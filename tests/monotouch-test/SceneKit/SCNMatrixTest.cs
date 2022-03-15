@@ -15,13 +15,22 @@ using System;
 using CoreAnimation;
 using Foundation;
 using SceneKit;
-using OpenTK;
 
 using NUnit.Framework;
 
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+using Vector3d = global::CoreGraphics.NVector3d;
+using Vector4 = global::System.Numerics.Vector4;
+using Quaternion = global::System.Numerics.Quaternion;
+using Quaterniond = global::CoreGraphics.NQuaterniond;
+#else
+using OpenTK;
+#endif
+
 #if __MACOS__
 #if NET
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #else
 using pfloat = System.nfloat;
 #endif

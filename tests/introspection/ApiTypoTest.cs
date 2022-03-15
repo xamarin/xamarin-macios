@@ -730,7 +730,7 @@ namespace Introspection
 			"Writeln",
 			"Xattr",
 #endif
-#if !XAMCORE_4_0
+#if !NET
 			"Actionfrom",
 			"Asal", // Typo, should be 'Basal', fixed in 'HKInsulinDeliveryReason'
 			"Attributefor",
@@ -1068,7 +1068,7 @@ namespace Introspection
 				case "SdkVersion":
 					Assert.True (Version.TryParse (s, out _), fi.Name);
 					break;
-#if !XAMCORE_4_0
+#if !NET
 #if __TVOS__
 				case "PassKitLibrary": // not part of tvOS
 					break;

@@ -56,8 +56,8 @@ namespace CoreText {
 		PostscriptCid,
 	}
 
-	static class CTFontNameKeyId {
-		
+	static partial class CTFontNameKeyId {
+#if !NET
 		public static readonly NSString Copyright;
 		public static readonly NSString Family;
 		public static readonly NSString SubFamily;
@@ -99,6 +99,7 @@ namespace CoreText {
 			SampleText    = Dlfcn.GetStringConstant (handle, "kCTFontSampleTextNameKey");
 			PostscriptCid = Dlfcn.GetStringConstant (handle, "kCTFontPostScriptCIDNameKey");
 		}
+#endif
 
 		public static NSString ToId (CTFontNameKey key)
 		{

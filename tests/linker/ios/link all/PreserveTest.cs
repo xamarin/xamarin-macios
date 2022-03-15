@@ -90,18 +90,6 @@ namespace LinkAll.Attributes {
 		}
 
 		[Test]
-		public void Class_LookupFullName ()
-		{
-			var klass = Type.GetType ("ObjCRuntime.Class, " + AssemblyName);
-			Assert.NotNull (klass, "Class");
-			// only required (and preserved) for debug builds
-			var method = klass.GetMethod ("LookupFullName", BindingFlags.NonPublic | BindingFlags.Static);
-			// note: since iOS/runtime unification this is being called by ObjCRuntime.Runtime.LookupManagedTypeName
-			// and will never be removed (even on Release builds)
-			Assert.NotNull (method, "LookupFullName");
-		}
-
-		[Test]
 		public void Runtime_RegisterEntryAssembly ()
 		{
 #if NET

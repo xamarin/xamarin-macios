@@ -24,9 +24,9 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.Name) {
-#if !XAMCORE_4_0
+#if !NET
 			case "NSDraggingInfo":
-				return true; // Incorrectly bound (BaseType on protocol), will be fixed for XAMCORE_4_0.
+				return true; // Incorrectly bound (BaseType on protocol), will be fixed for .NET.
 #endif
 			// special cases wrt sandboxing
 			case "NSRemoteOpenPanel":
@@ -277,7 +277,7 @@ namespace Introspection {
 				if (type.Name == "NSTextView")
 					return true;
 				break;
-#if !XAMCORE_4_0
+#if !NET
 			case "NSDraggingInfo":
 				return true; // We have to keep the type to maintain backwards compatibility.
 #endif

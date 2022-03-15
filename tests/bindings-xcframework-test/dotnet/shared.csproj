@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <IsBindingProject>true</IsBindingProject>
-    <NoBindingEmbedding>true</NoBindingEmbedding>
     <DefineConstants>$(DefineConstants);NET</DefineConstants>
     <DefineConstants>$(DefineConstants);NET;XCFRAMEWORK;FRAMEWORK_TEST</DefineConstants>
     <RootNamespace>bindingstest</RootNamespace>

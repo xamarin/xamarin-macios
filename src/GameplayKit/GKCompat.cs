@@ -3,10 +3,10 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using OpenTK;
-using System.Runtime.Versioning;
 
 #if !NET && !MONOMAC && !__MACCATALYST__
+
+using Vector2 = global::OpenTK.Vector2;
 
 namespace GameplayKit {
 

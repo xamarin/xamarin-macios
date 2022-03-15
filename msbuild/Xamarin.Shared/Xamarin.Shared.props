@@ -92,13 +92,16 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'tvOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.TVOS/</_XamarinBclPath>
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'watchOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.WatchOS/</_XamarinBclPath>
 	</PropertyGroup>
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'MacCatalyst'">Xamarin.MacCatalyst.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS'">Xamarin.iOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'tvOS'">Xamarin.TVOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'watchOS'">Xamarin.WatchOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyPath>$(_XamarinBclPath)$(_XamarinPlatformAssemblyName)</_XamarinPlatformAssemblyPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' == 'true'">
+		<_XamarinPlatformAssemblyPath>$(_XamarinBclPath)$(_PlatformAssemblyName).dll</_XamarinPlatformAssemblyPath>
 	</PropertyGroup>
 
 	<!-- Sometimes we've used different variable names for the same thing for Xamarin.iOS and Xamarin.Mac projects. Here we try to unify those variables -->
@@ -231,15 +234,20 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<!-- NoSymbolStrip -->
 		<!-- Xamarin.Mac never had an equivalent for MtouchNoSymbolStrip and was never stripped -> true -->
 		<!-- default to 'false' -->
-		<_NoSymbolStrip Condition="'$(_PlatformName)' != 'macOS'">$(MtouchNoSymbolStrip)</_NoSymbolStrip>
-		<_NoSymbolStrip Condition="'$(_PlatformName)' == 'macOS'">true</_NoSymbolStrip>
-		<_NoSymbolStrip Condition="'$(_NoSymbolStrip)' == ''">false</_NoSymbolStrip>
+		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchNoSymbolStrip)</NoSymbolStrip>
+		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst')">true</NoSymbolStrip>
+		<!-- Disable stripping for simulator builds by default -->
+		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And '$(ComputedPlatform)' != 'iPhone'">true</NoSymbolStrip>
+		<NoSymbolStrip Condition="'$(NoSymbolStrip)' == ''">false</NoSymbolStrip>
 
 		<!-- NoDSymUtil -->
 		<!-- Xamarin.Mac never had an equivalent for MtouchNoDSymUtil and never produced them -> now, produce them by default when archiving -->
-		<_NoDSymUtil Condition="'$(_PlatformName)' != 'macOS'">$(MtouchNoDSymUtil)</_NoDSymUtil>
-		<_NoDSymUtil Condition="'$(_PlatformName)' == 'macOS' And '$(ArchiveOnBuild)' != 'true'">true</_NoDSymUtil>
-		<_NoDSymUtil Condition="'$(_NoDSymUtil)' == ''">false</_NoDSymUtil>
+		<NoDSymUtil Condition="'$(NoDSymUtil)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchNoDSymUtil)</NoDSymUtil>
+		<!-- Disable dsymutil on desktop unless archiving -->
+		<NoDSymUtil Condition="'$(NoDSymUtil)' == '' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '$(ArchiveOnBuild)' != 'true'">true</NoDSymUtil>
+		<!-- Disable dsymutil for simulator builds by default -->
+		<NoDSymUtil Condition="'$(NoDSymUtil)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') And '$(ComputedPlatform)' != 'iPhone'">true</NoDSymUtil>
+		<NoDSymUtil Condition="'$(NoDSymUtil)' == ''">false</NoDSymUtil>
 
 		<!-- DeviceSpecificIntermediateOutputPath -->
 		<!--
@@ -323,6 +331,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     separately) allow, so `latest` it is.
 		-->
 		<LangVersion>latest</LangVersion>
+
+		<!-- Default NoBindingEmbedding to 'true' for .NET projects, it's the new way -->
+		<NoBindingEmbedding Condition="'$(NoBindingEmbedding)' == '' And '$(UsingAppleNETSdk)' == 'true'">true</NoBindingEmbedding>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">

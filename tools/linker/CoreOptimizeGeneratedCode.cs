@@ -168,7 +168,7 @@ namespace Xamarin.Linker {
 					break;
 				}
 
-				if (!Driver.IsXAMCORE_4_0 && tr.Is ("System.Runtime.CompilerServices", "CompilerGeneratedAttribute")) {
+				if (tr.Is ("System.Runtime.CompilerServices", "CompilerGeneratedAttribute")) {
 #if DEBUG
 					Console.WriteLine ("Assembly {0} : processing", assembly);
 #endif
@@ -725,7 +725,7 @@ namespace Xamarin.Linker {
 
 			if (method.IsBindingImplOptimizableCode (LinkContext)) {
 				// We optimize all methods that have the [BindingImpl (BindingImplAttributes.Optimizable)] attribute.
-			} else if (!Driver.IsXAMCORE_4_0 && (method.IsGeneratedCode (LinkContext) && (
+			} else if ((method.IsGeneratedCode (LinkContext) && (
 #if NET
 				GetIsExtensionType (method.DeclaringType)
 #else

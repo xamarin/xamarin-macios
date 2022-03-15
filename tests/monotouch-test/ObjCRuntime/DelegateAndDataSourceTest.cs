@@ -131,6 +131,11 @@ namespace Xamarin.Mac.Tests
 			case "SKView":
 				// on vms results on a crash
 				return TestRuntime.IsVM;
+#if !NET
+			case "PKPaymentAuthorizationViewController":
+				// The default constructor doesn't work (it's also obsolete)
+				return true;
+#endif
 			}
 
 			switch (t.Namespace) {

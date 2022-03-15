@@ -9,20 +9,27 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreGraphics;
 using ObjCRuntime;
 using Foundation;
 
+
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+#else
 using Vector2 = global::OpenTK.Vector2;
+#endif
 
 namespace Vision {
 
 #if NET
-	[SupportedOSPlatform ("ios11.0")]
 	[SupportedOSPlatform ("tvos11.0")]
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
 #else
-	[TV (11,0), Mac (10,13), iOS (11,0)]
+	[TV (11,0)]
+	[Mac (10,13)]
+	[iOS (11,0)]
 #endif
 	public static partial class VNUtils {
 	
@@ -38,11 +45,14 @@ namespace Vision {
 		public static extern CGPoint GetImagePoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight);
 
 #if NET
-		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
 #else
-		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
+		[iOS (14,0)]
 		[MacCatalyst (14,0)]
 #endif
 		[DllImport (Constants.VisionLibrary, EntryPoint = "VNNormalizedPointForImagePoint")]
@@ -55,45 +65,57 @@ namespace Vision {
 		public static extern CGRect GetNormalizedRect (CGRect imageRect, nuint imageWidth, nuint imageHeight);
 
 #if NET
-		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
 #endif
 		[DllImport (Constants.VisionLibrary, EntryPoint="VNImagePointForNormalizedPointUsingRegionOfInterest")]
 		public static extern CGPoint GetImagePoint (CGPoint normalizedPoint, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
 
 #if NET
-		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
 #endif
 		[DllImport (Constants.VisionLibrary, EntryPoint="VNNormalizedPointForImagePointUsingRegionOfInterest")]
 		public static extern CGPoint GetNormalizedPoint (CGPoint imagePoint, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
 
 #if NET
-		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
 #endif
 		[DllImport (Constants.VisionLibrary, EntryPoint="VNImageRectForNormalizedRectUsingRegionOfInterest")]
 		public static extern CGRect GetImageRect (CGRect normalizedRect, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
 
 #if NET
-		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("tvos15.0")]
 		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
 		[SupportedOSPlatform ("maccatalyst15.0")]
 #else
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
 #endif
 		[DllImport (Constants.VisionLibrary, EntryPoint="VNNormalizedRectForImageRectUsingRegionOfInterest")]
 		public static extern CGRect GetNormalizedRect (CGRect imageRect, nuint imageWidth, nuint imageHeight, CGRect regionOfInterest);
@@ -125,21 +147,25 @@ namespace Vision {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
 #else
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[DllImport (Constants.VisionLibrary)]
 		static extern nuint VNElementTypeSize (nuint elementType);
 
 #if NET
-		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
 #else
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public static nuint GetElementTypeSize (VNElementType elementType) => VNElementTypeSize ((nuint) (ulong) elementType);
 	}

@@ -279,7 +279,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			StandardOutputImportance="High"
 			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>
-			<Output TaskParameter="CompiledArchitectures" PropertyName="_CompiledArchitectures" />
 		</MTouch>
 
 		<Touch
@@ -290,47 +289,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
-	</Target>
-
-	<Target Name="_CreateDebugSettings" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false' And '$(_PlatformName)' != 'MacCatalyst'"
-		DependsOnTargets="_CopyResourcesToBundle"
-		Outputs="$(_AppBundlePath)Settings.bundle\Root.plist" >
-		<CreateDebugSettings
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
-			DebuggerPort="$(IOSDebuggerPort)"
-			>
-		</CreateDebugSettings>
-	</Target>
-
-	<Target Name="_CreateDebugConfiguration" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
-		DependsOnTargets="_CopyResourcesToBundle;_DetectDebugNetworkConfiguration"
-		Outputs="$(_AppResourcesPath)MonoTouchDebugConfiguration.txt" >
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppResourcesPath)" />
-		<CreateDebugConfiguration
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(_AppResourcesPath)"
-			DebugOverWiFi="$(IOSDebugOverWiFi)"
-			DebugIPAddresses="$(_DebugIPAddresses)"
-			DebuggerPort="$(IOSDebuggerPort)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			>
-		</CreateDebugConfiguration>
-	</Target>
-
-	<Target Name="_DetectDebugNetworkConfiguration" Condition="'$(_BundlerDebug)' == 'true'">
-		<DetectDebugNetworkConfiguration
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			DebugOverWiFi="$(IOSDebugOverWiFi)"
-			DebuggerHosts="$(IOSDebuggerHosts)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			>
-
-			<Output TaskParameter="DebugIPAddresses" PropertyName="_DebugIPAddresses" />
-		</DetectDebugNetworkConfiguration>
 	</Target>
 
 	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GenerateBundleName">
@@ -560,6 +518,9 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			<_AssetPack>
 				<DirectoryName>$([System.IO.Path]::GetFileName('%(_AssetPack._DirectoryName)'))</DirectoryName>
 			</_AssetPack>
+			<_AssetPack>
+				<CodesignStampFile>$(DeviceSpecificOutputPath)OnDemandResources-codesign\%(DirectoryName)</CodesignStampFile>
+			</_AssetPack>
 		</ItemGroup>
 
 		<!-- Sign assetpacks -->
@@ -590,6 +551,11 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')" Files="$(_IpaAppBundleDir)AssetPackManifestTemplate.plist" />
 
 		<!-- Re-sign app bundle if anything changed inside of it -->
+		<ItemGroup>
+			<_IpaAppBundleToSign Include="$(_IpaAppBundleDir)">
+				<CodesignStampFile>$(DeviceSpecificOutputPath)OnDemandResources-codesign\$(_AppBundleName).app</CodesignStampFile>
+			</_IpaAppBundleToSign>
+		</ItemGroup>
 		<Codesign
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(_DistributionType)' == 'AdHoc' And Exists('$(_IntermediateODRDir)')"
@@ -600,7 +566,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Keychain="$(CodesignKeychain)"
 			Entitlements="$(_CompiledCodesignEntitlements)"
 			ResourceRules="$(_PreparedResourceRules)"
-			Resources="$(_IpaAppBundleDir)"
+			Resources="@(_IpaAppBundleToSign)"
 			SigningKey="$(_CodeSigningKey)"
 			ExtraArgs="$(CodesignExtraArgs)"
 			/>

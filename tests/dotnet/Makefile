@@ -49,8 +49,8 @@ compare compare-size: $(TARGETS)
 	$(MAKE) report
 
 report:
-	cd ../../tools/app-compare && dotnet run $(abspath size-comparison/MySingleView/oldnet/bin/iPhone/Release/MySingleView.app) $(abspath size-comparison/MySingleView/dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/MySingleView.app) > $(CURDIR)/report.md
-	gist $(CURDIR)/report.md
+	appcompare $(abspath size-comparison/MySingleView/oldnet/bin/iPhone/Release/MySingleView.app) $(abspath size-comparison/MySingleView/dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/MySingleView.app) \
+		--output-markdown $(CURDIR)/report.md --gist --mapping-file $(CURDIR)/size-comparison/MySingleView.map
 
 COMMON_ARGS=/p:Platform=iPhone /p:Configuration=Release
 build-oldnet:

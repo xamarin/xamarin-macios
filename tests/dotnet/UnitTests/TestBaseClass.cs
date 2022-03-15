@@ -275,5 +275,31 @@ namespace Xamarin.Tests {
 			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
 			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
 		}
+
+		public static StringBuilder AssertExecute (string executable, params string[] arguments)
+		{
+			return AssertExecute (executable, arguments, out _);
+		}
+
+		public static StringBuilder AssertExecute (string executable, string[] arguments, out StringBuilder output)
+		{
+			var rv = ExecutionHelper.Execute (executable, arguments, out output);
+			if (rv != 0) {
+				Console.WriteLine ($"'{executable} {StringUtils.FormatArguments (arguments)}' exited with exit code {rv}:");
+				Console.WriteLine ("\t" + output.ToString ().Replace ("\n", "\n\t").TrimEnd (new char [] { '\n', '\t' }));
+			}
+			Assert.AreEqual (0, rv, $"Unable to execute '{executable} {StringUtils.FormatArguments (arguments)}': exit code {rv}");
+			return output;
+		}
+
+		protected void ExecuteProjectWithMagicWordAndAssert (string csproj, ApplePlatform platform, string? runtimeIdentifiers = null)
+		{
+			if (runtimeIdentifiers is null)
+				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+
+			var appPath = GetAppPath (csproj, platform, runtimeIdentifiers);
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (appExecutable);
+		}
 	}
 }

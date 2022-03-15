@@ -9,7 +9,11 @@
 
 using System;
 using ObjCRuntime;
+#if NET
+using Vector2i = global::CoreGraphics.NVector2i;
+#else
 using Vector2i = global::OpenTK.Vector2i;
+#endif // NET
 
 namespace GameplayKit {
 	public partial class GKGridGraph {

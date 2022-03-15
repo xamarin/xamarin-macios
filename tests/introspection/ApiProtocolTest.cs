@@ -39,11 +39,11 @@ namespace Introspection {
 			// *** NSForwarding: warning: object 0x5cbd078 of class 'JSExport' does not implement doesNotRecognizeSelector: -- abort
 			case "JSExport":
 				return true;
-#if !XAMCORE_4_0
+#if !NET
 			case "MTLCounter":
 			case "MTLCounterSampleBuffer":
 			case "MTLCounterSet":
-				return true; // Incorrectly bound, will be fixed for XAMCORE_4_0.
+				return true; // Incorrectly bound, will be fixed for .NET.
 #endif
 			case "MPSImageLaplacianPyramid":
 			case "MPSImageLaplacianPyramidSubtract":

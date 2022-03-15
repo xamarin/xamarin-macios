@@ -26,6 +26,11 @@ namespace Xamarin.MacDev.Tasks {
 		public string FrameworksDirectory { get; set; } = string.Empty;
 
 		[Required]
+		public bool BundlerDebug { get; set; }
+
+		public string PackageDebugSymbols { get; set; } = string.Empty;
+
+		[Required]
 		public string PlugInsDirectory { get; set; } = string.Empty;
 
 		[Required]
@@ -41,7 +46,31 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem []? UpdatedResolvedFileToPublish { get; set; }
 
 		HashSet<string> resourceFilesSet = new HashSet<string> ();
-		
+
+		// We package the symbols if the PackageDebugSymbols is set to 'true', we don't if set to anything else, and if set to
+		// nothing, then we package symbols unless we're doing a release build.
+		bool PackageSymbols {
+			get {
+				if (!string.IsNullOrEmpty (PackageDebugSymbols))
+					return string.Equals ("true", PackageDebugSymbols, StringComparison.OrdinalIgnoreCase);
+				return BundlerDebug;
+			}
+		}
+
+		void AddResourceFiles (ITaskItem[]? items)
+		{
+			if (items is null || items.Length == 0)
+				return;
+
+			var resources = items.
+				// Remove any items with PublishFolderType set
+				Where (v => string.IsNullOrEmpty (v.GetMetadata ("PublishFolderType"))).
+				// Get the full path
+				Select (v => Path.GetFullPath (v.ItemSpec));
+
+			resourceFilesSet.UnionWith (resources);
+		}
+
 		public override bool Execute ()
 		{
 			if (ResolvedFileToPublish is null || ResolvedFileToPublish.Length == 0)
@@ -54,12 +83,9 @@ namespace Xamarin.MacDev.Tasks {
 			ResourceDirectory = ResourceDirectory.Replace ('\\', Path.DirectorySeparatorChar);
 
 			// Collect all our BundleResource, Content and EmbeddedResource paths into one big dictionary for later lookup.
-			if (BundleResource?.Length > 0)
-				resourceFilesSet.UnionWith (BundleResource.Select (v => Path.GetFullPath (v.ItemSpec)));
-			if (Content?.Length > 0)
-				resourceFilesSet.UnionWith (Content.Select (v => Path.GetFullPath (v.ItemSpec)));
-			if (EmbeddedResource?.Length > 0)
-				resourceFilesSet.UnionWith (EmbeddedResource.Select (v => Path.GetFullPath (v.ItemSpec)));
+			AddResourceFiles (BundleResource);
+			AddResourceFiles (Content);
+			AddResourceFiles (EmbeddedResource);
 
 			var appleFrameworks = new Dictionary<string, List<ITaskItem>> ();
 			var list = ResolvedFileToPublish.ToList ();
@@ -249,12 +275,20 @@ namespace Xamarin.MacDev.Tasks {
 
 			// Assemblies and their related files
 			var assemblyExtensions = new string [] {
-				".dll",".exe", ".pdb",
-				".dll.mdb", ".exe.mdb", ".config",
+				".dll", ".exe", ".config",
 			};
 			foreach (var extension in assemblyExtensions) {
 				if (filename.EndsWith (extension, StringComparison.OrdinalIgnoreCase))
 					return PublishFolderType.Assembly;
+			}
+
+			// Assemblies and their related files
+			var assemblyDebugExtensions = new string [] {
+				".pdb", ".dll.mdb", ".exe.mdb",
+			};
+			foreach (var extension in assemblyDebugExtensions) {
+				if (filename.EndsWith (extension, StringComparison.OrdinalIgnoreCase))
+					return PackageSymbols ? PublishFolderType.Assembly : PublishFolderType.None;
 			}
 
 			// Binding resource package (*.resources / *.resources.zip)

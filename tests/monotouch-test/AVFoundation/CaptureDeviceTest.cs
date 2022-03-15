@@ -15,9 +15,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		void Compare (NSString constant, AVMediaTypes value)
 		{
 			Assert.That (AVCaptureDevice.GetDefaultDevice (constant), Is.EqualTo (AVCaptureDevice.GetDefaultDevice (value)), value.ToString ());
-#if !XAMCORE_4_0
 			Assert.That (AVCaptureDevice.GetDefaultDevice (constant), Is.EqualTo (AVCaptureDevice.DefaultDeviceWithMediaType ((string) constant)), value.ToString () + ".compat");
-#endif
 		}
 
 		[Test]

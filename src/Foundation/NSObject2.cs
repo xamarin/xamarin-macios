@@ -233,9 +233,9 @@ namespace Foundation {
 			}
 		}
 
-		IntPtr GetSuper ()
+		NativeHandle GetSuper ()
 		{
-			if (super == IntPtr.Zero) {
+			if (super == NativeHandle.Zero) {
 				IntPtr ptr;
 
 				unsafe {
@@ -253,7 +253,7 @@ namespace Foundation {
 
 			unsafe {
 				objc_super* sup = (objc_super*) super;
-				if (sup->ClassHandle == IntPtr.Zero)
+				if (sup->ClassHandle == NativeHandle.Zero)
 					sup->ClassHandle = ClassHandle;
 				sup->Handle = handle;
 			}
@@ -329,14 +329,10 @@ namespace Foundation {
 		}
 
 		private void InitializeObject (bool alloced) {
-			if (alloced && handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
-				if (ClassHandle == IntPtr.Zero)
-					throw new Exception (string.Format ("Could not create an native instance of the type '{0}': the native class hasn't been loaded.\n" +
-						"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.",
-						GetType ().FullName));
-				throw new Exception (string.Format ("Failed to create a instance of the native type '{0}'.\n" +
-					"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.",
-					new Class (ClassHandle).Name));
+			if (alloced && handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
+				if (ClassHandle == NativeHandle.Zero)
+					throw new Exception ($"Could not create an native instance of the type '{GetType ().FullName}': the native class hasn't been loaded.\n{Constants.SetThrowOnInitFailureToFalse}.");
+				throw new Exception ($"Could not create an native instance of the type '{new Class (ClassHandle).Name}'.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
 
 			// The authorative value for the IsDirectBinding value is the register attribute:
@@ -373,7 +369,7 @@ namespace Foundation {
 				var h = GCHandle.ToIntPtr (gchandle);
 				if (!xamarin_set_gchandle_with_flags_safe (handle, h, flags)) {
 					// A GCHandle already existed: this shouldn't happen, but let's handle it anyway.
-					Runtime.NSLog ("Tried to create a managed reference from an object that already has a managed reference (type: {0})", GetType ());
+					Runtime.NSLog ($"Tried to create a managed reference from an object that already has a managed reference (type: {GetType ()})");
 					gchandle.Free ();
 				}
 			}
@@ -557,10 +553,10 @@ namespace Foundation {
 			return this;
 		}
 
-		public IntPtr SuperHandle {
+		public NativeHandle SuperHandle {
 			get {
 				if (handle == IntPtr.Zero)
-					throw new ObjectDisposedException (GetType ().Name);
+					ObjCRuntime.ThrowHelper.ThrowObjectDisposedException (this);
 
 				return GetSuper ();
 			}
@@ -598,28 +594,22 @@ namespace Foundation {
 		[EditorBrowsable (EditorBrowsableState.Never)]
 		protected void InitializeHandle (NativeHandle handle, string initSelector)
 		{
-			if (this.handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
-				if (ClassHandle == IntPtr.Zero)
-					throw new Exception (string.Format ("Could not create an native instance of the type '{0}': the native class hasn't been loaded.\n" +
-						"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.",
-						GetType ().FullName));
-				throw new Exception (string.Format ("Failed to create a instance of the native type '{0}'.\n" +
-					"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.",
-					new Class (ClassHandle).Name));
+			if (this.handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
+				if (ClassHandle == NativeHandle.Zero)
+					throw new Exception ($"Could not create an native instance of the type '{GetType ().FullName}': the native class hasn't been loaded.\n{Constants.SetThrowOnInitFailureToFalse}.");
+				throw new Exception ($"Could not create an native instance of the type '{new Class (ClassHandle).Name}'.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
 
-			if (handle == IntPtr.Zero && Class.ThrowOnInitFailure) {
-				Handle = IntPtr.Zero; // We'll crash if we don't do this.
-				throw new Exception (string.Format ("Could not initialize an instance of the type '{0}': the native '{1}' method returned nil.\n" +
-				"It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.",
-					GetType ().FullName, initSelector));
+			if (handle == NativeHandle.Zero && Class.ThrowOnInitFailure) {
+				Handle = NativeHandle.Zero; // We'll crash if we don't do this.
+				throw new Exception ($"Could not initialize an instance of the type '{GetType ().FullName}': the native '{initSelector}' method returned nil.\n{Constants.SetThrowOnInitFailureToFalse}.");
 			}
 
 			this.Handle = handle;
 		}
 		
 		private bool AllocIfNeeded () {
-			if (handle == IntPtr.Zero) {
+			if (handle == NativeHandle.Zero) {
 #if MONOMAC
 				handle = Messaging.IntPtr_objc_msgSend (Class.GetHandle (this.GetType ()), Selector.AllocHandle);
 #else
@@ -796,13 +786,8 @@ namespace Foundation {
 			case TypeCode.String:
 				return new NSString ((string) obj);
 			default:
-#if NET
 				if (t == typeof (NativeHandle))
 					return NSValue.ValueFromPointer ((NativeHandle) obj);
-#else
-				if (t == typeof (IntPtr))
-					return NSValue.ValueFromPointer ((IntPtr) obj);
-#endif
 #if !NO_SYSTEM_DRAWING
 				if (t == typeof (SizeF))
 					return NSValue.FromSizeF ((SizeF) obj);
@@ -843,7 +828,7 @@ namespace Foundation {
 			}
 		}
 
-		public void SetValueForKeyPath (IntPtr handle, NSString keyPath)
+		public void SetValueForKeyPath (NativeHandle handle, NSString keyPath)
 		{
 			if (keyPath == null)
 				throw new ArgumentNullException ("keyPath");
@@ -920,7 +905,7 @@ namespace Foundation {
 
 		internal void ClearHandle ()
 		{
-			handle = IntPtr.Zero;
+			handle = NativeHandle.Zero;
 		}
 
 		protected virtual void Dispose (bool disposing) {
@@ -928,10 +913,24 @@ namespace Foundation {
 				return;
 			disposed = true;
 			
-			if (handle != IntPtr.Zero) {
+			if (handle != NativeHandle.Zero) {
 				if (disposing) {
 					ReleaseManagedRef ();
 				} else {
+#if NET
+					// By adding an external reference to the object from finalizer we will
+					// resurrect it. Since Runtime class tracks the NSObject instances with
+					// GCHandle(..., WeakTrackResurrection) we need to make sure it's aware
+					// that the object was finalized.
+					//
+					// On CoreCLR the non-tracked objects don't get a callback from the
+					// garbage collector when they enter the finalization queue but the
+					// information is necessary for Runtime.TryGetNSObject to work correctly. 
+					// Since we are on the finalizer thread now we can just set the flag
+					// directly here.
+					actual_flags |= Flags.InFinalizerQueue;
+#endif
+
 					NSObject_Disposer.Add (this);
 				}
 			} else {
@@ -941,9 +940,9 @@ namespace Foundation {
 
 		unsafe void FreeData ()
 		{
-			if (super != IntPtr.Zero) {
+			if (super != NativeHandle.Zero) {
 				Marshal.FreeHGlobal (super);
-				super = IntPtr.Zero;
+				super = NativeHandle.Zero;
 			}
 		}
 
@@ -975,7 +974,7 @@ namespace Foundation {
 				if (!call_drain)
 					return;
 #if NET
-				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (class_ptr, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), Selector.GetHandle ("drain:"), IntPtr.Zero, false);
+				Messaging.void_objc_msgSend_NativeHandle_NativeHandle_bool (class_ptr, Selector.GetHandle (Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDone), Selector.GetHandle ("drain:"), NativeHandle.Zero, false);
 #else
 #if MONOMAC
 				Messaging.void_objc_msgSend_IntPtr_IntPtr_bool (class_ptr, Selector.PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle, drainHandle, IntPtr.Zero, false);

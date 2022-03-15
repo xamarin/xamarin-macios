@@ -1940,6 +1940,15 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The &quot;{0}&quot; task was not given a value for the required parameter &quot;{1}&quot;, nor was there a &quot;{2}&quot; metadata on the resource {3}..
+        /// </summary>
+        public static string E7085 {
+            get {
+                return ResourceManager.GetString("E7085", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The value &apos;{0}&apos; is invalid for the Compress property. Valid values: &apos;true&apos;, &apos;false&apos; or &apos;auto&apos;..
         /// </summary>
         public static string E7086 {

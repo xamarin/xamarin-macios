@@ -54,6 +54,7 @@ namespace CoreText {
 		WindingNumber
 	}
 
+#if !NET
 	public static class CTFrameAttributeKey {
 
 		public static readonly NSString Progression;
@@ -73,6 +74,7 @@ namespace CoreText {
 			PathClippingPath = Dlfcn.GetStringConstant (handle, "kCTFramePathClippingPathAttributeName")!;
 		}
 	}
+#endif
 
 	public class CTFrameAttributes {
 

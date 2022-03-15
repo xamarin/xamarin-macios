@@ -13,7 +13,6 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 using CoreGraphics;
-using System.Runtime.Versioning;
 
 using System;
 using System.Runtime.InteropServices;
@@ -61,13 +60,17 @@ namespace UIKit {
 
 		
 		// UIAccessibility.h
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* NSObject */ IntPtr UIAccessibilityFocusedElement (IntPtr assistiveTechnologyIdentifier);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
 #endif
 		public static NSObject FocusedElement (string assistiveTechnologyIdentifier)
@@ -77,14 +80,18 @@ namespace UIKit {
 		}
 
 		// UIAccessibility.h
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static /* BOOL */ bool UIAccessibilityIsShakeToUndoEnabled ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
 #endif
 		public static bool IsShakeToUndoEnabled {
@@ -172,13 +179,17 @@ namespace UIKit {
 		extern public static void RegisterGestureConflictWithZoom ();
 
 		// UIAccessibility.h
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static /* UIBezierPath* */ IntPtr UIAccessibilityConvertPathToScreenCoordinates (/* UIBezierPath* */ IntPtr path, /* UIView* */ IntPtr view);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public static UIBezierPath ConvertPathToScreenCoordinates (UIBezierPath path, UIView view)
@@ -192,13 +203,17 @@ namespace UIKit {
 		}
 
 		// UIAccessibility.h
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern static CGRect UIAccessibilityConvertFrameToScreenCoordinates (CGRect rect, /* UIView* */ IntPtr view);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public static CGRect ConvertFrameToScreenCoordinates (CGRect rect, UIView view)
@@ -210,13 +225,17 @@ namespace UIKit {
 		}
 
 		// UIAccessibility.h
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		extern unsafe static void UIAccessibilityRequestGuidedAccessSession (/* BOOL */ [MarshalAs (UnmanagedType.I1)] bool enable, /* void(^completionHandler)(BOOL didSucceed) */ void * completionHandler);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -234,7 +253,9 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public static Task<bool> RequestGuidedAccessSessionAsync (bool enable)
@@ -258,14 +279,18 @@ namespace UIKit {
 				del (enable);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityDarkerSystemColorsEnabled ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		public static bool DarkerSystemColorsEnabled {
@@ -284,14 +309,18 @@ namespace UIKit {
 		}
 #endif
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsBoldTextEnabled ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		public static bool IsBoldTextEnabled {
@@ -300,36 +329,42 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
-		[TV (14,0), iOS (14,0)]
-		[MacCatalyst (14,0)]
-#else
-		[SupportedOSPlatform ("ios14.0")]
+#if NET
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[TV (14,0)]
+		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityButtonShapesEnabled ();
 
-#if !NET
-		[TV (14,0), iOS (14,0)]
-		[MacCatalyst (14,0)]
-#else
-		[SupportedOSPlatform ("ios14.0")]
+#if NET
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[TV (14,0)]
+		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 #endif
 		public static bool ButtonShapesEnabled => UIAccessibilityButtonShapesEnabled ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsGrayscaleEnabled ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		static public bool IsGrayscaleEnabled {
@@ -338,14 +373,18 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsReduceMotionEnabled ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		static public bool IsReduceMotionEnabled {
@@ -354,54 +393,62 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
-		[TV (14,0), iOS (14,0)]
-		[MacCatalyst (14,0)]
-#else
-		[SupportedOSPlatform ("ios14.0")]
+#if NET
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[TV (14,0)]
+		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityPrefersCrossFadeTransitions ();
 
-#if !NET
-		[TV (14,0), iOS (14,0)]
-		[MacCatalyst (14,0)]
-#else
-		[SupportedOSPlatform ("ios14.0")]
+#if NET
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[TV (14,0)]
+		[iOS (14,0)]
+		[MacCatalyst (14,0)]
 #endif
 		public static bool PrefersCrossFadeTransitions => UIAccessibilityPrefersCrossFadeTransitions ();
 
-#if !NET
-		[iOS (13,0), TV (13,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsVideoAutoplayEnabled ();
 
-#if !NET
-		[iOS (13,0), TV (13,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
 #endif
 		static public bool IsVideoAutoplayEnabled => UIAccessibilityIsVideoAutoplayEnabled ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsReduceTransparencyEnabled ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		static public bool IsReduceTransparencyEnabled {
@@ -410,14 +457,18 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsSwitchControlRunning ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		static public bool IsSwitchControlRunning {
@@ -426,14 +477,18 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsSpeakSelectionEnabled ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		static public bool IsSpeakSelectionEnabled {
@@ -442,14 +497,18 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsSpeakScreenEnabled ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[iOS (8,0)]
 #endif
 		static public bool IsSpeakScreenEnabled {
@@ -458,15 +517,23 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
-		[iOS (10,0), TV (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsAssistiveTouchRunning ();
 
-#if !NET
-		[iOS (10,0), TV (10,0)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("tvos10.0")]
+#else
+		[iOS (10,0)]
+		[TV (10,0)]
 #endif
 		public static bool IsAssistiveTouchRunning {
 			get {
@@ -474,50 +541,58 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
-		[iOS (13,0), TV (13,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityShouldDifferentiateWithoutColor ();
 
-#if !NET
-		[iOS (13,0), TV (13,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
 #endif
 		public static bool ShouldDifferentiateWithoutColor => UIAccessibilityShouldDifferentiateWithoutColor ();
 
-#if !NET
-		[iOS (13,0), TV (13,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIAccessibilityIsOnOffSwitchLabelsEnabled ();
 
-#if !NET
-		[iOS (13,0), TV (13,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
 #endif
 		public static bool IsOnOffSwitchLabelsEnabled => UIAccessibilityIsOnOffSwitchLabelsEnabled ();
 
 #if !TVOS
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10,0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		static extern nuint UIAccessibilityHearingDevicePairedEar ();
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+#else
 		[iOS (10,0)]
 #endif
 		public static UIAccessibilityHearingDeviceEar HearingDevicePairedEar {

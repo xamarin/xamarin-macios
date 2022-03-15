@@ -94,6 +94,9 @@ namespace ClassKit {
 		ArtsAndMusic,
 		[Field ("CLSContextTopicHealthAndFitness")]
 		HealthAndFitness,
+		// CLSContext.Topic should be nullable, thus we should add a null option
+		[Field (null)]
+		None = 1000,
 	}
 
 

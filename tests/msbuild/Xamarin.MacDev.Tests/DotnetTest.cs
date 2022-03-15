@@ -48,7 +48,6 @@ namespace Xamarin.iOS.Tasks {
 		[TestCase ("MyTVMetalGame")]
 		// [TestCase ("MyWatch2Container")] // TODO: Requires watchOS support, which has not been implemented yet
 		[TestCase ("MyWebViewApp")]
-		[TestCase ("MyXamarinFormsApp")]
 		public void CompareBuilds (string project, int expectedErrorCount = 0)
 		{
 			Configuration.AssertDotNetAvailable ();

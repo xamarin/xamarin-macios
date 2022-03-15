@@ -229,8 +229,8 @@ define RunRegistrar
 	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework Xamarin.$(5),v1.0 --abi $(2) -r:$(8)/mscorlib.dll
 	$$(Q) touch $$(basename $$@).m $$(basename $$@).h
 
-.libs/Microsoft.$(9).registrar.$(10)%m .libs/Microsoft.$(9).registrar.$(10)%h: $(TOP)/src/build/dotnet/$(1)/$(3)/Xamarin.$(5).dll $(LOCAL_MTOUCH) | .libs
-	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework .NETCoreApp,Version=6.0,Profile=$(1) --abi $(2) -r:$(DOTNET6_BCL_DIR)/System.Runtime.dll --rid $(10)
+.libs/Microsoft.$(9).registrar.$(10)%m .libs/Microsoft.$(9).registrar.$(10)%h: $(TOP)/src/build/dotnet/$(1)/$(3)/Microsoft.$(9).dll $(LOCAL_MTOUCH) | .libs
+	$$(Q_GEN) $$(LOCAL_MTOUCH_COMMAND) --xamarin-framework-directory=$$(IOS_DESTDIR)/$$(MONOTOUCH_PREFIX) $$(MTOUCH_VERBOSITY) --runregistrar:$$(abspath $$(basename $$@).m) --sdkroot $$(XCODE_DEVELOPER_ROOT) --sdk $(4) $$< --registrar:static --target-framework .NETCoreApp,Version=6.0,Profile=$(1) --abi $(2) -r:$(DOTNET6_BCL_DIR)/System.Runtime.dll -r:$(DOTNET_SYSTEM_RUNTIME_INTEROPSERVICES_REF_ASSEMBLY_DIR)/System.Runtime.InteropServices.dll --rid $(10)
 	$$(Q) touch $$(basename $$@).m $$(basename $$@).h
 
 %.registrar.$(1).$(2).a: %.registrar.$(1).$(2).m %.registrar.$(1).$(2).h
@@ -404,6 +404,11 @@ verify-sorted-resx:
 		rm -rf .$@*tmp; \
 		exit 1; \
 	fi
+package-introspection-dependencies.zip: simlauncher32-sgen simlauncher64-sgen
+	$(Q) mkdir -p $@.tmpdir
+	$(Q) $(CP) -a simlauncher*-sgen*  $@.tmpdir
+	$(Q_GEN) cd $@.tmpdir && zip -9r $(abspath $@) .
+	$(Q) rm -rf $@.tmpdir
 
 clean-dotnet:
 	rm -f $(TARGETS_DOTNET)

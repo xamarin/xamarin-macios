@@ -14,7 +14,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
@@ -25,12 +24,15 @@ using NativeHandle = System.IntPtr;
 
 namespace Security {
 
-#if !NET
-	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
-#else
-	[SupportedOSPlatform ("ios12.0")]
+#if NET
 	[SupportedOSPlatform ("tvos12.0")]
 	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (5,0)]
 #endif
 	public class SecCertificate2 : NativeObject {
 		[Preserve (Conditional = true)]

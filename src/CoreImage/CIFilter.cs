@@ -108,7 +108,6 @@
 //
 using System;
 using System.Diagnostics;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;

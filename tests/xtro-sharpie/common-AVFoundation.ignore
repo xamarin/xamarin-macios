@@ -79,5 +79,5 @@
 # adding abstract member to an existing type would be a breaking change
 !incorrect-protocol-member! AVQueuedSampleBufferRendering::hasSufficientMediaDataForReliablePlaybackStart is REQUIRED and should be abstract
 
-# added for XAMCORE_4_0 since it is part of a new breaking change in a notification
+# added for .NET since it is part of a new breaking change in a notification
 !missing-field! AVPlayerItemTimeJumpedOriginatingParticipantKey not bound

@@ -4613,35 +4613,82 @@ namespace UIKit {
 		[Export ("CIColor")]
 		CIColor CIColor { get; }
 
+#if !NET
+		[Obsolete ("Use 'LightText' instead.")]
 		[NoWatch][NoTV]
 		[Export ("lightTextColor")]
 		[Static]
 		UIColor LightTextColor { get; }
+#endif
 
+		[NoWatch][NoTV]
+		[Export ("lightTextColor")]
+		[Static]
+		UIColor LightText { get; }
+
+#if !NET
+		[Obsolete ("Use 'DarkText' instead.")]
 		[NoWatch][NoTV]
 		[Export ("darkTextColor")]
 		[Static]
 		UIColor DarkTextColor { get; }
+#endif
 
-		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SystemGroupedBackgroundColor' instead.")]
+		[NoWatch][NoTV]
+		[Export ("darkTextColor")]
+		[Static]
+		UIColor DarkText { get; }
+
+#if !NET
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SystemGroupedBackground' instead.")]
 		[NoWatch][NoTV]
 		[Export ("groupTableViewBackgroundColor")][Static]
 		UIColor GroupTableViewBackgroundColor { get; }
+#endif
 
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'SystemGroupedBackground' instead.")]
+		[NoWatch][NoTV]
+		[Export ("groupTableViewBackgroundColor")][Static]
+		UIColor GroupTableViewBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'ViewFlipsideBackground' instead.")]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[NoWatch][NoTV]
 		[Export ("viewFlipsideBackgroundColor")][Static]
 		UIColor ViewFlipsideBackgroundColor { get; }
+#endif
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
+		[NoWatch][NoTV]
+		[Export ("viewFlipsideBackgroundColor")][Static]
+		UIColor ViewFlipsideBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'ScrollViewTexturedBackground' instead.")]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[NoWatch][NoTV]
 		[Export ("scrollViewTexturedBackgroundColor")][Static]
 		UIColor ScrollViewTexturedBackgroundColor { get; }
+#endif
 
+		[Deprecated (PlatformName.iOS, 7, 0)]
+		[NoWatch][NoTV]
+		[Export ("scrollViewTexturedBackgroundColor")][Static]
+		UIColor ScrollViewTexturedBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'UnderPageBackground' instead.")]
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[NoWatch][NoTV]
 		[Static, Export ("underPageBackgroundColor")]
 		UIColor UnderPageBackgroundColor { get; }
+#endif
+
+		[Deprecated (PlatformName.iOS, 7, 0)]
+		[NoWatch][NoTV]
+		[Static, Export ("underPageBackgroundColor")]
+		UIColor UnderPageBackground { get; }
 
 		[NoWatch]
 		[Static, Export ("colorWithCIColor:")]
@@ -4712,190 +4759,486 @@ namespace UIKit {
 		// and adjust accordingly since a lot of those are static properties
 		// that cannot be exposed from a [Category]
 
+#if !NET
+		[Obsolete ("Use 'SystemRed' instead.")]
 		[TV (9,0), NoWatch, iOS (7,0)]
 		[Static]
 		[Export ("systemRedColor")]
 		UIColor SystemRedColor { get; }
+#endif
 
+		[TV (9,0), NoWatch, iOS (7,0)]
+		[Static]
+		[Export ("systemRedColor")]
+		UIColor SystemRed { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemGreen' instead.")]
 		[TV (9,0), NoWatch, iOS (7,0)]
 		[Static]
 		[Export ("systemGreenColor")]
 		UIColor SystemGreenColor { get; }
+#endif
 
+		[TV (9,0), NoWatch, iOS (7,0)]
+		[Static]
+		[Export ("systemGreenColor")]
+		UIColor SystemGreen { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemBlue' instead.")]
 		[TV (9,0), NoWatch, iOS (7,0)]
 		[Static]
 		[Export ("systemBlueColor")]
 		UIColor SystemBlueColor { get; }
+#endif
 
+		[TV (9,0), NoWatch, iOS (7,0)]
+		[Static]
+		[Export ("systemBlueColor")]
+		UIColor SystemBlue { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemOrange' instead.")]
 		[TV (9,0), NoWatch, iOS (7,0)]
 		[Static]
 		[Export ("systemOrangeColor")]
 		UIColor SystemOrangeColor { get; }
+#endif
 
+		[TV (9,0), NoWatch, iOS (7,0)]
+		[Static]
+		[Export ("systemOrangeColor")]
+		UIColor SystemOrange { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemYellow' instead.")]
 		[TV (9,0), NoWatch, iOS (7,0)]
 		[Static]
 		[Export ("systemYellowColor")]
 		UIColor SystemYellowColor { get; }
+#endif
 
+		[TV (9,0), NoWatch, iOS (7,0)]
+		[Static]
+		[Export ("systemYellowColor")]
+		UIColor SystemYellow { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemPink' instead.")]
 		[TV (9,0), NoWatch, iOS (7,0)]
 		[Static]
 		[Export ("systemPinkColor")]
 		UIColor SystemPinkColor { get; }
+#endif
 
+		[TV (9,0), NoWatch, iOS (7,0)]
+		[Static]
+		[Export ("systemPinkColor")]
+		UIColor SystemPink { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemPurple' instead.")]
 		[TV (9,0), NoWatch, iOS (9,0)]
 		[Static]
 		[Export ("systemPurpleColor")]
 		UIColor SystemPurpleColor { get; }
+#endif
 
+		[TV (9,0), NoWatch, iOS (9,0)]
+		[Static]
+		[Export ("systemPurpleColor")]
+		UIColor SystemPurple { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemTeal' instead.")]
 		[TV (9,0), NoWatch, iOS (7,0)]
 		[Static]
 		[Export ("systemTealColor")]
 		UIColor SystemTealColor { get; }
+#endif
 
+		[TV (9,0), NoWatch, iOS (7,0)]
+		[Static]
+		[Export ("systemTealColor")]
+		UIColor SystemTeal { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemIndigo' instead.")]
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Static]
 		[Export ("systemIndigoColor")]
 		UIColor SystemIndigoColor { get; }
+#endif
 
+		[TV (13,0), NoWatch, iOS (13,0)]
+		[Static]
+		[Export ("systemIndigoColor")]
+		UIColor SystemIndigo { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemBrown' instead.")]
 		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		[Static]
 		[Export ("systemBrownColor")]
 		UIColor SystemBrownColor { get; }
+#endif
 
+		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("systemBrownColor")]
+		UIColor SystemBrown { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemMint' instead.")]
 		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		[Static]
 		[Export ("systemMintColor")]
 		UIColor SystemMintColor { get; }
+#endif
 
+		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("systemMintColor")]
+		UIColor SystemMint { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemCyan' instead.")]
 		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		[Static]
 		[Export ("systemCyanColor")]
 		UIColor SystemCyanColor { get; }
+#endif
 
+		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("systemCyanColor")]
+		UIColor SystemCyan { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemGray' instead.")]
 		[TV (9,0), NoWatch, iOS (7,0)]
 		[Static]
 		[Export ("systemGrayColor")]
 		UIColor SystemGrayColor { get; }
+#endif
 
+		[TV (9,0), NoWatch, iOS (7,0)]
+		[Static]
+		[Export ("systemGrayColor")]
+		UIColor SystemGray { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemGray2' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("systemGray2Color")]
 		UIColor SystemGray2Color { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("systemGray2Color")]
+		UIColor SystemGray2 { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemGray3' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("systemGray3Color")]
 		UIColor SystemGray3Color { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("systemGray3Color")]
+		UIColor SystemGray3 { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemGray4' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("systemGray4Color")]
 		UIColor SystemGray4Color { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("systemGray4Color")]
+		UIColor SystemGray4 { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemGray5' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("systemGray5Color")]
 		UIColor SystemGray5Color { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("systemGray5Color")]
+		UIColor SystemGray5 { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemGray6' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("systemGray6Color")]
 		UIColor SystemGray6Color { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("systemGray6Color")]
+		UIColor SystemGray6 { get; }
+
+#if !NET
+		[Obsolete ("Use 'Tint' instead.")]
 		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		[Static]
 		[Export ("tintColor")]
 		UIColor TintColor { get; }
+#endif
 
+		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("tintColor")]
+		UIColor Tint { get; }
+
+#if !NET
+		[Obsolete ("Use 'Label' instead.")]
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Static]
 		[Export ("labelColor")]
 		UIColor LabelColor { get; }
+#endif
 
+		[TV (13,0), NoWatch, iOS (13,0)]
+		[Static]
+		[Export ("labelColor")]
+		UIColor Label { get; }
+
+#if !NET
+		[Obsolete ("Use 'SecondaryLabel' instead.")]
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Static]
 		[Export ("secondaryLabelColor")]
 		UIColor SecondaryLabelColor { get; }
+#endif
 
+		[TV (13,0), NoWatch, iOS (13,0)]
+		[Static]
+		[Export ("secondaryLabelColor")]
+		UIColor SecondaryLabel { get; }
+
+#if !NET
+		[Obsolete ("Use 'TertiaryLabel' instead.")]
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Static]
 		[Export ("tertiaryLabelColor")]
 		UIColor TertiaryLabelColor { get; }
+#endif
 
+		[TV (13,0), NoWatch, iOS (13,0)]
+		[Static]
+		[Export ("tertiaryLabelColor")]
+		UIColor TertiaryLabel { get; }
+
+#if !NET
+		[Obsolete ("Use 'QuaternaryLabel' instead.")]
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Static]
 		[Export ("quaternaryLabelColor")]
 		UIColor QuaternaryLabelColor { get; }
+#endif
 
+		[TV (13,0), NoWatch, iOS (13,0)]
+		[Static]
+		[Export ("quaternaryLabelColor")]
+		UIColor QuaternaryLabel { get; }
+
+#if !NET
+		[Obsolete ("Use 'Link' instead.")]
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Static]
 		[Export ("linkColor")]
 		UIColor LinkColor { get; }
+#endif
 
+		[TV (13,0), NoWatch, iOS (13,0)]
+		[Static]
+		[Export ("linkColor")]
+		UIColor Link { get; }
+
+#if !NET
+		[Obsolete ("Use 'PlaceholderText' instead.")]
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Static]
 		[Export ("placeholderTextColor")]
 		UIColor PlaceholderTextColor { get; }
+#endif
 
+		[TV (13,0), NoWatch, iOS (13,0)]
+		[Static]
+		[Export ("placeholderTextColor")]
+		UIColor PlaceholderText { get; }
+
+#if !NET
+		[Obsolete ("Use 'Separator' instead.")]
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Static]
 		[Export ("separatorColor")]
 		UIColor SeparatorColor { get; }
+#endif
 
+		[TV (13,0), NoWatch, iOS (13,0)]
+		[Static]
+		[Export ("separatorColor")]
+		UIColor Separator { get; }
+
+#if !NET
+		[Obsolete ("Use 'OpaqueSeparator' instead.")]
 		[TV (13,0), NoWatch, iOS (13,0)]
 		[Static]
 		[Export ("opaqueSeparatorColor")]
 		UIColor OpaqueSeparatorColor { get; }
+#endif
 
+		[TV (13,0), NoWatch, iOS (13,0)]
+		[Static]
+		[Export ("opaqueSeparatorColor")]
+		UIColor OpaqueSeparator { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemBackground' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("systemBackgroundColor")]
 		UIColor SystemBackgroundColor { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("systemBackgroundColor")]
+		UIColor SystemBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'SecondarySystemBackground' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("secondarySystemBackgroundColor")]
 		UIColor SecondarySystemBackgroundColor { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("secondarySystemBackgroundColor")]
+		UIColor SecondarySystemBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'TertiarySystemBackground' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("tertiarySystemBackgroundColor")]
 		UIColor TertiarySystemBackgroundColor { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("tertiarySystemBackgroundColor")]
+		UIColor TertiarySystemBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemGroupedBackground' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("systemGroupedBackgroundColor")]
 		UIColor SystemGroupedBackgroundColor { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("systemGroupedBackgroundColor")]
+		UIColor SystemGroupedBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'SecondarySystemGroupedBackground' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("secondarySystemGroupedBackgroundColor")]
 		UIColor SecondarySystemGroupedBackgroundColor { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("secondarySystemGroupedBackgroundColor")]
+		UIColor SecondarySystemGroupedBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'TertiarySystemGroupedBackground' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("tertiarySystemGroupedBackgroundColor")]
 		UIColor TertiarySystemGroupedBackgroundColor { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("tertiarySystemGroupedBackgroundColor")]
+		UIColor TertiarySystemGroupedBackground { get; }
+
+#if !NET
+		[Obsolete ("Use 'SystemFill' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("systemFillColor")]
 		UIColor SystemFillColor { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("systemFillColor")]
+		UIColor SystemFill { get; }
+
+#if !NET
+		[Obsolete ("Use 'SecondarySystemFill' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("secondarySystemFillColor")]
 		UIColor SecondarySystemFillColor { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("secondarySystemFillColor")]
+		UIColor SecondarySystemFill { get; }
+
+#if !NET
+		[Obsolete ("Use 'TertiarySystemFill' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("tertiarySystemFillColor")]
 		UIColor TertiarySystemFillColor { get; }
+#endif
 
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("tertiarySystemFillColor")]
+		UIColor TertiarySystemFill { get; }
+
+#if !NET
+		[Obsolete ("Use 'QuaternarySystemFill' instead.")]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Static]
 		[Export ("quaternarySystemFillColor")]
 		UIColor QuaternarySystemFillColor { get; }
+#endif
+
+		[NoWatch, NoTV, iOS (13,0)]
+		[Static]
+		[Export ("quaternarySystemFillColor")]
+		UIColor QuaternarySystemFill { get; }
 
 		// UIColor (UIAccessibility) Category
 
@@ -5447,7 +5790,7 @@ namespace UIKit {
 		[Static]
 		[Internal] // bug https://xamarin.github.io/bugzilla-archives/25/25511/bug.html
 		[Export ("monospacedSystemFontOfSize:weight:")]
-		IntPtr _MonospacedSystemFontOfSize (nfloat fontSize, double weight);
+		IntPtr _MonospacedSystemFontOfSize (nfloat fontSize, nfloat weight);
 
 		[NoWatch][NoTV]
 		[Static] [Export ("labelFontSize")]
@@ -10433,6 +10776,7 @@ namespace UIKit {
 		CGPoint SnapPoint { get; set; }
 	}
 
+	[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 	[NoTV]
 	[BaseType (typeof (UIViewController))]
 	// iOS6 returns the following (confusing) message with the default .ctor:
@@ -10452,7 +10796,7 @@ namespace UIKit {
 	}
 
 	[BaseType (typeof (NSObject))]
-	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus, UIUserActivityRestoring
+	interface UIResponder : UIAccessibilityAction, UIAccessibilityFocus, UIUserActivityRestoring, UIResponderStandardEditActions
 #if !TVOS
 	, UIAccessibilityDragging
 #endif // !TVOS
@@ -10526,65 +10870,6 @@ namespace UIKit {
 
 		[Export ("remoteControlReceivedWithEvent:")]
 		void RemoteControlReceived  ([NullAllowed] UIEvent theEvent);
-
-		// From the informal protocol ( = category on NSObject) UIResponderStandardEditActions
-
-		[Export ("cut:")]
-		void Cut ([NullAllowed] NSObject sender);
-		
-		[Export ("copy:")]
-		void Copy ([NullAllowed] NSObject sender);
-		
-		[Export ("paste:")]
-		void Paste ([NullAllowed] NSObject sender);
-
-		[iOS (15,0), MacCatalyst (15,0)]
-		[Export ("pasteAndMatchStyle:")]
-		void PasteAndMatchStyle ([NullAllowed] NSObject sender);
-
-		[iOS (15,0), MacCatalyst (15,0)]
-		[Export ("pasteAndGo:")]
-		void PasteAndGo ([NullAllowed] NSObject sender);
-
-		[iOS (15,0), MacCatalyst (15,0)]
-		[Export ("pasteAndSearch:")]
-		void PasteAndSearch ([NullAllowed] NSObject sender);
-
-		[Export ("select:")]
-		void Select ([NullAllowed] NSObject sender);
-		
-		[Export ("selectAll:")]
-		void SelectAll ([NullAllowed] NSObject sender);
-		
-		[Export ("delete:")]
-		void Delete ([NullAllowed] NSObject sender);
-		
-		[Export ("makeTextWritingDirectionLeftToRight:")]
-		void MakeTextWritingDirectionLeftToRight ([NullAllowed] NSObject sender);
-	
-		[Export ("makeTextWritingDirectionRightToLeft:")]
-		void MakeTextWritingDirectionRightToLeft ([NullAllowed] NSObject sender);
-
-		[iOS (13,0), TV (13,0)]
-		[Export ("updateTextAttributesWithConversionHandler:")]
-		void UpdateTextAttributes (UITextAttributesConversionHandler conversionHandler);
-
-		[iOS (15,0), MacCatalyst (15,0)]
-		[Export ("print:")]
-		void Print ([NullAllowed] NSObject sender);
-
-		//
-		// 6.0
-		//
-
-		[Export ("toggleBoldface:")]
-		void ToggleBoldface ([NullAllowed] NSObject sender);
-
-		[Export ("toggleItalics:")]
-		void ToggleItalics ([NullAllowed] NSObject sender);
-
-		[Export ("toggleUnderline:")]
-		void ToggleUnderline ([NullAllowed] NSObject sender);
 
 		//
 		// 7.0
@@ -10685,6 +10970,69 @@ namespace UIKit {
 		NSTouchBar TouchBar { get; set; }
 	}
 	
+	[Protocol]
+	interface UIResponderStandardEditActions {
+		[Export ("cut:")]
+		void Cut ([NullAllowed] NSObject sender);
+
+		[Export ("copy:")]
+		void Copy ([NullAllowed] NSObject sender);
+
+		[Export ("paste:")]
+		void Paste ([NullAllowed] NSObject sender);
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("pasteAndMatchStyle:")]
+		void PasteAndMatchStyle ([NullAllowed] NSObject sender);
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("pasteAndGo:")]
+		void PasteAndGo ([NullAllowed] NSObject sender);
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("pasteAndSearch:")]
+		void PasteAndSearch ([NullAllowed] NSObject sender);
+
+		[Export ("select:")]
+		void Select ([NullAllowed] NSObject sender);
+
+		[Export ("selectAll:")]
+		void SelectAll ([NullAllowed] NSObject sender);
+
+		[Export ("delete:")]
+		void Delete ([NullAllowed] NSObject sender);
+
+		[Export ("makeTextWritingDirectionLeftToRight:")]
+		void MakeTextWritingDirectionLeftToRight ([NullAllowed] NSObject sender);
+
+		[Export ("makeTextWritingDirectionRightToLeft:")]
+		void MakeTextWritingDirectionRightToLeft ([NullAllowed] NSObject sender);
+
+		[Export ("toggleBoldface:")]
+		void ToggleBoldface ([NullAllowed] NSObject sender);
+
+		[Export ("toggleItalics:")]
+		void ToggleItalics ([NullAllowed] NSObject sender);
+
+		[Export ("toggleUnderline:")]
+		void ToggleUnderline ([NullAllowed] NSObject sender);
+
+		[Export ("decreaseSize:")]
+		void DecreaseSize ([NullAllowed] NSObject sender);
+
+		[Export ("increaseSize:")]
+		void IncreaseSize ([NullAllowed] NSObject sender);
+
+		[iOS (13,0), TV (13,0)]
+		[Export ("updateTextAttributesWithConversionHandler:")]
+		void UpdateTextAttributes (UITextAttributesConversionHandler conversionHandler);
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("print:")]
+		void Print ([NullAllowed] NSObject sender);
+	}
+
+#if !NET // These two methods are in the UIResponderStandardEditActions protocol
 	[Category, BaseType (typeof (UIResponder))]
 	interface UIResponder_NSObjectExtension {
 		[Export ("decreaseSize:")]
@@ -10693,6 +11041,7 @@ namespace UIKit {
 		[Export ("increaseSize:")]
 		void IncreaseSize ([NullAllowed] NSObject sender);
 	}
+#endif
 	
 	[BaseType (typeof (NSObject))]
 	interface UIScreen : UITraitEnvironment {
@@ -17256,6 +17605,7 @@ namespace UIKit {
 		UIEdgeInsets PerPageContentInsets { get; set; }
 	}
 
+	[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 	[NoTV]
 	[BaseType (typeof (UIPrintFormatter))]
 	[DisableDefaultCtor] // nonfunctional (and it doesn't show up in the header anyway)

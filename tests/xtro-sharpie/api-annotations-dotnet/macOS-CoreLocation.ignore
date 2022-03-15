@@ -2,5 +2,3 @@
 !missing-protocol-member! CLLocationManagerDelegate::locationManager:didRangeBeacons:inRegion: not found
 !missing-protocol-member! CLLocationManagerDelegate::locationManager:rangingBeaconsDidFailForRegion:withError: not found
 !missing-selector! CLBeaconRegion::initWithUUID:identifier: not bound
-
-# Fixed in XAMCORE_4_0

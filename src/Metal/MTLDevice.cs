@@ -10,7 +10,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -27,8 +26,12 @@ namespace Metal {
 	public delegate void MTLDeviceNotificationHandler (IMTLDevice device, NSString notifyName);
 #endif
 
-#if !NET
-	[iOS (8,0)][Mac (10,11)]
+#if NET
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("macos10.11")]
+#else
+	[iOS (8,0)]
+	[Mac (10,11)]
 #endif
 	public static partial class MTLDevice {
 		[DllImport (Constants.MetalLibrary)]
@@ -57,18 +60,22 @@ namespace Metal {
 		
 #if MONOMAC || __MACCATALYST__
 
-#if !NET
-		[MacCatalyst (15,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[MacCatalyst (15,0)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		unsafe static extern IntPtr MTLCopyAllDevices ();
 
-#if !NET
-		[MacCatalyst (15,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.11")]
+#else
+		[MacCatalyst (15,0)]
 #endif
 		public static IMTLDevice [] GetAllDevices ()
 		{
@@ -82,13 +89,19 @@ namespace Metal {
 		
 #if MONOMAC
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		static extern IntPtr MTLCopyAllDevicesWithObserver (out IntPtr observer, ref BlockLiteral handler);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10, 13)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -111,7 +124,6 @@ namespace Metal {
 
 #if !NET
 		[Mac (10, 13)]
-#endif
 		[Obsolete ("Use the overload that takes an 'out NSObject' instead.")]
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IMTLDevice [] GetAllDevices (ref NSObject? observer, MTLDeviceNotificationHandler handler)
@@ -120,6 +132,7 @@ namespace Metal {
 			observer = obs;
 			return rv;
 		}
+#endif // !NET
 
 		internal delegate void InnerNotification (IntPtr block, IntPtr device, IntPtr notifyName);
 		static readonly InnerNotification static_notificationHandler = TrampolineNotificationHandler;
@@ -132,14 +145,24 @@ namespace Metal {
 				del ((IMTLDevice) Runtime.GetNSObject (device)!, (Foundation.NSString) Runtime.GetNSObject (notifyName)!);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios8.0")]
+#else
 		[Mac (10, 13)]
 #endif
 		[DllImport (Constants.MetalLibrary)]
 		static extern void MTLRemoveDeviceObserver (IntPtr observer);
 
-#if !NET
-		[Mac (10, 13), NoiOS, NoWatch, NoTV]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10, 13)]
+		[NoiOS]
+		[NoWatch]
+		[NoTV]
 #endif
 		public static void RemoveObserver (NSObject observer)
 		{
@@ -200,10 +223,12 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoMac, NoTV, iOS (13,0)]
+		[NoMac]
+		[NoTV]
+		[iOS (13,0)]
 #endif
 		public static void ConvertSparseTileRegions (this IMTLDevice This, MTLRegion [] tileRegions, MTLRegion [] pixelRegions, MTLSize tileSize, nuint numRegions)
 		{
@@ -226,10 +251,12 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
-		[NoMac, NoTV, iOS (13,0)]
+		[NoMac]
+		[NoTV]
+		[iOS (13,0)]
 #endif
 		public static void ConvertSparsePixelRegions (this IMTLDevice This, MTLRegion [] pixelRegions, MTLRegion [] tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions)
 		{

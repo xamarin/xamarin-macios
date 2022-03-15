@@ -7,6 +7,9 @@
 	<ItemGroup>
 		<ObjcBindingApiDefinition Include="ApiDefinition.cs" />
 		<ObjcBindingCoreSource Include="StructsAndEnums.cs" />
+		<NativeReference Include="..\..\..\test-libraries\.libs\XTest.xcframework">
+			<Kind>Framework</Kind>
+		</NativeReference>
 	</ItemGroup>
 
 	<Import Project="../../common/shared-dotnet.csproj" />

@@ -46,7 +46,7 @@ namespace MonoTouchFixtures.Metal {
 			encoder = null;
 		}
 
-#if XAMCORE_4_0
+#if NET
 		[Test]
 		public void SetBuffers ()
 		{

@@ -1,82 +1,70 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class DSymUtilTaskBase : XamarinToolTask
+	public abstract class DSymUtilTaskBase : XamarinTask
 	{
 		#region Inputs
 
-		[Required]
-		public string AppBundleDir { get; set; }
-
-		public string Architectures { get; set; }
-
-		[Required]
-		public string DSymDir { get; set; }
+		// This can also be specified as metadata on the Executable item (as 'DSymDir')
+		public string DSymDir { get; set; } = string.Empty;
 
 		[Output]
 		[Required]
-		public ITaskItem Executable { get; set; }
+		public ITaskItem [] Executable { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
 		#region Outputs
 
+		// This property is required for XVS to work properly, even though it's not used for anything in the targets.
 		[Output]
-		public ITaskItem[] DsymContentFiles { get; set; }
+		public ITaskItem[] DsymContentFiles { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 
-		protected override string ToolName {
-			get { return "dsymutil"; }
-		}
-
 		public override bool Execute ()
 		{
-			var result = base.Execute ();
+			var contentFiles = new List<ITaskItem> ();
 
-			var contentsDir = Path.Combine (DSymDir, "Contents");
-			if (Directory.Exists(contentsDir))
-				DsymContentFiles = Directory.EnumerateFiles (contentsDir).Select (x => new TaskItem (x)).ToArray ();
+			// We're not executing multiple dsymutil processes in parallel, because
+			// we're asking dsymutil to do parallel processing (we're passing '-num-threads 4' to dsymutil)
+			foreach (var item in Executable) {
+				ExecuteDSymUtil (item, contentFiles);
+			}
 
-			return result;
+			DsymContentFiles = contentFiles.ToArray ();
+
+			return !Log.HasLoggedErrors;
 		}
 
-		protected override string GenerateFullPathToTool ()
+		void ExecuteDSymUtil (ITaskItem item, List<ITaskItem> contentFiles)
 		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
+			var dSymDir = GetNonEmptyStringOrFallback (item, "DSymDir", DSymDir, required: true);
 
-			var path = Path.Combine (AppleSdkSettings.DeveloperRoot, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", ToolExe);
+			var args = new List<string> ();
 
-			return File.Exists (path) ? path : ToolExe;
-		}
+			args.Add ("dsymutil");
+			args.Add ("-num-threads");
+			args.Add ("4");
+			args.Add ("-z");
+			args.Add ("-o");
+			args.Add (dSymDir);
 
-		protected override string GenerateCommandLineCommands ()
-		{
-			var args = new CommandLineBuilder ();
+			args.Add (Path.GetFullPath (item.ItemSpec));
+			ExecuteAsync ("xcrun", args).Wait ();
 
-			args.AppendSwitch ("-num-threads");
-			args.AppendSwitch ("4");
-			args.AppendSwitch ("-z");
-			args.AppendSwitch ("-o");
-			args.AppendFileNameIfNotNull (DSymDir);
-			args.AppendFileNameIfNotNull (Executable.ItemSpec);
-
-			return args.ToString ();
-		}
-
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
-		{
-			if (singleLine.StartsWith ("warning:", StringComparison.Ordinal))
-				Log.LogWarning (singleLine);
-			else
-				Log.LogMessage (messageImportance, singleLine);
+			var contentsDir = Path.Combine (dSymDir, "Contents");
+			if (Directory.Exists (contentsDir))
+				contentFiles.AddRange (Directory.EnumerateFiles (contentsDir).Select (x => new TaskItem (x)).ToArray ());
 		}
 	}
 }

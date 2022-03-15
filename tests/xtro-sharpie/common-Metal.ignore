@@ -1,4 +1,4 @@
-## new Apple abstract member (breaking change) fixed in XAMCORE_4_0
+## new Apple abstract member (breaking change) fixed in .NET
 !incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
 
 # fixed in XAMCORE_3_0 - API break
@@ -11,7 +11,7 @@
 !incorrect-protocol-member! MTLRenderCommandEncoder::setStencilFrontReferenceValue:backReferenceValue: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::newTextureViewWithPixelFormat:textureType:levels:slices: is REQUIRED and should be abstract
 
-# fixed in XAMCORE_4_0 - API Break
+# fixed in .NET - API Break
 !incorrect-protocol-member! MTLBlitCommandEncoder::updateFence: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::waitForFence: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLCommandBuffer::GPUEndTime is REQUIRED and should be abstract

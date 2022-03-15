@@ -1,4 +1,4 @@
-## XAMCORE_4_0 - not exposed in any API (and now excluded in Xcode11)
+## .NET - not exposed in any API (and now excluded in Xcode11)
 !unknown-native-enum! GKPeerPickerConnectionType bound
 
 # API removed by Apple, marked as deprecated

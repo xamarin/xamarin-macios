@@ -10,6 +10,8 @@
 		<AppManifestDetectionEnabled>false</AppManifestDetectionEnabled>
 
 		<RootTestsDirectory Condition="'$(RootTestsDirectory)' == ''">$(MSBuildThisFileDirectory)/../..</RootTestsDirectory>
+		<!-- disable IL stripping, because some of our assemblies aren't actually assemblies, they're just placeholder files -->
+		<EnableAssemblyILStripping>false</EnableAssemblyILStripping>
 	</PropertyGroup>
 
 	<Import Project="../../common/shared-dotnet.csproj" />
@@ -96,6 +98,11 @@
 			<!-- Not bundled; warning -->
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+
+		<None Include="$(RootTestsDirectory)/test-libraries/libraries/.libs/$(RuntimeIdentifier)/libSkipInstallNameTool.dylib">
+			<!-- Bundled, linked with, install_name_tool must have been executed -->
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -137,15 +144,37 @@
 
 		<!-- Content items -->
 
-		<!-- Content without any metadata -->
+		<!-- Content without any metadata: bundled -->
 		<Content Include="../ContentA.txt" />
-		<!-- Content with CopyToOutputDirectory -->
+		<!-- Content with CopyToOutputDirectory: bundled -->
 		<Content Include="../ContentB.txt">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<!-- Content with CopyToPublishDirectory -->
+		<!-- Content with CopyToPublishDirectory: bundled -->
 		<Content Include="../ContentC.txt">
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+		<!-- Content with CopyToPublishDirectory=Never: still bundled -->
+		<Content Include="../ContentD.txt">
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</Content>
+		<!-- Content with CopyToOutputDirectory=Never: still bundled -->
+		<Content Include="../ContentE.txt">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</Content>
+		<!-- Content with CopyToOutputDirectory and PublishFolderType=None: not bundled -->
+		<Content Include="../ContentF.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</Content>
+		<!-- Content with CopyToPublishDirectory and PublishFolderType=None: not bundled -->
+		<Content Include="../ContentG.txt">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</Content>
+		<!-- Content with just PublishFolderType=None: not bundled -->
+		<Content Include="../ContentH.txt">
+			<PublishFolderType>None</PublishFolderType>
 		</Content>
 
 		<!-- EmbeddedResource items -->
@@ -160,6 +189,28 @@
 		<EmbeddedResource Include="EmbeddedResourceC.txt">
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 		</EmbeddedResource>
+		<!-- EmbeddedResource with CopyToPublishDirectory=Never: not bundled -->
+		<EmbeddedResource Include="../EmbeddedResourceD.txt">
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</EmbeddedResource>
+		<!-- EmbeddedResource with CopyToOutputDirectory=Never: not bundled -->
+		<EmbeddedResource Include="../EmbeddedResourceE.txt">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</EmbeddedResource>
+		<!-- EmbeddedResource with CopyToOutputDirectory and PublishFolderType=None: not bundled -->
+		<EmbeddedResource Include="../EmbeddedResourceF.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</EmbeddedResource>
+		<!-- EmbeddedResource with CopyToPublishDirectory and PublishFolderType=None: not bundled -->
+		<EmbeddedResource Include="../EmbeddedResourceG.txt">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</EmbeddedResource>
+		<!-- EmbeddedResource with just PublishFolderType=None: not bundled -->
+		<EmbeddedResource Include="../EmbeddedResourceH.txt">
+			<PublishFolderType>None</PublishFolderType>
+		</EmbeddedResource>
 
 		<!-- BundleResource items -->
 
@@ -172,6 +223,28 @@
 		<!-- Content with CopyToPublishDirectory: bundled -->
 		<BundleResource Include="../BundleResourceC.txt">
 			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</BundleResource>
+		<!-- BundleResource with CopyToPublishDirectory=Never: still bundled -->
+		<BundleResource Include="../BundleResourceD.txt">
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</BundleResource>
+		<!-- BundleResource with CopyToOutputDirectory=Never: still bundled -->
+		<BundleResource Include="../BundleResourceE.txt">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</BundleResource>
+		<!-- BundleResource with CopyToOutputDirectory and PublishFolderType=None: not bundled -->
+		<BundleResource Include="../BundleResourceF.txt">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</BundleResource>
+		<!-- BundleResource with CopyToPublishDirectory and PublishFolderType=None: not bundled -->
+		<BundleResource Include="../BundleResourceG.txt">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+			<PublishFolderType>None</PublishFolderType>
+		</BundleResource>
+		<!-- BundleResource with just PublishFolderType=None: not bundled -->
+		<BundleResource Include="../BundleResourceH.txt">
+			<PublishFolderType>None</PublishFolderType>
 		</BundleResource>
 
 		<None Remove="@(Content)" />
@@ -218,4 +291,17 @@
 		<ProjectReference Include="$(RootTestsDirectory)/bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" />
 	</ItemGroup>
 
+	<!-- Adding resources using a custom target -->
+	<PropertyGroup>
+		<CollectBundleResourcesDependsOn>
+			$(CollectBundleResourcesDependsOn);
+			AddBundleResources;
+		</CollectBundleResourcesDependsOn>
+	</PropertyGroup>
+	<Target Name="AddBundleResources">
+		<ItemGroup>
+			<Content Include="../ContentI.txt" />
+			<BundleResource Include="../BundleResourceI.txt" />
+		</ItemGroup>
+	</Target>
 </Project>

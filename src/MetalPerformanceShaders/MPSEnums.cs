@@ -5,9 +5,6 @@ using Foundation;
 using ObjCRuntime;
 using Metal;
 
-using Vector4 = global::OpenTK.Vector4;
-using OpenTK;
-
 namespace MetalPerformanceShaders {
 
 	[iOS (9,0)][Mac (10, 13)][Introduced (PlatformName.MacCatalyst, 13, 0)]

@@ -38,6 +38,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string Optimize { get; set; }
 
 		[Output]
+		public string PackageDebugSymbols { get; set; }
+
+		[Output]
 		public string Registrar { get; set; }
 
 		// This is input too
@@ -134,6 +137,9 @@ namespace Xamarin.MacDev.Tasks {
 						if (!string.IsNullOrEmpty (Optimize))
 							Optimize += ",";
 						Optimize += value;
+						break;
+					case "package-debug-symbols":
+						PackageDebugSymbols = string.IsNullOrEmpty (value) ? "true" : value;
 						break;
 					case "registrar":
 						value = hasValue ? value : nextValue; // requires a value, which might be the next option

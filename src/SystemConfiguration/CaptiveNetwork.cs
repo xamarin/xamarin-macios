@@ -11,7 +11,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -63,6 +62,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 #endif
@@ -72,6 +74,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0)]
 #endif
@@ -98,6 +103,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0 use 'NEHotspotNetwork.FetchCurrent' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'NEHotspotNetwork.FetchCurrent' instead.")]
 #endif
@@ -116,6 +124,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -125,6 +136,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -134,6 +148,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -146,6 +163,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -158,6 +178,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif
@@ -167,6 +190,9 @@ namespace SystemConfiguration {
 
 #if NET
 		[UnsupportedOSPlatform ("ios9.0")]
+#if IOS
+		[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 #endif

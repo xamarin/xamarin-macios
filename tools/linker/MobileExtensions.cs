@@ -132,7 +132,7 @@ namespace Xamarin.Linker {
 			if (IsBindingImplOptimizableCode (self, link_context))
 				return true;
 
-			if (!Driver.IsXAMCORE_4_0 && IsGeneratedCode (self, link_context))
+			if (IsGeneratedCode (self, link_context))
 				return true;
 
 			return false;

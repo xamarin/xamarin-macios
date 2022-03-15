@@ -18,8 +18,13 @@ using NUnit.Framework;
 using ObjCRuntime;
 using Xamarin.Utils;
 
+#if NET
+using VectorFloat2 = global::System.Numerics.Vector2;
+using VectorFloat3 = global::CoreGraphics.NVector3;
+#else
 using VectorFloat2 = global::OpenTK.Vector2;
 using VectorFloat3 = global::OpenTK.NVector3;
+#endif
 
 namespace MonoTouchFixtures.ARKit {
 

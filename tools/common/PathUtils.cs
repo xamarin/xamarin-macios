@@ -227,5 +227,14 @@ namespace Xamarin.Utils
 
 			return false;
 		}
+
+		// Replace any windows-style slashes with mac-style slashes.
+		public static string ConvertToMacPath (string path)
+		{
+			if (string.IsNullOrEmpty (path))
+				return path;
+
+			return path.Replace ('\\', '/');
+		}
 	}
 }

@@ -2216,7 +2216,11 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 	}
 
 	if (mode == MarshalObjectiveCExceptionModeDefault)
+#if DOTNET
+		mode = MarshalObjectiveCExceptionModeThrowManagedException;
+#else
 		mode = xamarin_is_gc_coop ? MarshalObjectiveCExceptionModeThrowManagedException : MarshalObjectiveCExceptionModeUnwindManagedCode;
+#endif
 	
 	xamarin_log_objectivec_exception (ns_exception, mode);
 
@@ -2286,7 +2290,7 @@ xamarin_process_managed_exception (MonoObject *exception)
 	}
 
 	if (mode == MarshalManagedExceptionModeDefault) {
-#if defined (CORECLR_RUNTIME)
+#if DOTNET
 		mode = MarshalManagedExceptionModeThrowObjectiveCException;
 #else
 		mode = xamarin_is_gc_coop ? MarshalManagedExceptionModeThrowObjectiveCException : MarshalManagedExceptionModeUnwindNativeCode;
@@ -3169,6 +3173,18 @@ xamarin_is_managed_exception_marshaling_disabled ()
 	return false;
 #endif
 }
+
+#if DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)
+int
+xamarin_get_runtime_arch ()
+{
+	#if TARGET_OS_SIMULATOR
+		return 1;
+	#else
+		return 0;
+	#endif
+}
+#endif // DOTNET && (TARGET_OS_IOS || TARGET_OS_TV || TARGET_OS_WATCH)
 
 /*
  * XamarinGCHandle

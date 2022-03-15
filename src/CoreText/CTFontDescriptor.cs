@@ -33,7 +33,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -86,8 +85,8 @@ namespace CoreText {
 		FailedWithError
 	}
 	
+#if !NET
 	public static class CTFontDescriptorAttributeKey {
-
 		public static readonly NSString Url;
 		public static readonly NSString Name;
 		public static readonly NSString DisplayName;
@@ -138,6 +137,7 @@ namespace CoreText {
 			Enabled             = Dlfcn.GetStringConstant (handle, "kCTFontEnabledAttribute")!;
 		}
 	}
+#endif // !NET
 
 	public class CTFontDescriptorAttributes {
 
@@ -696,7 +696,9 @@ namespace CoreText {
 			return o;
 		}
 #endregion
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+#else
 		[Mac (10,9)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
@@ -704,7 +706,9 @@ namespace CoreText {
 		static extern bool CTFontDescriptorMatchFontDescriptorsWithProgressHandler (IntPtr descriptors, IntPtr mandatoryAttributes,
 			Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+#else
 		[Mac (10,9)]
 #endif
 		public static bool MatchFontDescriptors (CTFontDescriptor[] descriptors, NSSet mandatoryAttributes, Func<CTFontDescriptorMatchingState, IntPtr, bool> progressHandler)

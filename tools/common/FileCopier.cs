@@ -65,17 +65,62 @@ namespace Xamarin.Bundler {
 		static extern int copyfile (string @from, string @to, IntPtr state, CopyFileFlags flags);
 
 		// This code is shared between our packaging tools (mmp\mtouch) and msbuild tasks
-#if MMP || MTOUCH
-		public static void Log (int min_verbosity, string format, params object[] args) => Driver.Log (min_verbosity, format, args);
-		public static Exception CreateError (int code, string message, params object[] args) => ErrorHelper.CreateError (code, message, args);
-#else
-		// LogMessage and LogError are instance objects on the tasks themselves and bubbling an event up is not ideal
-		// msbuild handles uncaught exceptions as a task error
-		public static void Log (int min_verbosity, string format, params object[] args) => Console.WriteLine (format, args);
-		public static Exception CreateError (int code, string message, params object[] args) => throw new Exception ($"{code} {string.Format (message, args)}");
-#endif
+		public delegate void LogCallback (int verbosity, string format, params object [] arguments);
+		public delegate void ReportErrorCallback (int code, string format, params object [] arguments);
 
+		[ThreadStatic]
+		static LogCallback logCallback;
+
+		[ThreadStatic]
+		static ReportErrorCallback reportErrorCallback;
+
+		static void Log (int min_verbosity, string format, params object[] arguments)
+		{
+			if (logCallback is not null) {
+				logCallback (min_verbosity, format, arguments);
+				return;
+			}
+
+#if MMP || MTOUCH || BUNDLER
+			// LogMessage and LogError are instance objects on the tasks themselves and bubbling an event up is not ideal
+			Driver.Log (min_verbosity, format, arguments);
+#else
+			Console.WriteLine (format, arguments);
+#endif
+		}
+
+		static void ReportError (int code, string format, params object[] arguments)
+		{
+			if (reportErrorCallback is not null) {
+				reportErrorCallback (code, format, arguments);
+				return;
+			}
+
+#if MMP || MTOUCH || BUNDLER
+			throw ErrorHelper.CreateError (code, format, arguments);
+#else
+			// msbuild handles uncaught exceptions as a task error
+			throw new Exception ($"{code} {string.Format (format, arguments)}");
+#endif
+		}
+
+		public static void UpdateDirectory (string source, string target, ReportErrorCallback reportErrorCallback, LogCallback logCallback)
+		{
+			try {
+				FileCopier.reportErrorCallback = reportErrorCallback;
+				FileCopier.logCallback = logCallback;
+				UpdateDirectory (source, target);
+			} finally {
+				FileCopier.reportErrorCallback = null;
+				FileCopier.logCallback = null;
+			}
+		}
+
+#if MMP || MTOUCH || BUNDLER
 		public static void UpdateDirectory (string source, string target)
+#else
+		static void UpdateDirectory (string source, string target)
+#endif
 		{
 			// first chance, try to update existing content inside `target`
 			if (TryUpdateDirectory (source, target, out var err))
@@ -85,7 +130,7 @@ namespace Xamarin.Bundler {
 			Log (1, "Could not update `{0}` content (error #{1} : {2}), trying to overwrite everything...", target, err, strerror (err));
 			Directory.Delete (target, true);
 			if (!TryUpdateDirectory (source, target, out err))
-				throw CreateError (1022, Errors.MT1022, source, target, err, strerror (err));
+				ReportError (1022, Errors.MT1022, source, target, err, strerror (err));
 		}
 
 		static bool TryUpdateDirectory (string source, string target, out int errno)
@@ -149,15 +194,31 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		public static bool IsUptodate (string source, string target, ReportErrorCallback reportErrorCallback, LogCallback logCallback, bool check_contents = false, bool check_stamp = true)
+		{
+			try {
+				FileCopier.reportErrorCallback = reportErrorCallback;
+				FileCopier.logCallback = logCallback;
+				return IsUptodate (source, target, check_contents, check_stamp);
+			} finally {
+				FileCopier.reportErrorCallback = null;
+				FileCopier.logCallback = null;
+			}
+		}
+
 		// Checks if the source file has a time stamp later than the target file.
 		//
 		// Optionally check if the contents of the files are different after checking the timestamp.
 		//
 		// If check_stamp is true, the function will use the timestamp of a "target".stamp file
 		// if it's later than the timestamp of the "target" file itself.
+#if MMP || MTOUCH || BUNDLER
 		public static bool IsUptodate (string source, string target, bool check_contents = false, bool check_stamp = true)
+#else
+		static bool IsUptodate (string source, string target, bool check_contents = false, bool check_stamp = true)
+#endif
 		{
-#if MMP || MTOUCH	// msbuild does not have force
+#if MMP || MTOUCH || BUNDLER	// msbuild does not have force
 			if (Driver.Force)
 				return false;
 #endif
@@ -184,7 +245,7 @@ namespace Xamarin.Bundler {
 				return true;
 			}
 
-#if MMP || MTOUCH	// msbuild usages do not require CompareFiles optimization
+#if MMP || MTOUCH || BUNDLER	// msbuild usages do not require CompareFiles optimization
 			if (check_contents && Cache.CompareFiles (source, target)) {
 				Log (3, "Prerequisite '{0}' is newer than the target '{1}', but the contents are identical.", source, target);
 				return true;
@@ -198,13 +259,29 @@ namespace Xamarin.Bundler {
 			return false;
 		}
 		
+		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, ReportErrorCallback reportErrorCallback, LogCallback logCallback, bool check_stamp = true)
+		{
+			try {
+				FileCopier.reportErrorCallback = reportErrorCallback;
+				FileCopier.logCallback = logCallback;
+				return IsUptodate (sources, targets, check_stamp);
+			} finally {
+				FileCopier.reportErrorCallback = null;
+				FileCopier.logCallback = null;
+			}
+		}
+
 		// Checks if any of the source files have a time stamp later than any of the target files.
 		//
 		// If check_stamp is true, the function will use the timestamp of a "target".stamp file
 		// if it's later than the timestamp of the "target" file itself.
+#if MMP || MTOUCH || BUNDLER
 		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, bool check_stamp = true)
+#else
+		static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, bool check_stamp = true)
+#endif
 		{
-#if MMP || MTOUCH  // msbuild does not have force
+#if MMP || MTOUCH || BUNDLER  // msbuild does not have force
 			if (Driver.Force)
 				return false;
 #endif

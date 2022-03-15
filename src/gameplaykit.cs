@@ -13,13 +13,22 @@ using ObjCRuntime;
 using Foundation;
 using SpriteKit;
 using SceneKit;
-using Vector2 = global::OpenTK.Vector2;
-using Vector2d = global::OpenTK.Vector2d;
-using Vector2i = global::OpenTK.Vector2i;
-using Vector3 = global::OpenTK.Vector3;
-using Vector3d = global::OpenTK.Vector3d;
+#if NET
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector2d = global::CoreGraphics.NVector2d;
+using Vector2i = global::CoreGraphics.NVector2i;
+using Vector3d = global::CoreGraphics.NVector3d;
+#else
 using Matrix3 = global::OpenTK.Matrix3;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
+using Vector2 = global::OpenTK.Vector2;
+using Vector3 = global::OpenTK.Vector3;
+using Vector2d = global::OpenTK.Vector2d;
+using Vector2i = global::OpenTK.Vector2i;
+using Vector3d = global::OpenTK.Vector3d;
+#endif
 
 #if MONOMAC
 using SKColor = AppKit.NSColor;

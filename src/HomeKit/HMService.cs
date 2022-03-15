@@ -1,11 +1,15 @@
 using System;
 using System.Threading.Tasks;
+
 using ObjCRuntime;
 using Foundation;
 
 namespace HomeKit {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("ios8.0")]
+#else
 	[TV (10,0)]
 	[iOS (8,0)]
 #endif

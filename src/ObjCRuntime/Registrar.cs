@@ -89,9 +89,9 @@ namespace Registrar {
 #endif
 
 #if MMP || MTOUCH || BUNDLER
-		static string NFloatTypeName { get => Driver.IsDotNet ? "ObjCRuntime.nfloat" : "System.nfloat"; }
+		static string NFloatTypeName { get => Driver.IsDotNet ? "System.Runtime.InteropServices.NFloat" : "System.nfloat"; }
 #elif NET
-		const string NFloatTypeName = "ObjCRuntime.nfloat";
+		const string NFloatTypeName = "System.Runtime.InteropServices.NFloat";
 #else
 		const string NFloatTypeName = "System.nfloat";
 #endif
@@ -1284,30 +1284,50 @@ namespace Registrar {
 			get {
 				switch (App.Platform) {
 				case ApplePlatform.iOS:
-					return "Xamarin.iOS";
+					return Driver.IsDotNet ? "Microsoft.iOS" : "Xamarin.iOS";
 				case ApplePlatform.WatchOS:
-					return "Xamarin.WatchOS";
+					return Driver.IsDotNet ? "Microsoft.watchOS" : "Xamarin.WatchOS";
 				case ApplePlatform.TVOS:
-					return "Xamarin.TVOS";
+					return Driver.IsDotNet ? "Microsoft.tvOS" : "Xamarin.TVOS";
 				case ApplePlatform.MacOSX:
-					return "Xamarin.Mac";
+					return Driver.IsDotNet ? "Microsoft.macOS" : "Xamarin.Mac";
 				case ApplePlatform.MacCatalyst:
-					return "Xamarin.MacCatalyst";
+					return Driver.IsDotNet ? "Microsoft.MacCatalyst" : "Xamarin.MacCatalyst";
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
 			}
 		}
 #elif MONOMAC
+#if NET
+		internal const string AssemblyName = "Microsoft.macOS";
+#else
 		internal const string AssemblyName = "Xamarin.Mac";
+#endif
 #elif WATCH
+#if NET
+		internal const string AssemblyName = "Microsoft.watchOS";
+#else
 		internal const string AssemblyName = "Xamarin.WatchOS";
+#endif
 #elif TVOS
+#if NET
+		internal const string AssemblyName = "Microsoft.tvOS";
+#else
 		internal const string AssemblyName = "Xamarin.TVOS";
+#endif
 #elif __MACCATALYST__
+#if NET
+		internal const string AssemblyName = "Microsoft.MacCatalyst";
+#else
 		internal const string AssemblyName = "Xamarin.MacCatalyst";
+#endif
 #elif IOS
+#if NET
+		internal const string AssemblyName = "Microsoft.iOS";
+#else
 		internal const string AssemblyName = "Xamarin.iOS";
+#endif
 #else
 #error Unknown platform
 #endif
@@ -2731,7 +2751,7 @@ namespace Registrar {
 			// we'll end up crashing/infinite recursion since Console.WriteLine is redirected
 			// to NSLog and is using NSString (and we haven't necessarily finished registering
 			// everything yet).
-			R.NSLog (message, args);
+			R.NSLog (String.Format (message, args));
 		}
 
 		protected virtual void ReportWarning (int code, string message, params object[] args)

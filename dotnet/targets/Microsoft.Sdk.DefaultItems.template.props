@@ -81,7 +81,19 @@
 
 	<!-- Default font files inclusion -->
 	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true'">
-		<BundleResource Include="$(_ResourcePrefix)\**\*.ttf;$(_ResourcePrefix)\**\*.otf;$(_ResourcePrefix)\**\*.ttc" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
+		<!-- Include everything in the project's Resources folder (as represented by the _ResourcePrefix property, which is set from the IPhoneResourcePrefix/XamMacResourcePrefix properties),
+		     except for files that are already in any of the other resource type item groups -->
+		<BundleResource Include="$(_ResourcePrefix)\**\*" Exclude="
+			$(DefaultItemExcludes);
+			$(DefaultExcludesInProjectFolder);
+			$(_ResourcePrefix)\**\*.xcassets\**\*.*;
+			$(_ResourcePrefix)\**\*.storyboard;**\*.xib;
+			$(_ResourcePrefix)\**\*.atlas\*.png;
+			$(_ResourcePrefix)\**\*.mlmodel;
+			$(_ResourcePrefix)\**\*.metal;
+			$(_ResourcePrefix)\**\*.scnassets\*;
+			$(_ResourcePrefix)\**\*.DS_Store;
+			" Condition="'$(_ResourcePrefix)' != ''" >
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
 		</BundleResource>

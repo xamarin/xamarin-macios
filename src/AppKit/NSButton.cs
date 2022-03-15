@@ -31,7 +31,6 @@
 using System;
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace AppKit {
 

@@ -3,6 +3,10 @@ parameters:
   type: boolean
   default: false
 
+- name: sbomFilter
+  type: string
+  default: '*'            # Supports multiple filters separated by semi-colon such as *.msi;*.nupkg
+
 steps:
 
 - checkout: self
@@ -19,7 +23,7 @@ steps:
 
 - powershell : |
     $packagePrefix = "https://bosstoragemirror.blob.core.windows.net/wrench/$Env:VIRTUAL_PATH/package"
-    $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\artifacts\package" -File -Force -Name 
+    $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\artifacts\package" -File -Force -Name
     $manifestFile = "$(Build.SourcesDirectory)\artifacts\package\manifest"
     foreach ($f in $files) {
       Add-Content -Path "$manifestFile" -Value "$packagePrefix/$f"
@@ -94,7 +98,7 @@ steps:
 
     $maciosPath="$Env:BUILD_SOURCESDIRECTORY"
 
-    Write-Host "Exect path is $execPath" 
+    Write-Host "Exect path is $execPath"
     Write-Host "Macios path is $maciosPath"
     Write-Host "$Env:VIRTUAL_PATH"
     Write-Host "Artifacts url wrench/$Env:VIRTUAL_PATH/package"
@@ -106,7 +110,7 @@ steps:
     STORAGE_PASS: $(auth-xamarin-bosstoragemirror-account-key)
   displayName: 'Generate artifacts.json'
 
-# upload the artifacts.json to the build pipeline artifacts so that it can be consumed by other jobs to 
+# upload the artifacts.json to the build pipeline artifacts so that it can be consumed by other jobs to
 # get the required urls
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Build Artifacts'
@@ -116,7 +120,6 @@ steps:
   continueOnError: true
 
 - powershell: |
-
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\GitHub.psm1
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\VSTS.psm1
 
@@ -189,7 +192,7 @@ steps:
     }
     if ($Env:ENABLE_DOTNET -eq "True" -and  $Env:SkipNugets -ne "True") {
       $nugets = Get-ChildItem -Path $pkgsPath -Filter *.nupkg -File -Name
-      Write-Host $nugets 
+      Write-Host $nugets
       Write-Host "nuget count is $($nugets.Count)"
 
       if ($nugets.Count -gt 0) {
@@ -202,7 +205,7 @@ steps:
           Set-GitHubStatus -Status "error" -Description "Error when publishing nugets." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
         }
       } else {
-        Write-Host "Setting nuget status to failure." 
+        Write-Host "Setting nuget status to failure."
         Set-GitHubStatus -Status "error" -Description "No nugets were built." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets built)"
         Set-GitHubStatus -Status "error" -Description "No nugets were published." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
       }
@@ -214,6 +217,9 @@ steps:
     foreach ($n in $msi) {
       Set-GitHubStatus -Status "success" -Description "$n" -TargetUrl "$pkgsVirtualUrl/$n" -Context "$n"
     }
+
+    Write-Host "Setting SBOM.PackagesPath: ${pkgsPath}"
+    Write-Host "##vso[task.setvariable variable=SBOM.PackagesPath]$pkgsPath"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
@@ -222,3 +228,112 @@ steps:
     ${{ if eq(parameters.enableDotnet, true) }}:
       ENABLE_DOTNET: "True"
   displayName: 'Set GithubStatus'
+
+# Executive Order (EO): Software Bill of Materials (SBOM): https://www.1eswiki.com/wiki/ADO_sbom_Generator
+- powershell: |
+    # https://stackoverflow.com/questions/188892/glob-pattern-matching-in-net
+    function Is-Match([string] $Text, [string] $Filter)
+    {
+        $isMatch = $false
+
+        $regexGlobEquivalent = [Regex]::Escape($Filter).Replace("\*", ".*").Replace("\?", ".")
+        $pattern = "^${regexGlobEquivalent}$"
+
+        # https://stackoverflow.com/questions/42700341/how-can-i-use-powershell-to-do-a-net-regex-matches-method-and-add-a-timeout
+        $regEx = New-Object -TypeName regex -ArgumentList $pattern, ([Text.RegularExpressions.RegexOptions]::Singleline, [Text.RegularExpressions.RegexOptions]::IgnoreCase)
+        $isMatch = $regEx.IsMatch($Text)
+
+        return $isMatch
+    }
+
+    $filter = "${{ parameters.sbomFilter }}"
+    Write-Host "sbomFilter: ${filter}"
+
+    $sbomStagingDirectory = "$(Build.ArtifactStagingDirectory)/sbom"
+    Write-Host "Creating SBOM staging directory: ${sbomStagingDirectory}"
+
+    if (-not ([IO.Directory]::Exists($sbomStagingDirectory))) {
+      [IO.Directory]::CreateDirectory($sbomStagingDirectory)
+    }
+
+    $pkgsPath = "$(SBOM.PackagesPath)"
+    Write-Host "Packages path: ${pkgsPath}"
+
+    if ([string]::IsNullOrEmpty($filter)) {
+        $filter = '*'       # Even if the caller attempts to force the parameter to an empty string treat empty as all '*'
+    }
+
+    $filters = $filter.Split(';', [StringSplitOptions]::RemoveEmptyEntries)
+    Write-Host "Copying files based on ${filter}"
+
+    $files = [IO.Directory]::GetFiles($pkgsPath)
+    $files | foreach {
+      $filename = [IO.Path]::GetFileName($_)
+      $isMatch = $false
+      $filters | foreach {
+        if (-not $isMatch) {
+          $isMatch = Is-Match -Text $filename -Filter $_
+        }
+      }
+
+      if ($isMatch) {
+        $destPathAndFilename = [IO.Path]::Combine($sbomStagingDirectory, $filename)
+        Write-Host "Copying $_ to ${destPathAndFilename}. Filter: ${filter}"
+        [IO.File]::Copy($_, $destPathAndFilename)
+      } else {
+        Write-Host "Skipped file copy based on filter ${filter}: ${filename}"
+      }
+    }
+  displayName: 'SBOM: Staging'
+
+- powershell: |
+    function Get-PackageFileNames([string] $PkgsPath) {
+      $files = [IO.Directory]::GetFiles($PkgsPath)
+      $pkgFiles = $files | foreach { [IO.Path]::GetFileName($_) }
+      return $pkgFiles
+    }
+
+    $pkgsPath = "$(SBOM.PackagesPath)"
+    Write-Host "Packages path: ${pkgsPath}"
+
+    $packageFileNames = Get-PackageFileNames -PkgsPath $pkgsPath
+    $packageFileNames = @($packageFileNames)
+    Write-Host "Package files: $($packageFileNames.Count)"
+    $packageFileNames | foreach { Write-Host $_ }
+
+    Write-Host "Setting SBOM.ProductName: Xamarin iOS"
+    Write-Host "##vso[task.setvariable variable=SBOM.ProductName]Xamarin iOS"         # SBOM generation only lets us use a single package name and so choose 'Xamarin iOS' instead of 'Xamarin Mac'
+
+    $sbomManifestVersion = "$(Build.BuildId)"
+    Write-Host "Setting SBOM.ProductVersion to the build number: ${sbomManifestVersion}"
+    Write-Host "##vso[task.setvariable variable=SBOM.ProductVersion]$sbomManifestVersion"
+  displayName: 'SBOM: Set ProductVersion'
+
+- task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
+  displayName: 'SBOM: Generation'
+  inputs:
+    BuildDropPath: '$(Build.ArtifactStagingDirectory)/sbom'
+    PackageName: '$(SBOM.ProductName)'
+    PackageVersion: '$(SBOM.ProductVersion)'
+    Verbosity: Verbose
+
+- powershell: |
+    # The pkg files are already included under the drop-x64 and drop-arm locations
+    # We only needed them temporarily here as a means to produce the Software Bill of Materials (SBOM) manifest
+    # No need to include the pkg files (and duplicate them) in the SBOM drop
+    $sbomStagingDirectory = "$(Build.ArtifactStagingDirectory)/sbom"
+
+    # Delete all top-level package files. This should leave the SBOM '_manifest' directory intact
+    $pkgFiles = [IO.Directory]::GetFiles($sbomStagingDirectory)
+    $pkgFiles | foreach {
+      Write-Host "Deleting PKG: $_"
+      [IO.File]::Delete($_)
+    }
+  displayName: 'SBOM: Cleanup'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'SBOM: Publish'
+  inputs:
+    artifactName: sbom
+    pathToPublish: $(Build.ArtifactStagingDirectory)/sbom
+  condition: succeeded()

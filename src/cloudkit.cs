@@ -414,6 +414,8 @@ namespace CloudKit {
 		CKDatabase Database { get; set; }
 	}
 
+#if !NET
+	// This type is no longer in the headers.
 	[NoWatch]
 	[NoTV]
 	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKDiscoverAllUserIdentitiesOperation' instead.")]
@@ -431,6 +433,7 @@ namespace CloudKit {
 
 	}
 
+	// This type is no longer in the headers.
 	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKUserIdentity' instead.")]
 	[Deprecated (PlatformName.iOS, 10, 0, message : "Use 'CKUserIdentity' instead.")]
 	[Obsoleted (PlatformName.MacOSX, 10, 16, message : "Use 'CKUserIdentity' instead.")]
@@ -449,6 +452,7 @@ namespace CloudKit {
 		[Export ("userRecordID", ArgumentSemantic.Copy)]
 		CKRecordID UserRecordId { get; }
 	}
+#endif // !NET
 
 	// CKError.h Fields
 	[Watch (3,0)]
@@ -1690,17 +1694,21 @@ namespace CloudKit {
 	[BaseType (typeof (NSObject))]
 	interface CKSubscription : NSSecureCoding, NSCopying {
 
+#if !NET
+		// This constructor does not exist in the headers (anymore?)
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("initWithRecordType:predicate:options:")]
 		NativeHandle Constructor (string recordType, NSPredicate predicate, CKSubscriptionOptions subscriptionOptions);
 
+		// This constructor does not exist in the headers (anymore?)
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'CKQuerySubscription'.")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'CKQuerySubscription'.")]
 		[Export ("initWithRecordType:predicate:subscriptionID:options:")]
 		NativeHandle Constructor (string recordType, NSPredicate predicate, string subscriptionId, CKSubscriptionOptions subscriptionOptions);
+#endif
 
 		[Export ("subscriptionID")]
 		string SubscriptionId { get; }

@@ -10,7 +10,6 @@ using System;
 using ObjCRuntime;
 using CoreGraphics;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace UIKit {
 	
@@ -224,7 +223,9 @@ namespace UIKit {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
 #endif
 		public static UIFontDescriptor PreferredTitle1 {
@@ -233,7 +234,9 @@ namespace UIKit {
 			}
 		}
 		
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
 #endif
 		public static UIFontDescriptor PreferredTitle2 {
@@ -242,7 +245,9 @@ namespace UIKit {
 			}
 		}
 		
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
 #endif
 		public static UIFontDescriptor PreferredTitle3 {
@@ -251,7 +256,9 @@ namespace UIKit {
 			}
 		}
 		
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+#else
 		[iOS (9,0)]
 #endif
 		public static UIFontDescriptor PreferredCallout {

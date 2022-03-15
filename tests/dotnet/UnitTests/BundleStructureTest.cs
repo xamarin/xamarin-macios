@@ -12,13 +12,30 @@ using Xamarin.Utils;
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class BundleStructureTest : TestBaseClass {
-		void CheckAppBundleContents (ApplePlatform platform, string appPath, string[] runtimeIdentifiers, CodeSignature isSigned)
+		// Returns true if the assembly name is _any_ of our platform assemblies (Microsoft.iOS/tvOS/macOS/MacCatalyst/watchOS.dll)
+		bool IsPlatformAssembly (string assemblyName)
+		{
+			if (assemblyName.EndsWith (".dll", StringComparison.Ordinal) || assemblyName.EndsWith (".pdb", StringComparison.Ordinal))
+				assemblyName = Path.GetFileNameWithoutExtension (assemblyName);
+			foreach (var platform in Enum.GetValues<ApplePlatform> ()) {
+				if (platform == ApplePlatform.None)
+					continue;
+				var platformAssembly = Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true));
+				if (platformAssembly == assemblyName)
+					return true;
+			}
+			return false;
+		}
+
+		void CheckAppBundleContents (ApplePlatform platform, string appPath, string[] runtimeIdentifiers, CodeSignature isSigned, bool isReleaseBuild)
 		{
 			// Directory.GetFileSystemEntries will enter symlink directories and iterate inside :/
 			Console.WriteLine ($"App bundle: {appPath}");
-			Assert.AreEqual (0, ExecutionHelper.Execute ("find", new string [] { appPath }, out var output), "find");
+			Assert.That (appPath, Does.Exist, "App bundle existence");
+			var output = AssertExecute ("find", appPath);
 
 			var isCoreCLR = platform == ApplePlatform.MacOSX;
+			var includeDebugFiles = !isReleaseBuild;
 			var allFiles = output.ToString ().
 								Split ('\n', StringSplitOptions.RemoveEmptyEntries).
 								Where (v => v.Length > appPath.Length).
@@ -64,7 +81,7 @@ namespace Xamarin.Tests {
 				if (fn.StartsWith ("System.", StringComparison.Ordinal) && (fn.EndsWith (".dll", StringComparison.Ordinal) || fn.EndsWith (".pdb", StringComparison.Ordinal)))
 					return true;
 
-				if (fn.StartsWith ("Microsoft.", StringComparison.Ordinal) && (fn.EndsWith (".dll", StringComparison.Ordinal) || fn.EndsWith (".pdb", StringComparison.Ordinal)))
+				if (!IsPlatformAssembly (fn) && fn.StartsWith ("Microsoft.", StringComparison.Ordinal) && (fn.EndsWith (".dll", StringComparison.Ordinal) || fn.EndsWith (".pdb", StringComparison.Ordinal)))
 					return true;
 
 				if (fn.StartsWith ("libSystem.", StringComparison.Ordinal) && fn.EndsWith (".dylib", StringComparison.Ordinal))
@@ -101,10 +118,13 @@ namespace Xamarin.Tests {
 
 			// NoneA.txt is not bundled
 			expectedFiles.Add ($"{assemblyDirectory}NoneB.dll");
-			expectedFiles.Add ($"{assemblyDirectory}NoneB.pdb");
-			expectedFiles.Add ($"{assemblyDirectory}NoneB.dll.mdb");
+			if (includeDebugFiles) {
+				expectedFiles.Add ($"{assemblyDirectory}NoneB.pdb");
+				expectedFiles.Add ($"{assemblyDirectory}NoneB.dll.mdb");
+			}
 			expectedFiles.Add ($"{assemblyDirectory}NoneB.config");
-			expectedFiles.Add ($"{assemblyDirectory}NoneC.pdb");
+			if (includeDebugFiles)
+				expectedFiles.Add ($"{assemblyDirectory}NoneC.pdb");
 			expectedFiles.Add ($"{assemblyDirectory}NoneD.exe");
 			expectedFiles.Add ($"{assemblyDirectory}libNoneE.dylib");
 			// NoneF.a is not bundled
@@ -115,6 +135,7 @@ namespace Xamarin.Tests {
 			// NoneK.txt is not bundled
 			expectedFiles.Add ($"{assemblyDirectory}NoneL.config");
 			// NoneM.unknown is not bundled
+			expectedFiles.Add ($"{assemblyDirectory}libSkipInstallNameTool.dylib");
 
 			expectedFiles.Add ($"{resourcesDirectory}basn3p08.png");
 			expectedFiles.Add ($"{resourcesDirectory}iTunesArtwork.jpg");
@@ -182,14 +203,26 @@ namespace Xamarin.Tests {
 			expectedFiles.Add ($"{resourcesDirectory}ContentA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}ContentB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}ContentC.txt");
+			expectedFiles.Add ($"{resourcesDirectory}ContentD.txt");
+			expectedFiles.Add ($"{resourcesDirectory}ContentE.txt");
+			expectedFiles.Add ($"{resourcesDirectory}ContentI.txt");
 
 			// expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceC.txt");
+			// expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceD.txt");
+			// expectedFiles.Add ($"{resourcesDirectory}EmbeddedResourceE.txt");
 
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}BundleResourceC.txt");
+			expectedFiles.Add ($"{resourcesDirectory}BundleResourceD.txt");
+			expectedFiles.Add ($"{resourcesDirectory}BundleResourceE.txt");
+			expectedFiles.Add ($"{resourcesDirectory}BundleResourceI.txt");
+
+			expectedFiles.Add ($"{resourcesDirectory}AutoIncluded.txt");
+			expectedFiles.Add ($"{resourcesDirectory}SubDirectory");
+			expectedFiles.Add ($"{resourcesDirectory}SubDirectory/AutoIncluded2.txt");
 
 			expectedFiles.Add ($"{assemblyDirectory}FrameworksInRuntimesNativeDirectory.dll");
 			AddExpectedFrameworkFiles (platform, expectedFiles, "FrameworksInRuntimesNativeDirectory1", isSigned);
@@ -207,7 +240,8 @@ namespace Xamarin.Tests {
 			AddExpectedFrameworkFiles (platform, expectedFiles, "FrameworkTest5", isSigned);
 
 			expectedFiles.Add ($"{assemblyDirectory}bindings-framework-test.dll");
-			expectedFiles.Add ($"{assemblyDirectory}bindings-framework-test.pdb");
+			if (includeDebugFiles)
+				expectedFiles.Add ($"{assemblyDirectory}bindings-framework-test.pdb");
 			AddExpectedFrameworkFiles (platform, expectedFiles, "XTest", isSigned);
 
 			// various directories
@@ -220,14 +254,15 @@ namespace Xamarin.Tests {
 			// misc other files not directly related to the test itself
 			if (!isCoreCLR)
 				expectedFiles.Add ($"{assemblyDirectory}icudt.dat");
-			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "BundleStructure", runtimeIdentifiers, addConfig: true);
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "BundleStructure", runtimeIdentifiers, addConfig: true, includeDebugFiles: includeDebugFiles);
 			if (platform != ApplePlatform.MacOSX)
-				AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "MonoTouch.Dialog", runtimeIdentifiers, forceSingleRid: true);
+				AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, "MonoTouch.Dialog", runtimeIdentifiers, forceSingleRid: true, includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add ($"{assemblyDirectory}nunit.framework.dll");
 			expectedFiles.Add ($"{assemblyDirectory}nunitlite.dll");
 			expectedFiles.Add ($"{assemblyDirectory}Touch.Client.dll");
-			expectedFiles.Add ($"{assemblyDirectory}Touch.Client.pdb");
-			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform)), runtimeIdentifiers, forceSingleRid: platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX, hasPdb: false);
+			if (includeDebugFiles)
+				expectedFiles.Add ($"{assemblyDirectory}Touch.Client.pdb");
+			AddMultiRidAssembly (platform, expectedFiles, assemblyDirectory, Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (platform, true)), runtimeIdentifiers, forceSingleRid: (platform == ApplePlatform.MacCatalyst && !isReleaseBuild) || platform == ApplePlatform.MacOSX, hasPdb: false, includeDebugFiles: includeDebugFiles);
 			expectedFiles.Add ($"{assemblyDirectory}runtimeconfig.bin");
 
 			if (platform == ApplePlatform.MacOSX)
@@ -238,13 +273,17 @@ namespace Xamarin.Tests {
 			case ApplePlatform.TVOS:
 				expectedFiles.Add ("BundleStructure");
 				expectedFiles.Add ("Info.plist");
-				expectedFiles.Add ("MonoTouchDebugConfiguration.txt");
+				if (!isReleaseBuild)
+					expectedFiles.Add ("MonoTouchDebugConfiguration.txt");
 				expectedFiles.Add ("PkgInfo");
-				expectedFiles.Add ("Settings.bundle");
-				expectedFiles.Add ("Settings.bundle/Root.plist");
+				if (!isReleaseBuild) {
+					expectedFiles.Add ("Settings.bundle");
+					expectedFiles.Add ("Settings.bundle/Root.plist");
+				}
 				break;
 			case ApplePlatform.MacCatalyst:
-				expectedFiles.Add ("Contents/Resources/MonoTouchDebugConfiguration.txt");
+				if (!isReleaseBuild)
+					expectedFiles.Add ("Contents/Resources/MonoTouchDebugConfiguration.txt");
 				goto case ApplePlatform.MacOSX;
 			case ApplePlatform.MacOSX:
 				expectedFiles.Add ("Contents");
@@ -298,14 +337,66 @@ namespace Xamarin.Tests {
 
 			Assert.That (unexpectedFiles, Is.Empty, "No unexpected files");
 			Assert.That (missingFiles, Is.Empty, "No missing files");
+
+			AssertDynamicLibraryId (platform, appPath, assemblyDirectory, "libSkipInstallNameTool.dylib");
+		}
+
+		void AssertDynamicLibraryId (ApplePlatform platform, string appPath, string dylibDirectory, string library)
+		{
+			var dylibPath = Path.Combine (appPath, dylibDirectory, library);
+			Assert.That (dylibPath, Does.Exist, "dylib existence");
+
+			var invalidLoadCommands = new List<string> ();
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			foreach (var file in MachO.Read (appExecutable)) {
+				foreach (var lc in file.load_commands) {
+					if (lc is DylibLoadCommand loadCommand) {
+						if (!IsValidLoadLibrary (loadCommand.name)) {
+							invalidLoadCommands.Add ($"Invalid load library '{loadCommand.name}' in '{file.Filename}'");
+						}
+					}
+				}
+			}
+
+			var dylibs = Directory.GetFiles (Path.Combine (appPath, dylibDirectory), "*.dylib");
+			foreach (var dylib in dylibs) {
+				foreach (var file in MachO.Read (dylib)) {
+					foreach (var lc in file.load_commands) {
+						if (lc is DylibIdCommand loadCommand) {
+							if (!IsValidLoadLibrary (loadCommand.name)) {
+								invalidLoadCommands.Add ($"Invalid id '{loadCommand.name}' for library '{file.Filename}'");
+							}
+						}
+					}
+				}
+			}
+
+			Assert.That (invalidLoadCommands, Is.Empty);
+		}
+
+		static bool IsValidLoadLibrary (string library)
+		{
+			var valid_prefixes = new string [] {
+				"/System/Library/",
+				"/System/iOSSupport/System/Library/",
+				"/usr/lib/",
+				"@rpath",
+				"@executable_path",
+			};
+			foreach (var valid_prefix in valid_prefixes) {
+				if (library.StartsWith (valid_prefix, StringComparison.Ordinal))
+					return true;
+			}
+			return false;
 		}
 
 
-		static void AddMultiRidAssembly (ApplePlatform platform, List<string> expectedFiles, string assemblyDirectory, string assemblyName, string[] runtimeIdentifiers, bool forceSingleRid = false, bool hasPdb = true, bool addConfig = false)
+		static void AddMultiRidAssembly (ApplePlatform platform, List<string> expectedFiles, string assemblyDirectory, string assemblyName, string[] runtimeIdentifiers, bool forceSingleRid = false, bool hasPdb = true, bool addConfig = false, bool includeDebugFiles = false)
 		{
 			if (forceSingleRid || runtimeIdentifiers.Length == 1) {
 				expectedFiles.Add ($"{assemblyDirectory}{assemblyName}.dll");
-				if (hasPdb)
+				if (hasPdb && includeDebugFiles)
 					expectedFiles.Add ($"{assemblyDirectory}{assemblyName}.pdb");
 				if (addConfig)
 					expectedFiles.Add ($"{assemblyDirectory}{assemblyName}.dll.config");
@@ -314,7 +405,7 @@ namespace Xamarin.Tests {
 				foreach (var rid in runtimeIdentifiers) {
 					expectedFiles.Add ($"{assemblyDirectory}.xamarin/{rid}");
 					expectedFiles.Add ($"{assemblyDirectory}.xamarin/{rid}/{assemblyName}.dll");
-					if (hasPdb)
+					if (hasPdb && includeDebugFiles)
 						expectedFiles.Add ($"{assemblyDirectory}.xamarin/{rid}/{assemblyName}.pdb");
 					if (addConfig)
 						expectedFiles.Add ($"{assemblyDirectory}.xamarin/{rid}/{assemblyName}.dll.config");
@@ -441,28 +532,41 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", CodeSignature.All)]
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64", CodeSignature.Frameworks)]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", CodeSignature.All)]
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;maccatalyst-arm64", CodeSignature.All)]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.None)]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", CodeSignature.None)]
-		[TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All)]
-		public void Build (ApplePlatform platform, string runtimeIdentifiers, CodeSignature signature)
+		// Debug
+		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", CodeSignature.All, "Debug")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", CodeSignature.Frameworks, "Debug")]
+#if !NET //ignore due to https://github.com/xamarin/maccore/issues/2548
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", CodeSignature.All, "Debug")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;maccatalyst-arm64", CodeSignature.All, "Debug")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.None, "Debug")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", CodeSignature.None, "Debug")]
+#endif
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Debug")]
+		// Release
+		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", CodeSignature.All, "Release")]
+#if !NET // ignore due to https://github.com/xamarin/maccore/issues/2548
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;maccatalyst-arm64", CodeSignature.All, "Release")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.None, "Release")]
+#endif
+		[TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Release")]
+		public void Build (ApplePlatform platform, string runtimeIdentifiers, CodeSignature signature, string configuration)
 		{
 			var project = "BundleStructure";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			var project_dir = Path.GetDirectoryName (Path.GetDirectoryName (project_path))!;
 			Clean (project_path);
 
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["_IsAppSigned"] = signature != CodeSignature.None ? "true" : "false";
+			if (!string.IsNullOrWhiteSpace (configuration))
+				properties ["Configuration"] = configuration;
 			var rv = DotNet.AssertBuild (project_path, properties);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			var warningMessages = FilterWarnings (warnings);
 
+			var isReleaseBuild = string.Equals (configuration, "Release", StringComparison.OrdinalIgnoreCase);
 			var platformString = platform.AsString ();
 			var tfm = platform.ToFramework ();
 			var testsDirectory = Path.GetDirectoryName (Path.GetDirectoryName (project_dir));
@@ -487,16 +591,16 @@ namespace Xamarin.Tests {
 			var zippedFrameworks = platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX;
 			foreach (var rid in rids) {
 				if (zippedFrameworks) {
-					expectedWarnings.Add ($"The framework obj/Debug/{tfm}/{rid}/bindings-framework-test.resources.zip/XStaticObjectTest.framework is a framework of static libraries, and will not be copied to the app.");
-					expectedWarnings.Add ($"The framework obj/Debug/{tfm}/{rid}/bindings-framework-test.resources.zip/XStaticArTest.framework is a framework of static libraries, and will not be copied to the app.");
+					expectedWarnings.Add ($"The framework obj/{configuration}/{tfm}/{rid}/bindings-framework-test.resources.zip/XStaticObjectTest.framework is a framework of static libraries, and will not be copied to the app.");
+					expectedWarnings.Add ($"The framework obj/{configuration}/{tfm}/{rid}/bindings-framework-test.resources.zip/XStaticArTest.framework is a framework of static libraries, and will not be copied to the app.");
 				} else {
-					expectedWarnings.Add ($"The framework {testsDirectory}/bindings-framework-test/dotnet/{platformString}/bin/Debug/{tfm}/bindings-framework-test.resources/XStaticObjectTest.framework is a framework of static libraries, and will not be copied to the app.");
-					expectedWarnings.Add ($"The framework {testsDirectory}/bindings-framework-test/dotnet/{platformString}/bin/Debug/{tfm}/bindings-framework-test.resources/XStaticArTest.framework is a framework of static libraries, and will not be copied to the app.");
+					expectedWarnings.Add ($"The framework {testsDirectory}/bindings-framework-test/dotnet/{platformString}/bin/{configuration}/{tfm}/bindings-framework-test.resources/XStaticObjectTest.framework is a framework of static libraries, and will not be copied to the app.");
+					expectedWarnings.Add ($"The framework {testsDirectory}/bindings-framework-test/dotnet/{platformString}/bin/{configuration}/{tfm}/bindings-framework-test.resources/XStaticArTest.framework is a framework of static libraries, and will not be copied to the app.");
 				}
 			}
 
 			if (signature == CodeSignature.None && (platform == ApplePlatform.MacCatalyst || platform == ApplePlatform.MacOSX)) {
-				expectedWarnings.Add ($"Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/{tfm}{(runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : "/" + runtimeIdentifiers)}/BundleStructure.app/UnknownJ.bin");
+				expectedWarnings.Add ($"Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/{configuration}/{tfm}{(runtimeIdentifiers.IndexOf (';') >= 0 ? string.Empty : "/" + runtimeIdentifiers)}/BundleStructure.app/UnknownJ.bin");
 			}
 
 			// Sort the messages so that comparison against the expected array is faster
@@ -506,7 +610,7 @@ namespace Xamarin.Tests {
 
 			var appExecutable = GetNativeExecutable (platform, appPath);
 
-			CheckAppBundleContents (platform, appPath, rids, signature);
+			CheckAppBundleContents (platform, appPath, rids, signature, isReleaseBuild);
 			CollectionAssert.AreEqual (expectedWarnings, warningMessages, "Warnings");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
@@ -518,7 +622,7 @@ namespace Xamarin.Tests {
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			warningMessages = FilterWarnings (warnings);
 
-			CheckAppBundleContents (platform, appPath, rids, signature);
+			CheckAppBundleContents (platform, appPath, rids, signature, isReleaseBuild);
 			CollectionAssert.AreEqual (expectedWarnings, warningMessages, "Warnings Rebuild 1");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
@@ -530,7 +634,7 @@ namespace Xamarin.Tests {
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			warningMessages = FilterWarnings (warnings);
 
-			CheckAppBundleContents (platform, appPath, rids, signature);
+			CheckAppBundleContents (platform, appPath, rids, signature, isReleaseBuild);
 			CollectionAssert.AreEqual (expectedWarnings, warningMessages, "Warnings Rebuild 2");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 
@@ -539,7 +643,7 @@ namespace Xamarin.Tests {
 			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			warningMessages = FilterWarnings (warnings);
 
-			CheckAppBundleContents (platform, appPath, rids, signature);
+			CheckAppBundleContents (platform, appPath, rids, signature, isReleaseBuild);
 			CollectionAssert.AreEqual (expectedWarnings, warningMessages, "Warnings Rebuild 3");
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}

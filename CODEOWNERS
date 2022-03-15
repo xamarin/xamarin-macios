@@ -87,7 +87,7 @@
 /src/gamekit.cs
 /src/GameplayKit @dalexsoto
 /src/gameplaykit.cs @dalexsoto
-/src/generator* @dalexsoto @rolf
+/src/generator* @dalexsoto @rolfbjarne
 /src/GLKit @dalexsoto
 /src/glkit.cs @dalexsoto
 /src/HealthKit
@@ -182,8 +182,8 @@
 /src/vision.cs @dalexsoto
 /src/WatchConnectivity @rolfbjarne
 /src/watchconnectivity.cs @rolfbjarne
-/src/WatchKit @rolf
-/src/watchkit.cs @rolf
+/src/WatchKit @rolfbjarne
+/src/watchkit.cs @rolfbjarne
 /src/WebKit @chamons
 /src/webkit.cs @chamons
 /src/WKWebKit

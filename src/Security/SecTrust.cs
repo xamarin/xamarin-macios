@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Security;
 using System.Security.Cryptography.X509Certificates;
 using ObjCRuntime;
@@ -34,13 +33,17 @@ namespace Security {
 			Initialize (certificate.Handle, policy);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustCopyPolicies (IntPtr /* SecTrustRef */ trust, ref IntPtr /* CFArrayRef* */ policies);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public SecPolicy[] GetPolicies ()
@@ -88,20 +91,32 @@ namespace Security {
 			SetPolicies (policies.Handle);
 		}
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustGetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] out bool /* Boolean* */ allowFetch);
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustSetNetworkFetchAllowed (IntPtr /* SecTrustRef */ trust, [MarshalAs (UnmanagedType.I1)] bool /* Boolean */ allowFetch);
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		public bool NetworkFetchAllowed {
 			get {
@@ -118,13 +133,17 @@ namespace Security {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustCopyCustomAnchorCertificates (IntPtr /* SecTrustRef */ trust, out IntPtr /* CFArrayRef* */ anchors);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public SecCertificate[] GetCustomAnchorCertificates  ()
@@ -136,25 +155,24 @@ namespace Security {
 			return NSArray.ArrayFromHandle<SecCertificate> (p);
 		}
 
-#if !NET
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-#if !NET
+#else
+		[iOS (7,0)]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustEvaluateAsync (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, ref BlockLiteral block);
@@ -172,27 +190,25 @@ namespace Security {
 			}
 		}
 
-#if !NET
-		[iOS (7,0)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[UnsupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.15 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+		[Obsolete ("Starting with tvos13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-#if !NET
+#else
+		[iOS (7,0)]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.")]
-#else
-		[UnsupportedOSPlatform ("ios13.0")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
-#if IOS
-		[Obsolete ("Starting with ios13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'Evaluate (DispatchQueue, SecTrustWithErrorCallback)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-#endif
-		// not always async (so suffix is removed)
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public SecStatusCode Evaluate (DispatchQueue queue, SecTrustCallback handler)
 		{
@@ -212,12 +228,15 @@ namespace Security {
 			}
 		}
 
-#if !NET
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Watch (6,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern SecStatusCode SecTrustEvaluateAsyncWithError (IntPtr /* SecTrustRef */ trust, IntPtr /* dispatch_queue_t */ queue, ref BlockLiteral block);
@@ -236,14 +255,16 @@ namespace Security {
 			}
 		}
 
-#if !NET
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Watch (6,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
-		// not always async (so suffix is removed)
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public SecStatusCode Evaluate (DispatchQueue queue, SecTrustWithErrorCallback handler)
 		{
@@ -262,13 +283,17 @@ namespace Security {
 			}
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustGetTrustResult (IntPtr /* SecTrustRef */ trust, out SecTrustResult /* SecTrustResultType */ result);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public SecTrustResult GetTrustResult ()
@@ -280,23 +305,29 @@ namespace Security {
 			return trust_result;
 		}
 
-#if !NET
-		[Watch (5,0)][TV (12,0)][Mac (10,14)][iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
+#if NET
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+#else
+		[Watch (5,0)]
+		[TV (12,0)]
+		[Mac (10,14)]
+		[iOS (12,0)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		static extern bool SecTrustEvaluateWithError (/* SecTrustRef */ IntPtr trust, out /* CFErrorRef** */ IntPtr error);
 
-#if !NET
-		[Watch (5,0)][TV (12,0)][Mac (10,14)][iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
+#if NET
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+#else
+		[Watch (5,0)]
+		[TV (12,0)]
+		[Mac (10,14)]
+		[iOS (12,0)]
 #endif
 		public bool Evaluate (out NSError error)
 		{
@@ -305,28 +336,42 @@ namespace Security {
 			return result;
 		}
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* CFDictionaryRef */ SecTrustCopyResult (IntPtr /* SecTrustRef */ trust);
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		public NSDictionary GetResult ()
 		{
 			return new NSDictionary (SecTrustCopyResult (Handle), true);
 		}
 
-#if !NET
-		[iOS (7,0)][Mac (10,9)]
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+#else
+		[iOS (7,0)]
+		[Mac (10,9)]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		extern static SecStatusCode /* OSStatus */ SecTrustSetOCSPResponse (IntPtr /* SecTrustRef */ trust, IntPtr /* CFTypeRef */ responseData);
 
 		// the API accept the handle for a single policy or an array of them
-#if !NET
+#if NET
+		[SupportedOSPlatform ("macos10.9")]
+#else
 		[Mac (10,9)]
 #endif
 		void SetOCSPResponse (IntPtr ocsp)
@@ -336,7 +381,9 @@ namespace Security {
 				throw new InvalidOperationException (result.ToString ());
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public void SetOCSPResponse (NSData ocspResponse)
@@ -347,7 +394,9 @@ namespace Security {
 			SetOCSPResponse (ocspResponse.Handle);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public void SetOCSPResponse (IEnumerable<NSData> ocspResponses)
@@ -359,7 +408,9 @@ namespace Security {
 				SetOCSPResponse (array.Handle);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+#else
 		[iOS (7,0)]
 #endif
 		public void SetOCSPResponse (NSArray ocspResponses)
@@ -370,28 +421,28 @@ namespace Security {
 			SetOCSPResponse (ocspResponses.Handle);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios12.1.1")]
+		[SupportedOSPlatform ("tvos12.1.1")]
+		[SupportedOSPlatform ("macos10.14.2")]
+#else
 		[iOS (12,1,1)]
 		[Watch (5,1,1)]
 		[TV (12,1,1)]
 		[Mac (10,14,2)]
-#else
-		[SupportedOSPlatform ("ios12.1.1")]
-		[SupportedOSPlatform ("tvos12.1.1")]
-		[SupportedOSPlatform ("macos10.14.2")]
 #endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern SecStatusCode /* OSStatus */ SecTrustSetSignedCertificateTimestamps (/* SecTrustRef* */ IntPtr trust, /* CFArrayRef* */ IntPtr sctArray);
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios12.1.1")]
+		[SupportedOSPlatform ("tvos12.1.1")]
+		[SupportedOSPlatform ("macos10.14.2")]
+#else
 		[iOS (12,1,1)]
 		[Watch (5,1,1)]
 		[TV (12,1,1)]
 		[Mac (10,14,2)]
-#else
-		[SupportedOSPlatform ("ios12.1.1")]
-		[SupportedOSPlatform ("tvos12.1.1")]
-		[SupportedOSPlatform ("macos10.14.2")]
 #endif
 		public SecStatusCode SetSignedCertificateTimestamps (IEnumerable<NSData> sct)
 		{
@@ -402,15 +453,15 @@ namespace Security {
 				return SecTrustSetSignedCertificateTimestamps (Handle, array.Handle);
 		}
 
-#if !NET
+#if NET
+		[SupportedOSPlatform ("ios12.1.1")]
+		[SupportedOSPlatform ("tvos12.1.1")]
+		[SupportedOSPlatform ("macos10.14.2")]
+#else
 		[iOS (12,1,1)]
 		[Watch (5,1,1)]
 		[TV (12,1,1)]
 		[Mac (10,14,2)]
-#else
-		[SupportedOSPlatform ("ios12.1.1")]
-		[SupportedOSPlatform ("tvos12.1.1")]
-		[SupportedOSPlatform ("macos10.14.2")]
 #endif
 		public SecStatusCode SetSignedCertificateTimestamps (NSArray<NSData> sct)
 		{

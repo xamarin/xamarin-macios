@@ -12,6 +12,9 @@ using Xamarin.Tests;
 
 namespace GeneratorTests
 {
+#if NET
+		[Ignore ("Ignore this until done https://github.com/xamarin/maccore/issues/2549")]
+#endif
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
 	public class BGenTests
@@ -688,12 +691,16 @@ namespace GeneratorTests
 		[Test]
 		public void DisposeAttributeOptimizable ()
 		{
-			var bgen = BuildFile (Profile.iOS, "tests/dispose-attribute.cs");
+			var profile = Profile.iOS;
+			var bgen = BuildFile (profile, "tests/dispose-attribute.cs");
 
 			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
-			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
 			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+#if NET
+			resolver.AddSearchDirectory (Configuration.GetRefDirectory (profile.AsPlatform ()));
+#else
 			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+#endif
 
 			// [Dispose] is, by default, not optimizable
 			var with_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDispose").Methods.First ((v) => v.Name == "Dispose");
@@ -714,12 +721,16 @@ namespace GeneratorTests
 		[Test]
 		public void SnippetAttributesOptimizable ()
 		{
-			var bgen = BuildFile (Profile.iOS, "tests/snippet-attributes.cs");
+			var profile = Profile.iOS;
+			var bgen = BuildFile (profile, "tests/snippet-attributes.cs");
 
 			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
-			var platform_dll = Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/Xamarin.iOS.dll");
 			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+#if NET
+			resolver.AddSearchDirectory (Configuration.GetRefDirectory (profile.AsPlatform ()));
+#else
 			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+#endif
 
 			// [SnippetAttribute] subclasses are, by default, not optimizable
 			var not_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "NotOptimizable");
@@ -841,6 +852,53 @@ namespace GeneratorTests
 			Assert.IsTrue (method.IsAbstract, "IsAbstract");
 			Assert.IsNull (throwInstruction, "Throw");
 #endif
+		}
+
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void NativeIntDelegates ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/nint-delegates.cs");
+
+			Func<string, bool> verifyDelegate = (typename) => {
+				// Assert that the return type from the delegate is IntPtr
+				var type = bgen.ApiAssembly.MainModule.GetType ("NS", typename);
+				Assert.NotNull (type, typename);
+				var method = type.Methods.First (m => m.Name == "Invoke");
+				Assert.IsNotNull (method.MethodReturnType.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Name == "NativeIntegerAttribute"), "Return type for delegate " + typename);
+				foreach (var p in method.Parameters) {
+					Assert.IsNotNull (p.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Name == "NativeIntegerAttribute"), $"Parameter {p.Name}'s type for delegate " + typename);
+				}
+
+				return false;
+			};
+
+			verifyDelegate ("D1");
+			verifyDelegate ("D2");
+			verifyDelegate ("D3");
+			verifyDelegate ("NSTableViewColumnRowPredicate");
+		}
+
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void CSharp10Syntax ()
+		{
+			BuildFile (Profile.iOS, "tests/csharp10syntax.cs");
+		}
+
+		[Test]
+		public void NFloatType ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/nfloat.cs");
+
+			var messaging = bgen.ApiAssembly.MainModule.Types.FirstOrDefault (v => v.Name == "Messaging");
+			Assert.IsNotNull (messaging, "Messaging");
+			var pinvoke = messaging.Methods.FirstOrDefault (v => v.Name == "xamarin_nfloat_objc_msgSend_exception");
+			Assert.IsNotNull (pinvoke, "PInvoke");
 		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)

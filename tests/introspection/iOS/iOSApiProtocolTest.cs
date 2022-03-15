@@ -91,7 +91,7 @@ namespace Introspection {
 				// but that web page doesn't explain anything (it's mostly empty, so this is probably just lagging documentation)
 				// I also tried enabling every entitlement in Xcode, but it still didn't work.
 				return true;
-#if __WATCHOS__ && !XAMCORE_4_0
+#if __WATCHOS__ && !NET
 			case "INCarAirCirculationModeResolutionResult":
 			case "INCarAudioSourceResolutionResult":
 			case "INCarDefrosterResolutionResult":
@@ -99,7 +99,7 @@ namespace Introspection {
 			case "INRadioTypeResolutionResult":
 			case "INRelativeSettingResolutionResult":
 			case "INRelativeReferenceResolutionResult":
-				// These were bound by mistake, and they're gone in XAMCORE_4_0.
+				// These were bound by mistake, and they're gone in NET.
 				return true;
 #endif
 			case "SNClassificationResult": // Class is not being created properly

@@ -24,10 +24,17 @@ using SpriteKit;
 using SceneKit;
 using UIKit;
 
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::CoreGraphics.NVector3;
+using Matrix3 = global::CoreGraphics.NMatrix3;
+using Matrix4 = global::CoreGraphics.NMatrix4;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.NVector3;
 using Matrix3 = global::OpenTK.NMatrix3;
 using Matrix4 = global::OpenTK.NMatrix4;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;

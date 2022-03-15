@@ -213,7 +213,7 @@ namespace Registrar {
 
 	class StaticRegistrar : Registrar
 	{
-		static string NFloatTypeName { get => Driver.IsDotNet ? "ObjCRuntime.nfloat" : "System.nfloat"; }
+		static string NFloatTypeName { get => Driver.IsDotNet ? "System.Runtime.InteropServices.NFloat" : "System.nfloat"; }
 
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
@@ -2191,9 +2191,11 @@ namespace Registrar {
 					}
 				}
 				goto default;
+#if !NET
 			case "Chip":
 				h = "<CHIP/CHIP.h>";
 				break;
+#endif
 			case "GLKit":
 				// This prevents this warning:
 				//     /Applications/Xcode83.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h:5:2: warning: gl.h and gl3.h are both
@@ -3185,7 +3187,7 @@ namespace Registrar {
 			ErrorHelper.ThrowIfErrors (exceptions);
 		}
 
-		static bool HasIntPtrBoolCtor (TypeDefinition type)
+		bool HasIntPtrBoolCtor (TypeDefinition type, List<Exception> exceptions)
 		{
 			if (!type.HasMethods)
 				return false;
@@ -3194,15 +3196,21 @@ namespace Registrar {
 					continue;
 				if (method.Parameters.Count != 2)
 					continue;
+				if (!method.Parameters [1].ParameterType.Is ("System", "Boolean"))
+					continue;
 				if (Driver.IsDotNet) {
+					if (method.Parameters [0].ParameterType.Is ("System", "IntPtr")) {
+						// The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).
+						exceptions.Add (ErrorHelper.CreateWarning (App, 4186, method, Errors.MT4186, type.FullName));
+						return true;
+					}
 					if (!method.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle"))
 						continue;
 				} else {
 					if (!method.Parameters [0].ParameterType.Is ("System", "IntPtr"))
 						continue;
 				}
-				if (method.Parameters [1].ParameterType.Is ("System", "Boolean"))
-					return true;
+				return true;
 			}
 			return false;
 		}
@@ -3672,7 +3680,7 @@ namespace Registrar {
 							}
 
 							// verify that the type has a ctor with two parameters
-							if (!HasIntPtrBoolCtor (nativeObjType))
+							if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
 								throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
 							body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
@@ -3796,7 +3804,7 @@ namespace Registrar {
 						}
 
 						// verify that the type has a ctor with two parameters
-						if (!HasIntPtrBoolCtor (nativeObjType))
+						if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
 							throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
 						if (!td.IsInterface) {

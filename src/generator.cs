@@ -911,7 +911,7 @@ public partial class Generator : IMemberGatherer {
 		get {
 #if NET
 			return 4;
-#endif
+#else
 			switch (CurrentPlatform) {
 			case PlatformName.MacOSX:
 			case PlatformName.iOS:
@@ -922,6 +922,7 @@ public partial class Generator : IMemberGatherer {
 			default:
 				return 4;
 			}
+#endif
 		}
 	}
 	Type [] types, strong_dictionaries;
@@ -1127,6 +1128,8 @@ public partial class Generator : IMemberGatherer {
 			return "bool";
 		if (t == TypeManager.System_Char)
 			return "char";
+		if (t == TypeManager.System_nfloat)
+			return "nfloat";
 
 		return formatted ? FormatType (null, t) : t.Name;
 	}
@@ -2152,7 +2155,7 @@ public partial class Generator : IMemberGatherer {
 		// in question actually has that value at least). Same goes for Int32.MinValue/Int64.MinValue.
 		// var isDefined = enumType.IsEnumDefined (maxValue);
 		var definedMaxField = enumType.GetFields ().Where (v => v.IsLiteral).FirstOrDefault (isMaxDefinedFunc);
-		if (definedMaxField != null) {
+		if (definedMaxField is not null && postproc is not null) {
 			postproc.AppendLine ("#if ARCH_32");
 			postproc.AppendFormat ("if (({0}) ret == ({0}) {1}.MaxValue)\n", underlyingTypeName, itype);
 			postproc.AppendFormat ("\tret = {0}.{1}; // = {2}.MaxValue\n", renderedEnumType, definedMaxField.Name, underlyingTypeName);
@@ -2409,7 +2412,7 @@ public partial class Generator : IMemberGatherer {
 		m = GetOutputStream ("ObjCRuntime", "Messaging");
 		Header (m);
 		print (m, "namespace {0} {{", ns.ObjCRuntime);
-		print (m, "\tpartial class Messaging {");
+		print (m, "\tstatic partial class Messaging {");
 
 		print (m, "\t\tinternal const string LIBOBJC_DYLIB = \"/usr/lib/libobjc.dylib\";\n");
 		if (BindThirdPartyLibrary){
@@ -3627,6 +3630,8 @@ public partial class Generator : IMemberGatherer {
 			return "nuint";
 		if (type == TypeManager.System_Char)
 			return "char";
+		if (type == TypeManager.System_nfloat)
+			return "nfloat";
 
 		if (type.IsArray)
 			return FormatTypeUsedIn (usedInNamespace, type.GetElementType ()) + "[" + new string (',', type.GetArrayRank () - 1) + "]";
@@ -5726,7 +5731,7 @@ public partial class Generator : IMemberGatherer {
 					print ("[MonoNativeFunctionWrapper]\n");
 
 				print ("public delegate {0} {1} ({2});",
-				       RenderType (mi.ReturnType),
+				       RenderType (mi.ReturnType, mi.ReturnTypeCustomAttributes),
 				       shortName,
 				       RenderParameterDecl (mi.GetParameters ()));
 			}
@@ -6447,15 +6452,15 @@ public partial class Generator : IMemberGatherer {
 
 		switch (BindingTouch.TargetFramework.Platform) {
 		case ApplePlatform.iOS:
-			return "Xamarin.iOS";
+			return BindingTouch.IsDotNet ? "Microsoft.iOS" : "Xamarin.iOS";
 		case ApplePlatform.MacOSX:
-			return "Xamarin.Mac";
+			return BindingTouch.IsDotNet ? "Microsoft.macOS" : "Xamarin.Mac";
 		case ApplePlatform.TVOS:
-			return "Xamarin.TVOS";
+			return BindingTouch.IsDotNet ? "Microsoft.tvOS" : "Xamarin.TVOS";
 		case ApplePlatform.WatchOS:
-			return "Xamarin.WatchOS";
+			return BindingTouch.IsDotNet ? "Microsoft.watchOS" :"Xamarin.WatchOS";
 		case ApplePlatform.MacCatalyst:
-			return "Xamarin.MacCatalyst";
+			return "Microsoft.MacCatalyst";
 		default:
 			throw ErrorHelper.CreateError (1053, /* Internal error: unknown target framework '{0}'. */ BindingTouch.TargetFramework);
 		}
@@ -8008,9 +8013,9 @@ public partial class Generator : IMemberGatherer {
 		string name;
 		if (pt.IsByRef) {
 			pt = pt.GetElementType ();
-			name = (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + prefix + RenderType (pt);
+			name = (removeRefTypes ? "" : (p.IsOut ? "out " : "ref ")) + prefix + RenderType (pt, p);
 		} else
-			name = prefix + RenderType (pt);
+			name = prefix + RenderType (pt, p);
 		if (!pt.IsValueType && AttributeManager.HasAttribute<NullAllowedAttribute> (p))
 			name += "?";
 		return name;
@@ -8161,8 +8166,16 @@ public partial class Generator : IMemberGatherer {
 
 		return def;
 	}
-	
-	string RenderType (Type t)
+
+	bool HasNativeAttribute (ICustomAttributeProvider provider)
+	{
+		if (provider is null)
+			return false;
+
+		return AttributeManager.HasAttribute (provider, "NativeIntegerAttribute");
+	}
+
+	string RenderType (Type t, ICustomAttributeProvider provider = null)
 	{
 		t = GetCorrectGenericType (t);
 
@@ -8197,6 +8210,12 @@ public partial class Generator : IMemberGatherer {
 		
 		if (t == TypeManager.System_Void)
 			return "void";
+
+		if (t == TypeManager.System_IntPtr) {
+			return HasNativeAttribute (provider) ? "nint" : "IntPtr";
+		} else if (t == TypeManager.System_UIntPtr) {
+			return HasNativeAttribute (provider) ? "nuint" : "UIntPtr";
+		}
 
 		string ns = t.Namespace;
 		if (NamespaceManager.ImplicitNamespaces.Contains (ns) || t.IsGenericType) {

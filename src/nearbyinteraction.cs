@@ -11,7 +11,11 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using System;
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+#else
 using Vector3 = global::OpenTK.Vector3;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;

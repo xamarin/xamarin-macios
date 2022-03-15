@@ -7,7 +7,6 @@ using System.Drawing;
 using Foundation;
 using GLKit;
 using ObjCRuntime;
-using OpenTK;
 using NUnit.Framework;
 using Xamarin.Utils;
 
@@ -23,10 +22,18 @@ namespace MonoTouchFixtures.GLKit {
 			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var fog = new GLKEffectPropertyFog ();
+#if NET
+			Assert.That (fog.Color.ToString (), Is.EqualTo ("<0, 0, 0, 0>"), "Color");
+#else
 			Assert.That (fog.Color.ToString (), Is.EqualTo ("(0, 0, 0, 0)"), "Color");
+#endif
 			
 			fog = new GLKBaseEffect ().Fog;
+#if NET
+			Assert.That (fog.Color.ToString (), Is.EqualTo ("<0, 0, 0, 0>"), "Color");
+#else
 			Assert.That (fog.Color.ToString (), Is.EqualTo ("(0, 0, 0, 0)"), "Color");
+#endif
 		}
 	}
 }

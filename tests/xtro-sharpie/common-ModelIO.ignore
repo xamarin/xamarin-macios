@@ -1,4 +1,4 @@
-# fixed in XAMCORE_4_0 - API break
+# fixed in .NET - API break
 !incorrect-protocol-member! MDLObjectContainerComponent::count is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLObjectContainerComponent::objectAtIndexedSubscript: is REQUIRED and should be abstract
 !incorrect-protocol-member! MDLTransformComponent::keyTimes is REQUIRED and should be abstract

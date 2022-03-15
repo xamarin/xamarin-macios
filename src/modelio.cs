@@ -16,33 +16,48 @@ using ObjCRuntime;
 using CoreAnimation;
 using CoreGraphics;
 using SceneKit;
-using Vector2i = global::OpenTK.Vector2i;
-using Vector2d = global::OpenTK.Vector2d;
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector2d = global::CoreGraphics.NVector2d;
+using Vector2i = global::CoreGraphics.NVector2i;
+using NVector3d = global::CoreGraphics.NVector3d;
+using NVector3 = global::CoreGraphics.NVector3;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector3i = global::CoreGraphics.NVector3i;
+using Vector4 = global::System.Numerics.Vector4;
+using Vector4d = global::CoreGraphics.NVector4d;
+using Vector4i = global::CoreGraphics.NVector4i;
+using Matrix2 = global::CoreGraphics.NMatrix2;
+using Matrix3 = global::CoreGraphics.NMatrix3;
+using Matrix4 = global::CoreGraphics.NMatrix4;
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+using NMatrix4 = global::CoreGraphics.NMatrix4;
+using NMatrix4d = global::CoreGraphics.NMatrix4d;
+using Quaterniond = global::CoreGraphics.NQuaterniond;
+using Quaternion = global::System.Numerics.Quaternion;
+#else
 using Vector2 = global::OpenTK.Vector2;
+using Vector2d = global::OpenTK.Vector2d;
+using Vector2i = global::OpenTK.Vector2i;
+using NVector3d = global::OpenTK.NVector3d;
+using NVector3 = global::OpenTK.NVector3;
 using Vector3 = global::OpenTK.Vector3;
 using Vector3i = global::OpenTK.Vector3i;
-using NVector3 = global::OpenTK.NVector3;
-using NVector3d = global::OpenTK.NVector3d;
 using Vector4 = global::OpenTK.Vector4;
-using Vector4i = global::OpenTK.Vector4i;
 using Vector4d = global::OpenTK.Vector4d;
-#if NET
-using Matrix2 = global::OpenTK.NMatrix2;
-using Matrix3 = global::OpenTK.NMatrix3;
-using Matrix4 = global::OpenTK.NMatrix4;
-#else
+using Vector4i = global::OpenTK.Vector4i;
 using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
-using MatrixFloat2x2 = global::OpenTK.NMatrix2;
-using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
-#endif
-using Quaternion = global::OpenTK.Quaternion;
-using Quaterniond = global::OpenTK.Quaterniond;
 using NMatrix4 = global::OpenTK.NMatrix4;
 using NMatrix4d = global::OpenTK.NMatrix4d;
-using MathHelper = global::OpenTK.MathHelper;
+using Quaterniond = global::OpenTK.Quaterniond;
+using Quaternion = global::OpenTK.Quaternion;
+#endif
+
 #if MONOMAC
 using AppKit;
 using AUViewControllerBase = AppKit.NSViewController;
@@ -2161,11 +2176,20 @@ namespace ModelIO {
 	{
 
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
+#if NET
+		[NoiOS]
+#else
+		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
+#endif
 		[Export ("initWithAsset:divisions:interiorShells:exteriorShells:patchRadius:")]
 		NativeHandle Constructor (MDLAsset asset, int divisions, int interiorShells, int exteriorShells, float patchRadius);
 
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
-		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use new MDLVoxelArray (MDLAsset, int, float)")]
+#if NET
+		[NoiOS]
+#else
+		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'new MDLVoxelArray (MDLAsset, int, float)'.")]
+#endif
 		[Export ("initWithAsset:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		NativeHandle Constructor (MDLAsset asset, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
 
@@ -2198,12 +2222,20 @@ namespace ModelIO {
 		void SetVoxels (MDLMesh mesh, int divisions, float patchRadius);
 
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
+#if NET
+		[NoiOS]
+#else
 		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
+#endif
 		[Export ("setVoxelsForMesh:divisions:interiorShells:exteriorShells:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, int interiorShells, int exteriorShells, float patchRadius);
 
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
+#if NET
+		[NoiOS]
+#else
 		[Obsoleted (PlatformName.iOS, 10, 0, message: "Use 'SetVoxels (MDLMesh, int, float)' instead.")]
+#endif
 		[Export ("setVoxelsForMesh:divisions:interiorNBWidth:exteriorNBWidth:patchRadius:")]
 		void SetVoxels (MDLMesh mesh, int divisions, float interiorNBWidth, float exteriorNBWidth, float patchRadius);
 

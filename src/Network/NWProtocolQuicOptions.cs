@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 using Security;
-using System.Runtime.Versioning;
 
 using OS_nw_protocol_options = System.IntPtr;
 using OS_nw_protocol_metadata = System.IntPtr;

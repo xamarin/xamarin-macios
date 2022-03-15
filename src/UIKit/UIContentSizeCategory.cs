@@ -2,7 +2,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -10,20 +9,22 @@ using Foundation;
 namespace UIKit {
 	static public partial class UIContentSizeCategoryExtensions {
 
-#if !NET
-		[iOS (11, 0), TV (11, 0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[TV (11, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		static extern nint /* NSComparisonResult */ UIContentSizeCategoryCompareToCategory (IntPtr /* NSString */ lhs, IntPtr /* NSString */ rhs);
 
-#if !NET
-		[iOS (11, 0), TV (11, 0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[TV (11, 0)]
 #endif
 		public static NSComparisonResult Compare (UIContentSizeCategory category1, UIContentSizeCategory category2)
 		{
@@ -38,21 +39,23 @@ namespace UIKit {
 			return (NSComparisonResult)(long)UIContentSizeCategoryCompareToCategory (c1.Handle, c2.Handle);
 		}
 
-#if !NET
-		[iOS (11, 0), TV (11, 0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[TV (11, 0)]
 #endif
 		[DllImport (Constants.UIKitLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool UIContentSizeCategoryIsAccessibilityCategory (IntPtr /* NSString */ category);
 
-#if !NET
-		[iOS (11, 0), TV (11, 0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+#else
+		[iOS (11, 0)]
+		[TV (11, 0)]
 #endif
 		static public bool IsAccessibilityCategory (this UIContentSizeCategory self)
 		{

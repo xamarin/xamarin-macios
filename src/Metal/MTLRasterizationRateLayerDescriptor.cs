@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -12,10 +11,13 @@ using ObjCRuntime;
 namespace Metal {
 	public partial class MTLRasterizationRateLayerDescriptor
 	{
-#if !NET
-		[MacCatalyst (15,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos10.15.4")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[MacCatalyst (15,0)]
 #endif
 		public double[] HorizontalSampleStorage { 
 			get {
@@ -26,10 +28,13 @@ namespace Metal {
 			}
 		}
 
-#if !NET
-		[MacCatalyst (15,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos10.15.4")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[MacCatalyst (15,0)]
 #endif
 		public double[] VerticalSampleStorage {
 			get {
@@ -40,10 +45,13 @@ namespace Metal {
 			}
 		}
 
-#if !NET
-		[MacCatalyst (15,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos10.15.4")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[MacCatalyst (15,0)]
 #endif
 		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
 		{

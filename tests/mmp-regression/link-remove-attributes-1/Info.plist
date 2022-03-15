@@ -5,7 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>link-remove-attributes-1</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.linkremoveattributes1</string>
+	<string>com.xamarin.linkremoveattributes1</string>
 	<key>CFBundleName</key>
 	<string>link-remove-attributes-1</string>
 	<key>CFBundleVersion</key>

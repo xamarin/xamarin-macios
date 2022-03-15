@@ -18,7 +18,7 @@ namespace Xamarin.iOS.Tasks
 		{
 		}
 
-		public ProjectPaths BuildProject (string appName, int expectedErrorCount = 0, bool clean = true, bool nuget_restore = false)
+		public ProjectPaths BuildProject (string appName, int expectedErrorCount = 0, bool clean = true, bool nuget_restore = false, bool is_library = false)
 		{
 			var mtouchPaths = SetupProjectPaths (appName);
 			var csproj = mtouchPaths.ProjectCSProjPath;
@@ -55,7 +55,7 @@ namespace Xamarin.iOS.Tasks
 
 			RunTarget (mtouchPaths, "Build", Mode, expectedErrorCount);
 
-			if (expectedErrorCount > 0)
+			if (expectedErrorCount > 0 || is_library)
 				return mtouchPaths;
 
 			Assert.IsTrue (Directory.Exists (AppBundlePath), "App Bundle does not exist: {0} ", AppBundlePath);
@@ -80,8 +80,8 @@ namespace Xamarin.iOS.Tasks
 				var dSYMInfoPlist = Path.Combine (AppBundlePath + ".dSYM", "Contents", "Info.plist");
 				var nativeExecutable = Path.Combine (AppBundlePath, appName);
 
-				Assert.IsTrue (File.Exists (dSYMInfoPlist), "dSYM Info.plist file does not exist");
-				Assert.IsTrue (File.GetLastWriteTimeUtc (dSYMInfoPlist) >= File.GetLastWriteTimeUtc (nativeExecutable), "dSYM Info.plist should be newer than the native executable");
+				Assert.That (dSYMInfoPlist, Does.Exist, "dSYM Info.plist file does not exist");
+				Assert.That (File.GetLastWriteTimeUtc (dSYMInfoPlist), Is.GreaterThanOrEqualTo (File.GetLastWriteTimeUtc (nativeExecutable)), $"dSYM Info.plist ({dSYMInfoPlist}) should be newer than the native executable ({nativeExecutable})");
 			}
 
 			return mtouchPaths;

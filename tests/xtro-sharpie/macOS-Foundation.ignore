@@ -10,7 +10,7 @@
 !missing-selector! NSXPCCoder::encodeXPCObject:forKey: not bound
 !missing-protocol-conformance! NSXPCConnection should conform to NSXPCProxyCreating
 
-## The AppKit version will be removed in XAMCORE_4_0.
+## The AppKit version will be removed in .NET.
 ## See https://github.com/xamarin/xamarin-macios/issues/6573
 !duplicate-type-name! NSWritingDirection enum exists as both Foundation.NSWritingDirection and AppKit.NSWritingDirection
 

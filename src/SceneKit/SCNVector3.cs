@@ -30,12 +30,19 @@ using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using MathHelper = global::CoreGraphics.MathHelper;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using MathHelper = global::OpenTK.MathHelper;
+#endif
+
 #if MONOMAC
 #if NET
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #else
 using pfloat = System.nfloat;
 #endif
@@ -208,7 +215,7 @@ namespace SceneKit
         public void NormalizeFast()
         {
 	    pfloat scale = (pfloat)MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z);
-            X *= scale;
+     	    X *= scale;
             Y *= scale;
             Z *= scale;
         }
@@ -573,7 +580,7 @@ namespace SceneKit
         public static SCNVector3 NormalizeFast(SCNVector3 vec)
         {
             pfloat scale = (pfloat)MathHelper.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z);
-            vec.X *= scale;
+     	    vec.X *= scale;
             vec.Y *= scale;
             vec.Z *= scale;
             return vec;

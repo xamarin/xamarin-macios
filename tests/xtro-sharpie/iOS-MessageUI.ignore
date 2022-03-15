@@ -1,4 +1,4 @@
-## [Native] available on XAMCORE_4_0
+## [Native] available on .NET
 !missing-enum-native! MessageComposeResult
 !missing-enum-native! MFMailComposeErrorCode
 !missing-enum-native! MFMailComposeResult

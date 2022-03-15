@@ -177,7 +177,11 @@ namespace JavaScriptCore {
 		NSDate ToDate ();
 
 		[Export ("toArray")]
+#if NET
+		NSArray ToArray ();
+#else
 		JSValue [] ToArray ();
+#endif
 
 		[Export ("toDictionary")]
 		NSDictionary ToDictionary ();

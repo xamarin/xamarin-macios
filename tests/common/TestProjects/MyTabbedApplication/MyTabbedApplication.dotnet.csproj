@@ -8,13 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <BundleResource Include="Resources\first.png" />
-    <BundleResource Include="Resources\first%402x.png" />
-    <BundleResource Include="Resources\second.png" />
-    <BundleResource Include="Resources\second%402x.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MyActionExtension\MyActionExtension.dotnet.csproj">
       <IsAppExtension>True</IsAppExtension>
     </ProjectReference>

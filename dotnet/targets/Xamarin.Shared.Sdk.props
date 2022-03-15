@@ -31,10 +31,13 @@
 		<!-- MSBuild will discard the 'PublishFolderType' metadata on items unless we set these properties -->
 		<MSBuildDisableGetCopyToOutputDirectoryItemsOptimization>true</MSBuildDisableGetCopyToOutputDirectoryItemsOptimization>
 		<MSBuildDisableGetCopyToPublishDirectoryItemsOptimization>true</MSBuildDisableGetCopyToPublishDirectoryItemsOptimization>
+
+		<!-- Do we need a RuntimeIdentifier? For apps and app extensions we do -->
+		<_RuntimeIdentifierIsRequired Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true'">true</_RuntimeIdentifierIsRequired>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
-	<PropertyGroup Condition=" ('$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true') And '$(RuntimeIdentifier)' == '' And '$(RuntimeIdentifiers)' == '' ">
+	<PropertyGroup Condition="'$(_RuntimeIdentifierIsRequired)' == 'true' And '$(RuntimeIdentifier)' == '' And '$(RuntimeIdentifiers)' == '' ">
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS'">iossimulator-x64</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS'">tvossimulator-x64</RuntimeIdentifier>
 		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS'">osx-x64</RuntimeIdentifier>

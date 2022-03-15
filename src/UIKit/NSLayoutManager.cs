@@ -14,7 +14,6 @@ using System;
 using System.Drawing;
 #endif
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Collections;
 
 using CoreGraphics;
@@ -110,12 +109,15 @@ namespace UIKit {
 		}
 #endif // !NET
 
-#if !NET
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
-#else
-		[SupportedOSPlatform ("ios13.0")]
+#if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+#else
+		[Watch (6,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
 #endif
 		public unsafe void ShowGlyphs (
 			short [] /* const CGGlyph* = CGFontIndex* = unsigned short* */ glyphs,

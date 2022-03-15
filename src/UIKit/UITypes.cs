@@ -10,7 +10,6 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -104,7 +103,9 @@ namespace UIKit {
 	}
 
 #if !WATCH
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+#else
 	[iOS (9,0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -155,13 +156,13 @@ namespace UIKit {
 #endif
 
 #if IOS || __MACCATALYST__
-#if !NET
-	[Introduced (PlatformName.iOS, 15,0)]
-	[Introduced (PlatformName.MacCatalyst, 15,0)]
-#else
+#if NET
 	[SupportedOSPlatform ("ios15.0")]
 	[SupportedOSPlatform ("maccatalyst15.0")]
-#endif //!NET
+#else
+	[Introduced (PlatformName.iOS, 15,0)]
+	[Introduced (PlatformName.MacCatalyst, 15,0)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct UIPointerAccessoryPosition {
 		public nfloat Offset, Angle;

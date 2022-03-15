@@ -5,8 +5,12 @@ using ObjCRuntime;
 namespace StoreKit {
 
 	partial class SKReceiptRefreshRequest {
-#if !NET
-		[iOS (7,1), Mac (10,14)]
+#if NET
+		[SupportedOSPlatform ("ios7.1")]
+		[SupportedOSPlatform ("macos10.14")]
+#else
+		[iOS (7,1)]
+		[Mac (10,14)]
 #endif
 		[DllImport (Constants.StoreKitLibrary, EntryPoint = "SKTerminateForInvalidReceipt")]
 		static extern public void TerminateForInvalidReceipt ();

@@ -21,6 +21,26 @@ namespace ObjCRuntime {
 
 	public static partial class Runtime {
 #if !COREBUILD
+#if NET
+#if WATCH
+		internal const string ProductName = "Microsoft.watchOS";
+#elif TVOS
+		internal const string ProductName = "Microsoft.tvOS";
+#elif IOS
+		internal const string ProductName = "Microsoft.iOS";
+#else
+		#error Unknown platform
+#endif
+#if WATCH
+		internal const string AssemblyName = "Microsoft.watchOS.dll";
+#elif TVOS
+		internal const string AssemblyName = "Microsoft.tvOS.dll";
+#elif IOS
+		internal const string AssemblyName = "Microsoft.iOS.dll";
+#else
+		#error Unknown platform
+#endif
+#else
 #if WATCH
 		internal const string ProductName = "Xamarin.Watch";
 #elif TVOS
@@ -39,20 +59,40 @@ namespace ObjCRuntime {
 #else
 		#error Unknown platform
 #endif
+#endif
 
 #if !__MACCATALYST__
+#if NET
+		public readonly static Arch Arch = (Arch) GetRuntimeArch ();
+#else
 		public static Arch Arch; // default: = Arch.DEVICE;
+#endif
 #endif
 
 		unsafe static void InitializePlatform (InitializationOptions* options)
 		{
-#if !__MACCATALYST__
+#if !__MACCATALYST__ && !NET
 			if (options->IsSimulator)
 				Arch = Arch.SIMULATOR;
 #endif
 
 			UIApplication.Initialize ();
 		}
+
+#if NET && !__MACCATALYST__
+		[SuppressGCTransition] // The native function is a single "return <constant>;" so this should be safe.
+		[DllImport ("__Internal")]
+		static extern int xamarin_get_runtime_arch ();
+
+		// The linker will replace the contents of this method with constant return value depending on the circumstances.
+		// The linker will not do that with P/Invokes (https://github.com/dotnet/linker/issues/2586), so
+		// we need an indirection here. The P/Invoke itself will be removed by the linker once the contents
+		// of this method have been replaced with a constant value.
+		static int GetRuntimeArch ()
+		{
+			return xamarin_get_runtime_arch ();
+		}
+#endif
 
 #if !NET
 		// This method is documented to be for diagnostic purposes only,

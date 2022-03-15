@@ -5,7 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>ObjCBlocksTest</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.ObjCBlocksTest</string>
+	<string>com.xamarin.ObjCBlocksTest</string>
 	<key>CFBundleName</key>
 	<string>ObjCBlocksTest</string>
 	<key>CFBundleVersion</key>

@@ -38,7 +38,7 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 				var password = hotRestartClient.CertificatesManager.GetCertificatePassword (certificatePath: CodeSigningPath);
 
 				if (password == null) {
-					throw new Exception (Resources.LocalCodesign_MissingPasswordFile);
+					throw new Exception (Resources.Codesign_MissingPasswordFile);
 				}
 
 				hotRestartClient.Sign (AppBundlePath, ProvisioningProfilePath, CodeSigningPath, password, plistArgs);

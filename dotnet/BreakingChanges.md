@@ -2,6 +2,20 @@
 
 Reference: https://github.com/xamarin/xamarin-macios/issues/13087
 
+## The SDK assemblies have been renamed.
+
+We've renamed the SDK assemblies like this:
+
+* `Xamarin.iOS.dll` -> `Microsoft.iOS.dll`
+* `Xamarin.TVOS.dll` -> `Microsoft.tvOS.dll`
+* `Xamarin.MacCatalyst.dll` -> `Microsoft.MacCatalyst.dll`
+* `Xamarin.Mac.dll` -> `Microsoft.macOS.dll`
+
+This will affect:
+
+* Code using reflection with hardcoded assembly name.
+* [Custom linker configuration files](https://docs.microsoft.com/en-us/xamarin/cross-platform/deploy-test/linker), since they contain the assembly name.
+
 ## Removed `System.nint` and `System.nuint`
 
 The two types `System.nint` and `System.nuint` (which despite their `System`
@@ -26,17 +40,29 @@ favor of the C# 9 `nint` and `nuint` types (these map to `System.IntPtr` and
 
 Reference: https://github.com/xamarin/xamarin-macios/issues/10508
 
-## System.nfloat moved to ObjCRuntime.nfloat
+## Removed `System.nfloat`
 
-The `nfloat` type moved from the `System` namespace to the `ObjCRuntime` namespace.
+The `System.nfloat` type has been removed in favor of the
+`System.Runtime.InteropServices.NFloat` type.
 
-* Code that references the `nfloat` type might not compile unless the `ObjCRuntime` namespace is imported.
+In order to make existing code compile as much as possible, we're adding a
+global using directive to C# projects, so that using `nfloat` as a type name
+continues to work:
 
-  Fix: add `using ObjCRuntime` to the file in question.
+```csharp
+global using nfloat = System.Runtime.InteropServices.NFloat;
+```
 
-* Code that references the full typename, `System.nfloat` won't compile.
+If this global using directive is undesirable, it can be turned off by setting
+a `NoNFloatUsing=true` property in the project file.
 
-  Fix: use `ObjCRuntime.nfloat` instead.
+There are a few other source code incompatibilities:
+
+* Any code that refers to the full typename (`System.nfloat`) will have to be
+  modified to just use `nfloat`, or the new full typename
+  (`System.Runtime.InteropServices.NFloat`).
+* The `nfloat.CopyArray` methods don't exist in `NFloat`. The code needs to be
+  rewritten to use `Buffer.CopyMemory` instead.
 
 ## System.NMath moved to ObjCRuntime.NMath
 
@@ -44,7 +70,7 @@ The `NMath` type moved from the `System` namespace to the `ObjCRuntime` namespac
 
 * Code that uses the `NMath` type won't compile unless the `ObjCRuntime` namespace is imported.
 
-  Fix: add `using ObjCRuntime` to the file in question.
+  Fix: add `using ObjCRuntime` to the file in question, or as a global using directive.
 
 ## NSObject.Handle and INativeObject.Handle changed type from System.IntPtr to ObjCRuntime.NativeHandle
 
@@ -171,3 +197,13 @@ API and behavior on all platforms.
 The type 'CFNetwork.MessageHandler' has been removed. Please use
 'System.Net.Http.CFNetworkHandler' or the more recent
 'Foundation.NSUrlSessionHandler' instead.
+
+## Changed name of the Info.plist entry with our version number.
+
+We add an entry to the app's Info.plist with the version number used to build
+the app. In .NET, we've changed the name of this entry from `com.xamarin.ios`
+to `com.microsoft.<platform in lower case>` (for instance `com.microsoft.tvos`
+for tvOS apps).
+
+The version format has also changed, from "X.Y.Z.W (`branch`: `hash`)" to the
+semantic versioning we use for .NET: "X.Y.Z-`branch`.Z+sha.`hash`".
