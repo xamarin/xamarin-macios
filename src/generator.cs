@@ -2155,7 +2155,7 @@ public partial class Generator : IMemberGatherer {
 		// in question actually has that value at least). Same goes for Int32.MinValue/Int64.MinValue.
 		// var isDefined = enumType.IsEnumDefined (maxValue);
 		var definedMaxField = enumType.GetFields ().Where (v => v.IsLiteral).FirstOrDefault (isMaxDefinedFunc);
-		if (definedMaxField != null) {
+		if (definedMaxField is not null && postproc is not null) {
 			postproc.AppendLine ("#if ARCH_32");
 			postproc.AppendFormat ("if (({0}) ret == ({0}) {1}.MaxValue)\n", underlyingTypeName, itype);
 			postproc.AppendFormat ("\tret = {0}.{1}; // = {2}.MaxValue\n", renderedEnumType, definedMaxField.Name, underlyingTypeName);
