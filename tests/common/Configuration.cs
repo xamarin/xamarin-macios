@@ -68,6 +68,18 @@ namespace Xamarin.Tests
 			}
 		}
 
+		static bool? is_vsts; // if the system-installed XI/XM should be used instead of the local one.
+		public static bool IsVsts {
+			get {
+				if (!is_vsts.HasValue)
+					is_vsts = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_BUILDID"));
+				return is_vsts.Value;
+			}
+			set {
+				is_vsts = value;
+			}
+		}
+
 		public static string XcodeLocation {
 			get {
 				return xcode_root;
@@ -306,18 +318,31 @@ namespace Xamarin.Tests
 
 		public static string RootPath {
 			get {
-				var dir = TestAssemblyDirectory;
-				var path = Path.Combine (dir, ".git");
-				while (!Directory.Exists (path) && path.Length > 3) {
-					dir = Path.GetDirectoryName (dir);
-					if (dir == null)
+				if (IsVsts) {
+					var workingDir = Environment.GetEnvironmentVariable ("SYSTEM_DEFAULTWORKINGDIRECTORY");
+					var git = Path.Combine (workingDir, ".git");
+					if (Directory.Exists (git)) {
+						return workingDir;
+					} else {
+						var xamarin = Path.Combine (workingDir, "xamarin-macios");
+						if (!Directory.Exists (xamarin))
+							throw new Exception ($"Could not find the xamarin-macios repo given the test working directory {workingDir}");
+						return xamarin;
+					}
+				} else {
+					var dir = TestAssemblyDirectory;
+					var path = Path.Combine (dir, ".git");
+					while (!Directory.Exists (path) && path.Length > 3) {
+						dir = Path.GetDirectoryName (dir);
+						if (dir is null)
+							throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
+						path = Path.Combine (dir, ".git");
+					}
+					path = Path.GetDirectoryName (path);
+					if (!Directory.Exists (path))
 						throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
-					path = Path.Combine (dir, ".git");
+					return path;
 				}
-				path = Path.GetDirectoryName (path);
-				if (!Directory.Exists (path))
-					throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
-				return path;
 			}
 		}
 
@@ -394,12 +419,16 @@ namespace Xamarin.Tests
 
 		public static string TargetDirectoryXI {
 			get {
+				if (UseSystem) 
+					return "/";
 				return make_config ["IOS_DESTDIR"];
 			}
 		}
 
 		public static string TargetDirectoryXM {
 			get {
+				if (UseSystem) 
+					return "/";
 				return make_config ["MAC_DESTDIR"];
 			}
 		}
@@ -479,7 +508,11 @@ namespace Xamarin.Tests
 
 		public static string GetDotNetRoot ()
 		{
-			return Path.Combine (SourceRoot, "_build");
+			if (IsVsts) {
+				return EvaluateVariable ("DOTNET6_DIR");
+			} else {
+				return Path.Combine (SourceRoot, "_build");
+			}
 		}
 
 		public static string GetRefDirectory (ApplePlatform platform)
