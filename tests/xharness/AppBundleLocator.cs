@@ -20,7 +20,7 @@ namespace Xharness {
 		readonly string dotnetPath;
 		readonly string dotnet6Path;
 
-		// Gets either the DOTNET or DOTNET6 variable, depending on any global.json
+		// Gets either the SYSTEM_DOTNET or DOTNET6 variable, depending on any global.json
 		// config file found in the specified directory or any containing directories.
 		readonly Dictionary<string, string> dotnet_executables = new Dictionary<string, string> ();
 
