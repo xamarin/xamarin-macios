@@ -260,7 +260,7 @@ namespace Darwin {
 
 			if (eventList is not null && eventList.Length < nEvents)
 				throw new ArgumentException ("nChanges is larger than the number of elements in changeList");
-
+			
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
@@ -276,7 +276,7 @@ namespace Darwin {
 
 			if (eventList is not null && eventList.Length < nEvents)
 				throw new ArgumentException ("nChanges is larger than the number of elements in changeList");
-
+			
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
@@ -290,7 +290,7 @@ namespace Darwin {
 			unsafe {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
-						return kevent (handle, cp, changeList is not null ? changeList.Length : 0, ep, eventList is not null ? eventList.Length : 0, ref timeOut) != -1;
+						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, ref timeOut) != -1;
 			}
 		}
 #endif
