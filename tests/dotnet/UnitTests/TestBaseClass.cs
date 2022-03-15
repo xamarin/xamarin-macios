@@ -291,5 +291,15 @@ namespace Xamarin.Tests {
 			Assert.AreEqual (0, rv, $"Unable to execute '{executable} {StringUtils.FormatArguments (arguments)}': exit code {rv}");
 			return output;
 		}
+
+		protected void ExecuteProjectWithMagicWordAndAssert (string csproj, ApplePlatform platform, string? runtimeIdentifiers = null)
+		{
+			if (runtimeIdentifiers is null)
+				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+
+			var appPath = GetAppPath (csproj, platform, runtimeIdentifiers);
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (appExecutable);
+		}
 	}
 }
