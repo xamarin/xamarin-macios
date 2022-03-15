@@ -162,6 +162,13 @@ steps:
   continueOnError: true
   workingDirectory: $(Build.SourcesDirectory)\tools\devops 
 
+- task: PowerShell@2
+  displayName: "Update LocProject.json"
+  inputs:
+    targetType: 'filePath'
+    filePath: $(Build.SourcesDirectory)\tools\devops\automation\scripts\update-locproject.ps1
+    arguments: -SourcesDirectory "$(Build.SourcesDirectory)" -LocProjectPath "$(Build.SourcesDirectory)\Localize\LocProject.json"
+
 - powershell: |
     git config user.email "valco@microsoft.com"
     git config user.name "vs-mobiletools-engineering-service2"

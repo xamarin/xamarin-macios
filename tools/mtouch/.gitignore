@@ -9,3 +9,4 @@ simlauncher64-sgen
 *.stamp
 mtouch.csproj.inc
 *.frameworks
+package-introspection-dependencies.zip

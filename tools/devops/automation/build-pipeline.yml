@@ -79,34 +79,49 @@ parameters:
 # the following parameters, define an array of dictionaries with the
 # data required by the templates. Do you want a new stage with 
 # device tests, no more copy paste, just add the new config.
+#
+- name: simTestsConfigurations
+  displayName: Simulator test configurations to run
+  type: object
+  default: [
+    {
+      testPrefix: 'simulator',
+      stageName: 'simulator',
+      displayName: 'Simulator Tests',
+      useXamarinStorage: False,
+      testsLabels: '--label=run-all-tests,skip-device-tests', # TODO same as calling jenkins, we need to use diff one in ci an
+      statusContext: 'VSTS: simulator tests iOS',
+      makeTarget: 'jenkins',
+    }
+  ]
 
 - name: deviceTestsConfigurations
   displayName: Device test configurations to run
   type: object
   default: [
     {
-      devicePrefix: 'iOS64',
-      execute: 'runDevice64b',
+      testPrefix: 'iOS64',
       stageName: 'ios64b_device',
       displayName: 'iOS64 Device Tests',
-      iOSDevicePool: 'VSEng-Xamarin-Mac-Devices',
+      testPool: 'VSEng-Xamarin-Mac-Devices',
       useXamarinStorage: False,
       testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests iOS',
-      iOSDeviceDemand: [
+      makeTarget: 'vsts-device-tests',
+      extraBotDemands: [
         'ios',
       ]
     },
     {
-      devicePrefix: 'tvos',
-      execute: 'runDeviceTv',
+      testPrefix: 'tvos',
       stageName: 'tvos_device',
       displayName: 'tvOS Device Tests',
-      iOSDevicePool: 'VSEng-Xamarin-Mac-Devices',
+      testPool: 'VSEng-Xamarin-Mac-Devices',
       useXamarinStorage: False,
       testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests tvOS',
-      iOSDeviceDemand: [
+      makeTarget: 'vsts-device-tests',
+      extraBotDemands: [
         'tvos',
       ]
     }]
@@ -207,6 +222,8 @@ variables:
   value: 'https://devdiv.visualstudio.com/_settings/agentpools?poolId=367&view=agents'
 - name: IsPRBuild
   value: ${{ or(eq(variables['Build.Reason'], 'PullRequest'), and(eq(variables['Build.SourceBranchName'], 'merge'), or(eq(variables['Build.Reason'], 'Manual'), eq(variables['Build.Reason'], 'IndividualCI')))) }}
+- name: CIBuild
+  value: true
 
 trigger:
   branches:
@@ -298,60 +315,82 @@ stages:
   - template: templates/release/vs-insertion-prep.yml
 
 # Test stages
+
+# always run simulator tests
+- ${{ each config in parameters.simTestsConfigurations }}:
+  - template: templates/tests/stage.yml
+    parameters:
+      testPrefix: ${{ config.testPrefix }} 
+      stageName: ${{ config.stageName }} 
+      displayName: ${{ config.displayName }} 
+      useXamarinStorage: ${{ config.useXamarinStorage }} 
+      testsLabels: ${{ config.testsLabels }}
+      statusContext: ${{ config.statusContext }} 
+      ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+        makeTarget: 'wrench-jenkins' # override when we are running on CI or manually to run all tests
+      ${{ else }}:
+        makeTarget: ${{ config.makeTarget }} 
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      gitHubToken: ${{ variables['GitHub.Token'] }}
+      xqaCertPass: $(xqa--certificates--password)
+      condition: ${{ parameters.runTests }}
+
+# devices are optional and will only be ran when we set them OR in CI
 - ${{ if eq(parameters.runDeviceTests, true) }}:
   - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
     - ${{ each config in parameters.deviceTestsConfigurations }}:
-      - template: templates/devices/stage.yml
+      - template: templates/tests/stage.yml
         parameters:
-          devicePrefix: ${{ config['devicePrefix'] }} 
-          execute: ${{ config['execute'] }} 
-          stageName: ${{ config['stageName'] }} 
-          displayName: ${{ config['displayName'] }} 
-          iOSDevicePool: ${{ config['iOSDevicePool'] }} 
-          useXamarinStorage: ${{ config['useXamarinStorage'] }} 
-          testsLabels: ${{ config['testsLabels'] }} 
-          statusContext: ${{ config['statusContext'] }} 
-          iOSDeviceDemand: ${{ config['iOSDeviceDemand'] }} 
+          testPrefix: ${{ config.testPrefix }} 
+          stageName: ${{ config.stageName }} 
+          displayName: ${{ config.displayName }} 
+          testPool: ${{ config.testPool }} 
+          useXamarinStorage: ${{ config.useXamarinStorage }} 
+          testsLabels: ${{ config.testsLabels }} 
+          statusContext: ${{ config.statusContext }} 
+          extraBotDemands: ${{ config.extraBotDemands }} 
+          makeTarget: ${{ config.makeTarget }} 
           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
           keyringPass: $(pass-XamarinQA-bot-login) 
           gitHubToken: ${{ variables['GitHub.Token'] }}
           xqaCertPass: $(xqa--certificates--password)
+          condition: ${{ parameters.runDeviceTests }}
+          parseLabels: false
 
 - ${{ if eq(parameters.runOldMacOSTests, true) }}:
-  - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
-    - ${{ each config in parameters.macTestsConfigurations }}:
-      - template: templates/mac/stage.yml
-        parameters:
-          stageName: ${{ config['stageName'] }}
-          displayName: ${{ config['displayName'] }}
-          macPool: ${{ config['macPool'] }}
-          useImage: ${{ config['useImage'] }}
-          statusContext: ${{ config['statusContext'] }}
-          keyringPass: $(pass--lab--mac--builder--keychain)
-          demands: ${{ config['demands'] }}
-
-    - template: templates/windows/stage.yml
+  - ${{ each config in parameters.macTestsConfigurations }}:
+    - template: templates/mac/stage.yml
       parameters:
-        stageName: windows_integration
-        displayName: 'Windows Integration Tests'
-        pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
-        statusContext: 'Windows Integration Tests'
+        stageName: ${{ config.stageName }}
+        displayName: ${{ config.displayName }}
+        macPool: ${{ config.macPool }}
+        useImage: ${{ config.useImage }}
+        statusContext: ${{ config.statusContext }}
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        demands: ${{ config.demands }}
+
+  - template: templates/windows/stage.yml
+    parameters:
+      stageName: windows_integration
+      displayName: 'Windows Integration Tests'
+      pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
+      statusContext: 'Windows Integration Tests'
 
 # iOS 32b tests are slow and do not have many machines, for that reason we are going just to run them in the Schedule builds.
 # This means we are going to get the translations AND the iOS 32b on those builds.
 #
 - ${{ if eq(variables['Build.Reason'], 'Schedule') }}: 
-  - template: templates/devices/stage.yml
+  - template: templates/tests/stage.yml
     parameters:
-      devicePrefix: 'iOS32b'
-      execute: 'runDevice32b'
+      testPrefix: 'iOS32b'
       stageName: 'ios32b_device'
       displayName: 'iOS32b Device Tests'
-      iOSDevicePool: 'VSEng-Xamarin-QA'
+      testPool: 'VSEng-Xamarin-QA'
       useXamarinStorage: False
       testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
       statusContext: 'VSTS: device tests iOS32b'
-      iOSDeviceDemand: 'xismoke-32'
+      extraBotDemands: 'xismoke-32'
       vsdropsPrefix: ${{ variables.vsdropsPrefix }}
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: ${{ variables['GitHub.Token'] }}

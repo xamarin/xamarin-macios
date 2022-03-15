@@ -36,8 +36,14 @@ bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe xtro-sanity/bin
 	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln /r /bl:$@.binlog
 	$(Q) touch $@
 
-XIOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/iOS/Xamarin.iOS.dll
+ifdef TESTS_USE_SYSTEM
+XIOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/iOS/Xamarin.iOS.dll
+XIOS_GL ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
+else
+XIOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/iOS/Xamarin.iOS.dll
 XIOS_GL ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
+endif
+
 XIOS_ARCH = arm64
 XIOS_PCH = iphoneos$(IOS_SDK_VERSION)-$(XIOS_ARCH).pch
 XIOS_RID = ios-arm64
@@ -49,15 +55,26 @@ $(XIOS_PCH): .stamp-check-sharpie
 	$(CORETELEPHONY_HEADERS) \
 
 
+ifdef TESTS_USE_SYSTEM
+XWATCHOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/32bits/watchOS/Xamarin.WatchOS.dll
+else
 XWATCHOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/watchOS/Xamarin.WatchOS.dll
+endif
+
 XWATCHOS_ARCH = armv7
 XWATCHOS_PCH = watchos$(WATCH_SDK_VERSION)-$(XWATCHOS_ARCH).pch
 
 $(XWATCHOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH) -exclude RealityKit
 
+ifdef TESTS_USE_SYSTEM
+XTVOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/tvOS/Xamarin.TVOS.dll
+XTVOS_GL ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll
+else
 XTVOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/tvOS/Xamarin.TVOS.dll
 XTVOS_GL ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll
+endif
+
 XTVOS_ARCH = arm64
 XTVOS_PCH = appletvos$(TVOS_SDK_VERSION)-$(XTVOS_ARCH).pch
 XTVOS_RID = tvos-arm64
@@ -65,7 +82,11 @@ XTVOS_RID = tvos-arm64
 $(XTVOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH) -exclude RealityKit
 
+ifdef TESTS_USE_SYSTEM
+XMACOS ?= /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/mobile/Xamarin.Mac.dll
+else
 XMACOS ?= $(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll
+endif
 XMACOS_ARCH = x86_64
 XMACOS_PCH = macosx$(MACOS_SDK_VERSION)-$(XMACOS_ARCH).pch
 XMACOS_RID = osx-x64
