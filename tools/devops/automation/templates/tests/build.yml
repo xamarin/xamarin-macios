@@ -33,7 +33,7 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: devicePrefix
+- name: testPrefix
   type: string
   default: 'ios' # default context, since we started dealing with iOS devices.
 
@@ -42,6 +42,10 @@ parameters:
 
 - name: xqaCertPass
   type: string
+
+- name: makeTarget
+  type: string
+  default: 'vsts-device-tests' # target to be used to run the tests
 
 steps:
 
@@ -109,7 +113,7 @@ steps:
 
 # download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
 - task: DownloadPipelineArtifact@2
-  displayName: Download artifacts.json
+  displayName: Download json artifacts
   inputs:
     patterns: '**/*.json'
     allowFailedBuilds: true
@@ -122,7 +126,10 @@ steps:
       if ($i.tag -like "xamarin-ios*" -and -not ($i.url -like "*notarized*")) {
         $url = $i.url
         Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$url"
-        break
+      }
+      if ($i.url -match ".*/xamarin.mac-[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*[.]pkg$" -and -not ($i.url -like "*notarized*")) {
+        $url = $i.url
+        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$url"
       }
     }
   displayName: 'Set iOS pkgs url'
@@ -131,7 +138,7 @@ steps:
 - bash: |
     echo "Pkg uri is $XI_PACKAGE"
     make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
-  displayName: 'Generate Provisionator csx file'
+  displayName: 'Generate Provisionator csx file for iOS'
 
 # Executed ONLY if we want to clear the provisionator cache.
 - bash: rm -rf "$TOOLS_DIR/provisionator"
@@ -142,11 +149,57 @@ steps:
 
 # Use the provisionator to install the test dependencies. Those have been generated in the 'Generate Provisionator csx file' step.
 - task: xamops.azdevex.provisionator-task.provisionator@1
-  displayName: 'Provision dependencies'
+  displayName: 'Provision Xamarin.iOS'
   inputs:
     provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
+
+- bash: |
+    var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR)
+    IOS_DESTDIR=${var#*=}
+    DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
+    mkdir -p $DEST_DIR
+    ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$DEST_DIR/git" 
+    ls -R $DEST_DIR
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
+  displayName: Create Xamarin.iOS SDK symlinks
+
+- bash: |
+    echo "Pkg uri is $XM_PACKAGE"
+    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
+  displayName: 'Generate Provisionator csx file for Mac'
+
+- task: xamops.azdevex.provisionator-task.provisionator@1
+  displayName: 'Provision Xamarin.Mac'
+  inputs:
+    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
+    provisioning_extra_args: '-vvvv'
+  timeoutInMinutes: 250
+
+- bash: |
+    var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR)
+    MAC_DESTDIR=${var#*=}
+    DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
+    mkdir -p $DEST_DIR
+    ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$DEST_DIR/git" 
+    ls -R $DEST_DIR
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
+  displayName: Create Xamarin.Mac SDK symlinks
+
+- bash: |
+    set -x
+    set -e
+    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
+  displayName: 'Provision simulators'
+
+- template: ./run-tests.yml
+  parameters:
+    statusContext: ${{ parameters.statusContext }}
+    testsLabels: ${{ parameters.testsLabels }}
+    vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+    testPrefix: ${{ parameters.testPrefix }}
+    makeTarget: ${{ parameters.makeTarget }}
 
 # clean the bot after we use it
 - template: ../common/teardown.yml

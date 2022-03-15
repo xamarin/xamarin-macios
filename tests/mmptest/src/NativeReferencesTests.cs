@@ -51,7 +51,7 @@ namespace Xamarin.MMP.Tests
 			string dylibPath = Path.Combine (tmpDir, "dll/");
 			string filePath = Path.Combine (dylibPath, fileName);
 			Directory.CreateDirectory (dylibPath);
-			File.Copy (Path.Combine (TI.AssemblyDirectory, TI.TestDirectory + "mac-binding-project/bin/SimpleClassDylib.dylib"), filePath);
+			File.Copy (Path.Combine (TI.TestDirectory, "mac-binding-project", "bin", "SimpleClassDylib.dylib"), filePath);
 			return filePath;
 		}
 
