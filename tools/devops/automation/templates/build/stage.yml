@@ -243,7 +243,6 @@ jobs:
   - template: publish-html.yml
     parameters:
       statusContext: "Build"
-      runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       enableAPIDiff: ${{ parameters.enableAPIDiff }}
       testPrefix: sim
