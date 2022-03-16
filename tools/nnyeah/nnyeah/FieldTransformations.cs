@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+#nullable enable
+
 namespace nnyeah {
 	public class FieldTransformations {
-		static Dictionary<string, Transformation> allTransforms;
+		static Dictionary<string, Transformation>? allTransforms;
 
 		public Dictionary<string, Transformation> GetTransforms (ModuleDefinition module)
 		{
-			if (allTransforms != null) {
+			if (allTransforms is not null) {
 				return allTransforms;
 			}
 

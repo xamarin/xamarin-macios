@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
+#nullable enable
+
 namespace nnyeah {
 	public class MethodTransformations {
-		static List<Transformation> allTransforms;
-		static Dictionary<string, Transformation> transformTable;
+		static List<Transformation>? allTransforms;
+		static Dictionary<string, Transformation>? transformTable;
 
 		public Dictionary<string, Transformation> GetTransforms (ModuleDefinition module, Func<List<bool>, CustomAttribute> attrBuilder)
 		{
-			if (allTransforms != null) {
+			if (transformTable is not null) {
 				return transformTable;
 			}
 

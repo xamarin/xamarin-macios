@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Mono.Cecil.Cil;
 
+#nullable enable
+
 namespace nnyeah {
 	public class Transformation {
 		static List<Instruction> emptyInstructions = new List<Instruction> ();
