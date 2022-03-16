@@ -1493,6 +1493,10 @@ namespace UIKit {
 		[iOS (11,0)]
 		[Field ("UIActivityTypeMarkupAsPDF")]
 		NSString MarkupAsPdf { get; }
+
+		[iOS (15,4), MacCatalyst (15,4)]
+		[Field ("UIActivityTypeSharePlay")]
+		NSString UIActivityTypeSharePlay { get; }
 	}
 
 	//
@@ -1582,6 +1586,10 @@ namespace UIKit {
 		[iOS (8,0)]
 		[NullAllowed, Export ("completionWithItemsHandler", ArgumentSemantic.Copy)]
 		UIActivityViewControllerCompletion CompletionWithItemsHandler { get; set; }
+
+		[NoWatch, iOS (15,4), MacCatalyst (15,4)]
+		[Export ("allowsProminentActivity")]
+		bool AllowsProminentActivity { get; set; }
 
 		// UIActivityViewController (UIActivityItemsConfiguration) category
 
@@ -2556,6 +2564,10 @@ namespace UIKit {
 		[iOS (8,0)]
 		[Field ("UIApplicationOpenSettingsURLString")]
 		NSString OpenSettingsUrlString { get; }
+
+		[iOS (15,4), MacCatalyst (15,4), TV (15,4), NoWatch]
+		[Field ("UIApplicationOpenNotificationSettingsURLString")]
+		NSString OpenNotificationSettingsUrl { get; }
 
 		// from @interface UIApplication (UIUserNotificationSettings)
 		[NoTV]
@@ -23682,5 +23694,14 @@ namespace UIKit {
 
 		[NullAllowed, Export ("representedURL", ArgumentSemantic.Copy)]
 		NSUrl RepresentedUrl { get; set; }
+	}
+
+	[NoWatch, TV (15,4), iOS (15,4), MacCatalyst (15,4)]
+	[BaseType (typeof (UICellAccessory))]
+	[DesignatedDefaultCtor]
+	interface UICellAccessoryDetail {
+
+		[NullAllowed, Export ("actionHandler", ArgumentSemantic.Copy)]
+		Action ActionHandler { get; set; }
 	}
 }
