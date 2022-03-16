@@ -764,16 +764,15 @@ namespace MetalPerformanceShadersGraph
 
 	// @interface MPSGraphSparseOps (MPSGraph)
 	[Category]
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(MPSGraph))]
 	interface MPSGraph_MPSGraphSparseOps
 	{
 		// -(MPSGraphTensor * _Nonnull)sparseTensorWithType:(MPSGraphSparseStorageType)sparseStorageType tensors:(NSArray<MPSGraphTensor *> * _Nonnull)inputTensorArray shape:(MPSShape * _Nonnull)shape dataType:(MPSDataType)dataType name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("sparseTensor(sparseTensorWithType:tensors:shape:dataType:name:)")));
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("sparseTensorWithType:tensors:shape:dataType:name:")]
 		MPSGraphTensor Sparse (MPSGraphSparseStorageType sparseStorageType, MPSGraphTensor[] inputTensorArray, [BindAs (typeof (int[]))] NSNumber[] shape, MPSDataType dataType, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)sparseTensorWithDescriptor:(MPSGraphCreateSparseOpDescriptor * _Nonnull)sparseDescriptor tensors:(NSArray<MPSGraphTensor *> * _Nonnull)inputTensorArray shape:(MPSShape * _Nonnull)shape name:(NSString * _Nullable)name __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0))) __attribute__((swift_name("sparseTensor(sparseTensorWithDescriptor:tensors:shape:name:)")));
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("sparseTensorWithDescriptor:tensors:shape:name:")]
 		MPSGraphTensor Sparse (MPSGraphCreateSparseOpDescriptor sparseDescriptor, MPSGraphTensor[] inputTensorArray, [BindAs (typeof (int[]))] NSNumber[] shape, [NullAllowed] string name);
 	}
@@ -1097,6 +1096,7 @@ namespace MetalPerformanceShadersGraph
 	}
 
 	// @interface MPSGraphRandomOpDescriptor : NSObject <NSCopying>
+	[TV (15,2), Mac (12,1), iOS (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof(NSObject))]
 	interface MPSGraphRandomOpDescriptor : NSCopying
 	{
@@ -1321,16 +1321,15 @@ namespace MetalPerformanceShadersGraph
 
 	// @interface MPSGraphScatterOps (MPSGraph)
 	[Category]
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(MPSGraph))]
 	interface MPSGraph_MPSGraphScatterOps
 	{
 		// -(MPSGraphTensor * _Nonnull)scatterWithUpdatesTensor:(MPSGraphTensor * _Nonnull)updatesTensor indicesTensor:(MPSGraphTensor * _Nonnull)indicesTensor shape:(MPSShape * _Nonnull)shape axis:(NSInteger)axis mode:(MPSGraphScatterMode)mode name:(NSString * _Nullable)name __attribute__((swift_name("scatter(_:indices:shape:axis:mode:name:)"))) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("scatterWithUpdatesTensor:indicesTensor:shape:axis:mode:name:")]
 		MPSGraphTensor Scatter (MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, [BindAs (typeof (int[]))] NSNumber[] shape, nint axis, MPSGraphScatterMode mode, [NullAllowed] string name);
 
 		// -(MPSGraphTensor * _Nonnull)scatterWithDataTensor:(MPSGraphTensor * _Nonnull)dataTensor updatesTensor:(MPSGraphTensor * _Nonnull)updatesTensor indicesTensor:(MPSGraphTensor * _Nonnull)indicesTensor axis:(NSInteger)axis mode:(MPSGraphScatterMode)mode name:(NSString * _Nullable)name __attribute__((swift_name("scatterWithData(_:updates:indices:axis:mode:name:)"))) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(tvos, introduced=15.0)));
-		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("scatterWithDataTensor:updatesTensor:indicesTensor:axis:mode:name:")]
 		MPSGraphTensor Scatter (MPSGraphTensor dataTensor, MPSGraphTensor updatesTensor, MPSGraphTensor indicesTensor, nint axis, MPSGraphScatterMode mode, [NullAllowed] string name);
 	}
@@ -1561,6 +1560,7 @@ namespace MetalPerformanceShadersGraph
 	}
 
 	// @interface MPSGraphTopKGradientOps (MPSGraph)
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[Category]
 	[BaseType (typeof(MPSGraph))]
 	interface MPSGraph_MPSGraphTopKGradientOps
