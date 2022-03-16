@@ -546,13 +546,13 @@ namespace MetalPerformanceShadersGraph
 	delegate MPSGraphTensor[] MPSGraphIfThenElseBlock ();
 
 	// typedef MPSGraphTensor * _Nonnull (^MPSGraphWhileBeforeBlock)(NSArray<MPSGraphTensor *> * _Nonnull, NSMutableArray<MPSGraphTensor *> * _Nonnull);
-	delegate MPSGraphTensor MPSGraphWhileBeforeBlock (MPSGraphTensor[] arg0, NSMutableArray<MPSGraphTensor> arg1);
+	delegate MPSGraphTensor MPSGraphWhileBeforeBlock (MPSGraphTensor[] inputTensors, NSMutableArray<MPSGraphTensor> resultTensors);
 
 	// typedef NSArray<MPSGraphTensor *> * _Nonnull (^MPSGraphWhileAfterBlock)(NSArray<MPSGraphTensor *> * _Nonnull);
-	delegate MPSGraphTensor[] MPSGraphWhileAfterBlock (MPSGraphTensor[] arg0);
+	delegate MPSGraphTensor[] MPSGraphWhileAfterBlock (MPSGraphTensor[] bodyBlockArguments);
 
 	// typedef NSArray<MPSGraphTensor *> * _Nonnull (^MPSGraphForLoopBodyBlock)(MPSGraphTensor * _Nonnull, NSArray<MPSGraphTensor *> * _Nonnull);
-	delegate MPSGraphTensor[] MPSGraphForLoopBodyBlock (MPSGraphTensor arg0, MPSGraphTensor[] arg1);
+	delegate MPSGraphTensor[] MPSGraphForLoopBodyBlock (MPSGraphTensor index, MPSGraphTensor[] iterationArguments);
 
 	// @interface MPSGraphDepthwiseConvolution2DOpDescriptor : NSObject <NSCopying>
 	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
@@ -1600,14 +1600,14 @@ namespace MetalPerformanceShadersGraph
 		// +(instancetype _Nonnull)deviceWithMTLDevice:(id<MTLDevice> _Nonnull)metalDevice;
 		[Static]
 		[Export ("deviceWithMTLDevice:")]
-		MPSGraphDevice FromMTLDevice (IMTLDevice metalDevice);
+		MPSGraphDevice Create (IMTLDevice metalDevice);
 	}
 
 	// typedef void (^MPSGraphExecutableCompletionHandler)(NSArray<MPSGraphTensorData *> * _Nonnull, NSError * _Nullable);
-	delegate void MPSGraphExecutableCompletionHandler (MPSGraphTensorData[] arg0, [NullAllowed] NSError error);
+	delegate void MPSGraphExecutableCompletionHandler (MPSGraphTensorData[] results, [NullAllowed] NSError error);
 
 	// typedef void (^MPSGraphExecutableScheduledHandler)(NSArray<MPSGraphTensorData *> * _Nonnull, NSError * _Nullable);
-	delegate void MPSGraphExecutableScheduledHandler (MPSGraphTensorData[] arg0, [NullAllowed] NSError error);
+	delegate void MPSGraphExecutableScheduledHandler (MPSGraphTensorData[] results, [NullAllowed] NSError error);
 
 	// @interface MPSGraphExecutableExecutionDescriptor : NSObject
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -1669,7 +1669,6 @@ namespace MetalPerformanceShadersGraph
 
 	// @interface MPSGraphExecutionDescriptor : NSObject
 	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
-	
 	[BaseType (typeof(NSObject))]
 	interface MPSGraphExecutionDescriptor
 	{
