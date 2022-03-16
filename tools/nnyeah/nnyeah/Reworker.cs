@@ -39,7 +39,7 @@ namespace nnyeah {
 		{
 			CheckModule ();
 
-			// simple prediate for seeing if there any references
+			// simple predicate for seeing if there any references
 			// to types we need to care about.
 			// IntPtr is for future handling of types that
 			// descend from NObject and need to have the constructor
