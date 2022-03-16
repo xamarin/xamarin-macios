@@ -780,6 +780,7 @@ namespace MetalPerformanceShadersGraph
 	// @interface MPSGraphVariableOp : MPSGraphOperation
 	[iOS (14,0), TV (14,0), Mac (11,0), MacCatalyst (14,0)]
 	[BaseType (typeof(MPSGraphOperation))]
+	[DisableDefaultCtor]
 	interface MPSGraphVariableOp
 	{
 		// @property (readonly, nonatomic) MPSShape * _Nonnull shape;
