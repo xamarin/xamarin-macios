@@ -1629,6 +1629,7 @@ namespace Intents {
 		FailureUnknownMediaType,
 		FailureNoUnplayedContent,
 		FailureRestrictedContent,
+		FailureMaxStreamLimitReached,
 	}
 
 	[Watch (5,0), TV (14,0), NoMac, iOS (12,0)]
