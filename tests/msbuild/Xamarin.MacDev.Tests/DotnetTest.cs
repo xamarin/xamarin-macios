@@ -38,6 +38,7 @@ namespace Xamarin.iOS.Tasks {
 		// [TestCase ("MyLinkedAssets")] // TODO: Requires fat apps, which has not been implemented yet
 		[TestCase ("MyMasterDetailApp")]
 		[TestCase ("MyMetalGame")]
+		[TestCase ("MyMPSGraphApp")]
 		// [TestCase ("MyOpenGLApp")] // TODO: Requires OpenTK-1.0.dll, which has not been implemented yet
 		[TestCase ("MyReleaseBuild")]
 		[TestCase ("MySceneKitApp")]
@@ -55,6 +56,7 @@ namespace Xamarin.iOS.Tasks {
 			tfi = "Xamarin.iOS";
 			switch (project) {
 			case "MyMetalGame":
+			case "MyMPSGraphApp":
 				if (Platform == "iPhoneSimulator")
 					Assert.Ignore ("The iOS Simulator does not support metal. Build for a device instead.");
 				break;
