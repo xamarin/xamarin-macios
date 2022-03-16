@@ -643,6 +643,16 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<!-- $(_CompiledCodesignEntitlements) will be used only with Codesign tasks when building for device or desktop. MUST NOT BE SET for iOS Simulator builds. -->
 			<Output TaskParameter="EntitlementsInSignature" PropertyName="_CompiledCodesignEntitlements" />
 		</CompileEntitlements>
+
+		<!-- The path to the entitlements must be resolved to the full path, because we might want to reference it from a containing project that just references this project,
+			 and in that case it becomes a bit complicated to resolve to a full path on disk when building remotely from Windows. Instead just resolve to a full path here,
+			 and use that from now on. This has to be done from a task, so that we get the full path on the mac when executed remotely from Windows. -->
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_CompiledEntitlements)' != ''" RelativePath="$(_CompiledEntitlements)">
+			<Output TaskParameter="FullPath" PropertyName="_CompiledEntitlements" />
+		</GetFullPath>
+		<GetFullPath SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true' And '$(_CompiledCodesignEntitlements)' != ''" RelativePath="$(_CompiledCodesignEntitlements)">
+			<Output TaskParameter="FullPath" PropertyName="_CompiledCodesignEntitlements" />
+		</GetFullPath>
 	</Target>
 
 	<!-- Compilation of InterfaceDefinition assets (*.xib, *.storyboard) -->
