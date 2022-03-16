@@ -116,34 +116,10 @@ steps:
     DOTNET_NUPKG_DIR=${var#*=}
     echo "Using nuget dir $DOTNET_NUPKG_DIR"
 
-    echo "Build WorkloadRollback.json"
-    VERSIONS=""
-
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=IOS_NUGET_VERSION_FULL)
-    IOS_NUGET_VERSION_FULL=${var#*=}
-    IOS_NUGET_VERSION_FULL=$(echo $IOS_NUGET_VERSION_FULL | cut -d "+" -f1)
-
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=TVOS_NUGET_VERSION_FULL)
-    TVOS_NUGET_VERSION_FULL=${var#*=}
-    TVOS_NUGET_VERSION_FULL=$(echo $TVOS_NUGET_VERSION_FULL | cut -d "+" -f1)
-
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MACOS_NUGET_VERSION_FULL)
-    MACOS_NUGET_VERSION_FULL=${var#*=}
-    MACOS_NUGET_VERSION_FULL=$(echo $MACOS_NUGET_VERSION_FULL | cut -d "+" -f1)
-
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MACCATALYST_NUGET_VERSION_FULL)
-    MACCATALYST_NUGET_VERSION_FULL=${var#*=}
-    MACCATALYST_NUGET_VERSION_FULL=$(echo $MACCATALYST_NUGET_VERSION_FULL | cut -d "+" -f1)
-
-    echo "{" >  "WorkloadRollback.json"
-    echo "\"microsoft.net.sdk.ios\": \"$IOS_NUGET_VERSION_FULL\"," >>  "WorkloadRollback.json"
-    echo "\"microsoft.net.sdk.tvos\": \"$TVOS_NUGET_VERSION_FULL\"," >>  "WorkloadRollback.json"
-    echo "\"microsoft.net.sdk.macos\": \"$MACOS_NUGET_VERSION_FULL\"," >>  "WorkloadRollback.json"
-    echo "\"microsoft.net.sdk.maccatalyst\": \"$MACCATALYST_NUGET_VERSION_FULL\"" >>  "WorkloadRollback.json"
-    echo "}" >>  "WorkloadRollback.json"
+    ROLLBACK_PATH="$(Build.SourcesDirectory)/artifacts/package-internal/WorkloadRollback.json"
 
     echo "Rollback file contents:" 
-    echo "$(cat WorkloadRollback.json)"
+    echo "$(cat $ROLLBACK_PATH)"
 
     mkdir -p $DOTNET_NUPKG_DIR
     ls -R $(Build.SourcesDirectory)/artifacts/package
@@ -165,7 +141,7 @@ steps:
 
     rm global.json
     cp global6.json global.json
-    $DOTNET6 workload install --from-rollback-file WorkloadRollback.json --source $DOTNET_NUPKG_DIR $SOURCES --verbosity diag $PLATFORMS
+    $DOTNET6 workload install --from-rollback-file $ROLLBACK_PATH --source $DOTNET_NUPKG_DIR $SOURCES --verbosity diag $PLATFORMS
 
     var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET6_DIR)
     DOTNET6_DIR=${var#*=}
@@ -242,7 +218,7 @@ steps:
     make -C builds download -j || true
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
-    EC=0
+    RC=0
     MONO_ENV_OPTIONS=--trace=E:all make -C tests ${{ parameters.makeTarget }} || RC=$?
     if [ $RC -eq 0 ]; then
       echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"

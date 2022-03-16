@@ -30,7 +30,7 @@ stages:
   dependsOn:
   - build_packages
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
-  condition: and(succeeded(), eq(dependencies.build_packages.outputs['build.configuration.RunDeviceTests'], 'True'))
+  condition: succeeded()
 
   variables:
     MAC_TESTS_PRESENT: $[ dependencies.build_packages.outputs['macTestPkg.macTestsPresent'] ]

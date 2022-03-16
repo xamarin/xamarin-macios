@@ -610,6 +610,10 @@ namespace AuthenticationServices {
 		[Mac (11,0)]
 		[Export ("localizedCallerDisplayName")]
 		string LocalizedCallerDisplayName { get; }
+
+		[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("userInterfaceEnabled")]
+		bool UserInterfaceEnabled { [Bind ("isUserInterfaceEnabled")] get; }
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -818,6 +822,11 @@ namespace AuthenticationServices {
 
 		[Export ("wasLaunchedByAuthenticationServices")]
 		bool WasLaunchedByAuthenticationServices { get; }
+
+		[Mac (12,3)]
+		[Static]
+		[Export ("registerDefaultsForASWASInSetupAssistantIfNeeded")]
+		void RegisterDefaultsForAswasInSetupAssistantIfNeeded ();
 	}
 
 
