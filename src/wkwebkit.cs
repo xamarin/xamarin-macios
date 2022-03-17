@@ -29,6 +29,15 @@ using NativeHandle = System.IntPtr;
 
 namespace WebKit
 {
+	[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+	[Native]
+	public enum WKFullscreenState : long {
+		NotInFullscreen,
+		EnteringFullscreen,
+		InFullscreen,
+		ExitingFullscreen,
+	}
+
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor ()] // Crashes during deallocation in Xcode 6 beta 2. radar 17377712.
@@ -318,6 +327,14 @@ namespace WebKit
 		[MacCatalyst (15,0)]
 		[Export ("isTextInteractionEnabled")]
 		bool _NewGetTextInteractionEnabled ();
+
+		[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("siteSpecificQuirksModeEnabled")]
+		bool SiteSpecificQuirksModeEnabled { [Bind ("isSiteSpecificQuirksModeEnabled")] get; set; }
+
+		[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("elementFullscreenEnabled")]
+		bool ElementFullscreenEnabled { [Bind ("isElementFullscreenEnabled")] get; set; }
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -1003,6 +1020,10 @@ namespace WebKit
 		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoTV]
 		[NullAllowed, Export ("underPageBackgroundColor", ArgumentSemantic.Copy)]
 		UIColor UnderPageBackgroundColor { get; set; }
+
+		[iOS (15,4), MacCatalyst (15,4), Mac (12,3), NoTV]
+		[Export ("fullscreenState")]
+		WKFullscreenState FullscreenState { get; }
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);

@@ -1,3 +1,5 @@
+//#define VERBOSE_COMPARISON
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -147,9 +149,11 @@ namespace Xamarin.Tests {
 
 		public static void CompareApps (string old_app, string new_app)
 		{
+#if VERBOSE_COMPARISON
 			Console.WriteLine ($"Comparing:");
 			Console.WriteLine ($"    {old_app}");
 			Console.WriteLine ($"    {new_app}");
+#endif
 
 			var all_old_files = Directory.GetFiles (old_app, "*.*", SearchOption.AllDirectories).Select ((v) => v.Substring (old_app.Length + 1));
 			var all_new_files = Directory.GetFiles (new_app, "*.*", SearchOption.AllDirectories).Select ((v) => v.Substring (new_app.Length + 1));
@@ -186,6 +190,13 @@ namespace Xamarin.Tests {
 				});
 			});
 
+			var old_files = filter (all_old_files);
+			var new_files = filter (all_new_files);
+
+			var extra_old_files = old_files.Except (new_files);
+			var extra_new_files = new_files.Except (old_files);
+
+#if VERBOSE_COMPARISON
 			Console.WriteLine ("Files in old app:");
 			foreach (var f in all_old_files.OrderBy (v => v))
 				Console.WriteLine ($"\t{f}");
@@ -193,18 +204,12 @@ namespace Xamarin.Tests {
 			foreach (var f in all_new_files.OrderBy (v => v))
 				Console.WriteLine ($"\t{f}");
 
-			var old_files = filter (all_old_files);
-			var new_files = filter (all_new_files);
-
 			Console.WriteLine ("Files in old app (filtered):");
 			foreach (var f in old_files.OrderBy (v => v))
 				Console.WriteLine ($"\t{f}");
 			Console.WriteLine ("Files in new app (filtered):");
 			foreach (var f in new_files.OrderBy (v => v))
 				Console.WriteLine ($"\t{f}");
-
-			var extra_old_files = old_files.Except (new_files);
-			var extra_new_files = new_files.Except (old_files);
 
 			if (extra_new_files.Any ()) {
 				Console.WriteLine ("Extra dotnet files:");
@@ -234,6 +239,7 @@ namespace Xamarin.Tests {
 			Console.WriteLine ($"\tOld app size: {total_old} bytes = {total_old / 1024.0:0.0} KB = {total_old / (1024.0 * 1024.0):0.0} MB");
 			Console.WriteLine ($"\tNew app size: {total_new} bytes = {total_new / 1024.0:0.0} KB = {total_new / (1024.0 * 1024.0):0.0} MB");
 			Console.WriteLine ($"\tSize comparison complete, total size change: {total_diff} bytes = {total_diff / 1024.0:0.0} KB = {total_diff / (1024.0 * 1024.0):0.0} MB");
+#endif
 
 			Assert.That (extra_new_files, Is.Empty, "Extra dotnet files");
 			Assert.That (extra_old_files, Is.Empty, "Missing dotnet files");
