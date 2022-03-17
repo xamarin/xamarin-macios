@@ -231,7 +231,7 @@ steps:
     # yet we do have some  flacky ones, this will allow the release to run. The comment will let use know that we failed
     exit 0  
   displayName: 'Run tests'
-  timeoutInMinutes: 30
+  timeoutInMinutes: 1
   env:
     CONTEXT: ${{ parameters.statusContext }}
     BUILD_REVISION: $(Build.SourceVersion)
@@ -241,6 +241,7 @@ steps:
   continueOnError: true
 
 - pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
     if (-not ([IO.File]::Exists("$testsPath/test-run-completed"))) {
       Set-GitHubStatus -Status "error" -Description "Tests timed out on macOS $Env:CONTEXT." -Context "$Env:CONTEXT"
