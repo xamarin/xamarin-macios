@@ -2045,31 +2045,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</Codesign>
 	</Target>
 
-	<!-- LinkMode -->
-	<PropertyGroup>
-		<_ComputeLinkModeDependsOn>
-			$(_ComputeLinkModeDependsOn);
-			_DetectSdkLocations;
-		</_ComputeLinkModeDependsOn>
-	</PropertyGroup>
-	<Target Name="_ComputeLinkMode" DependsOnTargets="$(_ComputeLinkModeDependsOn)">
-		<PropertyGroup>
-			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">$(LinkMode)</_LinkMode>
-			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">$(MtouchLink)</_LinkMode>
-			<_LinkMode Condition="'$(_LinkMode)' == ''">$(_DefaultLinkMode)</_LinkMode> <!-- Let the .NET targets chime in -->
-			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' == 'macOS'">None</_LinkMode> <!-- Linking is off by default for macOS apps -->
-			<_LinkMode Condition="'$(_LinkMode)' == '' And '$(_PlatformName)' != 'macOS'">SdkOnly</_LinkMode> <!-- Default linking is SdkOnly for iOS/tvOS/watchOS apps -->
-		</PropertyGroup>
-	</Target>
-
-	<PropertyGroup>
-		<_CollectFrameworksDependsOn>
-			$(_CollectFrameworksDependsOn);
-			_DetectSigningIdentity;
-			_CompileToNative;
-		</_CollectFrameworksDependsOn>
-	</PropertyGroup>
-
 	<Target Name="_CollectFrameworks" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_CollectFrameworksDependsOn)">
 		<PropertyGroup>
 			<_FrameworksDirectory Condition="'$(_FrameworksDirectory)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS')">$(_AppBundlePath)/Frameworks</_FrameworksDirectory>
