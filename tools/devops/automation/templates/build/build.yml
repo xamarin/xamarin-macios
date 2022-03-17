@@ -49,6 +49,10 @@ steps:
   submodules: recursive
   path: s/xamarin-macios
 
+- bash: |
+    git reset --hard HEAD~1
+  displayName: "Undo VSTS merge"
+
 - checkout: maccore
   clean: true
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
