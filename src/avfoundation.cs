@@ -7181,6 +7181,30 @@ namespace AVFoundation {
 		[NoTV][NoWatch]
 		[Field ("AVMetadataObjectTypeSalientObject")]
 		SalientObject = 1 << 17,
+
+		[TV (15,4), NoWatch, MacCatalyst (15,4), Mac (12,3), iOS (15,4)]
+		[Field ("AVMetadataObjectTypeCodabarCode")]
+		CodabarCode = 1 << 18,
+
+		[TV (15,4), NoWatch, MacCatalyst (15,4), Mac (12,3), iOS (15,4)]
+		[Field ("AVMetadataObjectTypeGS1DataBarCode")]
+		GS1DataBarCode = 1 << 19,
+
+		[TV (15,4), NoWatch, MacCatalyst (15,4), Mac (12,3), iOS (15,4)]
+		[Field ("AVMetadataObjectTypeGS1DataBarExpandedCode")]
+		GS1DataBarExpandedCode = 1 << 20,
+
+		[TV (15,4), NoWatch, MacCatalyst (15,4), Mac (12,3), iOS (15,4)]
+		[Field ("AVMetadataObjectTypeGS1DataBarLimitedCode")]
+		GS1DataBarLimitedCode = 1 << 21,
+
+		[TV (15,4), NoWatch, MacCatalyst (15,4), Mac (12,3), iOS (15,4)]
+		[Field ("AVMetadataObjectTypeMicroQRCode")]
+		MicroQRCode = 1 << 22,
+
+		[TV (15,4), NoWatch, MacCatalyst (15,4), Mac (12,3), iOS (15,4)]
+		[Field ("AVMetadataObjectTypeMicroPDF417Code")]
+		MicroPdf417Code = 1 << 23,
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -8976,6 +9000,14 @@ namespace AVFoundation {
 		[Field ("AVCaptureSessionInterruptionSystemPressureStateKey")]
 		NSString InterruptionSystemPressureStateKey { get; }
 
+		[NullAllowed]
+		[MacCatalyst (15,4), Mac (12,3), iOS (15,4)]
+		[Export ("synchronizationClock")]
+		CMClock SynchronizationClock { get; }
+
+		[Deprecated (PlatformName.MacOSX, 12, 3, message: "Use 'SynchronizationClock' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'SynchronizationClock' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 4, message: "Use 'SynchronizationClock' instead.")]
 		[iOS (7,0)]
 		[Export ("masterClock"), NullAllowed]
 		CMClock MasterClock { get; }
@@ -10606,6 +10638,10 @@ namespace AVFoundation {
 		[NoWatch, NoTV, NoiOS, NoMacCatalyst]
 		[Field ("AVCaptureDeviceTypeExternalUnknown")]
 		ExternalUnknown,
+
+		[NoWatch, NoTV, NoMac, MacCatalyst (15,4), iOS (15,4)]
+		[Field ("AVCaptureDeviceTypeBuiltInLiDARDepthCamera")]
+		BuiltInLiDarDepthCamera,
 	}
 
 	[NoTV, iOS (7,0), Mac (10,14), NoWatch] // matches API that uses it.
@@ -10754,6 +10790,16 @@ namespace AVFoundation {
 		CGPoint ExposurePointOfInterest { get; set;  }
 
 		[NoWatch]
+		[NoTV, NoMac, MacCatalyst (15,4), iOS (15,4)]
+		[Export ("automaticallyAdjustsFaceDrivenAutoExposureEnabled")]
+		bool AutomaticallyAdjustsFaceDrivenAutoExposureEnabled { get; set; }
+
+		[NoWatch]
+		[NoTV, NoMac, MacCatalyst (15,4), iOS (15,4)]
+		[Export ("faceDrivenAutoExposureEnabled")]
+		bool FaceDrivenAutoExposureEnabled { [Bind ("isFaceDrivenAutoExposureEnabled")] get; set; }
+
+		[NoWatch]
 		[Export ("adjustingExposure")]
 		bool AdjustingExposure { [Bind ("isAdjustingExposure")] get;  }
 
@@ -10865,6 +10911,14 @@ namespace AVFoundation {
 		[iOS (7,0), NoWatch, NoMac]
 		[Export ("smoothAutoFocusEnabled")]
 		bool SmoothAutoFocusEnabled { [Bind ("isSmoothAutoFocusEnabled")] get; set; }
+
+		[NoWatch, NoTV, NoMac, MacCatalyst (15,4), iOS (15,4)]
+		[Export ("automaticallyAdjustsFaceDrivenAutoFocusEnabled")]
+		bool AutomaticallyAdjustsFaceDrivenAutoFocusEnabled { get; set; }
+
+		[NoWatch, NoTV, NoMac, MacCatalyst (15,4), iOS (15,4)]
+		[Export ("faceDrivenAutoFocusEnabled")]
+		bool FaceDrivenAutoFocusEnabled { [Bind ("isFaceDrivenAutoFocusEnabled")] get; set; }
 
 		// Either AVMediaTypeVideo or AVMediaTypeAudio.
 		[iOS (7,0), NoWatch]
@@ -11226,23 +11280,26 @@ namespace AVFoundation {
 
 		// from AVCaptureDevice_AVCaptureDeviceCenterStage
 
-		[NoWatch, NoTV, NoMac]
+		[NoWatch, NoTV]
 		[iOS (14,5)]
 		[MacCatalyst (14,5)]
+		[Mac (12,3)]
 		[Static]
 		[Export ("centerStageControlMode", ArgumentSemantic.Assign)]
 		AVCaptureCenterStageControlMode CenterStageControlMode { get; set; }
 
-		[NoWatch, NoTV, NoMac]
+		[NoWatch, NoTV]
 		[iOS (14,5)]
 		[MacCatalyst (14,5)]
+		[Mac (12,3)]
 		[Static]
 		[Export ("centerStageEnabled")]
 		bool CenterStageEnabled { [Bind ("isCenterStageEnabled")] get; set; }
 
-		[NoWatch, NoTV, NoMac]
+		[NoWatch, NoTV]
 		[iOS (14,5)]
 		[MacCatalyst (14,5)]
+		[Mac (12,3)]
 		[Export ("centerStageActive")]
 		bool CenterStageActive { [Bind ("isCenterStageActive")] get; }
 
@@ -11433,27 +11490,31 @@ namespace AVFoundation {
 
 		// from AVCaptureDeviceFormat_AVCaptureDeviceFormatCenterStage
 
-		[NoWatch, NoTV, NoMac]
+		[NoWatch, NoTV]
 		[iOS (14,5)]
 		[MacCatalyst (14,5)]
+		[Mac (12,3)]
 		[Export ("centerStageSupported")]
 		bool CenterStageSupported { [Bind ("isCenterStageSupported")] get; }
 
-		[NoWatch, NoTV, NoMac]
+		[NoWatch, NoTV]
 		[iOS (14,5)]
 		[MacCatalyst (14,5)]
+		[Mac (12,3)]
 		[Export ("videoMinZoomFactorForCenterStage")]
 		nfloat VideoMinZoomFactorForCenterStage { get; }
 
-		[NoWatch, NoTV, NoMac]
+		[NoWatch, NoTV]
 		[iOS (14,5)]
 		[MacCatalyst (14,5)]
+		[Mac (12,3)]
 		[Export ("videoMaxZoomFactorForCenterStage")]
 		nfloat VideoMaxZoomFactorForCenterStage { get; }
 
-		[NoWatch, NoTV, NoMac]
+		[NoWatch, NoTV]
 		[iOS (14,5)]
 		[MacCatalyst (14,5)]
+		[Mac (12,3)]
 		[Export ("videoFrameRateRangeForCenterStage")]
 		[NullAllowed]
 		AVFrameRateRange VideoFrameRateRangeForCenterStage { get; }
@@ -14982,9 +15043,10 @@ namespace AVFoundation {
 		void LeaveArbitration ();
 	}
 
-	[NoWatch, NoTV, NoMac]
+	[NoWatch, NoTV]
 	[iOS (14,5)]
 	[MacCatalyst (14,5)]
+	[Mac (12,3)]
 	[Native]
 	public enum AVCaptureCenterStageControlMode : long {
 		User = 0,
@@ -15325,6 +15387,10 @@ namespace AVFoundation {
 	{
 		[Export ("playbackCoordinator:identifierForPlayerItem:")]
 		string GetIdentifier (AVPlayerPlaybackCoordinator coordinator, AVPlayerItem playerItem);
+
+		[TV (15,4), NoWatch, Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("playbackCoordinator:interstitialTimeRangesForPlayerItem:")]
+		NSValue [] GetInterstitialTimeRanges (AVPlayerPlaybackCoordinator coordinator, AVPlayerItem playerItem);
 	}
 
 	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
