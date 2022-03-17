@@ -52,6 +52,7 @@ steps:
 - bash: |
     git reset --hard HEAD~1
   displayName: "Undo VSTS merge"
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
 - checkout: maccore
   clean: true
