@@ -678,7 +678,7 @@ namespace Xamarin.Tests {
 						Where (v => v != Abi.ARMv7s).
 						// Sort to get stable results
 						OrderBy (v => v).
-						// Render to a string string to make it easy to understand what's going on in test failures
+						// Render to a string to make it easy to understand what's going on in test failures
 						Select (v => v.ToString ()));
 			};
 			var expectedArchitectures = renderArchitectures (
