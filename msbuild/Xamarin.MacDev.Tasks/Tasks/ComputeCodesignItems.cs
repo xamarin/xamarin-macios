@@ -1,8 +1,12 @@
+using System.Collections.Generic;
+using System.Linq;
+
 using Microsoft.Build.Framework;
+
 using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.MacDev.Tasks {
-	public class ComputeCodesignItems : ComputeCodesignItemsTaskBase, ICancelableTask {
+	public class ComputeCodesignItems : ComputeCodesignItemsTaskBase, ITaskCallback, ICancelableTask {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -10,6 +14,14 @@ namespace Xamarin.MacDev.Tasks {
 
 			return base.Execute ();
 		}
+
+		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied () => Enumerable.Empty<ITaskItem> ();
+
+		// This task does not create or modify any files, and it should only
+		// deal with files that are already on the mac, so no need to copy any
+		// files either way.
+		public bool ShouldCopyToBuildServer (ITaskItem item) => false;
+		public bool ShouldCreateOutputFile (ITaskItem item) => false;
 
 		public void Cancel ()
 		{
