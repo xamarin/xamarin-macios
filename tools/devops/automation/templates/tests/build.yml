@@ -52,14 +52,15 @@ steps:
 - checkout: self
   path: s/xamarin-macios
 
-- bash: |
-    git config user.email "valco@microsoft.com"
-    git config user.name "vs-mobiletools-engineering-service2"
+${{ if eq($(Build.Reason), PullRequest) }}:
+  - bash: |
+      git config user.email "valco@microsoft.com"
+      git config user.name "vs-mobiletools-engineering-service2"
 
-    git revert -m 0 HEAD
-    git show -n 5 --no-patch --oneline
-  displayName: "Undo VSTS merge"
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+      git revert -m 0 HEAD
+      git show -n 5 --no-patch --oneline
+    displayName: "Undo VSTS merge"
+    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
