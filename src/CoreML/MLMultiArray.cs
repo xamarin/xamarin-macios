@@ -18,7 +18,7 @@ namespace CoreML {
 		static NSNumber[] ConvertArray (nint[] value)
 		{
 			if (value is null)
-				return null!;
+				return Array.Empty<NSNumber> ();
 
 			return Array.ConvertAll<nint, NSNumber> (value, NSNumber.FromNInt);
 		}
