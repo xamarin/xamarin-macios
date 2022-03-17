@@ -50,7 +50,7 @@ steps:
   path: s/xamarin-macios
 
 - bash: |
-    git reset --hard HEAD~1
+    git revert -m 1 HEAD
   displayName: "Undo VSTS merge"
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
