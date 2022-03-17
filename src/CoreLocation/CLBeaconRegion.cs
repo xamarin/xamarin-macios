@@ -1,3 +1,5 @@
+#nullable enable
+
 #if iOS
 
 using System;

@@ -225,6 +225,9 @@ namespace Cecil.Tests {
 			return method.IsPublic;
 		}
 
+#if NET
+		[Ignore ("To be fixed after the move to an outside bot: https://github.com/xamarin/maccore/issues/2547.")]
+#endif
 		[Test]
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
@@ -365,6 +368,9 @@ namespace Cecil.Tests {
 			return false;
 		}
 
+#if NET
+		[Ignore ("To be fixed after the move to an outside bot: https://github.com/xamarin/maccore/issues/2547.")]
+#endif
 		[Test]
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]

@@ -48,7 +48,7 @@ jobs:
     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
 
   steps:
-  - template: configure.yml
+  - template: ../common/configure.yml
 
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
@@ -167,7 +167,7 @@ jobs:
         gitHubToken: ${{ parameters.gitHubToken }}
         xqaCertPass: ${{ parameters.xqaCertPass }}
         enableDotnet: ${{ parameters.enableDotnet }}
-        enableAPIDiff: true
+        enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure & SBOM'
@@ -175,7 +175,7 @@ jobs:
   dependsOn:
   - configure
   - build # can start as soon as the packages are available
-  condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True'), not(contains (variables['Build.DefinitionName'], 'private'))) # only run when we do have pkgs and on public builds
+  condition: succeeded()
 
   variables:
     Parameters.outputStorageUri: ''
@@ -193,12 +193,12 @@ jobs:
       sbomFilter: '*.nupkg;*.pkg;*.msi'
 
 - job: upload_vsdrops
-  displayName: 'Upload test results to VSDrops'
+  displayName: 'Upload API diff to VSDrops'
   timeoutInMinutes: 1000
   dependsOn: # can start as soon as the tests are done and the api diff
   - build 
   - api_diff
-  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
+  condition: succeededOrFailed() 
 
   variables:
     API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
@@ -210,26 +210,12 @@ jobs:
   steps:
   - template: upload-vsdrops.yml
     parameters:
-      devicePrefix: sim
+      testPrefix: sim
       runTests: ${{ parameters.runTests }}
 
-- job: upload_vsts_tests
-  displayName: 'Upload xml to vsts'
-  timeoutInMinutes: 1000
-  dependsOn:  build # can start as soon as the tests are done
-  condition: and(succeededOrFailed(), contains(dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
-
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: ../common/upload-vsts-tests.yml
-    parameters:
-      devicePrefix: sim
 
 - job: publish_html
-  displayName: 'Publish Html report in VSDrops'
+  displayName: 'Publish API diff to GitHub'
   timeoutInMinutes: 1000
   dependsOn: # has to wait for the tests to be done AND the data to be uploaded
   - configure
@@ -237,7 +223,6 @@ jobs:
   - api_diff
   - upload_azure_blob
   - upload_vsdrops
-  - upload_vsts_tests
   condition: succeededOrFailed()
   variables:
     # Define the variable FOO from the previous job
@@ -258,7 +243,6 @@ jobs:
   - template: publish-html.yml
     parameters:
       statusContext: "Build"
-      runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       enableAPIDiff: ${{ parameters.enableAPIDiff }}
-      devicePrefix: sim
+      testPrefix: sim
