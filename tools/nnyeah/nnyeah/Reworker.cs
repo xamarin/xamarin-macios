@@ -307,7 +307,7 @@ namespace nnyeah {
 		{
 			embeddedAttributeTypeDef = module.Types.FirstOrDefault (td => td.FullName == "Microsoft.CodeAnalysis.EmbeddedAttribute")
 				?? MakeEmbeddedAttribute ();
-			if (embeddedAttributeTypeRef == null)
+			if (embeddedAttributeTypeRef is null)
 				embeddedAttributeTypeRef = module.ImportReference (new TypeReference (embeddedAttributeTypeDef.Namespace,
 					embeddedAttributeTypeDef.Name, embeddedAttributeTypeDef.Module, embeddedAttributeTypeDef.Scope));
 		}
@@ -350,7 +350,7 @@ namespace nnyeah {
 			nativeIntegerAttributeTypeDef = module.Types.FirstOrDefault (td => td.FullName == "System.Runtime.CompilerServices.NativeIntegerAttribute")
 				?? MakeNativeIntegerAttribute ();
 
-			if (nativeIntegerAttributeTypeRef == null) {
+			if (nativeIntegerAttributeTypeRef is null) {
 				nativeIntegerAttributeTypeRef = new TypeReference (nativeIntegerAttributeTypeDef.Namespace,
 					nativeIntegerAttributeTypeDef.Name, nativeIntegerAttributeTypeDef.Module,
 					nativeIntegerAttributeTypeDef.Scope);
@@ -451,7 +451,7 @@ namespace nnyeah {
 				return null;
 
 			var ctor = resolved.Methods.SingleOrDefault (m => m.IsConstructor && m.Parameters.Count == 0 && !m.IsStatic);
-			if (ctor == null)
+			if (ctor is null)
 				return DefaultCtorFor (resolved.BaseType);
 
 			return new MethodReference (".ctor", type.Module.TypeSystem.Void, type) { HasThis = true };
