@@ -52,7 +52,7 @@ steps:
 - checkout: self
   path: s/xamarin-macios
 
-${{ if eq($(Build.Reason), PullRequest) }}:
+- ${{ if eq(variables['Build.Reason'], PullRequest) }}:
   - bash: |
       git config user.email "valco@microsoft.com"
       git config user.name "vs-mobiletools-engineering-service2"
