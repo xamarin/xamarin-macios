@@ -403,6 +403,7 @@ namespace Photos
 		RequestNotSupportedForAsset = 3306,
 		AccessRestricted = 3310,
 		AccessUserDenied = 3311,
+		LibraryInFileProviderSyncRoot = 5423,
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
