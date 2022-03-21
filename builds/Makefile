@@ -117,7 +117,7 @@ endif
 endif
 
 .stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
-	$(Q_GEN) cd package-download && $(DOTNET6) \
+	$(Q_GEN) cd package-download && $(DOTNET) \
 		build \
 		download-packages.proj \
 		/t:WriteBundledNETCorePlatformsPackageVersion \

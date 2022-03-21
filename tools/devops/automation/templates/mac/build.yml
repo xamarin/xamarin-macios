@@ -157,7 +157,7 @@ steps:
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Mac tests were not packaged."
       Stop-Pipeline
     } 
-  displayName: Validate tests pacakge
+  displayName: Validate tests package
   env:
     CONTEXT: ${{ parameters.statusContext }}
     BUILD_REVISION: $(Build.SourceVersion)
