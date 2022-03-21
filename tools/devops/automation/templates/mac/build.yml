@@ -251,3 +251,7 @@ steps:
   timeoutInMinutes: 5
   condition: succeededOrFailed() # in particular we care if something failed
   continueOnError: true
+  env:
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
