@@ -2277,6 +2277,10 @@ namespace Contacts {
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("transactionAuthor")]
 		string TransactionAuthor { get; set; }
+
+		[Mac (12, 3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("shouldRefetchContacts")]
+		bool ShouldRefetchContacts { get; set; }
 	}
 #endif // !WATCH
 
