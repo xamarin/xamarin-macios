@@ -128,6 +128,38 @@ namespace HealthKit {
 		Indeterminate,
 	}
 
+	[Watch (8,5), iOS (15,4), MacCatalyst (15,4)]
+	public enum HKVerifiableClinicalRecordSourceType {
+		[DefaultEnumValue]
+		[Field (null)]
+		None,
+
+		[Field ("HKVerifiableClinicalRecordSourceTypeSMARTHealthCard")]
+		SmartHealthCard,
+
+		[Field ("HKVerifiableClinicalRecordSourceTypeEUDigitalCOVIDCertificate")]
+		EuDigitalCovidCertificate,
+	}
+
+	[Watch (8,5), iOS (15,4), MacCatalyst (15,4)]
+	public enum HKVerifiableClinicalRecordCredentialType {
+		[DefaultEnumValue]
+		[Field (null)]
+		None,
+
+		[Field ("HKVerifiableClinicalRecordCredentialTypeCOVID19")]
+		Covid19,
+
+		[Field ("HKVerifiableClinicalRecordCredentialTypeImmunization")]
+		Immunization,
+
+		[Field ("HKVerifiableClinicalRecordCredentialTypeLaboratory")]
+		Laboratory,
+
+		[Field ("HKVerifiableClinicalRecordCredentialTypeRecovery")]
+		Recovery,
+	}
+
 #if NET
 	delegate void HKAnchoredObjectResultHandler (HKAnchoredObjectQuery query, HKSample[] results, nuint newAnchor, NSError error);
 #else
@@ -3704,6 +3736,16 @@ namespace HealthKit {
 		[Export ("itemNames", ArgumentSemantic.Copy)]
 		string[] ItemNames { get; }
 
+		[NullAllowed, iOS (15,4), MacCatalyst (15,4)]
+		[Export ("sourceType")]
+		string SourceType { get; }
+
+		[iOS (15,4), MacCatalyst (15,4)]
+		[Export ("dataRepresentation", ArgumentSemantic.Copy)]
+		NSData DataRepresentation { get; }
+
+		[Deprecated (PlatformName.iOS, 15, 4)]
+		[Deprecated (PlatformName.MacCatalyst, 15, 4)]
 		[Export ("JWSRepresentation", ArgumentSemantic.Copy)]
 		NSData JwsRepresentation { get; }
 	}
@@ -3718,8 +3760,17 @@ namespace HealthKit {
 		[Export ("recordTypes", ArgumentSemantic.Copy)]
 		string[] RecordTypes { get; }
 
+		[iOS (15,4), MacCatalyst (15,4)]
+		[BindAs (typeof (HKVerifiableClinicalRecordSourceType []))]
+		[Export ("sourceTypes", ArgumentSemantic.Copy)]
+		NSString [] SourceTypes { get; }
+
 		[Export ("initWithRecordTypes:predicate:resultsHandler:")]
 		NativeHandle Constructor (string[] recordTypes, [NullAllowed] NSPredicate predicate, HKVerifiableClinicalRecordQueryResultHandler handler);
+
+		[iOS (15,4)]
+		[Export ("initWithRecordTypes:sourceTypes:predicate:resultsHandler:")]
+		IntPtr Constructor (string [] recordTypes, [BindAs (typeof (HKVerifiableClinicalRecordSourceType []))] NSString [] sourceTypes, [NullAllowed] NSPredicate predicate, Action<HKVerifiableClinicalRecordQuery, HKVerifiableClinicalRecord []?, NSError?> resultsHandler);
 	}
 
 	[NoWatch, iOS (15,0)]
