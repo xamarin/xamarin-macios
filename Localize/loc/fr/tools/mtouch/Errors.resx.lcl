@@ -2746,6 +2746,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MT4186" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Le bureau d’enregistrement a trouvé un type «{0}» non optimal : le type n’a pas de constructeur qui accepte deux arguments (ObjCRuntime.NativeHandle, bool). Toutefois, un constructeur qui accepte deux arguments (System.IntPtr, bool) a été trouvé (et sera utilisé à la place). Il est vivement recommandé de remplacer la signature du constructeur (System.IntPtr, bool) par (ObjCRuntime.NativeHandle, bool).]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MT5101" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component]D;]A;		]]></Val>
@@ -3567,6 +3576,15 @@
           <Val><![CDATA[The tool xcrun failed to find result when looking for the tool '{0}' (the file '{1}' does not exist). Check build log for details.]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[L'outil xcrun n'a trouvé aucun résultat durant la recherche de l'outil '{0}' (le fichier '{1}' n'existe pas). Pour plus d'informations, consultez le journal de génération.]D;]A;		]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX7000" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occured while executing the custom linker steps. Please review the build log for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[Une erreur s’est produite lors de l’exécution des étapes de l’éditeur de liens personnalisé. Pour plus d’informations, consultez le journal des builds.]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

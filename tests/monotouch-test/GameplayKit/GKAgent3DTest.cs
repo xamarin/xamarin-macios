@@ -11,15 +11,22 @@
 #if !__WATCHOS__
 
 using System;
-using OpenTK;
 
 using Foundation;
 using GameplayKit;
 
+#if NET
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+using VectorFloat3 = global::CoreGraphics.NVector3;
+#else
+using OpenTK;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
+#endif
 
 using Bindings.Test;
 using NUnit.Framework;
@@ -40,6 +47,7 @@ namespace MonoTouchFixtures.GamePlayKit
 			TestRuntime.AssertXcodeVersion (8, 0);
 		}
 
+#if !NET
 		[Test]
 		public void RotationTest ()
 		{
@@ -84,6 +92,7 @@ namespace MonoTouchFixtures.GamePlayKit
 				Asserts.AreEqual (mat3x3, CFunctions.GetMatrixFloat3x3 (obj, "rotation"), "Rotation3x3 after setter native 3x3");
 			}
 		}
+#endif // !NET
 	}
 }
 

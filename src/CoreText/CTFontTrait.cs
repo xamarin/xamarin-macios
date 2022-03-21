@@ -35,6 +35,7 @@ using ObjCRuntime;
 
 namespace CoreText {
 
+#if !NET
 	public static class CTFontTraitKey {
 		public static readonly NSString Symbolic;
 		public static readonly NSString Weight;
@@ -50,6 +51,7 @@ namespace CoreText {
 			Slant     = Dlfcn.GetStringConstant (handle, "kCTFontSlantTrait");
 		}
 	}
+#endif
 
 	[Flags]
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontTraits.h

@@ -13,7 +13,11 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+#else
 using Vector3 = global::OpenTK.Vector3;
+#endif
 
 #if __IOS__ || WATCH
 namespace NearbyInteraction {

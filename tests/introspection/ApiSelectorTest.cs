@@ -355,6 +355,14 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "SKNode":
+				switch (selectorName) {
+				case "focusItemContainer":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
 			case "INPriceRange":
 				switch (selectorName) {
 				case "initWithMaximumPrice:currencyCode:":
@@ -658,6 +666,16 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "NSMenu":
+				switch (selectorName) {
+				case "appearance":
+				case "setAppearance:":
+				case "effectiveAppearance":
+					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
+						return true;
+					break;
+				}
+				break;
 			case "NSQueryGenerationToken": // A test was added in monotouch tests to ensure the selector works
 				switch (selectorName) {
 				case "encodeWithCoder:":
@@ -786,6 +804,12 @@ namespace Introspection {
 					if (!TestRuntime.CheckXcodeVersion (11, 0))
 						return true;
 					break;
+				case "objectWithItemProviderData:typeIdentifier:error:":
+				case "readableTypeIdentifiersForItemProvider":
+					// Conformance added in Xcode 12
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
 				}
 				break;
 			case "MPSNNNeuronDescriptor":
@@ -807,7 +831,6 @@ namespace Introspection {
 					break;
 				}
 				break;
-#if __MACOS__ || __MACCATALYST__ || __WATCHOS__
 			case "MLDictionaryFeatureProvider":
 			case "MLMultiArray":
 			case "MLFeatureValue":
@@ -819,7 +842,6 @@ namespace Introspection {
 					break;
 				}
 				break;
-#endif
 			case "BGTaskScheduler":
 				switch (selectorName) {
 				case "sharedScheduler":
@@ -878,6 +900,26 @@ namespace Introspection {
 						return true;
 					break;
 				}
+				break;
+			case "UIControl":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "contextMenuInteraction:configurationForMenuAtLocation:":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+			case "UISceneConnectionOptions":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "shortcutItem":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+#endif
 				break;
 			}
 

@@ -1854,6 +1854,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Class.cs \
 	ObjCRuntime/Constants.cs \
 	ObjCRuntime/DisposableObject.cs \
+	ObjCRuntime/ErrorConstants.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/NativeAttribute.cs \
@@ -1868,13 +1869,21 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/Selector.cs \
 	ObjCRuntime/SystemVersion.cs \
 	ObjCRuntime/ThrowHelper.cs \
+	Simd/MathHelper.cs \
 	Simd/MatrixDouble4x4.cs \
 	Simd/MatrixFloat2x2.cs \
 	Simd/MatrixFloat3x3.cs \
+	Simd/MatrixFloat3x3RM.cs \
 	Simd/MatrixFloat4x3.cs \
 	Simd/MatrixFloat4x4.cs \
+	Simd/VectorDouble2.cs \
 	Simd/VectorDouble3.cs \
+	Simd/VectorDouble4.cs \
 	Simd/VectorFloat3.cs \
+	Simd/VectorInt2.cs \
+	Simd/VectorInt3.cs \
+	Simd/VectorInt4.cs \
+	Simd/QuaternionDouble.cs \
 
 SHARED_SOURCES = \
 	../runtime/Delegates.generated.cs \

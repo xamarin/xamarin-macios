@@ -25,17 +25,28 @@ using SceneKit;
 using Metal;
 #endif
 
-using Vector2 = global::OpenTK.Vector2;
-using Vector3 = global::OpenTK.Vector3;
+#if NET
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector4 = global::System.Numerics.Vector4;
+using VectorFloat3 = global::CoreGraphics.NVector3;
+using Quaternion = global::System.Numerics.Quaternion;
+#else
 using Matrix2 = global::OpenTK.Matrix2;
 using Matrix3 = global::OpenTK.Matrix3;
 using Matrix4 = global::OpenTK.Matrix4;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
-using VectorFloat3 = global::OpenTK.NVector3;
+using Vector2 = global::OpenTK.Vector2;
+using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
+using VectorFloat3 = global::OpenTK.NVector3;
 using Quaternion = global::OpenTK.Quaternion;
+#endif
 
 #if MONOMAC
 using AppKit;
@@ -1026,7 +1037,6 @@ namespace SpriteKit {
 		[Export ("fieldBitMask")]
 		uint FieldBitMask { get; set; } /* uint32_t */
 
-		[iOS (8,0), Mac(10,10)]
 		[Deprecated (PlatformName.iOS, 8, 0)]
 		[Deprecated (PlatformName.TvOS, 8, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -1856,7 +1866,7 @@ namespace SpriteKit {
 #else
 		[Internal]
 		IntPtr InitWithNameMatrixFloat2x2 (string name, Matrix2 value);
-#endif
+#endif // WATCH
 #endif // !NET
 
 		[iOS (10,0)][Mac (10,12)]
@@ -1884,8 +1894,8 @@ namespace SpriteKit {
 #else
 		[Internal]
 		IntPtr InitWithNameMatrixFloat3x3 (string name, Matrix3 value);
-#endif
-#endif
+#endif // WATCH
+#endif // !NET
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
@@ -1900,7 +1910,7 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("initWithName:floatMatrix4:")]
 		IntPtr InitWithNameFloatMatrix4 (string name, Matrix4 value);
-#endif
+#endif // !NET
 
 #if !NET
 		[Obsolete ("Use the '(string, MatrixFloat4x4)' overload instead.")]
@@ -1914,8 +1924,8 @@ namespace SpriteKit {
 #else
 		[Internal]
 		IntPtr InitWithNameMatrixFloat4x4 (string name, Matrix4 value);
-#endif
-#endif
+#endif // WATCH
+#endif // !NET
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
@@ -2003,7 +2013,7 @@ namespace SpriteKit {
 		[NoWatch]
 		[Export ("floatMatrix2Value")]
 		Matrix2 _FloatMatrix2Value { get; set; }
-#endif
+#endif // !NET
 
 #if !NET && WATCH
 		[Obsolete ("Use 'MatrixFloat2x2Value' instead.")]
@@ -2034,7 +2044,7 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatMatrix3Value")]
 		Matrix3 _FloatMatrix3Value { get; set; }
-#endif
+#endif // !NET
 
 #if !NET && WATCH
 		[Obsolete ("Use 'MatrixFloat3x3Value' instead.")]
@@ -2065,7 +2075,7 @@ namespace SpriteKit {
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("floatMatrix4Value")]
 		Matrix4 _FloatMatrix4Value { get; set; }
-#endif
+#endif // !NET
 
 #if !NET && WATCH
 		[Obsolete ("Use 'MatrixFloat4x4Value' instead.")]
@@ -2128,7 +2138,7 @@ namespace SpriteKit {
 		[Export ("uniformWithName:matrixFloat2x2:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix2 value);
-#endif
+#endif // !NET
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10, 0)]
@@ -2162,7 +2172,7 @@ namespace SpriteKit {
 		[Export ("uniformWithName:matrixFloat4x4:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		SKUniform Create (string name, Matrix4 value);
-#endif
+#endif // !NET
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10, 0)]

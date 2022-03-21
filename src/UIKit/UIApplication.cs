@@ -10,6 +10,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Threading;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
@@ -65,6 +66,7 @@ namespace UIKit {
 		
 #if !WATCH
 		[Obsolete ("Use the overload with 'Type' instead of 'String' parameters for type safety.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static void Main (string []? args, string? principalClassName, string? delegateClassName)
 		{
 			var p = CFString.CreateNative (principalClassName);

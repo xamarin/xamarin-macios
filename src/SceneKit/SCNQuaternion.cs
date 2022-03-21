@@ -23,12 +23,19 @@ SOFTWARE.
  */
 #endregion
 
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector4 = global::System.Numerics.Vector4;
+using Matrix3 = global::CoreGraphics.RMatrix3;
+using Quaternion = global::System.Numerics.Quaternion;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
-using Matrix3 = global::OpenTK.Matrix3;
 using Vector4 = global::OpenTK.Vector4;
+using Matrix3 = global::OpenTK.Matrix3;
 using Quaternion = global::OpenTK.Quaternion;
-using MathHelper = global::OpenTK.MathHelper;
+#endif
 
 #if MONOMAC
 #if NET
@@ -92,23 +99,30 @@ namespace SceneKit
             double scale = System.Math.Pow(matrix.Determinant, 1.0d / 3.0d);
 	    float x, y, z;
 	    
-            w = (float) (System.Math.Sqrt(System.Math.Max(0, scale + matrix[0, 0] + matrix[1, 1] + matrix[2, 2])) / 2);
-            x = (float) (System.Math.Sqrt(System.Math.Max(0, scale + matrix[0, 0] - matrix[1, 1] - matrix[2, 2])) / 2);
-            y = (float) (System.Math.Sqrt(System.Math.Max(0, scale - matrix[0, 0] + matrix[1, 1] - matrix[2, 2])) / 2);
-            z = (float) (System.Math.Sqrt(System.Math.Max(0, scale - matrix[0, 0] - matrix[1, 1] + matrix[2, 2])) / 2);
+            w = (float) (System.Math.Sqrt(System.Math.Max(0, scale + matrix.R0C0 + matrix.R1C1 + matrix.R2C2)) / 2);
+            x = (float) (System.Math.Sqrt(System.Math.Max(0, scale + matrix.R0C0 - matrix.R1C1 - matrix.R2C2)) / 2);
+            y = (float) (System.Math.Sqrt(System.Math.Max(0, scale - matrix.R0C0 + matrix.R1C1 - matrix.R2C2)) / 2);
+            z = (float) (System.Math.Sqrt(System.Math.Max(0, scale - matrix.R0C0 - matrix.R1C1 + matrix.R2C2)) / 2);
 
 	    xyz = new Vector3 (x, y, z);
 	    
-            if (matrix[2, 1] - matrix[1, 2] < 0) X = -X;
-            if (matrix[0, 2] - matrix[2, 0] < 0) Y = -Y;
-            if (matrix[1, 0] - matrix[0, 1] < 0) Z = -Z;
+            if (matrix.R2C1 - matrix.R1C2 < 0) X = -X;
+            if (matrix.R0C2 - matrix.R2C0 < 0) Y = -Y;
+            if (matrix.R1C0 - matrix.R0C1 < 0) Z = -Z;
         }
 
+#if NET
+	public SCNQuaternion (Quaternion quaternion)
+		: this (quaternion.X, quaternion.Y, quaternion.Z, quaternion.W)
+	{
+	}
+#else
 	public SCNQuaternion (Quaternion openTkQuaternion) : this (new SCNVector3 (openTkQuaternion.XYZ), openTkQuaternion.W)
 	{
 		
 	}
-	
+#endif
+
         #endregion
 
         #region Public Members

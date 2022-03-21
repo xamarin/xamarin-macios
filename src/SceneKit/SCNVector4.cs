@@ -28,11 +28,19 @@ using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector4 = global::System.Numerics.Vector4;
+using MathHelper = global::CoreGraphics.MathHelper;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
 using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;
+#endif
+
 #if MONOMAC
 #if NET
 using pfloat = ObjCRuntime.nfloat;
@@ -236,7 +244,7 @@ namespace SceneKit
             get
             {
                 return (pfloat)(1.0f / MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
-            }
+     	    }
         }
 
         #endregion
@@ -286,7 +294,7 @@ namespace SceneKit
         public void NormalizeFast()
         {
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
-            X *= scale;
+     	    X *= scale;
             Y *= scale;
             Z *= scale;
             W *= scale;
@@ -716,7 +724,7 @@ namespace SceneKit
         public static void NormalizeFast(ref SCNVector4 vec, out SCNVector4 result)
         {
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z + vec.W * vec.W));
-            result.X = vec.X * scale;
+     	    result.X = vec.X * scale;
             result.Y = vec.Y * scale;
             result.Z = vec.Z * scale;
             result.W = vec.W * scale;
@@ -1102,7 +1110,5 @@ namespace SceneKit
 	{
 		return new Vector4 ((float)source.X, (float)source.Y, (float)source.Z, (float)source.W);
 	}
-
-		
     }
 }

@@ -3,6 +3,24 @@ using System;
 using ModelIO;
 using MetalPerformanceShaders;
 #endif
+
+#if NET
+using System.Numerics;
+using CoreGraphics;
+using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
+using MatrixFloat3x3 = global::CoreGraphics.NMatrix3;
+using MatrixFloat4x3 = global::CoreGraphics.NMatrix4x3;
+using Matrix4 = global::System.Numerics.Matrix4x4;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+using VectorFloat3 = global::CoreGraphics.NVector3;
+using MatrixDouble4x4 = global::CoreGraphics.NMatrix4d;
+using VectorDouble2 = global::CoreGraphics.NVector2d;
+using VectorDouble3 = global::CoreGraphics.NVector3d;
+using Vector4d = global::CoreGraphics.NVector4d;
+using Vector2i = global::CoreGraphics.NVector2i;
+using Vector4i = global::CoreGraphics.NVector4i;
+using Quaterniond = global::CoreGraphics.NQuaterniond;
+#else
 using OpenTK;
 using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
@@ -11,6 +29,8 @@ using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 using VectorFloat3 = global::OpenTK.NVector3;
 using MatrixDouble4x4 = global::OpenTK.NMatrix4d;
 using VectorDouble3 = global::OpenTK.NVector3d;
+#endif
+
 using NUnit.Framework;
 
 public static class Asserts
@@ -94,6 +114,7 @@ public static class Asserts
 		Assert.AreEqual (expected.W, actual.W, delta, message + " (W)");
 	}
 
+#if !NET
 	public static void AreEqual (Matrix2 expected, Matrix2 actual, string message)
 	{
 		AreEqual (expected.R0C0, actual.R0C0, message + " (R0C0)");
@@ -127,21 +148,46 @@ public static class Asserts
 		AreEqual (expected.R2C1, actual.R2C1, delta, message + " (R2C1)");
 		AreEqual (expected.R2C2, actual.R2C2, delta, message + " (R2C2)");
 	}
+#endif
 
 	public static void AreEqual (Matrix4 expected, Matrix4 actual, string message)
 	{
-		AreEqual (expected.Column0, actual.Column0, message + " (Col0)");
-		AreEqual (expected.Column1, actual.Column1, message + " (Col1)");
-		AreEqual (expected.Column2, actual.Column2, message + " (Col2)");
-		AreEqual (expected.Column3, actual.Column3, message + " (Col3)");
+		AreEqual (expected.M11, actual.M11, message + " (M11)");
+		AreEqual (expected.M21, actual.M21, message + " (M21)");
+		AreEqual (expected.M31, actual.M31, message + " (M31)");
+		AreEqual (expected.M41, actual.M41, message + " (M41)");
+		AreEqual (expected.M12, actual.M12, message + " (M12)");
+		AreEqual (expected.M22, actual.M22, message + " (M22)");
+		AreEqual (expected.M32, actual.M32, message + " (M32)");
+		AreEqual (expected.M42, actual.M42, message + " (M42)");
+		AreEqual (expected.M13, actual.M13, message + " (M13)");
+		AreEqual (expected.M23, actual.M23, message + " (M23)");
+		AreEqual (expected.M33, actual.M33, message + " (M33)");
+		AreEqual (expected.M43, actual.M43, message + " (M43)");
+		AreEqual (expected.M14, actual.M14, message + " (M14)");
+		AreEqual (expected.M24, actual.M24, message + " (M24)");
+		AreEqual (expected.M34, actual.M34, message + " (M34)");
+		AreEqual (expected.M44, actual.M44, message + " (M44)");
 	}
 
 	public static void AreEqual (Matrix4 expected, Matrix4 actual, float delta, string message)
 	{
-		AreEqual (expected.Column0, actual.Column0, delta, message + " (Col0)");
-		AreEqual (expected.Column1, actual.Column1, delta, message + " (Col1)");
-		AreEqual (expected.Column2, actual.Column2, delta, message + " (Col2)");
-		AreEqual (expected.Column3, actual.Column3, delta, message + " (Col3)");
+		AreEqual (expected.M11, actual.M11, delta, message + " (M11)");
+		AreEqual (expected.M21, actual.M21, delta, message + " (M21)");
+		AreEqual (expected.M31, actual.M31, delta, message + " (M31)");
+		AreEqual (expected.M41, actual.M41, delta, message + " (M41)");
+		AreEqual (expected.M12, actual.M12, delta, message + " (M12)");
+		AreEqual (expected.M22, actual.M22, delta, message + " (M22)");
+		AreEqual (expected.M32, actual.M32, delta, message + " (M32)");
+		AreEqual (expected.M42, actual.M42, delta, message + " (M42)");
+		AreEqual (expected.M13, actual.M13, delta, message + " (M13)");
+		AreEqual (expected.M23, actual.M23, delta, message + " (M23)");
+		AreEqual (expected.M33, actual.M33, delta, message + " (M33)");
+		AreEqual (expected.M43, actual.M43, delta, message + " (M43)");
+		AreEqual (expected.M14, actual.M14, delta, message + " (M14)");
+		AreEqual (expected.M24, actual.M24, delta, message + " (M24)");
+		AreEqual (expected.M34, actual.M34, delta, message + " (M34)");
+		AreEqual (expected.M44, actual.M44, delta, message + " (M44)");
 	}
 
 	public static void AreEqual (Vector2i expected, Vector2i actual, string message)
@@ -248,6 +294,7 @@ public static class Asserts
 		AreEqual (expected.R1C1, actual.R1C1, delta, message + " (R1C1)");
 	}
 
+#if !NET
 	public static void AreEqual (Matrix2 expected, MatrixFloat2x2 actual, string message)
 	{
 		AreEqual (expected.R0C0, actual.R0C0, message + " (R0C0)");
@@ -263,6 +310,7 @@ public static class Asserts
 		AreEqual (expected.R1C0, actual.R1C0, message + " (R1C0)");
 		AreEqual (expected.R1C1, actual.R1C1, message + " (R1C1)");
 	}
+#endif // !NET
 
 	public static void AreEqual (MatrixFloat3x3 expected, MatrixFloat3x3 actual, string message)
 	{
@@ -290,6 +338,7 @@ public static class Asserts
 		AreEqual (expected.R2C2, actual.R2C2, delta, message + " (R2C2)");
 	}
 
+#if !NET
 	public static void AreEqual (Matrix3 expected, MatrixFloat3x3 actual, string message)
 	{
 		AreEqual (expected.R0C0, actual.R0C0, message + " (R0C0)");
@@ -315,6 +364,7 @@ public static class Asserts
 		AreEqual (expected.R2C1, actual.R2C1, message + " (R2C1)");
 		AreEqual (expected.R2C2, actual.R2C2, message + " (R2C2)");
 	}
+#endif
 
 	public static void AreEqual (MatrixFloat4x4 expected, MatrixFloat4x4 actual, string message)
 	{
@@ -427,12 +477,29 @@ public static class Asserts
 		Assert.AreEqual (expected, actual, delta, message);
 	}
 
+#if !NET
 	public static void AreEqual (Vector2d expected, Vector2d actual, string message)
 	{
 		Assert.AreEqual (expected.X, actual.X, message + " (X)");
 		Assert.AreEqual (expected.Y, actual.Y, message + " (Y)");
 	}
+#endif
 
+#if NET
+	public static void AreEqual (VectorDouble2 expected, VectorDouble2 actual, string message)
+	{
+		Assert.AreEqual (expected.X, actual.X, 0.001, message + " (X)");
+		Assert.AreEqual (expected.Y, actual.Y, 0.001, message + " (Y)");
+	}
+
+	public static void AreEqual (VectorDouble2 expected, VectorDouble2 actual, double delta, string message)
+	{
+		Assert.AreEqual (expected.X, actual.X, delta, message + " (X)");
+		Assert.AreEqual (expected.Y, actual.Y, delta, message + " (Y)");
+	}
+#endif
+
+#if !NET
 	public static void AreEqual (Vector3d expected, Vector3d actual, string message)
 	{
 		Assert.AreEqual (expected.X, actual.X, 0.001, message + " (X)");
@@ -460,6 +527,7 @@ public static class Asserts
 		Assert.AreEqual (expected.Y, actual.Y, 0.001, message + " (Y)");
 		Assert.AreEqual (expected.Z, actual.Z, 0.001, message + " (Z)");
 	}
+#endif
 
 	public static void AreEqual (VectorDouble3 expected, VectorDouble3 actual, string message)
 	{
@@ -491,6 +559,7 @@ public static class Asserts
 		Assert.AreEqual (expected.W, actual.W, delta, message + " (W)");
 	}
 
+#if !NET
 	public static void AreEqual (Matrix4d expected, Matrix4d actual, string message)
 	{
 		AreEqual (expected.Column0, actual.Column0, message + " (Col0)");
@@ -506,6 +575,7 @@ public static class Asserts
 		AreEqual (expected.Column2, actual.Column2, delta, message + " (Col2)");
 		AreEqual (expected.Column3, actual.Column3, delta, message + " (Col3)");
 	}
+#endif //!NET
 
 	public static void AreEqual (MatrixDouble4x4 expected, MatrixDouble4x4 actual, string message)
 	{
@@ -547,6 +617,7 @@ public static class Asserts
 		AreEqual (expected.M44, actual.M44, delta, message + " (M44)");
 	}
 
+#if !NET
 	public static void AreEqual (Matrix4d expected, MatrixDouble4x4 actual, string message)
 	{
 		AreEqual (expected.M11, actual.M11, message + " (M11)");
@@ -586,6 +657,7 @@ public static class Asserts
 		AreEqual (expected.M34, actual.M34, delta, message + " (M34)");
 		AreEqual (expected.M44, actual.M44, delta, message + " (M44)");
 	}
+#endif // !NET
 
 	public static void AreEqual (NMatrix4x3 expected, NMatrix4x3 actual, float delta, string message)
 	{
@@ -603,6 +675,7 @@ public static class Asserts
 		AreEqual (expected.M34, actual.M34, delta, message + " (M34)");
 	}
 
+#if !NET
 	public static void AreEqual (NMatrix4d expected, Matrix4d actual, string message)
 	{
 		AreEqual (expected.M11, actual.M11, message + " (M11)");
@@ -622,6 +695,7 @@ public static class Asserts
 		AreEqual (expected.M34, actual.M34, message + " (M34)");
 		AreEqual (expected.M44, actual.M44, message + " (M44)");
 	}
+#endif
 
 	public static void AreEqual (NMatrix4x3 expected, NMatrix4x3 actual, string message)
 	{

@@ -1661,6 +1661,7 @@ namespace GameKit {
 		[Async]
 		void LoadAchievementDescriptions ([NullAllowed] GKAchievementDescriptionHandler handler);
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoWatch]
 		[Export ("loadImageWithCompletionHandler:")]
 		[Async]
@@ -1693,11 +1694,13 @@ namespace GameKit {
 		[NullAllowed]
 		UIImage Image { get; }
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoWatch]
 		[Static]
 		[Export ("incompleteAchievementImage")]
 		UIImage IncompleteAchievementImage { get; }
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoWatch]
 		[Static]
 		[Export ("placeholderCompletedAchievementImage")]

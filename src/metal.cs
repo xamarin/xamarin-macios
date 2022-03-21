@@ -736,6 +736,7 @@ namespace Metal {
 		nuint GetImageblockMemoryLength (MTLSize imageblockDimensions);
 
 		[TV (13, 0), Mac (11,0), iOS (13, 0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -2299,6 +2300,7 @@ namespace Metal {
 		nuint GetImageblockMemoryLength (MTLSize imageblockDimensions);
 
 		[Mac (10,14), iOS (12,0), TV (12,0)]
+		[MacCatalyst (14, 0)]
 #if NET
 		[Abstract]
 #endif
@@ -3553,6 +3555,7 @@ namespace Metal {
 
 		[iOS (11, 0), Mac (11,0), NoWatch]
 		[TV (14,5)]
+		[MacCatalyst (14, 0)]
 		[NullAllowed, Export ("tileArguments")]
 		MTLArgument[] TileArguments { get; }
 	}
@@ -3680,21 +3683,25 @@ namespace Metal {
 
 		[iOS (11, 0), NoWatch, Mac (11,0)]
 		[TV (14,5)]
+		[MacCatalyst (14,0)]
 		[Export ("imageblockSampleLength")]
 		nuint ImageblockSampleLength { get; set; }
 
 		[iOS (11, 0), NoWatch, Mac (11,0)]
 		[TV (14,5)]
+		[MacCatalyst (14,0)]
 		[Export ("threadgroupMemoryLength")]
 		nuint ThreadgroupMemoryLength { get; set; }
 
 		[iOS (11, 0), NoWatch, Mac (11,0)]
 		[TV (14,5)]
+		[MacCatalyst (14,0)]
 		[Export ("tileWidth")]
 		nuint TileWidth { get; set; }
 
 		[iOS (11, 0), NoWatch, Mac (11,0)]
 		[TV (14,5)]
+		[MacCatalyst (14,0)]
 		[Export ("tileHeight")]
 		nuint TileHeight { get; set; }
 
@@ -3960,6 +3967,7 @@ namespace Metal {
 		MTLPipelineBufferDescriptorArray Buffers { get; }
 
 		[Mac (11,0), iOS (13, 0), TV (13,0)]
+		[MacCatalyst (14, 0)]
 		[Export ("supportIndirectCommandBuffers")]
 		bool SupportIndirectCommandBuffers { get; set; }
 

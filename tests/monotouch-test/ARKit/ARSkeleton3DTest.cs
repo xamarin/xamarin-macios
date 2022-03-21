@@ -18,7 +18,11 @@ using NUnit.Framework;
 using ObjCRuntime;
 using Xamarin.Utils;
 
+#if NET
+using Matrix4 = global::CoreGraphics.NMatrix4;
+#else
 using Matrix4 = global::OpenTK.NMatrix4;
+#endif
 
 namespace MonoTouchFixtures.ARKit {
 

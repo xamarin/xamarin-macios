@@ -13,11 +13,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
-using OpenTK;
 
 using CoreGraphics;
 using Foundation;
 using Vision;
+
+#if NET
+using System.Numerics;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.Vision {
 

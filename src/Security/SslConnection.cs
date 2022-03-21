@@ -23,22 +23,22 @@ namespace Security {
 	unsafe delegate SslStatus SslWriteFunc (IntPtr connection, IntPtr data, /* size_t* */ nint* dataLength);
 #endif
 
-#if !NET
+#if NET
+	[UnsupportedOSPlatform ("macos10.15")]
+	[UnsupportedOSPlatform ("tvos13.0")]
+	[UnsupportedOSPlatform ("ios13.0")]
+#if MONOMAC
+	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif TVOS
+	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete (Constants.UseNetworkInstead, DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
-#else
-	[UnsupportedOSPlatform ("ios13.0")]
-	[UnsupportedOSPlatform ("tvos13.0")]
-	[UnsupportedOSPlatform ("macos10.15")]
-#if IOS
-	[Obsolete ("Starting with ios13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-	[Obsolete ("Starting with tvos13.0 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif MONOMAC
-	[Obsolete ("Starting with macos10.15 use 'Network.framework' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
 #endif
 	public abstract class SslConnection : IDisposable {
 

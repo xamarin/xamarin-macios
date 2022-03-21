@@ -10,12 +10,17 @@
 // (as opposed to OpenTK.Matrix3, which has a row-major layout).
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
-using VectorFloat3 = global::OpenTK.NVector3;
-
+// This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/matrix_types.h
+#if NET
+namespace CoreGraphics
+#else
 namespace OpenTK
+#endif
 {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NMatrix3 : IEquatable<NMatrix3>
@@ -140,6 +145,7 @@ namespace OpenTK
 			return !left.Equals (right);
 		}
 
+#if !NET
 		public static explicit operator global::OpenTK.Matrix3 (NMatrix3 value)
 		{
 			return new global::OpenTK.Matrix3 (
@@ -155,6 +161,7 @@ namespace OpenTK
 				value.R1C0, value.R1C1, value.R1C2,
 				value.R2C0, value.R2C1, value.R2C2);
 		}
+#endif // !NET
 
 		public override string ToString ()
 		{
@@ -172,12 +179,12 @@ namespace OpenTK
 				R2C0.GetHashCode () ^ R2C1.GetHashCode () ^ R2C2.GetHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NMatrix3))
+			if (!(obj is NMatrix3 matrix))
 				return false;
 
-			return Equals ((NMatrix3) obj);
+			return Equals (matrix);
 		}
 
 		public bool Equals (NMatrix3 other)

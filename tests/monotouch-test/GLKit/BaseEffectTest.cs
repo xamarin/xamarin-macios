@@ -7,9 +7,14 @@ using System.Drawing;
 using Foundation;
 using GLKit;
 using ObjCRuntime;
-using OpenTK;
 using NUnit.Framework;
 using Xamarin.Utils;
+
+#if NET
+using System.Numerics;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.GLKit {
 	

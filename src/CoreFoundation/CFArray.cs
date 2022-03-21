@@ -189,7 +189,7 @@ namespace CoreFoundation {
 		static T DefaultConvert<T> (NativeHandle handle) where T: class, INativeObject
 		{
 			if (handle != CFNullHandle)
-				return Runtime.GetINativeObject<T> (handle, false)!;
+				return Runtime.GetINativeObject<T> (handle, forced_type: false, owns: false)!;
 			return null!;
 		}
 

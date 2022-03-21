@@ -5790,7 +5790,7 @@ namespace UIKit {
 		[Static]
 		[Internal] // bug https://xamarin.github.io/bugzilla-archives/25/25511/bug.html
 		[Export ("monospacedSystemFontOfSize:weight:")]
-		IntPtr _MonospacedSystemFontOfSize (nfloat fontSize, double weight);
+		IntPtr _MonospacedSystemFontOfSize (nfloat fontSize, nfloat weight);
 
 		[NoWatch][NoTV]
 		[Static] [Export ("labelFontSize")]
@@ -10776,6 +10776,7 @@ namespace UIKit {
 		CGPoint SnapPoint { get; set; }
 	}
 
+	[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 	[NoTV]
 	[BaseType (typeof (UIViewController))]
 	// iOS6 returns the following (confusing) message with the default .ctor:
@@ -17604,6 +17605,7 @@ namespace UIKit {
 		UIEdgeInsets PerPageContentInsets { get; set; }
 	}
 
+	[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 	[NoTV]
 	[BaseType (typeof (UIPrintFormatter))]
 	[DisableDefaultCtor] // nonfunctional (and it doesn't show up in the header anyway)

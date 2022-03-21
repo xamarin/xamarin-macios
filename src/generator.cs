@@ -2410,7 +2410,7 @@ public partial class Generator : IMemberGatherer {
 		m = GetOutputStream ("ObjCRuntime", "Messaging");
 		Header (m);
 		print (m, "namespace {0} {{", ns.ObjCRuntime);
-		print (m, "\tpartial class Messaging {");
+		print (m, "\tstatic partial class Messaging {");
 
 		print (m, "\t\tinternal const string LIBOBJC_DYLIB = \"/usr/lib/libobjc.dylib\";\n");
 		if (BindThirdPartyLibrary){
@@ -6448,15 +6448,15 @@ public partial class Generator : IMemberGatherer {
 
 		switch (BindingTouch.TargetFramework.Platform) {
 		case ApplePlatform.iOS:
-			return "Xamarin.iOS";
+			return BindingTouch.IsDotNet ? "Microsoft.iOS" : "Xamarin.iOS";
 		case ApplePlatform.MacOSX:
-			return "Xamarin.Mac";
+			return BindingTouch.IsDotNet ? "Microsoft.macOS" : "Xamarin.Mac";
 		case ApplePlatform.TVOS:
-			return "Xamarin.TVOS";
+			return BindingTouch.IsDotNet ? "Microsoft.tvOS" : "Xamarin.TVOS";
 		case ApplePlatform.WatchOS:
-			return "Xamarin.WatchOS";
+			return BindingTouch.IsDotNet ? "Microsoft.watchOS" :"Xamarin.WatchOS";
 		case ApplePlatform.MacCatalyst:
-			return "Xamarin.MacCatalyst";
+			return "Microsoft.MacCatalyst";
 		default:
 			throw ErrorHelper.CreateError (1053, /* Internal error: unknown target framework '{0}'. */ BindingTouch.TargetFramework);
 		}

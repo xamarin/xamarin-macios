@@ -121,6 +121,9 @@ namespace Xamarin.Linker {
 				case "CacheDirectory":
 					CacheDirectory = value;
 					break;
+				case "AppBundleManifestPath":
+					Application.InfoPListPath = value;
+					break;
 				case "CustomLinkFlags":
 					Application.ParseCustomLinkFlags (value, "gcc_flags");
 					break;
@@ -154,6 +157,9 @@ namespace Xamarin.Linker {
 				case "Interpreter":
 					if (!string.IsNullOrEmpty (value))
 						Application.ParseInterpreter (value);
+					break;
+				case "IsAppExtension":
+					Application.IsExtension = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
 					break;
 				case "ItemsDirectory":
 					ItemsDirectory = value;
@@ -364,6 +370,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"LinkerConfiguration:");
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
 				Console.WriteLine ($"    AOTOutputDirectory: {AOTOutputDirectory}");
+				Console.WriteLine ($"    AppBundleManifestPath: {Application.InfoPListPath}");
 				Console.WriteLine ($"    AreAnyAssembliesTrimmed: {Application.AreAnyAssembliesTrimmed}");
 				Console.WriteLine ($"    AssemblyName: {Application.AssemblyName}");
 				Console.WriteLine ($"    CacheDirectory: {CacheDirectory}");

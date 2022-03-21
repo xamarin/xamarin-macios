@@ -7,7 +7,6 @@ using System.Drawing;
 using Foundation;
 using GLKit;
 using ObjCRuntime;
-using OpenTK;
 using NUnit.Framework;
 using Xamarin.Utils;
 

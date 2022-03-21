@@ -9908,6 +9908,7 @@ namespace AppKit {
 		[Export ("layerContentsForContentsScale:")]
 		NSObject GetLayerContentsForContentsScale (nfloat layerContentsScale);
 
+		[NoMacCatalyst]
 		[Mac (11,0)]
 		[Static]
 		[Export ("imageWithSystemSymbolName:accessibilityDescription:")]
@@ -19809,6 +19810,7 @@ namespace AppKit {
 #if NET
 		[Abstract]
 #endif
+		[return: NullAllowed]
 		[Export ("attributedSubstringForProposedRange:actualRange:")]
 		NSAttributedString GetAttributedSubstring (NSRange proposedRange, out NSRange actualRange);
 

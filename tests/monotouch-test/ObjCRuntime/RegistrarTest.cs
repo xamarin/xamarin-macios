@@ -48,7 +48,6 @@ using Contacts;
 #if !(__TVOS__ && NET)
 using WebKit;
 #endif
-using OpenTK;
 using NUnit.Framework;
 using Bindings.Test;
 

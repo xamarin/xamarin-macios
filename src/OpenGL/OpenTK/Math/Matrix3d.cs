@@ -25,6 +25,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 
+#if !NET
 namespace OpenTK
 {
     // Todo: Remove this warning when the code goes public.
@@ -827,3 +828,4 @@ namespace OpenTK
     }
     #pragma warning restore 3019
 }
+#endif // !NET

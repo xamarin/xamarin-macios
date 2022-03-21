@@ -73,6 +73,11 @@
     <FirstParty Include="System.IO.Abstractions.dll" />
     <!-- Xamarin.PreBuilt.iOS.app.zip -->
     <FirstParty Include="Xamarin.PreBuilt.iOS.app\*.dll" />
+    <!-- Our new Microsoft.* product dlls -->
+    <FirstParty Include="Microsoft.iOS.dll" />
+    <FirstParty Include="Microsoft.MacCatalyst.dll" />
+    <FirstParty Include="Microsoft.macOS.dll" />
+    <FirstParty Include="Microsoft.tvOS.dll" />
   </ItemGroup>
 
   <Import Project="$(MSBuildThisFileDirectory)SignList.targets" />

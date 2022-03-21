@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET;TESTS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
@@ -50,6 +50,21 @@
     </Compile>
     <Compile Include="..\..\..\tools\common\SdkVersions.cs">
       <Link>external\SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\MachO.cs">
+      <Link>external\MachO.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\mtouch\Errors.designer.cs">
+      <Link>external\Errors.designer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>external\ErrorHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\ErrorHelper.tests.cs">
+      <Link>external\ErrorHelper.tests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\error.cs">
+      <Link>external\error.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>

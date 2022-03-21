@@ -18,7 +18,11 @@ using NUnit.Framework;
 using ObjCRuntime;
 using Xamarin.Utils;
 
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+#else
 using Vector2 = global::OpenTK.Vector2;
+#endif
 
 namespace MonoTouchFixtures.ARKit {
 

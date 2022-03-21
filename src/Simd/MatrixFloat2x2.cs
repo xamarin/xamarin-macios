@@ -10,10 +10,17 @@
 // (as opposed to OpenTK.Matrix2, which has a row-major layout).
 // 
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
+// This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/matrix_types.h
+#if NET
+namespace CoreGraphics
+#else
 namespace OpenTK
+#endif
 {
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NMatrix2 : IEquatable<NMatrix2>
@@ -92,6 +99,7 @@ namespace OpenTK
 			return !left.Equals (right);
 		}
 
+#if !NET
 		public static explicit operator global::OpenTK.Matrix2 (NMatrix2 value)
 		{
 			return new global::OpenTK.Matrix2 (
@@ -105,6 +113,7 @@ namespace OpenTK
 				value.R0C0, value.R0C1,
 				value.R1C0, value.R1C1);
 		}
+#endif // !NET
 
 		public override string ToString ()
 		{
@@ -116,12 +125,12 @@ namespace OpenTK
 			return R0C0.GetHashCode () ^ R0C1.GetHashCode () ^ R1C0.GetHashCode () ^ R1C1.GetHashCode ();
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (!(obj is NMatrix2))
+			if (!(obj is NMatrix2 matrix))
 				return false;
 
-			return Equals ((NMatrix2) obj);
+			return Equals (matrix);
 		}
 
 		public bool Equals (NMatrix2 other)

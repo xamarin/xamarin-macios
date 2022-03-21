@@ -92,13 +92,16 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'tvOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.TVOS/</_XamarinBclPath>
 		<_XamarinBclPath Condition="'$(_PlatformName)' == 'watchOS'">$(_XamarinSdkRoot)/lib/mono/Xamarin.WatchOS/</_XamarinBclPath>
 	</PropertyGroup>
-	<PropertyGroup>
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'MacCatalyst'">Xamarin.MacCatalyst.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'iOS'">Xamarin.iOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'tvOS'">Xamarin.TVOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'watchOS'">Xamarin.WatchOS.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyName Condition="'$(_PlatformName)' == 'macOS'">Xamarin.Mac.dll</_XamarinPlatformAssemblyName>
 		<_XamarinPlatformAssemblyPath>$(_XamarinBclPath)$(_XamarinPlatformAssemblyName)</_XamarinPlatformAssemblyPath>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' == 'true'">
+		<_XamarinPlatformAssemblyPath>$(_XamarinBclPath)$(_PlatformAssemblyName).dll</_XamarinPlatformAssemblyPath>
 	</PropertyGroup>
 
 	<!-- Sometimes we've used different variable names for the same thing for Xamarin.iOS and Xamarin.Mac projects. Here we try to unify those variables -->
@@ -323,6 +326,9 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 		     separately) allow, so `latest` it is.
 		-->
 		<LangVersion>latest</LangVersion>
+
+		<!-- Default NoBindingEmbedding to 'true' for .NET projects, it's the new way -->
+		<NoBindingEmbedding Condition="'$(NoBindingEmbedding)' == '' And '$(UsingAppleNETSdk)' == 'true'">true</NoBindingEmbedding>
 	</PropertyGroup>
 
 	<Target Name="_ComputeTargetFrameworkMoniker" Condition="'$(_ComputedTargetFrameworkMoniker)' == ''">

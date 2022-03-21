@@ -9,7 +9,6 @@ using Foundation;
 using ObjCRuntime;
 using CoreAnimation;
 using CoreLocation;
-using OpenTK;
 
 namespace AVFoundation {
 

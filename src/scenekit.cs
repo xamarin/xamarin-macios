@@ -34,11 +34,17 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if NET
+using NMatrix4 = global::CoreGraphics.NMatrix4;
+using NVector3 = global::CoreGraphics.NVector3;
+using Vector3 = global::CoreGraphics.NVector3;
+using Vector4 = global::System.Numerics.Vector4;
+#else
 using NMatrix4 = global::OpenTK.NMatrix4;
 using NVector3 = global::OpenTK.NVector3;
 using Vector3 = global::OpenTK.NVector3;
 using Vector4 = global::OpenTK.Vector4;
-using Quaternion = global::OpenTK.Quaternion;
+#endif
 
 #if !WATCH
 using CoreAnimation;
@@ -61,7 +67,6 @@ using GameplayKit;
 
 #if MONOMAC
 using AppKit;
-using OpenTK;
 
 using GLContext = global::OpenGL.CGLContext;
 #else

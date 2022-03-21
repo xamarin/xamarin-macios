@@ -5,7 +5,11 @@ using System.Diagnostics;
 using Foundation;
 using ObjCRuntime;
 
-using OpenTK;
+#if NET
+using NMatrix4x3 = global::CoreGraphics.NMatrix4x3;
+#else
+using NMatrix4x3 = global::OpenTK.NMatrix4x3;
+#endif
 
 using NUnit.Framework;
 

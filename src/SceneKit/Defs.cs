@@ -13,9 +13,6 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
-using Vector3 = global::OpenTK.Vector3;
-using Vector4 = global::OpenTK.Vector4;
-
 #nullable enable
 
 namespace SceneKit {

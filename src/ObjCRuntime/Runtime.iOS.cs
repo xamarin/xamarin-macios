@@ -21,6 +21,26 @@ namespace ObjCRuntime {
 
 	public static partial class Runtime {
 #if !COREBUILD
+#if NET
+#if WATCH
+		internal const string ProductName = "Microsoft.watchOS";
+#elif TVOS
+		internal const string ProductName = "Microsoft.tvOS";
+#elif IOS
+		internal const string ProductName = "Microsoft.iOS";
+#else
+		#error Unknown platform
+#endif
+#if WATCH
+		internal const string AssemblyName = "Microsoft.watchOS.dll";
+#elif TVOS
+		internal const string AssemblyName = "Microsoft.tvOS.dll";
+#elif IOS
+		internal const string AssemblyName = "Microsoft.iOS.dll";
+#else
+		#error Unknown platform
+#endif
+#else
 #if WATCH
 		internal const string ProductName = "Xamarin.Watch";
 #elif TVOS
@@ -38,6 +58,7 @@ namespace ObjCRuntime {
 		internal const string AssemblyName = "Xamarin.iOS.dll";
 #else
 		#error Unknown platform
+#endif
 #endif
 
 #if !__MACCATALYST__

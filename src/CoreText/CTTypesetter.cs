@@ -61,10 +61,13 @@ namespace CoreText {
 
 		public NSDictionary Dictionary {get; private set;}
 
-#if !NET
-		[Deprecated (PlatformName.iOS, 6, 0)]
-#else
+#if NET
 		[UnsupportedOSPlatform ("ios6.0")]
+#if IOS
+		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 6, 0)]
 #endif
 		public bool DisableBidiProcessing {
 			get {
@@ -84,11 +87,15 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTTypesetterOptionKey.ForceEmbeddingLevel, value);}
 		}
 
-#if !NET
-		[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
-#else
-		[SupportedOSPlatform ("ios12.0")]
+#if NET
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("ios12.0")]
+#else
+		[Watch (5,0)]
+		[TV (12,0)]
+		[Mac (10,14)]
+		[iOS (12,0)]
 #endif
 		public bool AllowUnboundedLayout {
 			get => CFDictionary.GetBooleanValue (Dictionary.Handle, CTTypesetterOptionKey.AllowUnboundedLayout.Handle);

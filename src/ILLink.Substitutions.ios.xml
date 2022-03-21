@@ -1,5 +1,5 @@
 <linker>
-  <assembly fullname="Xamarin.iOS">
+  <assembly fullname="Microsoft.iOS">
     <type fullname="ObjCRuntime.Dlfcn">
       <method signature="System.Void WarnOnce()" body="stub" feature="System.Diagnostics.Debugger.IsSupported" featurevalue="false" />
     </type>

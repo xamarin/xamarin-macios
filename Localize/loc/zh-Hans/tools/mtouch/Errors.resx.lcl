@@ -2746,6 +2746,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";MT4186" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[注册机构找到了非最佳类型 `{0}`: 该类型不具有采用两个(ObjCRuntime.NativeHandle, bool)参数的构造函数。但是，找到了一个采用两个(System.IntPtr, bool)参数的构造函数(并将改用此函数)。强烈建议将(System.IntPtr, bool)构造函数的签名更改为(ObjCRuntime.NativeHandle, bool)。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";MT5101" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component]D;]A;		]]></Val>
@@ -3567,6 +3576,15 @@
           <Val><![CDATA[The tool xcrun failed to find result when looking for the tool '{0}' (the file '{1}' does not exist). Check build log for details.]D;]A;		]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[查找工具“{0}”时，工具 xcrun 未能找到结果(文件“{1}”不存在)。请查看生成日志了解详细信息。]D;]A;		]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";MX7000" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[An error occured while executing the custom linker steps. Please review the build log for more information.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[执行自定义链接器步骤时出错。请查看生成日志以获取详细信息。]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

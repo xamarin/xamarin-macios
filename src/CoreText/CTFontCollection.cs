@@ -50,6 +50,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
+#if !NET
 	public static class CTFontCollectionOptionKey {
 		public static readonly NSString RemoveDuplicates;
 
@@ -58,6 +59,7 @@ namespace CoreText {
 			RemoveDuplicates = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTFontCollectionRemoveDuplicatesOption")!;
 		}
 	}
+#endif
 
 	public class CTFontCollectionOptions {
 
@@ -148,20 +150,24 @@ namespace CoreText {
 			return CFArray.ArrayFromHandleFunc (cfArrayRef, fd => new CTFontDescriptor (fd, false), true)!;
 		}
 
-#if !NET
-		[iOS (12,0), TV (12,0), Watch (5,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[iOS (12,0)]
+		[TV (12,0)]
+		[Watch (5,0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTFontCollectionCreateMatchingFontDescriptorsWithOptions (IntPtr collection, IntPtr options);
 
-#if !NET
-		[iOS (12,0), TV (12,0), Watch (5,0)]
-#else
+#if NET
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+#else
+		[iOS (12,0)]
+		[TV (12,0)]
+		[Watch (5,0)]
 #endif
 		public CTFontDescriptor [] GetMatchingFontDescriptors (CTFontCollectionOptions? options)
 		{

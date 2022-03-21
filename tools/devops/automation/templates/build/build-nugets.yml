@@ -25,5 +25,6 @@ steps:
   displayName: 'Publish Artifact: build-binlogs'
   inputs:
     targetPath: $(Build.ArtifactStagingDirectory)/build-binlogs
-    artifactName: build-binlogs
+    artifactName: build-binlogs-$(Build.BuildId)
+  continueOnError: true
   condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))

@@ -583,8 +583,12 @@ namespace Xamarin.Bundler {
 			}
 		}
 
+		string info_plistpath;
 		public string InfoPListPath {
 			get {
+				if (info_plistpath is not null)
+					return info_plistpath;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
@@ -596,6 +600,9 @@ namespace Xamarin.Bundler {
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 				}
+			}
+			set {
+				info_plistpath = value;
 			}
 		}
 

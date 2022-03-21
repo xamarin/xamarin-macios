@@ -5,7 +5,13 @@ using System.Threading;
 using CoreAnimation;
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
+#if NET
+using System.Numerics;
+using Matrix4 = System.Numerics.Matrix4x4;
+#else
 using OpenTK;
+#endif
 using Metal;
 using UIKit;
 
@@ -93,7 +99,11 @@ namespace MyTVMetalGame {
 		Uniforms uniformBuffer;
 		float rotation;
 
+#if NET
+		public GameViewController (NativeHandle handle) : base (handle)
+#else
 		public GameViewController (IntPtr handle) : base (handle)
+#endif
 		{
 		}
 
@@ -279,12 +289,16 @@ namespace MyTVMetalGame {
 
 		void Update ()
 		{
-			var baseModel = Matrix4.Mult (CreateMatrixFromTranslation (0.0f, 0.0f, 5.0f), CreateMatrixFromRotation (rotation, 0.0f, 1.0f, 0.0f));
-			var baseMv = Matrix4.Mult (viewMatrix, baseModel);
-			var modelViewMatrix = Matrix4.Mult (baseMv, CreateMatrixFromRotation (rotation, 1.0f, 1.0f, 1.0f));
+			var baseModel = CreateMatrixFromTranslation (0.0f, 0.0f, 5.0f) * CreateMatrixFromRotation (rotation, 0.0f, 1.0f, 0.0f);
+			var baseMv = viewMatrix * baseModel;
+			var modelViewMatrix = baseMv * CreateMatrixFromRotation (rotation, 1.0f, 1.0f, 1.0f);
 
+#if NET
+			Matrix4.Invert (Matrix4.Transpose (modelViewMatrix), out uniformBuffer.NormalMatrix);
+#else
 			uniformBuffer.NormalMatrix = Matrix4.Invert (Matrix4.Transpose (modelViewMatrix));
-			uniformBuffer.ModelviewProjectionMatrix = Matrix4.Transpose (Matrix4.Mult (projectionMatrix, modelViewMatrix));
+#endif
+			uniformBuffer.ModelviewProjectionMatrix = Matrix4.Transpose (projectionMatrix * modelViewMatrix);
 
 			// Copy uniformBuffer's content into dynamicConstantBuffer.Contents
 			int rawsize = Marshal.SizeOf (typeof (Uniforms));
@@ -330,12 +344,12 @@ namespace MyTVMetalGame {
 			float xscale = yscale / aspect;
 			float q = farZ / (farZ - nearZ);
 
-			var m = new Matrix4 {
-				Row0 = new Vector4 (xscale, 0.0f, 0.0f, 0.0f),
-				Row1 = new Vector4 (0.0f, yscale, 0.0f, 0.0f),
-				Row2 = new Vector4 (0.0f, 0.0f, q, q * -nearZ),
-				Row3 = new Vector4 (0.0f, 0.0f, 1.0f, 0.0f)
-			};
+			var m = new Matrix4 (
+				xscale, 0.0f, 0.0f, 0.0f,
+				0.0f, yscale, 0.0f, 0.0f,
+				0.0f, 0.0f, q, q * -nearZ,
+				0.0f, 0.0f, 1.0f, 0.0f
+			);
 
 			return m;
 		}
@@ -343,10 +357,10 @@ namespace MyTVMetalGame {
 		static Matrix4 CreateMatrixFromTranslation (float x, float y, float z)
 		{
 			var m = Matrix4.Identity;
-			m.Row0.W = x;
-			m.Row1.W = y;
-			m.Row2.W = z;
-			m.Row3.W = 1.0f;
+			m.M14 = x;
+			m.M24 = y;
+			m.M34 = z;
+			m.M44 = 1.0f;
 			return m;
 		}
 
@@ -357,12 +371,12 @@ namespace MyTVMetalGame {
 			var sin = (float)Math.Sin (radians);
 			float cosp = 1.0f - cos;
 
-			var m = new Matrix4 {
-				Row0 = new Vector4 (cos + cosp * v.X * v.X, cosp * v.X * v.Y - v.Z * sin, cosp * v.X * v.Z + v.Y * sin, 0.0f),
-				Row1 = new Vector4 (cosp * v.X * v.Y + v.Z * sin, cos + cosp * v.Y * v.Y, cosp * v.Y * v.Z - v.X * sin, 0.0f),
-				Row2 = new Vector4 (cosp * v.X * v.Z - v.Y * sin, cosp * v.Y * v.Z + v.X * sin, cos + cosp * v.Z * v.Z, 0.0f),
-				Row3 = new Vector4 (0.0f, 0.0f, 0.0f, 1.0f)
-			};
+			var m = new Matrix4 (
+				cos + cosp * v.X * v.X, cosp * v.X * v.Y - v.Z * sin, cosp * v.X * v.Z + v.Y * sin, 0.0f,
+				cosp * v.X * v.Y + v.Z * sin, cos + cosp * v.Y * v.Y, cosp * v.Y * v.Z - v.X * sin, 0.0f,
+				cosp * v.X * v.Z - v.Y * sin, cosp * v.Y * v.Z + v.X * sin, cos + cosp * v.Z * v.Z, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f
+			);
 
 			return m;
 		}

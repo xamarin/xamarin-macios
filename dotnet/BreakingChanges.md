@@ -2,6 +2,20 @@
 
 Reference: https://github.com/xamarin/xamarin-macios/issues/13087
 
+## The SDK assemblies have been renamed.
+
+We've renamed the SDK assemblies like this:
+
+* `Xamarin.iOS.dll` -> `Microsoft.iOS.dll`
+* `Xamarin.TVOS.dll` -> `Microsoft.tvOS.dll`
+* `Xamarin.MacCatalyst.dll` -> `Microsoft.MacCatalyst.dll`
+* `Xamarin.Mac.dll` -> `Microsoft.macOS.dll`
+
+This will affect:
+
+* Code using reflection with hardcoded assembly name.
+* [Custom linker configuration files](https://docs.microsoft.com/en-us/xamarin/cross-platform/deploy-test/linker), since they contain the assembly name.
+
 ## Removed `System.nint` and `System.nuint`
 
 The two types `System.nint` and `System.nuint` (which despite their `System`

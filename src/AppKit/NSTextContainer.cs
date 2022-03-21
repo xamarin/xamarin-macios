@@ -8,17 +8,13 @@ namespace AppKit
 {
 	public partial class NSTextContainer
 	{
-#if NET
-#if MONOMAC
-		[Obsolete ("Starting with macos10.11 use NSTextContainer.FromSize instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
+#if !NET
 		[Obsoleted (PlatformName.MacOSX, 10, 11, message : "Use NSTextContainer.FromSize instead.")]
-#endif
 		public NSTextContainer (CGSize size)
 		{
 			Handle = InitWithContainerSize (size);
 		}
+#endif // !NET
 
 		internal NSTextContainer (CGSize size, bool isContainer)
 		{
