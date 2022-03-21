@@ -307,9 +307,9 @@ namespace Darwin {
 				fixed (KernelEvent *cp = &changeList [0])
 					fixed (KernelEvent *ep = &eventList [0])
 #if NET
-						return kevent (handle, cp, changeList is not null ? changeList.Length : 0, ep, eventList is not null ? eventList.Length : 0, IntPtr.Zero);
+						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, IntPtr.Zero);
 #else
-						return kevent (handle, cp, changeList is not null ? changeList.Length : 0, ep, eventList is not null ? eventList.Length : 0, IntPtr.Zero) != -1;
+						return kevent (handle, cp, changeList?.Length ?? 0, ep, eventList?.Length ?? 0, IntPtr.Zero) != -1;
 #endif
 			}
 		}
