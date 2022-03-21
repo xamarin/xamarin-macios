@@ -54,11 +54,8 @@ steps:
 
 - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
   - bash: |
-      git config user.email "valco@microsoft.com"
-      git config user.name "vs-mobiletools-engineering-service2"
-
-      git revert -m 2 HEAD
-      git show -n 5 --no-patch --oneline
+      HASH=$(git show HEAD~1 --pretty=format:"%h" --no-patch)
+      git reset --hard $HASH
     displayName: "Undo VSTS merge"
     workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
