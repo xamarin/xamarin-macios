@@ -55,7 +55,7 @@ steps:
       git config user.email "valco@microsoft.com"
       git config user.name "vs-mobiletools-engineering-service2"
 
-      git revert -m 0 HEAD
+      git revert -m 2 HEAD
       git show -n 5 --no-patch --oneline
     displayName: "Undo VSTS merge"
     workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
