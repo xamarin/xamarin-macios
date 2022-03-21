@@ -167,7 +167,16 @@ namespace Xamarin.Tests {
 			if (s.StartsWith ("objc", StringComparison.Ordinal))
 				s = s.Substring (s.IndexOf (Environment.NewLine) + 1);
 
-			return JsonDocument.Parse (s);
+			try {
+				return JsonDocument.Parse (s);
+			} catch (Exception e) {
+				Console.WriteLine ($"Failure to parse json:");
+				Console.WriteLine (e);
+				Console.WriteLine ("Json document:");
+				Console.WriteLine (s);
+				Assert.Fail ($"Failure to parse json: {e.Message}\nJson document:\n{s}");
+				throw;
+			}
 		}
 
 		HashSet<string> FindAssets (JsonDocument doc)
