@@ -41,12 +41,12 @@ namespace StoreKit {
 		[Export ("state")]
 		SKDownloadState State { get; }
 #if MONOMAC
-		[NoiOS][NoTV][NoMacCatalyst][NoWatch]
+		[NoiOS][NoTV][NoWatch]
 		[Obsolete ("Use 'State' instead.")]
 		[Wrap ("State", IsVirtual = true)]
 		SKDownloadState DownloadState { get;  }
 
-		[NoiOS][NoTV][NoMacCatalyst][NoWatch]
+		[NoiOS][NoTV][NoWatch]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'ExpectedContentLength' instead.")]
 		[Export ("contentLength", ArgumentSemantic.Copy)]
 		NSNumber ContentLength { get; }
@@ -88,18 +88,17 @@ namespace StoreKit {
 		[Export ("timeRemaining")]
 		double TimeRemaining { get;  }
 
-#if MONOMAC || __MACCATALYST__
-		[NoWatch][NoTV][NoiOS]
+		[NoWatch][NoTV][NoiOS][MacCatalyst (13,0)]
 		[return: NullAllowed]
 		[Export ("contentURLForProductID:")]
 		[Static]
 		NSUrl GetContentUrlForProduct (string productId);
 
-		[NoWatch][NoTV][NoiOS]
+		[NoWatch][NoTV][NoiOS][MacCatalyst (13,0)]
 		[Export ("deleteContentForProductID:")]
 		[Static]
 		void DeleteContentForProduct (string productId);
-#endif
+
 		[Mac (10,14)]
 		[Field ("SKDownloadTimeRemainingUnknown")]
 		double TimeRemainingUnknown { get; }
@@ -291,7 +290,7 @@ namespace StoreKit {
 		string ProductIdentifier { get; }
 
 #if MONOMAC
-		[NoWatch][NoiOS][NoTV][NoMacCatalyst]
+		[NoWatch][NoiOS][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'IsDownloadable' instead.")]
 		[Export ("downloadable")]
 		bool Downloadable { get; }
