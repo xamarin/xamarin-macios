@@ -36,7 +36,7 @@ rm -rf "$MLAUNCH_WORK_DIR"
 mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/bin"
 mkdir -p "$MLAUNCH_WORK_DIR/mlaunch/lib/mlaunch"
 
-DOTNET6=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET6 | grep "^DOTNET6=" | sed -e 's/^DOTNET6=//')
+DOTNET=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET | grep "^DOTNET=" | sed -e 's/^DOTNET=//')
 IOS_DESTDIR=$(make -C tools/devops print-abspath-variable VARIABLE=IOS_DESTDIR | grep "^IOS_DESTDIR=" | sed -e 's/^IOS_DESTDIR=//')
 MONOTOUCH_PREFIX=$(make -C tools/devops print-abspath-variable VARIABLE=MONOTOUCH_PREFIX | grep "^MONOTOUCH_PREFIX=" | sed -e 's/^MONOTOUCH_PREFIX=//')
 
@@ -63,7 +63,7 @@ VERSION="$(expr $BUILD_NUMBER_YY \* 1000 + $BUILD_NUMBER_MM \* 50 + $BUILD_NUMBE
 
 # We have to build from within the dir to respect the global.json
 cd "$MLAUNCH_WORK_DIR"
-"$DOTNET6" pack --version-suffix "$VERSION.$MACCORE_HASH" /p:VersionPrefix=$XCODE_VERSION
+"$DOTNET" pack --version-suffix "$VERSION.$MACCORE_HASH" /p:VersionPrefix=$XCODE_VERSION
 
 # We store mlaunch NuGet in [build work root]/mlaunch
 cd "$XAM_TOP"

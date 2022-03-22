@@ -32,6 +32,23 @@ using NativeHandle = System.IntPtr;
 
 namespace StoreKit {
 
+	[ErrorDomain ("SKANErrorDomain")]
+	[NoWatch, NoTV, NoMac, iOS (15,4), NoMacCatalyst]
+	[Native]
+	public enum SKANError : long {
+		ImpressionMissingRequiredValue = 0,
+		Unsupported = 1,
+		AdNetworkIdMissing = 2,
+		MismatchedSourceAppId = 3,
+		ImpressionNotFound = 4,
+		InvalidCampaignId = 5,
+		InvalidConversionValue = 6,
+		InvalidSourceAppId = 7,
+		InvalidAdvertisedAppId = 8,
+		InvalidVersion = 9,
+		Unknown = 10,
+	}
+
 	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKDownload {
@@ -922,10 +939,12 @@ namespace StoreKit {
 	[DisableDefaultCtor]
 	interface SKAdNetwork {
 
+		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'UpdatePostback' instead.")]
 		[Static]
 		[Export ("registerAppForAdNetworkAttribution")]
 		void RegisterAppForAdNetworkAttribution ();
 
+		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'UpdatePostback' instead.")]
 		[NoWatch, NoTV, NoMac, iOS (14,0)]
 		[Static]
 		[Export ("updateConversionValue:")]
@@ -946,6 +965,12 @@ namespace StoreKit {
 		[Async]
 		[Export ("endImpression:completionHandler:")]
 		void EndImpression (SKAdImpression impression, [NullAllowed] Action<NSError> completion);
+
+		[NoWatch, NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
+		[Static]
+		[Async]
+		[Export ("updatePostbackConversionValue:completionHandler:")]
+		void UpdatePostback (nint conversionValue, [NullAllowed] Action<NSError> completion);
 	}
 
 	[iOS (12,2)]
