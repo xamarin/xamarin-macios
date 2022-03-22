@@ -55,7 +55,7 @@ using NSCompositingOperation = Foundation.NSObject;
 using IKFilterUIView = Foundation.NSObject;
 #else
 using Color = AppKit.NSColor;
-using UIImage = Foundation.NSObject;
+using UIImage = AppKit.NSImage;
 #endif
 
 #if !NET
