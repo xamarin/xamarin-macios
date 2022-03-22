@@ -53,8 +53,9 @@ steps:
   path: s/xamarin-macios
 
 - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-  - bash: |
-      git checkout $BUILD_SOURCEBRANCH
+  - pwsh: |
+      $branch="$(Build.SourceBranch)".Replace("refs/", "")
+      git checkout $branch
     displayName: "Undo VSTS merge"
     workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
