@@ -1030,6 +1030,11 @@
 			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
 			<_DotNetCscCompiler>$(RoslynTargetsPath)/bincore/csc.dll</_DotNetCscCompiler>
 		</PropertyGroup>
+
+		<ItemGroup>
+			<_BTouchCompileCommand Include="$(DOTNET_HOST_PATH)" />
+			<_BTouchCompileCommand Include="$(RoslynTargetsPath)/bincore/csc.dll" />
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_ComputeNativeExecutableInputs" DependsOnTargets="_ComputeVariables">
@@ -1213,7 +1218,7 @@
 
 		<SymbolStrip
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(_NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
 			Executable="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
 			IsFramework="false"
 			SymbolFile="$(_MtouchSymbolsList)"
@@ -1695,7 +1700,7 @@
 	</Target>
 
 	<Target Name="_ValidateRuntimeIdentifier"
-		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false'"
+		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false' And '$(_RuntimeIdentifierIsRequired)' == 'true'"
 		BeforeTargets="Restore;Build;ResolvedFrameworkReference;ResolveRuntimePackAssets;ProcessFrameworkReferences">
 		<PropertyGroup>
 			<_IsValidRuntimeIdentifier Condition="@(_XamarinValidRuntimeIdentifier->WithMetadataValue('Platform', '$(_PlatformName)')->WithMetadataValue('Filename', '$(RuntimeIdentifier)')->Count()) &gt; 0">true</_IsValidRuntimeIdentifier>

@@ -89,7 +89,7 @@ namespace AudioToolbox {
 		{
 		}
 
-		protected virtual void Dispose (bool disposing)
+		new protected virtual void Dispose (bool disposing)
 		{
 			currentSequence = null;
 			if (Owns && Handle != IntPtr.Zero)

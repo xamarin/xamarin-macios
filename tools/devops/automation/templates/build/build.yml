@@ -84,6 +84,19 @@ steps:
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
+# the ddsign plugin needs this version or it will crash and will make the sign step fail
+- task: UseDotNet@2
+  inputs:
+    packageType: sdk
+    version: 3.x
+  displayName: 'Install .NET Core SDK 3.x needed for ESRP'
+  
+- task: UseDotNet@2
+  inputs:
+    packageType: sdk
+    version: 5.x
+  displayName: 'Install .NET 5.x SDK'
+
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
   inputs:
@@ -141,11 +154,7 @@ steps:
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual" -or $buildReason -eq "IndividualCI") -and ($buildSourceBranchName -eq "merge")) ) {
       $configVars.Add("IsPR", "True")
 
-      if ($Env:BuildPackage -eq "True") {
-        $configVars.Add("BuildPkgs", "True")
-      } else {
-        $configVars.Add("BuildPkgs", "False")
-      }
+      $configVars.Add("BuildPkgs", "True")
 
       # interesting case, we have build-pkg and skip-pkg... if that is the case, we build it, but we set a warning
       if ($Env:BuildPackage -eq "True" -and $Env:SkipPackages -eq "True") {
@@ -250,13 +259,7 @@ steps:
     set -x
     set -e
 
-    if [[ "$IsPR" == "True" ]]; then
-      echo "Xamarin private packages NOT configured. Building a PR."
-      CONFIGURE_FLAGS=""
-    else
-      echo "Xamarin private packages configured."
-      CONFIGURE_FLAGS="--enable-xamarin"
-    fi
+    CONFIGURE_FLAGS="--enable-xamarin"
 
     if [[ "$EnableDotNet" == "True" ]]; then
       echo "Enabling dotnet builds."
@@ -350,6 +353,35 @@ steps:
       GitHubToken: $(GitHub.Token)
       ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 
+  - bash: |
+      var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=IOS_NUGET_VERSION_FULL)
+      IOS_NUGET_VERSION_FULL=${var#*=}
+      IOS_NUGET_VERSION_FULL=$(echo $IOS_NUGET_VERSION_FULL | cut -d "+" -f1)
+
+      var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=TVOS_NUGET_VERSION_FULL)
+      TVOS_NUGET_VERSION_FULL=${var#*=}
+      TVOS_NUGET_VERSION_FULL=$(echo $TVOS_NUGET_VERSION_FULL | cut -d "+" -f1)
+
+      var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MACOS_NUGET_VERSION_FULL)
+      MACOS_NUGET_VERSION_FULL=${var#*=}
+      MACOS_NUGET_VERSION_FULL=$(echo $MACOS_NUGET_VERSION_FULL | cut -d "+" -f1)
+
+      var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MACCATALYST_NUGET_VERSION_FULL)
+      MACCATALYST_NUGET_VERSION_FULL=${var#*=}
+      MACCATALYST_NUGET_VERSION_FULL=$(echo $MACCATALYST_NUGET_VERSION_FULL | cut -d "+" -f1)
+      WORKLOAD_DST="$(Build.SourcesDirectory)/package-internal/WorkloadRollback.json"
+
+      echo "{" > $WORKLOAD_DST
+      echo "\"microsoft.net.sdk.ios\": \"$IOS_NUGET_VERSION_FULL\"," >>  $WORKLOAD_DST
+      echo "\"microsoft.net.sdk.tvos\": \"$TVOS_NUGET_VERSION_FULL\"," >> $WORKLOAD_DST
+      echo "\"microsoft.net.sdk.macos\": \"$MACOS_NUGET_VERSION_FULL\"," >>  $WORKLOAD_DST
+      echo "\"microsoft.net.sdk.maccatalyst\": \"$MACCATALYST_NUGET_VERSION_FULL\"" >> $WORKLOAD_DST
+      echo "}" >>  $WORKLOAD_DST
+
+      echo "Rollback file contents:" 
+      echo "$(cat $WORKLOAD_DST)"
+    displayName: 'Generate "WorkloadRollback.json'
+
   # upload each of the pkgs into the pipeline artifacts
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Build Artifacts'
@@ -414,95 +446,39 @@ steps:
     condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
     continueOnError: true
 
-- ${{ if eq(parameters.runTests, true) }}:
   - bash: |
       set -x
       set -e
-      echo "Running tests on $AGENT_NAME"
-      echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
 
-      echo "##vso[task.setvariable variable=TESTS_RAN;isOutput=true]True"
-      rm -rf ~/.config/.mono/keypairs/
+      make -C $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch package-introspection-dependencies.zip || RC=$?
+      exit $RC
+    displayName: 'Package introspection dependencies'
+    continueOnError: true # not a terrible blocking issue
+    timeoutInMinutes: 60
 
-      if [[ "$IsPR" == "True" ]]; then
-        TARGET='jenkins'
-      else
-        TARGET='wrench-jenkins'
-      fi
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish introspection dependencies'
+    inputs:
+      targetPath: $(Build.SourcesDirectory)/xamarin-macios/tools/mtouch/package-introspection-dependencies.zip
+      artifactName: package-introspection-dependencies
+    continueOnError: true
 
-      echo "Using target '$TARGET'"
-
-      RC=0
-      make -C $(Build.SourcesDirectory)/xamarin-macios/tests "$TARGET" || RC=$?
-
-      if [ $RC -eq 0 ]; then
-        echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
-      else
-        echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
-      fi
-
-      if test -f "$(Build.SourcesDirectory)/xamarin-macios//jenkins/failure-stamp"; then
-        echo "Something went wrong:"
-        cat "$(Build.SourcesDirectory)/xamarin-macios//jenkins/pr-comments.md"
-        exit 1
-      fi
-    displayName: 'Run tests'
-    name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
-    timeoutInMinutes: 720
-    enabled: ${{ parameters.runTests }}
-    env:
-      IsPR: $(configuration.IsPR)
-      PR_ID: $(configuration.PR_ID)
-      GITHUB_TOKEN: $(GitHub.Token)  # used to filter the tests to be ran
-      BUILD_REVISION: jenkins
-      VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/sim;/tests/' # uri used to create the vsdrops index using full uri
-
-
-  # Only executed when the tests failed, that means that we did have a timeout, and we could not set the status, this
-  # later results on an error when publishing the results, if we timeout, we ensure we set the needed vars
   - bash: |
-      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
-    displayName: 'On tests timeout'
-    condition: failed()
+      set -x
+      set -e
 
-  # Upload TestSummary as an artifact.
+      make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-test-libraries.zip 
+    name: introPkg
+    displayName: 'Package test libraries dependencies'
+    continueOnError: true # not a terrible blocking issue
+    timeoutInMinutes: 60
+
   - task: PublishPipelineArtifact@1
-    displayName: 'Publish Artifact: TestSummary'
+    displayName: 'Publish test libraries dependencies'
     inputs:
-      targetPath: 'xamarin-macios/tests/TestSummary.md'
-      artifactName: TestSummary-sim
+      targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/package-test-libraries.zip 
+      artifactName: package-test-libraries
     continueOnError: true
-    condition: always () # any task can write to TestSummary.md, so always try to upload it
-
-  - pwsh: |
-      $summaryName = "TestSummary.md"
-      $summaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
-      if (Test-Path "$summaryPath" -PathType Leaf) {
-        Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
-      }
-    displayName: Set TestSummary
-    condition: always () # any task can write to TestSummary.md, so always try to upload it
-
-  # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
-  - task: ArchiveFiles@1
-    displayName: 'Archive HtmlReport'
-    inputs:
-      rootFolder: 'xamarin-macios/jenkins-results'
-      includeRootFolder: false
-      archiveFile: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    continueOnError: true
-    condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
-
-  # Create HtmlReport artifact. This serves two purposes:
-  # 1. It is the way we are going to share the HtmlReport with the publish_html job that is executed on a Windows machine.
-  # 2. Users can download this if they want.
-  - task: PublishPipelineArtifact@1
-    displayName: 'Publish Artifact: HtmlReport'
-    inputs:
-      targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-      artifactName: HtmlReport-sim
-    continueOnError: true
-    condition: and(succeededOrFailed(), contains(variables['runTests.TESTS_RAN'], 'True')) # if tests did not run, there is nothing to do
 
 - ${{ if eq(parameters.uploadBinlogs, true) }}:
   # Copy all the binlogs to a separate directory, keeping directory structure.

@@ -4,7 +4,6 @@ using System;
 using System.Threading.Tasks;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if WATCH
 using AnimationType = global::SceneKit.ISCNAnimationProtocol;

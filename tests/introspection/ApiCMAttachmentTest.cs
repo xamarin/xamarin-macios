@@ -385,6 +385,12 @@ namespace Introspection {
 						ForegroundColorFromContext =  true,
 						Font = new CTFont ("ArialMT", 24)
 					}));
+#if __MACCATALYST__ || __MACOS__
+			case "CGEvent":
+				return new CGEvent ((CGEventSource) null);
+			case "CGEventSource":
+				return new CGEventSource (CGEventSourceStateID.CombinedSession);
+#endif
 			case "CGImageDestination":
 				var storage = new NSMutableData ();
 				return CGImageDestination.Create (new CGDataConsumer (storage), "public.png", 1);

@@ -279,7 +279,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			StandardOutputImportance="High"
 			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>
-			<Output TaskParameter="CompiledArchitectures" PropertyName="_CompiledArchitectures" />
 		</MTouch>
 
 		<Touch
@@ -523,6 +522,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 				<CodesignStampFile>$(DeviceSpecificOutputPath)OnDemandResources-codesign\%(DirectoryName)</CodesignStampFile>
 			</_AssetPack>
 		</ItemGroup>
+
+		<Delete
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Files="@(_AssetPack->'%(CodesignStampFile)')"
+		/>
 
 		<!-- Sign assetpacks -->
 		<Codesign

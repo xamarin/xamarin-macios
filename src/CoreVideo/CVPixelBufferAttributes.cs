@@ -29,7 +29,6 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -187,7 +186,7 @@ namespace CoreVideo {
 					RemoveValue (CVPixelBuffer.IOSurfacePropertiesKey);
 			}
 			get {
-				return GetNSDictionary (CVPixelBuffer.IOSurfacePropertiesKey) != null;
+				return GetNSDictionary (CVPixelBuffer.IOSurfacePropertiesKey) is not null;
 			}
 		}
 

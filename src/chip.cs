@@ -1,3 +1,4 @@
+#if !NET // Excluded from dotnet6 due to native API is not stable
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -4178,3 +4179,4 @@ namespace Chip {
 
 
 }
+#endif // !NET

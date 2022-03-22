@@ -5,7 +5,7 @@ parameters:
   type: string 
   default: 'pr' # default reason is a pr build 
 
-- name: devicePrefix
+- name: testPrefix
   type: string 
   default: 'sim' # always sim, but use a param to move in the future if needed
 
@@ -118,7 +118,7 @@ steps:
     Get-ChildItem $destinationRoot -Recurse -Force -Directory |
       Sort-Object -Property FullName -Descending |
       Where-Object { $($_ | Get-ChildItem -Force | Select-Object -First 1).Count -eq 0 } |
-      Remove-Item -Verbose
+      try { Remove-Item -Verbose } catch { $null }
 
     if ($Env:SYSTEM_DEBUG) {
       Get-ChildItem $destinationRoot -Recurse

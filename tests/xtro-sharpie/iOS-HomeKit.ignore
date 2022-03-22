@@ -1,0 +1,2 @@
+# This is deprecated in Xcode 13.3 and its companion member is deprecated on 15.4
+!deprecated-attribute-wrong! HMHome::addAndSetupAccessoriesWithPayload:completionHandler: has 15.4 not 15.0 on [Deprecated] attribute

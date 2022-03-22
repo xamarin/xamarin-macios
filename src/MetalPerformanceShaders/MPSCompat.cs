@@ -2,7 +2,6 @@
 
 using System;
 using Metal;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 

@@ -35,8 +35,8 @@ build-%: $(TARGETS)
 build-specific:
 	$(Q) test -n "$(XAMARIN_RUNTIME)" || (echo "$(COLOR_RED)You must set the variable $(COLOR_GRAY)XAMARIN_RUNTIME$(COLOR_RED) to select which runtime to use (to either $(COLOR_GRAY)CoreCLR$(COLOR_RED) or $(COLOR_GRAY)MonoVM$(COLOR_RED)).$(COLOR_CLEAR)"; exit 1)
 	$(Q) rm -rf $(TOP)/tests/monotouch-test/dotnet/macOS/bin $(TOP)/tests/monotouch-test/dotnet/macOS/obj
-	if ! $(DOTNET6) build $(TOP)/tests/monotouch-test/dotnet/macOS/monotouch-test.csproj "/bl:$@-$(XAMARIN_RUNTIME).binlog" $(BUILD_PARAMETERS) /p:Configuration=$(XAMARIN_RUNTIME) /p:UseMonoRuntime=$(if $(subst MonoVM,,$(XAMARIN_RUNTIME)),false,true) $(MSBUILD_VERBOSITY); then \
-			$(DOTNET6) build /v:diag "$@-$(XAMARIN_RUNTIME).binlog"; \
+	if ! $(DOTNET) build $(TOP)/tests/monotouch-test/dotnet/macOS/monotouch-test.csproj "/bl:$@-$(XAMARIN_RUNTIME).binlog" $(BUILD_PARAMETERS) /p:Configuration=$(XAMARIN_RUNTIME) /p:UseMonoRuntime=$(if $(subst MonoVM,,$(XAMARIN_RUNTIME)),false,true) $(MSBUILD_VERBOSITY); then \
+			$(DOTNET) build /v:diag "$@-$(XAMARIN_RUNTIME).binlog"; \
 			exit 1; \
 	fi
 

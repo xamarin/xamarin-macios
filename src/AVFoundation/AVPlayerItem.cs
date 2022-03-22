@@ -4,7 +4,6 @@ using System;
 
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AVFoundation {
 	public partial class AVPlayerItem {

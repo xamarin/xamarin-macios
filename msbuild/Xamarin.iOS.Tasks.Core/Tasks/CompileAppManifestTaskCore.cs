@@ -31,16 +31,6 @@ namespace Xamarin.iOS.Tasks
 
 			supportedDevices = plist.GetUIDeviceFamily ();
 
-			if (!IsWatchApp) {
-				var version = Sdks.XamIOS.ExtendedVersion;
-				// This key is our supported way of determining if an app
-				// was built with Xamarin, so it needs to be present in all apps.
-
-				var dict = new PDictionary ();
-				dict.Add ("Version", new PString (string.Format ("{0} ({1}: {2})", version.Version, version.Branch, version.Hash)));
-				plist.Add ("com.xamarin.ios", dict);
-			}
-
 			var sdkSettings = currentSDK.GetSdkSettings (sdkVersion, SdkIsSimulator);
 			var dtSettings = currentSDK.GetAppleDTSettings ();
 
