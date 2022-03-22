@@ -57,7 +57,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="NUnitLite" Version="3.12.0" />
-		<ProjectReference Include="$(MSBuildThisFileDirectory)\..\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" />
+		<ProjectReference Include="$(MSBuildThisFileDirectory)\..\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" Condition="'$(ExcludeTouchUnitReference)' != 'true'" />
 	</ItemGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" />
