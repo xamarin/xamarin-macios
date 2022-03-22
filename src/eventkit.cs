@@ -24,6 +24,16 @@ using AppKit;
 using UIKit;
 #endif
 
+#if !WATCH && !MONOMAC
+using EKAlarmType = Foundation.NSObject;
+#else
+using ABAddressBook = Foundation.NSObject;
+using ABRecord = Foundation.NSObject;
+#endif
+#if !MONOMAC
+using NSColor = UIKit.UIColor;
+#endif
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -54,12 +64,11 @@ namespace EventKit {
 	[Abstract] // "The EKCalendarItem class is a an abstract superclass ..." from Apple docs.
 #endif
 	interface EKCalendarItem {
-#if !MONOMAC
 		// Never made avaialble on MonoMac
 		[Export ("UUID")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'CalendarItemIdentifier' instead.")]
+		[NoMac]
 		string UUID { get;  }
-#endif
 
 		[NullAllowed] // by default this property is null
 		[Export ("calendar", ArgumentSemantic.Retain)]
@@ -143,11 +152,10 @@ namespace EventKit {
 		[Export ("title")]
 		string Title { get;  }
 
-#if !MONOMAC
 		[Export ("calendars")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'GetCalendars (EKEntityType)' instead.")]
+		[NoMac]
 		NSSet Calendars { get;  }
-#endif
 
 		[Export ("sourceIdentifier")]
 		string SourceIdentifier { get; }
@@ -203,23 +211,25 @@ namespace EventKit {
 		[Export ("proximity")]
 		EKAlarmProximity Proximity { get; set;  }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("type")]
 		EKAlarmType Type { get; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[NullAllowed]
 		[Export ("emailAddress")]
 		string EmailAddress { get; set; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[NullAllowed]
 		[Export ("soundName")]
 		string SoundName { get; set; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[NullAllowed]
 		[Export ("url", ArgumentSemantic.Copy)]
 		NSUrl Url { get; set; }
-#endif
 	}
 
 	[BaseType (typeof (EKObject))]
@@ -234,10 +244,10 @@ namespace EventKit {
 		[Export ("allowsContentModifications")]
 		bool AllowsContentModifications { get;  }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("color", ArgumentSemantic.Copy)]
 		NSColor Color { get; set; }
-#endif
+
 		[Mac (10, 15)]
 		[Export ("CGColor")]
 		CGColor CGColor { get; set; }
@@ -254,12 +264,11 @@ namespace EventKit {
 		[Export ("immutable")]
 		bool Immutable { [Bind ("isImmutable")] get;  }
 
-#if !MONOMAC
+		[NoMac]
 		[NoMacCatalyst] // It's in the documentation and headers, but throws a "+[EKCalendar calendarWithEventStore:]: unrecognized selector" exception at runtime
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'Create (EKEntityType, EKEventStore)' instead.")]
 		[Static, Export ("calendarWithEventStore:")]
 		EKCalendar FromEventStore (EKEventStore eventStore);
-#endif
 
 		[Export ("source", ArgumentSemantic.Retain)]
 		EKSource Source { get; set; }
@@ -319,11 +328,13 @@ namespace EventKit {
 		NSDate OccurrenceDate { get; }
 
 #if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Replaced by 'BirthdayContactIdentifier'.")]
 		[NullAllowed]
 		[Export ("birthdayPersonUniqueID")]
 		string BirthdayPersonUniqueID { get; }
 #else
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Replaced by 'BirthdayContactIdentifier'.")]
 		[Export ("birthdayPersonID")]
 		nint BirthdayPersonID { get;  }
@@ -354,20 +365,13 @@ namespace EventKit {
 		[Export ("participantType")]
 		EKParticipantType ParticipantType { get;  }
 
-#if MONOMAC
-// missing some Mac support for the address book
-//		[Export ("ABPersonInAddressBook:")]
-//		ABPerson GetPerson (ABAddressBook addressBook);
-#else
-#if !WATCH
+		[NoMac][NoWatch]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Replaced by 'ContactPredicate'.")]
 		[MacCatalyst (14,0)]
 		[return: NullAllowed]
 		[Export ("ABRecordWithAddressBook:")]
 		ABRecord GetRecord (ABAddressBook addressBook);
-#endif // !WATCH
 
-#endif
 		[Mac (10,9)]
 		[Export ("isCurrentUser")]
 		bool IsCurrentUser { get; }
@@ -502,11 +506,10 @@ namespace EventKit {
 		[Export ("eventStoreIdentifier")]
 		string EventStoreIdentifier { get;  }
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("calendars")]
 		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'GetCalendars' instead.")]
 		EKCalendar [] Calendars { get;  }
-#endif
 
 		[Export ("defaultCalendarForNewEvents"), NullAllowed]
 		EKCalendar DefaultCalendarForNewEvents { get;  }
@@ -612,11 +615,11 @@ namespace EventKit {
 		[Export ("saveReminder:commit:error:")]
 		bool SaveReminder (EKReminder reminder, bool commit, out NSError error);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 9)]
 		[Export ("initWithAccessToEntityTypes:")]
 		NativeHandle Constructor (EKEntityMask accessToEntityTypes);
-#endif
+
 		[Mac (10,11), Watch (5,0), iOS (12,0)]
 		[Export ("delegateSources")]
 		EKSource[] DelegateSources { get; }
