@@ -245,7 +245,7 @@ steps:
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
     if (-not ([IO.File]::Exists("$testsPath/test-run-completed"))) {
       Set-GitHubStatus -Status "error" -Description "Tests timed out on macOS $Env:CONTEXT." -Context "$Env:CONTEXT"
-      $request = New-GitHubComment -Header "Tests timed out on macOS $Env:CONTEXT" -Description "Tests timed out on $Env:CONTEXT." -Message "Tests timed out on $Env:CONTEXT." -Emoji ":x:"
+      $request = New-GitHubComment -Header "Tests timed out on macOS $Env:CONTEXT" -Description "" -Message "" -Emoji ":x:"
     }
   displayName: 'Report test timeout'
   timeoutInMinutes: 5
