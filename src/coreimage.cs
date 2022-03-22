@@ -47,6 +47,17 @@ using AppKit;
 using ImageKit;
 #endif
 
+
+#if !MONOMAC
+using Color = UIKit.UIColor;
+using NSImageRep = Foundation.NSObject;
+using NSCompositingOperation = Foundation.NSObject;
+using IKFilterUIView = Foundation.NSObject;
+#else
+using Color = AppKit.NSColor;
+using UIImage = Foundation.NSObject;
+#endif
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -196,13 +207,8 @@ namespace CoreImage {
 		[Export ("stringRepresentation")]
 		string StringRepresentation ();
 
-#if !MONOMAC
 		[Export ("initWithColor:")]
-		NativeHandle Constructor (UIColor color);
-#else
-		[Export ("initWithColor:")]
-		NativeHandle Constructor (NSColor color);
-#endif
+		NativeHandle Constructor (Color color);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -274,13 +280,13 @@ namespace CoreImage {
 		[Export ("render:toIOSurface:bounds:colorSpace:")]
 		void Render (CIImage image, IOSurface.IOSurface surface, CGRect bounds, [NullAllowed] CGColorSpace colorSpace);
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("inputImageMaximumSize")]
 		CGSize InputImageMaximumSize { get; }
 
+		[NoMac]
 		[Export ("outputImageMaximumSize")]
 		CGSize OutputImageMaximumSize { get; }
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("render:toMTLTexture:commandBuffer:bounds:colorSpace:")]
@@ -311,11 +317,10 @@ namespace CoreImage {
 		[return: NullAllowed]
 		CGImage CreateCGImage (CIImage image, CGRect fromRect, CIFormat format, [NullAllowed] CGColorSpace colorSpace, bool deferred);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Internal, Export ("createCGLayerWithSize:info:")]
 		[return: NullAllowed]
 		CGLayer CreateCGLayer (CGSize size, [NullAllowed] NSDictionary info);
-#endif
 
 		[Export ("render:toBitmap:rowBytes:bounds:format:colorSpace:")]
 		void RenderToBitmap (CIImage image, IntPtr bitmapPtr, nint bytesPerRow, CGRect bounds, int /* CIFormat = int */ bitmapFormat, [NullAllowed] CGColorSpace colorSpace);
@@ -323,10 +328,9 @@ namespace CoreImage {
 		//[Export ("render:toIOSurface:bounds:colorSpace:")]
 		//void RendertoIOSurfaceboundscolorSpace (CIImage im, IOSurfaceRef surface, CGRect r, CGColorSpaceRef cs, );
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("reclaimResources")]
 		void ReclaimResources ();
-#endif
 
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -365,19 +369,19 @@ namespace CoreImage {
 		[Field ("kCIContextName")]
 		NSString Name { get; }
 
-#if MONOMAC
 		[Mac(10,11)]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("offlineGPUCount")]
 		[Static]
 		int OfflineGPUCount { get; }
 
 		[Mac(10,11)]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("contextForOfflineGPUAtIndex:")]
 		[Static]
 		[return: NullAllowed]
 		CIContext FromOfflineGpu (int gpuIndex);
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("workingColorSpace")]
@@ -609,7 +613,7 @@ namespace CoreImage {
 		[Export ("registerFilterName:constructor:classAttributes:")]
 		void RegisterFilterName (string name, NSObject constructorObject, NSDictionary classAttributes);
 #else
-		[iOS(9,0)]
+		[iOS(9,0)][Mac (10,4)][MacCatalyst (13,1)][TV (9,0)][NoWatch]
 		[Static]
 		[Export ("registerFilterName:constructor:classAttributes:")]
 #if NET
@@ -620,27 +624,29 @@ namespace CoreImage {
 #endif
 #endif
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("apply:arguments:options:")]
 		[return: NullAllowed]
 		CIImage Apply (CIKernel k, [NullAllowed] NSArray args, [NullAllowed] NSDictionary options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("viewForUIConfiguration:excludedKeys:")]
 		IKFilterUIView GetFilterUIView (NSDictionary configurationOptions, [NullAllowed] NSArray excludedKeys);
 
-#else
 		// added in 10.10 but it was already accessible in a different way before (manual bindings)
+		[NoMac]
 		[Export ("outputImage")]
 		[NullAllowed]
 		CIImage OutputImage { get; }
 
+		[NoMac]
 		[Export ("serializedXMPFromFilters:inputImageExtent:"), Static]
 		[return: NullAllowed]
 		NSData SerializedXMP (CIFilter[] filters, CGRect extent); 
 
+		[NoMac]
 		[Export ("filterArrayFromSerializedXMP:inputImageExtent:error:"), Static]
 		CIFilter[] FromSerializedXMP (NSData xmpData, CGRect extent, out NSError error);
-#endif
 
 		[Export ("setValue:forKey:"), Internal]
 		void SetValueForKey ([NullAllowed] NSObject value, IntPtr key);
@@ -1437,7 +1443,7 @@ namespace CoreImage {
 		NSString Development  { get; }
 	}
 
-#if MONOMAC
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[Static]
 	interface CIFilterApply {
 		[Field ("kCIApplyOptionExtent", "+CoreImage")]
@@ -1452,9 +1458,8 @@ namespace CoreImage {
 		[Field ("kCIApplyOptionColorSpace", "+CoreImage")]
 		NSString OptionColorSpace  { get; }
 	}
-#endif
 	
-#if MONOMAC
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIFilterGenerator : CIFilterConstructor, NSSecureCoding, NSCopying {
@@ -1510,7 +1515,6 @@ namespace CoreImage {
 		NSString ExportedKeyName { get; }
 	}
 
-#endif
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[iOS(9,0)]
@@ -1668,17 +1672,17 @@ namespace CoreImage {
 		[Wrap ("FromCGImageSource (source, index, options.GetDictionary ())")]
 		CIImage FromCGImageSource (CGImageSource source, nuint index, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Static]
 		[Export ("imageWithCGLayer:")]
 		CIImage FromLayer (CGLayer layer);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Static]
 		[Export ("imageWithCGLayer:options:")]
 		CIImage FromLayer (CGLayer layer, [NullAllowed] NSDictionary options);
-#endif
 
 		[Static]
 		[Export ("imageWithBitmapData:bytesPerRow:size:format:colorSpace:")]
@@ -1752,20 +1756,22 @@ namespace CoreImage {
 		[Wrap ("FromImageBuffer (imageBuffer, options.GetDictionary ())")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, CIImageInitializationOptions options);
 		
-#if !MONOMAC
+		[NoMac]
 		[Static]
 		[Export ("imageWithCVPixelBuffer:")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer);
 
+		[NoMac]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithCVPixelBuffer:options:")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
 
+		[NoMac]
 		[Static]
 		[Wrap ("FromImageBuffer (buffer, options.GetDictionary ())")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer, [NullAllowed] CIImageInitializationOptions options);
-#endif
+
 		[iOS (11,0)]
 		[TV (11,0)]
 		[Mac (10,13)]
@@ -1815,19 +1821,20 @@ namespace CoreImage {
 		[Wrap ("this (source, index, options.GetDictionary ())")]
 		NativeHandle Constructor (CGImageSource source, nuint index, CIImageInitializationOptionsWithMetadata options);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CIImage (CGImage)' instead.")]
 		[Export ("initWithCGLayer:")]
 		NativeHandle Constructor (CGLayer layer);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CIImage (CGImage)' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithCGLayer:options:")]
 		NativeHandle Constructor (CGLayer layer, [NullAllowed] NSDictionary d);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this (layer, options.GetDictionary ())")]
 		NativeHandle Constructor (CGLayer layer, [NullAllowed] CIImageInitializationOptions options);
-#endif
 
 		[Export ("initWithData:")]
 		NativeHandle Constructor (NSData data);
@@ -1882,10 +1889,16 @@ namespace CoreImage {
 		NativeHandle Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
 		[iOS(9,0)]
+		[Mac (10,4)]
+		[MacCatalyst (13,1)]
+		[TV (9,0)]
 		[Export ("initWithCVImageBuffer:options:")]
 		NativeHandle Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary<NSString, NSObject> dict);
 
 		[iOS(9,0)]
+		[Mac (10,4)]
+		[MacCatalyst (13,1)]
+		[TV (9,0)]
 		[Internal] // This overload is needed for our strong dictionary support (but only for Unified, since for Classic the generic version is transformed to this signature)
 		[Sealed]
 		[Export ("initWithCVImageBuffer:options:")]
@@ -1915,16 +1928,17 @@ namespace CoreImage {
 		[Export ("initWithMTLTexture:options:")]
 		NativeHandle Constructor (IMTLTexture texture, [NullAllowed] NSDictionary options);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithBitmapImageRep:")]
 		NativeHandle Constructor (NSImageRep imageRep);
 		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("drawAtPoint:fromRect:operation:fraction:")]
 		void Draw (CGPoint point, CGRect srcRect, NSCompositingOperation op, nfloat delta);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("drawInRect:fromRect:operation:fraction:")]
 		void Draw (CGRect dstRect, CGRect srcRect, NSCompositingOperation op, nfloat delta);
-#endif
 
 		[Export ("imageByApplyingTransform:")]
 		CIImage ImageByApplyingTransform (CGAffineTransform matrix);
@@ -1945,10 +1959,10 @@ namespace CoreImage {
 		[Wrap ("WeakProperties")]
 		CoreGraphics.CGImageProperties Properties { get; }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("definition")]
 		CIFilterShape Definition { get; }
-#endif
+
 		[iOS (10,0)]
 		[Field ("kCIFormatRGBA16")]
 		int FormatRGBA16 { get; } /* CIFormat = int */
@@ -2053,17 +2067,18 @@ namespace CoreImage {
 		[Field ("kCIFormatLAf")]
 		int FormatLAf { get; }
 
-#if !MONOMAC
 		// UIKit extensions
+		[NoMac]
 		[Export ("initWithImage:")]
 		NativeHandle Constructor (UIImage image);
 
+		[NoMac]
 		[Export ("initWithImage:options:")]
 		NativeHandle Constructor (UIImage image, [NullAllowed] NSDictionary options);
 
+		[NoMac]
 		[Wrap ("this (image, options.GetDictionary ())")]
 		NativeHandle Constructor (UIImage image, [NullAllowed] CIImageInitializationOptions options);
-#endif
 	
 		[Field ("kCIImageAutoAdjustFeatures"), Internal]
 		NSString AutoAdjustFeaturesKey { get; }
@@ -2521,10 +2536,10 @@ namespace CoreImage {
 		[Export ("name")]
 		string Name { get; }
 
-#if MONOMAC || __MACCATALYST__
+ 		[NoiOS][NoWatch][NoTV][Mac (10,4)][MacCatalyst (13,1)]
 		[Export ("setROISelector:")]
 		void SetRegionOfInterestSelector (Selector aMethod);
-#endif
+
 		[Mac (10,11)]
 		[Export ("applyWithExtent:roiCallback:arguments:")]
 		[return: NullAllowed]
@@ -2622,7 +2637,7 @@ namespace CoreImage {
 		CIImage Image { get; set; }
 	}
 
-#if MONOMAC
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	interface CIPlugIn {
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'LoadNonExecutablePlugIns' for non-executable plugins instead.")]
@@ -2644,7 +2659,6 @@ namespace CoreImage {
 		[Export ("loadPlugIn:allowNonExecutable:")]
 		void LoadPlugIn (NSUrl pluginUrl, bool allowNonExecutable);
 	}
-#endif
 
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
@@ -2718,19 +2732,20 @@ namespace CoreImage {
 		[Export ("vectorWithX:Y:Z:W:")]
 		CIVector Create (nfloat x, nfloat y, nfloat z, nfloat w);
 
-#if !MONOMAC
+		[NoMac]
 		[Static]
 		[Export ("vectorWithCGPoint:")]
 		CIVector Create (CGPoint point);
 
+		[NoMac]
 		[Static]
 		[Export ("vectorWithCGRect:")]
 		CIVector Create (CGRect point);
 
+		[NoMac]
 		[Static]
 		[Export ("vectorWithCGAffineTransform:")]
 		CIVector Create (CGAffineTransform affineTransform);
-#endif
 
 		[Static]
 		[Export ("vectorWithString:")]
