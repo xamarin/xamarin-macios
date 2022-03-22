@@ -1015,7 +1015,7 @@ static void block_called ()
 
 -(void) testString: (int) action a:(NSString **) refValue b:(NSString **) outValue
 {
-	NSString *obj = NULL;
+	NSString *obj __attribute__((unused)) = NULL;
 
 	// We should never get null pointers.
 	assert (refValue != NULL);
@@ -1048,7 +1048,7 @@ static void block_called ()
 
 -(void) testInt: (int) action a:(int32_t *) refValue b:(int32_t *) outValue
 {
-	NSString *obj = NULL;
+	NSString *obj __attribute__((unused)) = NULL;
 
 	// We should never get null pointers.
 	assert (refValue != NULL);

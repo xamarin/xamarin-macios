@@ -289,7 +289,7 @@ namespace Xamarin.Tests
 			include_dotnet = !string.IsNullOrEmpty (GetVariable ("ENABLE_DOTNET", ""));
 			DotNetBclDir = GetVariable ("DOTNET_BCL_DIR", null);
 			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
-			DotNetExecutable = GetVariable ("DOTNET6", null);
+			DotNetExecutable = GetVariable ("DOTNET", null);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
