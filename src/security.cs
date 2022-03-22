@@ -35,13 +35,15 @@ namespace Security {
 			
 		[Field ("kSecPolicyAppleIPsec")]
 		NSString AppleIPsec { get; }
-#if MONOMAC
+
+		[NoiOS][NoWatch][NoTV]
 		[Field ("kSecPolicyApplePKINITClient")]
 		NSString ApplePKINITClient { get; }
 			
+		[NoiOS][NoWatch][NoTV]
 		[Field ("kSecPolicyApplePKINITServer")]
 		NSString ApplePKINITServer { get; }
-#endif	
+
 		[Field ("kSecPolicyAppleCodeSigning")]
 		NSString AppleCodeSigning { get; }
 
@@ -1103,7 +1105,6 @@ namespace Security {
 		NSData SharedInfo { get; set; }
 	}
 
-#if IOS || MONOMAC
 	[iOS (8,0)][NoTV][NoWatch]
 	[Mac (11,0)]
 	[Internal][Static]
@@ -1135,8 +1136,6 @@ namespace Security {
 
 		int Port { get; set; }
 	}
-
-#endif
 
 	delegate void SecProtocolVerifyComplete (bool complete);
 
