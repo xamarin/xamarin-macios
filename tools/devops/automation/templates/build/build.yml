@@ -52,9 +52,8 @@ steps:
 
 - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
   - pwsh: |
-      $branch="$(Build.SourceBranch)".Replace("refs/", "")
-      git checkout $branch
-    displayName: "Undo VSTS merge"
+      git reset --hard HEAD^2 
+    displayName: "Undo Github merge"
     workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
 - checkout: maccore
