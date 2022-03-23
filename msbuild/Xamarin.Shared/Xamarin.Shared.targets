@@ -574,6 +574,12 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="XSAppIconAssets" PropertyName="_XSAppIconAssets" />
 			<Output TaskParameter="XSLaunchImageAssets" PropertyName="_XSLaunchImageAssets" />
 		</ReadAppManifest>
+
+		<!-- A bundle identifier is required when creating an app bundle. It's not when building a class library -->
+		<Error
+			Condition="'$(IsMacEnabled)' == 'true' And '$(_BundleIdentifier)' == '' And '$(_CanOutputAppBundle)' == 'true'"
+			Text="A bundle identifier is required. Either add an 'ApplicationId' property in the project file, or add a 'CFBundleIdentifier' entry in the project's Info.plist file."
+		/>
 	</Target>
 
 	<PropertyGroup>
