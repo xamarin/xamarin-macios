@@ -8,5 +8,12 @@ namespace Microsoft.Build.Framework {
 				item.GetMetadata ("ResolvedFrom") == "{TargetFrameworkDirectory}" ||
 				item.GetMetadata ("ResolvedFrom") == "ImplicitlyExpandDesignTimeFacades";
 		}
+
+		public static void SetMetadataIfNotSet (this ITaskItem self, string metadata, string value)
+		{
+			if (!string.IsNullOrEmpty (self.GetMetadata (metadata)))
+				return;
+			self.SetMetadata (metadata, value);
+		}
 	}
 }
