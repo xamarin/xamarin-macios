@@ -2295,7 +2295,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			  delay until we've created the universal app bundle.
 
 		* Metadata on items:
-			* NoSymbolStrip: set to true to not strip native symbols for this item (and false to dot it)
+			* NoSymbolStrip: set to true to not strip native symbols for this item (and false to do it)
 			* NoDSymUtil: set to true to do not run dsymutil for this item (and false do it)
 			* SymbolFile: The path to a file that contains a list of exported names that should be	kept after stripping.
 
