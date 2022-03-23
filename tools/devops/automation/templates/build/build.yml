@@ -322,10 +322,9 @@ steps:
   timeoutInMinutes: 180
 
 - pwsh: |
-    New-GitHubComment -Header "Build failed on $Env:CONTEXT" -Emoji ":fire:" -Description "$Env:BUILDFAILUREMESSAGE"
+    New-GitHubComment -Header "Build failed" -Emoji ":fire:" -Description "$Env:BUILDFAILUREMESSAGE"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
-    CONTEXT: ${{ parameters.statusContext }}
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     BUILDFAILUREMESSAGE: $(BuildStep.BuildFailureMessage]
