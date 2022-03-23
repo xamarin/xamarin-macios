@@ -36,7 +36,7 @@ $(DOTNET_DIRECTORIES):
 global.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
-		printf "\t\"sdk\": { \"version\": \"$(DOTNET6_VERSION)\" }\n" >> $@; \
+		printf "\t\"sdk\": { \"version\": \"$(DOTNET_VERSION)\" }\n" >> $@; \
 		printf "}\n" >> $@
 
 all-local:: $(DOTNET_TARGETS)
