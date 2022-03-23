@@ -144,14 +144,17 @@ namespace SpriteKit {
 
 	[DisableDefaultCtor] // DesignatedInitializer below
 #if MONOMAC
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,9)]
 	[BaseType (typeof (NSResponder))]
 	partial interface SKNode : NSSecureCoding, NSCopying {
 #elif IOS || TVOS
+	[NoMac][NoWatch][MacCatalyst (13,1)]
 	[iOS (7,0)]
 	[BaseType (typeof (UIResponder))]
 	partial interface SKNode : NSSecureCoding, NSCopying, UIFocusItem {
 #else // WATCHOS
+	[NoMac][NoiOS][NoTV][NoMacCatalyst]
 	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKNode : NSSecureCoding, NSCopying {
@@ -364,12 +367,14 @@ namespace SpriteKit {
 #if !NET
 		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("attributeValues", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, SKAttributeValue> AttributeValues { get; set; }
 
 		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("valueForAttributeNamed:")]
 		[return: NullAllowed]
@@ -377,6 +382,7 @@ namespace SpriteKit {
 
 		[Deprecated (PlatformName.iOS, 10,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
+		[Deprecated (PlatformName.WatchOS, 3,0, message: "Attributes are only available for node classes supporting SKShader (see SKSpriteNode etc.).")]
 		[iOS (9,0),Mac(10,11)]
 		[Export ("setValue:forAttributeNamed:")]
 		void SetValue (SKAttributeValue value, string key);
@@ -402,6 +408,7 @@ namespace SpriteKit {
 	}
 
 #if MONOMAC
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac(10,9)]
 	[Category, BaseType (typeof (NSEvent))]
 	partial interface SKNodeEvent_NSEvent {
@@ -410,6 +417,7 @@ namespace SpriteKit {
 		CGPoint LocationInNode (SKNode node);
 	}
 #elif !WATCH
+	[NoMac][MacCatalyst (13,1)]
 	[NoWatch]
 	[iOS (7,0)]
 	[Category, BaseType (typeof (UITouch))]
