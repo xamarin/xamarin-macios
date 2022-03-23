@@ -536,84 +536,97 @@ namespace Foundation {
 
 #if NET
 		// Properties that will be called by the default HttpClientHandler
+
+		// NSUrlSession handler automatically handles decompression, and there doesn't seem to be a way to turn it off.
+		// The available decompression algorithms depend on the OS version we're running on, and maybe the target OS version as well,
+		// so just say we're doing them all, and not do anything in the setter (it doesn't seem to be configurable in NSUrlSession anyways).
 		public DecompressionMethods AutomaticDecompression {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
+			get => DecompressionMethods.All;
+			set { }
 		}
 
-		public bool CheckCertificateRevocationList {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
-		}
+		// We're ignoring this property, just like Xamarin.Android does:
+		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L158
+		public bool CheckCertificateRevocationList { get; set; } = false;
 
-		public X509CertificateCollection ClientCertificates {
-			get => throw new PlatformNotSupportedException ();
-		}
+		// We're ignoring this property, just like Xamarin.Android does:
+		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L150
+		public X509CertificateCollection ClientCertificates { get { return null; } }
 
-		public ClientCertificateOption ClientCertificateOptions {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
-		}
+		// We're ignoring this property, just like Xamarin.Android does:
+		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L148
+		public ClientCertificateOption ClientCertificateOptions { get; set; }
 
-		public ICredentials DefaultProxyCredentials {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
-		}
+		// We're ignoring this property, just like Xamarin.Android does:
+		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L152
+		public ICredentials DefaultProxyCredentials { get; set; }
 
 		public int MaxAutomaticRedirections {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
+			get => int.MaxValue;
+			set {
+				// I believe it's possible to implement support for MaxAutomaticRedirections (it just has to be done)
+				if (value != int.MaxValue)
+					throw new ArgumentOutOfRangeException (nameof (value), value, "It's not possible to lower the max number of automatic redirections.");;
+			}
 		}
 
-		public int MaxConnectionsPerServer {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
-		}
+		// We're ignoring this property, just like Xamarin.Android does:
+		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L154
+		public int MaxConnectionsPerServer { get; set; } = int.MaxValue;
 
-		public int MaxResponseHeadersLength {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
-		}
+		// We're ignoring this property, just like Xamarin.Android does:
+		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L156
+		public int MaxResponseHeadersLength { get; set; } = 64; // Units in K (1024) bytes.
 
+		// We don't support PreAuthenticate, so always return false, and ignore any attempts to change it.
 		public bool PreAuthenticate {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
+			get => false;
+			set { }
 		}
 
-		public IDictionary<string, object> Properties {
-			get => throw new PlatformNotSupportedException ();
-		}
+		// We're ignoring this property, just like Xamarin.Android does:
+		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L167
+		public IDictionary<string, object> Properties { get { return null; } }
 
+		// We dont support any custom proxies, and don't let anybody wonder why their proxy isn't
+		// being used if they try to assign one (in any case we also return false from 'SupportsProxy').
 		public IWebProxy Proxy {
-			get => throw new PlatformNotSupportedException ();
+			get => null;
 			set => throw new PlatformNotSupportedException ();
 		}
 
-		public SslProtocols SslProtocols {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
-		}
+		// There doesn't seem to be a trivial way to specify the protocols to accept (or not)
+		// It might be possible to reject some protocols in code during the challenge phase,
+		// but accepting earlier (unsafe) protocols requires adding entires to the Info.plist,
+		// which means it's not trivial to detect/accept/reject from code here.
+		// Currently the default for Apple platforms is to accept TLS v1.2 and v1.3, so default
+		// to that value, and ignore any changes to it.
+		public SslProtocols SslProtocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
-		public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> ServerCertificateCustomValidationCallback {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
-		}
+		// We're ignoring this property, just like Xamarin.Android does:
+		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L160
+		public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> ServerCertificateCustomValidationCallback { get; set; }
 
+		// There's no way to turn off automatic decompression, so yes, we support it
 		public bool SupportsAutomaticDecompression {
-			get => throw new PlatformNotSupportedException ();
+			get => true;
 		}
 
+		// We don't support using custom proxies, but NSUrlSession will automatically use any proxies configured in the OS.
 		public bool SupportsProxy {
-			get => throw new PlatformNotSupportedException ();
+			get => false;
 		}
 
+		// We support the AllowAutoRedirect property, but we don't support changing the MaxAutomaticRedirections value.
 		public bool SupportsRedirectConfiguration {
-			get => throw new PlatformNotSupportedException ();
+			get => true;
 		}
 
+		// NSUrlSession will automatically use any proxies configured in the OS (so always return true in the getter).
+		// There doesn't seem to be a way to turn this off, so ignore any attempts to set a different value in the setter.
 		public bool UseProxy {
-			get => throw new PlatformNotSupportedException ();
-			set => throw new PlatformNotSupportedException ();
+			get => true;
+			set { }
 		}
 #endif // NET
 
