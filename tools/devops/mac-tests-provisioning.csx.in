@@ -22,3 +22,19 @@ Item ("Override Apple SDK Settings")
 		CreateSetting (appleSdkOverride, "AppleSdkRoot", GetSelectedXcodePath ());
 		Console.WriteLine ($"New VSMac iOS SDK Location: {GetSelectedXcodePath ()}");
 	});
+
+void DeleteSafe (string file)
+{
+	if (File.Exists (file))
+		File.Delete (file);
+}
+
+void CreateSetting (string settingFile, string key, string value)
+{
+	Exec ("defaults", "write", settingFile, key, value);
+}
+
+string GetSettingValue (string settingFile, string keyName)
+{
+	return Exec ("defaults", "read", settingFile, keyName).FirstOrDefault ();
+}
