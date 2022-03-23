@@ -260,8 +260,8 @@ define CreatePackage
 $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.NET.Sdk.$1.$2/
-	$$(Q) mkdir -p tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
-	$$(Q) $$(CP) -r Workloads/Microsoft.NET.Sdk.$1 tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
+	$$(Q) mkdir -p tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
+	$$(Q) $$(CP) -r Workloads/Microsoft.NET.Sdk.$1 tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
 	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.NET.Sdk.$1.$2 --component-plist PackageInfo.plist  --install-location / --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
@@ -314,11 +314,11 @@ PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 
 $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
-	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
+	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
 	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
@@ -333,12 +333,12 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreatePackage,$(platform),$
 define CreateWindowsBundle
 $(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) $(SDK_PACK_$(4)_WINDOWS) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
-	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
+	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_WITH_PRERELEASE_COMPONENT)/microsoft.net.sdk.$3
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Windows.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2

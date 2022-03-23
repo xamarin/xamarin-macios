@@ -125,6 +125,7 @@ steps:
     ls -R $(Build.SourcesDirectory)/artifacts/package
     cp $(Build.SourcesDirectory)/artifacts/package/*.nupkg $DOTNET_NUPKG_DIR
     cp $(Build.SourcesDirectory)/artifacts/package/*.pkg $DOTNET_NUPKG_DIR
+    cp $(Build.SourcesDirectory)/artifacts/package/*.zip $DOTNET_NUPKG_DIR
     ls -R $DOTNET_NUPKG_DIR
 
     NUGET_SOURCES=$(grep https://pkgs.dev.azure.com ./NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
@@ -137,6 +138,11 @@ steps:
     for platform in $DOTNET_PLATFORMS; do
       CURRENT=$(echo $platform | tr A-Z a-z)
       PLATFORMS="$PLATFORMS $CURRENT"
+    done
+
+    for platform in $DOTNET_PLATFORMS; do
+      unzip -l $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip -d tmpdir
+      mv tmpdir/dotnet/sdk-manifests/* $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*/sdk-manifests/
     done
 
     rm global.json
