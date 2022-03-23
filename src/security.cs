@@ -36,11 +36,11 @@ namespace Security {
 		[Field ("kSecPolicyAppleIPsec")]
 		NSString AppleIPsec { get; }
 
-		[NoiOS][NoWatch][NoTV]
+		[NoiOS][NoWatch][NoTV][NoMacCatalyst]
 		[Field ("kSecPolicyApplePKINITClient")]
 		NSString ApplePKINITClient { get; }
 			
-		[NoiOS][NoWatch][NoTV]
+		[NoiOS][NoWatch][NoTV][NoMacCatalyst]
 		[Field ("kSecPolicyApplePKINITServer")]
 		NSString ApplePKINITServer { get; }
 
@@ -1106,7 +1106,7 @@ namespace Security {
 	}
 
 	[iOS (8,0)][NoTV][NoWatch]
-	[Mac (11,0)]
+	[Mac (11,0)][MacCatalyst (13,1)]
 	[Internal][Static]
 	interface SecSharedCredentialKeys {
 		[Field ("kSecAttrServer")]
