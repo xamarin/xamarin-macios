@@ -21,7 +21,7 @@ namespace Xamarin.Tests
 		static string mt_root;
 		static string ios_destdir;
 		static string mac_destdir;
-		public static string DotNet6BclDir;
+		public static string DotNetBclDir;
 		public static string DotNetCscCommand;
 		public static string DotNetExecutable;
 		public static string mt_src_root;
@@ -287,9 +287,9 @@ namespace Xamarin.Tests
 			include_maccatalyst = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MACCATALYST", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 			include_dotnet = !string.IsNullOrEmpty (GetVariable ("ENABLE_DOTNET", ""));
-			DotNet6BclDir = GetVariable ("DOTNET6_BCL_DIR", null);
+			DotNetBclDir = GetVariable ("DOTNET_BCL_DIR", null);
 			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
-			DotNetExecutable = GetVariable ("DOTNET6", null);
+			DotNetExecutable = GetVariable ("DOTNET", null);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
@@ -509,7 +509,7 @@ namespace Xamarin.Tests
 		public static string GetDotNetRoot ()
 		{
 			if (IsVsts) {
-				return EvaluateVariable ("DOTNET6_DIR");
+				return EvaluateVariable ("DOTNET_DIR");
 			} else {
 				return Path.Combine (SourceRoot, "_build");
 			}
