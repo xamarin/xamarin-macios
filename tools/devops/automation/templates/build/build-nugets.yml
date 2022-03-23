@@ -21,10 +21,20 @@ steps:
   displayName: Generate and Upload Build Asset Registry Manifest
   condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
 
+- bash: |
+    set -x
+    set -e
+    if test -d $(Build.ArtifactStagingDirectory)/build-binlogs; then
+      echo "##vso[task.setvariable variable=PublishBuildBinLogs]True"
+    fi
+  displayName: 'Detect build-binlogs'
+  continueOnError: true
+  condition: always()
+
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: build-binlogs'
   inputs:
     targetPath: $(Build.ArtifactStagingDirectory)/build-binlogs
     artifactName: build-binlogs-$(Build.BuildId)
   continueOnError: true
-  condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
+  condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'), eq(variables['PublishBuildBinLogs'],'True'))
