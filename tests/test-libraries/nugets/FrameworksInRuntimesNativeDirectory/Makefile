@@ -16,7 +16,7 @@ PACKAGE_VERSION=$(shell grep '<PackageVersion>' FrameworksInRuntimesNativeDirect
 # Test case for https://github.com/xamarin/xamarin-macios/issues/12440
 .libs/FrameworksInRuntimesNativeDirectory.nupkg: FrameworksInRuntimesNativeDirectory.csproj NuGet.config global.json $(wildcard *.cs) | .libs
 	$(Q) mkdir -p $(abspath $(NUGET_TEST_FEED))
-	$(Q_GEN) $(DOTNET6) pack /bl $(DOTNET_PACK_VERBOSITY) $<
+	$(Q_GEN) $(DOTNET) pack /bl $(DOTNET_PACK_VERBOSITY) $<
 	$(Q) $(CP) bin/Debug/Xamarin.Tests.FrameworksInRuntimesNativeDirectory.$(PACKAGE_VERSION).nupkg $@
 
 INSTALLED_PACKAGE=$(NUGET_TEST_FEED)/xamarin.tests.frameworksinruntimesnativedirectory/$(PACKAGE_VERSION)/xamarin.tests.frameworksinruntimesnativedirectory.$(PACKAGE_VERSION).nupkg

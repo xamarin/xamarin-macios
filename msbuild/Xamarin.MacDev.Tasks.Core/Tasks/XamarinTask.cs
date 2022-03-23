@@ -155,11 +155,19 @@ namespace Xamarin.MacDev.Tasks {
 
 		protected string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, string fallbackValue, string fallbackName = null, bool required = false)
 		{
+			return GetNonEmptyStringOrFallback (item, metadataName, out var _, fallbackValue, fallbackName, required);
+		}
+
+		protected string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, out bool foundInMetadata, string fallbackValue, string fallbackName = null, bool required = false)
+		{
 			var metadataValue = item.GetMetadata (metadataName);
-			if (!string.IsNullOrEmpty (metadataValue))
+			if (!string.IsNullOrEmpty (metadataValue)) {
+				foundInMetadata = true;
 				return metadataValue;
+			}
 			if (required && string.IsNullOrEmpty (fallbackValue))
 				Log.LogError (MSBStrings.E7085 /* The "{0}" task was not given a value for the required parameter "{1}", nor was there a "{2}" metadata on the resource {3}. */, GetType ().Name, fallbackName ?? metadataName, metadataName, item.ItemSpec);
+			foundInMetadata = false;
 			return fallbackValue;
 		}
 	}
