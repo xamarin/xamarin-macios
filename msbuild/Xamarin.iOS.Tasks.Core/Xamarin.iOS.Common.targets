@@ -523,6 +523,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			</_AssetPack>
 		</ItemGroup>
 
+		<Delete
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Files="@(_AssetPack->'%(CodesignStampFile)')"
+		/>
+
 		<!-- Sign assetpacks -->
 		<Codesign
 			SessionId="$(BuildSessionId)"
