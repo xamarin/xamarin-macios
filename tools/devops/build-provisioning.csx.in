@@ -13,4 +13,4 @@ Xcode ("@XCODE_XIP_NAME@").XcodeSelect (allowUntrusted: true);
 Item ("@MONO_PACKAGE@");
 Item ("@MIN_SHARPIE_URL@");
 Item ("@VS_PACKAGE@");
-DotNetCoreSdk ("@DOTNET_VERSION@");
+DotNetCoreSdk ("@SYSTEM_DOTNET_VERSION@");
