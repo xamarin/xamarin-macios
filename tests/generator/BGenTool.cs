@@ -175,7 +175,7 @@ namespace Xamarin.Tests
 				if (tf == null) {
 					// do nothing
 				} else if (tf.Value.IsDotNet == true) {
-					References.AddRange (Directory.GetFiles (Configuration.DotNet6BclDir, "*.dll"));
+					References.AddRange (Directory.GetFiles (Configuration.DotNetBclDir, "*.dll"));
 				} else {
 					throw new NotImplementedException ("ReferenceBclByDefault");
 				}

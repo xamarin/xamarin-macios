@@ -104,9 +104,9 @@ steps:
     set -x
     set -e
 
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET6)
-    DOTNET6=${var#*=}
-    echo "Using dotnet found at $DOTNET6"
+    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET)
+    DOTNET=${var#*=}
+    echo "Using dotnet found at $DOTNET"
 
     var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET_PLATFORMS)
     DOTNET_PLATFORMS=${var#*=}
@@ -141,11 +141,11 @@ steps:
 
     rm global.json
     cp global6.json global.json
-    $DOTNET6 workload install --from-rollback-file $ROLLBACK_PATH --source $DOTNET_NUPKG_DIR $SOURCES --verbosity diag $PLATFORMS
+    $DOTNET workload install --from-rollback-file $ROLLBACK_PATH --source $DOTNET_NUPKG_DIR $SOURCES --verbosity diag $PLATFORMS
 
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET6_DIR)
-    DOTNET6_DIR=${var#*=}
-    ls -lR $DOTNET6_DIR
+    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET_DIR)
+    DOTNET_DIR=${var#*=}
+    ls -lR $DOTNET_DIR
 
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Install dotnet workloads'
