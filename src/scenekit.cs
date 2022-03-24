@@ -68,9 +68,13 @@ using GameplayKit;
 #if MONOMAC
 using AppKit;
 
+using EAGLContext = Foundation.NSObject;
 using GLContext = global::OpenGL.CGLContext;
 #else
 using UIKit;
+using CAOpenGLLayer = System.Object;
+using NSOpenGLContext = System.Object;
+using NSOpenGLPixelFormat = System.Object;
 
 #if HAS_OPENGLES
 using OpenGLES;
@@ -82,6 +86,7 @@ using GLContext = global::Foundation.NSObject; // won't be used -> but must comp
 #if WATCH
 using NSView = global::Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 using SCNGeometryTessellator = global::Foundation.NSObject; // won't be used -> [NoWatch] but must compile
+using EAGLContext = global::Foundation.NSObject;
 #else
 using NSView = global::UIKit.UIView;
 #endif
@@ -90,6 +95,10 @@ using NSColor = global::UIKit.UIColor;
 using NSFont = global::UIKit.UIFont;
 using NSImage = global::UIKit.UIImage;
 using NSBezierPath = global::UIKit.UIBezierPath;
+#endif
+
+#if __MACCATALYST__
+using EAGLContext = System.Object;
 #endif
 
 #if !NET
@@ -1219,8 +1228,7 @@ namespace SceneKit {
 		CGPoint GetTextureCoordinatesWithMappingChannel (nint channel);
 	}
 
-#if MONOMAC
-	[iOS (8,0)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
 	[NoMacCatalyst]
 	[BaseType (typeof (CAOpenGLLayer))]
@@ -1229,7 +1237,6 @@ namespace SceneKit {
 //		[Export ("scene", ArgumentSemantic.Retain)]
 //		SCNScene Scene { get; set;  }
 	}
-#endif
 
 	[Watch (3,0)]
 	[iOS (8,0)]
@@ -1494,7 +1501,7 @@ namespace SceneKit {
 		NSString Area { get; }
 	}
 
-#if MONOMAC
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
 	[Static]
 	interface SCNLightAttribute {
@@ -1519,7 +1526,6 @@ namespace SceneKit {
 		[Field ("SCNLightShadowFarClippingKey")]
 		NSString ShadowFarClippingKey { get; }
 	}
-#endif
 
 	[Watch (3,0)]
 	[iOS (8,0)]
@@ -1784,7 +1790,6 @@ namespace SceneKit {
 		[Export ("SCNSceneSourceLoading.OptionPreserveOriginalTopology")]
 		bool PreserveOriginalTopology { get; set; }
 
-#if !TVOS && !WATCH
 		// note: generator's StrongDictionary does not support No* attributes yet
 		[NoTV]
 		[NoWatch]
@@ -1792,7 +1797,6 @@ namespace SceneKit {
 		[NoTV]
 		[NoWatch]
 		bool ConvertToYUp { get; set; }
-#endif
 
 		[Internal, Export ("SCNSceneSourceLoading.AnimationImportPolicyKey")]
 		NSString _AnimationImportPolicyKey { get; set; }
@@ -2498,35 +2502,28 @@ namespace SceneKit {
 	[BaseType (typeof (NSObject))]
 	[Model, Protocol]
 	interface SCNProgramDelegate {
-#if MONOMAC
-	#if XAMCORE_3_0
+
 		[Unavailable (PlatformName.iOS)]
-	#endif
+		[NoTV][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("program:bindValueForSymbol:atLocation:programID:renderer:")]
 		bool BindValue (SCNProgram program, string symbol, uint /* unsigned int */ location, uint /* unsigned int */ programID, SCNRenderer renderer);
 
-	#if XAMCORE_3_0
 		[Unavailable (PlatformName.iOS)]
-	#endif
+		[NoTV][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[Export ("program:unbindValueForSymbol:atLocation:programID:renderer:")]
 		void UnbindValue (SCNProgram program, string symbol, uint /* unsigned int */ location, uint /* unsigned int */ programID, SCNRenderer renderer);
-#endif
 
 		[Export ("program:handleError:")]
 		void HandleError (SCNProgram program, NSError error);
 
-#if MONOMAC
-	#if XAMCORE_3_0
 		[NoiOS]
 		[NoTV, NoWatch]
-	#endif
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the SCNProgram's Opaque property instead.")]
 		[NoMacCatalyst]
 		[Export ("programIsOpaque:")]
 		bool IsProgramOpaque (SCNProgram program);
-#endif
 	}
 
 	[Watch (3,0)]
@@ -3058,15 +3055,14 @@ namespace SceneKit {
 		[Export ("context")]
 		IntPtr Context { get;  }
 
-#if MONOMAC
 #if NET
 		[Abstract]
 #endif
+		[NoTV][NoWatch][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 10)]
 		[NoiOS]
 		[Export ("currentTime")]
 		double CurrentTime { get; set; }
-#endif
 
 		[Abstract]
 		[Export ("hitTest:options:")]
@@ -3322,11 +3318,10 @@ namespace SceneKit {
 		[Export ("containerFrame")]
 		CGRect ContainerFrame { get; set;  }
 
-#if MONOMAC
 		// removed in iOS8 beta 5 - but it was already existing in 10.8 ?
+		[NoiOS][NoTV][NoWatch]
 		[Export ("textSize")]
 		CGSize TextSize { get;  }
-#endif
 
 		[Export ("truncationMode", ArgumentSemantic.Copy)]
 		string TruncationMode { get; set;  }
@@ -3489,31 +3484,31 @@ namespace SceneKit {
 //		[Export ("scene", ArgumentSemantic.Retain)]
 //		SCNScene Scene { get; set;  }
 
-#if MONOMAC
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
 		NSColor BackgroundColor { get; set;  }
-#endif
 
 		[Export ("allowsCameraControl")]
 		bool AllowsCameraControl { get; set;  }
 
-#if MONOMAC
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("openGLContext", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		NSOpenGLContext	OpenGLContext { get; set;  }
 
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("pixelFormat", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		NSOpenGLPixelFormat PixelFormat { get; set;  }
-#elif !WATCH && !__MACCATALYST__
+
+		[NoMac][NoWatch][NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0, message: "Please use Metal instead of OpenGL API.")]
 		[Deprecated (PlatformName.TvOS, 12, 0, message: "Please use Metal instead of OpenGL API.")]
 		[Export ("eaglContext", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		EAGLContext EAGLContext { get; set; }
-#endif
 
 #if !WATCH
 		[iOS (9,0)][Mac (10,11)]
