@@ -677,6 +677,7 @@
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			CopyFromWindows="true"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="%(_DirectoriesToPublish.SourceDirectory)"
@@ -1563,6 +1564,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedAppleBindingResourcePackage.Identity)"
 			Destination="$(_IntermediateDecompressionDir)/%(Filename)"
 			>
@@ -1610,6 +1612,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedPlugIns.Identity)"
 			Destination="$(_IntermediateDecompressionDir)/%(Filename)%(Extension)"
 			>
@@ -1656,6 +1659,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedAppleFrameworks.Identity)"
 			Destination="$(_IntermediateFrameworksDir)/%(Filename)%(Extension)"
 			>
