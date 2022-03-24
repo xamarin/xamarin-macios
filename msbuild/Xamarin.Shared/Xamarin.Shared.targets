@@ -2345,6 +2345,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And Exists ('$(_Source)')"
+			CopyFromWindows="true"
 			Source="$(_Source)"
 			Destination="$(_Destination)"
 		>
