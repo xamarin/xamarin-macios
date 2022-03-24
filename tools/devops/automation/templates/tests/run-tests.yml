@@ -143,8 +143,9 @@ steps:
     for platform in $DOTNET_PLATFORMS; do
       unzip -l $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip
       unzip $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip -d tmpdir
-      mv tmpdir/dotnet/sdk-manifests/* $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*/sdk-manifests/
+      rsync -av tmpdir/dotnet/sdk-manifests/* $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*/sdk-manifests/
     done
+    find $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*
 
     rm global.json
     cp global6.json global.json
