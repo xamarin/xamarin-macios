@@ -141,7 +141,8 @@ steps:
     done
 
     for platform in $DOTNET_PLATFORMS; do
-      unzip -l $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip -d tmpdir
+      unzip -l $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip
+      unzip $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip -d tmpdir
       mv tmpdir/dotnet/sdk-manifests/* $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*/sdk-manifests/
     done
 
