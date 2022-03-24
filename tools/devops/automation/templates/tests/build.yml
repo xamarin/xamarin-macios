@@ -54,7 +54,8 @@ steps:
 
 - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
   - pwsh: |
-      git reset --hard HEAD^2 
+      $branch="$BUILD_SOURCEBRANCH".Replace("merge", "head")
+      git checkout $branch
     displayName: "Undo Github merge"
     workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
