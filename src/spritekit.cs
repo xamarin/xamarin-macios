@@ -143,19 +143,14 @@ namespace SpriteKit {
 
 
 	[DisableDefaultCtor] // DesignatedInitializer below
+	[Mac (10,9)][Watch (3,0)][iOS (7,0)][MacCatalyst (13,1)]
 #if MONOMAC
-	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
-	[Mac (10,9)]
 	[BaseType (typeof (NSResponder))]
 	partial interface SKNode : NSSecureCoding, NSCopying {
 #elif IOS || TVOS
-	[NoMac][NoWatch][MacCatalyst (13,1)]
-	[iOS (7,0)]
 	[BaseType (typeof (UIResponder))]
 	partial interface SKNode : NSSecureCoding, NSCopying, UIFocusItem {
 #else // WATCHOS
-	[NoMac][NoiOS][NoTV][NoMacCatalyst]
-	[Watch (3,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKNode : NSSecureCoding, NSCopying {
 #endif
