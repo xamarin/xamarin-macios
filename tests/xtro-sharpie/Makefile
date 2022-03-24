@@ -191,10 +191,10 @@ endif
 gen-all: gen-ios gen-tvos gen-watchos gen-macos
 
 wrench:
-	$(MAKE) -j8 classify
+	$(MAKE) -j8 classify V=1
 
 dotnet-wrench:
-	$(MAKE) -j8 dotnet-classify
+	$(MAKE) -j8 dotnet-classify V=1
 
 report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-classify
 	rm -rf report/
