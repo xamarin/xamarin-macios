@@ -163,16 +163,6 @@ steps:
   timeoutInMinutes: 250
 
 - bash: |
-    var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR)
-    IOS_DESTDIR=${var#*=}
-    DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
-    mkdir -p $DEST_DIR
-    ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$DEST_DIR/git" 
-    ls -R $DEST_DIR
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
-  displayName: Create Xamarin.iOS SDK symlinks
-
-- bash: |
     echo "Pkg uri is $XM_PACKAGE"
     make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
   displayName: 'Generate Provisionator csx file for Mac'
@@ -185,14 +175,22 @@ steps:
   timeoutInMinutes: 250
 
 - bash: |
-    var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR)
-    MAC_DESTDIR=${var#*=}
-    DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
-    mkdir -p $DEST_DIR
-    ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$DEST_DIR/git" 
-    ls -R $DEST_DIR
+    set -e
+    set -x
+    mac_var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR MAC_DESTDIR=)
+    ios_var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR IOS_DESTDIR=)
+    MAC_DESTDIR=${mac_var#*=}
+    IOS_DESTDIR=${ios_var#*=}
+    XM_DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/"
+    XI_DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
+    mkdir -p "$XM_DEST_DIR"
+    mkdir -p "$XI_DEST_DIR"
+    ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$XM_DEST_DIR/git"
+    ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$XI_DEST_DIR/git"
+    ls -laR "$XM_DEST_DIR"
+    ls -laR "$XI_DEST_DIR"
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
-  displayName: Create Xamarin.Mac SDK symlinks
+  displayName: Create legacy iOS/Mac SDK symlinks
 
 - bash: |
     set -x
