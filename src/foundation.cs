@@ -300,7 +300,7 @@ namespace Foundation
 		// New API in iOS9 with same signature as an older alternative.
 		// We expose only the *new* one for the new platforms as the old
 		// one was moved to `NSDeprecatedKitAdditions (NSAttributedString)`
-		[NoMac]
+		[NoMac][NoWatch][NoTV]
 		[iOS (9,0)]
 		[Internal]
 		[Export ("initWithURL:options:documentAttributes:error:")]
@@ -308,7 +308,7 @@ namespace Foundation
 
 		// but we still need to allow the API to work before iOS 9.0
 		// and to compleify matters the old one was deprecated in 9.0
-		[NoMac]
+		[NoMac][NoWatch][NoTV]
 		[iOS (7,0)]
 		[Internal]
 		[Deprecated (PlatformName.iOS, 9, 0)]
@@ -371,10 +371,6 @@ namespace Foundation
 
 #if MONOMAC
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export("size")]
-		CGSize Size { get; }
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithData:options:documentAttributes:error:")]
 		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary docAttributes, out NSError error);
 
@@ -385,14 +381,6 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithHTML:baseURL:documentAttributes:")]
 		NativeHandle Constructor (NSData htmlData, NSUrl baseUrl, out NSDictionary docAttributes);
-		
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export ("drawAtPoint:")]
-		void DrawString (CGPoint point);
-		
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export ("drawInRect:")]
-		void DrawString (CGRect rect);
 		
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("drawWithRect:options:")]
@@ -542,18 +530,6 @@ namespace Foundation
 		NSData GetDocFormat (NSRange range, NSAttributedStringDocumentAttributes options);
 #else
 		[NoMac]
-		[Export ("size")]
-		CGSize Size { get; }
-
-		[NoMac]
-		[Export ("drawAtPoint:")]
-		void DrawString (CGPoint point);
-
-		[NoMac]
-		[Export ("drawInRect:")]
-		void DrawString (CGRect rect);
-
-		[NoMac]
 		[Export ("drawWithRect:options:context:")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
 
@@ -561,6 +537,16 @@ namespace Foundation
 		[Export ("boundingRectWithSize:options:context:")]
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
 #endif
+
+		[NoMac]
+		[Export ("size")]
+		CGSize Size { get; }
+
+		[Export ("drawAtPoint:")]
+		void DrawString (CGPoint point);
+		
+		[Export ("drawInRect:")]
+		void DrawString (CGRect rect);
 
 		// -(BOOL)containsAttachmentsInRange:(NSRange)range __attribute__((availability(macosx, introduced=10.11)));
 		[Mac (10,11)][iOS (9,0)]
@@ -8867,35 +8853,43 @@ namespace Foundation
 		Class GetBindingValueClass (NSString binding);
 
 #if !NET
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options)' instead.")]
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (string binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'Unbind (NSString binding)' instead.")]
 		[Export ("unbind:")]
 		void Unbind (string binding);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'GetBindingValueClass (NSString binding)' instead.")]
 		[Export ("valueClassForBinding:")]
 		Class BindingValueClass (string binding);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'GetBindingInfo (NSString binding)' instead.")]
 		[Export ("infoForBinding:")]
 		NSDictionary BindingInfo (string binding);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'GetBindingOptionDescriptions (NSString aBinding)' instead.")]
 		[Export ("optionDescriptionsForBinding:")]
 		NSObject[] BindingOptionDescriptions (string aBinding);
 
 		[Static]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("GetDefaultPlaceholder (marker, (NSString) binding)")]
 		NSObject GetDefaultPlaceholder (NSObject marker, string binding);
 
 		[Static]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding)' instead.")]
 		[Wrap ("SetDefaultPlaceholder (placeholder, marker, (NSString) binding)")]
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, string binding);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("exposedBindings")]
 		NSString[] ExposedBindings ();
 #else
@@ -9883,7 +9877,6 @@ namespace Foundation
 		NSDictionary InfoDictionary{ get; }
 
 		// Additions from AppKit
-#if MONOMAC
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("loadNibNamed:owner:topLevelObjects:")]
 		bool LoadNibNamed (string nibName, [NullAllowed] NSObject owner, out NSArray topLevelObjects);
@@ -9910,13 +9903,12 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("contextHelpForKey:")]
 		NSAttributedString GetContextHelp (string key);
-#else
+
 		// http://developer.apple.com/library/ios/#documentation/uikit/reference/NSBundle_UIKitAdditions/Introduction/Introduction.html
 		[NoMac]
 		[NoWatch]
 		[Export ("loadNibNamed:owner:options:")]
 		NSArray LoadNib (string nibName, [NullAllowed] NSObject owner, [NullAllowed] NSDictionary options);
-#endif
 
 		[Export ("bundleURL")]
 		NSUrl BundleUrl { get; }
