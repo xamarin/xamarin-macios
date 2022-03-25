@@ -452,6 +452,7 @@ namespace CallKit {
 		[Export ("provider:timedOutPerformingAction:")]
 		void TimedOutPerformingAction (CXProvider provider, CXAction action);
 
+		// Xcode 12 beta 1 issue, AVAudioSession does not appear on Mac OS X but this methods do: https://github.com/xamarin/maccore/issues/2257 
 		[NoMac]
 		[Export ("provider:didActivateAudioSession:")]
 		void DidActivateAudioSession (CXProvider provider, AVAudioSession audioSession);
