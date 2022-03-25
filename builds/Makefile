@@ -79,6 +79,16 @@ downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))): dotnet-install.sh
 	$(Q) mv "$@.tmp" "$@"
 	$(Q) echo "Downloaded and installed .NET $(DOTNET_VERSION) into $@."
 
+# This is just a helpful target to print the url to the .pkg to download and install the current .NET version into the system.
+print-dotnet-pkg-urls: dotnet-install.sh
+	$(Q) rm -f $@-found-it.stamp
+	$(Q) for url in $$(./dotnet-install.sh --version "$(DOTNET6_VERSION)" --architecture x64 --no-path $$DOTNET_INSTALL_EXTRA_ARGS --dry-run | grep URL.*primary: | sed 's/.*primary: //'); do \
+		pkg=$${url/tar.gz/pkg}; \
+		if curl -LI --fail "$$pkg" >/dev/null 2>&1; then echo "$$pkg"; touch $@-found-it.stamp; break; fi; \
+	done
+	$(Q) if ! test -f $@-found-it.stamp; then echo "No working urls were found."; exit 1; fi
+	$(Q) rm -f $@-found-it.stamp
+
 dotnet-install.sh: Makefile
 	$(Q) curl --retry 20 --retry-delay 2 --connect-timeout 15 -S -L $(if $(V),-v,-s) https://dot.net/v1/dotnet-install.sh --output $@.tmp
 	$(Q) chmod +x $@.tmp
