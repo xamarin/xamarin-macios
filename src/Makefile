@@ -27,6 +27,8 @@ MACCATALYST_DOTNET_BUILD_DIR=$(DOTNET_BUILD_DIR)/maccatalyst
 
 GENERATOR_FLAGS=-process-enums -core -nologo -nostdlib -noconfig -native-exception-marshalling --ns:ObjCRuntime
 
+GENERATOR_TF_VERSION=$(subst net,,$(DOTNET_TFM))
+
 DOTNET_REFERENCES = \
 	/r:$(DOTNET_BCL_DIR)/System.Buffers.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Collections.Concurrent.dll \
@@ -242,7 +244,7 @@ $(IOS_DOTNET_BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources 
 		-sourceonly=$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources \
 		-tmpdir=$(IOS_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib=$(IOS_DOTNET_BUILD_DIR)/core-ios.dll \
-		--target-framework=.NETCoreApp,Version=6.0,Profile=ios \
+		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=ios \
 		$(IOS_APIS) \
 		@$(DOTNET_BUILD_DIR)/ios-defines-dotnet.rsp \
 		> $@
@@ -664,7 +666,7 @@ $(MACOS_DOTNET_BUILD_DIR)/macos.rsp: Makefile Makefile.generator frameworks.sour
 		-sourceonly:$(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources \
 		-tmpdir:$(MACOS_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib:$(MACOS_DOTNET_BUILD_DIR)/core-macos.dll \
-		--target-framework=.NETCoreApp,Version=6.0,Profile=macos \
+		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=macos \
 		$(MACOS_DOTNET_APIS) \
 		@$(DOTNET_BUILD_DIR)/macos-defines-dotnet.rsp \
 		> $@
@@ -918,7 +920,7 @@ $(WATCHOS_DOTNET_BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.
 		-sourceonly=$(WATCHOS_DOTNET_BUILD_DIR)/watchos-generated-sources \
 		-tmpdir=$(WATCHOS_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib=$(WATCHOS_DOTNET_BUILD_DIR)/core-watchos.dll \
-		--target-framework=.NETCoreApp,Version=6.0,Profile=watchos \
+		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=watchos \
 		$(WATCHOS_APIS) \
 		@$(DOTNET_BUILD_DIR)/watchos-defines-dotnet.rsp \
 		> $@
@@ -1227,7 +1229,7 @@ $(TVOS_DOTNET_BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.source
 		-sourceonly=$(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources \
 		-tmpdir=$(TVOS_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib=$(TVOS_DOTNET_BUILD_DIR)/core-tvos.dll \
-		--target-framework=.NETCoreApp,Version=6.0,Profile=tvos \
+		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=tvos \
 		$(TVOS_DOTNET_APIS) \
 		@$(DOTNET_BUILD_DIR)/tvos-defines-dotnet.rsp \
 		> $@
@@ -1412,7 +1414,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst.rsp: Makefile Makefile.generator fra
 		-sourceonly=$(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources \
 		-tmpdir=$(MACCATALYST_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib=$(MACCATALYST_DOTNET_BUILD_DIR)/core-maccatalyst.dll \
-		--target-framework=.NETCoreApp,Version=6.0,Profile=maccatalyst \
+		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=maccatalyst \
 		$(MACCATALYST_DOTNET_APIS) \
 		@$(DOTNET_BUILD_DIR)/maccatalyst-defines-dotnet.rsp \
 		> $@

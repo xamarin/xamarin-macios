@@ -14,11 +14,12 @@ namespace Xamarin.Utils
 {
 	public struct TargetFramework : IEquatable<TargetFramework>
 	{
-		public const string DotNet_6_0_iOS_String = ".NETCoreApp,Version=6.0,Profile=ios"; // Short form: net6.0-ios
-		public const string DotNet_6_0_tvOS_String = ".NETCoreApp,Version=6.0,Profile=tvos"; // Short form: net6.0-tvos
-		public const string DotNet_6_0_watchOS_String = ".NETCoreApp,Version=6.0,Profile=watchos"; // Short form: net6.0-watchos
-		public const string DotNet_6_0_macOS_String = ".NETCoreApp,Version=6.0,Profile=macos"; // Short form: net6.0-macos
-		public const string DotNet_6_0_MacCatalyst_String = ".NETCoreApp,Version=6.0,Profile=maccatalyst"; // Short form: net6.0-maccatalyst
+		const string TFMVersion = "7.0";
+		public const string DotNet_iOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=ios"; // Short form: netX.Y-ios
+		public const string DotNet_tvOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=tvos"; // Short form: netX.Y-tvos
+		public const string DotNet_watchOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=watchos"; // Short form: netX.Y-watchos
+		public const string DotNet_macOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=macos"; // Short form: netX.Y-macos
+		public const string DotNet_MacCatalyst_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=maccatalyst"; // Short form: netX.Y-maccatalyst
 
 		public static readonly TargetFramework Empty = new TargetFramework ();
 		public static readonly TargetFramework Net_2_0 = Parse ("2.0");
@@ -37,21 +38,21 @@ namespace Xamarin.Utils
 		public static readonly TargetFramework Xamarin_Mac_4_5_Full = Parse ("Xamarin.Mac,Version=v4.5,Profile=Full");
 		public static readonly TargetFramework Xamarin_Mac_4_5_System = Parse ("Xamarin.Mac,Version=v4.5,Profile=System");
 
-		public static readonly TargetFramework DotNet_5_0_iOS = Parse (DotNet_6_0_iOS_String);
-		public static readonly TargetFramework DotNet_5_0_tvOS = Parse (DotNet_6_0_tvOS_String);
-		public static readonly TargetFramework DotNet_5_0_watchOS = Parse (DotNet_6_0_watchOS_String);
-		public static readonly TargetFramework DotNet_5_0_macOS = Parse (DotNet_6_0_macOS_String);
-		public static readonly TargetFramework DotNet_5_0_MacCatalyst = Parse (DotNet_6_0_MacCatalyst_String);
+		public static readonly TargetFramework DotNet_iOS = Parse (DotNet_iOS_String);
+		public static readonly TargetFramework DotNet_tvOS = Parse (DotNet_tvOS_String);
+		public static readonly TargetFramework DotNet_watchOS = Parse (DotNet_watchOS_String);
+		public static readonly TargetFramework DotNet_macOS = Parse (DotNet_macOS_String);
+		public static readonly TargetFramework DotNet_MacCatalyst = Parse (DotNet_MacCatalyst_String);
 
 		public static readonly TargetFramework [] ValidFrameworksMac = new [] {
 			Xamarin_Mac_2_0_Mobile, Xamarin_Mac_4_5_Full, Xamarin_Mac_4_5_System,
-			DotNet_5_0_macOS,
+			DotNet_macOS,
 		};
 
 		public static readonly TargetFramework [] ValidFrameworksiOS = new [] {
 			Xamarin_iOS_1_0, Xamarin_WatchOS_1_0, Xamarin_TVOS_1_0,
 			Xamarin_MacCatalyst_1_0,
-			DotNet_5_0_iOS, DotNet_5_0_tvOS, DotNet_5_0_watchOS, DotNet_5_0_MacCatalyst,
+			DotNet_iOS, DotNet_tvOS, DotNet_watchOS, DotNet_MacCatalyst,
 		};
 
 		public static IEnumerable<TargetFramework> AllValidFrameworks {
@@ -251,15 +252,15 @@ namespace Xamarin.Utils
 		{
 			switch (platform) {
 			case ApplePlatform.iOS:
-				return isDotNet ? DotNet_5_0_iOS : Xamarin_iOS_1_0;
+				return isDotNet ? DotNet_iOS : Xamarin_iOS_1_0;
 			case ApplePlatform.TVOS:
-				return isDotNet ? DotNet_5_0_tvOS : Xamarin_TVOS_1_0;
+				return isDotNet ? DotNet_tvOS : Xamarin_TVOS_1_0;
 			case ApplePlatform.MacCatalyst:
-				return DotNet_5_0_MacCatalyst;
+				return DotNet_MacCatalyst;
 			case ApplePlatform.WatchOS:
 				return Xamarin_WatchOS_1_0;
 			case ApplePlatform.MacOSX:
-				return isDotNet ? DotNet_5_0_macOS : Xamarin_Mac_2_0;
+				return isDotNet ? DotNet_macOS : Xamarin_Mac_2_0;
 			default:
 				throw new ArgumentOutOfRangeException (nameof (platform), string.Format ("Unknown platform: {0}", platform.ToString ()));
 			}
