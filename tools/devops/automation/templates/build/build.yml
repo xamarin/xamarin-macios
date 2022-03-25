@@ -54,6 +54,7 @@ steps:
   - pwsh: |
       $branch="$BUILD_SOURCEBRANCH".Replace("merge", "head")
       git checkout $branch
+      git branch -a
     displayName: "Undo Github merge"
     workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
