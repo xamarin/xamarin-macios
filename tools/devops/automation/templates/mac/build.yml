@@ -223,7 +223,7 @@ steps:
       }
 
       # We failed, so write to the comment file why we failed.
-      Set-Content -File "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "$msg"
+      Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "$msg"
     } else {
       # We succeeded, so remove the failure comment file.
       Remove-Item -Path "$Env:GITHUB_FAILURE_COMMENT_FILE"
