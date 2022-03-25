@@ -53,6 +53,7 @@ using AppKit;
 using UIColor = global::AppKit.NSColor;
 using UIImage = global::AppKit.NSImage;
 using UIView = global::AppKit.NSView;
+using UITouch = Foundation.NSObject;
 #if NET
 using pfloat = System.Runtime.InteropServices.NFloat;
 #else
@@ -62,9 +63,14 @@ using pfloat = System.nfloat;
 using UIKit;
 using NSLineBreakMode = global::UIKit.UILineBreakMode;
 using pfloat = System.Single;
+using NSEvent = System.Object;
 #if !WATCH
 using UIView = global::UIKit.UIView;
 #endif
+#endif
+
+#if WATCH
+using UITouch = System.Object;
 #endif
 
 #if !NET
@@ -402,7 +408,6 @@ namespace SpriteKit {
 #endif
 	}
 
-#if MONOMAC
 	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac(10,9)]
 	[Category, BaseType (typeof (NSEvent))]
@@ -411,7 +416,7 @@ namespace SpriteKit {
 		[Export ("locationInNode:")]
 		CGPoint LocationInNode (SKNode node);
 	}
-#elif !WATCH
+
 	[NoMac][MacCatalyst (13,1)]
 	[NoWatch]
 	[iOS (7,0)]
@@ -424,7 +429,6 @@ namespace SpriteKit {
 		[Export ("previousLocationInNode:")]
 		CGPoint PreviousLocationInNode (SKNode node);
 	}
-#endif
 
 	[Watch (3,0)]
 	[Mac (10,9)]
