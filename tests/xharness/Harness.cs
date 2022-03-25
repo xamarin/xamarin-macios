@@ -542,6 +542,7 @@ namespace Xharness {
 
 		void ParseConfigFile (string file, Dictionary<string, string> configuration)
 		{
+			Log ($"ParseConfigFile ({file})");
 			if (string.IsNullOrEmpty (file))
 				return;
 
@@ -550,9 +551,13 @@ namespace Xharness {
 				if (eq == -1)
 					continue;
 
-				var key = line.Substring (0, eq);
-				if (!configuration.ContainsKey (key))
-					configuration [key] = line.Substring (eq + 1);
+				var key = line.Substring (0, eq).Trim ();
+				if (!configuration.ContainsKey (key)) {
+					configuration [key] = line.Substring (eq + 1).Trim ();
+					Log ($"    Setting '{key}'='{configuration[key]}'");
+				} else {
+					Log ($"    Not setting '{key}' because it's already in configuration as '{configuration[key]}', new value would have been: '{line.Substring (eq + 1).Trim ()}'");
+				}
 			}
 		}
 
