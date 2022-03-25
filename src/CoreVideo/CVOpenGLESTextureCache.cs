@@ -79,8 +79,8 @@ namespace CoreVideo {
 		
 		public CVOpenGLESTextureCache (EAGLContext context)
 		{
-			if (context == null)
-				throw new ArgumentNullException ("context");
+			if (context is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			
 			if (CVOpenGLESTextureCacheCreate (IntPtr.Zero,
 							  IntPtr.Zero, /* change one day to support cache attributes */
@@ -94,8 +94,8 @@ namespace CoreVideo {
 
 		public static CVOpenGLESTextureCache FromEAGLContext (EAGLContext context)
 		{
-			if (context == null)
-				throw new ArgumentNullException ("context");
+			if (context is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			IntPtr handle;
 			if (CVOpenGLESTextureCacheCreate (IntPtr.Zero,
 							  IntPtr.Zero, /* change one day to support cache attributes */
@@ -108,8 +108,8 @@ namespace CoreVideo {
 
 		public CVOpenGLESTexture TextureFromImage (CVImageBuffer imageBuffer, bool isTexture2d, OpenTK.Graphics.ES20.All internalFormat, int width, int height, OpenTK.Graphics.ES20.All pixelFormat, OpenTK.Graphics.ES20.DataType pixelType, int planeIndex, out CVReturn errorCode)
 		{
-			if (imageBuffer == null)
-				throw new ArgumentNullException ("imageBuffer");
+			if (imageBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			
 			int target = isTexture2d ? 0x0DE1 /* GL_TEXTURE_2D */ : 0x8D41 /* GL_RENDERBUFFER */;
 			IntPtr texture;
