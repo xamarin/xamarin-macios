@@ -141,21 +141,22 @@ namespace MetricKit {
 		[Export ("JSONRepresentation")]
 		NSData JsonRepresentation { get; }
 
-#if !MONOMAC
+		[NoMac]
 		[Internal]
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Export ("DictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation13 { get; }
 
+		[NoMac]
 		[Internal]
 		[iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("dictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation14 { get; }
-#else 
+
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("dictionaryRepresentation")]
 		NSDictionary DictionaryRepresentation { get; }
-#endif
 
 		[iOS (14,0)]
 		[MacCatalyst (14,0)]
