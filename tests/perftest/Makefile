@@ -92,4 +92,4 @@ run-perftest-with-runtime: $(TARGETS)
 	@echo "Running perftest ($(XAMARIN_RUNTIME)) and writing output to $(PERFLOGFILENAME)..."
 	$(Q) mkdir -p $(BENCHMARK_OUTPUT_PATH)
 	$(Q) echo "VM: $(XAMARIN_RUNTIME)" > $(PERFLOGFILENAME)
-	$(Q) set -o pipefail; (time $(abspath dotnet/bin/$(XAMARIN_RUNTIME)/net6.0-macos/$(RUNTIME_IDENTIFIER)/perftest.app/Contents/MacOS/perftest) $(ARGUMENTS) 2>&1) 2>&1 | tee -a $(PERFLOGFILENAME)
+	$(Q) set -o pipefail; (time $(abspath dotnet/bin/$(XAMARIN_RUNTIME)/$(DOTNET_TFM)-macos/$(RUNTIME_IDENTIFIER)/perftest.app/Contents/MacOS/perftest) $(ARGUMENTS) 2>&1) 2>&1 | tee -a $(PERFLOGFILENAME)

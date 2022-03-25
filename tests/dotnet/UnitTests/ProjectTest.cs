@@ -525,7 +525,7 @@ namespace Xamarin.Tests {
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			Assert.AreEqual (1, warnings.Length, "Warning Count");
-			Assert.AreEqual ("Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/net6.0-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherfile.txt", warnings [0].Message, "Warning");
+			Assert.AreEqual ($"Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/{Configuration.DotNetTfm}-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherfile.txt", warnings [0].Message, "Warning");
 
 			// Remove the offending file
 			File.Delete (Path.Combine (appPath, "otherfile.txt"));
@@ -819,9 +819,9 @@ namespace Xamarin.Tests {
 		}
 
 
-		[TestCase (ApplePlatform.iOS, "bin/Debug/net6.0-ios/iossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]
-		[TestCase (ApplePlatform.TVOS, "bin/Debug/net6.0-tvos/tvossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]		
-		[TestCase (ApplePlatform.MacOSX, "bin/Debug/net6.0-macos/osx-x64/MySimpleApp.app/Contents/PlugIns/ExtensionProject.appex")]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64/MySimpleApp.app/Contents/PlugIns/ExtensionProject.appex")]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
 		public void BuildProjectsWithExtensions (ApplePlatform platform, string appPath)
 		{
@@ -837,7 +837,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
 			
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, appPath);
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", Configuration.DotNetTfm, appPath);
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 		}
 
