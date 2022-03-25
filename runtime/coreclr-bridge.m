@@ -315,23 +315,29 @@ xamarin_coreclr_reference_tracking_is_referenced_callback (void* ptr)
 	int rv = 0;
 	struct TrackedObjectInfo *info = (struct TrackedObjectInfo *) ptr;
 	enum NSObjectFlags flags = info->flags;
+	bool isRegisteredToggleRef = (flags & NSObjectFlagsRegisteredToggleRef) == NSObjectFlagsRegisteredToggleRef;
 	id handle = info->handle;
-	MonoToggleRefStatus res;
+	MonoToggleRefStatus res = (MonoToggleRefStatus) 0;
 
-	res = xamarin_gc_toggleref_callback (flags, handle, NULL, NULL);
+	if (isRegisteredToggleRef) {
+		res = xamarin_gc_toggleref_callback (flags, handle, NULL, NULL);
 
-	switch (res) {
-	case MONO_TOGGLE_REF_DROP:
-		// There's no equivalent to DROP in CoreCLR, so just treat it as weak.
-	case MONO_TOGGLE_REF_WEAK:
+		switch (res) {
+		case MONO_TOGGLE_REF_DROP:
+			// There's no equivalent to DROP in CoreCLR, so just treat it as weak.
+		case MONO_TOGGLE_REF_WEAK:
+			rv = 0;
+			break;
+		case MONO_TOGGLE_REF_STRONG:
+			rv = 1;
+			break;
+		default:
+			LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i): INVALID toggle ref value: %i\n", __func__, ptr, handle, flags, res);
+			break;
+		}
+	} else {
+		// If this isn't a toggle ref, it's effectively a weak gchandle
 		rv = 0;
-		break;
-	case MONO_TOGGLE_REF_STRONG:
-		rv = 1;
-		break;
-	default:
-		LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i): INVALID toggle ref value: %i\n", __func__, ptr, handle, flags, res);
-		break;
 	}
 
 	LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i) => %i (res: %i) isRegisteredToggleRef: %i\n", __func__, ptr, handle, flags, rv, res, isRegisteredToggleRef);
