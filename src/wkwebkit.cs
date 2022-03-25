@@ -17,13 +17,11 @@ using Security;
 #if MONOMAC
 using AppKit;
 using UIColor=AppKit.NSColor;
-using UIPreviewActionItem = Foundation.NSObject;
 using UIScrollView = AppKit.NSScrollView;
 using UIImage = AppKit.NSImage;
 using IUIContextMenuInteractionCommitAnimating = Foundation.NSObject;
 using UIContextMenuConfiguration = Foundation.NSObject;
 using UIViewController = AppKit.NSViewController;
-using IWKPreviewActionItem = Foundation.NSObject;
 #else
 using UIKit;
 using NSPrintInfo = Foundation.NSObject;
@@ -1186,7 +1184,10 @@ namespace WebKit
 		NSNumber height { get; }
 	}
 
-#if !MONOMAC
+#if MONOMAC
+	interface UIPreviewActionItem {}
+#endif
+
 	interface IWKPreviewActionItem {}
 
 	[iOS (10,0)][NoMac]
@@ -1198,7 +1199,6 @@ namespace WebKit
 		[Export ("identifier", ArgumentSemantic.Copy)]
 		NSString Identifier { get; }
 	}
-#endif
 
 	[iOS (10,0)][NoMac]
 	[Static]
