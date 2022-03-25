@@ -1078,6 +1078,10 @@ namespace ObjCRuntime {
 					if (managed_obj is null || wr.Target == (object) managed_obj) {
 						object_map.Remove (ptr);
 						wr.Free ();
+					} else if (wr.Target is null) {
+						// We can remove null entries, and free the corresponding GCHandle
+						object_map.Remove (ptr);
+						wr.Free ();
 					}
 
 				}
