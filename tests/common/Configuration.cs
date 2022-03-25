@@ -509,7 +509,7 @@ namespace Xamarin.Tests
 		public static string GetDotNetRoot ()
 		{
 			if (IsVsts) {
-				return EvaluateVariable ("DOTNET_DIR");
+				return Path.Combine (EvaluateVariable ("DOTNET_DIR"), "packs");
 			} else {
 				return Path.Combine (SourceRoot, "_build");
 			}

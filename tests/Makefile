@@ -94,6 +94,7 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
 	@echo "MACOS_SDK_VERSION=$(MACOS_SDK_VERSION)" >> $@
+	@echo "DOTNET_BCL_DIR=$(DOTNET_BCL_DIR)" >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
