@@ -12,9 +12,6 @@ parameters:
 - name: keyringPass
   type: string
 
-variables:
-  GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
-
 steps:
 
 - checkout: self
