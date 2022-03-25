@@ -55,6 +55,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string Namespace { get; set; }
 
+		public bool NoNFloatUsing { get; set; }
+
 		public ITaskItem[] NativeLibraries { get; set; }
 
 		public string OutputAssembly { get; set; }
@@ -155,6 +157,9 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			cmd.AddQuotedSwitchIfNotNull ("/ns:", Namespace);
+
+			if (NoNFloatUsing)
+				cmd.Add ("/no-nfloat-using:true");
 
 			if (!string.IsNullOrEmpty (DefineConstants)) {
 				var strv = DefineConstants.Split (new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);

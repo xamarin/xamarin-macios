@@ -45,7 +45,7 @@ using Quaterniond = global::CoreGraphics.NQuaterniond;
 #if PFLOAT_SINGLE
 using pfloat = System.Single;
 #else
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #endif
 
 #nullable enable

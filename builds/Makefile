@@ -19,7 +19,7 @@ download-mono: \
 downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
 downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
 downloads/$(basename $(MONO_MACCATALYST_FILENAME)): MONO_URL=$(MONO_MACCATALYST_URL)
-downloads/$(DOTNET6_TARBALL_NAME): MONO_URL=$(DOTNET6_TARBALL)
+downloads/$(DOTNET_TARBALL_NAME): MONO_URL=$(DOTNET_TARBALL)
 
 include $(TOP)/mk/colors.mk
 
@@ -72,12 +72,12 @@ downloads/%: downloads/%.nupkg
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
-downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))): dotnet-install.sh
-	$(Q) echo "Downloading and installing .NET $(DOTNET6_VERSION) into $@..."
-	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET6_VERSION)" --architecture x64 --no-path $$DOTNET_INSTALL_EXTRA_ARGS
+downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))): dotnet-install.sh
+	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) into $@..."
+	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture x64 --no-path $$DOTNET_INSTALL_EXTRA_ARGS
 	$(Q) rm -Rf "$@"
 	$(Q) mv "$@.tmp" "$@"
-	$(Q) echo "Downloaded and installed .NET $(DOTNET6_VERSION) into $@."
+	$(Q) echo "Downloaded and installed .NET $(DOTNET_VERSION) into $@."
 
 dotnet-install.sh: Makefile
 	$(Q) curl --retry 20 --retry-delay 2 --connect-timeout 15 -S -L $(if $(V),-v,-s) https://dot.net/v1/dotnet-install.sh --output $@.tmp
@@ -116,8 +116,8 @@ DOWNLOAD_DOTNET_VERSION=$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)
 endif
 endif
 
-.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
-	$(Q_GEN) cd package-download && $(DOTNET6) \
+.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
+	$(Q_GEN) cd package-download && $(DOTNET) \
 		build \
 		download-packages.proj \
 		/t:WriteBundledNETCorePlatformsPackageVersion \
@@ -125,12 +125,12 @@ endif
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
 		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
 		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
-		/p:DotNetManifestVersionBand="$(MANIFEST_VERSION_BAND)" \
+		/p:DotNetManifestVersionBand="$(DOTNET_MANIFEST_VERSION_BAND)" \
 		/p:ToolChainManifestVersionBand="$(TOOLCHAIN_MANIFEST_VERSION_BAND)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
-	$(Q) $(CP) ./downloads/microsoft.net.workload.mono.toolchain.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET6_VERSION)-osx-x64/sdk-manifests/$(MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
-	$(Q) $(CP) ./downloads/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET6_VERSION)-osx-x64/sdk-manifests/$(MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
+	$(Q) $(CP) ./downloads/microsoft.net.workload.mono.toolchain.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
+	$(Q) $(CP) ./downloads/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
 	$(Q) touch $@
 
 BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
@@ -149,7 +149,7 @@ endif
 	$(Q) mv $@.tmp $@
 
 DOTNET_DOWNLOADS = \
-	downloads/$(basename $(basename $(DOTNET6_TARBALL_NAME))) \
+	downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))) \
 	.stamp-download-dotnet-packages \
 
 dotnet: $(DOTNET_DOWNLOADS)

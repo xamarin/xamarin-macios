@@ -163,6 +163,7 @@ namespace CoreBluetooth {
 		[Field ("CBCentralManagerScanOptionAllowDuplicatesKey")]
 		NSString ScanOptionAllowDuplicatesKey { get; }
 
+#if !NET
 		[Obsolete ("Use 'CBConnectPeripheralOptions' instead.")]
 		[Field ("CBConnectPeripheralOptionNotifyOnDisconnectionKey")]
 		NSString OptionNotifyOnDisconnectionKey { get; }
@@ -176,6 +177,7 @@ namespace CoreBluetooth {
 		[Mac (10,13)]
 		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
 		NSString OptionNotifyOnNotificationKey { get; }
+#endif
 
 		[Mac (10,14)]
 		[iOS (11,2)][TV (11,2)][Watch (4,2)]

@@ -229,6 +229,7 @@ public class BindingTouch : IDisposable {
 		var defines = new List<string> ();
 		string? generate_file_list = null;
 		bool process_enums = false;
+		bool noNFloatUsing = false;
 
 		ErrorHelper.ClearWarningLevels ();
 
@@ -314,6 +315,10 @@ public class BindingTouch : IDisposable {
 					} catch (Exception ex) {
 						throw ErrorHelper.CreateError (26, ex.Message);
 					}
+				}
+			},
+			{ "no-nfloat-using:", "If a global using alias directive for 'nfloat = System.Runtime.InteropServices.NFloat' should automatically be created.", (v) => {
+					noNFloatUsing = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v);
 				}
 			},
 			new Mono.Options.ResponseFileSource (),
@@ -466,6 +471,14 @@ public class BindingTouch : IDisposable {
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
+#if NET
+			var tmpusing = Path.Combine (tmpdir, "GlobalUsings.g.cs");
+			if (!noNFloatUsing) {
+				File.WriteAllText (tmpusing, "global using nfloat = global::System.Runtime.InteropServices.NFloat;\n");
+				cargs.Add (tmpusing);
+			}
+#endif
+
 			Compile (cargs, 2);
 
 			universe = new MetadataLoadContext (
@@ -591,6 +604,11 @@ public class BindingTouch : IDisposable {
 			}
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
+
+#if NET
+			if (!noNFloatUsing)
+				cargs.Add (tmpusing);
+#endif
 
 			Compile (cargs, 1000);
 		} finally {

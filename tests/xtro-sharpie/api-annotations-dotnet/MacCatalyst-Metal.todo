@@ -1,9 +1,9 @@
 !extra-enum-value! Managed value 0 for MTLFeatureSet.iOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 1 for MTLFeatureSet.iOS_GPUFamily2_v1 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 10 for MTLFeatureSet.iOS_GPUFamily3_v3 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 10000 for MTLFeatureSet.OSX_GPUFamily1_v1 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 10001 for MTLFeatureSet.OSX_GPUFamily1_v2 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 10002 for MTLFeatureSet.OSX_ReadWriteTextureTier2 is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 10000 for MTLFeatureSet.macOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 10001 for MTLFeatureSet.macOS_GPUFamily1_v2 is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 10002 for MTLFeatureSet.macOS_ReadWriteTextureTier2 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 10003 for MTLFeatureSet.macOS_GPUFamily1_v3 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 10004 for MTLFeatureSet.macOS_GPUFamily1_v4 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 10005 for MTLFeatureSet.macOS_GPUFamily2_v1 is available for the current platform while the value in the native header is not
@@ -15,7 +15,7 @@
 !extra-enum-value! Managed value 16 for MTLFeatureSet.iOS_GPUFamily5_v1 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 2 for MTLFeatureSet.iOS_GPUFamily1_v2 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 3 for MTLFeatureSet.iOS_GPUFamily2_v2 is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 30000 for MTLFeatureSet.TVOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 30000 for MTLFeatureSet.tvOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 30001 for MTLFeatureSet.tvOS_GPUFamily1_v2 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 30002 for MTLFeatureSet.tvOS_GPUFamily1_v3 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 30003 for MTLFeatureSet.tvOS_GPUFamily2_v1 is available for the current platform while the value in the native header is not

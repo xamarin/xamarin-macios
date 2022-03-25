@@ -1,6 +1,5 @@
 using System;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Foundation {
 

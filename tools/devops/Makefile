@@ -7,7 +7,8 @@ device-tests-provisioning.csx: device-tests-provisioning.csx.in Makefile $(TOP)/
 		-e 's#@XI_PACKAGE@#$(XI_PACKAGE)#g' \
 		-e 's#@MONO_PACKAGE@#$(MIN_MONO_URL)#g' \
 		-e 's#@VS_PACKAGE@#$(MIN_VISUAL_STUDIO_URL)#g' \
-		-e 's#@DOTNET_VERSION@#$(DOTNET_VERSION)#g' \
+		-e 's#@MIN_SHARPIE_URL@#$(MIN_SHARPIE_URL)#g' \
+		-e 's#@SYSTEM_DOTNET_VERSION@#$(SYSTEM_DOTNET_VERSION)#g' \
 		$< > $@;
 
 build-provisioning.csx: build-provisioning.csx.in Makefile $(TOP)/Make.config
@@ -16,7 +17,7 @@ build-provisioning.csx: build-provisioning.csx.in Makefile $(TOP)/Make.config
 		-e 's#@MONO_PACKAGE@#$(MIN_MONO_URL)#g' \
 		-e 's#@VS_PACKAGE@#$(MIN_VISUAL_STUDIO_URL)#g' \
 		-e 's#@MIN_SHARPIE_URL@#$(MIN_SHARPIE_URL)#g' \
-		-e 's#@DOTNET_VERSION@#$(DOTNET_VERSION)#g' \
+		-e 's#@SYSTEM_DOTNET_VERSION@#$(SYSTEM_DOTNET_VERSION)#g' \
 		$< > $@;
 
 mac-tests-provisioning.csx: mac-tests-provisioning.csx.in Makefile $(TOP)/Make.config
@@ -24,7 +25,7 @@ mac-tests-provisioning.csx: mac-tests-provisioning.csx.in Makefile $(TOP)/Make.c
 		-e 's#@XM_PACKAGE@#$(XM_PACKAGE)#g' \
 		-e 's#@MONO_PACKAGE@#$(MIN_MONO_URL)#g' \
 		-e 's#@VS_PACKAGE@#$(MIN_VISUAL_STUDIO_URL)#g' \
-		-e 's#@DOTNET_VERSION@#$(DOTNET_VERSION)#g' \
+		-e 's#@SYSTEM_DOTNET_VERSION@#$(SYSTEM_DOTNET_VERSION)#g' \
 		$< > $@;
 
 provision-xcode.csx: provision-xcode.csx.in Makefile $(TOP)/Make.config

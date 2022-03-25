@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -37,27 +39,27 @@ namespace AudioToolbox {
 
 	public static class AudioFormatAvailability
 	{
-		public static AudioValueRange[] GetAvailableEncodeBitRates (AudioFormatType format)
+		public static AudioValueRange[]? GetAvailableEncodeBitRates (AudioFormatType format)
 		{
 			return GetAvailable<AudioValueRange> (AudioFormatProperty.AvailableEncodeBitRates, format);
 		}
 
-		public static AudioValueRange[] GetAvailableEncodeSampleRates (AudioFormatType format)
+		public static AudioValueRange[]? GetAvailableEncodeSampleRates (AudioFormatType format)
 		{
 			return GetAvailable<AudioValueRange> (AudioFormatProperty.AvailableEncodeSampleRates, format);
 		}
 
-		public static AudioClassDescription[] GetDecoders (AudioFormatType format)
+		public static AudioClassDescription[]? GetDecoders (AudioFormatType format)
 		{
 			return GetAvailable<AudioClassDescription> (AudioFormatProperty.Decoders, format);
 		}
 
-		public static AudioClassDescription[] GetEncoders (AudioFormatType format)
+		public static AudioClassDescription[]? GetEncoders (AudioFormatType format)
 		{
 			return GetAvailable<AudioClassDescription> (AudioFormatProperty.Encoders, format);
 		}
 
-		unsafe static T[] GetAvailable<T> (AudioFormatProperty prop, AudioFormatType format)
+		unsafe static T[]? GetAvailable<T> (AudioFormatProperty prop, AudioFormatType format)
 		{		
 			uint size;
 			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (prop, sizeof (AudioFormatType), ref format, out size) != 0)

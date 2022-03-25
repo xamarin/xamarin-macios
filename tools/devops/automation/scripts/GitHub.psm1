@@ -1,3 +1,10 @@
+# the following is a hack around the fact that pwsh does not handle well the using 
+# form a relative path in vsts
+$moduleName = "$PSScriptRoot\\StaticPages.psm1"  # windows path separators work on unix and windows
+$scriptBody = "using module $ModuleName"
+$script = [ScriptBlock]::Create($scriptBody)
+. $script
+
 <#
     .SYNOPSIS
         Simple retry block to workaround certain issues with the webservices that cannot handle the load.
@@ -216,7 +223,6 @@ function New-GitHubComment {
         [String]
         $Header,
         
-        [Parameter(Mandatory)]
         [String]
         $Description,
 
@@ -250,7 +256,9 @@ function New-GitHubComment {
     $msg = [System.Text.StringBuilder]::new()
     $msg.AppendLine("### $Emoji $Header $Emoji")
     $msg.AppendLine()
-    $msg.AppendLine($Description)
+    if ($Description) { # only if description is not null or empty
+        $msg.AppendLine($Description)
+    }
     if ($Message) { # only if message is not null or empty
         $msg.AppendLine()
         $msg.AppendLine($Message)
@@ -563,7 +571,7 @@ function New-GitHubSummaryComment {
     $sb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
     if ($Env:VSDROPS_INDEX) {
         # we did generate an index with the files in vsdrops
-        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-sim&api-version=6.0&`$format=zip)")
+        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-simulator&api-version=6.0&`$format=zip)")
     }
 
     if (-not $DeviceTest) {
@@ -575,14 +583,8 @@ function New-GitHubSummaryComment {
     if (Test-Path $TestSummaryPath -PathType Leaf) { # if present we did get results and add the links, else skip
         $githubPagePrefix = "https://xamarin.github.io/macios.ci"
         if (-not [string]::IsNullOrEmpty($Env:PR_ID)) {
-            $githubPagePrefix = "$githubPagePrefix/pr/PR$Env:PR_ID/$Env:BUILD_BUILDID"
-            $sb.AppendLine("# GitHub pages")
-            $sb.AppendLine()
-            $sb.AppendLine("Results can be found in the following github pages (it might take some time to publish):")
-            $sb.AppendLine()
-            $sb.AppendLine("* [Test results]($githubPagePrefix/HtmlReport-sim/tests/vsdrops_index.html)")
-            $sb.AppendLine("* [API diff ]($githubPagePrefix/HtmlReport-sim/api-diff/api-diff.html)")
-            $sb.AppendLine("* [API & Generator diff]($githubPagePrefix/apicomparison/api-diff.html)")
+            $staticPageComment = [StaticPages]::new($githubPagePrefix, $Env:PR_ID, $Env:BUILD_BUILDID)
+            $staticPageComment.WriteComment($sb)
         }
     }
 

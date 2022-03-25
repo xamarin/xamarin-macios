@@ -61,6 +61,9 @@
     <Compile Include="..\..\tools\common\FileUtils.cs">
       <Link>external\FileUtils.cs</Link>
     </Compile>
+    <Compile Include="..\Versions.dotnet.g.cs">
+      <Link>Versions.dotnet.g.cs</Link>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>

@@ -119,8 +119,13 @@ namespace MonoTouchFixtures.Network {
 				browser.Start ();
 				browserReady.WaitOne (30000);
 				using (var advertiser = NWAdvertiseDescriptor.CreateBonjourService ("MonoTouchFixtures.Network", type))
+#if NET
+				using (var tcpOptions = new NWProtocolTcpOptions ())
+				using (var tlsOptions = new NWProtocolTlsOptions ())
+#else
 				using (var tcpOptions = NWProtocolOptions.CreateTcp ())
 				using (var tlsOptions = NWProtocolOptions.CreateTls ())
+#endif
 				using (var paramenters = NWParameters.CreateTcp ()) {
 					paramenters.ProtocolStack.PrependApplicationProtocol (tlsOptions);
 					paramenters.ProtocolStack.PrependApplicationProtocol (tcpOptions);

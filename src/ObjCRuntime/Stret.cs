@@ -229,8 +229,14 @@ namespace ObjCRuntime
 #if NET
 			if (type.Namespace == "ObjCRuntime") {
 				switch (type.Name) {
-				case "nfloat":
 				case "NativeHandle":
+					type_size = is_64_bits ? 8 : 4;
+					return true;
+				}
+				return false;
+			} else if (type.Namespace == "System.Runtime.InteropServices") {
+				switch (type.Name) {
+				case "NFloat":
 					type_size = is_64_bits ? 8 : 4;
 					return true;
 				}

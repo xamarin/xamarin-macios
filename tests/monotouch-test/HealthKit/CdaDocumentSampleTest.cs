@@ -37,11 +37,7 @@ namespace MonoTouchFixtures.HealthKit {
 						Assert.That (details.ValidationError.Length, Is.EqualTo ((nint) 0), "Length");
 					}
 				};
-#if __MACCATALYST__
-				var throwsException = false;
-#else
 				var throwsException = TestRuntime.CheckXcodeVersion (11, 0);
-#endif
 
 				if (throwsException) {
 #if NET

@@ -38,7 +38,6 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 #if NET
-using System.Runtime.Versioning;
 #else
 using NativeHandle = System.IntPtr;
 #endif

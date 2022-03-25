@@ -64,10 +64,12 @@ namespace CoreGraphics {
 			CGPDFOperatorTableRelease (GetCheckedHandle ());
 		}
 
+#if !NET
 		// We need this P/Invoke for legacy AOT scenarios (since we have public API taking a 'Action<IntPtr, IntPtr>', and with this particular native function we can't wrap the delegate)
 		// Unfortunately CoreCLR doesn't support generic Action delegates in P/Invokes: https://github.com/dotnet/runtime/issues/32963
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFOperatorTableSetCallback (/* CGPDFOperatorTableRef */ IntPtr table, /* const char */ string name, /* CGPDFOperatorCallback */ Action<IntPtr,IntPtr>? callback);
+#endif
 
 #if NET
 		// This signature requires C# 9 (so .NET only).
@@ -77,7 +79,7 @@ namespace CoreGraphics {
 		unsafe extern static void CGPDFOperatorTableSetCallback (/* CGPDFOperatorTableRef */ IntPtr table, /* const char */ string name, /* CGPDFOperatorCallback */ delegate* unmanaged<IntPtr, IntPtr, void> callback);
 #endif
 
-#if MONOMAC
+#if MONOMAC && !NET
 		// This signature can work everywhere, but we can't enforce at compile time that 'callback' is a delegate to a static function (which is required for FullAOT scenarios),
 		// so limit it to non-FullAOT platforms (macOS)
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -103,10 +105,8 @@ namespace CoreGraphics {
 		[Advice ("Use the nicer SetCallback(string,Action<CGPDFScanner,object>) API when possible.")]
 #endif
 
+#if !NET
 		// this API is ugly - but I do not see a better way with the AOT limitation
-#if NET && !MONOMAC
-		[Obsolete ("Use the overload that takes a function pointer ('delegate*<IntPtr,IntPtr,void>') instead.")]
-#endif
 		public void SetCallback (string name, Action<IntPtr,IntPtr>? callback)
 		{
 			if (name is null)
@@ -114,6 +114,7 @@ namespace CoreGraphics {
 
 			CGPDFOperatorTableSetCallback (Handle, name, callback);
 		}
+#endif // !NET
 
 #if NET
 		// this signature requires C# 9 and unsafe code

@@ -30,7 +30,7 @@ using OpenTK;
 
 #if __MACOS__
 #if NET
-using pfloat = ObjCRuntime.nfloat;
+using pfloat = System.Runtime.InteropServices.NFloat;
 #else
 using pfloat = System.nfloat;
 #endif

@@ -1,9 +1,10 @@
 // Copyright 2016, Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 #if !COREBUILD && !NET
 
 using System;
-using System.Runtime.Versioning;
 using System.Threading.Tasks;
 
 #if MONOMAC || IOS
@@ -80,7 +81,7 @@ namespace CloudKit {
 	public partial class CKDiscoverAllContactsOperation {
 
 		[Obsolete ("Empty stub (not a public API).")]
-		public virtual Action<CKDiscoveredUserInfo[], NSError> DiscoverAllContactsHandler { get; set; }
+		public virtual Action<CKDiscoveredUserInfo[], NSError>? DiscoverAllContactsHandler { get; set; }
 
 	}
 #endif
@@ -104,17 +105,17 @@ namespace CloudKit {
 
 		[iOS (8,0), Mac (10,10)]
 		[Obsolete ("Empty stub (not a public API).")]
-		public virtual CKDiscoverUserInfosCompletionHandler Completed { get; set; }
+		public virtual CKDiscoverUserInfosCompletionHandler? Completed { get; set; }
 
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public CKDiscoverUserInfosOperation (string [] emailAddresses, CKRecordID [] userRecordIDs)
 			=> throw new NotSupportedException ();
 
 		[Obsolete ("Empty stub (not a public API).")]
-		public virtual string[] EmailAddresses { get; set; }
+		public virtual string[]? EmailAddresses { get; set; }
 
 		[Obsolete ("Empty stub (not a public API).")]
-		public virtual CKRecordID [] UserRecordIds { get; set; }
+		public virtual CKRecordID []? UserRecordIds { get; set; }
 
 #pragma warning disable CS0809
 		[Obsolete ("Empty stub (not a public API).")]
@@ -141,13 +142,13 @@ namespace CloudKit {
 	public partial class CKDiscoveredUserInfo {
 		[iOS (9,0)][Mac (10,11)]
 		[Obsolete ("Empty stub (not public API).")]
-		public virtual CNContact DisplayContact { get; }
+		public virtual CNContact? DisplayContact { get; }
 
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'DisplayContact.GivenName'.")]
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.GivenName'.")]
 		[Obsoleted (PlatformName.MacOSX, 12, 0, message : "Use 'DisplayContact.GivenName'.")]
 		[Obsoleted (PlatformName.iOS, 15, 0, message : "Use 'DisplayContact.GivenName'.")]
-		public virtual string FirstName {
+		public virtual string? FirstName {
 			get { return null; }
 		}
 
@@ -155,7 +156,7 @@ namespace CloudKit {
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'DisplayContact.FamilyName'.")]
 		[Obsoleted (PlatformName.MacOSX, 12, 0, message : "Use 'DisplayContact.FamilyName'.")]
 		[Obsoleted (PlatformName.iOS, 15, 0, message : "Use 'DisplayContact.FamilyName'.")]
-		public virtual string LastName {
+		public virtual string? LastName {
 			get { return null; }
 		}
 	}

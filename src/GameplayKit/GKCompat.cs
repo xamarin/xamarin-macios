@@ -3,7 +3,6 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if !NET && !MONOMAC && !__MACCATALYST__
 

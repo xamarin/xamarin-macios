@@ -27,7 +27,6 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -204,8 +203,8 @@ namespace CoreVideo {
 #if !XAMCORE_3_0
 		public static void Register (NSDictionary description, int pixelFormat)
 		{
-			if (description == null)
-				throw new ArgumentNullException ("description");
+			if (description is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (description));
 
 			CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType (description.Handle, pixelFormat);
 		}
@@ -213,8 +212,8 @@ namespace CoreVideo {
 
 		public static void Register (NSDictionary description, CVPixelFormatType pixelFormat)
 		{
-			if (description == null)
-				throw new ArgumentNullException ("description");
+			if (description is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (description));
 
 			CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType (description.Handle, (int) pixelFormat);
 		}

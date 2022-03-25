@@ -83,7 +83,7 @@ namespace Xharness {
 				if (child == null)
 					continue;
 
-				if (child.NodeType == XmlNodeType.Element && child.Name == name)
+				if (child.NodeType == XmlNodeType.Element && string.Equals (child.Name, name, StringComparison.OrdinalIgnoreCase))
 					yield return child;
 
 				if (!child.HasChildNodes)
