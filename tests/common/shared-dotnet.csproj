@@ -2,43 +2,49 @@
 <!-- This file is processed by xharness, and contains logic shared by all our test suites -->
 <Project>
 	<!-- NativeLibName: the platform-specific subdirectory of tests/test-libraries/.libs where to get libraries with all the relevant architectures -->
+	<Choose>
 
-	<!-- Logic for iOS -->
-	<PropertyGroup Condition="$(TargetFramework.EndsWith('-ios'))">
-		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
-		<NativeLibName>ios-fat</NativeLibName>
-		<!-- We need this because we'd otherwise default to the latest OS version we support, and we'll want to execute on earlier versions -->
-		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
-		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\ios-defines-dotnet.rsp</CompilerResponseFile>
-	</PropertyGroup>
-	<ItemGroup Condition="'$(_PlatformName)' == 'iOS'">
-	</ItemGroup>
+		<!-- Logic for iOS -->
+		<When Condition="$(TargetFramework.EndsWith('-ios'))">
+			<PropertyGroup> 
+				<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
+				<NativeLibName>ios-fat</NativeLibName>
+				<!-- We need this because we'd otherwise default to the latest OS version we support, and we'll want to execute on earlier versions -->
+				<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+				<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\ios-defines-dotnet.rsp</CompilerResponseFile>
+			</PropertyGroup>
+		</When>
 
-	<!-- Logic for tvOS -->
-	<PropertyGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
-		<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
-		<NativeLibName>tvos-fat</NativeLibName>
-		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
-		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\tvos-defines-dotnet.rsp</CompilerResponseFile>
-	</PropertyGroup>
-	<ItemGroup Condition="$(TargetFramework.EndsWith('-tvos'))">
-	</ItemGroup>
+		<!-- Logic for tvOS -->
+		<When Condition="$(TargetFramework.EndsWith('-tvos'))">
+			<PropertyGroup>
+				<AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
+				<NativeLibName>tvos-fat</NativeLibName>
+				<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+				<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\tvos-defines-dotnet.rsp</CompilerResponseFile>
+			</PropertyGroup>
+		</When>
 
-	<!-- Logic for macOS -->
-	<PropertyGroup Condition="$(TargetFramework.EndsWith('-macos'))">
-		<DefineConstants>$(DefineConstants);MONOMAC</DefineConstants>
-		<NativeLibName>macos-fat</NativeLibName>
-		<SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
-		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\macos-defines-dotnet.rsp</CompilerResponseFile>
-	</PropertyGroup>
+		<!-- Logic for macOS -->
+		<When Condition="$(TargetFramework.EndsWith('-macos'))">
+			<PropertyGroup> 
+				<DefineConstants>$(DefineConstants);MONOMAC</DefineConstants>
+				<NativeLibName>macos-fat</NativeLibName>
+				<SupportedOSPlatformVersion>10.14</SupportedOSPlatformVersion>
+				<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\macos-defines-dotnet.rsp</CompilerResponseFile>
+			</PropertyGroup>
+		</When>
 
-	<!-- Logic for Mac Catalyst -->
-	<PropertyGroup Condition="$(TargetFramework.EndsWith('-maccatalyst'))">
-		<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
-		<NativeLibName>maccatalyst-fat</NativeLibName>
-		<SupportedOSPlatformVersion>13.3</SupportedOSPlatformVersion>
-		<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\maccatalyst-defines-dotnet.rsp</CompilerResponseFile>
-	</PropertyGroup>
+		<!-- Logic for Mac Catalyst -->
+		<When Condition="$(TargetFramework.EndsWith('-maccatalyst'))">
+			<PropertyGroup> 
+				<AssetTargetFallback>xamarinios10;$(AssetTargetFallback)</AssetTargetFallback>
+				<NativeLibName>maccatalyst-fat</NativeLibName>
+				<SupportedOSPlatformVersion>13.3</SupportedOSPlatformVersion>
+				<CompilerResponseFile>$(MSBuildThisFileDirectory)\..\..\src\build\dotnet\maccatalyst-defines-dotnet.rsp</CompilerResponseFile>
+			</PropertyGroup>
+		</When>
+	</Choose>
 
 	<!-- Logic for all test suites -->
 	<PropertyGroup>
