@@ -26,6 +26,11 @@ steps:
     Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests on macOS $Env:CONTEXT failed for unknown reasons."
     Set-GitHubStatus -Status "pending" -Description "Tests on macOS $Env:CONTEXT have started." -Context "$Env:CONTEXT"
   displayName: "Initialize state"
+  env:
+    BUILD_REVISION: $(Build.SourceVersion)
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
 
 - bash: |
     RC=0
