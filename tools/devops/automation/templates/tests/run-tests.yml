@@ -97,7 +97,7 @@ steps:
     make global6.json
     make -C builds dotnet
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-  displayName: Boostrap dotnet
+  displayName: Bootstrap dotnet
   timeoutInMinutes: 30
 
 - bash: |
@@ -169,6 +169,7 @@ steps:
     set -x
     set -e
     make -C tests -j8 all
+    make -C tools/xibuild
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Build test dependencies
   timeoutInMinutes: 30
