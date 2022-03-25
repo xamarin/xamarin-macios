@@ -427,17 +427,7 @@ steps:
       set -x
       set -e
 
-      echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
-      RC=0
-      make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests || RC=$?
-      if [ $RC -eq 0 ]; then
-        echo "Setting outpur var macTestsPresent to Succeeded"
-        echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
-      else
-        echo "Setting outpur var macTestsPresent to Failed"
-        echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Failed"
-      fi
-      exit $RC
+      make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
       
     name: macTestPkg
     displayName: 'Package Xamarin.mac tests'
