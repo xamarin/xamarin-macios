@@ -192,7 +192,7 @@ steps:
     [System.Collections.Generic.List[string]]$failures = @()
 
     # Claim that the tests timed out before we start
-    Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests timed out"
+    Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests timed out ⏰"
 
     $macTest = @("dontlink", "introspection", "linksdk", "linkall", "xammac_tests", "monotouch-test")
     foreach ($t in $macTest) {
