@@ -37,7 +37,7 @@ bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe xtro-sanity/bin
 	$(Q) touch $@
 
 ifdef TESTS_USE_SYSTEM
-XIOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/iOS/Xamarin.iOS.dll
+XIOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/Xamarin.iOS.dll
 XIOS_GL ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll
 else
 XIOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/iOS/Xamarin.iOS.dll
@@ -56,7 +56,7 @@ $(XIOS_PCH): .stamp-check-sharpie
 
 
 ifdef TESTS_USE_SYSTEM
-XWATCHOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/32bits/watchOS/Xamarin.WatchOS.dll
+XWATCHOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/32bits/Xamarin.WatchOS.dll
 else
 XWATCHOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/watchOS/Xamarin.WatchOS.dll
 endif
@@ -68,7 +68,7 @@ $(XWATCHOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH) -exclude RealityKit
 
 ifdef TESTS_USE_SYSTEM
-XTVOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/tvOS/Xamarin.TVOS.dll
+XTVOS ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/Xamarin.TVOS.dll
 XTVOS_GL ?= /Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll
 else
 XTVOS ?= $(TOP)/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/tvOS/Xamarin.TVOS.dll
@@ -225,7 +225,12 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetClassify,$(platform),
 ifdef INCLUDE_IOS
 INCLUDED_PLATFORMS+=iOS
 CLASSIFY+=.stamp-classify-ios
-.stamp-classify-ios: bin/Debug/xtro-sharpie.exe $(XIOS_PCH) $(XIOS) $(XIOS_GL)
+STAMP_CLASSIFY_IOS_DEPS := bin/Debug/xtro-sharpie.exe $(XIOS_PCH) 
+ifndef TESTS_USE_SYSTEM
+STAMP_CLASSIFY_IOS_DEPS += $(XIOS)
+STAMP_CLASSIFY_IOS_DEPS += $(XIOS_GL)
+endif
+.stamp-classify-ios: $(STAMP_CLASSIFY_IOS_DEPS) 
 	rm -f $(ANNOTATIONS_DIR)/iOS-*.raw
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XIOS_PCH) $(XIOS) $(XIOS_GL)
 	$(Q) touch $@
@@ -234,7 +239,12 @@ endif
 ifdef INCLUDE_TVOS
 INCLUDED_PLATFORMS+=tvOS
 CLASSIFY+=.stamp-classify-tvos
-.stamp-classify-tvos: bin/Debug/xtro-sharpie.exe $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
+STAMP_CLASSIFY_TVOS_DEPS := bin/Debug/xtro-sharpie.exe $(XTVOS_PCH)
+ifndef TESTS_USE_SYSTEM
+STAMP_CLASSIFY_TVOS_DEPS += $(XTVOS) 
+STAMP_CLASSIFY_TVOS_DEPS += $(XTVOS_GL)
+endif
+.stamp-classify-tvos: $(STAMP_CLASSIFY_TVOS_DEPS)
 	rm -f $(ANNOTATIONS_DIR)/tvOS-*.raw
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XTVOS_PCH) $(XTVOS) $(XTVOS_GL)
 	$(Q) touch $@
@@ -243,7 +253,11 @@ endif
 ifdef INCLUDE_WATCH
 INCLUDED_PLATFORMS+=watchOS
 CLASSIFY+=.stamp-classify-watchos
-.stamp-classify-watchos: bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) $(XWATCHOS)
+STAMP_CLASSIFY_WATCH_DEPS := bin/Debug/xtro-sharpie.exe $(XWATCHOS_PCH) 
+ifndef TESTS_USE_SYSTEM
+STAMP_CLASSIFY_WATCH_DEPS += $(XWATCHOS)
+endif
+.stamp-classify-watchos: $(STAMP_CLASSIFY_WATCH_DEPS)
 	rm -f $(ANNOTATIONS_DIR)/watchOS-*.raw
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XWATCHOS_PCH) $(XWATCHOS)
 	$(Q) touch $@
@@ -252,7 +266,11 @@ endif
 ifdef INCLUDE_MAC
 INCLUDED_PLATFORMS+=macOS
 CLASSIFY+=.stamp-classify-macos
-.stamp-classify-macos: bin/Debug/xtro-sharpie.exe $(XMACOS_PCH) $(XMACOS)
+STAMP_CLASSIFY_MAC_DEPS := bin/Debug/xtro-sharpie.exe $(XMACOS_PCH)
+ifndef TESTS_USE_SYSTEM
+STAMP_CLASSIFY_MAC_DEPS += $(XMACOS)
+endif
+.stamp-classify-macos: $(STAMP_CLASSIFY_MAC_DEPS)
 	rm -f $(ANNOTATIONS_DIR)/macOS-*.raw
 	$(MONO) bin/Debug/xtro-sharpie.exe --output-directory $(ANNOTATIONS_DIR) $(XMACOS_PCH) $(XMACOS)
 	$(Q) touch $@
