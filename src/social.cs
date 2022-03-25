@@ -60,7 +60,7 @@ namespace Social {
 
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
 		[Field ("SLServiceTypeLinkedIn")]
-		[NoiOS]
+		[NoiOS][NoMacCatalyst]
 		[Mac (10,9)]
 		NSString LinkedIn { get; }
 	}
