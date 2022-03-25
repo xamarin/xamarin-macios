@@ -113,6 +113,10 @@ stages:
     timeoutInMinutes: 1000
 
     variables:
+      # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
+      PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+      # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
       XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
       ${{ if eq(parameters.testPool, '') }}:
         AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
