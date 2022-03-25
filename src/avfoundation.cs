@@ -14243,6 +14243,7 @@ namespace AVFoundation {
 		NSString Apple { get; }
 	}
 
+	// FIXME: Unsure about if CMMetadataFormatDescription will be an INativeObject and will need manual binding for Classic
 	[NoMac]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
