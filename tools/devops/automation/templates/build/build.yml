@@ -55,6 +55,7 @@ steps:
       git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
       git fetch origin
       $branch="$(Build.SourceBranch)".Replace("merge", "head")
+      $branch=$branch.Replace("refs", "origin")
       Write-Host "Checking out branch $branch"
       git checkout $branch
       git branch -a
