@@ -151,6 +151,29 @@ monoobject_dict_free_value (CFAllocatorRef allocator, const void *value)
 
 #endif // defined (TRACK_MONOOBJECTS)
 
+#if DEBUG
+void xamarin_coreclr_print_obj (MonoObject *obj) __attribute__((unused));
+
+void
+xamarin_coreclr_print_obj (MonoObject *obj)
+{
+	if (obj == NULL) {
+		fprintf (stderr, "Object is NULL\n");
+		return;
+	}
+
+	fprintf (stderr, "MonoObject: %p\n", obj);
+	fprintf (stderr, "    Reference count: %i\n", (int) obj->reference_count);
+	fprintf (stderr, "    GCHandle: %p\n", obj->gchandle);
+	fprintf (stderr, "    Struct value: %p\n", obj->struct_value);
+	if (obj->gchandle != INVALID_GCHANDLE) {
+		char *fullname = xamarin_get_object_type_fullname (obj->gchandle);
+		fprintf (stderr, "    GCHandle type name: %s\n", fullname);
+		xamarin_free (fullname);
+	}
+}
+#endif
+
 /*
  * Toggle-ref support for CoreCLR is a bit different than for MonoVM. It goes like this:
  *
@@ -311,7 +334,7 @@ xamarin_coreclr_reference_tracking_is_referenced_callback (void* ptr)
 		break;
 	}
 
-	LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i) => %i (res: %i)\n", __func__, ptr, handle, flags, rv, res);
+	LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i) => %i (res: %i) isRegisteredToggleRef: %i\n", __func__, ptr, handle, flags, rv, res, isRegisteredToggleRef);
 
 	return rv;
 }
@@ -872,7 +895,7 @@ MonoException *
 mono_get_exception_out_of_memory ()
 {
 	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_OutOfMemoryException, NULL);
-	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
+	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
 	return rv;
 }
 
