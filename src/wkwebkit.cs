@@ -864,19 +864,12 @@ namespace WebKit
 		[NullAllowed, Export ("serverTrust")]
 		SecTrust ServerTrust { get; }
 
-#if !MONOMAC
-		[NoMac][MacCatalyst (13,1)]
+		[Mac (10,13)][MacCatalyst (13,1)]
 		[iOS (11,0)]
 		[Async]
 		[Export ("takeSnapshotWithConfiguration:completionHandler:")]
 		void TakeSnapshot ([NullAllowed] WKSnapshotConfiguration snapshotConfiguration, Action<UIImage, NSError> completionHandler);
-#else
-		[NoiOS][NoMacCatalyst]
-		[Mac (10,13)]
-		[Export ("takeSnapshotWithConfiguration:completionHandler:")]
-		[Async]
-		void TakeSnapshot ([NullAllowed] WKSnapshotConfiguration snapshotConfiguration, Action<NSImage, NSError> completionHandler);
-#endif
+
 		[Mac (10,13), iOS (11,0)]
 		[Static]
 		[Export ("handlesURLScheme:")]
