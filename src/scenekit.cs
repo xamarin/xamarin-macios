@@ -65,10 +65,13 @@ using Metal;
 using GameplayKit;
 #endif
 
+#if MONOMAC || WATCH || __MACCATALYST__
+using EAGLContext = System.Object;
+#endif
+
 #if MONOMAC
 using AppKit;
 
-using EAGLContext = Foundation.NSObject;
 using GLContext = global::OpenGL.CGLContext;
 #else
 using UIKit;
@@ -86,7 +89,6 @@ using GLContext = global::Foundation.NSObject; // won't be used -> but must comp
 #if WATCH
 using NSView = global::Foundation.NSObject; // won't be used -> [NoWatch] but must compile
 using SCNGeometryTessellator = global::Foundation.NSObject; // won't be used -> [NoWatch] but must compile
-using EAGLContext = global::Foundation.NSObject;
 #else
 using NSView = global::UIKit.UIView;
 #endif
@@ -95,10 +97,6 @@ using NSColor = global::UIKit.UIColor;
 using NSFont = global::UIKit.UIFont;
 using NSImage = global::UIKit.UIImage;
 using NSBezierPath = global::UIKit.UIBezierPath;
-#endif
-
-#if __MACCATALYST__
-using EAGLContext = System.Object;
 #endif
 
 #if !NET
