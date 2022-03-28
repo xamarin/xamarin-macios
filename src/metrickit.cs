@@ -147,16 +147,15 @@ namespace MetricKit {
 		[Export ("DictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation13 { get; }
 
-		[NoMac]
-		[Internal]
-		[iOS (14,0)]
-		[MacCatalyst (14,0)]
-		[Export ("dictionaryRepresentation")]
-		NSDictionary _DictionaryRepresentation14 { get; }
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export ("dictionaryRepresentation")]
-		NSDictionary DictionaryRepresentation { get; }
+ 		[iOS (14,0)]
+ 		[MacCatalyst (14,0)]
+ 		[Export ("dictionaryRepresentation")]
+#if MONOMAC
+ 		NSDictionary DictionaryRepresentation { get; }
+#else
+ 		[Internal]
+ 		NSDictionary _DictionaryRepresentation14 { get; }
+#endif
 
 		[iOS (14,0)]
 		[MacCatalyst (14,0)]
