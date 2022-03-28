@@ -23,6 +23,7 @@ using CoreGraphics;
 using AppKit;
 using UIWindow = AppKit.NSWindow;
 using UIViewController = AppKit.NSViewController;
+using UIImage = AppKit.NSImage;
 #else
 using UIKit;
 using NSViewController = Foundation.NSObject;
@@ -1659,43 +1660,26 @@ namespace GameKit {
 		bool Replayable { [Bind ("isReplayable")] get; }
 		
 #if MONOMAC
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("image", ArgumentSemantic.Retain)]
-		[NullAllowed]
-		NSImage Image { get; }
-		
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Static]
-		[Export ("incompleteAchievementImage")]
-		NSImage IncompleteAchievementImage { get; }
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Static]
-		[Export ("placeholderCompletedAchievementImage")]
-		NSImage PlaceholderCompletedAchievementImage { get; }
-
 #else
-		[NoMac]
+		[Export ("image")]
+#endif
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'LoadImage' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'LoadImage' instead.")]
-		[Export ("image")]
 		[NullAllowed]
 		UIImage Image { get; }
 
-		[NoMac]
 		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoWatch]
 		[Static]
 		[Export ("incompleteAchievementImage")]
 		UIImage IncompleteAchievementImage { get; }
 
-		[NoMac]
 		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoWatch]
 		[Static]
 		[Export ("placeholderCompletedAchievementImage")]
 		UIImage PlaceholderCompletedAchievementImage { get; }
-#endif
 	}
 
 	[NoWatch]
