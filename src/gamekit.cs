@@ -735,20 +735,12 @@ namespace GameKit {
 		[return: NullAllowed]
 		UIViewController ChallengeComposeController ([NullAllowed] string[] playerIDs, [NullAllowed] string message, [NullAllowed] GKChallengeComposeHandler completionHandler);
 
-#if MONOMAC
-		[Mac (10,10)]
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Async (ResultTypeName = "GKChallengeComposeResult")]
-		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
-		NSViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
-#else
-		[NoMac]
 		[NoWatch]
+		[Mac (10,10)]
 		[iOS (8,0)]
 		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
 		UIViewController ChallengeComposeController ([NullAllowed] string message, [NullAllowed] GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
-#endif
 	}
 
 	[NoWatch]
@@ -1602,21 +1594,12 @@ namespace GameKit {
 		[Export ("initWithIdentifier:player:")]
 		NativeHandle Constructor ([NullAllowed] string identifier, GKPlayer player);
 
-
-#if MONOMAC
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Mac (10,10)]
-		[Async (ResultTypeName = "GKChallengeComposeResult")]
-		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
-		NSViewController ChallengeComposeController ([NullAllowed] string message, GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
-#else
-		[NoMac]
-		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		[NoWatch]
 		[iOS (8,0)]
+		[Async (ResultTypeName = "GKChallengeComposeResult")]
 		[Export ("challengeComposeControllerWithMessage:players:completionHandler:")]
 		UIViewController ChallengeComposeController ([NullAllowed] string message, GKPlayer [] players, [NullAllowed] GKChallengeComposeHandler completionHandler);
-#endif
 	
 		[NoWatch]
 		[iOS (8,0), Mac (10,10)]
@@ -1770,18 +1753,16 @@ namespace GameKit {
 		GKDialogController SharedDialogController { get; }
 	}
 
-	[NoWatch]
-#if MONOMAC
 	[Deprecated (PlatformName.MacOSX, 10, 12)]
-	[NoiOS][NoMacCatalyst][NoTV]
+	[Deprecated (PlatformName.iOS, 10, 0)]
+	[NoMacCatalyst]
+	[NoTV][NoWatch]
+#if MONOMAC
 	[BaseType (typeof (NSViewController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
 	interface GKFriendRequestComposeViewController : GKViewController {
 		[Export ("initWithNibName:bundle:")]
 		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 #else
-	[NoMac][NoTV]
-	[Deprecated (PlatformName.iOS, 10, 0)]
-	[NoMacCatalyst]
 	[BaseType (typeof (UINavigationController), Events=new Type [] { typeof (GKFriendRequestComposeViewControllerDelegate)}, Delegates=new string[] {"WeakComposeViewDelegate"})]
 	interface GKFriendRequestComposeViewController : UIAppearance {
 #endif
