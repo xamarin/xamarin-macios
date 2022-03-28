@@ -36,7 +36,6 @@ steps:
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'
 
-
 # download the packages that have been created, install them, later download the zip files that contain the already built
 # tests and execute them.
 
@@ -182,8 +181,6 @@ steps:
     $(Build.SourcesDirectory)/artifacts/mac-test-package/test-dependencies.sh
   displayName: Install dependencies.
   timeoutInMinutes: 60
-  env:
-    IGNORE_DOTNET: 1  # Not needed for the tests.
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
