@@ -13,6 +13,7 @@ using ObjCRuntime;
 using Security;
 #if MONOMAC
 using AppKit;
+using UIViewController = AppKit.NSViewController;
 #else
 using UIKit;
 #endif
@@ -246,14 +247,10 @@ namespace MultipeerConnectivity {
 
 	interface IMCNearbyServiceBrowserDelegate {}
 
-#if MONOMAC
 	[Mac (10,10)]
-	[BaseType (typeof (NSViewController))]
-#else
 	[TV (10,0)]
 	[iOS (7,0)]
 	[BaseType (typeof (UIViewController))]
-#endif
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCPeerPickerViewController initWithNibName:bundle:]: unrecognized selector sent to instance 0x15517b90
 	partial interface MCBrowserViewController : MCNearbyServiceBrowserDelegate {
 		[Export ("initWithNibName:bundle:")]
