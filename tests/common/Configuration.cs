@@ -325,31 +325,18 @@ namespace Xamarin.Tests
 
 		public static string RootPath {
 			get {
-				if (IsVsts) {
-					var workingDir = Environment.GetEnvironmentVariable ("SYSTEM_DEFAULTWORKINGDIRECTORY");
-					var git = Path.Combine (workingDir, ".git");
-					if (Directory.Exists (git)) {
-						return workingDir;
-					} else {
-						var xamarin = Path.Combine (workingDir, "xamarin-macios");
-						if (!Directory.Exists (xamarin))
-							throw new Exception ($"Could not find the xamarin-macios repo given the test working directory {workingDir}");
-						return xamarin;
-					}
-				} else {
-					var dir = TestAssemblyDirectory;
-					var path = Path.Combine (dir, ".git");
-					while (!Directory.Exists (path) && path.Length > 3) {
-						dir = Path.GetDirectoryName (dir);
-						if (dir is null)
-							throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
-						path = Path.Combine (dir, ".git");
-					}
-					path = Path.GetDirectoryName (path);
-					if (!Directory.Exists (path))
+				var dir = TestAssemblyDirectory;
+				var path = Path.Combine (dir, ".git");
+				while (!Directory.Exists (path) && path.Length > 3) {
+					dir = Path.GetDirectoryName (dir);
+					if (dir is null)
 						throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
-					return path;
+					path = Path.Combine (dir, ".git");
 				}
+				path = Path.GetDirectoryName (path);
+				if (!Directory.Exists (path))
+					throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
+				return path;
 			}
 		}
 

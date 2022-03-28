@@ -859,5 +859,19 @@ namespace Xamarin.Tests {
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
+
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void OlderCSharpLanguage (ApplePlatform platform, string runtimeIdentifier)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			properties ["LangVersion"] = "8";
+			properties ["ExcludeTouchUnitReference"] = "true";
+			DotNet.AssertBuild (project_path, properties);
+		}
 	}
 }
