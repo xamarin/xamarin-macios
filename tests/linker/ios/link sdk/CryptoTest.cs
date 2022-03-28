@@ -36,7 +36,7 @@ namespace LinkSdk {
 #else
 			const string prefix = "System.Core, ";
 #endif
-			Assert.True (aes.GetType ().Assembly.FullName.StartsWith (prefix, StringComparison.Ordinal), prefix);
+			Assert.That (aes.GetType ().Assembly.FullName, Does.StartWith (prefix), prefix);
 		}
 
 		static int trust_validation_callback;
