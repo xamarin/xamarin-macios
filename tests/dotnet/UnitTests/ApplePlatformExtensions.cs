@@ -1,4 +1,4 @@
-using System;
+using Xamarin.Tests;
 
 namespace Xamarin.Utils {
 	public static class ApplePlatformExtensionsWithVersions {
