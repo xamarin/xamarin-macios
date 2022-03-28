@@ -43,5 +43,5 @@ steps:
   - powershell: |
       Write-Host "##vso[task.setvariable variable=TEST_SUMMARY_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.testPrefix }}\TestSummary.md"
       Write-Host "##vso[task.setvariable variable=HTML_REPORT_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport-${{ parameters.testPrefix }}"
-    displayName: Pusblish artifact paths
+    displayName: Publish artifact paths
     name: artifacts # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
