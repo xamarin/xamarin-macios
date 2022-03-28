@@ -10,7 +10,7 @@ namespace nnyeah {
 			Message = message;
 		}
 
-		public string Message { get; set; }
+		public string Message { get; init; }
 
 		public override string HelpfulMessage ()
 		{

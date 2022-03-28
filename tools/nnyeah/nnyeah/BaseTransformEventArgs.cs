@@ -11,9 +11,9 @@ namespace nnyeah {
 			TargetOperand = targetOperand;
 		}
 
-		public string ContainerName { get; private set; }
-		public string MethodName { get; private set; }
-		public string TargetOperand { get; private set; }
+		public string ContainerName { get; init; }
+		public string MethodName { get; init; }
+		public string TargetOperand { get; init; }
 
 		public abstract string HelpfulMessage ();
 	}

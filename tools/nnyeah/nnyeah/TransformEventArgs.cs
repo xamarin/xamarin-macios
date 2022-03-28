@@ -5,19 +5,15 @@ using System.Text;
 
 namespace nnyeah {
 	public class TransformEventArgs : BaseTransformEventArgs {
-		public TransformEventArgs (string containerName, string methodName, string targetOperand, int addedCount, int removedCount)
+		public TransformEventArgs (string containerName, string methodName, string targetOperand, uint addedCount, uint removedCount)
 			: base (containerName, methodName, targetOperand)
 		{
-			if (addedCount < 0)
-				throw new ArgumentOutOfRangeException (nameof (addedCount));
-			if (removedCount < 0)
-				throw new ArgumentOutOfRangeException (nameof (removedCount));
 			AddedCount = addedCount;
 			RemovedCount = removedCount;
 		}
 
-		public int AddedCount { get; private set; }
-		public int RemovedCount { get; private set; }
+		public uint AddedCount { get; init; }
+		public uint RemovedCount { get; init; }
 
 		public override string HelpfulMessage ()
 		{
