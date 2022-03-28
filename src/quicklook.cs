@@ -188,7 +188,7 @@ namespace QuickLook {
 	[NoMac]
 	delegate CGPDFDocument QLPreviewReplyUIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
 
-	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
 	interface QLPreviewReply
 	{
@@ -215,7 +215,7 @@ namespace QuickLook {
 		NativeHandle Constructor (CGSize defaultPageSize, QLPreviewReplyUIDocumentCreationHandler documentCreationHandler);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface QLPreviewReplyAttachment
@@ -230,7 +230,7 @@ namespace QuickLook {
 		NativeHandle Constructor (NSData data, UTType contentType);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface QLFilePreviewRequest
@@ -239,7 +239,7 @@ namespace QuickLook {
 		NSUrl FileUrl { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface QLPreviewProvider : NSExtensionRequestHandling
