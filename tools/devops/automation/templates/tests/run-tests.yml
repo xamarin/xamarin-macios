@@ -227,7 +227,7 @@ steps:
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
     RC=0
-    MONO_ENV_OPTIONS=--trace=E:all make -C tests ${{ parameters.makeTarget }} || RC=$?
+    make -C tests ${{ parameters.makeTarget }} || RC=$?
     if [ $RC -eq 0 ]; then
       echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
     else
@@ -278,6 +278,25 @@ steps:
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
     artifactName: HtmlReport-${{ parameters.testPrefix }}
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Upload all the binlogs
+# Copy all the binlogs to a separate directory, keeping directory structure.
+- script: |
+    set -x
+    mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
+    rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+  displayName: Copy all binlogs
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Publish all the binlogs we collected in the previous step
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: All binlogs'
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
+    artifactName: all-binlogs-test-$(Build.BuildId)
   continueOnError: true
   condition: succeededOrFailed()
 

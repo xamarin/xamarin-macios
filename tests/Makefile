@@ -402,5 +402,5 @@ package-test-libraries.zip:
 	$(Q) @$(MAKE) all -C test-libraries
 	$(Q) mkdir -p $@.tmpdir
 	$(Q) $(CP) -a test-libraries/*  $@.tmpdir
-	$(Q_GEN) cd $@.tmpdir && zip -9r $(abspath $@) .
+	$(Q_GEN) cd $@.tmpdir && zip -9r --symlinks $(abspath $@) .
 	$(Q) rm -rf $@.tmpdir
