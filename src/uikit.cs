@@ -18,6 +18,8 @@ using UIKit;
 using CloudKit;
 #if !TVOS
 using Contacts;
+#else
+using CNContact = System.Object;
 #endif
 #if !WATCH
 using MediaPlayer;
@@ -2647,11 +2649,11 @@ namespace UIKit {
 		[Export ("iconWithSystemImageName:")]
 		UIApplicationShortcutIcon FromSystemImageName (string systemImageName);
 
-#if IOS // This is inside ContactsUI.framework
+		// This is inside ContactsUI.framework
+		[NoMac][NoTV][NoMacCatalyst][NoWatch]
 		[NoMacCatalyst]
 		[Static, Export ("iconWithContact:")]
 		UIApplicationShortcutIcon FromContact (CNContact contact);
-#endif // IOS
 	}
 
 	[NoTV]
@@ -10314,11 +10316,11 @@ namespace UIKit {
 		[Export ("setItems:options:")]
 		void SetItems (NSDictionary<NSString, NSObject>[] items, NSDictionary options);
 		
-#if !TVOS
+		[NoTV]
 		[iOS (10,0)]
 		[Wrap ("SetItems (items, pasteboardOptions.GetDictionary ()!)")]
 		void SetItems (NSDictionary<NSString, NSObject> [] items, UIPasteboardOptions pasteboardOptions);
-#endif
+
 		[NoWatch, NoTV, iOS (10, 0)]
 		[Export ("hasStrings")]
 		bool HasStrings { get; }
@@ -10383,14 +10385,13 @@ namespace UIKit {
 		NSString Find { get; }
 	}
 
-#if !TVOS
 	[NoWatch, NoTV, iOS (10, 0)]
 	[StrongDictionary ("UIPasteboardOptionKeys")]
 	interface UIPasteboardOptions {
 		NSDate ExpirationDate { get; set; }
 		bool LocalOnly { get; set; }
 	}
-#endif
+
 	[NoWatch, NoTV, iOS (10,0)]
 	[Static]
 	interface UIPasteboardOptionKeys {
