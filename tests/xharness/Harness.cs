@@ -206,6 +206,9 @@ namespace Xharness {
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 
+			Log ($"IOS_DESTDIR={IOS_DESTDIR}");
+			Log ($"MlaunchPath={MlaunchPath}");
+
 			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
 			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, config ["SYSTEM_DOTNET"], config ["DOTNET"]);
 			TunnelBore = new TunnelBore (processManager);
