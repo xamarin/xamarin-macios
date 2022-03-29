@@ -34,7 +34,7 @@ namespace nnyeah {
 
 		public void Load ()
 		{
-			if (module is not null)
+			if (module != EmptyModule)
 				return;
 			module = ModuleDefinition.ReadModule (stm);
 		}
