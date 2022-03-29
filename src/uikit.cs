@@ -2650,7 +2650,7 @@ namespace UIKit {
 		UIApplicationShortcutIcon FromSystemImageName (string systemImageName);
 
 		// This is inside ContactsUI.framework
-		[NoMac][NoTV][NoMacCatalyst][NoWatch]
+		[NoMac][NoTV][NoWatch]
 		[NoMacCatalyst]
 		[Static, Export ("iconWithContact:")]
 		UIApplicationShortcutIcon FromContact (CNContact contact);
