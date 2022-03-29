@@ -74,6 +74,8 @@ stages:
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
   condition: and(succeeded(), ${{ parameters.condition }})
 
+  variables:
+    WORKLOAD_VERSION: $[ stageDependencies.build_packages.build.outputs['workload_file.WorkloadVersion'] ] 
   jobs:
   - ${{ if eq(parameters.testPool, '') }}:
     - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
