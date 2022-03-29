@@ -4,7 +4,7 @@
   "classifications": [ "tvOS", "Mobile" ],
   "identity": "Microsoft.tvOS.tvOSApp",
   "name": "tvOS Application (Preview)",
-  "description": "A project for creating a .NET 6 tvOS application",
+  "description": "A project for creating a .NET tvOS application",
   "shortName": "tvos",
   "tags": {
     "language": "C#",
