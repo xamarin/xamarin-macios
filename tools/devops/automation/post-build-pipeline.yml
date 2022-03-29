@@ -31,7 +31,7 @@ jobs:
 
   - task: UseDotNet@2
     inputs:
-      version: 5.0.200
+      version: 6.0.100
 
   - download: macios
     artifact: AssetManifests
