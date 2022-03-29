@@ -504,22 +504,38 @@ namespace Xamarin.Tests
 
 		public static string GetRefDirectory (ApplePlatform platform)
 		{
-			return Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform), "ref", "net6.0");
+			var rv = Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform), "ref", "net6.0");
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return rv;
 		}
 
 		public static string GetRefDirectory (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetRefNuGetName (targetFramework), "ref", "net6.0");
+				return GetRefDirectory (targetFramework.Platform);
 
 			// This is only applicable for .NET
 			throw new InvalidOperationException (targetFramework.ToString ());
 		}
 
+		public static string GetNuGetVersionNoMetadata (TargetFramework framework)
+		{
+			return GetNuGetVersionNoMetadata (framework.Platform);
+		}
+
+		public static string GetNuGetVersionNoMetadata (ApplePlatform platform)
+		{
+			return GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty);
+		}
+
 		// This is only applicable for .NET
 		public static string GetRuntimeDirectory (ApplePlatform platform, string runtimeIdentifier)
 		{
-			return Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier), "runtimes", runtimeIdentifier);
+			var rv = Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return Path.Combine (rv, "runtimes", runtimeIdentifier);
 		}
 
 		public static string GetTargetDirectory (ApplePlatform platform)
@@ -555,7 +571,10 @@ namespace Xamarin.Tests
 		// Only valid for .NET
 		public static string GetSdkRoot (ApplePlatform platform)
 		{
-			return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform), "tools");
+			var rv = Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return Path.Combine (rv, "tools");
 		}
 
 		public static string SdkRootXI {
