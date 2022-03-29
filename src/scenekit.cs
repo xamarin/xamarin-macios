@@ -3317,7 +3317,7 @@ namespace SceneKit {
 		CGRect ContainerFrame { get; set;  }
 
 		// removed in iOS8 beta 5 - but it was already existing in 10.8 ?
-		[NoiOS][NoTV][NoWatch]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[Export ("textSize")]
 		CGSize TextSize { get;  }
 
