@@ -33,6 +33,7 @@ clean-local::
 bin/Debug/xtro-sharpie.exe xtro-report/bin/Debug/xtro-report.exe xtro-sanity/bin/Debug/xtro-sanity.exe build: .stamp-build
 
 .stamp-build: $(wildcard *.cs) pch-info.proj
+	export MSBUILDNOINPROCNODE=1
 	$(Q_BUILD) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) xtro-sharpie.sln /r /bl:$@.binlog
 	$(Q) touch $@
 
@@ -283,6 +284,7 @@ remove-empty-files:
 
 U2TODO = u2todo/bin/Debug/u2todo.exe
 $(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj Filter.cs)
+	export MSBUILDNOINPROCNODE=1
 	$(Q) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) /bl:$@.binlog /r
 	$(Q) touch $@
 
