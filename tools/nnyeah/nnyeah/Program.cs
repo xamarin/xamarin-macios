@@ -25,12 +25,22 @@ namespace nnyeah {
                 { "s|suppress-warnings", o => suppressWarnings = true },
             };
 
-            var extra = options.Parse (args);
+            try {
+                var extra = options.Parse (args);
+            } catch {
+                doHelp = true;
+            }
+
 
             if (doHelp || infile is null || outfile is null) {
                 PrintOptions (options, Console.Out);
                 Environment.Exit (0);
-			}
+            }
+
+            if (!File.Exists (infile)) {
+                Console.Error.WriteLine ($"input file '{infile}' doesn't exist.");
+                Environment.Exit (1);
+            }
 
             using var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var reworker = new Reworker (stm);
@@ -40,7 +50,7 @@ namespace nnyeah {
             } catch (Exception e) {
                 Console.Error.WriteLine ($"Unable to read module from file {infile}: {e.Message}.");
                 Environment.Exit (1);
-			}
+            }
 
             reworker.WarningIssued += (s, e) => warnings.Add (e.HelpfulMessage ());
             reworker.Transformed += (s, e) => warnings.Add (e.HelpfulMessage ());
@@ -58,17 +68,17 @@ namespace nnyeah {
                 } catch (Exception e) {
                     Console.Error.Write ($"Unable to generate output file, unexpected exception: {e.Message}");
                     Environment.Exit (1);
-				}
+                }
             } else {
                 if (verbose) {
                     Console.WriteLine ("Package does not need changes - no output generated.");
-				}
-			}
+                }
+            }
         }
 
         static void PrintOptions (OptionSet options, TextWriter writer)
-		{
+        {
             options.WriteOptionDescriptions (writer);
         }
     }
-}    
+}
