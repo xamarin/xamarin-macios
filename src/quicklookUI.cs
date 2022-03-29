@@ -183,8 +183,4 @@ namespace QuickLookUI {
 		[Export ("providePreviewForFileRequest:completionHandler:")]
 		void ProvidePreview (QLFilePreviewRequest request, Action<QLPreviewReply, NSError> handler);
 	}
-
-	delegate bool QLPreviewReplyDrawingHandler (CGContext context, QLPreviewReply reply, out NSError error);
-	delegate NSData QLPreviewReplyDataCreationHandler (QLPreviewReply reply, out NSError error);
-	delegate CGPDFDocument QLPreviewReplyUIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
 }
