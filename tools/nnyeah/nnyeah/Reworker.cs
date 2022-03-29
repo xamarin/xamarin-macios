@@ -24,6 +24,9 @@ namespace nnyeah {
 		Dictionary<string, Transformation> methodSubs = new Dictionary<string, Transformation> ();
 		Dictionary<string, Transformation> fieldSubs = new Dictionary<string, Transformation> ();
 
+		public event EventHandler<WarningEventArgs>? WarningIssued;
+		public event EventHandler<TransformEventArgs>? Transformed;
+
 		public Reworker (Stream stm)
 		{
 			this.stm = stm;
@@ -255,7 +258,13 @@ namespace nnyeah {
 			}
 
 			foreach (var (instr, trans) in changes) {
-				trans.PerformTransform (instr, body);
+				if (!trans.TryPerformTransform (instr, body)) {
+					WarningIssued?.Invoke (this, new WarningEventArgs (body.Method.DeclaringType.FullName, body.Method.Name, trans.Operand, trans.Message!));
+				} else {
+					var added = (uint)trans.Instructions.Count;
+					var removed = trans.Action == TransformationAction.Remove || trans.Action == TransformationAction.Replace ? (uint)1 : 0;
+					Transformed?.Invoke (this, new TransformEventArgs (body.Method.DeclaringType.FullName, body.Method.Name, trans.Operand, added, removed));
+				}
 			}
 		}
 
