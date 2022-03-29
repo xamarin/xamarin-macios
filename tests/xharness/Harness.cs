@@ -172,6 +172,8 @@ namespace Xharness {
 			target = configuration.Target;
 			Timeout = configuration.TimeoutInMinutes;
 			useSystemXamarinIOSMac = configuration.UseSystemXamarinIOSMac;
+			if (!string.IsNullOrEmpty ("TESTS_USE_SYSTEM"))
+				useSystemXamarinIOSMac = true;
 			Verbosity = configuration.Verbosity;
 			WatchOSAppTemplate = configuration.WatchOSAppTemplate;
 			WatchOSContainerTemplate = configuration.WatchOSContainerTemplate;
