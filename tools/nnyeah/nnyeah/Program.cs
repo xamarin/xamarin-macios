@@ -68,12 +68,6 @@ namespace nnyeah {
 
         static void PrintOptions (OptionSet options, TextWriter writer)
 		{
-            var location = Assembly.GetEntryAssembly ()?.Location;
-            string exeName = (location is not null) ? Path.GetFileName (location) : "";
-            writer.WriteLine ($"Usage:");
-            writer.WriteLine ($"\t{exeName} [options] -o=output-directory -module-name=ModuleName");
-            writer.WriteLine ($"\t{exeName} --demangle symbol [symbol...]");
-            writer.WriteLine ("Options:");
             options.WriteOptionDescriptions (writer);
         }
     }
