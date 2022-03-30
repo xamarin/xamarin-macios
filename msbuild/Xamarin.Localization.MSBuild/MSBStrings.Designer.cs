@@ -2636,5 +2636,32 @@ namespace Xamarin.Localization.MSBuild {
                 return ResourceManager.GetString("W7093", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code signing has been requested multiple times for &apos;{0}&apos;, with different metadata. The metadata for one are: &apos;{1}&apos;, while the metadata for the other are: &apos;{2}&apos;.
+        /// </summary>
+        public static string W7095 {
+            get {
+                return ResourceManager.GetString("W7095", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code signing has been requested multiple times for &apos;{0}&apos;, with different metadata. The metadata &apos;{1}={2}&apos; has been set for one item, but not the other..
+        /// </summary>
+        public static string W7096 {
+            get {
+                return ResourceManager.GetString("W7096", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code signing has been requested multiple times for &apos;{0}&apos;, with different metadata. The metadata &apos;{1}&apos; has been values for each item (once it&apos;s &apos;{2}&apos;, another time it&apos;s &apos;{3}&apos;)..
+        /// </summary>
+        public static string W7097 {
+            get {
+                return ResourceManager.GetString("W7097", resourceCulture);
+            }
+        }
     }
 }
