@@ -154,14 +154,38 @@ namespace Xamarin.MacDev.Tasks
 			return string.Equals (metadataValue, "true", StringComparison.OrdinalIgnoreCase);
 		}
 
-		string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, string fallbackValue, string fallbackName = null, bool required = false)
+		string ResolvePath (ITaskItem item, string path)
 		{
-			var metadataValue = item.GetMetadata (metadataName);
-			if (!string.IsNullOrEmpty (metadataValue))
-				return metadataValue;
-			if (required && string.IsNullOrEmpty (fallbackValue))
-				Log.LogError (MSBStrings.E7085 /* The "{0}" task was not given a value for the required parameter "{1}", nor was there a "{2}" metadata on the resource {3}. */, "Codesign", fallbackName, metadataName, item.ItemSpec);
-			return fallbackValue;
+			if (string.IsNullOrEmpty (path))
+				return path;
+
+			path = PathUtils.ConvertToMacPath (path);
+			if (Path.IsPathRooted (path))
+				return path;
+
+			var sourceProjectPath = GetNonEmptyStringOrFallback (item, "SourceProjectPath", null);
+			if (sourceProjectPath is null)
+				return path;
+
+			return Path.Combine (sourceProjectPath, path);
+		}
+
+		string GetCodesignResourceRules (ITaskItem item)
+		{
+			var rv = GetNonEmptyStringOrFallback (item, "CodesignResourceRules", out var foundInMetadata, ResourceRules);
+			// The ResourceRules value is a path, and as such it might be a relative path from a different project, in which case we have to resolve it accordingly.
+			if (foundInMetadata)
+				rv = ResolvePath (item, rv);
+			return rv;
+		}
+
+		string GetCodesignEntitlements (ITaskItem item)
+		{
+			var rv = GetNonEmptyStringOrFallback (item, "CodesignEntitlements", out var foundInMetadata, ResourceRules);
+			// The ResourceRules value is a path, and as such it might be a relative path from a different project, in which case we have to resolve it accordingly.
+			if (foundInMetadata)
+				rv = ResolvePath (item, rv);
+			return rv;
 		}
 
 		IList<string> GenerateCommandLineArguments (ITaskItem item)
@@ -173,8 +197,8 @@ namespace Xamarin.MacDev.Tasks
 			var disableTimestamp = ParseBoolean (item, "CodesignDisableTimestamp", DisableTimestamp);
 			var signingKey = GetNonEmptyStringOrFallback (item, "CodesignSigningKey", SigningKey, "SigningKey", required: true);
 			var keychain = GetNonEmptyStringOrFallback (item, "CodesignKeychain", Keychain);
-			var resourceRules = GetNonEmptyStringOrFallback (item, "CodesignResourceRules", ResourceRules);
-			var entitlements = GetNonEmptyStringOrFallback (item, "CodesignEntitlements", Entitlements);
+			var resourceRules = GetCodesignResourceRules (item);
+			var entitlements = GetCodesignEntitlements (item);
 			var extraArgs = GetNonEmptyStringOrFallback (item, "CodesignExtraArgs", ExtraArgs);
 
 			args.Add ("-v");
@@ -206,11 +230,13 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (!string.IsNullOrEmpty (resourceRules)) {
+				resourceRules = PathUtils.ConvertToMacPath (resourceRules);
 				args.Add ("--resource-rules");
 				args.Add (Path.GetFullPath (resourceRules));
 			}
 
 			if (!string.IsNullOrEmpty (entitlements)) {
+				entitlements = PathUtils.ConvertToMacPath (entitlements);
 				args.Add ("--entitlements");
 				args.Add (Path.GetFullPath (entitlements));
 			}

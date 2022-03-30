@@ -2,7 +2,7 @@
 # job that downloads the html report from the artifacts and uploads them into vsdrops.
 parameters:
 
-- name: devicePrefix
+- name: testPrefix
   type: string 
   default: 'ios' # default context, since we started dealing with iOS devices. 
 
@@ -17,18 +17,16 @@ steps:
   persistCredentials: true
   path: s/xamarin-macios
 
-- ${{ if eq(parameters.provisioningFailed, 'False') }}:
-  - template: download-artifacts.yml 
-    parameters:
-      devicePrefix: ${{ parameters.devicePrefix }}
+- template: download-artifacts.yml 
+  parameters:
+    testPrefix: ${{ parameters.testPrefix }}
 
-  # Upload full report to vsdrops using the the build numer and id as uuids.
-  - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
-    displayName: 'Publish to Artifact Services Drop'
-    inputs:
-      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-      dropMetadataContainerName: 'DropMetadata-${{ parameters.devicePrefix }}'
-      buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.devicePrefix }}'
-      sourcePath: $(HTML_REPORT_PATH)
-      detailedLog: true
-      usePat: true 
+- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+  displayName: 'Publish to Artifact Services Drop'
+  inputs:
+    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}'
+    sourcePath: $(HTML_REPORT_PATH)
+    detailedLog: true
+    usePat: true 

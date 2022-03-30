@@ -195,6 +195,12 @@ namespace Xamarin.Tests {
 			Assert.That (assemblies.Length == assembliesWithOnlyEmptyMethods.Count, Is.EqualTo (shouldStrip), $"Unexpected stripping status: of {assemblies.Length} assemblies {assembliesWithOnlyEmptyMethods.Count} were empty.");
 		}
 
+		protected void AssertDSymDirectory (string appPath)
+		{
+			var dSYMDirectory = appPath + ".dSYM";
+			Assert.That (dSYMDirectory, Does.Exist, "dsym directory");
+		}
+
 		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)
 		{
 			var executableName = Path.GetFileNameWithoutExtension (app_directory);
@@ -290,6 +296,16 @@ namespace Xamarin.Tests {
 			}
 			Assert.AreEqual (0, rv, $"Unable to execute '{executable} {StringUtils.FormatArguments (arguments)}': exit code {rv}");
 			return output;
+		}
+
+		protected void ExecuteProjectWithMagicWordAndAssert (string csproj, ApplePlatform platform, string? runtimeIdentifiers = null)
+		{
+			if (runtimeIdentifiers is null)
+				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+
+			var appPath = GetAppPath (csproj, platform, runtimeIdentifiers);
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (appExecutable);
 		}
 	}
 }
