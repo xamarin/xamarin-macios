@@ -37,6 +37,8 @@ namespace Xamarin.MacDev.Tasks {
 				Environment.CurrentDirectory = tmpdir;
 				var codesignItems = new List<ITaskItem> ();
 				var codesignBundle = new List<ITaskItem> ();
+				var generateDSymItems = new List<ITaskItem> ();
+				var nativeStripItems = new List<ITaskItem> ();
 
 				string codeSignatureSubdirectory = string.Empty;
 				switch (platform) {
@@ -202,8 +204,30 @@ namespace Xamarin.MacDev.Tasks {
 					new TaskItem ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex", wp3Metadata),
 				};
 
+				nativeStripItems = new List<ITaskItem> {
+					new TaskItem ("Bundle.app/Bundle", new Dictionary<string, string> { { "StripStampFile", "bundle-strip-stamp-file" } } ),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/P1"),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/PlugIns/P2.appex/P2"),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/PlugIns/P2.appex/PlugIns/P3.appex/P3", new Dictionary<string, string> { { "StripStampFile", "p3-strip-stamp-file" } } ),
+					new TaskItem ("Bundle.app/Watch/W1.app/W1"),
+					new TaskItem ("Bundle.app/Watch/W1W1app/PlugIns/WP1.appex/WP1"),
+					new TaskItem ("Bundle.app/Watch/Watch.app/PlugIns/WP1.appex/PlugIns/WP2.appex/WP2"),
+					new TaskItem ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/WP3", new Dictionary<string, string> { { "StripStampFile", "wp3-strip-stamp-file" } } ),
+				};
+
+				generateDSymItems = new List<ITaskItem> {
+					new TaskItem ("Bundle.app/Bundle", new Dictionary<string, string> { { "dSYMUtilStampFile", "Bundle.app.dSYM/Contents/Info.plist" } } ),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/P1", new Dictionary<string, string> { { "dSYMUtilStampFile", "P1.appex.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/PlugIns/P2.appex/P2", new Dictionary<string, string> { { "dSYMUtilStampFile", "P2.appex.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/PlugIns/P1.appex/PlugIns/P2.appex/PlugIns/P3.appex/P3", new Dictionary<string, string> { { "dSYMUtilStampFile", "P3.appex.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/Watch/W1.app/W1", new Dictionary<string, string> { { "dSYMUtilStampFile", "W1.app.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/WP1", new Dictionary<string, string> { { "dSYMUtilStampFile", "WP1.appex.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/WP2", new Dictionary<string, string> { { "dSYMUtilStampFile", "WP2.appex.dSYM/Contents/Info.plist" } }),
+					new TaskItem ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/WP3", new Dictionary<string, string> { { "dSYMUtilStampFile", "WP3.appex.dSYM/Contents/Info.plist" } }),
+				};
+
 				var infos = new CodesignInfo [] {
-					new CodesignInfo ("Bundle.app", Platforms.All, bundleAppMetadata.Set ("CodesignAdditionalFilesToTouch", "Bundle.app.dSYM/Contents/Info.plist")),
+					new CodesignInfo ("Bundle.app", Platforms.All, bundleAppMetadata.Set ("CodesignAdditionalFilesToTouch", "Bundle.app.dSYM/Contents/Info.plist;bundle-strip-stamp-file")),
 					new CodesignInfo ("Bundle.app/a.dylib", Platforms.Mobile, bundleAppMetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/a.dylib")),
 					new CodesignInfo ("Bundle.app/Contents/b.dylib", Platforms.All, bundleAppMetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/Contents/b.dylib")),
 					new CodesignInfo ("Bundle.app/Contents/MonoBundle/c.dylib", Platforms.All, bundleAppMetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/Contents/MonoBundle/c.dylib")),
@@ -246,7 +270,7 @@ namespace Xamarin.MacDev.Tasks {
 						Platforms.All,
 						p3Metadata.
 							Set ("CodesignStampFile", $"Bundle.app/PlugIns/P1.appex/PlugIns/P2.appex/PlugIns/P3.appex/{codeSignatureSubdirectory}_CodeSignature/CodeResources").
-							Set ("CodesignAdditionalFilesToTouch", "P3.appex.dSYM/Contents/Info.plist")
+							Set ("CodesignAdditionalFilesToTouch", "P3.appex.dSYM/Contents/Info.plist;p3-strip-stamp-file")
 					),
 					new CodesignInfo ("Bundle.app/PlugIns/P1.appex/plugins/P2.appex/PlugIns/P3.appex/P3a.dylib", Platforms.Mobile, p3MetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/PlugIns/P1.appex/plugins/P2.appex/PlugIns/P3.appex/P3a.dylib")),
 					new CodesignInfo ("Bundle.app/PlugIns/P1.appex/plugins/P2.appex/PlugIns/P3.appex/Contents/P3b.dylib", Platforms.All, p3MetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/PlugIns/P1.appex/plugins/P2.appex/PlugIns/P3.appex/Contents/P3b.dylib")),
@@ -305,7 +329,7 @@ namespace Xamarin.MacDev.Tasks {
 						Platforms.All,
 						wp3Metadata.
 							Set ("CodesignStampFile", $"Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/{codeSignatureSubdirectory}_CodeSignature/CodeResources").
-							Set ("CodesignAdditionalFilesToTouch", "WP3.appex.dSYM/Contents/Info.plist")
+							Set ("CodesignAdditionalFilesToTouch", "WP3.appex.dSYM/Contents/Info.plist;wp3-strip-stamp-file")
 					),
 					new CodesignInfo ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/W3a.dylib", Platforms.Mobile, wp3MetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/W3a.dylib")),
 					new CodesignInfo ("Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/Contents/W3b.dylib", Platforms.All, wp3MetadataNativeLibraries.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/Watch/W1.app/PlugIns/WP1.appex/PlugIns/WP2.appex/PlugIns/WP3.appex/Contents/W3b.dylib")),
@@ -327,68 +351,222 @@ namespace Xamarin.MacDev.Tasks {
 				task.CodesignBundle = codesignBundle.ToArray ();
 				task.CodesignItems = codesignItems.ToArray ();
 				task.CodesignStampPath = "codesign-stamp-path/";
+				task.GenerateDSymItems = generateDSymItems.ToArray ();
+				task.NativeStripItems = nativeStripItems.ToArray ();
 				task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform, isDotNet).ToString ();
 				Assert.IsTrue (task.Execute (), "Execute");
+				Assert.AreEqual (0, Engine.Logger.WarningsEvents.Count, "Warning Count");
 
-				var outputCodesignItems = task.OutputCodesignItems;
-				Assert.That (outputCodesignItems.Select (v => v.ItemSpec), Is.Unique, "Uniqueness");
-
-				var failures = new List<string> ();
-				var itemsFound = new List<ITaskItem> ();
-				foreach (var info in infos) {
-					var item = outputCodesignItems.SingleOrDefault (v => string.Equals (v.ItemSpec, info.ItemSpec, StringComparison.OrdinalIgnoreCase));
-					info.CodesignItem = item;
-					if (IsPlatform (info.SignedOn, platform)) {
-						if (item is null) {
-							failures.Add ($"Expected '{info.ItemSpec}' to be signed.");
-							continue;
-						}
-					} else {
-						if (item is not null) {
-							failures.Add ($"Did not expect '{info.ItemSpec}' to be signed.");
-							continue;
-						}
-					}
-
-					if (item is null)
-						continue;
-					itemsFound.Add (item);
-
-					foreach (var kvp in info.Metadata) {
-						var metadata = item.GetMetadata (kvp.Key);
-						if (metadata == string.Empty && kvp.Value != string.Empty) {
-							failures.Add ($"Item '{info.ItemSpec}': Expected metadata '{kvp.Key}' not found (with value '{kvp.Value}').");
-						} else if (!string.Equals (metadata, kvp.Value)) {
-							failures.Add ($"Item '{info.ItemSpec}': Expected value '{kvp.Value}' for metadata '{kvp.Key}', but got '{metadata}' instead.\nExpected: {kvp.Value}\nActual:   {metadata}");
-						}
-					}
-
-					var customMetadata = item.CopyCustomMetadata ();
-					var unexpectedMetadata = customMetadata.Keys.ToHashSet ();
-					unexpectedMetadata.ExceptWith (info.Metadata.Keys);
-					unexpectedMetadata.Remove ("OriginalItemSpec");
-					foreach (var unexpected in unexpectedMetadata) {
-						if (string.IsNullOrEmpty (customMetadata [unexpected]))
-							continue;
-						failures.Add ($"Item '{info.ItemSpec}': Unexpected metadata '{unexpected}' with value '{customMetadata [unexpected]}'.");
-					}
-				}
-
-				var itemsNotFound = outputCodesignItems.Where (v => !itemsFound.Contains (v)).ToArray ();
-				foreach (var itemNotFound in itemsNotFound) {
-					failures.Add ($"Did not expect '{itemNotFound.ItemSpec}' to be signed.");
-				}
-
-				if (failures.Count > 0) {
-					Console.WriteLine ($"{failures.Count} failures");
-					foreach (var f in failures)
-						Console.WriteLine (f);
-					Console.WriteLine ($"{failures.Count} failures");
-				}
-				Assert.That (failures, Is.Empty, "Failures");
+				VerifyCodesigningResults (infos, task.OutputCodesignItems, platform);
 			} finally {
 				Environment.CurrentDirectory = currentDir;
 			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, true)]
+		[TestCase (ApplePlatform.iOS, false)]
+		[TestCase (ApplePlatform.TVOS, true)]
+		[TestCase (ApplePlatform.TVOS, false)]
+		[TestCase (ApplePlatform.WatchOS, false)]
+		[TestCase (ApplePlatform.MacOSX, true)]
+		[TestCase (ApplePlatform.MacOSX, false)]
+		[TestCase (ApplePlatform.MacCatalyst, true)]
+		public void Duplicated (ApplePlatform platform, bool isDotNet)
+		{
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+
+			var currentDir = Environment.CurrentDirectory;
+			try {
+				Environment.CurrentDirectory = tmpdir;
+				var codesignItems = new List<ITaskItem> ();
+				var codesignBundle = new List<ITaskItem> ();
+
+				string codeSignatureSubdirectory = string.Empty;
+				switch (platform) {
+				case ApplePlatform.MacCatalyst:
+				case ApplePlatform.MacOSX:
+					codeSignatureSubdirectory = "Contents/";
+					break;
+				}
+
+				var bundleAppMetadata = new Dictionary<string, string> {
+					{ "RequireCodeSigning", "true" },
+				};
+
+				var createDumpMetadata = new Dictionary<string, string> {
+					{ "RequireCodeSigning", "true" },
+				};
+
+				codesignItems = new List<ITaskItem> {
+					new TaskItem ("Bundle.app/Contents/MonoBundle/createdump", createDumpMetadata),
+					new TaskItem ("Bundle.app/Contents/MonoBundle/createdump", createDumpMetadata),
+				};
+
+				codesignBundle = new List<ITaskItem> {
+					new TaskItem ("Bundle.app", bundleAppMetadata),
+				};
+
+				var infos = new CodesignInfo [] {
+					new CodesignInfo ("Bundle.app", Platforms.All, bundleAppMetadata.Set ("CodesignStampFile", $"Bundle.app/{codeSignatureSubdirectory}_CodeSignature/CodeResources")),
+					new CodesignInfo ("Bundle.app/Contents/MonoBundle/createdump", Platforms.All, createDumpMetadata.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/Contents/MonoBundle/createdump")),
+				};
+
+				var allFiles = infos.Select (v => v.ItemSpec).ToArray ();
+				Touch (tmpdir, allFiles);
+
+				var task = CreateTask<ComputeCodesignItems> ();
+				task.AppBundleDir = "Bundle.app";
+				task.CodesignBundle = codesignBundle.ToArray ();
+				task.CodesignItems = codesignItems.ToArray ();
+				task.CodesignStampPath = "codesign-stamp-path/";
+				task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform, isDotNet).ToString ();
+				Assert.IsTrue (task.Execute (), "Execute");
+				Assert.AreEqual (0, Engine.Logger.WarningsEvents.Count, "Warning Count");
+
+				VerifyCodesigningResults (infos, task.OutputCodesignItems, platform);
+			} finally {
+				Environment.CurrentDirectory = currentDir;
+			}
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, true)]
+		[TestCase (ApplePlatform.iOS, false)]
+		[TestCase (ApplePlatform.TVOS, true)]
+		[TestCase (ApplePlatform.TVOS, false)]
+		[TestCase (ApplePlatform.WatchOS, false)]
+		[TestCase (ApplePlatform.MacOSX, true)]
+		[TestCase (ApplePlatform.MacOSX, false)]
+		[TestCase (ApplePlatform.MacCatalyst, true)]
+		public void DuplicatedWithDifferentMetadata (ApplePlatform platform, bool isDotNet)
+		{
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+
+			var currentDir = Environment.CurrentDirectory;
+			try {
+				Environment.CurrentDirectory = tmpdir;
+				var codesignItems = new List<ITaskItem> ();
+				var codesignBundle = new List<ITaskItem> ();
+
+				string codeSignatureSubdirectory = string.Empty;
+				switch (platform) {
+				case ApplePlatform.MacCatalyst:
+				case ApplePlatform.MacOSX:
+					codeSignatureSubdirectory = "Contents/";
+					break;
+				}
+
+				var bundleAppMetadata = new Dictionary<string, string> {
+					{ "RequireCodeSigning", "true" },
+				};
+
+				var createDumpMetadata1 = new Dictionary<string, string> {
+					{ "RequireCodeSigning", "true" },
+					{ "OnlyIn1", "true" },
+					{ "InOneAndTwoWithDifferentValues", "1" },
+				};
+				var createDumpMetadata2 = new Dictionary<string, string> {
+					{ "RequireCodeSigning", "true" },
+					{ "OnlyIn2", "true" },
+					{ "InOneAndTwoWithDifferentValues", "2" },
+				};
+				var createDumpMetadata3 = new Dictionary<string, string> {
+					{ "RequireCodeSigning", "true" },
+				};
+
+				codesignItems = new List<ITaskItem> {
+					new TaskItem ("Bundle.app/Contents/MonoBundle/createdump", createDumpMetadata1),
+					new TaskItem ("Bundle.app/Contents/MonoBundle/createdump", createDumpMetadata2),
+					new TaskItem ("Bundle.app/Contents/MonoBundle/createdump", createDumpMetadata3),
+				};
+
+				codesignBundle = new List<ITaskItem> {
+					new TaskItem ("Bundle.app", bundleAppMetadata),
+				};
+
+				var infos = new CodesignInfo [] {
+					new CodesignInfo ("Bundle.app", Platforms.All, bundleAppMetadata.Set ("CodesignStampFile", $"Bundle.app/{codeSignatureSubdirectory}_CodeSignature/CodeResources")),
+					new CodesignInfo ("Bundle.app/Contents/MonoBundle/createdump", Platforms.All, createDumpMetadata1.Set ("CodesignStampFile", "codesign-stamp-path/Bundle.app/Contents/MonoBundle/createdump")),
+				};
+
+				var allFiles = infos.Select (v => v.ItemSpec).ToArray ();
+				Touch (tmpdir, allFiles);
+
+				var task = CreateTask<ComputeCodesignItems> ();
+				task.AppBundleDir = "Bundle.app";
+				task.CodesignBundle = codesignBundle.ToArray ();
+				task.CodesignItems = codesignItems.ToArray ();
+				task.CodesignStampPath = "codesign-stamp-path/";
+				task.TargetFrameworkMoniker = TargetFramework.GetTargetFramework (platform, isDotNet).ToString ();
+				Assert.IsTrue (task.Execute (), "Execute");
+				Assert.AreEqual (3, Engine.Logger.WarningsEvents.Count, "Warning Count");
+				Assert.AreEqual ("Code signing has been requested multiple times for 'Bundle.app/Contents/MonoBundle/createdump', with different metadata. The metadata 'OnlyIn1=true' has been set for one item, but not the other.", Engine.Logger.WarningsEvents [0].Message, "Message #0");
+				Assert.AreEqual ("Code signing has been requested multiple times for 'Bundle.app/Contents/MonoBundle/createdump', with different metadata. The metadata 'InOneAndTwoWithDifferentValues' has been values for each item (once it's '1', another time it's '2').", Engine.Logger.WarningsEvents [1].Message, "Message #1");
+				Assert.AreEqual ("Code signing has been requested multiple times for 'Bundle.app/Contents/MonoBundle/createdump', with different metadata. The metadata for one are: 'RequireCodeSigning, OnlyIn1, InOneAndTwoWithDifferentValues, CodesignStampFile', while the metadata for the other are: 'RequireCodeSigning, CodesignStampFile'", Engine.Logger.WarningsEvents [2].Message, "Message #2");
+
+				VerifyCodesigningResults (infos, task.OutputCodesignItems, platform);
+			} finally {
+				Environment.CurrentDirectory = currentDir;
+			}
+		}
+		void VerifyCodesigningResults (CodesignInfo [] infos, ITaskItem[] outputCodesignItems, ApplePlatform platform)
+		{
+			Assert.That (outputCodesignItems.Select (v => v.ItemSpec), Is.Unique, "Uniqueness");
+
+			var failures = new List<string> ();
+			var itemsFound = new List<ITaskItem> ();
+			foreach (var info in infos) {
+				var item = outputCodesignItems.SingleOrDefault (v => string.Equals (v.ItemSpec, info.ItemSpec, StringComparison.OrdinalIgnoreCase));
+				info.CodesignItem = item;
+				if (IsPlatform (info.SignedOn, platform)) {
+					if (item is null) {
+						failures.Add ($"Expected '{info.ItemSpec}' to be signed.");
+						continue;
+					}
+				} else {
+					if (item is not null) {
+						failures.Add ($"Did not expect '{info.ItemSpec}' to be signed.");
+						continue;
+					}
+				}
+
+				if (item is null)
+					continue;
+				itemsFound.Add (item);
+
+				foreach (var kvp in info.Metadata) {
+					var metadata = item.GetMetadata (kvp.Key);
+					if (metadata == string.Empty && kvp.Value != string.Empty) {
+						failures.Add ($"Item '{info.ItemSpec}': Expected metadata '{kvp.Key}' not found (with value '{kvp.Value}').");
+					} else if (!string.Equals (metadata, kvp.Value)) {
+						failures.Add ($"Item '{info.ItemSpec}': Expected value '{kvp.Value}' for metadata '{kvp.Key}', but got '{metadata}' instead.\nExpected: {kvp.Value}\nActual:   {metadata}");
+					}
+				}
+
+				var customMetadata = item.CopyCustomMetadata ();
+				var unexpectedMetadata = customMetadata.Keys.ToHashSet ();
+				unexpectedMetadata.ExceptWith (info.Metadata.Keys);
+				unexpectedMetadata.Remove ("OriginalItemSpec");
+				foreach (var unexpected in unexpectedMetadata) {
+					if (string.IsNullOrEmpty (customMetadata [unexpected]))
+						continue;
+					failures.Add ($"Item '{info.ItemSpec}': Unexpected metadata '{unexpected}' with value '{customMetadata [unexpected]}'.");
+				}
+			}
+
+			var itemsNotFound = outputCodesignItems.Where (v => !itemsFound.Contains (v)).ToArray ();
+			foreach (var itemNotFound in itemsNotFound) {
+				failures.Add ($"Did not expect '{itemNotFound.ItemSpec}' to be signed.");
+			}
+
+			if (failures.Count > 0) {
+				Console.WriteLine ($"{failures.Count} failures");
+				foreach (var f in failures)
+					Console.WriteLine (f);
+				Console.WriteLine ($"{failures.Count} failures");
+			}
+			Assert.That (failures, Is.Empty, "Failures");
 		}
 
 		bool IsPlatform (Platforms platforms, ApplePlatform platform)
