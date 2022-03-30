@@ -21,14 +21,14 @@ namespace Xamarin.MacDev.Tasks
 		// This can also be specified as metadata on the Executable item (as 'SymbolFile')
 		public string SymbolFile { get; set; } = string.Empty;
 
-		// This can also be specified as metadata on the Executable item  (as 'IsFramework')
-		public bool IsFramework { get; set; }
+		// This can also be specified as metadata on the Executable item (as 'Kind')
+		public string Kind { get; set; } = string.Empty;
 		#endregion
 
 		bool GetIsFramework (ITaskItem item)
 		{
-			var value = GetNonEmptyStringOrFallback (item, "IsFramework", IsFramework ? "true" : "false", required: true);
-			return string.Equals (value, "true", StringComparison.OrdinalIgnoreCase);
+			var value = GetNonEmptyStringOrFallback (item, "Kind", Kind);
+			return string.Equals (value, "Framework", StringComparison.OrdinalIgnoreCase);
 		}
 
 		void ExecuteStrip (ITaskItem item)
