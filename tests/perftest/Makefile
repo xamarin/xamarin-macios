@@ -46,8 +46,8 @@ RUNTIME_IDENTIFIER?=osx-x64
 build-perf-test: $(TARGETS)
 	$(Q) test -n "$(XAMARIN_RUNTIME)" || ( echo "❌ XAMARIN_RUNTIME must be set! ❌"; exit 1)
 	$(Q) rm -Rf bin/$(XAMARIN_RUNTIME) obj/$(XAMARIN_RUNTIME)
-	$(Q) if ! (cd dotnet && $(DOTNET6) build $(abspath dotnet/perftest.csproj) "/bl:$(abspath $@-$(XAMARIN_RUNTIME)-$(BINLOG_TIMESTAMP).binlog)" $(BUILD_PARAMETERS) /p:Configuration=$(XAMARIN_RUNTIME) /p:_XamarinRuntime=$(XAMARIN_RUNTIME) /p:RuntimeIdentifier=$(RUNTIME_IDENTIFIER) $(DOTNET_BUILD_VERBOSITY)); then \
-		$(DOTNET6) build /v:diag "$(abspath $@-$(XAMARIN_RUNTIME)-$(BINLOG_TIMESTAMP).binlog)"; \
+	$(Q) if ! (cd dotnet && $(DOTNET) build $(abspath dotnet/perftest.csproj) "/bl:$(abspath $@-$(XAMARIN_RUNTIME)-$(BINLOG_TIMESTAMP).binlog)" $(BUILD_PARAMETERS) /p:Configuration=$(XAMARIN_RUNTIME) /p:_XamarinRuntime=$(XAMARIN_RUNTIME) /p:RuntimeIdentifier=$(RUNTIME_IDENTIFIER) $(DOTNET_BUILD_VERBOSITY)); then \
+		$(DOTNET) build /v:diag "$(abspath $@-$(XAMARIN_RUNTIME)-$(BINLOG_TIMESTAMP).binlog)"; \
 		echo "Performance test build failed" & \
 		exit 1; \
 	fi
