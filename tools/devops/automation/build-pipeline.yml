@@ -328,6 +328,7 @@ stages:
       testPrefix: ${{ config.testPrefix }} 
       stageName: ${{ config.stageName }} 
       displayName: ${{ config.displayName }} 
+      testPool: '' # use the default
       useXamarinStorage: ${{ config.useXamarinStorage }} 
       testsLabels: ${{ config.testsLabels }}
       statusContext: ${{ config.statusContext }} 
