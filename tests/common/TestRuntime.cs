@@ -114,6 +114,7 @@ partial class TestRuntime
 	public static void IgnoreInCI (string message)
 	{
 		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
+		in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
 		if (!in_ci)
 			return;
 		NUnit.Framework.Assert.Ignore (message);
