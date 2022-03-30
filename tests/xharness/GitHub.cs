@@ -164,8 +164,8 @@ namespace Xharness {
 
 		IEnumerable<string> GetModifiedFilesLocally (int pullRequest)
 		{
-			var base_commit = $"origin/pr/{pullRequest}/merge^";
-			var head_commit = $"origin/pr/{pullRequest}/merge";
+			var base_commit = $"origin/pull/{pullRequest}/merge^";
+			var head_commit = $"origin/pull/{pullRequest}/merge";
 
 			harness.Log ("Fetching modified files for commit range {0}..{1}", base_commit, head_commit);
 
