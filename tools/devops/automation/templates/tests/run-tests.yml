@@ -97,8 +97,25 @@ steps:
     make global6.json
     make -C builds dotnet
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-  displayName: Boostrap dotnet
+  displayName: Bootstrap dotnet
   timeoutInMinutes: 30
+
+- pwsh: |
+    $workloadPath = "$(Build.SourcesDirectory)/artifacts/package-internal/WorkloadRollback.json"
+    $versionData = Get-Content $workloadPath | ConvertFrom-Json
+    # could be done in a loop, but we don't want to be smart just yet
+    $iOSVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.ios"
+    Write-Host "##vso[task.setvariable variable=IOS_WORKLOAD_VERSION;]$iOSVersion"
+    
+    $tvOSVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.tvos"
+    Write-Host "##vso[task.setvariable variable=TVOS_WORKLOAD_VERSION;]$tvOSVersion"
+
+    $macVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.macos"
+    Write-Host "##vso[task.setvariable variable=MACOS_WORKLOAD_VERSION;]$macVersion"
+
+    $catalystVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.maccatalyst"
+    Write-Host "##vso[task.setvariable variable=MACCATALYST_WORKLOAD_VERSION;]$catalystVersion"
+  displayName: 'Set workload versions for xtro'
 
 - bash: |
     set -x
@@ -143,9 +160,9 @@ steps:
     cp global6.json global.json
     $DOTNET workload install --from-rollback-file $ROLLBACK_PATH --source $DOTNET_NUPKG_DIR $SOURCES --verbosity diag $PLATFORMS
 
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET6_DIR)
-    DOTNET6_DIR=${var#*=}
-    ls -lR $DOTNET6_DIR
+    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET_DIR)
+    DOTNET_DIR=${var#*=}
+    ls -lR $DOTNET_DIR
 
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Install dotnet workloads'
@@ -169,6 +186,7 @@ steps:
     set -x
     set -e
     make -C tests -j8 all
+    make -C tools/xibuild
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Build test dependencies
   timeoutInMinutes: 30
@@ -219,7 +237,7 @@ steps:
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
     RC=0
-    MONO_ENV_OPTIONS=--trace=E:all make -C tests ${{ parameters.makeTarget }} || RC=$?
+    make -C tests ${{ parameters.makeTarget }} || RC=$?
     if [ $RC -eq 0 ]; then
       echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
     else
@@ -270,6 +288,25 @@ steps:
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
     artifactName: HtmlReport-${{ parameters.testPrefix }}
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Upload all the binlogs
+# Copy all the binlogs to a separate directory, keeping directory structure.
+- script: |
+    set -x
+    mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
+    rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+  displayName: Copy all binlogs
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Publish all the binlogs we collected in the previous step
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: All binlogs'
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
+    artifactName: all-binlogs-test-$(Build.BuildId)
   continueOnError: true
   condition: succeededOrFailed()
 

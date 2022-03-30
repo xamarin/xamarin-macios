@@ -8,7 +8,7 @@ namespace nnyeah {
         static void Main (string [] args)
         {
             if (args.Length != 2) {
-                Console.Error.WriteLine ("Usage: mono nnyeah.exe /path/to/input/file.dll /path/to/output/file.dll");
+                Console.Error.WriteLine ("Usage: dotnet nnyeah.dll /path/to/input/file.dll /path/to/output/file.dll");
                 Environment.Exit (1);
             }
             using var stm = new FileStream (args [0], FileMode.Open, FileAccess.Read, FileShare.ReadWrite);

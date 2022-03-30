@@ -154,6 +154,40 @@ namespace Xamarin.MacDev.Tasks
 			return string.Equals (metadataValue, "true", StringComparison.OrdinalIgnoreCase);
 		}
 
+		string ResolvePath (ITaskItem item, string path)
+		{
+			if (string.IsNullOrEmpty (path))
+				return path;
+
+			path = PathUtils.ConvertToMacPath (path);
+			if (Path.IsPathRooted (path))
+				return path;
+
+			var sourceProjectPath = GetNonEmptyStringOrFallback (item, "SourceProjectPath", null);
+			if (sourceProjectPath is null)
+				return path;
+
+			return Path.Combine (sourceProjectPath, path);
+		}
+
+		string GetCodesignResourceRules (ITaskItem item)
+		{
+			var rv = GetNonEmptyStringOrFallback (item, "CodesignResourceRules", out var foundInMetadata, ResourceRules);
+			// The ResourceRules value is a path, and as such it might be a relative path from a different project, in which case we have to resolve it accordingly.
+			if (foundInMetadata)
+				rv = ResolvePath (item, rv);
+			return rv;
+		}
+
+		string GetCodesignEntitlements (ITaskItem item)
+		{
+			var rv = GetNonEmptyStringOrFallback (item, "CodesignEntitlements", out var foundInMetadata, ResourceRules);
+			// The ResourceRules value is a path, and as such it might be a relative path from a different project, in which case we have to resolve it accordingly.
+			if (foundInMetadata)
+				rv = ResolvePath (item, rv);
+			return rv;
+		}
+
 		IList<string> GenerateCommandLineArguments (ITaskItem item)
 		{
 			var args = new List<string> ();
@@ -163,8 +197,8 @@ namespace Xamarin.MacDev.Tasks
 			var disableTimestamp = ParseBoolean (item, "CodesignDisableTimestamp", DisableTimestamp);
 			var signingKey = GetNonEmptyStringOrFallback (item, "CodesignSigningKey", SigningKey, "SigningKey", required: true);
 			var keychain = GetNonEmptyStringOrFallback (item, "CodesignKeychain", Keychain);
-			var resourceRules = GetNonEmptyStringOrFallback (item, "CodesignResourceRules", ResourceRules);
-			var entitlements = GetNonEmptyStringOrFallback (item, "CodesignEntitlements", Entitlements);
+			var resourceRules = GetCodesignResourceRules (item);
+			var entitlements = GetCodesignEntitlements (item);
 			var extraArgs = GetNonEmptyStringOrFallback (item, "CodesignExtraArgs", ExtraArgs);
 
 			args.Add ("-v");
