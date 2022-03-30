@@ -64,7 +64,7 @@ all-local:: global6.json
 global6.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
-		printf "\t\"sdk\": { \"version\": \"$(DOTNET6_VERSION)\" }\n" >> $@; \
+		printf "\t\"sdk\": { \"version\": \"$(DOTNET_VERSION)\" }\n" >> $@; \
 		printf "\n}\n" >> $@
 
 install-hook::
