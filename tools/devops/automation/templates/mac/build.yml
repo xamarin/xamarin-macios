@@ -79,10 +79,8 @@ steps:
 # 2. Set a comment stating the same as what was sent to the status.
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/
-    Import-Module ./System.psm1
-    Import-Module ./VSTS.psm1
-    Import-Module ./GitHub.psm1
+    Import-Module MaciosCI.psd1
+
     if ( -not (Test-HDFreeSpace -Size 5)) {
       Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
@@ -98,6 +96,7 @@ steps:
   displayName: 'Check HD Free Space'
   timeoutInMinutes: 5
   condition: succeededOrFailed() # we do not care about the previous step
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
 
 - task: xamops.azdevex.provisionator-task.provisionator@2
   displayName: 'Provision Brew components'
@@ -149,7 +148,7 @@ steps:
 
 # sometimes the make that creates the pkgs fails.
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     if ($Env:MAC_TESTS_PRESENT -eq "Failed") {
       Set-GitHubStatus -Status "error" -Description "Mac tests were not packaged." -Context "$Env:CONTEXT"
@@ -183,7 +182,7 @@ steps:
   timeoutInMinutes: 60
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     Write-Host "Found tests"
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
@@ -238,7 +237,7 @@ steps:
   continueOnError: true
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
     if (-not ([IO.File]::Exists("$testsPath/test-run-completed"))) {
       Set-GitHubStatus -Status "error" -Description "Tests timed out on macOS $Env:CONTEXT." -Context "$Env:CONTEXT"

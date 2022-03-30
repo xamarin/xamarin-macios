@@ -76,11 +76,9 @@ steps:
 # 1. Set the status of the build to error. It is not a failure since no tests have been ran.
 # 2. Set a comment stating the same as what was sent to the status.
 # 3. Cancel the pipeline and do not execute any of the following steps.
-- pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/
-    Import-Module ./System.psm1
-    Import-Module ./VSTS.psm1
-    Import-Module ./GitHub.psm1
+- pwsh: | 
+    Import-Module MaciosCI.psd1
+
     if ( -not (Test-HDFreeSpace -Size 20)) {
       Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
@@ -95,6 +93,7 @@ steps:
     ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Check HD Free Space'
   timeoutInMinutes: 5
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
   condition: succeededOrFailed() # we do not care about the previous step
 
 # if we got to this point, it means that we do have at least 50 Gb to run the test, should

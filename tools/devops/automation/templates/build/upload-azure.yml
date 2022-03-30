@@ -120,8 +120,7 @@ steps:
   continueOnError: true
 
 - powershell: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\GitHub.psm1
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\VSTS.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\MaciosCI.psd1
 
     Dir "$(Build.SourcesDirectory)\artifacts\package"
 
