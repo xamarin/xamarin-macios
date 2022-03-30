@@ -49,6 +49,19 @@ steps:
   submodules: recursive
   path: s/xamarin-macios
 
+
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - pwsh: |
+      git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
+      git fetch origin
+      $branch="$(Build.SourceBranch)".Replace("merge", "head")
+      $branch=$branch.Replace("refs", "origin")
+      Write-Host "Checking out branch $branch"
+      git checkout $branch
+      git branch -a
+    displayName: "Undo Github merge"
+    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+
 - checkout: maccore
   clean: true
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
@@ -352,6 +365,36 @@ steps:
     parameters:
       GitHubToken: $(GitHub.Token)
       ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+  - bash: |
+      var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=IOS_NUGET_VERSION_FULL)
+      IOS_NUGET_VERSION_FULL=${var#*=}
+      IOS_NUGET_VERSION_FULL=$(echo $IOS_NUGET_VERSION_FULL | cut -d "+" -f1)
+
+      var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=TVOS_NUGET_VERSION_FULL)
+      TVOS_NUGET_VERSION_FULL=${var#*=}
+      TVOS_NUGET_VERSION_FULL=$(echo $TVOS_NUGET_VERSION_FULL | cut -d "+" -f1)
+
+      var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MACOS_NUGET_VERSION_FULL)
+      MACOS_NUGET_VERSION_FULL=${var#*=}
+      MACOS_NUGET_VERSION_FULL=$(echo $MACOS_NUGET_VERSION_FULL | cut -d "+" -f1)
+
+      var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MACCATALYST_NUGET_VERSION_FULL)
+      MACCATALYST_NUGET_VERSION_FULL=${var#*=}
+      MACCATALYST_NUGET_VERSION_FULL=$(echo $MACCATALYST_NUGET_VERSION_FULL | cut -d "+" -f1)
+      WORKLOAD_DST="$(Build.SourcesDirectory)/package-internal/WorkloadRollback.json"
+
+      echo "{" > $WORKLOAD_DST
+      echo "\"microsoft.net.sdk.ios\": \"$IOS_NUGET_VERSION_FULL\"," >>  $WORKLOAD_DST
+      echo "\"microsoft.net.sdk.tvos\": \"$TVOS_NUGET_VERSION_FULL\"," >> $WORKLOAD_DST
+      echo "\"microsoft.net.sdk.macos\": \"$MACOS_NUGET_VERSION_FULL\"," >>  $WORKLOAD_DST
+      echo "\"microsoft.net.sdk.maccatalyst\": \"$MACCATALYST_NUGET_VERSION_FULL\"" >> $WORKLOAD_DST
+      echo "}" >>  $WORKLOAD_DST
+
+      echo "Rollback file contents:" 
+      echo "$(cat $WORKLOAD_DST)"
+    name: workload_file
+    displayName: 'Generate "WorkloadRollback.json'
 
   # upload each of the pkgs into the pipeline artifacts
   - task: PublishPipelineArtifact@1

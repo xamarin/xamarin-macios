@@ -12,7 +12,6 @@
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindAotCompiler" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.InstallNameTool" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.LinkNativeCode" AssemblyFile="$(_XamarinTaskAssembly)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.MergeAppBundles" AssemblyFile="$(_XamarinTaskAssembly)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ILStrip" AssemblyFile="$(_XamarinTaskAssembly)" />
 
@@ -242,6 +241,7 @@
 			CopyFilesToPublishDirectory;
 			_CopyDirectoriesToBundle;
 			_CopyAppExtensionsToBundle;
+			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
 
 		<!-- not inner build for multi-rid build (single-rid build or outer build for multi-rid build) -->
@@ -256,6 +256,7 @@
 			$(CreateAppBundleDependsOn);
 			_CompileEntitlements;
 			_CreateMergedAppBundle;
+			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
@@ -293,6 +294,8 @@
 				<!-- Platform = "rid-arch".Substring (0, "rid-arch".IndexOf ('-')) -->
 				<Platform>$([System.String]::new('%(Identity)').Substring(0, $([System.String]::new('%(Identity)').IndexOf ('-'))))</Platform>
 				<RidSpecificCodesignItemsPath>$(DeviceSpecificIntermediateOutputPath)codesignitems-%(Identity).items</RidSpecificCodesignItemsPath>
+				<RidSpecificSymbolsListPath>$(DeviceSpecificIntermediateOutputPath)mtouch-symbols-%(Identity).list</RidSpecificSymbolsListPath>
+				<RidSpecificUserFrameworksWithoutDebugSymbolsPath>$(DeviceSpecificIntermediateOutputPath)user-frameworks-without-dsym-%(Identity).list</RidSpecificUserFrameworksWithoutDebugSymbolsPath>
 			</_RuntimeIdentifiersAsItems>
 
 			<!-- Verify that we're not mixing simulator + device RIDs in a single build -->
@@ -301,6 +304,10 @@
 
 			<!-- Create an item group with all the rid-specific CodesignItemsPath -->
 			<_RidSpecificCodesignItemsPath Include="@(_RuntimeIdentifiersAsItems -> '%(RidSpecificCodesignItemsPath)')" />
+			<!-- Create an item group with all the rid-specific symbol lists -->
+			<_RidSpecificSymbolsListPath Include="@(_RuntimeIdentifiersAsItems -> '%(RidSpecificSymbolsListPath)')" />
+			<!-- Create an item group with all the rid-specific user frameworks without debug symbols -->
+			<_RidSpecificUserFrameworksWithoutDebugSymbolsPath Include="@(_RuntimeIdentifiersAsItems -> '%(RidSpecificUserFrameworksWithoutDebugSymbolsPath)')" />
 		</ItemGroup>
 
 		<!-- Show an error if we're mixing simulator + device RIDs in a single build -->
@@ -328,6 +335,8 @@
 			Properties="
 				RuntimeIdentifier=%(_RuntimeIdentifiersAsItems.Identity);
 				_CodesignItemsPath=%(_RuntimeIdentifiersAsItems.RidSpecificCodesignItemsPath);
+				_MtouchSymbolsList=%(_RuntimeIdentifiersAsItems.RidSpecificSymbolsList);
+				_UserFrameworksWithoutDebugSymbolsPath=%(_RuntimeIdentifiersAsItems.RidSpecificUserFrameworksWithoutDebugSymbolsPath);
 				$(_RidSpecificProperties);
 				">
 			<Output TaskParameter="TargetOutputs" ItemName="_AssemblyPublishDirectories" />
@@ -668,6 +677,7 @@
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			CopyFromWindows="true"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="%(_DirectoriesToPublish.SourceDirectory)"
@@ -1191,7 +1201,7 @@
 	<Target Name="_LinkNativeExecutable"
 			DependsOnTargets="$(_LinkNativeExecutableDependsOn)"
 			Inputs="@(_LinkNativeExecutableInputs)"
-			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
+			Outputs="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName);$(_MtouchSymbolsList)"
 		>
 
 		<LinkNativeCode
@@ -1216,14 +1226,6 @@
 		<!-- remove the `-u` prefix from `_ReferencesLinkerFlags` so we can give the output file to `strip` -->
 		<WriteLinesToFile SessionId="$(BuildSessionId)" File="$(_MtouchSymbolsList)" Lines="@(_ReferencesLinkerFlags->'%(Identity)'->Substring (2))" Overwrite="true" />
 
-		<SymbolStrip
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(NoSymbolStrip)' == 'false' And '$(IsAppExtension)' == 'false'"
-			Executable="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)"
-			IsFramework="false"
-			SymbolFile="$(_MtouchSymbolsList)"
-		/>
-
 		<ItemGroup>
 			<!-- Copy the executable from the intermediate directory to the .app -->
 			<ResolvedFileToPublish Include="$(_IntermediateNativeLibraryDir)$(_NativeExecutableName)">
@@ -1231,6 +1233,25 @@
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 			</ResolvedFileToPublish>
 		</ItemGroup>
+	</Target>
+
+	<!-- When we're building a universal app, we need to collect the symbols from each inner build -->
+	<Target Name="_CollectRidSpecificSymbolLists" Inputs="@(_RidSpecificSymbolsListPath)" Outputs="$(_MtouchSymbolsList)">
+		<ReadLinesFromFile File="%(_RidSpecificSymbolsListPath.Identity)">
+			<Output TaskParameter="Lines" ItemName="_AllExecutableSymbols" />
+		</ReadLinesFromFile>
+		<WriteLinesToFile File="$(_MtouchSymbolsList)" Lines="@(_AllExecutableSymbols->DistinctWithCase())" Overwrite="true" />
+	</Target>
+
+	<!-- When we're building a universal app, we need to collect the list of user frameworks we need to run dsymutil on -->
+	<Target Name="_CollectRidSpecificUserFrameworksWithoutDebugSymbols">
+		<ReadItemsFromFile
+			SessionId="$(BuildSessionId)"
+			File="%(_RidSpecificUserFrameworksWithoutDebugSymbolsPath.Identity)"
+			Condition="Exists('%(_RidSpecificUserFrameworksWithoutDebugSymbolsPath.Identity)')"
+		>
+			<Output TaskParameter="Lines" ItemName="_UserFrameworksWithoutDebugSymbols" />
+		</ReadItemsFromFile>
 	</Target>
 
 	<Target Name="_ComputeDefaultLinkMode" DependsOnTargets="_DetectSdkLocations">
@@ -1543,6 +1564,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedAppleBindingResourcePackage.Identity)"
 			Destination="$(_IntermediateDecompressionDir)/%(Filename)"
 			>
@@ -1590,6 +1612,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedPlugIns.Identity)"
 			Destination="$(_IntermediateDecompressionDir)/%(Filename)%(Extension)"
 			>
@@ -1628,7 +1651,7 @@
 	<Target Name="_DecompressAppleFrameworks"
 		Inputs="@(_CompressedAppleFrameworks)"
 		Outputs="@(_CompressedAppleFrameworks -> '$(_IntermediateFrameworksDir)/%(Filename)%(Extension).stamp')"
-		DependsOnTargets="_ComputePublishLocation;_ComputeVariables"
+		DependsOnTargets="_ComputeVariables"
 		BeforeTargets="_ExpandNativeReferences"
 		>
 
@@ -1636,6 +1659,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedAppleFrameworks.Identity)"
 			Destination="$(_IntermediateFrameworksDir)/%(Filename)%(Extension)"
 			>

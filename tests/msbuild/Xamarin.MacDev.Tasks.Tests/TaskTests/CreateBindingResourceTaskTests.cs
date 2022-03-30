@@ -117,34 +117,34 @@ namespace Xamarin.MacDev.Tasks {
 
 			var manifest = @"<BindingAssembly>
 	<NativeReference Name=""A.txt"">
-		<Kind></Kind>
 		<ForceLoad></ForceLoad>
-		<SmartLink></SmartLink>
 		<Frameworks></Frameworks>
-		<WeakFrameworks></WeakFrameworks>
+		<IsCxx></IsCxx>
+		<Kind></Kind>
 		<LinkerFlags></LinkerFlags>
 		<NeedsGccExceptionHandling></NeedsGccExceptionHandling>
-		<IsCxx></IsCxx>
+		<SmartLink></SmartLink>
+		<WeakFrameworks></WeakFrameworks>
 	</NativeReference>
 	<NativeReference Name=""B.txt"">
-		<Kind></Kind>
 		<ForceLoad></ForceLoad>
-		<SmartLink></SmartLink>
 		<Frameworks></Frameworks>
-		<WeakFrameworks></WeakFrameworks>
+		<IsCxx></IsCxx>
+		<Kind></Kind>
 		<LinkerFlags></LinkerFlags>
 		<NeedsGccExceptionHandling></NeedsGccExceptionHandling>
-		<IsCxx></IsCxx>
+		<SmartLink></SmartLink>
+		<WeakFrameworks></WeakFrameworks>
 	</NativeReference>
 	<NativeReference Name=""C.framework"">
-		<Kind></Kind>
 		<ForceLoad></ForceLoad>
-		<SmartLink></SmartLink>
 		<Frameworks></Frameworks>
-		<WeakFrameworks></WeakFrameworks>
+		<IsCxx></IsCxx>
+		<Kind></Kind>
 		<LinkerFlags></LinkerFlags>
 		<NeedsGccExceptionHandling></NeedsGccExceptionHandling>
-		<IsCxx></IsCxx>
+		<SmartLink></SmartLink>
+		<WeakFrameworks></WeakFrameworks>
 	</NativeReference>
 </BindingAssembly>";
 			Assert.AreEqual (manifest, File.ReadAllText (Path.Combine (directory, "manifest")), "Manifest");

@@ -53,6 +53,8 @@ namespace NS {
 		Value2 = ulong.MaxValue,
 	}
 
+	delegate void EnumHandler (MyEnum7 seven, MyEnum8 eight);
+
 	[BaseType (typeof (NSObject))]
 	interface MyClass {
 		[Export ("myProp1")]
@@ -90,5 +92,10 @@ namespace NS {
 		MyEnum8 MyProp8 { get; set; }
 		[Export ("myMethod8:")]
 		MyEnum8 MyMethod8 (MyEnum8 arg);
+
+		[Export ("myDelegateProp")]
+		EnumHandler MyDelegateProp { get; set; }
+		[Export ("myDelegateMethod:")]
+		EnumHandler MyDelegateMethod (EnumHandler arg);
 	}
 }
