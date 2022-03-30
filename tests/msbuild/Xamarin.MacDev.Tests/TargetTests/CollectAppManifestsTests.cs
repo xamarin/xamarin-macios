@@ -40,6 +40,8 @@ namespace Xamarin.MacDev.Tasks {
 <dict>
         <key>CFBundleDisplayName</key>
         <string>PartialAppManifestDisplayName</string>
+        <key>CFBundleIdentifier</key>
+        <string>com.xamarin.partialappmanifest</string>
 </dict>
 </plist>";
 
@@ -68,6 +70,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var plist = PDictionary.FromFile (appManifestPath);
 			Assert.AreEqual ("PartialAppManifestDisplayName", plist.GetCFBundleDisplayName (), "Bundle display name");
+			Assert.AreEqual ("com.xamarin.partialappmanifest", plist.GetCFBundleIdentifier (), "Bundle identifier");
 		}
 	}
 }

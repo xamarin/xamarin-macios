@@ -25,12 +25,14 @@ namespace Xamarin.Tests {
 		public void ArchiveTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
+			var configuration = "Release";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, platform: platform);
+			var project_path = GetProjectPath (project, runtimeIdentifiers, platform, out var appPath, configuration: configuration);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["ArchiveOnBuild"] = "true";
+			properties ["Configuration"] = configuration;
 
 			var result = DotNet.AssertBuild (project_path, properties);
 			var reader = new BinLogReader ();
@@ -40,6 +42,7 @@ namespace Xamarin.Tests {
 			Assert.That (archiveDirRecord.Count, Is.GreaterThan (0), "ArchiveDir");
 			var archiveDir = archiveDirRecord [0].Args.Message.Substring (findString.Length + 1).Trim ();
 			Assert.That (archiveDir, Does.Exist, "Archive directory existence");
+			AssertDSymDirectory (appPath);
 		}
 
 		[Test]
@@ -49,13 +52,14 @@ namespace Xamarin.Tests {
 		public void BuildIpaTest (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "MySimpleApp";
+			var configuration = "Release";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: "Release");
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["BuildIpa"] = "true";
-			properties ["Configuration"] = "Release";
+			properties ["Configuration"] = configuration;
 
 			DotNet.AssertBuild (project_path, properties);
 
@@ -63,6 +67,7 @@ namespace Xamarin.Tests {
 			Assert.That (pkgPath, Does.Exist, "pkg creation");
 
 			AssertBundleAssembliesStripStatus (appPath, true);
+			AssertDSymDirectory (appPath);
 		}
 
 		[Test]
