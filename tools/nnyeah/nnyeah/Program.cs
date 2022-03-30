@@ -13,6 +13,7 @@ namespace nnyeah {
 			var doHelp = false;
 			string? infile = null, outfile = null;
 			var verbose = false;
+			var forceOverwrite = false;
 			var suppressWarnings = false;
 			var warnings = new List<string> ();
 			var transforms = new List<string> ();
@@ -22,6 +23,7 @@ namespace nnyeah {
 				{ "i=|input=", f => infile = f },
 				{ "o=|output=", f => outfile = f },
 				{ "v|verbose", o => verbose = true },
+				{ "f|force-overwrite", o => forceOverwrite = true },
 				{ "s|suppress-warnings", o => suppressWarnings = true },
 			};
 
@@ -41,6 +43,12 @@ namespace nnyeah {
 				Console.Error.WriteLine ($"input file '{infile}' doesn't exist.");
 				Environment.Exit (1);
 			}
+
+			if (File.Exists (outfile) && !forceOverwrite) {
+				Console.Error.WriteLine ($"output file '{outfile}' already exists. Use '--force-overwrite' if you want to overwrite it.");
+				Environment.Exit (1);
+			}
+
 
 			using var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 			var reworker = new Reworker (stm);
