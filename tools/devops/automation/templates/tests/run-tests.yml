@@ -169,6 +169,7 @@ steps:
     set -x
     set -e
     make -C tests -j8 all
+    make -C tools/xibuild
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Build test dependencies
   timeoutInMinutes: 30
