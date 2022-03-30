@@ -198,7 +198,7 @@ jobs:
   dependsOn: # can start as soon as the tests are done and the api diff
   - build 
   - api_diff
-  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
+  condition: succeededOrFailed() 
 
   variables:
     API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
@@ -243,7 +243,6 @@ jobs:
   - template: publish-html.yml
     parameters:
       statusContext: "Build"
-      runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       enableAPIDiff: ${{ parameters.enableAPIDiff }}
       testPrefix: sim
