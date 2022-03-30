@@ -39,7 +39,7 @@ all-local:: $(TARGETS)
 reload: $(TARGETS)
 	$(Q) $(MAKE) -C $(TOP) -j8 all
 	$(Q) $(MAKE) -C $(TOP) -j8 install
-	$(Q) $(DOTNET6) build-server shutdown # make sure msbuild picks up any new task assemblies we built
+	$(Q) $(DOTNET) build-server shutdown # make sure msbuild picks up any new task assemblies we built
 
 compare compare-size: $(TARGETS)
 	rm -rf packages
@@ -57,13 +57,13 @@ build-oldnet:
 	$(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) size-comparison/MySingleView/oldnet/MySingleView.csproj $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
 
 build-dotnet: $(TARGETS)
-	$(DOTNET6) build size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
+	$(DOTNET) build size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
 
 run-dotnet: $(TARGETS)
-	$(DOTNET6) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
+	$(DOTNET) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
 
 run-dotnet-sim: $(TARGETS)
-	$(DOTNET6) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj /p:Configuration=Release --runtime iossimulator-x64 /p:Platform=iPhoneSimulator /bl:$@.binlog
+	$(DOTNET) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj /p:Configuration=Release --runtime iossimulator-x64 /p:Platform=iPhoneSimulator /bl:$@.binlog
 
 # this target will copy NuGet.config and global.json to the directories that need it for their .NET build to work correctly.
 copy-dotnet-config: $(TARGETS)
