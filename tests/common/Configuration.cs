@@ -504,9 +504,10 @@ namespace Xamarin.Tests
 
 		public static string GetRefDirectory (ApplePlatform platform)
 		{
-			var rv = Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform), "ref", "net6.0");
+			var rv = Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform));
 			if (UseSystem)
 				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			rv = Path.Combine (rv, "ref", "net6.0");
 			return rv;
 		}
 
@@ -555,7 +556,7 @@ namespace Xamarin.Tests
 		public static string GetSdkRoot (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (targetFramework), "tools");
+				return GetSdkRoot (targetFramework.Platform);
 			switch (targetFramework.Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
