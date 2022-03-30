@@ -36,6 +36,11 @@ parameters:
   type: boolean
   default: true
 
+- name: runWindowsIntegration
+  displayName: Run Windows integration tests
+  type: boolean
+  default: false
+
 - name: runGovernanceTests
   displayName: Run Governance Checks
   type: boolean
@@ -323,6 +328,7 @@ stages:
       testPrefix: ${{ config.testPrefix }} 
       stageName: ${{ config.stageName }} 
       displayName: ${{ config.displayName }} 
+      testPool: '' # use the default
       useXamarinStorage: ${{ config.useXamarinStorage }} 
       testsLabels: ${{ config.testsLabels }}
       statusContext: ${{ config.statusContext }} 
@@ -370,6 +376,7 @@ stages:
         keyringPass: $(pass--lab--mac--builder--keychain)
         demands: ${{ config.demands }}
 
+- ${{ if eq(parameters.runWindowsIntegration, true) }}:
   - template: templates/windows/stage.yml
     parameters:
       stageName: windows_integration
