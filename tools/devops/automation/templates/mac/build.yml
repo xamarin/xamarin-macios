@@ -36,7 +36,6 @@ steps:
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'
 
-
 # download the packages that have been created, install them, later download the zip files that contain the already built
 # tests and execute them.
 
@@ -182,8 +181,6 @@ steps:
     $(Build.SourcesDirectory)/artifacts/mac-test-package/test-dependencies.sh
   displayName: Install dependencies.
   timeoutInMinutes: 60
-  env:
-    IGNORE_DOTNET: 1  # Not needed for the tests.
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
@@ -223,9 +220,10 @@ steps:
       }
       $request = New-GitHubComment -Header "Tests failed on macOS $Env:CONTEXT" -Description "Tests failed on $Env:CONTEXT." -Message $msg.ToString() -Emoji ":x:"
     } else {
-      Set-GitHubStatus -Status "success" -Description "Tests passed Xamarin.Mac tests on macOS $Env:CONTEXT passed." -Context "$Env:CONTEXT"
-      $request = New-GitHubComment -Header "Tests passed on macOS $Env:CONTEXT" -Description "Tests passed" -Message "**All** tests on macOS X $Env:CONTEXT passed." -Emoji ":white_check_mark:"
+      Set-GitHubStatus -Status "success" -Description "Tests passed on macOS $Env:CONTEXT passed." -Context "$Env:CONTEXT"
+      $request = New-GitHubComment -Header "Tests passed on macOS $Env:CONTEXT" -Description "Tests passed" -Message "**All** tests on macOS $Env:CONTEXT passed." -Emoji ":white_check_mark:"
     }
+    touch $testsPath/test-run-completed
     # we set the result to 0, the reason is that release pipelines do not like failing tests,
     # yet we do have some  flacky ones, this will allow the release to run. The comment will let use know that we failed
     exit 0  
@@ -238,3 +236,20 @@ steps:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
   continueOnError: true
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
+    $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
+    if (-not ([IO.File]::Exists("$testsPath/test-run-completed"))) {
+      Set-GitHubStatus -Status "error" -Description "Tests timed out on macOS $Env:CONTEXT." -Context "$Env:CONTEXT"
+      $request = New-GitHubComment -Header "Tests timed out on macOS $Env:CONTEXT" -Description "" -Message "" -Emoji ":x:"
+    }
+  displayName: 'Report test timeout'
+  timeoutInMinutes: 5
+  condition: succeededOrFailed() # in particular we care if something failed
+  continueOnError: true
+  env:
+    CONTEXT: ${{ parameters.statusContext }}
+    BUILD_REVISION: $(Build.SourceVersion)
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
