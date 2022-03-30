@@ -195,6 +195,12 @@ namespace Xamarin.Tests {
 			Assert.That (assemblies.Length == assembliesWithOnlyEmptyMethods.Count, Is.EqualTo (shouldStrip), $"Unexpected stripping status: of {assemblies.Length} assemblies {assembliesWithOnlyEmptyMethods.Count} were empty.");
 		}
 
+		protected void AssertDSymDirectory (string appPath)
+		{
+			var dSYMDirectory = appPath + ".dSYM";
+			Assert.That (dSYMDirectory, Does.Exist, "dsym directory");
+		}
+
 		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)
 		{
 			var executableName = Path.GetFileNameWithoutExtension (app_directory);
