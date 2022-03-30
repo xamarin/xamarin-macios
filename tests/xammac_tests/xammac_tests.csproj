@@ -311,6 +311,6 @@
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting"
       Condition="!Exists('$(TestLibrariesDirectory)/.libs/macos/custom-type-assembly.dll') Or !Exists('$(TestLibrariesDirectory)/.libs/dotnet/macos/custom-type-assembly.dll')" >
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly V=1 -d" />
   </Target>
 </Project>
