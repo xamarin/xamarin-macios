@@ -5,5 +5,6 @@ namespace nnyeah {
 		Replace,
 		Insert,
 		Append,
+		Warn,
 	}
 }
