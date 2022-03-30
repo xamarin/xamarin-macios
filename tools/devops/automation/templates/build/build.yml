@@ -393,8 +393,6 @@ steps:
 
       echo "Rollback file contents:" 
       echo "$(cat $WORKLOAD_DST)"
-      
-      echo "##vso[task.setvariable variable=WorkloadVersion;]$IOS_NUGET_VERSION_FULL"
     name: workload_file
     displayName: 'Generate "WorkloadRollback.json'
 
