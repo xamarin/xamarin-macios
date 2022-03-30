@@ -51,6 +51,19 @@ steps:
 
 - checkout: self
   path: s/xamarin-macios
+
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - pwsh: |
+      git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
+      git fetch origin
+      $branch="$(Build.SourceBranch)".Replace("merge", "head")
+      $branch=$branch.Replace("refs", "origin")
+      Write-Host "Checking out branch $branch"
+      git checkout $branch
+      git branch -a
+    displayName: "Undo Github merge"
+    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
