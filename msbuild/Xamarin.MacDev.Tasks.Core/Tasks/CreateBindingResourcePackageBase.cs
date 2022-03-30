@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -112,9 +113,15 @@ namespace Xamarin.MacDev.Tasks {
 					writer.WriteStartElement ("NativeReference");
 					writer.WriteAttributeString ("Name", Path.GetFileName (nativeRef.ItemSpec));
 
-					foreach (string attribute in NativeReferenceAttributeNames) {
-						writer.WriteStartElement (attribute);
-						writer.WriteString (nativeRef.GetMetadata (attribute));
+					var customMetadata = nativeRef.CloneCustomMetadataToDictionary ();
+					var allKeys = customMetadata.Keys.Union (NativeReferenceAttributeNames, StringComparer.OrdinalIgnoreCase);
+					foreach (var key in allKeys.OrderBy (v => v)) {
+						writer.WriteStartElement (key);
+						if (customMetadata.TryGetValue (key, out var value)) {
+							writer.WriteString (value);
+						} else {
+							writer.WriteString (string.Empty);
+						}
 						writer.WriteEndElement ();
 					}
 
