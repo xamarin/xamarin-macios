@@ -103,7 +103,7 @@ steps:
 - pwsh: |
     $workloadPath = "$(Build.SourcesDirectory)/artifacts/package-internal/WorkloadRollback.json"
     $versionData = Get-Content $workloadPath | ConvertFrom-Json
-    # could be done in a loop, but we don't what to be smart just yet
+    # could be done in a loop, but we don't want to be smart just yet
     $iOSVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.ios"
     Write-Host "##vso[task.setvariable variable=IOS_WORKLOAD_VERSION;]$iOSVersion"
     
