@@ -113,11 +113,37 @@ exec-mac-modern-linksdk:
 	@echo "ℹ️  Executing the 'link sdk' test for Xamarin.Mac (Modern profile) ℹ️"
 	$(Q) $(RUN_WITH_TIMEOUT) "./linker/mac/link sdk/bin/x86/$(CONFIG)/link sdk.app/Contents/MacOS/link sdk"
 
+### .NET dependency projects
+
+# We have library projects that are used in multiple test projects.
+# If those test projects are built in parallel, these library projects
+# might be built in multiple build processes at once, and that
+# may turn into build errors when the simultaneous builds stomp
+# on eachother. So here we build those library projects first, serialized,
+# so that when the test projects need them, they're already built.
+
+.stamp-copy-dotnet-config:
+	$(Q) $(MAKE) -C dotnet copy-dotnet-config
+	$(Q) touch $@
+
+define DotNetDependentProject
+.stamp-dotnet-dependency-$(2)-$(1): Makefile .stamp-copy-dotnet-config
+	$$(Q) $$(MAKE) -C "$(1)/dotnet/$(2)" build
+	$$(Q) touch $$@
+
+.stamp-dotnet-dependency-$(2):: .stamp-dotnet-dependency-$(2)-$(1)
+	$$(Q) touch $$@
+endef
+$(eval $(call DotNetDependentProject,BundledResources,macOS))
+$(eval $(call DotNetDependentProject,BundledResources,MacCatalyst))
+$(eval $(call DotNetDependentProject,EmbeddedResources,macOS))
+$(eval $(call DotNetDependentProject,EmbeddedResources,MacCatalyst))
+
 ### .NET normal tests
 
 define DotNetNormalTest
 # macOS/.NET/x64
-build-mac-dotnet-x64-$(1):
+build-mac-dotnet-x64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-x64
 
 exec-mac-dotnet-x64-$(1):
@@ -125,7 +151,7 @@ exec-mac-dotnet-x64-$(1):
 	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/macOS/bin/$(CONFIG)/net6.0-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
 
 # macOS/.NET/arm64
-build-mac-dotnet-arm64-$(1):
+build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-arm64
 
 exec-mac-dotnet-arm64-$(1):
@@ -137,7 +163,7 @@ else
 endif
 
 # MacCatalyst/.NET/x64
-build-maccatalyst-dotnet-x64-$(1):
+build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 	$$(Q_BUILD) $$(MAKE) -C "$(1)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-x64
 
 exec-maccatalyst-dotnet-x64-$(1):
@@ -149,7 +175,7 @@ else
 endif
 
 # MacCatalyst/.NET/arm64
-build-maccatalyst-dotnet-arm64-$(1):
+build-maccatalyst-dotnet-arm64-$(1):.stamp-dotnet-dependency-MacCatalyst
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-arm64
 
 exec-maccatalyst-dotnet-arm64-$(1):
@@ -186,7 +212,7 @@ $(eval $(call DotNetNormalTest,introspection,introspection))
 
 define DotNetLinkerTest
 # macOS/.NET/x64
-build-mac-dotnet-x64-$(1):
+build-mac-dotnet-x64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q_BUILD) $$(MAKE) -C "linker/ios/$(2)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-x64
 
 exec-mac-dotnet-x64-$(1):
@@ -194,7 +220,7 @@ exec-mac-dotnet-x64-$(1):
 	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/net6.0-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
 
 # macOS/.NET/arm64
-build-mac-dotnet-arm64-$(1):
+build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "linker/ios/$(2)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-arm64
 
 exec-mac-dotnet-arm64-$(1):
@@ -206,7 +232,7 @@ else
 endif
 
 # MacCatalyst/.NET/x64
-build-maccatalyst-dotnet-x64-$(1):
+build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 	$$(Q_BUILD) $$(MAKE) -C "linker/ios/$(2)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-x64
 
 exec-maccatalyst-dotnet-x64-$(1):
@@ -218,7 +244,7 @@ else
 endif
 
 # MacCatalyst/.NET/arm64
-build-maccatalyst-dotnet-arm64-$(1):
+build-maccatalyst-dotnet-arm64-$(1): .stamp-dotnet-dependency-MacCatalyst
 	$$(Q) $$(MAKE) -C "linker/ios/$(2)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-arm64
 
 exec-maccatalyst-dotnet-arm64-$(1):
