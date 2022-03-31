@@ -198,7 +198,7 @@ steps:
     foreach ($info in $statusInfo) {
       if (Test-Path $info.Path -PathType Leaf) {
           Set-GitHubStatus -Status "success" -Description $info.Description -TargetUrl $info.TargetUrl  -Context $info.Context
-      } else if ($info.ShouldExist) {
+      } elseif ($info.ShouldExist) {
           Set-GitHubStatus -Status "error" -Description $info.Error -Context $info.Context
       }
     }
