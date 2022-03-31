@@ -2289,6 +2289,7 @@ MACCATALYST_FRAMEWORKS = \
 	GameController \
 	GameplayKit \
 	HealthKit \
+	HealthKitUI \
 	HomeKit \
 	IdentityLookup \
 	ImageIO \
