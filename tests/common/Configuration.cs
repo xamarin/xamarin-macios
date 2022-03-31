@@ -503,7 +503,7 @@ namespace Xamarin.Tests
 		public static string GetDotNetRoot ()
 		{
 			if (IsVsts) {
-				return EvaluateVariable ("DOTNET_DIR");
+				return Path.Combine (EvaluateVariable ("DOTNET_DIR"), "packs");
 			} else {
 				return Path.Combine (SourceRoot, "_build");
 			}
@@ -511,22 +511,39 @@ namespace Xamarin.Tests
 
 		public static string GetRefDirectory (ApplePlatform platform)
 		{
-			return Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform), "ref", "net6.0");
+			var rv = Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			rv = Path.Combine (rv, "ref", "net6.0");
+			return rv;
 		}
 
 		public static string GetRefDirectory (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetRefNuGetName (targetFramework), "ref", "net6.0");
+				return GetRefDirectory (targetFramework.Platform);
 
 			// This is only applicable for .NET
 			throw new InvalidOperationException (targetFramework.ToString ());
 		}
 
+		public static string GetNuGetVersionNoMetadata (TargetFramework framework)
+		{
+			return GetNuGetVersionNoMetadata (framework.Platform);
+		}
+
+		public static string GetNuGetVersionNoMetadata (ApplePlatform platform)
+		{
+			return GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty);
+		}
+
 		// This is only applicable for .NET
 		public static string GetRuntimeDirectory (ApplePlatform platform, string runtimeIdentifier)
 		{
-			return Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier), "runtimes", runtimeIdentifier);
+			var rv = Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return Path.Combine (rv, "runtimes", runtimeIdentifier);
 		}
 
 		public static string GetTargetDirectory (ApplePlatform platform)
@@ -546,7 +563,7 @@ namespace Xamarin.Tests
 		public static string GetSdkRoot (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (targetFramework), "tools");
+				return GetSdkRoot (targetFramework.Platform);
 			switch (targetFramework.Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -562,7 +579,10 @@ namespace Xamarin.Tests
 		// Only valid for .NET
 		public static string GetSdkRoot (ApplePlatform platform)
 		{
-			return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform), "tools");
+			var rv = Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return Path.Combine (rv, "tools");
 		}
 
 		public static string SdkRootXI {
