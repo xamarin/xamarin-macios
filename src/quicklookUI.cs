@@ -6,6 +6,7 @@ using AppKit;
 using System;
 using System.ComponentModel;
 using UniformTypeIdentifiers;
+using QuickLook;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -181,67 +182,5 @@ namespace QuickLookUI {
 		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
 		[Export ("providePreviewForFileRequest:completionHandler:")]
 		void ProvidePreview (QLFilePreviewRequest request, Action<QLPreviewReply, NSError> handler);
-	}
-
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface QLFilePreviewRequest
-	{
-		[Export ("fileURL")]
-		NSUrl FileUrl { get; }
-	}
-
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[DisableDefaultCtor]
-	[BaseType (typeof(NSObject))]
-	interface QLPreviewProvider : NSExtensionRequestHandling
-	{
-	}
-
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
-	[DisableDefaultCtor]
-	interface QLPreviewReplyAttachment
-	{
-		[Export ("data")]
-		NSData Data { get; }
-
-		[Export ("contentType")]
-		UTType ContentType { get; }
-
-		[Export ("initWithData:contentType:")]
-		NativeHandle Constructor (NSData data, UTType contentType);
-	}
-
-	delegate bool QLPreviewReplyDrawingHandler (CGContext context, QLPreviewReply reply, out NSError error);
-	delegate NSData QLPreviewReplyDataCreationHandler (QLPreviewReply reply, out NSError error);
-	delegate CGPDFDocument QLPreviewReplyUIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
-
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
-	[BaseType (typeof(NSObject))]
-	interface QLPreviewReply
-	{
-		[Export ("stringEncoding")]
-		NSStringEncoding StringEncoding { get; set; }
-
-		[Export ("attachments", ArgumentSemantic.Copy)]
-		NSDictionary<NSString, QLPreviewReplyAttachment> Attachments { get; set; }
-
-		[Export ("title")]
-		string Title { get; set; }
-
-		[Export ("initWithContextSize:isBitmap:drawingBlock:")]
-		NativeHandle Constructor (CGSize contextSize, bool isBitmap, QLPreviewReplyDrawingHandler drawingHandler);
-
-		[Export ("initWithFileURL:")]
-		NativeHandle Constructor (NSUrl fileUrl);
-
-		[Export ("initWithDataOfContentType:contentSize:dataCreationBlock:")]
-		NativeHandle Constructor (UTType contentType, CGSize contentSize, QLPreviewReplyDataCreationHandler dataCreationHandler);
-
-		// QLPreviewReply_UI
-		[Export ("initForPDFWithPageSize:documentCreationBlock:")]
-		NativeHandle Constructor (CGSize defaultPageSize, QLPreviewReplyUIDocumentCreationHandler documentCreationHandler);
 	}
 }
