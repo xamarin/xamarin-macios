@@ -137,6 +137,12 @@ steps:
     $macPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.mac-*.pkg
     Write-Host "mac PKG is $macPkg"
 
+    if ($Env:BUILD_REASON -eq "PullRequest") {
+      $notarizedShouldExist = $false;
+    } else {
+      $notarizedShouldExist = $true;
+    }
+
     # create an array with objects so that we can set each of the statuses:
     $statusInfo = @(
       @{
@@ -145,6 +151,7 @@ steps:
         Description = $iOSPkg;
         TargetUrl = "$pkgsVirtualUrl/$iOSPkg";
         Error = "xamarin.ios pkg not found";
+        ShouldExist = $true;
       },
       @{
         Path = "$pkgsPath\\notarized\\xamarin.ios-*.pkg";
@@ -152,6 +159,7 @@ steps:
         Description = "$iOSPkg (Notarized)" ;
         TargetUrl = "$pkgsVirtualUrl/notarized/$iOSPkg" ;
         Error = "Notarized xamarin.ios pkg not found" ;
+        ShouldExist = $notarizedShouldExist;
       },
       @{
         Path = "$pkgsPath\\xamarin.mac-*.pkg" ;
@@ -159,6 +167,7 @@ steps:
         Description = "$macPkg" ;
         TargetUrl = "$pkgsVirtualUrl/$macPkg" ;
         Error = "xamarin.mac pkg not found." ;
+        ShouldExist = $true;
       },
       @{
         Path = "$pkgsPath\\notarized\\xamarin.mac-*.pkg" ;
@@ -166,6 +175,7 @@ steps:
         Description = "$macPkg (Notarized)" ;
         TargetUrl = "$pkgsVirtualUrl/notarized/$macPkg" ;
         Error = "Notarized xamarin.mac pkg not found." ;
+        ShouldExist = $notarizedShouldExist;
       },
       @{
         Path = "$pkgsPath\bundle.zip" ;
@@ -173,6 +183,7 @@ steps:
         Description = "bundle.zip" ;
         TargetUrl = "$pkgsVirtualUrl/bundle.zip" ;
         Error = "bundle.zip not found." ;
+        ShouldExist = $true;
       },
       @{
         Path = "$pkgsPath\msbuild.zip" ;
@@ -180,13 +191,14 @@ steps:
         Description = "msbuild.zip" ;
         TargetUrl = "$pkgsVirtualUrl/msbuild.zip" ;
         Error = "msbuild.zip not found." ;
+        ShouldExist = $true;
       }
     )
 
     foreach ($info in $statusInfo) {
       if (Test-Path $info.Path -PathType Leaf) {
           Set-GitHubStatus -Status "success" -Description $info.Description -TargetUrl $info.TargetUrl  -Context $info.Context
-      } else {
+      } else if ($info.ShouldExist) {
           Set-GitHubStatus -Status "error" -Description $info.Error -Context $info.Context
       }
     }
