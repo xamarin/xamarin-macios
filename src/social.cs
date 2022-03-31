@@ -58,12 +58,11 @@ namespace Social {
 		[Mac (10,9)]
 		NSString TencentWeibo { get; }
 
-#if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
 		[Field ("SLServiceTypeLinkedIn")]
+		[NoiOS][NoMacCatalyst]
 		[Mac (10,9)]
 		NSString LinkedIn { get; }
-#endif
 	}
 	
 	[BaseType (typeof (NSObject))]
