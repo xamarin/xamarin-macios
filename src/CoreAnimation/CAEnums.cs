@@ -60,10 +60,10 @@ namespace CoreAnimation {
 		MaxXMaxYCorner = 1 << 3,
 	}
 
-#if MONOMAC || __MACCATALYST__
 	// untyped enum -> CALayer.h (only on OSX headers)
 	// note: autoresizingMask is an `unsigned int` @property
 	[Flags]
+	[NoiOS][NoTV][NoWatch][MacCatalyst (13, 0)]
 	public enum CAAutoresizingMask : uint {
 		NotSizable   = 0,
 		MinXMargin   = 1 << 0,
@@ -75,6 +75,7 @@ namespace CoreAnimation {
 	}
 
 	// typedef int -> CAConstraintLayoutManager.h
+	[NoiOS][NoTV][NoWatch][MacCatalyst (13, 0)]
 	public enum CAConstraintAttribute {
 		MinX,
 		MidX,
@@ -85,5 +86,4 @@ namespace CoreAnimation {
 		MaxY,
 		Height,
 	};
-#endif
 }
