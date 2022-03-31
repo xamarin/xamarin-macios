@@ -172,6 +172,8 @@ namespace Xharness {
 			target = configuration.Target;
 			Timeout = configuration.TimeoutInMinutes;
 			useSystemXamarinIOSMac = configuration.UseSystemXamarinIOSMac;
+			if (!string.IsNullOrEmpty ("TESTS_USE_SYSTEM"))
+				useSystemXamarinIOSMac = true;
 			Verbosity = configuration.Verbosity;
 			WatchOSAppTemplate = configuration.WatchOSAppTemplate;
 			WatchOSContainerTemplate = configuration.WatchOSContainerTemplate;
@@ -207,7 +209,7 @@ namespace Xharness {
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 
 			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
-			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, config ["DOTNET"], config ["DOTNET6"]);
+			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, config ["SYSTEM_DOTNET"], config ["DOTNET"]);
 			TunnelBore = new TunnelBore (processManager);
 		}
 

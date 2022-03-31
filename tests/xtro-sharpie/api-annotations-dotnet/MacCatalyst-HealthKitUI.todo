@@ -1,4 +1,0 @@
-!missing-selector! HKActivityRingView::activitySummary not bound
-!missing-selector! HKActivityRingView::setActivitySummary: not bound
-!missing-selector! HKActivityRingView::setActivitySummary:animated: not bound
-!missing-type! HKActivityRingView not bound
