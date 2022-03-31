@@ -419,18 +419,18 @@ namespace CoreVideo {
 		[Field ("kCVPixelBufferPlaneAlignmentKey")]
 		NSString PlaneAlignmentKey { get; }
 
-#if !MONOMAC
+		[NoMac]
 		[NoWatch]
 		[NoMacCatalyst]
 		[Field ("kCVPixelBufferOpenGLESCompatibilityKey")]
 		NSString OpenGLESCompatibilityKey { get; }
 
+		[NoMac]
 		[NoWatch]
 		[NoMacCatalyst]
 		[iOS (9,0)]
 		[Field ("kCVPixelBufferOpenGLESTextureCacheCompatibilityKey")]
 		NSString OpenGLESTextureCacheCompatibilityKey { get; }
-#endif
 
 		[iOS (8,0)][Mac (10,11)]
 		[Field ("kCVPixelBufferMetalCompatibilityKey")]
