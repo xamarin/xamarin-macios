@@ -1,5 +1,7 @@
 // Copyright 2015 Xamarin Inc.
 
+#nullable enable
+
 #if !WATCHOS
 
 using System;
@@ -70,7 +72,7 @@ namespace GameController {
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCMicroGamepadSnapShotDataV100 (
 			/* __nullable */ ref GCMicroGamepadSnapShotDataV100 snapshotData);
 
-		public NSData ToNSData ()
+		public NSData? ToNSData ()
 		{
 			var p = NSDataFromGCMicroGamepadSnapShotDataV100 (ref this);
 			return p == IntPtr.Zero ? null : new NSData (p);
@@ -153,7 +155,7 @@ namespace GameController {
 		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
-		public NSData ToNSData ()
+		public NSData? ToNSData ()
 		{
 			var p = NSDataFromGCMicroGamepadSnapshotData (ref this);
 			return p == IntPtr.Zero ? null : new NSData (p);

@@ -6,6 +6,8 @@
 //
 // Copyright 2013-2014 Xamarin Inc.
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -59,7 +61,7 @@ namespace GameController {
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCGamepadSnapShotDataV100 (
 			/* GCGamepadSnapShotDataV100 * __nullable */ ref GCGamepadSnapShotDataV100 snapshotData);
 
-		public NSData ToNSData ()
+		public NSData? ToNSData ()
 		{
 			var p = NSDataFromGCGamepadSnapShotDataV100 (ref this);
 			return p == IntPtr.Zero ? null : new NSData (p);
