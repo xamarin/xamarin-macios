@@ -12,9 +12,6 @@ using Xamarin.Tests;
 
 namespace GeneratorTests
 {
-#if NET
-		[Ignore ("Ignore this until done https://github.com/xamarin/maccore/issues/2549")]
-#endif
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
 	public class BGenTests

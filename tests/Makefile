@@ -78,6 +78,7 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_$(platform)_RUNTIME_IDENTIFIERS='$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS)'\\n)" | sed 's/^ //' >> $@
 	@echo "DOTNET_CSC_COMMAND='$(DOTNET_CSC)'" >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_VERSION_NO_METADATA=$($(platform)_NUGET_VERSION_NO_METADATA)\\n)" | sed 's/^ //' >> $@
 
 test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.Details.xml
 	@rm -f $@
@@ -94,6 +95,11 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
 	@echo "WATCH_SDK_VERSION=$(WATCH_SDK_VERSION)" >> $@
 	@echo "MACOS_SDK_VERSION=$(MACOS_SDK_VERSION)" >> $@
+	@echo "DOTNET_BCL_DIR=$(DOTNET_BCL_DIR)" >> $@
+	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_$(platform)_RUNTIME_IDENTIFIERS='$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS)'\\n)" | sed 's/^ //' >> $@
+	@echo "DOTNET_CSC_COMMAND='$(DOTNET_CSC)'" >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_VERSION_NO_METADATA=$($(platform)_NUGET_VERSION_NO_METADATA)\\n)" | sed 's/^ //' >> $@
 
 clean-local::
 	$(Q) $(SYSTEM_XBUILD) /t:Clean /p:Platform=iPhoneSimulator /p:Configuration=$(CONFIG) $(XBUILD_VERBOSITY) tests.sln
@@ -400,5 +406,5 @@ package-test-libraries.zip:
 	$(Q) @$(MAKE) all -C test-libraries
 	$(Q) mkdir -p $@.tmpdir
 	$(Q) $(CP) -a test-libraries/*  $@.tmpdir
-	$(Q_GEN) cd $@.tmpdir && zip -9r $(abspath $@) .
+	$(Q_GEN) cd $@.tmpdir && zip -9r --symlinks $(abspath $@) .
 	$(Q) rm -rf $@.tmpdir
