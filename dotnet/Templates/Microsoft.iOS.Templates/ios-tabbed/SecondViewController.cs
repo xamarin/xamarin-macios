@@ -3,7 +3,7 @@ namespace iOSTabbedApp1;
 using ObjCRuntime;
 
 public partial class SecondViewController : UIViewController {
-	public SecondViewController (NativeHandle handle) : base (handle)
+	protected SecondViewController (NativeHandle handle) : base (handle)
 	{
 	}
 
