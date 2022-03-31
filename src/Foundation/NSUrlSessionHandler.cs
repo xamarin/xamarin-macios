@@ -542,19 +542,36 @@ namespace Foundation {
 
 		// We're ignoring this property, just like Xamarin.Android does:
 		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L158
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 		public bool CheckCertificateRevocationList { get; set; } = false;
 
 		// We're ignoring this property, just like Xamarin.Android does:
 		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L150
-		public X509CertificateCollection ClientCertificates { get { return null; } }
+		// Note: we can't return null (like Xamarin.Android does), because the return type isn't nullable.
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+		public X509CertificateCollection ClientCertificates { get { return new X509CertificateCollection (); } }
 
 		// We're ignoring this property, just like Xamarin.Android does:
 		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L148
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 		public ClientCertificateOption ClientCertificateOptions { get; set; }
 
 		// We're ignoring this property, just like Xamarin.Android does:
 		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L152
-		public ICredentials DefaultProxyCredentials { get; set; }
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+		public ICredentials? DefaultProxyCredentials { get; set; }
 
 		public int MaxAutomaticRedirections {
 			get => int.MaxValue;
@@ -567,13 +584,25 @@ namespace Foundation {
 
 		// We're ignoring this property, just like Xamarin.Android does:
 		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L154
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 		public int MaxConnectionsPerServer { get; set; } = int.MaxValue;
 
 		// We're ignoring this property, just like Xamarin.Android does:
 		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L156
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 		public int MaxResponseHeadersLength { get; set; } = 64; // Units in K (1024) bytes.
 
 		// We don't support PreAuthenticate, so always return false, and ignore any attempts to change it.
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 		public bool PreAuthenticate {
 			get => false;
 			set { }
@@ -581,11 +610,19 @@ namespace Foundation {
 
 		// We're ignoring this property, just like Xamarin.Android does:
 		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L167
-		public IDictionary<string, object> Properties { get { return null; } }
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+		public IDictionary<string, object>? Properties { get { return null; } }
 
 		// We dont support any custom proxies, and don't let anybody wonder why their proxy isn't
 		// being used if they try to assign one (in any case we also return false from 'SupportsProxy').
-		public IWebProxy Proxy {
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+		public IWebProxy? Proxy {
 			get => null;
 			set => throw new PlatformNotSupportedException ();
 		}
@@ -596,11 +633,19 @@ namespace Foundation {
 		// which means it's not trivial to detect/accept/reject from code here.
 		// Currently the default for Apple platforms is to accept TLS v1.2 and v1.3, so default
 		// to that value, and ignore any changes to it.
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 		public SslProtocols SslProtocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
 		// We're ignoring this property, just like Xamarin.Android does:
 		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L160
-		public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool> ServerCertificateCustomValidationCallback { get; set; }
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+		public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback { get; set; }
 
 		// There's no way to turn off automatic decompression, so yes, we support it
 		public bool SupportsAutomaticDecompression {
@@ -612,16 +657,20 @@ namespace Foundation {
 			get => false;
 		}
 
-		// We support the AllowAutoRedirect property, but we don't support changing the MaxAutomaticRedirections value.
+		// We support the AllowAutoRedirect property, but we don't support changing the MaxAutomaticRedirections value,
+		// so be safe here and say we don't support redirect configuration.
 		public bool SupportsRedirectConfiguration {
-			get => true;
+			get => false;
 		}
 
 		// NSUrlSession will automatically use any proxies configured in the OS (so always return true in the getter).
-		// There doesn't seem to be a way to turn this off, so ignore any attempts to set a different value in the setter.
+		// There doesn't seem to be a way to turn this off, so throw if someone attempts to disable this.
 		public bool UseProxy {
 			get => true;
-			set { }
+			set {
+				if (!value)
+					throw new ArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies.");;
+			}
 		}
 #endif // NET
 
