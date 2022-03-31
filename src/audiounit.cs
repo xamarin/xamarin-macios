@@ -31,6 +31,10 @@ using UIKit;
 using MediaToolbox;
 using AUViewControllerBase = UIKit.UIViewController;
 #endif
+#if WATCH || TVOS
+using MidiCIProfile = Foundation.NSObject;
+using MidiCIProfileState = Foundation.NSObject;
+#endif
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -69,9 +73,8 @@ namespace AudioUnit {
 	delegate bool AUHostTransportStateBlock (ref AUHostTransportStateFlags transportStateFlags, ref double currentSamplePosition, ref double cycleStartBeatPosition, ref double cycleEndBeatPosition);
 	delegate void AURenderObserver (AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timestamp, uint frameCount, nint outputBusNumber);
 	delegate float AUImplementorValueFromStringCallback (AUParameter param, string str);
-#if IOS || MONOMAC
+	[NoTV][NoWatch]
 	delegate void AUMidiCIProfileChangedCallback (byte cable, byte channel, MidiCIProfile profile, bool enabled);
-#endif
 
 	[iOS (9,0), Mac(10,11)]
 	[BaseType (typeof(NSObject))]
@@ -284,9 +287,7 @@ namespace AudioUnit {
 		[Export ("MIDIOutputBufferSizeHint")]
 		nint MidiOutputBufferSizeHint { get; set; }
 
-#if IOS || MONOMAC
-
-		[Mac (10,14), iOS (12,0)]
+		[Mac (10,14), iOS (12,0)][NoWatch][NoTV]
 		[Export ("profileStateForCable:channel:")]
 		MidiCIProfileState GetProfileState (byte cable, byte channel);
 
@@ -294,15 +295,13 @@ namespace AudioUnit {
 		[NullAllowed, Export ("profileChangedBlock", ArgumentSemantic.Assign)]
 		AUMidiCIProfileChangedCallback ProfileChangedCallback { get; set; }
 
-		[Mac (10,14), iOS (12,0)]
+		[Mac (10,14), iOS (12,0)][NoWatch][NoTV]
 		[Export ("disableProfile:cable:onChannel:error:")]
 		bool Disable (MidiCIProfile profile, byte cable, byte channel, [NullAllowed] out NSError outError);
 
-		[Mac (10,14), iOS (12,0)]
+		[Mac (10,14), iOS (12,0)][NoWatch][NoTV]
 		[Export ("enableProfile:cable:onChannel:error:")]
 		bool Enable (MidiCIProfile profile, byte cable, byte channel, [NullAllowed] out NSError outError);
-
-#endif
 
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("userPresets", ArgumentSemantic.Copy)]
