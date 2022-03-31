@@ -50,6 +50,12 @@ using ObjCRuntime;
 using Metal;
 using SceneKit; // For SCNAnimationEvent
 
+#if !MONOMAC
+using CGLPixelFormat = Foundation.NSObject;
+using CVTimeStamp = Foundation.NSObject;
+using CGLContext = System.IntPtr;
+#endif
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -95,7 +101,7 @@ namespace CoreAnimation {
 
 	interface ICAMediaTiming {}
 
-#if MONOMAC || __MACCATALYST__
+	[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CAConstraintLayoutManager : NSCoding {
 		[Static]
@@ -103,6 +109,7 @@ namespace CoreAnimation {
 		CAConstraintLayoutManager LayoutManager { get; }
 	}
 	
+	[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CAConstraint : NSSecureCoding {
 		[Export ("attribute")]
@@ -132,9 +139,8 @@ namespace CoreAnimation {
 		[Export ("initWithAttribute:relativeTo:attribute:scale:offset:")]
 		NativeHandle Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
 	}
-#endif
 
-#if !MONOMAC
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	interface CADisplayLink {
 		[Export ("displayLinkWithTarget:selector:")][Static]
@@ -185,7 +191,6 @@ namespace CoreAnimation {
 		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
 		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
-#endif
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	enum CAContentsFormat {
@@ -323,11 +328,10 @@ namespace CoreAnimation {
 		[Export ("contents", ArgumentSemantic.Strong)][Internal][Sealed]
 		IntPtr _Contents { get; set; }
 
-#if MONOMAC || __MACCATALYST__
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("layoutManager", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		NSObject LayoutManager { get; set; }
-#endif
 
 		[Export ("contentsScale")]
 		nfloat ContentsScale { get; set; }
@@ -546,23 +550,26 @@ namespace CoreAnimation {
 		[Export ("minificationFilterBias")]
 		float MinificationFilterBias { get; set; } /* float, not CGFloat */
 
-#if MONOMAC  || __MACCATALYST__
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("autoresizingMask")]
 		CAAutoresizingMask AutoresizingMask { get; set; }
 
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("resizeSublayersWithOldSize:")]
 		void ResizeSublayers (CGSize oldSize);
 
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("resizeWithOldSuperlayerSize:")]
 		void Resize (CGSize oldSuperlayerSize);
 		
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("constraints")]
 		[NullAllowed]
 		CAConstraint[] Constraints { get; set;  }
 
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("addConstraint:")]
 		void AddConstraint (CAConstraint c);
-#endif
 
 		[Export ("shouldRasterize")]
 		bool ShouldRasterize { get; set; }
@@ -1529,7 +1536,7 @@ namespace CoreAnimation {
 		
 	}
 
-#if MONOMAC
+	[NoiOS][NoTV][NoWatch]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'CAMetalLayer' instead.")]
 	[BaseType (typeof (CALayer))]
 	interface CAOpenGLLayer {
@@ -1556,9 +1563,7 @@ namespace CoreAnimation {
 
 		[Export ("releaseCGLContext:")]
 		void Release (CGLContext glContext);
-
 	}
-#endif
 
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterCell : CAMediaTiming, NSSecureCoding {
@@ -1843,7 +1848,6 @@ namespace CoreAnimation {
 	}
 #endif
 
-#if MONOMAC
 	[Internal]
 	[Static]
 	[NoiOS][NoTV][NoWatch]
@@ -1856,6 +1860,7 @@ namespace CoreAnimation {
 		NSString MetalCommandQueue { get; }
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[StrongDictionary ("CARendererOptionKeys")]
 	interface CARendererOptions {
 
@@ -1916,7 +1921,6 @@ namespace CoreAnimation {
 		[Export ("setDestination:")]
 		void SetDestination (IMTLTexture tex);
 	}
-#endif
 
 	[NoWatch][NoiOS][NoTV]
 	[MacCatalyst (13,1)]
