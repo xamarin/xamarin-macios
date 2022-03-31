@@ -93,6 +93,8 @@
 			$(_ResourcePrefix)\**\*.metal;
 			$(_ResourcePrefix)\**\*.scnassets\*;
 			$(_ResourcePrefix)\**\*.DS_Store;
+			@(Compile);
+			@(EmbeddedResource);
 			" Condition="'$(_ResourcePrefix)' != ''" >
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 			<IsDefaultItem>true</IsDefaultItem>
