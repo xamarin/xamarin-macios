@@ -409,6 +409,7 @@ steps:
 
       echo "Rollback file contents:" 
       echo "$(cat $WORKLOAD_DST)"
+    name: workload_file
     displayName: 'Generate "WorkloadRollback.json'
 
   # upload each of the pkgs into the pipeline artifacts
