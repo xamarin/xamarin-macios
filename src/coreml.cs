@@ -70,7 +70,7 @@ namespace CoreML {
 		Float64 = 0x10000 | 64,
 		Float32 = 0x10000 | 32,
 #if MONOMAC // macOS 12 Only
-		[Mac (12,0)]
+		[Mac (12,0)][NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		Float16 = 0x10000 | 16,
 #endif
 		// added in xcode12 but it's the same a `Float32` and can be used in earlier versions

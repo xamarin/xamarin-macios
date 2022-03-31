@@ -133,7 +133,7 @@ namespace CoreVideo {
 		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds, out CVReturn error)
 		{
 			if (displayIds is null)
-				throw new ArgumentNullException (nameof (displayIds));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (displayIds));
 			error = 0;
 			IntPtr handle = IntPtr.Zero;
 			error = CVDisplayLinkCreateWithCGDisplays (displayIds, displayIds.Length, out handle);

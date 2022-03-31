@@ -165,6 +165,19 @@ namespace Xamarin.iOS.Tasks
 
 			// make sure everything is still codesigned properly
 			AssertProperlyCodesigned (expectedCodesignResults);
+
+			if (Platform == "iPhone") {
+				// make sure the dSYMs exist
+
+				var mainDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatch2Container.app.dSYM"));
+				Assert.That (mainDsymDir, Does.Exist, "MyWatch2Container dSYMs not found");
+
+				var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
+				Assert.That (appexDsymDir, Does.Exist, "MyWatchKit2Extension dSYMs not found");
+
+				var appex2DsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2IntentsExtension.appex.dSYM"));
+				Assert.That (appex2DsymDir, Does.Exist, "MyWatchKit2IntentsExtension/ dSYMs not found");
+			}
 		}
 
 		[Test]
@@ -200,6 +213,19 @@ namespace Xamarin.iOS.Tasks
 				// restore the original ActionViewController.cs code...
 				text = text.Replace ("{0} The Awakening...", "{0} awake with context");
 				File.WriteAllText (viewController, text);
+			}
+
+			if (Platform == "iPhone") {
+				// make sure the dSYMs exist
+
+				var mainDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatch2Container.app.dSYM"));
+				Assert.That (mainDsymDir, Does.Exist, "MyWatch2Container dSYMs not found");
+
+				var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
+				Assert.That (appexDsymDir, Does.Exist, "MyWatchKit2Extension dSYMs not found");
+
+				var appex2DsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2IntentsExtension.appex.dSYM"));
+				Assert.That (appex2DsymDir, Does.Exist, "MyWatchKit2IntentsExtension/ dSYMs not found");
 			}
 		}
 	}

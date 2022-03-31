@@ -19,13 +19,6 @@ namespace Xamarin.iOS.Tasks {
 				Assert.Ignore ("WatchOS is not enabled");
 
 			BuildExtension ("MyWatchApp2", "MyWatchKit2Extension");
-
-			if (Platform == "iPhone") {
-				// make sure the dSYMs exist
-				var appexDsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", "MyWatchKit2Extension.appex.dSYM"));
-
-				Assert.IsTrue (Directory.Exists (appexDsymDir), "MyWatchKit2Extension dSYMs not found");
-			}
 		}
 
 		public override string TargetFrameworkIdentifier {

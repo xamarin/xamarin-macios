@@ -165,5 +165,30 @@ $@"<Project Sdk=""Microsoft.NET.Sdk"">
 			DotNet.AssertBuild (csprojfn);
 			ExecuteProjectWithMagicWordAndAssert (csprojfn, platform);
 		}
+
+		[TestCase (ApplePlatform.MacOSX)]
+		public void NoBundleIdentifierError (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var csproj = $@"
+<Project Sdk=""Microsoft.NET.Sdk"">
+	<PropertyGroup>
+		<TargetFramework>{platform.ToFramework ()}</TargetFramework>
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+</Project>";
+
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			Configuration.CopyDotNetSupportingFiles (tmpdir);
+			var project_path = Path.Combine (tmpdir, "TestProject.csproj");
+			File.WriteAllText (project_path, csproj);
+			File.WriteAllText (Path.Combine (tmpdir, "Main.cs"), EmptyMainFile);
+
+			var properties = GetDefaultProperties ();
+			var result = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToArray ();
+			Assert.AreEqual (1, errors.Length, "Errors");
+			Assert.AreEqual ("A bundle identifier is required. Either add an 'ApplicationId' property in the project file, or add a 'CFBundleIdentifier' entry in the project's Info.plist file.", errors [0].Message);
+		}
 	}
 }
