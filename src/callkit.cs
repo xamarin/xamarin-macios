@@ -27,7 +27,6 @@ namespace CallKit {
 		Enabled = 2
 	}
 
-#if !MONOMAC
 	[iOS (10, 0), NoMac]
 	[ErrorDomain ("CXErrorDomain")]
 	[Native]
@@ -88,7 +87,6 @@ namespace CallKit {
 		InvalidClientProcess = 1,
 		MissingNotificationFilteringEntitlement = 2,
 	}
-#endif // !MONOMAC
 
 #if NET
 	[NoMac]
@@ -454,13 +452,14 @@ namespace CallKit {
 		[Export ("provider:timedOutPerformingAction:")]
 		void TimedOutPerformingAction (CXProvider provider, CXAction action);
 
-#if !MONOMAC // Xcode 12 beta 1 issue, AVAudioSession does not appear on Mac OS X but this methods do: https://github.com/xamarin/maccore/issues/2257 
+		// Xcode 12 beta 1 issue, AVAudioSession does not appear on Mac OS X but this methods do: https://github.com/xamarin/maccore/issues/2257 
+		[NoMac]
 		[Export ("provider:didActivateAudioSession:")]
 		void DidActivateAudioSession (CXProvider provider, AVAudioSession audioSession);
 
+		[NoMac]
 		[Export ("provider:didDeactivateAudioSession:")]
 		void DidDeactivateAudioSession (CXProvider provider, AVAudioSession audioSession);
-#endif
 	}
 
 	[iOS (10, 0)] [NoMac]

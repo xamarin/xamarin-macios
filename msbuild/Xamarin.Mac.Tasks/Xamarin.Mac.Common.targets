@@ -58,10 +58,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			_CompileToNative;
 			_CreatePkgInfo;
 			_CopyAppExtensionsToBundle;
-			_ReadAppExtensionDebugSymbolProperties;
-			_GenerateAppExtensionDebugSymbols;
-			_PrepareDebugSymbolGeneration;
-			_GenerateDebugSymbols;
+			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
 
