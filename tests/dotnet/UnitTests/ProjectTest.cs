@@ -873,5 +873,21 @@ namespace Xamarin.Tests {
 			properties ["ExcludeTouchUnitReference"] = "true";
 			DotNet.AssertBuild (project_path, properties);
 		}
+
+		// This test can be removed in .NET 7
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void CentralPackageVersionsApp (ApplePlatform platform)
+		{
+			var project = "CentralPackageVersionsApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties ();
+			DotNet.AssertBuild (project_path, properties);
+		}
 	}
 }

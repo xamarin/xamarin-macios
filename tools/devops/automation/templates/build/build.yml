@@ -393,6 +393,7 @@ steps:
 
       echo "Rollback file contents:" 
       echo "$(cat $WORKLOAD_DST)"
+    name: workload_file
     displayName: 'Generate "WorkloadRollback.json'
 
   # upload each of the pkgs into the pipeline artifacts
@@ -516,3 +517,14 @@ steps:
 - template: ../common/teardown.yml
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
+    New-GitHubComment -Header "Build failed" -Emoji ":fire:" -Description "Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
+  condition: failed()
+  displayName: 'Report build failure'
+  env:
+    BUILD_REVISION: $(Build.SourceVersion)
+    CONTEXT: "Build"
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
