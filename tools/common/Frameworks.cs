@@ -661,7 +661,6 @@ public class Frameworks : Dictionary <string, Framework>
 				case "iAd":
 				case "CHIP":
 #endif
-				case "IdentityLookupUI":
 				case "WatchConnectivity":
 					f.Unavailable = true;
 					break;
