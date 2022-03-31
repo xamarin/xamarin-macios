@@ -1379,3 +1379,7 @@
 
 ## convenience value (combined flags)
 !extra-enum-value! Managed value 3 for NSKeyValueObservingOptions.OldNew not found in native headers
+
+## the apple docs state that it does accept null: https://developer.apple.com/documentation/foundation/nsurl/1572047-urlwithstring
+## An NSURL object initialized with URLString. If the URL string was malformed or nil, returns nil.
+!extra-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromString(System.String)' has a extraneous [NullAllowed] on parameter #0
