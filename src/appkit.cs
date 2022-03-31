@@ -20993,7 +20993,7 @@ namespace AppKit {
 			get;
 #if !XAMCORE_5_0
 			// https://github.com/xamarin/xamarin-macios/issues/14359
-			[Obsolete ("Setting 'IsVisible' will probably behave unexpectedly, since it comes from the NSScripting protocol (and not like the getter, which is defined on the NSWindow type). If this is the expected behavior, call 'SetIsVisible(bool)' instead.")]
+			[Obsolete ("Setting 'IsVisible' will probably behave unexpectedly, since it comes from the NSScripting protocol (and not like the getter, which is defined on the NSWindow type). Typically the correct way to change the visibility of an NSWindow is to use the 'OrderOut' or 'OrderFront' methods. However, if this is the expected behavior, call 'SetIsVisible(bool)' instead. ")]
 			set;
 #endif
 		}
