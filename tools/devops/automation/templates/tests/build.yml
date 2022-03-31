@@ -77,7 +77,7 @@ steps:
 # 2. Set a comment stating the same as what was sent to the status.
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
-    Import-Module MaciosCI.psd1
+    Import-Module ./MaciosCI.psd1
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
       Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
@@ -93,7 +93,7 @@ steps:
     ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Check HD Free Space'
   timeoutInMinutes: 5
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/
   condition: succeededOrFailed() # we do not care about the previous step
 
 # if we got to this point, it means that we do have at least 50 Gb to run the test, should
