@@ -6,9 +6,6 @@ using Xamarin.Tests;
 
 namespace GeneratorTests
 {
-#if NET
-		[Ignore ("Ignore this until done https://github.com/xamarin/maccore/issues/2549")]
-#endif
 	[TestFixture ()]
 	[Parallelizable (ParallelScope.All)]
 	public class ErrorTests
@@ -439,9 +436,6 @@ namespace Bug57797Tests {
 			bgen.AssertError (1048, "Unsupported type Foo?[] decorated with [BindAs]");
 		}
 
-#if NET
-		[Ignore ("Ignore this until done https://github.com/xamarin/maccore/issues/2549")]
-#endif
 		[Test]
 		public void BindAsNoRefParam ()
 		{
