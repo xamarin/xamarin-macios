@@ -340,7 +340,6 @@ function New-GitHubCommentFromFile {
         [String]
         $Header,
         
-        [Parameter(Mandatory)]
         [String]
         $Description,
 

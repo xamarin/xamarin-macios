@@ -50,7 +50,8 @@ included by default (as `Metal` items).
 
 ## All other files in the Resources/ subdirectory
 
-All files in the Resources/ subdirectory except the ones mentioned above
+All files in the Resources/ subdirectory, except any items in the `Compile` or
+`EmbeddedResource` item groups, and except the ones mentioned above
 (\*.scnassets, \*.storyboard, \*.xib, \*.xcassets, \*.atlas, \*.mlmodel,
 \*.metal) are included by default (as `BundleResource` items).
 
