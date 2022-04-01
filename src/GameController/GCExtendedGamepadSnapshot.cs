@@ -303,7 +303,7 @@ namespace GameController {
 
 		public static bool TryGetSnapShotData (NSData data, out GCExtendedGamepadSnapShotDataV100 snapshotData)
 		{
-			return GCExtendedGamepadSnapShotDataV100FromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
+			return GCExtendedGamepadSnapShotDataV100FromNSData (out snapshotData, data.GetHandle ());
 		}
 		
 #if NET
@@ -327,7 +327,7 @@ namespace GameController {
 #endif
 		public static bool TryGetExtendedSnapShotData (NSData data, out GCExtendedGamepadSnapshotData snapshotData)
 		{
-			return GCExtendedGamepadSnapshotDataFromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
+			return GCExtendedGamepadSnapshotDataFromNSData (out snapshotData, data.GetHandle ());
 		}
 	}
 }

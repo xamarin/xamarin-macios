@@ -208,7 +208,7 @@ namespace GameController {
 #endif
 		public static bool TryGetSnapshotData (NSData data, out GCMicroGamepadSnapShotDataV100 snapshotData)
 		{
-			return GCMicroGamepadSnapShotDataV100FromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
+			return GCMicroGamepadSnapShotDataV100FromNSData (out snapshotData, data.GetHandle ());
 		}
 		
 #if NET
@@ -258,7 +258,7 @@ namespace GameController {
 #endif
 		public static bool TryGetSnapshotData (NSData data, out GCMicroGamepadSnapshotData snapshotData)
 		{
-			return GCMicroGamepadSnapshotDataFromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
+			return GCMicroGamepadSnapshotDataFromNSData (out snapshotData, data.GetHandle ());
 		}
 
 	}

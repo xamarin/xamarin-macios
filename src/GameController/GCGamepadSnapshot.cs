@@ -79,7 +79,7 @@ namespace GameController {
 
 		public static bool TryGetSnapshotData (NSData data, out GCGamepadSnapShotDataV100 snapshotData)
 		{
-			return GCGamepadSnapShotDataV100FromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
+			return GCGamepadSnapShotDataV100FromNSData (out snapshotData, data.GetHandle ());
 		}
 	}
 }
