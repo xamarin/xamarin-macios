@@ -34,7 +34,7 @@ namespace nnyeah {
 
 		public void Load ()
 		{
-			if (module is not null)
+			if (module != EmptyModule)
 				return;
 			module = ModuleDefinition.ReadModule (stm);
 		}
@@ -261,8 +261,8 @@ namespace nnyeah {
 				if (!trans.TryPerformTransform (instr, body)) {
 					WarningIssued?.Invoke (this, new WarningEventArgs (body.Method.DeclaringType.FullName, body.Method.Name, trans.Operand, trans.Message!));
 				} else {
-					var added = (uint)trans.Instructions.Count;
-					var removed = trans.Action == TransformationAction.Remove || trans.Action == TransformationAction.Replace ? (uint)1 : 0;
+					var added = (uint) trans.Instructions.Count;
+					var removed = trans.Action == TransformationAction.Remove || trans.Action == TransformationAction.Replace ? (uint) 1 : 0;
 					Transformed?.Invoke (this, new TransformEventArgs (body.Method.DeclaringType.FullName, body.Method.Name, trans.Operand, added, removed));
 				}
 			}
