@@ -7,6 +7,8 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -53,12 +55,12 @@ namespace GameplayKit {
 		{
 		}
 
-		public static GKObstacleGraph<NodeType> FromObstacles (GKPolygonObstacle [] obstacles, float bufferRadius)
+		public static new GKObstacleGraph<NodeType>? FromObstacles (GKPolygonObstacle [] obstacles, float bufferRadius)
 		{
 			return Runtime.GetNSObject <GKObstacleGraph<NodeType>> (GraphWithObstacles (obstacles, bufferRadius, new Class (typeof (NodeType))));
 		}
 
-		public NodeType [] GetNodes (GKPolygonObstacle obstacle)
+		public new NodeType [] GetNodes (GKPolygonObstacle obstacle)
 		{
 			return NSArray.ArrayFromHandle<NodeType> (_GetNodes (obstacle));
 		}

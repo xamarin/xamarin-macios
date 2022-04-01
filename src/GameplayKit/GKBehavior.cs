@@ -7,6 +7,8 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 
@@ -18,7 +20,7 @@ namespace GameplayKit {
 		}
 
 		public NSNumber this [GKGoal goal] {
-			get { return ObjectForKeyedSubscript (goal); }
+			get { return ObjectForKeyedSubscript (goal)!; }
 			set { SetObject (value, goal); }
 		}
 	}

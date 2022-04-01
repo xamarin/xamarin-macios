@@ -7,6 +7,8 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -19,7 +21,7 @@ namespace GameplayKit {
 		{
 		}
 
-		public Type ComponentType { 
+		public Type? ComponentType { 
 			get { return Class.Lookup (ComponentClass); }
 		}
 
