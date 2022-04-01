@@ -55,6 +55,8 @@ using SceneKit;
 using Security;
 #if IOS || MONOMAC
 using FileProvider;
+#else
+using INSFileProviderItem = Foundation.NSObject;
 #endif
 
 #if MONOMAC
@@ -82,6 +84,11 @@ using NSDirectionalEdgeInsets = Foundation.NSObject;
 using UIEdgeInsets = Foundation.NSObject;
 using UIOffset = Foundation.NSObject;
 using UIPreferredPresentationStyle = Foundation.NSObject;
+#else
+using NSPasteboard = Foundation.NSObject;
+using NSWorkspaceAuthorization = Foundation.NSObject;
+
+using NSStringAttributes = UIKit.UIStringAttributes;
 #endif
 
 #if IOS && !__MACCATALYST__
@@ -101,6 +108,7 @@ using NSImage = Foundation.NSObject;
 using NSAppleEventSendOptions = Foundation.NSObject;
 using NSBezierPath = Foundation.NSObject;
 using NSImage = Foundation.NSObject;
+using CSSearchableItemAttributeSet = Foundation.NSObject;
 #endif
 
 #if WATCH
@@ -292,51 +300,60 @@ namespace Foundation
 		// New API in iOS9 with same signature as an older alternative.
 		// We expose only the *new* one for the new platforms as the old
 		// one was moved to `NSDeprecatedKitAdditions (NSAttributedString)`
+		[NoMac][NoWatch][NoTV]
 		[iOS (9,0)]
 		[Internal]
 		[Export ("initWithURL:options:documentAttributes:error:")]
 		IntPtr InitWithURL (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
+
 		// but we still need to allow the API to work before iOS 9.0
 		// and to compleify matters the old one was deprecated in 9.0
+		[NoMac][NoWatch][NoTV]
 		[iOS (7,0)]
 		[Internal]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Export ("initWithFileURL:options:documentAttributes:error:")]
 		IntPtr InitWithFileURL (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #elif TVOS || WATCH
+		[NoMac]
 		[iOS (9,0)]
 		[Export ("initWithURL:options:documentAttributes:error:")]
 		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
-
+		[NoMac]
 		[iOS (7,0)]
 		[Wrap ("this (url, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
+		[NoMac]
 		[iOS (7,0)]
 		[Export ("initWithData:options:documentAttributes:error:")]
 		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
+		[NoMac]
 		[iOS (7,0)]
 		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 
+		[NoMac]
 		[iOS (7,0)]
 		[Export ("dataFromRange:documentAttributes:error:")]
 		NSData GetDataFromRange (NSRange range, NSDictionary attributes, ref NSError error);
 
+		[NoMac]
 		[iOS (7,0)]
 		[Wrap ("GetDataFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
 		NSData GetDataFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
 
+		[NoMac]
 		[iOS (7,0)]
 		[Export ("fileWrapperFromRange:documentAttributes:error:")]
 		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSDictionary attributes, ref NSError error);
 
+		[NoMac]
 		[iOS (7,0)]
 		[Wrap ("GetFileWrapperFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
 		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
-
 #endif
 		
 		[Export ("initWithString:attributes:")]
@@ -353,150 +370,183 @@ namespace Foundation
 		void EnumerateAttribute (NSString attributeName, NSRange inRange, NSAttributedStringEnumeration options, NSAttributedStringCallback callback);
 
 #if MONOMAC
-		[Export("size")]
-		CGSize Size { get; }
-
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithData:options:documentAttributes:error:")]
 		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary docAttributes, out NSError error);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithDocFormat:documentAttributes:")]
 		NativeHandle Constructor(NSData wordDocFormat, out NSDictionary docAttributes);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithHTML:baseURL:documentAttributes:")]
 		NativeHandle Constructor (NSData htmlData, NSUrl baseUrl, out NSDictionary docAttributes);
 		
-		[Export ("drawAtPoint:")]
-		void DrawString (CGPoint point);
-		
-		[Export ("drawInRect:")]
-		void DrawString (CGRect rect);
-		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("drawWithRect:options:")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options);	
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithURL:options:documentAttributes:error:")]
 		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this (url, options.GetDictionary (), out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
 		[Export ("initWithPath:documentAttributes:")]
 		NativeHandle Constructor (string path, out NSDictionary resultDocumentAttributes);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
 		[Export ("initWithURL:documentAttributes:")]
 		NativeHandle Constructor (NSUrl url, out NSDictionary resultDocumentAttributes);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Internal, Export ("initWithRTF:documentAttributes:")]
 		IntPtr InitWithRtf (NSData data, out NSDictionary resultDocumentAttributes);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Internal, Export ("initWithRTFD:documentAttributes:")]
 		IntPtr InitWithRtfd (NSData data, out NSDictionary resultDocumentAttributes);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Internal, Export ("initWithHTML:documentAttributes:")]
 		IntPtr InitWithHTML (NSData data, out NSDictionary resultDocumentAttributes);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithHTML:options:documentAttributes:")]
 		NativeHandle Constructor (NSData data, [NullAllowed]  NSDictionary options, out NSDictionary resultDocumentAttributes);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithRTFDFileWrapper:documentAttributes:")]
 		NativeHandle Constructor (NSFileWrapper wrapper, out NSDictionary resultDocumentAttributes);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("containsAttachments")]
 		bool ContainsAttachments { get; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("fontAttributesInRange:")]
 		NSDictionary GetFontAttributes (NSRange range);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("rulerAttributesInRange:")]
 		NSDictionary GetRulerAttributes (NSRange range);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("lineBreakBeforeIndex:withinRange:")]
 		nuint GetLineBreak (nuint beforeIndex, NSRange aRange);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("lineBreakByHyphenatingBeforeIndex:withinRange:")]
 		nuint GetLineBreakByHyphenating (nuint beforeIndex, NSRange aRange);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("doubleClickAtIndex:")]
 		NSRange DoubleClick (nuint index);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("nextWordFromIndex:forward:")]
 		nuint GetNextWord (nuint fromIndex, bool isForward);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSDataDetector' instead.")]
 		[Export ("URLAtIndex:effectiveRange:")]
 		NSUrl GetUrl (nuint index, out NSRange effectiveRange);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("rangeOfTextBlock:atIndex:")]
 		NSRange GetRange (NSTextBlock textBlock, nuint index);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("rangeOfTextTable:atIndex:")]
 		NSRange GetRange (NSTextTable textTable, nuint index);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("rangeOfTextList:atIndex:")]
 		NSRange GetRange (NSTextList textList, nuint index);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("itemNumberInTextList:atIndex:")]
 		nint GetItemNumber (NSTextList textList, nuint index);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("dataFromRange:documentAttributes:error:")]
 		NSData GetData (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this.GetData (range, options.GetDictionary (), out error)")]
 		NSData GetData (NSRange range, NSAttributedStringDocumentAttributes options, out NSError error);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("fileWrapperFromRange:documentAttributes:error:")]
 		NSFileWrapper GetFileWrapper (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this.GetFileWrapper (range, options.GetDictionary (), out error)")]
 		NSFileWrapper GetFileWrapper (NSRange range, NSAttributedStringDocumentAttributes options, out NSError error);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("RTFFromRange:documentAttributes:")]
 		NSData GetRtf (NSRange range, [NullAllowed] NSDictionary options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this.GetRtf (range, options.GetDictionary ())")]
 		NSData GetRtf (NSRange range, NSAttributedStringDocumentAttributes options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("RTFDFromRange:documentAttributes:")]
 		NSData GetRtfd (NSRange range, [NullAllowed] NSDictionary options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this.GetRtfd (range, options.GetDictionary ())")]
 		NSData GetRtfd (NSRange range, NSAttributedStringDocumentAttributes options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("RTFDFileWrapperFromRange:documentAttributes:")]
 		NSFileWrapper GetRtfdFileWrapper (NSRange range, [NullAllowed] NSDictionary options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this.GetRtfdFileWrapper (range, options.GetDictionary ())")]
 		NSFileWrapper GetRtfdFileWrapper (NSRange range, NSAttributedStringDocumentAttributes options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("docFormatFromRange:documentAttributes:")]
 		NSData GetDocFormat (NSRange range, [NullAllowed] NSDictionary options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this.GetDocFormat (range, options.GetDictionary ())")]
 		NSData GetDocFormat (NSRange range, NSAttributedStringDocumentAttributes options);
 #else
+		[NoMac]
+		[Export ("drawWithRect:options:context:")]
+		void DrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
+
+		[NoMac]
+		[Export ("boundingRectWithSize:options:context:")]
+		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
+#endif
+
+		[NoMac]
 		[Export ("size")]
 		CGSize Size { get; }
 
 		[Export ("drawAtPoint:")]
 		void DrawString (CGPoint point);
-
+		
 		[Export ("drawInRect:")]
 		void DrawString (CGRect rect);
-
-		[Export ("drawWithRect:options:context:")]
-		void DrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
-
-		[Export ("boundingRectWithSize:options:context:")]
-		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
-#endif
 
 		// -(BOOL)containsAttachmentsInRange:(NSRange)range __attribute__((availability(macosx, introduced=10.11)));
 		[Mac (10,11)][iOS (9,0)]
@@ -944,9 +994,9 @@ namespace Foundation
 		NSString DayChangedNotification { get; }
 	}
 
-#if MONOMAC
 	// Obsolete, but the only API surfaced by WebKit.WebHistory.
 	[Deprecated (PlatformName.MacOSX, 10, 1, message: "Use NSCalendar and NSDateComponents.")]
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSDate))]
 	interface NSCalendarDate {
 		[Export ("initWithString:calendarFormat:locale:")]
@@ -1025,7 +1075,6 @@ namespace Foundation
 		[Export ("timeZone")]
 		NSTimeZone TimeZone { get; set; }
 	}
-#endif
 
 	[BaseType (typeof (NSObject))]
 	interface NSCharacterSet : NSSecureCoding, NSMutableCopying {
@@ -2690,20 +2739,21 @@ namespace Foundation
 		NSString ResultContentRelevanceAttribute { get; }
 		
 		// Scope constants for defined search locations
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("NSMetadataQueryUserHomeScope")]
 		NSString UserHomeScope { get; }
 		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("NSMetadataQueryLocalComputerScope")]
 		NSString LocalComputerScope { get; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("NSMetadataQueryLocalDocumentsScope")]
 		NSString LocalDocumentsScope { get; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("NSMetadataQueryNetworkScope")]
 		NSString NetworkScope { get; }
-
-#endif
 
 		[Field ("NSMetadataQueryUbiquitousDocumentsScope")]
 		NSString UbiquitousDocumentsScope { get; }
@@ -2803,583 +2853,581 @@ namespace Foundation
 		[Field ("NSMetadataUbiquitousItemURLInLocalContainerKey")]
 		NSString UbiquitousItemURLInLocalContainerKey { get; }
 
-#if MONOMAC
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemKeywordsKey")]
 		NSString KeywordsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemTitleKey")]
 		NSString TitleKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAuthorsKey")]
 		NSString AuthorsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemEditorsKey")]
 		NSString EditorsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemParticipantsKey")]
 		NSString ParticipantsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemProjectsKey")]
 		NSString ProjectsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemDownloadedDateKey")]
 		NSString DownloadedDateKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemWhereFromsKey")]
 		NSString WhereFromsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemCommentKey")]
 		NSString CommentKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemCopyrightKey")]
 		NSString CopyrightKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemLastUsedDateKey")]
 		NSString LastUsedDateKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemContentCreationDateKey")]
 		NSString ContentCreationDateKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemContentModificationDateKey")]
 		NSString ContentModificationDateKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemDateAddedKey")]
 		NSString DateAddedKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemDurationSecondsKey")]
 		NSString DurationSecondsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemContactKeywordsKey")]
 		NSString ContactKeywordsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemVersionKey")]
 		NSString VersionKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemPixelHeightKey")]
 		NSString PixelHeightKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemPixelWidthKey")]
 		NSString PixelWidthKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemPixelCountKey")]
 		NSString PixelCountKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemColorSpaceKey")]
 		NSString ColorSpaceKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemBitsPerSampleKey")]
 		NSString BitsPerSampleKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemFlashOnOffKey")]
 		NSString FlashOnOffKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemFocalLengthKey")]
 		NSString FocalLengthKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAcquisitionMakeKey")]
 		NSString AcquisitionMakeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAcquisitionModelKey")]
 		NSString AcquisitionModelKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemISOSpeedKey")]
 		NSString IsoSpeedKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemOrientationKey")]
 		NSString OrientationKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemLayerNamesKey")]
 		NSString LayerNamesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemWhiteBalanceKey")]
 		NSString WhiteBalanceKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemApertureKey")]
 		NSString ApertureKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemProfileNameKey")]
 		NSString ProfileNameKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemResolutionWidthDPIKey")]
 		NSString ResolutionWidthDpiKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemResolutionHeightDPIKey")]
 		NSString ResolutionHeightDpiKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemExposureModeKey")]
 		NSString ExposureModeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemExposureTimeSecondsKey")]
 		NSString ExposureTimeSecondsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemEXIFVersionKey")]
 		NSString ExifVersionKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemCameraOwnerKey")]
 		NSString CameraOwnerKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemFocalLength35mmKey")]
 		NSString FocalLength35mmKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemLensModelKey")]
 		NSString LensModelKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemEXIFGPSVersionKey")]
 		NSString ExifGpsVersionKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAltitudeKey")]
 		NSString AltitudeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemLatitudeKey")]
 		NSString LatitudeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemLongitudeKey")]
 		NSString LongitudeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemSpeedKey")]
 		NSString SpeedKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemTimestampKey")]
 		NSString TimestampKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSTrackKey")]
 		NSString GpsTrackKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemImageDirectionKey")]
 		NSString ImageDirectionKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemNamedLocationKey")]
 		NSString NamedLocationKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSStatusKey")]
 		NSString GpsStatusKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSMeasureModeKey")]
 		NSString GpsMeasureModeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSDOPKey")]
 		NSString GpsDopKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSMapDatumKey")]
 		NSString GpsMapDatumKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSDestLatitudeKey")]
 		NSString GpsDestLatitudeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSDestLongitudeKey")]
 		NSString GpsDestLongitudeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSDestBearingKey")]
 		NSString GpsDestBearingKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSDestDistanceKey")]
 		NSString GpsDestDistanceKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSProcessingMethodKey")]
 		NSString GpsProcessingMethodKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSAreaInformationKey")]
 		NSString GpsAreaInformationKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSDateStampKey")]
 		NSString GpsDateStampKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGPSDifferentalKey")]
 		NSString GpsDifferentalKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemCodecsKey")]
 		NSString CodecsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemMediaTypesKey")]
 		NSString MediaTypesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemStreamableKey")]
 		NSString StreamableKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemTotalBitRateKey")]
 		NSString TotalBitRateKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemVideoBitRateKey")]
 		NSString VideoBitRateKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAudioBitRateKey")]
 		NSString AudioBitRateKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemDeliveryTypeKey")]
 		NSString DeliveryTypeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAlbumKey")]
 		NSString AlbumKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemHasAlphaChannelKey")]
 		NSString HasAlphaChannelKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemRedEyeOnOffKey")]
 		NSString RedEyeOnOffKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemMeteringModeKey")]
 		NSString MeteringModeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemMaxApertureKey")]
 		NSString MaxApertureKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemFNumberKey")]
 		NSString FNumberKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemExposureProgramKey")]
 		NSString ExposureProgramKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemExposureTimeStringKey")]
 		NSString ExposureTimeStringKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemHeadlineKey")]
 		NSString HeadlineKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemInstructionsKey")]
 		NSString InstructionsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemCityKey")]
 		NSString CityKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemStateOrProvinceKey")]
 		NSString StateOrProvinceKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemCountryKey")]
 		NSString CountryKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemTextContentKey")]
 		NSString TextContentKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAudioSampleRateKey")]
 		NSString AudioSampleRateKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAudioChannelCountKey")]
 		NSString AudioChannelCountKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemTempoKey")]
 		NSString TempoKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemKeySignatureKey")]
 		NSString KeySignatureKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemTimeSignatureKey")]
 		NSString TimeSignatureKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAudioEncodingApplicationKey")]
 		NSString AudioEncodingApplicationKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemComposerKey")]
 		NSString ComposerKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemLyricistKey")]
 		NSString LyricistKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAudioTrackNumberKey")]
 		NSString AudioTrackNumberKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemRecordingDateKey")]
 		NSString RecordingDateKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemMusicalGenreKey")]
 		NSString MusicalGenreKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemIsGeneralMIDISequenceKey")]
 		NSString IsGeneralMidiSequenceKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemRecordingYearKey")]
 		NSString RecordingYearKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemOrganizationsKey")]
 		NSString OrganizationsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemLanguagesKey")]
 		NSString LanguagesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemRightsKey")]
 		NSString RightsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemPublishersKey")]
 		NSString PublishersKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemContributorsKey")]
 		NSString ContributorsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemCoverageKey")]
 		NSString CoverageKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemSubjectKey")]
 		NSString SubjectKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemThemeKey")]
 		NSString ThemeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemDescriptionKey")]
 		NSString DescriptionKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemIdentifierKey")]
 		NSString IdentifierKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAudiencesKey")]
 		NSString AudiencesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemNumberOfPagesKey")]
 		NSString NumberOfPagesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemPageWidthKey")]
 		NSString PageWidthKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemPageHeightKey")]
 		NSString PageHeightKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemSecurityMethodKey")]
 		NSString SecurityMethodKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemCreatorKey")]
 		NSString CreatorKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemEncodingApplicationsKey")]
 		NSString EncodingApplicationsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemDueDateKey")]
 		NSString DueDateKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemStarRatingKey")]
 		NSString StarRatingKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemPhoneNumbersKey")]
 		NSString PhoneNumbersKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemEmailAddressesKey")]
 		NSString EmailAddressesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemInstantMessageAddressesKey")]
 		NSString InstantMessageAddressesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemKindKey")]
 		NSString KindKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemRecipientsKey")]
 		NSString RecipientsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemFinderCommentKey")]
 		NSString FinderCommentKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemFontsKey")]
 		NSString FontsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAppleLoopsRootKeyKey")]
 		NSString AppleLoopsRootKeyKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAppleLoopsKeyFilterTypeKey")]
 		NSString AppleLoopsKeyFilterTypeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAppleLoopsLoopModeKey")]
 		NSString AppleLoopsLoopModeKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAppleLoopDescriptorsKey")]
 		NSString AppleLoopDescriptorsKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemMusicalInstrumentCategoryKey")]
 		NSString MusicalInstrumentCategoryKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemMusicalInstrumentNameKey")]
 		NSString MusicalInstrumentNameKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemCFBundleIdentifierKey")]
 		NSString CFBundleIdentifierKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemInformationKey")]
 		NSString InformationKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemDirectorKey")]
 		NSString DirectorKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemProducerKey")]
 		NSString ProducerKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemGenreKey")]
 		NSString GenreKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemPerformersKey")]
 		NSString PerformersKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemOriginalFormatKey")]
 		NSString OriginalFormatKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemOriginalSourceKey")]
 		NSString OriginalSourceKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAuthorEmailAddressesKey")]
 		NSString AuthorEmailAddressesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemRecipientEmailAddressesKey")]
 		NSString RecipientEmailAddressesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemAuthorAddressesKey")]
 		NSString AuthorAddressesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemRecipientAddressesKey")]
 		NSString RecipientAddressesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemIsLikelyJunkKey")]
 		NSString IsLikelyJunkKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemExecutableArchitecturesKey")]
 		NSString ExecutableArchitecturesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemExecutablePlatformKey")]
 		NSString ExecutablePlatformKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemApplicationCategoriesKey")]
 		NSString ApplicationCategoriesKey { get; }
 
-		[NoWatch, NoTV, NoiOS, Mac (10, 9)]
+		[NoWatch, NoTV, NoiOS, Mac (10, 9), NoMacCatalyst]
 		[Field ("NSMetadataItemIsApplicationManagedKey")]
 		NSString IsApplicationManagedKey { get; }
-#endif
 
 		[NoWatch, NoTV, Mac (10, 12), iOS (10, 0)]
 		[Field ("NSMetadataUbiquitousItemIsSharedKey")]
@@ -3617,10 +3665,10 @@ namespace Foundation
 		[Export ("addAttributes:range:")]
 		void AddAttributes (NSDictionary attrs, NSRange range);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("AddAttributes (attributes.GetDictionary ()!, range)")]
 		void AddAttributes (NSStringAttributes attributes, NSRange range);
-#endif
+
 		[Export ("removeAttribute:range:")]
 		void RemoveAttribute (string name, NSRange range);
 		
@@ -3645,26 +3693,27 @@ namespace Foundation
 		[Export ("endEditing")]
 		void EndEditing ();
 
-#if !MONOMAC
+		[NoMac]
 		[NoTV]
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ReadFromUrl' instead.")]
 		[Export ("readFromFileURL:options:documentAttributes:error:")]
 		bool ReadFromFile (NSUrl url, NSDictionary options, ref NSDictionary returnOptions, ref NSError error);
 
+		[NoMac]
 		[NoTV]
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ReadFromUrl' instead.")]
 		[Wrap ("ReadFromFile (url, options.GetDictionary ()!, ref returnOptions, ref error)")]
 		bool ReadFromFile (NSUrl url, NSAttributedStringDocumentAttributes options, ref NSDictionary returnOptions, ref NSError error);
 
+		[NoMac]
 		[iOS (7,0)]
 		[Export ("readFromData:options:documentAttributes:error:")]
 		bool ReadFromData (NSData data, NSDictionary options, ref NSDictionary returnOptions, ref NSError error);
 		
+		[NoMac]
 		[Wrap ("ReadFromData (data, options.GetDictionary ()!, ref returnOptions, ref error)")]
 		bool ReadFromData (NSData data, NSAttributedStringDocumentAttributes options, ref NSDictionary returnOptions, ref NSError error);
-
-#endif
 
 		[Internal]
 		[Sealed]
@@ -4130,31 +4179,28 @@ namespace Foundation
 		[return: NullAllowed]
 		NSErrorUserInfoValueProvider GetUserInfoValueProvider (string errorDomain);
 
-#if IOS || MONOMAC
-
 		// From NSError (NSFileProviderError) Category to avoid static category uglyness
 
 		[iOS (11,0)]
 		[Mac (10,15)]
-		[NoMacCatalyst]
+		[NoMacCatalyst][NoTV][NoWatch]
 		[Static]
 		[Export ("fileProviderErrorForCollisionWithItem:")]
 		NSError GetFileProviderError (INSFileProviderItem existingItem);
 
 		[iOS (11,0)]
 		[Mac (10,15)]
-		[NoMacCatalyst]
+		[NoMacCatalyst][NoTV][NoWatch]
 		[Static]
 		[Export ("fileProviderErrorForNonExistentItemWithIdentifier:")]
 		NSError GetFileProviderError (string nonExistentItemIdentifier);
 
 		[NoiOS]
 		[Mac (11,0)]
-		[NoMacCatalyst]
+		[NoMacCatalyst][NoTV][NoWatch]
 		[Static]
 		[Export ("fileProviderErrorForRejectedDeletionOfItem:")]
 		NSError GetFileProviderErrorForRejectedDeletion (INSFileProviderItem updatedVersion);
-#endif
 		
 #if false
 		// FIXME that value is present in the header (7.0 DP 6) files but returns NULL (i.e. unusable)
@@ -4344,27 +4390,29 @@ namespace Foundation
 		[Field ("NSExtensionItemsAndErrorsKey")]
 		NSString ItemsAndErrorsKey { get; }
 
-#if !MONOMAC
+		[NoMac]
 		[iOS (8,2)]
 		[Notification]
 		[Field ("NSExtensionHostWillEnterForegroundNotification")]
 		NSString HostWillEnterForegroundNotification { get; }
 
+		[NoMac]
 		[iOS (8,2)]
 		[Notification]
 		[Field ("NSExtensionHostDidEnterBackgroundNotification")]
 		NSString HostDidEnterBackgroundNotification { get; }
 
+		[NoMac]
 		[iOS (8,2)]
 		[Notification]
 		[Field ("NSExtensionHostWillResignActiveNotification")]
 		NSString HostWillResignActiveNotification { get; }
 
+		[NoMac]
 		[iOS (8,2)]
 		[Notification]
 		[Field ("NSExtensionHostDidBecomeActiveNotification")]
 		NSString HostDidBecomeActiveNotification { get; }
-#endif
 	}
 
 	[iOS (8,0)][Mac (10,10)] // Not defined in 32-bit
@@ -5034,22 +5082,6 @@ namespace Foundation
 		[Static]
 		[Export ("setWithArray:")]
 		NativeHandle _SetWithArray (NativeHandle array);
-
-#if MACCORE
-		[Mac (10,11)]
-		[Static]
-		[Export ("setWithCollectionViewIndexPath:")]
-		NSSet FromCollectionViewIndexPath (NSIndexPath indexPath);
-
-		[Mac (10,11)]
-		[Static]
-		[Export ("setWithCollectionViewIndexPaths:")]
-		NSSet FromCollectionViewIndexPaths (NSIndexPath[] indexPaths);
-
-		[Mac (10,11)]
-		[Export ("enumerateIndexPathsWithOptions:usingBlock:")]
-		void Enumerate (NSEnumerationOptions opts, Action<NSIndexPath, out bool> block);
-#endif
 	}
 
 	interface NSSet<TKey> : NSSet {}
@@ -5422,13 +5454,12 @@ namespace Foundation
 		[Export ("eligibleForPublicIndexing")]
 		bool EligibleForPublicIndexing { [Bind ("isEligibleForPublicIndexing")] get; set; }
 		
-#if IOS || MONOMAC
 		[iOS (9,0)]
 		[Mac (10,13)]
+		[NoWatch][NoTV]
 		[NullAllowed]
 		[Export ("contentAttributeSet", ArgumentSemantic.Copy)] // From CSSearchableItemAttributeSet.h
 		CSSearchableItemAttributeSet ContentAttributeSet { get; set; }
-#endif
 
 		[Watch (4, 0), TV (11, 0), Mac (10, 13), iOS (11, 0)]
 		[NullAllowed, Export ("referrerURL", ArgumentSemantic.Copy)]
@@ -5831,17 +5862,16 @@ namespace Foundation
 		[iOS (7,0), Mac (10, 9), Static, Export ("fileURLWithFileSystemRepresentation:isDirectory:relativeToURL:")]
 		NSUrl FromUTF8Pointer (IntPtr ptrUtf8path, bool isDir, [NullAllowed] NSUrl baseURL);
 
-#if MONOMAC
-
 		/* These methods come from NURL_AppKitAdditions */
-
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("URLFromPasteboard:")]
 		[Static]
 		NSUrl FromPasteboard (NSPasteboard pasteboard);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("writeToPasteboard:")]
 		void WriteToPasteboard (NSPasteboard pasteboard);
-#endif
+
 		[Export("bookmarkDataWithContentsOfURL:error:")]
 		[Static]
 		NSData GetBookmarkData (NSUrl bookmarkFileUrl, out NSError error);
@@ -6756,13 +6786,14 @@ namespace Foundation
 		[Wrap ("Unschedule (aRunLoop, forMode.GetConstant ()!)")]
 		void Unschedule (NSRunLoop aRunLoop, NSRunLoopMode forMode);
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("originalRequest")]
 		NSUrlRequest OriginalRequest { get; }
 
+		[NoMac]
 		[Export ("currentRequest")]
 		NSUrlRequest CurrentRequest { get; }
-#endif
+
 		[Export ("setDelegateQueue:")]
 		void SetDelegateQueue (NSOperationQueue queue);
 
@@ -7015,10 +7046,10 @@ namespace Foundation
 #if !NET
 		[Obsolete ("Use the overload with a 'INSUrlSessionDelegate' parameter.")]
 		[Static, Wrap ("FromWeakConfiguration (configuration, sessionDelegate, delegateQueue);")]
-		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
+		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, [NullAllowed] NSOperationQueue delegateQueue);
 #endif
 		[Static, Wrap ("FromWeakConfiguration (configuration, (NSObject) sessionDelegate, delegateQueue);")]
-		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, INSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
+		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, INSUrlSessionDelegate sessionDelegate, [NullAllowed] NSOperationQueue delegateQueue);
 
 		[Export ("delegateQueue", ArgumentSemantic.Retain)]
 		NSOperationQueue DelegateQueue { get; }
@@ -7577,7 +7608,7 @@ namespace Foundation
 		void DidSendBodyData (NSUrlSession session, NSUrlSessionTask task, long bytesSent, long totalBytesSent, long totalBytesExpectedToSend);
 	
 		[Export ("URLSession:task:didCompleteWithError:")]
-		void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error);
+		void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, [NullAllowed] NSError error);
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		[Export ("URLSession:task:didFinishCollectingMetrics:")]
@@ -8164,6 +8195,7 @@ namespace Foundation
 #if NET
 		[Abstract]
 #endif
+		[return: NullAllowed]
 		[Protected]
 		[Export ("propertyForKey:")]
 		NSObject GetProperty (NSString key);
@@ -8302,23 +8334,26 @@ namespace Foundation
 	{
 		[Export ("initWithData:encoding:")]
 		NativeHandle Constructor (NSData data, NSStringEncoding encoding);
-#if MONOMAC
+
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Bind ("sizeWithAttributes:")]
 		CGSize StringSize ([NullAllowed] NSDictionary attributedStringAttributes);
 		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Bind ("boundingRectWithSize:options:attributes:")]
 		CGRect BoundingRectWithSize (CGSize size, NSStringDrawingOptions options, NSDictionary attributes);
 		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Bind ("drawAtPoint:withAttributes:")]
 		void DrawString (CGPoint point, NSDictionary attributes);
 		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Bind ("drawInRect:withAttributes:")]
 		void DrawString (CGRect rect, NSDictionary attributes);
 		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Bind ("drawWithRect:options:attributes:")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options, NSDictionary attributes);
-#else
-#endif
 
 		[Internal]
 		[Export ("characterAtIndex:")]
@@ -8594,9 +8629,8 @@ namespace Foundation
 		NSString CreateStringByReplacingPercentEscapes (NSStringEncoding enc);
 	}
 
-	
-#if !MONOMAC
 	// This comes from UIKit.framework/Headers/NSStringDrawing.h
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	interface NSStringDrawingContext {
 		[Export ("minimumScaleFactor")]
@@ -8619,7 +8653,6 @@ namespace Foundation
 		[Export ("totalBounds")]
 		CGRect TotalBounds { get;  }
 	}
-#endif
 
 	[BaseType (typeof (NSStream))]
 	[DefaultCtorVisibility (Visibility.Protected)]
@@ -8651,6 +8684,7 @@ namespace Foundation
 		NSInputStream FromUrl (NSUrl url);
 
 #if NET
+		[return: NullAllowed]
 		[Protected]
 		[Export ("propertyForKey:"), Override]
 		NSObject GetProperty (NSString key);
@@ -8811,47 +8845,57 @@ namespace Foundation
 
 		[Field ("NSKeyValueChangeNotificationIsPriorKey")]
 		NSString ChangeNotificationIsPriorKey { get; }
-#if MONOMAC
+
 		// Cocoa Bindings added by Kenneth J. Pouncey 2010/11/17
 #if !NET
 		[Sealed]
 #endif
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("valueClassForBinding:")]
 		Class GetBindingValueClass (NSString binding);
 
 #if !NET
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options)' instead.")]
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (string binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'Unbind (NSString binding)' instead.")]
 		[Export ("unbind:")]
 		void Unbind (string binding);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'GetBindingValueClass (NSString binding)' instead.")]
 		[Export ("valueClassForBinding:")]
 		Class BindingValueClass (string binding);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'GetBindingInfo (NSString binding)' instead.")]
 		[Export ("infoForBinding:")]
 		NSDictionary BindingInfo (string binding);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'GetBindingOptionDescriptions (NSString aBinding)' instead.")]
 		[Export ("optionDescriptionsForBinding:")]
 		NSObject[] BindingOptionDescriptions (string aBinding);
 
 		[Static]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("GetDefaultPlaceholder (marker, (NSString) binding)")]
 		NSObject GetDefaultPlaceholder (NSObject marker, string binding);
 
 		[Static]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Use 'SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding)' instead.")]
 		[Wrap ("SetDefaultPlaceholder (placeholder, marker, (NSString) binding)")]
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, string binding);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("exposedBindings")]
 		NSString[] ExposedBindings ();
 #else
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("exposedBindings")]
 		NSString[] ExposedBindings { get; }
 #endif
@@ -8859,50 +8903,59 @@ namespace Foundation
 #if !NET
 		[Sealed]
 #endif
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("bind:toObject:withKeyPath:options:")]
 		void Bind (NSString binding, NSObject observable, string keyPath, [NullAllowed] NSDictionary options);
 
 #if !NET
 		[Sealed]
 #endif
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("unbind:")]
 		void Unbind (NSString binding);
 
 #if !NET
 		[Sealed]
 #endif
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("infoForBinding:")]
 		NSDictionary GetBindingInfo (NSString binding);
 
 #if !NET
 		[Sealed]
 #endif
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("optionDescriptionsForBinding:")]
 		NSObject[] GetBindingOptionDescriptions (NSString aBinding);
 
 		// NSPlaceholders (informal) protocol
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Static]
 		[Export ("defaultPlaceholderForMarker:withBinding:")]
 		NSObject GetDefaultPlaceholder (NSObject marker, NSString binding);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Static]
 		[Export ("setDefaultPlaceholder:forMarker:withBinding:")]
 		void SetDefaultPlaceholder (NSObject placeholder, NSObject marker, NSString binding);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("objectDidEndEditing:")]
 		void ObjectDidEndEditing (NSObject editor);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("commitEditing")]
 		bool CommitEditing ();
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, message: "Now on 'NSEditor' protocol.")]
 		[Export ("commitEditingWithDelegate:didCommitSelector:contextInfo:")]
 		void CommitEditing (NSObject objDelegate, Selector didCommitSelector, IntPtr contextInfo);
-#endif
+
 		[Export ("methodForSelector:")]
 		IntPtr GetMethodForSelector (Selector sel);
 
@@ -9530,6 +9583,7 @@ namespace Foundation
 		NSOutputStream CreateFile (string path, bool shouldAppend);
 
 #if NET
+		[return: NullAllowed]
 		[Protected]
 		[Export ("propertyForKey:"), Override]
 		NSObject GetProperty (NSString key);
@@ -9826,33 +9880,38 @@ namespace Foundation
 		NSDictionary InfoDictionary{ get; }
 
 		// Additions from AppKit
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("loadNibNamed:owner:topLevelObjects:")]
 		bool LoadNibNamed (string nibName, [NullAllowed] NSObject owner, out NSArray topLevelObjects);
 
 		// https://developer.apple.com/library/mac/#documentation/Cocoa/Reference/ApplicationKit/Classes/NSBundle_AppKitAdditions/Reference/Reference.html
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Static]
 		[Deprecated (PlatformName.MacOSX, 10, 8)]
 		[Export ("loadNibNamed:owner:")]
 		bool LoadNib (string nibName, NSObject owner);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("pathForImageResource:")]
 		string PathForImageResource (string resource);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("pathForSoundResource:")]
 		string PathForSoundResource (string resource);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("URLForImageResource:")]
 		NSUrl GetUrlForImageResource (string resource);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("contextHelpForKey:")]
 		NSAttributedString GetContextHelp (string key);
-#else
+
 		// http://developer.apple.com/library/ios/#documentation/uikit/reference/NSBundle_UIKitAdditions/Introduction/Introduction.html
+		[NoMac]
 		[NoWatch]
 		[Export ("loadNibNamed:owner:options:")]
 		NSArray LoadNib (string nibName, [NullAllowed] NSObject owner, [NullAllowed] NSDictionary options);
-#endif
 
 		[Export ("bundleURL")]
 		NSUrl BundleUrl { get; }
@@ -9924,18 +9983,18 @@ namespace Foundation
 		[Export ("URLsForResourcesWithExtension:subdirectory:localization:")]
 		NSUrl [] GetUrlsForResourcesWithExtension (string fileExtension, [NullAllowed] string subdirectory,  [NullAllowed] string localizationName);
 
-#if !MONOMAC
+		[NoMac]
 		[iOS (9,0)]
 		[Export ("preservationPriorityForTag:")]
 		double GetPreservationPriority (NSString tag);
 
+		[NoMac]
 		[iOS (9,0)]
 		[Export ("setPreservationPriority:forTags:")]
 		void SetPreservationPriority (double priority, NSSet<NSString> tags);
-#endif
 	}
 
-#if !MONOMAC
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -9975,7 +10034,6 @@ namespace Foundation
 		[Field ("NSBundleResourceRequestLoadingPriorityUrgent")]
 		double LoadingPriorityUrgent { get; }
 	}
-#endif
 		
 	[BaseType (typeof (NSObject))]
 	interface NSIndexPath : NSCoding, NSSecureCoding, NSCopying {
@@ -10007,30 +10065,30 @@ namespace Foundation
 		[Export ("compare:")]
 		nint Compare (NSIndexPath other);
 
-#if !MONOMAC
 		// NSIndexPath UIKit Additions Reference
 		// https://developer.apple.com/library/ios/#documentation/UIKit/Reference/NSIndexPath_UIKitAdditions/Reference/Reference.html
 
 		// see monotouch/src/UIKit/Addition.cs for int-returning Row/Section properties
-
+		[NoMac]
 		[NoWatch]
 		[Export ("row")]
 		nint LongRow { get; }
 
+		[NoMac]
 		[NoWatch]
 		[Export ("section")]
 		nint LongSection { get; }
 
+		[NoMac]
 		[NoWatch]
 		[Static]
 		[Export ("indexPathForRow:inSection:")]
 		NSIndexPath FromRowSection (nint row, nint section);
-#else
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Mac (10,11)]
 		[Export ("section")]
 		nint Section { get; }
-#endif
 
 		[NoWatch]
 		[Static]
@@ -11762,11 +11820,12 @@ namespace Foundation
 	[BaseType (typeof (NSObject))]
 	[MacCatalyst(15, 0)]
 	interface NSPortMessage {
-#if MONOMAC || __MACCATALYST__
+		[NoiOS][NoWatch][NoTV][MacCatalyst(15, 0)]
 		[DesignatedInitializer]
 		[Export ("initWithSendPort:receivePort:components:")]
 		NativeHandle Constructor (NSPort sendPort, NSPort recvPort, NSArray components);
 
+		[NoiOS][NoWatch][NoTV][MacCatalyst(15, 0)]
 		[Export ("components")]
 		NSArray Components { get; }
 
@@ -11774,19 +11833,21 @@ namespace Foundation
 		// The situation is a bit confusing since NSPortMessage.h is not part of iOS SDK - 
 		// but the type is used (from NSPort[Delegate]) but not _itself_ documented
 		// The selectors Apple *currently* dislike are removed from the iOS build
-
+		[NoiOS][NoWatch][NoTV][MacCatalyst(15, 0)]
 		[Export ("sendBeforeDate:")]
 		bool SendBefore (NSDate date);
 
+		[NoiOS][NoWatch][NoTV][MacCatalyst(15, 0)]
 		[Export ("receivePort")]
 		NSPort ReceivePort { get; }
 
+		[NoiOS][NoWatch][NoTV][MacCatalyst(15, 0)]
 		[Export ("sendPort")]
 		NSPort SendPort { get; }
 
+		[NoiOS][NoWatch][NoTV][MacCatalyst(15, 0)]
 		[Export ("msgid")]
 		uint MsgId { get; set; } /* uint32_t */
-#endif
 	}
 
 	[BaseType (typeof (NSPort))]
@@ -11906,35 +11967,41 @@ namespace Foundation
 		[Export ("operatingSystemVersion")]
 		NSOperatingSystemVersion OperatingSystemVersion { get; }
 		
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("enableSuddenTermination")]
 		void EnableSuddenTermination  ();
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("disableSuddenTermination")]
 		void DisableSuddenTermination ();
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("enableAutomaticTermination:")]
 		void EnableAutomaticTermination (string reason);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("disableAutomaticTermination:")]
 		void DisableAutomaticTermination (string reason);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("automaticTerminationSupportEnabled")]
 		bool AutomaticTerminationSupportEnabled { get; set; }
-#else
+
+		[NoMac]
 		[iOS (8,2)]
 		[Export ("performExpiringActivityWithReason:usingBlock:")]
 		void PerformExpiringActivity (string reason, Action<bool> block);
 
+		[NoMac]
 		[iOS (9,0)]
 		[Export ("lowPowerModeEnabled")]
 		bool LowPowerModeEnabled { [Bind ("isLowPowerModeEnabled")] get; }
 
+		[NoMac]
 		[iOS (9,0)]
 		[Notification]
 		[Field ("NSProcessInfoPowerStateDidChangeNotification")]
 		NSString PowerStateDidChangeNotification { get; }
-#endif
 
 		[Mac (10,10,3)]
 		[Watch (4,0)]
@@ -12066,28 +12133,34 @@ namespace Foundation
 		[Export ("kind", ArgumentSemantic.Copy)]
 		NSString Kind { get; set; }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("publish")]
 		void Publish ();
 	
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("unpublish")]
 		void Unpublish ();
 	
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("setAcknowledgementHandler:forAppBundleIdentifier:")]
 		void SetAcknowledgementHandler (Action<bool> acknowledgementHandler, string appBundleIdentifier);
-	
+		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Static, Export ("addSubscriberForFileURL:withPublishingHandler:")]
 		NSObject AddSubscriberForFile (NSUrl url, Action<NSProgress> publishingHandler);
-	
+		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Static, Export ("removeSubscriber:")]
 		void RemoveSubscriber (NSObject subscriber);
-	
+
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("acknowledgeWithSuccess:")]
 		void AcknowledgeWithSuccess (bool success);
-	
+
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("old")]
 		bool Old { [Bind ("isOld")] get; }
-#endif
+
 		[Field ("NSProgressKindFile")]
 		NSString KindFile { get; }
 	
@@ -12125,16 +12198,17 @@ namespace Foundation
 		[Field ("NSProgressFileCompletedCountKey")]
 		NSString FileCompletedCountKey { get; }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("NSProgressFileAnimationImageKey")]
 		NSString FileAnimationImageKey { get; }
 	
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("NSProgressFileAnimationImageOriginalRectKey")]
 		NSString FileAnimationImageOriginalRectKey { get; }
 	
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("NSProgressFileIconKey")]
 		NSString FileIconKey { get; }
-#endif
 
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Async, Export ("performAsCurrentWithPendingUnitCount:usingBlock:")]
@@ -12595,17 +12669,14 @@ namespace Foundation
 		[Export ("getRelationship:ofDirectoryAtURL:toItemAtURL:error:")]
 		bool GetRelationship (out NSUrlRelationship outRelationship, NSUrl directoryURL, NSUrl otherURL, out NSError error);
 
-#if MONOMAC
-		[NoWatch][NoTV][NoiOS][Mac (10, 11)][Async]
+		[NoWatch][NoTV][NoiOS][Mac (10, 11)][NoMacCatalyst]
+		[Async]
 		[Export ("unmountVolumeAtURL:options:completionHandler:")]
 		void UnmountVolume (NSUrl url, NSFileManagerUnmountOptions mask, Action<NSError> completionHandler);
-#endif
 
-#if !WATCH && !TVOS
 		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
 		[Async, Export ("getFileProviderServicesForItemAtURL:completionHandler:")]
 		void GetFileProviderServices (NSUrl url, Action<NSDictionary<NSString, NSFileProviderService>, NSError> completionHandler);
-#endif
 	}
 
 	[BaseType(typeof(NSObject))]
@@ -12615,31 +12686,37 @@ namespace Foundation
 		[Export("fileManager:shouldCopyItemAtPath:toPath:")]
 		bool ShouldCopyItemAtPath(NSFileManager fm, NSString srcPath, NSString dstPath);
 
-#if !MONOMAC
+		[NoMac]
 		[Export("fileManager:shouldCopyItemAtURL:toURL:")]
 		bool ShouldCopyItemAtUrl(NSFileManager fm, NSUrl srcUrl, NSUrl dstUrl);
 		
+		[NoMac]
 		[Export ("fileManager:shouldLinkItemAtURL:toURL:")]
 		bool ShouldLinkItemAtUrl (NSFileManager fileManager, NSUrl srcUrl, NSUrl dstUrl);
 
+		[NoMac]
 		[Export ("fileManager:shouldMoveItemAtURL:toURL:")]
 		bool ShouldMoveItemAtUrl (NSFileManager fileManager, NSUrl srcUrl, NSUrl dstUrl);
 
+		[NoMac]
 		[Export ("fileManager:shouldProceedAfterError:copyingItemAtURL:toURL:")]
 		bool ShouldProceedAfterErrorCopyingItem (NSFileManager fileManager, NSError error, NSUrl srcUrl, NSUrl dstUrl);
 
+		[NoMac]
 		[Export ("fileManager:shouldProceedAfterError:linkingItemAtURL:toURL:")]
 		bool ShouldProceedAfterErrorLinkingItem (NSFileManager fileManager, NSError error, NSUrl srcUrl, NSUrl dstUrl);
 
+		[NoMac]
 		[Export ("fileManager:shouldProceedAfterError:movingItemAtURL:toURL:")]
 		bool ShouldProceedAfterErrorMovingItem (NSFileManager fileManager, NSError error, NSUrl srcUrl, NSUrl dstUrl);
 
+		[NoMac]
 		[Export ("fileManager:shouldRemoveItemAtURL:")]
 		bool ShouldRemoveItemAtUrl (NSFileManager fileManager, NSUrl url);
 
+		[NoMac]
 		[Export ("fileManager:shouldProceedAfterError:removingItemAtURL:")]
 		bool ShouldProceedAfterErrorRemovingItem (NSFileManager fileManager, NSError error, NSUrl url);
-#endif
 
 		[Export ("fileManager:shouldProceedAfterError:copyingItemAtPath:toPath:")]
 		bool ShouldProceedAfterErrorCopyingItem (NSFileManager fileManager, NSError error, string srcPath, string dstPath);
@@ -12786,10 +12863,10 @@ namespace Foundation
 
 		[Export ("resolved")]
 		bool Resolved { [Bind ("isResolved")] get; set;  }
-#if MONOMAC
+
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("discardable")]
 		bool Discardable { [Bind ("isDiscardable")] get; set;  }
-#endif
 
 		[Mac (10,10)]
 		[iOS (8,0)]
@@ -12824,15 +12901,15 @@ namespace Foundation
 		[Export ("versionOfItemAtURL:forPersistentIdentifier:")]
 		NSFileVersion GetSpecificVersion (NSUrl url, NSObject persistentIdentifier);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Static]
 		[Export ("addVersionOfItemAtURL:withContentsOfURL:options:error:")]
 		NSFileVersion AddVersion (NSUrl url, NSUrl contentsURL, NSFileVersionAddingOptions options, out NSError outError);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Static]
 		[Export ("temporaryDirectoryURLForNewVersionOfItemAtURL:")]
 		NSUrl TemporaryDirectoryForItem (NSUrl url);
-#endif
 
 		[Export ("replaceItemAtURL:options:error:")]
 		NSUrl ReplaceItem (NSUrl url, NSFileVersionReplacingOptions options, out NSError error);
@@ -12926,10 +13003,9 @@ namespace Foundation
 		[Export ("fileAttributes", ArgumentSemantic.Copy)]
 		NSDictionary FileAttributes { get; set; }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("icon", ArgumentSemantic.Retain)]
 		NSImage Icon { get; set; }
-#endif
 	}
 
 	[BaseType (typeof (NSEnumerator))]
@@ -12943,10 +13019,10 @@ namespace Foundation
 		[Export ("skipDescendents")]
 		void SkipDescendents ();
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("level")]
 		nint Level { get; }
-#endif
+
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("isEnumeratingDirectoryPostOrder")]
 		bool IsEnumeratingDirectoryPostOrder { get; }
@@ -12980,13 +13056,13 @@ namespace Foundation
 
 		[Export ("evaluateWithObject:substitutionVariables:")]
 		bool EvaluateWithObject (NSObject obj, NSDictionary substitutionVariables);
-#if MONOMAC
-		// 10.9+
+
 		[Static]
 		[Mac (10, 9)]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("predicateFromMetadataQueryString:")]
 		NSPredicate FromMetadataQueryString (string query);
-#endif
+
 		[iOS (7,0), Mac (10, 9)]
 		[Export ("allowEvaluation")]
 		void AllowEvaluation ();
@@ -13030,7 +13106,7 @@ namespace Foundation
 		void FilterUsingPredicate (NSPredicate predicate);
 	}
 	
-#if MONOMAC
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSObject), Name="NSURLDownload")]
 	interface NSUrlDownload {
 		[Static, Export ("canResumeDownloadDecodedWithEncodingMIMEType:")]
@@ -13060,8 +13136,9 @@ namespace Foundation
 		bool DeletesFileUponFailure { get; set; }
 	}
 
-    	[BaseType (typeof (NSObject))]
-    	[Model]
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+	[BaseType (typeof (NSObject))]
+	[Model]
 	[Protocol (Name = "NSURLDownloadDelegate")]
 	interface NSUrlDownloadDelegate {
 		[Export ("downloadDidBegin:")]
@@ -13102,7 +13179,6 @@ namespace Foundation
 		[Export ("download:didFailWithError:")]
 		void FailedWithError(NSUrlDownload download, NSError error);
 	}
-#endif
 
 	// Users are not supposed to implement the NSUrlProtocolClient protocol, they're 
 	// only supposed to consume it. This is why there's no model for this protocol.
@@ -13571,39 +13647,38 @@ namespace Foundation
 
 	// Placeholer, just so we can start flagging things
 	interface INSFastEnumeration {}
-	
-#if MONOMAC
+		
 	partial interface NSBundle {
 		// - (NSImage *)imageForResource:(NSString *)name NS_AVAILABLE_MAC(10_7);
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("imageForResource:")]
 		NSImage ImageForResource (string name);
 	}
-#endif
 
 	partial interface NSAttributedString {
 
 #if MONOMAC
 		[Field ("NSTextLayoutSectionOrientation", "AppKit")]
 #else
-		[iOS (7,0)]
 		[Field ("NSTextLayoutSectionOrientation", "UIKit")]
 #endif
+		[iOS (7,0)]
 		NSString TextLayoutSectionOrientation { get; }
 
 #if MONOMAC
 		[Field ("NSTextLayoutSectionRange", "AppKit")]
 #else
-		[iOS (7,0)]
 		[Field ("NSTextLayoutSectionRange", "UIKit")]
 #endif
+		[iOS (7,0)]
 		NSString TextLayoutSectionRange { get; }
 
 #if MONOMAC
 		[Field ("NSTextLayoutSectionsAttribute", "AppKit")]
 #else
-		[iOS (7,0)]
 		[Field ("NSTextLayoutSectionsAttribute", "UIKit")]
 #endif
+		[iOS (7,0)]
 		NSString TextLayoutSectionsAttribute { get; }
 
 		[NoiOS, NoWatch, NoTV]
@@ -13612,30 +13687,30 @@ namespace Foundation
 		nint UnderlineByWordMaskAttributeName { get; }
 
 #if MONOMAC
-		[Mac (10,15)]
 		[Field ("NSTextScalingDocumentAttribute", "AppKit")]
 #else
-		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Field ("NSTextScalingDocumentAttribute", "UIKit")]
 #endif
+		[Mac (10,15)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
 		NSString TextScalingDocumentAttribute { get; }
 
 #if MONOMAC
-		[Mac (10,15)]
 		[Field ("NSSourceTextScalingDocumentAttribute", "AppKit")]
 #else
-		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Field ("NSSourceTextScalingDocumentAttribute", "UIKit")]
 #endif
+		[Mac (10,15)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
 		NSString SourceTextScalingDocumentAttribute { get; }
 
 #if MONOMAC
-		[Mac (10,15)]
 		[Field ("NSCocoaVersionDocumentAttribute", "AppKit")]
 #else
-		[iOS (13,0), TV (13,0), Watch (6,0)]
 		[Field ("NSCocoaVersionDocumentAttribute", "UIKit")]
 #endif
+		[Mac (10,15)]
+		[iOS (13,0), TV (13,0), Watch (6,0)]
 		NSString CocoaVersionDocumentAttribute { get; }
 	}
 
@@ -13773,12 +13848,11 @@ namespace Foundation
 		[Export ("trashItemAtURL:resultingItemURL:error:")]
 		bool TrashItem (NSUrl url, out NSUrl resultingItemUrl, out NSError error);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Mac (10,14)]
 		[Static]
 		[Export ("fileManagerWithAuthorization:")]
 		NSFileManager FromAuthorization (NSWorkspaceAuthorization authorization);
-#endif
 	}
 
 	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
@@ -13792,17 +13866,19 @@ namespace Foundation
 
 #if MONOMAC
 	partial interface NSFilePresenter {
-
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("primaryPresentedItemURL")]
 		NSUrl PrimaryPresentedItemUrl { get; }
 	}
 
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	partial interface NSAttributedString {
-
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("boundingRectWithSize:options:")]
 		CGRect BoundingRectWithSize (CGSize size, NSStringDrawingOptions options);
 	}
 
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[NoMacCatalyst]
