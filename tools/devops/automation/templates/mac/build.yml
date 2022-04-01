@@ -246,7 +246,7 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
-      Set-GitHubStatus -Status "error" -Description "Tests on macOS $${{ parameters.statusContext }} failed." -Context "$Env:CONTEXT"
+      Set-GitHubStatus -Status "error" -Description "Tests on macOS ${{ parameters.statusContext }} failed." -Context "$Env:CONTEXT"
       New-GitHubCommentFromFile -Header "Tests on macOS $Env:CONTEXT failed" -Emoji ":x:" -Path "$Env:GITHUB_FAILURE_COMMENT_FILE"
     } else {
       Set-GitHubStatus -Status "success" -Description "Tests on macOS ${{ parameters.statusContext }} passed." -Context "$Env:CONTEXT"
