@@ -819,11 +819,11 @@ namespace Xamarin.Tests {
 		}
 
 
-		[TestCase (ApplePlatform.iOS, "iossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64/MySimpleApp.app/Contents/PlugIns/ExtensionProject.appex")]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
-		public void BuildProjectsWithExtensions (ApplePlatform platform, string appPath)
+		public void BuildProjectsWithExtensions (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var consumingProjectDir = GetProjectPath ("ExtensionConsumer", platform: platform);
@@ -837,7 +837,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
 			
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", Configuration.DotNetTfm, appPath);
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "MySimpleApp.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 		}
 
