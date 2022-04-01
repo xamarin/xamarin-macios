@@ -236,12 +236,12 @@ namespace AVKit {
 		[Export ("requiresFullSubtitles")]
 		bool RequiresFullSubtitles { get; set; }
 #endregion
-#if !MONOMAC
+
 		[NullAllowed]
 		[NoiOS, TV (10, 0), NoWatch, NoMac]
 		[Export ("contentProposalViewController", ArgumentSemantic.Assign)]
 		AVContentProposalViewController ContentProposalViewController { get; set; }
-#endif
+
 		[NoiOS, TV (10, 0), NoWatch, NoMac]
 		[Export ("skippingBehavior", ArgumentSemantic.Assign)]
 		AVPlayerViewControllerSkippingBehavior SkippingBehavior { get; set; }

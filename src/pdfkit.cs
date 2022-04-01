@@ -26,7 +26,6 @@
 //
 // PdfKit.cs: Bindings for the PdfKit API
 //
-#if MONOMAC || IOS
 
 using System;
 #if MONOMAC
@@ -1233,9 +1232,11 @@ namespace PdfKit {
 		[Export ("minorVersion")]
 		nint MinorVersion { get; }
 #else
+		[NoiOS]
 		[Export ("majorVersion")]
 		int MajorVersion { get; } /* int, not NSInteger */
 
+		[NoiOS]
 		[Export ("minorVersion")]
 		int MinorVersion { get; } /* int, not NSInteger */
 #endif
@@ -2118,4 +2119,3 @@ namespace PdfKit {
 	}
 
 }
-#endif // MONOMAC || IOS

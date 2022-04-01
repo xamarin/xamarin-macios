@@ -33,7 +33,7 @@ stages:
   condition: succeeded()
 
   variables:
-    MAC_TESTS_PRESENT: $[ dependencies.build_packages.outputs['macTestPkg.macTestsPresent'] ]
+    GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
 
   jobs:
   - job: run_tests
