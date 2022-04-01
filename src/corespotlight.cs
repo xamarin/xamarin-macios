@@ -71,10 +71,9 @@ namespace CoreSpotlight {
 		[Export ("initWithName:")]
 		NativeHandle Constructor (string name);
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("initWithName:protectionClass:")]
 		NativeHandle Constructor (string name, [NullAllowed] NSString protectionClass);
-#endif
 
 		[Export ("indexSearchableItems:completionHandler:")]
 		[Async]
