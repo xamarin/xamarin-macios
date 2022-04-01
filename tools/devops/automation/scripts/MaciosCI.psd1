@@ -27,7 +27,7 @@ Author = 'mandel'
 CompanyName = 'Microsoft Corp.'
 
 # Copyright statement for this module
-Copyright = '(c) mandel. All rights reserved.'
+Copyright = 'Copyright (C) Microsoft Corporation. All Rights Reserved.'
 
 # Description of the functionality provided by this module
 Description = 'Module that contains all the scripts needed for the macios ci.'
