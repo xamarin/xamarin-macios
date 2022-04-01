@@ -2286,6 +2286,7 @@ MACCATALYST_FRAMEWORKS = \
 	CoreWlan \
 	DeviceCheck \
 	EventKit \
+	EventKitUI \
 	ExternalAccessory \
 	FileProvider \
 	GameController \
@@ -2294,6 +2295,7 @@ MACCATALYST_FRAMEWORKS = \
 	HealthKitUI \
 	HomeKit \
 	IdentityLookup \
+	IdentityLookupUI \
 	ImageIO \
 	Intents \
 	IntentsUI \

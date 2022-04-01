@@ -656,12 +656,10 @@ public class Frameworks : Dictionary <string, Framework>
 				case "ARKit":
 				case "AssetsLibrary":
 				case "CarPlay":
-				case "EventKitUI":
 #if !NET
 				case "iAd":
 				case "CHIP":
 #endif
-				case "IdentityLookupUI":
 				case "WatchConnectivity":
 					f.Unavailable = true;
 					break;
