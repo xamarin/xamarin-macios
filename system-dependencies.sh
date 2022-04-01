@@ -1023,7 +1023,7 @@ function check_dotnet ()
 
 	DOTNET_VERSION=$(grep "^SYSTEM_DOTNET_VERSION=" dotnet.config | sed 's/.*=//')
 	URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-x64.pkg
-	INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
+	INSTALL_DIR=/usr/local/share/dotnet/x64/sdk/"$DOTNET_VERSION"
 
 	if test -d "$INSTALL_DIR"; then
 		ok "Found dotnet $DOTNET_VERSION in $INSTALL_DIR (exactly $DOTNET_VERSION is required)."
