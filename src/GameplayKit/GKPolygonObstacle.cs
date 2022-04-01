@@ -24,7 +24,7 @@ namespace GameplayKit {
 
 		public static GKPolygonObstacle FromPoints (Vector2 [] points)
 		{
-			if (points == null)
+			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			
 			var size = Marshal.SizeOf (typeof (Vector2));
@@ -47,7 +47,7 @@ namespace GameplayKit {
 
 		static unsafe IntPtr GetPointer (Vector2[] points)
 		{
-			if (points == null)
+			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			if (ctor_pointer != IntPtr.Zero) {
