@@ -19,7 +19,7 @@ namespace GameplayKit {
 		internal static Class GetClass (Type type, string parameterName)
 		{
 			if (type == null)
-				throw new ArgumentNullException (parameterName);
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameterName));
 
 			var klass = new Class (type);
 			// most API do not accept null so we throw in managed code instead of crashing the app
@@ -32,7 +32,7 @@ namespace GameplayKit {
 		internal static Class GetClass (NSObject instance, string parameterName)
 		{
 			if (instance == null)
-				throw new ArgumentNullException (parameterName);
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameterName));
 			
 			var klass = instance.Class; 
 			if ((klass == null) || (klass.Handle == IntPtr.Zero))

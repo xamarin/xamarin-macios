@@ -25,7 +25,7 @@ namespace GameplayKit {
 		public static GKPolygonObstacle FromPoints (Vector2 [] points)
 		{
 			if (points == null)
-				throw new ArgumentNullException ("points");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			
 			var size = Marshal.SizeOf (typeof (Vector2));
 			var length = points.Length * size;
@@ -48,7 +48,7 @@ namespace GameplayKit {
 		static unsafe IntPtr GetPointer (Vector2[] points)
 		{
 			if (points == null)
-				throw new ArgumentNullException ("points");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			if (ctor_pointer != IntPtr.Zero) {
 				// This can occur of a previous call to the base ctor threw an exception

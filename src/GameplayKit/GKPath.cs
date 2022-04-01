@@ -28,7 +28,7 @@ namespace GameplayKit {
 		public static GKPath FromPoints (Vector2[] points, float radius, bool cyclical)
 		{
 			if (points == null)
-				throw new ArgumentNullException ("points");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			var buffer = IntPtr.Zero;
 			try {
@@ -45,7 +45,7 @@ namespace GameplayKit {
 		public GKPath (Vector2 [] points, float radius, bool cyclical)
 		{
 			if (points == null)
-				throw new ArgumentNullException ("points");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			
 			var buffer = IntPtr.Zero;
 			try {
@@ -70,7 +70,7 @@ namespace GameplayKit {
 		public static GKPath FromPoints (Vector3 [] points, float radius, bool cyclical)
 		{
 			if (points == null)
-				throw new ArgumentNullException ("points");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			var buffer = IntPtr.Zero;
 			try {
@@ -96,7 +96,7 @@ namespace GameplayKit {
 		public GKPath (Vector3 [] points, float radius, bool cyclical)
 		{
 			if (points == null)
-				throw new ArgumentNullException ("points");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			var buffer = IntPtr.Zero;
 			try {
