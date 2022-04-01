@@ -228,7 +228,7 @@ steps:
     # yet we do have some  flacky ones, this will allow the release to run. The comment will let use know that we failed
     exit 0  
   displayName: 'Run tests'
-  timeoutInMinutes: 30
+  timeoutInMinutes: 45
   env:
     CONTEXT: ${{ parameters.statusContext }}
     BUILD_REVISION: $(Build.SourceVersion)
