@@ -1130,7 +1130,6 @@
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::AppendPathExtension(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::CreateFileUrl(System.String[])' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromBookmarkData(Foundation.NSData,Foundation.NSUrlBookmarkResolutionOptions,Foundation.NSUrl,System.Boolean&,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromString(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::get_AbsoluteUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::get_BaseUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::get_FilePathUrl()' is missing an [NullAllowed] on return type
