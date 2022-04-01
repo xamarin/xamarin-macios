@@ -1,3 +1,6 @@
+# I'm not sure if CarPlay is of any use on Mac Catalyst,
+# so until proven it's useful, ignore it.
+
 !missing-enum! CPAlertActionStyle not bound
 !missing-enum! CPAssistantCellActionType not bound
 !missing-enum! CPAssistantCellPosition not bound
