@@ -11120,13 +11120,12 @@ namespace AppKit {
 		void SetImage (NSImage image);
 	}
 	
-#if MONOMAC
+	[NoMacCatalyst]
 	[Protocol (IsInformal = true)]
 	interface NSLayerDelegateContentsScaleUpdating {
 		[Export ("layer:shouldInheritContentsScale:fromWindow:")]
 		bool ShouldInheritContentsScale (CALayer layer, nfloat newScale, NSWindow fromWindow);
 	}
-#endif
 
 	[Mac (10,11)]
 	[NoMacCatalyst]
