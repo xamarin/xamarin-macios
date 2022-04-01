@@ -148,7 +148,7 @@ build-mac-dotnet-x64-$(1): .stamp-dotnet-dependency-macOS
 
 exec-mac-dotnet-x64-$(1):
 	@echo "ℹ️  Executing the '$(1)' test for macOS/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/macOS/bin/$(CONFIG)/net6.0-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
 
 # macOS/.NET/arm64
 build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
@@ -157,7 +157,7 @@ build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
 exec-mac-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for macOS/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/macOS/bin/$(CONFIG)/net6.0-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
 else
 	@echo "⚠️  Not executing the '$(1)' test for macOS/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
@@ -169,7 +169,7 @@ build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 exec-maccatalyst-dotnet-x64-$(1):
 ifeq ($(SUPPORTS_MACCATALYST),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/net6.0-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (x64) - macOS version $(MACOS_VERSION) is too old ⚠️"
 endif
@@ -181,7 +181,7 @@ build-maccatalyst-dotnet-arm64-$(1):.stamp-dotnet-dependency-MacCatalyst
 exec-maccatalyst-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/net6.0-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
@@ -217,7 +217,7 @@ build-mac-dotnet-x64-$(1): .stamp-dotnet-dependency-macOS
 
 exec-mac-dotnet-x64-$(1):
 	@echo "ℹ️  Executing the '$(2)' test for macOS/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/net6.0-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
 
 # macOS/.NET/arm64
 build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
@@ -226,7 +226,7 @@ build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
 exec-mac-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(2)' test for macOS/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/net6.0-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
 else
 	@echo "⚠️  Not executing the '$(2)' test for macOS/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
@@ -238,7 +238,7 @@ build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 exec-maccatalyst-dotnet-x64-$(1):
 ifeq ($(SUPPORTS_MACCATALYST),1)
 	@echo "ℹ️  Executing the '$(2)' test for Mac Catalyst/.NET (x64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/net6.0-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(2)' test for Mac Catalyst/.NET (x64) - macOS version $(MACOS_VERSION) is too old ⚠️"
 endif
@@ -250,7 +250,7 @@ build-maccatalyst-dotnet-arm64-$(1): .stamp-dotnet-dependency-MacCatalyst
 exec-maccatalyst-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(2)' test for Mac Catalyst/.NET (arm64) ℹ️"
-	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/net6.0-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(2)' test for Mac Catalyst/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif

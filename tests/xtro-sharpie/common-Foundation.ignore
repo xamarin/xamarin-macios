@@ -1073,7 +1073,6 @@
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSPropertyListSerialization::PropertyListWithStream(Foundation.NSInputStream,Foundation.NSPropertyListReadOptions,Foundation.NSPropertyListFormat&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSSet::get_AnyObject()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSSet::LookupMember(Foundation.NSObject)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSStream::GetProperty(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSTimer::get_UserInfo()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSUrlProtocol::GetProperty(System.String,Foundation.NSUrlRequest)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSUserDefaults::ObjectForKey(System.String)' is missing an [NullAllowed] on return type
