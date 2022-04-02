@@ -5748,8 +5748,9 @@ namespace Foundation
 		[Export ("initWithString:relativeToURL:")]
 		NativeHandle Constructor (string urlString, NSUrl relativeToUrl);
 
+		[return: NullAllowed]
 		[Export ("URLWithString:")][Static]
-		NSUrl FromString (string s);
+		NSUrl FromString ([NullAllowed] string s);
 
 		[Export ("URLWithString:relativeToURL:")][Internal][Static]
 		NSUrl _FromStringRelative (string url, NSUrl relative);
