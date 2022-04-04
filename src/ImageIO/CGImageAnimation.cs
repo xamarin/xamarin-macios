@@ -66,9 +66,9 @@ namespace ImageIO
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
 #else
-            if (url == null)
+            if (url is null)
                 ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
-            if (handler == null)
+            if (handler is null)
                 ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
             var block = new BlockLiteral ();
@@ -98,9 +98,9 @@ namespace ImageIO
 #if IOS && ARCH_32
             throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
 #else
-            if (data == null)
+            if (data is null)
                 ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
-            if (handler == null)
+            if (handler is null)
                 ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
             var block = new BlockLiteral ();
@@ -125,7 +125,7 @@ namespace ImageIO
             static void Invoke (IntPtr block, nint index, IntPtr image, [MarshalAs (UnmanagedType.I1)] out bool stop)
             {
                 var del = BlockLiteral.GetTarget<CGImageSourceAnimationHandler> (block);
-                if (del != null)
+                if (del is not null)
                     del (index, new CoreGraphics.CGImage (image, false), out stop);
                 else
                     stop = false;
