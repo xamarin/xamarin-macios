@@ -67,7 +67,13 @@ steps:
   continueOnError: true
 
 - bash: |
-    security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain
+    RC=0
+    security set-key-partition-list -S apple-tool:,apple: -s -k $OSX_KEYCHAIN_PASS login.keychain || RC=$?
+    if [ $RC -eq 0 ]; then
+      echo "Security UI-prompt removed."
+    else
+      echo "Security UI-prompt could NOT be removed."
+    fi
   env:
     OSX_KEYCHAIN_PASS: ${{ parameters.keyringPass }}
   displayName: 'Remove security UI-prompt (http://stackoverflow.com/a/40039594/183422)'
@@ -84,3 +90,10 @@ steps:
       xcode-select -s "/Applications/Xcode.app/Contents/Developer"
     fi
   displayName: 'Ensure Xcode is selected.'
+
+- pwsh: |
+    # some steps expect this to be set to be able to get the correct nuget name
+    Write-Host "##vso[task.setvariable variable=BRANCH_NAME]$Env:BRANCH_NAME"
+  displayName: 'Set Jenkins variables'
+  env:
+    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]

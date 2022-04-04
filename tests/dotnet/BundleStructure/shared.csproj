@@ -291,4 +291,17 @@
 		<ProjectReference Include="$(RootTestsDirectory)/bindings-framework-test/dotnet/$(_PlatformName)/bindings-framework-test.csproj" />
 	</ItemGroup>
 
+	<!-- Adding resources using a custom target -->
+	<PropertyGroup>
+		<CollectBundleResourcesDependsOn>
+			$(CollectBundleResourcesDependsOn);
+			AddBundleResources;
+		</CollectBundleResourcesDependsOn>
+	</PropertyGroup>
+	<Target Name="AddBundleResources">
+		<ItemGroup>
+			<Content Include="../ContentI.txt" />
+			<BundleResource Include="../BundleResourceI.txt" />
+		</ItemGroup>
+	</Target>
 </Project>

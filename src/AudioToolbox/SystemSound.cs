@@ -31,7 +31,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using Foundation;
 using CoreFoundation;

@@ -13,7 +13,6 @@ using System;
 using AddressBook;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AddressBookUI {
 

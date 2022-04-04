@@ -2,7 +2,6 @@
 using System;
 using CoreGraphics;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AppKit
 {

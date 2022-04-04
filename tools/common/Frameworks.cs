@@ -653,18 +653,13 @@ public class Frameworks : Dictionary <string, Framework>
 				case "Twitter":
 				// headers-based xtro reporting those are *all* unknown API for Catalyst
 				case "AddressBookUI":
-				case "AppClip":
 				case "ARKit":
 				case "AssetsLibrary":
 				case "CarPlay":
-				case "EventKitUI":
-				case "HealthKit":
-				case "HealthKitUI":
 #if !NET
 				case "iAd":
 				case "CHIP":
 #endif
-				case "IdentityLookupUI":
 				case "WatchConnectivity":
 					f.Unavailable = true;
 					break;

@@ -6,7 +6,6 @@ using CoreFoundation;
 using ObjCRuntime;
 using System;
 #if NET
-using System.Runtime.Versioning;
 #endif
 
 namespace CoreWlan {

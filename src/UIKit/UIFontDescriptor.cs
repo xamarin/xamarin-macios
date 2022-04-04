@@ -10,7 +10,6 @@ using System;
 using ObjCRuntime;
 using CoreGraphics;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace UIKit {
 	

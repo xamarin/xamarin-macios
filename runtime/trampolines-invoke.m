@@ -547,7 +547,7 @@ xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_
 	
 	// invoke
 	MonoObject *retval;
-	MonoObject *ctorval;
+	MonoObject *ctorval __attribute__((unused));
 	if (is_ctor) {
 		/* 
 		 * Some Objective-C classes overwrite retain, release,

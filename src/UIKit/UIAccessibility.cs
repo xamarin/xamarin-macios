@@ -13,7 +13,6 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 using CoreGraphics;
-using System.Runtime.Versioning;
 
 using System;
 using System.Runtime.InteropServices;

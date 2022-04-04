@@ -38,7 +38,7 @@ namespace MonoTouchFixtures.HealthKit {
 					}
 				};
 #if __MACCATALYST__
-				var throwsException = false;
+				var throwsException = TestRuntime.CheckXcodeVersion (12, 0);
 #else
 				var throwsException = TestRuntime.CheckXcodeVersion (11, 0);
 #endif
