@@ -15,8 +15,7 @@ steps:
   path: s/xamarin-macios
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/GitHub.psm1
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/VSTS.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/MaciosCI.psd1
 
     # we are going to use a custom object to store all the configuration of the build, this later
     # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines

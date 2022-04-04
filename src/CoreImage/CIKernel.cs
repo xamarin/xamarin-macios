@@ -30,7 +30,7 @@ namespace CoreImage {
 
 		public void SetRegionOfInterest (CIKernelRoiHandler handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			roiHandler = handler;

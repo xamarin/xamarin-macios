@@ -1,3 +1,6 @@
+# This entire framework is deprecated, so don't add it to Mac Catalyst unless
+# someone needs it.
+
 !missing-field! ABPersonBirthdayProperty not bound
 !missing-field! ABPersonDatesProperty not bound
 !missing-field! ABPersonDepartmentNameProperty not bound
