@@ -24,6 +24,7 @@ namespace Xamarin.Tests
 		public static string DotNetBclDir;
 		public static string DotNetCscCommand;
 		public static string DotNetExecutable;
+		public static string DotNetTfm;
 		public static string mt_src_root;
 		public static string sdk_version;
 		public static string watchos_sdk_version;
@@ -297,6 +298,7 @@ namespace Xamarin.Tests
 			DotNetBclDir = GetVariable ("DOTNET_BCL_DIR", null);
 			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
 			DotNetExecutable = GetVariable ("DOTNET", null);
+			DotNetTfm = GetVariable ("DOTNET_TFM", null);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
@@ -514,7 +516,7 @@ namespace Xamarin.Tests
 			var rv = Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform));
 			if (UseSystem)
 				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
-			rv = Path.Combine (rv, "ref", "net6.0");
+			rv = Path.Combine (rv, "ref", DotNetTfm);
 			return rv;
 		}
 
@@ -829,7 +831,7 @@ namespace Xamarin.Tests
 		{
 			var runtimeIdentifiers = GetRuntimeIdentifiers (platform);
 			foreach (var rid in runtimeIdentifiers) {
-				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", "net6.0");
+				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", DotNetTfm);
 				yield return Path.Combine (libdir, GetBaseLibraryName (platform, true));
 			}
 		}

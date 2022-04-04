@@ -22,6 +22,10 @@ using Contacts;
 #endif
 using System;
 
+#if TVOS
+using CNPostalAddress = Foundation.NSObject;
+#endif
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -48,7 +52,6 @@ namespace CoreLocation {
 		Far
 	}
 
-#if !MONOMAC
 	[ErrorDomain ("CLLocationPushServiceErrorDomain")]
 #if NET // Apple fixed this in Xcode 13.1
 	[iOS (15,0), NoTV, NoMacCatalyst, NoMac, NoWatch]
@@ -62,7 +65,6 @@ namespace CoreLocation {
 		MissingPushServerEnvironment = 2,
 		MissingEntitlement = 3,
 	}
-#endif
 
 	[NoTV]
 	[Watch (6,0)]
@@ -684,12 +686,11 @@ namespace CoreLocation {
 		[NullAllowed, Export ("timeZone")]
 		[iOS (9,0), Mac(10,11)]
 		NSTimeZone TimeZone { get; }
-#if !TVOS
+
 		// From CLPlacemark (ContactsAdditions) category.
 		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
 		[NullAllowed, Export ("postalAddress")]
 		CNPostalAddress PostalAddress { get; }
-#endif
 	}
 
 	[Mac (10,10)]
@@ -850,7 +851,6 @@ namespace CoreLocation {
 		[Export ("cancelGeocode")]
 		void CancelGeocode ();
 
-#if !TVOS
 		[Watch (4,0), NoTV, Mac (10,13), iOS (11,0)]
 		[Export ("geocodePostalAddress:completionHandler:")]
 		[Async]
@@ -860,7 +860,6 @@ namespace CoreLocation {
 		[Export ("geocodePostalAddress:preferredLocale:completionHandler:")]
 		[Async]
 		void GeocodePostalAddress (CNPostalAddress postalAddress, [NullAllowed] NSLocale locale, CLGeocodeCompletionHandler completionHandler);
-#endif
 	}
 
 	[NoWatch][NoTV]

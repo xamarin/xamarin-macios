@@ -5748,8 +5748,9 @@ namespace Foundation
 		[Export ("initWithString:relativeToURL:")]
 		NativeHandle Constructor (string urlString, NSUrl relativeToUrl);
 
+		[return: NullAllowed]
 		[Export ("URLWithString:")][Static]
-		NSUrl FromString (string s);
+		NSUrl FromString ([NullAllowed] string s);
 
 		[Export ("URLWithString:relativeToURL:")][Internal][Static]
 		NSUrl _FromStringRelative (string url, NSUrl relative);
@@ -7046,10 +7047,10 @@ namespace Foundation
 #if !NET
 		[Obsolete ("Use the overload with a 'INSUrlSessionDelegate' parameter.")]
 		[Static, Wrap ("FromWeakConfiguration (configuration, sessionDelegate, delegateQueue);")]
-		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
+		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, [NullAllowed] NSOperationQueue delegateQueue);
 #endif
 		[Static, Wrap ("FromWeakConfiguration (configuration, (NSObject) sessionDelegate, delegateQueue);")]
-		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, INSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue);
+		NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, INSUrlSessionDelegate sessionDelegate, [NullAllowed] NSOperationQueue delegateQueue);
 
 		[Export ("delegateQueue", ArgumentSemantic.Retain)]
 		NSOperationQueue DelegateQueue { get; }
@@ -7608,7 +7609,7 @@ namespace Foundation
 		void DidSendBodyData (NSUrlSession session, NSUrlSessionTask task, long bytesSent, long totalBytesSent, long totalBytesExpectedToSend);
 	
 		[Export ("URLSession:task:didCompleteWithError:")]
-		void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError error);
+		void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, [NullAllowed] NSError error);
 
 		[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 		[Export ("URLSession:task:didFinishCollectingMetrics:")]
@@ -8195,6 +8196,7 @@ namespace Foundation
 #if NET
 		[Abstract]
 #endif
+		[return: NullAllowed]
 		[Protected]
 		[Export ("propertyForKey:")]
 		NSObject GetProperty (NSString key);
@@ -8683,6 +8685,7 @@ namespace Foundation
 		NSInputStream FromUrl (NSUrl url);
 
 #if NET
+		[return: NullAllowed]
 		[Protected]
 		[Export ("propertyForKey:"), Override]
 		NSObject GetProperty (NSString key);
@@ -9581,6 +9584,7 @@ namespace Foundation
 		NSOutputStream CreateFile (string path, bool shouldAppend);
 
 #if NET
+		[return: NullAllowed]
 		[Protected]
 		[Export ("propertyForKey:"), Override]
 		NSObject GetProperty (NSString key);
