@@ -486,7 +486,7 @@ namespace HealthKit {
 		[Export ("correlationType", ArgumentSemantic.Copy)]
 		HKCorrelationType CorrelationType { get; }
 
-		[Export ("samplePredicates", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("samplePredicates", ArgumentSemantic.Copy)]
 		NSDictionary SamplePredicates { get; }
 	}
 
@@ -1068,7 +1068,7 @@ namespace HealthKit {
 		[Export ("source", ArgumentSemantic.Strong)]
 		HKSource Source { get; }
 
-		[Export ("metadata", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("metadata", ArgumentSemantic.Copy)]
 		NSDictionary WeakMetadata { get; }
 
 		[Wrap ("WeakMetadata")]
@@ -1103,7 +1103,7 @@ namespace HealthKit {
 		[Static]
 		[Export ("quantityTypeForIdentifier:")]
 		[return: NullAllowed]
-		HKQuantityType GetQuantityType (NSString hkTypeIdentifier);
+		HKQuantityType GetQuantityType ([NullAllowed] NSString hkTypeIdentifier);
 
 #if NET || WATCH
 		[Internal]
@@ -1113,7 +1113,7 @@ namespace HealthKit {
 		[Static]
 		[Export ("categoryTypeForIdentifier:")]
 		[return: NullAllowed]
-		HKCategoryType GetCategoryType (NSString hkCategoryTypeIdentifier);
+		HKCategoryType GetCategoryType ([NullAllowed] NSString hkCategoryTypeIdentifier);
 
 #if NET || WATCH
 		[Internal]
@@ -1123,7 +1123,7 @@ namespace HealthKit {
 		[Static]
 		[Export ("characteristicTypeForIdentifier:")]
 		[return: NullAllowed]
-		HKCharacteristicType GetCharacteristicType (NSString hkCharacteristicTypeIdentifier);
+		HKCharacteristicType GetCharacteristicType ([NullAllowed] NSString hkCharacteristicTypeIdentifier);
 
 #if NET || WATCH
 		[Internal]
@@ -1132,7 +1132,7 @@ namespace HealthKit {
 #endif
 		[Static, Export ("correlationTypeForIdentifier:")]
 		[return: NullAllowed]
-		HKCorrelationType GetCorrelationType (NSString hkCorrelationTypeIdentifier);
+		HKCorrelationType GetCorrelationType ([NullAllowed] NSString hkCorrelationTypeIdentifier);
 
 		[NoWatch] // HKDocumentType is iOS only, rdar #27865614
 		[iOS (10,0)]
@@ -1140,7 +1140,7 @@ namespace HealthKit {
 		[Static]
 		[Export ("documentTypeForIdentifier:")]
 		[return: NullAllowed]
-		HKDocumentType _GetDocumentType (NSString hkDocumentTypeIdentifier);
+		HKDocumentType _GetDocumentType ([NullAllowed] NSString hkDocumentTypeIdentifier);
 
 		[Static, Export ("workoutType")]
 #if NET
@@ -1350,7 +1350,7 @@ namespace HealthKit {
 		[NullAllowed, Export ("sampleType", ArgumentSemantic.Strong)]
 		HKSampleType SampleType { get; }
 
-		[Export ("predicate", ArgumentSemantic.Strong)]
+		[NullAllowed, Export ("predicate", ArgumentSemantic.Strong)]
 		NSPredicate Predicate { get; }
 
 		// HKQuery (HKObjectPredicates) Category
@@ -1548,7 +1548,7 @@ namespace HealthKit {
 		[Export ("limit")]
 		nuint Limit { get; }
 
-		[Export ("sortDescriptors")]
+		[NullAllowed, Export ("sortDescriptors")]
 		NSSortDescriptor[] SortDescriptors { get; }
 
 		[Export ("initWithSampleType:predicate:limit:sortDescriptors:resultsHandler:")]
@@ -1605,31 +1605,39 @@ namespace HealthKit {
 		[Export ("endDate", ArgumentSemantic.Strong)]
 		NSDate EndDate { get; }
 
-		[Export ("sources")]
+		[NullAllowed, Export ("sources")]
 		HKSource [] Sources { get; }
 
 		[Export ("averageQuantityForSource:")]
+		[return: NullAllowed]
 		HKQuantity AverageQuantity (HKSource source);
 
 		[Export ("averageQuantity")]
+		[return: NullAllowed]
 		HKQuantity AverageQuantity ();
 
 		[Export ("minimumQuantityForSource:")]
+		[return: NullAllowed]
 		HKQuantity MinimumQuantity (HKSource source);
 
 		[Export ("minimumQuantity")]
+		[return: NullAllowed]
 		HKQuantity MinimumQuantity ();
 
 		[Export ("maximumQuantityForSource:")]
+		[return: NullAllowed]
 		HKQuantity MaximumQuantity (HKSource source);
 
 		[Export ("maximumQuantity")]
+		[return: NullAllowed]
 		HKQuantity MaximumQuantity ();
 
 		[Export ("sumQuantityForSource:")]
+		[return: NullAllowed]
 		HKQuantity SumQuantity (HKSource source);
 
 		[Export ("sumQuantity")]
+		[return: NullAllowed]
 		HKQuantity SumQuantity ();
 
 		[Watch (5,0), iOS (12,0)]
@@ -1669,6 +1677,7 @@ namespace HealthKit {
 	interface HKStatisticsCollection {
 
 		[Export ("statisticsForDate:")]
+		[return: NullAllowed]
 		HKStatistics GetStatistics (NSDate date);
 
 		[Export ("enumerateStatisticsFromDate:toDate:withBlock:")]
@@ -2642,16 +2651,16 @@ namespace HealthKit {
 		[Export ("workoutActivityType")]
 		HKWorkoutActivityType WorkoutActivityType { get; }
 
-		[Export ("workoutEvents")]
+		[NullAllowed, Export ("workoutEvents")]
 		HKWorkoutEvent [] WorkoutEvents { get; }
 
 		[Export ("duration", ArgumentSemantic.UnsafeUnretained)]
 		double Duration { get; }
 
-		[Export ("totalEnergyBurned", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("totalEnergyBurned", ArgumentSemantic.Retain)]
 		HKQuantity TotalEnergyBurned { get; }
 
-		[Export ("totalDistance", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("totalDistance", ArgumentSemantic.Retain)]
 		HKQuantity TotalDistance { get; }
 
 		[Watch (3,0), iOS (10,0)]
