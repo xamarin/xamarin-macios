@@ -67,9 +67,9 @@ namespace ImageIO
             throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
 #else
             if (url == null)
-                throw new ArgumentNullException (nameof (url));
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
             if (handler == null)
-                throw new ArgumentNullException (nameof (handler));
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
             var block = new BlockLiteral ();
             block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
@@ -99,9 +99,9 @@ namespace ImageIO
             throw new PlatformNotSupportedException ("This API is not supported on this version of iOS");
 #else
             if (data == null)
-                throw new ArgumentNullException (nameof (data));
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
             if (handler == null)
-                throw new ArgumentNullException (nameof (handler));
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
             var block = new BlockLiteral ();
             block.SetupBlockUnsafe (SDCGImageSourceAnimationBlock.Handler, handler);
