@@ -831,7 +831,7 @@ namespace MapKit {
 	}
 
 	// This requires the AddressBook framework, which afaict isn't bound on Mac, tvOS and watchOS yet
-	[NoMac][NoMacCatalyst][NoWatch][NoTV]
+	[NoMac][NoWatch][NoTV]
 	[StrongDictionary ("global::AddressBook.ABPersonAddressKey")]
 	interface MKPlacemarkAddress {
 		[Export ("City")]
