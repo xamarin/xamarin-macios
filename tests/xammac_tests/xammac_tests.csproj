@@ -310,7 +310,7 @@
   </Target>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting"
       Condition="!Exists('$(TestLibrariesDirectory)/.libs/macos/custom-type-assembly.dll') Or !Exists('$(TestLibrariesDirectory)/.libs/dotnet/macos/custom-type-assembly.dll')" >
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath=/>
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath="/>
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath="/>
   </Target>
 </Project>
