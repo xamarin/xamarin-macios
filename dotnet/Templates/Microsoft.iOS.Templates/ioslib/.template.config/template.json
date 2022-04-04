@@ -4,7 +4,7 @@
   "classifications": [ "iOS", "Mobile" ],
   "identity": "Microsoft.iOS.iOSLib",
   "name": "iOS Class Library (Preview)",
-  "description": "A project for creating a .NET 6 iOS class library",
+  "description": "A project for creating a .NET iOS class library",
   "shortName": "ioslib",
   "tags": {
     "language": "C#",
