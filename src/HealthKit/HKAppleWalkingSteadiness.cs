@@ -25,7 +25,7 @@ namespace HealthKit {
 		public static bool TryGetClassification (HKQuantity value, out HKAppleWalkingSteadinessClassification? classification, out NSError? error)
 		{
 			if (value == null)
-				throw new ArgumentNullException (nameof (value));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			classification = null;
 			error = null;
 			if (HKAppleWalkingSteadinessClassificationForQuantity (value.GetHandle (), out var classificationOut, out var errorPtr)) {
