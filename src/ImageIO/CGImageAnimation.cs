@@ -7,6 +7,8 @@
 // Copyright 2020, Microsoft Corp.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -142,7 +144,7 @@ namespace ImageIO
 
             [Preserve (Conditional = true)]
             [BindingImpl (BindingImplOptions.Optimizable)]
-            public unsafe static CGImageSourceAnimationHandler Create (IntPtr block)
+            public unsafe static CGImageSourceAnimationHandler? Create (IntPtr block)
             {
                 if (block == IntPtr.Zero)
                     return null;
