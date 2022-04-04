@@ -1,15 +1,3 @@
-# the following is a hack around the fact that pwsh does not handle well the using 
-# form a relative path in vsts
-$modulePath = "$PSScriptRoot\\Artifacts.psm1"  # windows path separators work on unix and windows
-$scriptBody = "using module $modulePath"
-$script = [ScriptBlock]::Create($scriptBody)
-. $script
-
-$modulePath = "$PSScriptRoot\\StaticPages.psm1"  # windows path separators work on unix and windows
-$scriptBody = "using module $modulePath"
-$script = [ScriptBlock]::Create($scriptBody)
-. $script
-
 <#
     .SYNOPSIS
         Simple retry block to workaround certain issues with the webservices that cannot handle the load.
@@ -522,7 +510,7 @@ function New-GitHubSummaryComment {
     if (-not $DeviceTest) {
         Write-APIDiffContent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
 
-        $artifactComment = [Artifacts]::FromJsonFiles($Artifacts)
+        $artifactComment = New-ArtifactsFromJsonFile -Content $Artifacts
         $artifactComment.WriteComment($sb)
     }
 

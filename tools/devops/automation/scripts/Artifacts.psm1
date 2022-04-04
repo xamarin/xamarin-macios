@@ -40,7 +40,7 @@ class Artifacts {
         }
     }
 
-    static [Artifacts] FromJsonFiles (
+    static [Artifacts] FromJsonFile (
         [object] $contentFile) {
         if ($null -eq $contentFile -or (-not (Test-Path $contentFile -PathType Leaf))) {
             return [Artifacts]::new($null)
@@ -50,3 +50,33 @@ class Artifacts {
         }
     }
 }
+
+<# 
+    .SYNOPSIS
+        Creates a new Artifacts object from the data present in the given hash table.
+#>
+function New-Artifacts {
+    param (
+        [object]
+        $Content
+    )
+    return [Artifacts]::new($Content)
+}
+
+
+<# 
+    .SYNOPSIS
+        Creates a new Artifacts object from the data present in a json file. 
+#>
+function New-ArtifactsFromJsonFile {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Path
+    )
+    return [Artifacts]::FromJsonFile($Path)
+}
+
+Export-ModuleMember -Function New-Artifacts
+Export-ModuleMember -Function New-ArtifactsFromJsonFile
