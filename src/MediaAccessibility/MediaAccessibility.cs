@@ -249,7 +249,7 @@ namespace MediaAccessibility {
 #endif
 		public static void DidDisplayCaptions (string[] strings)
 		{
-			if ((strings == null) || (strings.Length == 0))
+			if ((strings is null) || (strings.Length == 0))
 				MACaptionAppearanceDidDisplayCaptions (IntPtr.Zero);
 			else {
 				using (var array = NSArray.FromStrings (strings))
@@ -270,7 +270,7 @@ namespace MediaAccessibility {
 		{
 			// CFAttributedString is “toll-free bridged” with its Foundation counterpart, NSAttributedString.
 			// https://developer.apple.com/documentation/corefoundation/cfattributedstring?language=objc
-			if ((strings == null) || (strings.Length == 0))
+			if ((strings is null) || (strings.Length == 0))
 				MACaptionAppearanceDidDisplayCaptions (IntPtr.Zero);
 			else {
 				using (var array = NSArray.FromNSObjects (strings))

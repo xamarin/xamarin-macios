@@ -28,7 +28,7 @@ namespace MediaAccessibility {
 
 		static public string? GetCaption (NSUrl url, out NSError? error)
 		{
-			if (url == null)
+			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			var result = MAImageCaptioningCopyCaption (url.Handle, out var e);
@@ -42,7 +42,7 @@ namespace MediaAccessibility {
 
 		static public bool SetCaption (NSUrl url, string @string, out NSError? error)
 		{
-			if (url == null)
+			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			var s = CFString.CreateNative (@string);
