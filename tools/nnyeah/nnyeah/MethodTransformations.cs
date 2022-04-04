@@ -10,6 +10,7 @@ namespace nnyeah {
 		static List<Transformation>? allTransforms;
 		static Dictionary<string, Transformation>? transformTable;
 		const string ConvertibleMessage = "IConvertible interfaces are not supported yet. If this code gets called, it will fail. Consider contacting the library maintainer to request a dotnet 6 upgrade.";
+		const string CopyArrayMessage = "CopyArray for nuint is not supported yet. If this method is called, it will not function correctly.";
 
 		public Dictionary<string, Transformation> GetTransforms (ModuleDefinition module, Func<List<bool>, CustomAttribute> attrBuilder)
 		{
@@ -854,9 +855,9 @@ namespace nnyeah {
 			// Not doing this right now since a survey of nuget.org shows that these methods
 			// are never called in the wild.
 			new Transformation ("System.Void System.nuint::CopyArray(System.IntPtr,System.nuint[],System.Int32,System.Int32)",
-				"CopyArray for nuint is not supported yet. If this method is called, it will not function correctly."),
+				CopyArrayMessage),
 			new Transformation ("System.Void System.nuint::CopyArray(System.nuint[],System.Int32,System.IntPtr,System.Int32)",
-				"CopyArray for nuint is not supported yet. If this method is called, it will not function correctly."),
+				CopyArrayMessage),
 		};
 	}
 }
