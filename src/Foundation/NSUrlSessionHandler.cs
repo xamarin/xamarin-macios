@@ -471,7 +471,7 @@ namespace Foundation {
 				AllowsCellularAccess = allowsCellularAccess,
 				CachePolicy = DisableCaching ? NSUrlRequestCachePolicy.ReloadIgnoringCacheData : NSUrlRequestCachePolicy.UseProtocolCachePolicy,
 				HttpMethod = request.Method.ToString ().ToUpperInvariant (),
-				Url = NSUrl.FromString (request.RequestUri!.AbsoluteUri),
+				Url = NSUrl.FromString (request.RequestUri?.AbsoluteUri),
 				Headers = nativeHeaders,
 			};
 
