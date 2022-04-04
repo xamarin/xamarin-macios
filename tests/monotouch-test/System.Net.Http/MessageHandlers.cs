@@ -41,13 +41,29 @@ namespace MonoTests.System.Net.Http
 #if !__WATCHOS__
 			Console.WriteLine (new HttpClientHandler ());
 			Console.WriteLine (new CFNetworkHandler ());
+#if NET
+			Console.WriteLine (new SocketsHttpHandler ());
+#endif
 #endif
 			Console.WriteLine (new NSUrlSessionHandler ());
 		}
 
 		HttpMessageHandler GetHandler (Type handler_type)
 		{
-			return (HttpMessageHandler) Activator.CreateInstance (handler_type);
+#if !__WATCHOS__
+			if (handler_type == typeof (HttpClientHandler))
+				return new HttpClientHandler ();
+			if (handler_type == typeof (CFNetworkHandler))
+				return new CFNetworkHandler ();
+#endif
+#if NET
+			if (handler_type == typeof (SocketsHttpHandler))
+				return new SocketsHttpHandler ();
+#endif
+			if (handler_type == typeof (NSUrlSessionHandler))
+				return new NSUrlSessionHandler ();
+
+			throw new NotImplementedException ($"Unknown handler type: {handler_type}");
 		}
 
 		[Test]

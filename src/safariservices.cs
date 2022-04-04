@@ -15,10 +15,16 @@ using Foundation;
 using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
+using NSRunningApplication = System.Object;
+using NSImage = UIKit.UIImage;
+using NSViewController = UIKit.UIViewController;
 #else
 using AppKit;
 using UIImage = AppKit.NSImage;
 using UIEventAttribution = Foundation.NSObject;
+using UIColor = AppKit.NSColor;
+using UIActivity = Foundation.NSObject;
+using UIViewController = AppKit.NSViewController;
 #endif
 
 #if !NET
@@ -51,7 +57,7 @@ namespace SafariServices {
 		void GetStateOfContentBlocker (string identifier, Action<SFContentBlockerState, NSError> completionHandler);
 	}
 
-#if !MONOMAC
+	[NoMac]
 	[iOS (7,0)]
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[BaseType (typeof (NSObject))]
@@ -76,6 +82,7 @@ namespace SafariServices {
 #endif
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // NSGenericException Reason: Misuse of SFSafariViewController interface. Use initWithURL:entersReaderIfAvailable:
@@ -129,6 +136,7 @@ namespace SafariServices {
 		SFSafariViewControllerPrewarmingToken PrewarmConnections (NSUrl[] urls);
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[Model]
 	[BaseType (typeof (NSObject))]
@@ -156,6 +164,7 @@ namespace SafariServices {
 		void WillOpenInBrowser (SFSafariViewController controller);
 	}
 
+	[NoMac]
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface SFSafariViewControllerConfiguration : NSCopying {
@@ -176,9 +185,11 @@ namespace SafariServices {
 		UIEventAttribution EventAttribution { get; set; }
 	}
 
+	[NoMac]
 	[iOS (11,0)]
 	delegate void SFAuthenticationCompletionHandler ([NullAllowed] NSUrl callbackUrl, [NullAllowed] NSError error);
 
+	[NoMac]
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -193,7 +204,8 @@ namespace SafariServices {
 		[Export ("cancel")]
 		void Cancel ();
 	}
-#else
+
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -233,6 +245,7 @@ namespace SafariServices {
 		void GetHostApplication (Action<NSRunningApplication> completionHandler);
 	}
 
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -259,6 +272,7 @@ namespace SafariServices {
 		void GetScreenshotOfVisibleArea (Action<NSImage> completionHandler);
 	}
 
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,12)]
 	[Protocol]
 	interface SFSafariExtensionHandling
@@ -306,6 +320,7 @@ namespace SafariServices {
 		void WillNavigate (SFSafariPage page, [NullAllowed] NSUrl url);
 	}
 
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,14,4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -316,6 +331,7 @@ namespace SafariServices {
 		void GetBaseUri (Action<NSUrl> completionHandler);
 	}
 
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface SFSafariPageProperties
@@ -335,6 +351,7 @@ namespace SafariServices {
 		bool Active { [Bind ("isActive")] get; }
 	}
 
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -366,6 +383,7 @@ namespace SafariServices {
 		void Close ();
 	}
 
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -396,6 +414,7 @@ namespace SafariServices {
 		void ShowPopover ();
 	}
 
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
@@ -423,6 +442,7 @@ namespace SafariServices {
 		void Close ();
 	}
 
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,12)]
 	[BaseType (typeof(NSViewController))]
 	interface SFSafariExtensionViewController
@@ -435,6 +455,7 @@ namespace SafariServices {
 		void DismissPopover ();
 	}
 
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface SFSafariExtensionHandler : NSExtensionRequestHandling, SFSafariExtensionHandling
@@ -459,6 +480,7 @@ namespace SafariServices {
 // 		bool Enabled { [Bind ("isEnabled")] get; }
 // 	}
 
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -476,7 +498,6 @@ namespace SafariServices {
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
-#endif
 
 	[Static]
 	[iOS (15,0), Mac (11,0), MacCatalyst (15,0), NoTV, NoWatch]

@@ -5,7 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>MyMetalGame</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.MyMetalGame</string>
+	<string>com.xamarin.MyMetalGame</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

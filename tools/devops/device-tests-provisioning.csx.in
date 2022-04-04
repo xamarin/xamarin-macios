@@ -13,6 +13,33 @@ Xcode ("@XCODE_XIP_NAME@").XcodeSelect (allowUntrusted: true);
 Item ("@MONO_PACKAGE@");
 Item ("@VS_PACKAGE@");
 Item ("@XI_PACKAGE@");
-DotNetCoreSdk ("@DOTNET_VERSION@");
+Item ("@MIN_SHARPIE_URL@");
+
+DotNetCoreSdk ("@SYSTEM_DOTNET_VERSION@");
 
 BrewPackages ("p7zip");
+
+var appleSdkOverride = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "Library", "Preferences", "Xamarin", "Settings.plist");
+Item ("Override Apple SDK Settings")
+	.Condition (item => !File.Exists (appleSdkOverride) || GetSettingValue (appleSdkOverride, "AppleSdkRoot") != GetSelectedXcodePath ())
+	.Action (item => {
+		DeleteSafe (appleSdkOverride);
+		CreateSetting (appleSdkOverride, "AppleSdkRoot", GetSelectedXcodePath ());
+		Console.WriteLine ($"New VSMac iOS SDK Location: {GetSelectedXcodePath ()}");
+	});
+
+void DeleteSafe (string file)
+{
+	if (File.Exists (file))
+		File.Delete (file);
+}
+
+void CreateSetting (string settingFile, string key, string value)
+{
+	Exec ("defaults", "write", settingFile, key, value);
+}
+
+string GetSettingValue (string settingFile, string keyName)
+{
+	return Exec ("defaults", "read", settingFile, keyName).FirstOrDefault ();
+}

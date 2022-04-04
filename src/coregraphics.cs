@@ -187,27 +187,30 @@ namespace CoreGraphics {
 		[Field ("kCGColorSpaceExtendedLinearGray")]
 		NSString ExtendedLinearGray { get; }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Now accessible as GenericCmyk")]
 		[Field ("kCGColorSpaceGenericCMYK")]
 		NSString GenericCMYK { get; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Now accessible as AdobeRgb1998")]
 		[Field ("kCGColorSpaceAdobeRGB1998")]
 		NSString AdobeRGB1998 { get; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Now accessible as Srgb")]
 		[Field ("kCGColorSpaceSRGB")]
 		NSString SRGB { get; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Now accessible as GenericRgb")]
 		[Field ("kCGColorSpaceGenericRGB")]
 		NSString GenericRGB { get; }
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Obsolete ("Now accessible as GenericRgb")]
 		[Field ("kCGColorSpaceGenericRGBLinear")]
 		NSString GenericRGBLinear { get; }
-#endif
 
 		[iOS (11,0)][Mac (10,13)][Watch (4,0)][TV (11,0)]
 		[Field ("kCGColorSpaceGenericLab")]

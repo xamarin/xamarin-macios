@@ -5,7 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>MyTabbedApplication</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.MyTabbedApplication</string>
+	<string>com.xamarin.MyTabbedApplication</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>

@@ -337,5 +337,10 @@ namespace MonoTouchFixtures.Foundation {
 			var url = new Uri (value, kind);
 			Assert.AreEqual (url.ToString (), ((Uri) (NSUrl) url).ToString (), "RoundTrip Uri");
 		}
+
+		[Test]
+		public void FromNullString () {
+			Assert.IsNull (NSUrl.FromString (null));
+		}
 	}
 }

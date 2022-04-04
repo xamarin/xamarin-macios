@@ -1,7 +1,7 @@
 # imports the xml to the vsts test results for the job
 parameters:
 
-- name: devicePrefix
+- name: testPrefix
   type: string 
   default: 'ios' # default context, since we started dealing with iOS devices. 
 
@@ -19,7 +19,7 @@ steps:
 - ${{ if eq(parameters.provisioningFailed, 'False') }}:
   - template: download-artifacts.yml 
     parameters:
-      devicePrefix: ${{ parameters.devicePrefix }}
+      testPrefix: ${{ parameters.testPrefix }}
 
   # Upload test results to vsts.
   - task: PublishTestResults@2

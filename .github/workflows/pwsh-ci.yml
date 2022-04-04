@@ -13,4 +13,5 @@ jobs:
         Install-Module -Name Pester -RequiredVersion 5.0.4 -Confirm:$false -Force
 
         Invoke-Pester -Path ./tools/devops/automation/scripts/APIDiff.Tests.ps1
+        Invoke-Pester -Path ./tools/devops/automation/scripts/StaticPages.Tests.ps1
       shell: pwsh

@@ -7,9 +7,10 @@
 // Copyright (C) 2012 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -32,8 +33,8 @@ namespace AddressBookUI {
 		
 		static public string ToString (NSDictionary address, bool addCountryName)
 		{
-			if (address == null)
-				throw new ArgumentNullException ("address");
+			if (address is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (address));
 			
 			using (NSString s = new NSString (ABCreateStringWithAddressDictionary (address.Handle, addCountryName)))
 				return s.ToString ();

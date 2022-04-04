@@ -13,7 +13,6 @@ namespace Cecil.Tests {
 
 	[TestFixture]
 	public class ObsoleteTest {
-
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))] // call this method with every .net6 library
 		public void GetAllObsoletedThings (string assemblyPath)
 		{

@@ -6,12 +6,13 @@
 // Copyright (C) 2009 Novell, Inc
 //
 
+#nullable enable
+
 using System;
 
 using AddressBook;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AddressBookUI {
 #if NET
@@ -39,7 +40,7 @@ namespace AddressBookUI {
 
 	class InternalABPersonViewControllerDelegate : ABPersonViewControllerDelegate {
 
-		internal EventHandler<ABPersonViewPerformDefaultActionEventArgs> performDefaultAction;
+		internal EventHandler<ABPersonViewPerformDefaultActionEventArgs>? performDefaultAction;
 
 		public InternalABPersonViewControllerDelegate ()
 		{
@@ -68,8 +69,8 @@ namespace AddressBookUI {
 #endif
 	partial class ABPersonViewController {
 
-		ABPerson displayedPerson;
-		public ABPerson DisplayedPerson {
+		ABPerson? displayedPerson;
+		public ABPerson? DisplayedPerson {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref displayedPerson, _DisplayedPerson, h => new ABPerson (h, AddressBook));
@@ -80,10 +81,10 @@ namespace AddressBookUI {
 			}
 		}
 
-		DisplayedPropertiesCollection displayedProperties;
-		public DisplayedPropertiesCollection DisplayedProperties {
+		DisplayedPropertiesCollection? displayedProperties;
+		public DisplayedPropertiesCollection? DisplayedProperties {
 			get {
-				if (displayedProperties == null) {
+				if (displayedProperties is null) {
 					displayedProperties = new DisplayedPropertiesCollection (
 							() => _DisplayedProperties, 
 							v => _DisplayedProperties = v);
@@ -93,8 +94,8 @@ namespace AddressBookUI {
 			}
 		}
 
-		ABAddressBook addressBook;
-		public ABAddressBook AddressBook {
+		ABAddressBook? addressBook;
+		public ABAddressBook? AddressBook {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref addressBook, _AddressBook, h => new ABAddressBook (h, false));
@@ -109,7 +110,7 @@ namespace AddressBookUI {
 		{
 			SetHighlightedItemForProperty (
 					ABPersonPropertyId.ToId (property),
-					identifier.HasValue ? identifier.Value : ABRecord.InvalidPropertyId);
+					identifier ?? ABRecord.InvalidPropertyId);
 		}
 
 		public void SetHighlightedProperty (ABPersonProperty property)
@@ -122,7 +123,7 @@ namespace AddressBookUI {
 		InternalABPersonViewControllerDelegate EnsureEventDelegate ()
 		{
 			var d = WeakDelegate as InternalABPersonViewControllerDelegate;
-			if (d == null) {
+			if (d is null) {
 				d = new InternalABPersonViewControllerDelegate ();
 				WeakDelegate = d;
 			}
@@ -132,7 +133,7 @@ namespace AddressBookUI {
 		protected internal virtual void OnPerformDefaultAction (ABPersonViewPerformDefaultActionEventArgs e)
 		{
 			var h = EnsureEventDelegate ().performDefaultAction;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
