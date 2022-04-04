@@ -1117,7 +1117,6 @@
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::AppendPathExtension(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::CreateFileUrl(System.String[])' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromBookmarkData(Foundation.NSData,Foundation.NSUrlBookmarkResolutionOptions,Foundation.NSUrl,System.Boolean&,Foundation.NSError&)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromString(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::get_AbsoluteUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::get_BaseUrl()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::get_FilePathUrl()' is missing an [NullAllowed] on return type
@@ -1370,3 +1369,7 @@
 ## these are implemented in a way that xtro doesn't see
 !missing-selector! NSAppleEventDescriptor::initListDescriptor not bound
 !missing-selector! NSAppleEventDescriptor::initRecordDescriptor not bound
+
+## the apple docs state that it does accept null: https://developer.apple.com/documentation/foundation/nsurl/1572047-urlwithstring
+## An NSURL object initialized with URLString. If the URL string was malformed or nil, returns nil.
+!extra-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromString(System.String)' has a extraneous [NullAllowed] on parameter #0
