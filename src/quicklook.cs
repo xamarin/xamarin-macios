@@ -34,9 +34,6 @@ using CoreGraphics;
 #if MONOMAC
 using AppKit;
 using UIWindowSceneActivationConfiguration=Foundation.NSObject;
-using UIViewController = AppKit.NSViewController;
-using UIView = AppKit.NSView;
-using UIImage = AppKit.NSImage;
 #else
 using UIKit;
 #endif
@@ -49,7 +46,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace QuickLook {
-	[NoMac]
+#if !MONOMAC
 	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate" }, Events=new Type [] { typeof (QLPreviewControllerDelegate)})]
 	interface QLPreviewController {
 		[Export ("initWithNibName:bundle:")]
@@ -89,7 +86,6 @@ namespace QuickLook {
 		void RefreshCurrentPreviewItem ();
 	}
 
-	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -104,7 +100,6 @@ namespace QuickLook {
 		QLPreviewItem GetPreviewItem (QLPreviewController controller, nint index);
 	}
 
-	[NoMac]
 	[iOS (13,0)]
 	[Native]
 	public enum QLPreviewItemEditingMode : long {
@@ -113,7 +108,6 @@ namespace QuickLook {
 		CreateCopy,
 	}
 
-	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -127,6 +121,7 @@ namespace QuickLook {
 		[Export ("previewController:shouldOpenURL:forPreviewItem:"), DelegateName ("QLOpenUrl"), DefaultValue (false)]
 		bool ShouldOpenUrl (QLPreviewController controller, NSUrl url, [Protocolize] QLPreviewItem item);
 
+#if !MONOMAC
 		// UIView and UIImage do not exists in MonoMac
 		
 		[Export ("previewController:frameForPreviewItem:inSourceView:"), DelegateName ("QLFrame"), DefaultValue (typeof (CGRect))]
@@ -152,12 +147,12 @@ namespace QuickLook {
 		[iOS (13,0)]
 		[Export ("previewController:didSaveEditedCopyOfPreviewItem:atURL:"), EventArgs ("QLPreviewControllerDelegateDidSave")]
 		void DidSaveEditedCopy (QLPreviewController controller, IQLPreviewItem previewItem, NSUrl modifiedContentsUrl);
+
+#endif
 	}
 
-	[NoMac]
 	interface IQLPreviewItem {}
 
-	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -252,7 +247,6 @@ namespace QuickLook {
 		nint InitialPreviewIndex { get; set; }
 	}
 
-	[NoMac]
 	[iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(UIWindowSceneActivationConfiguration))]
 	interface QLPreviewSceneActivationConfiguration
@@ -267,7 +261,6 @@ namespace QuickLook {
 		NativeHandle Constructor (NSUserActivity userActivity);
 	}
 
-	[NoMac]
 	[iOS (11,0)]
 	[Protocol]
 	interface QLPreviewingController {
@@ -281,8 +274,7 @@ namespace QuickLook {
 		[Export ("providePreviewForFileRequest:completionHandler:")]
 		void ProvidePreview (QLFilePreviewRequest request, Action<QLPreviewReply, NSError> handler);
 	}
-
-	[NoiOS][NoMacCatalyst]
+#else
 	[Static]
 	interface QLThumbnailImage {
 		[Internal, Field ("kQLThumbnailOptionScaleFactorKey")]
@@ -291,4 +283,6 @@ namespace QuickLook {
 		[Internal, Field ("kQLThumbnailOptionIconModeKey")]
 		NSString OptionIconModeKey { get; }
 	}
+#endif
+
 }
