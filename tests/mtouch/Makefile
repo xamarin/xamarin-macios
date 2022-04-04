@@ -27,10 +27,10 @@ run-tests: bin/Debug/mtouchtests.dll test.config
 		echo "@MonkeyWrench: AddFile: $$PWD/index.html")
 	@[[ ! -e .failed-stamp ]] 
 
-# mtouchtests.csproj.inc contains the mtouch_dependencies variable used to determine if mtouchtests.dll needs to be rebuilt or not.
+# mtouchtests.csproj.inc contains the mtouchtests_dependencies variable used to determine if mtouchtests.dll needs to be rebuilt or not.
 -include mtouchtests.csproj.inc
 
-bin/Debug/mtouchtests.dll: $(mtouch_dependencies)
+bin/Debug/mtouchtests.dll: $(mtouchtests_dependencies)
 	$(SYSTEM_XIBUILD) -- mtouchtests.csproj /r $(XBUILD_VERBOSITY) /bl
 	$(Q) rm -f .failed-stamp
 
