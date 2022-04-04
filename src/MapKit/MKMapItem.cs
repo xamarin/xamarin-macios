@@ -66,7 +66,7 @@ namespace MapKit {
 			if (MapSpan.HasValue) n++;
 #if !WATCH
 			if (ShowTraffic.HasValue) n++;
-			if (Camera != null) n++;
+			if (Camera is not null) n++;
 #endif
 			if (n == 0)
 				return null;
@@ -117,7 +117,7 @@ namespace MapKit {
 			}
 #endif
 #if !WATCH // MKLaunchOptionsCameraKey is allowed in WatchOS, but there's no MKMapCamera type.
-			if (Camera != null) {
+			if (Camera is not null) {
 				keys [i] = MKMapItem.MKLaunchOptionsCameraKey;
 				values [i++] = Camera;
 			}
