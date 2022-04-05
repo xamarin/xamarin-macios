@@ -32,7 +32,7 @@ namespace MessageUI {
 		Mono_MFMailComposeViewControllerDelegate EnsureDelegate ()
 		{
 			NSObject? del = WeakMailComposeDelegate;
-			if (del == null || (!(del is Mono_MFMailComposeViewControllerDelegate))){
+			if (del is null || (!(del is Mono_MFMailComposeViewControllerDelegate))){
 				del = new Mono_MFMailComposeViewControllerDelegate ();
 				WeakMailComposeDelegate = del;
 			}
@@ -61,7 +61,7 @@ namespace MessageUI {
 		[Preserve (Conditional = true)]
 		public override void Finished (MFMailComposeViewController controller, MFMailComposeResult result, NSError? error)
 		{
-			if (cbFinished != null)
+			if (cbFinished is not null)
 				cbFinished (controller, new MFComposeResultEventArgs (controller, result, error));
 		}
 	}
@@ -82,7 +82,7 @@ namespace MessageUI {
 		Mono_MFMessageComposeViewControllerDelegate EnsureDelegate ()
 		{
 			NSObject? del = WeakMessageComposeDelegate;
-			if (del == null || (!(del is Mono_MFMessageComposeViewControllerDelegate))){
+			if (del is null || (!(del is Mono_MFMessageComposeViewControllerDelegate))){
 				del = new Mono_MFMessageComposeViewControllerDelegate ();
 				WeakMessageComposeDelegate = del;
 			}
@@ -111,7 +111,7 @@ namespace MessageUI {
 		[Preserve (Conditional = true)]
 		public override void Finished (MFMessageComposeViewController controller, MessageComposeResult result)
 		{
-			if (cbFinished != null)
+			if (cbFinished is not null)
 				cbFinished (controller, new MFMessageComposeResultEventArgs (controller, result));
 		}
 	}
