@@ -1500,6 +1500,13 @@ SCENEKIT_SOURCES = \
 	SceneKit/SCNSkinner.cs \
 	SceneKit/SCNTechnique.cs \
 
+# ScreenCaptureKit
+
+SCREENCAPTUREKIT_API_SOURCES = \
+
+SCREENCAPTUREKIT_SOURCES = \
+	ScreenCaptureKit/SCContentFilter.cs \
+
 # ScriptingBridge
 
 SCRIPTINGBRIDGE_CORE_SOURCES = \
@@ -2042,6 +2049,7 @@ MACOS_FRAMEWORKS =          \
 	QuickLookUI             \
 	ReplayKit               \
 	SafariServices          \
+	ScreenCaptureKit        \
 	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
@@ -2330,6 +2338,7 @@ MACCATALYST_FRAMEWORKS = \
 	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
+	ScreenCaptureKit \
 	ScreenTime \
 	Security \
 	SensorKit \
