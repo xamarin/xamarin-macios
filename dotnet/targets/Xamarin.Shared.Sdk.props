@@ -38,10 +38,10 @@
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
 	<PropertyGroup Condition="'$(_RuntimeIdentifierIsRequired)' == 'true' And '$(RuntimeIdentifier)' == '' And '$(RuntimeIdentifiers)' == '' ">
-		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS' And '$(_iOSRuntimeIdentifier)' != ''">$(_iOSRuntimeIdentifier)</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS' And '$(_tvOSRuntimeIdentifier)' != ''">$(_tvOSRuntimeIdentifier)</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS' And '$(_macOSRuntimeIdentifier)' != ''">$(_macOSRuntimeIdentifier)</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'MacCatalyst' And '$(_MacCatalystRuntimeIdentifier)' != ''">$(_MacCatalystRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS'">$(_iOSRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS'">$(_tvOSRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS'">$(_macOSRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'MacCatalyst'">$(_MacCatalystRuntimeIdentifier)</RuntimeIdentifier>
 
 		<_XamarinUsingDefaultRuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">true</_XamarinUsingDefaultRuntimeIdentifier>
 		
