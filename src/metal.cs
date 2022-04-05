@@ -3142,7 +3142,6 @@ namespace Metal {
 
 		[iOS (12,0)]
 		[Mac (10,13), NoWatch]
-		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "API removed, please do not use.")]
 		[TV (14,5)]
 #if NET
 		[Abstract]
@@ -3152,7 +3151,6 @@ namespace Metal {
 
 		[iOS (12,0)]
 		[Mac (10,13), NoWatch]
-		[Obsoleted (PlatformName.MacOSX, 10, 14, message: "API removed, please do not use.")]
 		[TV (14,5)]
 #if NET
 		[Abstract]

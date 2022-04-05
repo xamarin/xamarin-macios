@@ -97,9 +97,9 @@
 
 # Initial result from new rule extra-null-allowed
 !extra-null-allowed! 'Foundation.NSIndexPath UIKit.UICollectionViewDataSource::GetIndexPath(UIKit.UICollectionView,System.String,System.IntPtr)' has a extraneous [NullAllowed] on return type
-!extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,ObjCRuntime.nfloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,ObjCRuntime.nfloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,ObjCRuntime.nfloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #3
+!extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #1
+!extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #2
+!extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'System.Boolean UIKit.UIApplication::CanOpenUrl(Foundation.NSUrl)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
@@ -215,7 +215,7 @@
 !missing-null-allowed! 'System.Void UIKit.UIResponder::PressesChanged(Foundation.NSSet`1<UIKit.UIPress>,UIKit.UIPressesEvent)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void UIKit.UIResponder::PressesEnded(Foundation.NSSet`1<UIKit.UIPress>,UIKit.UIPressesEvent)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void UIKit.UIScene::set_Title(System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::ZoomingEnded(UIKit.UIScrollView,UIKit.UIView,ObjCRuntime.nfloat)' is missing an [NullAllowed] on parameter #1
+!missing-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::ZoomingEnded(UIKit.UIScrollView,UIKit.UIView,System.Runtime.InteropServices.NFloat)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::ZoomingStarted(UIKit.UIScrollView,UIKit.UIView)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void UIKit.UISearchBar::_SetScopeBarButtonTitle(Foundation.NSDictionary,UIKit.UIControlState)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UISegmentedControl::.ctor(Foundation.NSArray)' is missing an [NullAllowed] on parameter #0

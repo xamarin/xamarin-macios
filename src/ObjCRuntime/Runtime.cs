@@ -260,8 +260,7 @@ namespace ObjCRuntime {
 			}
 
 			if (IntPtr.Size != sizeof (nint)) {
-				string msg = string.Format ("Native type size mismatch between " + AssemblyName + " and the executing architecture. " + AssemblyName + " was built for {0}-bit, while the current process is {1}-bit.", 
-					IntPtr.Size == 4 ? "64" : "32", IntPtr.Size == 4 ? "32" : "64");
+				string msg = $"Native type size mismatch between {AssemblyName} and the executing architecture. {AssemblyName} was built for {(IntPtr.Size == 4 ? 64 : 32)}-bit, while the current process is {(IntPtr.Size == 4 ? 32 : 64)}-bit.";
 				NSLog (msg);
 				throw ErrorHelper.CreateError (8010, msg);
 			}
@@ -659,7 +658,7 @@ namespace ObjCRuntime {
 				libPath = Path.Combine (libPath, libName);
 
 				if (Dlfcn.dlopen (libPath, 0) == IntPtr.Zero)
-					throw new Exception (string.Format ("Unable to load required framework: '{0}'", requiredFramework.Name),
+					throw new Exception ($"Unable to load required framework: '{requiredFramework.Name}'",
 						new Exception (Dlfcn.dlerror()));
 			}
 
@@ -742,7 +741,7 @@ namespace ObjCRuntime {
 
 			var nsobj = GetGCHandleTarget (obj) as NSObject;
 			if (nsobj is null)
-				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {method.DeclaringType!.FullName}.{method.Name} (token reference: 0x{token_ref:X}). Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+				throw ErrorHelper.CreateError (8023, $"An instance object is required to construct a closed generic method for the open generic method: {method.DeclaringType!.FullName}.{method.Name} (token reference: 0x{token_ref:X}). {Constants.PleaseFileBugReport}");
 
 			return AllocGCHandle (FindClosedMethod (nsobj.GetType (), method));
 		}
@@ -974,8 +973,7 @@ namespace ObjCRuntime {
 				}
 			}
 
-			throw new RuntimeException (8009, true, "Unable to locate the block to delegate conversion method for the method {0}.{1}'s parameter #{2}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.",
-				method.DeclaringType.FullName, method.Name, parameter + 1);
+			throw new RuntimeException (8009, true, $"Unable to locate the block to delegate conversion method for the method {method.DeclaringType.FullName}.{method.Name}'s parameter #{parameter + 1}. {Constants.PleaseFileBugReport}");
 		}
 
 		//
@@ -1062,7 +1060,7 @@ namespace ObjCRuntime {
 				return m;
 			}
 
-			throw ErrorHelper.CreateError (8002, "Could not find the method '{0}' in the type '{1}'.", methodName, type.FullName);
+			throw ErrorHelper.CreateError (8002, "Could not find the method '{methodName}' in the type '{type.FullName}'.");
 		}
 
 		internal static void UnregisterNSObject (IntPtr ptr) {
@@ -1135,38 +1133,40 @@ namespace ObjCRuntime {
 
 		static void MissingCtor (IntPtr ptr, IntPtr klass, Type type, MissingCtorResolution resolution)
 		{
-			string msg;
+			if (resolution == MissingCtorResolution.Ignore)
+				return;
 
 			if (klass == IntPtr.Zero)
 				klass = Class.GetClassForObject (ptr);
 
+			var msg = new StringBuilder ();
+			msg.Append ("Failed to marshal the Objective-C object 0x");
+			msg.Append (ptr.ToString ("x"));
+			msg.Append (" (type: ");
+			msg.Append (new Class (klass).Name);
+			msg.Append ("). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance (because the type '");
+			msg.Append (type.FullName);
+			msg.Append ("' does not have a constructor that takes ");
+
 			switch (resolution) {
 			case MissingCtorResolution.ThrowConstructor1NotFound:
-				msg = "Failed to marshal the Objective-C object 0x{0} (type: {1}). " +
-					"Could not find an existing managed instance for this object, " +
-					"nor was it possible to create a new managed instance " +
 #if NET
-					"(because the type '{2}' does not have a constructor that takes one NativeHandle argument).";
+				msg.Append ("one NativeHandle argument");
 #else
-					"(because the type '{2}' does not have a constructor that takes one IntPtr argument).";
+				msg.Append ("one IntPtr argument");
 #endif
 				break;
 			case MissingCtorResolution.ThrowConstructor2NotFound:
-				msg = "Failed to marshal the Objective-C object 0x{0} (type: {1}). " +
-					"Could not find an existing managed instance for this object, " +
-					"nor was it possible to create a new managed instance " +
 #if NET
-					"(because the type '{2}' does not have a constructor that takes two (NativeHandle, bool) arguments).";
+				msg.Append ("two (NativeHandle, bool) arguments");
 #else
-					"(because the type '{2}' does not have a constructor that takes two (IntPtr, bool) arguments).";
+				msg.Append ("two (IntPtr, bool) arguments");
 #endif
 				break;
-			case MissingCtorResolution.Ignore:
-			default:
-				return;
 			}
 
-			throw ErrorHelper.CreateError (8027, string.Format (msg, ptr.ToString ("x"), new Class (klass).Name, type.FullName));
+			msg.Append (").");
+			throw ErrorHelper.CreateError (8027, msg.ToString ());
 		}
 
 		static NSObject? ConstructNSObject (IntPtr ptr, IntPtr klass, MissingCtorResolution missingCtorResolution)
@@ -1579,9 +1579,7 @@ namespace ObjCRuntime {
 					// We already have an instance of an NSObject-subclass for this ptr.
 					// Creating another will break the one-to-one assumption we have between
 					// native objects and NSObject instances.
-					throw ErrorHelper.CreateError (8004, "Cannot create an instance of {0} for the native object 0x{1} (of type '{2}'), " +
-						"because another instance already exists for this native object (of type {3}).",
-						implementation.FullName, ptr.ToString ("x"), Class.class_getName (Class.GetClassForObject (ptr)), o.GetType ().FullName);
+					throw ErrorHelper.CreateError (8004, $"Cannot create an instance of {implementation.FullName} for the native object 0x{ptr:x} (of type '{Class.class_getName (Class.GetClassForObject (ptr))}'), because another instance already exists for this native object (of type {o.GetType ().FullName}).");
 				}
 				return ConstructNSObject<INativeObject> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound);
 			}
@@ -1626,9 +1624,7 @@ namespace ObjCRuntime {
 					// We already have an instance of an NSObject-subclass for this ptr.
 					// Creating another will break the one-to-one assumption we have between
 					// native objects and NSObject instances.
-					throw ErrorHelper.CreateError (8004, "Cannot create an instance of {0} for the native object 0x{1} (of type '{2}'), " +
-						"because another instance already exists for this native object (of type {3}).",
-						implementation.FullName, ptr.ToString ("x"), Class.class_getName (Class.GetClassForObject (ptr)), o.GetType ().FullName);
+					throw ErrorHelper.CreateError (8004, $"Cannot create an instance of {implementation.FullName} for the native object 0x{ptr:x} (of type '{Class.class_getName (Class.GetClassForObject (ptr))}'), because another instance already exists for this native object (of type {o.GetType ().FullName}).");
 				}
 				return (T?) ConstructNSObject<T> (ptr, implementation, MissingCtorResolution.ThrowConstructor1NotFound);
 			}
@@ -1666,9 +1662,8 @@ namespace ObjCRuntime {
 
 			var attr = (Foundation.ProtocolAttribute?) (a.Length > 0 ? a [0] : null);
 			if (attr is null || attr.WrapperType is null)
-				throw ErrorHelper.CreateError (4125, "The registrar found an invalid interface '{0}': " +
-					"The interface must have a Protocol attribute specifying its wrapper type.",
-					type.FullName);
+				throw ErrorHelper.CreateError (4125, $"The registrar found an invalid interface '{type.FullName}': " +
+					"The interface must have a Protocol attribute specifying its wrapper type.");
 			return attr.WrapperType;
 		}
 
@@ -1704,7 +1699,7 @@ namespace ObjCRuntime {
 				}
 			}
 
-			throw new ArgumentException (string.Format ("'{0}' is an unknown protocol", type.FullName));
+			throw new ArgumentException ($"'{type.FullName}' is an unknown protocol");
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
@@ -1815,9 +1810,7 @@ namespace ObjCRuntime {
 		}
 #endif // !COREBUILD
 
-		static int MajorVersion = -1;
-		static int MinorVersion = -1;
-		static int BuildVersion = -1;
+		static Version? SystemVersion;
 
 		internal static bool CheckSystemVersion (int major, int minor, string systemVersion)
 		{
@@ -1826,33 +1819,22 @@ namespace ObjCRuntime {
 
 		internal static bool CheckSystemVersion (int major, int minor, int build, string systemVersion)
 		{
-			if (MajorVersion == -1) {
-				string[] version = systemVersion.Split (new char[] { '.' });
-				
-				if (version.Length < 1 || !int.TryParse (version[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out MajorVersion))
-					MajorVersion = 2;
-				
-				if (version.Length < 2 || !int.TryParse (version[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out MinorVersion))
-					MinorVersion = 0;
-
-				if (version.Length < 3 || !int.TryParse (version[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out BuildVersion))
-					BuildVersion = 0;
+			if (SystemVersion is null) {
+				if (!Version.TryParse (systemVersion, out SystemVersion))
+					SystemVersion = new Version (2, 0, 0);
 			}
 			
-			if (MajorVersion > major)
+			if (SystemVersion.Major > major)
 				return true;
-			else if (MajorVersion < major)
+			else if (SystemVersion.Major < major)
 				return false;
 
-			if (MinorVersion > minor)
+			if (SystemVersion.Minor > minor)
 				return true;
-			else if (MinorVersion < minor)
+			else if (SystemVersion.Minor < minor)
 				return false;
 
-			if (BuildVersion < build)
-				return false;
-
-			return true;
+			return (SystemVersion.Build == -1) || (SystemVersion.Build >= build);
 		}
 
 		internal unsafe static IntPtr CloneMemory (IntPtr source, long length)
@@ -1912,7 +1894,7 @@ namespace ObjCRuntime {
 				}
 			}
 
-			throw ErrorHelper.CreateError (8003, "Failed to find the closed generic method '{0}' on the type '{1}'.", open_method.Name, closed_type.FullName);
+			throw ErrorHelper.CreateError (8003, $"Failed to find the closed generic method '{open_method.Name}' on the type '{closed_type.FullName}'.");
 		}
 
 		static void GCCollect ()

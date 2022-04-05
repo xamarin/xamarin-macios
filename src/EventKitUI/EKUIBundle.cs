@@ -7,9 +7,10 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
@@ -24,7 +25,7 @@ namespace EventKitUI {
 		[DllImport (Constants.EventKitUILibrary)]
 		static extern IntPtr EventKitUIBundle ();
 
-		public static NSBundle UIBundle {
+		public static NSBundle? UIBundle {
 			get {
 				return Runtime.GetNSObject<NSBundle> (EventKitUIBundle ());
 			}

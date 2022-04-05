@@ -850,7 +850,8 @@ namespace PassKit {
 		[Export ("localizedValueForFieldKey:")]
 		NSObject GetLocalizedValue (NSString key); // TODO: Should be enum for PKPassLibraryUserInfoKey
 
-#if !NET && !MONOMAC
+#if !NET
+		[NoMac]
 		[Field ("PKPassKitErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -961,6 +962,10 @@ namespace PassKit {
 		[iOS (9,2)]
 		[Field ("PKPaymentNetworkChinaUnionPay")]
 		NSString ChinaUnionPay { get; }
+
+		[Watch (8,5), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Field ("PKPaymentNetworkDankort")]
+		NSString Dankort { get; }
 
 		[iOS (9,2)]
 		[Field ("PKPaymentNetworkInterac")]

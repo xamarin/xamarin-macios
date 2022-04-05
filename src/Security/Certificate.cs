@@ -33,7 +33,6 @@
 #if !NET
 #define NATIVE_APPLE_CERTIFICATE
 #else 
-using System.Runtime.Versioning;
 #endif
 
 using System;

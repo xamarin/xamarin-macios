@@ -35,7 +35,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using CoreFoundation;
 using Foundation;
@@ -233,9 +232,9 @@ namespace AddressBook {
 			: base (handle, owns)
 		{
 			if (toManaged is null)
-				throw new ArgumentNullException (nameof (toManaged));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (toManaged));
 			if (toNative is null)
-				throw new ArgumentNullException (nameof (toNative));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (toNative));
 
 			this.toManaged = toManaged;
 			this.toNative  = toNative;

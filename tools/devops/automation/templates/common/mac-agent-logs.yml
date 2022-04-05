@@ -80,5 +80,5 @@ steps:
         targetPath: ${{ parameters.outputPath }}
       ${{ else }}:
         targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
-      artifactName: $(Agent.Name)-${{ parameters.outputPath }} 
+      artifactName: $(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }} 
     continueOnError: true

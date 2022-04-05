@@ -108,7 +108,6 @@
 //
 using System;
 using System.Diagnostics;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -285,13 +284,13 @@ namespace CoreImage {
 		internal CGPoint GetPoint (string key)
 		{
 			var v = Get<CIVector> (key);
-			return v != null ? new CGPoint (v.X, v.Y) : default (CGPoint);
+			return v is not null ? new CGPoint (v.X, v.Y) : default (CGPoint);
 		}
 
 		internal CGRect GetRect (string key)
 		{
 			var v = Get<CIVector> (key);
-			return v != null ? new CGRect (v.X, v.Y, v.Z, v.W) : default (CGRect);
+			return v is not null ? new CGRect (v.X, v.Y, v.Z, v.W) : default (CGRect);
 		}
 
 #if MONOMAC

@@ -1,18 +1,10 @@
 using System;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
 namespace WebKit {
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
-#endif
 	public enum DomCssRuleType : ushort {
 		Unknown = 0,
 		Style = 1,
@@ -27,14 +19,7 @@ namespace WebKit {
 		NamespaceRule = 10,
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
-#endif
 	public enum DomCssValueType : ushort {
 		Inherit = 0,
 		PrimitiveValue = 1,
@@ -42,14 +27,7 @@ namespace WebKit {
 		Custom = 3
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
-#endif
 	[Flags]
 	public enum DomDocumentPosition : ushort {
 		Disconnected = 0x01,
@@ -60,14 +38,7 @@ namespace WebKit {
 		ImplementationSpecific = 0x20
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
-#endif
 	public enum DomNodeType : ushort {
 		Element = 1,
 		Attribute = 2,
@@ -83,14 +54,7 @@ namespace WebKit {
 		Notation = 12
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
-#endif
 	public enum DomRangeCompareHow : ushort {
 		StartToStart = 0, 
 		StartToEnd = 1, 
@@ -103,26 +67,12 @@ namespace WebKit {
 		DocumentViewer, DocumentBrowser, PrimaryWebBrowser
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
-#endif
 	public enum DomEventPhase : ushort {
 		Capturing = 1, AtTarget, Bubbling
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
-#endif
 	[Flags]
 	public enum WebDragSourceAction : ulong {
 		None = 0,
@@ -133,29 +83,14 @@ namespace WebKit {
 		Any = UInt64.MaxValue
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
-#endif
 	[Flags]
 	public enum WebDragDestinationAction : ulong {
 		None = 0,
 		DHTML = 1,
 		Image = 2, 
 		Link = 4,
-#if NET
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-		[Obsolete ("This API is not available on this platform.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#else
 		[Obsolete ("This API is not available on this platform.")]
-#endif
 		Selection = 8,
 		Any = UInt64.MaxValue
 	}
@@ -170,14 +105,7 @@ namespace WebKit {
 	}
 
 	// Used as an 'unsigned int' parameter 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
-#endif
 	public enum DomKeyLocation : uint {
 		Standard = 0,
 		Left = 1,
@@ -186,14 +114,7 @@ namespace WebKit {
 	}
 
 	// Used as an 'int' parameter 
-#if NET
-	[UnsupportedOSPlatform ("macos10.14")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.14 no longer supported.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
-#endif
 	public enum DomDelta : int {
 		Pixel = 0,
 		Line = 1,

@@ -27,7 +27,6 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -131,7 +130,7 @@ namespace CoreVideo {
 		public static CGColorSpace? CreateFrom (NSDictionary attachments)
 		{
 			if (attachments is null)
-				throw new ArgumentNullException (nameof (attachments));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (attachments));
 			var h = CVImageBufferCreateColorSpaceFromAttachments (attachments.Handle);
 			return h == IntPtr.Zero ? null : new CGColorSpace (h, true);
 		}

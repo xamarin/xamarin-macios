@@ -1808,7 +1808,7 @@ WATCHKIT_SOURCES = \
 
 # WebKit (Mac version)
 
-WEBKIT_CORE_SOURCES = \
+WEBKIT_API_SOURCES = \
 	WebKit/Enums.cs \
 
 WEBKIT_SOURCES = \
@@ -1844,6 +1844,7 @@ SHARED_API_SOURCES = \
 	ObjCRuntime/ObsoleteConstants.cs \
 
 SHARED_CORE_SOURCES = \
+	DotNetGlobals.cs \
 	MinimumVersions.cs \
 	MonoPInvokeCallbackAttribute.cs \
 	$(BUILD_DIR)/common/NativeTypes/Drawing.cs \
@@ -1859,6 +1860,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/LinkWithAttribute.cs \
 	ObjCRuntime/NativeAttribute.cs \
 	ObjCRuntime/NativeHandle.cs \
+	ObjCRuntime/NFloat.cs \
 	ObjCRuntime/ObsoleteConstants.cs \
 	ObjCRuntime/PlatformAvailability.cs \
 	ObjCRuntime/PlatformAvailability2.cs \
@@ -2249,6 +2251,7 @@ TVOS_FRAMEWORKS =           \
 
 MACCATALYST_FRAMEWORKS = \
 	$(COMMON_FRAMEWORKS) \
+	AppClip \
 	AppKit \
 	AVKit \
 	Accounts \
@@ -2273,19 +2276,26 @@ MACCATALYST_FRAMEWORKS = \
 	CoreHaptics \
 	CoreImage \
 	CoreLocation \
+	CoreLocationUI \
 	CoreMIDI \
 	CoreMotion \
+	CoreNFC \
 	CoreSpotlight \
+	CoreTelephony \
 	CoreText \
 	CoreWlan \
 	DeviceCheck \
 	EventKit \
+	EventKitUI \
 	ExternalAccessory \
 	FileProvider \
 	GameController \
 	GameplayKit \
+	HealthKit \
+	HealthKitUI \
 	HomeKit \
 	IdentityLookup \
+	IdentityLookupUI \
 	ImageIO \
 	Intents \
 	IntentsUI \
@@ -2297,6 +2307,8 @@ MACCATALYST_FRAMEWORKS = \
 	MediaAccessibility \
 	MediaPlayer \
 	MediaToolbox \
+	Messages \
+	MessageUI \
 	Metal \
 	MetalKit \
 	MetalPerformanceShaders \
@@ -2329,20 +2341,28 @@ MACCATALYST_FRAMEWORKS = \
 	UserNotificationsUI \
 	VideoToolbox \
 	Vision \
+	VisionKit \
 	WKWebKit \
 
 # List frameworks that have been removed in .NET
 
+# Chip is intentionally removed from .NET because the API
+# is not final and it keeps breaking on every new Xcode release.
+
 DOTNET_REMOVED_IOS_FRAMEWORKS = \
+	Chip \
 	iAd \
 	WatchKit \
 
 DOTNET_REMOVED_MACOS_FRAMEWORKS = \
+	Chip \
 	QTKit \
 
 DOTNET_REMOVED_TVOS_FRAMEWORKS = \
+	Chip \
 
 DOTNET_REMOVED_MACCATALYST_FRAMEWORKS = \
+	Chip \
 
 #
 # Compute the SOURCES variables.

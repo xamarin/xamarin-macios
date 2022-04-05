@@ -6,12 +6,13 @@
 // Copyright (C) 2009 Novell, Inc
 //
 
+#nullable enable
+
 using System;
 
 using AddressBook;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AddressBookUI {
 #if NET
@@ -24,17 +25,17 @@ namespace AddressBookUI {
 #endif
 	public class ABUnknownPersonCreatedEventArgs : EventArgs {
 
-		public ABUnknownPersonCreatedEventArgs (ABPerson person)
+		public ABUnknownPersonCreatedEventArgs (ABPerson? person)
 		{
 			Person = person;
 		}
 
-		public ABPerson Person {get; private set;}
+		public ABPerson? Person {get; private set;}
 	}
 
 	class InternalABUnknownPersonViewControllerDelegate : ABUnknownPersonViewControllerDelegate {
-		internal EventHandler<ABPersonViewPerformDefaultActionEventArgs> performDefaultAction;
-		internal EventHandler<ABUnknownPersonCreatedEventArgs> personCreated;
+		internal EventHandler<ABPersonViewPerformDefaultActionEventArgs>? performDefaultAction;
+		internal EventHandler<ABUnknownPersonCreatedEventArgs>? personCreated;
 
 		public InternalABUnknownPersonViewControllerDelegate ()
 		{
@@ -42,7 +43,7 @@ namespace AddressBookUI {
 		}
 
 		[Preserve (Conditional = true)]
-		public override void DidResolveToPerson (ABUnknownPersonViewController personViewController, ABPerson person)
+		public override void DidResolveToPerson (ABUnknownPersonViewController personViewController, ABPerson? person)
 		{
 			personViewController.OnPersonCreated (new ABUnknownPersonCreatedEventArgs (person));
 		}
@@ -69,8 +70,8 @@ namespace AddressBookUI {
 #endif
 	partial class ABUnknownPersonViewController {
 
-		ABPerson displayedPerson;
-		public ABPerson DisplayedPerson {
+		ABPerson? displayedPerson;
+		public ABPerson? DisplayedPerson {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref displayedPerson, _DisplayedPerson, h => new ABPerson (h, AddressBook));
@@ -81,8 +82,8 @@ namespace AddressBookUI {
 			}
 		}
 
-		ABAddressBook addressBook;
-		public ABAddressBook AddressBook {
+		ABAddressBook? addressBook;
+		public ABAddressBook? AddressBook {
 			get {
 				MarkDirty ();
 				return BackingField.Get (ref addressBook, _AddressBook, h => new ABAddressBook (h, false));
@@ -96,7 +97,7 @@ namespace AddressBookUI {
 		InternalABUnknownPersonViewControllerDelegate EnsureEventDelegate ()
 		{
 			var d = WeakDelegate as InternalABUnknownPersonViewControllerDelegate;
-			if (d == null) {
+			if (d is null) {
 				d = new InternalABUnknownPersonViewControllerDelegate ();
 				WeakDelegate = d;
 			}
@@ -106,14 +107,14 @@ namespace AddressBookUI {
 		protected internal virtual void OnPerformDefaultAction (ABPersonViewPerformDefaultActionEventArgs e)
 		{
 			var h = EnsureEventDelegate ().performDefaultAction;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
 		protected internal virtual void OnPersonCreated (ABUnknownPersonCreatedEventArgs e)
 		{
 			var h = EnsureEventDelegate ().personCreated;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 

@@ -1347,6 +1347,9 @@ namespace Xamarin.Bundler {
 					continue;
 				} else if (line.Contains ("was built for newer iOS version (5.1.1) than being linked (5.1)")) {
 					continue;
+				} else if (line.Contains ("was built with class_ro_t pointer signing enabled, but previous .o files were not")) {
+					// https://github.com/xamarin/xamarin-macios/issues/14601
+					continue;
 				} else if (line.Contains ("was built for newer iOS version (7.0) than being linked (6.0)") && 
 					line.Contains (Driver.GetProductSdkDirectory (target.App))) {
 					continue;

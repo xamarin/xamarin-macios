@@ -14,7 +14,6 @@ using CoreFoundation;
 using CoreLocation;
 using UIKit;
 using MediaPlayer;
-using System.Runtime.Versioning;
 
 #nullable enable
 

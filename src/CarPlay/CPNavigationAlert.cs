@@ -7,6 +7,8 @@
 // Copyright 2018 Microsoft Corporation. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;

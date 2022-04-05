@@ -1396,7 +1396,7 @@ namespace AppKit {
 		[Export ("appendBezierPathWithArcFromPoint:toPoint:radius:")]
 		void AppendPathWithArc (CGPoint point1, CGPoint point2, nfloat radius);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 13, message: "Use 'AppendPathWithCGGlyph (CGGlyph, NSFont)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'AppendPathWithCGGlyph (CGGlyph, NSFont)' instead.")]
 		[Export ("appendBezierPathWithGlyph:inFont:")]
 		void AppendPathWithGlyph (uint /* NSGlyph = unsigned int */ glyph, NSFont font);
 
@@ -1404,7 +1404,7 @@ namespace AppKit {
 		void _AppendPathWithGlyphs (IntPtr glyphs, nint count, NSFont font);
 
 		//IntPtr is exposed because the packedGlyphs should be treated as a "black box"
-		[Obsoleted (PlatformName.MacOSX, 10, 13, message: "Use 'Append (uint[], NSFont)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'Append (uint[], NSFont)' instead.")]
 		[Export ("appendBezierPathWithPackedGlyphs:")]
 		void AppendPathWithPackedGlyphs (IntPtr packedGlyphs);
 
@@ -10409,22 +10409,22 @@ namespace AppKit {
 	[Category, BaseType (typeof (NSString))]
 	interface NSStringDrawing_NSString {
 		[Export ("sizeWithAttributes:")]
-		CGSize StringSize (NSDictionary attributes);
+		CGSize StringSize ([NullAllowed] NSDictionary attributes);
 
 		[Wrap ("This.StringSize (attributes.GetDictionary ()!)")]
-		CGSize StringSize (AppKit.NSStringAttributes attributes);
+		CGSize StringSize ([NullAllowed] AppKit.NSStringAttributes attributes);
 
 		[Export ("drawAtPoint:withAttributes:")]
-		void DrawAtPoint (CGPoint point, NSDictionary attributes);
+		void DrawAtPoint (CGPoint point, [NullAllowed] NSDictionary attributes);
 
 		[Wrap ("This.DrawAtPoint (point, attributes.GetDictionary ()!)")]
-		void DrawAtPoint (CGPoint point, AppKit.NSStringAttributes attributes);
+		void DrawAtPoint (CGPoint point, [NullAllowed] AppKit.NSStringAttributes attributes);
 
 		[Export ("drawInRect:withAttributes:")]
-		void DrawInRect (CGRect rect, NSDictionary attributes);
+		void DrawInRect (CGRect rect, [NullAllowed] NSDictionary attributes);
 
 		[Wrap ("This.DrawInRect (rect, attributes.GetDictionary ()!)")]
-		void DrawInRect (CGRect rect, AppKit.NSStringAttributes attributes);
+		void DrawInRect (CGRect rect, [NullAllowed] AppKit.NSStringAttributes attributes);
 	}
 
 	[ThreadSafe]
@@ -10586,7 +10586,7 @@ namespace AppKit {
 		bool DrawInRect (CGRect rect);
 
 		[Export ("drawInRect:fromRect:operation:fraction:respectFlipped:hints:")]
-		bool DrawInRect (CGRect dstSpacePortionRect, CGRect srcSpacePortionRect, NSCompositingOperation op, nfloat requestedAlpha, bool respectContextIsFlipped, NSDictionary hints);
+		bool DrawInRect (CGRect dstSpacePortionRect, CGRect srcSpacePortionRect, NSCompositingOperation op, nfloat requestedAlpha, bool respectContextIsFlipped, [NullAllowed] NSDictionary hints);
 
 		[Export ("setAlpha:")]
 		void SetAlpha (bool alpha);
@@ -11120,13 +11120,12 @@ namespace AppKit {
 		void SetImage (NSImage image);
 	}
 	
-#if MONOMAC
+	[NoMacCatalyst]
 	[Protocol (IsInformal = true)]
 	interface NSLayerDelegateContentsScaleUpdating {
 		[Export ("layer:shouldInheritContentsScale:fromWindow:")]
 		bool ShouldInheritContentsScale (CALayer layer, nfloat newScale, NSWindow fromWindow);
 	}
-#endif
 
 	[Mac (10,11)]
 	[NoMacCatalyst]
@@ -20880,14 +20879,48 @@ namespace AppKit {
 		void Deminiaturize ([NullAllowed] NSObject sender);
 	
 		[Export ("isZoomed")]
-		bool IsZoomed { get; set; }
-	
+		bool IsZoomed  {
+			get;
+#if !XAMCORE_5_0
+			// https://github.com/xamarin/xamarin-macios/issues/14359
+			[Obsolete ("Setting 'IsZoomed' will probably behave unexpectedly, since it comes from the NSScripting protocol (and not like the getter, which is defined on the NSWindow type). If this is the expected behavior, call 'SetIsZoomed(bool)' instead.")]
+			set;
+#endif
+		}
+
+		// The setIsZoomed: selector is defined on the NSScripting protocol, and
+		// is not directly related to the isZoomed getter defined on the NSWindow
+		// type, so use a separate method to express this distinction in managed code.
+		// Ref: https://github.com/xamarin/xamarin-macios/issues/14359
+#if !XAMCORE_5_0
+		[Sealed]
+#endif
+		[Export ("setIsZoomed:")]
+		void SetIsZoomed (bool value);
+
 		[Export ("zoom:")]
 		void Zoom ([NullAllowed] NSObject sender);
 	
 		[Export ("isMiniaturized")]
-		bool IsMiniaturized { get; set; }
-	
+		bool IsMiniaturized  {
+			get;
+#if !XAMCORE_5_0
+			// https://github.com/xamarin/xamarin-macios/issues/14359
+			[Obsolete ("Setting 'IsMiniaturized' will probably behave unexpectedly, since it comes from the NSScripting protocol (and not like the getter, which is defined on the NSWindow type). If this is the expected behavior, call 'SetIsMiniaturized(bool)' instead.")]
+			set;
+#endif
+		}
+
+		// The setIsMiniaturized: selector is defined on the NSScripting protocol, and
+		// is not directly related to the isMiniaturized getter defined on the NSWindow
+		// type, so use a separate method to express this distinction in managed code.
+		// Ref: https://github.com/xamarin/xamarin-macios/issues/14359
+#if !XAMCORE_5_0
+		[Sealed]
+#endif
+		[Export ("setIsMiniaturized:")]
+		void SetIsMiniaturized (bool value);
+
 		[Export ("tryToPerform:with:")]
 		bool TryToPerform (Selector anAction, NSObject anObject);
 		
@@ -20955,7 +20988,23 @@ namespace AppKit {
 		bool DocumentEdited  { [Bind ("isDocumentEdited")] get; set; }
 	
 		[Export ("isVisible")]
-		bool IsVisible  { get; set; }
+		bool IsVisible  {
+			get;
+#if !XAMCORE_5_0
+			// https://github.com/xamarin/xamarin-macios/issues/14359
+			[Obsolete ("Setting 'IsVisible' will probably behave unexpectedly, since it comes from the NSScripting protocol (and not like the getter, which is defined on the NSWindow type). Typically the correct way to change the visibility of an NSWindow is to use the 'OrderOut' or 'OrderFront' methods. However, if this is the expected behavior, call 'SetIsVisible(bool)' instead. ")]
+			set;
+#endif
+		}
+
+		// The setIsVisible: selector is defined on the NSScripting protocol, and
+		// is not directly related to the isVisible getter defined on the NSWindow
+		// type, so use a separate method to express this distinction in managed code.
+#if !XAMCORE_5_0
+		[Sealed]
+#endif
+		[Export ("setIsVisible:")]
+		void SetIsVisible (bool value);
 	
 		[Export ("isKeyWindow")]
 		bool IsKeyWindow { get; }
@@ -26374,43 +26423,43 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	interface NSObjectAccessibilityExtensions {
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityAttributeNames")]
 		NSArray AccessibilityAttributeNames { get; }
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityAttributeValue:")]
 		NSObject GetAccessibilityValue (NSString attribute);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityIsAttributeSettable:")]
 		bool IsAccessibilityAttributeSettable (NSString attribute);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilitySetValue:forAttribute:")]
 		void SetAccessibilityValue (NSString attribute, NSObject value);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityParameterizedAttributeNames")]
 		NSArray AccessibilityParameterizedAttributeNames { get; }
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityAttributeValue:forParameter:")]
 		NSObject GetAccessibilityValue (NSString attribute, NSObject parameter);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityActionNames")]
 		NSArray AccessibilityActionNames { get; }
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityActionDescription:")]
 		NSString GetAccessibilityActionDescription (NSString action);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityPerformAction:")]
 		void AccessibilityPerformAction (NSString action);
 
-		[Obsoleted (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use the NSAccessibility protocol methods instead.")]
 		[Export ("accessibilityIsIgnored")]
 		bool AccessibilityIsIgnored { get; }
 

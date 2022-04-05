@@ -2,7 +2,6 @@ using System;
 using Metal;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace MetalPerformanceShaders {
 	public partial class MPSCnnNeuronPReLU {

@@ -1,5 +1,4 @@
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace CoreMedia {
 

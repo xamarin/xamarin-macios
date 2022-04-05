@@ -8,7 +8,6 @@ using OpenTK;
 using CoreMedia;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;

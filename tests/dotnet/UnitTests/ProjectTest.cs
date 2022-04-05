@@ -525,7 +525,7 @@ namespace Xamarin.Tests {
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			Assert.AreEqual (1, warnings.Length, "Warning Count");
-			Assert.AreEqual ("Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/net6.0-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherfile.txt", warnings [0].Message, "Warning");
+			Assert.AreEqual ($"Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/{Configuration.DotNetTfm}-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherfile.txt", warnings [0].Message, "Warning");
 
 			// Remove the offending file
 			File.Delete (Path.Combine (appPath, "otherfile.txt"));
@@ -819,11 +819,11 @@ namespace Xamarin.Tests {
 		}
 
 
-		[TestCase (ApplePlatform.iOS, "bin/Debug/net6.0-ios/iossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]
-		[TestCase (ApplePlatform.TVOS, "bin/Debug/net6.0-tvos/tvossimulator-x64/MySimpleApp.app/PlugIns/ExtensionProject.appex")]		
-		[TestCase (ApplePlatform.MacOSX, "bin/Debug/net6.0-macos/osx-x64/MySimpleApp.app/Contents/PlugIns/ExtensionProject.appex")]
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacOSX)]
 		// [TestCase ("MacCatalyst", "")] - No extension support yet
-		public void BuildProjectsWithExtensions (ApplePlatform platform, string appPath)
+		public void BuildProjectsWithExtensions (ApplePlatform platform)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var consumingProjectDir = GetProjectPath ("ExtensionConsumer", platform: platform);
@@ -837,8 +837,57 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
 			
-			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, appPath);
+			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "MySimpleApp.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
+		}
+
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64;iossimulator-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
+		public void AppWithGenericLibraryReference (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "AppWithGenericLibraryReference";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+
+			DotNet.AssertBuild (project_path, GetDefaultProperties (runtimeIdentifiers));
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
+		}
+
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void OlderCSharpLanguage (ApplePlatform platform, string runtimeIdentifier)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			properties ["LangVersion"] = "8";
+			properties ["ExcludeTouchUnitReference"] = "true";
+			DotNet.AssertBuild (project_path, properties);
+		}
+
+		// This test can be removed in .NET 7
+		[TestCase (ApplePlatform.iOS)]
+		[TestCase (ApplePlatform.TVOS)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		[TestCase (ApplePlatform.MacOSX)]
+		public void CentralPackageVersionsApp (ApplePlatform platform)
+		{
+			var project = "CentralPackageVersionsApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties ();
+			DotNet.AssertBuild (project_path, properties);
 		}
 	}
 }
