@@ -123,6 +123,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 #endif

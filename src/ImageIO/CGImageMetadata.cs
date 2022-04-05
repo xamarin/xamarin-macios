@@ -24,6 +24,9 @@ namespace ImageIO {
 
 #if NET
 	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[iOS (7,0)]
 #endif
@@ -48,6 +51,9 @@ namespace ImageIO {
 	// CGImageMetadata.h
 #if NET
 	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[iOS (7,0)]
 #endif
