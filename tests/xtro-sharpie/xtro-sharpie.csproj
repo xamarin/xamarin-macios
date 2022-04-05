@@ -33,49 +33,45 @@
     <Externalconsole>true</Externalconsole>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+  <Import Project="pch-info.proj" />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>watchos8.0-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/watchOS/Xamarin.WatchOS.dll</StartArguments>
+    <StartArguments>$(WATCHOS_PCH) ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/watchOS/Xamarin.WatchOS.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>iphoneos15.0-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/iOS/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>$(iOS_PCH) ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/iOS/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>appletvos15.0-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>$(tvOS_PCH) ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>macosx12.0-x86_64.pch ../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll</StartArguments>
-    <StartWorkingDirectory>.</StartWorkingDirectory>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'MacCatalyst' ">
-    <StartAction>Project</StartAction>
-    <StartArguments>ios15.0-macabi-x86_64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll</StartArguments>
+    <StartArguments>$(macOS_PCH) ../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS (.NET)' ">
     <StartAction>Project</StartAction>
-    <StartArguments>iphoneos15.0-arm64.pch --output-directory api-annotations-dotnet ../../_build/Microsoft.iOS.Runtime.ios-arm64/runtimes/ios-arm64/lib/net6.0/Xamarin.iOS.dll</StartArguments>
+    <StartArguments>$(iOS_PCH) --output-directory api-annotations-dotnet $(iOS_DLL)</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS (.NET)' ">
     <StartAction>Project</StartAction>
-    <StartArguments>appletvos15.0-arm64.pch --output-directory api-annotations-dotnet ../../_build/Microsoft.tvOS.Runtime.tvos-arm64/runtimes/tvos-arm64/lib/net6.0/Xamarin.TVOS.dll</StartArguments>
+    <StartArguments>$(tvOS_PCH) --output-directory api-annotations-dotnet $(tvOS_DLL)</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS (.NET)' ">
     <StartAction>Project</StartAction>
-    <StartArguments>macosx12.0-x86_64.pch --output-directory api-annotations-dotnet ../../_build/Microsoft.macOS.Runtime.osx-x64/runtimes/osx-x64/lib/net6.0/Xamarin.Mac.dll</StartArguments>
+    <StartArguments>$(macOS_PCH) --output-directory api-annotations-dotnet $(macOS_DLL)</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'MacCatalyst (.NET)' ">
     <StartAction>Project</StartAction>
-    <StartArguments>ios15.0-macabi-x86_64.pch --output-directory api-annotations-dotnet ../../_build/Microsoft.MacCatalyst.Runtime.maccatalyst-x64/runtimes/maccatalyst-x64/lib/net6.0/Xamarin.MacCatalyst.dll</StartArguments>
+    <StartArguments>$(MacCatalyst_PCH) --output-directory api-annotations-dotnet $(MacCatalyst_DLL)</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <ItemGroup>

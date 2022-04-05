@@ -527,7 +527,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if !MONOMAC // Failing with 10 broken
+#if !MONOMAC || NET // Failing with 10 broken in legacy Xamarin.Mac
 		[TestCase (typeof (NSObject))]
 #endif
 		[TestCase (typeof (ResurrectedObjectsDisposedTestClass))]

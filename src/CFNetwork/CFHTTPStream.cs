@@ -13,7 +13,6 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -148,7 +147,7 @@ namespace CoreServices {
 		public void SetProxy (CFProxySettings proxySettings)
 		{
 			if (proxySettings is null)
-				throw new ArgumentNullException (nameof (proxySettings));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (proxySettings));
 
 			SetProperty (_Proxy, proxySettings.Dictionary);
 		}

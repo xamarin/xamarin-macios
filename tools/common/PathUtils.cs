@@ -17,6 +17,20 @@ namespace Xamarin.Utils
 			return (((uint) c - 'a') <= ((uint) 'z' - 'a')) ? (char) (c - 0x20) : c;
 		}
 
+		public static string EnsureTrailingSlash (this string path)
+		{
+			if (path is null)
+				return null;
+
+			if (path.Length == 0)
+				return Path.DirectorySeparatorChar.ToString ();
+
+			if (path [path.Length - 1] != Path.DirectorySeparatorChar)
+				path += Path.DirectorySeparatorChar;
+
+			return path;
+		}
+
 		[DllImport ("/usr/lib/libc.dylib")]
 		static extern IntPtr realpath (string path, IntPtr buffer);
 
@@ -226,6 +240,15 @@ namespace Xamarin.Utils
 			}
 
 			return false;
+		}
+
+		// Replace any windows-style slashes with mac-style slashes.
+		public static string ConvertToMacPath (string path)
+		{
+			if (string.IsNullOrEmpty (path))
+				return path;
+
+			return path.Replace ('\\', '/');
 		}
 	}
 }

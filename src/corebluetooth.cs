@@ -35,10 +35,9 @@ namespace CoreBluetooth {
 		[Export ("OptionShowPowerAlertKey")]
 		bool ShowPowerAlert { get; set; }
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("OptionRestoreIdentifierKey")]
 		string RestoreIdentifier { get; set; }
-#endif
 	}
 
 	[Watch (4,0)]
@@ -50,23 +49,24 @@ namespace CoreBluetooth {
 		[Export ("state", ArgumentSemantic.Assign)]
 		CBManagerState State { get; }
 
-#if IOS || WATCH
 		[Internal]
 		[iOS (13,0), Watch (6,0)]
+		[NoTV][NoMac]
 		[Export ("authorization", ArgumentSemantic.Assign)]
 		CBManagerAuthorization _IAuthorization { get; }
 
 		[Internal]
 		[iOS (13,1), Watch (6,1)]
+		[NoTV][NoMac]
 		[Static]
 		[Export ("authorization", ArgumentSemantic.Assign)]
 		CBManagerAuthorization _SAuthorization { get; }
-#else
+
 		[TV (13,0), Mac (10, 15)]
+		[NoiOS][NoWatch]
 		[Static]
 		[Export ("authorization", ArgumentSemantic.Assign)]
 		CBManagerAuthorization Authorization { get; }
-#endif
 	}
 
 	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
@@ -163,6 +163,7 @@ namespace CoreBluetooth {
 		[Field ("CBCentralManagerScanOptionAllowDuplicatesKey")]
 		NSString ScanOptionAllowDuplicatesKey { get; }
 
+#if !NET
 		[Obsolete ("Use 'CBConnectPeripheralOptions' instead.")]
 		[Field ("CBConnectPeripheralOptionNotifyOnDisconnectionKey")]
 		NSString OptionNotifyOnDisconnectionKey { get; }
@@ -176,6 +177,7 @@ namespace CoreBluetooth {
 		[Mac (10,13)]
 		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
 		NSString OptionNotifyOnNotificationKey { get; }
+#endif
 
 		[Mac (10,14)]
 		[iOS (11,2)][TV (11,2)][Watch (4,2)]
@@ -761,14 +763,15 @@ namespace CoreBluetooth {
 		[Field ("CBUUIDCharacteristicAggregateFormatString")]
 		NSString CharacteristicAggregateFormatString { get; }
 
-#if MONOMAC
 		[Internal]
 		[Field ("CBUUIDValidRangeString")]
 		[Introduced (PlatformName.MacOSX, 10, 12)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Obsoleted (PlatformName.MacOSX, 10, 13)]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		NSString CBUUIDValidRangeString { get; }
 
+#if MONOMAC && !NET
 		[Internal]
 		[Mac (10,13)]
 		[Field ("CBUUIDCharacteristicValidRangeString")]
@@ -776,6 +779,9 @@ namespace CoreBluetooth {
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
+		[Watch (4,0)]
+		[Mac (10,13)]
+		[MacCatalyst (13,0)]
 		[Field ("CBUUIDCharacteristicValidRangeString")]
 		NSString CharacteristicValidRangeString { get; }
 #endif
@@ -848,13 +854,9 @@ namespace CoreBluetooth {
 	// `delloc` a default instance crash applications and a default instance, without the ability to change the UUID, does not make sense
 	[DisableDefaultCtor]
 	interface CBCentral : NSCopying {
-#if MONOMAC
-		// Introduced with iOS7, but does not have NS_AVAILABLE
-		// Moved to a new base class, CBPeer, in iOS 8.
-		[iOS (7,0)]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[Export ("identifier")]
 		NSUuid Identifier { get; }
-#endif
 
 		// Introduced with iOS7, but does not have NS_AVAILABLE
 		[iOS (7,0)]

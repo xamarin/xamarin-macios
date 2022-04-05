@@ -9,7 +9,6 @@
 #if !WATCH
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -86,8 +85,8 @@ namespace CoreVideo {
 #endif
 		public static CVPixelBuffer? Create (IOSurface.IOSurface surface, out CVReturn result, CVPixelBufferAttributes? pixelBufferAttributes = null)
 		{
-			if (surface == null)
-				throw new ArgumentNullException (nameof (surface));
+			if (surface is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (surface));
 
 			IntPtr pixelBufferPtr;
 			result = CVPixelBufferCreateWithIOSurface (

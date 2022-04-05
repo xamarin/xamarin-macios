@@ -10,7 +10,6 @@
 using System;
 using CoreGraphics;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 

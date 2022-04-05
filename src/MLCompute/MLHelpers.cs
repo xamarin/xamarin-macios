@@ -1,6 +1,7 @@
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using CoreFoundation;
 using Foundation;
@@ -23,7 +24,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCActivationTypeDebugDescription (MLCActivationType activationType);
 
-		public static string GetDebugDescription (this MLCActivationType self)
+		public static string? GetDebugDescription (this MLCActivationType self)
 		{
 			return CFString.FromHandle (MLCActivationTypeDebugDescription (self));
 		}
@@ -44,7 +45,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCArithmeticOperationDebugDescription (MLCArithmeticOperation operation);
 
-		public static string GetDebugDescription (this MLCArithmeticOperation self)
+		public static string? GetDebugDescription (this MLCArithmeticOperation self)
 		{
 			return CFString.FromHandle (MLCArithmeticOperationDebugDescription (self));
 		}
@@ -65,7 +66,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCPaddingPolicyDebugDescription (MLCPaddingPolicy paddingPolicy);
 
-		public static string GetDebugDescription (this MLCPaddingPolicy self)
+		public static string? GetDebugDescription (this MLCPaddingPolicy self)
 		{
 			return CFString.FromHandle (MLCPaddingPolicyDebugDescription (self));
 		}
@@ -86,7 +87,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCLossTypeDebugDescription (MLCLossType lossType);
 
-		public static string GetDebugDescription (this MLCLossType self)
+		public static string? GetDebugDescription (this MLCLossType self)
 		{
 			return CFString.FromHandle (MLCLossTypeDebugDescription (self));
 		}
@@ -107,7 +108,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCReductionTypeDebugDescription (MLCReductionType reductionType);
 
-		public static string GetDebugDescription (this MLCReductionType self)
+		public static string? GetDebugDescription (this MLCReductionType self)
 		{
 			return CFString.FromHandle (MLCReductionTypeDebugDescription (self));
 		}
@@ -128,7 +129,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCPaddingTypeDebugDescription (MLCPaddingType paddingType);
 
-		public static string GetDebugDescription (this MLCPaddingType self)
+		public static string? GetDebugDescription (this MLCPaddingType self)
 		{
 			return CFString.FromHandle (MLCPaddingTypeDebugDescription (self));
 		}
@@ -149,7 +150,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCConvolutionTypeDebugDescription (MLCConvolutionType convolutionType);
 
-		public static string GetDebugDescription (this MLCConvolutionType self)
+		public static string? GetDebugDescription (this MLCConvolutionType self)
 		{
 			return CFString.FromHandle (MLCConvolutionTypeDebugDescription (self));
 		}
@@ -170,7 +171,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCPoolingTypeDebugDescription (MLCPoolingType poolingType);
 
-		public static string GetDebugDescription (this MLCPoolingType self)
+		public static string? GetDebugDescription (this MLCPoolingType self)
 		{
 			return CFString.FromHandle (MLCPoolingTypeDebugDescription (self));
 		}
@@ -191,7 +192,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCSoftmaxOperationDebugDescription (MLCSoftmaxOperation operation);
 
-		public static string GetDebugDescription (this MLCSoftmaxOperation self)
+		public static string? GetDebugDescription (this MLCSoftmaxOperation self)
 		{
 			return CFString.FromHandle (MLCSoftmaxOperationDebugDescription (self));
 		}
@@ -212,7 +213,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCSampleModeDebugDescription (MLCSampleMode mode);
 
-		public static string GetDebugDescription (this MLCSampleMode self)
+		public static string? GetDebugDescription (this MLCSampleMode self)
 		{
 			return CFString.FromHandle (MLCSampleModeDebugDescription (self));
 		}
@@ -233,7 +234,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCLSTMResultModeDebugDescription (MLCLstmResultMode mode);
 
-		public static string GetDebugDescription (this MLCLstmResultMode self)
+		public static string? GetDebugDescription (this MLCLstmResultMode self)
 		{
 			return CFString.FromHandle (MLCLSTMResultModeDebugDescription (self));
 		}
@@ -254,7 +255,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCComparisonOperationDebugDescription (MLCComparisonOperation operation);
 
-		public static string GetDebugDescription (this MLCComparisonOperation self)
+		public static string? GetDebugDescription (this MLCComparisonOperation self)
 		{
 			return CFString.FromHandle (MLCComparisonOperationDebugDescription (self));
 		}
@@ -277,7 +278,7 @@ namespace MLCompute {
 		[DllImport (Constants.MLComputeLibrary)]
 		static extern /* NSString */ IntPtr MLCGradientClippingTypeDebugDescription (MLCGradientClippingType gradientClippingType);
 
-		public static string GetDebugDescription (this MLCGradientClippingType self)
+		public static string? GetDebugDescription (this MLCGradientClippingType self)
 		{
 			return CFString.FromHandle (MLCGradientClippingTypeDebugDescription (self));
 		}

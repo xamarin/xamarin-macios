@@ -33,6 +33,10 @@ parameters:
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
 
+- name: pool
+  type: string
+  default: automatic
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -44,30 +48,37 @@ jobs:
     isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
 
   steps:
-  - template: configure.yml
+  - template: ../common/configure.yml
 
-- job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
-  pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
-    vmImage: ubuntu-latest
-  steps:
-  - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+- ${{ if eq(parameters.pool, 'automatic') }}:
+  - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+    pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
 
-  # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
-  - template: azure-devops-pools/agent-pool-selector.yml@templates
-    parameters:
-      agentPoolPR: $(PRBuildPool)
-      agentPoolPRUrl: $(PRBuildPoolUrl)
-      agentPoolCI: $(CIBuildPool)
-      agentPoolCIUrl: $(CIBuildPoolUrl)
+    # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+    - template: azure-devops-pools/agent-pool-selector.yml@templates
+      parameters:
+        agentPoolPR: $(PRBuildPool)
+        agentPoolPRUrl: $(PRBuildPoolUrl)
+        agentPoolCI: $(CIBuildPool)
+        agentPoolCIUrl: $(CIBuildPoolUrl)
 
 - job: build
   dependsOn:
-  - AgentPoolSelector
+  - ${{ if eq(parameters.pool, 'automatic') }}:
+    - AgentPoolSelector
   - configure
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
-    AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+    ${{ if eq(parameters.pool, 'automatic') }}:
+      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+    ${{ if eq(parameters.pool, 'ci') }}:
+      AgentPoolComputed: $(CIBuildPool)
+    ${{ if eq(parameters.pool, 'pr') }}:
+      AgentPoolComputed: $(PRBuildPool)
     # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
     #
     # build-package
@@ -116,40 +127,47 @@ jobs:
       skipESRP: ${{ parameters.skipESRP }}
       enableAPIDiff: false # this step should never execute the api diff, that should be left for the parallel job
 
-- job: api_diff
-  dependsOn:
-  - AgentPoolSelector
-  - configure
-  displayName: 'Generate API diff'
-  timeoutInMinutes: 1000
-  variables:
-    AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
-    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
-    # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
-    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
-  pool:
-    name: $(AgentPoolComputed)
-    demands:
-    - Agent.OS -equals Darwin
-    - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
-  workspace:
-    clean: all
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
+  - job: api_diff
+    dependsOn:
+    - ${{ if eq(parameters.pool, 'automatic') }}:
+      - AgentPoolSelector
+    - configure
+    displayName: 'Generate API diff'
+    timeoutInMinutes: 1000
+    variables:
+      ${{ if eq(parameters.pool, 'automatic') }}:
+        AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+      ${{ if eq(parameters.pool, 'ci') }}:
+        AgentPoolComputed: $(CIBuildPool)
+      ${{ if eq(parameters.pool, 'pr') }}:
+        AgentPoolComputed: $(PRBuildPool)
+      PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+      # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
+      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+      XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
+    pool:
+      name: $(AgentPoolComputed)
+      demands:
+      - Agent.OS -equals Darwin
+      - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+    workspace:
+      clean: all
 
-  steps:
-  - template: build.yml
-    parameters:
-      runTests: false
-      runDeviceTests: false
-      uploadBinlogs: false
-      signAndNotarize: false
-      skipPackages: true
-      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-      keyringPass: ${{ parameters.keyringPass }}
-      gitHubToken: ${{ parameters.gitHubToken }}
-      xqaCertPass: ${{ parameters.xqaCertPass }}
-      enableDotnet: ${{ parameters.enableDotnet }}
-      enableAPIDiff: ${{ parameters.enableAPIDiff }}
+    steps:
+    - template: build.yml
+      parameters:
+        runTests: false
+        runDeviceTests: false
+        uploadBinlogs: false
+        signAndNotarize: false
+        skipPackages: true
+        vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+        keyringPass: ${{ parameters.keyringPass }}
+        gitHubToken: ${{ parameters.gitHubToken }}
+        xqaCertPass: ${{ parameters.xqaCertPass }}
+        enableDotnet: ${{ parameters.enableDotnet }}
+        enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 - job: upload_azure_blob
   displayName: 'Upload packages to Azure & SBOM'
@@ -157,7 +175,7 @@ jobs:
   dependsOn:
   - configure
   - build # can start as soon as the packages are available
-  condition: and(succeeded(), contains (dependencies.build.outputs['configuration.BuildPkgs'], 'True'), not(contains (variables['Build.DefinitionName'], 'private'))) # only run when we do have pkgs and on public builds
+  condition: succeeded()
 
   variables:
     Parameters.outputStorageUri: ''
@@ -175,12 +193,12 @@ jobs:
       sbomFilter: '*.nupkg;*.pkg;*.msi'
 
 - job: upload_vsdrops
-  displayName: 'Upload test results to VSDrops'
+  displayName: 'Upload API diff to VSDrops'
   timeoutInMinutes: 1000
   dependsOn: # can start as soon as the tests are done and the api diff
   - build 
   - api_diff
-  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
+  condition: succeededOrFailed() 
 
   variables:
     API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
@@ -192,26 +210,12 @@ jobs:
   steps:
   - template: upload-vsdrops.yml
     parameters:
-      devicePrefix: sim
+      testPrefix: sim
       runTests: ${{ parameters.runTests }}
 
-- job: upload_vsts_tests
-  displayName: 'Upload xml to vsts'
-  timeoutInMinutes: 1000
-  dependsOn:  build # can start as soon as the tests are done
-  condition: and(succeededOrFailed(), contains(dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
-
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: ../common/upload-vsts-tests.yml
-    parameters:
-      devicePrefix: sim
 
 - job: publish_html
-  displayName: 'Publish Html report in VSDrops'
+  displayName: 'Publish API diff to GitHub'
   timeoutInMinutes: 1000
   dependsOn: # has to wait for the tests to be done AND the data to be uploaded
   - configure
@@ -219,7 +223,6 @@ jobs:
   - api_diff
   - upload_azure_blob
   - upload_vsdrops
-  - upload_vsts_tests
   condition: succeededOrFailed()
   variables:
     # Define the variable FOO from the previous job
@@ -240,7 +243,6 @@ jobs:
   - template: publish-html.yml
     parameters:
       statusContext: "Build"
-      runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       enableAPIDiff: ${{ parameters.enableAPIDiff }}
-      devicePrefix: sim
+      testPrefix: sim

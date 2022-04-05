@@ -160,17 +160,6 @@ namespace Xamarin.MMP.Tests
 			}
 		}
 
-		public static string AssemblyDirectory
-		{
-			get
-			{
-				string codeBase = Assembly.GetExecutingAssembly ().CodeBase;
-				UriBuilder uri = new UriBuilder (codeBase);
-				string path = Uri.UnescapeDataString (uri.Path);
-				return Path.GetDirectoryName (path);
-			}
-		}
-
 		public static Version FindMonoVersion ()
 		{
 			string output = RunAndAssert ("/Library/Frameworks/Mono.framework/Commands/mono", new [] { "--version" }, "FindMonoVersion");
@@ -453,15 +442,11 @@ namespace Xamarin.MMP.Tests
 				});
 		}
 
-		public static string TestDirectory => Path.Combine (FindRootDirectory (), "..", "tests") + "/";
+		public static string TestDirectory => Path.Combine (Configuration.RootPath, "tests");
 
 		public static string FindSourceDirectory ()
 		{
-			string codeBase = System.Reflection.Assembly.GetExecutingAssembly ().CodeBase;
-			UriBuilder uri = new UriBuilder (codeBase);
-			string path = Uri.UnescapeDataString (uri.Path);
-			string assemblyDirectory = Path.GetDirectoryName (path);
-			return Path.Combine(assemblyDirectory, TestDirectory + "common/mac");
+			return Path.Combine (TestDirectory, "common", "mac");
 		}
 
 		public static void CopyDirectory (string src, string target)

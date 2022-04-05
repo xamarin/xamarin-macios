@@ -5,7 +5,6 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace CoreSpotlight {
 

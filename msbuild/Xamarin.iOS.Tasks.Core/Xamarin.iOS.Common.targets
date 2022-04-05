@@ -91,10 +91,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			_CreatePkgInfo;
 			_CopyAppExtensionsToBundle;
 			_CopyWatchOS2AppsToBundle;
-			_ReadAppExtensionDebugSymbolProperties;
-			_GenerateAppExtensionDebugSymbols;
-			_PrepareDebugSymbolGeneration;
-			_GenerateDebugSymbols;
+			_PostProcessAppBundle;
 			_ValidateAppBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
@@ -279,7 +276,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			StandardOutputImportance="High"
 			XamarinSdkRoot="$(_XamarinSdkRoot)"
 			>
-			<Output TaskParameter="CompiledArchitectures" PropertyName="_CompiledArchitectures" />
 		</MTouch>
 
 		<Touch
@@ -290,47 +286,6 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			>
 			<Output TaskParameter="TouchedFiles" ItemName="FileWrites" />
 		</Touch>
-	</Target>
-
-	<Target Name="_CreateDebugSettings" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false' And '$(_PlatformName)' != 'MacCatalyst'"
-		DependsOnTargets="_CopyResourcesToBundle"
-		Outputs="$(_AppBundlePath)Settings.bundle\Root.plist" >
-		<CreateDebugSettings
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(AppBundleDir)"
-			DebuggerPort="$(IOSDebuggerPort)"
-			>
-		</CreateDebugSettings>
-	</Target>
-
-	<Target Name="_CreateDebugConfiguration" Condition="'$(_BundlerDebug)' == 'true' And '$(IsWatchApp)' == 'false'"
-		DependsOnTargets="_CopyResourcesToBundle;_DetectDebugNetworkConfiguration"
-		Outputs="$(_AppResourcesPath)MonoTouchDebugConfiguration.txt" >
-		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_AppResourcesPath)" />
-		<CreateDebugConfiguration
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			AppBundleDir="$(_AppResourcesPath)"
-			DebugOverWiFi="$(IOSDebugOverWiFi)"
-			DebugIPAddresses="$(_DebugIPAddresses)"
-			DebuggerPort="$(IOSDebuggerPort)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			>
-		</CreateDebugConfiguration>
-	</Target>
-
-	<Target Name="_DetectDebugNetworkConfiguration" Condition="'$(_BundlerDebug)' == 'true'">
-		<DetectDebugNetworkConfiguration
-			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true'"
-			DebugOverWiFi="$(IOSDebugOverWiFi)"
-			DebuggerHosts="$(IOSDebuggerHosts)"
-			SdkIsSimulator="$(_SdkIsSimulator)"
-			>
-
-			<Output TaskParameter="DebugIPAddresses" PropertyName="_DebugIPAddresses" />
-		</DetectDebugNetworkConfiguration>
 	</Target>
 
 	<Target Name="_ValidateAppBundle" Condition="'$(IsAppExtension)' == 'false' And '$(IsWatchApp)' == 'false'" DependsOnTargets="_DetectSdkLocations;_ComputeTargetFrameworkMoniker;_GenerateBundleName">
@@ -564,6 +519,12 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 				<CodesignStampFile>$(DeviceSpecificOutputPath)OnDemandResources-codesign\%(DirectoryName)</CodesignStampFile>
 			</_AssetPack>
 		</ItemGroup>
+
+		<Delete
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Files="@(_AssetPack->'%(CodesignStampFile)')"
+		/>
 
 		<!-- Sign assetpacks -->
 		<Codesign

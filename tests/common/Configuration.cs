@@ -21,7 +21,10 @@ namespace Xamarin.Tests
 		static string mt_root;
 		static string ios_destdir;
 		static string mac_destdir;
-		public static string DotNet6BclDir;
+		public static string DotNetBclDir;
+		public static string DotNetCscCommand;
+		public static string DotNetExecutable;
+		public static string DotNetTfm;
 		public static string mt_src_root;
 		public static string sdk_version;
 		public static string watchos_sdk_version;
@@ -63,6 +66,18 @@ namespace Xamarin.Tests
 			}
 			set {
 				use_system = value;
+			}
+		}
+
+		static bool? is_vsts; // if the system-installed XI/XM should be used instead of the local one.
+		public static bool IsVsts {
+			get {
+				if (!is_vsts.HasValue)
+					is_vsts = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_BUILDID"));
+				return is_vsts.Value;
+			}
+			set {
+				is_vsts = value;
 			}
 		}
 
@@ -273,7 +288,10 @@ namespace Xamarin.Tests
 			include_maccatalyst = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MACCATALYST", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 			include_dotnet = !string.IsNullOrEmpty (GetVariable ("ENABLE_DOTNET", ""));
-			DotNet6BclDir = GetVariable ("DOTNET6_BCL_DIR", null);
+			DotNetBclDir = GetVariable ("DOTNET_BCL_DIR", null);
+			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
+			DotNetExecutable = GetVariable ("DOTNET", null);
+			DotNetTfm = GetVariable ("DOTNET_TFM", null);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
@@ -306,7 +324,7 @@ namespace Xamarin.Tests
 				var path = Path.Combine (dir, ".git");
 				while (!Directory.Exists (path) && path.Length > 3) {
 					dir = Path.GetDirectoryName (dir);
-					if (dir == null)
+					if (dir is null)
 						throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
 					path = Path.Combine (dir, ".git");
 				}
@@ -390,12 +408,16 @@ namespace Xamarin.Tests
 
 		public static string TargetDirectoryXI {
 			get {
+				if (UseSystem) 
+					return "/";
 				return make_config ["IOS_DESTDIR"];
 			}
 		}
 
 		public static string TargetDirectoryXM {
 			get {
+				if (UseSystem) 
+					return "/";
 				return make_config ["MAC_DESTDIR"];
 			}
 		}
@@ -475,27 +497,48 @@ namespace Xamarin.Tests
 
 		public static string GetDotNetRoot ()
 		{
-			return Path.Combine (SourceRoot, "_build");
+			if (IsVsts) {
+				return Path.Combine (EvaluateVariable ("DOTNET_DIR"), "packs");
+			} else {
+				return Path.Combine (SourceRoot, "_build");
+			}
 		}
 
 		public static string GetRefDirectory (ApplePlatform platform)
 		{
-			return Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform), "ref", "net6.0");
+			var rv = Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			rv = Path.Combine (rv, "ref", DotNetTfm);
+			return rv;
 		}
 
 		public static string GetRefDirectory (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetRefNuGetName (targetFramework), "ref", "net6.0");
+				return GetRefDirectory (targetFramework.Platform);
 
 			// This is only applicable for .NET
 			throw new InvalidOperationException (targetFramework.ToString ());
 		}
 
+		public static string GetNuGetVersionNoMetadata (TargetFramework framework)
+		{
+			return GetNuGetVersionNoMetadata (framework.Platform);
+		}
+
+		public static string GetNuGetVersionNoMetadata (ApplePlatform platform)
+		{
+			return GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty);
+		}
+
 		// This is only applicable for .NET
 		public static string GetRuntimeDirectory (ApplePlatform platform, string runtimeIdentifier)
 		{
-			return Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier), "runtimes", runtimeIdentifier);
+			var rv = Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return Path.Combine (rv, "runtimes", runtimeIdentifier);
 		}
 
 		public static string GetTargetDirectory (ApplePlatform platform)
@@ -515,7 +558,7 @@ namespace Xamarin.Tests
 		public static string GetSdkRoot (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (targetFramework), "tools");
+				return GetSdkRoot (targetFramework.Platform);
 			switch (targetFramework.Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -531,7 +574,10 @@ namespace Xamarin.Tests
 		// Only valid for .NET
 		public static string GetSdkRoot (ApplePlatform platform)
 		{
-			return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform), "tools");
+			var rv = Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return Path.Combine (rv, "tools");
 		}
 
 		public static string SdkRootXI {
@@ -756,11 +802,18 @@ namespace Xamarin.Tests
 			return variable.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 		}
 
+		public static IEnumerable<string> GetBaseLibraryImplementations ()
+		{
+			foreach (var platform in GetIncludedPlatforms (true))
+				foreach (var lib in GetBaseLibraryImplementations (platform))
+					yield return lib;
+		}
+
 		public static IEnumerable<string> GetBaseLibraryImplementations (ApplePlatform platform)
 		{
 			var runtimeIdentifiers = GetRuntimeIdentifiers (platform);
 			foreach (var rid in runtimeIdentifiers) {
-				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", "net6.0");
+				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", DotNetTfm);
 				yield return Path.Combine (libdir, GetBaseLibraryName (platform, true));
 			}
 		}

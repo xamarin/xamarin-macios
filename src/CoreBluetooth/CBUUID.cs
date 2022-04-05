@@ -11,7 +11,6 @@
 using System;
 using System.Text;
 using Foundation;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -28,7 +27,7 @@ namespace CoreBluetooth {
 
 		public static CBUUID FromBytes (byte [] bytes)
 		{
-			if (bytes == null) {
+			if (bytes is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			} else if (bytes.Length != 2 && bytes.Length != 4 && bytes.Length != 16) {
 				throw new ArgumentException ("must either be 2, 4, or 16 bytes long", "bytes");
@@ -91,7 +90,7 @@ namespace CoreBluetooth {
 		public unsafe string ToString (bool fullUuid)
 		{
 			NSData d = Data;
-			if (d == null)
+			if (d is null)
 				return String.Empty;
 
 			StringBuilder sb = new StringBuilder ();
@@ -118,14 +117,10 @@ namespace CoreBluetooth {
 			return sb.ToString ();
 		}
 
-#if MONOMAC
+#if MONOMAC && !NET
 		// workaround for 27160443 – Trello: https://trello.com/c/oqB27JA6
 		// try new constant (10.13+) and fallback to the old/misnamed one
-#if NET
-		[SupportedOSPlatform ("macos10.13")]
-#else
 		[Mac (10, 13)]
-#endif
 		public static NSString CharacteristicValidRangeString {
 			get {
 				return CBUUIDCharacteristicValidRangeString ?? CBUUIDValidRangeString;

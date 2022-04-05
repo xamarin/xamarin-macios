@@ -13,7 +13,6 @@ using System;
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;

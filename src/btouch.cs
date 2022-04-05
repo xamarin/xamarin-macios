@@ -49,6 +49,11 @@ public class BindingTouch : IDisposable {
 	public bool skipSystemDrawing;
 	public string? outfile;
 
+#if !NET
+	const string DefaultCompiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+#endif
+	string compiler = string.Empty;
+	string []? compile_command = null;
 	string? baselibdll;
 	string? attributedll;
 
@@ -224,7 +229,7 @@ public class BindingTouch : IDisposable {
 		var defines = new List<string> ();
 		string? generate_file_list = null;
 		bool process_enums = false;
-		string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+		bool noNFloatUsing = false;
 
 		ErrorHelper.ClearWarningLevels ();
 
@@ -242,6 +247,12 @@ public class BindingTouch : IDisposable {
 			{ "r|reference=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (v) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
+			{ "compile-command=", "Sets the command to execute the C# compiler (this be an executable + arguments).", v =>
+				{
+					if (!StringUtils.TryParseArguments (v, out compile_command, out var ex))
+						throw ErrorHelper.CreateError (27, "--compile-command", ex);
+				}
+			},
 			{ "sdk=", "Sets the .NET SDK to use (Obsolete)", v => {}, true },
 			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
@@ -304,6 +315,10 @@ public class BindingTouch : IDisposable {
 					} catch (Exception ex) {
 						throw ErrorHelper.CreateError (26, ex.Message);
 					}
+				}
+			},
+			{ "no-nfloat-using:", "If a global using alias directive for 'nfloat = System.Runtime.InteropServices.NFloat' should automatically be created.", (v) => {
+					noNFloatUsing = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v);
 				}
 			},
 			new Mono.Options.ResponseFileSource (),
@@ -456,8 +471,15 @@ public class BindingTouch : IDisposable {
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (2, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{compile_output}".Replace ("\n", "\n\t"));
+#if NET
+			var tmpusing = Path.Combine (tmpdir, "GlobalUsings.g.cs");
+			if (!noNFloatUsing) {
+				File.WriteAllText (tmpusing, "global using nfloat = global::System.Runtime.InteropServices.NFloat;\n");
+				cargs.Add (tmpusing);
+			}
+#endif
+
+			Compile (cargs, 2);
 
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
@@ -583,8 +605,12 @@ public class BindingTouch : IDisposable {
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			if (Driver.RunCommand (compiler, cargs, null, out var generated_compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (1000, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{generated_compile_output}".Replace ("\n", "\n\t"));
+#if NET
+			if (!noNFloatUsing)
+				cargs.Add (tmpusing);
+#endif
+
+			Compile (cargs, 1000);
 		} finally {
 			if (delete_temp)
 				Directory.Delete (tmpdir, true);
@@ -592,6 +618,25 @@ public class BindingTouch : IDisposable {
 		return 0;
 	}
 	
+	void Compile (List<string> arguments, int errorCode)
+	{
+		if (compile_command is null || compile_command.Length == 0) {
+#if !NET
+			if (string.IsNullOrEmpty (compiler))
+				compiler = DefaultCompiler;
+#endif
+			if (string.IsNullOrEmpty (compiler))
+				throw ErrorHelper.CreateError (28);
+			compile_command = new string [] { compiler };
+		}
+
+		for (var i = 1; i < compile_command.Length; i++) {
+			arguments.Insert (i - 1, compile_command [i]);
+		}
+
+		if (Driver.RunCommand (compile_command [0], arguments, null, out var compile_output, true, Driver.Verbosity) != 0)
+			throw ErrorHelper.CreateError (errorCode, $"{compiler} {StringUtils.FormatArguments (arguments)}\n{compile_output}".Replace ("\n", "\n\t"));
+	}
 
 	static string GetWorkDir ()
 	{
