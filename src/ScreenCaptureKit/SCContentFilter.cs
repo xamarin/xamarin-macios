@@ -47,7 +47,7 @@ namespace ScreenCaptureKit {
 				Handle = InitWithDisplayExcludingWindows (display, windows);
 				break;
 			default:
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (option));
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (option), $"Unknown option {option}");
 				break;
 			};
 		}
@@ -62,7 +62,7 @@ namespace ScreenCaptureKit {
 				Handle = InitWithDisplayExcludingApplications (display, applications, exceptingWindows);
 				break;
 			default:
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (option));
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (option), $"Unknown option {option}");
 				break;
 			};
 		}
