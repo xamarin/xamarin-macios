@@ -29,7 +29,7 @@ namespace MetalKit {
 		public MTLTextureUsage? TextureUsage {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureUsageKey);
-				if (val != null)
+				if (val is not null)
 					return (MTLTextureUsage)(uint) val;
 				return null;
 			}
@@ -44,7 +44,7 @@ namespace MetalKit {
 		public MTLCpuCacheMode? TextureCpuCacheMode {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureCpuCacheModeKey);
-				if (val != null)
+				if (val is not null)
 					return (MTLCpuCacheMode)(uint) val;
 				return null;
 			}
@@ -66,7 +66,7 @@ namespace MetalKit {
 		public MTLStorageMode? TextureStorageMode {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureStorageModeKey);
-				if (val != null)
+				if (val is not null)
 					return (MTLStorageMode)(uint) val;
 				return null;
 			}
@@ -88,7 +88,7 @@ namespace MetalKit {
 		public MTKTextureLoaderCubeLayout? CubeLayout {
 			get {
 				var val = GetNSStringValue (MTKTextureLoaderKeys.CubeLayoutKey);
-				if (val == null)
+				if (val is null)
 					return null;
 				return MTKTextureLoaderCubeLayoutExtensions.GetValue (val);
 			}
@@ -110,7 +110,7 @@ namespace MetalKit {
 		public MTKTextureLoaderOrigin? Origin {
 			get {
 				var val = GetNSStringValue (MTKTextureLoaderKeys.OriginKey);
-				if (val == null)
+				if (val is null)
 					return null;
 				return MTKTextureLoaderOriginExtensions.GetValue (val);
 			}
