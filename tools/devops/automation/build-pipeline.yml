@@ -315,7 +315,7 @@ stages:
         pool: ${{ parameters.pool }}
 
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
-  - stage: getnerate_api_diff
+  - stage: generate_api_diff
     displayName: 'API diff'
     dependsOn: []
     jobs:
