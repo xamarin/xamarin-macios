@@ -22,13 +22,13 @@ namespace ScreenCaptureKit {
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 	[SupportedOSPlatform ("macos12.3")]
-	[SupportedOSPlatform ("maccatalyst15.4")]
+	[UnsupportedOSPlatform ("maccatalyst")]
 #else
 	[NoiOS]
 	[NoTV]
 	[NoWatch]
 	[Mac (12,3)]
-	[MacCatalyst (15,4)]
+	[NoMacCatalyst]
 #endif
 	public enum SCContentFilterOption {
 		Include,
