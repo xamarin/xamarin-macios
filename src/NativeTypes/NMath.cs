@@ -7,6 +7,8 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.CompilerServices;
 
