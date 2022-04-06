@@ -155,7 +155,7 @@ jobs:
       sbomFilter: '*.nupkg;*.pkg;*.msi'
 
 # Job that runs on a vm that downlods the artefacts information and adds a gihub comment pointing to the results of the build.
-- job: artefacts_github_comment
+- job: artifacts_github_comment
   displayName: 'Publish GitHub Comment - Artifacts'
   timeoutInMinutes: 1000
   dependsOn:
