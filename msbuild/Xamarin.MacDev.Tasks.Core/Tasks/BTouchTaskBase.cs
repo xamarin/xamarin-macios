@@ -75,10 +75,6 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string ResponseFilePath { get; set; }
 
-		bool IsDotNet {
-			get { return TargetFramework.IsDotNet; }
-		}
-
 		string DotNetPath {
 			get {
 				// Return the dotnet executable we're executing with.

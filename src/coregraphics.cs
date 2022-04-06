@@ -403,4 +403,48 @@ namespace CoreGraphics {
 		[Field ("kCGColorClear")]
 		Clear,
 	}
+
+	// Adding suffix *Keys to avoid possible name clash
+	[NoiOS, NoTV, NoWatch, Mac (10,9), MacCatalyst (13,1)]
+	[Static]
+	interface CGDisplayStreamKeys {
+
+		[Field ("kCGDisplayStreamColorSpace")]
+		NSString ColorSpace { get; }
+
+		[Field ("kCGDisplayStreamDestinationRect")]
+		NSString DestinationRect { get; }
+
+		[Field ("kCGDisplayStreamMinimumFrameTime")]
+		NSString MinimumFrameTime { get; }
+
+		[Field ("kCGDisplayStreamPreserveAspectRatio")]
+		NSString PreserveAspectRatio { get; }
+
+		[Field ("kCGDisplayStreamQueueDepth")]
+		NSString QueueDepth { get; }
+
+		[Field ("kCGDisplayStreamShowCursor")]
+		NSString ShowCursor { get; }
+
+		[Field ("kCGDisplayStreamSourceRect")]
+		NSString SourceRect { get; }
+
+		[Field ("kCGDisplayStreamYCbCrMatrix")]
+		NSString YCbCrMatrix { get; }
+	}
+
+	[NoiOS, NoTV, NoWatch, Mac (10,9), MacCatalyst (13,1)]
+	[Static]
+	interface CGDisplayStreamYCbCrMatrixOptionKeys {
+
+		[Field ("kCGDisplayStreamYCbCrMatrix_ITU_R_601_4")]
+		NSString Itu_R_601_4 { get; }
+
+		[Field ("kCGDisplayStreamYCbCrMatrix_ITU_R_709_2")]
+		NSString Itu_R_709_2 { get; }
+
+		[Field ("kCGDisplayStreamYCbCrMatrix_SMPTE_240M_1995")]
+		NSString Smpte_240M_1995 { get; }
+	}
 }

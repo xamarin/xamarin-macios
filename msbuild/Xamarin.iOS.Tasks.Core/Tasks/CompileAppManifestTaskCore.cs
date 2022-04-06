@@ -135,9 +135,6 @@ namespace Xamarin.iOS.Tasks
 
 			SetRequiredArchitectures (plist);
 
-			if (IsIOS)
-				Validation (plist);
-
 			return !Log.HasLoggedErrors;
 		}
 
@@ -217,34 +214,25 @@ namespace Xamarin.iOS.Tasks
 
 		void SetDeviceFamily (PDictionary plist)
 		{
+			var uiDeviceFamily = IPhoneDeviceType.NotSet;
 			switch (Platform) {
 			case ApplePlatform.iOS:
-				SetIOSDeviceFamily (plist);
-				break;
-			case ApplePlatform.WatchOS:
-				plist.SetUIDeviceFamily (IPhoneDeviceType.Watch);
-				break;
-			case ApplePlatform.TVOS:
-				plist.SetUIDeviceFamily (IPhoneDeviceType.TV);
-				break;
-			}
-		}
-
-		void SetIOSDeviceFamily (PDictionary plist)
-		{
-			if (IsWatchApp) {
-				if (SdkIsSimulator) {
-					plist.SetUIDeviceFamily (IPhoneDeviceType.IPhone | IPhoneDeviceType.Watch);
-				} else {
-					plist.SetUIDeviceFamily (IPhoneDeviceType.Watch);
-				}
-			} else {
 				if (!IsAppExtension)
 					plist.SetIfNotPresent (ManifestKeys.LSRequiresIPhoneOS, true);
 
-				if (supportedDevices == IPhoneDeviceType.NotSet)
-					plist.SetUIDeviceFamily (IPhoneDeviceType.IPhone);
+				uiDeviceFamily = IPhoneDeviceType.IPhone;
+				break;
+			case ApplePlatform.WatchOS:
+				uiDeviceFamily = IPhoneDeviceType.Watch;
+				break;
+			case ApplePlatform.TVOS:
+				uiDeviceFamily = IPhoneDeviceType.TV;
+				break;
 			}
+
+			// Don't set UIDeviceFamily if the plist already contains it
+			if (uiDeviceFamily != IPhoneDeviceType.NotSet && supportedDevices == IPhoneDeviceType.NotSet)
+				plist.SetUIDeviceFamily (uiDeviceFamily);
 		}
 
 		void SetAppTransportSecurity (PDictionary plist)
@@ -271,39 +259,6 @@ namespace Xamarin.iOS.Tasks
 			} else {
 				Log.LogMessage (MessageImportance.Low, MSBStrings.M0018);
 				ats.SetBooleanOrRemove (ManifestKeys.NSAllowsArbitraryLoads, true);
-			}
-		}
-
-		void Validation (PDictionary plist)
-		{
-			if (!Validate)
-				return;
-
-			var supportsIPhone = (supportedDevices & IPhoneDeviceType.IPhone) != 0
-			                     || supportedDevices == IPhoneDeviceType.NotSet;
-			var supportsIPad = (supportedDevices & IPhoneDeviceType.IPad) != 0;
-
-			// Validation...
-			if (!IsAppExtension && sdkVersion >= AppleSdkVersion.V3_2) {
-				IPhoneOrientation orientation;
-
-				if (supportsIPhone) {
-					orientation = plist.GetUISupportedInterfaceOrientations (false);
-					if (orientation == IPhoneOrientation.None) {
-						LogAppManifestWarning (MSBStrings.W0019);
-					} else if (!orientation.IsValidPair ()) {
-						LogAppManifestWarning (MSBStrings.W0020);
-					}
-				}
-
-				if (supportsIPad) {
-					orientation = plist.GetUISupportedInterfaceOrientations (true);
-					if (orientation == IPhoneOrientation.None) {
-						LogAppManifestWarning (MSBStrings.W0021);
-					} else if (!orientation.IsValidPair ()) {
-						LogAppManifestWarning (MSBStrings.W0022);
-					}
-				}
 			}
 		}
 	}
