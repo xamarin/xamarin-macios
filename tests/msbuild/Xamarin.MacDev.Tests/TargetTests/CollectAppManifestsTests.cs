@@ -15,10 +15,10 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void PartialAppManifest ()
 		{
-			var csproj = @"<?xml version=""1.0"" encoding=""utf-8""?>
+			var csproj = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project Sdk=""Microsoft.NET.Sdk"">
 	<PropertyGroup>
-		<TargetFramework>net6.0-macos</TargetFramework>
+		<TargetFramework>{Configuration.DotNetTfm}-macos</TargetFramework>
 		<OutputType>Exe</OutputType>
 
 		<CollectAppManifestsDependsOn>
@@ -40,6 +40,8 @@ namespace Xamarin.MacDev.Tasks {
 <dict>
         <key>CFBundleDisplayName</key>
         <string>PartialAppManifestDisplayName</string>
+        <key>CFBundleIdentifier</key>
+        <string>com.xamarin.partialappmanifest</string>
 </dict>
 </plist>";
 
@@ -63,11 +65,12 @@ namespace Xamarin.MacDev.Tasks {
 			var rv = engine.RunTarget (ApplePlatform.MacOSX, ExecutionMode.DotNet, csprojPath, target: "_WriteAppManifest", properties: properties);
 			Assert.AreEqual (0, rv.ExitCode, "Exit code");
 
-			var appManifestPath = Path.Combine (tmpdir, "bin", "Debug", "net6.0-macos", "osx-x64", "PartialAppManifest.app", "Contents", "Info.plist");
+			var appManifestPath = Path.Combine (tmpdir, "bin", "Debug", Configuration.DotNetTfm + "-macos", "osx-x64", "PartialAppManifest.app", "Contents", "Info.plist");
 			Assert.That (appManifestPath, Does.Exist, "App manifest existence");
 
 			var plist = PDictionary.FromFile (appManifestPath);
 			Assert.AreEqual ("PartialAppManifestDisplayName", plist.GetCFBundleDisplayName (), "Bundle display name");
+			Assert.AreEqual ("com.xamarin.partialappmanifest", plist.GetCFBundleIdentifier (), "Bundle identifier");
 		}
 	}
 }

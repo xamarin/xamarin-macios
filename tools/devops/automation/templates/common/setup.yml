@@ -93,5 +93,7 @@ steps:
 
 - pwsh: |
     # some steps expect this to be set to be able to get the correct nuget name
-    Write-Host "##vso[task.setvariable variable=BRANCH_NAME]$(Build.SourceBranchName)"
+    Write-Host "##vso[task.setvariable variable=BRANCH_NAME]$Env:BRANCH_NAME"
   displayName: 'Set Jenkins variables'
+  env:
+    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]

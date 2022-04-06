@@ -68,13 +68,10 @@ namespace Xamarin.iOS.Tasks {
 
 			ClearTestDirectory ();
 
-			Console.WriteLine ("Building dotnet");
 			Mode = ExecutionMode.DotNet;
 			BuildProject (project, clean: false, expectedErrorCount: expectedErrorCount);
-			Console.WriteLine ("Done building dotnet");
 			var dotnet_bundle = AppBundlePath;
 
-			Console.WriteLine ("Building net461");
 			Mode = ExecutionMode.MSBuild;
 			var net461 = GetTestDirectory (forceClone: true);
 			switch (project) {
@@ -86,7 +83,6 @@ namespace Xamarin.iOS.Tasks {
 				break;
 			}
 			BuildProject (project, nuget_restore: true, expectedErrorCount: expectedErrorCount);
-			Console.WriteLine ("Done building net461");
 			var net461_bundle = AppBundlePath;
 
 			if (expectedErrorCount == 0)

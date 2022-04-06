@@ -1,5 +1,5 @@
 <Project>
-  <Target Name="ExtractMlaunch" BeforeTargets="Build">
+  <Target Name="ExtractMlaunch" BeforeTargets="Build" Condition="'$(TargetFrameworks)' == '' OR $(TargetFrameworks.EndsWith($(TargetFramework)))">
     <Message Condition=" '$(MlaunchDestinationDir)' != '' " Text="Copying mlaunch to $(MlaunchDestinationDir)" />
     <Copy Condition=" '$(MlaunchDestinationDir)' != '' "
           SourceFiles="@(_MlaunchFiles)"

@@ -223,7 +223,6 @@ function New-GitHubComment {
         [String]
         $Header,
         
-        [Parameter(Mandatory)]
         [String]
         $Description,
 
@@ -257,7 +256,9 @@ function New-GitHubComment {
     $msg = [System.Text.StringBuilder]::new()
     $msg.AppendLine("### $Emoji $Header $Emoji")
     $msg.AppendLine()
-    $msg.AppendLine($Description)
+    if ($Description) { # only if description is not null or empty
+        $msg.AppendLine($Description)
+    }
     if ($Message) { # only if message is not null or empty
         $msg.AppendLine()
         $msg.AppendLine($Message)
@@ -339,7 +340,6 @@ function New-GitHubCommentFromFile {
         [String]
         $Header,
         
-        [Parameter(Mandatory)]
         [String]
         $Description,
 

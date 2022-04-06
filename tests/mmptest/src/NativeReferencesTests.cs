@@ -17,27 +17,24 @@ namespace Xamarin.MMP.Tests
 
 		public static string SimpleDylibPath {
 			get {
-				string rootDir = TI.FindRootDirectory ();
-				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassDylib.dylib");
-				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("SimpleDylibPath missing? {0}", buildLibPath));
+				var buildLibPath = Path.Combine (Configuration.RootPath, "tests", "mac-binding-project", "bin", "SimpleClassDylib.dylib");
+				Assert.That (buildLibPath, Does.Exist, "SimpleDylibPath missing?");
 				return buildLibPath;
 			}
 		}
 
 		public static string SimpleStaticPath {
 			get {
-				string rootDir = TI.FindRootDirectory ();
-				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/SimpleClassStatic.a");
-				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("SimpleStaticPath missing? {0}", buildLibPath));
+				var buildLibPath = Path.Combine (Configuration.RootPath, "tests", "mac-binding-project", "bin", "SimpleClassStatic.a");
+				Assert.That (buildLibPath, Does.Exist, "SimpleStaticPath missing?");
 				return buildLibPath;
 			}
 		}
 
 		public static string MobileStaticBindingPath {
 			get {
-				string rootDir = TI.FindRootDirectory ();
-				string buildLibPath = Path.Combine (rootDir, "../tests/mac-binding-project/bin/Mobile-static/MobileBinding.dll");
-				Assert.IsTrue (File.Exists (buildLibPath), string.Format ("MobileStaticBindingPath missing? {0}", buildLibPath));
+				var buildLibPath = Path.Combine (Configuration.RootPath, "tests", "mac-binding-project", "bin", "Mobile-static", "MobileBinding.dll");
+				Assert.That (buildLibPath, Does.Exist, "MobileStaticBindingPath missing?");
 				return buildLibPath;
 			}
 		}
@@ -51,7 +48,7 @@ namespace Xamarin.MMP.Tests
 			string dylibPath = Path.Combine (tmpDir, "dll/");
 			string filePath = Path.Combine (dylibPath, fileName);
 			Directory.CreateDirectory (dylibPath);
-			File.Copy (Path.Combine (TI.AssemblyDirectory, TI.TestDirectory + "mac-binding-project/bin/SimpleClassDylib.dylib"), filePath);
+			File.Copy (Path.Combine (TI.TestDirectory, "mac-binding-project", "bin", "SimpleClassDylib.dylib"), filePath);
 			return filePath;
 		}
 

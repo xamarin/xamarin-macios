@@ -38,11 +38,17 @@
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->
 	<PropertyGroup Condition="'$(_RuntimeIdentifierIsRequired)' == 'true' And '$(RuntimeIdentifier)' == '' And '$(RuntimeIdentifiers)' == '' ">
-		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS'">iossimulator-x64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS'">tvossimulator-x64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS'">osx-x64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64</RuntimeIdentifier>
-		<_XamarinUsingDefaultRuntimeIdentifier>true</_XamarinUsingDefaultRuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'iOS'">$(_iOSRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'tvOS'">$(_tvOSRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'macOS'">$(_macOSRuntimeIdentifier)</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(_PlatformName)' == 'MacCatalyst'">$(_MacCatalystRuntimeIdentifier)</RuntimeIdentifier>
+
+		<_XamarinUsingDefaultRuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">true</_XamarinUsingDefaultRuntimeIdentifier>
+		
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'iOS'">iossimulator-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS'">tvossimulator-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'macOS'">osx-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64</RuntimeIdentifier>
 		<!--
 			Workaround/hack:
 

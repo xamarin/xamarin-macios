@@ -1021,8 +1021,13 @@ function check_dotnet ()
 	local CACHED_FILE
 	local DOWNLOADED_FILE
 
-	DOTNET_VERSION=$(grep "^DOTNET_VERSION=" dotnet.config | sed 's/.*=//')
-	URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-x64.pkg
+	DOTNET_VERSION=$(grep "^SYSTEM_DOTNET_VERSION=" dotnet.config | sed 's/.*=//')
+	ARCH=$(arch)
+	if [[ "$ARCH" =~ "arm64" ]]; then
+		URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-arm64.pkg
+	else
+		URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-x64.pkg
+	fi
 	INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
 
 	if test -d "$INSTALL_DIR"; then

@@ -96,6 +96,20 @@ namespace Xamarin.Tests {
 			return project_path;
 		}
 
+		protected string GetPlugInsRelativePath (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+				return "PlugIns";
+			case ApplePlatform.MacCatalyst:
+			case ApplePlatform.MacOSX:
+				return Path.Combine ("Contents", "PlugIns");
+			default:
+				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
+			}
+		}
+
 		protected void Clean (string project_path)
 		{
 			var dirs = Directory.GetDirectories (Path.GetDirectoryName (project_path)!, "*", SearchOption.AllDirectories);
@@ -193,6 +207,12 @@ namespace Xamarin.Tests {
 
 			// Some assemblies, such as Facades, will be completely empty even when not stripped
 			Assert.That (assemblies.Length == assembliesWithOnlyEmptyMethods.Count, Is.EqualTo (shouldStrip), $"Unexpected stripping status: of {assemblies.Length} assemblies {assembliesWithOnlyEmptyMethods.Count} were empty.");
+		}
+
+		protected void AssertDSymDirectory (string appPath)
+		{
+			var dSYMDirectory = appPath + ".dSYM";
+			Assert.That (dSYMDirectory, Does.Exist, "dsym directory");
 		}
 
 		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)

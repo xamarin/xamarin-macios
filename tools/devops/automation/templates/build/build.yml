@@ -49,6 +49,19 @@ steps:
   submodules: recursive
   path: s/xamarin-macios
 
+
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - pwsh: |
+      git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
+      git fetch origin
+      $branch="$(Build.SourceBranch)".Replace("merge", "head")
+      $branch=$branch.Replace("refs", "origin")
+      Write-Host "Checking out branch $branch"
+      git checkout $branch
+      git branch -a
+    displayName: "Undo Github merge"
+    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+
 - checkout: maccore
   clean: true
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
@@ -380,6 +393,7 @@ steps:
 
       echo "Rollback file contents:" 
       echo "$(cat $WORKLOAD_DST)"
+    name: workload_file
     displayName: 'Generate "WorkloadRollback.json'
 
   # upload each of the pkgs into the pipeline artifacts
@@ -420,26 +434,16 @@ steps:
       set -x
       set -e
 
-      echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
-      RC=0
-      make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests || RC=$?
-      if [ $RC -eq 0 ]; then
-        echo "Setting outpur var macTestsPresent to Succeeded"
-        echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Succeeded"
-      else
-        echo "Setting outpur var macTestsPresent to Failed"
-        echo "##vso[task.setvariable variable=macTestsPresent;isOutput=true]Failed"
-      fi
-      exit $RC
+      make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
       
     name: macTestPkg
-    displayName: 'Package Xamarin.mac tests'
+    displayName: 'Package macOS tests'
     condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
     continueOnError: true # not a terrible blocking issue
     timeoutInMinutes: 60
 
   - task: PublishPipelineArtifact@1
-    displayName: 'Publish Xamarin.Mac tests'
+    displayName: 'Publish macOS tests'
     inputs:
       targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z
       artifactName: mac-test-package
@@ -503,3 +507,14 @@ steps:
 - template: ../common/teardown.yml
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    New-GitHubComment -Header "Build failed" -Emoji ":fire:" -Description "Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
+  condition: failed()
+  displayName: 'Report build failure'
+  env:
+    BUILD_REVISION: $(Build.SourceVersion)
+    CONTEXT: "Build"
+    GITHUB_TOKEN: $(GitHub.Token)
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)

@@ -192,26 +192,28 @@ jobs:
       enableDotnet: ${{ parameters.enableDotnet }}
       sbomFilter: '*.nupkg;*.pkg;*.msi'
 
-- job: upload_vsdrops
-  displayName: 'Upload API diff to VSDrops'
-  timeoutInMinutes: 1000
-  dependsOn: # can start as soon as the tests are done and the api diff
-  - build 
-  - api_diff
-  condition: and(succeededOrFailed() , contains (dependencies.build.outputs['runTests.TESTS_RAN'], 'True')) # only run when we did run the tests
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
+  - job: upload_vsdrops
+    displayName: 'Upload API diff to VSDrops'
+    timeoutInMinutes: 1000
+    dependsOn: # can start as soon as the tests are done and the api diff
+    - build 
+    - api_diff
+    condition: succeededOrFailed() 
 
-  variables:
-    API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
+    variables:
+      API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
 
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: upload-vsdrops.yml
-    parameters:
-      testPrefix: sim
-      runTests: ${{ parameters.runTests }}
+    pool:
+      vmImage: 'windows-latest'
+      workspace:
+        clean: all
+    steps:
+    - template: upload-vsdrops.yml
+      parameters:
+        testPrefix: sim
+        runTests: ${{ parameters.runTests }}
+        enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 
 - job: publish_html
@@ -220,9 +222,10 @@ jobs:
   dependsOn: # has to wait for the tests to be done AND the data to be uploaded
   - configure
   - build
-  - api_diff
   - upload_azure_blob
   - upload_vsdrops
+  - ${{ if eq(parameters.enableAPIDiff, true) }}:
+    - api_diff
   condition: succeededOrFailed()
   variables:
     # Define the variable FOO from the previous job
@@ -230,11 +233,12 @@ jobs:
     BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
     TESTS_BOT: $[ dependencies.build.outputs['runTests.TESTS_BOT'] ]
     TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
-    APIDIFF_MESSAGE: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_MESSAGE'] ]
-    APIDIFF_BUILT: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_BUILT'] ]
-    API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
-    API_GENERATOR_DIFF_STATUS_MESSAGE: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE'] ]
     PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    ${{ if eq(parameters.enableAPIDiff, true) }}:
+      APIDIFF_MESSAGE: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_MESSAGE'] ]
+      APIDIFF_BUILT: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_BUILT'] ]
+      API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
+      API_GENERATOR_DIFF_STATUS_MESSAGE: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE'] ]
   pool:
     vmImage: 'windows-latest'
     workspace:
@@ -243,7 +247,6 @@ jobs:
   - template: publish-html.yml
     parameters:
       statusContext: "Build"
-      runTests: ${{ parameters.runTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       enableAPIDiff: ${{ parameters.enableAPIDiff }}
       testPrefix: sim
