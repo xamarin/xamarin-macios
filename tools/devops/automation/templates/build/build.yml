@@ -512,31 +512,31 @@ steps:
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
 
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    New-GitHubComment -Header "Build failed" -Emoji ":fire:" -Description "Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
-  condition: failed()
-  displayName: 'Report build failure'
-  env:
-    BUILD_REVISION: $(Build.SourceVersion)
-    CONTEXT: "Build"
-    GITHUB_TOKEN: $(GitHub.Token)
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+- bash:
+    env | sort
+  displayName: "Print environment"
+  continueOnError: true
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $status = "$Env:AGENT_JOBSTATUS"
-    if (($status -eq "Succeeded") -or ($status -eq "SucceededWithIssues")) {
+    Write-Host "Status: $status"
+    Write-Host "macTestPkgError: $Env:macTestPkgError"
+    if ($status -eq "Succeeded") {
       $header = "Build succeeded"
       $emojii = ":white_check_mark:"
       $description = "Build succeeded for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
-      if ("$Env:macTestPkgError" -eq "true") {
-        $description = "$description`n`n:warning: Failed to package macOS tests"
-      }
+    } elseif ($status -eq "SucceededWithIssues")) {
+      $header = "Build succeeded"
+      $emojii = ":white_check_mark:"
+      $description = "Build succeeded (with issues) for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
     } else {
       $header = "Build failed"
       $emojii = ":fire:"
-      $description = "Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
+      $description = "Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME' (status: $status)"
+    }
+    if ("$Env:macTestPkgError" -eq "true") {
+      $description = "$description`n`n:warning: Failed to package macOS tests"
     }
     New-GitHubComment -Header "$header" -Emoji "$emojii" -Description "$description"
   condition: always()
