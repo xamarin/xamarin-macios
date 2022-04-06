@@ -89,6 +89,9 @@ using NSPasteboard = Foundation.NSObject;
 using NSWorkspaceAuthorization = Foundation.NSObject;
 
 using NSStringAttributes = UIKit.UIStringAttributes;
+using NSTextBlock = Foundation.NSObject;
+using NSTextList = Foundation.NSString; // Not NSObject, because there are method overloads with NSTextBlock and NSTextList, so these three must all be different types.
+using NSTextTable = Foundation.NSData; // Not NSObject, because there are method overloads with NSTextBlock and NSTextList, so these three must all be different types.
 #endif
 
 #if IOS && !__MACCATALYST__
@@ -294,68 +297,11 @@ namespace Foundation
 		[Export ("initWithString:")]
 		NativeHandle Constructor (string str);
 
-#if !MONOMAC
-
-#if IOS
-		// New API in iOS9 with same signature as an older alternative.
-		// We expose only the *new* one for the new platforms as the old
-		// one was moved to `NSDeprecatedKitAdditions (NSAttributedString)`
-		[NoMac][NoWatch][NoTV]
-		[iOS (9,0)]
 		[Internal]
+		[Sealed]
 		[Export ("initWithURL:options:documentAttributes:error:")]
-		IntPtr InitWithURL (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
+		NativeHandle InitWithUrl (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
 
-		// but we still need to allow the API to work before iOS 9.0
-		// and to compleify matters the old one was deprecated in 9.0
-		[NoMac][NoWatch][NoTV]
-		[iOS (7,0)]
-		[Internal]
-		[Deprecated (PlatformName.iOS, 9, 0)]
-		[Export ("initWithFileURL:options:documentAttributes:error:")]
-		IntPtr InitWithFileURL (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
-#elif TVOS || WATCH
-		[NoMac]
-		[iOS (9,0)]
-		[Export ("initWithURL:options:documentAttributes:error:")]
-		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
-#endif
-		[NoMac]
-		[iOS (7,0)]
-		[Wrap ("this (url, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
-		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Export ("initWithData:options:documentAttributes:error:")]
-		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
-		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Export ("dataFromRange:documentAttributes:error:")]
-		NSData GetDataFromRange (NSRange range, NSDictionary attributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Wrap ("GetDataFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
-		NSData GetDataFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Export ("fileWrapperFromRange:documentAttributes:error:")]
-		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSDictionary attributes, ref NSError error);
-
-		[NoMac]
-		[iOS (7,0)]
-		[Wrap ("GetFileWrapperFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
-		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
-#endif
-		
 		[Export ("initWithString:attributes:")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		NativeHandle Constructor (string str, [NullAllowed] NSDictionary attributes);
@@ -369,10 +315,107 @@ namespace Foundation
 		[Export ("enumerateAttribute:inRange:options:usingBlock:")]
 		void EnumerateAttribute (NSString attributeName, NSRange inRange, NSAttributedStringEnumeration options, NSAttributedStringCallback callback);
 
-#if MONOMAC
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[Export ("initWithURL:options:documentAttributes:error:")]
+#if MONOMAC || XAMCORE_5_0
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+#else
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
+
+#if MONOMAC || XAMCORE_5_0
+		[Wrap ("this (url, options?.GetDictionary (), out resultDocumentAttributes, out error)")]
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+#else
+		[Wrap ("this (url, options?.GetDictionary (), out resultDocumentAttributes, ref error)")]
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
+
+#if MONOMAC || XAMCORE_5_0
+		[Wrap ("this (url, (NSDictionary?) null, out var _, out error)")]
+		NativeHandle Constructor (NSUrl url, out NSError error);
+#else
+		[Wrap ("this (url, (NSDictionary?) null, out var _, ref error)")]
+		NativeHandle Constructor (NSUrl url, ref NSError error);
+#endif
+
+#if MONOMAC || XAMCORE_5_0
+		[Wrap ("this (url, options?.GetDictionary (), out var _, out error)")]
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSError error);
+#else
+		[Wrap ("this (url, options?.GetDictionary (), out var _, ref error)")]
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSAttributedStringDocumentAttributes options, ref NSError error);
+#endif
+
 		[Export ("initWithData:options:documentAttributes:error:")]
-		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary docAttributes, out NSError error);
+#if MONOMAC || XAMCORE_5_0
+		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+#else
+		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
+
+#if MONOMAC || XAMCORE_5_0
+		[Wrap ("this (data, (NSDictionary?) null, out var _, out error)")]
+		NativeHandle Constructor (NSData data, out NSError error);
+#else
+		[Wrap ("this (data, (NSDictionary?) null, out var _, ref error)")]
+		NativeHandle Constructor (NSData data, ref NSError error);
+#endif
+
+#if MONOMAC || XAMCORE_5_0
+		[Wrap ("this (data, options?.GetDictionary (), out var _, out error)")]
+		NativeHandle Constructor (NSData data, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSError error);
+#else
+		[Wrap ("this (data, options?.GetDictionary (), out var _, ref error)")]
+		NativeHandle Constructor (NSData data, [NullAllowed] NSAttributedStringDocumentAttributes options, ref NSError error);
+#endif
+
+#if MONOMAC || XAMCORE_5_0
+		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, out error)")]
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+#else
+		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
+
+		[Export ("dataFromRange:documentAttributes:error:")]
+#if !(MONOMAC || XAMCORE_5_0)
+		[Sealed]
+#endif
+		NSData GetData (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
+
+#if !(MONOMAC || XAMCORE_5_0)
+		[Obsolete ("Use 'GetData' instead.")]
+		[Export ("dataFromRange:documentAttributes:error:")]
+		NSData GetDataFromRange (NSRange range, [NullAllowed] NSDictionary attributes, ref NSError error);
+#endif
+
+		[Wrap ("GetData (range, documentAttributes?.GetDictionary (), out error)")]
+		NSData GetData (NSRange range, [NullAllowed] NSAttributedStringDocumentAttributes documentAttributes, out NSError error);
+
+#if !(MONOMAC || XAMCORE_5_0)
+		[Obsolete ("Use 'GetData' instead.")]
+		[Wrap ("GetDataFromRange (range, documentAttributes?.GetDictionary (), ref error)")]
+		NSData GetDataFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
+#endif
+
+#if !(MONOMAC || XAMCORE_5_0)
+		[Obsolete ("Use 'GetFileWrapper' instead.")]
+		[Export ("fileWrapperFromRange:documentAttributes:error:")]
+		NSFileWrapper GetFileWrapperFromRange (NSRange range, [NullAllowed] NSDictionary attributes, ref NSError error);
+
+		[Obsolete ("Use 'GetFileWrapper' instead.")]
+		[Wrap ("GetFileWrapperFromRange (range, documentAttributes?.GetDictionary (), ref error)")]
+		NSFileWrapper GetFileWrapperFromRange (NSRange range, [NullAllowed] NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
+#endif
+
+		[Export ("fileWrapperFromRange:documentAttributes:error:")]
+#if !(MONOMAC || XAMCORE_5_0)
+		[Sealed]
+#endif
+		NSFileWrapper GetFileWrapper (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
+
+		[Wrap ("this.GetFileWrapper (range, options?.GetDictionary (), out error)")]
+		NSFileWrapper GetFileWrapper (NSRange range, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSError error);
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithDocFormat:documentAttributes:")]
@@ -387,24 +430,12 @@ namespace Foundation
 		void DrawString (CGRect rect, NSStringDrawingOptions options);	
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export ("initWithURL:options:documentAttributes:error:")]
-		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this (url, options.GetDictionary (), out resultDocumentAttributes, out error)")]
-		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, out error)")]
-		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, out NSError)' instead.")]
 		[Export ("initWithPath:documentAttributes:")]
 		NativeHandle Constructor (string path, out NSDictionary resultDocumentAttributes);
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, ref NSError)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSAttributedString (NSUrl, NSDictionary, out NSDictionary, out NSError)' instead.")]
 		[Export ("initWithURL:documentAttributes:")]
 		NativeHandle Constructor (NSUrl url, out NSDictionary resultDocumentAttributes);
 
@@ -482,22 +513,6 @@ namespace Foundation
 		nint GetItemNumber (NSTextList textList, nuint index);
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export ("dataFromRange:documentAttributes:error:")]
-		NSData GetData (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this.GetData (range, options.GetDictionary (), out error)")]
-		NSData GetData (NSRange range, NSAttributedStringDocumentAttributes options, out NSError error);
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Export ("fileWrapperFromRange:documentAttributes:error:")]
-		NSFileWrapper GetFileWrapper (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
-		[Wrap ("this.GetFileWrapper (range, options.GetDictionary (), out error)")]
-		NSFileWrapper GetFileWrapper (NSRange range, NSAttributedStringDocumentAttributes options, out NSError error);
-
-		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("RTFFromRange:documentAttributes:")]
 		NSData GetRtf (NSRange range, [NullAllowed] NSDictionary options);
 
@@ -528,7 +543,7 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Wrap ("this.GetDocFormat (range, options.GetDictionary ())")]
 		NSData GetDocFormat (NSRange range, NSAttributedStringDocumentAttributes options);
-#else
+
 		[NoMac]
 		[Export ("drawWithRect:options:context:")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
@@ -536,7 +551,6 @@ namespace Foundation
 		[NoMac]
 		[Export ("boundingRectWithSize:options:context:")]
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
-#endif
 
 		[MacCatalyst (13, 1)][TV (9, 0)][Mac (10, 0)][iOS (6, 0)]
 		[Export ("size")]
