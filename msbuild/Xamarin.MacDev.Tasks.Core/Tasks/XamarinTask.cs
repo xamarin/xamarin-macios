@@ -25,6 +25,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string Product {
 			get {
+				if (IsDotNet)
+					return "Microsoft." + PlatformName;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
@@ -59,6 +62,10 @@ namespace Xamarin.MacDev.Tasks {
 				}
 				return target_framework.Value;
 			}
+		}
+
+		public bool IsDotNet {
+			get { return TargetFramework.IsDotNet; }
 		}
 
 		public string PlatformName {

@@ -525,7 +525,7 @@ steps:
     keyringPass: ${{ parameters.keyringPass }}
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     New-GitHubComment -Header "Build failed" -Emoji ":fire:" -Description "Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
   condition: failed()
   displayName: 'Report build failure'
