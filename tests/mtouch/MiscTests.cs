@@ -136,6 +136,9 @@ namespace Xamarin.Tests
 				"___destroy_helper_block_",
 				// compiler-generated helper methods
 				"___os_log_helper_",
+				// Brotli compression symbols
+				"_kBrotli",
+				"__kBrotli",
 			};
 
 			paths.RemoveWhere ((v) => {
