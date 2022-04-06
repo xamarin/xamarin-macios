@@ -39,7 +39,7 @@ namespace MapKit {
 	public partial class MKGeodesicPolyline {
 		public static unsafe MKGeodesicPolyline FromPoints (MKMapPoint [] points)
 		{
-			if (points == null)
+			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			if (points.Length == 0)
 				return PolylineWithPoints (IntPtr.Zero, 0);
@@ -51,7 +51,7 @@ namespace MapKit {
 
 		public static unsafe MKGeodesicPolyline FromCoordinates (CLLocationCoordinate2D [] coords)
 		{
-			if (coords == null)
+			if (coords is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (coords));
 			if (coords.Length == 0)
 				return PolylineWithCoordinates (IntPtr.Zero, 0);
