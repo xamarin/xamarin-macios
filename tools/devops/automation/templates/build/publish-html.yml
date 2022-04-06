@@ -1,4 +1,3 @@
-
 # Job that will download the other artifact from the tests job and will publish them in the 
 # vsdrops
 
@@ -41,7 +40,7 @@ steps:
     enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     $apiDiffRoot = "$Env:STABLE_APIDIFF_PATH"
     $filePatterns = @{
@@ -123,7 +122,7 @@ steps:
     GITHUB_TOKEN: $(GitHub.Token)
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     $apiDiffRoot = "$Env:STABLE_APID_GENERATOR_DIFF_PATH"
     $filePatterns = @{
@@ -205,8 +204,7 @@ steps:
 
 - powershell: |
     $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/$Env:DEVICE_PREFIX/;/tests/vsdrops_index.html"
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\VSTS.psm1 
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"

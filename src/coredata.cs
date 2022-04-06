@@ -551,7 +551,8 @@ namespace CoreData
 		[return: NullAllowed]
 		INSFetchRequestResult[] Execute (out NSError error);
 	}
-#if !MONOMAC
+
+	[NoMac]
 	[BaseType (typeof (NSObject), Delegates = new string [] { "WeakDelegate" })]
 	interface NSFetchedResultsController {
 
@@ -621,6 +622,7 @@ namespace CoreData
 		void DeleteCache ([NullAllowed] string name);
 	}
 
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -642,6 +644,7 @@ namespace CoreData
 		string SectionFor (NSFetchedResultsController controller, string sectionName);
 	}
 
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -664,7 +667,7 @@ namespace CoreData
 	}
 
 	interface INSFetchedResultsSectionInfo {}
-#endif
+
 	// 	NSInvalidArgumentException *** -loadMetadata: cannot be sent to an abstract object of class NSIncrementalStore: Create a concrete instance!
 	//	Apple doc quote: "NSIncrementalStore is an abstract superclass..."
 #if NET
@@ -1043,23 +1046,23 @@ namespace CoreData
 		[Export ("save:")]
 		bool Save (out NSError error);
 
-#if !WATCH && !TVOS
+		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
 
+		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
 
-		[NoTV]
+		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use a queue style context and 'Perform' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use a queue style context and 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
-#endif // !WATCH && !TVOS
 
 		[Export ("propagatesDeletesAtEndOfEvent")]
 		bool PropagatesDeletesAtEndOfEvent { get; set; }
@@ -2056,36 +2059,37 @@ namespace CoreData
 		[return: NullAllowed]
 		NSManagedObjectID ManagedObjectIDForURIRepresentation (NSUrl url);
 
-#if !WATCH && !TVOS
+		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PerformAndWait' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'PerformAndWait' instead.")]
 		[Export ("lock")]
 		new void Lock ();
 
+		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'PerformAndWait' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'PerformAndWait' instead.")]
 		[Export ("unlock")]
 		new void Unlock ();
 
-		[NoTV]
+		[NoWatch][NoTV]
 		[Deprecated (PlatformName.iOS, 8, 0, message: "Use 'Perform' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 10, message: "Use 'Perform' instead.")]
 		[Export ("tryLock")]
 		bool TryLock { get; }
-#endif // !WATCH && !TVOS
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 5)]
 		[Static, Export ("metadataForPersistentStoreWithURL:error:")]
 		[return: NullAllowed]
 		NSDictionary MetadataForPersistentStoreWithUrl (NSUrl url, out NSError error);
-#endif
+
 		[Field ("NSSQLiteStoreType")]
 		NSString SQLiteStoreType { get; }
-#if MONOMAC
+
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("NSXMLStoreType")]
 		NSString XMLStoreType { get; }
-#endif	
+
 		[Field ("NSBinaryStoreType")]
 		NSString BinaryStoreType { get; }
 
@@ -2114,10 +2118,11 @@ namespace CoreData
 
 		[Field ("NSReadOnlyPersistentStoreOption")]
 		NSString ReadOnlyPersistentStoreOption { get; }
-#if MONOMAC
+
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("NSValidateXMLStoreOption")]
 		NSString ValidateXMLStoreOption { get; }
-#endif
+
 		[Field ("NSPersistentStoreTimeoutOption")]
 		NSString PersistentStoreTimeoutOption { get; }
 
@@ -2188,10 +2193,9 @@ namespace CoreData
 		NSString PersistentStoreUbiquitousContentUrlLKey { get; }
 #endif
 
-#if !MONOMAC
+		[NoMac]
 		[Field ("NSPersistentStoreFileProtectionKey")]
 		NSString PersistentStoreFileProtectionKey { get; }
-#endif
 
 		// 7.0
 
