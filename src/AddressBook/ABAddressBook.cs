@@ -35,7 +35,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using Foundation;
 using CoreFoundation;
@@ -204,7 +203,7 @@ namespace AddressBook {
 		public void RequestAccess (Action<bool,NSError?> onCompleted)
 		{
 			if (onCompleted is null)
-				throw new ArgumentNullException (nameof (onCompleted));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompleted));
 
 			var block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_completionHandler, onCompleted);
@@ -254,7 +253,7 @@ namespace AddressBook {
 		public void Add (ABRecord record)
 		{
 			if (record is null)
-				throw new ArgumentNullException (nameof (record));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (record));
 
 			if (!ABAddressBookAddRecord (GetCheckedHandle (), record.Handle, out var error))
 				throw CFException.FromCFError (error);
@@ -267,7 +266,7 @@ namespace AddressBook {
 		public void Remove (ABRecord record)
 		{
 			if (record is null)
-				throw new ArgumentNullException (nameof (record));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (record));
 
 			if (!ABAddressBookRemoveRecord (GetCheckedHandle (), record.Handle, out var error))
 				throw CFException.FromCFError (error);
@@ -296,7 +295,7 @@ namespace AddressBook {
 		public ABPerson [] GetPeople (ABRecord source)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			var cfArrayRef = ABAddressBookCopyArrayOfAllPeopleInSource (GetCheckedHandle (), source.Handle);
 			return NSArray.ArrayFromHandle (cfArrayRef, l => new ABPerson (l, this));
 		}
@@ -307,7 +306,7 @@ namespace AddressBook {
 		public ABPerson [] GetPeople (ABRecord source, ABPersonSortBy sortOrdering)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			var cfArrayRef = ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering (GetCheckedHandle (), source.Handle, sortOrdering);
 			return NSArray.ArrayFromHandle (cfArrayRef, l => new ABPerson (l, this));
 		}		
@@ -334,7 +333,7 @@ namespace AddressBook {
 		public ABGroup[] GetGroups (ABRecord source)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 
 			var cfArrayRef = ABAddressBookCopyArrayOfAllGroupsInSource (GetCheckedHandle (), source.Handle);
 			return NSArray.ArrayFromHandle (cfArrayRef, l => new ABGroup (l, this));
@@ -345,7 +344,7 @@ namespace AddressBook {
 		public static string? LocalizedLabel (NSString label)
 		{
 			if (label is null)
-				throw new ArgumentNullException (nameof (label));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (label));
 
 			return CFString.FromHandle (ABAddressBookCopyLocalizedLabel (label.Handle));
 		}

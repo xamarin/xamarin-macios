@@ -24,6 +24,7 @@
 			<string>11.3</string>
 			<string>12.0</string>
 			<string>12.1</string>
+			<string>12.3</string>
 		</array>
 	</dict>
 	<key>RecommendedXcodeVersion</key>

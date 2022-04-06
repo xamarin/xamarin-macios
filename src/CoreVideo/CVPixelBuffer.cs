@@ -12,7 +12,6 @@ using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 #if NET
-using System.Runtime.Versioning;
 #endif
 
 using CFDictionaryRef=System.IntPtr;
@@ -53,7 +52,7 @@ namespace CoreVideo {
 		}
 
 		public CVPixelBuffer (nint width, nint height, CVPixelFormatType pixelFormatType, CVPixelBufferAttributes? attributes)
-			: this (width, height, pixelFormatType, attributes == null ? null : attributes.Dictionary)
+			: this (width, height, pixelFormatType, attributes?.Dictionary)
 		{
 		}
 
@@ -89,7 +88,7 @@ namespace CoreVideo {
 		{
 			CVReturn ret;
 			IntPtr resolvedDictionaryOut;
-			if (attributes == null) {
+			if (attributes is null) {
 				ret = CVPixelBufferCreateResolvedAttributesDictionary (IntPtr.Zero, IntPtr.Zero, out resolvedDictionaryOut);
 			} else {
 				using (var array = NSArray.FromNSObjects (attributes)) {
@@ -175,8 +174,8 @@ namespace CoreVideo {
 			IntPtr handle;
 			GCHandle gchandle;
 
-			if (data == null)
-				throw new ArgumentNullException (nameof (data));
+			if (data is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			if (data.Length < height * bytesPerRow)
 				throw new ArgumentOutOfRangeException (nameof (data), "The length of data is smaller than height * bytesPerRow");
@@ -250,17 +249,17 @@ namespace CoreVideo {
 			PlaneData data;
 			GCHandle data_handle;
 
-			if (planes == null)
-				throw new ArgumentNullException (nameof (planes));
+			if (planes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planes));
 
-			if (planeWidths == null)
-				throw new ArgumentNullException (nameof (planeWidths));
+			if (planeWidths is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planeWidths));
 
-			if (planeHeights == null)
-				throw new ArgumentNullException (nameof (planeHeights));
+			if (planeHeights is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planeHeights));
 
-			if (planeBytesPerRow == null)
-				throw new ArgumentNullException (nameof (planeBytesPerRow));
+			if (planeBytesPerRow is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (planeBytesPerRow));
 
 			var planeCount = planes.Length;
 

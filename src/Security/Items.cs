@@ -39,7 +39,6 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 #if !MONOMAC
 using UIKit;
 #endif

@@ -36,7 +36,6 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 #if NET
 using CFNetwork;
 #elif !WATCH

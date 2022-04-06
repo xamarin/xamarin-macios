@@ -11,7 +11,6 @@ using System.Diagnostics.CodeAnalysis;
 
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 

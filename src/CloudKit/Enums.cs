@@ -160,6 +160,7 @@ namespace CloudKit
 
 	// NSInteger -> CKSubscription.h
 
+#if !NET
 	[NoWatch]
 	[iOS (8, 0)]
 	[Obsoleted (PlatformName.iOS, 14, 0, message : "Use 'CKQuerySubscriptionOptions' instead.")]
@@ -175,6 +176,7 @@ namespace CloudKit
 		FiresOnRecordDeletion = 1 << 2,
 		FiresOnce = 1 << 3,
 	}
+#endif
 	
 	[Watch (3,0)]
 	[iOS (10,0), Mac (10,12)]

@@ -2,7 +2,6 @@
 using Foundation;
 using CoreMedia;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace AVFoundation {
 

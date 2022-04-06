@@ -9,6 +9,6 @@ namespace ObjCRuntime {
 
 		internal const string PleaseFileBugReport = "Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.";
 
-		internal const string SetThrowOnInitFailureToFalse = "It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false.";
+		internal const string SetThrowOnInitFailureToFalse = "It is possible to ignore this condition by setting ObjCRuntime.Class.ThrowOnInitFailure to false";
 	}
 }

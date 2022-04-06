@@ -4043,6 +4043,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occured while executing the custom linker steps. Please review the build log for more information..
+        /// </summary>
+        public static string MX7000 {
+            get {
+                return ResourceManager.GetString("MX7000", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t know how to marshal the parameter of type {0} for parameter {1} in call to {2}.
         /// </summary>
         public static string MX8037 {

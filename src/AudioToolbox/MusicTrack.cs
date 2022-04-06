@@ -143,7 +143,7 @@ namespace AudioToolbox {
 		internal MusicEventUserData (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (handle));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handle));
 
 			int length = Marshal.ReadInt32 (handle);
 
@@ -231,7 +231,7 @@ namespace AudioToolbox {
 		public static MusicTrack? FromSequence (MusicSequence sequence)
 		{
 			if (sequence is null)
-				throw new ArgumentNullException (nameof (sequence));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sequence));
 			return sequence.CreateTrack ();
 		}
 
@@ -363,7 +363,7 @@ namespace AudioToolbox {
 		public MusicPlayerStatus AddMidiRawDataEvent (double timestamp, MidiRawData rawData)
 		{
 			if (rawData is null)
-				throw new ArgumentNullException (nameof (rawData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rawData));
 			
 			var native = rawData.ToUnmanaged ();
 			var r = MusicTrackNewMIDIRawDataEvent (Handle, timestamp, native);
@@ -395,7 +395,7 @@ namespace AudioToolbox {
 		public MusicPlayerStatus AddMetaEvent (double timestamp, MidiMetaEvent metaEvent)
 		{
 			if (metaEvent is null)
-				throw new ArgumentNullException (nameof (metaEvent));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metaEvent));
 			
 			var ptr = metaEvent.ToUnmanaged ();
 			var ret = MusicTrackNewMetaEvent (Handle, timestamp, ptr);
@@ -409,7 +409,7 @@ namespace AudioToolbox {
 		public MusicPlayerStatus AddUserEvent (double timestamp, MusicEventUserData userData)
 		{
 			if (userData is null)
-				throw new ArgumentNullException (nameof (userData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (userData));
 			var ptr = userData.ToUnmanaged ();
 			var ret = MusicTrackNewUserEvent (Handle, timestamp, ptr);
 			Marshal.FreeHGlobal (ptr);
@@ -446,7 +446,7 @@ namespace AudioToolbox {
 		public MusicPlayerStatus CopyInsert (double sourceStartTime, double sourceEndTime, MusicTrack targetTrack, double targetInsertTime)
 		{
 			if (targetTrack is null)
-				throw new ArgumentNullException (nameof (targetTrack));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (targetTrack));
 			return MusicTrackCopyInsert (Handle, sourceStartTime, sourceEndTime, targetTrack.Handle, targetInsertTime);
 		}
 
@@ -456,7 +456,7 @@ namespace AudioToolbox {
 		public MusicPlayerStatus Merge (double sourceStartTime, double sourceEndTime, MusicTrack targetTrack, double targetInsertTime)
 		{
 			if (targetTrack is null)
-				throw new ArgumentNullException (nameof (targetTrack));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (targetTrack));
 			return MusicTrackMerge (Handle, sourceStartTime, sourceEndTime, targetTrack.Handle, targetInsertTime);
 		}
 #endif // !COREBUILD

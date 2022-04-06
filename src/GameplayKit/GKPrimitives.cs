@@ -10,7 +10,6 @@
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if NET
 using Vector2 = global::System.Numerics.Vector2;

@@ -5,7 +5,6 @@
 //     Manuel de la Pena <mandel@microsoft.com>
 using System;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 using Foundation;
 

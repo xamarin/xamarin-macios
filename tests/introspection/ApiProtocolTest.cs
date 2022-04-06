@@ -141,6 +141,8 @@ namespace Introspection {
 				case "PKRecurringPaymentSummaryItem":
 				case "PKStoredValuePassProperties":
 				case "SNTimeDurationConstraint": // Conformance not in headers
+				// Xcode 13.3
+				case "HMAccessorySetupPayload": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -275,6 +277,11 @@ namespace Introspection {
 				case "QLPreviewReply": // conformance not in headers
 				case "QLPreviewReplyAttachment": // conformance not in headers
 				case "SNTimeDurationConstraint": // Conformance not in headers
+				// Xcode 13.3
+				case "SRWristDetection": // Conformance not in headers
+				case "HMAccessorySetupPayload": // Conformance not in headers
+				case "HMAccessorySetupRequest": // Conformance not in headers
+				case "HMAccessorySetupResult": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -405,6 +412,11 @@ namespace Introspection {
 				case "QLPreviewReply": // conformance not in headers
 				case "QLPreviewReplyAttachment": // conformance not in headers
 				case "SNTimeDurationConstraint": // Conformance not in headers
+				// Xcode 13.3
+				case "SRWristDetection": // Conformance not in headers
+				case "HMAccessorySetupPayload": // Conformance not in headers
+				case "HMAccessorySetupRequest": // Conformance not in headers
+				case "HMAccessorySetupResult": // Conformance not in headers
 					return true;
 				}
 				break;

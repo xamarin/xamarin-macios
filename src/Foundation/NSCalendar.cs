@@ -31,7 +31,6 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 using CoreGraphics;
-using System.Runtime.Versioning;
 #if !WATCH
 using CoreMedia;
 #endif

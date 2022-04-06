@@ -65,8 +65,8 @@ namespace ObjCRuntime {
 		{
 			this.handle = objc_getClass (name);
 
-			if (this.handle == IntPtr.Zero)
-				throw new ArgumentException (String.Format ("'{0}' is an unknown class", name));
+			if (handle == NativeHandle.Zero)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (name), $"Unknown class {name}");
 		}
 
 		public Class (Type type)
@@ -94,7 +94,7 @@ namespace ObjCRuntime {
 			get { return this.handle; }
 		}
 
-		public IntPtr SuperClass {
+		public NativeHandle SuperClass {
 			get { return class_getSuperclass (Handle); }
 		}
 
@@ -295,6 +295,7 @@ namespace ObjCRuntime {
 				var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * idx;
 				// first compare what's most likely to fail (the type's metadata token)
 				var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
+				type_token |= 0x02000000 /* TypeDef - the token type is explicit in the full token reference, but not present in the type_token argument, so we have to add it before comparing */;
 				if (type_token != token)
 					return false;
 

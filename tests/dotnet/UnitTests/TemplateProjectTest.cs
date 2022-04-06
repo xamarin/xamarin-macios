@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 using NUnit.Framework;
 
@@ -93,6 +95,100 @@ class MainClass {
 			File.WriteAllText (Path.Combine (tmpdir, "Main.cs"), EmptyMainFile);
 
 			DotNet.AssertBuild (project_path, GetDefaultProperties ());
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.MacOSX)]
+		[TestCase (ApplePlatform.MacCatalyst)]
+		public void VeryManyRegisteredAssemblies (ApplePlatform platform)
+		{
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			var assemblies = 200;
+
+			var xm = Configuration.XamarinMacMobileDll;
+			var csc = Configuration.DotNetCscCommand;
+
+			var references = new List<string> ();
+
+			for (var i = 0; i < assemblies; i++) {
+				var refprojdir = Path.Combine (tmpdir, $"Project{i}");
+				Directory.CreateDirectory (refprojdir);
+				var refcs = $"public class C{i} : Foundation.NSObject {{}}";
+				var reffn = Path.Combine (refprojdir, $"C{i}.cs");
+				File.WriteAllText (reffn, refcs);
+				var refcsproj =
+@$"<Project Sdk=""Microsoft.NET.Sdk"">
+	<PropertyGroup>
+		<TargetFramework>{platform.ToFramework ()}</TargetFramework>
+	</PropertyGroup>
+</Project>";
+				var refcsprojfn = Path.Combine (refprojdir, Path.GetFileName (refprojdir) + ".csproj");
+				File.WriteAllText (refcsprojfn, refcsproj);
+
+				references.Add (refcsprojfn);
+			}
+
+			var projdir = Path.Combine (tmpdir, $"Main");
+			Directory.CreateDirectory (projdir);
+
+			var cs = new StringBuilder ();
+			cs.AppendLine ("using System;");
+			cs.AppendLine ("public class MainClass {");
+			cs.AppendLine ("\tstatic void Main () {");
+			for (var i = 0; i < assemblies; i++)
+				cs.AppendLine ($"\t\tConsole.WriteLine (new C{i} ().Handle);");
+			cs.AppendLine ($"\t\tConsole.WriteLine (Environment.GetEnvironmentVariable (\"MAGIC_WORD\"));");
+			cs.AppendLine ("\t}");
+			cs.AppendLine ("}");
+			var fn = Path.Combine (projdir, $"Main.cs");
+			File.WriteAllText (fn, cs.ToString ());
+
+			var csproj =
+$@"<Project Sdk=""Microsoft.NET.Sdk"">
+	<PropertyGroup>
+		<TargetFramework>{platform.ToFramework ()}</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<ApplicationId>com.microsoft.VeryManyRegisteredAssemblies</ApplicationId>
+		<MonoBundlingExtraArgs>--registrar:static --optimize:remove-dynamic-registrar</MonoBundlingExtraArgs>
+		<MtouchExtraArgs>$(MonoBundlingExtraArgs)</MtouchExtraArgs>
+		<LinkMode>Full</LinkMode>
+		<MtouchLink>Full</MtouchLink>
+	</PropertyGroup>
+	<ItemGroup>
+		{string.Join ("\n\t\t", references.Select (v => $"<ProjectReference Include=\"{v}\" />"))}
+	</ItemGroup>
+</Project>";
+			var csprojfn = Path.Combine (projdir, Path.GetFileName (projdir) + ".csproj");
+			File.WriteAllText (csprojfn, csproj);
+
+			Configuration.CopyDotNetSupportingFiles (tmpdir);
+			DotNet.AssertBuild (csprojfn);
+			ExecuteProjectWithMagicWordAndAssert (csprojfn, platform);
+		}
+
+		[TestCase (ApplePlatform.MacOSX)]
+		public void NoBundleIdentifierError (ApplePlatform platform)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var csproj = $@"
+<Project Sdk=""Microsoft.NET.Sdk"">
+	<PropertyGroup>
+		<TargetFramework>{platform.ToFramework ()}</TargetFramework>
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+</Project>";
+
+			var tmpdir = Cache.CreateTemporaryDirectory ();
+			Configuration.CopyDotNetSupportingFiles (tmpdir);
+			var project_path = Path.Combine (tmpdir, "TestProject.csproj");
+			File.WriteAllText (project_path, csproj);
+			File.WriteAllText (Path.Combine (tmpdir, "Main.cs"), EmptyMainFile);
+
+			var properties = GetDefaultProperties ();
+			var result = DotNet.AssertBuildFailure (project_path, properties);
+			var errors = BinLog.GetBuildLogErrors (result.BinLogPath).ToArray ();
+			Assert.AreEqual (1, errors.Length, "Errors");
+			Assert.AreEqual ("A bundle identifier is required. Either add an 'ApplicationId' property in the project file, or add a 'CFBundleIdentifier' entry in the project's Info.plist file.", errors [0].Message);
 		}
 	}
 }

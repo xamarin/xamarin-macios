@@ -30,7 +30,6 @@ using System;
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
-using System.Runtime.Versioning;
 
 #if !MONOMAC
 using UIKit;
