@@ -154,7 +154,7 @@ jobs:
       enableDotnet: ${{ parameters.enableDotnet }}
       sbomFilter: '*.nupkg;*.pkg;*.msi'
 
-# Job that runs on a vm that downlods the artefacts information and adds a gihub comment pointing to the results of the build.
+# Job that runs on a vm that downloads the artefacts information and adds a github comment pointing to the results of the build.
 - job: artifacts_github_comment
   displayName: 'Publish GitHub Comment - Artifacts'
   timeoutInMinutes: 1000
