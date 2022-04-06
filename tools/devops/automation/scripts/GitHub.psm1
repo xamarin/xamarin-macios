@@ -75,7 +75,7 @@ class GitHubComments {
     [string] GetCommentUrl() {
         # if the build was due to PR, we want to write the comment in the PR rather than in the commit 
         if ($Env:BUILD_REASON -eq "PullRequest") {
-            # calcualte the change ID which is the PR number 
+            # calculate the change ID which is the PR number 
             $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
             $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
             $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/issues/$changeId/comments"
