@@ -248,12 +248,12 @@ namespace CoreServices
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern void FSEventStreamRelease (IntPtr handle);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			FSEventStreamRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			FSEventStreamRelease (GetCheckedHandle ());
 		}

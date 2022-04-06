@@ -59,7 +59,7 @@ namespace Network {
 			return new NWContentContext (handle, owns: true, global: true);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			if (global)
 				return;

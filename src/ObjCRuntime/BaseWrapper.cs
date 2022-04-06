@@ -26,13 +26,13 @@ namespace ObjCRuntime {
 		{
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			if (Handle != IntPtr.Zero)
 				Messaging.void_objc_msgSend (Handle, Selector.GetHandle ("retain"));
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			if (Handle != IntPtr.Zero)
 				Messaging.void_objc_msgSend (Handle, Selector.GetHandle ("release"));

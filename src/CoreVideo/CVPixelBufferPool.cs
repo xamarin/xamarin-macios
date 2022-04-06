@@ -44,12 +44,12 @@ namespace CoreVideo {
 		extern static /* CVPixelBufferPoolRef __nullable */ IntPtr CVPixelBufferPoolRetain (
 			/* CVPixelBufferPoolRef __nullable */ IntPtr handle);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CVPixelBufferPoolRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CVPixelBufferPoolRelease (GetCheckedHandle ());
 		}

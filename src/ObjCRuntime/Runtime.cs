@@ -19,6 +19,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 
+using CoreFoundation;
 using Foundation;
 using Registrar;
 
@@ -1807,6 +1808,21 @@ namespace ObjCRuntime {
 				(char) (byte) (value >> 16),
 				(char) (byte) (value >> 8),
 				(char) (byte) value });
+		}
+
+		static void RetainNativeObject (IntPtr gchandle)
+		{
+			var obj = GetGCHandleTarget (gchandle) as NativeObject;
+			obj?.Retain ();
+		}
+
+		// Check if the input is an NSObject, and in that case retain it (and return true)
+		// This way the caller knows if it can call 'autorelease' on our input.
+		static bool AttemptRetainNSObject (IntPtr gchandle)
+		{
+			var obj = GetGCHandleTarget (gchandle) as NSObject;
+			obj?.DangerousRetain ();
+			return obj is not null;
 		}
 #endif // !COREBUILD
 

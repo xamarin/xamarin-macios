@@ -127,12 +127,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGColorSpaceRef */ IntPtr CGColorSpaceRetain (/* CGColorSpaceRef */ IntPtr space);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGColorSpaceRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGColorSpaceRelease (GetCheckedHandle ());
 		}

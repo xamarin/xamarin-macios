@@ -181,6 +181,20 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 				}
 			} else if (xamarin_is_class_inativeobject (r_klass)) {
 				returnValue = xamarin_get_handle_for_inativeobject (retval, exception_gchandle);
+				if (*exception_gchandle != INVALID_GCHANDLE)
+					return returnValue;
+				if (returnValue != NULL) {
+					if (retain) {
+						xamarin_retain_nativeobject (retval);
+					} else {
+						// This will try to retain the object if and only if it's an NSObject -
+						// in which case we known it's 'id' here and we can call autorelease on it.
+						if (xamarin_attempt_retain_nsobject (retval)) {
+							id i = (id) returnValue;
+							[i autorelease];
+						}
+					}
+				}
 			} else {
 				xamarin_assertion_message ("Don't know how to marshal a return value of type '%s.%s'. Please file a bug with a test case at https://github.com/xamarin/xamarin-macios/issues/new\n", mono_class_get_namespace (r_klass), mono_class_get_name (r_klass)); 
 			}
