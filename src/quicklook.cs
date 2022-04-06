@@ -34,9 +34,6 @@ using CoreGraphics;
 #if MONOMAC
 using AppKit;
 using UIWindowSceneActivationConfiguration=Foundation.NSObject;
-using UIViewController = AppKit.NSViewController;
-using UIView = AppKit.NSView;
-using UIImage = AppKit.NSImage;
 #else
 using UIKit;
 #endif
@@ -49,6 +46,7 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace QuickLook {
+#if !MONOMAC
 	[NoMac]
 	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate" }, Events=new Type [] { typeof (QLPreviewControllerDelegate)})]
 	interface QLPreviewController {
@@ -89,10 +87,10 @@ namespace QuickLook {
 		void RefreshCurrentPreviewItem ();
 	}
 
-	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
+	[NoMac]
 	interface QLPreviewControllerDataSource {
 		[Abstract]
 		[Export ("numberOfPreviewItemsInPreviewController:")]
@@ -127,6 +125,7 @@ namespace QuickLook {
 		[Export ("previewController:shouldOpenURL:forPreviewItem:"), DelegateName ("QLOpenUrl"), DefaultValue (false)]
 		bool ShouldOpenUrl (QLPreviewController controller, NSUrl url, [Protocolize] QLPreviewItem item);
 
+#if !MONOMAC
 		// UIView and UIImage do not exists in MonoMac
 		
 		[Export ("previewController:frameForPreviewItem:inSourceView:"), DelegateName ("QLFrame"), DefaultValue (typeof (CGRect))]
@@ -152,9 +151,10 @@ namespace QuickLook {
 		[iOS (13,0)]
 		[Export ("previewController:didSaveEditedCopyOfPreviewItem:atURL:"), EventArgs ("QLPreviewControllerDelegateDidSave")]
 		void DidSaveEditedCopy (QLPreviewController controller, IQLPreviewItem previewItem, NSUrl modifiedContentsUrl);
+
+#endif
 	}
 
-	[NoMac]
 	interface IQLPreviewItem {}
 
 	[NoMac]
@@ -185,7 +185,8 @@ namespace QuickLook {
 	delegate NSData QLPreviewReplyDataCreationHandler (QLPreviewReply reply, out NSError error);
 	delegate CGPDFDocument QLPreviewReplyUIDocumentCreationHandler (QLPreviewReply reply, out NSError error);
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[NoMac]
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
 	interface QLPreviewReply
 	{
@@ -212,7 +213,8 @@ namespace QuickLook {
 		NativeHandle Constructor (CGSize defaultPageSize, QLPreviewReplyUIDocumentCreationHandler documentCreationHandler);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[NoMac]
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface QLPreviewReplyAttachment
@@ -227,7 +229,8 @@ namespace QuickLook {
 		NativeHandle Constructor (NSData data, UTType contentType);
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[NoMac]
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface QLFilePreviewRequest
@@ -236,7 +239,8 @@ namespace QuickLook {
 		NSUrl FileUrl { get; }
 	}
 
-	[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[NoMac]
+	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof(NSObject))]
 	interface QLPreviewProvider : NSExtensionRequestHandling
@@ -281,9 +285,9 @@ namespace QuickLook {
 		[Export ("providePreviewForFileRequest:completionHandler:")]
 		void ProvidePreview (QLFilePreviewRequest request, Action<QLPreviewReply, NSError> handler);
 	}
-
-	[NoiOS][NoMacCatalyst]
+#else
 	[Static]
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	interface QLThumbnailImage {
 		[Internal, Field ("kQLThumbnailOptionScaleFactorKey")]
 		NSString OptionScaleFactorKey { get; }
@@ -291,4 +295,6 @@ namespace QuickLook {
 		[Internal, Field ("kQLThumbnailOptionIconModeKey")]
 		NSString OptionIconModeKey { get; }
 	}
+#endif
+
 }

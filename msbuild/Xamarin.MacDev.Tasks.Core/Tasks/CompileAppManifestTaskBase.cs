@@ -151,6 +151,8 @@ namespace Xamarin.MacDev.Tasks
 			// Merge with any partial plists...
 			MergePartialPlistTemplates (plist);
 
+			Validation (plist);
+
 			// write the resulting app manifest
 			if (FileUtils.UpdateFile (CompiledAppManifest.ItemSpec, (tmpfile) => plist.Save (tmpfile, true, true)))
 				Log.LogMessage (MessageImportance.Low, "The file {0} is up-to-date.", CompiledAppManifest.ItemSpec);
@@ -285,6 +287,13 @@ namespace Xamarin.MacDev.Tasks
 			return true;
 		}
 
+		protected string GetMinimumOSVersion (PDictionary plist, out Version version)
+		{
+			var rv = plist.Get<PString> (PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform))?.Value;
+			version = Version.Parse (rv);
+			return rv;
+		}
+
 		protected abstract bool Compile (PDictionary plist);
 
 		protected void LogAppManifestError (string format, params object[] args)
@@ -358,6 +367,43 @@ namespace Xamarin.MacDev.Tasks
 		protected void MergePartialPlistTemplates (PDictionary plist)
 		{
 			MergePartialPLists (this, plist, PartialAppManifests);
+		}
+
+		void Validation (PDictionary plist)
+		{
+			if (!Validate)
+				return;
+
+			var supportedDevices = plist.GetUIDeviceFamily ();
+			switch (Platform) {
+			case ApplePlatform.iOS:
+				var supportsIPhone = (supportedDevices & IPhoneDeviceType.IPhone) != 0
+				                     || supportedDevices == IPhoneDeviceType.NotSet;
+				var supportsIPad = (supportedDevices & IPhoneDeviceType.IPad) != 0;
+
+				if (!IsAppExtension) {
+					IPhoneOrientation orientation;
+
+					if (supportsIPhone) {
+						orientation = plist.GetUISupportedInterfaceOrientations (false);
+						if (orientation == IPhoneOrientation.None) {
+							LogAppManifestWarning (MSBStrings.W0019);
+						} else if (!orientation.IsValidPair ()) {
+							LogAppManifestWarning (MSBStrings.W0020);
+						}
+					}
+
+					if (supportsIPad) {
+						orientation = plist.GetUISupportedInterfaceOrientations (true);
+						if (orientation == IPhoneOrientation.None) {
+							LogAppManifestWarning (MSBStrings.W0021);
+						} else if (!orientation.IsValidPair ()) {
+							LogAppManifestWarning (MSBStrings.W0022);
+						}
+					}
+				}
+				break;
+			}
 		}
 	}
 }
