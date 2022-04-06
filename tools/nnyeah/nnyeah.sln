@@ -49,5 +49,12 @@ Global
 		$2.SpaceAfterMethodCallName = True
 		$2.SpaceBeforeOpenSquareBracket = True
 		$2.scope = text/x-csharp
+		$0.DotNetNamingPolicy = $3
+		$3.DirectoryNamespaceAssociation = PrefixedHierarchical
+		$0.TextStylePolicy = $4
+		$4.FileWidth = 80
+		$4.TabWidth = 8
+		$4.IndentWidth = 8
+		$4.scope = text/plain
 	EndGlobalSection
 EndGlobal

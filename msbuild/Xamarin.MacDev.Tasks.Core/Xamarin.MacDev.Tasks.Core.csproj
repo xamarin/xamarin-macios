@@ -5,6 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
     <DefineConstants>$(DefineConstants);MSBUILD_TASKS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>

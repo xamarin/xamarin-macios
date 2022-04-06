@@ -32,20 +32,20 @@ steps:
 
 # remove any old processes that might have been left behind.
 - pwsh : |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/System.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Clear-XamarinProcesses
   displayName: 'Process cleanup'
 
 # Increase mlaunch verbosity. Will step on the old setting present.
 - pwsh : |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MLaunch.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Set-MLaunchVerbosity -Verbosity 10
   displayName: 'Make mlaunch verbose'
   condition: succeededOrFailed() # we do not care about the previous step
 
 # Re-start the daemon used to find the devices in the bot.
 - pwsh : |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MLaunch.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Optimize-DeviceDiscovery
   displayName: 'Fix device discovery (reset launchctl)'
   condition: succeededOrFailed() # making mlaunch verbose should be a non blocker
@@ -53,7 +53,7 @@ steps:
 # Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this
 # point we were just setting up the agent.
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Set-GitHubStatus -Status "pending" -Context "$Env:CONTEXT" -Description "Running device tests on $Env:CONTEXT"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
@@ -97,8 +97,25 @@ steps:
     make global6.json
     make -C builds dotnet
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-  displayName: Boostrap dotnet
+  displayName: Bootstrap dotnet
   timeoutInMinutes: 30
+
+- pwsh: |
+    $workloadPath = "$(Build.SourcesDirectory)/artifacts/package-internal/WorkloadRollback.json"
+    $versionData = Get-Content $workloadPath | ConvertFrom-Json
+    # could be done in a loop, but we don't want to be smart just yet
+    $iOSVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.ios"
+    Write-Host "##vso[task.setvariable variable=IOS_WORKLOAD_VERSION;]$iOSVersion"
+    
+    $tvOSVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.tvos"
+    Write-Host "##vso[task.setvariable variable=TVOS_WORKLOAD_VERSION;]$tvOSVersion"
+
+    $macVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.macos"
+    Write-Host "##vso[task.setvariable variable=MACOS_WORKLOAD_VERSION;]$macVersion"
+
+    $catalystVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.maccatalyst"
+    Write-Host "##vso[task.setvariable variable=MACCATALYST_WORKLOAD_VERSION;]$catalystVersion"
+  displayName: 'Set workload versions for xtro'
 
 - bash: |
     set -x
@@ -169,6 +186,7 @@ steps:
     set -x
     set -e
     make -C tests -j8 all
+    make -C tools/xibuild
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Build test dependencies
   timeoutInMinutes: 30
@@ -219,7 +237,7 @@ steps:
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
     RC=0
-    MONO_ENV_OPTIONS=--trace=E:all make -C tests ${{ parameters.makeTarget }} || RC=$?
+    make -C tests ${{ parameters.makeTarget }} || RC=$?
     if [ $RC -eq 0 ]; then
       echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
     else
@@ -273,12 +291,31 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+# Upload all the binlogs
+# Copy all the binlogs to a separate directory, keeping directory structure.
+- script: |
+    set -x
+    mkdir -p $(Build.ArtifactStagingDirectory)/all-binlogs
+    rsync -av --prune-empty-dirs --include '*/' --include '*.binlog' --exclude '*' $(Build.SourcesDirectory)/xamarin-macios $(Build.ArtifactStagingDirectory)/all-binlogs
+  displayName: Copy all binlogs
+  continueOnError: true
+  condition: succeededOrFailed()
+
+# Publish all the binlogs we collected in the previous step
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: All binlogs'
+  inputs:
+    targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
+    artifactName: all-binlogs-test-$(Build.BuildId)
+  continueOnError: true
+  condition: succeededOrFailed()
+
 # Be nice and clean behind you
 - pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/
-    Import-Module ./System.psm1
+    Import-Module MaciosCI.psd1
     Clear-AfterTests
   displayName: 'Cleanup'
   continueOnError: true
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
   condition: always() # no matter what, includes cancellation
 

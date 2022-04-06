@@ -1500,6 +1500,13 @@ SCENEKIT_SOURCES = \
 	SceneKit/SCNSkinner.cs \
 	SceneKit/SCNTechnique.cs \
 
+# ScreenCaptureKit
+
+SCREENCAPTUREKIT_API_SOURCES = \
+
+SCREENCAPTUREKIT_SOURCES = \
+	ScreenCaptureKit/SCContentFilter.cs \
+
 # ScriptingBridge
 
 SCRIPTINGBRIDGE_CORE_SOURCES = \
@@ -2042,6 +2049,7 @@ MACOS_FRAMEWORKS =          \
 	QuickLookUI             \
 	ReplayKit               \
 	SafariServices          \
+	ScreenCaptureKit        \
 	ScreenTime              \
 	ScriptingBridge         \
 	SearchKit               \
@@ -2251,6 +2259,7 @@ TVOS_FRAMEWORKS =           \
 
 MACCATALYST_FRAMEWORKS = \
 	$(COMMON_FRAMEWORKS) \
+	AppClip \
 	AppKit \
 	AVKit \
 	Accounts \
@@ -2275,21 +2284,26 @@ MACCATALYST_FRAMEWORKS = \
 	CoreHaptics \
 	CoreImage \
 	CoreLocation \
+	CoreLocationUI \
 	CoreMIDI \
 	CoreMotion \
+	CoreNFC \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
 	CoreWlan \
 	DeviceCheck \
 	EventKit \
+	EventKitUI \
 	ExternalAccessory \
 	FileProvider \
 	GameController \
 	GameplayKit \
 	HealthKit \
+	HealthKitUI \
 	HomeKit \
 	IdentityLookup \
+	IdentityLookupUI \
 	ImageIO \
 	Intents \
 	IntentsUI \

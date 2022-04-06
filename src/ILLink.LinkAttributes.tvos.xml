@@ -16,7 +16,7 @@
       <attribute internal="RemoveAttributeInstances" />
     </type>
     <type fullname="Foundation.FieldAttribute">
-      <attribute internal="LinkerSafeAttribute" />
+      <attribute internal="RemoveAttributeInstances" />
     </type>
 
     <!-- ObjCRuntime -->

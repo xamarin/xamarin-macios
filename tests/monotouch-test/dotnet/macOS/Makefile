@@ -47,11 +47,11 @@ exec-%: $(TARGETS)
 
 exec:
 	$(Q) test -n "$(XAMARIN_RUNTIME)" || (echo "XAMARIN_RUNTIME is not set"; exit 1)
-	$(Q) echo "Running monotouch-test: $(COLOR_GRAY)$(abspath $(TOP)/tests/monotouch-test/dotnet/macOS/bin/$(XAMARIN_RUNTIME)/net6.0-macos/osx-*/monotouchtest.app/Contents/MacOS/monotouchtest) $(ARGUMENTS)$(COLOR_CLEAR)"
+	$(Q) echo "Running monotouch-test: $(COLOR_GRAY)$(abspath $(TOP)/tests/monotouch-test/dotnet/macOS/bin/$(XAMARIN_RUNTIME)/$(DOTNET_TFM)-macos/osx-*/monotouchtest.app/Contents/MacOS/monotouchtest) $(ARGUMENTS)$(COLOR_CLEAR)"
 	$(Q) echo "Writing output to: $(COLOR_GRAY)$(LOGFILENAME)$(COLOR_CLEAR)"
 	$(Q) mkdir -p "$(dir $(LOGFILENAME))"
 	$(Q) echo "VM: $(XAMARIN_RUNTIME)" > "$(LOGFILENAME)"
-	$(Q) if ! $(abspath $(TOP)/tests/monotouch-test/dotnet/macOS/bin/$(XAMARIN_RUNTIME)/net6.0-macos/osx-*/monotouchtest.app/Contents/MacOS/monotouchtest) $(ARGUMENTS) >> "$(LOGFILENAME)" 2>&1 ; then \
+	$(Q) if ! $(abspath $(TOP)/tests/monotouch-test/dotnet/macOS/bin/$(XAMARIN_RUNTIME)/$(DOTNET_TFM)-macos/osx-*/monotouchtest.app/Contents/MacOS/monotouchtest) $(ARGUMENTS) >> "$(LOGFILENAME)" 2>&1 ; then \
 		echo "❌ Test run failed"; \
 		grep "[[]FAIL[]]" "$(LOGFILENAME)"; \
 		grep "Tests run:" "$(LOGFILENAME)"; \

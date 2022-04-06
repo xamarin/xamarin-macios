@@ -1,10 +1,3 @@
-# the following is a hack around the fact that pwsh does not handle well the using 
-# form a relative path in vsts
-$moduleName = "$PSScriptRoot\\StaticPages.psm1"  # windows path separators work on unix and windows
-$scriptBody = "using module $ModuleName"
-$script = [ScriptBlock]::Create($scriptBody)
-. $script
-
 <#
     .SYNOPSIS
         Simple retry block to workaround certain issues with the webservices that cannot handle the load.
@@ -340,7 +333,6 @@ function New-GitHubCommentFromFile {
         [String]
         $Header,
         
-        [Parameter(Mandatory)]
         [String]
         $Description,
 
@@ -441,65 +433,6 @@ function Write-APIDiffContent {
 
 <# 
     .SYNOPSIS
-        Helper function used to create the content in the comment with the artifacts.
-
-    .PARAMETER Artifacts
-        The json that contains all the artifacts.
-#>
-function Write-Artifacts {
-
-    param (
-
-        [Parameter(Mandatory)]
-        [System.Text.StringBuilder]
-        $StringBuilder,
-
-        [String]
-        $Artifacts=""
-
-    )
-
-    if (-not [string]::IsNullOrEmpty($Artifacts)) {
-        Write-Host "Parsing artifacts"
-        if (-not (Test-Path $Artifacts -PathType Leaf)) {
-            $StringBuilder.AppendLine("Path $Artifacts was not found!")
-        } else {
-            # read the json file, convert it to an object and add a line for each artifact
-            $json =  Get-Content $Artifacts | ConvertFrom-Json
-            if ($json.Count -gt 0) {
-                $StringBuilder.AppendLine("# Packages generated")
-                $StringBuilder.AppendLine("")
-                $StringBuilder.AppendLine("<details><summary>View packages</summary>")
-                $StringBuilder.AppendLine("") # no new line results in a bad rendering in the links
-                foreach ($a in $json) {
-                    $url = $a.url
-                    if ($url.EndsWith(".pkg") -or $url.EndsWith(".nupkg") -or $url.EndsWith(".msi")) {
-                        try {
-                            $fileName = $a.url.Substring($a.url.LastIndexOf("/") + 1)
-                            Write-Host "Adding link for $fileName"
-                            if ($a.url.Contains("notarized")) {
-                                $link = "* [$fileName (notarized)]($($a.url))"
-                            } else {
-                                $link = "* [$fileName]($($a.url))"
-                            }
-                            $StringBuilder.AppendLine($link)
-                        } catch {
-                            Write-Host "Could not get file name for url $url"
-                        }
-                    }
-                }
-                $StringBuilder.AppendLine("</details>")
-            } else {
-                $StringBuilder.AppendLine("No packages found.")
-            }
-        }
-    } else {
-        Write-Host "Artifacts were not provided."
-    }
-}
-
-<# 
-    .SYNOPSIS
         Add a new comment that contains the summaries to the Html Report as well as set the status accordingly.
 
     .PARAMETER Context
@@ -577,7 +510,8 @@ function New-GitHubSummaryComment {
     if (-not $DeviceTest) {
         Write-APIDiffContent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
 
-        Write-Artifacts -StringBuilder $sb -Artifacts $Artifacts
+        $artifactComment = New-ArtifactsFromJsonFile -Content $Artifacts
+        $artifactComment.WriteComment($sb)
     }
 
     if (Test-Path $TestSummaryPath -PathType Leaf) { # if present we did get results and add the links, else skip
