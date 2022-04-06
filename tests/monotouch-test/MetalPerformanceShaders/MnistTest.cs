@@ -1,14 +1,21 @@
 #nullable enable
 
+#if HAS_METALPERFORMANCESHADERSGRAPH
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
+
 using Foundation;
 using Metal;
 using MetalPerformanceShaders;
 using MetalPerformanceShadersGraph;
 
+using NUnit.Framework;
+
 namespace MyMPSGraphApp {
+	[Preserve (AllMembers = true)]
+	[TestFixture]
 	public class MnistTest
 	{
 		const int batchSize = 3;
@@ -21,13 +28,13 @@ namespace MyMPSGraphApp {
 
 		readonly MnistData data = new ();
 
+		[Test]
 		public void Run ()
 		{
 			MPSCommandBuffer? latestCommandBuffer = null;
 			for (var i = 0; i < numTrainingIterations; i++) {
 				latestCommandBuffer = RunTrainingIterationBatch ((i + 1) / (float) numTrainingIterations);
 			}
-			Console.WriteLine ($"TEST COMPLETED");
 		}
 
 		MPSCommandBuffer RunTrainingIterationBatch (float progress)
@@ -35,10 +42,14 @@ namespace MyMPSGraphApp {
 			var commandBuffer = MPSCommandBuffer.Create (commandQueue);
 
 			var xInput = data.GetRandomTrainingBatch (commandQueue.Device, batchSize, out var yLabels);
+			var completed = false;
 			graph.EncodeTrainingBatch (commandBuffer, xInput, yLabels, loss => {
 				commandBuffer.Dispose ();
-				Console.WriteLine ($"Progress: {progress * 100:000.0}% Loss: {loss}");
+				completed = true;
 			});
+
+			Assert.IsTrue (TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () => {
+			}, () => completed), "Completion");
 
 			// Don't need to commit since EncodeTrainingBatch oddly does that
 			return commandBuffer;
@@ -268,3 +279,4 @@ namespace MyMPSGraphApp {
 		}
 	}
 }
+#endif // HAS_METALPERFORMANCESHADERSGRAPH
