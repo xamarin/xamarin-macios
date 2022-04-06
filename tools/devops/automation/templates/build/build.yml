@@ -317,28 +317,11 @@ steps:
 - bash: |
     set -x
     set -e
-    if ! time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset ||
-       ! time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8 ||
-       ! time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8; then
-       echo "##vso[task.setvariable variable=BuildFailureMessage]Build failed"
-       exit 1
-    fi
-  name: 'BuildStep'
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8
   displayName: 'Build'
   timeoutInMinutes: 180
-
-- pwsh: |
-    New-GitHubComment -Header "Build failed on $Env:CONTEXT" -Emoji ":fire:" -Description "$Env:BUILDFAILUREMESSAGE"
-  env:
-    BUILD_REVISION: $(Build.SourceVersion)
-    CONTEXT: ${{ parameters.statusContext }}
-    GITHUB_TOKEN: $(GitHub.Token)
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-    BUILDFAILUREMESSAGE: $(BuildStep.BuildFailureMessage]
-  displayName: 'Check HD Free Space'
-  timeoutInMinutes: 5
-  condition: ne(variables['BuildFailureMessage'],'')
-
 
 # run ASAP so that we do not have any files that got generated confusing git 
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
