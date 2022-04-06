@@ -858,7 +858,7 @@ namespace MapKit {
 		NativeHandle Constructor (CLLocationCoordinate2D coordinate, [NullAllowed] NSDictionary addressDictionary);
 
 		// This requires the AddressBook framework, which afaict isn't bound on Mac, tvOS and watchOS yet
-		[NoMac][NoMacCatalyst][NoWatch][NoTV]
+		[NoMac][NoWatch][NoTV]
 		[Wrap ("this (coordinate, addressDictionary.GetDictionary ())")]
 		NativeHandle Constructor (CLLocationCoordinate2D coordinate, MKPlacemarkAddress addressDictionary);
 
@@ -878,7 +878,7 @@ namespace MapKit {
 		string CountryCode { get; }
 	}
 		
-	[NoMac][NoMacCatalyst][NoWatch][NoTV]
+	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'CoreLocation.CLGeocoder' instead.")]
 	// crash (at least) at Dispose time when instance is created by 'init'
@@ -911,7 +911,9 @@ namespace MapKit {
 	}
 
 #pragma warning disable 618
-	[NoMac][NoMacCatalyst][NoWatch][NoTV]
+	[NoMac][NoWatch][NoTV][MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.iOS, 5, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]

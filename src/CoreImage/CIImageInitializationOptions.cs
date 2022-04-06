@@ -44,7 +44,7 @@ namespace CoreImage {
 				return GetNativeValue<CGColorSpace> (CIImageInitializationOptionsKeys.ColorSpaceKey);
 			}
 			set {
-				SetNativeValue (CIImageInitializationOptionsKeys.ColorSpaceKey, value == null ? null : value);
+				SetNativeValue (CIImageInitializationOptionsKeys.ColorSpaceKey, value);
 			}
 		}
 #endif
