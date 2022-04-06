@@ -1118,6 +1118,11 @@
 
 	<Target Name="_ComputeLinkNativeExecutableInputs">
 		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
+                        <!-- TODO this is not sufficient tvOS, where the lib is named libtvextension -->
+                        <!-- TODO Is _FileNativeReference the way to do this here? -->
+                        <!-- TODO note that we do need ForceLoad=True for this .a -->
+			<_FileNativeReference Include="$(_XamarinNativeLibraryDirectory)/libextension-dotnet.a" Kind="Static" ForceLoad="True" Condition="'$(IsAppExtension)' == 'true'" />
+
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
