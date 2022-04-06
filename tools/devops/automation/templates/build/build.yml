@@ -526,21 +526,19 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $status = "$Env:AGENT_JOBSTATUS"
-    $description = [System.Text.StringBuilder]::new()
     if (($status -eq "Succeeded") -or ($status -eq "SucceededWithIssues")) {
       $header = "Build succeeded"
       $emojii = ":white_check_mark:"
-      $description.AppendLine ("Build succeeded for the job '$Env:SYSTEM_JOBDISPLAYNAME'")
+      $description = "Build succeeded for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
       if ("$Env:macTestPkgError" -eq "true") {
-        $description.AppendLine ()
-        $description.AppendLine (":warning: Failed to package macOS tests")
+        $description = "$description`n`n:warning: Failed to package macOS tests"
       }
     } else {
       $header = "Build failed"
       $emojii = ":fire:"
-      $description.AppendLine ("Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME'")
+      $description = "Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
     }
-    New-GitHubComment -Header "$header" -Emoji "$emojii" -Description $description.ToString ()
+    New-GitHubComment -Header "$header" -Emoji "$emojii" -Description "$description"
   condition: always()
   displayName: 'Report build status'
   env:
