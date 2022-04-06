@@ -228,6 +228,9 @@ namespace Xamarin.MacDev.Tasks {
 				// Don't recurse into the Watch directory, for the same reason
 				if (relativePath.StartsWith ("Watch" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
 					continue;
+				// Don't sign symlinks, just the real file (this avoids trying to sign the same file multiple times through a symlink)
+				if (PathUtils.IsSymlink (entry))
+					continue;
 
 				if (entry.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase) && entry.StartsWith (dylibDirectory, StringComparison.OrdinalIgnoreCase)) {
 					// We find *.dylibs in any subdirectory
