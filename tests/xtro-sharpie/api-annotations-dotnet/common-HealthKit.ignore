@@ -5,3 +5,10 @@
 !missing-null-allowed! 'HealthKit.HKBiologicalSexObject HealthKit.HKHealthStore::GetBiologicalSex(Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'HealthKit.HKBloodTypeObject HealthKit.HKHealthStore::GetBloodType(Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'HealthKit.HKSeriesBuilder HealthKit.HKWorkoutBuilder::GetSeriesBuilder(HealthKit.HKSeriesType)' is missing an [NullAllowed] on return type
+
+# These ones should have this "extra" null according to the headers
+!extra-null-allowed! 'HealthKit.HKCategoryType HealthKit.HKObjectType::GetCategoryType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'HealthKit.HKCharacteristicType HealthKit.HKObjectType::GetCharacteristicType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'HealthKit.HKCorrelationType HealthKit.HKObjectType::GetCorrelationType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'HealthKit.HKDocumentType HealthKit.HKObjectType::_GetDocumentType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'HealthKit.HKQuantityType HealthKit.HKObjectType::GetQuantityType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0
