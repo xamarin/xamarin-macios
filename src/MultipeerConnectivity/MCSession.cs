@@ -37,7 +37,7 @@ namespace MultipeerConnectivity {
 				if (certificates == null)
 					Handle = Init (myPeerID, null, encryptionPreference);
 				else
-					throw new ArgumentNullException ("identity");
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			} else {
 				using (var certs = NSArray.FromNativeObjects (certificates))
 					Handle = Init (myPeerID, certs, encryptionPreference);
