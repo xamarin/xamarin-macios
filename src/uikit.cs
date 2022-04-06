@@ -10863,7 +10863,7 @@ namespace UIKit {
 		[Export ("canPerformAction:withSender:")]
 		bool CanPerform (Selector action, [NullAllowed] NSObject withSender);
 
-		[Export ("undoManager")]
+		[Export ("undoManager"), NullAllowed]
 		NSUndoManager UndoManager { get; }
 
 		[iOS (13,0), TV (13,0)]
