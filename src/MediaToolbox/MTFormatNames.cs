@@ -1,5 +1,7 @@
 // Copyright 2015 Xamarin Inc.
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -28,7 +30,7 @@ namespace MediaToolbox {
 		[iOS (9,0)]
 		[Mac (10,11)]
 #endif
-		static public string GetLocalizedName (this CMMediaType mediaType)
+		static public string? GetLocalizedName (this CMMediaType mediaType)
 		{
 			return CFString.FromHandle (MTCopyLocalizedNameForMediaType (mediaType), releaseHandle: true);
 		}
@@ -51,7 +53,7 @@ namespace MediaToolbox {
 		[iOS (9,0)]
 		[Mac (10,11)]
 #endif
-		static public string GetLocalizedName (this CMMediaType mediaType, uint mediaSubType)
+		static public string? GetLocalizedName (this CMMediaType mediaType, uint mediaSubType)
 		{
 			return CFString.FromHandle (MTCopyLocalizedNameForMediaSubType (mediaType, mediaSubType), releaseHandle: true);
 		}

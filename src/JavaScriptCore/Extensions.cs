@@ -6,6 +6,8 @@
 //
 // Copyright 2013 Xamarin, Inc.
 
+#nullable enable
+
 using System;
 using Foundation;
 
