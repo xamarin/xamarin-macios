@@ -26,6 +26,11 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]		
 		public ITaskItem[] NativeReferences { get; set; }
 		
+		// This is not used from the targets, but it's used by XVS to copy
+		// our packaged files back to Windows.
+		[Output]
+		public ITaskItem[] PackagedFiles { get; set; }
+
 		public override bool Execute ()
 		{
 			// LinkWith must be migrated for NoBindingEmbedding styled binding projects
@@ -51,6 +56,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var manifestDirectory = compress ? IntermediateOutputPath : BindingResourcePath;
 			var manifestPath = CreateManifest (manifestDirectory);
+			var packagedFiles = new List<ITaskItem> ();
 
 			if (compress) {
 				var zipFile = Path.GetFullPath (BindingResourcePath + ".zip");
@@ -73,14 +79,28 @@ namespace Xamarin.MacDev.Tasks {
 					var workingDirectory = Path.GetDirectoryName (fullPath);
 					zipArguments.Add (Path.GetFileName (fullPath));
 					ExecuteAsync ("zip", zipArguments, workingDirectory: workingDirectory).Wait ();
+
+					packagedFiles.Add (new TaskItem (zipFile));
 				}
 			} else {
 				var bindingResourcePath = BindingResourcePath;
 				Log.LogMessage (MSBStrings.M0121, bindingResourcePath);
 				Directory.CreateDirectory (bindingResourcePath);
-				foreach (var nativeRef in NativeReferences)
+				foreach (var nativeRef in NativeReferences) {
 					Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef.ItemSpec, bindingResourcePath, FileCopierReportErrorCallback, FileCopierLogCallback);
+
+					var bindingOutputPath = Path.Combine (bindingResourcePath, Path.GetFileName (nativeRef.ItemSpec));
+					if (Directory.Exists (bindingOutputPath)) {
+						packagedFiles.AddRange (Directory.GetFiles (bindingOutputPath, "*", SearchOption.AllDirectories).Select (v => new TaskItem (v)));
+					} else if (File.Exists (bindingOutputPath)) {
+						packagedFiles.Add (new TaskItem (bindingOutputPath));
+					} else {
+						Log.LogWarning (MSBStrings.W7100, bindingOutputPath);
+					}
+				}
 			}
+
+			PackagedFiles = packagedFiles.ToArray ();
 
 			return !Log.HasLoggedErrors;
 		}
