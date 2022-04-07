@@ -112,9 +112,11 @@ steps:
       "message" = $Env:APIDIFF_MESSAGE;
     }
     # write to a file to be used by the comment to parse
-    $path = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apidiff.json"
+    $path =  Join-Path -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY" -ChildPath "apidiff.json"
+    Write-Host "Json path is '$path'"
     $apiDiffData | ConvertTo-Json | Out-File $path
-    $apiDiffData | ConvertTo-Json | Write-Host
+    Write-Host "Content of json file:"
+    Get-Content $path
     Write-Host "##vso[task.setvariable variable=APIDIFF_JSON_PATH]$path"
   displayName: 'Create API from stable diff gists'
   timeoutInMinutes: 10
@@ -193,9 +195,11 @@ steps:
       "message" = $Env:API_GENERATOR_DIFF_STATUS_MESSAGE;
     }
     # write to a file to be used by the comment to parse
-    $path = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apiGeneratorDiff.json"
+    $path =  Join-Path -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY" -ChildPath "apiGeneratorDiff.json"
+    Write-Host "Json path is '$path'"
     $apiGeneratorDiffData | ConvertTo-Json | Out-File $path
-    $apiGeneratorDiffData | ConvertTo-Json | Write-Host
+    Write-Host "Content of json file:"
+    Get-Content $path
     Write-Host "##vso[task.setvariable variable=APIGENERATORDIFF_JSON_PATH]$path"
   displayName: 'Create API from current diff gists'
   timeoutInMinutes: 10
