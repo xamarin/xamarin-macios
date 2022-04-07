@@ -40,12 +40,12 @@ namespace nnyeah {
 			}
 
 			if (!File.Exists (infile)) {
-				Console.Error.WriteLine (NStrings.E0001, infile);
+				Console.Error.WriteLine (Errors.E0001, infile);
 				Environment.Exit (1);
 			}
 
 			if (File.Exists (outfile) && !forceOverwrite) {
-				Console.Error.WriteLine (NStrings.E0002, outfile);
+				Console.Error.WriteLine (Errors.E0002, outfile);
 				Environment.Exit (1);
 			}
 
@@ -56,7 +56,7 @@ namespace nnyeah {
 			try {
 				reworker.Load ();
 			} catch (Exception e) {
-				Console.Error.WriteLine (NStrings.E0003, infile, e.Message);
+				Console.Error.WriteLine (Errors.E0003, infile, e.Message);
 				Environment.Exit (1);
 			}
 
@@ -74,12 +74,12 @@ namespace nnyeah {
 						warnings.ForEach (Console.WriteLine);
 					}
 				} catch (Exception e) {
-					Console.Error.Write (NStrings.E0004, e.Message);
+					Console.Error.Write (Errors.E0004, e.Message);
 					Environment.Exit (1);
 				}
 			} else {
 				if (verbose) {
-					Console.WriteLine (NStrings.N0003);
+					Console.WriteLine (Errors.N0003);
 				}
 			}
 		}

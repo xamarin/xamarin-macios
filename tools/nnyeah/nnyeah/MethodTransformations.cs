@@ -594,21 +594,21 @@ namespace nnyeah {
 				"System.Void System.nint::.cctor()"
 				),
 
-			new Transformation ("System.Boolean System.nint::System.IConvertible.ToBoolean(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Byte System.nint::System.IConvertible.ToByte(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Char System.nint::System.IConvertible.ToChar(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.DateTime System.nint::System.IConvertible.ToDateTime(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Decimal System.nint::System.IConvertible.ToDecimal(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Double System.nint::System.IConvertible.ToDouble(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Int16 System.nint::System.IConvertible.ToInt16(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Int32 System.nint::System.IConvertible.ToInt32(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Int64 System.nint::System.IConvertible.ToInt64(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.SByte System.nint::System.IConvertible.ToSByte(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Single System.nint::System.IConvertible.ToSingle(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.UInt16 System.nint::System.IConvertible.ToUInt16(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.UInt32 System.nint::System.IConvertible.ToUInt32(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.UInt64 System.nint::System.IConvertible.ToUInt64(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Object System.nint::System.IConvertible.ToType(System.Type,System.IFormatProvider)", NStrings.N0001),
+			new Transformation ("System.Boolean System.nint::System.IConvertible.ToBoolean(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Byte System.nint::System.IConvertible.ToByte(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Char System.nint::System.IConvertible.ToChar(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.DateTime System.nint::System.IConvertible.ToDateTime(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Decimal System.nint::System.IConvertible.ToDecimal(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Double System.nint::System.IConvertible.ToDouble(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int16 System.nint::System.IConvertible.ToInt16(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int32 System.nint::System.IConvertible.ToInt32(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int64 System.nint::System.IConvertible.ToInt64(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.SByte System.nint::System.IConvertible.ToSByte(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Single System.nint::System.IConvertible.ToSingle(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt16 System.nint::System.IConvertible.ToUInt16(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt32 System.nint::System.IConvertible.ToUInt32(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt64 System.nint::System.IConvertible.ToUInt64(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Object System.nint::System.IConvertible.ToType(System.Type,System.IFormatProvider)", Errors.N0001),
 
 			// nuint
 			new Transformation(
@@ -830,21 +830,21 @@ namespace nnyeah {
 				"System.Void System.nuint::.cctor()"
 				),
 
-			new Transformation ("System.Boolean System.nuint::System.IConvertible.ToBoolean(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Byte System.nuint::System.IConvertible.ToByte(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Char System.nuint::System.IConvertible.ToChar(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.DateTime System.nuint::System.IConvertible.ToDateTime(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Decimal System.nuint::System.IConvertible.ToDecimal(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Double System.nuint::System.IConvertible.ToDouble(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Int16 System.nuint::System.IConvertible.ToInt16(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Int32 System.nuint::System.IConvertible.ToInt32(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Int64 System.nuint::System.IConvertible.ToInt64(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.SByte System.nuint::System.IConvertible.ToSByte(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Single System.nuint::System.IConvertible.ToSingle(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.UInt16 System.nuint::System.IConvertible.ToUInt16(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.UInt32 System.nuint::System.IConvertible.ToUInt32(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.UInt64 System.nuint::System.IConvertible.ToUInt64(System.IFormatProvider)", NStrings.N0001),
-			new Transformation ("System.Object System.nuint::System.IConvertible.ToType(System.Type,System.IFormatProvider)", NStrings.N0001),
+			new Transformation ("System.Boolean System.nuint::System.IConvertible.ToBoolean(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Byte System.nuint::System.IConvertible.ToByte(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Char System.nuint::System.IConvertible.ToChar(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.DateTime System.nuint::System.IConvertible.ToDateTime(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Decimal System.nuint::System.IConvertible.ToDecimal(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Double System.nuint::System.IConvertible.ToDouble(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int16 System.nuint::System.IConvertible.ToInt16(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int32 System.nuint::System.IConvertible.ToInt32(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int64 System.nuint::System.IConvertible.ToInt64(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.SByte System.nuint::System.IConvertible.ToSByte(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Single System.nuint::System.IConvertible.ToSingle(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt16 System.nuint::System.IConvertible.ToUInt16(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt32 System.nuint::System.IConvertible.ToUInt32(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt64 System.nuint::System.IConvertible.ToUInt64(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Object System.nuint::System.IConvertible.ToType(System.Type,System.IFormatProvider)", Errors.N0001),
 
 			// why warnings for this?
 			// Because in .NET 6 there is no direct equivalent of this call.
@@ -853,9 +853,9 @@ namespace nnyeah {
 			// Not doing this right now since a survey of nuget.org shows that these methods
 			// are never called in the wild.
 			new Transformation ("System.Void System.nuint::CopyArray(System.IntPtr,System.nuint[],System.Int32,System.Int32)",
-				NStrings.N0002),
+				Errors.N0002),
 			new Transformation ("System.Void System.nuint::CopyArray(System.nuint[],System.Int32,System.IntPtr,System.Int32)",
-				NStrings.N0002),
+				Errors.N0002),
 		};
 	}
 }

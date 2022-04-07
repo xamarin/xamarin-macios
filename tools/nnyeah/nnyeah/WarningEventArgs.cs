@@ -14,7 +14,7 @@ namespace nnyeah {
 
 		public override string HelpfulMessage ()
 		{
-			return string.Format (NStrings.N0006, ContainerName, MethodName, TargetOperand);
+			return string.Format (Errors.N0006, ContainerName, MethodName, TargetOperand);
 		}
 	}
 }

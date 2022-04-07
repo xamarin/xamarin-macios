@@ -63,7 +63,7 @@ namespace nnyeah {
 		void CheckModule ()
 		{
 			if (module == EmptyModule)
-				throw new Exception (NStrings.E0005);
+				throw new Exception (Errors.E0005);
 		}
 
 		public void Rework (Stream stm)

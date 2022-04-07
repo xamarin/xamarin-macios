@@ -18,9 +18,9 @@ namespace nnyeah {
 		public override string HelpfulMessage ()
 		{
 			if (RemovedCount > 0)
-				return string.Format (NStrings.N0004, ContainerName, MethodName, TargetOperand, AddedCount, RemovedCount);
+				return string.Format (Errors.N0004, ContainerName, MethodName, TargetOperand, AddedCount, RemovedCount);
 
-			return string.Format (NStrings.N0005, ContainerName, MethodName, TargetOperand, AddedCount);
+			return string.Format (Errors.N0005, ContainerName, MethodName, TargetOperand, AddedCount);
 		}
 	}
 }
