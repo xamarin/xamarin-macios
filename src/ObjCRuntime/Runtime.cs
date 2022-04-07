@@ -1090,6 +1090,8 @@ namespace ObjCRuntime {
 		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
 			var handle = GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection);
 			lock (lock_obj) {
+				if (object_map.Remove (ptr, out var existing))
+					existing.Free ();
 				object_map [ptr] = handle;
 				obj.Handle = ptr;
 			}
