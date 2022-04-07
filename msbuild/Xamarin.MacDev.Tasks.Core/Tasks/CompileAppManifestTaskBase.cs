@@ -388,7 +388,7 @@ namespace Xamarin.MacDev.Tasks
 				if (minimumOSVersion < new Version (11, 0)) {
 					string miniOSVersion = "?";
 					if (MacCatalystSupport.TryGetiOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumOSVersion, out var iOSVersion, out var _))
-						miniOSVersion = iOSVersion.ToString ();
+						miniOSVersion = iOSVersion?.ToString () ?? "?";
 					LogAppManifestError (MSBStrings.E7099 /* The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}). */,  miniOSVersion, minimumOSVersion);
 				}
 			}
