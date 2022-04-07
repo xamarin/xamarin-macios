@@ -185,3 +185,39 @@ class APIDiffComment {
         }
     }
 }
+
+<# 
+    .SYNOPSIS
+        Creates a new APIDiffComment object from the data present in the given hash table.
+#>
+function New-APIDiffComment {
+    param (
+        [object]
+        $PRContent,
+        [object]
+        $StableContent,
+        [string]
+        $GeneratorContent
+    )
+    return [APIDiffComment]::new($PRContent, $StableContent, $GeneratorContent)
+}
+
+
+<# 
+    .SYNOPSIS
+        Creates a new APIDiffComment object from the data present in a json file. 
+#>
+function New-APIDiffCommentFromFiles {
+    param (
+        [string]
+        $PRContentPath,
+        [string]
+        $StableContentPath,
+        [string]
+        $GeneratorContent
+    )
+    return [APIDiffComment]::FromJsonFiles($PRContentPath, $StableContentPath, $GeneratorContent)
+}
+
+Export-ModuleMember -Function New-APIDiffComment
+Export-ModuleMember -Function New-APIDiffCommentFromFiles

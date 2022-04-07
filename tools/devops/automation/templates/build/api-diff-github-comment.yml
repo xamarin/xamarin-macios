@@ -206,23 +206,15 @@ steps:
     $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/$Env:DEVICE_PREFIX/;/tests/vsdrops_index.html"
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
-    $buildReason = "$(Build.Reason)"
-    $buildSourceBranchName = "$(Build.SourceBranchName)"
     if ($Env:STABLE_APID_GENERATOR_DIFF_PATH) {
-      $apiGeneratorComment= Join-Path -Path "$Env:STABLE_APID_GENERATOR_DIFF_PATH" -ChildPath "api-diff-comments.md"
+      $apiGeneratorComment = Join-Path -Path "$Env:STABLE_APID_GENERATOR_DIFF_PATH" -ChildPath "api-diff-comments.md"
     } else {
       $apiGeneratorComment = ""
     }
 
-    if ($buildReason -ne "PullRequest" -or $Env:BUILD_PACKAGE -eq "True") {
-      Write-Host "Json path is $Env:ARTIFACTS_JSON_PATH"
-      $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:TESTS_SUMMARY" -Artifacts "$Env:ARTIFACTS_JSON_PATH" -APIDiff "$Env:APIDIFF_JSON_PATH" -APIGeneratorDiffJson "$Env:APIGENERATORDIFF_JSON_PATH" -APIGeneratorDiff $apiGeneratorComment
-      Write-Host $response
-    } else {
-      Write-Host "Json path is $Env:ARTIFACTS_JSON_PATH"
-      $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:TESTS_SUMMARY" -APIDiff "$Env:APIDIFF_JSON_PATH" -APIGeneratorDiffJson "$Env:APIGENERATORDIFF_JSON_PATH" -APIGeneratorDiff $apiGeneratorComment
-      Write-Host $response
-    }
+    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN
+    $apiDiffComment = New-APIDiffCommentFromFiles -PRContentPath "$Env:APIDIFF_JSON_PATH" -StableContentPath "$Env:APIGENERATORDIFF_JSON_PATH" -GeneratorContent $apiGeneratorComment
+    $result = $gihubComments.NewCommentFromObject("API Diff", ":clipboard:", $apiDiffComment)
   env:
     BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
@@ -231,6 +223,5 @@ steps:
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
     TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
     ACCESSTOKEN: $(System.AccessToken)
-  displayName: 'Create API diff GitHub comment'
-  enabled: false
+  displayName: 'Create github comment'
   timeoutInMinutes: 10
