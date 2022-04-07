@@ -312,7 +312,7 @@ steps:
 
 # Be nice and clean behind you
 - pwsh: |
-    Import-Module MaciosCI.psd1
+    Import-Module ./MaciosCI.psd1
     Clear-AfterTests
   displayName: 'Cleanup'
   continueOnError: true
