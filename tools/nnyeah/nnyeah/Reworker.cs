@@ -63,7 +63,7 @@ namespace nnyeah {
 		void CheckModule ()
 		{
 			if (module == EmptyModule)
-				throw new Exception ("Module is not loaded. Call Load first.");
+				throw new Exception (NStrings.E0005);
 		}
 
 		public void Rework (Stream stm)
