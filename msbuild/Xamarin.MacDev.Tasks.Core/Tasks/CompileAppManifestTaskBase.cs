@@ -377,6 +377,22 @@ namespace Xamarin.MacDev.Tasks
 				return;
 
 			var supportedDevices = plist.GetUIDeviceFamily ();
+			var macCatalystOptimizedForMac = (supportedDevices & IPhoneDeviceType.MacCatalystOptimizedForMac) == IPhoneDeviceType.MacCatalystOptimizedForMac;
+			if (macCatalystOptimizedForMac) {
+				if (Platform != ApplePlatform.MacCatalyst) {
+					LogAppManifestError (MSBStrings.E7098 /* The UIDeviceFamily value '6' is not valid for this platform. It's only valid for Mac Catalyst. */);
+					return; // no need to look for more errors, they will probably not make much sense.
+				}
+
+				GetMinimumOSVersion (plist, out var minimumOSVersion);
+				if (minimumOSVersion < new Version (11, 0)) {
+					string miniOSVersion = "?";
+					if (MacCatalystSupport.TryGetiOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumOSVersion, out var iOSVersion, out var _))
+						miniOSVersion = iOSVersion.ToString ();
+					LogAppManifestError (MSBStrings.E7099 /* The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}). */,  miniOSVersion, minimumOSVersion);
+				}
+			}
+
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				var supportsIPhone = (supportedDevices & IPhoneDeviceType.IPhone) != 0
