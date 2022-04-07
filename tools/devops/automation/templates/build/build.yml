@@ -536,7 +536,7 @@ steps:
       $description = "Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME' (status: $status)"
     }
     if ("$Env:MACTESTPKG_MACTESTPKGERROR" -eq "true") {
-      $description = "$description`n`n:warning: Failed to package macOS tests"
+      $description = "$description`n`n:x: Failed to package macOS tests :x:"
     }
     New-GitHubComment -Header "$header" -Emoji "$emojii" -Description "$description"
   condition: always()
