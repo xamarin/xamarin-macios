@@ -451,7 +451,7 @@ steps:
     inputs:
       targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z
       artifactName: mac-test-package
-    condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
+    condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'), ne(variables['macTestPkg.macTestPkgError'], 'true'))
     continueOnError: true
 
   - bash: |
