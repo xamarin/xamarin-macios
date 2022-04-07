@@ -213,6 +213,13 @@ namespace Xamarin.Tests
 			return result;
 		}
 
+		static IList<string> GetVariableArray (string variable, string @default = "")
+		{
+			// variables with more than one value are wrapped in ', get the var remove the '' and split
+			var value = GetVariable (variable, @default).Trim ('\'');
+			return value.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+		}
+
 		public static string EvaluateVariable (string variable)
 		{
 			var output = new StringBuilder ();
@@ -797,9 +804,20 @@ namespace Xamarin.Tests
 
 		public static IList<string> GetRuntimeIdentifiers (ApplePlatform platform)
 		{
-			// variables with more than one value are wrapped in ', get the var remove the '' and split
-			var variable = GetVariable ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS", string.Empty).Trim ('\'');
-			return variable.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			return GetVariableArray ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS");
+		}
+
+		public static IList<string> GetArchitectures (ApplePlatform platform)
+		{
+			var rv = new List<string> ();
+			foreach (var rid in GetRuntimeIdentifiers (platform))
+				rv.AddRange (GetArchitectures (rid));
+			return rv;
+		}
+
+		public static IList<string> GetArchitectures (string runtimeIdentifier)
+		{
+			return GetVariableArray ($"DOTNET_{runtimeIdentifier}_ARCHITECTURES");
 		}
 
 		public static IEnumerable<string> GetBaseLibraryImplementations ()
