@@ -10,10 +10,6 @@ using Mono.Cecil;
 namespace Cecil.Tests {
 	[TestFixture]
 	public class OpenTKTest {
-
-#if NET
-		[Ignore ("To be fixed after the move to an outside bot: https://github.com/xamarin/maccore/issues/2547.")]
-#endif
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		// https://github.com/xamarin/xamarin-macios/issues/9724
 		public void BeGone (string assemblyPath)
