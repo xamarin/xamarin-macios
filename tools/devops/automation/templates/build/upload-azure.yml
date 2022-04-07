@@ -21,7 +21,7 @@ steps:
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts
 
-- powershell : |
+- pwsh: |
     $packagePrefix = "https://bosstoragemirror.blob.core.windows.net/wrench/$Env:VIRTUAL_PATH/package"
     $files =  Get-ChildItem -Path "$(Build.SourcesDirectory)\artifacts\package" -File -Force -Name
     $manifestFile = "$(Build.SourcesDirectory)\artifacts\package\manifest"
@@ -89,7 +89,7 @@ steps:
     outputStorageUri: Parameters.outputStorageUri
     outputStorageContainerSasToken: PackageSasToken
 
-- powershell: |
+- pwsh: |
     $execPath="$Env:BUILD_SOURCESDIRECTORY\Xamarin.Build.Tasks\tools\BuildTasks\build-tasks.exe"
 
     if (-not (Test-Path $execPath -PathType Leaf)) {
@@ -119,9 +119,8 @@ steps:
     artifactName: pkg-info
   continueOnError: true
 
-- powershell: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\GitHub.psm1
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\VSTS.psm1
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\MaciosCI.psd1
 
     Dir "$(Build.SourcesDirectory)\artifacts\package"
 
@@ -137,6 +136,12 @@ steps:
     $macPkg = Get-ChildItem -Path $pkgsPath -File -Force -Name xamarin.mac-*.pkg
     Write-Host "mac PKG is $macPkg"
 
+    if ($Env:BUILD_REASON -eq "PullRequest") {
+      $notarizedShouldExist = $false;
+    } else {
+      $notarizedShouldExist = $true;
+    }
+
     # create an array with objects so that we can set each of the statuses:
     $statusInfo = @(
       @{
@@ -145,6 +150,7 @@ steps:
         Description = $iOSPkg;
         TargetUrl = "$pkgsVirtualUrl/$iOSPkg";
         Error = "xamarin.ios pkg not found";
+        ShouldExist = $true;
       },
       @{
         Path = "$pkgsPath\\notarized\\xamarin.ios-*.pkg";
@@ -152,6 +158,7 @@ steps:
         Description = "$iOSPkg (Notarized)" ;
         TargetUrl = "$pkgsVirtualUrl/notarized/$iOSPkg" ;
         Error = "Notarized xamarin.ios pkg not found" ;
+        ShouldExist = $notarizedShouldExist;
       },
       @{
         Path = "$pkgsPath\\xamarin.mac-*.pkg" ;
@@ -159,6 +166,7 @@ steps:
         Description = "$macPkg" ;
         TargetUrl = "$pkgsVirtualUrl/$macPkg" ;
         Error = "xamarin.mac pkg not found." ;
+        ShouldExist = $true;
       },
       @{
         Path = "$pkgsPath\\notarized\\xamarin.mac-*.pkg" ;
@@ -166,6 +174,7 @@ steps:
         Description = "$macPkg (Notarized)" ;
         TargetUrl = "$pkgsVirtualUrl/notarized/$macPkg" ;
         Error = "Notarized xamarin.mac pkg not found." ;
+        ShouldExist = $notarizedShouldExist;
       },
       @{
         Path = "$pkgsPath\bundle.zip" ;
@@ -173,6 +182,7 @@ steps:
         Description = "bundle.zip" ;
         TargetUrl = "$pkgsVirtualUrl/bundle.zip" ;
         Error = "bundle.zip not found." ;
+        ShouldExist = $true;
       },
       @{
         Path = "$pkgsPath\msbuild.zip" ;
@@ -180,13 +190,14 @@ steps:
         Description = "msbuild.zip" ;
         TargetUrl = "$pkgsVirtualUrl/msbuild.zip" ;
         Error = "msbuild.zip not found." ;
+        ShouldExist = $true;
       }
     )
 
     foreach ($info in $statusInfo) {
       if (Test-Path $info.Path -PathType Leaf) {
           Set-GitHubStatus -Status "success" -Description $info.Description -TargetUrl $info.TargetUrl  -Context $info.Context
-      } else {
+      } elseif ($info.ShouldExist) {
           Set-GitHubStatus -Status "error" -Description $info.Error -Context $info.Context
       }
     }
@@ -230,7 +241,7 @@ steps:
   displayName: 'Set GithubStatus'
 
 # Executive Order (EO): Software Bill of Materials (SBOM): https://www.1eswiki.com/wiki/ADO_sbom_Generator
-- powershell: |
+- pwsh: |
     # https://stackoverflow.com/questions/188892/glob-pattern-matching-in-net
     function Is-Match([string] $Text, [string] $Filter)
     {
@@ -286,7 +297,7 @@ steps:
     }
   displayName: 'SBOM: Staging'
 
-- powershell: |
+- pwsh: |
     function Get-PackageFileNames([string] $PkgsPath) {
       $files = [IO.Directory]::GetFiles($PkgsPath)
       $pkgFiles = $files | foreach { [IO.Path]::GetFileName($_) }
@@ -317,7 +328,7 @@ steps:
     PackageVersion: '$(SBOM.ProductVersion)'
     Verbosity: Verbose
 
-- powershell: |
+- pwsh: |
     # The pkg files are already included under the drop-x64 and drop-arm locations
     # We only needed them temporarily here as a means to produce the Software Bill of Materials (SBOM) manifest
     # No need to include the pkg files (and duplicate them) in the SBOM drop

@@ -46,11 +46,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
 
-		public bool ShouldCreateOutputFile (ITaskItem item)
-		{
-			var fileExtension = Path.GetExtension (item.ItemSpec);
-
-			return fileExtension != ".app" && fileExtension != ".appex";
-		}
+		public bool ShouldCreateOutputFile (ITaskItem item) => true;
 	}
 }
