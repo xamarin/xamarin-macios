@@ -202,7 +202,7 @@ steps:
   env:
     GITHUB_TOKEN: $(GitHub.Token)
 
-- powershell: |
+- pwsh: |
     $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/$Env:DEVICE_PREFIX/;/tests/vsdrops_index.html"
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
