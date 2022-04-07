@@ -31,6 +31,11 @@ if test -z "$XAM_TOP"; then
     exit 1
 fi
 
+if test -z "$WORKSPACE"; then
+	echo "Variable WORKSPACE is missing."
+	exit 1
+fi
+
 cd $XAM_TOP
 
 MARKDOWN_INDENT="&nbsp;&nbsp;&nbsp;&nbsp;"
