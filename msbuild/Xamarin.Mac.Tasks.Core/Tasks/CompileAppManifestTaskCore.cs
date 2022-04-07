@@ -1,6 +1,8 @@
 using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
 
+#nullable enable
+
 namespace Xamarin.Mac.Tasks {
 	public abstract class CompileAppManifestTaskCore : CompileAppManifestTaskBase {
 
