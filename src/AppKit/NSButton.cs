@@ -44,6 +44,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -57,6 +58,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -70,6 +72,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -83,6 +86,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif
@@ -96,6 +100,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 #endif

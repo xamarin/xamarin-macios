@@ -28,6 +28,10 @@ namespace CoreServices {
 #endif
 
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("tvos15.0")]
 	[UnsupportedOSPlatform ("maccatalyst15.0")]
 	[UnsupportedOSPlatform ("macos12.0")]

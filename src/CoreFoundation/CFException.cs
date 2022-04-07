@@ -30,9 +30,16 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace CoreFoundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class CFErrorDomain {
 
 		public static readonly NSString Cocoa;
@@ -50,6 +57,12 @@ namespace CoreFoundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class CFExceptionDataKey {
 
 		public static readonly NSString Description;
@@ -69,6 +82,12 @@ namespace CoreFoundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFException : Exception {
 
 		public CFException (string description, NSString domain, nint code, string failureReason, string recoverySuggestion)
