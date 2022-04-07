@@ -527,8 +527,8 @@ steps:
       $emojii = ":white_check_mark:"
       $description = "Build succeeded for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
     } elseif ($status -eq "SucceededWithIssues") {
-      $header = "Build succeeded"
-      $emojii = ":white_check_mark:"
+      $header = "Build succeeded with issues"
+      $emojii = ":warning:"
       $description = "Build succeeded (with issues) for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
     } else {
       $header = "Build failed"
