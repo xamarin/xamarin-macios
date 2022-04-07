@@ -521,7 +521,7 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $status = "$Env:AGENT_JOBSTATUS"
     Write-Host "Status: $status"
-    Write-Host "macTestPkgError: $Env:macTestPkgError"
+    Write-Host "macTestPkgError: $Env:MACTESTPKG_MACTESTPKGERROR"
     if ($status -eq "Succeeded") {
       $header = "Build succeeded"
       $emojii = ":white_check_mark:"
@@ -535,7 +535,7 @@ steps:
       $emojii = ":fire:"
       $description = "Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME' (status: $status)"
     }
-    if ("$Env:macTestPkgError" -eq "true") {
+    if ("$Env:MACTESTPKG_MACTESTPKGERROR" -eq "true") {
       $description = "$description`n`n:warning: Failed to package macOS tests"
     }
     New-GitHubComment -Header "$header" -Emoji "$emojii" -Description "$description"
