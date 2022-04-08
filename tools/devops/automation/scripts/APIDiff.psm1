@@ -38,7 +38,7 @@ class APIDiff {
         $this.Result = $content.result
         $this.Message = $content.message
         $this.Platforms = @{}
-        
+
         # loop over the gists and create the Platform diff as needed
         if ($null -ne $content.gist -and $null -ne $content.gist.Keys) {
             foreach ($platform in $content.gist.Keys) {
@@ -83,8 +83,15 @@ class APIDiffComment {
 
     static [hashtable] ConvertToHashTable($obj) {
         $result = @{}
-        $obj.psobject.properties | Foreach { $result[$_.Name] = $_.Value }
-        return $result
+        foreach($property in $obj.psobject.properties.name )
+        {
+            $value = $obj.$property
+            if ($value.GetType().Name -eq "PSCustomObject") {
+                $value = [APIDiffComment]::ConvertToHashTable($value)
+            }
+            $result[$property] = $value
+        }
+       return $result
     }
 
     static [APIDiffComment] FromJsonFiles (
@@ -108,7 +115,7 @@ class APIDiffComment {
         } else {
             # read the json file, convert it to an object and add a line for each artifact
             $stableContent =  Get-Content $stableContentPath | ConvertFrom-Json
-            $stableContent = [APIDiffComment]::ConvertToHashTable($stableContentPath)
+            $stableContent = [APIDiffComment]::ConvertToHashTable($stableContent)
         }
 
         return [APIDiffComment]::new($prContent, $stableContent, $generatorContent)
