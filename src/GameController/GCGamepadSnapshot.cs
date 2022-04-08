@@ -77,7 +77,7 @@ namespace GameController {
 			/* GCGamepadSnapShotDataV100 * __nullable */ out GCGamepadSnapShotDataV100 snapshotData,
 			/* NSData * __nullable */ IntPtr data);
 
-		public static bool TryGetSnapshotData (NSData data, out GCGamepadSnapShotDataV100 snapshotData)
+		public static bool TryGetSnapshotData (NSData? data, out GCGamepadSnapShotDataV100 snapshotData)
 		{
 			return GCGamepadSnapShotDataV100FromNSData (out snapshotData, data.GetHandle ());
 		}

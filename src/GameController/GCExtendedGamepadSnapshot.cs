@@ -301,7 +301,7 @@ namespace GameController {
 			/* GCExtendedGamepadSnapshotData * __nullable */ out GCExtendedGamepadSnapshotData snapshotData, 
 			/* NSData * __nullable */ IntPtr data);
 
-		public static bool TryGetSnapShotData (NSData data, out GCExtendedGamepadSnapShotDataV100 snapshotData)
+		public static bool TryGetSnapShotData (NSData? data, out GCExtendedGamepadSnapShotDataV100 snapshotData)
 		{
 			return GCExtendedGamepadSnapShotDataV100FromNSData (out snapshotData, data.GetHandle ());
 		}
@@ -325,7 +325,7 @@ namespace GameController {
 		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
-		public static bool TryGetExtendedSnapShotData (NSData data, out GCExtendedGamepadSnapshotData snapshotData)
+		public static bool TryGetExtendedSnapShotData (NSData? data, out GCExtendedGamepadSnapshotData snapshotData)
 		{
 			return GCExtendedGamepadSnapshotDataFromNSData (out snapshotData, data.GetHandle ());
 		}
