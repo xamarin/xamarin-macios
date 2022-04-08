@@ -164,12 +164,18 @@ class APIDiffComment {
         if ($null -eq $this.FromPR) {
             $stringBuilder.AppendLine("* :warning: API diff urls have not been provided.")
         } else {
+            $stringBuilder.AppendLine("")
+            $stringBuilder.AppendLine($this.FromPR.Message)
+            $stringBuilder.AppendLine("")
             $this.WriteDiff($this.FromPR, $stringBuilder)
         }
 
         if ($null -eq $this.FromStable) {
             $stringBuilder.AppendLine("* :warning: API Current PR diff urls have not been provided.")
         } else {
+            $stringBuilder.AppendLine("")
+            $stringBuilder.AppendLine($this.FromStable.Message)
+            $stringBuilder.AppendLine("")
             $this.WriteDiff($this.FromStable, $stringBuilder)
         }
 
