@@ -1,4 +1,7 @@
-Using module ./StaticPages.psm1
+$modulePath = "$PSScriptRoot\\StaticPages.psm1"  # windows path separators work on unix and windows
+$scriptBody = "using module $modulePath"
+$script = [ScriptBlock]::Create($scriptBody)
+. $script
 
 Describe "Static pages tests" {
 

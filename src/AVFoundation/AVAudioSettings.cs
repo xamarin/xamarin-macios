@@ -34,6 +34,13 @@ using AudioToolbox;
 
 namespace AVFoundation {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// Should be called AVAudioSetting but AVAudioSetting has been already used by keys class
 	public class AudioSettings : DictionaryContainer
 	{
@@ -164,6 +171,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -206,6 +216,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -238,6 +251,9 @@ namespace AVFoundation {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif

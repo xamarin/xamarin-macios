@@ -15,6 +15,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 // This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/matrix_types.h
 #if NET
@@ -23,6 +24,12 @@ namespace CoreGraphics
 namespace OpenTK
 #endif
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NMatrix3 : IEquatable<NMatrix3>
 	{

@@ -33,10 +33,17 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
 using AudioUnit;
+using System.Runtime.Versioning;
 
 namespace AudioToolbox {
 
 	// CoreAudio.framework - CoreAudioTypes.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioClassDescription
 	{

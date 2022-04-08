@@ -1,3 +1,4 @@
+# This framework is not available on Mac Catalyst, even if ObjectiveSharpie thinks it is.
 !missing-enum! SCFrameStatus not bound
 !missing-enum! SCStreamErrorCode not bound
 !missing-enum! SCStreamOutputType not bound

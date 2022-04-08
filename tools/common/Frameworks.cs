@@ -272,6 +272,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MetricKit", 12, 0 },
 					{ "Phase", "PHASE", 12, 0 },
 					{ "ShazamKit", "ShazamKit", 12,0 },
+
+					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
 				};
 			}
 			return mac_frameworks;
@@ -675,6 +677,9 @@ public class Frameworks : Dictionary <string, Framework>
 
 			// Add frameworks that are not in iOS
 			catalyst_frameworks.Add ("AppKit", 13, 0);
+			// Due to a linking problem, ScreenCpatureKit doesn't work on Mac Catalyst (we can't pass -framework ScreenCaptureKit to the native linker,
+			// because there's no Mac Catalyst tbd file for ScreenCaptureKit).
+			// catalyst_frameworks.Add ("ScreenCaptureKit", 15, 4);
 		}
 		return catalyst_frameworks;
 	}

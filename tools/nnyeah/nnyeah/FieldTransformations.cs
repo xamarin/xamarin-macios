@@ -55,6 +55,58 @@ namespace nnyeah {
 				Instruction.Create (OpCodes.Call, minReference)
 				));
 
+			var newNfloatModuleReference = new ModuleReference ("System.Private.CoreLib");
+			var newNfloatTypeReference = new TypeReference ("System.Runtime.InteropServices",
+				"NFloat", null, newNfloatModuleReference, true);
+
+			sizeReference = new MethodReference ("get_Size", module.TypeSystem.Int32, newNfloatTypeReference);
+			allTransforms.Add ("System.Int32 System.nfloat::Size", new Transformation (
+				"System.Int32 System.nfloat::Size",
+				Instruction.Create (OpCodes.Call, sizeReference)
+				));
+
+			maxReference = new MethodReference ("get_MaxValue", newNfloatTypeReference, newNfloatTypeReference);
+			allTransforms.Add ("System.nfloat System.nfloat::MaxValue", new Transformation (
+				"System.nfloat System.nfloat::MaxValue",
+				Instruction.Create (OpCodes.Call, maxReference)
+				));
+
+			minReference = new MethodReference ("get_MinValue", newNfloatTypeReference, newNfloatTypeReference);
+			allTransforms.Add ("System.nfloat System.nfloat::MinValue", new Transformation (
+				"System.nfloat System.nfloat::MinValue",
+				Instruction.Create (OpCodes.Call, minReference)
+				));
+
+			var epsilonReference = new MethodReference ("get_Epsilon", newNfloatTypeReference, newNfloatTypeReference);
+			allTransforms.Add ("System.nfloat System.nfloat::Epsilon", new Transformation (
+				"System.nfloat System.nfloat::Epsilon",
+				Instruction.Create (OpCodes.Call, epsilonReference)
+				));
+
+			var nanReference = new MethodReference ("get_NaN", newNfloatTypeReference, newNfloatTypeReference);
+			allTransforms.Add ("System.nfloat System.nfloat::NaN", new Transformation (
+				"System.nfloat System.nfloat::NaN",
+				Instruction.Create (OpCodes.Call, nanReference)
+				));
+
+			var infinityReference = new MethodReference ("get_NegativeInfinity", newNfloatTypeReference, newNfloatTypeReference);
+			allTransforms.Add ("System.nfloat System.nfloat::NegativeInfinity", new Transformation (
+				"System.nfloat System.nfloat::NegativeInfinity",
+				Instruction.Create (OpCodes.Call, infinityReference)
+				));
+
+			infinityReference = new MethodReference ("get_PositiveInfinity", newNfloatTypeReference, newNfloatTypeReference);
+			allTransforms.Add ("System.nfloat System.nfloat::PositiveInfinity", new Transformation (
+				"System.nfloat System.nfloat::PositiveInfinity",
+				Instruction.Create (OpCodes.Call, infinityReference)
+				));
+
+			var valReference = new MethodReference ("get_Value", module.TypeSystem.Double, newNfloatTypeReference);
+			allTransforms.Add ("System.Double System.nfloat::v", new Transformation (
+				"System.Double System.nfloat::v",
+				Instruction.Create (OpCodes.Call, valReference)
+				));
+
 			return allTransforms;
 		}
 	}
