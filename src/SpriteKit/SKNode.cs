@@ -24,6 +24,8 @@ namespace SpriteKit
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -67,6 +69,7 @@ namespace SpriteKit
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5,0)]
 		[TV (12,0)]
@@ -94,6 +97,7 @@ namespace SpriteKit
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5,0)]
 		[TV (12,0)]
