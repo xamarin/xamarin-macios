@@ -20,6 +20,8 @@ namespace MediaPlayer {
 	// MPVolumeSettings.h
 	public static class MPVolumeSettings {
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios11.3")]
 #if IOS
 		[Obsolete ("Starting with ios11.3 use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -31,6 +33,8 @@ namespace MediaPlayer {
 		public extern static void AlertShow ();
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios11.3")]
 #if IOS
 		[Obsolete ("Starting with ios11.3 use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -43,6 +47,8 @@ namespace MediaPlayer {
 
 		// note: sizeof (BOOL) is 1 like C, i.e. it's not a Win32 BOOL (4 bytes)
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios11.3")]
 #if IOS
 		[Obsolete ("Starting with ios11.3 use 'MPVolumeView' to present volume controls.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

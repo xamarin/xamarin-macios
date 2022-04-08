@@ -44,6 +44,7 @@ namespace PassKit {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4,0)]
 		[iOS (11,0)]
@@ -56,6 +57,7 @@ namespace PassKit {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4,0)]
 		[iOS (11,0)]

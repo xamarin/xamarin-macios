@@ -25,6 +25,12 @@ namespace CoreFoundation {
 			Bundle
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public struct PackageInfo {
 			public PackageInfo (CFBundle.PackageType type, string creator)
 			{

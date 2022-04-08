@@ -5,7 +5,7 @@ using Mono.Cecil.Cil;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class MethodTransformations {
 		static List<Transformation>? allTransforms;
 		static Dictionary<string, Transformation>? transformTable;

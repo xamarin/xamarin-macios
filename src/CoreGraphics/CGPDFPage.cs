@@ -33,9 +33,17 @@ using System.Runtime.InteropServices;
 
 using CoreFoundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGPDFPage.h
 	public partial class CGPDFPage : NativeObject {
 		[DllImport (Constants.CoreGraphicsLibrary)]

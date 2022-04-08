@@ -12,6 +12,7 @@
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
@@ -27,6 +28,12 @@ namespace CFNetwork {
 namespace CoreServices {
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFHTTPAuthentication : CFType {
 		[Preserve (Conditional = true)]
 		internal CFHTTPAuthentication (NativeHandle handle, bool owns)

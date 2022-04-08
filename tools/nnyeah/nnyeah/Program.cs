@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	class Program {
 		static void Main (string [] args)
 		{

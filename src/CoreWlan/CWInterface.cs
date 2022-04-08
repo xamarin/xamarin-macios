@@ -47,6 +47,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 #endif
@@ -58,6 +59,7 @@ namespace CoreWlan {
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 #endif

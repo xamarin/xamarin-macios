@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class Reworker {
 		Stream stm;
 		ModuleDefinition module = EmptyModule;

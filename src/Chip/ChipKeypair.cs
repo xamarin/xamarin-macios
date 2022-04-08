@@ -16,8 +16,17 @@ using Security;
 namespace Chip {
     public partial class ChipKeypair {
 
-#if !NET
-		[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
+#if NET
+		[SupportedOSPlatform ("macos12.1")]
+		[SupportedOSPlatform ("tvos15.2")]
+		[SupportedOSPlatform ("ios15.2")]
+		[SupportedOSPlatform ("maccatalyst15.2")]
+#else
+		[Mac (12,1)]
+		[Watch (8,3)]
+		[TV (15,2)]
+		[iOS (15,2)]
+		[MacCatalyst (15,2)]
 #endif
 		static public SecKey? GetPubKey ()
 		{
