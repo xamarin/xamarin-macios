@@ -41,6 +41,120 @@ function Invoke-Request {
     } while ($true)
 }
 
+class GitHubComments {
+    [ValidateNotNullOrEmpty ()][string] $Org
+    [ValidateNotNullOrEmpty ()][string] $Repo
+    [ValidateNotNullOrEmpty ()][string] $Token
+
+    GitHubComments (
+        $githubOrg,
+        $githubRepo,
+        $githubToken
+    ) {
+        $this.Org = $githubOrg
+        $this.Repo = $githubRepo
+        $this.Token = $githubToken
+    }
+
+    [void] WriteCommentHeader(
+        [object] $stringBuilder,
+        [string] $commentTitle,
+        [string] $commentEmoji
+    ) {
+        $stringBuilder.AppendLine("# $commentEmoji $commentTitle $commentEmoji")
+    }
+
+    [void] WriteCommentFooter(
+        [object] $stringBuilder
+    ) {
+        $targetUrl = Get-TargetUrl
+        $stringBuilder.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
+        $stringBuilder.AppendLine("$Env:BUILD_SOURCEVERSIONMESSAGE") # default envars to provide more context to the result
+    }
+
+    [string] GetCommentUrl() {
+        # if the build was due to PR, we want to write the comment in the PR rather than in the commit 
+        if ($Env:BUILD_REASON -eq "PullRequest") {
+            # calculate the change ID which is the PR number 
+            $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
+            $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/issues/$changeId/comments"
+        } else {
+            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/commits/$Env:BUILD_REVISION/comments"
+        }
+        return $url
+    }
+
+    [object] NewCommentFromObject(
+        [string] $commentTitle,
+        [string] $commentEmoji,
+        [object] $commentObject
+    ) {
+        # build the message, which will be sent to github, users can use markdown
+        $msg = [System.Text.StringBuilder]::new()
+
+        # header
+        $this.WriteCommentHeader($msg, $commentTitle, $commentEmoji)
+        $msg.AppendLine()
+
+        # content
+        $commentObject.WriteComment($msg)
+        $msg.AppendLine()
+
+        # footer
+        $this.WriteCommentFooter($msg)
+
+
+        # github has a max size for the comments to be added in a PR, it can be the case that because we failed so much, that we
+        # cannot add the full message, in that case, we add part of it, then a link to a gist with the content.
+        $maxLength = 32768
+        $body = $msg.ToString()
+        if ($body.Length -ge $maxLength) {
+            # create a gist with the contents, next, add substring of the message - the length of the info about the gist so that users
+            # can click, set that as the body
+            $gist =  New-GistWithContent -Description "Build results" -FileName "TestResult.md" -GistContent $body -FileType "md"
+            $linkMessage = "The message from CI is too large for the GitHub comments. You can find the full results [here]($gist)."
+            $messageLength = $maxLength - ($linkMessage.Length + 2) # +2 is to add a nice space
+            $body = $body.Substring(0, $messageLength);
+            $body = $body + "\n\n" + $linkMessage
+        }
+
+        $payload = @{
+            body = $body
+        }
+
+        $headers = @{
+            Authorization = ("token {0}" -f $this.Token)
+        }
+
+        $url = $this.GetCommentUrl()
+        $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' }
+        return $request
+    }
+}
+
+<# 
+    .SYNOPSIS
+        Creates a new GitHubComments object from that can be used to create comments for the build.
+#>
+function New-GitHubCommentsObject {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Org,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Repo,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Token
+    )
+    return [GitHubComments]::new($Org, $Repo, $Token)
+}
+
 <#
     .SYNOPSIS
         Returns the target url to be used when setting the status. The target url allows users to get back to the CI event that updated the status.
@@ -924,3 +1038,6 @@ Export-ModuleMember -Function New-GistWithFiles
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
 Export-ModuleMember -Function Push-RepositoryDispatch 
+
+# new future API that uses objects.
+Export-ModuleMember -Function New-GitHubCommentsObject
