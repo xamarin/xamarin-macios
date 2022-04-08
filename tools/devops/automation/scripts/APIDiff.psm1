@@ -124,6 +124,9 @@ class APIDiffComment {
     [void] WriteDiff($diff, $stringBuilder) {
         # loop over the platforms and write the data
         $stringBuilder.AppendLine("# $($diff.Header)")
+        $stringBuilder.AppendLine("")
+        $stringBuilder.AppendLine("$($diff.Message)")
+        $stringBuilder.AppendLine("")
 
         # group the platforms as how the diffs were done
         $commonPlatforms = "iOS", "macOS", "tvOS"
@@ -164,18 +167,12 @@ class APIDiffComment {
         if ($null -eq $this.FromPR) {
             $stringBuilder.AppendLine("* :warning: API diff urls have not been provided.")
         } else {
-            $stringBuilder.AppendLine("")
-            $stringBuilder.AppendLine($this.FromPR.Message)
-            $stringBuilder.AppendLine("")
             $this.WriteDiff($this.FromPR, $stringBuilder)
         }
 
         if ($null -eq $this.FromStable) {
             $stringBuilder.AppendLine("* :warning: API Current PR diff urls have not been provided.")
         } else {
-            $stringBuilder.AppendLine("")
-            $stringBuilder.AppendLine($this.FromStable.Message)
-            $stringBuilder.AppendLine("")
             $this.WriteDiff($this.FromStable, $stringBuilder)
         }
 
