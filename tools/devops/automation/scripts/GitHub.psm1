@@ -61,7 +61,13 @@ class GitHubComments {
         [string] $commentTitle,
         [string] $commentEmoji
     ) {
-        $stringBuilder.AppendLine("# $commentEmoji $commentTitle $commentEmoji")
+        if ([string]::IsNullOrEmpty($Env:PR_ID)) {
+            $prefix = "[CI Build]"
+        } else {
+            $prefix = "[PR Build]"
+        }
+
+        $stringBuilder.AppendLine("# $commentEmoji $prefix $commentTitle $commentEmoji")
     }
 
     [void] WriteCommentFooter(
