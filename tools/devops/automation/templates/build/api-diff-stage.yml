@@ -123,7 +123,7 @@ jobs:
     # Define the variable FOO from the previous job
     # Note the use of single quotes!
     BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
-    TESTS_BOT: $[ dependencies.build.outputs['runTests.TESTS_BOT'] ]
+    TESTS_BOT: $[ dependencies.build.outputs['build.TESTS_BOT'] ]
     TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
     APIDIFF_MESSAGE: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_MESSAGE'] ]
     APIDIFF_BUILT: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_BUILT'] ]
