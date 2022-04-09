@@ -1228,7 +1228,6 @@ namespace SceneKit {
 
 	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
-	[NoMacCatalyst]
 	[BaseType (typeof (CAOpenGLLayer))]
 	interface SCNLayer : SCNSceneRenderer, SCNTechniqueSupport {
 //		We already pull in the Scene property from the SCNSceneRenderer protocol, no need to redefine it here.
@@ -3259,26 +3258,26 @@ namespace SceneKit {
 	interface SCNSceneRendererDelegate {
 
 		[Export ("renderer:willRenderScene:atTime:")]
-		void WillRenderScene ([Protocolize]SCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
+		void WillRenderScene (ISCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
 
 		[Export ("renderer:didRenderScene:atTime:")]
-		void DidRenderScene ([Protocolize]SCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
+		void DidRenderScene (ISCNSceneRenderer renderer, SCNScene scene, double timeInSeconds);
 
 		[Mac (10,10)]
 		[Export ("renderer:updateAtTime:")]
-		void Update ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
+		void Update (ISCNSceneRenderer renderer, double timeInSeconds);
 
 		[Mac (10,10)]
 		[Export ("renderer:didApplyAnimationsAtTime:")]
-		void DidApplyAnimations ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
+		void DidApplyAnimations (ISCNSceneRenderer renderer, double timeInSeconds);
 
 		[Mac (10,10)]
 		[Export ("renderer:didSimulatePhysicsAtTime:")]
-		void DidSimulatePhysics ([Protocolize]SCNSceneRenderer renderer, double timeInSeconds);
+		void DidSimulatePhysics (ISCNSceneRenderer renderer, double timeInSeconds);
 
 		[Watch (4,0), TV (11,0), Mac (10, 13), iOS (11,0)]
 		[Export ("renderer:didApplyConstraintsAtTime:")]
-		void DidApplyConstraints ([Protocolize] SCNSceneRenderer renderer, double atTime);
+		void DidApplyConstraints (ISCNSceneRenderer renderer, double atTime);
 		
 	}	
 

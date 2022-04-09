@@ -30,7 +30,12 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreMedia {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	public class CMFormatDescription : NativeObject {
@@ -288,7 +293,12 @@ namespace CoreMedia {
 #endif
 	}
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	public class CMAudioFormatDescription : CMFormatDescription {
@@ -301,7 +311,12 @@ namespace CoreMedia {
 		// TODO: Move more audio specific methods here
 	}
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	public partial class CMVideoFormatDescription : CMFormatDescription {
@@ -363,6 +378,8 @@ namespace CoreMedia {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -379,6 +396,8 @@ namespace CoreMedia {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -422,6 +441,8 @@ namespace CoreMedia {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -438,6 +459,8 @@ namespace CoreMedia {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -483,6 +506,7 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 		[Mac (10,13)]
@@ -502,6 +526,7 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 		[Mac (10,13)]
@@ -547,6 +572,7 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 		[Mac (10,13)]
@@ -565,6 +591,7 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 		[Mac (10,13)]

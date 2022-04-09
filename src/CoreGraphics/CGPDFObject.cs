@@ -35,6 +35,7 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
+using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -42,6 +43,13 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGPDFObject.h
 	public class CGPDFObject : INativeObject {
 		public NativeHandle Handle { get; private set; }

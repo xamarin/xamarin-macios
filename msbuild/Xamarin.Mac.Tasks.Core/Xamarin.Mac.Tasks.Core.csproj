@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>latest</LangVersion>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir. -->

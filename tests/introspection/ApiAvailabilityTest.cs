@@ -374,7 +374,7 @@ namespace Introspection {
 					if (availableVersion >= typeUnavailableVersion)
 						AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} in {availableVersion} but the type {t.FullName} is [Unavailable ({Platform})] in {typeUnavailableVersion}");
 				} else {
-					AddErrorLine ($"[FAIL] {m} is marked with {ma} but the type {t.FullName} is [Unavailable ({Platform})]");
+					AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} but the type {t.FullName} is [Unavailable ({Platform})]");
 				}
 			}
 
@@ -392,7 +392,16 @@ namespace Introspection {
 							AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
 					}
 				} else {
+					// As documented in https://docs.microsoft.com/en-us/dotnet/standard/analyzers/platform-compat-analyzer#advanced-scenarios-for-attribute-combinations
+					// it is valid, and required in places to declare a type both availabile and unavailable on a given platform.
+					// Example:
+					// 		[SupportedOSPlatform ("macos")]
+					// 		[UnsupportedOSPlatform ("macos10.13")]
+					// This API was introduced on macOS but became unavailable on 10.13
+					// The legacy attributes described this with Deprecated, and did not need to double declare
+#if !NET
 					AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked both [Unavailable ({Platform})] and {ma}.");
+#endif
 				}
 			}
 		}
@@ -423,7 +432,16 @@ namespace Introspection {
 								AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
 						}
 					} else {
+					// As documented in https://docs.microsoft.com/en-us/dotnet/standard/analyzers/platform-compat-analyzer#advanced-scenarios-for-attribute-combinations
+					// it is valid, and required in places to declare a type both availabile and unavailable on a given platform.
+					// Example:
+					// 		[SupportedOSPlatform ("macos")]
+					// 		[UnsupportedOSPlatform ("macos10.13")]
+					// This API was introduced on macOS but became unavailable on 10.13
+					// The legacy attributes described this with Deprecated, and did not need to double declare
+#if !NET
 						AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}. Available: {availableVersion} Unavailable: {unavailableVersion}");
+#endif
 					}
 				}
 
@@ -517,6 +535,15 @@ namespace Introspection {
 						return true;
 					}
 					break;
+				case "CoreMedia.CMTimebase": {
+					switch (memberName) {
+						case "SetMasterTimebase":
+						case "SetMasterClock":
+							// These APIs were introduced and deprecated in the same version
+							return true;
+					}
+					break;
+				}
 				case "GameKit.GKScore": {
 					switch (memberName) {
 					case "ReportLeaderboardScores":
@@ -560,6 +587,51 @@ namespace Introspection {
 					break;
 				}
 			}
+#if NET
+			// These are temporary ignores until the generator changes are in for NET6 attributes
+			switch (type.FullName) {
+				case "GLKit.GLKTextureOperations": {
+					switch (memberName) {
+						case "SRGB":
+							return true;
+					}
+					break;
+				}
+				case "MapKit.MKOverlayView": {
+					switch (memberName) {
+						case "MKRoadWidthAtZoomScale":
+							return true;
+					}
+					break;
+				}
+				case "MobileCoreServices.UTType": {
+					switch (memberName) {
+						case "Equals":
+						case "IsDynamic":
+						case "IsDeclared":
+						case "CopyAllTags":
+							return true;
+					}
+					break;
+				}
+				case "Security.SecSharedCredential": {
+					switch (memberName) {
+						case "RequestSharedWebCredential":
+							return true;
+					}
+					break;
+				}
+				case "Security.SslContext": {
+					switch (memberName) {
+						case "SetEncryptionCertificate":
+						case "SetSessionStrengthPolicy":
+						case "GetRequestedPeerName":
+							return true;
+					}
+					break;			
+				}
+			}
+#endif
 			return false;
 		}
 

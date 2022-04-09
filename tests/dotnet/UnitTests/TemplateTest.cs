@@ -29,6 +29,7 @@ namespace Xamarin.Tests {
 
 		public static TemplateInfo[] Templates = {
 			new TemplateInfo (ApplePlatform.iOS, "ios"),
+			new TemplateInfo (ApplePlatform.iOS, "ios-tabbed"),
 			new TemplateInfo (ApplePlatform.iOS, "ioslib"),
 			new TemplateInfo (ApplePlatform.iOS, "iosbinding", false), // Bindings can not build without a native library assigned
 			new TemplateInfo (ApplePlatform.TVOS, "tvos"),

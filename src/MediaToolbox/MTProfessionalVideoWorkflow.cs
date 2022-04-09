@@ -1,3 +1,5 @@
+#nullable enable
+
 #if MONOMAC
 
 using System;
@@ -7,6 +9,9 @@ using ObjCRuntime;
 
 namespace MediaToolbox {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	static public class MTProfessionalVideoWorkflow {
 
 #if NET

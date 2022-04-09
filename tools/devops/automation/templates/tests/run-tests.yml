@@ -32,20 +32,20 @@ steps:
 
 # remove any old processes that might have been left behind.
 - pwsh : |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/System.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Clear-XamarinProcesses
   displayName: 'Process cleanup'
 
 # Increase mlaunch verbosity. Will step on the old setting present.
 - pwsh : |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MLaunch.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Set-MLaunchVerbosity -Verbosity 10
   displayName: 'Make mlaunch verbose'
   condition: succeededOrFailed() # we do not care about the previous step
 
 # Re-start the daemon used to find the devices in the bot.
 - pwsh : |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MLaunch.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Optimize-DeviceDiscovery
   displayName: 'Fix device discovery (reset launchctl)'
   condition: succeededOrFailed() # making mlaunch verbose should be a non blocker
@@ -53,7 +53,7 @@ steps:
 # Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this
 # point we were just setting up the agent.
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Set-GitHubStatus -Status "pending" -Context "$Env:CONTEXT" -Description "Running device tests on $Env:CONTEXT"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
@@ -312,10 +312,10 @@ steps:
 
 # Be nice and clean behind you
 - pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/
-    Import-Module ./System.psm1
+    Import-Module ./MaciosCI.psd1
     Clear-AfterTests
   displayName: 'Cleanup'
   continueOnError: true
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
   condition: always() # no matter what, includes cancellation
 

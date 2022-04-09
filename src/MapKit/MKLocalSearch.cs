@@ -50,7 +50,7 @@ namespace MapKit {
 					if (token.IsCancellationRequested) {
 						tcs.TrySetCanceled ();
 					} else {
-						if (error != null)
+						if (error is not null)
 							tcs.SetException (new NSErrorException(error));
 						else
 							tcs.SetResult (response);
