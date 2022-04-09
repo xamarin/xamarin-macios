@@ -111,7 +111,7 @@ jobs:
       runTests: false
 
 
-- job: publish_html
+- job: api_diff_github_comment
   displayName: 'Publish API diff to GitHub'
   timeoutInMinutes: 1000
   dependsOn: # has to wait for the tests to be done AND the data to be uploaded
@@ -135,7 +135,7 @@ jobs:
     workspace:
       clean: all
   steps:
-  - template: publish-html.yml
+  - template: api-diff-github-comment.yml
     parameters:
       statusContext: "Build"
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
