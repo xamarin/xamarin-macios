@@ -167,6 +167,7 @@ jobs:
     BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
     TESTS_BOT: $[ dependencies.build.outputs['runTests.TESTS_BOT'] ]
     PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    GIT_HASH: $[ dependencies.build.outputs['fix_commit.GIT_HASH'] ]
   pool:
     vmImage: 'windows-latest'
     workspace:

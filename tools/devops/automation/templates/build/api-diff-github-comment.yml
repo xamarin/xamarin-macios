@@ -216,9 +216,7 @@ steps:
       $apiGeneratorComment = ""
     }
 
-    $hash = git -C "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios" rev-parse HEAD
-
-    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $hash
+    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
     $apiDiffComment = New-APIDiffCommentFromFiles -PRContentPath "$Env:APIGENERATORDIFF_JSON_PATH" -StableContentPath "$Env:APIDIFF_JSON_PATH" -GeneratorContent $apiGeneratorComment
     $result = $gihubComments.NewCommentFromObject("API Diff", ":clipboard:", $apiDiffComment)
   env:

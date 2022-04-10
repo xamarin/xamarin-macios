@@ -58,7 +58,16 @@ steps:
       $branch=$branch.Replace("refs", "origin")
       Write-Host "Checking out branch $branch"
       git checkout $branch
-      git branch -a
+      $hash = git rev-parse HEAD
+      Write-Host "##vso[task.setvariable variable=GIT_HASH]$hash"
+    name: fix_commit
+    displayName: "Undo Github merge"
+    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+- ${{ else }}:
+  - pwsh: |
+      $hash = git rev-parse HEAD
+      Write-Host "##vso[task.setvariable variable=GIT_HASH]$hash"
+    name: fix_commit
     displayName: "Undo Github merge"
     workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
