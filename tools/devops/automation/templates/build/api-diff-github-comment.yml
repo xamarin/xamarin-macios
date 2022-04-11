@@ -208,7 +208,7 @@ steps:
 
 - pwsh: |
     $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/$Env:DEVICE_PREFIX/;/tests/vsdrops_index.html"
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
 
     if ($Env:STABLE_APID_GENERATOR_DIFF_PATH) {
       $apiGeneratorComment = Join-Path -Path "$Env:STABLE_APID_GENERATOR_DIFF_PATH" -ChildPath "api-diff-comments.md"
@@ -216,7 +216,7 @@ steps:
       $apiGeneratorComment = ""
     }
 
-    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN
+    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
     $apiDiffComment = New-APIDiffCommentFromFiles -PRContentPath "$Env:APIGENERATORDIFF_JSON_PATH" -StableContentPath "$Env:APIDIFF_JSON_PATH" -GeneratorContent $apiGeneratorComment
     $result = $gihubComments.NewCommentFromObject("API Diff", ":clipboard:", $apiDiffComment)
   env:

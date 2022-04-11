@@ -123,13 +123,13 @@ jobs:
     # Define the variable FOO from the previous job
     # Note the use of single quotes!
     BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
-    TESTS_BOT: $[ dependencies.build.outputs['runTests.TESTS_BOT'] ]
-    TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
+    TESTS_BOT: $[ dependencies.api_diff.outputs['build.TESTS_BOT'] ]
     APIDIFF_MESSAGE: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_MESSAGE'] ]
     APIDIFF_BUILT: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_BUILT'] ]
     API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
     API_GENERATOR_DIFF_STATUS_MESSAGE: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE'] ]
     PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    GIT_HASH: $[ dependencies.api_diff.outputs['fix_commit.GIT_HASH'] ]
   pool:
     vmImage: 'windows-latest'
     workspace:

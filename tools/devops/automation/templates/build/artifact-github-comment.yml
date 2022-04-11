@@ -13,7 +13,7 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $artifact = New-ArtifactsFromJsonFile -Path "$Env:ARTIFACTS_JSON_PATH"
-    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN
+    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
     $result = $gihubComments.NewCommentFromObject("Artifacts", ":books:", $artifact)
     Write-Host $result
   env:
