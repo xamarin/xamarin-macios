@@ -21,10 +21,13 @@
       </Item>
       <Item ItemId=";description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[A project for creating a .NET 6 macOS application]]></Val>
+          <Val><![CDATA[A project for creating a .NET macOS application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Projet de création d’une application macOS .NET 6]]></Val>
+            <Val><![CDATA[Projet de création d’une application macOS .NET]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[A project for creating a .NET 6 macOS application]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
