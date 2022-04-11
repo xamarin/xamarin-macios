@@ -2,6 +2,7 @@ name: CI for pwsh
 on:
   push:
     branches: [ main ]
+  pull_request:
 jobs:
   test-pwsh:
     runs-on: windows-latest
@@ -15,4 +16,5 @@ jobs:
         Invoke-Pester -Path ./tools/devops/automation/scripts/APIDiff.Tests.ps1
         Invoke-Pester -Path ./tools/devops/automation/scripts/StaticPages.Tests.ps1
         Invoke-Pester -Path ./tools/devops/automation/scripts/Artifacts.Tests.ps1
+        Invoke-Pester -Path ./tools/devops/automation/scripts/TestResults.Tests.ps1
       shell: pwsh
