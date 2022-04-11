@@ -1,7 +1,4 @@
-$modulePath = "$PSScriptRoot\\APIDiff.psm1"  # windows path separators work on unix and windows
-$scriptBody = "using module $modulePath"
-$script = [ScriptBlock]::Create($scriptBody)
-. $script
+using module ".\\APIDiff.psm1"
 
 Describe "Platform diff tests" {
 
