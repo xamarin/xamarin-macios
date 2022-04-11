@@ -1,3 +1,112 @@
+class Agent {
+    [object] $RestObject
+
+    Agent (
+        [object] $object) {
+        $this.RestObject $object
+    }
+
+}
+
+class Agents {
+    [string] $Org
+    hidden [string] $Token
+
+    Agents(
+        [string] $org,
+        [string] $token) {
+        $this.Org = $org
+        $this.Token = $token
+    }
+
+    [object] GetAgent($pool, $name) {
+        if (-not $pool) {
+            throw [System.NullArgumentException]::new("pool")
+        }
+        if (-not $name) {
+            throw [System.NullArgumentException]::new("name")
+        }
+    }
+
+    [object[]] GetAgents($pool) {
+        if (-not $pool) {
+            throw [System.NullArgumentException]::new("pool")
+        }
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $agents = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
+        $result = [System.Collections.ArrayList]@()
+        foreach ($a in $agents.value) {
+            $result.Add([Agent]::new($a))
+        }
+        return $result
+    }
+}
+
+class Pool {
+    hidden [object] $RestObject
+
+    Pool (
+        [object] $data) {
+        $this.RestObject = $data
+    }
+
+    [string] GetID() {
+        return $this.RestObject.id
+    }
+
+    [string] GetName() {
+        return $this.RestObject.name
+    }
+
+    [int] GetSize() {
+        return $this.RestObject.size
+    }
+}
+
+class Pools {
+
+    [string] $Org
+    hidden [string] $Token
+
+    Pools(
+        [string] $org,
+        [string] $token) {
+        $this.Org = $org
+        $this.Token = $token
+    }
+
+    [object] GetPool ($name) {
+        if (-not $name) {
+            throw [System.NullArgumentException]::new("name")
+        }
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools?poolName=$name&api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $pools = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
+        if ($pools.count -ne 1) {
+            return $null
+        }
+        return [Pool]::new($pools.value[0])
+    }
+
+    [object[]] GetPools () {
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools?api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $pools = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
+
+        # loop and create a pool object for each of the pools in the org
+        $result = [System.Collections.ArrayList]@()
+        foreach ($p in $pools.value) {
+            $result.Add([Pool]::new($p))
+        }
+        return $result
+    }
+}
+
+class VSTS {
+    [Pools] Pools
+}
+
 <#
     .SYNOPSIS
         Returns the uri to be used for the VSTS rest API.
