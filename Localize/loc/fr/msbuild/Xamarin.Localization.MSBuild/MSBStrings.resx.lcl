@@ -1798,6 +1798,24 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7098" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The UIDeviceFamily value '6' is not valid for this platform. It's only valid for Mac Catalyst.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La valeur UIDeviceFamily « 6 » n’est pas valide pour cette plateforme. Il n’est valide que pour Mac Catalyst.]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";E7099" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}).]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[La valeur UIDeviceFamily « 6 » nécessite macOS 11.0. Définissez « SupportedOSPlatformVersion » dans le fichier projet sur au moins 14.0 (l’équivalent de macOS 11.0 dans la version Mac Migrate). La valeur actuelle est {0} (équivaut à macOS {1}).]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>
