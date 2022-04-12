@@ -30,6 +30,7 @@
     <Compile Include="$(RepositoryPath)\src\generator.cs" />
     <Compile Include="$(RepositoryPath)\src\generator-attributes.cs" />
     <Compile Include="$(RepositoryPath)\src\generator-attribute-manager.cs" />
+    <Compile Include="$(RepositoryPath)\src\generator-context.cs" />
     <Compile Include="$(RepositoryPath)\src\generator-enums.cs" />
     <Compile Include="$(RepositoryPath)\src\generator-filters.cs" />
     <Compile Include="$(RepositoryPath)\src\generator-typemanager.cs" />

@@ -98,6 +98,7 @@
     <Compile Include="..\src\generator-attributes.cs" />
     <Compile Include="..\src\generator-attribute-manager.cs" />
     <Compile Include="..\src\generator-enums.cs" />
+    <Compile Include="..\src\generator-context.cs" />
     <Compile Include="..\src\generator-filters.cs" />
     <Compile Include="..\src\generator-typemanager.cs" />
     <Compile Include="..\src\ObjCRuntime\Stret.cs" />

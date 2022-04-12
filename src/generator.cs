@@ -52,6 +52,7 @@ using System.Reflection;
 using ObjCRuntime;
 using Foundation;
 using Xamarin.Utils;
+using Xamarin.Generator.Traceability;
 
 public static class GeneratorExtensions
 {
@@ -5091,6 +5092,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		if (pi.CanRead){
+			using var span = GeneratorContext.BeginSpan ("Read Property");
 			var getter = pi.GetGetMethod ();
 			var ba = GetBindAttribute (getter);
 			string sel = ba != null ? ba.Selector : export.Selector;
@@ -5151,6 +5153,7 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 		if (pi.CanWrite){
+			using var span = GeneratorContext.BeginSpan ("Write Property");
 			var setter = pi.GetSetMethod ();
 			var ba = GetBindAttribute (setter);
 			bool null_allowed = AttributeManager.HasAttribute<NullAllowedAttribute> (setter);
@@ -5552,6 +5555,7 @@ public partial class Generator : IMemberGatherer {
 
 	void GenerateMethod (MemberInformation minfo)
 	{
+		using var span = GeneratorContext.BeginSpan ($"Method: {minfo.method.Name}");
 		var mi = minfo.method;
 
 		// skip if we provide a manual implementation that would conflict with the generated code
@@ -6468,6 +6472,7 @@ public partial class Generator : IMemberGatherer {
 
 	public void Generate (Type type)
 	{
+		using var span = GeneratorContext.BeginSpan ($"Type: {type.Name}");
 		if (ZeroCopyStrings) {
 			ErrorHelper.Warning (1027);
 			ZeroCopyStrings = false;
@@ -6532,6 +6537,7 @@ public partial class Generator : IMemberGatherer {
 				if (is_model && base_type == TypeManager.System_Object)
 					ErrorHelper.Warning (1060, type.FullName);
 
+				using var span2 = GeneratorContext.BeginSpan ("Generate Protocol Types");
 				GenerateProtocolTypes (type, class_visibility, TypeName, protocol.Name ?? objc_type_name, protocol);
 			}
 
