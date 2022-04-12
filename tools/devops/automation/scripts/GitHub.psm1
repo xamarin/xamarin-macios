@@ -41,6 +41,261 @@ function Invoke-Request {
     } while ($true)
 }
 
+class GitHubStatus {
+    [ValidateNotNullOrEmpty ()] [string] $Status
+    [ValidateNotNullOrEmpty ()] [string] $Description
+    [ValidateNotNullOrEmpty ()] [string] $Context
+    [string] $TargetUrl
+
+    GitHubStatus(
+        $status,
+        $description,
+        $context
+    ) {
+        if (-not $("error", "failure", "pending", "success").Contains($status)) {
+            throw [System.ArgumentOutOfRangeException]::new("status")
+        }
+        $this.Status = $status
+        $this.Description = $description
+        $this.Context = $context
+        $this.TargetUrl = $null
+    }
+
+    GitHubStatus(
+        $status,
+        $description,
+        $context,
+        $targetUrl
+    ) {
+        if (-not $("error", "failure", "pending", "success").Contains($status)) {
+            throw [System.ArgumentOutOfRangeException]::new("status")
+        }
+        $this.Status = $status
+        $this.Description = $description
+        $this.Context = $context
+        $this.TargetUrl = $targetUrl
+    }
+
+}
+
+class GitHubStatuses {
+    [ValidateNotNullOrEmpty ()][string] $Org
+    [ValidateNotNullOrEmpty ()][string] $Repo
+    [ValidateNotNullOrEmpty ()][string] $Token
+
+    GitHubStatuses (
+        $githubOrg,
+        $githubRepo,
+        $githubToken
+    ) {
+        $this.Org = $githubOrg
+        $this.Repo = $githubRepo
+        $this.Token = $githubToken
+    }
+
+    hidden [string] GetStatusUrl() {
+        if ($Env:BUILD_REASON -eq "PullRequest") {
+            # the env var is only provided for PR not for builds.
+            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/statuses/$Env:SYSTEM_PULLREQUEST_SOURCECOMMITID"
+        } else {
+            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/statuses/$Env:BUILD_REVISION"
+        }
+        return $url
+    }
+
+    [object] SetStatus($status) {
+        return $this.SetStatus(
+            $status.Status,
+            $status.Description,
+            $status.Context,
+            $status.TargetUrl)
+    }
+
+    [object] SetStatus($status, $description, $context, $targetUrl) {
+        $headers = @{
+            Authorization = ("token {0}" -f $this.Token)
+        }
+
+        $url = [GitHubStatuses]::GetStatusUrl()
+
+        # Check if the status was already set, if it was we will override yet print a message for the user to know this action was done.
+        $presentStatuses = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "GET" -ContentType 'application/json' }
+
+        # try to find the status with the same context and make a decision, this is not a dict but an array :/ 
+        foreach ($s in $presentStatuses) {
+            # we found a status from a previous build that was a success, we do not want to step on it
+            if (($s.context -eq $context) -and ($s.state -eq "success")) {
+                Write-Host "WARNING: Found status for $Context because it was already set as a success, overriding result."
+            }
+        }
+
+        # use the GitHub API to set the status for the given commit
+        $detailsUrl = ""
+        if ($targetUrl) {
+            $detailsUrl = $targetUrl
+        } else {
+            $detailsUrl = Get-TargetUrl
+        }
+
+        $payload= @{
+            state = $status
+            target_url = $detailsUrl
+            description = $description
+            context = $context
+        }
+
+        return Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' }
+    }
+}
+
+class GitHubComments {
+    [ValidateNotNullOrEmpty ()][string] $Org
+    [ValidateNotNullOrEmpty ()][string] $Repo
+    [ValidateNotNullOrEmpty ()][string] $Token
+    [string] $Hash
+
+    GitHubComments (
+        $githubOrg,
+        $githubRepo,
+        $githubToken,
+        $hash
+    ) {
+        $this.Org = $githubOrg
+        $this.Repo = $githubRepo
+        $this.Token = $githubToken
+        $this.Hash = $hash
+    }
+
+    static [bool] IsPR() {
+        return $Env:BUILD_REASON -eq "PullRequest"
+    }
+
+    static [string] GetPRID() {
+        $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
+        $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+        return $changeId 
+    }
+
+    [void] WriteCommentHeader(
+        [object] $stringBuilder,
+        [string] $commentTitle,
+        [string] $commentEmoji
+    ) {
+        if ([string]::IsNullOrEmpty($Env:PR_ID)) {
+            $prefix = "[CI Build]"
+        } else {
+            $prefix = "[PR Build]"
+        }
+
+        $stringBuilder.AppendLine("# $commentEmoji $prefix $commentTitle $commentEmoji")
+    }
+
+    [void] WriteCommentFooter(
+        [object] $stringBuilder
+    ) {
+        $targetUrl = Get-TargetUrl
+        $stringBuilder.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
+        $hashUrl = $null
+        if ([GitHubComments]::IsPR) {
+            $changeId = [GitHubComments]::GetPRID()
+            $hashUrl = "https://github.com/$($this.Org)/$($this.Repo)/pull/$changeId/commits/$($this.Hash)"
+        } else {
+            $hashUrl= "https://github.com/$($this.Org)/$($this.Repo)/commit/$($this.Hash)"
+        }
+        $stringBuilder.AppendLine("Hash: [$($this.Hash)]($hashUrl)")
+    }
+
+    [string] GetCommentUrl() {
+        # if the build was due to PR, we want to write the comment in the PR rather than in the commit 
+        if ([GitHubComments]::IsPR) {
+            $changeId = [GitHubComments]::GetPRID()
+            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/issues/$changeId/comments"
+        } else {
+            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/commits/$Env:BUILD_REVISION/comments"
+        }
+        return $url
+    }
+
+    [string] GetPayload($stringBuilder) {
+        # github has a max size for the comments to be added in a PR, it can be the case that because we failed so much, that we
+        # cannot add the full message, in that case, we add part of it, then a link to a gist with the content.
+        $maxLength = 32768
+        $body = $stringBuilder.ToString()
+        if ($body.Length -ge $maxLength) {
+            # create a gist with the contents, next, add substring of the message - the length of the info about the gist so that users
+            # can click, set that as the body
+            $gist =  New-GistWithContent -Description "Build results" -FileName "TestResult.md" -GistContent $body -FileType "md"
+            $linkMessage = "The message from CI is too large for the GitHub comments. You can find the full results [here]($gist)."
+            $messageLength = $maxLength - ($linkMessage.Length + 2) # +2 is to add a nice space
+            $body = $body.Substring(0, $messageLength);
+            $body = $body + "\n\n" + $linkMessage
+        }
+        return $body
+    }
+
+    hidden [object] NewComment($stringBuilder) {
+        $payload = @{
+            body = $this.GetPayload($stringBuilder)
+        }
+
+        $headers = @{
+            Authorization = ("token {0}" -f $this.Token)
+        }
+
+        $url = $this.GetCommentUrl()
+        $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' }
+        return $request
+    }
+
+    [object] NewCommentFromObject(
+        [string] $commentTitle,
+        [string] $commentEmoji,
+        [object] $commentObject
+    ) {
+        # build the message, which will be sent to github, users can use markdown
+        $msg = [System.Text.StringBuilder]::new()
+
+        # header
+        $this.WriteCommentHeader($msg, $commentTitle, $commentEmoji)
+        $msg.AppendLine()
+
+        # content
+        $commentObject.WriteComment($msg)
+        $msg.AppendLine()
+
+        # footer
+        $this.WriteCommentFooter($msg)
+
+        return $this.NewComment($msg)
+    }
+}
+
+<# 
+    .SYNOPSIS
+        Creates a new GitHubComments object from that can be used to create comments for the build.
+#>
+function New-GitHubCommentsObject {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Org,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Repo,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Token,
+
+        [string]
+        $Hash
+
+    )
+    return [GitHubComments]::new($Org, $Repo, $Token, $Hash)
+}
+
 <#
     .SYNOPSIS
         Returns the target url to be used when setting the status. The target url allows users to get back to the CI event that updated the status.
@@ -924,3 +1179,6 @@ Export-ModuleMember -Function New-GistWithFiles
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
 Export-ModuleMember -Function Push-RepositoryDispatch 
+
+# new future API that uses objects.
+Export-ModuleMember -Function New-GitHubCommentsObject

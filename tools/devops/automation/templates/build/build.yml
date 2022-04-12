@@ -58,7 +58,16 @@ steps:
       $branch=$branch.Replace("refs", "origin")
       Write-Host "Checking out branch $branch"
       git checkout $branch
-      git branch -a
+      $hash = git rev-parse HEAD
+      Write-Host "##vso[task.setvariable variable=GIT_HASH;isOutput=true]$hash"
+    name: fix_commit
+    displayName: "Undo Github merge"
+    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+- ${{ else }}:
+  - pwsh: |
+      $hash = git rev-parse HEAD
+      Write-Host "##vso[task.setvariable variable=GIT_HASH;isOutput=true]$hash"
+    name: fix_commit
     displayName: "Undo Github merge"
     workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
@@ -317,9 +326,11 @@ steps:
 - bash: |
     set -x
     set -e
+    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8
+  name: build
   displayName: 'Build'
   timeoutInMinutes: 180
 

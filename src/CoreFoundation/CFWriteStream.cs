@@ -34,6 +34,7 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #if NET
 using CFIndex = System.IntPtr;
@@ -47,6 +48,12 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreFoundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFWriteStream : CFStream {
 		[Preserve (Conditional = true)]
 		internal CFWriteStream (NativeHandle handle, bool owns)
