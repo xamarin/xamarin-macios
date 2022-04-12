@@ -21,7 +21,7 @@ namespace NaturalLanguage {
 
 		public float[] this [NSString key] {
 			get {
-				if (key == null)
+				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 				var a = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
@@ -30,10 +30,10 @@ namespace NaturalLanguage {
 				});
 			}
 			set {
-				if (key == null)
+				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
-				if (value == null)
+				if (value is null)
 					RemoveValue (key);
 				else
 					Dictionary [key] = NSArray.From (value);

@@ -21,7 +21,7 @@ namespace NaturalLanguage {
 
 		public string[] this [NSString key] {
 			get {
-				if (key == null)
+				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 				var value = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
