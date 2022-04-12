@@ -1,3 +1,5 @@
+#nullable enable
+
 #if !MONOMAC
 
 using Foundation;
@@ -9,10 +11,10 @@ namespace NetworkExtension {
 		// not fields, but defines :|
 		// we bind them like [Field]s so, if they ever get done properly, then it won't be a breaking change
 
-		static NSString _RemediationURLFlowURL;
-		static NSString _RemediationURLFlowURLHostname;
-		static NSString _RemediationURLOrganization;
-		static NSString _RemediationURLUsername;
+		static NSString? _RemediationURLFlowURL;
+		static NSString? _RemediationURLFlowURLHostname;
+		static NSString? _RemediationURLOrganization;
+		static NSString? _RemediationURLUsername;
 
 		public static NSString RemediationUrlFlowUrl {
 			get {
