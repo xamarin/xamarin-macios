@@ -146,6 +146,10 @@ class GitHubStatuses {
 
         return Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' }
     }
+
+    [object] SetStatus($status, $description, $context) {
+        return $this.SetStatus($status, $description, $context, $null)
+    }
 }
 
 <#
