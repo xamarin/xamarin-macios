@@ -13882,7 +13882,6 @@ namespace Foundation
 	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	[NoMacCatalyst]
 	partial interface NSHost {
 
 		[Static, Internal, Export ("currentHost")]

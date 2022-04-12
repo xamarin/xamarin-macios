@@ -325,7 +325,10 @@ public class AttributeManager
 		case "SupportedOSPlatformAttribute":
 			var sarg = attribute.ConstructorArguments [0].Value as string;
 			(var sp, var sv) = ParseOSPlatformAttribute (sarg);
-			return AttributeFactory.CreateNewIntroducedAttribute (sp, sv.Major, sv.Minor).Yield ();
+			if (sv is null)
+				return AttributeFactory.CreateNewUnspecifiedIntroducedAttribute (sp).Yield ();
+			else
+				return AttributeFactory.CreateNewIntroducedAttribute (sp, sv.Major, sv.Minor).Yield ();
 		case "UnsupportedOSPlatformAttribute":
 			var uarg = attribute.ConstructorArguments [0].Value as string;
 			(var up, var uv) = ParseOSPlatformAttribute (uarg);
@@ -815,9 +818,26 @@ static class AttributeFactory
 		return CreateNewAttribute (type, ctorTypes, ctorValues);
 	}
 
+	static Attribute CreateUnspecifiedAttribute (System.Type type, PlatformName platform, string message)
+	{
+#if NET
+		var ctorValues = new object [] { (byte) platform, message };
+		var ctorTypes = new System.Type [] { PlatformEnum, typeof (string) };
+#else
+		var ctorValues = new object [] { (byte)platform, (byte) 0xff, message };
+		var ctorTypes = new System.Type [] { PlatformEnum, PlatformArch, typeof (string) };
+#endif
+		return CreateNewAttribute (type, ctorTypes, ctorValues);
+	}
+
 	public static System.Attribute CreateNewIntroducedAttribute (PlatformName platform, int major, int minor, string message = null)
 	{
 		return CreateMajorMinorAttribute (IntroducedAttributeType, platform, major, minor, message);
+	}
+
+	public static System.Attribute CreateNewUnspecifiedIntroducedAttribute (PlatformName platform, string message = null)
+	{
+		return CreateUnspecifiedAttribute (IntroducedAttributeType, platform, message);
 	}
 
 	public static System.Attribute CreateObsoletedAttribute (PlatformName platform, int major, int minor, string message = null)

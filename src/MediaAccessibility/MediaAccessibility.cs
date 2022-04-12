@@ -6,6 +6,8 @@
 //
 // Copyright 2013, 2015 Xamarin Inc.
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -20,6 +22,8 @@ namespace MediaAccessibility {
 #if NET
 	[SupportedOSPlatform ("ios7.0")]
 	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[iOS (7,0)]
 	[Mac (10,9)]
@@ -28,13 +32,13 @@ namespace MediaAccessibility {
 
 #if !NET
 		// FIXME: make this a real notification
-		public static readonly NSString SettingsChangedNotification;
+		public static readonly NSString? SettingsChangedNotification;
 
 		[Advice ("Use 'MediaCharacteristic.DescribesMusicAndSoundForAccessibility' getter.")]
-		public static readonly NSString MediaCharacteristicDescribesMusicAndSoundForAccessibility;
+		public static readonly NSString? MediaCharacteristicDescribesMusicAndSoundForAccessibility;
 
 		[Advice ("Use 'MediaCharacteristic.TranscribesSpokenDialogForAccessibility' getter.")]
-		public static readonly NSString MediaCharacteristicTranscribesSpokenDialogForAccessibility;
+		public static readonly NSString? MediaCharacteristicTranscribesSpokenDialogForAccessibility;
 
 		static MACaptionAppearance ()
 		{
@@ -64,10 +68,10 @@ namespace MediaAccessibility {
 		[DllImport (Constants.MediaAccessibilityLibrary)]
 		static extern /* CFArrayRef __nonnull */ IntPtr MACaptionAppearanceCopySelectedLanguages (nint domain);
 
-		public static string [] GetSelectedLanguages (MACaptionAppearanceDomain domain)
+		public static string? [] GetSelectedLanguages (MACaptionAppearanceDomain domain)
 		{
 			using (var langs = new CFArray (MACaptionAppearanceCopySelectedLanguages ((int) domain), owns: true)) {
-				var languages = new string [langs.Count];
+				var languages = new string? [langs.Count];
 				for (int i = 0; i < langs.Count; i++) {
 					languages[i] = CFString.FromHandle (langs.GetValue (i));
 				}
@@ -228,6 +232,7 @@ namespace MediaAccessibility {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -240,6 +245,7 @@ namespace MediaAccessibility {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -247,7 +253,7 @@ namespace MediaAccessibility {
 #endif
 		public static void DidDisplayCaptions (string[] strings)
 		{
-			if ((strings == null) || (strings.Length == 0))
+			if ((strings is null) || (strings.Length == 0))
 				MACaptionAppearanceDidDisplayCaptions (IntPtr.Zero);
 			else {
 				using (var array = NSArray.FromStrings (strings))
@@ -259,6 +265,7 @@ namespace MediaAccessibility {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -268,7 +275,7 @@ namespace MediaAccessibility {
 		{
 			// CFAttributedString is “toll-free bridged” with its Foundation counterpart, NSAttributedString.
 			// https://developer.apple.com/documentation/corefoundation/cfattributedstring?language=objc
-			if ((strings == null) || (strings.Length == 0))
+			if ((strings is null) || (strings.Length == 0))
 				MACaptionAppearanceDidDisplayCaptions (IntPtr.Zero);
 			else {
 				using (var array = NSArray.FromNSObjects (strings))
@@ -277,10 +284,18 @@ namespace MediaAccessibility {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	static partial class MAAudibleMedia {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -290,7 +305,7 @@ namespace MediaAccessibility {
 
 		// according to webkit source code (the only use I could find) this is an array of CFString
 		// https://github.com/WebKit/webkit/blob/master/Source/WebCore/page/CaptionUserPreferencesMediaAF.cpp
-		static public string[] GetPreferredCharacteristics ()
+		static public string?[]? GetPreferredCharacteristics ()
 		{
 			var handle = MAAudibleMediaCopyPreferredCharacteristics ();
 			if (handle == IntPtr.Zero)

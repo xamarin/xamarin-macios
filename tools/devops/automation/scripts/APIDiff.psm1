@@ -38,7 +38,7 @@ class APIDiff {
         $this.Result = $content.result
         $this.Message = $content.message
         $this.Platforms = @{}
-        
+
         # loop over the gists and create the Platform diff as needed
         if ($null -ne $content.gist -and $null -ne $content.gist.Keys) {
             foreach ($platform in $content.gist.Keys) {
@@ -83,8 +83,15 @@ class APIDiffComment {
 
     static [hashtable] ConvertToHashTable($obj) {
         $result = @{}
-        $obj.psobject.properties | Foreach { $result[$_.Name] = $_.Value }
-        return $result
+        foreach($property in $obj.psobject.properties.name )
+        {
+            $value = $obj.$property
+            if ($value.GetType().Name -eq "PSCustomObject") {
+                $value = [APIDiffComment]::ConvertToHashTable($value)
+            }
+            $result[$property] = $value
+        }
+       return $result
     }
 
     static [APIDiffComment] FromJsonFiles (
@@ -108,7 +115,7 @@ class APIDiffComment {
         } else {
             # read the json file, convert it to an object and add a line for each artifact
             $stableContent =  Get-Content $stableContentPath | ConvertFrom-Json
-            $stableContent = [APIDiffComment]::ConvertToHashTable($stableContentPath)
+            $stableContent = [APIDiffComment]::ConvertToHashTable($stableContent)
         }
 
         return [APIDiffComment]::new($prContent, $stableContent, $generatorContent)
@@ -117,6 +124,9 @@ class APIDiffComment {
     [void] WriteDiff($diff, $stringBuilder) {
         # loop over the platforms and write the data
         $stringBuilder.AppendLine("# $($diff.Header)")
+        $stringBuilder.AppendLine("")
+        $stringBuilder.AppendLine("$($diff.Message)")
+        $stringBuilder.AppendLine("")
 
         # group the platforms as how the diffs were done
         $commonPlatforms = "iOS", "macOS", "tvOS"
@@ -185,3 +195,39 @@ class APIDiffComment {
         }
     }
 }
+
+<# 
+    .SYNOPSIS
+        Creates a new APIDiffComment object from the data present in the given hash table.
+#>
+function New-APIDiffComment {
+    param (
+        [object]
+        $PRContent,
+        [object]
+        $StableContent,
+        [string]
+        $GeneratorContent
+    )
+    return [APIDiffComment]::new($PRContent, $StableContent, $GeneratorContent)
+}
+
+
+<# 
+    .SYNOPSIS
+        Creates a new APIDiffComment object from the data present in a json file. 
+#>
+function New-APIDiffCommentFromFiles {
+    param (
+        [string]
+        $PRContentPath,
+        [string]
+        $StableContentPath,
+        [string]
+        $GeneratorContent
+    )
+    return [APIDiffComment]::FromJsonFiles($PRContentPath, $StableContentPath, $GeneratorContent)
+}
+
+Export-ModuleMember -Function New-APIDiffComment
+Export-ModuleMember -Function New-APIDiffCommentFromFiles

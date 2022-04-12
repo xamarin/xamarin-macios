@@ -2288,7 +2288,6 @@ namespace GameKit {
 	[Deprecated (PlatformName.MacOSX, 10, 10, message : "Implement the 'IGKChallengeListener' interface and register a listener with 'GKLocalPlayer'.")]
 	[BaseType (typeof (NSObject), Events=new[] { typeof (GKChallengeEventHandlerDelegate) }, Delegates=new[] { "WeakDelegate"})]
 	[DisableDefaultCtor]
-	[NoTV]
 	interface GKChallengeEventHandler
 	{
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
@@ -2309,7 +2308,6 @@ namespace GameKit {
 	[Model]
 	[BaseType (typeof (NSObject))]
 	[Protocol]
-	[NoTV]
 	interface GKChallengeEventHandlerDelegate
 	{
 		[Export ("localPlayerDidSelectChallenge:")]
