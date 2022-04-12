@@ -47,7 +47,7 @@ namespace Network {
 
 		public NWDataTransferReport (NWConnection connection)
 		{
-			if (connection == null)
+			if (connection is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (connection));
 
 			InitializeHandle (nw_connection_create_new_data_transfer_report (connection.Handle));
@@ -152,7 +152,7 @@ namespace Network {
 		static void TrampolineCollectHandler (IntPtr block, IntPtr report)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWDataTransferReport>> (block);
-			if (del != null) {
+			if (del is not null) {
 				using (var nwReport = new NWDataTransferReport (report, owns: false))
 					del (nwReport);
 			}
@@ -161,9 +161,9 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void Collect (DispatchQueue queue, Action<NWDataTransferReport> handler)
 		{
-			if (queue == null)
+			if (queue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_CollectHandler, handler);

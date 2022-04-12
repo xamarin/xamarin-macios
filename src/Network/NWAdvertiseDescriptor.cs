@@ -48,10 +48,10 @@ namespace Network {
 
 		public static NWAdvertiseDescriptor? CreateBonjourService (string name, string type, string? domain = null)
 		{
-			if (name == null)
+			if (name is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
-			if (type == null)
+			if (type is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (type));
 
 			var x = nw_advertise_descriptor_create_bonjour_service (name, type, domain);
@@ -65,7 +65,7 @@ namespace Network {
 
 		public void SetTxtRecord (string txt)
 		{
-			if (txt == null)
+			if (txt is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (txt));
 			var n = System.Text.Encoding.UTF8.GetByteCount (txt);
 			nw_advertise_descriptor_set_txt_record (GetCheckedHandle (), txt, (nuint) n);

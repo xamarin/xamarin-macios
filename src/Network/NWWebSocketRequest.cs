@@ -50,7 +50,7 @@ namespace Network {
 		static void TrampolineEnumerateHeaderHandler (IntPtr block, string header, string value)
 		{
 			var del = BlockLiteral.GetTarget<Action<string, string>> (block);
-			if (del != null) {
+			if (del is not null) {
 				del (header, value);
 			}
 		}
@@ -58,7 +58,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateAdditionalHeaders (Action<string, string> handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -81,7 +81,7 @@ namespace Network {
 		static void TrampolineEnumerateSubprotocolHandler (IntPtr block, string subprotocol)
 		{
 			var del = BlockLiteral.GetTarget<Action<string>> (block);
-			if (del != null) {
+			if (del is not null) {
 				del (subprotocol);
 			}
 		}
@@ -89,7 +89,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateSubprotocols (Action<string> handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();

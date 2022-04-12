@@ -73,7 +73,7 @@ namespace Network {
 		static void TrampolinePongHandler (IntPtr block, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwError = (error == IntPtr.Zero)? null : new NWError (error, owns: false);
 				del (nwError);
 			}
@@ -82,10 +82,10 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetPongHandler (DispatchQueue queue, Action<NWError?> handler)
 		{
-			if (queue == null)
+			if (queue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {

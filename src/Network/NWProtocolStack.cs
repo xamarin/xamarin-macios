@@ -51,7 +51,7 @@ namespace Network {
 
 		public void PrependApplicationProtocol (NWProtocolOptions options)
 		{
-			if (options == null)
+			if (options is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 			nw_protocol_stack_prepend_application_protocol (GetCheckedHandle (), options.Handle);
 		}
@@ -71,7 +71,7 @@ namespace Network {
 		static void TrampolineIterateHandler (IntPtr block, IntPtr options)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
-			if (del != null) {
+			if (del is not null) {
 				using (var tempOptions = new NWProtocolOptions (options, owns: false)) 
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
@@ -131,7 +131,7 @@ namespace Network {
 					if (definition.Equals (NWProtocolDefinition.CreateUdpDefinition ())) {
 						castedOptions = new NWProtocolUdpOptions (pHandle, owns: true);
 					} 
-					if (castedOptions == null) {
+					if (castedOptions is null) {
 						return tempOptions;
 					} else {
 						tempOptions.Dispose ();

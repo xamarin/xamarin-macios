@@ -97,7 +97,7 @@ namespace Network {
 		}
 		
 		public bool Add (string key, string value)
-			=> Add (key, value == null ? null : Encoding.UTF8.GetBytes (value));
+			=> Add (key, value is null ? null : Encoding.UTF8.GetBytes (value));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern byte nw_txt_record_remove_key (IntPtr handle, string key);
@@ -120,7 +120,7 @@ namespace Network {
 
 		public bool Equals (NWTxtRecord other)
 		{
-			if (other == null)
+			if (other is null)
 				return false;
 			return nw_txt_record_is_equal (GetCheckedHandle (), other.GetCheckedHandle ());
 		}
@@ -147,7 +147,7 @@ namespace Network {
 #else
 			var del = BlockLiteral.GetTarget<MulticastDelegate> (block);
 #endif
-			if (del == null)
+			if (del is null)
 				return false;
 
 			var mValue = new ReadOnlySpan<byte> ((void*)value, (int)valueLen);
@@ -171,7 +171,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (NWTxtRecordApplyDelegate handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -187,7 +187,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool Apply (NWTxtRecordApplyDelegate2 handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -213,7 +213,7 @@ namespace Network {
 		unsafe static void TrampolineAccessKeyHandler (IntPtr block, string key, NWTxtRecordFindKey found, IntPtr value, nuint valueLen)
 		{
 			var del = BlockLiteral.GetTarget<NWTxtRecordGetValueDelegete> (block);
-			if (del != null) {
+			if (del is not null) {
 				ReadOnlySpan<byte> mValue;
 				if (found == NWTxtRecordFindKey.NonEmptyValue)
 					mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
@@ -226,7 +226,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool GetValue (string key, NWTxtRecordGetValueDelegete handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -251,7 +251,7 @@ namespace Network {
 		unsafe static void TrampolineRawBytesHandler (IntPtr block, IntPtr value, nuint valueLen)
 		{
 			var del = BlockLiteral.GetTarget<NWTxtRecordGetRawByteDelegate> (block);
-			if (del != null) {
+			if (del is not null) {
 				var mValue = new ReadOnlySpan<byte>((void*)value, (int)valueLen);
 				del (mValue);
 			}
@@ -260,7 +260,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool GetRawBytes (NWTxtRecordGetRawByteDelegate handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();

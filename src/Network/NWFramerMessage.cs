@@ -53,7 +53,7 @@ namespace Network {
 		// https://github.com/xamarin/xamarin-macios/pull/7256#discussion_r337066971
 		public static NWFramerMessage Create (NWProtocolDefinition protocolDefinition)
 		{
-			if (protocolDefinition == null)
+			if (protocolDefinition is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolDefinition));
 			return new NWFramerMessage (nw_framer_protocol_create_message (protocolDefinition.Handle), owns: true);
 		}
@@ -68,7 +68,7 @@ namespace Network {
 		{
 			// get and call, this is internal and we are trying to do all the magic in the call
 			var del = BlockLiteral.GetTarget<Action<IntPtr>> (block);
-			if (del != null) {
+			if (del is not null) {
 				del (data);
 			}
 		}
@@ -77,7 +77,7 @@ namespace Network {
 		public void SetData (string key, byte[] value)
 		{
 			// the method takes a callback to cleanup the data, but we do not need that since we are managed
-			if (key == null)
+			if (key is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 			// pin the handle so that is not collected,  let our callback release it
@@ -106,7 +106,7 @@ namespace Network {
 		{
 			// get and call, this is internal and we are trying to do all the magic in the call
 			var del = BlockLiteral.GetTarget<Func<IntPtr, bool>> (block);
-			if (del != null) {
+			if (del is not null) {
 				return del (data);
 			}
 			return false;
