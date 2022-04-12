@@ -173,7 +173,6 @@
 !missing-null-allowed! 'Foundation.NSString UIKit.UIResponder::get_TextInputContextIdentifier()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSString UIKit.UITableViewCell::get_ReuseIdentifier()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSString UIKit.UITableViewHeaderFooterView::get_ReuseIdentifier()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUndoManager UIKit.UIResponder::get_UndoManager()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUuid UIKit.UIDevice::get_IdentifierForVendor()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class UIKit.UIStateRestoring::get_ObjectRestorationClass()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'System.Boolean UIKit.UIApplicationDelegate::FinishedLaunching(UIKit.UIApplication,Foundation.NSDictionary)' is missing an [NullAllowed] on parameter #1

@@ -22,6 +22,8 @@ namespace UIKit {
 #if !COREBUILD
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -30,6 +32,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -44,6 +48,8 @@ namespace UIKit {
 #if IOS
 #if NET
 		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (12,2)]
 #endif
@@ -52,6 +58,8 @@ namespace UIKit {
 
 #if NET
 		// [SupportedOSPlatform ("ios12.2")] -- Not valid for Delegates
+		// [SupportedOSPlatform ("maccatalyst")]
+		// [SupportedOSPlatform ("tvos")]
 #else
 		[iOS (12,2)]
 #endif
@@ -75,6 +83,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (12,2)]
 #endif
@@ -98,6 +108,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (12,2)]
 #endif

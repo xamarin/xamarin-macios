@@ -9079,8 +9079,7 @@ namespace AppKit {
 	}
 
 	[ThreadSafe]
-	[Deprecated (PlatformName.MacOSX, 10, 7)]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
+	[Deprecated (PlatformName.MacOSX, 10, 7, message : "Use 'Metal' Framework instead.")]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSOpenGLPixelBuffer {
@@ -11120,13 +11119,12 @@ namespace AppKit {
 		void SetImage (NSImage image);
 	}
 	
-#if MONOMAC
+	[NoMacCatalyst]
 	[Protocol (IsInformal = true)]
 	interface NSLayerDelegateContentsScaleUpdating {
 		[Export ("layer:shouldInheritContentsScale:fromWindow:")]
 		bool ShouldInheritContentsScale (CALayer layer, nfloat newScale, NSWindow fromWindow);
 	}
-#endif
 
 	[Mac (10,11)]
 	[NoMacCatalyst]
@@ -20880,14 +20878,48 @@ namespace AppKit {
 		void Deminiaturize ([NullAllowed] NSObject sender);
 	
 		[Export ("isZoomed")]
-		bool IsZoomed { get; set; }
-	
+		bool IsZoomed  {
+			get;
+#if !XAMCORE_5_0
+			// https://github.com/xamarin/xamarin-macios/issues/14359
+			[Obsolete ("Setting 'IsZoomed' will probably behave unexpectedly, since it comes from the NSScripting protocol (and not like the getter, which is defined on the NSWindow type). If this is the expected behavior, call 'SetIsZoomed(bool)' instead.")]
+			set;
+#endif
+		}
+
+		// The setIsZoomed: selector is defined on the NSScripting protocol, and
+		// is not directly related to the isZoomed getter defined on the NSWindow
+		// type, so use a separate method to express this distinction in managed code.
+		// Ref: https://github.com/xamarin/xamarin-macios/issues/14359
+#if !XAMCORE_5_0
+		[Sealed]
+#endif
+		[Export ("setIsZoomed:")]
+		void SetIsZoomed (bool value);
+
 		[Export ("zoom:")]
 		void Zoom ([NullAllowed] NSObject sender);
 	
 		[Export ("isMiniaturized")]
-		bool IsMiniaturized { get; set; }
-	
+		bool IsMiniaturized  {
+			get;
+#if !XAMCORE_5_0
+			// https://github.com/xamarin/xamarin-macios/issues/14359
+			[Obsolete ("Setting 'IsMiniaturized' will probably behave unexpectedly, since it comes from the NSScripting protocol (and not like the getter, which is defined on the NSWindow type). If this is the expected behavior, call 'SetIsMiniaturized(bool)' instead.")]
+			set;
+#endif
+		}
+
+		// The setIsMiniaturized: selector is defined on the NSScripting protocol, and
+		// is not directly related to the isMiniaturized getter defined on the NSWindow
+		// type, so use a separate method to express this distinction in managed code.
+		// Ref: https://github.com/xamarin/xamarin-macios/issues/14359
+#if !XAMCORE_5_0
+		[Sealed]
+#endif
+		[Export ("setIsMiniaturized:")]
+		void SetIsMiniaturized (bool value);
+
 		[Export ("tryToPerform:with:")]
 		bool TryToPerform (Selector anAction, NSObject anObject);
 		
@@ -20955,7 +20987,23 @@ namespace AppKit {
 		bool DocumentEdited  { [Bind ("isDocumentEdited")] get; set; }
 	
 		[Export ("isVisible")]
-		bool IsVisible  { get; set; }
+		bool IsVisible  {
+			get;
+#if !XAMCORE_5_0
+			// https://github.com/xamarin/xamarin-macios/issues/14359
+			[Obsolete ("Setting 'IsVisible' will probably behave unexpectedly, since it comes from the NSScripting protocol (and not like the getter, which is defined on the NSWindow type). Typically the correct way to change the visibility of an NSWindow is to use the 'OrderOut' or 'OrderFront' methods. However, if this is the expected behavior, call 'SetIsVisible(bool)' instead. ")]
+			set;
+#endif
+		}
+
+		// The setIsVisible: selector is defined on the NSScripting protocol, and
+		// is not directly related to the isVisible getter defined on the NSWindow
+		// type, so use a separate method to express this distinction in managed code.
+#if !XAMCORE_5_0
+		[Sealed]
+#endif
+		[Export ("setIsVisible:")]
+		void SetIsVisible (bool value);
 	
 		[Export ("isKeyWindow")]
 		bool IsKeyWindow { get; }
@@ -22955,7 +23003,6 @@ namespace AppKit {
 		NSATSTypesetter SharedTypesetter { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSTypesetter {
 		[Export ("substituteFontForFont:")]
 		NSFont GetSubstituteFont (NSFont originalFont);
@@ -23145,7 +23192,6 @@ namespace AppKit {
 		void SetBidiLevels (IntPtr levels, NSRange glyphRange);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSCollectionViewDelegate {
 		[Export ("collectionView:pasteboardWriterForItemAtIndex:")]
 		INSPasteboardWriting PasteboardWriterForItem (NSCollectionView collectionView, nuint index);
@@ -23166,7 +23212,6 @@ namespace AppKit {
 			CGPoint screenPoint, NSDragOperation dragOperation);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSColor {
 		[Static, Export ("colorWithGenericGamma22White:alpha:")]
 		NSColor FromGamma22White (nfloat white, nfloat alpha);
@@ -23178,7 +23223,6 @@ namespace AppKit {
 		NSString SystemColorsChanged { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSDocumentController {
 		[Export ("duplicateDocumentWithContentsOfURL:copying:displayName:error:")]
 		NSDocument DuplicateDocumentWithContentsOfUrl (NSUrl url, bool duplicateByCopying,
@@ -23210,7 +23254,6 @@ namespace AppKit {
 		NSObject Item { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSOutlineView : NSAccessibilityOutline {
 
 		[Notification, Field ("NSOutlineViewSelectionDidChangeNotification")]
@@ -23264,7 +23307,6 @@ namespace AppKit {
 		void MoveRow (nint oldIndex, nint newIndex);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSOutlineViewDataSource {
 		// - (id <NSPasteboardWriting>)outlineView:(NSOutlineView *)outlineView pasteboardWriterForItem:(id)item NS_AVAILABLE_MAC(10_7);
 		[Export ("outlineView:pasteboardWriterForItem:")]
@@ -23300,7 +23342,6 @@ namespace AppKit {
 		NSColorSpace OldColorSpace { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSWindow {
 		[Mac (10, 12)]
 		[Static]
@@ -23365,7 +23406,6 @@ namespace AppKit {
 		NSWindowTabGroup TabGroup { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSPrintOperation {
 		[Export ("preferredRenderingQuality")]
 		NSPrintRenderingQuality PreferredRenderingQuality { get; }
@@ -23382,7 +23422,6 @@ namespace AppKit {
  	}
 #endif
 
-	[NoMacCatalyst]
 	partial interface NSResponder {
 		[Export ("wantsScrollEventsForSwipeTrackingOnAxis:")]
 		bool WantsScrollEventsForSwipeTrackingOnAxis (NSEventGestureAxis axis);
@@ -23430,7 +23469,6 @@ namespace AppKit {
 		void PerformTextFinderAction ([NullAllowed] NSObject sender);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSRunningApplication {
 		[Static, Export ("terminateAutomaticallyTerminableApplications")]
 		void TerminateAutomaticallyTerminableApplications ();
@@ -23438,7 +23476,6 @@ namespace AppKit {
 
 	delegate void NSSpellCheckerShowCorrectionIndicatorOfTypeHandler (string acceptedString);
 
-	[NoMacCatalyst]
 	partial interface NSSpellChecker {
 		[Export ("correctionForWordRange:inString:language:inSpellDocumentWithTag:")]
 		string GetCorrection (NSRange forWordRange, string inString, string language, nint inSpellDocumentWithTag);
@@ -23529,7 +23566,6 @@ namespace AppKit {
 		NSTextView NewView { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSTextView : NSTextLayoutOrientationProvider {
 		[Export ("setLayoutOrientation:")]
 		void SetLayoutOrientation (NSTextLayoutOrientation theOrientation);
@@ -23576,7 +23612,6 @@ namespace AppKit {
 		bool UsesAdaptiveColorMappingForDarkAppearance { get; set; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSView {
 
 		[Export ("wantsUpdateLayer")]
@@ -23605,7 +23640,6 @@ namespace AppKit {
 		NSTextView FieldEditor { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSControl {
 
 		[Notification (typeof (NSControlTextEditingEventArgs))]
@@ -23634,28 +23668,24 @@ namespace AppKit {
 		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSMatrix : NSUserInterfaceValidations, NSViewToolTipOwner {
 
 		[Export ("autorecalculatesCellSize")]
 		bool AutoRecalculatesCellSize { get; set; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSForm {
 
 		[Export ("preferredTextFieldWidth")]
 		nfloat PreferredTextFieldWidth { get; set; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSFormCell {
 
 		[Export ("preferredTextFieldWidth")]
 		nfloat PreferredTextFieldWidth { get; set; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSColor {
 
 #if !NET
@@ -23673,7 +23703,6 @@ namespace AppKit {
 
 	delegate bool NSCustomImageRepDrawingHandler (CGRect dstRect);
 
-	[NoMacCatalyst]
 	partial interface NSCustomImageRep {
 
 		[Export ("initWithSize:flipped:drawingHandler:")]
@@ -23690,7 +23719,6 @@ namespace AppKit {
 	delegate void NSDocumentLockCompletionHandler (NSError error);
 	delegate void NSDocumentUnlockCompletionHandler (NSError error);
 
-	[NoMacCatalyst]
 	partial interface NSDocument : NSEditorRegistration, NSFilePresenter, NSMenuItemValidation
 #if NET
 	, NSUserInterfaceValidations // ValidateUserInterfaceItem was bound with NSObject and fix would break API compat  
@@ -23758,7 +23786,6 @@ namespace AppKit {
 	delegate void NSDocumentControllerOpenPanelWithCompletionHandler (NSArray urlsToOpen);
 	delegate void NSDocumentControllerOpenPanelResultHandler (nint result);
 
-	[NoMacCatalyst]
 	partial interface NSDocumentController : NSMenuItemValidation 
 #if NET
 	, NSUserInterfaceValidations // ValidateUserInterfaceItem was bound with NSObject and fix would break API compat  
@@ -23926,26 +23953,22 @@ namespace AppKit {
 		string BaseString { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSTableViewDelegate {
 
 		[Export ("tableView:toolTipForCell:rect:tableColumn:row:mouseLocation:"), DelegateName ("NSTableViewToolTip"), DefaultValue ("null")]
 		NSString GetToolTip (NSTableView tableView, NSCell cell, ref CGRect rect, [NullAllowed] NSTableColumn tableColumn, nint row, CGPoint mouseLocation);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSBrowser {
 		[Notification, Field ("NSBrowserColumnConfigurationDidChangeNotification")]
 		NSString ColumnConfigurationChangedNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSColorPanel {
 		[Notification, Field ("NSColorPanelColorDidChangeNotification")]
 		NSString ColorChangedNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSFont {
 		[Notification, Field ("NSAntialiasThresholdChangedNotification")]
 		NSString AntialiasThresholdChangedNotification { get; }
@@ -23954,7 +23977,6 @@ namespace AppKit {
 		NSString FontSetChangedNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSHelpManager {
 		[Notification, Field ("NSContextHelpModeDidActivateNotification")]
 		NSString ContextHelpModeDidActivateNotification { get; }
@@ -23963,7 +23985,6 @@ namespace AppKit {
 		NSString ContextHelpModeDidDeactivateNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSDrawer {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 		[Notification, Field ("NSDrawerWillOpenNotification")]
@@ -23992,7 +24013,6 @@ namespace AppKit {
 		NSMenu MenuItem { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSMenu {
 		[Notification (typeof (NSMenuItemEventArgs))]
 		[Field ("NSMenuWillSendActionNotification")]
@@ -24021,31 +24041,26 @@ namespace AppKit {
 		NSString DidEndTrackingNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSPopUpButtonCell : NSMenuItemValidation {
 		[Notification, Field ("NSPopUpButtonCellWillPopUpNotification")]
 		NSString WillPopUpNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSPopUpButton {
 		[Notification, Field ("NSPopUpButtonWillPopUpNotification")]
 		NSString WillPopUpNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSRuleEditor {
 		[Notification, Field ("NSRuleEditorRowsDidChangeNotification")]
 		NSString RowsDidChangeNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSScreen {
 		[Notification, Field ("NSScreenColorSpaceDidChangeNotification")]
 		NSString ColorSpaceDidChangeNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSTableView : NSUserInterfaceValidations {
 		[Notification, Field ("NSTableViewSelectionDidChangeNotification")]
 		NSString SelectionDidChangeNotification { get; }
@@ -24071,7 +24086,6 @@ namespace AppKit {
 		nint Movement { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSText {
 		[Notification, Field ("NSTextDidBeginEditingNotification")]
 		NSString DidBeginEditingNotification { get; }
@@ -24088,7 +24102,6 @@ namespace AppKit {
 		NSString MovementUserInfoKey { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSTextInputContext {
 		[Notification, Field ("NSTextInputContextKeyboardSelectionDidChangeNotification")]
 		NSString KeyboardSelectionDidChangeNotification { get; }
@@ -24099,7 +24112,6 @@ namespace AppKit {
 		NSToolbarItem Item { get; }
 	}
 
-	[MacCatalyst (13,0)]
 	partial interface NSToolbar {
 		[Notification (typeof (NSToolbarItemEventArgs))]
 		[Field ("NSToolbarWillAddItemNotification")]
@@ -24110,7 +24122,6 @@ namespace AppKit {
 		NSString NSToolbarDidRemoveItemNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSImageRep {
 		[Notification, Field ("NSImageRepRegistryDidChangeNotification")]
 		NSString RegistryDidChangeNotification { get; }

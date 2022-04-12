@@ -670,6 +670,12 @@
 		Inputs="@(_DirectoriesToPublish)"
 		Outputs="@(_DirectoriesToPublish -> '%(TargetDirectory)/%(Filename)')"
 		>
+
+		<!-- Ask ditto to not copy architectures we don't care about. This can be overridden by passing 'SkipLibraryThinning=true' -->
+		<PropertyGroup Condition="'$(TargetArchitectures)' != '' And '$(SkipLibraryThinning)' != 'true'">
+			<_DittoArchitectures>--arch $([System.String]::Join('--arch ',$(TargetArchitectures.ToLowerInvariant().Split(','))))</_DittoArchitectures>
+		</PropertyGroup>
+
 		<!-- We specifically do *not* use the publishing logic in .NET to (ResolvedFileToPublish) copy whole directories to the app bundle, because symlinks aren't handled correctly.
 			 In particular, MSBuild can't handle symlinks to directories: https://github.com/dotnet/msbuild/issues/6821.
 			 So we have a custom item group (_DirectoriesToPublish), which we copy ourselves.
@@ -677,6 +683,8 @@
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			AdditionalArguments="$(_DittoArchitectures)"
+			CopyFromWindows="true"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
 			Source="%(_DirectoriesToPublish.SourceDirectory)"
@@ -1563,6 +1571,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedAppleBindingResourcePackage.Identity)"
 			Destination="$(_IntermediateDecompressionDir)/%(Filename)"
 			>
@@ -1610,6 +1619,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedPlugIns.Identity)"
 			Destination="$(_IntermediateDecompressionDir)/%(Filename)%(Extension)"
 			>
@@ -1656,6 +1666,7 @@
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AdditionalArguments="-x -k"
+			CopyFromWindows="true"
 			Source="%(_CompressedAppleFrameworks.Identity)"
 			Destination="$(_IntermediateFrameworksDir)/%(Filename)%(Extension)"
 			>

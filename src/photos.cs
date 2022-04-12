@@ -1401,7 +1401,6 @@ namespace Photos
 	}
 
 	[Mac (10,13)]
-	[Unavailable (PlatformName.MacCatalyst)]
 	[NoiOS][NoTV]
 	[NoMacCatalyst]
 	[BaseType (typeof (PHChangeRequest))]

@@ -4249,6 +4249,7 @@ class C {
 		}
 
 		[Test]
+		[Ignore ("We're not copying dSYMs for user frameworks to the app bundle anymore: https://github.com/xamarin/xamarin-macios/issues/14598")]
 		public void BindingLibraryDSymCreated ()
 		{
 			// framework-test for macOS has binding library that should have dSYMs

@@ -2025,17 +2025,16 @@ namespace UIKit {
 		[Export ("hidden")]
 		bool Hidden { [Bind ("isHidden")] get; set; }
 
-#if MONOMAC
 		// Inherited from UIDynamicItem for !MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
 		CGPoint Center { get; set; }
 
-
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Abstract]
 		[Export ("bounds")]
 		CGRect Bounds { get; }
-#endif
 
 		[NoMac]
 		[Abstract]
