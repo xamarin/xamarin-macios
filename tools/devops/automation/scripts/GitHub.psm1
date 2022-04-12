@@ -116,7 +116,7 @@ class GitHubStatuses {
             Authorization = ("token {0}" -f $this.Token)
         }
 
-        $url = [GitHubStatuses]::GetStatusUrl()
+        $url = $this.GetStatusUrl()
 
         # Check if the status was already set, if it was we will override yet print a message for the user to know this action was done.
         $presentStatuses = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "GET" -ContentType 'application/json' }
