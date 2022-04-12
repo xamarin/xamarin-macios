@@ -241,6 +241,7 @@ steps:
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
+    TEST_BOT: $(Agent.Name)
   continueOnError: true
 
 # Make sure to report any errors
@@ -263,3 +264,4 @@ steps:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    TEST_BOT: $(Agent.Name)

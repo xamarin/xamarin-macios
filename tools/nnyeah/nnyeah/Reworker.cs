@@ -63,7 +63,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		void CheckModule ()
 		{
 			if (module == EmptyModule)
-				throw new Exception ("Module is not loaded. Call Load first.");
+				throw new Exception (Errors.E0005);
 		}
 
 		public void Rework (Stream stm)
