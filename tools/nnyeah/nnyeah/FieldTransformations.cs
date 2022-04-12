@@ -5,7 +5,7 @@ using Mono.Cecil.Cil;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class FieldTransformations {
 		static Dictionary<string, Transformation>? allTransforms;
 

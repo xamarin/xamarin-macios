@@ -5,7 +5,7 @@ using Mono.Cecil.Cil;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class Transformation {
 		static List<Instruction> emptyInstructions = new List<Instruction> ();
 		public Transformation (string operand, TransformationAction action, List<Instruction> instructions)

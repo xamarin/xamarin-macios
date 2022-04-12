@@ -45,15 +45,28 @@ class GitHubComments {
     [ValidateNotNullOrEmpty ()][string] $Org
     [ValidateNotNullOrEmpty ()][string] $Repo
     [ValidateNotNullOrEmpty ()][string] $Token
+    [string] $Hash
 
     GitHubComments (
         $githubOrg,
         $githubRepo,
-        $githubToken
+        $githubToken,
+        $hash
     ) {
         $this.Org = $githubOrg
         $this.Repo = $githubRepo
         $this.Token = $githubToken
+        $this.Hash = $hash
+    }
+
+    static [bool] IsPR() {
+        return $Env:BUILD_REASON -eq "PullRequest"
+    }
+
+    static [string] GetPRID() {
+        $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
+        $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+        return $changeId 
     }
 
     [void] WriteCommentHeader(
@@ -61,7 +74,13 @@ class GitHubComments {
         [string] $commentTitle,
         [string] $commentEmoji
     ) {
-        $stringBuilder.AppendLine("# $commentEmoji $commentTitle $commentEmoji")
+        if ([string]::IsNullOrEmpty($Env:PR_ID)) {
+            $prefix = "[CI Build]"
+        } else {
+            $prefix = "[PR Build]"
+        }
+
+        $stringBuilder.AppendLine("# $commentEmoji $prefix $commentTitle $commentEmoji")
     }
 
     [void] WriteCommentFooter(
@@ -69,15 +88,20 @@ class GitHubComments {
     ) {
         $targetUrl = Get-TargetUrl
         $stringBuilder.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
-        $stringBuilder.AppendLine("$Env:BUILD_SOURCEVERSIONMESSAGE") # default envars to provide more context to the result
+        $hashUrl = $null
+        if ([GitHubComments]::IsPR) {
+            $changeId = [GitHubComments]::GetPRID()
+            $hashUrl = "https://github.com/$($this.Org)/$($this.Repo)/pull/$changeId/commits/$($this.Hash)"
+        } else {
+            $hashUrl= "https://github.com/$($this.Org)/$($this.Repo)/commit/$($this.Hash)"
+        }
+        $stringBuilder.AppendLine("Hash: [$($this.Hash)]($hashUrl)")
     }
 
     [string] GetCommentUrl() {
         # if the build was due to PR, we want to write the comment in the PR rather than in the commit 
-        if ($Env:BUILD_REASON -eq "PullRequest") {
-            # calculate the change ID which is the PR number 
-            $buildSourceBranch = $Env:BUILD_SOURCEBRANCH
-            $changeId = $buildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+        if ([GitHubComments]::IsPR) {
+            $changeId = [GitHubComments]::GetPRID()
             $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/issues/$changeId/comments"
         } else {
             $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/commits/$Env:BUILD_REVISION/comments"
@@ -150,9 +174,13 @@ function New-GitHubCommentsObject {
 
         [ValidateNotNullOrEmpty ()]
         [string]
-        $Token
+        $Token,
+
+        [string]
+        $Hash
+
     )
-    return [GitHubComments]::new($Org, $Repo, $Token)
+    return [GitHubComments]::new($Org, $Repo, $Token, $Hash)
 }
 
 <#
