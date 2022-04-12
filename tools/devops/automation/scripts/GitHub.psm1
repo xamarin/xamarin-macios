@@ -233,7 +233,7 @@ class GitHubComments {
 
     [string] GetCommentUrl() {
         # if the build was due to PR, we want to write the comment in the PR rather than in the commit 
-        if ([GitHubComments]::IsPR) {
+        if ([GitHubComments]::IsPR()) {
             $changeId = [GitHubComments]::GetPRID()
             $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/issues/$changeId/comments"
         } else {
