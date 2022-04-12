@@ -587,10 +587,12 @@ namespace HealthKit {
 
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Export ("biologicalSexWithError:")]
+		[return: NullAllowed]
 		HKBiologicalSexObject GetBiologicalSex (out NSError error);
 
 		// FIXME NS_EXTENSION_UNAVAILABLE("Not available to extensions") ;
 		[Export ("bloodTypeWithError:")]
+		[return: NullAllowed]
 		HKBloodTypeObject GetBloodType (out NSError error);
 
 		[Watch (8,0)]
@@ -3300,6 +3302,7 @@ namespace HealthKit {
 		HKStatistics GetStatistics (HKQuantityType quantityType);
 
 		[Export ("seriesBuilderForType:")]
+		[return: NullAllowed]
 		HKSeriesBuilder GetSeriesBuilder (HKSeriesType seriesType);
 	}
 
