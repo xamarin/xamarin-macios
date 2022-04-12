@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 
 using CoreFoundation;
@@ -23,7 +25,12 @@ namespace NaturalLanguage {
 					throw new ArgumentNullException (nameof (key));
 
 				var value = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
-				return CFArray.StringArrayFromHandle (value);
+				var array = CFArray.StringArrayFromHandle (value) ?? throw new ArgumentOutOfRangeException (nameof (key));
+				foreach (var str in array) {
+					if (str is null)
+						ObjCRuntime.ThrowHelper.ThrowArgumentNullException ($"Key value {nameof (key)} contains a null string.");
+				}
+				return array!;
 			}
 			set {
 				SetArrayValue (key, value);
