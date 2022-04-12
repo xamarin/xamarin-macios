@@ -14,4 +14,15 @@
     <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="Mono.Options" Version="6.12.0.148" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Errors.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Errors.Designer.cs">
+      <DependentUpon>Errors.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
