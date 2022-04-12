@@ -46,7 +46,7 @@ namespace Network {
 		{
 			// domain can be null, type CANNOT	
 			if (type == null)
-				throw new ArgumentNullException (nameof (type));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (type));
 
 			return new NWBrowserDescriptor (nw_browse_descriptor_create_bonjour_service (type, domain), owns: true);
 		}

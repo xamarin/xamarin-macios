@@ -71,7 +71,7 @@ namespace Network {
 		public NWEthernetChannel (ushort ethernetType, NWInterface networkInterface)
 		{
 			if (networkInterface == null)
-				throw new ArgumentNullException (nameof (networkInterface));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (networkInterface));
 
 			InitializeHandle (nw_ethernet_channel_create (ethernetType, networkInterface.Handle));
 		}
@@ -92,7 +92,7 @@ namespace Network {
 		public void SetQueue (DispatchQueue queue)
 		{
 			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			nw_ethernet_channel_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 
@@ -116,7 +116,7 @@ namespace Network {
 		public void Send (ReadOnlySpan<byte> content, ushort vlanTag, string remoteAddress, Action<NWError?> callback)
 		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			using (var dispatchData = DispatchData.FromReadOnlySpan (content)) {
 				BlockLiteral block_handler = new BlockLiteral ();

@@ -36,7 +36,7 @@ namespace Network {
 		public NWMulticastGroup (NWEndpoint endpoint)
 		{
 			if (endpoint == null)
-				throw new ArgumentNullException (nameof (endpoint));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 
 			InitializeHandle (nw_group_descriptor_create_multicast (endpoint.GetCheckedHandle ()));
 		}
@@ -48,7 +48,7 @@ namespace Network {
 		public void AddEndpoint (NWEndpoint endpoint)
 		{
 			if (endpoint == null)
-				throw new ArgumentNullException (nameof (endpoint));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			nw_group_descriptor_add_endpoint (GetCheckedHandle (), endpoint.GetCheckedHandle ());
 		}
 
@@ -70,7 +70,7 @@ namespace Network {
 		public void SetSpecificSource (NWEndpoint endpoint)
 		{
 			if (endpoint == null)
-				throw new ArgumentNullException (nameof (endpoint));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			nw_multicast_group_descriptor_set_specific_source (GetCheckedHandle (), endpoint.GetCheckedHandle ());
 		}
 
@@ -95,7 +95,7 @@ namespace Network {
 		public void EnumerateEndpoints (Func<NWEndpoint, bool> handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateEndpointsHandler, handler);

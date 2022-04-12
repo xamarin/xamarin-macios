@@ -54,9 +54,9 @@ namespace Network {
 			IntPtr handle;
 
 			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			if (port == null)
-				throw new ArgumentNullException (nameof (port));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (port));
 
 			handle = nw_listener_create_with_port (port, parameters.Handle);
 			if (handle == IntPtr.Zero)
@@ -72,7 +72,7 @@ namespace Network {
 			IntPtr handle;
 
 			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
 			handle = nw_listener_create (parameters.Handle);
 			if (handle == IntPtr.Zero)
@@ -86,9 +86,9 @@ namespace Network {
 		public static NWListener? Create (NWConnection connection, NWParameters parameters)
 		{
 			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			if (connection == null)
-				throw new ArgumentNullException (nameof (connection));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (connection));
 
 			var handle = nw_listener_create_with_connection (connection.Handle, parameters.Handle);
 			if (handle == IntPtr.Zero)
@@ -102,7 +102,7 @@ namespace Network {
 		public void SetQueue (DispatchQueue queue)
 		{
 			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 
 			nw_listener_set_queue (GetCheckedHandle (), queue.Handle);
 		}

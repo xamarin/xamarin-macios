@@ -79,7 +79,7 @@ namespace Network {
 		public void SetQueue (DispatchQueue queue)
 		{
 			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			nw_path_monitor_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 

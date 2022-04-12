@@ -82,7 +82,7 @@ namespace Network {
 		public void EnumerateInterfaces (Action<NWInterface> handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateInterfacesHandler, handler);

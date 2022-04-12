@@ -60,7 +60,7 @@ namespace Network {
 		public void WriteOutput (DispatchData data)
 		{
 			if (data == null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			nw_framer_write_output_data (GetCheckedHandle (), data.Handle);
 		}
 
@@ -275,7 +275,7 @@ namespace Network {
 		public bool PrependApplicationProtocol (NWProtocolOptions options)
 		{
 			if (options == null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 			return nw_framer_prepend_application_protocol (GetCheckedHandle (), options.Handle);
 		}
 
@@ -306,7 +306,7 @@ namespace Network {
 		public bool DeliverInputNoCopy (nuint length, NWFramerMessage message, bool isComplete)
 		{
 			if (message == null)
-				throw new ArgumentNullException (nameof (message));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (message));
 			return nw_framer_deliver_input_no_copy (GetCheckedHandle (), length, message.Handle, isComplete);
 		}
 
@@ -316,7 +316,7 @@ namespace Network {
 		public static T? CreateOptions<T> (NWProtocolDefinition protocolDefinition) where T: NWProtocolOptions
 		{
 			if (protocolDefinition == null)
-				throw new ArgumentNullException (nameof (protocolDefinition));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolDefinition));
 			var x = nw_framer_create_options (protocolDefinition.Handle);
 			return Runtime.GetINativeObject<T> (x, owns: true);
 		}
@@ -393,7 +393,7 @@ namespace Network {
 		public bool ParseOutput (nuint minimumIncompleteLength, nuint maximumLength, Memory<byte> tempBuffer, Action<Memory<byte>, bool> handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
 				block_handler.SetupBlockUnsafe (static_ParseOutputHandler, handler);
@@ -430,7 +430,7 @@ namespace Network {
 		public bool ParseInput (nuint minimumIncompleteLength, nuint maximumLength, Memory<byte> tempBuffer, NWFramerParseCompletionDelegate handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
 				block_handler.SetupBlockUnsafe (static_ParseInputHandler, handler);
@@ -449,7 +449,7 @@ namespace Network {
 		public void DeliverInput (ReadOnlySpan<byte> buffer, NWFramerMessage message, bool isComplete)
 		{
 			if (message == null)
-				throw new ArgumentNullException (nameof (message));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (message));
 			unsafe {
 				fixed (byte *mh = buffer)
 					nw_framer_deliver_input (GetCheckedHandle (),mh, (nuint)buffer.Length, message.Handle, isComplete);

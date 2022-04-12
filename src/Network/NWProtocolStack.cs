@@ -52,7 +52,7 @@ namespace Network {
 		public void PrependApplicationProtocol (NWProtocolOptions options)
 		{
 			if (options == null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 			nw_protocol_stack_prepend_application_protocol (GetCheckedHandle (), options.Handle);
 		}
 

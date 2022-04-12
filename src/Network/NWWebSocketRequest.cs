@@ -59,7 +59,7 @@ namespace Network {
 		public void EnumerateAdditionalHeaders (Action<string, string> handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateHeaderHandler, handler);
@@ -90,7 +90,7 @@ namespace Network {
 		public void EnumerateSubprotocols (Action<string> handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateSubprotocolHandler, handler);

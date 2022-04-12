@@ -172,7 +172,7 @@ namespace Network {
 		public bool Apply (NWTxtRecordApplyDelegate handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ApplyHandler, handler);
@@ -188,7 +188,7 @@ namespace Network {
 		public bool Apply (NWTxtRecordApplyDelegate2 handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ApplyHandler, handler);
@@ -227,7 +227,7 @@ namespace Network {
 		public bool GetValue (string key, NWTxtRecordGetValueDelegete handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_AccessKeyHandler, handler);
@@ -261,7 +261,7 @@ namespace Network {
 		public bool GetRawBytes (NWTxtRecordGetRawByteDelegate handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_RawBytesHandler, handler);

@@ -83,10 +83,10 @@ namespace Network {
 		public void SetPongHandler (DispatchQueue queue, Action<NWError?> handler)
 		{
 			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();

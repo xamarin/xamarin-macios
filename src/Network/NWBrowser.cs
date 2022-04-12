@@ -60,7 +60,7 @@ namespace Network {
 		public NWBrowser (NWBrowserDescriptor descriptor, NWParameters? parameters)
 		{
 			if (descriptor == null)
-				throw new ArgumentNullException (nameof (descriptor));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));
 
 			InitializeHandle (nw_browser_create (descriptor.Handle, parameters.GetHandle ()));
 			SetChangesHandler (InternalChangesHandler);
@@ -74,7 +74,7 @@ namespace Network {
 		public void SetDispatchQueue (DispatchQueue queue)
 		{
 			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			lock (startLock) {
 				nw_browser_set_queue (GetCheckedHandle (), queue.Handle);
 				queueSet = true;

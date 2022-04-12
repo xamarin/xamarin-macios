@@ -72,9 +72,9 @@ namespace Network {
 		public NWConnectionGroup (NWMulticastGroup groupDescriptor, NWParameters parameters)
 		{
 			if (groupDescriptor == null)
-				throw new ArgumentNullException (nameof (groupDescriptor));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (groupDescriptor));
 			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
 			InitializeHandle (nw_connection_group_create (groupDescriptor.GetCheckedHandle (), parameters.GetCheckedHandle ()));
 		}
@@ -119,7 +119,7 @@ namespace Network {
 		public void SetQueue (DispatchQueue queue)
 		{
  			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 
 			nw_connection_group_set_queue (GetCheckedHandle (), queue.GetCheckedHandle ());
 		}
@@ -131,7 +131,7 @@ namespace Network {
 		public NWEndpoint? GetLocalEndpoint (NWContentContext context)
 		{
 			if (context == null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			var ptr = nw_connection_group_copy_local_endpoint_for_message (GetCheckedHandle (), context.GetCheckedHandle ());
 			return ptr == IntPtr.Zero ? null : new NWEndpoint (ptr, owns: true);
 		}
@@ -143,7 +143,7 @@ namespace Network {
 		public NWPath? GetPath (NWContentContext context)
 		{
 			if (context == null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			var ptr = nw_connection_group_copy_path_for_message (GetCheckedHandle (), context.GetCheckedHandle ());
 			return ptr == IntPtr.Zero ? null : new NWPath (ptr, owns: true);
 		}
@@ -155,7 +155,7 @@ namespace Network {
 		public NWEndpoint? GetRemmoteEndpoint (NWContentContext context)
 		{
 			if (context == null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			var ptr = nw_connection_group_copy_remote_endpoint_for_message (GetCheckedHandle (), context.GetCheckedHandle ());
 			return ptr == IntPtr.Zero ? null : new NWEndpoint (ptr, owns: true);
 		}
@@ -167,7 +167,7 @@ namespace Network {
 		public NWConnection? GetConnection (NWContentContext context)
 		{
 			if (context == null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			var ptr = nw_connection_group_extract_connection_for_message (GetCheckedHandle (), context.GetCheckedHandle ());
 			return ptr == IntPtr.Zero ? null : new NWConnection (ptr, owns: true);
 		}
@@ -178,9 +178,9 @@ namespace Network {
 		public void Reply (NWContentContext inboundMessage, NWContentContext outboundMessage, DispatchData content)
 		{
 			if (inboundMessage == null)
-				throw new ArgumentNullException (nameof (inboundMessage));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inboundMessage));
 			if (outboundMessage == null)
-				throw new ArgumentNullException (nameof (outboundMessage));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outboundMessage));
 
 			nw_connection_group_reply (GetCheckedHandle (), inboundMessage.GetCheckedHandle  (), outboundMessage.GetCheckedHandle (), content.GetHandle ());
 		}
@@ -328,7 +328,7 @@ namespace Network {
 #endif
 		public NWProtocolMetadata? GetProtocolMetadata (NWContentContext context) {
 			if (context is null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			var ptr = nw_connection_group_copy_protocol_metadata (GetCheckedHandle (), context.Handle);
 			return ptr == IntPtr.Zero ? null : new NWProtocolMetadata (ptr, true);
 		}
@@ -362,9 +362,9 @@ namespace Network {
 #endif
 		public NWProtocolMetadata? GetProtocolMetadata (NWContentContext context, NWProtocolDefinition definition) {
 			if (context is null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			if (definition is null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			var ptr = nw_connection_group_copy_protocol_metadata_for_message (GetCheckedHandle (), context.Handle, definition.Handle);
 			return ptr == IntPtr.Zero ? null : new NWProtocolMetadata (ptr, true);
 		}
@@ -433,7 +433,7 @@ namespace Network {
 		public bool TryReinsertExtractedConnection (NWConnection connection)
 		{
 			if (connection is null)
-				throw new ArgumentNullException (nameof (connection));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (connection));
 			return nw_connection_group_reinsert_extracted_connection (GetCheckedHandle (), connection.Handle);
 		}
 
@@ -482,7 +482,7 @@ namespace Network {
 		public void SetNewConnectionHandler (Action<NWConnection> handler)
 		{
 			if (handler is null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			var block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_SetNewConnectionHandler, handler);

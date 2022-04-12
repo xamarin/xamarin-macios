@@ -54,7 +54,7 @@ namespace Network {
 		public static NWFramerMessage Create (NWProtocolDefinition protocolDefinition)
 		{
 			if (protocolDefinition == null)
-				throw new ArgumentNullException (nameof (protocolDefinition));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolDefinition));
 			return new NWFramerMessage (nw_framer_protocol_create_message (protocolDefinition.Handle), owns: true);
 		}
 
@@ -78,7 +78,7 @@ namespace Network {
 		{
 			// the method takes a callback to cleanup the data, but we do not need that since we are managed
 			if (key == null)
-				throw new ArgumentNullException (nameof (key));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 			// pin the handle so that is not collected,  let our callback release it
 			var pinned = GCHandle.Alloc (value, GCHandleType.Pinned);

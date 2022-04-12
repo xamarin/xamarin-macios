@@ -70,9 +70,9 @@ namespace Network {
 		public NWConnection (NWEndpoint endpoint, NWParameters parameters)
 		{
 			if (endpoint == null)
-				throw new ArgumentNullException (nameof (endpoint));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			InitializeHandle (nw_connection_create (endpoint.Handle, parameters.Handle));
 		}
 
@@ -231,7 +231,7 @@ namespace Network {
 		public void SetQueue (DispatchQueue queue)
 		{
 			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			nw_connection_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 
@@ -344,7 +344,7 @@ namespace Network {
 		public void Receive (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveCompletion callback)
 		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
@@ -359,7 +359,7 @@ namespace Network {
 		public void ReceiveData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveDispatchDataCompletion callback)
 		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
@@ -375,7 +375,7 @@ namespace Network {
 		public void ReceiveReadOnlyData (uint minimumIncompleteLength, uint maximumLength, NWConnectionReceiveReadOnlySpanCompletion callback)
 		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
@@ -394,7 +394,7 @@ namespace Network {
 		public void ReceiveMessage (NWConnectionReceiveCompletion callback)
 		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletion, callback);
@@ -410,7 +410,7 @@ namespace Network {
 		public void ReceiveMessageData (NWConnectionReceiveDispatchDataCompletion callback)
 		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchData, callback);
@@ -426,7 +426,7 @@ namespace Network {
 		public void ReceiveMessageReadOnlyData (NWConnectionReceiveReadOnlySpanCompletion callback)
 		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ReceiveCompletionDispatchReadnOnlyData, callback);
@@ -495,9 +495,9 @@ namespace Network {
 		public void Send (DispatchData? buffer, NWContentContext context, bool isComplete, Action<NWError?> callback)
 		{
 			if (context == null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
@@ -515,7 +515,7 @@ namespace Network {
 		public unsafe void SendIdempotent (DispatchData? buffer, NWContentContext context, bool isComplete)
 		{
 			if (context == null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 
 			LowLevelSend (GetCheckedHandle (), buffer, context.Handle, isComplete, (void *) NWConnectionConstants._SendIdempotentContent);
 		}
@@ -552,7 +552,7 @@ namespace Network {
 		public NWProtocolMetadata? GetProtocolMetadata (NWProtocolDefinition definition)
 		{
 			if (definition == null)
-				throw new ArgumentNullException (nameof (definition));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (definition));
 
 			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.Handle);
 			if (x == IntPtr.Zero)
@@ -563,7 +563,7 @@ namespace Network {
 		public T? GetProtocolMetadata<T> (NWProtocolDefinition definition) where T : NWProtocolMetadata
 		{
 			if (definition is null)
-				throw new ArgumentNullException (nameof (definition));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (definition));
 
 			var x = nw_connection_copy_protocol_metadata (GetCheckedHandle (), definition.Handle);
 			return Runtime.GetINativeObject<T> (x, owns: true);
@@ -623,9 +623,9 @@ namespace Network {
 		public void GetEstablishmentReport (DispatchQueue queue, Action<NWEstablishmentReport> handler)
 		{
 			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_GetEstablishmentReportHandler, handler);

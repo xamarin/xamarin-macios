@@ -73,7 +73,7 @@ namespace Network {
 		public NWContentContext (string contextIdentifier)
 		{
 			if (contextIdentifier == null)
-				throw new ArgumentNullException (nameof (contextIdentifier));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contextIdentifier));
 			InitializeHandle (nw_content_context_create (contextIdentifier));
 		}
 
@@ -140,7 +140,7 @@ namespace Network {
 		public NWProtocolMetadata? GetProtocolMetadata (NWProtocolDefinition protocolDefinition)
 		{
 			if (protocolDefinition == null)
-				throw new ArgumentNullException (nameof (protocolDefinition));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolDefinition));
 			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
 			if (x == IntPtr.Zero)
 				return null;
@@ -150,7 +150,7 @@ namespace Network {
 		public T? GetProtocolMetadata<T> (NWProtocolDefinition protocolDefinition) where T : NWProtocolMetadata
 		{
 			if (protocolDefinition is null)
-				throw new ArgumentNullException (nameof (protocolDefinition));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolDefinition));
 			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
 			return Runtime.GetINativeObject<T> (x, owns: true);
 		}
@@ -161,7 +161,7 @@ namespace Network {
 		public void SetMetadata (NWProtocolMetadata protocolMetadata)
 		{
 			if (protocolMetadata == null)
-				throw new ArgumentNullException (nameof (protocolMetadata));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolMetadata));
 			nw_content_context_set_metadata_for_protocol (GetCheckedHandle (), protocolMetadata.Handle);
 		}
 

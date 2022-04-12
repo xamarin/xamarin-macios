@@ -48,7 +48,7 @@ namespace Network {
 		public NWDataTransferReport (NWConnection connection)
 		{
 			if (connection == null)
-				throw new ArgumentNullException (nameof (connection));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (connection));
 
 			InitializeHandle (nw_connection_create_new_data_transfer_report (connection.Handle));
 		}
@@ -162,9 +162,9 @@ namespace Network {
 		public void Collect (DispatchQueue queue, Action<NWDataTransferReport> handler)
 		{
 			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_CollectHandler, handler);
 			try {

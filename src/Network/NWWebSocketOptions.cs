@@ -55,7 +55,7 @@ namespace Network {
 		public void SetHeader (string header, string value) 
 		{
 			if (header == null)
-				throw new ArgumentNullException (header);
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (header));
 			nw_ws_options_add_additional_header (GetCheckedHandle(), header, value); 
 		}
 
@@ -65,7 +65,7 @@ namespace Network {
 		public void AddSubprotocol (string subprotocol)
 		{
 			if (subprotocol == null)
-				throw new ArgumentNullException (nameof (subprotocol));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (subprotocol));
 			nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocol);
 		}
 
@@ -122,9 +122,9 @@ namespace Network {
 		public void SetClientRequestHandler (DispatchQueue queue, Action<NWWebSocketRequest> handler)
 		{
 			if (queue == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
 				block_handler.SetupBlockUnsafe (static_ClientRequestHandler, handler);

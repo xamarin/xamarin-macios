@@ -208,7 +208,7 @@ namespace Network {
 		public void EnumerateGateways (Action<NWEndpoint> callback)
 		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_Enumerator, callback);

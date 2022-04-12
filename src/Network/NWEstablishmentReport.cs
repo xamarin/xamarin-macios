@@ -93,7 +93,7 @@ namespace Network {
 		public void EnumerateResolutions (Action<NWReportResolutionSource, TimeSpan, int, NWEndpoint, NWEndpoint> handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ResolutionEnumeratorHandler, handler);
@@ -124,7 +124,7 @@ namespace Network {
 		public void EnumerateProtocols (Action<NWProtocolDefinition, TimeSpan, TimeSpan> handler)
 		{
 			if (handler == null) 
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateProtocolsHandler, handler);
@@ -189,7 +189,7 @@ namespace Network {
 		public void EnumerateResolutionReports (Action<NWResolutionReport> handler)
 		{
 			if (handler is null) 
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral blockHandler = new ();
 			blockHandler.SetupBlockUnsafe (static_EnumerateResolutionReport, handler);
