@@ -196,7 +196,7 @@ class GitHubComments {
         $targetUrl = Get-TargetUrl
         $stringBuilder.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
         $hashUrl = $null
-        if ([GitHubComments]::IsPR) {
+        if ([GitHubComments]::IsPR()) {
             $changeId = [GitHubComments]::GetPRID()
             $hashUrl = "https://github.com/$($this.Org)/$($this.Repo)/pull/$changeId/commits/$($this.Hash)"
         } else {
