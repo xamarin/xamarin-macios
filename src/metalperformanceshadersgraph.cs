@@ -1575,10 +1575,10 @@ namespace MetalPerformanceShadersGraph
 		MPSGraphTensor TopKGradient (MPSGraphTensor gradient, MPSGraphTensor source, MPSGraphTensor kTensor, [NullAllowed] string name);
 	}
 
-	// @interface MPSGraphCompilationDescriptor : NSObject
+	// @interface MPSGraphCompilationDescriptor : NSObject <NSCopying>
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
-	interface MPSGraphCompilationDescriptor
+	interface MPSGraphCompilationDescriptor : NSCopying
 	{
 		// -(void)disableTypeInference;
 		[Export ("disableTypeInference")]
