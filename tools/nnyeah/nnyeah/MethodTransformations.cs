@@ -5,11 +5,12 @@ using Mono.Cecil.Cil;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class MethodTransformations {
 		static List<Transformation>? allTransforms;
 		static Dictionary<string, Transformation>? transformTable;
 		const string ConvertibleMessage = "IConvertible interfaces are not supported yet. If this code gets called, it will fail. Consider contacting the library maintainer to request a dotnet 6 upgrade.";
+		const string CopyArrayMessage = "CopyArray for nuint is not supported yet. If this method is called, it will not function correctly.";
 
 		public Dictionary<string, Transformation> GetTransforms (ModuleDefinition module, Func<List<bool>, CustomAttribute> attrBuilder)
 		{
@@ -193,12 +194,32 @@ namespace nnyeah {
 					Instruction.Create (OpCodes.Call, mref)
 				}));
 
-			//"System.nint System.nint::op_Explicit(System.nfloat)"
-			//
-			//"System.Void System.nint::CopyArray(System.IntPtr,System.nint[],System.Int32,System.Int32)"
-			//"System.Void System.nint::CopyArray(System.nint[],System.Int32,System.IntPtr,System.Int32)"
-			//
+			var marshalTypeReference = new TypeReference ("System.Runtime.InteropServices", "Marshal", module, module.TypeSystem.CoreLibrary);
+			mref = new MethodReference ("CopyArray", module.TypeSystem.Void, marshalTypeReference);
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.IntPtr));
+			mref.Parameters.Add (new ParameterDefinition (new ArrayType (module.TypeSystem.IntPtr)));
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
+			mref = module.ImportReference (mref);
+			allTransforms.Add (new Transformation ("System.Void System.nint::CopyArray(System.IntPtr,System.nint[],System.Int32,System.Int32)",
+				TransformationAction.Replace,
+				new List<Instruction> () {
+					Instruction.Create (OpCodes.Call, mref)
+				}));
 
+			mref = new MethodReference ("CopyArray", module.TypeSystem.Void, marshalTypeReference);
+			mref.Parameters.Add (new ParameterDefinition (new ArrayType (module.TypeSystem.IntPtr)));
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.IntPtr));
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
+			mref = module.ImportReference (mref);
+			allTransforms.Add (new Transformation ("System.Void System.nint::CopyArray(System.nint[],System.Int32,System.IntPtr,System.Int32)",
+				TransformationAction.Replace,
+				new List<Instruction> () {
+					Instruction.Create (OpCodes.Call, mref)
+				}));
+
+			//"System.nint System.nint::op_Explicit(System.nfloat)"
 
 			// nuint
 			mref = new MethodReference ("CompareTo", module.TypeSystem.Int32, module.TypeSystem.UIntPtr);
@@ -342,10 +363,6 @@ namespace nnyeah {
 				}));
 
 			//"System.nuint System.nuint::op_Explicit(System.nfloat)"
-			//
-			//"System.Void System.nuint::CopyArray(System.IntPtr,System.nuint[],System.Int32,System.Int32)"
-			//"System.Void System.nuint::CopyArray(System.nuint[],System.Int32,System.IntPtr,System.Int32)"
-			//
 
 			transformTable = new Dictionary<string, Transformation> ();
 
@@ -830,6 +847,17 @@ namespace nnyeah {
 			new Transformation ("System.UInt32 System.nuint::System.IConvertible.ToUInt32(System.IFormatProvider)", ConvertibleMessage),
 			new Transformation ("System.UInt64 System.nuint::System.IConvertible.ToUInt64(System.IFormatProvider)", ConvertibleMessage),
 			new Transformation ("System.Object System.nuint::System.IConvertible.ToType(System.Type,System.IFormatProvider)", ConvertibleMessage),
+
+			// why warnings for this?
+			// Because in .NET 6 there is no direct equivalent of this call.
+			// In order to support this, we need to inject helper methods that do the actual
+			// copying and revector to those helpers.
+			// Not doing this right now since a survey of nuget.org shows that these methods
+			// are never called in the wild.
+			new Transformation ("System.Void System.nuint::CopyArray(System.IntPtr,System.nuint[],System.Int32,System.Int32)",
+				CopyArrayMessage),
+			new Transformation ("System.Void System.nuint::CopyArray(System.nuint[],System.Int32,System.IntPtr,System.Int32)",
+				CopyArrayMessage),
 		};
 	}
 }

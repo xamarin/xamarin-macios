@@ -538,7 +538,7 @@ namespace Foundation
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
 #endif
 
-		[NoMac]
+		[MacCatalyst (13, 1)][TV (9, 0)][Mac (10, 0)][iOS (6, 0)]
 		[Export ("size")]
 		CGSize Size { get; }
 
@@ -5748,8 +5748,9 @@ namespace Foundation
 		[Export ("initWithString:relativeToURL:")]
 		NativeHandle Constructor (string urlString, NSUrl relativeToUrl);
 
+		[return: NullAllowed]
 		[Export ("URLWithString:")][Static]
-		NSUrl FromString (string s);
+		NSUrl FromString ([NullAllowed] string s);
 
 		[Export ("URLWithString:relativeToURL:")][Internal][Static]
 		NSUrl _FromStringRelative (string url, NSUrl relative);
@@ -13881,7 +13882,6 @@ namespace Foundation
 	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	[NoMacCatalyst]
 	partial interface NSHost {
 
 		[Static, Internal, Export ("currentHost")]

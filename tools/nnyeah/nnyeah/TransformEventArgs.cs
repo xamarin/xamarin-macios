@@ -3,7 +3,7 @@ using System.Text;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class TransformEventArgs : BaseTransformEventArgs {
 		public TransformEventArgs (string containerName, string methodName, string targetOperand, uint addedCount, uint removedCount)
 			: base (containerName, methodName, targetOperand)
