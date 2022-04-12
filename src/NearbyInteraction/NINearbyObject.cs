@@ -32,7 +32,7 @@ namespace NearbyInteraction {
 		[Field ("NINearbyObjectDirectionNotAvailable",  "NearbyInteraction")]
 		public static Vector3 DirectionNotAvailable {
 			get {
-				if (_DirectionNotAvailable == null) {
+				if (_DirectionNotAvailable is null) {
 					unsafe {
 						Vector3 *pointer = (Vector3 *) Dlfcn.GetIndirect (Libraries.NearbyInteraction.Handle, "NINearbyObjectDirectionNotAvailable");
 						_DirectionNotAvailable = *pointer;
