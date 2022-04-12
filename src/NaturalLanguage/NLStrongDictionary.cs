@@ -22,7 +22,7 @@ namespace NaturalLanguage {
 		public string[] this [NSString key] {
 			get {
 				if (key == null)
-					throw new ArgumentNullException (nameof (key));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 				var value = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
 				var array = CFArray.StringArrayFromHandle (value) ?? throw new ArgumentOutOfRangeException (nameof (key));
