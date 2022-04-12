@@ -148,6 +148,28 @@ class GitHubStatuses {
     }
 }
 
+<#
+    .SYNOPSIS
+        Creates a new GitHubComments object from that can be used to create comments for the build.
+#>
+function New-GitHubStatusesObject {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Org,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Repo,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Token
+    )
+    return [GitHubStatuses]::new($Org, $Repo, $Token)
+}
+
 class GitHubComments {
     [ValidateNotNullOrEmpty ()][string] $Org
     [ValidateNotNullOrEmpty ()][string] $Repo
@@ -1182,3 +1204,4 @@ Export-ModuleMember -Function Push-RepositoryDispatch
 
 # new future API that uses objects.
 Export-ModuleMember -Function New-GitHubCommentsObject
+Export-ModuleMember -Function New-GitHubStatusesObject
