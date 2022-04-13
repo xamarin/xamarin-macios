@@ -65,6 +65,7 @@ stages:
 
     variables:
       PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
 
     steps:
     - template: build.yml
