@@ -304,7 +304,7 @@ stages:
     displayName: 'Clean up'
     dependsOn: []
     jobs:
-      -job:
+      - job:
         displayName: 'Clean comments'
         pool:
           vmImage: windows-latest
