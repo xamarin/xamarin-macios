@@ -13,7 +13,7 @@ namespace MapKit {
 		
 		public static unsafe MKPolyline FromPoints (MKMapPoint [] points)
 		{
-			if (points == null)
+			if (points is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			if (points.Length == 0)
 				return _FromPoints (IntPtr.Zero, 0);
@@ -25,7 +25,7 @@ namespace MapKit {
 
 		public static unsafe MKPolyline FromCoordinates (CLLocationCoordinate2D [] coords)
 		{
-			if (coords == null)
+			if (coords is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (coords));
 			if (coords.Length == 0)
 				return _FromCoordinates (IntPtr.Zero, 0);

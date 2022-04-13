@@ -36,6 +36,12 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSAutoreleasePool", true)]
 	public class NSAutoreleasePool : NSObject
 #if !COREBUILD

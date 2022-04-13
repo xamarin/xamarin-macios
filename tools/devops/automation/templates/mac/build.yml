@@ -22,7 +22,7 @@ steps:
 # Write a generic failure message to the failure comment file, so a failure will be reported
 # if something goes wrong before we successfully complete the tests (in which case we delete the file).
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests on macOS $Env:CONTEXT failed for unknown reasons."
     Set-GitHubStatus -Status "pending" -Description "Tests on macOS $Env:CONTEXT have started." -Context "$Env:CONTEXT"
   displayName: "Initialize state"
@@ -91,10 +91,8 @@ steps:
 # 2. Set a comment stating the same as what was sent to the status.
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/
-    Import-Module ./System.psm1
-    Import-Module ./VSTS.psm1
-    Import-Module ./GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+
     if ( -not (Test-HDFreeSpace -Size 5)) {
       Set-Content -Path "$GITHUB_FAILURE_COMMENT_FILE" -Value "Not enough free space in the host."
       exit 1
@@ -183,7 +181,7 @@ steps:
   timeoutInMinutes: 60
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1 
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     Write-Host "Found tests"
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
@@ -233,18 +231,19 @@ steps:
     # yet we do have some  flacky ones, this will allow the release to run. The comment will let use know that we failed
     exit 0  
   displayName: 'Run tests'
-  timeoutInMinutes: 30
+  timeoutInMinutes: 45
   env:
     CONTEXT: ${{ parameters.statusContext }}
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
+    TEST_BOT: $(Agent.Name)
   continueOnError: true
 
 # Make sure to report any errors
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\GitHub.psm1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
       Set-GitHubStatus -Status "error" -Description "Tests on macOS $Env:CONTEXT failed." -Context "$Env:CONTEXT"
       New-GitHubCommentFromFile -Header "Tests on macOS $Env:CONTEXT failed" -Emoji ":x:" -Path "$Env:GITHUB_FAILURE_COMMENT_FILE"
@@ -261,3 +260,4 @@ steps:
     BUILD_REVISION: $(Build.SourceVersion)
     GITHUB_TOKEN: $(GitHub.Token)
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    TEST_BOT: $(Agent.Name)

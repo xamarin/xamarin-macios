@@ -60,6 +60,12 @@ namespace CoreText {
 	}
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFontCollectionOptions {
 
 		public CTFontCollectionOptions ()
@@ -99,6 +105,12 @@ namespace CoreText {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFontCollection : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTFontCollection (NativeHandle handle, bool owns)
@@ -152,6 +164,8 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (12,0)]
 		[TV (12,0)]
@@ -163,6 +177,8 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (12,0)]
 		[TV (12,0)]

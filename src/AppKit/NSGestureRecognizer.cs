@@ -13,6 +13,7 @@ using System;
 using System.Collections;
 using Foundation; 
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AppKit {
 	public partial class NSGestureRecognizer {
@@ -33,6 +34,10 @@ namespace AppKit {
 			MarkDirty ();
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		[Register ("__NSGestureRecognizerToken")]
 		[Preserve (Conditional = true)]
 		public class Token : NSObject {
@@ -42,6 +47,10 @@ namespace AppKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		[Register ("__NSGestureRecognizerParameterlessToken")]
 		[Preserve (Conditional = true)]
 		public class ParameterlessDispatch : Token {
@@ -60,6 +69,10 @@ namespace AppKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		[Register ("__NSGestureRecognizerParametrizedToken")]
 		[Preserve (Conditional = true)]
 		public class ParametrizedDispatch : Token {
