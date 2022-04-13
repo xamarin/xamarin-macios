@@ -244,15 +244,15 @@ steps:
 # Make sure to report any errors
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    $githubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token) -Hash $Env:GIT_HASH
 
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
       Set-GitHubStatus -Status "error" -Description "Tests on macOS $Env:CONTEXT failed." -Context "$Env:CONTEXT"
-      $gihubComments.NewCommentFromFile("Tests on macOS ${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
+      $githubComments.NewCommentFromFile("Tests on macOS ${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
     } else {
       Set-GitHubStatus -Status "success" -Description "Tests on macOS $Env:CONTEXT passed." -Context "$Env:CONTEXT"
       $message = ":white_check_mark: **All** tests on macOS ${{ parameters.statusContext }} passed."
-      $gihubComments.NewCommentFromMessage("Tests on macOS ${{ parameters.statusContext }} passed", ":computer:", $message)
+      $githubComments.NewCommentFromMessage("Tests on macOS ${{ parameters.statusContext }} passed", ":computer:", $message)
     }
   displayName: 'Report results to GitHub'
   timeoutInMinutes: 5
