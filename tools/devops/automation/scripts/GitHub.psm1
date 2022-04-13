@@ -311,7 +311,7 @@ class GitHubComments {
 query {
     repository(owner:"$($this.Org)", name:"$($this.Repo)"){
         pullRequest(number: $prID) {
-            comments(first: 100) {
+            comments(last: 100) {
                 edges {
                     node {
                         id
@@ -352,7 +352,7 @@ query {
 query{
     repository(owner:"$($this.Org)", name:"$($this.Repo)") {
         pullRequest(number: $prID){
-            commits(first:100) {
+            commits(last:100) {
                 edges {
                     node {
                         commit {
@@ -360,7 +360,7 @@ query{
                                 oid
                                 message
                             } 
-                            comments (first:100) {
+                            comments (last:100) {
                                 edges {
                                     node {
                                         id
