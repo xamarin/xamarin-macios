@@ -72,6 +72,7 @@ NestedModules = @('APIDiff.psm1',
                'MLaunch.psm1', 
                'StaticPages.psm1', 
                'System.psm1', 
+               'TestResults.psm1', 
                'VSTS.psm1')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.

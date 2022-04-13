@@ -14,7 +14,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		public override string HelpfulMessage ()
 		{
-			return $"In {ContainerName}.{MethodName}, found reference to {TargetOperand} - this is not transformable and will likely not work if invoked.";
+			return string.Format (Errors.N0006, ContainerName, MethodName, TargetOperand);
 		}
 	}
 }
