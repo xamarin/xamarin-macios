@@ -21,7 +21,7 @@ steps:
       $comments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
       $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
-      $prComments = comments.GetCommentsForPR($prId)
+      $prComments = $comments.GetCommentsForPR($prId)
 
       $botComments = [System.Collections.ArrayList]@()
       foreach ($c in $prComments) {
