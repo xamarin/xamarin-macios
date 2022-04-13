@@ -20,7 +20,7 @@ steps:
       Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/MaciosCI.psd1
       $comments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
-      $prId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+      $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
       $prComments = comments.GetCommentsForPR($prId)
 
       $botComments = [System.Collections.ArrayList]@()
