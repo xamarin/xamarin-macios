@@ -148,11 +148,41 @@ class GitHubStatuses {
     }
 }
 
+class GitHubComment {
+    [string] $Id
+    [string] $Author
+    [string] $Body
+    [bool] $IsMinimized
+
+    GitHubComment(
+        [string] $id,
+        [string] $author,
+        [string] $body,
+        [bool] $isMinimized
+    ) {
+        $this.Id = $id
+        $this.Author = $author
+        $this.Body = $body
+        $this.IsMinimized = $isMinimized
+    }
+}
+
 class GitHubComments {
     [ValidateNotNullOrEmpty ()][string] $Org
     [ValidateNotNullOrEmpty ()][string] $Repo
     [ValidateNotNullOrEmpty ()][string] $Token
     [string] $Hash
+
+    GitHubComments (
+        $githubOrg,
+        $githubRepo,
+        $githubToken
+    ) {
+        $this.Org = $githubOrg
+        $this.Repo = $githubRepo
+        $this.Token = $githubToken
+        $this.Hash = $null
+    }
 
     GitHubComments (
         $githubOrg,
@@ -268,6 +298,140 @@ class GitHubComments {
 
         return $this.NewComment($msg)
     }
+
+    [object] GetCommentsForPR ($prId) {
+        # build the query, create the json and perform a rest request againt the grapichQl api
+        $headers = @{
+            Authorization = ("Bearer {0}" -f $this.Token)
+        }
+
+        $query = @"
+query {
+    repository(owner:"$($this.Org)", name:"$($this.Repo)"){
+        pullRequest(number: $prID) {
+            comments(first: 100) {
+                edges {
+                    node {
+                        id
+                        isMinimized
+                        body
+                        author {
+                            login
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+"@
+        $payload = @{
+            query=$query
+        }
+        $body = ConvertTo-Json $payload
+        $response= Invoke-RestMethod -Uri "https://api.github.com/graphql" -Headers $headers -Method "POST" -Body $body
+        # loop over the result and remove all the extra noise we are not interested in
+        $comments = [System.Collections.ArrayList]@()
+        foreach ($edge in $response.data.repository.pullRequest.comments.edges) {
+            $commentId = $edge.node.id
+            $isMinimized = $edge.node.isMinimized
+            $author = $edge.node.author.login
+            $body = $edge.node.body
+            $comments.Add([GitHubComment]::new($commentId, $author, $body, $isMinimized))
+        }
+        # at this point, we have the comments for the PR, but not the comments of the commits of the PR, yes, confusing. The github UI
+        # contains 2 sets of comments:
+        # 1. Comments on a PR (which is an issue really)
+        # 2. Comments on the commits that are part of the PR
+        #
+        # We are missing those in 2, we can get those with a second query
+
+        $query = @"
+query{
+    repository(owner:"$($this.Org)", name:"$($this.Repo)") {
+        pullRequest(number: $prID){
+            commits(first:100) {
+                edges {
+                    node {
+                        commit {
+                            ... on Commit {
+                                oid
+                                message
+                            } 
+                            comments (first:100) {
+                                edges {
+                                    node {
+                                        id
+                                        body
+                                        author {
+                                            login
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+"@
+        $payload = @{
+            query=$query
+        }
+        $body = ConvertTo-Json $payload
+        $response= Invoke-RestMethod -Uri "https://api.github.com/graphql" -Headers $headers -Method "POST" -Body $body
+        foreach ($edge in $response.data.repository.pullRequest.commits.edges) {
+            # at this point a node is a commit, which has the following:
+            # commit
+            #   oid
+            #   message
+            #   comments
+            #       edges
+            #
+            # we are interested in looping for the comments
+            foreach ($commentEdge in $edge.node.commit.comments.edges) {
+                $commentId = $commentEdge.node.id
+                $isMinimized = $commentEdge.node.isMinimized
+                $author = $commentEdge.node.author.login
+                $body = $commentEdge.node.body
+                $comments.Add([GitHubComment]::new($commentId, $author, $body, $isMinimized))
+            }
+        }
+        return $comments
+    }
+
+    [void] MinimizeComments($comments) {
+        $headers = @{
+            Authorization = ("Bearer {0}" -f $this.Token)
+        }
+        # we cannot do a mutation with all the comments :/ but we can loop and do it
+        foreach($c in $comments) {
+
+        $mutation =@"
+mutation {
+    __typename
+    minimizeComment(
+        input: {
+            subjectId: "$($c.Id)",
+            clientMutationId: "xamarin-macios-ci"
+            classifier: OUTDATED
+        }
+    ) {
+        clientMutationId
+    }
+}
+"@
+            $payload = @{
+                query=$mutation
+            }
+            $body = ConvertTo-Json $payload
+            Write-Host "$body"
+            $response= Invoke-RestMethod -Uri "https://api.github.com/graphql" -Headers $headers -Method "POST" -Body $body
+            Write-Host "Respose $($response.errors)"
+        } # foreach
+    }
 }
 
 <# 
@@ -293,7 +457,11 @@ function New-GitHubCommentsObject {
         $Hash
 
     )
-    return [GitHubComments]::new($Org, $Repo, $Token, $Hash)
+    if ($Hash) {
+        return [GitHubComments]::new($Org, $Repo, $Token, $Hash)
+    } else {
+        return [GitHubComments]::new($Org, $Repo, $Token)
+    }
 }
 
 <#

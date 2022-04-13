@@ -14,6 +14,26 @@ steps:
   persistCredentials: true
   path: s/xamarin-macios
 
+
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - pwsh: |
+      Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/MaciosCI.psd1
+      $comments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+
+      $prId = $configuration.BuildSourceBranch.Replace("refs/pull/", "").Replace("/merge", "")
+      $prComments = comments.GetCommentsForPR($prId)
+
+      $botComments = [System.Collections.ArrayList]@()
+      foreach ($c in $prComments) {
+        if ($c.Author -eq "vs-mobiletools-engineering-service2") {
+          if ($c.Body.Contains("[PR Build]") -or $c.Body.Contains("[CI Build]")) {
+            $botComments.Add($c)
+          }
+        }
+      }
+      $comments.MinimizeComments($botComments)
+    displayName: Clear past comments
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/MaciosCI.psd1
 
