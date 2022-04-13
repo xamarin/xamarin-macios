@@ -298,6 +298,20 @@ stages:
         steps:
         - template: templates/governance-checks.yml
 
+
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - stage: clean
+    displayName: 'Clean up'
+    dependsOn: []
+    jobs:
+      -job:
+        displayName: 'Clean comments'
+        pool:
+          vmImage: windows-latest
+        steps:
+          - template: templates/common/clean.yml
+
+
 - stage: build_packages
   displayName: 'Build'
   dependsOn: []
