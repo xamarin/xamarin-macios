@@ -427,9 +427,7 @@ mutation {
                 query=$mutation
             }
             $body = ConvertTo-Json $payload
-            Write-Host "$body"
             $response= Invoke-RestMethod -Uri "https://api.github.com/graphql" -Headers $headers -Method "POST" -Body $body
-            Write-Host "Respose $($response.errors)"
         } # foreach
     }
 }
