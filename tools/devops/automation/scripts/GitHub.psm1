@@ -172,6 +172,7 @@ class GitHubComments {
     [ValidateNotNullOrEmpty ()][string] $Repo
     [ValidateNotNullOrEmpty ()][string] $Token
     [string] $Hash
+    hidden static [string] $GitHubGraphQLEndpoint = "https://api.github.com/graphql"
 
     GitHubComments (
         $githubOrg,
@@ -301,6 +302,7 @@ class GitHubComments {
 
     [object] GetCommentsForPR ($prId) {
         # build the query, create the json and perform a rest request againt the grapichQl api
+        $url = [GitHubComments]::GitHubGraphQLEndpoint
         $headers = @{
             Authorization = ("Bearer {0}" -f $this.Token)
         }
@@ -329,7 +331,7 @@ query {
             query=$query
         }
         $body = ConvertTo-Json $payload
-        $response= Invoke-RestMethod -Uri "https://api.github.com/graphql" -Headers $headers -Method "POST" -Body $body
+        $response = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $body
         # loop over the result and remove all the extra noise we are not interested in
         $comments = [System.Collections.ArrayList]@()
         foreach ($edge in $response.data.repository.pullRequest.comments.edges) {
@@ -381,7 +383,7 @@ query{
             query=$query
         }
         $body = ConvertTo-Json $payload
-        $response= Invoke-RestMethod -Uri "https://api.github.com/graphql" -Headers $headers -Method "POST" -Body $body
+        $response= Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $body
         foreach ($edge in $response.data.repository.pullRequest.commits.edges) {
             # at this point a node is a commit, which has the following:
             # commit
@@ -427,7 +429,8 @@ mutation {
                 query=$mutation
             }
             $body = ConvertTo-Json $payload
-            $response= Invoke-RestMethod -Uri "https://api.github.com/graphql" -Headers $headers -Method "POST" -Body $body
+            $url = [GitHubComments]::GitHubGraphQLEndpoint
+            $response= Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $body
         } # foreach
     }
 }
