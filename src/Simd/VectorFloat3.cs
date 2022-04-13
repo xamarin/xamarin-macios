@@ -13,6 +13,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 // This type does not come from the CoreGraphics framework; it's defined in /usr/include/simd/vector_types.h
 #if NET
@@ -21,6 +22,12 @@ namespace CoreGraphics
 namespace OpenTK
 #endif
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NVector3 : IEquatable<NVector3>
 	{

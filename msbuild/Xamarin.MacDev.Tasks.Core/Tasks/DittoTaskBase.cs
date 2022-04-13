@@ -35,7 +35,7 @@ namespace Xamarin.MacDev.Tasks
 
 		// This property is required for XVS to work properly, even though it's not used for anything in the targets.
 		[Output]
-		public ITaskItem[] CopiedFiles { get; set; }
+		public ITaskItem [] CopiedFiles { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 

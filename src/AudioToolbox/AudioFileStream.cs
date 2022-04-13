@@ -40,6 +40,7 @@ using Foundation;
 
 using OSStatus = System.Int32;
 using AudioFileStreamID = System.IntPtr;
+using System.Runtime.Versioning;
 
 namespace AudioToolbox {
 
@@ -87,6 +88,12 @@ namespace AudioToolbox {
 		InfoDictionary=0x696e666f,
 	}	
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class PropertyFoundEventArgs : EventArgs {
 		public PropertyFoundEventArgs (AudioFileStreamProperty propertyID, AudioFileStreamPropertyFlag ioFlags)
 		{
@@ -103,6 +110,12 @@ namespace AudioToolbox {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class PacketReceivedEventArgs : EventArgs {
 		public PacketReceivedEventArgs (int numberOfBytes, IntPtr inputData, AudioStreamPacketDescription []? packetDescriptions)
 		{
@@ -119,7 +132,13 @@ namespace AudioToolbox {
 			return String.Format ("Packet (Bytes={0} InputData={1} PacketDescriptions={2}", Bytes, InputData, PacketDescriptions?.Length ?? -1);
 		}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AudioFileStream : IDisposable {
 		IntPtr handle;
 		GCHandle gch;

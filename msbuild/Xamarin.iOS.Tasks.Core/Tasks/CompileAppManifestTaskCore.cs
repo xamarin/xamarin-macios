@@ -10,6 +10,8 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
+#nullable enable
+
 namespace Xamarin.iOS.Tasks
 {
 	public abstract class CompileAppManifestTaskCore : CompileAppManifestTaskBase
@@ -56,13 +58,13 @@ namespace Xamarin.iOS.Tasks
 			if (!plist.ContainsKey (ManifestKeys.CFBundleSupportedPlatforms))
 				plist[ManifestKeys.CFBundleSupportedPlatforms] = new PArray { SdkPlatform };
 
-			string dtCompiler = null;
-			string dtPlatformBuild = null;
-			string dtSDKBuild = null;
-			string dtPlatformName = null;
-			string dtPlatformVersion = null;
-			string dtXcode = null;
-			string dtXcodeBuild = null;
+			string? dtCompiler = null;
+			string? dtPlatformBuild = null;
+			string? dtSDKBuild = null;
+			string? dtPlatformName;
+			string? dtPlatformVersion = null;
+			string? dtXcode = null;
+			string? dtXcodeBuild = null;
 
 			if (!SdkIsSimulator) {
 				dtCompiler = sdkSettings.DTCompiler;
@@ -138,9 +140,9 @@ namespace Xamarin.iOS.Tasks
 			return !Log.HasLoggedErrors;
 		}
 
-		void SetValueIfNotNull (PDictionary dict, string key, string value)
+		void SetValueIfNotNull (PDictionary dict, string key, string? value)
 		{
-			if (value == null)
+			if (value is null)
 				return;
 			SetValue (dict, key, value);
 		}
@@ -158,7 +160,7 @@ namespace Xamarin.iOS.Tasks
 					for (int i = 0; i < array.Count; i++) {
 						var value = array[i] as PString;
 
-						if (value == null || !architectureValues.Contains (value.Value))
+						if (value is null || !architectureValues.Contains (value.Value))
 							continue;
 
 						array.RemoveAt (i);

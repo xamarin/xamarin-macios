@@ -267,6 +267,9 @@ namespace MediaPlayer {
 		
 #if NET
 		[SupportedOSPlatform ("ios9.2")]
+		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,2)]
 #endif
@@ -278,6 +281,9 @@ namespace MediaPlayer {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -289,6 +295,9 @@ namespace MediaPlayer {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -300,6 +309,9 @@ namespace MediaPlayer {
 
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
+		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,3)]
 #endif
@@ -313,6 +325,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("tvos14.5")]
 		[SupportedOSPlatform ("macos11.3")]
 		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (7,4)]
 		[TV (14,5)]

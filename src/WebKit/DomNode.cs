@@ -22,9 +22,13 @@
 //
 
 using System;
+using System.Runtime.Versioning;
 
 namespace WebKit {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class DomEventArgs : EventArgs {
 		public DomEventArgs (DomEvent evt)
 		{

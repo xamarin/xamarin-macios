@@ -14,6 +14,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 #if NET
 using Vector4d = global::CoreGraphics.NVector4d;
@@ -28,6 +29,12 @@ namespace CoreGraphics
 namespace OpenTK
 #endif
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct NMatrix4d : IEquatable<NMatrix4d>
 	{
