@@ -51,7 +51,7 @@ steps:
     $statuses = New-GitHubStatusesObject -Org "${{ parameters.org }}" -Repo "${{ parameters.repo }}" -Token "${{ parameters.githubToken }}"
     $statuses.SetStatus("${{ parameters.status }}", "${{ parameters.description }}", "${{ parameters.context }}", "${{ parameters.targetUrl }}")
   displayName: ${{ parameters.displayName }}
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
   continueOnError: ${{ parameters.continueOnError }}
   condition: ${{ parameters.condition }}
   timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
