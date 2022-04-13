@@ -116,7 +116,7 @@ class GitHubStatuses {
             Authorization = ("token {0}" -f $this.Token)
         }
 
-        $url = [GitHubStatuses]::GetStatusUrl()
+        $url = $this.GetStatusUrl()
 
         # Check if the status was already set, if it was we will override yet print a message for the user to know this action was done.
         $presentStatuses = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "GET" -ContentType 'application/json' }
@@ -146,6 +146,32 @@ class GitHubStatuses {
 
         return Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' }
     }
+
+    [object] SetStatus($status, $description, $context) {
+        return $this.SetStatus($status, $description, $context, $null)
+    }
+}
+
+<#
+    .SYNOPSIS
+        Creates a new GitHubComments object from that can be used to create comments for the build.
+#>
+function New-GitHubStatusesObject {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Org,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Repo,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Token
+    )
+    return [GitHubStatuses]::new($Org, $Repo, $Token)
 }
 
 class GitHubComments {
@@ -1182,3 +1208,4 @@ Export-ModuleMember -Function Push-RepositoryDispatch
 
 # new future API that uses objects.
 Export-ModuleMember -Function New-GitHubCommentsObject
+Export-ModuleMember -Function New-GitHubStatusesObject
