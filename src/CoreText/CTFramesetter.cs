@@ -41,6 +41,12 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFramesetter : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTFramesetter (NativeHandle handle, bool owns)
@@ -98,6 +104,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,14)]
 		[iOS (12,0)]
@@ -111,6 +118,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,14)]
 		[iOS (12,0)]

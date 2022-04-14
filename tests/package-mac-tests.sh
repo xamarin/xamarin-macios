@@ -15,7 +15,9 @@ rm -Rf "$DIR"
 mkdir -p "$DIR"
 
 make test.config
-source test.config
+cat test.config
+XCODE_DEVELOPER_ROOT=$(grep ^XCODE_DEVELOPER_ROOT= test.config | sed 's/.*=//')
+MAC_DESTDIR=$(grep ^MAC_DESTDIR= test.config | sed 's/.*=//')
 export MD_APPLE_SDK_ROOT="$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")"
 export XAMMAC_FRAMEWORK_PATH=$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XamarinMacFrameworkRoot=$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
@@ -52,6 +54,7 @@ for app in linker/*/*/dotnet/*/bin/*/*/*/*.app */dotnet/*/bin/*/*/*/*.app; do
 done
 
 $CP -p packaged-macos-tests.mk "$DIR/tests"
+$CP -p run-with-timeout.sh "$DIR/tests"
 $CP -p ../Make.config "$DIR"
 $CP -p ../Make.versions "$DIR"
 $CP -p test-dependencies.sh "$DIR"

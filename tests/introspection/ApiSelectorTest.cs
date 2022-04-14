@@ -1159,6 +1159,11 @@ namespace Introspection {
 			// NSAppleEventDescriptor
 			case "initListDescriptor":
 			case "initRecordDescriptor":
+			// SCContentFilter
+			case "initWithDisplay:excludingApplications:exceptingWindows:":
+			case "initWithDisplay:excludingWindows:":
+			case "initWithDisplay:includingApplications:exceptingWindows:":
+			case "initWithDisplay:includingWindows:":
 				return true;
 			default:
 				return false;

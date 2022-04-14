@@ -43,7 +43,12 @@ using AudioFileID = System.IntPtr;
 namespace AudioToolbox {
 
 	// AudioFormatListItem
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
@@ -93,6 +98,12 @@ namespace AudioToolbox {
         // '!dat'
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioValueRange
 	{
@@ -106,6 +117,12 @@ namespace AudioToolbox {
 		EqualPower = 1
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AudioBalanceFade
 	{
 #if !COREBUILD
@@ -180,6 +197,12 @@ namespace AudioToolbox {
 		VectorBasedPanning			= 4
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AudioPanningInfo
 	{
 #if !COREBUILD
@@ -253,6 +276,12 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	static partial class AudioFormatPropertyNative
 	{
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -391,6 +420,9 @@ namespace AudioToolbox {
 
 #if !MONOMAC
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios8.0")]
 #if IOS
 		[Obsolete ("Starting with ios8.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

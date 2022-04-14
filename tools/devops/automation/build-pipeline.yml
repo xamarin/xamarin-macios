@@ -298,11 +298,25 @@ stages:
         steps:
         - template: templates/governance-checks.yml
 
+
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - stage: clean
+    displayName: 'Clean up'
+    dependsOn: []
+    jobs:
+      - job:
+        displayName: 'Clean comments'
+        pool:
+          vmImage: windows-latest
+        steps:
+          - template: templates/common/clean.yml
+
+
 - stage: build_packages
   displayName: 'Build'
   dependsOn: []
   jobs:
-    - template: templates/build/stage.yml
+    - template: templates/build/build-stage.yml
       parameters:
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
@@ -311,9 +325,22 @@ stages:
         gitHubToken: ${{ variables['GitHub.Token'] }}
         xqaCertPass: $(xqa--certificates--password)
         enableDotnet: ${{ parameters.enableDotnet }}
-        enableAPIDiff: ${{ parameters.enableAPIDiff }}
         skipESRP: ${{ parameters.skipESRP }}
         pool: ${{ parameters.pool }}
+
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
+  - stage: generate_api_diff
+    displayName: 'API diff'
+    dependsOn: []
+    jobs:
+      - template: templates/build/api-diff-stage.yml
+        parameters:
+          vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+          keyringPass: $(pass--lab--mac--builder--keychain)
+          gitHubToken: ${{ variables['GitHub.Token'] }}
+          xqaCertPass: $(xqa--certificates--password)
+          enableDotnet: ${{ parameters.enableDotnet }}
+          pool: ${{ parameters.pool }}
 
 # .NET 6 Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(parameters.forceInsertion, true))) }}:

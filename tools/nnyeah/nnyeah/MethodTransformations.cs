@@ -5,11 +5,10 @@ using Mono.Cecil.Cil;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class MethodTransformations {
 		static List<Transformation>? allTransforms;
 		static Dictionary<string, Transformation>? transformTable;
-		const string ConvertibleMessage = "IConvertible interfaces are not supported yet. If this code gets called, it will fail. Consider contacting the library maintainer to request a dotnet 6 upgrade.";
 
 		public Dictionary<string, Transformation> GetTransforms (ModuleDefinition module, Func<List<bool>, CustomAttribute> attrBuilder)
 		{
@@ -193,12 +192,32 @@ namespace nnyeah {
 					Instruction.Create (OpCodes.Call, mref)
 				}));
 
-			//"System.nint System.nint::op_Explicit(System.nfloat)"
-			//
-			//"System.Void System.nint::CopyArray(System.IntPtr,System.nint[],System.Int32,System.Int32)"
-			//"System.Void System.nint::CopyArray(System.nint[],System.Int32,System.IntPtr,System.Int32)"
-			//
+			var marshalTypeReference = new TypeReference ("System.Runtime.InteropServices", "Marshal", module, module.TypeSystem.CoreLibrary);
+			mref = new MethodReference ("CopyArray", module.TypeSystem.Void, marshalTypeReference);
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.IntPtr));
+			mref.Parameters.Add (new ParameterDefinition (new ArrayType (module.TypeSystem.IntPtr)));
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
+			mref = module.ImportReference (mref);
+			allTransforms.Add (new Transformation ("System.Void System.nint::CopyArray(System.IntPtr,System.nint[],System.Int32,System.Int32)",
+				TransformationAction.Replace,
+				new List<Instruction> () {
+					Instruction.Create (OpCodes.Call, mref)
+				}));
 
+			mref = new MethodReference ("CopyArray", module.TypeSystem.Void, marshalTypeReference);
+			mref.Parameters.Add (new ParameterDefinition (new ArrayType (module.TypeSystem.IntPtr)));
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.IntPtr));
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
+			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
+			mref = module.ImportReference (mref);
+			allTransforms.Add (new Transformation ("System.Void System.nint::CopyArray(System.nint[],System.Int32,System.IntPtr,System.Int32)",
+				TransformationAction.Replace,
+				new List<Instruction> () {
+					Instruction.Create (OpCodes.Call, mref)
+				}));
+
+			//"System.nint System.nint::op_Explicit(System.nfloat)"
 
 			// nuint
 			mref = new MethodReference ("CompareTo", module.TypeSystem.Int32, module.TypeSystem.UIntPtr);
@@ -342,10 +361,6 @@ namespace nnyeah {
 				}));
 
 			//"System.nuint System.nuint::op_Explicit(System.nfloat)"
-			//
-			//"System.Void System.nuint::CopyArray(System.IntPtr,System.nuint[],System.Int32,System.Int32)"
-			//"System.Void System.nuint::CopyArray(System.nuint[],System.Int32,System.IntPtr,System.Int32)"
-			//
 
 			transformTable = new Dictionary<string, Transformation> ();
 
@@ -579,21 +594,21 @@ namespace nnyeah {
 				"System.Void System.nint::.cctor()"
 				),
 
-			new Transformation ("System.Boolean System.nint::System.IConvertible.ToBoolean(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Byte System.nint::System.IConvertible.ToByte(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Char System.nint::System.IConvertible.ToChar(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.DateTime System.nint::System.IConvertible.ToDateTime(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Decimal System.nint::System.IConvertible.ToDecimal(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Double System.nint::System.IConvertible.ToDouble(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Int16 System.nint::System.IConvertible.ToInt16(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Int32 System.nint::System.IConvertible.ToInt32(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Int64 System.nint::System.IConvertible.ToInt64(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.SByte System.nint::System.IConvertible.ToSByte(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Single System.nint::System.IConvertible.ToSingle(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.UInt16 System.nint::System.IConvertible.ToUInt16(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.UInt32 System.nint::System.IConvertible.ToUInt32(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.UInt64 System.nint::System.IConvertible.ToUInt64(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Object System.nint::System.IConvertible.ToType(System.Type,System.IFormatProvider)", ConvertibleMessage),
+			new Transformation ("System.Boolean System.nint::System.IConvertible.ToBoolean(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Byte System.nint::System.IConvertible.ToByte(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Char System.nint::System.IConvertible.ToChar(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.DateTime System.nint::System.IConvertible.ToDateTime(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Decimal System.nint::System.IConvertible.ToDecimal(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Double System.nint::System.IConvertible.ToDouble(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int16 System.nint::System.IConvertible.ToInt16(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int32 System.nint::System.IConvertible.ToInt32(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int64 System.nint::System.IConvertible.ToInt64(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.SByte System.nint::System.IConvertible.ToSByte(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Single System.nint::System.IConvertible.ToSingle(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt16 System.nint::System.IConvertible.ToUInt16(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt32 System.nint::System.IConvertible.ToUInt32(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt64 System.nint::System.IConvertible.ToUInt64(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Object System.nint::System.IConvertible.ToType(System.Type,System.IFormatProvider)", Errors.N0001),
 
 			// nuint
 			new Transformation(
@@ -815,21 +830,32 @@ namespace nnyeah {
 				"System.Void System.nuint::.cctor()"
 				),
 
-			new Transformation ("System.Boolean System.nuint::System.IConvertible.ToBoolean(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Byte System.nuint::System.IConvertible.ToByte(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Char System.nuint::System.IConvertible.ToChar(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.DateTime System.nuint::System.IConvertible.ToDateTime(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Decimal System.nuint::System.IConvertible.ToDecimal(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Double System.nuint::System.IConvertible.ToDouble(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Int16 System.nuint::System.IConvertible.ToInt16(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Int32 System.nuint::System.IConvertible.ToInt32(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Int64 System.nuint::System.IConvertible.ToInt64(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.SByte System.nuint::System.IConvertible.ToSByte(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Single System.nuint::System.IConvertible.ToSingle(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.UInt16 System.nuint::System.IConvertible.ToUInt16(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.UInt32 System.nuint::System.IConvertible.ToUInt32(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.UInt64 System.nuint::System.IConvertible.ToUInt64(System.IFormatProvider)", ConvertibleMessage),
-			new Transformation ("System.Object System.nuint::System.IConvertible.ToType(System.Type,System.IFormatProvider)", ConvertibleMessage),
+			new Transformation ("System.Boolean System.nuint::System.IConvertible.ToBoolean(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Byte System.nuint::System.IConvertible.ToByte(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Char System.nuint::System.IConvertible.ToChar(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.DateTime System.nuint::System.IConvertible.ToDateTime(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Decimal System.nuint::System.IConvertible.ToDecimal(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Double System.nuint::System.IConvertible.ToDouble(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int16 System.nuint::System.IConvertible.ToInt16(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int32 System.nuint::System.IConvertible.ToInt32(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Int64 System.nuint::System.IConvertible.ToInt64(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.SByte System.nuint::System.IConvertible.ToSByte(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Single System.nuint::System.IConvertible.ToSingle(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt16 System.nuint::System.IConvertible.ToUInt16(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt32 System.nuint::System.IConvertible.ToUInt32(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.UInt64 System.nuint::System.IConvertible.ToUInt64(System.IFormatProvider)", Errors.N0001),
+			new Transformation ("System.Object System.nuint::System.IConvertible.ToType(System.Type,System.IFormatProvider)", Errors.N0001),
+
+			// why warnings for this?
+			// Because in .NET 6 there is no direct equivalent of this call.
+			// In order to support this, we need to inject helper methods that do the actual
+			// copying and revector to those helpers.
+			// Not doing this right now since a survey of nuget.org shows that these methods
+			// are never called in the wild.
+			new Transformation ("System.Void System.nuint::CopyArray(System.IntPtr,System.nuint[],System.Int32,System.Int32)",
+				Errors.N0002),
+			new Transformation ("System.Void System.nuint::CopyArray(System.nuint[],System.Int32,System.IntPtr,System.Int32)",
+				Errors.N0002),
 		};
 	}
 }

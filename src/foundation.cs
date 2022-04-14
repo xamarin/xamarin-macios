@@ -538,7 +538,7 @@ namespace Foundation
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSStringDrawingContext context);
 #endif
 
-		[NoMac]
+		[MacCatalyst (13, 1)][TV (9, 0)][Mac (10, 0)][iOS (6, 0)]
 		[Export ("size")]
 		CGSize Size { get; }
 
@@ -13882,7 +13882,6 @@ namespace Foundation
 	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	[NoMacCatalyst]
 	partial interface NSHost {
 
 		[Static, Internal, Export ("currentHost")]
