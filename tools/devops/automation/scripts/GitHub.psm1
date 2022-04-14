@@ -326,6 +326,56 @@ class GitHubComments {
         return $this.NewComment($msg)
     }
 
+    [object] NewCommentFromFile(
+        [string] $commentTitle,
+        [string] $commentEmoji,
+        [string] $filePath
+    ) {
+        # build the message, which will be sent to github, users can use markdown
+        $msg = [System.Text.StringBuilder]::new()
+
+        # header
+        $this.WriteCommentHeader($msg, $commentTitle, $commentEmoji)
+        $msg.AppendLine()
+
+        if (-not (Test-Path $filePath -PathType Leaf)) {
+            throw [System.IO.FileNotFoundException]::new($filePath)
+        }
+
+        # content
+        foreach ($line in Get-Content -Path $filePath)
+        {
+            $msg.AppendLine($line)
+        }
+        $msg.AppendLine()
+
+        # footer
+        $this.WriteCommentFooter($msg)
+
+        return $this.NewComment($msg)
+    }
+
+    [object] NewCommentFromMessage(
+        [string] $commentTitle,
+        [string] $commentEmoji,
+        [string] $content
+    ) {
+        $msg = [System.Text.StringBuilder]::new()
+
+        # header
+        $this.WriteCommentHeader($msg, $commentTitle, $commentEmoji)
+        $msg.AppendLine()
+
+        # content
+        $msg.AppendLine($content)
+        $msg.AppendLine()
+
+        # footer
+        $this.WriteCommentFooter($msg)
+
+        return $this.NewComment($msg)
+    }
+
     [object] GetCommentsForPR ($prId) {
         # build the query, create the json and perform a rest request againt the grapichQl api
         $url = [GitHubComments]::GitHubGraphQLEndpoint

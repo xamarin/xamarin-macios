@@ -36,7 +36,21 @@ stages:
     GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
 
   jobs:
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+
+    steps:
+    - template: ../common/configure.yml
+
   - job: run_tests
+    dependsOn:
+    - configure
     displayName: 'macOS tests'
     timeoutInMinutes: 1000
     workspace:
@@ -48,6 +62,10 @@ stages:
         demands: ${{ parameters.demands }}
       ${{ else }}:
         vmImage: ${{ parameters.macPool }}
+
+    variables:
+      PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
 
     steps:
     - template: build.yml
