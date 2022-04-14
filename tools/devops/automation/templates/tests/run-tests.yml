@@ -52,17 +52,15 @@ steps:
 
 # Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this
 # point we were just setting up the agent.
-- pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
-    Set-GitHubStatus -Status "pending" -Context "$Env:CONTEXT" -Description "Running device tests on $Env:CONTEXT"
-  env:
-    BUILD_REVISION: $(Build.SourceVersion)
-    CONTEXT: ${{ parameters.statusContext }}
-    GITHUB_TOKEN: $(GitHub.Token)
-  displayName: Set pending GitHub status
-  continueOnError: true
-  condition: succeededOrFailed() # re-starting the daemon should not be an issue
-  timeoutInMinutes: 5
+- template: ../common/status.yml
+  parameters:
+    status: "pending"
+    description: "Running device tests on ${{ parameters.statusContext }}"
+    context: ${{ parameters.statusContext }}
+    githubToken: $(GitHub.Token)
+    continueOnError: true
+    condition: succeededOrFailed() # re-starting the daemon should not be an issue
+    timeoutInMinutes: 5
 
 - bash: |
     make -C src build/generator-frameworks.g.cs
