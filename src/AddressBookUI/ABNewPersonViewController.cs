@@ -53,14 +53,6 @@ namespace AddressBookUI {
 		}
 	}
 
-#if NET
-	[UnsupportedOSPlatform ("ios9.0")]
-#if IOS
-	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
-#endif
 	partial class ABNewPersonViewController {
 
 		ABPerson? displayedPerson;

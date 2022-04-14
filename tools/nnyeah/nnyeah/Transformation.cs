@@ -5,7 +5,7 @@ using Mono.Cecil.Cil;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class Transformation {
 		static List<Instruction> emptyInstructions = new List<Instruction> ();
 		public Transformation (string operand, TransformationAction action, List<Instruction> instructions)
@@ -26,11 +26,20 @@ namespace nnyeah {
 		{
 		}
 
+		public Transformation (string operand, string warningMessage)
+		{
+			Operand = operand;
+			Action = TransformationAction.Warn;
+			Instructions = new List<Instruction> ();
+			Message = warningMessage;
+		}
+
 		public string Operand { get; private set; }
 		public TransformationAction Action { get; private set; }
 		public List<Instruction> Instructions { get; private set; }
+		public string? Message { get; private set; }
 
-		public void PerformTransform (Instruction old, MethodBody body)
+		public bool TryPerformTransform (Instruction old, MethodBody body)
 		{
 			var il = body.GetILProcessor ();
 			switch (Action) {
@@ -53,7 +62,10 @@ namespace nnyeah {
 				}
 				il.Remove (old);
 				break;
+			case TransformationAction.Warn:
+				return false;
 			}
+			return true;
 		}
 
 		static Instruction AddVariableIfNeeded (MethodBody body, Instruction instr)

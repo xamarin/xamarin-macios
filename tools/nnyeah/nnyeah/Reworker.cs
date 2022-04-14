@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class Reworker {
 		Stream stm;
 		ModuleDefinition module = EmptyModule;
@@ -20,9 +20,15 @@ namespace nnyeah {
 		TypeReference embeddedAttributeTypeRef = EmptyTypeReference;
 		TypeReference nintTypeReference = EmptyTypeReference;
 		TypeReference nuintTypeReference = EmptyTypeReference;
+		TypeReference nfloatTypeReference = EmptyTypeReference;
+		TypeReference newNfloatTypeReference = EmptyTypeReference;
+		ModuleReference newNfloatModuleReference = EmptyModuleReference;
 
 		Dictionary<string, Transformation> methodSubs = new Dictionary<string, Transformation> ();
 		Dictionary<string, Transformation> fieldSubs = new Dictionary<string, Transformation> ();
+
+		public event EventHandler<WarningEventArgs>? WarningIssued;
+		public event EventHandler<TransformEventArgs>? Transformed;
 
 		public Reworker (Stream stm)
 		{
@@ -31,7 +37,7 @@ namespace nnyeah {
 
 		public void Load ()
 		{
-			if (module is not null)
+			if (module != EmptyModule)
 				return;
 			module = ModuleDefinition.ReadModule (stm);
 		}
@@ -57,7 +63,7 @@ namespace nnyeah {
 		void CheckModule ()
 		{
 			if (module == EmptyModule)
-				throw new Exception ("Module is not loaded. Call Load first.");
+				throw new Exception (Errors.E0005);
 		}
 
 		public void Rework (Stream stm)
@@ -70,6 +76,10 @@ namespace nnyeah {
 			AddNativeIntegerAttributeIfNeeded ();
 			module.TryGetTypeReference ("System.nint", out nintTypeReference);
 			module.TryGetTypeReference ("System.nuint", out nuintTypeReference);
+			module.TryGetTypeReference ("System.nfloat", out nfloatTypeReference);
+			newNfloatModuleReference = new ModuleReference ("System.Private.CoreLib");
+			newNfloatTypeReference = new TypeReference ("System.Runtime.InteropServices",
+				"NFloat", null, newNfloatModuleReference, true);
 
 			// load the substitutions
 			methodSubs = LoadMethodSubs ();
@@ -207,6 +217,11 @@ namespace nnyeah {
 				nativeTypes.Add (true);
 				result = type == nintTypeReference ? module.TypeSystem.IntPtr : module.TypeSystem.UIntPtr;
 				return true;
+			} else if (type == nfloatTypeReference) {
+				// changing the type to NFloat doesn't require changing the flags.
+				nativeTypes.Add (false);
+				result = newNfloatTypeReference;
+				return true;
 			} else if (type.IsGenericInstance) {
 				return TryReworkGenericType ((GenericInstanceType) type, nativeTypes, out result);
 			} else if (type.IsArray) {
@@ -255,7 +270,13 @@ namespace nnyeah {
 			}
 
 			foreach (var (instr, trans) in changes) {
-				trans.PerformTransform (instr, body);
+				if (!trans.TryPerformTransform (instr, body)) {
+					WarningIssued?.Invoke (this, new WarningEventArgs (body.Method.DeclaringType.FullName, body.Method.Name, trans.Operand, trans.Message!));
+				} else {
+					var added = (uint) trans.Instructions.Count;
+					var removed = trans.Action == TransformationAction.Remove || trans.Action == TransformationAction.Replace ? (uint) 1 : 0;
+					Transformed?.Invoke (this, new TransformEventArgs (body.Method.DeclaringType.FullName, body.Method.Name, trans.Operand, added, removed));
+				}
 			}
 		}
 
@@ -476,5 +497,6 @@ namespace nnyeah {
 		static TypeDefinition EmptyTypeDefinition = new TypeDefinition ("none", "still_none", TypeAttributes.NotPublic);
 		static TypeReference EmptyTypeReference = new TypeReference ("none", "still_none", null, null);
 		static ModuleDefinition EmptyModule = ModuleDefinition.CreateModule ("ThisIsNotARealModule", ModuleKind.Dll);
+		static ModuleReference EmptyModuleReference = new ModuleReference ("ThisIsNotARealModuleReference");
 	}
 }

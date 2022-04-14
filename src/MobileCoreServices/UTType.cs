@@ -25,6 +25,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -38,6 +40,8 @@ namespace MobileCoreServices {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
@@ -59,6 +63,8 @@ namespace MobileCoreServices {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
@@ -80,6 +86,8 @@ namespace MobileCoreServices {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
@@ -108,6 +116,8 @@ namespace MobileCoreServices {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
@@ -136,7 +146,7 @@ namespace MobileCoreServices {
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* NSString */ UTTypeCreatePreferredIdentifierForTag (IntPtr /* CFStringRef */ tagClassStr, IntPtr /* CFStringRef */ tagStr, IntPtr /* CFStringRef */ conformingToUtiStr);
 
-		public static string CreatePreferredIdentifier (string tagClass, string tag, string conformingToUti)
+		public static string? CreatePreferredIdentifier (string tagClass, string tag, string conformingToUti)
 		{
 			var a = CFString.CreateNative (tagClass);
 			var b = CFString.CreateNative (tag);
@@ -151,7 +161,7 @@ namespace MobileCoreServices {
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* NSString Array */ UTTypeCreateAllIdentifiersForTag (IntPtr /* CFStringRef */ tagClassStr, IntPtr /* CFStringRef */ tagStr, IntPtr /* CFStringRef */ conformingToUtiStr);
 
-		public static string [] CreateAllIdentifiers (string tagClass, string tag, string conformingToUti)
+		public static string? []? CreateAllIdentifiers (string tagClass, string tag, string conformingToUti)
 		{
 			if (tagClass is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tagClass));
@@ -171,6 +181,8 @@ namespace MobileCoreServices {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
@@ -191,6 +203,8 @@ namespace MobileCoreServices {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
@@ -205,7 +219,7 @@ namespace MobileCoreServices {
 		[iOS (8,0)]
 		[Mac (10,10)]
 #endif
-		public static string [] CopyAllTags (string uti, string tagClass)
+		public static string? []? CopyAllTags (string uti, string tagClass)
 		{
 			if (uti is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
@@ -242,7 +256,7 @@ namespace MobileCoreServices {
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* NSString */ UTTypeCopyDescription (IntPtr /* CFStringRef */ utiStr);
 
-		public static string GetDescription (string uti)
+		public static string? GetDescription (string uti)
 		{
 			if (uti is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
@@ -256,7 +270,7 @@ namespace MobileCoreServices {
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* CFStringRef */ UTTypeCopyPreferredTagWithClass (IntPtr /* CFStringRef */ uti, IntPtr /* CFStringRef */ tagClass);
 
-		public static string GetPreferredTag (string uti, string tagClass)
+		public static string? GetPreferredTag (string uti, string tagClass)
 		{
 			if (uti is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
@@ -274,7 +288,7 @@ namespace MobileCoreServices {
 		[DllImport (Constants.CoreServicesLibrary)]
 		extern static IntPtr /* NSDictionary */ UTTypeCopyDeclaration (IntPtr utiStr);
 
-		public static NSDictionary GetDeclaration (string uti)
+		public static NSDictionary? GetDeclaration (string uti)
 		{
 			if (uti is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (uti));
@@ -289,9 +303,9 @@ namespace MobileCoreServices {
 		extern static IntPtr /* NSUrl */ UTTypeCopyDeclaringBundleURL (IntPtr utiStr);
 
 #if NET
-		public static NSUrl GetDeclaringBundleUrl (string uti)
+		public static NSUrl? GetDeclaringBundleUrl (string uti)
 #else
-		public static NSUrl GetDeclaringBundleURL (string uti)
+		public static NSUrl? GetDeclaringBundleURL (string uti)
 #endif
 		{
 			if (uti is null)
@@ -310,6 +324,8 @@ namespace MobileCoreServices {
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("ios14.0")]

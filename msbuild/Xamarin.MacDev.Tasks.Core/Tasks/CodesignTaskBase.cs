@@ -463,6 +463,28 @@ namespace Xamarin.MacDev.Tasks
 				});
 			}
 
+			// The list of codesigned files has two requirements for Windows:
+			// * Only files, no directories
+			// * No absolute paths.
+			for (var i = codesignedFiles.Count - 1; i >= 0; i--) {
+				var item = codesignedFiles [i];
+				// Remove directories
+				if (Directory.Exists (item.ItemSpec)) {
+					codesignedFiles.RemoveAt (i);
+					continue;
+				}
+				if (!Path.IsPathRooted (item.ItemSpec))
+					continue;
+
+				// Make path relative. Unfortunately Path.GetRelativePath isn't available in netstandard2.0, which we're targetting, so use a very simple substitute.
+				var absolutePath = item.ItemSpec;
+				var relativeTo = Environment.CurrentDirectory;
+				if (absolutePath.StartsWith (relativeTo, StringComparison.Ordinal)) {
+					var relativePath = absolutePath.Substring (relativeTo.Length);
+					relativePath = relativePath.TrimStart (Path.DirectorySeparatorChar);
+					codesignedFiles [i] = new TaskItem (relativePath);
+				}
+			}
 			CodesignedFiles = codesignedFiles.ToArray ();
 
 			return !Log.HasLoggedErrors;

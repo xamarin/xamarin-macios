@@ -6,6 +6,8 @@ using System.Linq;
 using Xamarin.iOS.Tasks.Windows.Properties;
 using Xamarin.MacDev;
 
+#nullable enable
+
 namespace Xamarin.iOS.HotRestart.Tasks
 {
 	public class CompileAppManifest : Task
@@ -26,12 +28,12 @@ namespace Xamarin.iOS.HotRestart.Tasks
 		#region Inputs
 
 		[Required]
-		public string AppBundlePath { get; set; }
+		public string AppBundlePath { get; set; } = String.Empty;
 
 		[Required]
-		public string AppManifestPath { get; set; }
+		public string AppManifestPath { get; set; } = String.Empty;
 
-		public string ApplicationTitle { get; set; }
+		public string ApplicationTitle { get; set; } = String.Empty;
 
 		#endregion
 

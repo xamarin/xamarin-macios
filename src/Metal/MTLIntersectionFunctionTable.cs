@@ -8,12 +8,18 @@ using ObjCRuntime;
 
 namespace Metal {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	// add some extension methods to make the API of the protocol nicer
 	public static class MTLIntersectionFunctionTableExtensions {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Mac (11,0)]

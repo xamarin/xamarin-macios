@@ -1,0 +1,231 @@
+# Job that will download the other artifact from the tests job and will publish them in the 
+# vsdrops
+
+###########################################################
+# WARNING WARNING WARNING WARNING WARNING WARNING WARNING #
+###########################################################
+
+# This job is executed on WINDOWS! make sure you DO NOT USE
+# bash or linux file paths on scripts. Another important
+# details is that System.DefaultWorkingDirectory
+# on mac os x points on the top dir while on windows 
+# is the checked out dir
+
+parameters:
+
+- name: statusContext
+  type: string 
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices. 
+
+- name: vsdropsPrefix
+  type: string
+
+- name: testPrefix
+  type: string 
+  default: 'ios' # default context, since we started dealing with iOS devices. 
+
+- name: enableAPIDiff
+  type: boolean
+  default: true
+
+steps:
+
+- checkout: self
+  persistCredentials: true
+  path: s/xamarin-macios
+
+- template: download-artifacts.yml 
+  parameters:
+    runTests: false  # we do not run tests on builds
+    enableAPIDiff: ${{ parameters.enableAPIDiff }}
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+
+    $apiDiffRoot = "$Env:STABLE_APIDIFF_PATH"
+    $filePatterns = @{
+      "iOS" = "^ios-[0-9\-]*\.md$";
+      "macOS" = "^macos-[0-9\-]*\.md$";
+      "tvOS" = "^tvos-[0-9\-]*\.md$";
+      "watchOS" = "^watchos-[0-9\-]*\.md$";
+      "dotnet-iOS" = "^dotnet-ios-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-tvOS" = "^dotnet-tvos-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-MacCatalyst" = "^dotnet-maccatalyst-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-macOS" = "^dotnet-macos-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-legacy-iOS" = "^dotnet-legacy-ios-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-legacy-tvOS" = "^dotnet-legacy-tvos-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-legacy-macOS" = "^dotnet-legacy-macos-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-macCatiOS" = "^dotnet-maccatios-[a-zA-Z0-9\-]*\.md$";
+    }
+
+    [System.Collections.Generic.List[System.Object]]$gistsObj = @()
+    $gists = @{}
+
+    foreach ($key in $filePatterns.Keys) {
+      $filter = $filePatterns[$key]
+      $fileName = Get-ChildItem $apiDiffRoot -Name | Where-Object{$_ -match $filter}  
+      if ($fileName) {
+        $obj = New-GistObjectDefinition -Name $fileName -Path "$apiDiffRoot\$fileName" -Type "markdown"
+        $gistsObj.Add($obj)
+        $files = @($obj)
+        if ($files.Length -gt 0) {
+          # create a gist just for this file 
+          $url = New-GistWithFiles -Description "$key API diff from stable" -Files $files
+          Write-Host "New gist created at $url"
+          $gists[$key] = $url
+        } else {
+          Write-Host "Could not create gist for $obj"
+        }
+      }
+    }
+
+
+    if ($gistsObj.Length -gt 0) {
+      # create a gist with all diffs
+      $url = New-GistWithFiles -Description "API diff from stable (all platforms)" -Files $gistsObj 
+      $gists["index"] = $url
+    }
+
+    # similar dict but for the html links from vsdrops
+    $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/apidiff/;/"
+    $html =  @{
+      "iOS" = $apiDiffRoot + "ios-api-diff.html"; 
+      "macOS" = $apiDiffRoot + "mac-api-diff.html";
+      "tvOS" = $apiDiffRoot + "tvos-api-diff.html";
+      "watchOS" =$apiDiffRoot + "watchos-api-diff.html";
+      "index"= $apiDiffRoot + "api-diff.html";
+      "dotnet-iOS" = $apiDiffRoot + "dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html";
+      "dotnet-tvOS" = $apiDiffRoot + "dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html";
+      "dotnet-MacCatalyst" = $apiDiffRoot + "dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst-api-diff.html";
+      "dotnet-macOS" = $apiDiffRoot + "dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac-api-diff.html";
+      "dotnet-legacy-iOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html";
+      "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html";
+      "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac-api-diff.html";
+      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.MacCatalyst-api-diff.html";
+    }
+
+    # build a json object that will be used by the comment to write the data for users
+    $apiDiffData = @{
+      "gist" = $gists;
+      "html" = $html;
+      "result" = $Env:APIDIFF_BUILT;
+      "message" = $Env:APIDIFF_MESSAGE;
+    }
+    # write to a file to be used by the comment to parse
+    $path =  Join-Path -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY" -ChildPath "apidiff.json"
+    Write-Host "Json path is '$path'"
+    $apiDiffData | ConvertTo-Json | Out-File $path
+    Write-Host "Content of json file:"
+    Get-Content $path
+    Write-Host "##vso[task.setvariable variable=APIDIFF_JSON_PATH]$path"
+  displayName: 'Create API from stable diff gists'
+  timeoutInMinutes: 10
+  env:
+    GITHUB_TOKEN: $(GitHub.Token)
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+
+    $apiDiffRoot = "$Env:STABLE_APID_GENERATOR_DIFF_PATH"
+    $filePatterns = @{
+      "iOS" = "^ios-[a-zA-Z0-9\-]*\.md$";
+      "macOS" = "^macos-[a-zA-Z0-9\-]*\.md$";
+      "tvOS" = "^tvos-[a-zA-Z0-9\-]*\.md$";
+      "watchOS" = "^watchos-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-iOS" = "^dotnet-ios-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-tvOS" = "^dotnet-tvos-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-MacCatalyst" = "^dotnet-maccatalyst-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-macOS" = "^dotnet-macos-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-legacy-iOS" = "^dotnet-legacy-ios-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-legacy-tvOS" = "^dotnet-legacy-tvos-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-legacy-macOS" = "^dotnet-legacy-macos-[a-zA-Z0-9\-]*\.md$";
+      "dotnet-macCatiOS" = "^dotnet-maccatios-[a-zA-Z0-9\-]*\.md$";
+    }
+
+    [System.Collections.Generic.List[System.Object]]$gistsObj = @()
+    $gists = @{}
+
+    foreach ($key in $filePatterns.Keys) {
+      $filter = $filePatterns[$key]
+      $fileName = Get-ChildItem $apiDiffRoot -Name | Where-Object{$_ -match $filter}
+      if ($fileName) {
+        $obj = New-GistObjectDefinition -Name $fileName -Path "$apiDiffRoot\$fileName" -Type "markdown"
+        $gistsObj.Add($obj)
+        $files = @($obj)
+        if ($files.Length -gt 0) {
+          # create a gist just for this file
+          $url = New-GistWithFiles -Description "$key API Generator diffs" -Files $files
+          Write-Host "New gist created at $url"
+          $gists[$key] = $url
+        } else {
+          Write-Host "Could not create gist for $obj"
+        }
+      }
+    }
+
+    if ($gistsObj.Length -gt 0) {
+      # create a gist with all diffs
+      $url = New-GistWithFiles -Description "API Generator diffs" -Files $gistsObj
+      $gists["index"] = $url
+    }
+
+    # similar dict but for the html links from vsdrops
+    $apiDiffRoot="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/apigeneratordiff/;/"
+    $html =  @{
+      "iOS" = $apiDiffRoot + "ios-api-diff.html";
+      "macOS" = $apiDiffRoot + "mac-api-diff.html";
+      "tvOS" = $apiDiffRoot + "tvos-api-diff.html";
+      "watchOS" =$apiDiffRoot + "watchos-api-diff.html";
+      "index"= $apiDiffRoot + "api-diff.html";
+      "dotnet-iOS" = $apiDiffRoot + "dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html";
+      "dotnet-tvOS" = $apiDiffRoot + "dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html";
+      "dotnet-MacCatalyst" = $apiDiffRoot + "dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst-api-diff.html";
+      "dotnet-macOS" = $apiDiffRoot + "dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac-api-diff.html";
+      "dotnet-legacy-iOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html";
+      "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html";
+      "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac-api-diff.html";
+      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.MacCatalyst-api-diff.html";
+    }
+
+    # build a json object that will be used by the comment to write the data for users
+    $apiGeneratorDiffData = @{
+      "gist" = $gists;
+      "html" = $html;
+      "result" = $Env:API_GENERATOR_DIFF_BUILT;
+      "message" = $Env:API_GENERATOR_DIFF_STATUS_MESSAGE;
+    }
+    # write to a file to be used by the comment to parse
+    $path =  Join-Path -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY" -ChildPath "apiGeneratorDiff.json"
+    Write-Host "Json path is '$path'"
+    $apiGeneratorDiffData | ConvertTo-Json | Out-File $path
+    Write-Host "Content of json file:"
+    Get-Content $path
+    Write-Host "##vso[task.setvariable variable=APIGENERATORDIFF_JSON_PATH]$path"
+  displayName: 'Create API from current diff gists'
+  timeoutInMinutes: 10
+  env:
+    GITHUB_TOKEN: $(GitHub.Token)
+
+- pwsh: |
+    $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/$Env:DEVICE_PREFIX/;/tests/vsdrops_index.html"
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
+
+    if ($Env:STABLE_APID_GENERATOR_DIFF_PATH) {
+      $apiGeneratorComment = Join-Path -Path "$Env:STABLE_APID_GENERATOR_DIFF_PATH" -ChildPath "api-diff-comments.md"
+    } else {
+      $apiGeneratorComment = ""
+    }
+
+    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
+    $apiDiffComment = New-APIDiffCommentFromFiles -PRContentPath "$Env:APIGENERATORDIFF_JSON_PATH" -StableContentPath "$Env:APIDIFF_JSON_PATH" -GeneratorContent $apiGeneratorComment
+    $result = $gihubComments.NewCommentFromObject("API Diff", ":clipboard:", $apiDiffComment)
+  env:
+    BUILD_REVISION: $(Build.SourceVersion)
+    CONTEXT: ${{ parameters.statusContext }}
+    DEVICE_PREFIX: ${{ parameters.testPrefix }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
+    TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
+    ACCESSTOKEN: $(System.AccessToken)
+  displayName: 'Create github comment'
+  timeoutInMinutes: 10

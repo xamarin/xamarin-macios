@@ -135,6 +135,36 @@ namespace Xamarin.MacDev.Tasks {
 				output.Add (item);
 			}
 
+			// We may be asked to sign the same item multiple times (in particular for universal .NET builds)
+			// Here we de-duplicate (based on itemspec). We also verify that the metadata is the same between
+			// all deduplicated items, and if not, we show a warning.
+			var grouped = output.GroupBy (v => v.ItemSpec);
+			foreach (var group in grouped) {
+				if (group.Count () < 2)
+					continue;
+
+				var all = group.ToArray ();
+				var firstMetadata = all [0].CloneCustomMetadataToDictionary ();
+				for (var i = 1; i < all.Length; i++) {
+					var nextMetadata = all [i].CloneCustomMetadataToDictionary ();
+					if (nextMetadata.Count != firstMetadata.Count) {
+						Log.LogWarning (MSBStrings.W7095, /* Code signing has been requested multiple times for '{0}', with different metadata. The metadata for one are: '{1}', while the metadata for the other are: '{2}' */ group.Key, string.Join (", ", firstMetadata.Keys), string.Join (", ", nextMetadata.Keys));
+					} else {
+						foreach (var kvp in firstMetadata) {
+							if (!nextMetadata.TryGetValue (kvp.Key, out var nextValue)) {
+								Log.LogWarning (MSBStrings.W7096, /* Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}={2}' has been set for one item, but not the other. */ group.Key, kvp.Key, kvp.Value);
+								continue;
+							}
+							if (nextValue != kvp.Value) {
+								Log.LogWarning (MSBStrings.W7097, /* Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has been values for each item (once it's '{2}', another time it's '{3}'). */ group.Key, kvp.Key, kvp.Value, nextValue);
+								continue;
+							}
+						}
+					}
+					output.Remove (all [i]);
+				}
+			}
+
 			OutputCodesignItems = output.ToArray ();
 
 			return !Log.HasLoggedErrors;
@@ -197,6 +227,9 @@ namespace Xamarin.MacDev.Tasks {
 					continue;
 				// Don't recurse into the Watch directory, for the same reason
 				if (relativePath.StartsWith ("Watch" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+					continue;
+				// Don't sign symlinks, just the real file (this avoids trying to sign the same file multiple times through a symlink)
+				if (PathUtils.IsSymlink (entry))
 					continue;
 
 				if (entry.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase) && entry.StartsWith (dylibDirectory, StringComparison.OrdinalIgnoreCase)) {
