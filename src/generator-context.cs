@@ -138,7 +138,7 @@ namespace Xamarin.Generator.Traceability
                 Console.Error.WriteLine ();
                 for (int i = 1; i < st.FrameCount; i++) {
                     StackFrame? frame = st.GetFrame (i);
-                    if (frame != null) {
+                    if (frame is not null) {
                         Console.Error.WriteLine ($"{IndentForContext ()}{frame.GetMethod()} in {Path.GetFileName(frame.GetFileName())} at {frame.GetFileLineNumber()}");
                     }
                 }
