@@ -424,7 +424,7 @@ stages:
       useXamarinStorage: False
       testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
       statusContext: 'VSTS: device tests iOS32b'
-      extraBotDemands: 'xismoke-32'
+      extraBotDemands: ['xismoke-32']
       vsdropsPrefix: ${{ variables.vsdropsPrefix }}
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: ${{ variables['GitHub.Token'] }}
