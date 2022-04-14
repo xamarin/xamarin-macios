@@ -50,18 +50,6 @@ steps:
   displayName: 'Fix device discovery (reset launchctl)'
   condition: succeededOrFailed() # making mlaunch verbose should be a non blocker
 
-# Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this
-# point we were just setting up the agent.
-- template: ../common/status.yml
-  parameters:
-    status: "pending"
-    description: "Running device tests on ${{ parameters.statusContext }}"
-    context: ${{ parameters.statusContext }}
-    githubToken: $(GitHub.Token)
-    continueOnError: true
-    condition: succeededOrFailed() # re-starting the daemon should not be an issue
-    timeoutInMinutes: 5
-
 - bash: |
     make -C src build/generator-frameworks.g.cs
     make -C src build/ios/Constants.cs
@@ -223,6 +211,18 @@ steps:
   displayName: Expand test libraries.
   timeoutInMinutes: 10
 
+# Update the status to pending, that way the monitoring person knows that we started running the tests. Up to this
+# point we were just setting up the agent.
+- template: ../common/status.yml
+  parameters:
+    status: "pending"
+    description: "Running device tests on ${{ parameters.statusContext }}"
+    context: ${{ parameters.statusContext }}
+    githubToken: $(GitHub.Token)
+    continueOnError: true
+    condition: succeededOrFailed() # re-starting the daemon should not be an issue
+    timeoutInMinutes: 5
+
 # Run tests. If we are using xamarin-storage add a periodic command to be executed by xharness, else, since we are using vsdrops do nothing.
 - bash: |
     set -x
@@ -250,6 +250,20 @@ steps:
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 720
+
+# set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the commnet, this way
+# we report the result as soon as we have it and ensure that we set the status from pending to the appropiate value.
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+
+    $testResultsPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin/tests/TestSummary.md"
+    $testResult = [TestResults]::new($testResultsPath, "$(runTests.TESTS_JOBSTATUS)", "${{ parameters.statusContext }}")
+
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    $statuses.SetStatus($testResult.GetStatus())
+  displayName: "Set tests status."
+  timeoutInMinutes: 5
 
 # Upload TestSummary as an artifact.
 - task: PublishPipelineArtifact@1
