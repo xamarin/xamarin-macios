@@ -24,7 +24,7 @@ namespace GeneratorTests
 
 			var arguments = new List<string> ();
 #if NET
-			var targetFramework = TargetFramework.DotNet_6_0_iOS_String;
+			var targetFramework = TargetFramework.DotNet_iOS_String;
 			var tf = TargetFramework.Parse (targetFramework);
 			arguments.Add ($"--baselib={Configuration.GetBaseLibrary (tf)}");
 			arguments.Add ($"--attributelib={Configuration.GetBindingAttributePath (tf)}");

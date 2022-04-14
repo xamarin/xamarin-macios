@@ -33,6 +33,12 @@ namespace CoreMedia {
 #endif
 	public delegate nint   CMBufferGetSize (INativeObject buffer);
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CMBufferQueue : NativeObject
 		{
 #if !COREBUILD
@@ -286,6 +292,8 @@ namespace CoreMedia {
 #if NET
 		[SupportedOSPlatform ("ios7.1")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,1)]
 		[Mac (10,10)]
@@ -296,6 +304,8 @@ namespace CoreMedia {
 #if NET
 		[SupportedOSPlatform ("ios7.1")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,1)]
 		[Mac (10, 10)]

@@ -284,6 +284,8 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 15)]
 		[iOS (13, 0)]

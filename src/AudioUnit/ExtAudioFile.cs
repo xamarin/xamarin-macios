@@ -40,6 +40,7 @@ using ObjCRuntime;
 using CoreFoundation;
 using AudioToolbox;
 using Foundation;
+using System.Runtime.Versioning;
 
 namespace AudioUnit
 {
@@ -69,6 +70,12 @@ namespace AudioUnit
 		TooManyFilesOpenError         = -42,
 	}
 
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     public class ExtAudioFile : IDisposable
     {
         IntPtr _extAudioFile;

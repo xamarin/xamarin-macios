@@ -27,6 +27,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
+using System.Runtime.Versioning;
 
 #if NET
 using Vector2 = global::System.Numerics.Vector2;
@@ -59,6 +60,12 @@ namespace SceneKit
     /// <remarks>
     /// The Vector4 structure is suitable for interoperation with unmanaged code requiring four consecutive floats.
     /// </remarks>
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct SCNVector4 : IEquatable<SCNVector4>

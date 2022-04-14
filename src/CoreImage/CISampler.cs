@@ -30,6 +30,7 @@ using Foundation;
 using CoreGraphics;
 using CoreFoundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -45,7 +46,13 @@ namespace CoreImage {
 	public enum CIFilterMode {
 		Nearest, Linear
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CISamplerOptions {
 		public CISamplerOptions () {}
 
@@ -80,7 +87,7 @@ namespace CoreImage {
 			return ret;
 		}
 	}
-	
+
 	public partial class CISampler {
 #if !XAMCORE_3_0 && MONOMAC
 		[Obsolete ("This default constructor does not provide a valid instance")]
