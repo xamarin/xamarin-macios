@@ -30,7 +30,7 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
-    $statuses.SetStatus($(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS), $(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE), "API Diff (PR)")
+    $statuses.SetStatus("$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS)", "$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE)", "API Diff (PR)")
   displayName: "API diff final status"
   timeoutInMinutes: 5
   condition: succeededOrFailed() # re-starting the daemon should not be an issue
