@@ -5,7 +5,7 @@ Github interaction unit tests.
 Import-Module ./GitHub -Force
 
 Describe 'Set-GitHubStatus' {
-    Context 'with all env variables present' {
+    Context 'with all env variables present' -Skip {
 
         It 'calls the rest method succesfully' {
             # set the required enviroments in the context
@@ -89,7 +89,7 @@ Describe 'Set-GitHubStatus' {
             { Set-GitHubStatus -Status $status -Description $description -Context $context } | Should -Throw
         }
     }
-    Context 'without an env var' {
+    Context 'without an env var' -Skip {
         It 'failed calling the rest method' {
             Mock Invoke-RestMethod {
                 return @{"status"=200;}
@@ -121,7 +121,7 @@ Describe 'Set-GitHubStatus' {
 }
 
 Describe 'New-GitHubComment' {
-    Context 'with all env variables present' {
+    Context 'with all env variables present' -Skip {
 
         BeforeAll {
             $Script:envVariables = @{
@@ -192,7 +192,7 @@ Describe 'New-GitHubComment' {
         }
 
     }
-    Context 'without an env variable' {
+    Context 'without an env variable' -Skip {
         BeforeAll {
             # clear the env vars
             $envVariables = @{
@@ -228,7 +228,7 @@ Describe 'New-GitHubComment' {
 }
 
 Describe New-GitHubCommentFromFile {
-    Context 'file present' {
+    Context 'file present' -Skip {
 
         BeforeAll {
             $Script:tempPath = [System.IO.Path]::GetTempFileName()
@@ -280,7 +280,7 @@ Describe New-GitHubCommentFromFile {
 }
 
 Describe 'New-GitHubSummaryComment' {
-    Context 'all present variables' {
+    Context 'all present variables' -Skip {
 
         BeforeAll {
             # clear the env vars
@@ -436,7 +436,7 @@ Describe 'New-GitHubSummaryComment' {
 
     }
 
-    Context 'missing variables' {
+    Context 'missing variables' -Skip {
 
         BeforeAll {
             $Script:envVariables = @{
@@ -489,7 +489,7 @@ Describe 'Test-JobSuccess' {
 }
 
 Describe 'Get-GitHubPRInfo' {
-    Context 'with all env variables present' {
+    Context 'with all env variables present' -Skip {
 
         BeforeAll {
             $Script:envVariables = @{
@@ -542,7 +542,7 @@ Describe 'Get-GitHubPRInfo' {
         }
 
     }
-    Context 'without an env variable' {
+    Context 'without an env variable' -Skip {
         BeforeAll {
             # clear the env vars
             $envVariables = @{
