@@ -1,0 +1,30 @@
+parameters:
+
+- name: macPool
+  type: string
+  default: "VSEng-VSMac-Xamarin-Shared"
+
+steps:
+- checkout: self
+  path: s/xamarin-macios
+
+- checkout: maccore
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- pwsh: |
+    $macip=$(ipconfig getifaddr en0)
+    echo "##vso[task.setvariable variable=AGENT_NAME;isOutput=true]$(Agent.Name)"
+    echo "##vso[task.setvariable variable=AGENT_POOL;isOutput=true]${{ parameters.macPool }}"
+    echo "##vso[task.setvariable variable=AGENT_IP;isOutput=true]$macip"
+  name: macInfo
+  displayName: Set SDK destination dirs
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $vsts = New-VstsAPI -Org "DevDiv" -Token $(GitHub.Token)
+
+    # get the pool and the agent objects and disable the bot
+    $pool = $vsts.Pools.GetPool("${{ parameters.macPool }}")
+    $agent = $vsts.Agents.GetAgent($pool, $(Agent.Name))
+    $vsts.Agents.SetEnabled($pool, $agent, $False)
+  displayName: "Disable bot"

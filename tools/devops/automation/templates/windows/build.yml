@@ -8,9 +8,24 @@ steps:
 
 - checkout: self
   path: s/xamarin-macios
+
 - checkout: maccore
   persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
 - pwsh : |
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
+
+- pwsh: |
+    Write-Host "Run windows tests."
+  displayName: Run tests
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $vsts = New-VstsAPI -Org "DevDiv" -Token $(GitHub.Token)
+
+    # get the pool and the agent objects and disable the bot
+    $pool = $vsts.Pools.GetPool("$Env:MAC_AGENT_POOL")
+    $agent = $vsts.Agents.GetAgent($pool, $Env:MAC_AGENT_NAME))
+    $vsts.Agents.SetEnabled($pool, $agent, $True)
+  displayName: 'Re-enabled macOS bot'

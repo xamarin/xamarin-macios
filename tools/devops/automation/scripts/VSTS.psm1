@@ -134,9 +134,38 @@ class Pools {
     }
 }
 
-class VSTS {
+class Vsts {
+    [string] $Org
+    hidden [string] $Token
+
     [Pools] $Pools
+
+    VSTS (
+        [string] $org,
+        [string] $token) {
+        $this.Org = $org
+        $this.Token = $token
+
+        # generate the helper objects
+        $this.Pools = [Pools]::new($org, $token)
+        $this.Agents = [Agents]::new($org, $token)
+    }
 }
+
+function New-VstsAPI {
+    param
+    (
+        [Parameter(Mandatory)]
+        [String]
+        $Org,
+
+        [Parameter(Mandatory)]
+        [String]
+        $Token
+    )
+    return [Vsts]::new($Org, $Token)
+}
+
 
 <#
     .SYNOPSIS
