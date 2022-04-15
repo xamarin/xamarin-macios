@@ -3,10 +3,22 @@ class Agent {
 
     Agent (
         [object] $object) {
-        $this.RestObject $object
+        $this.RestObject = $object
     }
 
+    [string] GetID() {
+        return $this.RestObject.id
+    }
+
+    [string] GetName() {
+        return $this.RestObject.name
+    }
+
+    [bool] IsEnabled() {
+        return $this.RestObject.enabled
+    }
 }
+
 
 class Agents {
     [string] $Org
@@ -21,16 +33,23 @@ class Agents {
 
     [object] GetAgent($pool, $name) {
         if (-not $pool) {
-            throw [System.NullArgumentException]::new("pool")
+            throw [System.ArgumentNullException]::new("pool")
         }
         if (-not $name) {
-            throw [System.NullArgumentException]::new("name")
+            throw [System.ArgumentNullException]::new("name")
         }
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?agentName=$name&api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $agents = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
+        if ($agents.count -ne 1) {
+            return $null
+        }
+        return [Agent]::new($agents.value[0])
     }
 
     [object[]] GetAgents($pool) {
         if (-not $pool) {
-            throw [System.NullArgumentException]::new("pool")
+            throw [System.ArgumentNullException]::new("pool")
         }
         $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?api-version=6.0"
         $headers = Get-AuthHeader($this.Token)
@@ -40,6 +59,18 @@ class Agents {
             $result.Add([Agent]::new($a))
         }
         return $result
+    }
+
+    [void] SetEnabled($pool, $agent, $isEnabled) {
+        if (-not $agent) {
+            throw [System.ArgumentNullException]::new("pool")
+        }
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents/$($agent.GetID())?api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $payload = @{
+            enabled = $isEnabled
+        }
+        Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
     }
 }
 
@@ -78,7 +109,7 @@ class Pools {
 
     [object] GetPool ($name) {
         if (-not $name) {
-            throw [System.NullArgumentException]::new("name")
+            throw [System.ArgumentNullException]::new("name")
         }
         $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools?poolName=$name&api-version=6.0"
         $headers = Get-AuthHeader($this.Token)
@@ -104,7 +135,7 @@ class Pools {
 }
 
 class VSTS {
-    [Pools] Pools
+    [Pools] $Pools
 }
 
 <#
