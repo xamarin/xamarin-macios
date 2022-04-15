@@ -314,7 +314,7 @@ namespace Xharness {
 				}
 			} else {
 				args.Add (isSimulator
-					? (MlaunchArgument) new LaunchSimulatorArgument (AppInformation.LaunchAppPath)
+					? (MlaunchArgument) new LaunchSimulatorAppArgument (AppInformation.LaunchAppPath)
 					: new LaunchDeviceArgument (AppInformation.LaunchAppPath));
 			}
 			if (!isSimulator)
