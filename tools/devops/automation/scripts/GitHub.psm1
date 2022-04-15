@@ -93,12 +93,12 @@ class GitHubStatuses {
         $this.Token = $githubToken
     }
 
-    hidden [string] GetStatusUrl() {
+    [string] GetStatusUrl() {
         if ($Env:BUILD_REASON -eq "PullRequest") {
             # the env var is only provided for PR not for builds.
             $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/statuses/$Env:SYSTEM_PULLREQUEST_SOURCECOMMITID"
         } else {
-            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/statuses/$Env:BUILD_REVISION"
+            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/statuses/$Env:BUILD_SOURCEVERSION"
         }
         return $url
     }
