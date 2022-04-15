@@ -30,11 +30,13 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
-    $msg = "$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE)".Replace(":white_check_mark: ", "").Replace(":warning: ", "").Replace(":information_source: ", "")
+    $msg = "$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE)"
+    $msg = $msg.Replace(":white_check_mark: ", "").Replace(":warning: ", "").Replace(":information_source: ", "")
     $statuses.SetStatus("$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS)", $msg, "API Diff (PR)")
   displayName: "API diff final status"
   timeoutInMinutes: 5
   condition: succeededOrFailed() # re-starting the daemon should not be an issue
+  continueOnError: true
 
 - task: ArchiveFiles@1
   displayName: 'Archive API & Generator comparison'
@@ -95,11 +97,13 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
-    $msg = "$(apidiff.APIDIFF_MESSAGE)".Replace(":white_check_mark: ", "").Replace(":warning: ", "").Replace(":information_source: ", "")
+    $msg = "$(apidiff.APIDIFF_MESSAGE)"
+    $msg = $msg.Replace(":white_check_mark: ", "").Replace(":warning: ", "").Replace(":information_source: ", "")
     $statuses.SetStatus("$(apidiff.APIDIFF_STATUS)", $msg, "API Diff (stable)")
   displayName: "API diff final status"
   timeoutInMinutes: 5
   condition: succeededOrFailed() # re-starting the daemon should not be an issue
+  continueOnError: true
 
 - task: ArchiveFiles@1
   displayName: 'Archive API diff (from stable)'
