@@ -566,122 +566,6 @@ function Get-XamarinStorageIndexUrl {
 
 <#
     .SYNOPSIS
-        Sets a new status in github for the current build.
-    .DESCRIPTION
-
-    .PARAMETER Status
-        The status value to be set in GitHub. The available values are:
-
-        * error
-        * failure
-        * pending
-        * success
-
-        If the wrong value is passed a validation error with be thrown.
-
-    .PARAMETER Description
-        The description that will be added with the status update. This allows us to add a human readable string
-        to understand why the status was updated.
-    
-    .PARAMETER Context
-        The context to be used. A status can contain several contexts. The context must be passed to associate
-        the status with a specific event.
-
-    .EXAMPLE
-        Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "VSTS iOS device tests."
-
-    .NOTES
-        This cmdlet depends on the following environment variables. If one or more of the variables is missing an
-        InvalidOperationException will be thrown:
-
-        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
-        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
-        * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
-        * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
-        * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
-#>
-function Set-GitHubStatus {
-    param
-    (
-        [Parameter(Mandatory)]
-        [String]
-        [ValidateScript({
-            $("error", "failure", "pending", "success").Contains($_) #validate that the status is in the range of valid values
-        })]
-        $Status,
-
-        [Parameter(Mandatory)]
-        [String]
-        $Description,
-
-        [Parameter(Mandatory)]
-        [String]
-        $Context,
-
-        [String]
-        $TargetUrl
-    )
-
-    # assert that all the env vars that are needed are present, else we do have an error
-    $envVars = @{
-        "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
-        "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
-        "BUILD_BUILDID" = $Env:BUILD_BUILDID;
-        "BUILD_REVISION" = $Env:BUILD_REVISION;
-        "BUILD_REASON" = $Env:BUILD_REASON;
-        "BUILD_SOURCEBRANCHNAME" = $Env:BUILD_SOURCEBRANCHNAME;
-        "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
-    }
-
-    foreach ($key in $envVars.Keys) {
-        if (-not($envVars[$key])) {
-            Write-Debug "Enviroment varible missing $key"
-            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
-        }
-    }
-
-    if ($Env:BUILD_REASON -eq "PullRequest") {
-        # the env var is only provided for PR not for builds.
-        $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:SYSTEM_PULLREQUEST_SOURCECOMMITID"
-    } else {
-        $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
-    }
-
-    $headers = @{
-        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
-    }
-
-    $requestContext = $Context
-    # Check if the status was already set, if it was we will override yet print a message for the user to know this action was done.
-    $presentStatuses = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "GET" -ContentType 'application/json' }
-
-    # try to find the status with the same context and make a decision, this is not a dict but an array :/ 
-    foreach ($s in $presentStatuses) {
-        # we found a status from a previous build that was a success, we do not want to step on it
-        if (($s.context -eq $Context) -and ($s.state -eq "success")) {
-            Write-Host "WARNING: Found status for $Context because it was already set as a success, overriding result."
-        }
-    }
-
-    # use the GitHub API to set the status for the given commit
-    $detailsUrl = ""
-    if ($TargetUrl) {
-        $detailsUrl = $TargetUrl
-    } else {
-        $detailsUrl = Get-TargetUrl
-    }
-    $payload= @{
-        state = $Status
-        target_url = $detailsUrl
-        description = $Description
-        context = $requestContext
-    }
-
-    return Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' }
-}
-
-<#
-    .SYNOPSIS
         Add a new comment for the commit on GitHub.
 
     .PARAMETER Header
@@ -1041,17 +925,13 @@ function New-GitHubSummaryComment {
 
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
         Write-Host "No test summary found"
-        Set-GitHubStatus -Status "failure" -Description "$prefix Tests failed catastrophically on $Context (no summary found)." -Context $statusContext
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
         if ($Env:TESTS_JOBSTATUS -eq "") {
-            Set-GitHubStatus -Status "error" -Description "Tests didn't execute on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "$prefix Tests didn't execute on $Context." -Description "Tests didn't execute on $Context. $headerLinks"  -Emoji ":x:" -Path $TestSummaryPath
         } elseif (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
-            Set-GitHubStatus -Status "success" -Description "All tests passed on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "$prefix Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
         } else {
-            Set-GitHubStatus -Status "error" -Description "Tests failed on $Context." -Context $statusContext
             $request = New-GitHubCommentFromFile -Header "$prefix Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
         }
     }
@@ -1414,7 +1294,6 @@ function Push-RepositoryDispatch {
 }
 
 # module exports, any other functions are private and should not be used outside the module.
-Export-ModuleMember -Function Set-GitHubStatus
 Export-ModuleMember -Function New-GitHubComment
 Export-ModuleMember -Function New-GitHubCommentFromFile
 Export-ModuleMember -Function New-GitHubSummaryComment 
