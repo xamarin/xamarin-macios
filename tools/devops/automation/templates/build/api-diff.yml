@@ -7,6 +7,17 @@ parameters:
   default: '' # default empty, meaning we are building in CI 
 
 steps:
+
+- template: ../common/status.yml
+  parameters:
+    status: "pending"
+    description: "Generating API diff."
+    context: "API Diff (PR)"
+    githubToken: $(GitHub.Token)
+    continueOnError: true
+    condition: succeededOrFailed() # re-starting the daemon should not be an issue
+    timeoutInMinutes: 5
+
 - bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/vsts-compare.sh
   displayName: 'API & Generator comparison'
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
@@ -15,6 +26,15 @@ steps:
     BUILD_REVISION: 'jenkins'
     PR_ID:  ${{ parameters.prID }} # reusing jenkins vars, to be fixed
 
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+
+    $msg = "$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE)".Replace(":white_check_mark: ", "").Replace(":warning: ", "").Replace(":information_source: ", "")
+    $statuses.SetStatus("$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS)", $msg, "API Diff (PR)")
+  displayName: "API diff final status"
+  timeoutInMinutes: 5
+  condition: succeededOrFailed() # re-starting the daemon should not be an issue
 
 - task: ArchiveFiles@1
   displayName: 'Archive API & Generator comparison'
