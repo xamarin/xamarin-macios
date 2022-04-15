@@ -288,8 +288,7 @@ stages:
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
   - stage: governance_checks
     displayName: 'Governance Checks'
-    dependsOn:
-    - build_packages
+    dependsOn: []
     jobs:
       - job: governance
         displayName: 'Governance Checks'
