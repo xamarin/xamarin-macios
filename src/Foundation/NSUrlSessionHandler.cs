@@ -857,7 +857,13 @@ namespace Foundation {
 			[Preserve (Conditional = true)]
 			public override void WillCacheResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler)
 			{
-				completionHandler (sessionHandler.DisableCaching ? null! : proposedResponse);
+				var inflight = GetInflightData (dataTask);
+
+				if (inflight is null)
+					return;
+				// apple caches post request with a body, which should not happen. https://github.com/xamarin/maccore/issues/2571 
+				var disableCache = sessionHandler.DisableCaching || (inflight.Request.Method == HttpMethod.Post && inflight.Request.Content is not null);
+				completionHandler (disableCache ? null! : proposedResponse);
 			}
 
 			[Preserve (Conditional = true)]

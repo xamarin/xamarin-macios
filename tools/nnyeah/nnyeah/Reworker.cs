@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class Reworker {
 		Stream stm;
 		ModuleDefinition module = EmptyModule;
@@ -63,7 +63,7 @@ namespace nnyeah {
 		void CheckModule ()
 		{
 			if (module == EmptyModule)
-				throw new Exception ("Module is not loaded. Call Load first.");
+				throw new Exception (Errors.E0005);
 		}
 
 		public void Rework (Stream stm)
