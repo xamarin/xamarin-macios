@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS Controller template",
-  "description": "An iOS Controller class",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "Plantilla de controlador de iOS (versión preliminar)",
+  "description": "Clase de controladora iOS",
+  "symbols/namespace/description": "espacio de nombres para el código generado"
 }
