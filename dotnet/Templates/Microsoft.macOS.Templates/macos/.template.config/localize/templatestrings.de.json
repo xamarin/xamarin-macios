@@ -1,7 +1,7 @@
 {
   "author": "Microsoft",
-  "name": "macOS Application (Preview)",
-  "description": "A project for creating a .NET macOS application",
-  "symbols/bundleId/description": "Overrides CFBundleIdentifier in the Info.plist",
-  "symbols/minOSVersion/description": "Overrides SupportedOSPlatformVersion in the project file"
+  "name": "macOS-Anwendung (Vorschau)",
+  "description": "Ein Projekt zum Erstellen einer .NET macOS-Anwendung",
+  "symbols/bundleId/description": "Überschreibt „CFBundleIdentifier“ in „Info.plist“",
+  "symbols/minOSVersion/description": "Überschreibt „SupportedOSPlatformVersion“ in der Projektdatei."
 }
