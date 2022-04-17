@@ -1074,6 +1074,9 @@
             {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
+  <data name="E7085" xml:space="preserve">
+        <value>A tarefa "{0}" não recebeu um valor para o parâmetro necessário "{1}", nem havia metadados "{2}" no recurso {3}.</value>
+    </data>
   <data name="W7085" xml:space="preserve">
         <value>Criando um pacote de recursos de associação compactado porque existem links simbólicos na entrada.</value>
     </data>
@@ -1086,7 +1089,7 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="E7088" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <value>O valor de metadados 'PublishFolderType' '{0}' no item '{1}' não é reconhecido. O arquivo não será copiado para o lote de aplicativos.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1094,14 +1097,14 @@
         </comment>
     </data>
   <data name="E7089" xml:space="preserve">
-        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <value>O arquivo '{0}' não especifica um metadados 'PublishFolderType' e um valor padrão não pôde ser calculado. O arquivo não será copiado para o lote de aplicativos.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: path to a file
         </comment>
     </data>
   <data name="E7090" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <value>O valor de metadados 'PublishFolderType' {0} 'no item' {1} 'não foi reconhecido. O arquivo não será copiado para o lote de aplicativos. Se o arquivo não deve ser copiado para o lote de aplicativos, remova os metadados '{2}' do item.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1117,9 +1120,24 @@
         <value>O arquivo '{0}' não é uma estrutura válida: {1}</value>
     </data>
   <data name="W7093" xml:space="preserve">
-        <value>The binding resource package {0} does not exist.</value>
+        <value>O pacote de recursos de vinculação {0} não existe.</value>
     </data>
   <data name="E7094" xml:space="preserve">
-        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+        <value>O arquivo ou diretório '{0}' não é uma estrutura nem um arquivo dentro de uma estrutura.</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>A assinatura de código foi solicitada várias vezes para '{0}', com metadados diferentes. Os metadados para um são: '{1}', enquanto os metadados para o outro são: '{2}'</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>A assinatura de código foi solicitada várias vezes para '{0}', com metadados diferentes. Os metadados '{1}={2}' foi definido para um item, mas não para o outro.</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>A assinatura de código foi solicitada várias vezes para '{0}', com metadados diferentes. Os metadados '{1}' foram valores para cada item (uma vez que é '{2}', outra vez é '{3}').</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>O valor UIDeviceFamily '6' não é válido para esta plataforma. É válido somente para Mac Catalyst.</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>O valor UIDeviceFamily '6' requer o macOS 11.0. Defina o 'SupportedOSPlatformVersion' no arquivo de projeto para pelo menos 14.0 (a versão do Mac Catalyst equivalente ao macOS 11.0). O valor atual é {0} (equivalente ao macOS {1}).</value>
     </data>
 </root>
