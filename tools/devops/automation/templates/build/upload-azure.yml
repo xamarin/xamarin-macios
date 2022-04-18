@@ -9,9 +9,7 @@ parameters:
 
 steps:
 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
+- template: ../common/checkout.yml
 
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
