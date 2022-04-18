@@ -1,0 +1,37 @@
+parameters:
+- name: vsdropsPrefix
+  type: string
+
+- name: keyringPass
+  type: string
+
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
+- name: enableDotnet
+  type: boolean
+  default: false
+
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
+steps:
+- template: build.yml
+  parameters:
+    runTests: false
+    runDeviceTests: false
+    uploadBinlogs: false
+    signAndNotarize: false
+    vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+    keyringPass: ${{ parameters.keyringPass }}
+    gitHubToken: ${{ parameters.gitHubToken }}
+    xqaCertPass: ${{ parameters.xqaCertPass }}
+    enableDotnet: ${{ parameters.enableDotnet }}
+    buildSteps:
+      - template: api-diff.yml
+        parameters:
+          prID: variables['PrID']
