@@ -77,12 +77,15 @@ cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	STATUS_MESSAGE=":white_check_mark: API Diff (from PR only) (no change)"
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
+	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS;isOutput=true]success"
 elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' "$API_COMPARISON"/*.html | grep data-is-breaking; then
 	STATUS_MESSAGE=":warning: API Diff (from PR only) (:fire: breaking changes :fire:)"
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
+	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS;isOutput=true]error"
 else
 	STATUS_MESSAGE=":information_source: API Diff (from PR only) (please review changes)"
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
+	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS;isOutput=true]error"
 fi
 
 if ! test -s $API_COMPARISON/generator-diff/generator.diff; then

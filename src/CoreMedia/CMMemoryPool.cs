@@ -17,7 +17,12 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	public partial class CMMemoryPool : NativeObject

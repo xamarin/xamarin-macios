@@ -29,6 +29,7 @@ stages:
       artifactName: nuget-signed
       propsArtifactName: package
       signType: Real
+      useDateTimeVersion: true
 
   # Check - "xamarin-macios (Prepare Release Push NuGets)"
   - job: push_signed_nugets

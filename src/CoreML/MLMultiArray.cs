@@ -7,6 +7,8 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -15,8 +17,8 @@ namespace CoreML {
 	public partial class MLMultiArray {
 		static NSNumber[] ConvertArray (nint[] value)
 		{
-			if (value == null)
-				return null;
+			if (value is null)
+				return Array.Empty<NSNumber> ();
 
 			return Array.ConvertAll<nint, NSNumber> (value, NSNumber.FromNInt);
 		}

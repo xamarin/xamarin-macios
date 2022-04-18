@@ -78,13 +78,14 @@ steps:
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
     Import-Module ./MaciosCI.psd1
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
-      Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
+      $statuses.SetStatus("error", "Not enough free space in the host.", "${{ parameters.statusContext }}")
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
     } else {
-      Set-GitHubStatus -Status "pending" -Description "Device tests on VSTS have been started." -Context "$Env:CONTEXT"
+      $statuses.SetStatus("pending", "Device tests on VSTS have been started.", "${{ parameters.statusContext }}")
     }
   env:
     BUILD_REVISION: $(Build.SourceVersion)

@@ -33,6 +33,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
@@ -44,6 +45,12 @@ namespace CoreFoundation {
 
 	public delegate void DispatchIOHandler (DispatchData data, int error);
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class DispatchIO : DispatchObject {
 		[Preserve (Conditional = true)]
 		internal DispatchIO (NativeHandle handle, bool owns) : base (handle, owns)

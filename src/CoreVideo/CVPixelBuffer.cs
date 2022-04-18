@@ -25,7 +25,12 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreVideo {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public partial class CVPixelBuffer : CVImageBuffer {

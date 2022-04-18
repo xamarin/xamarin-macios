@@ -86,6 +86,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (13,0)]
@@ -139,6 +140,12 @@ namespace AudioToolbox {
 	}
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[DebuggerDisplay ("{FormatName}")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioStreamBasicDescription {
@@ -159,6 +166,10 @@ namespace AudioToolbox {
 		const AudioFormatFlags AudioFormatFlagIsBigEndian = 0;
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
 #if MONOMAC
@@ -353,6 +364,12 @@ namespace AudioToolbox {
 #endif // !COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioStreamPacketDescription {
 		public long  StartOffset;
@@ -498,6 +515,12 @@ namespace AudioToolbox {
 	}
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class AudioChannelLabelExtensions
 	{
 		public static bool IsReserved (this AudioChannelLabel value)
@@ -541,6 +564,12 @@ namespace AudioToolbox {
 		RightTopRear               = 1<<26,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioChannelDescription
 	{
@@ -816,6 +845,12 @@ namespace AudioToolbox {
 	}
 
 #if !COREBUILD && !WATCH
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class AudioChannelLayoutTagExtensions
 	{
 		public static AudioChannelBit? ToAudioChannel (this AudioChannelLayoutTag layoutTag)
@@ -842,6 +877,12 @@ namespace AudioToolbox {
 	}
 #endif // !COREBUILD
 	
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[DebuggerDisplay ("{Name}")]
 	public class AudioChannelLayout
 	{
@@ -1153,6 +1194,12 @@ namespace AudioToolbox {
 		Hvxc = 9
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct SmpteTime { // CoreAudio.framework - CoreAudioTypes.h
 		public short Subframes;
@@ -1209,6 +1256,12 @@ namespace AudioToolbox {
 		Type2398      = 11,
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioTimeStamp {
 
@@ -1267,6 +1320,12 @@ namespace AudioToolbox {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioBuffer {
 		public int NumberChannels;
@@ -1281,6 +1340,12 @@ namespace AudioToolbox {
 
 	// CoreAudioClock.h (inside AudioToolbox)
 	// It was a confusion between CA (CoreAudio) and CA (CoreAnimation)
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CABarBeatTime {
 		public /* SInt32 */ int Bar;

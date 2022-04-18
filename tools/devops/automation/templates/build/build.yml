@@ -58,7 +58,16 @@ steps:
       $branch=$branch.Replace("refs", "origin")
       Write-Host "Checking out branch $branch"
       git checkout $branch
-      git branch -a
+      $hash = git rev-parse HEAD
+      Write-Host "##vso[task.setvariable variable=GIT_HASH;isOutput=true]$hash"
+    name: fix_commit
+    displayName: "Undo Github merge"
+    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
+- ${{ else }}:
+  - pwsh: |
+      $hash = git rev-parse HEAD
+      Write-Host "##vso[task.setvariable variable=GIT_HASH;isOutput=true]$hash"
+    name: fix_commit
     displayName: "Undo Github merge"
     workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
 
@@ -317,9 +326,11 @@ steps:
 - bash: |
     set -x
     set -e
+    echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8
+  name: build
   displayName: 'Build'
   timeoutInMinutes: 180
 
@@ -435,7 +446,7 @@ steps:
       set -e
 
       make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
-      
+
     name: macTestPkg
     displayName: 'Package macOS tests'
     condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
@@ -508,13 +519,12 @@ steps:
   parameters:
     keyringPass: ${{ parameters.keyringPass }}
 
+# if we failed, write a comment and set the pipeline to failure. In this case, we do not want to hide the fact that we failed but we also want
+# to write a comment.
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    New-GitHubComment -Header "Build failed" -Emoji ":fire:" -Description "Build failed for the job '$Env:SYSTEM_JOBDISPLAYNAME'"
+
+    $githubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token) -Hash $Env:GIT_HASH
+    $githubComments.NewCommentFromMessage("Build failed", ":fire:", "Build failed for the job '$(System.JobDisplayName)'")
   condition: failed()
   displayName: 'Report build failure'
-  env:
-    BUILD_REVISION: $(Build.SourceVersion)
-    CONTEXT: "Build"
-    GITHUB_TOKEN: $(GitHub.Token)
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)

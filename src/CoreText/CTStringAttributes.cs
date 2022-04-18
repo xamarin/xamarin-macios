@@ -133,6 +133,12 @@ namespace CoreText {
 #endif // !NET
 #endregion
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTStringAttributes {
 
 		public CTStringAttributes ()
@@ -198,6 +204,8 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
 		[Mac (10,12)]
@@ -243,6 +251,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -324,6 +333,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[Mac (10,12)]
@@ -346,6 +356,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 		[Mac (10,13)]
