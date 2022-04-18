@@ -115,10 +115,17 @@ steps:
     }
 
     # remove empty dirs
-    Get-ChildItem $destinationRoot -Recurse -Force -Directory |
+    $empty = Get-ChildItem $destinationRoot -Recurse -Force -Directory |
       Sort-Object -Property FullName -Descending |
-      Where-Object { $($_ | Get-ChildItem -Force | Select-Object -First 1).Count -eq 0 } |
-      try { Remove-Item -Verbose } catch { $null }
+      Where-Object { $($_ | Get-ChildItem -Force | Select-Object -First 1).Count -eq 0 } 
+    foreach ($d in $empty) {
+      try {
+        Write-Host "Removing $d"
+        Remove-Item -Verbose -Force $d
+      } catch {
+        $null  # do nothing
+      }
+    }
 
     if ($Env:SYSTEM_DEBUG) {
       Get-ChildItem $destinationRoot -Recurse
