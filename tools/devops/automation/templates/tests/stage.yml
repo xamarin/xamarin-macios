@@ -87,6 +87,9 @@ stages:
 
       steps:
       - template: ../common/configure.yml
+        parameters: 
+          uploadArtifacts: false
+          enableDotnet: ${{ parameters.enableDotnet }}
 
   - job: tests
     dependsOn:
