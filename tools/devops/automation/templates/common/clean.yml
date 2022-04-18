@@ -5,7 +5,7 @@ steps:
 - template: checkout.yml
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     $comments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
     $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
