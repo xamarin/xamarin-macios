@@ -88,6 +88,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (11,0)]
 		[iOS (14,0)]
@@ -99,6 +100,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (11,0)]
 		[iOS (14,0)]
@@ -146,7 +148,13 @@ namespace CoreGraphics {
 			return ret;
 		}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CGContextPDF : CGContext {
 		bool closed;
 		
@@ -302,6 +310,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -315,6 +324,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -330,6 +340,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -346,6 +357,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -359,6 +371,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]

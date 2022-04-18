@@ -11,9 +11,16 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace VideoToolbox {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct VTDataRateLimit
 	{
 		public uint NumberOfBytes { get; set; }

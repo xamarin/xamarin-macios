@@ -36,7 +36,12 @@ using ObjCRuntime;
 namespace CoreMedia {
 
 	// Convenience structure
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	public struct TextMarkupColor
@@ -65,7 +70,12 @@ namespace CoreMedia {
 		public float Alpha { get; private set; }
 	}
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	public class CMTextMarkupAttributes : DictionaryContainer
