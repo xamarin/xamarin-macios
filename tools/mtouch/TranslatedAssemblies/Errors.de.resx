@@ -1516,6 +1516,9 @@
 		<value>Der Registrar kann die Blocksignatur für den Delegaten des Typs "{0}" in der Methode "{1}" nicht berechnen, weil die Invoke-Methode des Delegattyps nicht gefunden wurde.
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>Die Registrierungsstelle hat einen nicht optimalen Typ "{0}" gefunden: Der Typ verfügt nicht über einen Konstruktor, der zwei Argumente (ObjCRuntime.NativeHandle, bool) akzeptiert. Es wurde jedoch ein Konstruktor gefunden, der zwei Argumente (System.IntPtr, bool) akzeptiert (und stattdessen verwendet wird). Es wird dringend empfohlen, die Signatur des (System.IntPtr, bool)-Konstruktors in (ObjCRuntime.NativeHandle, bool) zu ändern.</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Der Compiler "{0}" fehlt. Installieren Sie die Xcode-Komponente "Befehlszeilentools".
 		</value>
@@ -1699,6 +1702,11 @@
 		<value>Das Tool "xcrun" hat bei der Suche nach dem Tool "{0}" kein Ergebnis gefunden. (Die Datei "{1}" ist nicht vorhanden.) Überprüfen Sie das Buildprotokoll auf Details.
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>Fehler beim Ausführen der Benutzerdefinierten Linkerschritte. Weitere Informationen finden Sie im Buildprotokoll.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>Interner Konsistenzfehler. Erstellen Sie einen Fehlerbericht unter https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>
