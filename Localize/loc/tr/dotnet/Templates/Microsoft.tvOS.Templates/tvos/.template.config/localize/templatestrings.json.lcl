@@ -21,10 +21,13 @@
       </Item>
       <Item ItemId=";description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[A project for creating a .NET 6 tvOS application]]></Val>
+          <Val><![CDATA[A project for creating a .NET tvOS application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Bir .NET 6 tvOS uygulaması oluşturmaya yönelik proje]]></Val>
+            <Val><![CDATA[Bir .NET tvOS uygulaması oluşturmaya yönelik proje]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[A project for creating a .NET 6 tvOS application]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
