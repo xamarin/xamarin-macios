@@ -41,6 +41,9 @@ using NativeHandle = System.IntPtr;
 #nullable enable
 
 namespace CoreVideo {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class CVDisplayLink : NativeObject {
 		GCHandle callbackHandle;
 		

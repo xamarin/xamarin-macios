@@ -14930,7 +14930,6 @@ namespace AVFoundation {
 		CMTime EndCompositionTime { get; }
 	}
 
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof(AVCaptureSession))]
@@ -15214,7 +15213,7 @@ namespace AVFoundation {
 
 	interface IAVPlaybackCoordinatorPlaybackControlDelegate {}
 
-	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0), MacCatalyst (15,0)]
+	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 #if NET
 	[Protocol, Model]
 #else

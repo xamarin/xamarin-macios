@@ -1,7 +1,4 @@
-$modulePath = "$PSScriptRoot\\Artifacts.psm1"  # windows path separators work on unix and windows
-$scriptBody = "using module $modulePath"
-$script = [ScriptBlock]::Create($scriptBody)
-. $script
+using module ".\\Artifacts.psm1"
 
 Describe "Artifacts tests" {
 

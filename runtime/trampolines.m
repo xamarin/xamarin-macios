@@ -726,7 +726,7 @@ xamarin_release_trampoline (id self, SEL sel)
 
 	pthread_mutex_unlock (&refcount_mutex);
 
-	/* Invoke the real retain method */
+	/* Invoke the real release method */
 	xamarin_invoke_objc_method_implementation (self, sel, (IMP) xamarin_release_trampoline);
 
 	if (detach)

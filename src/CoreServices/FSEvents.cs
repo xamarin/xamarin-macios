@@ -83,6 +83,9 @@ namespace CoreServices
 		ItemCloned = 0x00400000,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public struct FSEvent
 	{
 		public ulong Id { get; internal set; }
@@ -154,6 +157,9 @@ namespace CoreServices
 
 	public delegate void FSEventStreamEventsHandler (object sender, FSEventStreamEventsArgs args);
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public sealed class FSEventStreamEventsArgs : EventArgs
 	{
 		public FSEvent [] Events { get; private set; }
@@ -167,6 +173,9 @@ namespace CoreServices
 	/// <summary>
 	/// Creation options for <see cref="FSEventStream"/>.
 	/// </summary>
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public sealed class FSEventStreamCreateOptions
 	{
 		/// <summary>
@@ -240,6 +249,9 @@ namespace CoreServices
 		public FSEventStream CreateStream () => new (this);
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class FSEventStream : NativeObject
 	{
 		[DllImport (Constants.CoreServicesLibrary)]
