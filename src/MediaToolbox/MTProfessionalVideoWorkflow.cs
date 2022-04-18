@@ -9,6 +9,9 @@ using ObjCRuntime;
 
 namespace MediaToolbox {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	static public class MTProfessionalVideoWorkflow {
 
 #if NET

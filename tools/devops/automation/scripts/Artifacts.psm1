@@ -13,7 +13,7 @@ class Artifacts {
             return
         }
         if ($this.Content.Count -gt 0) {
-            $stringBuilder.AppendLine("# Packages generated")
+            $stringBuilder.AppendLine("## Packages generated")
             $stringBuilder.AppendLine("")
             $stringBuilder.AppendLine("<details><summary>View packages</summary>")
             $stringBuilder.AppendLine("") # no new line results in a bad rendering in the links
@@ -70,8 +70,6 @@ function New-Artifacts {
 #>
 function New-ArtifactsFromJsonFile {
     param (
-
-        [ValidateNotNullOrEmpty ()]
         [string]
         $Path
     )

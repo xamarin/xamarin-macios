@@ -37,6 +37,7 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("macos10.12")]
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Mac (10,12)]
 	[iOS (10,0)]

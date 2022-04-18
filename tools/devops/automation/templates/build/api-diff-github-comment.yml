@@ -94,14 +94,14 @@ steps:
       "tvOS" = $apiDiffRoot + "tvos-api-diff.html";
       "watchOS" =$apiDiffRoot + "watchos-api-diff.html";
       "index"= $apiDiffRoot + "api-diff.html";
-      "dotnet-iOS" = $apiDiffRoot + "dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html";
-      "dotnet-tvOS" = $apiDiffRoot + "dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html";
-      "dotnet-MacCatalyst" = $apiDiffRoot + "dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst-api-diff.html";
-      "dotnet-macOS" = $apiDiffRoot + "dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac-api-diff.html";
-      "dotnet-legacy-iOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html";
-      "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html";
-      "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac-api-diff.html";
-      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.MacCatalyst-api-diff.html";
+      "dotnet-iOS" = $apiDiffRoot + "dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html";
+      "dotnet-tvOS" = $apiDiffRoot + "dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.TVOS-api-diff.html";
+      "dotnet-MacCatalyst" = $apiDiffRoot + "dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst-api-diff.html";
+      "dotnet-macOS" = $apiDiffRoot + "dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html";
+      "dotnet-legacy-iOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html";
+      "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.TVOS-api-diff.html";
+      "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html";
+      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst-api-diff.html";
     }
 
     # build a json object that will be used by the comment to write the data for users
@@ -112,9 +112,11 @@ steps:
       "message" = $Env:APIDIFF_MESSAGE;
     }
     # write to a file to be used by the comment to parse
-    $path = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apidiff.json"
+    $path =  Join-Path -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY" -ChildPath "apidiff.json"
+    Write-Host "Json path is '$path'"
     $apiDiffData | ConvertTo-Json | Out-File $path
-    $apiDiffData | ConvertTo-Json | Write-Host
+    Write-Host "Content of json file:"
+    Get-Content $path
     Write-Host "##vso[task.setvariable variable=APIDIFF_JSON_PATH]$path"
   displayName: 'Create API from stable diff gists'
   timeoutInMinutes: 10
@@ -175,14 +177,14 @@ steps:
       "tvOS" = $apiDiffRoot + "tvos-api-diff.html";
       "watchOS" =$apiDiffRoot + "watchos-api-diff.html";
       "index"= $apiDiffRoot + "api-diff.html";
-      "dotnet-iOS" = $apiDiffRoot + "dotnet/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html";
-      "dotnet-tvOS" = $apiDiffRoot + "dotnet/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html";
-      "dotnet-MacCatalyst" = $apiDiffRoot + "dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Xamarin.MacCatalyst-api-diff.html";
-      "dotnet-macOS" = $apiDiffRoot + "dotnet/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac-api-diff.html";
-      "dotnet-legacy-iOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS-api-diff.html";
-      "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Xamarin.TVOS-api-diff.html";
-      "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Xamarin.Mac-api-diff.html";
-      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Xamarin.iOS.MacCatalyst-api-diff.html";
+      "dotnet-iOS" = $apiDiffRoot + "dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html";
+      "dotnet-tvOS" = $apiDiffRoot + "dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.TVOS-api-diff.html";
+      "dotnet-MacCatalyst" = $apiDiffRoot + "dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst-api-diff.html";
+      "dotnet-macOS" = $apiDiffRoot + "dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html";
+      "dotnet-legacy-iOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html";
+      "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.TVOS-api-diff.html";
+      "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html";
+      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst-api-diff.html";
     }
 
     # build a json object that will be used by the comment to write the data for users
@@ -193,36 +195,30 @@ steps:
       "message" = $Env:API_GENERATOR_DIFF_STATUS_MESSAGE;
     }
     # write to a file to be used by the comment to parse
-    $path = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\apiGeneratorDiff.json"
+    $path =  Join-Path -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY" -ChildPath "apiGeneratorDiff.json"
+    Write-Host "Json path is '$path'"
     $apiGeneratorDiffData | ConvertTo-Json | Out-File $path
-    $apiGeneratorDiffData | ConvertTo-Json | Write-Host
+    Write-Host "Content of json file:"
+    Get-Content $path
     Write-Host "##vso[task.setvariable variable=APIGENERATORDIFF_JSON_PATH]$path"
   displayName: 'Create API from current diff gists'
   timeoutInMinutes: 10
   env:
     GITHUB_TOKEN: $(GitHub.Token)
 
-- powershell: |
+- pwsh: |
     $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/$Env:DEVICE_PREFIX/;/tests/vsdrops_index.html"
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\xamarin-macios\\tools\\devops\\automation\\scripts\\MaciosCI.psd1
 
-    $buildReason = "$(Build.Reason)"
-    $buildSourceBranchName = "$(Build.SourceBranchName)"
     if ($Env:STABLE_APID_GENERATOR_DIFF_PATH) {
-      $apiGeneratorComment= Join-Path -Path "$Env:STABLE_APID_GENERATOR_DIFF_PATH" -ChildPath "api-diff-comments.md"
+      $apiGeneratorComment = Join-Path -Path "$Env:STABLE_APID_GENERATOR_DIFF_PATH" -ChildPath "api-diff-comments.md"
     } else {
       $apiGeneratorComment = ""
     }
 
-    if ($buildReason -ne "PullRequest" -or $Env:BUILD_PACKAGE -eq "True") {
-      Write-Host "Json path is $Env:ARTIFACTS_JSON_PATH"
-      $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:TESTS_SUMMARY" -Artifacts "$Env:ARTIFACTS_JSON_PATH" -APIDiff "$Env:APIDIFF_JSON_PATH" -APIGeneratorDiffJson "$Env:APIGENERATORDIFF_JSON_PATH" -APIGeneratorDiff $apiGeneratorComment
-      Write-Host $response
-    } else {
-      Write-Host "Json path is $Env:ARTIFACTS_JSON_PATH"
-      $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:TESTS_SUMMARY" -APIDiff "$Env:APIDIFF_JSON_PATH" -APIGeneratorDiffJson "$Env:APIGENERATORDIFF_JSON_PATH" -APIGeneratorDiff $apiGeneratorComment
-      Write-Host $response
-    }
+    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
+    $apiDiffComment = New-APIDiffCommentFromFiles -PRContentPath "$Env:APIGENERATORDIFF_JSON_PATH" -StableContentPath "$Env:APIDIFF_JSON_PATH" -GeneratorContent $apiGeneratorComment
+    $result = $gihubComments.NewCommentFromObject("API Diff", ":clipboard:", $apiDiffComment)
   env:
     BUILD_REVISION: $(Build.SourceVersion)
     CONTEXT: ${{ parameters.statusContext }}
@@ -231,6 +227,5 @@ steps:
     TESTS_JOBSTATUS: $(TESTS_JOBSTATUS) # set by the runTests step
     TESTS_SUMMARY: $(TEST_SUMMARY_PATH)
     ACCESSTOKEN: $(System.AccessToken)
-  displayName: 'Create API diff GitHub comment'
-  enabled: false
+  displayName: 'Create github comment'
   timeoutInMinutes: 10

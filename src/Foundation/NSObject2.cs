@@ -29,6 +29,7 @@ using System.Threading;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
+using System.Runtime.Versioning;
 
 #if NET
 using System.Runtime.InteropServices.ObjectiveC;
@@ -53,6 +54,10 @@ using NativeHandle = System.IntPtr;
 namespace Foundation {
 
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	public enum NSObjectFlag {
 		Empty,
 	}
@@ -66,6 +71,10 @@ namespace Foundation {
 
 #if NET && !COREBUILD
 	[ObjectiveCTrackedType]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public partial class NSObject 
@@ -1061,6 +1070,12 @@ namespace Foundation {
 	}
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSObservedChange {
 		NSDictionary dict;
 		public NSObservedChange (NSDictionary source)
