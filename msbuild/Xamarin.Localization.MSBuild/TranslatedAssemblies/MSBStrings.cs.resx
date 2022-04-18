@@ -1074,6 +1074,9 @@
             {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
+  <data name="E7085" xml:space="preserve">
+        <value>Úloha {0} neobdržela hodnotu požadovaného parametru {1} a ani metadata {2} nebyla v prostředku {3}.</value>
+    </data>
   <data name="W7085" xml:space="preserve">
         <value>Vytváření balíčku prostředků komprimované vazby, protože ve vstupu jsou symbolické odkazy.</value>
     </data>
@@ -1086,7 +1089,7 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="E7088" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <value>Hodnota metadat PublishFolderType {0} položky {1} se nerozpoznala. Soubor se do sady prostředků aplikace nezkopíruje.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1094,14 +1097,14 @@
         </comment>
     </data>
   <data name="E7089" xml:space="preserve">
-        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <value>Soubor {0} neurčuje metadata PublishFolderType a výchozí hodnota se nedá vypočítat. Soubor se do sady prostředků aplikace nezkopíruje.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: path to a file
         </comment>
     </data>
   <data name="E7090" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <value>Hodnota metadat PublishFolderType {0} položky {1} se nerozpoznala. Soubor se do sady prostředků aplikace nezkopíruje. Pokud se soubor nemá zkopírovat do sady prostředků aplikace, odeberte u položky metadata {2}.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1117,9 +1120,24 @@
         <value>Soubor {0} není platná architektura: {1}</value>
     </data>
   <data name="W7093" xml:space="preserve">
-        <value>The binding resource package {0} does not exist.</value>
+        <value>Balíček prostředků vazby {0} neexistuje.</value>
     </data>
   <data name="E7094" xml:space="preserve">
-        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+        <value>Soubor nebo adresář {0} není rozhraním ani souborem rozhraní.</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>Pro {0} bylo několikrát vyžádáno podepisování kódu s různými metadaty. Metadata byla v jednom případě {1} a v druhém případě {2}.</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>Pro {0} bylo několikrát vyžádáno podepisování kódu s různými metadaty. Metadata {1}={2} byla nastavena pro jednu položku, ale ne pro druhou.</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>Pro {0} bylo několikrát vyžádáno podepisování kódu s různými metadaty. Metadata {1} byla hodnotami pro každou položku (jednou {2}, jindy {3}).</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>Hodnota UIDeviceFamily 6 není pro tuto platformu platná. Je platná jenom pro Mac Catalyst.</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>Hodnota UIDeviceFamily 6 vyžaduje macOS 11.0. V souboru projektu prosím nastavte SupportedOSPlatformVersion na alespoň 14.0 (ekvivalent verze macOS 11.0 pro Mac). Aktuální hodnota je {0} (ekvivalent macOS {1}).</value>
     </data>
 </root>
