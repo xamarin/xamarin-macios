@@ -8,8 +8,11 @@ parameters:
   default: '*'            # Supports multiple filters separated by semi-colon such as *.msi;*.nupkg
 
 steps:
-
-- template: ../common/checkout.yml
+# Do not use the templates/common/checkout.yaml for this job else the azure upload tool will fail because 
+# it cannot find the correct branch to be used. 
+- checkout: self
+  persistCredentials: true
+  path: s/xamarin-macios
 
 # Download the Html Report that was added by the tests job.
 - task: DownloadPipelineArtifact@2
