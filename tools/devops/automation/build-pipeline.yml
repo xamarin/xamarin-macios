@@ -366,6 +366,7 @@ stages:
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: ${{ variables['GitHub.Token'] }}
       xqaCertPass: $(xqa--certificates--password)
+      enableDotnet: ${{ parameters.enableDotnet }}
       condition: ${{ parameters.runTests }}
 
 # devices are optional and will only be ran when we set them OR in CI
@@ -387,6 +388,7 @@ stages:
           keyringPass: $(pass-XamarinQA-bot-login) 
           gitHubToken: ${{ variables['GitHub.Token'] }}
           xqaCertPass: $(xqa--certificates--password)
+          enableDotnet: ${{ parameters.enableDotnet }}
           condition: ${{ parameters.runDeviceTests }}
           parseLabels: false
 
@@ -400,6 +402,7 @@ stages:
         useImage: ${{ config.useImage }}
         statusContext: ${{ config.statusContext }}
         keyringPass: $(pass--lab--mac--builder--keychain)
+        enableDotnet: ${{ parameters.enableDotnet }}
         demands: ${{ config.demands }}
 
 - ${{ if eq(parameters.runWindowsIntegration, true) }}:
@@ -428,6 +431,7 @@ stages:
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: ${{ variables['GitHub.Token'] }}
       xqaCertPass: $(xqa--certificates--password)
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step

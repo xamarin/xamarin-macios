@@ -20,6 +20,10 @@ parameters:
 - name: keyringPass
   type: string
 
+- name: enableDotnet
+  type: boolean
+  default: false
+
 - name: demands
   type: object
   default: []
