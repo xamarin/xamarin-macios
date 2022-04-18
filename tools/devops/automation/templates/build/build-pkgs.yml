@@ -38,7 +38,6 @@ parameters:
 steps:
 - template: build.yml
   parameters:
-    runTests: ${{ parameters.runTests }}
     runDeviceTests: ${{ parameters.runDeviceTests }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     keyringPass: ${{ parameters.keyringPass }}

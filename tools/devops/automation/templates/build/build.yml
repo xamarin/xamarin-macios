@@ -1,8 +1,4 @@
 parameters:
-- name: runTests
-  type: boolean
-  default: true
-
 - name: runDeviceTests
   type: boolean
   default: true

@@ -22,7 +22,6 @@ parameters:
 steps:
 - template: build.yml
   parameters:
-    runTests: false
     runDeviceTests: false
     uploadBinlogs: false
     signAndNotarize: false
