@@ -288,8 +288,7 @@ stages:
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
   - stage: governance_checks
     displayName: 'Governance Checks'
-    dependsOn:
-    - build_packages
+    dependsOn: []
     jobs:
       - job: governance
         displayName: 'Governance Checks'
@@ -297,6 +296,20 @@ stages:
           vmImage: windows-latest
         steps:
         - template: templates/governance-checks.yml
+
+
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - stage: clean
+    displayName: 'Clean up'
+    dependsOn: []
+    jobs:
+      - job:
+        displayName: 'Clean comments'
+        pool:
+          vmImage: windows-latest
+        steps:
+          - template: templates/common/clean.yml
+
 
 - stage: build_packages
   displayName: 'Build'
@@ -410,7 +423,7 @@ stages:
       useXamarinStorage: False
       testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
       statusContext: 'VSTS: device tests iOS32b'
-      extraBotDemands: 'xismoke-32'
+      extraBotDemands: ['xismoke-32']
       vsdropsPrefix: ${{ variables.vsdropsPrefix }}
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: ${{ variables['GitHub.Token'] }}
