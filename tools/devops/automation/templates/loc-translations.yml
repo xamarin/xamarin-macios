@@ -6,14 +6,14 @@ steps:
     make LocProject.json
   displayName: 'Generate LocProject.json'
   continueOnError: true
-  workingDirectory: $(Build.SourcesDirectory)\xamarin-macios\tools\devops 
+  workingDirectory: $(Build.SourcesDirectory)\\xamarin-macios\\tools\\devops
 
 - task: PowerShell@2
   displayName: "Update LocProject.json"
   inputs:
     targetType: 'filePath'
-    filePath: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\update-locproject.ps1
-    arguments: -SourcesDirectory "$(Build.SourcesDirectory)\xamarin-macios" -LocProjectPath "$(Build.SourcesDirectory)\xamarin-macios\Localize\LocProject.json"
+    filePath: $(Build.SourcesDirectory)\\xamarin-macios\\tools\\devops\\automation\\scripts\\update-locproject.ps1
+    arguments: -SourcesDirectory "$(Build.SourcesDirectory)\\xamarin-macios" -LocProjectPath "$(Build.SourcesDirectory)\\xamarin-macios\\Localize\\LocProject.json"
 
 - powershell: |
     git config user.email "valco@microsoft.com"
@@ -23,13 +23,14 @@ steps:
     git checkout -b Localization
     git push origin Localization
   displayName: "Create a new Localization branch from main"
+  workingDirectory: $(Build.SourcesDirectory)\\xamarin-macios
 
 - task: OneLocBuild@2
   continueOnError: true
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
   inputs:
-    locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
+    locProj: '$(Build.SourcesDirectory)\\xamarin-macios\\Localize\\LocProject.json'
     outDir: '$(Build.ArtifactStagingDirectory)'
     ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
       isCreatePrSelected: true
