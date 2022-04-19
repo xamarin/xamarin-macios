@@ -430,7 +430,7 @@ namespace AudioUnit
 			return device;
 		}
 
-#if !XAMCORE_3_0 || MONOMAC
+#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
 #if !MONOMAC
 		[Obsolete ("This API is not available on iOS.")]
 #endif
