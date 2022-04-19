@@ -5858,11 +5858,14 @@ namespace Intents {
 		[Export ("resolveRecipientForSearchCallHistory:withCompletion:")]
 		void ResolveRecipient (INSearchCallHistoryIntent intent, Action<INPersonResolutionResult> completion);
 
+#if !NET
+		[Mac (10,13)]
+#endif
 		[Watch (4,0), iOS (11,0)]
 		[Export ("resolveCallTypesForSearchCallHistory:withCompletion:")]
 		void ResolveCallTypes (INSearchCallHistoryIntent intent, Action<INCallRecordTypeOptionsResolutionResult> completion);
 
-		[Watch (4,0), iOS (11,0)]
+		[Watch (4,0), NoMac, iOS (11,0)]
 		[Export ("resolveUnseenForSearchCallHistory:withCompletion:")]
 		void ResolveUnseen (INSearchCallHistoryIntent intent, Action<INBooleanResolutionResult> completion);
 	}

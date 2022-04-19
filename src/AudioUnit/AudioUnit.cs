@@ -431,7 +431,7 @@ namespace AudioUnit
 		}
 
 #if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 		[Obsolete ("This API is not available on iOS.")]
 #endif
 #if NET

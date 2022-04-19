@@ -310,8 +310,10 @@ namespace NetworkExtension {
 	[DisableDefaultCtor]
 	interface NEAppRule : NSSecureCoding, NSCopying
 	{
-		[iOS (9, 0)][MacCatalyst (13, 1)]
-		[NoTV][NoMac][NoWatch]
+		[iOS (9, 0)][MacCatalyst (13, 1)][NoTV][NoWatch]
+#if NET
+		[NoMac]
+#endif
 		[Export ("initWithSigningIdentifier:")]
 		NativeHandle Constructor (string signingIdentifier);
 

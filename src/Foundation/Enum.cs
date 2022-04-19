@@ -77,11 +77,11 @@ namespace Foundation  {
 
 #if MONOMAC || !XAMCORE_3_0
 
-	[NoiOS][NoTV][NoMacCatalyst]
 #if !NET
 	[Native]
 	public enum NSBundleExecutableArchitecture : long {
 #else
+	[NoiOS][NoTV][NoMacCatalyst]
 	public enum NSBundleExecutableArchitecture {
 #endif
 		I386   = 0x00000007,

@@ -3222,6 +3222,7 @@ namespace CoreImage {
 		CIImage OutputImageNonMps { get; }
 
 		[Mac (10, 5)]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[CoreImageFilterProperty ("outputImageMPS")]
 		CIImage OutputImageMps { get; }
 
