@@ -3996,12 +3996,15 @@ namespace Registrar {
 						setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
 						setup_return.AppendLine ("if (retobj != NULL) {");
 						if (retain) {
-							setup_return.AppendLine ("xamarin_retain_nativeobject (retval);");
+							setup_return.AppendLine ("xamarin_retain_nativeobject (retval, &exception_gchandle);");
+							setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 						} else {
 							// If xamarin_attempt_retain_nsobject returns true, the input is an NSObject, so it's safe to call the 'autorelease' selector on it.
 							// We don't retain retval if it's not an NSObject, because we'd have to immediately release it,
 							// and that serves no purpose.
-							setup_return.AppendLine ("if (xamarin_attempt_retain_nsobject (retval)) {");
+							setup_return.AppendLine ("bool retained = xamarin_attempt_retain_nsobject (retval, &exception_gchandle);");
+							setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+							setup_return.AppendLine ("if (retained) {");
 							setup_return.AppendLine ("[retobj autorelease];");
 							setup_return.AppendLine ("}");
 						}

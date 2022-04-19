@@ -1810,10 +1810,14 @@ namespace ObjCRuntime {
 				(char) (byte) value });
 		}
 
+		// Retain the input if it's either an NSObject or a NativeObject.
 		static void RetainNativeObject (IntPtr gchandle)
 		{
-			var obj = GetGCHandleTarget (gchandle) as NativeObject;
-			obj?.Retain ();
+			var obj = GetGCHandleTarget (gchandle);
+			if (obj is NativeObject nobj)
+				nobj.Retain ();
+			else if (obj is NSObject nsobj)
+				nsobj.DangerousRetain ();
 		}
 
 		// Check if the input is an NSObject, and in that case retain it (and return true)
