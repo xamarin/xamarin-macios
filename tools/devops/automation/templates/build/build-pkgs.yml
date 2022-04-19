@@ -44,7 +44,6 @@ steps:
     gitHubToken: ${{ parameters.gitHubToken }}
     xqaCertPass: ${{ parameters.xqaCertPass }}
     enableDotnet: ${{ parameters.enableDotnet }}
-    skipESRP: ${{ parameters.skipESRP }}
     buildSteps:
       # build not signed .pkgs for the SDK
       - bash: |
