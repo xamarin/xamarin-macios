@@ -42,9 +42,9 @@ steps:
     repoType: gitHub
     gitHubPatVariable: '$(GitHub.Token)'
 
-  - task: PublishBuildArtifacts@1
-    continueOnError: true
-    inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      ArtifactName: 'localizationDrop'
-      publishLocation: 'Container'
+- task: PublishBuildArtifacts@1
+  continueOnError: true
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'localizationDrop'
+    publishLocation: 'Container'
