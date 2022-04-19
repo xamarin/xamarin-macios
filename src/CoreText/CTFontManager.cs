@@ -98,14 +98,14 @@ namespace CoreText {
 		static extern bool CTFontManagerIsSupportedFont (IntPtr url);
 
 #if NET
-		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.6")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.6.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-		[UnsupportedOSPlatform ("ios")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		[Unavailable (PlatformName.iOS)]
