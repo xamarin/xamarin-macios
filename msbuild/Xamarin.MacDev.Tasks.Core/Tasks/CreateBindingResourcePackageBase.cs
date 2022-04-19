@@ -26,10 +26,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]		
 		public ITaskItem[] NativeReferences { get; set; }
 		
-		// This is not used from the targets, but it's used by XVS to copy
-		// our packaged files back to Windows.
-		[Output]
-		public ITaskItem[] PackagedFiles { get; set; }
+		// This is a list of files to copy back to Windows
+		protected string[] PackagedFiles { get; set; }
 
 		public override bool Execute ()
 		{
@@ -56,7 +54,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var manifestDirectory = compress ? IntermediateOutputPath : BindingResourcePath;
 			var manifestPath = CreateManifest (manifestDirectory);
-			var packagedFiles = new List<ITaskItem> ();
+			var packagedFiles = new List<string> ();
 
 			if (compress) {
 				var zipFile = Path.GetFullPath (BindingResourcePath + ".zip");
@@ -80,7 +78,7 @@ namespace Xamarin.MacDev.Tasks {
 					zipArguments.Add (Path.GetFileName (fullPath));
 					ExecuteAsync ("zip", zipArguments, workingDirectory: workingDirectory).Wait ();
 
-					packagedFiles.Add (new TaskItem (zipFile));
+					packagedFiles.Add (zipFile);
 				}
 			} else {
 				var bindingResourcePath = BindingResourcePath;
@@ -91,9 +89,9 @@ namespace Xamarin.MacDev.Tasks {
 
 					var bindingOutputPath = Path.Combine (bindingResourcePath, Path.GetFileName (nativeRef.ItemSpec));
 					if (Directory.Exists (bindingOutputPath)) {
-						packagedFiles.AddRange (Directory.GetFiles (bindingOutputPath, "*", SearchOption.AllDirectories).Select (v => new TaskItem (v)));
+						packagedFiles.AddRange (Directory.GetFiles (bindingOutputPath, "*", SearchOption.AllDirectories));
 					} else if (File.Exists (bindingOutputPath)) {
-						packagedFiles.Add (new TaskItem (bindingOutputPath));
+						packagedFiles.Add (bindingOutputPath);
 					} else {
 						Log.LogWarning (MSBStrings.W7100, bindingOutputPath);
 					}
