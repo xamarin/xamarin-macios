@@ -1074,6 +1074,9 @@
             {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
+  <data name="E7085" xml:space="preserve">
+        <value>"{0}" görevine, gerekli "{1}" parametresi için bir değer verilmedi, ayrıca {3} kaynağında "{2}" meta verileri yoktu.</value>
+    </data>
   <data name="W7085" xml:space="preserve">
         <value>Girişte sembolik bağlantılar olduğundan sıkıştırılmış bağlama kaynak paketi oluşturuluyor.</value>
     </data>
@@ -1086,7 +1089,7 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="E7088" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <value>'{1}' öğesindeki 'PublishFolderType' meta veri değeri '{0}' tanınmıyor. Dosya, uygulama paketine kopyalanmayacak.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1094,14 +1097,14 @@
         </comment>
     </data>
   <data name="E7089" xml:space="preserve">
-        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <value>'{0}' dosyası bir 'PublishFolderType' meta verisi belirtmiyor ve varsayılan bir değer hesaplanamadı. Dosya, uygulama paketine kopyalanmayacak.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: path to a file
         </comment>
     </data>
   <data name="E7090" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <value>'{1}' öğesindeki 'PublishFolderType' meta veri değeri '{0}' tanınmıyor. Dosya, uygulama paketine kopyalanmayacak. Dosyanın uygulama paketine kopyalanması gerekmiyorsa, öğedeki '{2}' meta verilerini kaldırın.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1117,9 +1120,24 @@
         <value>'{0}' dosyası geçerli bir çerçeve değil: {1}</value>
     </data>
   <data name="W7093" xml:space="preserve">
-        <value>The binding resource package {0} does not exist.</value>
+        <value>Bağlama kaynak paketi {0} yok.</value>
     </data>
   <data name="E7094" xml:space="preserve">
-        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+        <value>'{0}' dosyası veya dizini bir çerçeve veya çerçeve içindeki bir dosya değil.</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. Meta veriler biri için '{1}' olurken bir diğeri için '{2}' olur.</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. '{1}={2}' meta verileri bir öğe için ayarlandı ancak diğer öğe için ayarlanmadı.</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. '{1}' meta verileri her bir öğe için değerler teşkil eder (bazen bu '{2}' olabilirken başka durumlarda ise '{3}' olabilir).</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>UIDeviceFamily değeri '6' bu platform için geçerli değil. Yalnızca Mac Catalyst için geçerlidir.</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>UIDeviceFamily değeri '6', macOS 11.0 gerektirir. Lütfen proje dosyasındaki 'SupportedOSPlatformVersion' sürümünü en az 14.0 olarak ayarlayın (macOS 11.0'ın Mac Catalyst sürümüne eşdeğer). Geçerli değer: {0} (macOS {1} sürümüne eşdeğer).</value>
     </data>
 </root>
