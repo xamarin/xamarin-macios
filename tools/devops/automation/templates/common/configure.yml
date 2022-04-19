@@ -7,6 +7,10 @@ parameters:
   type: boolean
   default: false
 
+- name: uploadArtifacts
+  type: boolean
+  default: false
+
 steps:
 - template: checkout.yml
 
@@ -143,12 +147,13 @@ steps:
   displayName: 'Configure build'
 
 # upload config to be consumed later
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: configuration.json'
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
-    artifactName: build-configuration
-  continueOnError: true
+- ${{ if eq(parameters.uploadArtifacts, true) }}:
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: configuration.json'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
+      artifactName: build-configuration
+    continueOnError: true
 
 - bash: |
     echo "current directory: $PWD"
@@ -193,10 +198,11 @@ steps:
     repoType: gitHub
     gitHubPatVariable: '$(GitHub.Token)'
 
-- task: PublishBuildArtifacts@1
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
-  continueOnError: true
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'localizationDrop'
-    publishLocation: 'Container'
+- ${{ if eq(parameters.uploadArtifacts, true) }}:
+  - task: PublishBuildArtifacts@1
+    condition: and(succeeded(), eq(variables.isMain, 'True'))
+    continueOnError: true
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'localizationDrop'
+      publishLocation: 'Container'
