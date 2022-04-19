@@ -189,12 +189,20 @@ namespace AudioUnit
 		TranslateUIDToBox = 1969841250, // 'uidb'
 		ClockDeviceList = 1668049699, //'clk#'
 		TranslateUidToClockDevice = 1969841251, // 'uidc',
+#if XAMCORE_3_0
+		[NoiOS][NoTV]
+#endif
 		[Deprecated (PlatformName.iOS, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
 		[Deprecated (PlatformName.MacOSX, 12,0, message : "Use the 'ProcessIsMain' element instead.")]
 		[Obsolete ("Use the 'ProcessIsMain' element instead.")]
 		ProcessIsMaster = 1835103092, // 'mast'
-		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
+#if !XAMCORE_3_0
+		[iOS (15,0)]
+#else
+		[NoiOS]
+#endif
+		[MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
 		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
@@ -208,7 +216,12 @@ namespace AudioUnit
 		ActualSampleRate = 1634955892,// 'asrt',
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
-		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
+#if !XAMCORE_3_0
+		[iOS (15,0)]
+#else
+		[NoiOS]
+#endif
+		[MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
 		ProcessMute = 1634758765, // 'appm'
 	}
 

@@ -369,7 +369,12 @@ namespace Intents {
 		Unread,
 		Flagged,
 		Unflagged,
-		[iOS (11,0), Mac (10,13), Watch (4,0)]
+#if NET
+		[NoMac]
+#else
+		[Mac (10,13)]
+#endif
+		[iOS (11,0), Watch (4,0)]
 		Played,
 	}
 
@@ -388,7 +393,12 @@ namespace Intents {
 		Unread = (1 << 1),
 		Flagged = (1 << 2),
 		Unflagged = (1 << 3),
-		[iOS (11,0), Mac (10,13), Watch (4,0)]
+#if NET
+		[NoMac]
+#else
+		[Mac (10,13)]
+#endif
+		[iOS (11,0), Watch (4,0)]
 		Played = (1UL << 4),
 	}
 
@@ -554,9 +564,9 @@ namespace Intents {
 		FailurePaymentsAmountAboveMaximum,
 		FailurePaymentsCurrencyUnsupported,
 		FailureNoBankAccount,
-		[iOS (11,0), Watch (4,0)]
+		[iOS (11,0), Watch (4,0)][NoMac]
 		FailureNotEligible,
-		[iOS (11,1), Watch (4,1)]
+		[iOS (11,1), Watch (4,1)][NoMac]
 		FailureTermsAndConditionsAcceptanceRequired,
 	}
 
@@ -660,11 +670,10 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
-		[iOS (11,0), Mac (10,13), Watch (4,0)]
+		[iOS (11,0), Watch (4,0)]
 		InProgress,
-		[iOS (11,0), Mac (10,13), Watch (4,0)]
+		[iOS (11,0), Watch (4,0)]
 		Success,
 	}
 
@@ -685,7 +694,7 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureMessageServiceNotAvailable,
-		[iOS (11,0), Mac (10,13), Watch (4,0)]
+		[iOS (11,0), Watch (4,0)]
 		FailureMessageTooManyResults,
 	}
 
@@ -703,7 +712,6 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
 	}
 
@@ -740,9 +748,7 @@ namespace Intents {
 		FailurePaymentsCurrencyUnsupported,
 		FailureInsufficientFunds,
 		FailureNoBankAccount,
-		[iOS (11, 0)]
-		[Mac (10, 13, 0)]
-		[Watch (4, 0)]
+		[iOS (11, 0)][Watch (4, 0)]
 		FailureNotEligible,
 		[iOS (11,1), Watch (4,1)]
 		FailureTermsAndConditionsAcceptanceRequired,
@@ -888,14 +894,12 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureCallingServiceNotAvailable,
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		FailureContactNotSupportedByApp,
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		FailureNoValidNumber,
 	}
 
@@ -934,10 +938,8 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureCallingServiceNotAvailable,
 		[Watch (4,0), iOS (11,0)]
 		FailureContactNotSupportedByApp,
@@ -1374,19 +1376,19 @@ namespace Intents {
 		MediaVideo,
 		MediaPass,
 		MediaAudio,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		PaymentSent,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		PaymentRequest,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		PaymentNote,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		Animoji,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		ActivitySnippet,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		File,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		Link,
 	}
 
