@@ -297,7 +297,7 @@ stages:
         steps:
         - template: templates/governance-checks.yml
 
-      - ${{ if and(eq(variables['Build.Reason'], 'Schedule'), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
+      - ${{ if and(eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}:
         - job: translations
           displayName: 'Loc translations'
           pool:
