@@ -1,3 +1,1 @@
 !extra-enum-value! Managed value 1 for NEOnDemandRuleInterfaceType.Ethernet is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 3 for NETunnelProviderRoutingMethod.NetworkRule is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 4 for NEFilterReportEvent.Statistics is available for the current platform while the value in the native header is not
