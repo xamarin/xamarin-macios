@@ -367,8 +367,6 @@
 !extra-null-allowed! 'System.Void AppKit.NSView::set_ContentFilters(CoreImage.CIFilter[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void AppKit.NSView::WillRemoveSubview(AppKit.NSView)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'AppKit.INSPasteboardWriting AppKit.NSCollectionViewDelegate::PasteboardWriterForItem(AppKit.NSCollectionView,System.nuint)' is missing an [NullAllowed] on return type

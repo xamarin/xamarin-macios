@@ -3,8 +3,6 @@
 !extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #2
 !extra-null-allowed! 'System.Boolean UIKit.NSLayoutManagerDelegate::ShouldSetLineFragmentRect(UIKit.NSLayoutManager,CoreGraphics.CGRect&,CoreGraphics.CGRect&,System.Runtime.InteropServices.NFloat&,UIKit.NSTextContainer,Foundation.NSRange)' has a extraneous [NullAllowed] on parameter #3
 !extra-null-allowed! 'System.Boolean UIKit.UIApplication::CanOpenUrl(Foundation.NSUrl)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.IntPtr Foundation.NSAttributedString::InitWithURL(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::.ctor(Foundation.NSAttributedString,UIKit.UIAccessibilityCustomActionHandler)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::.ctor(System.String,UIKit.UIAccessibilityCustomActionHandler)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UIAccessibilityCustomAction::set_Name(System.String)' has a extraneous [NullAllowed] on parameter #0

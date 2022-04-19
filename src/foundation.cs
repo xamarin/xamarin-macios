@@ -316,64 +316,93 @@ namespace Foundation
 		void EnumerateAttribute (NSString attributeName, NSRange inRange, NSAttributedStringEnumeration options, NSAttributedStringCallback callback);
 
 		[Export ("initWithURL:options:documentAttributes:error:")]
-#if MONOMAC || XAMCORE_5_0
-		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
-#else
+#if XAMCORE_5_0
+		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+#elif MONOMAC
+		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+#elif TVOS || WATCH
 		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
-#endif
-
-#if MONOMAC || XAMCORE_5_0
-		[Wrap ("this (url, options?.GetDictionary (), out resultDocumentAttributes, out error)")]
-		NativeHandle Constructor (NSUrl url, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 #else
-		[Wrap ("this (url, options?.GetDictionary (), out resultDocumentAttributes, ref error)")]
-		NativeHandle Constructor (NSUrl url, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+		NativeHandle Constructor (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
 
-#if MONOMAC || XAMCORE_5_0
-		[Wrap ("this (url, (NSDictionary?) null, out var _, out error)")]
+#if XAMCORE_5_0
+		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+#elif MONOMAC
+		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+#elif TVOS || WATCH
+		[Wrap ("this (url, options?.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#else
+		[Wrap ("this (url, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#endif
+
+#if XAMCORE_5_0
+		[Wrap ("this (url, new NSDictionary (), out var _, out error)")]
+		NativeHandle Constructor (NSUrl url, out NSError error);
+#elif MONOMAC
+		[Wrap ("this (url, new NSDictionary (), out var _, out error)")]
 		NativeHandle Constructor (NSUrl url, out NSError error);
 #else
-		[Wrap ("this (url, (NSDictionary?) null, out var _, ref error)")]
+		[Wrap ("this (url, new NSDictionary (), out var _, ref error)")]
 		NativeHandle Constructor (NSUrl url, ref NSError error);
 #endif
 
-#if MONOMAC || XAMCORE_5_0
-		[Wrap ("this (url, options?.GetDictionary (), out var _, out error)")]
-		NativeHandle Constructor (NSUrl url, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSError error);
+#if XAMCORE_5_0
+		[Wrap ("this (url, options.GetDictionary ()!, out var _, out error)")]
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSError error);
+#elif MONOMAC
+		[Wrap ("this (url, options.GetDictionary ()!, out var _, out error)")]
+		NativeHandle Constructor (NSUrl url, NSAttributedStringDocumentAttributes options, out NSError error);
 #else
-		[Wrap ("this (url, options?.GetDictionary (), out var _, ref error)")]
-		NativeHandle Constructor (NSUrl url, [NullAllowed] NSAttributedStringDocumentAttributes options, ref NSError error);
+		[Wrap ("this (url, documentAttributes.GetDictionary ()!, out var _, ref error)")]
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
 #endif
 
 		[Export ("initWithData:options:documentAttributes:error:")]
-#if MONOMAC || XAMCORE_5_0
-		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
-#else
+#if XAMCORE_5_0
+		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, out NSError error);
+#elif MONOMAC
+		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary docAttributes, out NSError error);
+#elif TVOS || WATCH
 		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
+#else
+		NativeHandle Constructor (NSData data, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
 
-#if MONOMAC || XAMCORE_5_0
-		[Wrap ("this (data, (NSDictionary?) null, out var _, out error)")]
+#if XAMCORE_5_0
+		[Wrap ("this (data, new NSDictionary (), out var _, out error)")]
+		NativeHandle Constructor (NSData data, out NSError error);
+#elif MONOMAC
+		[Wrap ("this (data, new NSDictionary (), out var _, out error)")]
 		NativeHandle Constructor (NSData data, out NSError error);
 #else
-		[Wrap ("this (data, (NSDictionary?) null, out var _, ref error)")]
+		[Wrap ("this (data, new NSDictionary (), out var _, ref error)")]
 		NativeHandle Constructor (NSData data, ref NSError error);
 #endif
 
-#if MONOMAC || XAMCORE_5_0
-		[Wrap ("this (data, options?.GetDictionary (), out var _, out error)")]
-		NativeHandle Constructor (NSData data, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSError error);
+#if XAMCORE_5_0
+		[Wrap ("this (data, options.GetDictionary ()!, out var _, out error)")]
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSError error);
+#elif MONOMAC
+		[Wrap ("this (data, options.GetDictionary ()!, out var _, out error)")]
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSError error);
 #else
-		[Wrap ("this (data, options?.GetDictionary (), out var _, ref error)")]
-		NativeHandle Constructor (NSData data, [NullAllowed] NSAttributedStringDocumentAttributes options, ref NSError error);
+		[Wrap ("this (data, documentAttributes.GetDictionary ()!, out var _, ref error)")]
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
 #endif
 
-#if MONOMAC || XAMCORE_5_0
-		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, out error)")]
+#if XAMCORE_5_0
+		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
+		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
+#elif MONOMAC
+		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, out error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, out NSError error);
 #else
-		[Wrap ("this (data, options.GetDictionary (), out resultDocumentAttributes, ref error)")]
+		[Wrap ("this (data, options.GetDictionary ()!, out resultDocumentAttributes, ref error)")]
 		NativeHandle Constructor (NSData data, NSAttributedStringDocumentAttributes options, out NSDictionary resultDocumentAttributes, ref NSError error);
 #endif
 
@@ -381,41 +410,59 @@ namespace Foundation
 #if !(MONOMAC || XAMCORE_5_0)
 		[Sealed]
 #endif
+#if XAMCORE_5_0
+		NSData GetData (NSRange range, NSDictionary options, out NSError error);
+#else
 		NSData GetData (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
+#endif
 
 #if !(MONOMAC || XAMCORE_5_0)
 		[Obsolete ("Use 'GetData' instead.")]
 		[Export ("dataFromRange:documentAttributes:error:")]
-		NSData GetDataFromRange (NSRange range, [NullAllowed] NSDictionary attributes, ref NSError error);
+		NSData GetDataFromRange (NSRange range, NSDictionary attributes, ref NSError error);
 #endif
 
-		[Wrap ("GetData (range, documentAttributes?.GetDictionary (), out error)")]
-		NSData GetData (NSRange range, [NullAllowed] NSAttributedStringDocumentAttributes documentAttributes, out NSError error);
+#if XAMCORE_5_0
+		[Wrap ("GetData (range, documentAttributes.GetDictionary ()!, out error)")]
+		NSData GetData (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, out NSError error);
+#else
+		[Wrap ("GetData (range, options.GetDictionary ()!, out error)")]
+		NSData GetData (NSRange range, NSAttributedStringDocumentAttributes options, out NSError error);
+#endif
 
 #if !(MONOMAC || XAMCORE_5_0)
 		[Obsolete ("Use 'GetData' instead.")]
-		[Wrap ("GetDataFromRange (range, documentAttributes?.GetDictionary (), ref error)")]
+		[Wrap ("GetDataFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
 		NSData GetDataFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
 #endif
 
 #if !(MONOMAC || XAMCORE_5_0)
 		[Obsolete ("Use 'GetFileWrapper' instead.")]
 		[Export ("fileWrapperFromRange:documentAttributes:error:")]
-		NSFileWrapper GetFileWrapperFromRange (NSRange range, [NullAllowed] NSDictionary attributes, ref NSError error);
+		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSDictionary attributes, ref NSError error);
 
 		[Obsolete ("Use 'GetFileWrapper' instead.")]
-		[Wrap ("GetFileWrapperFromRange (range, documentAttributes?.GetDictionary (), ref error)")]
-		NSFileWrapper GetFileWrapperFromRange (NSRange range, [NullAllowed] NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
+		[Wrap ("GetFileWrapperFromRange (range, documentAttributes.GetDictionary ()!, ref error)")]
+		NSFileWrapper GetFileWrapperFromRange (NSRange range, NSAttributedStringDocumentAttributes documentAttributes, ref NSError error);
 #endif
 
 		[Export ("fileWrapperFromRange:documentAttributes:error:")]
 #if !(MONOMAC || XAMCORE_5_0)
 		[Sealed]
 #endif
+#if XAMCORE_5_0
+		NSFileWrapper GetFileWrapper (NSRange range, NSDictionary options, out NSError error);
+#else
 		NSFileWrapper GetFileWrapper (NSRange range, [NullAllowed] NSDictionary options, out NSError error);
+#endif
 
+#if XAMCORE_5_0
+		[Wrap ("this.GetFileWrapper (range, options.GetDictionary ()!, out error)")]
+		NSFileWrapper GetFileWrapper (NSRange range, NSAttributedStringDocumentAttributes options, out NSError error);
+#else
 		[Wrap ("this.GetFileWrapper (range, options?.GetDictionary (), out error)")]
 		NSFileWrapper GetFileWrapper (NSRange range, [NullAllowed] NSAttributedStringDocumentAttributes options, out NSError error);
+#endif
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithDocFormat:documentAttributes:")]
