@@ -1283,7 +1283,7 @@ namespace Metal {
 		None = 0x0,
 		Refit = (1uL << 0),
 		PreferFastBuild = (1uL << 1),
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
 		ExtendedLimits = (1uL << 2),
 	}
 
@@ -1359,11 +1359,11 @@ namespace Metal {
 		Instancing = (1uL << 0),
 		TriangleData = (1uL << 1),
 		WorldSpaceData = (1uL << 2),
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
 		InstanceMotion = (1uL << 3),
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
 		PrimitiveMotion = (1uL << 4),
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
 		ExtendedLimits = (1uL << 5),
 	}
 

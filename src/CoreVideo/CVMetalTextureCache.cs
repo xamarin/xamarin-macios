@@ -25,16 +25,6 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreVideo {
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("macos10.15")]
-	[SupportedOSPlatform ("maccatalyst15.0")]
-	[SupportedOSPlatform ("tvos")]
-#else
-	[iOS (8,0)]
-	[Mac (10,15)]
-	[MacCatalyst (15,0)]
-#endif
 	public partial class CVMetalTextureCache : NativeObject {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static int /* CVReturn = int32_t */ CVMetalTextureCacheCreate (

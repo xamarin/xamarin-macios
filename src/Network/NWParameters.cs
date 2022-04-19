@@ -199,7 +199,7 @@ namespace Network {
 #if MONOMAC
 #if NET
 		[SupportedOSPlatform ("macos10.15")]
-		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
@@ -213,7 +213,7 @@ namespace Network {
 
 #if NET
 		[SupportedOSPlatform ("macos10.15")]
-		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else

@@ -254,11 +254,13 @@ namespace CoreImage {
 		CIContext Create ();
 
 #if HAS_OPENGLES
+		[NoMac][NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:")]
 		CIContext FromContext (EAGLContext eaglContext);
 
+		[NoMac][NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:options:")]
@@ -3219,10 +3221,9 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("outputImageNonMPS")]
 		CIImage OutputImageNonMps { get; }
 
-#if MONOMAC
+		[Mac (10, 5)]
 		[CoreImageFilterProperty ("outputImageMPS")]
 		CIImage OutputImageMps { get; }
-#endif
 
 		[CoreImageFilterProperty ("outputData")]
 		NSData OutputData { get; }

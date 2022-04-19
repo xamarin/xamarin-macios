@@ -244,9 +244,9 @@ namespace CoreGraphics {
 #if MONOMAC || __MACCATALYST__
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[MacCatalyst (15,0)]
 #endif
@@ -255,9 +255,9 @@ namespace CoreGraphics {
         
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[MacCatalyst (15,0)]
 #endif
@@ -268,9 +268,9 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[MacCatalyst (15,0)]
 #endif

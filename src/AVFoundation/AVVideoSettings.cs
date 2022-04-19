@@ -239,7 +239,7 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
-		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -255,8 +255,8 @@ namespace AVFoundation {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -298,8 +298,8 @@ namespace AVFoundation {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -316,8 +316,8 @@ namespace AVFoundation {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (7,0)]
 #endif
