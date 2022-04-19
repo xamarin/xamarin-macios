@@ -11,9 +11,7 @@ parameters:
 
 steps:
 
-- checkout: self
-  path: s/xamarin-macios
-  persistCredentials: true
+- template: ../common/checkout.yml
 
 - checkout: macios.ci 
   clean: true
