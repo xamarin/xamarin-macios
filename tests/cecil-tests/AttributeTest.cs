@@ -60,6 +60,19 @@ namespace Cecil.Tests {
 			Assert.That (found, Is.Empty, $"{found.Count} issues found");
 		}
 
+		bool IgnoreAllPlatformsOnParent (string fullName)
+		{
+			switch (fullName) {
+			// Generator Bug - Obsolete does not imply introduced but prevents unlisted from created one
+			case "AudioUnit.AudioUnitParameterType AudioUnit.AudioUnitParameterType::AUDCFilterDecayTime":
+			case "AppKit.NSBoxType AppKit.NSBoxType::NSBoxSecondary":
+			case "AppKit.NSBoxType AppKit.NSBoxType::NSBoxOldStyle":
+				return true;
+			default:
+				return false;
+			}
+		}
+
 		// Look for classes/struct that have double attributes, either because of partial classes or binding errors
 		// Example:
 		// TestType.cs
@@ -116,6 +129,10 @@ namespace Cecil.Tests {
 
 		void CheckAllPlatformsOnParent (ICustomAttributeProvider item, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
+			if (IgnoreAllPlatformsOnParent (fullName)) {
+				return;
+			}
+
 			var parentAvailability = GetAvailabilityAttributes (parent).ToList ();
 
 			var myAvailability = GetAvailabilityAttributes (item);
@@ -473,10 +490,6 @@ namespace Cecil.Tests {
 				return;
 			}
 
-			if (!assemblyPath.Contains("Xamarin.Mac.dll")) {
-				return;
-			}
-
 			string platformName = AssemblyToAttributeName (assemblyPath);
 
 			HashSet<string> found = new HashSet<string> ();
@@ -498,13 +511,31 @@ namespace Cecil.Tests {
 		void CheckCurrentPlatformIncludedIfAny (ICustomAttributeProvider item, string platformName, string fullName, TypeDefinition parent, HashSet<string> found)
 		{
 			if (HasAnyAvailabilityAttribute (item)) {
-				var supportedAttributes = item.CustomAttributes.Where (a => IsSupportedAttribute (a));
+				if (IgnoreCurrentPlatform (fullName)) {
+					return;
+				}
+				var supportedAttributes = item.CustomAttributes.Where (a => IsAvailabilityAttribute (a));
 				if (!supportedAttributes.Any (a => FindAvailabilityKind (a) == platformName)) {
 #if DEBUG
 					Console.WriteLine (fullName);
+					Console.WriteLine (String.Join(" ", supportedAttributes.Select (x => FindAvailabilityKind(x))));
+					Console.WriteLine (platformName);
 #endif
 					found.Add (fullName);
 				}
+			}
+		}
+
+		bool IgnoreCurrentPlatform (string fullName)
+		{
+			switch (fullName) {
+			// Generator Bug - Obsolete does not imply introduced but prevents unlisted from created one
+			case "AudioUnit.AudioUnitParameterType AudioUnit.AudioUnitParameterType::AUDCFilterDecayTime":
+			case "AppKit.NSBoxType AppKit.NSBoxType::NSBoxSecondary":
+			case "AppKit.NSBoxType AppKit.NSBoxType::NSBoxOldStyle":
+				return true;
+			default:
+				return false;
 			}
 		}
 

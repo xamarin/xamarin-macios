@@ -413,6 +413,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 	[Mac (10,15)]
 #endif

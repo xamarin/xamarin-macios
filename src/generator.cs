@@ -44,6 +44,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.ComponentModel;
@@ -3470,19 +3471,26 @@ public partial class Generator : IMemberGatherer {
 
 	HashSet<string> GetFrameworkListForPlatform (PlatformName platform)
 	{
+		HashSet<string> frameworkList = null;
 		switch (platform)
 		{
 			case PlatformName.iOS:
-				return Frameworks.iosframeworks;
+				frameworkList = Frameworks.iosframeworks;
+				break;
 			case PlatformName.TvOS:
-				return Frameworks.tvosframeworks;
+				frameworkList = Frameworks.tvosframeworks;
+				break;
 			case PlatformName.MacOSX:
-				return Frameworks.macosframeworks;
+				frameworkList = Frameworks.macosframeworks;
+				break;
 			case PlatformName.MacCatalyst:
-				return Frameworks.maccatalystframeworks;
+				frameworkList = Frameworks.maccatalystframeworks;
+				break;
  			default:
-				return new HashSet<string>();
+				frameworkList = new HashSet<string>();
+				break;
 		}
+		return new HashSet<string>(frameworkList.Select(x => x.ToLower (CultureInfo.InvariantCulture)));
 	}
 
 	static string FindNamespace (MemberInfo item)
@@ -3507,7 +3515,7 @@ public partial class Generator : IMemberGatherer {
 			var list = GetFrameworkListForPlatform (platform);
 			if (!availability.Any (v => v.Platform == platform)) {
 				string ns = FindNamespace (containingClass);
-				if (list.Contains(ns)) {
+				if (list.Contains(ns.ToLower (CultureInfo.InvariantCulture))) {
 					yield return CreateMinSupportedAttribute (platform);
 				}
 			}
