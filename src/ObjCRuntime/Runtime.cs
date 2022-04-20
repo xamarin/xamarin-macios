@@ -1088,7 +1088,17 @@ namespace ObjCRuntime {
 		}
 		
 		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
+#if NET
+			GCHandle handle;
+			if (Runtime.IsCoreCLR) {
+				handle = CreateTrackingGCHandle (obj, ptr);
+			} else {
+				handle = GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection);
+			}
+#else
 			var handle = GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection);
+#endif
+
 			lock (lock_obj) {
 				object_map [ptr] = handle;
 				obj.Handle = ptr;
