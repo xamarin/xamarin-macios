@@ -70,12 +70,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGDataProviderRef */ IntPtr CGDataProviderRetain (/* CGDataProviderRef */ IntPtr provider);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGDataProviderRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGDataProviderRelease (GetCheckedHandle ());
 		}

@@ -42,12 +42,12 @@ namespace PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		internal extern static OSStatus PMRelease (PMObject obj);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			PMRetain (Handle);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			PMRelease (Handle);
 		}

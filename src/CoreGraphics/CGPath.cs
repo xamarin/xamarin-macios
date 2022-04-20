@@ -128,12 +128,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPathRef */ IntPtr CGPathRetain (/* CGPathRef */ IntPtr path);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGPathRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGPathRelease (GetCheckedHandle ());
 		}
