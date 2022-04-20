@@ -61,14 +61,6 @@ steps:
       - ${{ if eq(parameters.enableDotnet, true) }}:
         - template: build-nugets.yml
 
-      - ${{ if eq(parameters.signAndNotarize, true) }}:
-        # only sign an notarize in no PR executions
-        - template: sign-and-notarized.yml
-          parameters:
-            enableDotnet: ${{ parameters.enableDotnet }}
-            skipESRP: ${{ parameters.skipESRP }}
-            keyringPass: ${{ parameters.keyringPass }}
-
       - bash: |
           var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=IOS_NUGET_VERSION_FULL)
           IOS_NUGET_VERSION_FULL=${var#*=}
