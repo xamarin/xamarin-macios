@@ -21,10 +21,13 @@
       </Item>
       <Item ItemId=";description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[A project for creating a .NET 6 MacCatalyst application]]></Val>
+          <Val><![CDATA[A project for creating a .NET MacCatalyst application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[.NET 6 MacCatalyst 애플리케이션을 만들기 위한 프로젝트]]></Val>
+            <Val><![CDATA[.NET MacCatalyst 애플리케이션을 만들기 위한 프로젝트]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[A project for creating a .NET 6 MacCatalyst application]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
