@@ -115,8 +115,11 @@ partial class TestRuntime
 	{
 		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
 		in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
-		if (!in_ci)
+		if (!in_ci) {
+			Console.WriteLine ($"Not ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
 			return;
+		}
+		Console.WriteLine ($"Ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
 		NUnit.Framework.Assert.Ignore (message);
 	}
 
