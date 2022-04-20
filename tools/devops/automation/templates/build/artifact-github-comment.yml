@@ -1,9 +1,7 @@
 # Job that will download the other artifact from the build and will add a comment with the contents.
 steps:
 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
+- template: ../common/checkout.yml
 
 - template: download-artifacts.yml 
   parameters:
