@@ -3598,7 +3598,7 @@ public partial class Generator : IMemberGatherer {
 	static PropertyInfo GetProperyFromGetSetMethod (MethodInfo method)
 	{
 		string name = method.Name;
-		if (name.StartsWith ("get_") || name.StartsWith ("set_")) {
+		if (name.StartsWith ("get_", StringComparison.Ordinal) || name.StartsWith ("set_", StringComparison.Ordinal)) {
 			return method.DeclaringType.GetProperty (name.Substring(4));
 		}
 		return null;
@@ -3621,7 +3621,7 @@ public partial class Generator : IMemberGatherer {
 		return FindContainingContext (mi.DeclaringType);
 	}
 
-	// We need to collect all of the availabilty attriutes walking up the chain of context.
+	// We need to collect all of the availability attributes walking up the chain of context.
 	// Example: A get_Foo inside of a property Foo which is inside of a class Klass.
 	//          The Foo property and the Klass both could have unique or duplicate attributes
 	// We collect them all, starting with the inner most first in the list.

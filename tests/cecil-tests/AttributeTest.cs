@@ -464,7 +464,7 @@ namespace Cecil.Tests {
 		// }
 		//
 		// When run against mac, this fails as Extension does not include a mac supported of any kind attribute
-		[TestCaseSource (typeof (Helper), "NetPlatformAssemblies")]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		public void AllAttributedItemsMustIncludeCurrentPlatform (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
