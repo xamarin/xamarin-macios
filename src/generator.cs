@@ -3502,7 +3502,7 @@ public partial class Generator : IMemberGatherer {
 	IEnumerable<AvailabilityBaseAttribute> AddUnlistedAvailability (MemberInfo containingClass, List<AvailabilityBaseAttribute> availability)
 	{
 		// If there are literally no attributes for a platform on a type, for non-catalyst platforms
-		// add a minimum supported introdced since it was "unlisted"
+		// add a minimum supported introduced since it was "unlisted"
 		foreach (var platform in new [] { PlatformName.iOS, PlatformName.TvOS, PlatformName.MacOSX }) {
 			var list = GetFrameworkListForPlatform (platform);
 			if (!availability.Any (v => v.Platform == platform)) {
