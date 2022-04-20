@@ -62,3 +62,22 @@ class TestResults {
         return $status
     }
 }
+
+
+<# 
+    .SYNOPSIS
+        Creates a new TestResults object.
+#>
+function New-TestResults {
+    param (
+        [string]
+        $Path,
+        [string]
+        $Status,
+        [string]
+        $Context
+    )
+    return [TestResults]::new($Path, $Status, $Context)
+}
+
+Export-ModuleMember -Function New-TestResults

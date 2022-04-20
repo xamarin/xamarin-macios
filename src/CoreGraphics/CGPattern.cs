@@ -81,8 +81,8 @@ namespace CoreGraphics {
 		{
 		}
 
-		protected override void Retain () => CGPatternRetain (Handle);
-		protected override void Release () => CGPatternRelease (Handle);
+		protected internal override void Retain () => CGPatternRetain (Handle);
+		protected internal override void Release () => CGPatternRelease (Handle);
 		
 		// This is what we expose on the API
 		public delegate void DrawPattern (CGContext ctx);

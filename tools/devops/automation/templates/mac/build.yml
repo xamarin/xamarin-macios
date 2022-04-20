@@ -14,17 +14,16 @@ parameters:
 
 steps:
 
-- checkout: self
-  path: s/xamarin-macios
-- checkout: maccore
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+- template: ../common/checkout.yml
 
 # Write a generic failure message to the failure comment file, so a failure will be reported
 # if something goes wrong before we successfully complete the tests (in which case we delete the file).
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests on macOS $Env:CONTEXT failed for unknown reasons."
-    Set-GitHubStatus -Status "pending" -Description "Tests on macOS $Env:CONTEXT have started." -Context "$Env:CONTEXT"
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+
+    Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "Tests on macOS ${{ parameters.statusContext }} failed for unknown reasons."
+    $statuses.SetStatus("pending", "Tests on macOS ${{ parameters.statusContext }} have started.", "${{ parameters.statusContext }}")
   displayName: "Initialize state"
   env:
     BUILD_REVISION: $(Build.SourceVersion)
@@ -182,6 +181,7 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
     Write-Host "Found tests"
     $testsPath = "$(Build.SourcesDirectory)/artifacts/mac-test-package/tests"
@@ -210,7 +210,7 @@ steps:
     if ($failures.Count -ne 0) {
       # post status and comment in the build
       $failedTestsStr = [string]::Join(",",$failures)
-      Set-GitHubStatus -Status "error" -Description "Tests on macOS $Env:CONTEXT failed ($failedTestsStr)." -Context "$Env:CONTEXT"
+      $statuses.SetStatus("error", "Tests on macOS ${{ parameters.statusContext }} failed ($failedTestsStr).", "${{ parameters.statusContext }}")
       # build message
       $msg = [System.Text.StringBuilder]::new()
       $msg.AppendLine("Failed tests are:")
@@ -244,12 +244,16 @@ steps:
 # Make sure to report any errors
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $githubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token) -Hash $Env:GIT_HASH
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    
     if (Test-Path -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -PathType Leaf)  {
-      Set-GitHubStatus -Status "error" -Description "Tests on macOS $Env:CONTEXT failed." -Context "$Env:CONTEXT"
-      New-GitHubCommentFromFile -Header "Tests on macOS $Env:CONTEXT failed" -Emoji ":x:" -Path "$Env:GITHUB_FAILURE_COMMENT_FILE"
+      $statuses.SetStatus("error", "Tests on macOS ${{ parameters.statusContext }} failed.", "${{ parameters.statusContext }}")
+      $githubComments.NewCommentFromFile("Tests on macOS ${{ parameters.statusContext }} failed", ":x:", "$Env:GITHUB_FAILURE_COMMENT_FILE")
     } else {
-      Set-GitHubStatus -Status "success" -Description "Tests on macOS $Env:CONTEXT passed." -Context "$Env:CONTEXT"
-      New-GitHubComment -Header "Tests on macOS $Env:CONTEXT passed" -Description "Tests passed" -Message "**All** tests on macOS $Env:CONTEXT passed." -Emoji ":white_check_mark:"
+      $statuses.SetStatus("success", "Tests on macOS ${{ parameters.statusContext }} passed.", "${{ parameters.statusContext }}")
+      $message = ":white_check_mark: **All** tests on macOS ${{ parameters.statusContext }} passed."
+      $githubComments.NewCommentFromMessage("Tests on macOS ${{ parameters.statusContext }} passed", ":computer:", $message)
     }
   displayName: 'Report results to GitHub'
   timeoutInMinutes: 5
