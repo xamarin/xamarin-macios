@@ -2,7 +2,7 @@ using System;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public abstract class BaseTransformEventArgs : EventArgs {
 		public BaseTransformEventArgs (string containerName, string methodName, string targetOperand)
 		{

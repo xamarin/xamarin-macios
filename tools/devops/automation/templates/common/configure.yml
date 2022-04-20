@@ -7,15 +7,15 @@ parameters:
   type: boolean
   default: false
 
+- name: uploadArtifacts
+  type: boolean
+  default: false
+
 steps:
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: false
-  persistCredentials: true
-  path: s/xamarin-macios
+- template: checkout.yml
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
 
     # we are going to use a custom object to store all the configuration of the build, this later
     # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines
@@ -147,26 +147,27 @@ steps:
   displayName: 'Configure build'
 
 # upload config to be consumed later
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: configuration.json'
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
-    artifactName: build-configuration
-  continueOnError: true
+- ${{ if eq(parameters.uploadArtifacts, true) }}:
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: configuration.json'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
+      artifactName: build-configuration
+    continueOnError: true
 
 - bash: |
     echo "current directory: $PWD"
     make LocProject.json
   displayName: 'Generate LocProject.json'
   continueOnError: true
-  workingDirectory: $(Build.SourcesDirectory)\tools\devops 
+  workingDirectory: $(Build.SourcesDirectory)\xamarin-macios\tools\devops 
 
 - task: PowerShell@2
   displayName: "Update LocProject.json"
   inputs:
     targetType: 'filePath'
-    filePath: $(Build.SourcesDirectory)\tools\devops\automation\scripts\update-locproject.ps1
-    arguments: -SourcesDirectory "$(Build.SourcesDirectory)" -LocProjectPath "$(Build.SourcesDirectory)\Localize\LocProject.json"
+    filePath: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\update-locproject.ps1
+    arguments: -SourcesDirectory "$(Build.SourcesDirectory)\xamarin-macios" -LocProjectPath "$(Build.SourcesDirectory)\xamarin-macios\Localize\LocProject.json"
 
 - powershell: |
     git config user.email "valco@microsoft.com"
@@ -197,10 +198,11 @@ steps:
     repoType: gitHub
     gitHubPatVariable: '$(GitHub.Token)'
 
-- task: PublishBuildArtifacts@1
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
-  continueOnError: true
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'localizationDrop'
-    publishLocation: 'Container'
+- ${{ if eq(parameters.uploadArtifacts, true) }}:
+  - task: PublishBuildArtifacts@1
+    condition: and(succeeded(), eq(variables.isMain, 'True'))
+    continueOnError: true
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      ArtifactName: 'localizationDrop'
+      publishLocation: 'Container'
