@@ -16,9 +16,7 @@ parameters:
 
 steps:
 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
+- template: ../common/checkout.yml
 
 - template: download-artifacts.yml 
   parameters:

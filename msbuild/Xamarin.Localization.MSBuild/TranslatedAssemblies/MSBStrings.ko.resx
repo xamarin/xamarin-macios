@@ -1074,6 +1074,9 @@
             {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
+  <data name="E7085" xml:space="preserve">
+        <value>"{0}" 작업에 필요한 매개 변수 "{1}"의 값이 지정되지 않았거나 {3} 리소스에 "{2}" 메타데이터가 없었습니다.</value>
+    </data>
   <data name="W7085" xml:space="preserve">
         <value>입력에 symlinks가 있으므로 압축 바인딩 리소스 패키지를 만들고 있습니다.</value>
     </data>
@@ -1086,7 +1089,7 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="E7088" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <value>항목 '{1}'의 'PublishFolderType' 메타데이터 값 '{0}'이(가) 인식되지 않습니다. 파일은 앱 번들에 복사되지 않습니다.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1094,14 +1097,14 @@
         </comment>
     </data>
   <data name="E7089" xml:space="preserve">
-        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <value>'{0}' 파일은 'PublishFolderType' 메타데이터를 지정하지 않으며 기본값을 계산할 수 없습니다. 파일은 앱 번들에 복사되지 않습니다.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: path to a file
         </comment>
     </data>
   <data name="E7090" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <value>항목 '{1}'의 'PublishFolderType' 메타데이터 값 '{0}'이(가) 인식되지 않습니다. 파일은 앱 번들에 복사되지 않습니다. 파일이 App Bundle에 복사되지 않아야 하는 경우 항목에서 '{2}' 메타데이터를 제거하세요.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1117,9 +1120,24 @@
         <value>파일 '{0}'은(는) 유효한 프레임워크가 아닙니다. {1}</value>
     </data>
   <data name="W7093" xml:space="preserve">
-        <value>The binding resource package {0} does not exist.</value>
+        <value>바인딩 리소스 패키지 {0}이(가) 존재하지 않습니다.</value>
     </data>
   <data name="E7094" xml:space="preserve">
-        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+        <value>파일 또는 디렉터리 '{0}'은(는) 프레임워크나 프레임워크 내의 파일이 아닙니다.</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>다른 메타데이터를 사용하여 ‘{0}’에 대한 코드 서명이 여러 번 요청되었습니다. 하나의 메타데이터는 ‘{1}’이고 다른 하나의 메타데이터는 ‘{2}’입니다.</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>다른 메타데이터를 사용하여 ‘{0}’에 대한 코드 서명이 여러 번 요청되었습니다. 메타데이터 ‘{1}={2}’이(가) 한 항목에 대해 설정되었지만 다른 항목에는 설정되지 않았습니다.</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>다른 메타데이터를 사용하여 ‘{0}’에 대한 코드 서명이 여러 번 요청되었습니다. 메타데이터 ‘{1}’이(가) 각 항목에 대한 값입니다(‘{2}’인 경우 다른 경우에는 ‘{3}’).</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>UIDeviceFamily 값 '6'은 이 플랫폼에 유효하지 않습니다. Mac Catalyst에만 유효합니다.</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>UIDeviceFamily 값 '6'에는 macOS 11.0이 필요합니다. 프로젝트 파일의 'SupportedOSPlatformVersion'을 최소 14.0(macOS 11.0에 해당하는 Mac Catalyst 버전)으로 설정하세요. 현재 값은 {0}(macOS {1}와 동일)입니다.</value>
     </data>
 </root>
