@@ -66,12 +66,12 @@ namespace CoreGraphics {
 		{
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGShadingRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGShadingRelease (GetCheckedHandle ());
 		}

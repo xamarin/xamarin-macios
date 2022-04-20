@@ -1074,6 +1074,9 @@
             {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
+  <data name="E7085" xml:space="preserve">
+        <value>Non è stato attribuito un valore all'attività "{0}" per il parametro obbligatorio "{1}" e non sono presenti metadati "{2}" nella risorsa {3}.</value>
+    </data>
   <data name="W7085" xml:space="preserve">
         <value>Creazione di un pacchetto di risorse di associazione compresso perché nell'input sono presenti collegamenti simbolici.</value>
     </data>
@@ -1086,7 +1089,7 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="E7088" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <value>Il valore dei metadati 'PublishFolderType' '{0}' nell'elemento '{1}' non è riconosciuto. Il file non verrà copiato nel bundle dell'app.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1094,14 +1097,14 @@
         </comment>
     </data>
   <data name="E7089" xml:space="preserve">
-        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <value>Il file '{0}' non specifica metadati 'PublishFolderType' e non è stato possibile calcolare un valore predefinito. Il file non verrà copiato nel bundle dell'app.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: path to a file
         </comment>
     </data>
   <data name="E7090" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <value>Il valore '{0}' dei metadati 'PublishFolderType' nell'elemento '{1}' non è riconosciuto. Il file non verrà copiato nel bundle dell'app. Se il file non deve essere copiato nel bundle dell'app, rimuovere i metadati '{2}' nell'elemento.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1117,9 +1120,24 @@
         <value>Il file '{0}' non è un framework valido: {1}</value>
     </data>
   <data name="W7093" xml:space="preserve">
-        <value>The binding resource package {0} does not exist.</value>
+        <value>Il pacchetto di risorse di binding {0} non esiste.</value>
     </data>
   <data name="E7094" xml:space="preserve">
-        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+        <value>Il file o la directory '{0}' non è un framework né un file all'interno di un framework.</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>La firma del codice è stata richiesta più volte per '{0}', con metadati diversi. I metadati per uno sono: '{1}', mentre i metadati per l'altro sono: '{2}'</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>La firma del codice è stata richiesta più volte per '{0}', con metadati diversi. I metadati '{1}={2}' sono stati impostati per un elemento, ma non per l'altro.</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>La firma del codice è stata richiesta più volte per '{0}', con metadati diversi. I metadati '{1}' contengono valori per ogni elemento (una volta è '{2}', un'altra volta è '{3}').</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>Il valore '6' di UIDeviceFamily non è valido per questa piattaforma. È valido solo per Mac Catalyst.</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>Il valore '6' di UIDeviceFamily richiede macOS 11.0. Impostare 'SupportedOSPlatformVersion' nel file di progetto su almeno 14.0 (l'equivalente della versione Mac Catalyst di macOS 11.0). Il valore corrente è {0} (equivalente a macOS {1}).</value>
     </data>
 </root>

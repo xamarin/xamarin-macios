@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "iOS Controller template",
-  "description": "An iOS Controller class",
-  "symbols/namespace/description": "namespace for the generated code"
+  "name": "iOS 컨트롤러 템플릿(미리 보기)",
+  "description": "iOS 컨트롤러 클래스",
+  "symbols/namespace/description": "생성된 코드의 네임스페이스"
 }

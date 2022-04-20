@@ -1,0 +1,57 @@
+steps:
+
+- template: ./common/checkout.yml
+
+- bash: |
+    make LocProject.json
+  displayName: 'Generate LocProject.json'
+  continueOnError: true
+  workingDirectory: $(Build.SourcesDirectory)\\xamarin-macios\\tools\\devops
+
+- task: PowerShell@2
+  displayName: "Update LocProject.json"
+  inputs:
+    targetType: 'filePath'
+    filePath: $(Build.SourcesDirectory)\\xamarin-macios\\tools\\devops\\automation\\scripts\\update-locproject.ps1
+    arguments: -SourcesDirectory "$(Build.SourcesDirectory)\\xamarin-macios" -LocProjectPath "$(Build.SourcesDirectory)\\xamarin-macios\\Localize\\LocProject.json"
+
+- pwsh: |
+    git remote remove origin
+    git remote add origin https://$(GitHub.Token)@github.com/xamarin/xamarin-macios.git
+    git remote # don't add -v else we see the pat
+
+    git config user.email "valco@microsoft.com"
+    git config user.name "vs-mobiletools-engineering-service2"
+
+    git branch -d Localization
+    git push origin --delete Localization
+
+    git checkout -b Localization
+    git push origin Localization
+  displayName: "Create a new Localization branch from main"
+  workingDirectory: $(Build.SourcesDirectory)\\xamarin-macios
+
+- task: OneLocBuild@2
+  continueOnError: true
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+  inputs:
+    locProj: '$(Build.SourcesDirectory)\\xamarin-macios\\Localize\\LocProject.json'
+    outDir: '$(Build.ArtifactStagingDirectory)'
+    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
+      isCreatePrSelected: true
+    ${{ else }}:
+      isCreatePrSelected: false
+    packageSourceAuth: patAuth
+    patVariable: '$(OneLocBuild--PAT)'
+    isAutoCompletePrSelected: false
+    prSourceBranchPrefix: 'locfiles'
+    repoType: gitHub
+    gitHubPatVariable: '$(GitHub.Token)'
+
+- task: PublishBuildArtifacts@1
+  continueOnError: true
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'localizationDrop'
+    publishLocation: 'Container'

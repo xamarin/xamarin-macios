@@ -8,7 +8,8 @@ parameters:
   default: '*'            # Supports multiple filters separated by semi-colon such as *.msi;*.nupkg
 
 steps:
-
+# Do not use the templates/common/checkout.yaml for this job else the azure upload tool will fail because 
+# it cannot find the correct branch to be used. 
 - checkout: self
   persistCredentials: true
   path: s/xamarin-macios
@@ -121,8 +122,9 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\tools\devops\automation\scripts\MaciosCI.psd1
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
-    Dir "$(Build.SourcesDirectory)\artifacts\package"
+    Dir "$(Build.SourcesDirectory)\\artifacts\\package"
 
     # $Env:STORAGE_URI/ ends with a /, annoying
     $pkgsVirtualUrl = "$Env:STORAGE_URI" +"$(Build.SourceBranchName)/$(Build.SourceVersion)/$(Build.BuildId)/package"
@@ -177,7 +179,7 @@ steps:
         ShouldExist = $notarizedShouldExist;
       },
       @{
-        Path = "$pkgsPath\bundle.zip" ;
+        Path = "$pkgsPath\\bundle.zip" ;
         Context = "bundle.zip" ;
         Description = "bundle.zip" ;
         TargetUrl = "$pkgsVirtualUrl/bundle.zip" ;
@@ -196,9 +198,9 @@ steps:
 
     foreach ($info in $statusInfo) {
       if (Test-Path $info.Path -PathType Leaf) {
-          Set-GitHubStatus -Status "success" -Description $info.Description -TargetUrl $info.TargetUrl  -Context $info.Context
+          $statuses.SetStatus("success", $info.Description, $info.Context, $info.TargetUrl)
       } elseif ($info.ShouldExist) {
-          Set-GitHubStatus -Status "error" -Description $info.Error -Context $info.Context
+          $statuses.SetStatus("error", $info.Error, $info.Context)
       }
     }
     if ($Env:ENABLE_DOTNET -eq "True" -and  $Env:SkipNugets -ne "True") {
@@ -208,17 +210,17 @@ steps:
 
       if ($nugets.Count -gt 0) {
         Write-Host "Setting status to success."
-        Set-GitHubStatus -Status "success" -Description "Nugets built." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets built)"
+        $statuses.SetStatus("success", "Nugets built.", "$(Build.DefinitionName) (Nugets built)", "$pkgsVirtualUrl/$n")
         Write-Host "Publishing result is $Env:NUGETS_PUBLISHED"
         if ($Env:NUGETS_PUBLISHED -ne "Failed") {
-          Set-GitHubStatus -Status "success" -Description "Nugets published." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
+          $statuses.SetStatus("success", "Nugets published.", "$(Build.DefinitionName) (Nugets published)", "$pkgsVirtualUrl/$n")
         } else {
-          Set-GitHubStatus -Status "error" -Description "Error when publishing nugets." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
+          $statuses.SetStatus("error", "Error when publishing nugets.", "$(Build.DefinitionName) (Nugets published)", "$pkgsVirtualUrl/$n")
         }
       } else {
         Write-Host "Setting nuget status to failure."
-        Set-GitHubStatus -Status "error" -Description "No nugets were built." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets built)"
-        Set-GitHubStatus -Status "error" -Description "No nugets were published." -TargetUrl "$pkgsVirtualUrl/$n" -Context "$(Build.DefinitionName) (Nugets published)"
+        $statuses.SetStatus("error", "No nugets were built.", "$(Build.DefinitionName) (Nugets built)", "$pkgsVirtualUrl/$n")
+        $statuses.SetStatus("error", "No nugets were published.", "$(Build.DefinitionName) (Nugets published)", "$pkgsVirtualUrl/$n")
       }
     }
 
@@ -226,7 +228,7 @@ steps:
     $msi = Get-ChildItem -Path $pkgsPath -Filter *.msi -File -Name
 
     foreach ($n in $msi) {
-      Set-GitHubStatus -Status "success" -Description "$n" -TargetUrl "$pkgsVirtualUrl/$n" -Context "$n"
+      $statuses.SetStatus("success", "$n", "$n", "$pkgsVirtualUrl/$n")
     }
 
     Write-Host "Setting SBOM.PackagesPath: ${pkgsPath}"

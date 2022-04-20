@@ -1074,6 +1074,9 @@
             {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
+  <data name="E7085" xml:space="preserve">
+        <value>未為 "{0}" 工作指定必要參數 "{1}" 的值，資源 {3} 上也沒有 "{2}" 中繼資料。</value>
+    </data>
   <data name="W7085" xml:space="preserve">
         <value>正在建立壓縮的繫結資源套件，因為輸入中具有符號連結。</value>
     </data>
@@ -1086,7 +1089,7 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="E7088" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <value>無法辨識項目 '{1}'上 '{0}' 的 'PublishFolderType' 中繼資料值。檔案將不會複製到應用程式套件組合。</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1094,14 +1097,14 @@
         </comment>
     </data>
   <data name="E7089" xml:space="preserve">
-        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <value>檔案 '{0}' 未指定 'PublishFolderType' 中繼資料，因此無法計算預設值。檔案將不會複製到應用程式套件組合。</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: path to a file
         </comment>
     </data>
   <data name="E7090" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <value>無法辨識項目 '{1}'上'{0}'的 'PublishFolderType' 中繼資料值。檔案將不會複製到應用程式套件組合。如果檔案不應複製到應用程式套件組合，請移除該項目上的 '{2}' 中繼資料。</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1117,9 +1120,24 @@
         <value>檔案 '{0}' 不是有效的架構: {1}</value>
     </data>
   <data name="W7093" xml:space="preserve">
-        <value>The binding resource package {0} does not exist.</value>
+        <value>繫結資源封裝 {0} 不存在。</value>
     </data>
   <data name="E7094" xml:space="preserve">
-        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+        <value>檔案或目錄 '{0}' 不是架構中的架構或檔案。</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>已為 '{0}' 使用不同的中繼資料多次要求 [程式碼簽署]。。其中一項的中繼資料為: '{1}'，而另一項的中繼資料為: '{2}'</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>已為 '{0}' 使用不同的中繼資料多次要求 [程式碼簽署]。已為一個項目設定中繼資料 '{1}={2}'，但未針對另一個項目。</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>已為 '{0}' 使用不同的中繼資料多次要求 [程式碼簽署]。中繼資料 '{1}' 已是每個項目的值 (它曾是 '{2}'，其他時間則為 '{3}')。</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>UIDeviceFamily 值 '6' 對此平臺無效。它僅適用於 Mac Catalyst。</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>UIDeviceFamily 值 '6' 需要 macOS 11.0。請將專案檔中的 'SupportedOSPlatformVersion' 設定為至少 14.0 (相當於 macOS 11.0)的 Mac Catalyst 版本。目前的值{0} (等於 macOS {1})。</value>
     </data>
 </root>
