@@ -12,7 +12,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -31,6 +30,7 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("macos12.0")]
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[iOS (8,0)]
 	[Mac (12,0)]

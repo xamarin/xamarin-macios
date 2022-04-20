@@ -11,8 +11,8 @@
 #if MONOMAC
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -83,15 +83,19 @@ namespace CoreServices
 		ItemCloned = 0x00400000,
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public struct FSEvent
 	{
 		public ulong Id { get; internal set; }
 		public string? Path { get; internal set; }
 		public FSEventStreamEventFlags Flags { get; internal set; }
+		public ulong FileId { get; internal set; }
 
 		public override string ToString ()
 		{
-			return String.Format ("[FSEvent: Id={0}, Path={1}, Flags={2}]", Id, Path, Flags);
+			return String.Format ("[FSEvent: Id={0}, Path={1}, Flags={2}, FileId={3}]", Id, Path, Flags, FileId);
 		}
 
 		public const ulong SinceNowId = UInt64.MaxValue;
@@ -153,6 +157,9 @@ namespace CoreServices
 
 	public delegate void FSEventStreamEventsHandler (object sender, FSEventStreamEventsArgs args);
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public sealed class FSEventStreamEventsArgs : EventArgs
 	{
 		public FSEvent [] Events { get; private set; }
@@ -163,6 +170,88 @@ namespace CoreServices
 		}
 	}
 
+	/// <summary>
+	/// Creation options for <see cref="FSEventStream"/>.
+	/// </summary>
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
+	public sealed class FSEventStreamCreateOptions
+	{
+		/// <summary>
+		/// The allocator to use to allocate memory for the stream. If <c>null</c>, the default
+		/// allocator will be used.
+		/// </summary>
+		public CFAllocator? Allocator { get; set; }
+
+		/// <summary>
+		/// A <c>dev_t</c> corresponding to the device which you want to receive notifications from.
+		/// The <c>dev_t</c> is the same as the <c>st_dev</c> field from a <c>stat</c> structure of a
+		/// file on that device or the <c>f_fsid[0]</c> field of a <c>statfs</c> structure.
+		/// </summary>
+		public ulong? DeviceToWatch { get; set; }
+
+		/// <summary>
+		/// A list of directory paths, signifying the root of a filesystem hierarchy to be watched
+		/// for modifications. If <see cref="DeviceToWatch"/> is set, the list of paths should be
+		/// relative to the root of the device. For example, if a volume "MyData" is mounted at
+		/// "/Volumes/MyData" and you want to watch "/Volumes/MyData/Pictures/July", specify a path
+		/// string of "Pictures/July". To watch the root of a volume pass a path of "" (the empty string).
+		/// </summary>
+		public IReadOnlyList<string>? PathsToWatch { get; set; }
+
+		// NB. to be set only by the FSEventStream .ctors
+		internal NSArray? NSPathsToWatch { get; set; }
+
+		/// <summary>
+		/// The service will supply events that have happened after the given event ID. To ask for
+		/// events "since now," set to <c>null</c> or <see cref="FSEvent.SinceNowId"/>. Often, clients
+		/// will supply the highest-numbered event ID they have received in a callback, which they can
+		/// obtain via <see cref="FSEventStream.LatestEventId">. Do not set to zero, unless you want to
+		/// receive events for every directory modified since "the beginning of time" -- an unlikely scenario.
+		/// </summary>
+		public ulong? SinceWhenId { get; set; }
+
+		/// <summary>
+		/// The amount of time the service should wait after hearing about an event from the kernel
+		/// before passing it along to the client via its callback. Specifying a larger value may result
+		/// in more effective temporal coalescing, resulting in fewer callbacks.
+		/// </summary>
+		public TimeSpan Latency { get; set; }
+
+		/// <summary>
+		/// Flags that modify the behavior of the stream being created.
+		/// See <see cref="FSEventStreamCreateFlags"/>.
+		/// </summary>
+		public FSEventStreamCreateFlags Flags { get; set; }
+
+		public FSEventStreamCreateOptions ()
+		{
+		}
+
+		public FSEventStreamCreateOptions (FSEventStreamCreateFlags flags, TimeSpan latency,
+			params string [] pathsToWatch)
+		{
+			Flags = flags;
+			Latency = latency;
+			PathsToWatch = pathsToWatch;
+		}
+
+		public FSEventStreamCreateOptions (FSEventStreamCreateFlags flags, TimeSpan latency,
+			ulong deviceToWatch, params string [] pathsToWatchRelativeToDevice)
+		{
+			Flags = flags;
+			Latency = latency;
+			DeviceToWatch = deviceToWatch;
+			PathsToWatch = pathsToWatchRelativeToDevice;
+		}
+
+		public FSEventStream CreateStream () => new (this);
+	}
+
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class FSEventStream : NativeObject
 	{
 		[DllImport (Constants.CoreServicesLibrary)]
@@ -171,12 +260,12 @@ namespace CoreServices
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern void FSEventStreamRelease (IntPtr handle);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			FSEventStreamRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			FSEventStreamRelease (GetCheckedHandle ());
 		}
@@ -194,11 +283,33 @@ namespace CoreServices
 			ref FSEventStreamContext context, IntPtr pathsToWatch,
 			ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
 
-		public FSEventStream (CFAllocator? allocator, NSArray pathsToWatch,
-			ulong sinceWhenId, TimeSpan latency, FSEventStreamCreateFlags flags)
+		[DllImport (Constants.CoreServicesLibrary)]
+		unsafe static extern IntPtr FSEventStreamCreateRelativeToDevice (IntPtr allocator,
+#if NET
+			delegate* unmanaged<IntPtr, IntPtr, nint, IntPtr, IntPtr, IntPtr, void> callback,
+#else
+			FSEventStreamCallback callback,
+#endif
+			ref FSEventStreamContext context, ulong deviceToWatch, IntPtr pathsToWatchRelativeToDevice,
+			ulong sinceWhen, double latency, FSEventStreamCreateFlags flags);
+
+		public FSEventStream (FSEventStreamCreateOptions options)
 		{
-			if (pathsToWatch is null)
-				throw new ArgumentNullException (nameof (pathsToWatch));
+			if (options is null)
+				throw new ArgumentNullException (nameof (options));
+
+			NSArray pathsToWatch;
+
+			if (options.NSPathsToWatch is not null) {
+				pathsToWatch = options.NSPathsToWatch;
+			} else if (options.PathsToWatch?.Count == 0) {
+				throw new ArgumentException (
+					$"must specify at least one path to watch on " +
+					$"{nameof (FSEventStreamCreateOptions)}.{nameof (FSEventStreamCreateOptions.PathsToWatch)}",
+					nameof (options));
+			} else {
+				pathsToWatch = NSArray.FromStrings (options.PathsToWatch);
+			}
 
 			var gch = GCHandle.Alloc (this);
 
@@ -212,24 +323,58 @@ namespace CoreServices
 			context.Release = releaseContextCallback;
 #endif
 
+			var allocator = options.Allocator.GetHandle ();
+			var sinceWhenId = options.SinceWhenId ?? FSEvent.SinceNowId;
+			var latency = options.Latency.TotalSeconds;
+			var flags = options.Flags |= (FSEventStreamCreateFlags)0x1 /* UseCFTypes */;
+
 			IntPtr handle;
 			unsafe {
-				handle = FSEventStreamCreate (
-					allocator.GetHandle (),
+				if (options.DeviceToWatch.HasValue) {
+					handle = FSEventStreamCreateRelativeToDevice (
+						allocator,
 #if NET
-					&EventsCallback,
+						&EventsCallback,
 #else
-					eventsCallback,
+						eventsCallback,
 #endif
-					ref context, pathsToWatch.Handle,
-					sinceWhenId, latency.TotalSeconds, flags | (FSEventStreamCreateFlags)0x1 /* UseCFTypes */);
+						ref context,
+						options.DeviceToWatch.Value,
+						pathsToWatch.Handle, sinceWhenId, latency, flags);
+				} else {
+					handle = FSEventStreamCreate (
+						allocator,
+#if NET
+						&EventsCallback,
+#else
+						eventsCallback,
+#endif
+						ref context,
+						pathsToWatch.Handle, sinceWhenId, latency, flags);
+				}
 			}
 
 			InitializeHandle (handle);
 		}
 
+		public FSEventStream (CFAllocator? allocator, NSArray pathsToWatch,
+			ulong sinceWhenId, TimeSpan latency, FSEventStreamCreateFlags flags)
+			: this (new () {
+				Allocator = allocator,
+				NSPathsToWatch = pathsToWatch ?? throw new ArgumentNullException (nameof (pathsToWatch)),
+				SinceWhenId = sinceWhenId,
+				Latency = latency,
+				Flags = flags
+			})
+		{
+		}
+
 		public FSEventStream (string [] pathsToWatch, TimeSpan latency, FSEventStreamCreateFlags flags)
-			: this (null, NSArray.FromStrings (pathsToWatch), FSEvent.SinceNowId, latency, flags)
+			: this (new () {
+				PathsToWatch = pathsToWatch ?? throw new ArgumentNullException (nameof (pathsToWatch)),
+				Latency = latency,
+				Flags = flags
+			})
 		{
 		}
 
@@ -248,6 +393,14 @@ namespace CoreServices
 			GCHandle.FromIntPtr (gchandle).Free ();
 		}
 
+		static readonly nint CFStringTypeID = CFString.GetTypeID ();
+		static readonly nint CFDictionaryTypeID = CFDictionary.GetTypeID ();
+
+		// These constants are defined in FSEvents.h but do not end up exported in any binaries,
+		// so we cannot use Dlfcn.GetStringConstant against CoreServices. -abock, 2022-03-04
+		static readonly NSString kFSEventStreamEventExtendedDataPathKey = new ("path");
+		static readonly NSString kFSEventStreamEventExtendedFileIDKey = new ("fileID");
+
 #if NET
 		[UnmanagedCallersOnly]
 #endif
@@ -259,12 +412,35 @@ namespace CoreServices
 			}
 
 			var events = new FSEvent[numEvents];
-			var pathArray = new CFArray (eventPaths, false);
 
 			for (int i = 0; i < events.Length; i++) {
-				events[i].Flags = (FSEventStreamEventFlags)(uint)Marshal.ReadInt32 (eventFlags, i * 4);
-				events[i].Id = (uint)Marshal.ReadInt64 (eventIds, i * 8);
-				events[i].Path = CFString.FromHandle (pathArray.GetValue (i));
+				string? path = null;
+				long fileId = 0;
+
+				var eventDataHandle = CFArray.CFArrayGetValueAtIndex (eventPaths, i);
+				var eventDataType = CFType.GetTypeID (eventDataHandle);
+
+				if (eventDataType == CFStringTypeID) {
+					path = CFString.FromHandle (eventDataHandle);
+				} else if (eventDataType == CFDictionaryTypeID) {
+					path =  CFString.FromHandle (CFDictionary.GetValue (
+						eventDataHandle,
+						kFSEventStreamEventExtendedDataPathKey.Handle));
+
+					var fileIdHandle = CFDictionary.GetValue (
+						eventDataHandle,
+						kFSEventStreamEventExtendedFileIDKey.Handle);
+					if (fileIdHandle != IntPtr.Zero)
+						CFDictionary.CFNumberGetValue (fileIdHandle, 4 /*kCFNumberSInt64Type*/, out fileId);
+				}
+
+				events[i] = new FSEvent
+				{
+					Id = (ulong)Marshal.ReadInt64 (eventIds, i * 8),
+					Path = path,
+					Flags = (FSEventStreamEventFlags)(uint)Marshal.ReadInt32 (eventFlags, i * 4),
+					FileId = (ulong)fileId,
+				};
 			}
 
 			var instance = GCHandle.FromIntPtr (userData).Target as FSEventStream;
@@ -347,6 +523,41 @@ namespace CoreServices
 		{
 			ScheduleWithRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
 		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern void FSEventStreamUnscheduleFromRunLoop (IntPtr handle,
+			IntPtr runLoop, IntPtr runLoopMode);
+
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop, NSString runLoopMode)
+		{
+			FSEventStreamScheduleWithRunLoop (GetCheckedHandle (), runLoop.Handle, runLoopMode.Handle);
+		}
+
+		public void UnscheduleFromRunLoop (CFRunLoop runLoop)
+		{
+			UnscheduleFromRunLoop (runLoop, CFRunLoop.ModeDefault);
+		}
+
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop, NSString runLoopMode)
+		{
+			UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), runLoopMode);
+		}
+
+		public void UnscheduleFromRunLoop (NSRunLoop runLoop)
+		{
+			UnscheduleFromRunLoop (runLoop.GetCFRunLoop (), CFRunLoop.ModeDefault);
+		}
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern void FSEventStreamSetDispatchQueue (IntPtr handle, IntPtr dispatchQueue);
+
+		public void SetDispatchQueue (DispatchQueue? dispatchQueue)
+			=> FSEventStreamSetDispatchQueue (GetCheckedHandle (), dispatchQueue.GetHandle ());
+
+		[DllImport (Constants.CoreServicesLibrary)]
+		static extern ulong FSEventStreamGetDeviceBeingWatched (IntPtr handle);
+
+		public ulong DeviceBeingWatched => FSEventStreamGetDeviceBeingWatched (GetCheckedHandle ());
 
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr FSEventStreamCopyPathsBeingWatched (IntPtr handle);

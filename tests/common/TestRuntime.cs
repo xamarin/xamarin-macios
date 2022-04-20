@@ -114,8 +114,12 @@ partial class TestRuntime
 	public static void IgnoreInCI (string message)
 	{
 		var in_ci = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_REVISION"));
-		if (!in_ci)
+		in_ci |= !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")); // set by Azure DevOps
+		if (!in_ci) {
+			Console.WriteLine ($"Not ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
 			return;
+		}
+		Console.WriteLine ($"Ignoring test ('{message}'), because not running in CI. BUILD_REVISION={Environment.GetEnvironmentVariable ("BUILD_REVISION")} BUILD_SOURCEVERSION={Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION")}");
 		NUnit.Framework.Assert.Ignore (message);
 	}
 
@@ -201,6 +205,15 @@ partial class TestRuntime
 		if (!string.IsNullOrEmpty (vmVendor))
 			NUnit.Framework.Assert.Ignore ($"This test only runs on device. Found vm vendor: {vmVendor}");
 #endif
+	}
+
+	public static bool IsVSTS =>
+		!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("BUILD_BUILDID"));  // Env var set by vsts
+																																									 //
+	public static void AssertNotVSTS ()
+	{
+		if (IsVSTS)
+			NUnit.Framework.Assert.Ignore ("This test only runs on developer desktops and not on VSTS.");
 	}
 
 	// This function checks if the current Xcode version is exactly (neither higher nor lower) the requested one.

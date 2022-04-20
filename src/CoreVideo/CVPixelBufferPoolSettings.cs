@@ -30,13 +30,17 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace CoreVideo {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public class CVPixelBufferPoolSettings : DictionaryContainer
@@ -72,7 +76,12 @@ namespace CoreVideo {
 #endif
 	}
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public partial class CVPixelBufferPoolAllocationSettings : DictionaryContainer {

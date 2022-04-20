@@ -10,7 +10,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -78,6 +77,8 @@ namespace GameController {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -155,6 +156,7 @@ namespace GameController {
 		[SupportedOSPlatform ("ios12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
 		[SupportedOSPlatform ("tvos12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -177,6 +179,7 @@ namespace GameController {
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
 		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -199,6 +202,7 @@ namespace GameController {
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
 		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -221,6 +225,7 @@ namespace GameController {
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
 		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -244,6 +249,7 @@ namespace GameController {
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
 		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -279,6 +285,7 @@ namespace GameController {
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
 		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -309,6 +316,7 @@ namespace GameController {
 		[SupportedOSPlatform ("tvos12.2")]
 		[SupportedOSPlatform ("macos10.14.4")]
 		[SupportedOSPlatform ("ios12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]

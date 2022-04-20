@@ -29,13 +29,17 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace CoreVideo {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public class CVPixelBufferAttributes : DictionaryContainer
@@ -187,7 +191,7 @@ namespace CoreVideo {
 					RemoveValue (CVPixelBuffer.IOSurfacePropertiesKey);
 			}
 			get {
-				return GetNSDictionary (CVPixelBuffer.IOSurfacePropertiesKey) != null;
+				return GetNSDictionary (CVPixelBuffer.IOSurfacePropertiesKey) is not null;
 			}
 		}
 
@@ -205,6 +209,9 @@ namespace CoreVideo {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 #endif

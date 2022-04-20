@@ -25,7 +25,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
-using System.Runtime.Versioning;
 
 using Foundation;
 using CoreGraphics;
@@ -41,6 +40,12 @@ using OpenGLES;
 #nullable enable
 
 namespace CoreImage {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CIContextOptions : DictionaryContainer {
 
 		public CIContextOptions ()
@@ -91,6 +96,9 @@ namespace CoreImage {
 
 #if NET
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,12)]
 #endif
@@ -114,6 +122,9 @@ namespace CoreImage {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -129,6 +140,8 @@ namespace CoreImage {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
 		[Mac (10,12)]
@@ -146,6 +159,7 @@ namespace CoreImage {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13,0)]
 		[TV (13,0)]
@@ -164,6 +178,7 @@ namespace CoreImage {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (14,0)]
 		[TV (14,0)]
@@ -178,11 +193,14 @@ namespace CoreImage {
 			}
 		}
 	}
-	
+
 	public partial class CIContext {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 #endif
@@ -204,7 +222,7 @@ namespace CoreImage {
 #if HAS_OPENGLES
 		public static CIContext FromContext (EAGLContext eaglContext, CIContextOptions? options)
 		{
-			if (options == null)
+			if (options is null)
 				return FromContext (eaglContext);
 
 			return FromContext (eaglContext, options.Dictionary);
@@ -212,7 +230,7 @@ namespace CoreImage {
 
 		public static CIContext FromMetalDevice (IMTLDevice device, CIContextOptions? options)
 		{
-			if (options == null)
+			if (options is null)
 				return FromMetalDevice (device);
 
 			return FromMetalDevice (device, options.Dictionary);
@@ -221,6 +239,8 @@ namespace CoreImage {
 
 #if MONOMAC
 #if NET
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

@@ -12,7 +12,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
@@ -30,6 +29,7 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[iOS (8,0)]
 	[Mac (10,15)]
@@ -53,7 +53,7 @@ namespace CoreVideo {
 		static IntPtr Create (IMTLDevice metalDevice, CVMetalTextureAttributes? textureAttributes)
 		{
 			if (metalDevice is null)
-				throw new ArgumentNullException (nameof (metalDevice));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metalDevice));
 
 			CVReturn err = (CVReturn) CVMetalTextureCacheCreate (IntPtr.Zero,
 								IntPtr.Zero, /* change one day to support cache attributes */
@@ -74,7 +74,7 @@ namespace CoreVideo {
 		public static CVMetalTextureCache? FromDevice (IMTLDevice metalDevice)
 		{
 			if (metalDevice is null)
-				throw new ArgumentNullException (nameof (metalDevice));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metalDevice));
 			IntPtr handle;
 			if (CVMetalTextureCacheCreate (IntPtr.Zero,
 						       IntPtr.Zero, /* change one day to support cache attributes */
@@ -93,7 +93,7 @@ namespace CoreVideo {
 		public static CVMetalTextureCache? FromDevice (IMTLDevice metalDevice, CVMetalTextureAttributes? textureAttributes, out CVReturn creationErr)
 		{
 			if (metalDevice is null)
-				throw new ArgumentNullException (nameof (metalDevice));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metalDevice));
 			IntPtr handle;
 			creationErr = (CVReturn) CVMetalTextureCacheCreate (IntPtr.Zero,
 								IntPtr.Zero, /* change one day to support cache attributes */
@@ -114,7 +114,7 @@ namespace CoreVideo {
 		public CVMetalTexture? TextureFromImage (CVImageBuffer imageBuffer, MTLPixelFormat format, nint width, nint height, nint planeIndex, out CVReturn errorCode)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException (nameof (imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			
 			IntPtr texture;
 			errorCode = CVMetalTextureCacheCreateTextureFromImage (

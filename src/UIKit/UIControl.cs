@@ -13,7 +13,6 @@ using Foundation;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace UIKit {
@@ -198,6 +197,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif

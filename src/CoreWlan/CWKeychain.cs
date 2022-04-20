@@ -7,7 +7,6 @@ using Foundation;
 using ObjCRuntime;
 using Security;
 
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -20,6 +19,7 @@ using NSStringRef = System.IntPtr;
 namespace CoreWlan {
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif

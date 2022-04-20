@@ -25,13 +25,15 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
 namespace AppKit {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public static class NSGraphics {
 		public static readonly float White = 1;
 		public static readonly float Black = 0;
@@ -207,6 +209,7 @@ namespace AppKit {
 		public extern static void DrawWindowBackground (CGRect aRect);
 		
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.11 not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -218,6 +221,7 @@ namespace AppKit {
 		public extern static void DisableScreenUpdates ();
 		
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.11 not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

@@ -4,7 +4,7 @@
     "classifications": [ "iOS", "Mobile" ],
     "identity": "Microsoft.iOS.iOSApp",
     "name": "iOS Application (Preview)",
-    "description": "A project for creating a .NET 6 iOS application",
+    "description": "A project for creating a .NET iOS application",
     "shortName": "ios",
     "tags": {
       "language": "C#",
@@ -34,7 +34,7 @@
         "description": "Overrides SupportedOSPlatformVersion in the project file",
         "replaces": "minOSVersion",
         "datatype": "string",
-        "defaultValue": "11.2"
+        "defaultValue": "13.0"
       },
       "deviceFamily": {
         "type": "parameter",

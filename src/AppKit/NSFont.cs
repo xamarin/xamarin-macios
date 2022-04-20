@@ -1,7 +1,6 @@
 #if !__MACCATALYST__
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -23,6 +22,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 #endif
@@ -44,6 +44,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 #endif
@@ -154,10 +155,12 @@ namespace AppKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 #endif
@@ -169,10 +172,12 @@ namespace AppKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 #endif
@@ -184,10 +189,12 @@ namespace AppKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 #endif
@@ -205,6 +212,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,11)]
 #endif
@@ -216,6 +224,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,11)]
 #endif
@@ -227,6 +236,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 #endif

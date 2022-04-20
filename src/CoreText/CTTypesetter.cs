@@ -31,7 +31,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -45,6 +44,13 @@ using NativeHandle = System.IntPtr;
 namespace CoreText {
 
 #region Typesetter Values
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTTypesetterOptions {
 
 		public CTTypesetterOptions ()
@@ -62,6 +68,10 @@ namespace CoreText {
 		public NSDictionary Dictionary {get; private set;}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if IOS
 		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -91,6 +101,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5,0)]
 		[TV (12,0)]
@@ -116,6 +127,12 @@ namespace CoreText {
 	}
 #endregion
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTTypesetter : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTTypesetter (NativeHandle handle, bool owns)

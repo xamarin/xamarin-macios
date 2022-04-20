@@ -15,9 +15,10 @@ public class AppDelegate : UIApplicationDelegate {
 		// create a UIViewController with a single UILabel
 		var vc = new UIViewController ();
 		vc.View!.AddSubview (new UILabel (Window!.Frame) {
-			BackgroundColor = UIColor.White,
+			BackgroundColor = UIColor.SystemBackground,
 			TextAlignment = UITextAlignment.Center,
-			Text = "Hello, Catalyst!"
+			Text = "Hello, Catalyst!",
+			AutoresizingMask = UIViewAutoresizing.All,
 		});
 		Window.RootViewController = vc;
 

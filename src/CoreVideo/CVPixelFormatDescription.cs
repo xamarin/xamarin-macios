@@ -27,7 +27,6 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -36,7 +35,12 @@ using Foundation;
 
 namespace CoreVideo {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public static class CVPixelFormatDescription {
@@ -71,6 +75,8 @@ namespace CoreVideo {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -79,6 +85,8 @@ namespace CoreVideo {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -88,6 +96,8 @@ namespace CoreVideo {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,10)]
@@ -96,6 +106,8 @@ namespace CoreVideo {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,10)]
@@ -104,6 +116,8 @@ namespace CoreVideo {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,10)]
@@ -112,6 +126,8 @@ namespace CoreVideo {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,10)]
@@ -122,6 +138,7 @@ namespace CoreVideo {
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (12,0)]
 		[TV (12,0)]
@@ -204,8 +221,8 @@ namespace CoreVideo {
 #if !XAMCORE_3_0
 		public static void Register (NSDictionary description, int pixelFormat)
 		{
-			if (description == null)
-				throw new ArgumentNullException ("description");
+			if (description is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (description));
 
 			CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType (description.Handle, pixelFormat);
 		}
@@ -213,8 +230,8 @@ namespace CoreVideo {
 
 		public static void Register (NSDictionary description, CVPixelFormatType pixelFormat)
 		{
-			if (description == null)
-				throw new ArgumentNullException ("description");
+			if (description is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (description));
 
 			CVPixelFormatDescriptionRegisterDescriptionWithPixelFormatType (description.Handle, (int) pixelFormat);
 		}

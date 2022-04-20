@@ -12,6 +12,7 @@
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
@@ -27,6 +28,12 @@ namespace CFNetwork {
 namespace CoreServices {
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFHTTPAuthentication : CFType {
 		[Preserve (Conditional = true)]
 		internal CFHTTPAuthentication (NativeHandle handle, bool owns)
@@ -43,7 +50,7 @@ namespace CoreServices {
 		public static CFHTTPAuthentication? CreateFromResponse (CFHTTPMessage response)
 		{
 			if (response is null)
-				throw new ArgumentNullException (nameof (response));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (response));
 
 			if (response.IsRequest)
 				throw new InvalidOperationException ();
@@ -70,7 +77,7 @@ namespace CoreServices {
 		public bool AppliesToRequest (CFHTTPMessage request)
 		{
 			if (request is null)
-				throw new ArgumentNullException (nameof (request));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (request));
 
 			if (!request.IsRequest)
 				throw new InvalidOperationException ();

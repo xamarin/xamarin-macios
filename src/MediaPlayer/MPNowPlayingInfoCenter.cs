@@ -11,7 +11,6 @@ using System.Diagnostics.CodeAnalysis;
 
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -19,6 +18,9 @@ namespace MediaPlayer {
 
 #if NET
 	[SupportedOSPlatform ("macos10.12.2")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[Mac (10,12,2)]
 #endif
@@ -42,6 +44,8 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 #endif
@@ -50,6 +54,8 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -57,6 +63,8 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -64,6 +72,8 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -71,6 +81,8 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -78,6 +90,8 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -85,6 +99,8 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -92,6 +108,8 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -99,6 +117,8 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -106,6 +126,8 @@ namespace MediaPlayer {
 #if NET
 		[SupportedOSPlatform ("ios10.3")]
 		[SupportedOSPlatform ("macos10.12.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,3)]
 #endif
@@ -114,6 +136,7 @@ namespace MediaPlayer {
 		[SupportedOSPlatform ("ios11.1")]
 		[SupportedOSPlatform ("tvos11.1")]
 		[SupportedOSPlatform ("macos10.13.1")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,1)]
 		[TV (11,1)]
@@ -281,7 +304,7 @@ namespace MediaPlayer {
 				Title = (string) (result as NSString);
 		}
 	}
-	
+
 	public partial class MPNowPlayingInfoCenter {
 
 		public MPNowPlayingInfo NowPlaying {

@@ -12,7 +12,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -26,7 +25,12 @@ using NativeHandle = System.IntPtr;
 namespace CoreVideo {
 
 	// CVPixelBufferPool.h
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public partial class CVPixelBufferPool : NativeObject
@@ -45,12 +49,12 @@ namespace CoreVideo {
 		extern static /* CVPixelBufferPoolRef __nullable */ IntPtr CVPixelBufferPoolRetain (
 			/* CVPixelBufferPoolRef __nullable */ IntPtr handle);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CVPixelBufferPoolRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CVPixelBufferPoolRelease (GetCheckedHandle ());
 		}
@@ -154,6 +158,8 @@ namespace CoreVideo {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
@@ -165,6 +171,8 @@ namespace CoreVideo {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]

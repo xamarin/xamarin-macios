@@ -5,7 +5,6 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace CoreSpotlight {
 
@@ -24,6 +23,7 @@ namespace CoreSpotlight {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (11,0)]
@@ -39,6 +39,7 @@ namespace CoreSpotlight {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (11,0)]
@@ -54,6 +55,7 @@ namespace CoreSpotlight {
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (11,0)]

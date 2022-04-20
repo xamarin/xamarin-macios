@@ -5,7 +5,6 @@
 //     Manuel de la Pena <mandel@microsoft.com>
 using System;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 using Foundation;
 
@@ -42,6 +41,10 @@ namespace Foundation {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.10")]
 		[UnsupportedOSPlatform ("ios8.0")]
 #if MONOMAC

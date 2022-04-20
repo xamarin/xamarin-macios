@@ -1,6 +1,5 @@
 #if IOS
 using System;
-using System.Runtime.Versioning;
 using Foundation;
 using Intents;
 using ObjCRuntime;
@@ -12,6 +11,7 @@ namespace Intents {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios12.0")]
 #if IOS
 		[Obsolete ("Starting with ios12.0 use the overload that takes 'INSpeakableString carName'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -28,6 +28,7 @@ namespace Intents {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios12.0")]
 #if IOS
 		[Obsolete ("Starting with ios12.0 use the overload that takes 'INSpeakableString carName'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

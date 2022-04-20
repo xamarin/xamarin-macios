@@ -29,9 +29,11 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 #if IOS && !COREBUILD
@@ -44,6 +46,12 @@ namespace CoreLocation {
 	// CLLocationDegrees -> double -> CLLocation.h
 
 	// CLLocation.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CLLocationCoordinate2D {
 		public /* CLLocationDegrees */ double Latitude;
@@ -75,13 +83,15 @@ namespace CoreLocation {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10, 0)]
 		[Mac (11,0)]
 #endif
 		static public CLPlacemark GetPlacemark (CLLocation location, string name, CNPostalAddress postalAddress)
 		{
-			return (null as CLPlacemark)._GetPlacemark (location, name, postalAddress);
+			return (null as CLPlacemark)!._GetPlacemark (location, name, postalAddress);
 		}
 	}
 #endif

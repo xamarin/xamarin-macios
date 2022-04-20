@@ -30,7 +30,6 @@ using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
 #if NET
-using System.Runtime.Versioning;
 #endif
 
 #nullable enable
@@ -131,6 +130,12 @@ namespace CoreVideo {
 	}
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class CVPixelFormatTypeExtensions {
 
 #if NET

@@ -9,7 +9,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace CoreGraphics {
@@ -18,6 +17,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Mac (10,15)]
 	[iOS (13,0)]

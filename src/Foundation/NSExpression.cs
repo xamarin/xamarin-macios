@@ -3,7 +3,6 @@
 //       tests for those was not possible. The properties for these two types have been deduced from the other types yet bugs are possible and an objc exception will be thrown.
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 namespace Foundation {
@@ -96,6 +95,8 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,11)]
 		[iOS (9,0)]
@@ -115,6 +116,8 @@ namespace Foundation {
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,11)]
 		[iOS (9,0)]

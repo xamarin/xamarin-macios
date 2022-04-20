@@ -7,7 +7,6 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Collections.Generic;
 
 using CoreFoundation;
@@ -88,6 +87,8 @@ namespace VideoToolbox {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,0)]
 #endif
@@ -131,6 +132,8 @@ namespace VideoToolbox {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10,0)]
 #endif

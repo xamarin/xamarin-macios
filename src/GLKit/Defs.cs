@@ -28,7 +28,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using ModelIO;
 using ObjCRuntime;
@@ -129,6 +128,8 @@ namespace GLKit {
 #if NET
 	[SupportedOSPlatform ("ios9.0")]
 	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("tvos12.0")]
 	[UnsupportedOSPlatform ("macos10.14")]
 	[UnsupportedOSPlatform ("ios12.0")]

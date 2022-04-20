@@ -12,7 +12,6 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if MONOMAC
 using View = AppKit.NSView;
@@ -121,6 +120,9 @@ namespace UIKit
 #if !MONOMAC || NET
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst13.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10, 0)]
 #endif
@@ -131,6 +133,9 @@ namespace UIKit
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst13.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (10, 0)]
 #endif

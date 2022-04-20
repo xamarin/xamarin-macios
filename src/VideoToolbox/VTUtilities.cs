@@ -9,7 +9,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreGraphics;
@@ -24,6 +23,7 @@ namespace VideoToolbox {
 	[SupportedOSPlatform ("macos10.11")]
 	[SupportedOSPlatform ("ios9.0")]
 	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Mac (10,11)]
 	[iOS (9,0)]
@@ -57,6 +57,7 @@ namespace VideoToolbox {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
@@ -70,6 +71,7 @@ namespace VideoToolbox {
 
 #if NET
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else

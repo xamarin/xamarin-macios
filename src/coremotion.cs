@@ -537,7 +537,6 @@ namespace CoreMotion {
 		CMPedometerEventType Type { get; }
 	}
 
-	[NoMac]
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -556,7 +555,6 @@ namespace CoreMotion {
 		float PercentLikely { get; }
 	}
 
-	[NoMac]
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -831,6 +829,34 @@ namespace CoreMotion {
 
 		[Export ("precision")]
 		double Precision { get; }
+	}
+
+	// Just to please the generator that at this point does not know the hierarchy
+	interface NSUnitPressure : NSUnit { }
+	interface NSUnitTemperature : NSUnit { }
+
+	[Watch (8,5), NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
+	[BaseType (typeof (CMLogItem))]
+	[DisableDefaultCtor]
+	interface CMAmbientPressureData {
+
+		[Export ("pressure", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitPressure> Pressure { get; }
+
+		[Export ("temperature", ArgumentSemantic.Strong)]
+		NSMeasurement<NSUnitTemperature> Temperature { get; }
+	}
+
+	[Watch (8,5), NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
+	[BaseType (typeof (CMAmbientPressureData))]
+	[DisableDefaultCtor]
+	interface CMRecordedPressureData {
+		
+		[Export ("identifier")]
+		ulong Identifier { get; }
+
+		[Export ("startDate")]
+		NSDate StartDate { get; }
 	}
 
 }

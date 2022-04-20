@@ -1,6 +1,5 @@
 using System;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace MetalPerformanceShaders {
 	public partial class MPSCnnConvolutionDescriptor {
@@ -9,6 +8,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Introduced (PlatformName.TvOS, 11, 0, PlatformArchitecture.All, null)]
 		[Introduced (PlatformName.iOS, 11, 0, PlatformArchitecture.All, null)]

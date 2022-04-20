@@ -28,7 +28,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -42,6 +41,9 @@ using NativeHandle = System.IntPtr;
 #nullable enable
 
 namespace CoreVideo {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class CVDisplayLink : NativeObject {
 		GCHandle callbackHandle;
 		
@@ -134,7 +136,7 @@ namespace CoreVideo {
 		public static CVDisplayLink? CreateFromDisplayIds (uint[] displayIds, out CVReturn error)
 		{
 			if (displayIds is null)
-				throw new ArgumentNullException (nameof (displayIds));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (displayIds));
 			error = 0;
 			IntPtr handle = IntPtr.Zero;
 			error = CVDisplayLinkCreateWithCGDisplays (displayIds, displayIds.Length, out handle);
@@ -212,12 +214,12 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVDisplayLinkRelease (IntPtr handle);
 		
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CVDisplayLinkRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CVDisplayLinkRelease (GetCheckedHandle ());
 		}

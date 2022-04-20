@@ -7,13 +7,14 @@
 //   Miguel de Icaza 
 //
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 namespace CoreMotion {
 
 	// CMMagnetometer.h
 #if NET
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Mac (10,15)]
 #endif

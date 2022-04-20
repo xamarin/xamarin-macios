@@ -26,7 +26,6 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -38,6 +37,7 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("macos10.12")]
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Mac (10,12)]
 	[iOS (10,0)]
@@ -60,13 +60,13 @@ namespace CoreFoundation {
 			}
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			if (Handle != IntPtr.Zero)
 				os_retain (Handle);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			if (Handle != IntPtr.Zero)
 				os_release (Handle);

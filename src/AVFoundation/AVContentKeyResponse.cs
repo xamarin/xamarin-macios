@@ -10,7 +10,6 @@ using ObjCRuntime;
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
 
 #nullable enable
 

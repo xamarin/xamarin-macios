@@ -29,7 +29,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -63,6 +62,9 @@ namespace ImageIO {
 	{
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -70,6 +72,9 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -77,6 +82,9 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -85,6 +93,8 @@ namespace ImageIO {
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 10)]
 		[iOS (8, 0)]
@@ -93,6 +103,9 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -100,6 +113,9 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -148,6 +164,12 @@ namespace ImageIO {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CGImageDestination : NativeObject {
 #if !NET
 		internal CGImageDestination (NativeHandle handle)
@@ -183,9 +205,9 @@ namespace ImageIO {
 		public static CGImageDestination? Create (CGDataConsumer consumer, string typeIdentifier, int imageCount, CGImageDestinationOptions? options = null)
 		{
 			if (consumer is null)
-				throw new ArgumentNullException (nameof (consumer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (consumer));
 			if (typeIdentifier is null)
-				throw new ArgumentNullException (nameof (typeIdentifier));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (typeIdentifier));
 
 			using var dict = options?.ToDictionary ();
 			var typeId = CFString.CreateNative (typeIdentifier);
@@ -205,9 +227,9 @@ namespace ImageIO {
 		public static CGImageDestination? Create (NSMutableData data, string typeIdentifier, int imageCount, CGImageDestinationOptions? options = null)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (typeIdentifier is null)
-				throw new ArgumentNullException (nameof (typeIdentifier));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (typeIdentifier));
 
 			using var dict = options?.ToDictionary ();
 			var typeId = CFString.CreateNative (typeIdentifier);
@@ -227,9 +249,9 @@ namespace ImageIO {
 		public static CGImageDestination? Create (NSUrl url, string typeIdentifier, int imageCount)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			if (typeIdentifier is null)
-				throw new ArgumentNullException (nameof (typeIdentifier));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (typeIdentifier));
 
 			var typeId = CFString.CreateNative (typeIdentifier);
 			try {
@@ -257,7 +279,7 @@ namespace ImageIO {
 		public void AddImage (CGImage image, CGImageDestinationOptions? options = null)
 		{
 			if (image is null)
-				throw new ArgumentNullException (nameof (image));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (image));
 
 			using var dict = options?.ToDictionary ();
 			CGImageDestinationAddImage (Handle, image.Handle, dict.GetHandle ());
@@ -266,7 +288,7 @@ namespace ImageIO {
 		public void AddImage (CGImage image, NSDictionary? properties)
 		{
 			if (image is null)
-				throw new ArgumentNullException (nameof (image));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (image));
 			
 			CGImageDestinationAddImage (Handle, image.Handle, properties.GetHandle ());
 		}
@@ -279,7 +301,7 @@ namespace ImageIO {
 		public void AddImage (CGImageSource source, int index, CGImageDestinationOptions? options = null)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 
 			using var dict = options?.ToDictionary ();
 			CGImageDestinationAddImageFromSource (Handle, source.Handle, index, dict.GetHandle ());
@@ -288,7 +310,7 @@ namespace ImageIO {
 		public void AddImage (CGImageSource source, int index, NSDictionary? properties)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			
 			CGImageDestinationAddImageFromSource (Handle, source.Handle, index, properties.GetHandle ());
 		}
@@ -306,6 +328,9 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -316,6 +341,9 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -323,12 +351,15 @@ namespace ImageIO {
 		public void AddImageAndMetadata (CGImage image, CGImageMetadata meta, NSDictionary? options)
 		{
 			if (image is null)
-				throw new ArgumentNullException (nameof (image));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (image));
 			CGImageDestinationAddImageAndMetadata (Handle, image.Handle, meta.GetHandle (), options.GetHandle ());
 		}
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -340,6 +371,9 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -351,6 +385,9 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -358,7 +395,7 @@ namespace ImageIO {
 		public bool CopyImageSource (CGImageSource image, NSDictionary? options, out NSError? error)
 		{
 			if (image is null)
-				throw new ArgumentNullException (nameof (image));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (image));
 			var result = CGImageDestinationCopyImageSource (Handle, image.Handle, options.GetHandle (), out var err);
 			error = Runtime.GetNSObject<NSError> (err);
 			return result;
@@ -366,6 +403,9 @@ namespace ImageIO {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -379,6 +419,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4, 0)]
 		[TV (11, 0)]
@@ -392,6 +433,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4, 0)]
 		[TV (11, 0)]

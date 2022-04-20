@@ -31,7 +31,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -69,6 +68,8 @@ namespace ImageIO {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -104,6 +105,8 @@ namespace ImageIO {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
@@ -166,7 +169,7 @@ namespace ImageIO {
 		public static CGImageSource? FromUrl (NSUrl url, CGImageOptions? options)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			using (var dict = options?.ToDictionary ()) {
 				var result = CGImageSourceCreateWithURL (url.Handle, dict.GetHandle ());
@@ -186,7 +189,7 @@ namespace ImageIO {
 		public static CGImageSource? FromDataProvider (CGDataProvider provider, CGImageOptions? options)
 		{
 			if (provider is null)
-				throw new ArgumentNullException (nameof (provider));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (provider));
 
 			using (var dict = options?.ToDictionary ()) {
 				var result = CGImageSourceCreateWithDataProvider (provider.Handle, dict.GetHandle ());
@@ -206,7 +209,7 @@ namespace ImageIO {
 		public static CGImageSource? FromData (NSData data, CGImageOptions? options)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			using (var dict = options?.ToDictionary ()) {
 				var result = CGImageSourceCreateWithData (data.Handle, dict.GetHandle ());
@@ -248,7 +251,7 @@ namespace ImageIO {
 		public NSDictionary? CopyProperties (CGImageOptions options)
 		{
 			if (options is null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 			using var dict = options.ToDictionary ();
 			return CopyProperties (dict);
 		}
@@ -269,7 +272,7 @@ namespace ImageIO {
 		public NSDictionary? CopyProperties (CGImageOptions options, int imageIndex)
 		{
 			if (options is null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 			using var dict = options.ToDictionary ();
 			return CopyProperties (dict, imageIndex);
 		}
@@ -331,7 +334,7 @@ namespace ImageIO {
 		public void UpdateData (NSData data, bool final)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			CGImageSourceUpdateData (Handle, data.Handle, final);
 		}
 
@@ -343,7 +346,7 @@ namespace ImageIO {
 		public void UpdateDataProvider (CGDataProvider provider, bool final)
 		{
 			if (provider is null)
-				throw new ArgumentNullException (nameof (provider));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (provider));
 			CGImageSourceUpdateDataProvider (Handle, provider.Handle, final);
 		}
 
@@ -370,6 +373,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4, 0)]
 		[TV (11, 0)]
@@ -383,6 +387,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4, 0)]
 		[TV (11, 0)]
@@ -403,6 +408,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,14)]
 		[iOS (12,0)]
@@ -416,6 +422,7 @@ namespace ImageIO {
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,14)]
 		[iOS (12,0)]

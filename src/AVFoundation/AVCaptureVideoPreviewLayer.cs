@@ -6,7 +6,6 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
-using System.Runtime.Versioning;
 
 #nullable enable
 

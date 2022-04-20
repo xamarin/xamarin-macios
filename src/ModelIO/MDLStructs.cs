@@ -9,7 +9,6 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 using CoreFoundation;
 using CoreGraphics;
@@ -30,11 +29,19 @@ using VectorInt4 = global::OpenTK.Vector4i;
 namespace ModelIO {
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class MDLVertexFormatExtensions {
 		
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
@@ -45,6 +52,8 @@ namespace ModelIO {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
@@ -57,7 +66,13 @@ namespace ModelIO {
 	}
 #endif
 
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct MDLAxisAlignedBoundingBox {
 		public Vector3 MaxBounds;
 		public Vector3 MinBounds;
@@ -83,7 +98,13 @@ namespace ModelIO {
 	}
 #endif
 
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 #if NET
 	public struct MDLVoxelIndexExtent {
 #else

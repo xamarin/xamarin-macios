@@ -10,7 +10,6 @@ using System;
 using ObjCRuntime;
 using CoreGraphics;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace UIKit {
 	
@@ -226,6 +225,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -237,6 +238,8 @@ namespace UIKit {
 		
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -248,6 +251,8 @@ namespace UIKit {
 		
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -259,6 +264,8 @@ namespace UIKit {
 		
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif

@@ -30,6 +30,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -48,7 +49,13 @@ namespace CoreGraphics {
 		DrawsBeforeStartLocation = (1 << 0),
 		DrawsAfterEndLocation = (1 << 1)
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CGGradient : NativeObject
 	{
 #if !COREBUILD
@@ -64,12 +71,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGGradientRelease (/* CGGradientRef */ IntPtr gradient);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGGradientRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGGradientRelease (GetCheckedHandle ());
 		}

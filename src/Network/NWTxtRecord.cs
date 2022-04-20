@@ -12,7 +12,6 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
-using System.Runtime.Versioning;
 using System.Text;
 using ObjCRuntime;
 using Foundation;
@@ -33,6 +32,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13,0)]
 	[Mac (10,15)]

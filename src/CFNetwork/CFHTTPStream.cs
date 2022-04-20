@@ -13,7 +13,6 @@ using System;
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -28,6 +27,10 @@ namespace CoreServices {
 
 	// all fields constants that this is using are deprecated in Xcode 7
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("macos10.11")]
 	[UnsupportedOSPlatform ("ios9.0")]
 #if MONOMAC
@@ -148,7 +151,7 @@ namespace CoreServices {
 		public void SetProxy (CFProxySettings proxySettings)
 		{
 			if (proxySettings is null)
-				throw new ArgumentNullException (nameof (proxySettings));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (proxySettings));
 
 			SetProperty (_Proxy, proxySettings.Dictionary);
 		}

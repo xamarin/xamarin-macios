@@ -35,6 +35,7 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 using Foundation;
+using System.Runtime.Versioning;
 
 #if NET
 using CFIndex = System.IntPtr;
@@ -71,6 +72,12 @@ namespace CoreFoundation {
 		public IntPtr Perform;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFRunLoopSource : NativeObject {
 #if !NET
 		public CFRunLoopSource (NativeHandle handle)
@@ -126,6 +133,12 @@ namespace CoreFoundation {
 	}
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public abstract class CFRunLoopSourceCustom : CFRunLoopSource {
 		GCHandle gch;
 

@@ -8,14 +8,18 @@
 //
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
 namespace CoreMedia {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	[StructLayout(LayoutKind.Sequential)]
@@ -231,6 +235,8 @@ namespace CoreMedia {
 #if NET
 		[SupportedOSPlatform ("ios7.1")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,1)]
 		[Mac (10,10)]
@@ -241,6 +247,8 @@ namespace CoreMedia {
 #if NET
 		[SupportedOSPlatform ("ios7.1")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,1)]
 		[Mac (10, 10)]
@@ -315,6 +323,7 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -327,6 +336,7 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]

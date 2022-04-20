@@ -11,7 +11,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using CoreFoundation;
 using Foundation;
@@ -21,6 +20,9 @@ namespace ImageIO {
 
 #if NET
 	[SupportedOSPlatform ("ios7.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[iOS (7,0)]
 #endif
@@ -42,7 +44,7 @@ namespace ImageIO {
 			: base (CGImageMetadataCreateMutableCopy (Runtime.ThrowOnNull (metadata, nameof (metadata)).Handle), true)
 		{
 			if (metadata is null)
-				throw new ArgumentNullException (nameof (metadata));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metadata));
 		}
 
 		[DllImport (Constants.ImageIOLibrary)]
@@ -54,9 +56,9 @@ namespace ImageIO {
 		public bool RegisterNamespace (NSString xmlns, NSString prefix, out NSError? error)
 		{
 			if (xmlns is null)
-				throw new ArgumentNullException (nameof (xmlns));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (xmlns));
 			if (prefix is null)
-				throw new ArgumentNullException (nameof (prefix));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (prefix));
 			bool result = CGImageMetadataRegisterNamespaceForPrefix (Handle, xmlns.Handle, prefix.Handle, out var err);
 			error = Runtime.GetNSObject<NSError> (err);
 			return result;
@@ -71,9 +73,9 @@ namespace ImageIO {
 		public bool SetTag (CGImageMetadataTag? parent, NSString path, CGImageMetadataTag tag)
 		{
 			if (path is null)
-				throw new ArgumentNullException (nameof (path));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			if (tag is null)
-				throw new ArgumentNullException (nameof (tag));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tag));
 			return CGImageMetadataSetTagWithPath (Handle, parent.GetHandle (), path.Handle, tag.Handle);
 		}
 
@@ -86,7 +88,7 @@ namespace ImageIO {
 		public bool SetValue (CGImageMetadataTag? parent, NSString path, NSObject value)
 		{
 			if (value is null)
-				throw new ArgumentNullException (nameof (value));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			return SetValue (parent, path, value.Handle);
 		}
 
@@ -98,7 +100,7 @@ namespace ImageIO {
 		bool SetValue (CGImageMetadataTag? parent, NSString path, IntPtr value)
 		{
 			if (path is null)
-				throw new ArgumentNullException (nameof (path));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			return CGImageMetadataSetValueWithPath (Handle, parent.GetHandle (), path.Handle, value);
 		}
 
@@ -110,7 +112,7 @@ namespace ImageIO {
 		public bool RemoveTag (CGImageMetadataTag? parent, NSString path)
 		{
 			if (path is null)
-				throw new ArgumentNullException (nameof (path));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			return CGImageMetadataRemoveTagWithPath (Handle, parent.GetHandle (), path.Handle);
 		}
 
@@ -124,7 +126,7 @@ namespace ImageIO {
 		public bool SetValueMatchingImageProperty (NSString dictionaryName, NSString propertyName, NSObject value)
 		{
 			if (value is null)
-				throw new ArgumentNullException (nameof (value));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			return SetValueMatchingImageProperty (dictionaryName, propertyName, value.Handle);
 		}
 
@@ -136,9 +138,9 @@ namespace ImageIO {
 		bool SetValueMatchingImageProperty (NSString dictionaryName, NSString propertyName, IntPtr value)
 		{
 			if (dictionaryName is null)
-				throw new ArgumentNullException (nameof (dictionaryName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionaryName));
 			if (propertyName is null)
-				throw new ArgumentNullException (nameof (propertyName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (propertyName));
 			return CGImageMetadataSetValueMatchingImageProperty (Handle, dictionaryName.Handle, propertyName.Handle, value);
 		}
 	}

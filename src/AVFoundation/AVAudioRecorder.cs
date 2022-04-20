@@ -29,7 +29,6 @@ using CoreFoundation;
 using AudioToolbox;
 using ObjCRuntime;
 using System;
-using System.Runtime.Versioning;
 
 #nullable enable
 
@@ -65,6 +64,7 @@ namespace AVFoundation {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]

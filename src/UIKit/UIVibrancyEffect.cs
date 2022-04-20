@@ -2,7 +2,6 @@
 #if IOS || TVOS
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using Foundation;
 #if HAS_NOTIFICATIONCENTER
 using NotificationCenter;
@@ -21,6 +20,8 @@ namespace UIKit {
 		// note: we cannot reuse the same method name - as it would break compilation of existing apps
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios10.0")]
 #if IOS
 		[Obsolete ("Starting with ios10.0 use 'CreatePrimaryVibrancyEffectForNotificationCenter' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -35,6 +36,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios13.0")]
 #if IOS
 		[Obsolete ("Starting with ios13.0 use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -50,6 +53,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios13.0")]
 #if IOS
 		[Obsolete ("Starting with ios13.0 use 'UIVibrancyEffect.CreateWidgetEffectForNotificationCenter' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -65,6 +70,8 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (13,0)]
 #endif

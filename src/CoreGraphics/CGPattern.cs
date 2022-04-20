@@ -27,6 +27,7 @@
 //
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -56,6 +57,13 @@ namespace CoreGraphics {
 		internal ReleaseInfoCallback release;
 	}
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGPattern.h
 	public class CGPattern : NativeObject
 	{
@@ -73,8 +81,8 @@ namespace CoreGraphics {
 		{
 		}
 
-		protected override void Retain () => CGPatternRetain (Handle);
-		protected override void Release () => CGPatternRelease (Handle);
+		protected internal override void Retain () => CGPatternRetain (Handle);
+		protected internal override void Release () => CGPatternRelease (Handle);
 		
 		// This is what we expose on the API
 		public delegate void DrawPattern (CGContext ctx);

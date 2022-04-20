@@ -172,7 +172,7 @@ namespace Xamarin.Tests
 			}
 
 			if (Mode == ExecutionMode.DotNet) {
-				var targetPlatform = "net6.0";
+				var targetPlatform = Configuration.DotNetTfm;
 				var subdir = string.Empty;
 				var targetPlatformSuffix = string.Empty;
 				var isDevice = Platform == "iPhone";
@@ -333,8 +333,8 @@ namespace Xamarin.Tests
 			var rv = Engine.RunTarget (ApplePlatform, executionMode ?? Mode, paths.ProjectCSProjPath, target, properties);
 			if (expectedErrorCount != Engine.ErrorEvents.Count) {
 				foreach (var e in Engine.ErrorEvents)
-					Console.WriteLine (e.Message);
-				Assert.AreEqual (expectedErrorCount, Engine.ErrorEvents.Count, "ExitCode/ExpectedErrorCount");
+					Console.WriteLine (e.ToString ());
+				Assert.AreEqual (expectedErrorCount, Engine.ErrorEvents.Count, $"Unexpected number of errors when executing target '{target}'");
 			}
 			if (expectedErrorCount > 0) {
 				Assert.AreEqual (1, rv.ExitCode, "ExitCode (failure)");

@@ -1,6 +1,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
-		<MessagingVersion>1.4.28</MessagingVersion>
-		<HotRestartVersion>1.0.82</HotRestartVersion>
+		<MessagingVersion>1.6.3</MessagingVersion>
+		<HotRestartVersion>1.0.90</HotRestartVersion>
 	</PropertyGroup>
 </Project>

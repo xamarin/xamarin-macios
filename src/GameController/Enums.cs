@@ -11,7 +11,6 @@ using System;
 
 using ObjCRuntime;
 using Foundation;
-using System.Runtime.Versioning;
 
 namespace GameController {
 	[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'GCController.GetMicroGamepadController()' instead.")]

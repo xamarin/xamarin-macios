@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Versioning;
 using ObjCRuntime;
 
 #if NET
@@ -21,6 +20,8 @@ namespace ModelIO {
 #if NET
 		[SupportedOSPlatform ("ios10.2")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,2)]
 		[Mac (10,12)]

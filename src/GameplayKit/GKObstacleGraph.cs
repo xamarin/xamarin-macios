@@ -10,7 +10,6 @@
 using System;
 using Foundation;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -33,6 +32,7 @@ namespace GameplayKit {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]

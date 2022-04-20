@@ -2,7 +2,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using CoreGraphics;
 using Foundation;
 using Metal;
@@ -25,6 +24,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -37,6 +37,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -73,6 +74,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -85,6 +87,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -96,6 +99,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -108,6 +112,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -124,6 +129,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13,0)]
 		[TV (12,0)]
@@ -136,6 +142,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13,0)]
 		[TV (12,0)]
@@ -297,6 +304,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
 #if TVOS
@@ -418,6 +426,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos11.3")]
 		[SupportedOSPlatform ("macos10.13.4")]
 		[SupportedOSPlatform ("ios11.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11,3)]
 		[Mac (10,13,4)]
@@ -438,6 +447,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos11.3")]
 		[SupportedOSPlatform ("macos10.13.4")]
 		[SupportedOSPlatform ("ios11.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11,3)]
 		[Mac (10,13,4)]
@@ -460,6 +470,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos11.3")]
 		[SupportedOSPlatform ("macos10.13.4")]
 		[SupportedOSPlatform ("ios11.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11,3)]
 		[Mac (10,13,4)]
@@ -480,6 +491,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos11.3")]
 		[SupportedOSPlatform ("macos10.13.4")]
 		[SupportedOSPlatform ("ios11.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11,3)]
 		[Mac (10,13,4)]

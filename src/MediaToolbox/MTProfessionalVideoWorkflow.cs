@@ -1,13 +1,17 @@
+#nullable enable
+
 #if MONOMAC
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
 namespace MediaToolbox {
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	static public class MTProfessionalVideoWorkflow {
 
 #if NET

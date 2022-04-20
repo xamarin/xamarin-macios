@@ -35,7 +35,6 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 using System.Threading;
 
 using AudioToolbox;
@@ -64,6 +63,10 @@ namespace AudioUnit
 	}
 
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("tvos14.0")]
 	[UnsupportedOSPlatform ("macos11.0")]
 	[UnsupportedOSPlatform ("ios14.0")]

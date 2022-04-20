@@ -26,11 +26,18 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 #nullable enable
 
 namespace AVFoundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVEdgeWidths  {
 		public nfloat /* CGFloat */ Left, Top, Right, Bottom;

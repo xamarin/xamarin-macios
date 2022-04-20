@@ -32,7 +32,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -90,6 +89,10 @@ namespace CoreText {
 		MaximumLineHeight       = 8,
 		MinimumLineHeight       = 9,
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.8")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if MONOMAC
@@ -227,6 +230,12 @@ namespace CoreText {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTParagraphStyleSettings {
 
 		public CTParagraphStyleSettings ()
@@ -319,6 +328,12 @@ namespace CoreText {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTParagraphStyle : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTParagraphStyle (NativeHandle handle, bool owns)

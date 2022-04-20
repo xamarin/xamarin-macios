@@ -1,0 +1,7 @@
+{
+  "author": "Microsoft",
+  "name": "tvOS アプリケーション (プレビュー)",
+  "description": ".NET tvOS アプリケーションを作成するためのプロジェクト",
+  "symbols/bundleId/description": "Info.plist の CFBundleIdentifier をオーバーライドします",
+  "symbols/minOSVersion/description": "プロジェクト ファイルの SupportedOSPlatformVersion をオーバーライドします"
+}

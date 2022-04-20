@@ -16,7 +16,6 @@ using CoreGraphics;
 using Photos;
 using System;
 using System.Drawing;
-using System.Runtime.Versioning;
 
 namespace UIKit {
 	public partial class UIImagePickerController {
@@ -103,6 +102,7 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios9.1")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (9,1)]
 #endif
@@ -126,6 +126,7 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 #endif
@@ -137,6 +138,7 @@ namespace UIKit {
 
 #if NET
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 #endif

@@ -34,7 +34,6 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using CoreFoundation;
@@ -57,6 +56,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (11,0)]
@@ -82,6 +82,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (11,0)]
@@ -93,6 +94,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[NoWatch]
 		[iOS (13,0)]
@@ -222,6 +224,12 @@ namespace AudioToolbox {
 		IsEstimate = 1
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileSmpteTime { // AudioFile_SMPTE_Time
 		public sbyte Hours;
@@ -231,6 +239,12 @@ namespace AudioToolbox {
 		public uint  SubFrameSampleOffset;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileMarker {
 		public double FramePosition;
@@ -252,6 +266,7 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13,0)]
@@ -269,6 +284,7 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13,0)]
@@ -285,6 +301,7 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13,0)]
@@ -301,6 +318,7 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[NoWatch]
 	[iOS (13,0)]
@@ -346,6 +364,12 @@ namespace AudioToolbox {
 		CAFKeySignature				= 0x6b736967,	// 'ksig'
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AudioFileMarkerList : IDisposable
 	{
 		IntPtr ptr;
@@ -416,6 +440,12 @@ namespace AudioToolbox {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFilePacketTableInfo
 	{
@@ -424,6 +454,12 @@ namespace AudioToolbox {
 		public int RemainderFrames;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioFileRegion {
 		readonly IntPtr ptr;
@@ -501,6 +537,12 @@ namespace AudioToolbox {
 		PlayBackward = 4
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AudioFileRegionList : IDisposable
 	{
 		IntPtr ptr;
@@ -576,6 +618,12 @@ namespace AudioToolbox {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AudioFile : DisposableObject {
 		internal AudioFile ()
 		{
@@ -1593,6 +1641,12 @@ namespace AudioToolbox {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class AudioFileInfoDictionary : DictionaryContainer
 	{
 		internal AudioFileInfoDictionary (NSDictionary dict)
@@ -1737,7 +1791,13 @@ namespace AudioToolbox {
 	delegate int WriteProc (IntPtr clientData, long position, int requestCount, IntPtr buffer, out int actualCount);
 	delegate long GetSizeProc (IntPtr clientData);
 	delegate int SetSizeProc (IntPtr clientData, long size);
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public abstract class AudioSource : AudioFile {
 		static ReadProc dRead;
 		static WriteProc dWrite;

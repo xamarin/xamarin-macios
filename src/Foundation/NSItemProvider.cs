@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using CloudKit;
 using ObjCRuntime;
-using System.Runtime.Versioning;
 
 namespace Foundation 
 {
@@ -34,6 +33,7 @@ namespace Foundation
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4,0)]
 		[TV (11,0)]
@@ -55,6 +55,7 @@ namespace Foundation
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4,0)]
 		[TV (11,0)]
@@ -77,6 +78,7 @@ namespace Foundation
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (4,0)]
 		[TV (11,0)]

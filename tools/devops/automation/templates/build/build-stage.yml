@@ -1,0 +1,178 @@
+# template that contains all the different steps to create a pkgs, publish the results and provide feedback to the
+# developers in github.
+parameters:
+- name: runTests
+  type: boolean
+  default: true
+
+- name: vsdropsPrefix
+  type: string
+
+- name: runDeviceTests
+  type: boolean
+  default: true
+
+- name: keyringPass
+  type: string
+
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
+- name: enableDotnet
+  type: boolean
+  default: false
+
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
+- name: pool
+  type: string
+  default: automatic
+
+jobs:
+- job: configure
+  displayName: 'Configure build'
+  pool:
+    vmImage: windows-latest
+
+  variables:
+    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+
+  steps:
+  - template: ../common/configure.yml
+    parameters: 
+      uploadArtifacts: true
+      enableDotnet: ${{ parameters.enableDotnet }}
+
+- ${{ if eq(parameters.pool, 'automatic') }}:
+  - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+    pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+
+    # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+    - template: azure-devops-pools/agent-pool-selector.yml@templates
+      parameters:
+        agentPoolPR: $(PRBuildPool)
+        agentPoolPRUrl: $(PRBuildPoolUrl)
+        agentPoolCI: $(CIBuildPool)
+        agentPoolCIUrl: $(CIBuildPoolUrl)
+
+# This job performs the build of the nuget pkgs and the framework pkgs. There are two interesting dependencies in this job:
+#
+# - configure: Get the labels from gihub and populate the output.
+# - AgentPoolSelector: If the build was not manually triggered to use a specific pool, this job is used to decide if the build is using a 
+#                      private pool or a public one.
+- job: build
+  dependsOn:
+  - ${{ if eq(parameters.pool, 'automatic') }}:
+    - AgentPoolSelector
+  - configure
+  displayName: 'Build packages'
+  timeoutInMinutes: 1000
+  variables:
+    ${{ if eq(parameters.pool, 'automatic') }}:
+      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+    ${{ if eq(parameters.pool, 'ci') }}:
+      AgentPoolComputed: $(CIBuildPool)
+    ${{ if eq(parameters.pool, 'pr') }}:
+      AgentPoolComputed: $(PRBuildPool)
+    # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
+    #
+    # build-package
+    # run-internal-tests
+    # skip-packages
+    # skip-nugets
+    # skip-signing
+    # skip-external-tests
+    # trigger-device-tests
+    # run-sample-tests
+    # skip-packaged-xamarin-mac-tests
+    BuildPackage: $[ dependencies.configure.outputs['labels.build-package'] ]
+    RunInternalTests: $[ dependencies.configure.outputs['labels.run-internal-tests'] ]
+    SkipPackages: $[ dependencies.configure.outputs['labels.skip-packages'] ]
+    SkipNugets: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
+    SkipSigning: $[ dependencies.configure.outputs['labels.skip-signing'] ]
+    SkipExternalTests: $[ dependencies.configure.outputs['labels.skip-external-tests'] ]
+    TriggerDeviceTests: $[ dependencies.configure.outputs['labels.trigger-device-tests'] ]
+    RunSampleTests: $[ dependencies.configure.outputs['labels.run-sample-tests'] ]
+    SkipPackagedXamarinMacTests: $[ dependencies.configure.outputs['labels.skip-packaged-xamarin-mac-tests'] ]
+    SkipPublicJenkins: $[ dependencies.configure.outputs['labels.skip-public-jenkins'] ]
+    SkipApiComparison: $[ dependencies.configure.outputs['labels.skip-api-comparison'] ]
+    # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
+    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+    XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
+  pool:
+    name: $(AgentPoolComputed)
+    demands:
+    - Agent.OS -equals Darwin
+    - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+  workspace:
+    clean: all
+
+  steps:
+  - template: build-pkgs.yml
+    parameters:
+      runTests: ${{ parameters.runTests }}
+      runDeviceTests: ${{ parameters.runDeviceTests }}
+      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+      keyringPass: ${{ parameters.keyringPass }}
+      gitHubToken: ${{ parameters.gitHubToken }}
+      xqaCertPass: ${{ parameters.xqaCertPass }}
+      enableDotnet: ${{ parameters.enableDotnet }}
+      skipESRP: ${{ parameters.skipESRP }}
+
+# This job uploads the pkgs generated by the build step in the azure blob storage. This has to be done in a different job
+# because the azure blob storate tools DO NOT work on mac OS meaning that we need a bot running Windows. build uploads the contents
+# to the pipeline artefacts and we download and upload to azure in this job.
+- job: upload_azure_blob
+  displayName: 'Upload packages to Azure & SBOM'
+  timeoutInMinutes: 1000
+  dependsOn:
+  - configure
+  - build # can start as soon as the packages are available
+  condition: succeeded()
+
+  variables:
+    Parameters.outputStorageUri: ''
+    NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
+    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
+
+  pool:
+    vmImage: 'windows-latest'
+    workspace:
+      clean: all
+  steps:
+  - template: upload-azure.yml
+    parameters:
+      enableDotnet: ${{ parameters.enableDotnet }}
+      sbomFilter: '*.nupkg;*.pkg;*.msi'
+
+# Job that runs on a vm that downloads the artefacts information and adds a github comment pointing to the results of the build.
+- job: artifacts_github_comment
+  displayName: 'Publish GitHub Comment - Artifacts'
+  timeoutInMinutes: 1000
+  dependsOn:
+  - configure
+  - build
+  - upload_azure_blob
+  condition: succeededOrFailed()
+  variables:
+    BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
+    TESTS_BOT: $[ dependencies.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    GIT_HASH: $[ dependencies.build.outputs['fix_commit.GIT_HASH'] ]
+  pool:
+    vmImage: 'windows-latest'
+    workspace:
+      clean: all
+  steps:
+  - template: artifact-github-comment.yml

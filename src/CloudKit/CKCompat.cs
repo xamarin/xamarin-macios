@@ -5,7 +5,6 @@
 #if !COREBUILD && !NET
 
 using System;
-using System.Runtime.Versioning;
 using System.Threading.Tasks;
 
 #if MONOMAC || IOS

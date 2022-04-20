@@ -30,7 +30,6 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -124,6 +123,7 @@ namespace AppKit {
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 #endif
