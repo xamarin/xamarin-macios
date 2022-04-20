@@ -61,7 +61,6 @@ steps:
       - ${{ if eq(parameters.enableDotnet, true) }}:
         - template: build-nugets.yml
 
-
       - ${{ if eq(parameters.signAndNotarize, true) }}:
         # only sign an notarize in no PR executions
         - template: sign-and-notarized.yml
@@ -69,15 +68,6 @@ steps:
             enableDotnet: ${{ parameters.enableDotnet }}
             skipESRP: ${{ parameters.skipESRP }}
             keyringPass: ${{ parameters.keyringPass }}
-
-      # publish nugets (must be done after signing)
-      - ${{ if eq(parameters.enableDotnet, true) }}:
-        - template: publish-nugets.yml
-
-      - template: generate-workspace-info.yml@templates
-        parameters:
-          GitHubToken: $(GitHub.Token)
-          ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 
       - bash: |
           var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=IOS_NUGET_VERSION_FULL)
@@ -107,21 +97,14 @@ steps:
           echo "Rollback file contents:" 
           echo "$(cat $WORKLOAD_DST)"
         name: workload_file
-        displayName: 'Generate "WorkloadRollback.json'
+        displayName: 'Generate "WorkloadRollback.json"'
 
       # upload each of the pkgs into the pipeline artifacts
       - task: PublishPipelineArtifact@1
         displayName: 'Publish Build Artifacts'
         inputs:
           targetPath: $(Build.SourcesDirectory)/package
-          artifactName: package
-        continueOnError: true
-
-      - task: PublishPipelineArtifact@1
-        displayName: 'Publish Build Internal Artifacts'
-        inputs:
-          targetPath: $(Build.SourcesDirectory)/package-internal
-          artifactName: package-internal
+          artifactName: not-signed-package
         continueOnError: true
 
       # funny enough we need these profiles to build the mac tests

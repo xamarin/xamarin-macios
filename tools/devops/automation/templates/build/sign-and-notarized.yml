@@ -21,6 +21,14 @@ parameters:
 
 steps:
 
+# download the not notarized pkgs to the expected location
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Internal Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package
+    artifactName: not-signed-package
+  continueOnError: true
+
 - bash: |
     set -x
     set -e
@@ -219,3 +227,27 @@ steps:
     filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
   displayName: 'Notarize & verify packages (ESRP)'
   condition: ${{ parameters.condition }}
+
+- ${{ if eq(parameters.enableDotnet, true) }}:
+  - template: publish-nugets.yml
+
+- template: generate-workspace-info.yml@templates
+  parameters:
+    GitHubToken: $(GitHub.Token)
+    ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+# download worload jsona nd add it to out packate internal dir, this allows the rest of jobs
+# not to need several artifacts but just package-internal
+- task: DownloadPipelineArtifact@2
+  displayName: Download WorkloadRollback.json
+  inputs:
+    patterns: '**/WorkloadRollback.json'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/package-internal
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Internal Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package-internal
+    artifactName: package-internal
+  continueOnError: true
