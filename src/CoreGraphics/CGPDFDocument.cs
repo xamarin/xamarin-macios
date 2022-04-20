@@ -71,12 +71,12 @@ namespace CoreGraphics {
 		{
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGPDFDocumentRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGPDFDocumentRelease (GetCheckedHandle ());
 		}
