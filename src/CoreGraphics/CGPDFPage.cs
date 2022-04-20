@@ -44,12 +44,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFPageRelease (/* CGPDFPageRef */ IntPtr page);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGPDFPageRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGPDFPageRelease (GetCheckedHandle ());
 		}

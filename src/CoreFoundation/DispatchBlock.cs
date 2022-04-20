@@ -76,12 +76,12 @@ namespace CoreFoundation {
 			return new DispatchBlock (dispatch_block_create_with_qos_class ((nuint) (ulong) flags, qosClass, relative_priority, GetCheckedHandle ()), true);
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			Handle = BlockLiteral._Block_copy (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			BlockLiteral._Block_release (GetCheckedHandle ());
 		}
