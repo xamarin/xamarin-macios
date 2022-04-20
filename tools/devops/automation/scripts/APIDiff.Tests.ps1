@@ -1,4 +1,4 @@
-Using module ./APIDiff.psm1
+using module ".\\APIDiff.psm1"
 
 Describe "Platform diff tests" {
 

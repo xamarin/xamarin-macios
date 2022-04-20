@@ -9,17 +9,13 @@ parameters:
 
 steps:
 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
-
 # download the common artifacts + the api diff
 - template: ../common/download-artifacts.yml
   parameters:
     testPrefix: sim
     runTests: ${{ parameters.runTests }}
 
-- ${{ if and(eq(parameters.enableAPIDiff, true), eq(variables['APIDIFF_BUILT'], 'True')) }}:
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
   # Download the Html Report that was added by the tests job.
   - task: DownloadPipelineArtifact@2
     displayName: 'Download API diff (from stable)'
@@ -34,10 +30,9 @@ steps:
       archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/apidiff-stable/apidiff-stable.zip'
       destinationFolder: '$(System.DefaultWorkingDirectory)/apidiff-stable'
 
-- ${{ if and(eq(parameters.enableAPIDiff, true), eq(variables['API_GENERATOR_BUILT'], 'True')) }}:
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
   - task: DownloadPipelineArtifact@2
     displayName: 'Download API & Generator comparison'
-    condition: and(succeeded(), contains(variables.API_GENERATOR_DIFF_BUILT, 'True'))
     inputs:
       patterns: 'apicomparison/apicomparison.zip'
       allowFailedBuilds: true
@@ -45,7 +40,6 @@ steps:
 
   - task: ExtractFiles@1
     displayName: 'Extract API & Generator comparison'
-    condition: and(succeeded(), contains(variables.API_GENERATOR_DIFF_BUILT, 'True'))
     inputs:
       archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/apicomparison/apicomparison.zip'
       destinationFolder: '$(System.DefaultWorkingDirectory)/apicomparison'

@@ -10,11 +10,18 @@ parameters:
   type: boolean
   default: true
 
+- name: enableAPIDiff
+  type: boolean
+  default: true
+
 steps:
 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
+- template: ../common/checkout.yml
+
+- template: download-artifacts.yml 
+  parameters:
+    runTests: false  # we do not run tests on builds
+    enableAPIDiff: ${{ parameters.enableAPIDiff }}
 
 # Upload the API diff to vsdrops to be able to locate it
 - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0

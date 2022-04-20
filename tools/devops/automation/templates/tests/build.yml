@@ -49,17 +49,7 @@ parameters:
 
 steps:
 
-- checkout: self
-  path: s/xamarin-macios
-
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-  - pwsh: |
-      git reset --hard HEAD^2 
-    displayName: "Undo Github merge"
-    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-
-- checkout: maccore
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+- template: ../common/checkout.yml
 
 - template: ../common/setup.yml
   parameters:
@@ -70,17 +60,16 @@ steps:
 # 1. Set the status of the build to error. It is not a failure since no tests have been ran.
 # 2. Set a comment stating the same as what was sent to the status.
 # 3. Cancel the pipeline and do not execute any of the following steps.
-- pwsh: |
-    cd $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/
-    Import-Module ./System.psm1
-    Import-Module ./VSTS.psm1
-    Import-Module ./GitHub.psm1
+- pwsh: | 
+    Import-Module ./MaciosCI.psd1
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+
     if ( -not (Test-HDFreeSpace -Size 20)) {
-      Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
+      $statuses.SetStatus("error", "Not enough free space in the host.", "${{ parameters.statusContext }}")
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
     } else {
-      Set-GitHubStatus -Status "pending" -Description "Device tests on VSTS have been started." -Context "$Env:CONTEXT"
+      $statuses.SetStatus("pending", "Device tests on VSTS have been started.", "${{ parameters.statusContext }}")
     }
   env:
     BUILD_REVISION: $(Build.SourceVersion)
@@ -89,6 +78,7 @@ steps:
     ACCESSTOKEN: $(System.AccessToken)
   displayName: 'Check HD Free Space'
   timeoutInMinutes: 5
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/
   condition: succeededOrFailed() # we do not care about the previous step
 
 # if we got to this point, it means that we do have at least 50 Gb to run the test, should
@@ -163,16 +153,6 @@ steps:
   timeoutInMinutes: 250
 
 - bash: |
-    var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR)
-    IOS_DESTDIR=${var#*=}
-    DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
-    mkdir -p $DEST_DIR
-    ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$DEST_DIR/git" 
-    ls -R $DEST_DIR
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
-  displayName: Create Xamarin.iOS SDK symlinks
-
-- bash: |
     echo "Pkg uri is $XM_PACKAGE"
     make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
   displayName: 'Generate Provisionator csx file for Mac'
@@ -185,14 +165,22 @@ steps:
   timeoutInMinutes: 250
 
 - bash: |
-    var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR)
-    MAC_DESTDIR=${var#*=}
-    DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
-    mkdir -p $DEST_DIR
-    ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$DEST_DIR/git" 
-    ls -R $DEST_DIR
+    set -e
+    set -x
+    mac_var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR MAC_DESTDIR=)
+    ios_var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR IOS_DESTDIR=)
+    MAC_DESTDIR=${mac_var#*=}
+    IOS_DESTDIR=${ios_var#*=}
+    XM_DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/"
+    XI_DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
+    mkdir -p "$XM_DEST_DIR"
+    mkdir -p "$XI_DEST_DIR"
+    ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$XM_DEST_DIR/git"
+    ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$XI_DEST_DIR/git"
+    ls -laR "$XM_DEST_DIR"
+    ls -laR "$XI_DEST_DIR"
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
-  displayName: Create Xamarin.Mac SDK symlinks
+  displayName: Create legacy iOS/Mac SDK symlinks
 
 - bash: |
     set -x

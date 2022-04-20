@@ -114,7 +114,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void TestPEAssembly ()
 		{
-			var complexAssemblyPath = Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly", "bin", "Debug", "net6.0");
+			var complexAssemblyPath = Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly", "bin", "Debug", Configuration.DotNetTfm);
 			var complexFiles = new string [] {
 				"ComplexAssembly.dll",
 				"ComplexAssembly.pdb",
