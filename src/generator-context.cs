@@ -37,12 +37,15 @@ namespace Xamarin.Generator.Traceability
 		// Span are often nested:
 		//   "Generating Class Foo"
 		//   "Generating Method Bar"
+		[ThreadStatic]
 		static Stack<string> Context = new Stack<string>();
 
 		// Should Trace APIs do anything
+		[ThreadStatic]
 		static bool DetailedTracingEnabled = false;
 
 		// Only print the stack state before the first print until a Begin/End
+		[ThreadStatic]
 		static bool ShouldPrintContext = false;
 
 		// How many spans deep is the current context
