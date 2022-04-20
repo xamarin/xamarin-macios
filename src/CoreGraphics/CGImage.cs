@@ -45,6 +45,7 @@ namespace CoreGraphics {
 	// uint32_t -> CGWindow.h (OSX SDK only)
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -61,6 +62,7 @@ namespace CoreGraphics {
 	// uint32_t -> CGWindow.h (OSX SDK only)
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif

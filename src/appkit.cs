@@ -20447,6 +20447,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[MacCatalyst (13,1)]
 	public enum NSTouchBarItemIdentifier
 	{
 		[MacCatalyst (13, 0)]

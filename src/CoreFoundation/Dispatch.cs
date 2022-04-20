@@ -709,6 +709,7 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
 #else
@@ -721,6 +722,7 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
 #else
@@ -734,6 +736,8 @@ namespace CoreFoundation {
 #if NET
 			[SupportedOSPlatform ("macos10.10")]
 			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("tvos")]
+			[SupportedOSPlatform ("maccatalyst")]
 #else
 			[Mac (10,10)]
 			[iOS (8,0)]
@@ -743,6 +747,8 @@ namespace CoreFoundation {
 #if NET
 			[SupportedOSPlatform ("macos10.10")]
 			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("tvos")]
+			[SupportedOSPlatform ("maccatalyst")]
 #else
 			[Mac (10,10)]
 			[iOS (8,0)]
