@@ -3507,15 +3507,24 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
+	bool IsInSupportedFramework (MemberInfo klass, PlatformName platform)
+	{
+		string ns = FindNamespace (klass);
+		var list = GetFrameworkListForPlatform (platform);
+		// The framework is named wkwebkit but the namespace is webkit
+		if (list.Contains ("wkwebkit")) {
+			list.Add ("webkit");
+		}
+		return list.Contains(ns.ToLower (CultureInfo.InvariantCulture));
+	}
+
 	IEnumerable<AvailabilityBaseAttribute> AddUnlistedAvailability (MemberInfo containingClass, List<AvailabilityBaseAttribute> availability)
 	{
 		// If there are literally no attributes for a platform on a type, for non-catalyst platforms
 		// add a minimum supported introduced since it was "unlisted"
-		string ns = FindNamespace (containingClass);
 		foreach (var platform in new [] { PlatformName.iOS, PlatformName.TvOS, PlatformName.MacOSX }) {
-			var list = GetFrameworkListForPlatform (platform);
 			if (!availability.Any (v => v.Platform == platform)) {
-				if (list.Contains(ns.ToLower (CultureInfo.InvariantCulture))) {
+				if (IsInSupportedFramework (containingClass, platform)) {
 					yield return CreateMinSupportedAttribute (platform);
 				}
 			}
@@ -3541,13 +3550,11 @@ public partial class Generator : IMemberGatherer {
 	void StripIntroducedOnNamespaceNotIncluded (List<AvailabilityBaseAttribute> memberAvailability, MemberInfo context)
 	{
 		if (context is TypeInfo containingClass) {
-			string ns = FindNamespace (containingClass);
 			var droppedPlatforms = new HashSet<PlatformName>();
 
 			// Walk all members and look for introduced that are nonsense for our containing class's platform
 			foreach (var introduced in memberAvailability.Where (a => a.AvailabilityKind == AvailabilityKind.Introduced).ToList()) {
-				var list = GetFrameworkListForPlatform (introduced.Platform);
-				if (!list.Contains(ns.ToLower (CultureInfo.InvariantCulture))) {
+				if (!IsInSupportedFramework (containingClass, introduced.Platform)) {
 					memberAvailability.Remove (introduced);
 					droppedPlatforms.Add (introduced.Platform);
 				}
