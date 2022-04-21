@@ -7,8 +7,11 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.CompilerServices;
+using System.Runtime.Versioning;
 
 #if NET
 namespace ObjCRuntime
@@ -16,6 +19,12 @@ namespace ObjCRuntime
 namespace System
 #endif
 {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class NMath
 	{
 		public static readonly nfloat E = (nfloat)Math.E;

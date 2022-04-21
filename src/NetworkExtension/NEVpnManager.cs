@@ -21,13 +21,14 @@ namespace NetworkExtension {
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,11)]
 #endif
 		public void SetAuthorization (Authorization authorization)
 		{
 			if (authorization is null)
-				throw new ArgumentNullException (nameof (authorization));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (authorization));
 
 			_SetAuthorization (authorization.Handle);
 		}

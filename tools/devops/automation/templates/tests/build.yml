@@ -49,23 +49,7 @@ parameters:
 
 steps:
 
-- checkout: self
-  path: s/xamarin-macios
-
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-  - pwsh: |
-      git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
-      git fetch origin
-      $branch="$(Build.SourceBranch)".Replace("merge", "head")
-      $branch=$branch.Replace("refs", "origin")
-      Write-Host "Checking out branch $branch"
-      git checkout $branch
-      git branch -a
-    displayName: "Undo Github merge"
-    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-
-- checkout: maccore
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+- template: ../common/checkout.yml
 
 - template: ../common/setup.yml
   parameters:
@@ -78,13 +62,14 @@ steps:
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
     Import-Module ./MaciosCI.psd1
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
-      Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
+      $statuses.SetStatus("error", "Not enough free space in the host.", "${{ parameters.statusContext }}")
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
     } else {
-      Set-GitHubStatus -Status "pending" -Description "Device tests on VSTS have been started." -Context "$Env:CONTEXT"
+      $statuses.SetStatus("pending", "Device tests on VSTS have been started.", "${{ parameters.statusContext }}")
     }
   env:
     BUILD_REVISION: $(Build.SourceVersion)

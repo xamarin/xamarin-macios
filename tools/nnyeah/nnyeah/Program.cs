@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 #nullable enable
 
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	class Program {
 		static void Main (string [] args)
 		{
@@ -40,12 +40,12 @@ namespace nnyeah {
 			}
 
 			if (!File.Exists (infile)) {
-				Console.Error.WriteLine ($"input file '{infile}' doesn't exist.");
+				Console.Error.WriteLine (Errors.E0001, infile);
 				Environment.Exit (1);
 			}
 
 			if (File.Exists (outfile) && !forceOverwrite) {
-				Console.Error.WriteLine ($"output file '{outfile}' already exists. Use '--force-overwrite' if you want to overwrite it.");
+				Console.Error.WriteLine (Errors.E0002, outfile);
 				Environment.Exit (1);
 			}
 
@@ -56,7 +56,7 @@ namespace nnyeah {
 			try {
 				reworker.Load ();
 			} catch (Exception e) {
-				Console.Error.WriteLine ($"Unable to read module from file {infile}: {e.Message}.");
+				Console.Error.WriteLine (Errors.E0003, infile, e.Message);
 				Environment.Exit (1);
 			}
 
@@ -74,12 +74,12 @@ namespace nnyeah {
 						warnings.ForEach (Console.WriteLine);
 					}
 				} catch (Exception e) {
-					Console.Error.Write ($"Unable to generate output file, unexpected exception: {e.Message}");
+					Console.Error.Write (Errors.E0004, e.Message);
 					Environment.Exit (1);
 				}
 			} else {
 				if (verbose) {
-					Console.WriteLine ("Package does not need changes - no output generated.");
+					Console.WriteLine (Errors.N0003);
 				}
 			}
 		}

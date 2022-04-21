@@ -9,10 +9,6 @@ parameters:
 
 steps:
 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
-
 # download the common artifacts + the api diff
 - template: ../common/download-artifacts.yml
   parameters:
