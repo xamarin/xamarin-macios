@@ -1078,6 +1078,10 @@ namespace ObjCRuntime {
 					if (managed_obj is null || wr.Target == (object) managed_obj) {
 						object_map.Remove (ptr);
 						wr.Free ();
+					} else if (wr.Target is null) {
+						// We can remove null entries, and free the corresponding GCHandle
+						object_map.Remove (ptr);
+						wr.Free ();
 					}
 
 				}
@@ -1090,6 +1094,8 @@ namespace ObjCRuntime {
 		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
 			var handle = GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection);
 			lock (lock_obj) {
+				if (object_map.Remove (ptr, out var existing))
+					existing.Free ();
 				object_map [ptr] = handle;
 				obj.Handle = ptr;
 			}
