@@ -64,12 +64,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGContextRef */ IntPtr CGContextRetain (/* CGContextRef */ IntPtr c);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGContextRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGContextRelease (GetCheckedHandle ());
 		}

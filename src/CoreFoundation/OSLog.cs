@@ -52,13 +52,13 @@ namespace CoreFoundation {
 			}
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			if (Handle != IntPtr.Zero)
 				os_retain (Handle);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			if (Handle != IntPtr.Zero)
 				os_release (Handle);

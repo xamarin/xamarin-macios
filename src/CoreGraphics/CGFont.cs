@@ -66,12 +66,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGFontRelease (/* CGFontRef */ IntPtr font);
 		
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGFontRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGFontRelease (GetCheckedHandle ());
 		}

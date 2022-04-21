@@ -293,12 +293,12 @@ namespace SearchKit
 			Dispose ();
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			throw new InvalidOperationException ();
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			throw new InvalidOperationException ();
 		}

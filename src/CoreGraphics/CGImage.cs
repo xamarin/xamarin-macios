@@ -158,12 +158,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGImageRef */ IntPtr CGImageRetain (/* CGImageRef */ IntPtr image);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGImageRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGImageRelease (GetCheckedHandle ());
 		}

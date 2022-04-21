@@ -82,12 +82,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGFunctionRef */ IntPtr CGFunctionRetain (/* CGFunctionRef */ IntPtr function);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGFunctionRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGFunctionRelease (GetCheckedHandle ());
 		}
