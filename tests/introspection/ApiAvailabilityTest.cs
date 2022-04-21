@@ -654,10 +654,12 @@ namespace Introspection {
 					if (type_level.Contains (s))
 						AddErrorLine ($"[FAIL] Both '{t}' and '{m}' are marked with `{s}`.");
 #endif
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/14802
 					if (member_level.Contains (s))
 						AddErrorLine ($"[FAIL] '{m}' is decorated more than once with `{s}`.");
 					else
 						member_level.Add (s);
+#endif
 				}
 			}
 		}
