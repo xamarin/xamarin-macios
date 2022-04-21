@@ -106,7 +106,7 @@ namespace Network {
 
 		public bool EqualsTo (NWPath other)
 		{
-			if (other == null)
+			if (other is null)
 				return false;
 
 			return nw_path_is_equal (GetCheckedHandle (), other.Handle);
@@ -119,7 +119,7 @@ namespace Network {
 		static void TrampolineEnumerator (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWInterface>> (block);
-			if (del != null)
+			if (del is not null)
 				del (new NWInterface (iface, owns: false));
 		}
 
@@ -129,7 +129,7 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateInterfaces (Action<NWInterface> callback)
 		{
-			if (callback == null)
+			if (callback is null)
 				return;
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -188,7 +188,7 @@ namespace Network {
 		static void TrampolineGatewaysHandler (IntPtr block, IntPtr endpoint)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWEndpoint>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwEndpoint = new NWEndpoint (endpoint, owns: false);
 				del (nwEndpoint);
 			}
@@ -207,8 +207,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateGateways (Action<NWEndpoint> callback)
 		{
-			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_Enumerator, callback);
