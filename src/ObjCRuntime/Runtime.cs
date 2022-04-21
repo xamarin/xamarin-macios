@@ -775,7 +775,7 @@ namespace ObjCRuntime {
 		static IntPtr GetNSObjectWithType (IntPtr ptr, IntPtr type_ptr, out bool created)
 		{
 			var type = (System.Type) GetGCHandleTarget (type_ptr)!;
-			return AllocGCHandle (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, out created));
+			return AllocGCHandle (GetNSObject (ptr, type, MissingCtorResolution.ThrowConstructor1NotFound, true, true, out created));
 		}
 
 		static void Dispose (IntPtr gchandle)
@@ -1078,6 +1078,10 @@ namespace ObjCRuntime {
 					if (managed_obj is null || wr.Target == (object) managed_obj) {
 						object_map.Remove (ptr);
 						wr.Free ();
+					} else if (wr.Target is null) {
+						// We can remove null entries, and free the corresponding GCHandle
+						object_map.Remove (ptr);
+						wr.Free ();
 					}
 
 				}
@@ -1088,8 +1092,20 @@ namespace ObjCRuntime {
 		}
 		
 		internal static void RegisterNSObject (NSObject obj, IntPtr ptr) {
+#if NET
+			GCHandle handle;
+			if (Runtime.IsCoreCLR) {
+				handle = CreateTrackingGCHandle (obj, ptr);
+			} else {
+				handle = GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection);
+			}
+#else
 			var handle = GCHandle.Alloc (obj, GCHandleType.WeakTrackResurrection);
+#endif
+
 			lock (lock_obj) {
+				if (object_map.Remove (ptr, out var existing))
+					existing.Free ();
 				object_map [ptr] = handle;
 				obj.Handle = ptr;
 			}
@@ -1465,7 +1481,7 @@ namespace ObjCRuntime {
 		//
 
 		// The 'selector' and 'method' arguments are only used in error messages.
-		static NSObject? GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, out bool created) {
+		static NSObject? GetNSObject (IntPtr ptr, Type target_type, MissingCtorResolution missingCtorResolution, bool evenInFinalizerQueue, bool createNewInstanceIfWrongType, out bool created) {
 			created = false;
 
 			if (ptr == IntPtr.Zero)
@@ -1473,8 +1489,24 @@ namespace ObjCRuntime {
 
 			var o = TryGetNSObject (ptr, evenInFinalizerQueue);
 
-			if (o is not null)
-				return o;
+			if (o is not null) {
+				if (!createNewInstanceIfWrongType) {
+					// We don't care if we found an instance of the wrong type or not, so just return whatever we got.
+					return o;
+				}
+
+				// if our target type is a byref type, get the element type, otherwise the IsAssignableFrom method doesn't work as expected.
+				var acceptibleTargetType = target_type;
+				if (acceptibleTargetType.IsByRef)
+					acceptibleTargetType = acceptibleTargetType.GetElementType ()!;
+				if (acceptibleTargetType.IsAssignableFrom (o.GetType ())) {
+					// We found an instance of an acceptable type! We're done here.
+					return o;
+				}
+
+				// We found an instance of the wrong type, and we're asked to not return that.
+				// So fall through to create a new instance instead.
+			}
 
 			// Try to get the managed type that correspond to this exact native type
 			IntPtr p = Class.GetClassForObject (ptr);
