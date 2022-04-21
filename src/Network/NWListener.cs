@@ -53,10 +53,10 @@ namespace Network {
 		{
 			IntPtr handle;
 
-			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
-			if (port == null)
-				throw new ArgumentNullException (nameof (port));
+			if (parameters is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
+			if (port is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (port));
 
 			handle = nw_listener_create_with_port (port, parameters.Handle);
 			if (handle == IntPtr.Zero)
@@ -71,8 +71,8 @@ namespace Network {
 		{
 			IntPtr handle;
 
-			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+			if (parameters is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 
 			handle = nw_listener_create (parameters.Handle);
 			if (handle == IntPtr.Zero)
@@ -85,10 +85,10 @@ namespace Network {
 
 		public static NWListener? Create (NWConnection connection, NWParameters parameters)
 		{
-			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
-			if (connection == null)
-				throw new ArgumentNullException (nameof (connection));
+			if (parameters is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
+			if (connection is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (connection));
 
 			var handle = nw_listener_create_with_connection (connection.Handle, parameters.Handle);
 			if (handle == IntPtr.Zero)
@@ -101,8 +101,8 @@ namespace Network {
 
 		public void SetQueue (DispatchQueue queue)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 
 			nw_listener_set_queue (GetCheckedHandle (), queue.Handle);
 		}
@@ -136,7 +136,7 @@ namespace Network {
 		static void TrampolineListenerStateChanged (IntPtr block, NWListenerState state,  IntPtr nwerror)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWListenerState,NWError?>> (block);
-			if (del != null){
+			if (del is not null){
 				NWError? err = nwerror == IntPtr.Zero ? null : new NWError (nwerror, owns: false);
 				del (state, err);
 				err?.Dispose ();
@@ -150,7 +150,7 @@ namespace Network {
 		public void SetStateChangedHandler (Action<NWListenerState,NWError?> callback)
 		{
 			unsafe {
-				if (callback == null){
+				if (callback is null){
 					nw_listener_set_state_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
@@ -174,7 +174,7 @@ namespace Network {
 		static void TrampolineNewConnection (IntPtr block, IntPtr connection)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWConnection>> (block);
-			if (del != null){
+			if (del is not null){
 				var nwconnection = new NWConnection (connection, owns: false);
 				del (nwconnection);
 			}
@@ -188,7 +188,7 @@ namespace Network {
 		{
 			lock (connectionHandlerLock) {
 				unsafe {
-					if (callback == null) {
+					if (callback is null) {
 						nw_listener_set_new_connection_handler (GetCheckedHandle (), null);
 						return;
 					}
@@ -216,7 +216,7 @@ namespace Network {
 		static void TrampolineAdvertisedEndpointChangedHandler (IntPtr block, IntPtr endpoint, byte added)
 		{
 			var del = BlockLiteral.GetTarget<AdvertisedEndpointChanged> (block);
-			if (del != null) {
+			if (del is not null) {
 				using var nwendpoint = new NWEndpoint (endpoint, owns: false);
 				del (nwendpoint, added != 0 ? true : false);
 			}
@@ -229,7 +229,7 @@ namespace Network {
 		public void SetAdvertisedEndpointChangedHandler (AdvertisedEndpointChanged callback)
 		{
 			unsafe {
-				if (callback == null){
+				if (callback is null){
 					nw_listener_set_advertised_endpoint_changed_handler (GetCheckedHandle (), null);
 					return;
 				}

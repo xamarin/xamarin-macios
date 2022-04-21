@@ -134,21 +134,104 @@ class Pools {
     }
 }
 
+class Artifact {
+    hidden [object] $RestObject
+
+    Artifact (
+        [object] $data) {
+        $this.RestObject = $data
+    }
+
+    [string] GetDownloadTicket() {
+        return $this.RestObject.resource.downloadTicket
+    }
+
+    [string] GetDownloadUrl() {
+        return $this.RestObject.resource.downloadUrl
+    }
+
+    [string] GetName() {
+        return $this.RestObject.name
+    }
+
+}
+
+class Artifacts {
+    [string] $Org
+    [string] $Project
+    hidden [string] $Token
+
+    Artifacts (
+        [string] $org,
+        [string] $project,
+        [string] $token) {
+        $this.Org = $org
+        $this.Project = $project
+        $this.Token = $token
+    }
+
+    [object[]] GetArtifacts($buildId) {
+        if (-not $buildId) {
+            throw [System.ArgumentNullException]::new("buildId")
+        }
+
+        $url = "https://dev.azure.com/$($this.Org)/$($this.Project)/_apis/build/builds/$buildId/artifacts?api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $artifacts = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
+
+        # loop and create a pool object for each of the pools in the org
+        $result = [System.Collections.ArrayList]@()
+        foreach ($a in $artifacts.value) {
+            $result.Add([Artifact]::new($a))
+        }
+        return $result
+    }
+
+    [string] DownloadArtifact($artifact, $outputDir) {
+        if (-not $artifact) {
+            throw [System.ArgumentNullException]::new("artifact")
+        }
+
+        if (-not $outputDir) {
+            throw [System.ArgumentNullException]::new("outputDir")
+        }
+
+        if (Test-Path -Path $outputDir -PathType Leaf) {
+            throw [System.ArgumentException]::new("outputDir must be a directory. File found.")
+        }
+
+        $outputPath = Resolve-Path $outputDir
+        $outputPath = Join-Path  $outputPath  -ChildPath "$($artifact.GetName()).zip"
+        $headers = Get-AuthHeader($this.Token)
+        $auth = $headers["Authorization"]
+        # why using crul, well because with large files you will get an exception fron the internal methods from pwsh. Someone did not
+        # expect me to download large files with Invoke-Rest
+        curl $artifact.GetDownloadUrl() -L -o $outputPath --header "Authorization: $auth" 
+        return $outputPath 
+    }
+
+}
+
 class Vsts {
     [string] $Org
+    [string] $Project
     hidden [string] $Token
 
     [Pools] $Pools
+    [Agents] $Agents
+    [Artifacts] $Artifacts
 
     VSTS (
         [string] $org,
+        [string] $project,
         [string] $token) {
         $this.Org = $org
+        $this.Project = $project
         $this.Token = $token
-
         # generate the helper objects
         $this.Pools = [Pools]::new($org, $token)
         $this.Agents = [Agents]::new($org, $token)
+        $this.Agents = [Artifacts]::new($org, $project, $token)
     }
 }
 
@@ -161,9 +244,13 @@ function New-VstsAPI {
 
         [Parameter(Mandatory)]
         [String]
+        $Project,
+
+        [Parameter(Mandatory)]
+        [String]
         $Token
     )
-    return [Vsts]::new($Org, $Token)
+    return [Vsts]::new($Org, $Project, $Token)
 }
 
 
@@ -172,7 +259,7 @@ function New-VstsAPI {
         Returns the uri to be used for the VSTS rest API.
 #>
 function Get-BuildUrl {
-    $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "?api-version=5.1"
+    $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "?api-version=6.0"
     return $targetUrl
 }
 
