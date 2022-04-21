@@ -16,7 +16,7 @@ using System;
 using Foundation;
 namespace HealthKit
 {
-#if NET || WATCH
+#pragma warning disable CS0618 // Type or member is obsolete
 	public partial class HKQuantityType {
 		public static HKQuantityType? Create (HKQuantityTypeIdentifier kind)
 		{
@@ -44,7 +44,8 @@ namespace HealthKit
 			return HKObjectType.GetCorrelationType (kind.GetConstant ());
 		}
 	}
-#endif
+#pragma warning restore CS0618 // Type or member is obsolete
+
 
 #if !WATCH
 	public partial class HKDocumentType {
