@@ -140,8 +140,7 @@ namespace Xamarin.Generator.Traceability
 				StackTrace st = new StackTrace(true);
 				Console.Error.WriteLine ();
 				for (int i = 1; i < st.FrameCount; i++) {
-					StackFrame? frame = st.GetFrame (i);
-					if (frame != null) {
+                    if (st.GetFrame(i) is StackFrame frame) {
 						Console.Error.WriteLine ($"{IndentForContext ()}{frame.GetMethod()} in {Path.GetFileName(frame.GetFileName())} at {frame.GetFileLineNumber()}");
 					}
 				}
