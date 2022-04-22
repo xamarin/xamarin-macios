@@ -86,12 +86,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_retain (IntPtr o);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			dispatch_retain (Handle);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			dispatch_release (Handle);
 		}
