@@ -29,6 +29,7 @@ using System.Threading;
 #if !NO_SYSTEM_DRAWING
 using System.Drawing;
 #endif
+using System.Runtime.Versioning;
 
 #if NET
 using System.Runtime.InteropServices.ObjectiveC;
@@ -53,6 +54,10 @@ using NativeHandle = System.IntPtr;
 namespace Foundation {
 
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	public enum NSObjectFlag {
 		Empty,
 	}
@@ -66,6 +71,10 @@ namespace Foundation {
 
 #if NET && !COREBUILD
 	[ObjectiveCTrackedType]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public partial class NSObject 
@@ -94,11 +103,10 @@ namespace Foundation {
 		// See  "Toggle-ref support for CoreCLR" in coreclr-bridge.m for more information.
 		Flags actual_flags;
 		internal unsafe Runtime.TrackedObjectInfo* tracked_object_info;
-		internal GCHandle? tracked_object_handle;
 
 		unsafe Flags flags {
 			get {
-				// Get back the InFinalizerQueue flag, it's the only flag we'll set in the tracked object info structure.
+				// Get back the InFinalizerQueue flag, it's the only flag we'll set in the tracked object info structure from native code.
 				// The InFinalizerQueue will never be cleared once set, so there's no need to unset it here if it's not set in the tracked_object_info structure.
 				if (tracked_object_info != null && ((tracked_object_info->Flags) & Flags.InFinalizerQueue) == Flags.InFinalizerQueue)
 					actual_flags |= Flags.InFinalizerQueue;
@@ -389,12 +397,6 @@ namespace Foundation {
 			}
 			xamarin_release_managed_ref (handle, user_type);
 			FreeData ();
-#if NET
-			if (tracked_object_handle.HasValue) {
-				tracked_object_handle.Value.Free ();
-				tracked_object_handle = null;
-			}
-#endif
 		}
 
 		static bool IsProtocol (Type type, IntPtr protocol)
@@ -917,20 +919,6 @@ namespace Foundation {
 				if (disposing) {
 					ReleaseManagedRef ();
 				} else {
-#if NET
-					// By adding an external reference to the object from finalizer we will
-					// resurrect it. Since Runtime class tracks the NSObject instances with
-					// GCHandle(..., WeakTrackResurrection) we need to make sure it's aware
-					// that the object was finalized.
-					//
-					// On CoreCLR the non-tracked objects don't get a callback from the
-					// garbage collector when they enter the finalization queue but the
-					// information is necessary for Runtime.TryGetNSObject to work correctly. 
-					// Since we are on the finalizer thread now we can just set the flag
-					// directly here.
-					actual_flags |= Flags.InFinalizerQueue;
-#endif
-
 					NSObject_Disposer.Add (this);
 				}
 			} else {
@@ -1061,6 +1049,12 @@ namespace Foundation {
 	}
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSObservedChange {
 		NSDictionary dict;
 		public NSObservedChange (NSDictionary source)

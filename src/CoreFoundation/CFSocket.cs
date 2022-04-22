@@ -33,6 +33,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using Foundation;
@@ -75,6 +76,12 @@ namespace CoreFoundation {
 		CloseOnInvalidate = 128
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct CFSocketNativeHandle {
 		// typedef int CFSocketNativeHandle
 		internal readonly int handle;
@@ -90,6 +97,12 @@ namespace CoreFoundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFSocketException : Exception {
 		public CFSocketError Error {
 			get;
@@ -217,6 +230,12 @@ namespace CoreFoundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFSocket : CFType {
 		GCHandle gch;
 
@@ -448,6 +467,12 @@ namespace CoreFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public class CFSocketAcceptEventArgs : EventArgs {
 			internal CFSocketNativeHandle SocketHandle {
 				get;
@@ -476,6 +501,12 @@ namespace CoreFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public class CFSocketConnectEventArgs : EventArgs {
 			public CFSocketError Result {
 				get;
@@ -493,6 +524,12 @@ namespace CoreFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public class CFSocketDataEventArgs : EventArgs {
 			public IPEndPoint RemoteEndPoint {
 				get;
@@ -511,10 +548,22 @@ namespace CoreFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public class CFSocketReadEventArgs : EventArgs {
 			public CFSocketReadEventArgs () {}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public class CFSocketWriteEventArgs : EventArgs {
 			public CFSocketWriteEventArgs () {}
 		}

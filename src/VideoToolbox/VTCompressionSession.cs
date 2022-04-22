@@ -27,6 +27,8 @@ namespace VideoToolbox {
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[iOS (8,0)]
 	[TV (10,2)]
@@ -228,6 +230,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,9)]
 #endif
@@ -238,6 +241,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,9)]
 #endif
@@ -350,6 +354,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -360,6 +365,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -372,6 +378,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -382,6 +389,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -392,6 +400,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -412,6 +421,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -425,6 +435,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif

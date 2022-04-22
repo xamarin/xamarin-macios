@@ -33,6 +33,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -81,7 +82,7 @@ namespace Network {
 		static void TrampolineResolutionEnumeratorHandler (IntPtr block, NWReportResolutionSource source, nuint milliseconds, int endpoint_count, nw_endpoint_t successful_endpoint, nw_endpoint_t preferred_endpoint)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWReportResolutionSource, TimeSpan, int, NWEndpoint, NWEndpoint>> (block);
-			if (del != null) {
+			if (del is not null) {
 				using (var nwSuccesfulEndpoint = new NWEndpoint (successful_endpoint, owns: false))
 				using (var nwPreferredEndpoint = new NWEndpoint (preferred_endpoint, owns: false))
 					del (source,TimeSpan.FromMilliseconds (milliseconds), endpoint_count, nwSuccesfulEndpoint, nwPreferredEndpoint);
@@ -91,8 +92,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateResolutions (Action<NWReportResolutionSource, TimeSpan, int, NWEndpoint, NWEndpoint> handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_ResolutionEnumeratorHandler, handler);
@@ -113,7 +114,7 @@ namespace Network {
 		static void TrampolineEnumerateProtocolsHandler (IntPtr block, nw_protocol_definition_t protocol, nuint handshake_milliseconds, nuint handshake_rtt_milliseconds)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition, TimeSpan, TimeSpan>> (block);
-			if (del != null) {
+			if (del is not null) {
 				using (var nwProtocolDefinition = new NWProtocolDefinition (protocol, owns: false))
 					del (nwProtocolDefinition, TimeSpan.FromMilliseconds (handshake_milliseconds), TimeSpan.FromMilliseconds (handshake_rtt_milliseconds)); 
 			}
@@ -122,8 +123,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateProtocols (Action<NWProtocolDefinition, TimeSpan, TimeSpan> handler)
 		{
-			if (handler == null) 
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null) 
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateProtocolsHandler, handler);
@@ -188,7 +189,7 @@ namespace Network {
 		public void EnumerateResolutionReports (Action<NWResolutionReport> handler)
 		{
 			if (handler is null) 
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral blockHandler = new ();
 			blockHandler.SetupBlockUnsafe (static_EnumerateResolutionReport, handler);

@@ -21,6 +21,7 @@ namespace Intents {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("macos10.12")]
 	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10, 0)]
 	[Mac (10, 12, 0, PlatformArchitecture.Arch64)]
@@ -60,6 +61,7 @@ namespace Intents {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[iOS (13,0)]
@@ -71,6 +73,7 @@ namespace Intents {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[iOS (13,0)]

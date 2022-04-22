@@ -13,6 +13,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
@@ -25,6 +26,9 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace PrintCore {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPrintCoreBase : NativeObject {
 		[Preserve (Conditional = true)]
 		internal PMPrintCoreBase (NativeHandle handle, bool owns)
@@ -38,21 +42,27 @@ namespace PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		internal extern static OSStatus PMRelease (PMObject obj);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			PMRetain (Handle);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			PMRelease (Handle);
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPrintException : Exception {
 		public PMPrintException (PMStatusCode code) : base (code.ToString ()){}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPrintSession : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreateSession (out IntPtr session);
@@ -158,6 +168,9 @@ namespace PrintCore {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPrintSettings : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreatePrintSettings (out IntPtr session);
@@ -316,6 +329,9 @@ namespace PrintCore {
 		
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPageFormat : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreatePageFormat (out IntPtr handle);
@@ -401,6 +417,9 @@ namespace PrintCore {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPaper : PMPrintCoreBase {
 		[Preserve (Conditional = true)]
 		internal PMPaper (NativeHandle handle, bool owns) : base (handle, owns) {}
@@ -463,6 +482,9 @@ namespace PrintCore {
 		
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPrinter : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreateGenericPrinter (out IntPtr session);
@@ -739,6 +761,9 @@ namespace PrintCore {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMServer : PMPrintCoreBase {
 		// A private constructor so that nobody can create an instance of this class.
 		PMServer ()

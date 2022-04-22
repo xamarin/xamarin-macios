@@ -63,6 +63,10 @@ namespace Security {
 		WhenUnlocked,
 		AfterFirstUnlock,
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.14")]
 		[UnsupportedOSPlatform ("ios12.0")]
 #if MONOMAC
@@ -78,6 +82,10 @@ namespace Security {
 		WhenUnlockedThisDeviceOnly,
 		AfterFirstUnlockThisDeviceOnly,
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.14")]
 		[UnsupportedOSPlatform ("ios12.0")]
 #if MONOMAC
@@ -113,6 +121,12 @@ namespace Security {
 		Default = 1953261156,
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class SecKeyChain : INativeObject {
 
 		internal SecKeyChain (NativeHandle handle)
@@ -620,7 +634,13 @@ namespace Security {
 			return null;
 		}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class SecRecord : IDisposable {
 		// Fix <= iOS 6 Behaviour - Desk #83099
 		// NSCFDictionary: mutating method sent to immutable object
@@ -824,6 +844,8 @@ namespace Security {
 #if !MONOMAC
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -838,6 +860,9 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -978,6 +1003,9 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios9.0")]
 #if IOS
 		[Obsolete ("Starting with ios9.0 use 'AuthenticationUI' property instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -998,6 +1026,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
@@ -1016,6 +1046,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9, 0)]
 		[Mac (10, 11)]
@@ -1361,6 +1393,7 @@ namespace Security {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 		[TV (11,0)]
@@ -1518,7 +1551,7 @@ namespace Security {
 		public void SetKey (SecKey key) => SetValueRef (key);
 
 	}
-	
+
 	internal partial class SecItem {
 
 		[DllImport (Constants.SecurityLibrary)]
@@ -1554,7 +1587,7 @@ namespace Security {
 			}
 		}
 	}
-	
+
 	internal static partial class KeysAccessible {
 		public static IntPtr FromSecAccessible (SecAccessible accessible)
 		{
@@ -1601,7 +1634,7 @@ namespace Security {
 			return SecAccessible.Invalid;
 		}
 	}
-	
+
 	internal static partial class SecProtocolKeys {
 		public static IntPtr FromSecProtocol (SecProtocol protocol)
 		{
@@ -1710,7 +1743,7 @@ namespace Security {
 			return SecProtocol.Invalid;
 		}
 	}
-	
+
 	internal static partial class KeysAuthenticationType {
 		public static SecAuthenticationType ToSecAuthenticationType (IntPtr handle)
 		{
@@ -1759,7 +1792,13 @@ namespace Security {
 			}
 		}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class SecurityException : Exception {
 		static string ToMessage (SecStatusCode code)
 		{
@@ -1791,6 +1830,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
@@ -1831,6 +1872,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8, 0)]
 		[Mac (10, 10)]
@@ -1851,6 +1894,8 @@ namespace Security {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9, 0)]
 		[Mac (10, 12)]

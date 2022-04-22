@@ -262,6 +262,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			AttributeAssembly = PathUtils.ConvertToMacPath (AttributeAssembly);
+			BaseLibDll = PathUtils.ConvertToMacPath (BaseLibDll);
+			BTouchToolExe = PathUtils.ConvertToMacPath (BTouchToolExe);
+			BTouchToolPath = PathUtils.ConvertToMacPath (BTouchToolPath);
+			DotNetCscCompiler = PathUtils.ConvertToMacPath (DotNetCscCompiler);
+
 			if (!IsDotNet) {
 				ToolExe = BTouchToolExe;
 				ToolPath = BTouchToolPath;

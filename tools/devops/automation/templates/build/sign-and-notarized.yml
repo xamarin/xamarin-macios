@@ -166,7 +166,7 @@ steps:
         mkdir -p "$ESRP_TEMP"
       fi
 
-      echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -vv -c "8023" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
+      echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -vv -c "8025" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
       ls -R $(Build.SourcesDirectory)/package
     env:
       WORKING_DIR: $(System.DefaultWorkingDirectory)
