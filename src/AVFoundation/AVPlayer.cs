@@ -13,9 +13,11 @@ using Foundation;
 using CoreMedia;
 using CoreVideo;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVPlayerItemVideoOutput {
-		public CVPixelBuffer CopyPixelBuffer (CMTime itemTime, ref CMTime outItemTimeForDisplay)
+		public CVPixelBuffer? CopyPixelBuffer (CMTime itemTime, ref CMTime outItemTimeForDisplay)
 		{
 			var ptr = WeakCopyPixelBuffer (itemTime, ref outItemTimeForDisplay);
 			if (ptr == IntPtr.Zero)
