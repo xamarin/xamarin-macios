@@ -501,6 +501,7 @@
 				TargetFramework=$(_ComputedTargetFrameworkMoniker)
 				UseLlvm=$(MtouchUseLlvm)
 				Verbosity=$(_BundlerVerbosity)
+				XamarinNativeLibraryDirectory=$(_XamarinNativeLibraryDirectory)
 				XamarinRuntime=$(_XamarinRuntime)
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
@@ -1125,11 +1126,6 @@
 
 	<Target Name="_ComputeLinkNativeExecutableInputs">
 		<ItemGroup Condition="'$(IsMacEnabled)' == 'true'">
-                        <!-- TODO Is _FileNativeReference the way to do this here? -->
-                        <!-- TODO note that we do need ForceLoad=True for this .a -->
-			<_FileNativeReference Include="$(_XamarinNativeLibraryDirectory)/libextension-dotnet.a" Kind="Static" ForceLoad="True" Condition="'$(IsAppExtension)' == 'true' And '$(_PlatformName)' == 'iOS'" />
-			<_FileNativeReference Include="$(_XamarinNativeLibraryDirectory)/libtvextension-dotnet.a" Kind="Static" ForceLoad="True" Condition="'$(IsAppExtension)' == 'true' And '$(_PlatformName)' == 'tvOS'" />
-
 			<_XamarinMainLibraries Include="$(_XamarinNativeLibraryDirectory)/$(_LibXamarinName)" />
 			<!-- Link with the libraries shipped with the mono runtime pack -->
 			<_XamarinMainLibraries Include="@(_MonoLibrary)" />
