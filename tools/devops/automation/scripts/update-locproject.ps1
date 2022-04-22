@@ -18,12 +18,18 @@ $projectObject = Get-Content $LocProjectPath | ConvertFrom-Json
 $jsonFiles | ForEach-Object {
     $sourceFile = $_.FullName
     $outputPath = "$($_.DirectoryName + "\")"
-    $lclFile = "$($LocalizeDirectory + $_.FullName.Split("xamarin-macios")[1])"
+    $fullNameString = Convert-Path -Path $_.FullName
+    $afterXammacios = $fullNameString.Split("xamarin-macios")
+    $afterXammacios1 = $fullNameString.Split("xamarin-macios")[1]
+    $lclFile = "$($LocalizeDirectory + $afterXammacios1)"
     $projectObject.Projects[0].LocItems += (@{
         SourceFile = $sourceFile
         CopyOption = "LangIDOnName"
         OutputPath = $outputPath
         LclFile = $lclFile
+        fullNameString = $fullNameString
+        afterXammacios = $afterXammacios
+        afterXammacios1 = $afterXammacios1
     })
 }
 Pop-Location
