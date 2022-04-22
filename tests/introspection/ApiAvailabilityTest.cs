@@ -368,6 +368,12 @@ namespace Introspection {
 
 		void CheckUnavailable (Type t, bool typeUnavailable, Version? typeUnavailableVersion, MemberInfo m)
 		{
+#if NET
+			switch (t.FullName) {
+				case "MediaPlayer.MPMoviePlayerController":
+					return;
+			}
+#endif
 			var ma = GetAvailable (m, out var availableVersion);
 			if (typeUnavailable && (ma != null)) {
 				if (typeUnavailableVersion is not null && availableVersion is not null) {
@@ -384,6 +390,8 @@ namespace Introspection {
 					// Apple is introducing and deprecating numerous APIs in the same Mac Catalyst version,
 					// so specifically for Mac Catalyst, we do a simple 'greater than' version check,
 					// instead of a 'greater than or equal' version like we do for the other platforms.
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/14802
+
 					if (Platform == ApplePlatform.MacCatalyst) {
 						if (availableVersion > unavailableVersion)
 							AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is > than the unavailable version {unavailableVersion}");
@@ -391,6 +399,7 @@ namespace Introspection {
 						if (availableVersion >= unavailableVersion)
 							AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
 					}
+#endif
 				} else {
 					// As documented in https://docs.microsoft.com/en-us/dotnet/standard/analyzers/platform-compat-analyzer#advanced-scenarios-for-attribute-combinations
 					// it is valid, and required in places to declare a type both availabile and unavailable on a given platform.
@@ -423,6 +432,7 @@ namespace Introspection {
 						// Apple is introducing and deprecating numerous APIs in the same Mac Catalyst version,
 						// so specifically for Mac Catalyst, we do a simple 'greater than' version check,
 						// instead of a 'greater than or equal' version like we do for the other platforms.
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/14802
 						if (Platform == ApplePlatform.MacCatalyst) {
 							if (availableVersion > unavailableVersion)
 								AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is > than the unavailable version {unavailableVersion}");
@@ -431,6 +441,7 @@ namespace Introspection {
 							if (availableVersion >= unavailableVersion)
 								AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
 						}
+#endif
 					} else {
 					// As documented in https://docs.microsoft.com/en-us/dotnet/standard/analyzers/platform-compat-analyzer#advanced-scenarios-for-attribute-combinations
 					// it is valid, and required in places to declare a type both availabile and unavailable on a given platform.
