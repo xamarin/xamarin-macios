@@ -1302,12 +1302,14 @@ xamarin_initialize ()
 	xamarin_bridge_call_runtime_initialize (&options, &exception_gchandle);
 	if (exception_gchandle != INVALID_GCHANDLE) {
 		NSLog (@PRODUCT ": An exception occurred when calling Runtime.Initialize:\n%@", xamarin_print_all_exceptions (exception_gchandle));
-		xamarin_process_managed_exception_gchandle (exception_gchandle);
 		xamarin_assertion_message ("Can't continue if Runtime.Initialize fails.");
 	}
 
 	xamarin_bridge_register_product_assembly (&exception_gchandle);
-	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	if (exception_gchandle != INVALID_GCHANDLE) {
+		NSLog (@PRODUCT ": An exception occurred when registering the product assembly:\n%@", xamarin_print_all_exceptions (exception_gchandle));
+		xamarin_assertion_message ("Can't continue if registering the product assembly fails.");
+	}
 
 #if !defined (CORECLR_RUNTIME)
 	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or xamarin_enable_new_refcount
