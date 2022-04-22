@@ -567,7 +567,7 @@ endif
 # .NET
 #
 
-DOTNET_iOS_LIBRARIES = libapp-dotnet.a libextension-dotnet.a
+DOTNET_iOS_LIBRARIES = libextension-dotnet.a
 DOTNET_tvOS_LIBRARIES = libtvextension-dotnet.a
 DOTNET_macOS_LIBRARIES = libextension-dotnet-coreclr.a
 DOTNET_MacCatalyst_LIBRARIES =
@@ -694,32 +694,12 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIM
 $(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(foreach arch,$(DOTNET_$(rid)_ARCHITECTURES),$(eval $(call DotNetLibXamarinTemplate,$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(arch),_CORECLR_DEBUG,-dotnet-coreclr-debug,_CORECLR)))))
 
 #
-# DotNetLibExtensionTemplate builds libapp.a and lib[tv]extension.a
+# DotNetLibExtensionTemplate builds lib[tv]extension.a
 #
 
 define DotNetLibExtensionTemplate
-
-# TODO note that we build libextension and libtvextension
-# for all cases, even though we need at most one of them.
-# for example, the output directory for tvos contains
-# libextension-dotnet.a (which is for iOS)
-# and libtvextension-dotnet.a (which is for tvOS)
-# it seems we should only need to build one.
-
-# note also that we build libapp-dotnet, but I'm not sure
-# we need that one at all.
-
-# note also that there is a separate set of instructions to
-# build these, above, in the monotouch section of the file,
-# the instructions here build (potentially identical) files
-# except with -dotnet included in the name.
-
 .libs/$(1)/extension-main$(5).$(3).o: EXTRA_DEFINES=-DEXTENSION
 .libs/$(1)/tvextension-main$(5).$(3).o: EXTRA_DEFINES=-DTV_EXTENSION
-
-.libs/$(1)/libapp$(5).$(3).a: .libs/$(1)/app-main$(5).$(3).o
-	$(Q) rm -f $$@
-	$$(call Q_2,AR,    [$1]) $(DEVICE_BIN_PATH)/ar cru $$@ $$^
 
 .libs/$(1)/libextension$(5).$(3).a: .libs/$(1)/extension-main$(5).$(3).o
 	$(Q) rm -f $$@
