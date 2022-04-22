@@ -17,13 +17,15 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVAudioFormat {
 		public static bool operator == (AVAudioFormat a, AVAudioFormat b)
 		{
 			if ((object) a == (object) b)
 				return true;
-			if ((object) a == null ^ (object) b == null)
+			if (a is null || b is null)
 				return false;
 			return a.Equals (b);
 		}

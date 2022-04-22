@@ -10,6 +10,8 @@ using Xamarin.Messaging;
 
 using Xamarin.iOS.Tasks;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks
 {
 	public class BTouch : BTouchTaskBase, ITaskCallback

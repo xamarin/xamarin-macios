@@ -8,6 +8,8 @@
 // Copyright 2013-2014 Xamarin Inc.
 // Copyright 2019 Microsoft Corporation
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -98,7 +100,7 @@ namespace GameController {
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCExtendedGamepadSnapShotDataV100 (
 			/* GCExtendedGamepadSnapShotDataV100 * __nullable */ ref GCExtendedGamepadSnapShotDataV100 snapshotData);
 
-		public NSData ToNSData ()
+		public NSData? ToNSData ()
 		{
 			var p = NSDataFromGCExtendedGamepadSnapShotDataV100 (ref this);
 			return p == IntPtr.Zero ? null : new NSData (p);
@@ -265,7 +267,7 @@ namespace GameController {
 		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
-		public NSData ToNSData ()
+		public NSData? ToNSData ()
 		{
 			var p = NSDataFromGCExtendedGamepadSnapshotData (ref this);
 			return p == IntPtr.Zero ? null : new NSData (p);
@@ -307,9 +309,9 @@ namespace GameController {
 			/* GCExtendedGamepadSnapshotData * __nullable */ out GCExtendedGamepadSnapshotData snapshotData, 
 			/* NSData * __nullable */ IntPtr data);
 
-		public static bool TryGetSnapShotData (NSData data, out GCExtendedGamepadSnapShotDataV100 snapshotData)
+		public static bool TryGetSnapShotData (NSData? data, out GCExtendedGamepadSnapShotDataV100 snapshotData)
 		{
-			return GCExtendedGamepadSnapShotDataV100FromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
+			return GCExtendedGamepadSnapShotDataV100FromNSData (out snapshotData, data.GetHandle ());
 		}
 		
 #if NET
@@ -332,9 +334,9 @@ namespace GameController {
 		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
-		public static bool TryGetExtendedSnapShotData (NSData data, out GCExtendedGamepadSnapshotData snapshotData)
+		public static bool TryGetExtendedSnapShotData (NSData? data, out GCExtendedGamepadSnapshotData snapshotData)
 		{
-			return GCExtendedGamepadSnapshotDataFromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
+			return GCExtendedGamepadSnapshotDataFromNSData (out snapshotData, data.GetHandle ());
 		}
 	}
 }
