@@ -95,7 +95,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			args.Add ("--component");
-			args.AddQuoted (Path.Combine (OutputDirectory, Path.GetFileName (AppBundleDir)));
+			args.AddQuoted (Path.GetFullPath (AppBundleDir));
 			args.Add ("/Applications");
 
 			if (EnablePackageSigning) {
@@ -117,7 +117,10 @@ namespace Xamarin.MacDev.Tasks
 				string target = string.Format ("{0}{1}.pkg", Name, String.IsNullOrEmpty (projectVersion) ? "" : "-" + projectVersion);
 				PkgPackagePath = Path.Combine (OutputDirectory, target);
 			}
+			PkgPackagePath = Path.GetFullPath (PkgPackagePath);
 			args.AddQuoted (PkgPackagePath);
+
+			Directory.CreateDirectory (Path.GetDirectoryName (PkgPackagePath));
 
 			return args.ToString ();
 		}
