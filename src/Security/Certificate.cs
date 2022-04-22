@@ -228,6 +228,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos10.14")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
@@ -463,7 +464,6 @@ namespace Security {
 #if MONOMAC
 #if NET
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.13 use 'GetSerialNumber' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

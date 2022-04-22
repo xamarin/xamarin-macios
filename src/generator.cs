@@ -3436,19 +3436,17 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	static AvailabilityBaseAttribute CreateMinSupportedAttribute (PlatformName platform)
+	static AvailabilityBaseAttribute CreateNoVersionSupportedAttribute (PlatformName platform)
 	{
 		switch (platform) {
 		case PlatformName.iOS:
-			return new IntroducedAttribute(platform, Xamarin.SdkVersions.MiniOSVersion.Major, Xamarin.SdkVersions.MiniOSVersion.Minor);
 		case PlatformName.TvOS:
-			return new IntroducedAttribute(platform, Xamarin.SdkVersions.MinTVOSVersion.Major, Xamarin.SdkVersions.MinTVOSVersion.Minor);
 		case PlatformName.MacOSX:
-			return new IntroducedAttribute(platform, Xamarin.SdkVersions.MinOSXVersion.Major, Xamarin.SdkVersions.MinOSXVersion.Minor);
+			return new IntroducedAttribute(platform);
 		case PlatformName.WatchOS:
-			throw new InvalidOperationException ("CreateMinSupportedAttribute for WatchOS never makes sense");
+			throw new InvalidOperationException ("CreateNoVersionSupportedAttribute for WatchOS never makes sense");
 		case PlatformName.MacCatalyst:
-			throw new InvalidOperationException ("CreateMinSupportedAttribute for Catalyst never makes sense");
+			throw new InvalidOperationException ("CreateNoVersionSupportedAttribute for Catalyst never makes sense");
 		default:
 			throw new NotImplementedException ();
 		}
@@ -3511,36 +3509,41 @@ public partial class Generator : IMemberGatherer {
 	{
 		string ns = FindNamespace (klass);
 		var list = GetFrameworkListForPlatform (platform);
-		// The framework is named wkwebkit but the namespace is webkit
-		if (list.Contains ("wkwebkit")) {
-			list.Add ("webkit");
-		}
 		return list.Contains(ns.ToLower (CultureInfo.InvariantCulture));
 	}
 
-	IEnumerable<AvailabilityBaseAttribute> AddUnlistedAvailability (MemberInfo containingClass, List<AvailabilityBaseAttribute> availability)
+	void AddUnlistedAvailability (MemberInfo containingClass, List<AvailabilityBaseAttribute> availability)
 	{
-		// If there are literally no attributes for a platform on a type, for non-catalyst platforms
-		// add a minimum supported introduced since it was "unlisted"
+		// If there are no unavailable attributes for a platform on a type
+		// add a supported introduced (without version) since it was "unlisted" (for non-catalyst platforms)
 		foreach (var platform in new [] { PlatformName.iOS, PlatformName.TvOS, PlatformName.MacOSX }) {
-			if (!availability.Any (v => v.Platform == platform)) {
-				if (IsInSupportedFramework (containingClass, platform)) {
-					yield return CreateMinSupportedAttribute (platform);
-				}
+			if (!PlatformMarkedUnavailabile (platform, availability) && IsInSupportedFramework (containingClass, platform)) {
+				availability.Add (CreateNoVersionSupportedAttribute (platform));
 			}
 		}
 	}
 
 	static void AddImpliedCatalyst (List<AvailabilityBaseAttribute> memberAvailability)
 	{
-		foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS && v is not ObsoletedAttribute).ToList()) {
-			if (!memberAvailability.Any (v => (v.Platform == PlatformName.MacCatalyst) && ImpliedKindsMatch (v.AvailabilityKind, attr.AvailabilityKind))) {
+		if (!PlatformMarkedUnavailabile (PlatformName.MacCatalyst, memberAvailability) && 
+			!PlatformHasIntroduced (PlatformName.MacCatalyst, memberAvailability)) {
+			foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList()) {
 				var newAttribute = CloneFromOtherPlatform (attr, PlatformName.MacCatalyst);
-				if (IsValidToCopyTo (memberAvailability, newAttribute)) {
+				if (IsValidToCopyTo (memberAvailability, newAttribute, allowIntroducedOnUnavailable: true)) {
 					memberAvailability.Add (newAttribute);
 				}
 			}
 		}
+	}
+
+	static bool PlatformHasIntroduced (PlatformName platform, List<AvailabilityBaseAttribute> memberAvailability) 
+	{
+		return memberAvailability.Any (v => (v.Platform == platform && v is IntroducedAttribute));
+	}
+
+	static bool PlatformMarkedUnavailabile (PlatformName platform, List<AvailabilityBaseAttribute> memberAvailability) 
+	{
+		return memberAvailability.Any (v => (v.Platform == platform && v is UnavailableAttribute));
 	}
 
 	// Especially for TV and Catalyst some entire namespaces are removed via framework_sources.
@@ -3554,6 +3557,12 @@ public partial class Generator : IMemberGatherer {
 
 			// Walk all members and look for introduced that are nonsense for our containing class's platform
 			foreach (var introduced in memberAvailability.Where (a => a.AvailabilityKind == AvailabilityKind.Introduced).ToList()) {
+				// Hack - WebKit namespace has two distinct implementations with different types
+				// It can not be hacked in IsInSupportedFramework as AddUnlistedAvailability 
+				// will add iOS implied to the mac version and so on. So hard code it here...
+				if (FindNamespace (containingClass) == "WebKit" && introduced.Platform != PlatformName.TvOS) {
+					continue;
+				}
 				if (!IsInSupportedFramework (containingClass, introduced.Platform)) {
 					memberAvailability.Remove (introduced);
 					droppedPlatforms.Add (introduced.Platform);
@@ -3569,13 +3578,13 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	static bool IsValidToCopyTo (List<AvailabilityBaseAttribute> dest, AvailabilityBaseAttribute addition)
+	static bool IsValidToCopyTo (List<AvailabilityBaseAttribute> dest, AvailabilityBaseAttribute addition, bool allowIntroducedOnUnavailable = false)
 	{
 		// If we are duplicating an existing attribute
 		if (dest.Any (d => d.Platform == addition.Platform && d.AvailabilityKind == addition.AvailabilityKind))
 			return false;
 		// If we are introduced and there is already an Unavailable 
-		if (addition is IntroducedAttribute && dest.Any (d => d.Platform == addition.Platform && d.AvailabilityKind == AvailabilityKind.Unavailable))
+		if (!allowIntroducedOnUnavailable && (addition is IntroducedAttribute && dest.Any (d => d.Platform == addition.Platform && d.AvailabilityKind == AvailabilityKind.Unavailable)))
 			return false;
 		return true;
 	}
@@ -3684,17 +3693,17 @@ public partial class Generator : IMemberGatherer {
 			availabilityToConsider = availabilityToConsider.Where (x => x.Platform != PlatformName.WatchOS).ToList();
 
 			// Add any implied non-catalyst introduced (Catalyst will come later)
-			availabilityToConsider.AddRange (AddUnlistedAvailability (context, availabilityToConsider));
+			AddUnlistedAvailability (context, availabilityToConsider);
 
-			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst] on the type trumps [iOS] on a member
-			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind != AvailabilityKind.Introduced).Select (attr => CloneFromOtherPlatform (attr, attr.Platform)));
+			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst	] on the type trumps [iOS] on a member
+			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind != AvailabilityKind.Introduced));
 
 			// Add implied catalyst from [iOS] _before_ copying down from parent if no catalyst attributes
 			// As those take precedent. We will do this a second time later in a moment..
 			AddImpliedCatalyst (memberAvailability);
 
 			// Now copy it down introduced from the parent
-			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind == AvailabilityKind.Introduced).Select (attr => CloneFromOtherPlatform (attr, attr.Platform)));
+			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind == AvailabilityKind.Introduced));
 
 			// Now expand the implied catalyst from [iOS] a second time
 			// This is needed in some cases where the only iOS information is in the
@@ -3715,7 +3724,7 @@ public partial class Generator : IMemberGatherer {
 		return memberAvailability.ToArray ();
 	}
 
-	public bool PrintPlatformAttributes (MemberInfo mi, Type type = null)
+	public bool PrintPlatformAttributes (MemberInfo mi, Type type = null, bool is_enum = false)
 	{
 		bool printed = false;
 		if (mi == null)
@@ -3723,7 +3732,7 @@ public partial class Generator : IMemberGatherer {
 
 		AvailabilityBaseAttribute [] type_ca = null;
 
-		foreach (var availability in GetPlatformAttributesToPrint (mi, type, mi.DeclaringType)) {
+		foreach (var availability in GetPlatformAttributesToPrint (mi, is_enum ? mi.DeclaringType : type, is_enum ? null : mi.DeclaringType)) {
 			var t = type ?? (mi as TypeInfo) ?? mi.DeclaringType;
 			if (type_ca == null) {
 				if (t != null)
@@ -5288,7 +5297,9 @@ public partial class Generator : IMemberGatherer {
 			       use_underscore ? "_" : "");
 			indent++;
 			if (pi.CanRead) {
+#if !NET
 				PrintAttributes (pi, platform:true);
+#endif
 				PrintAttributes (pi.GetGetMethod (), platform:true, preserve:true, advice:true);
 				print ("get {");
 				indent++;
@@ -5308,7 +5319,9 @@ public partial class Generator : IMemberGatherer {
 				print ("}");
 			}
 			if (pi.CanWrite) {
+#if !NET
 				PrintAttributes (pi, platform:true);
+#endif
 				PrintAttributes (pi.GetSetMethod (), platform:true, preserve:true, advice:true);
 				print ("set {");
 				indent++;

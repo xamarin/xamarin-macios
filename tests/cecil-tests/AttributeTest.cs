@@ -314,6 +314,19 @@ namespace Cecil.Tests {
 			case "Intents.INPerson.get_VocabularyIdentifier":
 			case "MetricKit.MXUnitSignalBars.get_Symbol":
 			case "MetricKit.MXUnitAveragePixelLuminance.get_Symbol":
+			case "WebKit.DomNode.Copy":
+			case "WebKit.DomEventTarget.Copy":
+			case "WebKit.DomObject.Copy":
+			case "WebKit.WebArchive.Copy":
+			case "WebKit.WebHistoryItem.Copy":
+			case "CoreWlan.CWConfiguration.Copy":
+			case "CoreWlan.CWConfiguration.MutableCopy":
+			case "CoreWlan.CWChannel.Copy":
+			case "CoreWlan.CWMutableNetworkProfile.Copy":
+			case "CoreWlan.CWMutableNetworkProfile.MutableCopy":
+			case "CoreWlan.CWNetwork.Copy":
+			case "CoreWlan.CWNetworkProfile.Copy":
+			case "CoreWlan.CWNetworkProfile.MutableCopy":
 				return true;
 			}
 			// Generator Bug/Limitation - Related to ^, Wrapper protocol get/set with attributes

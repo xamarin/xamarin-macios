@@ -909,15 +909,9 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 		Message = message;
 	}
 
-	public override string ToString ()
+	void GeneratePlatformDefine (StringBuilder builder)
 	{
-		var builder = new StringBuilder ();
-		switch (AvailabilityKind) {
-		case AvailabilityKind.Introduced:
-			builder.Append ("[SupportedOSPlatform (\"");
-			break;
-		case AvailabilityKind.Obsoleted:
-			switch (Platform) {
+		switch (Platform) {
 			case PlatformName.iOS:
 				builder.AppendLine ("#if __IOS__");
 				break;
@@ -931,19 +925,61 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 				builder.AppendLine ("#if __MACOS__");
 				break;
 			case PlatformName.MacCatalyst:
-				builder.AppendLine ("#if __MACCATALYST__");
+				builder.AppendLine ("#if __MACCATALYST__ && !__IOS__ && !__MACOS__");
 				break;
 			default:
 				throw new NotSupportedException ($"Unknown platform: {Platform}");
-			}
-			builder.Append ("[Obsolete (\"Starting with ");
-			break;
-		case AvailabilityKind.Deprecated:
-		case AvailabilityKind.Unavailable:
-			builder.Append ("[UnsupportedOSPlatform (\"");
-			break;
 		}
+	}
 
+	void GenerateObsolete (StringBuilder builder)
+	{
+		GeneratePlatformDefine (builder);
+		builder.Append ("[Obsolete (\"Starting with ");
+
+		GeneratePlatformNameAndVersion (builder);
+
+		if (!String.IsNullOrEmpty (Message))
+			builder.Append (' ').Append (Message);
+		else
+			builder.Append ('.'); // intro check messages to they end with a '.'
+									// TODO add a URL (wiki?) and DiagnosticId (one per platform?) for documentation
+		builder.AppendLine ("\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]");
+		builder.AppendLine ("#endif");
+	}
+
+	void GenerateAdvice (StringBuilder builder)
+	{
+		GeneratePlatformDefine (builder);
+		builder.Append ("[Advice (\"Starting with ");
+
+		GeneratePlatformNameAndVersion (builder);
+
+		if (!String.IsNullOrEmpty (Message))
+			builder.Append (' ').Append (Message);
+		else
+			builder.Append ('.'); // intro check messages to they end with a '.'
+									// TODO add a URL (wiki?) and DiagnosticId (one per platform?) for documentation
+		builder.AppendLine ("\")]");
+		builder.AppendLine ("#endif");
+	}
+
+	void GenerateUnsupported (StringBuilder builder)
+	{
+		builder.Append ("[UnsupportedOSPlatform (\"");
+		GeneratePlatformNameAndVersion (builder);
+		builder.AppendLine ("\")]");
+	}
+
+	void GenerateSupported (StringBuilder builder)
+	{
+		builder.Append ("[SupportedOSPlatform (\"");
+		GeneratePlatformNameAndVersion (builder);
+		builder.AppendLine ("\")]");
+	}
+
+	void GeneratePlatformNameAndVersion (StringBuilder builder)
+	{
 		switch (Platform) {
 		case PlatformName.iOS:
 			builder.Append ("ios");
@@ -966,21 +1002,25 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 
 		if (Version != null)
 			builder.Append (Version.ToString (Version.Build >= 0 ? 3 : 2));
+	}
 
+	public override string ToString ()
+	{
+		var builder = new StringBuilder ();
 		switch (AvailabilityKind) {
-		case AvailabilityKind.Obsoleted:
-			if (!String.IsNullOrEmpty (Message))
-				builder.Append (' ').Append (Message);
-			else
-				builder.Append ('.'); // intro check messages to they end with a '.'
-										// TODO add a URL (wiki?) and DiagnosticId (one per platform?) for documentation
-			builder.AppendLine ("\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]");
-			builder.Append ("#endif");
-			break;
 		case AvailabilityKind.Introduced:
+			GenerateSupported (builder);
+			break;
 		case AvailabilityKind.Deprecated:
+			GenerateAdvice (builder);
+			GenerateUnsupported (builder);
+			break;
+		case AvailabilityKind.Obsoleted:
+			GenerateObsolete (builder);
+			GenerateUnsupported (builder);
+			break;
 		case AvailabilityKind.Unavailable:
-			builder.Append ("\")]");
+			GenerateUnsupported (builder);
 			break;
 		}
 		return builder.ToString ();
