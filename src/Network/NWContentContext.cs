@@ -72,8 +72,8 @@ namespace Network {
 
 		public NWContentContext (string contextIdentifier)
 		{
-			if (contextIdentifier == null)
-				throw new ArgumentNullException (nameof (contextIdentifier));
+			if (contextIdentifier is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contextIdentifier));
 			InitializeHandle (nw_content_context_create (contextIdentifier));
 		}
 
@@ -139,8 +139,8 @@ namespace Network {
 
 		public NWProtocolMetadata? GetProtocolMetadata (NWProtocolDefinition protocolDefinition)
 		{
-			if (protocolDefinition == null)
-				throw new ArgumentNullException (nameof (protocolDefinition));
+			if (protocolDefinition is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolDefinition));
 			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
 			if (x == IntPtr.Zero)
 				return null;
@@ -150,7 +150,7 @@ namespace Network {
 		public T? GetProtocolMetadata<T> (NWProtocolDefinition protocolDefinition) where T : NWProtocolMetadata
 		{
 			if (protocolDefinition is null)
-				throw new ArgumentNullException (nameof (protocolDefinition));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolDefinition));
 			var x = nw_content_context_copy_protocol_metadata (GetCheckedHandle (), protocolDefinition.Handle);
 			return Runtime.GetINativeObject<T> (x, owns: true);
 		}
@@ -160,8 +160,8 @@ namespace Network {
 
 		public void SetMetadata (NWProtocolMetadata protocolMetadata)
 		{
-			if (protocolMetadata == null)
-				throw new ArgumentNullException (nameof (protocolMetadata));
+			if (protocolMetadata is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (protocolMetadata));
 			nw_content_context_set_metadata_for_protocol (GetCheckedHandle (), protocolMetadata.Handle);
 		}
 
@@ -172,7 +172,7 @@ namespace Network {
 		static void TrampolineProtocolIterator (IntPtr block, IntPtr definition, IntPtr metadata)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolDefinition?,NWProtocolMetadata?>> (block);
-			if (del != null) {
+			if (del is not null) {
 				using NWProtocolDefinition? pdef = definition == IntPtr.Zero ? null : new NWProtocolDefinition (definition, owns: true);
 				using NWProtocolMetadata? meta = metadata == IntPtr.Zero ? null : new NWProtocolMetadata (metadata, owns: true);
 
@@ -202,7 +202,7 @@ namespace Network {
 		static NWContentContext? defaultMessage;
 		public static NWContentContext DefaultMessage {
 			get {
-				if (defaultMessage == null)
+				if (defaultMessage is null)
 					defaultMessage = MakeGlobal (NWContentContextConstants._DefaultMessage);
 
 				return defaultMessage;
@@ -214,7 +214,7 @@ namespace Network {
 		static NWContentContext? finalMessage;
 		public static NWContentContext FinalMessage {
 			get {
-				if (finalMessage == null)
+				if (finalMessage is null)
 					finalMessage = MakeGlobal (NWContentContextConstants._FinalSend); 
 				return finalMessage;
 			}
@@ -225,7 +225,7 @@ namespace Network {
 		static NWContentContext? defaultStream;
 		public static NWContentContext DefaultStream {
 			get {
-				if (defaultStream == null)
+				if (defaultStream is null)
 					defaultStream = MakeGlobal (NWContentContextConstants._DefaultStream);
 				return defaultStream;
 			}
