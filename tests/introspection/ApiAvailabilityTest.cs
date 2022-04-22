@@ -368,18 +368,35 @@ namespace Introspection {
 
 		void CheckUnavailable (Type t, bool typeUnavailable, Version? typeUnavailableVersion, MemberInfo m)
 		{
+			// Turns out Version (13, 1, 0) > Version (13, 1) since undefined fields are -1
+			// However, we consider them equal, so force a 0 Build if set to -1
+			if (typeUnavailableVersion is not null && typeUnavailableVersion.Build == -1) {
+				typeUnavailableVersion = new Version (typeUnavailableVersion.Major, typeUnavailableVersion.Minor, 0);
+			}
 #if NET
 			switch (t.FullName) {
 				case "MediaPlayer.MPMoviePlayerController":
+				case "AppKit.NSDrawer":
+				case "ImageKit.IKImageBrowserView":
 					return;
 			}
 #endif
 			var ma = GetAvailable (m, out var availableVersion);
 			if (typeUnavailable && (ma != null)) {
 				if (typeUnavailableVersion is not null && availableVersion is not null) {
+#if NET
+					// Introduced and Deprecated in same version happens a lot in catalyst
+					if (availableVersion > typeUnavailableVersion)
+#else
 					if (availableVersion >= typeUnavailableVersion)
+#endif
 						AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} in {availableVersion} but the type {t.FullName} is [Unavailable ({Platform})] in {typeUnavailableVersion}");
-				} else {
+				} 
+#if NET
+				// Availabile with no version and unavailable is a common valid pattern in NET-land
+				else if (typeUnavailableVersion is not null && availableVersion is null) { }
+#endif
+				 else {
 					AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} but the type {t.FullName} is [Unavailable ({Platform})]");
 				}
 			}
@@ -533,6 +550,17 @@ namespace Introspection {
 						return true;
 					}
 					break;
+				// Apple itself is inconsistent in the availability of the type compared to these selectors
+				case "AVFoundation.AVCaptureStillImageOutput":
+					switch (memberName) {
+						case "AutomaticallyEnablesStillImageStabilizationWhenAvailable":
+						case "CapturingStillImage":
+						case "HighResolutionStillImageOutputEnabled":
+						case "IsStillImageStabilizationActive":
+						case "IsStillImageStabilizationSupported":
+							return true;
+					}
+					break;
 #endif
 				case "CarPlay.CPApplicationDelegate":
 					switch (memberName) {
@@ -598,51 +626,6 @@ namespace Introspection {
 					break;
 				}
 			}
-#if NET
-			// These are temporary ignores until the generator changes are in for NET6 attributes
-			switch (type.FullName) {
-				case "GLKit.GLKTextureOperations": {
-					switch (memberName) {
-						case "SRGB":
-							return true;
-					}
-					break;
-				}
-				case "MapKit.MKOverlayView": {
-					switch (memberName) {
-						case "MKRoadWidthAtZoomScale":
-							return true;
-					}
-					break;
-				}
-				case "MobileCoreServices.UTType": {
-					switch (memberName) {
-						case "Equals":
-						case "IsDynamic":
-						case "IsDeclared":
-						case "CopyAllTags":
-							return true;
-					}
-					break;
-				}
-				case "Security.SecSharedCredential": {
-					switch (memberName) {
-						case "RequestSharedWebCredential":
-							return true;
-					}
-					break;
-				}
-				case "Security.SslContext": {
-					switch (memberName) {
-						case "SetEncryptionCertificate":
-						case "SetSessionStrengthPolicy":
-						case "GetRequestedPeerName":
-							return true;
-					}
-					break;			
-				}
-			}
-#endif
 			return false;
 		}
 
