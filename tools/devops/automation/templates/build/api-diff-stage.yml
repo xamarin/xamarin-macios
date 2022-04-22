@@ -33,6 +33,9 @@ jobs:
 
   steps:
   - template: ../common/configure.yml
+    parameters: 
+      uploadArtifacts: false
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
@@ -76,19 +79,13 @@ jobs:
     clean: all
 
   steps:
-  - template: build.yml
+  - template: build-api-diff.yml
     parameters:
-      runTests: false
-      runDeviceTests: false
-      uploadBinlogs: false
-      signAndNotarize: false
-      skipPackages: true
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
       enableDotnet: ${{ parameters.enableDotnet }}
-      enableAPIDiff: true
 
 - job: upload_vsdrops
   displayName: 'Upload API diff to VSDrops'

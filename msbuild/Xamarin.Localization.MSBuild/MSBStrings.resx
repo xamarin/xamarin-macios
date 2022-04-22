@@ -1419,4 +1419,8 @@
     <data name="W7100" xml:space="preserve">
         <value>Could not find the binding resource package: {0}</value>
     </data>
+
+    <data name="E7101" xml:space="preserve">
+        <value>Unknown property '{0}' with value '{1}'.</value>
+    </data>
 </root>

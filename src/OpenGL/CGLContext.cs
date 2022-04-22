@@ -69,12 +69,12 @@ namespace OpenGL {
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static void CGLReleaseContext (IntPtr handle);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGLRetainContext (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGLReleaseContext (GetCheckedHandle ());
 		}
