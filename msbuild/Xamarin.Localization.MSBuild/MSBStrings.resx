@@ -1415,4 +1415,8 @@
     <data name="E7099" xml:space="preserve">
         <value>The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}).</value>
     </data>
+
+    <data name="E7101" xml:space="preserve">
+        <value>Unknown property '{0}' with value '{1}'.</value>
+    </data>
 </root>
