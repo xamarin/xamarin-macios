@@ -19,30 +19,26 @@ namespace NaturalLanguage {
 		{
 		}
 
-		public string[] this [NSString key] {
+		public string?[]? this [NSString key] {
 			get {
 				if (key is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 				var value = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
-				var array = CFArray.StringArrayFromHandle (value) ?? throw new ArgumentOutOfRangeException (nameof (key));
-				foreach (var str in array) {
-					if (str is null)
-						ObjCRuntime.ThrowHelper.ThrowArgumentNullException ($"Key value {nameof (key)} contains a null string.");
-				}
-				return array!;
+				return CFArray.StringArrayFromHandle (value);
 			}
+
 			set {
-				SetArrayValue (key, value);
+				SetArrayValue (key, value!);
 			}
 		}
 
-		public string[] this [string key] {
+		public string?[]? this [string key] {
 			get {
 				return this [(NSString) key];
 			}
 			set {
-				SetArrayValue ((NSString) key, value);
+				SetArrayValue ((NSString) key, value!);
 			}
 		}
 #endif
