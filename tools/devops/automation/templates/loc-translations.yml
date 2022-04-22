@@ -13,7 +13,7 @@ steps:
   inputs:
     targetType: 'filePath'
     filePath: $(Build.SourcesDirectory)\\xamarin-macios\\tools\\devops\\automation\\scripts\\update-locproject.ps1
-    arguments: -SourcesDirectory "$(Build.SourcesDirectory)\\xamarin-macios" -LocProjectPath "$(Build.SourcesDirectory)\\xamarin-macios\\Localize\\LocProject.json"
+    arguments: -SourcesDirectory "$(Build.SourcesDirectory)\\xamarin-macios" -LocalizeDirectory "$(Build.SourcesDirectory)\\Localize\\loc\\{Lang}" -LocProjectPath "$(Build.SourcesDirectory)\\xamarin-macios\\Localize\\LocProject.json"
 
 - pwsh: |
     git remote remove origin
