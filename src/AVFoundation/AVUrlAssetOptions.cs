@@ -31,6 +31,8 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if NET

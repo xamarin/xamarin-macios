@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using Xamarin.Messaging.Build.Client;
 using Microsoft.Build.Framework;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks
 {
-	public class FindCscCompiler : FindCscCompilerTaskBase, ITaskCallback, ICancelableTask {
+	public class ComputeRemoteGeneratorProperties : ComputeRemoteGeneratorPropertiesTaskBase, ITaskCallback, ICancelableTask {
 		public override bool Execute ()
 		{
 			bool result;
