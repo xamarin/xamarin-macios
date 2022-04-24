@@ -21,13 +21,12 @@ parameters:
 
 steps:
 
-# download the not notarized pkgs to the expected location
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Build Internal Artifacts'
+# the ddsign plugin needs this version or it will crash and will make the sign step fail
+- task: UseDotNet@2
   inputs:
-    targetPath: 
-    artifactName: 
-  continueOnError: true
+    packageType: sdk
+    version: 3.x
+  displayName: 'Install .NET Core SDK 3.x needed for ESRP'
 
 - task: DownloadPipelineArtifact@2
   displayName: Download not notaraized build
