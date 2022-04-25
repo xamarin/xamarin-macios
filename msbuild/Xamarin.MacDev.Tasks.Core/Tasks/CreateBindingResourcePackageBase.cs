@@ -100,6 +100,10 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			PackagedFiles = packagedFiles.Select (v => new TaskItem (v)).ToArray ();
+			foreach (var pf in PackagedFiles) {
+				Log.LogWarning ($"Created packaged file: {pf.ItemSpec}");
+			}
+			Log.LogWarning ($"Created {PackagedFiles.Length} packaged files");
 
 			return !Log.HasLoggedErrors;
 		}
