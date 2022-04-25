@@ -16,8 +16,13 @@ $jsonFiles | ForEach-Object {
     $sourceFile = $_.FullName
     $outputPath = "$($_.DirectoryName + "\")"
     $fullNameString = Convert-Path -Path $_.FullName
-    $maciosPath = $fullNameString -split "xamarin-macios", 2
-    $lclFile = "$($LocalizeDirectory + $maciosPath[1] + ".lcl")"
+    $maciosPathArray = $fullNameString -split "xamarin-macios", 2
+    $maciosPath = $maciosPathArray[1]
+    if ($null -eq $maciosPath) {
+        Write-Host "'fullNameString' could not be split at 'xamarin-macios'!"
+        exit 1
+    }
+    $lclFile = Join-Path -Path $LocalizeDirectory -ChildPath "$($maciosPath).lcl"
     $projectObject.Projects[0].LocItems += (@{
         SourceFile = $sourceFile
         CopyOption = "LangIDOnName"
