@@ -30,13 +30,21 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
-    $msg = "$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE)"
+    $msg = "$Env:API_GENERATOR_DIFF_STATUS_MESSAGE"
+    if (-not $msg) {
+      $msg = "Catastrophic failure." 
+      # set the status to error to be used instead
+      $Env:API_GENERATOR_DIFF_STATUS = "error"
+    } 
     $msg = $msg.Replace(":white_check_mark: ", "").Replace(":warning: ", "").Replace(":information_source: ", "")
-    $statuses.SetStatus("$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS)", $msg, "API Diff (PR)")
+    $statuses.SetStatus("$Env:API_GENERATOR_DIFF_STATUS", $msg, "API Diff (PR)")
   displayName: "API diff final status"
   timeoutInMinutes: 5
   condition: succeededOrFailed() # re-starting the daemon should not be an issue
   continueOnError: true
+  env:
+    API_GENERATOR_DIFF_STATUS_MESSAGE: $(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE)
+    API_GENERATOR_DIFF_STATUS: $(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS)
 
 - task: ArchiveFiles@1
   displayName: 'Archive API & Generator comparison'
@@ -97,13 +105,22 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
-    $msg = "$(apidiff.APIDIFF_MESSAGE)"
+    $msg = "$Env:APIDIFF_MESSAGE"
+    if (-not $msg) {
+      $msg = "Catastrophic failure.." 
+      # set the status to error to be used instead
+      $Env:APIDIFF_STATUS = "error"
+    } 
+
     $msg = $msg.Replace(":white_check_mark: ", "").Replace(":warning: ", "").Replace(":information_source: ", "")
-    $statuses.SetStatus("$(apidiff.APIDIFF_STATUS)", $msg, "API Diff (stable)")
+    $statuses.SetStatus("$Env:APIDIFF_STATUS", $msg, "API Diff (stable)")
   displayName: "API diff final status"
   timeoutInMinutes: 5
   condition: succeededOrFailed() # re-starting the daemon should not be an issue
   continueOnError: true
+  env: 
+    APIDIFF_MESSAGE: $(apidiff.APIDIFF_MESSAGE)
+    APIDIFF_STATUS: $(apidiff.APIDIFF_STATUS)
 
 - task: ArchiveFiles@1
   displayName: 'Archive API diff (from stable)'
