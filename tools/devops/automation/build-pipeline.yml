@@ -39,7 +39,7 @@ parameters:
 - name: runWindowsIntegration
   displayName: Run Windows integration tests
   type: boolean
-  default: false
+  default: true
 
 - name: runGovernanceTests
   displayName: Run Governance Checks
