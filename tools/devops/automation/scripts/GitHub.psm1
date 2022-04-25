@@ -103,6 +103,14 @@ class GitHubStatuses {
         return $url
     }
 
+    [string] GetStatusPrefix() {
+        if ($Env:BUILD_REASON -eq "PullRequest") {
+            return "[PR]"
+        } else {
+            return "[CI]"
+        }
+    }
+
     [object] SetStatus($status) {
         return $this.SetStatus(
             $status.Status,
@@ -112,6 +120,8 @@ class GitHubStatuses {
     }
 
     [object] SetStatus($status, $description, $context, $targetUrl) {
+        # set a prefix to be more clear
+        $context = "$($this.GetStatusPrefix()) $context"
         $headers = @{
             Authorization = ("token {0}" -f $this.Token)
         }

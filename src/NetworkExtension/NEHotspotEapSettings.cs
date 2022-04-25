@@ -22,7 +22,7 @@ namespace NetworkExtension {
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
 				var ret = NSArray.From (value, value.Length);
 				_SupportedEapTypes = ret.Handle;

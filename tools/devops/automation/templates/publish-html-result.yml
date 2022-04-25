@@ -11,7 +11,7 @@ parameters:
 
 steps:
 
-- template: ../common/checkout.yml
+- template: ./common/checkout.yml
 
 - checkout: macios.ci 
   clean: true

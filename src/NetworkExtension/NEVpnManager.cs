@@ -28,7 +28,7 @@ namespace NetworkExtension {
 		public void SetAuthorization (Authorization authorization)
 		{
 			if (authorization is null)
-				throw new ArgumentNullException (nameof (authorization));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (authorization));
 
 			_SetAuthorization (authorization.Handle);
 		}

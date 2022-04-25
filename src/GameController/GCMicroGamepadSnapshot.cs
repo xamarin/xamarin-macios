@@ -1,5 +1,7 @@
 // Copyright 2015 Xamarin Inc.
 
+#nullable enable
+
 #if !WATCHOS
 
 using System;
@@ -74,7 +76,7 @@ namespace GameController {
 		static extern /* NSData * __nullable */ IntPtr NSDataFromGCMicroGamepadSnapShotDataV100 (
 			/* __nullable */ ref GCMicroGamepadSnapShotDataV100 snapshotData);
 
-		public NSData ToNSData ()
+		public NSData? ToNSData ()
 		{
 			var p = NSDataFromGCMicroGamepadSnapShotDataV100 (ref this);
 			return p == IntPtr.Zero ? null : new NSData (p);
@@ -163,7 +165,7 @@ namespace GameController {
 		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
-		public NSData ToNSData ()
+		public NSData? ToNSData ()
 		{
 			var p = NSDataFromGCMicroGamepadSnapshotData (ref this);
 			return p == IntPtr.Zero ? null : new NSData (p);
@@ -217,9 +219,9 @@ namespace GameController {
 		[Deprecated (PlatformName.MacOSX, 10, 14, 4, message: "Use 'TryGetSnapshotData (NSData, out GCMicroGamepadSnapshotData)' instead.")]
 		[Deprecated (PlatformName.TvOS, 12, 2, message: "Use 'TryGetSnapshotData (NSData, out GCMicroGamepadSnapshotData)' instead.")]
 #endif
-		public static bool TryGetSnapshotData (NSData data, out GCMicroGamepadSnapShotDataV100 snapshotData)
+		public static bool TryGetSnapshotData (NSData? data, out GCMicroGamepadSnapShotDataV100 snapshotData)
 		{
-			return GCMicroGamepadSnapShotDataV100FromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
+			return GCMicroGamepadSnapShotDataV100FromNSData (out snapshotData, data.GetHandle ());
 		}
 		
 #if NET
@@ -269,9 +271,9 @@ namespace GameController {
 		[Mac (10, 14, 4)]
 		[iOS (12, 2)]
 #endif
-		public static bool TryGetSnapshotData (NSData data, out GCMicroGamepadSnapshotData snapshotData)
+		public static bool TryGetSnapshotData (NSData? data, out GCMicroGamepadSnapshotData snapshotData)
 		{
-			return GCMicroGamepadSnapshotDataFromNSData (out snapshotData, data == null ? IntPtr.Zero : data.Handle);
+			return GCMicroGamepadSnapshotDataFromNSData (out snapshotData, data.GetHandle ());
 		}
 
 	}

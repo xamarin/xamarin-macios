@@ -3994,11 +3994,25 @@ namespace Registrar {
 						setup_return.AppendLine ("retobj = xamarin_get_handle_for_inativeobject ((MonoObject *) retval, &exception_gchandle);");
 						setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
 						setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
-						setup_return.AppendLine ("[retobj retain];");
-						if (!retain)
+						setup_return.AppendLine ("if (retobj != NULL) {");
+						if (retain) {
+							setup_return.AppendLine ("xamarin_retain_nativeobject (retval, &exception_gchandle);");
+							setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+						} else {
+							// If xamarin_attempt_retain_nsobject returns true, the input is an NSObject, so it's safe to call the 'autorelease' selector on it.
+							// We don't retain retval if it's not an NSObject, because we'd have to immediately release it,
+							// and that serves no purpose.
+							setup_return.AppendLine ("bool retained = xamarin_attempt_retain_nsobject (retval, &exception_gchandle);");
+							setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+							setup_return.AppendLine ("if (retained) {");
 							setup_return.AppendLine ("[retobj autorelease];");
+							setup_return.AppendLine ("}");
+						}
 						setup_return.AppendLine ("mt_dummy_use (retval);");
 						setup_return.AppendLine ("res = retobj;");
+						setup_return.AppendLine ("} else {");
+						setup_return.AppendLine ("res = NULL;");
+						setup_return.AppendLine ("}");
 					} else if (type.FullName == "System.String") {
 						// This should always be an NSString and never char*
 						setup_return.AppendLine ("res = xamarin_string_to_nsstring ((MonoString *) retval, {0});", retain ? "true" : "false");
