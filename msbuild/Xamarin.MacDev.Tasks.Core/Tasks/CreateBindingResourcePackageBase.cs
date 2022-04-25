@@ -46,10 +46,15 @@ namespace Xamarin.MacDev.Tasks {
 
 			message = $"PID={System.Diagnostics.Process.GetCurrentProcess ().Id}: {message}";
 
-			if (Log is not null)
-				Log.LogWarning (message);
-			else
+			if (Log is not null) {
+				try {
+						Log.LogWarning (message);
+				} catch (Exception e) {
+					Console.Error.WriteLine ($"EX ({e.Message}): {message}");
+				}
+			} else {
 				Console.Error.WriteLine (message);
+			}
 		}
 
 		public override bool Execute ()
