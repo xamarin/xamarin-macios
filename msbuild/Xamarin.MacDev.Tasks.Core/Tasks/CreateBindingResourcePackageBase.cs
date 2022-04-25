@@ -27,8 +27,30 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem[] NativeReferences { get; set; }
 		
 		// This is a list of files to copy back to Windows
+		ITaskItem[] packaged_files;
 		[Output]
-		public ITaskItem[] PackagedFiles { get; set; }
+		public ITaskItem[] PackagedFiles {
+			get {
+				L ($"Getting PackagedFiles. Is Null: {packaged_files is null}");
+				return packaged_files;
+			}
+			set
+			{
+				L ($"Setting PackagedFiles. Is Null: {packaged_files is null} Will Be Null: {value is null}");
+				packaged_files = value;
+			}
+		}
+
+		void L (string message)
+		{
+
+			message = $"PID={System.Diagnostics.Process.GetCurrentProcess ().Id}: {message}";
+
+			if (Log is not null)
+				Log.LogWarning (message);
+			else
+				Console.Error.WriteLine (message);
+		}
 
 		public override bool Execute ()
 		{
