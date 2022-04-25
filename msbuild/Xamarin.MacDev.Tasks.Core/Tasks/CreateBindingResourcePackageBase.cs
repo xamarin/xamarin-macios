@@ -27,7 +27,8 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem[] NativeReferences { get; set; }
 		
 		// This is a list of files to copy back to Windows
-		protected string[] PackagedFiles { get; set; }
+		[Output]
+		public ITaskItem[] PackagedFiles { get; set; }
 
 		public override bool Execute ()
 		{
@@ -98,7 +99,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			}
 
-			PackagedFiles = packagedFiles.ToArray ();
+			PackagedFiles = packagedFiles.Select (v => new TaskItem (v)).ToArray ();
 
 			return !Log.HasLoggedErrors;
 		}
