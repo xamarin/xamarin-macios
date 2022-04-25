@@ -28,6 +28,8 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if NET
@@ -67,7 +69,7 @@ namespace AVFoundation {
 			return (int) HorizontalSpacing ^ (int) VerticalSpacing;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is AVPixelAspectRatio){
 				var o = (AVPixelAspectRatio) other;

@@ -1,5 +1,7 @@
 // Copyright 2019 Microsoft Corporation
 
+#nullable enable
+
 #if !MONOMAC
 
 using Foundation;

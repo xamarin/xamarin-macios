@@ -7,6 +7,10 @@ parameters:
   type: boolean
   default: false
 
+- name: uploadArtifacts
+  type: boolean
+  default: false
+
 steps:
 - template: checkout.yml
 
@@ -143,60 +147,10 @@ steps:
   displayName: 'Configure build'
 
 # upload config to be consumed later
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: configuration.json'
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
-    artifactName: build-configuration
-  continueOnError: true
-
-- bash: |
-    echo "current directory: $PWD"
-    make LocProject.json
-  displayName: 'Generate LocProject.json'
-  continueOnError: true
-  workingDirectory: $(Build.SourcesDirectory)\xamarin-macios\tools\devops 
-
-- task: PowerShell@2
-  displayName: "Update LocProject.json"
-  inputs:
-    targetType: 'filePath'
-    filePath: $(Build.SourcesDirectory)\xamarin-macios\tools\devops\automation\scripts\update-locproject.ps1
-    arguments: -SourcesDirectory "$(Build.SourcesDirectory)\xamarin-macios" -LocProjectPath "$(Build.SourcesDirectory)\xamarin-macios\Localize\LocProject.json"
-
-- powershell: |
-    git config user.email "valco@microsoft.com"
-    git config user.name "vs-mobiletools-engineering-service2"
-    git branch -d Localization
-    git push origin --delete Localization
-    git checkout -b Localization
-    git push origin Localization
-  displayName: "Create a new Localization branch from main"
-  condition: and(succeeded(), in(variables['build.reason'], 'Schedule'), eq(variables.isMain, 'True'))
-
-- task: OneLocBuild@2
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
-  continueOnError: true
-  env:
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  inputs:
-    locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
-    outDir: '$(Build.ArtifactStagingDirectory)'
-    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
-      isCreatePrSelected: true
-    ${{ if ne(variables['Build.Reason'], 'Schedule') }}:
-      isCreatePrSelected: false
-    packageSourceAuth: patAuth
-    patVariable: '$(OneLocBuild--PAT)'
-    isAutoCompletePrSelected: false
-    prSourceBranchPrefix: 'locfiles'
-    repoType: gitHub
-    gitHubPatVariable: '$(GitHub.Token)'
-
-- task: PublishBuildArtifacts@1
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
-  continueOnError: true
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'localizationDrop'
-    publishLocation: 'Container'
+- ${{ if eq(parameters.uploadArtifacts, true) }}:
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: configuration.json'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
+      artifactName: build-configuration
+    continueOnError: true

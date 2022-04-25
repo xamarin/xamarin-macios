@@ -45,6 +45,9 @@ jobs:
 
   steps:
   - template: ../common/configure.yml
+    parameters: 
+      uploadArtifacts: true
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
