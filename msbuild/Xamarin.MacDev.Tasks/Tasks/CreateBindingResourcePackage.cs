@@ -22,7 +22,7 @@ namespace Xamarin.MacDev.Tasks
 
 			if (success) {
 				Log.LogWarning ("Successful!");
-				TransferBindingResourcePackagesToWindowsAsync (taskRunner).Wait ();
+				TransferBindingResourcePackagesToWindowsAsync (taskRunner, Log).Wait ();
 			} else {
 				Log.LogWarning ("Not successful!");
 			}
@@ -60,15 +60,15 @@ namespace Xamarin.MacDev.Tasks
 				yield return file;
 		}
 
-		async System.Threading.Tasks.Task TransferBindingResourcePackagesToWindowsAsync (TaskRunner taskRunner)
+		async System.Threading.Tasks.Task TransferBindingResourcePackagesToWindowsAsync (TaskRunner taskRunner, TaskLoggingHelper log)
 		{
-			Log.LogWarning ("Transferring...");
+			log.LogWarning ("Transferring...");
 			foreach (var package in PackagedFiles) {
 				var localRelativePath = GetLocalRelativePath (package);
-				Log.LogWarning ($"Transferring {localRelativePath}...");
+				log.LogWarning ($"Transferring {localRelativePath}...");
 				await taskRunner.GetFileAsync (localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
 			}
-			Log.LogWarning ($"Done transferring!");
+			log.LogWarning ($"Done transferring!");
 		}
 
 		string GetLocalRelativePath (string path)
