@@ -57,7 +57,7 @@ namespace Network {
 		static void TrampolineConfigureHandler (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
-			if (del != null) {
+			if (del is not null) {
 				using (var tempOptions = new NWProtocolOptions (iface, owns: false)) 
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
@@ -97,22 +97,22 @@ namespace Network {
 
 			var tlsPtr = &tlsHandler;
 			var tcpPtr = &tcpHandler;
-			if (configureTls == null)
+			if (configureTls is null)
 				tlsPtr = DEFAULT_CONFIGURATION ();
 			else
 				tlsHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTls);
 
-			if (configureTcp == null)
+			if (configureTcp is null)
 				tcpPtr = DEFAULT_CONFIGURATION ();
 			else
 				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
 
 			var ptr = nw_parameters_create_secure_tcp (tlsPtr, tcpPtr);
 
-			if (configureTls != null)
+			if (configureTls is not null)
 				tlsPtr->CleanupBlock ();
 
-			if (configureTcp != null)
+			if (configureTcp is not null)
 				tcpPtr->CleanupBlock ();
 
 			return new NWParameters (ptr, owns: true);
@@ -126,14 +126,14 @@ namespace Network {
 
 			var tcpPtr = &tcpHandler;
 
-			if (configureTcp == null)
+			if (configureTcp is null)
 				tcpPtr = DEFAULT_CONFIGURATION ();
 			else
 				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
 
 			var ptr = nw_parameters_create_secure_tcp (DISABLE_PROTOCOL (), tcpPtr);
 
-			if (configureTcp != null)
+			if (configureTcp is not null)
 				tcpPtr->CleanupBlock ();
 
 			return new NWParameters (ptr, owns: true);
@@ -155,22 +155,22 @@ namespace Network {
 			BlockLiteral *tlsPtr = &tlsHandler;
 			BlockLiteral *udpPtr = &udpHandler;
 
-			if (configureTls == null)
+			if (configureTls is null)
 				tlsPtr = DEFAULT_CONFIGURATION ();
 			else
 				tlsHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTls);
 
-			if (configureUdp == null)
+			if (configureUdp is null)
 				udpPtr = DEFAULT_CONFIGURATION ();
 			else
 				udpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureUdp);
 
 			var ptr = nw_parameters_create_secure_udp (tlsPtr, udpPtr);
 
-			if (configureTls != null)
+			if (configureTls is not null)
 				tlsPtr->CleanupBlock ();
 
-			if (configureUdp != null)
+			if (configureUdp is not null)
 				udpPtr->CleanupBlock ();
 
 			return new NWParameters (ptr, owns: true);
@@ -183,14 +183,14 @@ namespace Network {
 			var udpHandler = new BlockLiteral ();
 
 			var udpPtr = &udpHandler;
-			if (configureUdp == null)
+			if (configureUdp is null)
 				udpPtr = DEFAULT_CONFIGURATION ();
 			else
 				udpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureUdp);
 
 			var ptr = nw_parameters_create_secure_udp (DISABLE_PROTOCOL (), udpPtr);
 
-			if (configureUdp != null)
+			if (configureUdp is not null)
 				udpPtr->CleanupBlock ();
 
 			return new NWParameters (ptr, owns: true);
@@ -228,14 +228,14 @@ namespace Network {
 			var ipHandler = new BlockLiteral ();
 
 			var ipPtr = &ipHandler;
-			if (configureCustomIP == null)
+			if (configureCustomIP is null)
 				ipPtr = DEFAULT_CONFIGURATION ();
 			else
 				ipHandler.SetupBlockUnsafe (static_ConfigureHandler, configureCustomIP);
 
 			var ptr = nw_parameters_create_custom_ip (protocolNumber, ipPtr);
 
-			if (configureCustomIP != null)
+			if (configureCustomIP is not null)
 				ipPtr->CleanupBlock ();
 
 			return new NWParameters (ptr, owns: true);
@@ -334,8 +334,8 @@ namespace Network {
 
 		public void ProhibitInterface (NWInterface iface)
 		{
-			if (iface == null)
-				throw new ArgumentNullException (nameof (iface));
+			if (iface is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (iface));
 
 			nw_parameters_prohibit_interface (GetCheckedHandle (), iface.Handle);
 		}
@@ -383,7 +383,7 @@ namespace Network {
 		static bool TrampolineIterateProhibitedHandler (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterface,bool>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var x = new NWInterface (iface, owns: false);
 				var ret = del (x);
 				x.Dispose ();
@@ -416,7 +416,7 @@ namespace Network {
 		static bool TrampolineIterateProhibitedTypeHandler (IntPtr block, NWInterfaceType type)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterfaceType,bool>> (block);
-			if (del != null)
+			if (del is not null)
 				return del (type);
 			return false;
 		}
@@ -671,14 +671,14 @@ namespace Network {
 			unsafe {
 				var quicPtr = &quicHandlers;
 
-				if (configureQuic == null)
+				if (configureQuic is null)
 					quicPtr = DEFAULT_CONFIGURATION ();
 				else
 					quicHandlers.SetupBlockUnsafe (static_ConfigureHandler, configureQuic);
 
 				var ptr = nw_parameters_create_quic (quicPtr);
 
-				if (configureQuic != null)
+				if (configureQuic is not null)
 					quicPtr->CleanupBlock ();
 				return new NWParameters (ptr, owns: true);
 			}

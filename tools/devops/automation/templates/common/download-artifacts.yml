@@ -11,10 +11,6 @@ parameters:
 
 steps:
 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
-
 - ${{ if eq(parameters.runTests, true) }}:
   # Download the Html Report that was added by the tests job.
   - task: DownloadPipelineArtifact@2

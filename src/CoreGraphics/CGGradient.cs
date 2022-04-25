@@ -71,12 +71,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGGradientRelease (/* CGGradientRef */ IntPtr gradient);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGGradientRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGGradientRelease (GetCheckedHandle ());
 		}

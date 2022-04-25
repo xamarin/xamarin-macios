@@ -78,6 +78,25 @@ namespace Xamarin {
 				}
 			}
 
+			string extensionlib = null;
+			if (app.IsTVExtension) {
+				extensionlib = "libtvextension-dotnet.a";
+			} else if (app.IsExtension) {
+				if (app.XamarinRuntime == Bundler.XamarinRuntime.CoreCLR) {
+					extensionlib = "libextension-dotnet-coreclr.a";
+				} else {
+					extensionlib = "libextension-dotnet.a";
+				}
+			}
+			if (!string.IsNullOrEmpty (extensionlib)) {
+				linkWith.Add (new MSBuildItem {
+					Include = Path.Combine (Configuration.XamarinNativeLibraryDirectory, extensionlib),
+					Metadata = {
+						{ "ForceLoad", "true" },
+					}
+				});
+			}
+
 			Configuration.WriteOutputForMSBuild ("_MainLinkWith", linkWith);
 		}
 	}

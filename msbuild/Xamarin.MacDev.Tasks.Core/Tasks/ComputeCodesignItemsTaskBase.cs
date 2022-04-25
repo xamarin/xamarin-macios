@@ -156,7 +156,7 @@ namespace Xamarin.MacDev.Tasks {
 								continue;
 							}
 							if (nextValue != kvp.Value) {
-								Log.LogWarning (MSBStrings.W7097, /* Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has been values for each item (once it's '{2}', another time it's '{3}'). */ group.Key, kvp.Key, kvp.Value, nextValue);
+								Log.LogWarning (MSBStrings.W7097, /* Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has different values for each item (once it's '{2}', another time it's '{3}'). */ group.Key, kvp.Key, kvp.Value, nextValue);
 								continue;
 							}
 						}
