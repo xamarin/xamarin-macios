@@ -21,6 +21,8 @@ parameters:
 
 steps:
 
+- template: ../common/checkout.yml
+
 # the ddsign plugin needs this version or it will crash and will make the sign step fail
 - task: UseDotNet@2
   inputs:
