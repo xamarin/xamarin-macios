@@ -87,7 +87,7 @@ steps:
   timeoutInMinutes: 30
 
 - pwsh: |
-    $workloadPath = "$(Build.SourcesDirectory)/artifacts/package-internal/WorkloadRollback.json"
+    $workloadPath = "$(Build.SourcesDirectory)/artifacts/WorkloadRollback/WorkloadRollback.json"
     $versionData = Get-Content $workloadPath | ConvertFrom-Json
     # could be done in a loop, but we don't want to be smart just yet
     $iOSVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.ios"
@@ -119,7 +119,7 @@ steps:
     DOTNET_NUPKG_DIR=${var#*=}
     echo "Using nuget dir $DOTNET_NUPKG_DIR"
 
-    ROLLBACK_PATH="$(Build.SourcesDirectory)/artifacts/package-internal/WorkloadRollback.json"
+    ROLLBACK_PATH="$(Build.SourcesDirectory)/artifacts/WorkloadRollback/WorkloadRollback.json"
 
     echo "Rollback file contents:" 
     echo "$(cat $ROLLBACK_PATH)"
