@@ -89,7 +89,7 @@ namespace PdfKit {
 					});
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					_QuadrilateralPoints = IntPtr.Zero;
 				} else {
 					using (var arr = new NSMutableArray ()) {

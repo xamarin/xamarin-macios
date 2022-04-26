@@ -11,6 +11,8 @@ using Foundation;
 using System;
 using AudioToolbox;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVAudioBuffer {
 		public AudioBuffers AudioBufferList {
