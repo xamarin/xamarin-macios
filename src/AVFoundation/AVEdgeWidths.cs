@@ -28,6 +28,8 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if NET
@@ -77,7 +79,7 @@ namespace AVFoundation {
 				(int)Top ^ (int)Right ^ (int)Bottom;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is AVEdgeWidths){
 				var o = (AVEdgeWidths) other;

@@ -2021,6 +2021,15 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unknown property &apos;{0}&apos; with value &apos;{1}&apos;..
+        /// </summary>
+        public static string E7101 {
+            get {
+                return ResourceManager.GetString("E7101", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid framework: {0}.
         /// </summary>
         public static string InvalidFramework {

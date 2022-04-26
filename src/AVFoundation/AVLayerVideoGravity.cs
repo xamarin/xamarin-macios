@@ -33,6 +33,8 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 	// Convenience enum for native strings - AVAnimation.h
 	public enum AVLayerVideoGravity
@@ -57,7 +59,7 @@ namespace AVFoundation {
 			return (AVLayerVideoGravity) (-1);
 		}
 
-		static internal NSString EnumToKey (AVLayerVideoGravity vg)
+		static internal NSString EnumToKey (AVLayerVideoGravity? vg)
 		{
 			switch (vg) {
 			case AVLayerVideoGravity.ResizeAspect:
@@ -67,7 +69,7 @@ namespace AVFoundation {
 			case AVLayerVideoGravity.Resize:
 				return AVPlayerLayer.GravityResize;
 			default:
-				return null;
+				return null!;
 			}
 		}
 		
@@ -104,7 +106,7 @@ namespace AVFoundation {
 	{
 		public AVLayerVideoGravity? ExternalPlaybackVideoGravity {
 			set {
-				WeakExternalPlaybackVideoGravity = value.HasValue ? AVPlayerLayer.EnumToKey (value.Value) : null;
+				WeakExternalPlaybackVideoGravity = AVPlayerLayer.EnumToKey (value);
 			}
 			get {
 				var r = AVPlayerLayer.KeyToEnum (WeakExternalPlaybackVideoGravity, false);
