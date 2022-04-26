@@ -8,6 +8,11 @@ parameters:
 
 steps:
 
+- bash: |
+    git restore .
+  displayName: 'Reset git changes'
+  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios
+
 - template: ../common/status.yml
   parameters:
     status: "pending"
