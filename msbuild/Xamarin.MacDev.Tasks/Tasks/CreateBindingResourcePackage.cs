@@ -13,10 +13,18 @@ namespace Xamarin.MacDev.Tasks
 	{
 		public override bool Execute ()
 		{
-			if (ShouldExecuteRemotely ())
-				return new TaskRunner (SessionId, BuildEngine4).RunAsync (this).Result;
+			if (!ShouldExecuteRemotely ())
+				return base.Execute ();
 
-			return base.Execute ();
+			var taskRunner = new TaskRunner (SessionId, BuildEngine4);
+
+			var success = taskRunner.RunAsync (this).Result;
+
+			if (success) {
+				TransferBindingResourcePackagesToWindowsAsync (taskRunner).Wait ();
+			}
+
+			return success;
 		}
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
@@ -47,6 +55,29 @@ namespace Xamarin.MacDev.Tasks
 				.EnumerateFiles (folderPath, "*", SearchOption.AllDirectories)
 				.Select (x => new TaskItem (x)))
 				yield return file;
+		}
+
+		async System.Threading.Tasks.Task TransferBindingResourcePackagesToWindowsAsync (TaskRunner taskRunner)
+		{
+			if (PackagedFiles is not null) {
+				foreach (var package in PackagedFiles) {
+					var localRelativePath = GetLocalRelativePath (package.ItemSpec);
+					await taskRunner.GetFileAsync (localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
+				}
+			}
+		}
+
+		string GetLocalRelativePath (string path)
+		{
+			// convert mac full path in windows relative path
+			// must remove \users\{user}\Library\Caches\Xamarin\mtbs\builds\{appname}\{sessionid}\
+			if (path.Contains (SessionId)) {
+				var start = path.IndexOf (SessionId) + SessionId.Length + 1;
+
+				return path.Substring (start);
+			} else {
+				return path;
+			}
 		}
 	}
 }
