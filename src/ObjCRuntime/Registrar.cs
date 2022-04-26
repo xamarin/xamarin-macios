@@ -184,6 +184,24 @@ namespace Registrar {
 					return all_protocols;
 				}
 			}
+
+			HashSet<ObjCType> all_protocols_in_hierarchy;
+			public IEnumerable<ObjCType> AllProtocolsInHierarchy {
+				get {
+					if (all_protocols_in_hierarchy is null) {
+						all_protocols_in_hierarchy = new HashSet<ObjCType> ();
+						var type = this;
+						while (type is not null && (object) type != (object) type.BaseType) {
+							var allProtocols = type.AllProtocols;
+							if (allProtocols is not null)
+								all_protocols_in_hierarchy.UnionWith (allProtocols);
+							type = type.BaseType;
+						}
+					}
+
+					return all_protocols_in_hierarchy;
+				}
+			}
 #endif
 
 			public void VerifyRegisterAttribute (ref List<Exception> exceptions)
