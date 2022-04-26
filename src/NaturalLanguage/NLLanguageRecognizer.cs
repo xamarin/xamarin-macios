@@ -19,9 +19,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Collections.Generic;
-
+using CoreFoundation;
 using Foundation;
 
 namespace NaturalLanguage {
@@ -30,7 +33,7 @@ namespace NaturalLanguage {
 
 		public static NLLanguage GetDominantLanguage (string @string)
 		{
-			var nsstring = NSString.CreateNative (@string);
+			var nsstring = CFString.CreateNative (@string);
 			try {
 				using (var nslang = _GetDominantLanguage (nsstring))
 					return NLLanguageExtensions.GetValue (nslang);
@@ -54,14 +57,20 @@ namespace NaturalLanguage {
 			}
 			set {
 				var i = 0;
+				var skipCount = 0;
 				var nsKeys = new NSString[value.Keys.Count];
 				var nsValues = new NSNumber[value.Keys.Count];
 				foreach (var item in value) {
-					nsKeys[i] = NLLanguageExtensions.GetConstant (item.Key);
+					var constant = NLLanguageExtensions.GetConstant (item.Key);
+					if (constant is null) {
+						skipCount++;
+						continue;
+					}
+					nsKeys [i] = constant;
 					nsValues[i] = new NSNumber (item.Value);
 					i++;
 				}
-				NativeLanguageHints = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (nsValues, nsKeys, nsKeys.Length);
+				NativeLanguageHints = NSDictionary<NSString, NSNumber>.FromObjectsAndKeys (nsValues, nsKeys, nsKeys.Length - skipCount);
 			}
 		}
 	}
