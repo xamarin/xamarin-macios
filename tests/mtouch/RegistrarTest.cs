@@ -1982,5 +1982,171 @@ class C : NSObject {
 				mtouch.AssertWarning (4179, $"The registrar found the abstract type 'SomeNativeObject' in the signature for 'C.M2'. Abstract types should not be used in the signature for a member exported to Objective-C.", "testApp.cs", 21);
 			}
 		}
+
+		[Test]
+		public void OptionalProtocolMemberLookup ()
+		{
+			using (var mtouch = new MTouchTool ()) {
+				var code = @"
+namespace NS {
+	using System;
+	using Foundation;
+	using ObjCRuntime;
+
+	// Old style, where we look up the block proxy attribute on the extension method
+	public class Subclassable1Consumer : NSObject, IProtocolWithOptionalMembers1
+	{
+	}
+
+	public class Subclassed1Consumer1 : Subclassable1Consumer
+	{
+		[Export (""doActionWithCompletion:"")]
+		public void DoAction (Action<bool> completion)
+		{
+		}
+	}
+
+	public class Subclassed1Consumer2 : Subclassable1Consumer, IProtocolWithOptionalMembers1
+	{
+		[Export (""doActionWithCompletion:"")]
+		public void DoAction (Action<bool> completion)
+		{
+		}
+	}
+
+	public class DirectConsumer1 : NSObject, IProtocolWithOptionalMembers1
+	{
+		[Export (""doActionWithCompletion:"")]
+		public void DoAction (Action<bool> completion)
+		{
+		}
+	}
+
+	[Protocol (Name = ""IProtocolWithOptionalMembers1"", WrapperType = typeof (IProtocolWithOptionalMembers1Wrapper))]
+	[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = ""DoAction"", Selector = ""doActionWithCompletion:"", ParameterType = new Type [] { typeof (global::System.Action<bool>) }, ParameterByRef = new bool [] { false })]
+	public interface IProtocolWithOptionalMembers1 : INativeObject, IDisposable
+	{
+	}
+
+	public static partial class ProtocolWithOptionalMembers1_Extensions {
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static void DoAction (this IProtocolWithOptionalMembers1 This, [BlockProxy (typeof (NIDActionArity1V89))]global::System.Action<bool> completion)
+		{
+		}
+	}
+
+	internal sealed class IProtocolWithOptionalMembers1Wrapper : BaseWrapper, IProtocolWithOptionalMembers1 {
+		[Preserve (Conditional = true)]
+		public IProtocolWithOptionalMembers1Wrapper (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
+		}
+	}
+
+	// New style, where we find the block proxy attribute in the ProtocolMember attribute
+	public class Subclassable2Consumer : NSObject, IProtocolWithOptionalMembers2
+	{
+	}
+
+	public class Subclassed2Consumer1 : Subclassable2Consumer
+	{
+		[Export (""doAction2WithCompletion:"")]
+		public void DoAction2 (Action<bool> completion)
+		{
+		}
+	}
+
+	public class Subclassed2Consumer2 : Subclassable2Consumer, IProtocolWithOptionalMembers2
+	{
+		[Export (""doAction2WithCompletion:"")]
+		public void DoAction2 (Action<bool> completion)
+		{
+		}
+	}
+
+	public class DirectConsumer2: NSObject, IProtocolWithOptionalMembers2
+	{
+		[Export (""doAction2WithCompletion:"")]
+		public void DoAction2 (Action<bool> completion)
+		{
+		}
+	}
+
+	[Protocol (Name = ""IProtocolWithOptionalMembers2"", WrapperType = typeof (IProtocolWithOptionalMembers2Wrapper))]
+	[ProtocolMember (IsRequired = false, IsProperty = false, IsStatic = false, Name = ""DoAction2"", Selector = ""doAction2WithCompletion:"", ParameterType = new Type [] { typeof (global::System.Action<bool>) }, ParameterByRef = new bool [] { false }, ParameterBlockProxy = new Type [] {typeof (NIDActionArity1V89)})]
+	public interface IProtocolWithOptionalMembers2 : INativeObject, IDisposable
+	{
+	}
+
+	public static partial class ProtocolWithOptionalMembers2_Extensions {
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static void DoAction (this IProtocolWithOptionalMembers2 This, [BlockProxy (typeof (NIDActionArity1V89))]global::System.Action<bool> completion)
+		{
+		}
+	}
+
+	internal sealed class IProtocolWithOptionalMembers2Wrapper : BaseWrapper, IProtocolWithOptionalMembers2 {
+		[Preserve (Conditional = true)]
+		public IProtocolWithOptionalMembers2Wrapper (IntPtr handle, bool owns)
+			: base (handle, owns)
+		{
+		}
+	}
+
+	// Supporting block classes
+	[UserDelegateType (typeof (global::System.Action<bool>))]
+	internal delegate void DActionArity1V89 (IntPtr block, IntPtr obj);
+
+	static internal class SDActionArity1V89 {
+		static internal readonly DActionArity1V89 Handler = Invoke;
+
+		[MonoPInvokeCallback (typeof (DActionArity1V89))]
+		static void Invoke (IntPtr block, IntPtr obj) {
+			throw new NotImplementedException ();
+		}
+	}
+
+	internal class NIDActionArity1V89 {
+		IntPtr blockPtr;
+		DActionArity1V89 invoker;
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public NIDActionArity1V89 (ref BlockLiteral block)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		~NIDActionArity1V89 ()
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		public static global::System.Action<bool> Create (IntPtr block)
+		{
+			throw new NotImplementedException ();
+		}
+
+		[Preserve (Conditional=true)]
+		[BindingImpl (BindingImplOptions.GeneratedCode | BindingImplOptions.Optimizable)]
+		void Invoke (bool arg1)
+		{
+		}
+	}
+}
+
+";
+				mtouch.Linker = MTouchLinker.DontLink; // faster
+				mtouch.Registrar = MTouchRegistrar.Static;
+				mtouch.CreateTemporaryApp (extraCode: code, extraArgs: new [] { "-debug" });
+				mtouch.AssertExecute ("build");
+				mtouch.AssertErrorCount (0);
+				mtouch.AssertWarningCount (0);
+			}
+		}
 	}
 }
