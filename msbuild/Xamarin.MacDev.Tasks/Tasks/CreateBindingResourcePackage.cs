@@ -21,7 +21,7 @@ namespace Xamarin.MacDev.Tasks
 			var success = taskRunner.RunAsync (this).Result;
 
 			if (success) {
-				TransferBindingResourcePackagesToWindowsAsync (taskRunner, Log).Wait ();
+				TransferBindingResourcePackagesToWindowsAsync (taskRunner).Wait ();
 			}
 
 			return success;
