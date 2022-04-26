@@ -21,7 +21,21 @@ parameters:
 
 steps:
 
-- template: ../common/checkout.yml
+# DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
+- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+  submodules: recursive
+  path: s/xamarin-macios
+
+- checkout: maccore
+  clean: true
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- checkout: templates
+  clean: true
+
+- checkout: release-scripts
+  clean: true
 
 # the ddsign plugin needs this version or it will crash and will make the sign step fail
 - task: UseDotNet@2
