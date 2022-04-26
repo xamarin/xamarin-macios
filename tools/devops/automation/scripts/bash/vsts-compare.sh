@@ -11,6 +11,8 @@ fi
 
 
 if ! ./tools/devops/automation/scripts/bash/compare.sh; then
+    set +x
     echo "##vso[task.setvariable variable=API_GENERATOR_BUILT;isOutput=true]False"
+    set -x
     exit 1
 fi
