@@ -250,6 +250,8 @@ steps:
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 720
+  env:
+    BUILD_REVISION: $(Build.SourceVersion)
 
 # set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the commnet, this way
 # we report the result as soon as we have it and ensure that we set the status from pending to the appropiate value.
