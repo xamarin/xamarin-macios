@@ -32,14 +32,11 @@ steps:
 
     $msg = "$Env:API_GENERATOR_DIFF_STATUS_MESSAGE"
     if (-not $msg) {
-      Write-Host "Message is null"
       $msg = "Catastrophic failure." 
       # set the status to error to be used instead
       $Env:API_GENERATOR_DIFF_STATUS = "error"
     } 
     $msg = $msg.Replace(":white_check_mark: ", "").Replace(":warning: ", "").Replace(":information_source: ", "")
-    Write-Host "Message is $msg"
-    Write-Host "Status is $Env:API_GENERATOR_DIFF_STATUS" 
     $statuses.SetStatus("$Env:API_GENERATOR_DIFF_STATUS", $msg, "API Diff (PR)")
   displayName: "API diff final status"
   timeoutInMinutes: 5
