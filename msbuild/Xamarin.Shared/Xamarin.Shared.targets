@@ -78,6 +78,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CompileEntitlements" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleLocation" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeBundleResourceOutputPaths" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeRemoteGeneratorProperties" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CoreMLCompiler" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateAssetPackManifest" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.CreateBindingResourcePackage" AssemblyFile="$(_TaskAssemblyName)" />
@@ -91,7 +92,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.DSymUtil" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.EmbedProvisionProfile" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindCscCompiler" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.FindItemWithLogicalName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GenerateBundleName" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.GetDirectories" AssemblyFile="$(_TaskAssemblyName)" />
@@ -1565,7 +1565,24 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			_ComputeTargetFrameworkMoniker;
 			$(_GenerateBindingsDependsOn);
 		</_GenerateBindingsDependsOn>
+
+		<_WriteGeneratorPropertiesDependsOn Condition="'$(UsingAppleNETSdk)' == 'true'">
+			$(_WriteGeneratorPropertiesDependsOn);
+			_ComputeBindingVariables;
+		</_WriteGeneratorPropertiesDependsOn>
 	</PropertyGroup>
+
+	<!-- We execute this target on the mac from the ComputeRemoteGeneratorProperties task since we can only compute these values from the mac -->
+	<Target Name="_WriteRemoteGeneratorProperties" DependsOnTargets="$(_WriteGeneratorPropertiesDependsOn)">
+		<ItemGroup>
+			<_ComputedRemoteGeneratorProperties Include="BaseLibDllPath=$(BaseLibDllPath)" />
+			<_ComputedRemoteGeneratorProperties Include="BTouchToolExe=$(BTouchToolExe)" />
+			<_ComputedRemoteGeneratorProperties Include="BTouchToolPath=$(BTouchToolPath)" />
+			<_ComputedRemoteGeneratorProperties Include="_DotNetCscCompiler=$(_DotNetCscCompiler)" />
+			<_ComputedRemoteGeneratorProperties Include="_GeneratorAttributeAssembly=$(_GeneratorAttributeAssembly)" />
+		</ItemGroup>
+		<WriteLinesToFile File="$(OutputFilePath)" Lines="@(_ComputedRemoteGeneratorProperties)" />
+	</Target>
 
 	<Target Name="_GenerateBindings"
 		Inputs="$(MSBuildAllProjects);@(ObjcBindingApiDefinition);@(ObjcBindingCoreSource);@(ReferencePath);@(ObjcBindingNativeLibrary)"
@@ -1584,14 +1601,19 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(GeneratedSourcesDir)" />
 
-		<FindCscCompiler
+		<!-- Compute some variables on the mac: this task is only executed when building on Windows -->
+		<ComputeRemoteGeneratorProperties
 			SessionId="$(BuildSessionId)"
-			Condition="'$(IsMacEnabled)' == 'true' And '$(UsingAppleNETSdk)' == 'true' And !Exists('$(_DotNetCscCompiler)')"
-			CscCompiler="$(_DotNetCscCompiler)"
+			Condition="'$(IsMacEnabled)' == 'true' And '$(BuildSessionId)' != ''"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 		>
-			<Output TaskParameter="CscCompiler" PropertyName="_DotNetCscCompiler" />
-		</FindCscCompiler>
+			<Output TaskParameter="BaseLibDllPath" PropertyName="BaseLibDllPath" />
+			<Output TaskParameter="BTouchToolExe" PropertyName="BTouchToolExe" />
+			<Output TaskParameter="BTouchToolPath" PropertyName="BTouchToolPath" />
+			<Output TaskParameter="DotNetCscCompiler" PropertyName="_DotNetCscCompiler" />
+			<Output TaskParameter="GeneratorAttributeAssembly" PropertyName="_GeneratorAttributeAssembly" />
+		</ComputeRemoteGeneratorProperties>
 
 		<BTouch
 			Condition="'$(IsMacEnabled)' == 'true'"

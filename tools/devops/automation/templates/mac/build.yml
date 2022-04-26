@@ -14,10 +14,7 @@ parameters:
 
 steps:
 
-- checkout: self
-  path: s/xamarin-macios
-- checkout: maccore
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+- template: ../common/checkout.yml
 
 # Write a generic failure message to the failure comment file, so a failure will be reported
 # if something goes wrong before we successfully complete the tests (in which case we delete the file).

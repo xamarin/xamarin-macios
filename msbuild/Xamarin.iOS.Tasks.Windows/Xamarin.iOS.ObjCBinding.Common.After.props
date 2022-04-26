@@ -16,14 +16,4 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		<!-- Flag the project as a binding project -->
 		<XamarinOutputType>Binding</XamarinOutputType>
 	</PropertyGroup>
-
-	<Target Name="targetGetPropertyValue_BTouchToolPath">
-		<Message Text="{PropertyValue=$(BTouchToolPath)}" />
-	</Target>
-	<Target Name="targetGetPropertyValue_BaseLibDllPath">
-		<Message Text="{PropertyValue=$(BaseLibDllPath)}" />
-	</Target>
-	<Target Name="targetGetPropertyValue_BTouchToolExe">
-		<Message Text="{PropertyValue=$(BTouchToolExe)}" />
-	</Target>
 </Project>
