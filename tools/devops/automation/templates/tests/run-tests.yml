@@ -125,9 +125,9 @@ steps:
     echo "$(cat $ROLLBACK_PATH)"
 
     mkdir -p $DOTNET_NUPKG_DIR
-    ls -R $(Build.SourcesDirectory)/artifacts/package
-    cp $(Build.SourcesDirectory)/artifacts/package/*.nupkg $DOTNET_NUPKG_DIR
-    cp $(Build.SourcesDirectory)/artifacts/package/*.pkg $DOTNET_NUPKG_DIR
+    ls -R $(Build.SourcesDirectory)/artifacts/not-signed-package
+    cp $(Build.SourcesDirectory)/artifacts/not-signed-package/*.nupkg $DOTNET_NUPKG_DIR
+    cp $(Build.SourcesDirectory)/artifacts/not-signed-package/*.pkg $DOTNET_NUPKG_DIR
     ls -R $DOTNET_NUPKG_DIR
 
     NUGET_SOURCES=$(grep https://pkgs.dev.azure.com ./NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
@@ -205,7 +205,7 @@ steps:
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
     rm -Rf test-libraries/*
-    mv $(Build.SourcesDirectory)/artifacts/tmp//package-test-libraries/package-test-libraries.zip .
+    mv $(Build.SourcesDirectory)/artifacts/tmp/package-test-libraries/package-test-libraries.zip .
     unzip -o package-test-libraries.zip -d test-libraries
   workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tests
   displayName: Expand test libraries.
