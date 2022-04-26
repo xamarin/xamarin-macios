@@ -5,7 +5,7 @@ parameters:
 
 - name: dependsOn
   type: string
-  default: build_packages
+  default: prepare_packages
 
 stages:
 - stage: prepare_release
