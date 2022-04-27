@@ -14,6 +14,10 @@ steps:
 
 - pwsh: |
     Write-Host "Run windows tests."
+    Write-Host "Mac agent to be used:"
+    Write-Host "Mac agent pool: $Env:MAC_AGENT_POOL"
+    Write-Host "Mac agent name: $Env:MAC_AGENT_NAME"
+    Write-Host "Mac agent IP: $Env:MAC_AGENT_IP"
   displayName: Run tests
 
 - pwsh: |
@@ -25,3 +29,4 @@ steps:
     $agent = $vsts.Agents.GetAgent($pool, $Env:MAC_AGENT_NAME)
     $vsts.Agents.SetEnabled($pool, $agent, $True)
   displayName: 'Re-enabled macOS bot'
+  condition: always()
