@@ -62,13 +62,18 @@ class Agents {
     }
 
     [void] SetEnabled($pool, $agent, $isEnabled) {
-        if (-not $agent) {
+        if (-not $pool) {
             throw [System.ArgumentNullException]::new("pool")
         }
+        if (-not $agent) {
+            throw [System.ArgumentNullException]::new("agent")
+        }
         $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents/$($agent.GetID())?api-version=6.0"
+        Write-Host "Url is $url"
         $headers = Get-AuthHeader($this.Token)
         $payload = @{
-            enabled = $isEnabled
+            id = $agent.GetID() ;
+            enabled = $isEnabled ;
         }
         Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
     }
@@ -231,11 +236,11 @@ class Vsts {
         # generate the helper objects
         $this.Pools = [Pools]::new($org, $token)
         $this.Agents = [Agents]::new($org, $token)
-        $this.Agents = [Artifacts]::new($org, $project, $token)
+        $this.Artifacts = [Artifacts]::new($org, $project, $token)
     }
 }
 
-function New-VstsAPI {
+function New-VSTS {
     param
     (
         [Parameter(Mandatory)]
@@ -435,3 +440,4 @@ function Set-BuildTags {
 Export-ModuleMember -Function Stop-Pipeline
 Export-ModuleMember -Function Set-PipelineResult
 Export-ModuleMember -Function Set-BuildTags
+Export-ModuleMember -Function New-VSTS

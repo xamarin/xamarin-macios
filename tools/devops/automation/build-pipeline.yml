@@ -39,7 +39,7 @@ parameters:
 - name: runWindowsIntegration
   displayName: Run Windows integration tests
   type: boolean
-  default: false
+  default: true
 
 - name: runGovernanceTests
   displayName: Run Governance Checks
@@ -201,6 +201,7 @@ variables:
 - group: Xamarin Release
 - group: Xamarin Notarization
 - group: XamarinCompatLab                                     # provisionator-uri setting
+- group: VSEng DTL secrets
 - name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
   value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
 - name: AzDoBuildAccess.Token
