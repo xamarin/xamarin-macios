@@ -246,6 +246,7 @@ steps:
     USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }};/tests/' # uri used to create the vsdrops index using full uri
     USE_TCP_TUNNEL: 'true'
+    BUILD_REVISION: $(Build.SourceVersion)
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
