@@ -7,7 +7,9 @@ Our NuGet packages are versioned using [Semver 2.0.0][2].
 This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]+sha.1b2c3d4`.
 
 * Major: The major OS version.
-* Minor: The minor OS version.
+* Minor: The minor OS version + a digit specifying our managed API version (typically "0").
+    * See [API changes](#API Changes) below for a description of the two API
+      version digits.
 * Patch: Our internal release version based on `100` as a starting point.
     * Service releases will bump the last two digits of the patch version
     * Feature releases will round the patch version up to the nearest 100
@@ -51,5 +53,42 @@ This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]+sha.1b2c3d4`.
               we’d still be able to figure out it’s not a stable version by
               using the commit hash.
 
+## Changes in the managed API shape.
+
+According to Semver 2.0.0 rules, we must bump either the Major or the Minor
+version number when the API changes.
+
+This is also how .NET in general behaves, there won't be an API changes in a
+6.0.200 release compared to a 6.0.100 release for instance.
+
+Here's another way to reason about it:
+
+1. It must be possible to use an assembly build with release v1.0.100 by
+   somebody else who has v1.0.101 installed (backwards compatibility).
+2. It must be possible to use an assembly built with v1.0.101 by somebody show
+   has v1.0.100 installed (forward compatibility).
+
+This means that there can't be any changes in v1.0.101 that changes the API
+shape in any way (such as adding a class or method), because then an assembly
+can build with v1.0.101 using this new API, and it won't work on v1.0.100,
+because the new API doesn't exist there.
+
+A safe assumption is to _always_ bump the feature version number when there
+are _any_ API changes (in particular this is a much bigger restriction than
+just _no breaking changes_).
+
+Since we don't control the major and minor OS versions (Apple decides those,
+and when to release them), and we still need a way to publish new releases
+with managed API changes when we want to, we've appended a digit to the minor
+version. Typically these will be "0", but if we really want/need to, we could
+add new managed API outside of an OS release and bump these digits.
+
+Why don't we use "00" to get a scheme similar to the [.NET patch versioning][3]
+(6.0.1XX)? Because MSIs have a max of 255 for the major and minor version, so
+by adding a single digit only, we're allowing for 25 minor versions for a
+given major OS release. Hopefully that will be enough... 🔮
+
 [1]: https://github.com/dotnet/designs/blob/master/accepted/2018/sdk-version-scheme.md
 [2]: https://semver.org
+[3]: https://docs.microsoft.com/en-us/dotnet/core/versions/#understand-runtime-version-number-changes
+
