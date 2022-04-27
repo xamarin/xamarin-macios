@@ -231,7 +231,7 @@ class Vsts {
         # generate the helper objects
         $this.Pools = [Pools]::new($org, $token)
         $this.Agents = [Agents]::new($org, $token)
-        $this.Agents = [Artifacts]::new($org, $project, $token)
+        $this.Artifacts = [Artifacts]::new($org, $project, $token)
     }
 }
 
