@@ -31,6 +31,7 @@ steps:
     try {
       $vsts.Agents.SetEnabled($pool, $agent, $False)
     } catch {
-      Write-Host $_.message
+      Write-Host "ERROR $_"
+      throw $_
     }
   displayName: "Disable bot"

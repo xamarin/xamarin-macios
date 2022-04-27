@@ -72,7 +72,8 @@ class Agents {
         Write-Host "Url is $url"
         $headers = Get-AuthHeader($this.Token)
         $payload = @{
-            enabled = $isEnabled
+            id = $agent.GetID() ;
+            enabled = $isEnabled ;
         }
         Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
     }
