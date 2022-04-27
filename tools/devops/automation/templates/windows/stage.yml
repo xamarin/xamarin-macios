@@ -17,10 +17,15 @@ parameters:
   type: string
   default: "VSEng-VSMac-Xamarin-Shared"
 
+- name: windowsPool
+  type: string
+  default: "VSEng-VSMac-Xamarin-Shared"
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
   dependsOn: []
+#  - build_packages
 
   jobs:
   - job: mac_reservation
@@ -28,7 +33,11 @@ stages:
     timeoutInMinutes: 1000
     workspace:
       clean: all
-    pool: ${{ parameters.macPool }}
+    pool:
+      name: ${{ parameters.macPool }}
+      demands:
+      - agent.os -equals Darwin
+      - SSH.Enabled -equals True
 
     steps:
     - template: reserve-mac.yml
@@ -44,7 +53,9 @@ stages:
       clean: all
 
     pool:
-      vmImage: windows-latest
+      name: ${{ parameters.windowsPool }}
+      demands:
+      - agent.os -equals Windows_NT
 
     variables:
       MAC_AGENT_NAME: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_NAME'] ]

@@ -17,7 +17,7 @@ steps:
     echo "##vso[task.setvariable variable=AGENT_POOL;isOutput=true]${{ parameters.macPool }}"
     echo "##vso[task.setvariable variable=AGENT_IP;isOutput=true]$macip"
   name: macInfo
-  displayName: Set SDK destination dirs
+  displayName: Set agent information
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
@@ -27,4 +27,4 @@ steps:
     $pool = $vsts.Pools.GetPool("${{ parameters.macPool }}")
     $agent = $vsts.Agents.GetAgent($pool, "$(Agent.Name)")
     $vsts.Agents.SetEnabled($pool, $agent, $False)
-  displayName: "Disable bot"
+  displayName: "Disable macOS bot from pool"

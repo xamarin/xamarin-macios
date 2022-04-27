@@ -28,5 +28,5 @@ steps:
     $pool = $vsts.Pools.GetPool("$Env:MAC_AGENT_POOL")
     $agent = $vsts.Agents.GetAgent($pool, $Env:MAC_AGENT_NAME)
     $vsts.Agents.SetEnabled($pool, $agent, $True)
-  displayName: 'Re-enabled macOS bot'
+  displayName: 'Re-enabled macOS bot from pool'
   condition: always()
