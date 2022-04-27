@@ -20,10 +20,7 @@ parameters:
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
-  dependsOn:
-  - build_packages
-  # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
-  condition: and(succeeded(), eq(dependencies.build_packages.outputs['build.configuration.RunDeviceTests'], 'True'))
+  dependsOn: []
 
   jobs:
   - job: mac_reservation
