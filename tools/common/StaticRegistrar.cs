@@ -4282,7 +4282,7 @@ namespace Registrar {
 			}
 
 			// Might be an implementation of an optional protocol member.
-			var allProtocols = obj_method.DeclaringType.AllProtocols;
+			var allProtocols = obj_method.DeclaringType.AllProtocolsInHierarchy;
 			if (allProtocols != null) {
 				string selector = null;
 
@@ -4329,7 +4329,7 @@ namespace Registrar {
 			}
 
 			// Might be an implementation of an optional protocol member.
-			var allProtocols = obj_method.DeclaringType.AllProtocols;
+			var allProtocols = obj_method.DeclaringType.AllProtocolsInHierarchy;
 			if (allProtocols != null) {
 				string selector = null;
 
@@ -4353,7 +4353,7 @@ namespace Registrar {
 								continue;
 							if (!TypeMatch (pMethod.ReturnType, method.ReturnType))
 								continue;
-							if (ParametersMatch (method.Parameters, pMethod.Parameters))
+							if (!ParametersMatch (method.Parameters, pMethod.Parameters))
 								continue;
 
 							MethodDefinition extensionMethod = pMethod.Method;
@@ -4402,8 +4402,21 @@ namespace Registrar {
 
 			if (!method.HasCustomAttributes)
 				return false;
-			
-			var t = method.DeclaringType;
+
+			var type = method.DeclaringType;
+			while (type is not null && (object) type != (object) type.BaseType) {
+				if (MapProtocolMember (type, method, out extensionMethod))
+					return true;
+
+				type = type.BaseType?.Resolve ();
+			}
+
+			return false;
+		}
+
+		public bool MapProtocolMember (TypeDefinition t, MethodDefinition method, out MethodDefinition extensionMethod)
+		{
+			extensionMethod = null;
 
 			if (!t.HasInterfaces)
 				return false;

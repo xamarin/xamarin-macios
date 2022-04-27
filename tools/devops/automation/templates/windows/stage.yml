@@ -13,31 +13,54 @@ parameters:
   type: string
   default: 'Windows Integration Tests'
 
+- name: macPool
+  type: string
+  default: "VSEng-VSMac-Xamarin-Shared"
+
+- name: windowsPool
+  type: string
+  default: "VSEng-VSMac-Xamarin-Shared"
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_packages
-  # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
-  condition: and(succeeded(), eq(dependencies.build_packages.outputs['build.configuration.RunDeviceTests'], 'True'))
 
   jobs:
+  - job: mac_reservation
+    displayName: "Reserve bot for tests"
+    timeoutInMinutes: 1000
+    workspace:
+      clean: all
+    pool:
+      name: ${{ parameters.macPool }}
+      demands:
+      - agent.os -equals Darwin
+      - SSH.Enabled -equals True
+
+    steps:
+    - template: reserve-mac.yml
+      parameters:
+        macPool: ${{ parameters.macPool }}
+
   - job: run_tests
+    dependsOn:
+    - mac_reservation
     displayName: 'Dotnet tests'
     timeoutInMinutes: 1000
     workspace:
       clean: all
 
-
     pool:
-      vmImage: windows-latest
+      name: ${{ parameters.windowsPool }}
+      demands:
+      - agent.os -equals Windows_NT
 
-    # The following must be used once the VS team provides us with pool and the correct
-    # capabilities
-    #pool:
-    #  name: ${{ parameters.pool }}
-    #  demands: 
-    #  - Agent.OS -equals Windows
+    variables:
+      MAC_AGENT_NAME: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_NAME'] ]
+      MAC_AGENT_POOL: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_POOL'] ]
+      MAC_AGENT_IP: $[ dependencies.mac_reservation.outputs['macInfo.AGENT_IP'] ]
 
     steps:
     - template: build.yml

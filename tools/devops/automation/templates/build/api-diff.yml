@@ -8,6 +8,11 @@ parameters:
 
 steps:
 
+- bash: |
+    git restore .
+  displayName: 'Reset git changes'
+  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios
+
 - template: ../common/status.yml
   parameters:
     status: "pending"
@@ -70,9 +75,11 @@ steps:
     report_error ()
     {
       MESSAGE=$(printf ":fire: Failed to create API Diff from stable (%s/console) :fire:")
+      set +x
       echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
       echo "##vso[task.setvariable variable=APIDIFF_STATUS;isOutput=true]error"
       echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]False"
+      set -x
     }
     trap report_error ERR
 
@@ -82,9 +89,11 @@ steps:
     cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
     rm -Rf *.exe *.pdb *.stamp *.zip *.sh ./references ./temp
     MESSAGE=":white_check_mark: API Diff from stable"
+    set +x
     echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
     echo "##vso[task.setvariable variable=APIDIFF_STATUS;isOutput=true]success"
     echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]True"
+    set -x
   displayName: 'API diff (from stable)'
   name: apidiff
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
