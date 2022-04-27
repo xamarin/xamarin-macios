@@ -62,8 +62,11 @@ class Agents {
     }
 
     [void] SetEnabled($pool, $agent, $isEnabled) {
-        if (-not $agent) {
+        if (-not $pool) {
             throw [System.ArgumentNullException]::new("pool")
+        }
+        if (-not $agent) {
+            throw [System.ArgumentNullException]::new("agent")
         }
         $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents/$($agent.GetID())?api-version=6.0"
         $headers = Get-AuthHeader($this.Token)
