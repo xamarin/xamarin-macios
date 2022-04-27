@@ -37,6 +37,10 @@
 		<value>In {0}.{1}, found reference to {2} - this is not transformable and will likely not work if invoked.</value>
 	</data>
 
+	<data name="N0007" xml:space="preserve">
+		<value>If you want to compare assemblies, the earlier and later assembly options *must* be set.</value>
+	</data>
+
 	<data name="E0001" xml:space="preserve">
 		<value>Input file '{0}' doesn't exist.</value>
 	</data>
@@ -55,6 +59,24 @@
 
 	<data name="E0005" xml:space="preserve">
 		<value>Module is not loaded. Call Load first.</value>
+	</data>
+	<data name="E0006" xml:space="preserve">
+		<value>Unable to open file {0} {1}</value>
+	</data>
+	<data name="E0007" xml:space="preserve">
+		<value>This should never happen.</value>
+	</data>
+	<data name="E0008" xml:space="preserve">
+		<value>Unexpected visit kind: {0}.</value>
+	</data>
+	<data name="E0009" xml:space="preserve">
+		<value>After visiting, type stack is not empty. This is bad.</value>
+	</data>
+	<data name="E0010" xml:space="preserve">
+		<value>Type {0} not found.</value>
+	</data>
+	<data name="E0011" xml:space="preserve">
+		<value>Error while attempting to compare assemblies: {1}</value>
 	</data>
 </root>
 
