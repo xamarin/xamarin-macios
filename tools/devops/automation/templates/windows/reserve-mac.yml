@@ -25,6 +25,6 @@ steps:
 
     # get the pool and the agent objects and disable the bot
     $pool = $vsts.Pools.GetPool("${{ parameters.macPool }}")
-    $agent = $vsts.Agents.GetAgent($pool, "$Env:AGENT_NAME")
+    $agent = $vsts.Agents.GetAgent($pool, "$(Agent.Name)")
     $vsts.Agents.SetEnabled($pool, $agent, $False)
   displayName: "Disable bot"
