@@ -113,7 +113,7 @@ jobs:
     BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
     # TODO
     TESTS_BOT: $[ stageDependencies.build_packages.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
-    GIT_HASH: $[ stageDependencies.build_packages..build.outputs['fix_commit.GIT_HASH'] ]
+    GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
   pool:
     vmImage: 'windows-latest'
     workspace:
