@@ -62,6 +62,8 @@ MAC_PACKAGE_VERSION=8.11.0.$(MAC_COMMIT_DISTANCE)
 # * Bump last two digits of the patch version for service releases.
 # * Bump first digit of the patch version for feature releases (and reset the first two digits to 0)
 #
+# IMPORTANT: There must be *no* managed API differences unless the two first
+# numbers (major.minor) changes.
 
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 # When bumping the major macOS version in MACOS_NUGET_VERSION also update the macOS version where we execute on bots in jenkins/Jenkinsfile (in the 'node' element)
