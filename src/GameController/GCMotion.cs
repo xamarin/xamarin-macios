@@ -6,6 +6,8 @@
 //
 // Copyright 2019 Microsoft Corporation.
 
+#nullable enable
+
 using System;
 using System.Runtime.Versioning;
 using System.Runtime.InteropServices;

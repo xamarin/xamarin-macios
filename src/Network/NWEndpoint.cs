@@ -54,10 +54,10 @@ namespace Network {
 
 		public static NWEndpoint? Create (string hostname, string port)
 		{
-			if (hostname == null)
-				throw new ArgumentNullException (nameof (hostname));
-			if (port == null)
-				throw new ArgumentNullException (nameof (port));
+			if (hostname is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (hostname));
+			if (port is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (port));
 			var handle = nw_endpoint_create_host (hostname, port);
 			if (handle == IntPtr.Zero)
 				return null;
@@ -103,8 +103,8 @@ namespace Network {
 
 		public static NWEndpoint? CreateBonjourService (string name, string serviceType, string domain)
 		{
-			if (serviceType == null)
-				throw new ArgumentNullException (nameof (serviceType));
+			if (serviceType is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (serviceType));
 			var x = nw_endpoint_create_bonjour_service (name, serviceType, domain);
 			if (x == IntPtr.Zero)
 				return null;
@@ -151,8 +151,8 @@ namespace Network {
 #endif
 		public static NWEndpoint? Create (string url)
 		{
-			if (url == null)
-				throw new ArgumentNullException (nameof (url));
+			if (url is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			var handle = nw_endpoint_create_url (url);
 			if (handle == IntPtr.Zero)
 				return null;

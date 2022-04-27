@@ -59,8 +59,8 @@ namespace Network {
 
 		public NWBrowser (NWBrowserDescriptor descriptor, NWParameters? parameters)
 		{
-			if (descriptor == null)
-				throw new ArgumentNullException (nameof (descriptor));
+			if (descriptor is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptor));
 
 			InitializeHandle (nw_browser_create (descriptor.Handle, parameters.GetHandle ()));
 			SetChangesHandler (InternalChangesHandler);
@@ -73,8 +73,8 @@ namespace Network {
 
 		public void SetDispatchQueue (DispatchQueue queue)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			lock (startLock) {
 				nw_browser_set_queue (GetCheckedHandle (), queue.Handle);
 				queueSet = true;
@@ -138,7 +138,7 @@ namespace Network {
 		static void TrampolineChangesHandler (IntPtr block, IntPtr oldResult, IntPtr newResult, bool completed)
 		{
 			var del = BlockLiteral.GetTarget<NWBrowserChangesDelegate> (block);
-			if (del != null) {
+			if (del is not null) {
 				// we do the cleanup of the objs in the internal handlers
 				NWBrowseResult? nwOldResult = (oldResult == IntPtr.Zero) ? null : new NWBrowseResult (oldResult, owns: false);
 				NWBrowseResult? nwNewResult = (newResult == IntPtr.Zero) ? null : new NWBrowseResult (newResult, owns: false);
@@ -160,7 +160,7 @@ namespace Network {
 			var individualCb = IndividualChangesDelegate;
 			individualCb?.Invoke (oldResult, newResult);
 			var completeCb = CompleteChangesDelegate;
-			if (completeCb == null) {
+			if (completeCb is null) {
 				// we do not want to keep a list of the new results if the user does not care, dispose and move on
 				// results can be null, since we could have a not old one
 				oldResult?.Dispose ();
@@ -184,7 +184,7 @@ namespace Network {
 			}
 			if (completed) {
 				completeCb?.Invoke (tmp_changes);
-				if (tmp_changes != null)
+				if (tmp_changes is not null)
 					foreach (var c in tmp_changes)
 						c.result?.Dispose ();
 			}
@@ -194,7 +194,7 @@ namespace Network {
 		void SetChangesHandler (NWBrowserChangesDelegate? handler)
 		{
 			unsafe {
-				if (handler == null) {
+				if (handler is null) {
 					nw_browser_set_browse_results_changed_handler (GetCheckedHandle (), null);
 					return;
 				}
@@ -225,7 +225,7 @@ namespace Network {
 		static void TrampolineStateChangesHandler (IntPtr block, NWBrowserState state, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWBrowserState, NWError?>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwError = (error == IntPtr.Zero)? null : new NWError (error, owns: false);
 				del (state, nwError);
 			}
@@ -235,7 +235,7 @@ namespace Network {
 		public void SetStateChangesHandler (Action<NWBrowserState, NWError?> handler)
 		{
 			unsafe {
-				if (handler == null) {
+				if (handler is null) {
 					nw_browser_set_state_changed_handler (GetCheckedHandle (), null);
 					return;
 				}

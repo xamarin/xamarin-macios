@@ -7,6 +7,8 @@ using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVCaptureVideoPreviewLayer {
 

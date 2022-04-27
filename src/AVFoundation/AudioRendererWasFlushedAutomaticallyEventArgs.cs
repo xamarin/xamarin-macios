@@ -3,6 +3,8 @@ using Foundation;
 using CoreMedia;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if NET
