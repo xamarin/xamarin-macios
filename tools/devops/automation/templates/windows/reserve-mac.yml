@@ -28,5 +28,9 @@ steps:
     Write-Host "Pool name is $($pool.GetName()) and id $($pool.GetID())"
     $agent = $vsts.Agents.GetAgent($pool, "$(Agent.Name)")
     Write-Host "Agent name is $($agent.GetName()) and id $($agent.GetID())"
-    $vsts.Agents.SetEnabled($pool, $agent, $False)
+    try {
+      $vsts.Agents.SetEnabled($pool, $agent, $False)
+    } catch {
+      Write-Host $_.message
+    }
   displayName: "Disable bot"

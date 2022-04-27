@@ -69,6 +69,7 @@ class Agents {
             throw [System.ArgumentNullException]::new("agent")
         }
         $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents/$($agent.GetID())?api-version=6.0"
+        Write-Host "Url is $url"
         $headers = Get-AuthHeader($this.Token)
         $payload = @{
             enabled = $isEnabled
