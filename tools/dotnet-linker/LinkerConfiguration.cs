@@ -36,6 +36,7 @@ namespace Xamarin.Linker {
 		public Version SdkVersion { get; private set; }
 		public string SdkRootDirectory { get; private set; }
 		public int Verbosity => Driver.Verbosity;
+		public string XamarinNativeLibraryDirectory { get; private set; }
 
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
 
@@ -280,6 +281,9 @@ namespace Xamarin.Linker {
 				case "InvariantGlobalization":
 					InvariantGlobalization = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
 					break;
+				case "XamarinNativeLibraryDirectory":
+					XamarinNativeLibraryDirectory = value;
+					break;
 				default:
 					throw new InvalidOperationException ($"Unknown key '{key}' in {linker_file}");
 				}
@@ -403,6 +407,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    UseInterpreter: {Application.UseInterpreter}");
 				Console.WriteLine ($"    UseLlvm: {Application.IsLLVM}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
+				Console.WriteLine ($"    XamarinNativeLibraryDirectory: {XamarinNativeLibraryDirectory}");
 				Console.WriteLine ($"    XamarinRuntime: {Application.XamarinRuntime}");
 			}
 		}
