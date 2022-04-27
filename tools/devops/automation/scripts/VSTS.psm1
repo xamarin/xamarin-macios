@@ -235,7 +235,7 @@ class Vsts {
     }
 }
 
-function New-VstsAPI {
+function New-VSTS {
     param
     (
         [Parameter(Mandatory)]
@@ -435,3 +435,4 @@ function Set-BuildTags {
 Export-ModuleMember -Function Stop-Pipeline
 Export-ModuleMember -Function Set-PipelineResult
 Export-ModuleMember -Function Set-BuildTags
+Export-ModuleMember -Function New-VSTS

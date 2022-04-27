@@ -21,7 +21,7 @@ steps:
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $vsts = New-VstsAPI -Org "DevDiv" -Token $(GitHub.Token)
+    $vsts = New-VSTS -Org "DevDiv" -Token $(GitHub.Token)
 
     # get the pool and the agent objects and disable the bot
     $pool = $vsts.Pools.GetPool("${{ parameters.macPool }}")
