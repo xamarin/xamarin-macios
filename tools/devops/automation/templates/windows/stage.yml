@@ -24,8 +24,8 @@ parameters:
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
-  dependsOn: []
-#  - build_packages
+  dependsOn:
+  - build_packages
 
   jobs:
   - job: mac_reservation
