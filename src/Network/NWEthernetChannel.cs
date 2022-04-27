@@ -70,8 +70,8 @@ namespace Network {
 		// entitlement.
 		public NWEthernetChannel (ushort ethernetType, NWInterface networkInterface)
 		{
-			if (networkInterface == null)
-				throw new ArgumentNullException (nameof (networkInterface));
+			if (networkInterface is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (networkInterface));
 
 			InitializeHandle (nw_ethernet_channel_create (ethernetType, networkInterface.Handle));
 		}
@@ -91,8 +91,8 @@ namespace Network {
 
 		public void SetQueue (DispatchQueue queue)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			nw_ethernet_channel_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 
@@ -106,7 +106,7 @@ namespace Network {
 		static void TrampolineSendCompletion (IntPtr block, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
-			if (del != null) {
+			if (del is not null) {
 				using NWError? err = error == IntPtr.Zero ? null : new NWError (error, owns: false);
 				del (err);
 			}
@@ -115,8 +115,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void Send (ReadOnlySpan<byte> content, ushort vlanTag, string remoteAddress, Action<NWError?> callback)
 		{
-			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			using (var dispatchData = DispatchData.FromReadOnlySpan (content)) {
 				BlockLiteral block_handler = new BlockLiteral ();
@@ -140,11 +140,11 @@ namespace Network {
 		static void TrampolineReceiveHandler (IntPtr block, OS_dispatch_data content, ushort vlanTag, byte[] localAddress, byte[] remoteAddress)
 		{
 			var del = BlockLiteral.GetTarget<NWEthernetChannelReceiveDelegate> (block);
-			if (del != null) {
+			if (del is not null) {
 
 				var dispatchData = (content == IntPtr.Zero) ? null : new DispatchData (content, owns: false);
-				var local = (localAddress == null) ? null : Encoding.UTF8.GetString (localAddress);
-				var remote = (remoteAddress == null) ? null : Encoding.UTF8.GetString (remoteAddress);
+				var local = (localAddress is null) ? null : Encoding.UTF8.GetString (localAddress);
+				var remote = (remoteAddress is null) ? null : Encoding.UTF8.GetString (remoteAddress);
 
 				del (dispatchData, vlanTag, local, remote);
 			}
@@ -154,7 +154,7 @@ namespace Network {
 		public void SetReceiveHandler (NWEthernetChannelReceiveDelegate handler)
 		{
 			unsafe {
-				if (handler == null) {
+				if (handler is null) {
 					nw_ethernet_channel_set_receive_handler (GetCheckedHandle (), null);
 					return;
 				}
@@ -179,7 +179,7 @@ namespace Network {
 		static void TrampolineStateChangesHandler (IntPtr block, NWEthernetChannelState state, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWEthernetChannelState, NWError?>> (block);
-			if (del != null) {
+			if (del is not null) {
 				NWError? nwError = (error == IntPtr.Zero) ? null : new NWError (error, owns: false);
 				del (state, nwError);
 			}
@@ -189,7 +189,7 @@ namespace Network {
 		public void SetStateChangesHandler (Action<NWBrowserState, NWError?> handler)
 		{
 			unsafe {
-				if (handler == null) {
+				if (handler is null) {
 					nw_ethernet_channel_set_state_changed_handler (GetCheckedHandle (), null);
 					return;
 				}

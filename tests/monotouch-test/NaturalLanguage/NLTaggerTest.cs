@@ -88,5 +88,16 @@ namespace MonoTouchFixtures.NaturalLanguage {
 				Assert.That (range.Length, Is.EqualTo ((nint) 88), "Length");
 			}
 		}
+
+		[Test]
+		public void GetNativeTagHypothesesNullSchemeTest ()
+		{
+			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
+			using (var tagger = new NLTagger (NLTagScheme.LexicalClass) { String = Text }) {
+				var fakeScheme = (NLTagScheme)int.MaxValue;
+				Assert.Throws<ArgumentOutOfRangeException> (() => { _ = tagger.GetTagHypotheses (0, NLTokenUnit.Sentence, fakeScheme, nuint.MaxValue); }, "We should throw an ArgumentOutOfRangeException if GetTagHypotheses (nuint characterIndex, NLTokenUnit unit, NSString scheme, nuint maximumCount, IntPtr tokenRange) has a null value for the 'scheme' parameter.");
+				Assert.Throws<ArgumentOutOfRangeException> (() => { _ = tagger.GetTagHypotheses (0, NLTokenUnit.Sentence, fakeScheme, nuint.MaxValue, out NSRange range); }, "We should throw an ArgumentOutOfRangeException if GetTagHypotheses (nuint characterIndex, NLTokenUnit unit, NSString scheme, nuint maximumCount, IntPtr tokenRange) has a null value for the 'scheme' parameter.");
+			}
+		}
 	}
 }

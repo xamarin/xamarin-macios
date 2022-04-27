@@ -62,12 +62,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGDataConsumerRef */ IntPtr CGDataConsumerRetain (/* CGDataConsumerRef */ IntPtr consumer);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGDataConsumerRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGDataConsumerRelease (GetCheckedHandle ());
 		}

@@ -33,6 +33,9 @@ jobs:
 
   steps:
   - template: ../common/configure.yml
+    parameters: 
+      uploadArtifacts: false
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
@@ -76,19 +79,13 @@ jobs:
     clean: all
 
   steps:
-  - template: build.yml
+  - template: build-api-diff.yml
     parameters:
-      runTests: false
-      runDeviceTests: false
-      uploadBinlogs: false
-      signAndNotarize: false
-      skipPackages: true
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
       enableDotnet: ${{ parameters.enableDotnet }}
-      enableAPIDiff: true
 
 - job: upload_vsdrops
   displayName: 'Upload API diff to VSDrops'
@@ -111,7 +108,7 @@ jobs:
       runTests: false
 
 
-- job: publish_html
+- job: api_diff_github_comment
   displayName: 'Publish API diff to GitHub'
   timeoutInMinutes: 1000
   dependsOn: # has to wait for the tests to be done AND the data to be uploaded
@@ -123,19 +120,19 @@ jobs:
     # Define the variable FOO from the previous job
     # Note the use of single quotes!
     BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
-    TESTS_BOT: $[ dependencies.build.outputs['runTests.TESTS_BOT'] ]
-    TESTS_JOBSTATUS: $[ dependencies.build.outputs['runTests.TESTS_JOBSTATUS'] ]
+    TESTS_BOT: $[ dependencies.api_diff.outputs['build.TESTS_BOT'] ]
     APIDIFF_MESSAGE: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_MESSAGE'] ]
     APIDIFF_BUILT: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_BUILT'] ]
     API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
     API_GENERATOR_DIFF_STATUS_MESSAGE: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE'] ]
     PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    GIT_HASH: $[ dependencies.api_diff.outputs['fix_commit.GIT_HASH'] ]
   pool:
     vmImage: 'windows-latest'
     workspace:
       clean: all
   steps:
-  - template: publish-html.yml
+  - template: api-diff-github-comment.yml
     parameters:
       statusContext: "Build"
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

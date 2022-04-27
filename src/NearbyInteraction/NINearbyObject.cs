@@ -7,6 +7,8 @@
 // Copyright 2020 Microsoft Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -30,7 +32,7 @@ namespace NearbyInteraction {
 		[Field ("NINearbyObjectDirectionNotAvailable",  "NearbyInteraction")]
 		public static Vector3 DirectionNotAvailable {
 			get {
-				if (_DirectionNotAvailable == null) {
+				if (_DirectionNotAvailable is null) {
 					unsafe {
 						Vector3 *pointer = (Vector3 *) Dlfcn.GetIndirect (Libraries.NearbyInteraction.Handle, "NINearbyObjectDirectionNotAvailable");
 						_DirectionNotAvailable = *pointer;

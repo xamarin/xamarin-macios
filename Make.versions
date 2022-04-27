@@ -66,11 +66,11 @@ MAC_PACKAGE_VERSION=8.11.0.$(MAC_COMMIT_DISTANCE)
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 # When bumping the major macOS version in MACOS_NUGET_VERSION also update the macOS version where we execute on bots in jenkins/Jenkinsfile (in the 'node' element)
 
-IOS_NUGET_VERSION=15.4.200
-TVOS_NUGET_VERSION=15.4.200
-WATCHOS_NUGET_VERSION=8.5.200
-MACOS_NUGET_VERSION=12.3.200
-MACCATALYST_NUGET_VERSION=15.4.200
+IOS_NUGET_VERSION=15.4.400
+TVOS_NUGET_VERSION=15.4.400
+WATCHOS_NUGET_VERSION=8.5.400
+MACOS_NUGET_VERSION=12.3.400
+MACCATALYST_NUGET_VERSION=15.4.400
 
 
 # Defines the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:

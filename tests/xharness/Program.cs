@@ -10,7 +10,7 @@ namespace Xharness {
 		{
 			Microsoft.DotNet.XHarness.iOS.Shared.SdkVersions.OverrideVersions (
 				xcode: Xamarin.SdkVersions.Xcode,
-				oSX: Xamarin.SdkVersions.OSX,
+				osx: Xamarin.SdkVersions.OSX,
 				iOS: Xamarin.SdkVersions.iOS,
 				watchOS: Xamarin.SdkVersions.WatchOS,
 				tVOS: Xamarin.SdkVersions.TVOS,

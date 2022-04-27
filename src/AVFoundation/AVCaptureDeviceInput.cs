@@ -34,12 +34,13 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVCaptureDeviceInput {
-		static public AVCaptureDeviceInput FromDevice (AVCaptureDevice device)
+		static public AVCaptureDeviceInput? FromDevice (AVCaptureDevice device)
 		{
-			NSError error;
-			return FromDevice (device, out error);
+			return FromDevice (device, out var error);
 		}
 	}
 }
