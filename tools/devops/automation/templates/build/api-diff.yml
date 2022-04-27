@@ -7,6 +7,22 @@ parameters:
   default: '' # default empty, meaning we are building in CI 
 
 steps:
+
+- bash: |
+    git restore .
+  displayName: 'Reset git changes'
+  workingDirectory: $(Build.SourcesDirectory)/xamarin-macios
+
+- template: ../common/status.yml
+  parameters:
+    status: "pending"
+    description: "Generating API diff."
+    context: "API Diff (PR)"
+    githubToken: $(GitHub.Token)
+    continueOnError: true
+    condition: succeededOrFailed() # re-starting the daemon should not be an issue
+    timeoutInMinutes: 5
+
 - bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/vsts-compare.sh
   displayName: 'API & Generator comparison'
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
@@ -15,6 +31,17 @@ steps:
     BUILD_REVISION: 'jenkins'
     PR_ID:  ${{ parameters.prID }} # reusing jenkins vars, to be fixed
 
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+
+    $msg = "$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE)"
+    $msg = $msg.Replace(":white_check_mark: ", "").Replace(":warning: ", "").Replace(":information_source: ", "")
+    $statuses.SetStatus("$(apiGeneratorDiff.API_GENERATOR_DIFF_STATUS)", $msg, "API Diff (PR)")
+  displayName: "API diff final status"
+  timeoutInMinutes: 5
+  condition: succeededOrFailed() # re-starting the daemon should not be an issue
+  continueOnError: true
 
 - task: ArchiveFiles@1
   displayName: 'Archive API & Generator comparison'
@@ -32,14 +59,27 @@ steps:
     artifactName: apicomparison
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
   continueOnError: true
-  
+
+- template: ../common/status.yml
+  parameters:
+    status: "pending"
+    description: "Generating API diff."
+    context: "API Diff (stable)"
+    githubToken: $(GitHub.Token)
+    continueOnError: true
+    condition: succeededOrFailed() # re-starting the daemon should not be an issue
+    timeoutInMinutes: 5
+
 # order matters, first compare then diff, else git complains
 - bash: |
     report_error ()
     {
       MESSAGE=$(printf ":fire: Failed to create API Diff from stable (%s/console) :fire:")
+      set +x
       echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
+      echo "##vso[task.setvariable variable=APIDIFF_STATUS;isOutput=true]error"
       echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]False"
+      set -x
     }
     trap report_error ERR
 
@@ -49,8 +89,11 @@ steps:
     cd $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff/
     rm -Rf *.exe *.pdb *.stamp *.zip *.sh ./references ./temp
     MESSAGE=":white_check_mark: API Diff from stable"
+    set +x
     echo "##vso[task.setvariable variable=APIDIFF_MESSAGE;isOutput=true]$MESSAGE"
+    echo "##vso[task.setvariable variable=APIDIFF_STATUS;isOutput=true]success"
     echo "##vso[task.setvariable variable=APIDIFF_BUILT;isOutput=true]True"
+    set -x
   displayName: 'API diff (from stable)'
   name: apidiff
   condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
@@ -58,6 +101,18 @@ steps:
   env:
     BUILD_REVISION: 'jenkins'
     PR_ID:  ${{ parameters.prID}} # reusing jenkins vars, to be fixed
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+
+    $msg = "$(apidiff.APIDIFF_MESSAGE)"
+    $msg = $msg.Replace(":white_check_mark: ", "").Replace(":warning: ", "").Replace(":information_source: ", "")
+    $statuses.SetStatus("$(apidiff.APIDIFF_STATUS)", $msg, "API Diff (stable)")
+  displayName: "API diff final status"
+  timeoutInMinutes: 5
+  condition: succeededOrFailed() # re-starting the daemon should not be an issue
+  continueOnError: true
 
 - task: ArchiveFiles@1
   displayName: 'Archive API diff (from stable)'

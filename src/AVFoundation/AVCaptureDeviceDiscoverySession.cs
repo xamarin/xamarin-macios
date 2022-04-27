@@ -11,6 +11,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 #if IOS && !NET
 	public partial class AVCaptureDeviceDiscoverySession {
@@ -19,7 +21,8 @@ namespace AVFoundation {
 		{
 			var arr = new NSMutableArray ();
 			foreach (var device in deviceTypes)
-				arr.Add (device.GetConstant ());
+				if (device.GetConstant () is NSString s)
+					arr.Add (s);
 
 			return _Create (arr, mediaType, position);
 		}
