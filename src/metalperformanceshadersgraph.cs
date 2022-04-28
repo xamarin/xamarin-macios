@@ -20,6 +20,7 @@ namespace MetalPerformanceShadersGraph
 	[BaseType (typeof (NSObject))]
 	interface MPSGraph {
 		[Static, Export ("new")]
+		[return: Release]
 		MPSGraph Create ();
 
 		// @property (readwrite, atomic) MPSGraphOptions options;
