@@ -543,6 +543,42 @@ function check_specific_xcode () {
 	ok "Found Xcode $XCODE_ACTUAL_VERSION in $XCODE_ROOT"
 }
 
+function get_sdk_version ()
+{
+	local NUGET_VERSION_NAME=$1
+	local NUGET_VERSION
+	local SDK_VERSION
+	local SDK_VERSION_MAJOR
+	local SDK_VERSION_MINOR
+
+	# get the nuget version
+	NUGET_VERSION=$(grep "^$NUGET_VERSION_NAME=" Make.versions | sed "s/$NUGET_VERSION_NAME=//")
+
+	# first version field is the major OS version (logic is: "remove everything starting from the first dot")
+	SDK_VERSION_MAJOR=${NUGET_VERSION%%.*}
+
+	# Second version field is the minor OS version + a two digit managed API version
+
+	## First remove everything up until the first dot"
+	SDK_VERSION_MINOR=${NUGET_VERSION#*.}
+
+	## Then remove everything starting from the first dot"
+	SDK_VERSION_MINOR=${SDK_VERSION_MINOR%%.*}
+
+	# The minor OS version might be 0, in which case the second version field will have less than three digits. Cope with that here.
+
+	## Remove the last two characters
+	SDK_VERSION_MINOR=${SDK_VERSION_MINOR%??}
+
+	## If there's nothing left, then the minor version is 0
+	if test -z "$SDK_VERSION_MINOR"; then SDK_VERSION_MINOR=0; fi
+
+	# put it all together
+	SDK_VERSION=$SDK_VERSION_MAJOR.$SDK_VERSION_MINOR
+
+	echo "$SDK_VERSION"
+}
+
 function check_xcode () {
 	if ! test -z $IGNORE_XCODE; then return; fi
 
@@ -550,12 +586,14 @@ function check_xcode () {
 	check_specific_xcode
 	install_coresimulator
 
-	local IOS_SDK_VERSION MACOS_SDK_VERSION WATCH_SDK_VERSION TVOS_SDK_VERSION
+	local IOS_SDK_VERSION MACOS_SDK_VERSION WATCHOS_SDK_VERSION TVOS_SDK_VERSION
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
-	IOS_SDK_VERSION=$(grep ^IOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9][0-9]$//')
-	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9][0-9]$//')
-	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9][0-9]$//')
-	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9][0-9]$//')
+
+	# get the nuget version
+	IOS_SDK_VERSION=$(get_sdk_version IOS_NUGET_VERSION)
+	MACOS_SDK_VERSION=$(get_sdk_version MACOS_NUGET_VERSION)
+	WATCHOS_SDK_VERSION=$(get_sdk_version WATCHOS_NUGET_VERSION)
+	TVOS_SDK_VERSION=$(get_sdk_version TVOS_NUGET_VERSION)
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator${IOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
@@ -572,9 +610,9 @@ function check_xcode () {
 		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update TVOS_NUGET_VERSION in Make.versions."
 	fi
 
-	local D=$XCODE_DEVELOPER_ROOT/Platforms/WatchOS.platform/Developer/SDKs/WatchOS${WATCH_SDK_VERSION}.sdk
+	local D=$XCODE_DEVELOPER_ROOT/Platforms/WatchOS.platform/Developer/SDKs/WatchOS${WATCHOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
-		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update WATCH_NUGET_VERSION in Make.versions."
+		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update WATCHOS_NUGET_VERSION in Make.versions."
 	fi
 }
 

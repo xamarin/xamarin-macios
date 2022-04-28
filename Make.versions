@@ -60,12 +60,14 @@ MAC_PACKAGE_VERSION=8.11.0.$(MAC_COMMIT_DISTANCE)
 # * The first number represent the major version of the corresponding OS.
 # * The second number represent the minor version of the corresponding OS + two digits representing our managed API version / feature release number.
 #   * Reset the last two digit to 0 every time we bump to a new OS version.
+#   * Note that the minor OS version can be 0, and not present at all in the version.
+#   * This means that the version 16.1.0.0 actually means "OS 16.0 with managed API version 1"
 # * The third number is a patch version for service releases.
 #   * Reset this number 0 every time either major or minor version is bumped.
 #
 # IMPORTANT: There must be *no* managed API differences between service
 # releases. If there are *any* API changes, then we must bump the managed API
-# version digit in the minor version field. See dotnet/VERSIONS.md for more
+# version digits in the minor version field. See dotnet/VERSIONS.md for more
 # information.
 
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
