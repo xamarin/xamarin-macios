@@ -2018,7 +2018,7 @@ namespace ObjCRuntime {
 				return false;
 
 			unsafe {
-				return NXGetLocalArchInfo ()->Name.StartsWith ("arm64");
+				return NXGetLocalArchInfo ()->Name.StartsWith ("arm64", StringComparison.OrdinalIgnoreCase);
 			}
 		}
 
