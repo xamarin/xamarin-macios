@@ -552,29 +552,29 @@ function check_xcode () {
 
 	local IOS_SDK_VERSION MACOS_SDK_VERSION WATCH_SDK_VERSION TVOS_SDK_VERSION
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
-	IOS_SDK_VERSION=$(grep ^IOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9]$//')
-	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9]$//')
-	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9]$//')
-	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9]$//')
+	IOS_SDK_VERSION=$(grep ^IOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9][0-9]$//')
+	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9][0-9]$//')
+	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9][0-9]$//')
+	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//' -e 's/[0-9][0-9]$//')
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator${IOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
-		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update IOS_SDK_VERSION in Make.config."
+		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update IOS_NUGET_VERSION in Make.versions."
 	fi
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/MacOSX.platform/Developer/SDKs/MacOSX${MACOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
-		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update MACOS_SDK_VERSION in Make.config."
+		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update MACOS_NUGET_VERSION in Make.versions."
 	fi
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS${TVOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
-		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update TVOS_SDK_VERSION in Make.config."
+		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update TVOS_NUGET_VERSION in Make.versions."
 	fi
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/WatchOS.platform/Developer/SDKs/WatchOS${WATCH_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
-		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update WATCH_SDK_VERSION in Make.config."
+		fail "The directory $D does not exist. If you've updated the Xcode location it means you also need to update WATCH_NUGET_VERSION in Make.versions."
 	fi
 }
 

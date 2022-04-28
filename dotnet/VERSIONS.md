@@ -7,7 +7,7 @@ Our NuGet packages are versioned using [Semver 2.0.0][2].
 This is the scheme: `OsMajor.OsMinor.InternalRelease[-prereleaseX]+sha.1b2c3d4`.
 
 * Major: The major OS version.
-* Minor: The minor OS version + a digit specifying our managed API version (typically "0").
+* Minor: The minor OS version + two digits specifying our managed API version (typically "00").
     * See [API changes](#API Changes) below for a description of the two API
       version digits.
 * Patch: Our internal release version based on `100` as a starting point.
@@ -79,14 +79,9 @@ just _no breaking changes_).
 
 Since we don't control the major and minor OS versions (Apple decides those,
 and when to release them), and we still need a way to publish new releases
-with managed API changes when we want to, we've appended a digit to the minor
-version. Typically these will be "0", but if we really want/need to, we could
-add new managed API outside of an OS release and bump these digits.
-
-Why don't we use "00" to get a scheme similar to the [.NET patch versioning][3]
-(6.0.1XX)? Because MSIs have a max of 255 for the major and minor version, so
-by adding a single digit only, we're allowing for 25 minor versions for a
-given major OS release. Hopefully that will be enough... 🔮
+with managed API changes when we want to, we've appended two digits to the
+minor version. Typically these will be "00", but if we really want/need to, we
+could add new managed API outside of an OS release and bump these digits.
 
 [1]: https://github.com/dotnet/designs/blob/master/accepted/2018/sdk-version-scheme.md
 [2]: https://semver.org
