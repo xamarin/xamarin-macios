@@ -31,83 +31,55 @@ namespace Microsoft.MaciOS.AssemblyComparator {
 
 		void VisitTypes (TypeReworker reworker, ModuleElements earlier, ModuleElements later)
 		{
-			foreach (var typeName in earlier.Types.Keys) {
-				if (!later.Types.TryGetValue (typeName, out var laterElems)) {
-					TypeNotFound.Invoke (this, new TypeNotFoundEventArgs (typeName));
+			foreach (var typeNameAndValue in earlier.Types) {
+				if (!later.Types.TryGetValue (typeNameAndValue.Key, out var laterElems)) {
+					TypeEvents.InvokeNotFound (this, typeNameAndValue.Key);
 					continue;
-				} else {
-					TypeFound.Invoke (this, new TypeFoundEventArgs (typeName, laterElems.DeclaringType.ToString ()));
 				}
-				if (!earlier.Types.TryGetValue (typeName, out var earlierElems)) {
-					throw new Exception (Errors.E0007);
-				}
-				VisitAllMembers (reworker, earlierElems, laterElems);
+
+				TypeEvents.InvokeFound (this, typeNameAndValue.Key, laterElems.DeclaringType.ToString ());
+
+				VisitAllMembers (reworker, typeNameAndValue.Value, laterElems);
 			}
 		}
 
 		void VisitAllMembers (TypeReworker reworker, TypeElements earlier, TypeElements later)
 		{
-			VisitMembers (reworker, earlier.Methods, later.Methods);
-			VisitMembers (reworker, earlier.Fields, later.Fields);
-			VisitMembers (reworker, earlier.Events, later.Events);
-			VisitMembers (reworker, earlier.Properties, later.Properties);
+			VisitMembers (reworker, earlier.Methods, later.Methods, MethodEvents);
+			VisitMembers (reworker, earlier.Fields, later.Fields, FieldEvents);
+			VisitMembers (reworker, earlier.Events, later.Events, EventEvents);
+			VisitMembers (reworker, earlier.Properties, later.Properties, PropertyEvents);
 		}
 
-		void VisitMembers<T> (TypeReworker reworker,
-			List<TypeElement<T>> earlier, List<TypeElement<T>> later) where T : IMemberDefinition
+		void VisitMembers<T> (TypeReworker reworker, List<TypeElement<T>> earlier,
+			List<TypeElement<T>> later, ItemEvents<T> events) where T : IMemberDefinition
 		{
 			foreach (var earlierElem in earlier) {
-				VisitMember (reworker, earlierElem, later);
+				VisitMember (reworker, earlierElem, later, events);
 			}
 		}
 
 		void VisitMember<T> (TypeReworker reworker, TypeElement<T> elem,
-			List<TypeElement<T>> later) where T : IMemberDefinition
+			List<TypeElement<T>> later, ItemEvents<T> events) where T : IMemberDefinition
 		{
 			foreach (var late in later) {
 				if (elem.Signature == late.Signature) {
-					FireElementFound (elem, late);
+					events.InvokeFound (this, elem.Signature, late.Signature);
 					return;
 				}
 			}
 			var remappedSig = RemappedSignature (reworker, elem.Element);
 			if (remappedSig == elem.Signature) {
-				FireElementNotFound (elem);
+				events.InvokeNotFound (this, elem.Signature);
 				return;
 			}
 			foreach (var late in later) {
 				if (remappedSig == late.Signature) {
-					FireElementFound (elem, late);
+					events.InvokeFound (this, elem.Signature, late.Signature);
 					return;
 				}
 			}
-			FireElementNotFound (elem);
-		}
-
-		void FireElementNotFound<T> (TypeElement<T> earlier) where T : IMemberDefinition
-		{
-			if (earlier is TypeElement<FieldDefinition> field) {
-				FieldNotFound.Invoke (this, new FieldNotFoundEventArgs (field.Signature));
-			} else if (earlier is TypeElement<MethodDefinition> method) {
-				MethodNotFound.Invoke (this, new MethodNotFoundEventArgs (method.Signature));
-			} else if (earlier is TypeElement<EventDefinition> @event) {
-				EventNotFound.Invoke (this, new EventNotFoundEventArgs (@event.Signature));
-			} else if (earlier is TypeElement<PropertyDefinition> property) {
-				PropertyNotFound.Invoke (this, new PropertyNotFoundEventArgs (property.Signature));
-			}
-		}
-
-		void FireElementFound<T> (TypeElement<T> earlier, TypeElement<T> later) where T : IMemberDefinition
-		{
-			if (earlier is TypeElement<FieldDefinition> field) {
-				FieldFound.Invoke (this, new FieldFoundEventArgs (field.Signature, later.Signature));
-			} else if (earlier is TypeElement<MethodDefinition> method) {
-				MethodFound.Invoke (this, new MethodFoundEventArgs (method.Signature, later.Signature));
-			} else if (earlier is TypeElement<EventDefinition> @event) {
-				EventFound.Invoke (this, new EventFoundEventArgs (@event.Signature, later.Signature));
-			} else if (earlier is TypeElement<PropertyDefinition> property) {
-				PropertyFound.Invoke (this, new PropertyFoundEventArgs (earlier.Signature, later.Signature));
-			}
+			events.InvokeNotFound (this, elem.Signature);
 		}
 
 		static string RemappedSignature<T> (TypeReworker reworker, T elem) where T : IMemberDefinition
@@ -126,19 +98,10 @@ namespace Microsoft.MaciOS.AssemblyComparator {
 			}
 		}
 
-		public EventHandler<TypeNotFoundEventArgs> TypeNotFound = (s, e) => { };
-		public EventHandler<TypeFoundEventArgs> TypeFound = (s, e) => { };
-
-		public EventHandler<MethodNotFoundEventArgs> MethodNotFound = (s, e) => { };
-		public EventHandler<MethodFoundEventArgs> MethodFound = (s, e) => { };
-
-		public EventHandler<FieldNotFoundEventArgs> FieldNotFound = (s, e) => { };
-		public EventHandler<FieldFoundEventArgs> FieldFound = (s, e) => { };
-
-		public EventHandler<EventNotFoundEventArgs> EventNotFound = (s, e) => { };
-		public EventHandler<EventFoundEventArgs> EventFound = (s, e) => { };
-
-		public EventHandler<PropertyNotFoundEventArgs> PropertyNotFound = (s, e) => { };
-		public EventHandler<PropertyFoundEventArgs> PropertyFound = (s, e) => { };
+		public ItemEvents<TypeDefinition> TypeEvents { get; } = new ();
+		public ItemEvents<MethodDefinition> MethodEvents { get; } = new ();
+		public ItemEvents<FieldDefinition> FieldEvents { get; } = new ();
+		public ItemEvents<EventDefinition> EventEvents { get; } = new ();
+		public ItemEvents<PropertyDefinition> PropertyEvents { get; } = new ();
 	}
 }

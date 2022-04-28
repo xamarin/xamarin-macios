@@ -78,5 +78,8 @@
 	<data name="E0011" xml:space="preserve">
 		<value>Error while attempting to compare assemblies: {1}</value>
 	</data>
+	<data name="E0012" xml:space="preserve">
+		<value>UiquingStringDictionary entry with key {0} has illegal value {1}.</value>
+	</data>
 </root>
 

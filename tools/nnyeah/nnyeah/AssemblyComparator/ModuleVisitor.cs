@@ -97,8 +97,9 @@ namespace Microsoft.MaciOS.AssemblyComparator {
 
 		void VisitEvents (TypeDefinition type)
 		{
-			foreach (var evt in type.Events)
+			foreach (var evt in type.Events) {
 				VisitEvent (type, evt);
+			}
 		}
 
 		void VisitEvent (TypeDefinition type, EventDefinition evt)
@@ -115,8 +116,9 @@ namespace Microsoft.MaciOS.AssemblyComparator {
 
 		void VisitMethods (TypeDefinition type)
 		{
-			foreach (var method in type.Methods)
+			foreach (var method in type.Methods) {
 				VisitMethod (type, method);
+			}
 		}
 
 		void VisitMethod (TypeDefinition type, MethodDefinition method)

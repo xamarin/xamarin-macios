@@ -10,19 +10,19 @@ namespace Microsoft.MaciOS.AssemblyComparator {
 	[XmlRoot]
 	public class TypeAndMemberMap {
 		public List<string> TypesNotPresent { get; init; } = new List<string> ();
-		public SerializableDictionary<string, string> TypeMap { get; init; } = new SerializableDictionary<string, string> ();
+		public UniquingStringDictionary TypeMap { get; init; } = new UniquingStringDictionary ();
 
 		public List<string> MethodsNotPresent { get; init; } = new List<string> ();
-		public SerializableDictionary<string, string> MethodMap { get; init; } = new SerializableDictionary<string, string> ();
+		public UniquingStringDictionary MethodMap { get; init; } = new UniquingStringDictionary ();
 
 		public List<string> FieldsNotPresent { get; init; } = new List<string> ();
-		public SerializableDictionary<string, string> FieldMap { get; init; } = new SerializableDictionary<string, string> ();
+		public UniquingStringDictionary FieldMap { get; init; } = new UniquingStringDictionary ();
 
 		public List<string> EventsNotPresent { get; init; } = new List<string> ();
-		public SerializableDictionary<string, string> EventMap { get; init; } = new SerializableDictionary<string, string> ();
+		public UniquingStringDictionary EventMap { get; init; } = new UniquingStringDictionary ();
 
 		public List<string> PropertiesNotPresent { get; init; } = new List<string> ();
-		public SerializableDictionary<string, string> PropertyMap { get; init; } = new SerializableDictionary<string, string> ();
+		public UniquingStringDictionary PropertyMap { get; init; } = new UniquingStringDictionary ();
 
 		public TypeAndMemberMap ()
 		{

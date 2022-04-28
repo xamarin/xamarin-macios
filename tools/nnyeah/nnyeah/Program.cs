@@ -75,20 +75,20 @@ namespace Microsoft.MaciOS.Nnyeah {
 			var comparingVisitor = new ComparingVisitor (earlierModule, laterModule, publicOnly);
 			var map = new TypeAndMemberMap ();
 
-			comparingVisitor.TypeNotFound += (s, e) => { map.TypesNotPresent.Add (e.OriginalType); };
-			comparingVisitor.TypeFound += (s, e) => { map.TypeMap.Add (e.OriginalType, e.MappedType); };
+			comparingVisitor.TypeEvents.NotFound += (s, e) => { map.TypesNotPresent.Add (e.Original); };
+			comparingVisitor.TypeEvents.Found += (s, e) => { map.TypeMap.Add (e.Original, e.Mapped); };
 
-			comparingVisitor.MethodNotFound += (s, e) => { map.MethodsNotPresent.Add (e.OriginalMember); };
-			comparingVisitor.MethodFound += (s, e) => { map.MethodMap.Add (e.OriginalMember, e.MappedMember); };
+			comparingVisitor.MethodEvents.NotFound += (s, e) => { map.MethodsNotPresent.Add (e.Original); };
+			comparingVisitor.MethodEvents.Found += (s, e) => { map.MethodMap.Add (e.Original, e.Mapped); };
 
-			comparingVisitor.FieldNotFound += (s, e) => { map.FieldsNotPresent.Add (e.OriginalField); };
-			comparingVisitor.FieldFound += (s, e) => { map.FieldMap.Add (e.OriginalField, e.MappedField); };
+			comparingVisitor.FieldEvents.NotFound += (s, e) => { map.FieldsNotPresent.Add (e.Original); };
+			comparingVisitor.FieldEvents.Found += (s, e) => { map.FieldMap.Add (e.Original, e.Mapped); };
 
-			comparingVisitor.EventNotFound += (s, e) => { map.EventsNotPresent.Add (e.OriginalEvent); };
-			comparingVisitor.EventFound += (s, e) => { map.EventMap.Add (e.OriginalEvent, e.MappedEvent); };
+			comparingVisitor.EventEvents.NotFound += (s, e) => { map.EventsNotPresent.Add (e.Original); };
+			comparingVisitor.EventEvents.Found += (s, e) => { map.EventMap.Add (e.Original, e.Mapped); };
 
-			comparingVisitor.PropertyNotFound += (s, e) => { map.PropertiesNotPresent.Add (e.OriginalProperty); };
-			comparingVisitor.PropertyFound += (s, e) => { map.PropertyMap.Add (e.OriginalProperty, e.MappedProperty); };
+			comparingVisitor.PropertyEvents.NotFound += (s, e) => { map.PropertiesNotPresent.Add (e.Original); };
+			comparingVisitor.PropertyEvents.Found += (s, e) => { map.PropertyMap.Add (e.Original, e.Mapped); };
 
 			comparingVisitor.Visit ();
 
