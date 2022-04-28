@@ -373,14 +373,7 @@ namespace Introspection {
 			if (typeUnavailableVersion is not null && typeUnavailableVersion.Build == -1) {
 				typeUnavailableVersion = new Version (typeUnavailableVersion.Major, typeUnavailableVersion.Minor, 0);
 			}
-#if NET
-			switch (t.FullName) {
-				case "MediaPlayer.MPMoviePlayerController":
-				case "AppKit.NSDrawer":
-				case "ImageKit.IKImageBrowserView":
-					return;
-			}
-#endif
+
 			var ma = GetAvailable (m, out var availableVersion);
 			if (typeUnavailable && (ma != null)) {
 				if (typeUnavailableVersion is not null && availableVersion is not null) {
