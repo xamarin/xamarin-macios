@@ -13,7 +13,7 @@ using MetalPerformanceShadersGraph;
 
 using NUnit.Framework;
 
-namespace MyMPSGraphApp {
+namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 	[Preserve (AllMembers = true)]
 	[TestFixture]
 	public class MnistTest
