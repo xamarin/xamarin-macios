@@ -3,7 +3,7 @@
     "author": "Microsoft",
     "classifications": [ "iOS", "Mobile" ],
     "identity": "Microsoft.iOS.iOSTabbedApp",
-    "name": "iOS Tabbed Application (Preview)",
+    "name": "iOS Tabbed Application",
     "description": "A project for creating a .NET iOS tabbed application",
     "shortName": "ios-tabbed",
     "tags": {

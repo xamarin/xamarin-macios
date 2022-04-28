@@ -3,7 +3,7 @@
   "author": "Microsoft",
   "classifications": [ "tvOS", "Mobile" ],
   "identity": "Microsoft.tvOS.tvOSApp",
-  "name": "tvOS Application (Preview)",
+  "name": "tvOS Application",
   "description": "A project for creating a .NET tvOS application",
   "shortName": "tvos",
   "tags": {

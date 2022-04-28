@@ -3,7 +3,7 @@
     "author": "Microsoft",
     "classifications": [ "macOS" ],
     "identity": "Microsoft.macOS.macOSApp",
-    "name": "macOS Application (Preview)",
+    "name": "macOS Application",
     "description": "A project for creating a .NET macOS application",
     "shortName": "macos",
     "tags": {
