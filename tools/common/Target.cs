@@ -222,7 +222,6 @@ namespace Xamarin.Bundler {
 						case "Metal":
 						case "MetalKit":
 						case "MetalPerformanceShaders":
-						case "MetalPerformanceShadersGraph":
 #if !NET
 						case "CHIP":
 #endif
