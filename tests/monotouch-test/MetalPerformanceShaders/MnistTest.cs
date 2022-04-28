@@ -10,13 +10,43 @@ using Foundation;
 using Metal;
 using MetalPerformanceShaders;
 using MetalPerformanceShadersGraph;
+using ObjCRuntime;
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 	[Preserve (AllMembers = true)]
 	[TestFixture]
-	public class MnistTest
+	public class MnistTester
+	{
+
+		[OneTimeSetUp]
+		public void IsSupported ()
+		{
+			TestRuntime.AssertNotVirtualMachine ();
+#if __TVOS__
+			if (Runtime.Arch == Arch.SIMULATOR)
+				Assert.Inconclusive ("Metal Performance Shaders Graph is not supported in the tvOS simulator");
+#endif
+
+			var device = MTLDevice.SystemDefault;
+			// some older hardware won't have a default
+			if (device is null) {
+				Assert.Inconclusive ($"Metal does not exist on this device.");
+			} else if (!MPSKernel.Supports (device))
+				Assert.Inconclusive ($"Metal is not supported on this device: {device.Name}");
+		}
+
+		[Test]
+		public void Run ()
+		{
+			using (var tester = new MnistTest ()) {
+				tester.Run ();
+			}
+		}
+	}
+
+	public class MnistTest : IDisposable
 	{
 		const int batchSize = 3;
 
@@ -28,7 +58,6 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 
 		readonly MnistData data = new ();
 
-		[Test]
 		public void Run ()
 		{
 			MPSCommandBuffer? latestCommandBuffer = null;
@@ -53,6 +82,11 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 
 			// Don't need to commit since EncodeTrainingBatch oddly does that
 			return commandBuffer;
+		}
+
+		void IDisposable.Dispose ()
+		{
+			graph.Dispose ();
 		}
 	}
 
