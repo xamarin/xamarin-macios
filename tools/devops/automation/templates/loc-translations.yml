@@ -5,7 +5,6 @@ steps:
   submodules: recursive
   path: s/xamarin-macios
 
-
 - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
   - pwsh: |
       git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
@@ -39,7 +38,7 @@ steps:
   inputs:
     targetType: 'filePath'
     filePath: $(Build.SourcesDirectory)\\tools\\devops\\automation\\scripts\\update-locproject.ps1
-    arguments: -SourcesDirectory "$(Build.SourcesDirectory)" -LocalizeDirectory "$(Build.SourcesDirectory)\Localize\loc\{Lang}" -LocProjectPath "$(Build.SourcesDirectory)\\Localize\\LocProject.json"
+    arguments: -SourcesDirectory "$(Build.SourcesDirectory)" -LocProjectPath "$(Build.SourcesDirectory)\\Localize\\LocProject.json"
 
 - pwsh: |
     git remote remove origin
