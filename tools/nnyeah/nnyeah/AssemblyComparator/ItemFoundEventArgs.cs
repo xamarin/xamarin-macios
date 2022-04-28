@@ -3,7 +3,7 @@ using System;
 #nullable enable
 
 namespace Microsoft.MaciOS.AssemblyComparator {
-	public class ItemNotFoundEventArgs<T> {
+	public class ItemNotFoundEventArgs<T> : EventArgs{
 		public ItemNotFoundEventArgs (string original)
 		{
 			Original = original;
@@ -11,7 +11,7 @@ namespace Microsoft.MaciOS.AssemblyComparator {
 		public string Original { get; init; }
 	}
 
-	public class ItemFoundEventArgs<T> {
+	public class ItemFoundEventArgs<T> : EventArgs {
 		public ItemFoundEventArgs (string original, string mapped)
 		{
 			Original = original;
