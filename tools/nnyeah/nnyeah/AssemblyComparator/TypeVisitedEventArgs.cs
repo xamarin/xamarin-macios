@@ -3,7 +3,7 @@ using Mono.Cecil;
 
 #nullable enable
 
-namespace Microsoft.MaciOS.AssemblyComparator {
+namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	public enum VisitKind {
 		Start,
 		End,

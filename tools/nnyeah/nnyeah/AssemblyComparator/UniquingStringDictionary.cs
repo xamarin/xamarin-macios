@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
-using Microsoft.MaciOS.Nnyeah;
 
-namespace Microsoft.MaciOS.AssemblyComparator {
+namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	[XmlRoot ("dictionary")]
 	public class UniquingStringDictionary : Dictionary<string, string>, IXmlSerializable {
 		// if the key and the value are the same, we will serialized out the

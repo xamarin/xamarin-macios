@@ -1,11 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Mono.Cecil;
 
 #nullable enable
 
-namespace Microsoft.MaciOS.AssemblyComparator {
+namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	public class TypeElement<T> where T : IMemberDefinition {
 		public TypeElement (string signature, T element)
 		{

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.MaciOS.Nnyeah;
 using Mono.Cecil;
 
 #nullable enable
 
-namespace Microsoft.MaciOS.AssemblyComparator {
+namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	public class ModuleElements {
 		public Dictionary<string, TypeElements> Types { get; init; } = new Dictionary<string, TypeElements> ();
 		ModuleElements ()

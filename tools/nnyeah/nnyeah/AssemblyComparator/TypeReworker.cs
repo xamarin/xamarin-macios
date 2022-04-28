@@ -2,13 +2,11 @@
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
 using System.Collections.Generic;
-using System.Linq;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.MaciOS.Nnyeah;
 
 #nullable enable
 
-namespace Microsoft.MaciOS.AssemblyComparator {
+namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	public class TypeReworker {
 		ModuleDefinition module;
 		TypeDefinition nintTypeReference;

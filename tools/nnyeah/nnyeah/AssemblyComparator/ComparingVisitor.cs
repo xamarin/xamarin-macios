@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.MaciOS.Nnyeah;
 using Mono.Cecil;
 
 #nullable enable
 
-namespace Microsoft.MaciOS.AssemblyComparator {
+namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	public class ComparingVisitor {
 		ModuleDefinition EarlierModule, LaterModule;
 		bool PublicOnly;

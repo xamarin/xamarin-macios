@@ -1,12 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.Serialization;
 
 #nullable enable
 
-namespace Microsoft.MaciOS.AssemblyComparator {
+namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	[XmlRoot]
 	public class TypeAndMemberMap {
 		public List<string> TypesNotPresent { get; init; } = new List<string> ();
