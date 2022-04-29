@@ -258,7 +258,7 @@ steps:
     GitHubToken: $(GitHub.Token)
     ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
 
-# download worload jsona nd add it to out packate internal dir, this allows the rest of jobs
+# download workload json and add it to out package internal dir, this allows the rest of jobs
 # not to need several artifacts but just package-internal
 - task: DownloadPipelineArtifact@2
   displayName: Download WorkloadRollback.json
