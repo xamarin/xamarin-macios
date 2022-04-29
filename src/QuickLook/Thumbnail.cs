@@ -49,7 +49,7 @@ namespace QuickLook {
 		public static CGImage? Create (NSUrl url, CGSize maxThumbnailSize, float scaleFactor = 1, bool iconMode = false)
 		{
 			if (url == null)
-				throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			NSMutableDictionary? dictionary = null;
 
