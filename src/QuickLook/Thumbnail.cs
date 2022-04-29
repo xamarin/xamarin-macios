@@ -26,7 +26,10 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if MONOMAC
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -43,12 +46,12 @@ namespace QuickLook {
 		[DllImport(Constants.QuickLookLibrary)]
 		extern static /* CGImageRef */ IntPtr QLThumbnailImageCreate (/* CFAllocatorRef */ IntPtr allocator, /* CFUrlRef */ IntPtr url, CGSize maxThumbnailSize, /* CFDictionaryRef */ IntPtr options);
 
-		public static CGImage Create (NSUrl url, CGSize maxThumbnailSize, float scaleFactor = 1, bool iconMode = false)
+		public static CGImage? Create (NSUrl url, CGSize maxThumbnailSize, float scaleFactor = 1, bool iconMode = false)
 		{
 			if (url == null)
 				throw new ArgumentNullException ("url");
 
-			NSMutableDictionary dictionary = null;
+			NSMutableDictionary? dictionary = null;
 
 			if (scaleFactor != 1 && iconMode != false) {
 				dictionary = new NSMutableDictionary ();
