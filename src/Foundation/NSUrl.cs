@@ -47,6 +47,9 @@ namespace Foundation {
 		// Converts from an NSURL to a System.Uri
 		public static implicit operator Uri (NSUrl url)
 		{
+			if (url == null) {
+				return null;
+			}
 			if (Uri.TryCreate (url.AbsoluteString, UriKind.Absolute, out var uri))
 				return uri;
 			else
@@ -55,6 +58,9 @@ namespace Foundation {
 
 		public static implicit operator NSUrl (Uri uri)
 		{
+			if (uri == null) {
+				return null;
+			}
 			if (uri.IsAbsoluteUri)
 				return new NSUrl (uri.AbsoluteUri);
 			else
