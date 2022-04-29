@@ -25,6 +25,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -40,7 +42,7 @@ using AVFoundation;
 
 namespace ReplayKit {
 	public partial class RPBroadcastConfiguration {
-		public AVVideoCodecSettings VideoCompressionProperties {
+		public AVVideoCodecSettings? VideoCompressionProperties {
 			get {
 				var weak = WeakVideoCompressionProperties; 
 				return weak == null ? null : new AVVideoCodecSettings (new NSMutableDictionary (weak));
