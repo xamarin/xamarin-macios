@@ -3517,7 +3517,7 @@ public partial class Generator : IMemberGatherer {
 		// If there are no unavailable attributes for a platform on a type
 		// add a supported introduced (without version) since it was "unlisted" (for non-catalyst platforms)
 		foreach (var platform in new [] { PlatformName.iOS, PlatformName.TvOS, PlatformName.MacOSX }) {
-			if (!PlatformMarkedUnavailabile (platform, availability) && IsInSupportedFramework (containingClass, platform)) {
+			if (!PlatformMarkedUnavailable (platform, availability) && IsInSupportedFramework (containingClass, platform)) {
 				availability.Add (CreateNoVersionSupportedAttribute (platform));
 			}
 		}
@@ -3525,7 +3525,7 @@ public partial class Generator : IMemberGatherer {
 
 	static void AddImpliedCatalyst (List<AvailabilityBaseAttribute> memberAvailability)
 	{
-		if (!PlatformMarkedUnavailabile (PlatformName.MacCatalyst, memberAvailability) && 
+		if (!PlatformMarkedUnavailable (PlatformName.MacCatalyst, memberAvailability) && 
 			!PlatformHasIntroduced (PlatformName.MacCatalyst, memberAvailability)) {
 			foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList()) {
 				var newAttribute = CloneFromOtherPlatform (attr, PlatformName.MacCatalyst);
@@ -3541,7 +3541,7 @@ public partial class Generator : IMemberGatherer {
 		return memberAvailability.Any (v => (v.Platform == platform && v is IntroducedAttribute));
 	}
 
-	static bool PlatformMarkedUnavailabile (PlatformName platform, List<AvailabilityBaseAttribute> memberAvailability) 
+	static bool PlatformMarkedUnavailable (PlatformName platform, List<AvailabilityBaseAttribute> memberAvailability) 
 	{
 		return memberAvailability.Any (v => (v.Platform == platform && v is UnavailableAttribute));
 	}
@@ -3695,7 +3695,7 @@ public partial class Generator : IMemberGatherer {
 			// Add any implied non-catalyst introduced (Catalyst will come later)
 			AddUnlistedAvailability (context, availabilityToConsider);
 
-			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst	] on the type trumps [iOS] on a member
+			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst] on the type trumps [iOS] on a member
 			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind != AvailabilityKind.Introduced));
 
 			// Add implied catalyst from [iOS] _before_ copying down from parent if no catalyst attributes
