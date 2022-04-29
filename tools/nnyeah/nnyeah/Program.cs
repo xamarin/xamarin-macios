@@ -1,9 +1,8 @@
 using System;
 using System.IO;
-using System.Reflection;
 using Mono.Options;
 using System.Collections.Generic;
-using Microsoft.MaciOS.AssemblyComparator;
+using Microsoft.MaciOS.Nnyeah.AssemblyComparator;
 using Mono.Cecil;
 
 #nullable enable
