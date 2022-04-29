@@ -925,7 +925,7 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 				builder.AppendLine ("#if __MACOS__");
 				break;
 			case PlatformName.MacCatalyst:
-				builder.AppendLine ("#if __MACCATALYST__ && !__IOS__ && !__MACOS__");
+				builder.AppendLine ("#if __MACCATALYST__ && !__IOS__");
 				break;
 			default:
 				throw new NotSupportedException ($"Unknown platform: {Platform}");
