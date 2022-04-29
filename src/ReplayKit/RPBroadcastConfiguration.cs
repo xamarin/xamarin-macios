@@ -45,10 +45,10 @@ namespace ReplayKit {
 		public AVVideoCodecSettings? VideoCompressionProperties {
 			get {
 				var weak = WeakVideoCompressionProperties; 
-				return weak == null ? null : new AVVideoCodecSettings (new NSMutableDictionary (weak));
+				return weak is null ? null : new AVVideoCodecSettings (new NSMutableDictionary (weak));
 			}
 			set {
-				WeakVideoCompressionProperties = value == null ? null : new NSDictionary<NSString, INSSecureCoding> (value.Dictionary.Handle);
+				WeakVideoCompressionProperties = value is null ? null : new NSDictionary<NSString, INSSecureCoding> (value.Dictionary.Handle);
 			}
 		}		
 	}
