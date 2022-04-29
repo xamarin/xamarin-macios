@@ -3710,11 +3710,13 @@ public partial class Generator : IMemberGatherer {
 			// parent context, but we want to let any local iOS override a catalyst on the parent
 			AddImpliedCatalyst (memberAvailability);
 
-			// If all of this implication gives us something silly, like being introduced
-			// on a type that is on a namespace we don't support, ignore those Supported
-			StripIntroducedOnNamespaceNotIncluded (memberAvailability, context);
-			if (inlinedType != null) {
-				StripIntroducedOnNamespaceNotIncluded (memberAvailability, inlinedType);
+			if (!BindThirdPartyLibrary) {
+				// If all of this implication gives us something silly, like being introduced
+				// on a type that is on a namespace we don't support, ignore those Supported
+				StripIntroducedOnNamespaceNotIncluded (memberAvailability, context);
+				if (inlinedType != null) {
+					StripIntroducedOnNamespaceNotIncluded (memberAvailability, inlinedType);
+				}
 			}
 
 			// Remove any duplicates attributes as well
