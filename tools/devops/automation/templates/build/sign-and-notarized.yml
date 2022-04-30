@@ -21,6 +21,36 @@ parameters:
 
 steps:
 
+# DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
+- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+  submodules: recursive
+  path: s/xamarin-macios
+
+- checkout: maccore
+  clean: true
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- checkout: templates
+  clean: true
+
+- checkout: release-scripts
+  clean: true
+
+# the ddsign plugin needs this version or it will crash and will make the sign step fail
+- task: UseDotNet@2
+  inputs:
+    packageType: sdk
+    version: 3.x
+  displayName: 'Install .NET Core SDK 3.x needed for ESRP'
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download not notaraized build
+  inputs:
+    artifact: 'not-signed-package'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/package
+
 - bash: |
     set -x
     set -e
@@ -89,7 +119,7 @@ steps:
       echo "Microsoft.MacCatalyst package found at $MACCATALYST_DOTNET_PKG"
     fi
   displayName: 'Retrieve packages to sign'
-  condition: and(${{ parameters.condition }}, contains(variables['configuration.BuildPkgs'], 'True'))
+  condition: ${{ parameters.condition }}
   timeoutInMinutes: 180
 
 - task: MicroBuildSigningPlugin@3
@@ -219,3 +249,35 @@ steps:
     filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
   displayName: 'Notarize & verify packages (ESRP)'
   condition: ${{ parameters.condition }}
+
+- ${{ if eq(parameters.enableDotnet, true) }}:
+  - template: publish-nugets.yml
+
+- template: generate-workspace-info.yml@templates
+  parameters:
+    GitHubToken: $(GitHub.Token)
+    ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+# download workload json and add it to out package internal dir, this allows the rest of jobs
+# not to need several artifacts but just package-internal
+- task: DownloadPipelineArtifact@2
+  displayName: Download WorkloadRollback.json
+  inputs:
+    patterns: '**/WorkloadRollback.json'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/package-internal
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Internal Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package-internal
+    artifactName: package-internal
+  continueOnError: true
+
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Artifacts (notarized)'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package
+    artifactName: package
+  continueOnError: true
