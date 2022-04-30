@@ -30,7 +30,7 @@ jobs:
   displayName: 'Sign & Notarize'
   timeoutInMinutes: 1000
   pool:
-    vimImage: internal-macos-11
+    vmImage: internal-macos-11
   workspace:
     clean: all
 
