@@ -4,8 +4,6 @@ using System.Reflection;
 using Mono.Options;
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace Microsoft.MaciOS.Nnyeah {
 	class Program {
 		static void Main (string [] args)
