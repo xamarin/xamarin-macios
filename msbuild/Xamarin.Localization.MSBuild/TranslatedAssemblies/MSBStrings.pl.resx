@@ -1132,12 +1132,18 @@
         <value>Wielokrotnie zażądano podpisywania kodu dla elementu „{0}” z różnymi metadanymi. Metadane „{1}={2}” zostały ustawione tylko dla jednego elementu.</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>Wielokrotnie zażądano podpisywania kodu dla elementu „{0}” z różnymi metadanymi. Metadane „{1}” są wartościami dla każdego elementu (czasem jest to „{2}”, innym razem jest to „{3}”).</value>
+        <value>Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has different values for each item (once it's '{2}', another time it's '{3}').</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>Wartość „6” elementu UIDeviceFamily nie jest prawidłowa w przypadku tej platformy. Jest ona obowiązująca w przypadku Mac Catalyst.</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>Wartość „6” elementu UIDeviceFamily wymaga systemu macOS 11.0. Ustaw właściwość „SupportedOSPlatformVersion” w pliku projektu na wartość co najmniej 14.0 (odpowiednik wersji Mac Catalyst systemu macOs 11.0). Bieżącą wartością jest {0} (odpowiednik systemu macOS {1}).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Could not find the binding resource package: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>Unknown property '{0}' with value '{1}'.</value>
     </data>
 </root>

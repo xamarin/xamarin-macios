@@ -1132,12 +1132,18 @@
         <value>다른 메타데이터를 사용하여 ‘{0}’에 대한 코드 서명이 여러 번 요청되었습니다. 메타데이터 ‘{1}={2}’이(가) 한 항목에 대해 설정되었지만 다른 항목에는 설정되지 않았습니다.</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>다른 메타데이터를 사용하여 ‘{0}’에 대한 코드 서명이 여러 번 요청되었습니다. 메타데이터 ‘{1}’이(가) 각 항목에 대한 값입니다(‘{2}’인 경우 다른 경우에는 ‘{3}’).</value>
+        <value>Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has different values for each item (once it's '{2}', another time it's '{3}').</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>UIDeviceFamily 값 '6'은 이 플랫폼에 유효하지 않습니다. Mac Catalyst에만 유효합니다.</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>UIDeviceFamily 값 '6'에는 macOS 11.0이 필요합니다. 프로젝트 파일의 'SupportedOSPlatformVersion'을 최소 14.0(macOS 11.0에 해당하는 Mac Catalyst 버전)으로 설정하세요. 현재 값은 {0}(macOS {1}와 동일)입니다.</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Could not find the binding resource package: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>Unknown property '{0}' with value '{1}'.</value>
     </data>
 </root>

@@ -1132,12 +1132,18 @@
         <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. '{1}={2}' meta verileri bir öğe için ayarlandı ancak diğer öğe için ayarlanmadı.</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. '{1}' meta verileri her bir öğe için değerler teşkil eder (bazen bu '{2}' olabilirken başka durumlarda ise '{3}' olabilir).</value>
+        <value>Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has different values for each item (once it's '{2}', another time it's '{3}').</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>UIDeviceFamily değeri '6' bu platform için geçerli değil. Yalnızca Mac Catalyst için geçerlidir.</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>UIDeviceFamily değeri '6', macOS 11.0 gerektirir. Lütfen proje dosyasındaki 'SupportedOSPlatformVersion' sürümünü en az 14.0 olarak ayarlayın (macOS 11.0'ın Mac Catalyst sürümüne eşdeğer). Geçerli değer: {0} (macOS {1} sürümüne eşdeğer).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Could not find the binding resource package: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>Unknown property '{0}' with value '{1}'.</value>
     </data>
 </root>

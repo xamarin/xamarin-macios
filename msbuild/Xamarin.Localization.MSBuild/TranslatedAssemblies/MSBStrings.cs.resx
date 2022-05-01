@@ -1132,12 +1132,18 @@
         <value>Pro {0} bylo několikrát vyžádáno podepisování kódu s různými metadaty. Metadata {1}={2} byla nastavena pro jednu položku, ale ne pro druhou.</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>Pro {0} bylo několikrát vyžádáno podepisování kódu s různými metadaty. Metadata {1} byla hodnotami pro každou položku (jednou {2}, jindy {3}).</value>
+        <value>Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has different values for each item (once it's '{2}', another time it's '{3}').</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>Hodnota UIDeviceFamily 6 není pro tuto platformu platná. Je platná jenom pro Mac Catalyst.</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>Hodnota UIDeviceFamily 6 vyžaduje macOS 11.0. V souboru projektu prosím nastavte SupportedOSPlatformVersion na alespoň 14.0 (ekvivalent verze macOS 11.0 pro Mac). Aktuální hodnota je {0} (ekvivalent macOS {1}).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Could not find the binding resource package: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>Unknown property '{0}' with value '{1}'.</value>
     </data>
 </root>
