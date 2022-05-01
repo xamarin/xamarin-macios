@@ -7,8 +7,6 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-#nullable enable
-
 namespace Microsoft.MaciOS.Nnyeah {
 	public class Reworker {
 		Stream stm;
