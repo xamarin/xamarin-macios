@@ -19,11 +19,6 @@ using ObjCRuntime;
 
 namespace AppKit
 {
-#if NET
-	[SupportedOSPlatform ("macos10.10")]
-#else
-	[Mac (10,10)] // protocol added in 10.10
-#endif
 	public partial interface INSAccessibility {}
 
 #if NET

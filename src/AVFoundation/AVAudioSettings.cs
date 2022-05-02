@@ -32,6 +32,8 @@ using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
 
+#nullable enable
+
 namespace AVFoundation {
 
 
@@ -179,7 +181,7 @@ namespace AVFoundation {
 #endif
 		public AVAudioBitRateStrategy? BitRateStrategy {
 			set {
-				NSString v = null;
+				NSString? v = null;
 				switch (value){
 				case AVAudioBitRateStrategy.Constant:
 					v = AVAudioSettings._Constant;
@@ -232,7 +234,7 @@ namespace AVFoundation {
 				return null;
 			}
 			set {
-				NSString v = null;
+				NSString? v = null;
 				switch (value){
 				case AVSampleRateConverterAlgorithm.Mastering:
 					v = AVAudioSettings.AVSampleRateConverterAlgorithm_Mastering;
@@ -268,7 +270,7 @@ namespace AVFoundation {
 		
 		public AudioChannelLayout ChannelLayout {
 			set {
-				SetNativeValue (AVAudioSettings.AVChannelLayoutKey, value == null ? null : value.AsData ());
+				SetNativeValue (AVAudioSettings.AVChannelLayoutKey, value is null ? null : value.AsData ());
 			}
 		}
 

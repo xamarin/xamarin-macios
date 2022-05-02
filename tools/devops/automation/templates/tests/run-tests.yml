@@ -87,7 +87,7 @@ steps:
   timeoutInMinutes: 30
 
 - pwsh: |
-    $workloadPath = "$(Build.SourcesDirectory)/artifacts/package-internal/WorkloadRollback.json"
+    $workloadPath = "$(Build.SourcesDirectory)/artifacts/WorkloadRollback/WorkloadRollback.json"
     $versionData = Get-Content $workloadPath | ConvertFrom-Json
     # could be done in a loop, but we don't want to be smart just yet
     $iOSVersion = $versionData | Select-Object -ExpandProperty "microsoft.net.sdk.ios"
@@ -119,15 +119,15 @@ steps:
     DOTNET_NUPKG_DIR=${var#*=}
     echo "Using nuget dir $DOTNET_NUPKG_DIR"
 
-    ROLLBACK_PATH="$(Build.SourcesDirectory)/artifacts/package-internal/WorkloadRollback.json"
+    ROLLBACK_PATH="$(Build.SourcesDirectory)/artifacts/WorkloadRollback/WorkloadRollback.json"
 
     echo "Rollback file contents:" 
     echo "$(cat $ROLLBACK_PATH)"
 
     mkdir -p $DOTNET_NUPKG_DIR
-    ls -R $(Build.SourcesDirectory)/artifacts/package
-    cp $(Build.SourcesDirectory)/artifacts/package/*.nupkg $DOTNET_NUPKG_DIR
-    cp $(Build.SourcesDirectory)/artifacts/package/*.pkg $DOTNET_NUPKG_DIR
+    ls -R $(Build.SourcesDirectory)/artifacts/not-signed-package
+    cp $(Build.SourcesDirectory)/artifacts/not-signed-package/*.nupkg $DOTNET_NUPKG_DIR
+    cp $(Build.SourcesDirectory)/artifacts/not-signed-package/*.pkg $DOTNET_NUPKG_DIR
     ls -R $DOTNET_NUPKG_DIR
 
     NUGET_SOURCES=$(grep https://pkgs.dev.azure.com ./NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
@@ -205,7 +205,7 @@ steps:
 - bash: |
     ls -Rla $(Build.SourcesDirectory)/artifacts/tmp
     rm -Rf test-libraries/*
-    mv $(Build.SourcesDirectory)/artifacts/tmp//package-test-libraries/package-test-libraries.zip .
+    mv $(Build.SourcesDirectory)/artifacts/tmp/package-test-libraries/package-test-libraries.zip .
     unzip -o package-test-libraries.zip -d test-libraries
   workingDirectory: $(Build.SourcesDirectory)/xamarin-macios/tests
   displayName: Expand test libraries.
@@ -246,6 +246,7 @@ steps:
     USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }};/tests/' # uri used to create the vsdrops index using full uri
     USE_TCP_TUNNEL: 'true'
+    BUILD_REVISION: $(Build.SourceVersion)
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job

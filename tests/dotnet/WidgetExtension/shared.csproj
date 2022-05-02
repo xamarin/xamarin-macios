@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<IsAppExtension>true</IsAppExtension>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+		<None Include="../Info.plist" Link="Info.plist" />
+	</ItemGroup>
+</Project>

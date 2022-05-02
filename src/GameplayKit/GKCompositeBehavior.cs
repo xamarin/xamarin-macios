@@ -7,13 +7,15 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 
 namespace GameplayKit {
 	public partial class GKCompositeBehavior {
 
-		public GKBehavior this [nuint index] {
+		public new GKBehavior this [nuint index] {
 			get { return ObjectAtIndexedSubscript (index); }
 		}
 

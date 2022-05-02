@@ -281,7 +281,9 @@ namespace SceneKit {
 		Multisampling2X,
 		Multisampling4X,
 #if MONOMAC || __MACCATALYST__
+		[NoiOS][NoTV]
 		Multisampling8X,
+		[NoiOS][NoTV]
 		Multisampling16X,
 #endif
 	}
@@ -360,11 +362,14 @@ namespace SceneKit {
 	{
 		Metal,
 #if !MONOMAC
-		[Unavailable (PlatformName.MacCatalyst)]
+		[Unavailable (PlatformName.MacCatalyst)][NoMac]
 		OpenGLES2,
 #else
+		[NoiOS][NoTV][NoMacCatalyst]
 		OpenGLLegacy,
+		[NoiOS][NoTV][NoMacCatalyst]
 		OpenGLCore32,
+		[NoiOS][NoTV][NoMacCatalyst]
 		OpenGLCore41
 #endif
 	}

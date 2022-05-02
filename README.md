@@ -33,6 +33,8 @@ However, we provide links to older Xamarin.iOS and Mac packages for macOS downgr
 
 | Version | Xamarin.iOS       | Xamarin.Mac       |
 |---------|-------------------|-------------------|
+| Xcode 13.3 | [15.8.0.4][34] | [8.8.0.4][35]     |
+| Xcode 13.2 | [15.4.0.0][36] | [8.4.0.0][37]     |
 | d16.11 (Xcode 13.1) | [15.2.0.1][30]   | [8.2.0.1][33]    |
 | d16.11 (Xcode 13.0) | [15.0.0.6][29]   | N/A              |
 | d16.10              | [14.20.0.24][31] | [7.14.0.27][32]  |
@@ -99,4 +101,8 @@ Licensed under the [MIT](https://github.com/xamarin/xamarin-macios/blob/main/LIC
 [31]: https://download.visualstudio.microsoft.com/download/pr/4725e1ed-6254-4880-a410-c120d95a814c/70aa4394b2bf0636c8bd2bb9db73d759/xamarin.ios-14.20.0.24.pkg
 [32]: https://download.visualstudio.microsoft.com/download/pr/cddb0c4f-a69c-42a3-bb23-085e48d17af4/ca7547ae1b83548823e23a06d9960f47/xamarin.mac-7.14.0.27.pkg
 [33]: https://download.visualstudio.microsoft.com/download/pr/b51d2f25-e4e9-4032-9cfa-152f6e4b01c6/f5d46401aa91c68fe6b9d2f520116331/xamarin.mac-8.2.0.1.pkg
+[34]: https://bosstoragemirror.blob.core.windows.net/wrench/xcode13.3/f2005bab4dcccfdb139c1fc62285e19abbbc5580/5962973/package/notarized/xamarin.ios-15.8.0.4.pkg
+[35]: https://bosstoragemirror.blob.core.windows.net/wrench/xcode13.3/f2005bab4dcccfdb139c1fc62285e19abbbc5580/5962973/package/notarized/xamarin.mac-8.8.0.4.pkg
+[36]: https://bosstoragemirror.blob.core.windows.net/wrench/xcode13.2/8fc41ae827657721729ca219668a75271f2e0bcb/5529761/package/notarized/xamarin.ios-15.4.0.0.pkg
+[37]: https://bosstoragemirror.blob.core.windows.net/wrench/xcode13.2/8fc41ae827657721729ca219668a75271f2e0bcb/5529761/package/notarized/xamarin.mac-8.4.0.0.pkg
 

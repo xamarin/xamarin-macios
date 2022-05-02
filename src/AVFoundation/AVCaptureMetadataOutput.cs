@@ -31,6 +31,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	public partial class AVCaptureMetadataOutput {

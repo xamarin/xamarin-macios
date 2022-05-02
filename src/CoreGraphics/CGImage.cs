@@ -45,6 +45,7 @@ namespace CoreGraphics {
 	// uint32_t -> CGWindow.h (OSX SDK only)
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -61,6 +62,7 @@ namespace CoreGraphics {
 	// uint32_t -> CGWindow.h (OSX SDK only)
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -164,12 +166,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGImageRef */ IntPtr CGImageRetain (/* CGImageRef */ IntPtr image);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGImageRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGImageRelease (GetCheckedHandle ());
 		}
@@ -244,9 +246,9 @@ namespace CoreGraphics {
 #if MONOMAC || __MACCATALYST__
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[MacCatalyst (15,0)]
 #endif
@@ -255,9 +257,9 @@ namespace CoreGraphics {
         
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[MacCatalyst (15,0)]
 #endif
@@ -268,9 +270,9 @@ namespace CoreGraphics {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[MacCatalyst (15,0)]
 #endif
