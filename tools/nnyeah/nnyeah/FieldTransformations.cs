@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-#nullable enable
-
 namespace Microsoft.MaciOS.Nnyeah {
 	public class FieldTransformations {
 		static Dictionary<string, Transformation>? allTransforms;

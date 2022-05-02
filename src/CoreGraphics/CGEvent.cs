@@ -472,6 +472,7 @@ namespace CoreGraphics {
 
 #if NET
 	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("maccatalyst")]
 #endif
 	public struct CGEventTapInformation {
 		public uint /* uint32_t */ EventTapID;

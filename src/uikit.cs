@@ -1256,7 +1256,7 @@ namespace UIKit {
 	}
 
 	[NoWatch]
-	[TV (11,0), iOS (11,0)]
+	[TV (11,0), iOS (11,0)][NoMac]
 	[Protocol]
 	interface UIAccessibilityContentSizeCategoryImageAdjusting {
 		[Abstract]
@@ -2979,6 +2979,7 @@ namespace UIKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
+	[NoMac]
 	[Protocol]
 	interface UIApplicationDelegate {
 
@@ -6253,6 +6254,7 @@ namespace UIKit {
 	}
 
 	[NoWatch]
+	[NoMac]
 	[BaseType (typeof(NSObject))]
 	[Model]
 	[Protocol]
@@ -11374,6 +11376,7 @@ namespace UIKit {
 		UIRefreshControl RefreshControl { get; set; }
 	}
 
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -14149,6 +14152,7 @@ namespace UIKit {
 	}
 
 	[BaseType (typeof(UIScrollViewDelegate))]
+	[NoMac]
 	[Model]
 	[Protocol]
 	interface UITextViewDelegate {
@@ -18512,6 +18516,7 @@ namespace UIKit {
 
 	interface IUIFocusItem {}
 	[iOS (10,0)]
+	[NoMac]
 	[Protocol]
 	interface UIFocusItem : UIFocusEnvironment
 	{
@@ -18770,6 +18775,7 @@ namespace UIKit {
 
 	interface IUIFocusEnvironment {}
 	[NoWatch]
+	[NoMac]
 	[iOS (9,0)]
 	[Protocol]
 	interface UIFocusEnvironment {
@@ -20404,7 +20410,7 @@ namespace UIKit {
 
 	interface IUISceneDelegate { }
 
-	[iOS (13,0), TV (13,0), NoWatch]
+	[iOS (13,0), TV (13,0), NoWatch, NoMac]
 #if NET
 	[Protocol, Model]
 #else
@@ -22595,6 +22601,7 @@ namespace UIKit {
 
 	[NoWatch, TV (14,0), iOS (14,0)]
 	[MacCatalyst (14,0)]
+	[NoMac]
 	[Protocol]
 	interface UIContentConfiguration : NSCopying {
 
@@ -22609,7 +22616,7 @@ namespace UIKit {
 
 	interface IUIContentView {}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+	[NoWatch, TV (14,0), iOS (14,0)][NoMac]
 	[MacCatalyst (14,0)]
 	[Protocol]
 	interface UIContentView {

@@ -7,6 +7,8 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -25,8 +27,8 @@ namespace GameplayKit {
 
 		public static GKPath FromPoints (Vector2[] points, float radius, bool cyclical)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			var buffer = IntPtr.Zero;
 			try {
@@ -42,8 +44,8 @@ namespace GameplayKit {
 		[DesignatedInitializer]
 		public GKPath (Vector2 [] points, float radius, bool cyclical)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			
 			var buffer = IntPtr.Zero;
 			try {
@@ -68,8 +70,8 @@ namespace GameplayKit {
 #endif
 		public static GKPath FromPoints (Vector3 [] points, float radius, bool cyclical)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			var buffer = IntPtr.Zero;
 			try {
@@ -95,8 +97,8 @@ namespace GameplayKit {
 #endif
 		public GKPath (Vector3 [] points, float radius, bool cyclical)
 		{
-			if (points == null)
-				throw new ArgumentNullException ("points");
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 
 			var buffer = IntPtr.Zero;
 			try {

@@ -7,6 +7,8 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -28,8 +30,8 @@ namespace GameplayKit {
 		[Export ("shuffledArrayWithRandomSource:")]
 		public static T [] GetShuffledArray<T> (this NSArray This, GKRandomSource randomSource) where T : class, INativeObject
 		{
-			if (randomSource == null)
-				throw new ArgumentNullException (nameof (randomSource));
+			if (randomSource is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (randomSource));
 			return NSArray.ArrayFromHandle<T> (Messaging.IntPtr_objc_msgSend_IntPtr (This.Handle, Selector.GetHandle ("shuffledArrayWithRandomSource:"), randomSource.Handle));
 		}
 
