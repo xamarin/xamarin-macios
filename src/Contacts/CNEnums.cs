@@ -131,10 +131,12 @@ namespace Contacts {
 		NonGregorianBirthday		= 1 << 8,
 		Note						= 1 << 9,
 #if !MONOMAC
+		[NoMac]
 		ImageData					= 1 << 10,
 #endif
 		ThumbnailImageData			= 1 << 11,
 #if !MONOMAC
+		[NoMac]
 		ImageDataAvailable			= 1 << 12,
 #endif
 		Type						= 1 << 13,
