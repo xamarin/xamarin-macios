@@ -1,8 +1,6 @@
 using System;
 using System.Text;
 
-#nullable enable
-
 namespace Microsoft.MaciOS.Nnyeah {
 	public class TransformEventArgs : BaseTransformEventArgs {
 		public TransformEventArgs (string containerName, string methodName, string targetOperand, uint addedCount, uint removedCount)
