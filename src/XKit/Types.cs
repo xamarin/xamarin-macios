@@ -36,6 +36,8 @@ namespace UIKit {
 #if NET
 	[SupportedOSPlatform ("tvos11.0")]
 	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos10.15")]
 #else
 	[Watch (4,0)]
 	[TV (11,0)]

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-#nullable enable
-
 namespace Microsoft.MaciOS.Nnyeah {
 	public class MethodTransformations {
 		static List<Transformation>? allTransforms;
