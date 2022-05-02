@@ -20,8 +20,8 @@ namespace NetworkExtension {
 
 #if NET
 		[SupportedOSPlatform ("macos10.11")]
-		[SupportedOSPlatform ("ios8.0")]
-		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,11)]
 #endif

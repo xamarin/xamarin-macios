@@ -148,8 +148,8 @@ namespace AudioUnit
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
 #if TVOS
@@ -210,10 +210,10 @@ namespace AudioUnit
 #else
 #if NET
 		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("macos")]
 #if TVOS
 		[Obsolete ("Starting with tvos13.0 use 'AudioTypeEffect.GraphicEQ' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif IOS
@@ -248,10 +248,10 @@ namespace AudioUnit
 #if MONOMAC
 		Stereo=0x736d7872, // 'smxr'
 #if NET
-		[SupportedOSPlatform ("ios")]
-		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.10")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.10 use 'Spacial' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -262,7 +262,11 @@ namespace AudioUnit
 		ThreeD=0x33646d78, // '3dmx'
 #else
 #if NET
+		[SupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #if IOS
 		[Obsolete ("Starting with ios8.0 use 'Spacial' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif

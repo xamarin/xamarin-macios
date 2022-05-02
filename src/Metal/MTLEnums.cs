@@ -743,33 +743,33 @@ namespace Metal {
 		iOS_GPUFamily2_v1 = 1,
 		iOS_GPUFamily2_v2 = 3,
 		iOS_GPUFamily3_v1 = 4,
-		[iOS (10,0), NoTV, NoWatch, NoMac]
+		[iOS (10,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily1_v3 = 5,
-		[iOS (10,0), NoTV, NoWatch, NoMac]
+		[iOS (10,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily2_v3 = 6,
-		[iOS (10,0), NoTV, NoWatch, NoMac]
+		[iOS (10,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily3_v2 = 7,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+		[iOS (11,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily1_v4 = 8,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+		[iOS (11,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily2_v4 = 9,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+		[iOS (11,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily3_v3 = 10,
-		[iOS (11,0), NoTV, NoWatch, NoMac]
+		[iOS (11,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily4_v1 = 11,
 
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (12,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily1_v5 = 12,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (12,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily2_v5 = 13,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (12,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily3_v4 = 14,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (12,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily4_v2 = 15,
-		[iOS (12,0), NoTV, NoWatch, NoMac]
+		[iOS (12,0), NoTV, NoWatch, NoMac, NoMacCatalyst]
 		iOS_GPUFamily5_v1 = 16,
 
-		[Mac (10,11), NoiOS, NoTV, NoWatch]
+		[Mac (10,11), NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		macOS_GPUFamily1_v1 = 10000,
 		
 #if !NET
@@ -832,7 +832,7 @@ namespace Metal {
 	[iOS (9,0)][Mac (10,11)]
 	[Native]
 	public enum MTLLanguageVersion : ulong {
-		[NoMac]
+		[NoMac][NoMacCatalyst]
 		v1_0 = (1 << 16),
 		v1_1 = (1 << 16) + 1,
 		[iOS (10,0), TV (10,0), NoWatch, Mac (10,12)]
@@ -1283,7 +1283,7 @@ namespace Metal {
 		None = 0x0,
 		Refit = (1uL << 0),
 		PreferFastBuild = (1uL << 1),
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
 		ExtendedLimits = (1uL << 2),
 	}
 
@@ -1359,11 +1359,11 @@ namespace Metal {
 		Instancing = (1uL << 0),
 		TriangleData = (1uL << 1),
 		WorldSpaceData = (1uL << 2),
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
 		InstanceMotion = (1uL << 3),
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
 		PrimitiveMotion = (1uL << 4),
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
 		ExtendedLimits = (1uL << 5),
 	}
 
