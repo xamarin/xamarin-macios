@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 
+#nullable enable
+
 namespace Xharness.Jenkins.TestTasks {
 	// This class groups simulator run tasks according to the
 	// simulator they'll run from, so that we minimize switching
@@ -14,11 +16,11 @@ namespace Xharness.Jenkins.TestTasks {
 		public IEnumerable<RunSimulatorTask> Tasks;
 
 		// Due to parallelization this isn't the same as the sum of the duration for all the build tasks.
-		Stopwatch build_timer = new Stopwatch ();
-		public TimeSpan BuildDuration { get { return build_timer.Elapsed; } }
+		readonly Stopwatch buildTimer = new();
+		public TimeSpan BuildDuration { get { return buildTimer.Elapsed; } }
 
-		Stopwatch run_timer = new Stopwatch ();
-		public TimeSpan RunDuration { get { return run_timer.Elapsed; } }
+		readonly Stopwatch runTimer = new();
+		public TimeSpan RunDuration { get { return runTimer.Elapsed; } }
 
 		public AggregatedRunSimulatorTask (Jenkins jenkins, IEnumerable<RunSimulatorTask> tasks) : base (jenkins)
 		{
@@ -42,9 +44,9 @@ namespace Xharness.Jenkins.TestTasks {
 
 			// First build everything. This is required for the run simulator
 			// task to properly configure the simulator.
-			build_timer.Start ();
+			buildTimer.Start ();
 			await Task.WhenAll (Tasks.Select ((v) => v.BuildAsync ()).Distinct ());
-			build_timer.Stop ();
+			buildTimer.Stop ();
 
 			var executingTasks = Tasks.Where ((v) => !v.Ignored && !v.Failed);
 			if (!executingTasks.Any ()) {
@@ -53,7 +55,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 
 			using (var desktop = await NotifyBlockingWaitAsync (ResourceManager.DesktopResource.AcquireExclusiveAsync ())) {
-				run_timer.Start ();
+				runTimer.Start ();
 
 				// We need to set the dialog permissions for all the apps
 				// before launching the simulator, because once launched
@@ -68,7 +70,7 @@ namespace Xharness.Jenkins.TestTasks {
 					ExecutionResult = TestExecutingResult.DeviceNotFound;
 					return;
 				}
-				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Count() > 0 ? devices.First().Name : "none");
+				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Any() ? devices.First().Name : "none");
 
 				foreach (var dev in devices) {
 					using var tcclog = Logs.Create ($"prepare-simulator-{Xharness.Harness.Helpers.Timestamp}.log", "Simulator preparation");
@@ -94,7 +96,7 @@ namespace Xharness.Jenkins.TestTasks {
 				if (device != null)
 					await device.KillEverything (Jenkins.MainLog);
 
-				run_timer.Stop ();
+				runTimer.Stop ();
 			}
 
 			if (Tasks.All ((v) => v.Ignored)) {
