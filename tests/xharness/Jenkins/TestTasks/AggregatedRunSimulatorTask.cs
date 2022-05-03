@@ -16,10 +16,10 @@ namespace Xharness.Jenkins.TestTasks {
 		public IEnumerable<RunSimulatorTask> Tasks;
 
 		// Due to parallelization this isn't the same as the sum of the duration for all the build tasks.
-		readonly Stopwatch buildTimer = new();
+		readonly Stopwatch buildTimer = new ();
 		public TimeSpan BuildDuration { get { return buildTimer.Elapsed; } }
 
-		readonly Stopwatch runTimer = new();
+		readonly Stopwatch runTimer = new ();
 		public TimeSpan RunDuration { get { return runTimer.Elapsed; } }
 
 		public AggregatedRunSimulatorTask (Jenkins jenkins, IEnumerable<RunSimulatorTask> tasks) : base (jenkins)
@@ -70,7 +70,7 @@ namespace Xharness.Jenkins.TestTasks {
 					ExecutionResult = TestExecutingResult.DeviceNotFound;
 					return;
 				}
-				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Any() ? devices.First().Name : "none");
+				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Any () ? devices.First().Name : "none");
 
 				foreach (var dev in devices) {
 					using var tcclog = Logs.Create ($"prepare-simulator-{Xharness.Harness.Helpers.Timestamp}.log", "Simulator preparation");
@@ -93,7 +93,7 @@ namespace Xharness.Jenkins.TestTasks {
 					await dev.Shutdown (Jenkins.MainLog);
 
 				var device = devices.FirstOrDefault ();
-				if (device != null)
+				if (device is not null)
 					await device.KillEverything (Jenkins.MainLog);
 
 				runTimer.Stop ();
