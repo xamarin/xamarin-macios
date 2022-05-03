@@ -7,6 +7,8 @@
 // Copyright 2014 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Net.Sockets;
@@ -97,8 +99,8 @@ namespace Security {
 #endif
 		unsafe static SslStatus Read (IntPtr connection, IntPtr data, nint* dataLength)
 		{
-			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target;
-			return c.Read (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
+			var c = GCHandle.FromIntPtr (connection).Target as SslConnection;
+			return c!.Read (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
 		}
 
 #if NET
@@ -108,8 +110,8 @@ namespace Security {
 #endif
 		unsafe static SslStatus Write (IntPtr connection, IntPtr data, nint* dataLength)
 		{
-			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target;
-			return c.Write (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
+			var c = GCHandle.FromIntPtr (connection).Target as SslConnection;
+			return c!.Write (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
 		}
 	}
 

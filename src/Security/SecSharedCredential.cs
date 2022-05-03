@@ -1,3 +1,5 @@
+#nullable enable
+
 #if IOS || MONOMAC
 
 using System;
@@ -26,7 +28,7 @@ namespace Security {
 			[MonoPInvokeCallback (typeof (DActionArity1V12))]
 			static unsafe void Invoke (IntPtr block, IntPtr obj) {
 				var descriptor = (BlockLiteral *) block;
-				var del = (global::System.Action<NSError>) (descriptor->Target);
+				var del = (global::System.Action<NSError?>) (descriptor->Target);
 				if (del != null) {
 					del ( Runtime.GetNSObject<NSError> (obj));
 				}
@@ -96,7 +98,7 @@ namespace Security {
 			[MonoPInvokeCallback (typeof (ArrayErrorAction))]
 			static unsafe void Invoke (IntPtr block, IntPtr array, IntPtr err) {
 				var descriptor = (BlockLiteral *) block;
-				var del = (global::System.Action<NSArray, NSError>) (descriptor->Target);
+				var del = (global::System.Action<NSArray?, NSError?>) (descriptor->Target);
 				if (del != null)
 					del ( Runtime.GetNSObject<NSArray> (array), Runtime.GetNSObject<NSError> (err));
 			}
@@ -145,11 +147,11 @@ namespace Security {
 				block_ptr_onComplete = &block_onComplete;
 				block_onComplete.SetupBlockUnsafe (ArrayErrorActionTrampoline.Handler, onComplete);
 
-				NSString nsDomain = null;
+				NSString? nsDomain = null;
 				if (domainName != null)
 					nsDomain = new NSString (domainName);	
 
-				NSString nsAccount = null;
+				NSString? nsAccount = null;
 				if (account != null) 
 					nsAccount = new NSString (account);
 				
@@ -166,7 +168,7 @@ namespace Security {
 		[DllImport (Constants.SecurityLibrary)]
 		extern static IntPtr /* CFStringRef */ SecCreateSharedWebCredentialPassword ();
 
-		public static string CreateSharedWebCredentialPassword ()
+		public static string? CreateSharedWebCredentialPassword ()
 		{
 			var handle = SecCreateSharedWebCredentialPassword ();
 			var str = CFString.FromHandle (handle);

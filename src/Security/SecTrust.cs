@@ -8,6 +8,8 @@
 // Copyright 2019 Microsoft Corporation
 //
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +22,8 @@ using Foundation;
 
 namespace Security {
 
-	public delegate void SecTrustCallback (SecTrust trust, SecTrustResult trustResult);
-	public delegate void SecTrustWithErrorCallback (SecTrust trust, bool result, NSError /* CFErrorRef _Nullable */ error);
+	public delegate void SecTrustCallback (SecTrust? trust, SecTrustResult trustResult);
+	public delegate void SecTrustWithErrorCallback (SecTrust? trust, bool result, NSError? /* CFErrorRef _Nullable */ error);
 
 	public partial class SecTrust {
 
@@ -363,7 +365,7 @@ namespace Security {
 		[Mac (10,14)]
 		[iOS (12,0)]
 #endif
-		public bool Evaluate (out NSError error)
+		public bool Evaluate (out NSError? error)
 		{
 			var result = SecTrustEvaluateWithError (Handle, out var err);
 			error = err == IntPtr.Zero ? null : new NSError (err);

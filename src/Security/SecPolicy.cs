@@ -7,6 +7,8 @@
 // Copyright 2013-2014 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -36,7 +38,7 @@ namespace Security {
 #else
 		[iOS (7,0)]
 #endif
-		public NSDictionary GetProperties ()
+		public NSDictionary? GetProperties ()
 		{
 			var dict = SecPolicyCopyProperties (Handle);
 			return Runtime.GetNSObject<NSDictionary> (dict, true);
@@ -62,7 +64,7 @@ namespace Security {
 		[Mac (10,9)]
 		[iOS (7,0)]
 #endif
-		static public SecPolicy CreateRevocationPolicy (SecRevocation revocationFlags)
+		static public SecPolicy? CreateRevocationPolicy (SecRevocation revocationFlags)
 		{
 			var policy = SecPolicyCreateRevocation ((nuint)(ulong) revocationFlags);
 			return policy == IntPtr.Zero ? null : new SecPolicy (policy, true);
