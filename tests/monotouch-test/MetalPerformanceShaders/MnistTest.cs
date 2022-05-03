@@ -27,6 +27,9 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 #if __TVOS__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Inconclusive ("Metal Performance Shaders Graph is not supported in the tvOS simulator");
+#elif __IOS__ && !__MACCATALYST__
+			if (Runtime.Arch == Arch.SIMULATOR)
+				TestRuntime.IgnoreInCI ("This test seems to make bots keel over and die.");
 #endif
 
 			var device = MTLDevice.SystemDefault;
