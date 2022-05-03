@@ -29,7 +29,7 @@ namespace Security {
 
 		public SecTrust (SecCertificate certificate, SecPolicy policy)
 		{
-			if (certificate == null)
+			if (certificate is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 
 			Initialize (certificate.Handle, policy);
@@ -76,7 +76,7 @@ namespace Security {
 
 		public void SetPolicy (SecPolicy policy)
 		{
-			if (policy == null)
+			if (policy is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (policy));
 
 			SetPolicies (policy.Handle);
@@ -84,7 +84,7 @@ namespace Security {
 
 		public void SetPolicies (IEnumerable<SecPolicy> policies)
 		{
-			if (policies == null)
+			if (policies is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (policies));
 
 			using (var array = NSArray.FromNSObjects (policies.ToArray ()))
@@ -93,7 +93,7 @@ namespace Security {
 
 		public void SetPolicies (NSArray policies)
 		{
-			if (policies == null)
+			if (policies is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (policies));
 
 			SetPolicies (policies.Handle);
@@ -207,7 +207,7 @@ namespace Security {
 		static void TrampolineEvaluate (IntPtr block, IntPtr trust, SecTrustResult trustResult)
 		{
 			var del = BlockLiteral.GetTarget<SecTrustCallback> (block);
-			if (del != null) {
+			if (del is not null) {
 				var t = trust == IntPtr.Zero ? null : new SecTrust (trust, false);
 				del (t, trustResult);
 			}
@@ -239,9 +239,9 @@ namespace Security {
 		public SecStatusCode Evaluate (DispatchQueue queue, SecTrustCallback handler)
 		{
 			// headers have `dispatch_queue_t _Nullable queue` but it crashes... don't trust headers, even for SecTrust
-			if (queue == null)
+			if (queue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -275,7 +275,7 @@ namespace Security {
 		static void TrampolineEvaluateError (IntPtr block, IntPtr trust, bool result, IntPtr /* CFErrorRef _Nullable */  error)
 		{
 			var del = BlockLiteral.GetTarget<SecTrustWithErrorCallback> (block);
-			if (del != null) {
+			if (del is not null) {
 				var t = trust == IntPtr.Zero ? null : new SecTrust (trust, false);
 				var e = error == IntPtr.Zero ? null : new NSError (error);
 				del (t, result, e);
@@ -296,9 +296,9 @@ namespace Security {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public SecStatusCode Evaluate (DispatchQueue queue, SecTrustWithErrorCallback handler)
 		{
-			if (queue == null)
+			if (queue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -436,7 +436,7 @@ namespace Security {
 #endif
 		public void SetOCSPResponse (NSData ocspResponse)
 		{
-			if (ocspResponse == null)
+			if (ocspResponse is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ocspResponse));
 
 			SetOCSPResponse (ocspResponse.Handle);
@@ -452,7 +452,7 @@ namespace Security {
 #endif
 		public void SetOCSPResponse (IEnumerable<NSData> ocspResponses)
 		{
-			if (ocspResponses == null)
+			if (ocspResponses is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ocspResponses));
 
 			using (var array = NSArray.FromNSObjects (ocspResponses.ToArray ()))
@@ -469,7 +469,7 @@ namespace Security {
 #endif
 		public void SetOCSPResponse (NSArray ocspResponses)
 		{
-			if (ocspResponses == null)
+			if (ocspResponses is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ocspResponses));
 
 			SetOCSPResponse (ocspResponses.Handle);
@@ -502,7 +502,7 @@ namespace Security {
 #endif
 		public SecStatusCode SetSignedCertificateTimestamps (IEnumerable<NSData> sct)
 		{
-			if (sct == null)
+			if (sct is null)
 				return SecTrustSetSignedCertificateTimestamps (Handle, IntPtr.Zero);
 
 			using (var array = NSArray.FromNSObjects (sct.ToArray ()))

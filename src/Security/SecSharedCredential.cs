@@ -29,7 +29,7 @@ namespace Security {
 			static unsafe void Invoke (IntPtr block, IntPtr obj) {
 				var descriptor = (BlockLiteral *) block;
 				var del = (global::System.Action<NSError?>) (descriptor->Target);
-				if (del != null) {
+				if (del is not null) {
 					del ( Runtime.GetNSObject<NSError> (obj));
 				}
 			} 
@@ -38,9 +38,9 @@ namespace Security {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void AddSharedWebCredential (string domainName, string account, string password, Action<NSError> handler)
 		{
-			if (domainName == null)
+			if (domainName is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (domainName));
-			if (account == null)
+			if (account is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (account));
 			// we need to create our own block literal. We can reuse the SDActionArity1V12 which is generated and takes a
 			// NSError because a CFError is a toll-free bridget to CFError
@@ -53,7 +53,7 @@ namespace Security {
 
 				using (var nsDomain = new NSString (domainName))
 				using (var nsAccount = new NSString (account)) {
-					if (password == null) {  // we are removing a password
+					if (password is null) {  // we are removing a password
 						SecAddSharedWebCredential (nsDomain.Handle, nsAccount.Handle, IntPtr.Zero, (IntPtr) block_ptr_onComplete);
 					} else {
 						using (var nsPassword = new NSString (password)) {
@@ -99,7 +99,7 @@ namespace Security {
 			static unsafe void Invoke (IntPtr block, IntPtr array, IntPtr err) {
 				var descriptor = (BlockLiteral *) block;
 				var del = (global::System.Action<NSArray?, NSError?>) (descriptor->Target);
-				if (del != null)
+				if (del is not null)
 					del ( Runtime.GetNSObject<NSArray> (array), Runtime.GetNSObject<NSError> (err));
 			}
 		}
@@ -148,19 +148,19 @@ namespace Security {
 				block_onComplete.SetupBlockUnsafe (ArrayErrorActionTrampoline.Handler, onComplete);
 
 				NSString? nsDomain = null;
-				if (domainName != null)
-					nsDomain = new NSString (domainName);	
+				if (domainName is not null)
+					nsDomain = new NSString (domainName);
 
 				NSString? nsAccount = null;
-				if (account != null) 
+				if (account is not null)
 					nsAccount = new NSString (account);
 				
-				SecRequestSharedWebCredential ((nsDomain == null)? IntPtr.Zero : nsDomain.Handle, (nsAccount == null)? IntPtr.Zero : nsAccount.Handle,
+				SecRequestSharedWebCredential (nsDomain.GetHandle (), nsAccount.GetHandle (),
 					(IntPtr) block_ptr_onComplete); 
 				block_ptr_onComplete->CleanupBlock ();
-				if (nsDomain != null)
+				if (nsDomain is not null)
 					nsDomain.Dispose ();
-				if (nsAccount != null)
+				if (nsAccount is not null)
 					nsAccount.Dispose ();
 			}
 		}

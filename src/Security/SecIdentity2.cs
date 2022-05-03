@@ -54,7 +54,7 @@ namespace Security {
 
 		public SecIdentity2 (SecIdentity identity)
 		{
-			if (identity == null)
+			if (identity is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 
 			InitializeHandle (sec_identity_create (identity.Handle));
@@ -65,9 +65,9 @@ namespace Security {
 
 		public SecIdentity2 (SecIdentity identity, params SecCertificate [] certificates)
 		{
-			if (identity == null)
+			if (identity is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
-			if (certificates == null)
+			if (certificates is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificates));
 			using (var nsarray = NSArray.FromObjects (certificates))
 				InitializeHandle (sec_identity_create_with_certificates (identity.Handle, nsarray.Handle));
@@ -115,7 +115,7 @@ namespace Security {
 		static void TrampolineAccessCertificates (IntPtr block, IntPtr cert)
 		{
 			var del = BlockLiteral.GetTarget<Action<SecCertificate2>> (block);
-			if (del != null)
+			if (del is not null)
 				del (new SecCertificate2 (cert, false));
 		}
 
@@ -134,7 +134,7 @@ namespace Security {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool AccessCertificates (Action</* sec_identity_t */SecCertificate2> handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();

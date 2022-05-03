@@ -49,7 +49,7 @@ namespace Security {
 
 		public void SetLocalIdentity (SecIdentity2 identity)
 		{
-			if (identity == null)
+			if (identity is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			sec_protocol_options_set_local_identity (GetCheckedHandle (), identity.GetCheckedHandle ());
 		}
@@ -437,7 +437,7 @@ namespace Security {
 
 		public void AddTlsApplicationProtocol (string applicationProtocol)
 		{
-			if (applicationProtocol == null)
+			if (applicationProtocol is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationProtocol));
 			sec_protocol_options_add_tls_application_protocol (GetCheckedHandle (), applicationProtocol);
 		}
@@ -447,7 +447,7 @@ namespace Security {
 
 		public void SetTlsServerName (string serverName)
 		{
-			if (serverName == null)
+			if (serverName is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (serverName));
 			sec_protocol_options_set_tls_server_name (GetCheckedHandle (), serverName);
 		}
@@ -499,7 +499,7 @@ namespace Security {
 #endif
 		public void SetTlsDiffieHellmanParameters (DispatchData parameters)
 		{
-			if (parameters == null)
+			if (parameters is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			sec_protocol_options_set_tls_diffie_hellman_parameters (GetCheckedHandle (), parameters.Handle);
 		}
@@ -509,7 +509,7 @@ namespace Security {
 
 		public void AddPreSharedKey (DispatchData parameters)
 		{
-			if (parameters == null)
+			if (parameters is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			sec_protocol_options_set_tls_diffie_hellman_parameters (GetCheckedHandle (), parameters.Handle);
 		}
@@ -560,9 +560,9 @@ namespace Security {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetKeyUpdateCallback (SecProtocolKeyUpdate keyUpdate, DispatchQueue keyUpdateQueue)
 		{
-			if (keyUpdate == null)
+			if (keyUpdate is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyUpdate));
-			if (keyUpdateQueue == null)
+			if (keyUpdateQueue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyUpdateQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -601,7 +601,7 @@ namespace Security {
 #endif
 		public bool IsEqual (SecProtocolOptions other)
 		{
-			if (other == null)
+			if (other is null)
 				return false;
 			return sec_protocol_options_are_equal (GetCheckedHandle (), other.Handle);
 		}
@@ -619,9 +619,9 @@ namespace Security {
 #endif
 		static public bool IsEqual (SecProtocolOptions optionsA, SecProtocolOptions optionsB)
 		{
-			if (optionsA == null)
-				return (optionsB == null);
-			else if (optionsB == null)
+			if (optionsA is null)
+				return (optionsB is null);
+			else if (optionsB is null)
 				return false;
 			return sec_protocol_options_are_equal (optionsA.Handle, optionsB.Handle);
 		}
@@ -653,7 +653,7 @@ namespace Security {
 #endif
 		public void SetTlsPreSharedKeyIdentityHint (DispatchData pskIdentityHint)
 		{
-			if (pskIdentityHint == null)
+			if (pskIdentityHint is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pskIdentityHint));
 			sec_protocol_options_set_tls_pre_shared_key_identity_hint (GetCheckedHandle (), pskIdentityHint.Handle);
 		}

@@ -129,7 +129,7 @@ namespace Security {
 
 		public SslStreamConnection (Stream stream)
 		{
-			if (stream == null)
+			if (stream is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stream));
 			InnerStream = stream;
 			// a bit higher than the default maximum fragment size
