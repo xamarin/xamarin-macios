@@ -36,7 +36,7 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 					continue;
 				}
 
-				TypeEvents.InvokeFound (this, typeNameAndValue.Key, laterElems.DeclaringType.ToString ());
+				TypeEvents.InvokeFound (this, typeNameAndValue.Key, laterElems.DeclaringType);
 
 				VisitAllMembers (reworker, typeNameAndValue.Value, laterElems);
 			}
@@ -63,7 +63,7 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 		{
 			foreach (var late in later) {
 				if (elem.Signature == late.Signature) {
-					events.InvokeFound (this, elem.Signature, late.Signature);
+					events.InvokeFound (this, elem.Signature, late.Element);
 					return;
 				}
 			}
@@ -74,7 +74,7 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 			}
 			foreach (var late in later) {
 				if (remappedSig == late.Signature) {
-					events.InvokeFound (this, elem.Signature, late.Signature);
+					events.InvokeFound (this, elem.Signature, late.Element);
 					return;
 				}
 			}
