@@ -50,7 +50,7 @@ namespace Security {
 		public void SetLocalIdentity (SecIdentity2 identity)
 		{
 			if (identity == null)
-				throw new ArgumentNullException (nameof (identity));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			sec_protocol_options_set_local_identity (GetCheckedHandle (), identity.GetCheckedHandle ());
 		}
 
@@ -438,7 +438,7 @@ namespace Security {
 		public void AddTlsApplicationProtocol (string applicationProtocol)
 		{
 			if (applicationProtocol == null)
-				throw new ArgumentNullException (nameof (applicationProtocol));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationProtocol));
 			sec_protocol_options_add_tls_application_protocol (GetCheckedHandle (), applicationProtocol);
 		}
 
@@ -448,7 +448,7 @@ namespace Security {
 		public void SetTlsServerName (string serverName)
 		{
 			if (serverName == null)
-				throw new ArgumentNullException (nameof (serverName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (serverName));
 			sec_protocol_options_set_tls_server_name (GetCheckedHandle (), serverName);
 		}
 
@@ -500,7 +500,7 @@ namespace Security {
 		public void SetTlsDiffieHellmanParameters (DispatchData parameters)
 		{
 			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			sec_protocol_options_set_tls_diffie_hellman_parameters (GetCheckedHandle (), parameters.Handle);
 		}
 
@@ -510,7 +510,7 @@ namespace Security {
 		public void AddPreSharedKey (DispatchData parameters)
 		{
 			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			sec_protocol_options_set_tls_diffie_hellman_parameters (GetCheckedHandle (), parameters.Handle);
 		}
 
@@ -561,9 +561,9 @@ namespace Security {
 		public void SetKeyUpdateCallback (SecProtocolKeyUpdate keyUpdate, DispatchQueue keyUpdateQueue)
 		{
 			if (keyUpdate == null)
-				throw new ArgumentNullException (nameof (keyUpdate));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyUpdate));
 			if (keyUpdateQueue == null)
-				throw new ArgumentNullException (nameof (keyUpdateQueue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyUpdateQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
@@ -654,7 +654,7 @@ namespace Security {
 		public void SetTlsPreSharedKeyIdentityHint (DispatchData pskIdentityHint)
 		{
 			if (pskIdentityHint == null)
-				throw new ArgumentNullException (nameof (pskIdentityHint));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pskIdentityHint));
 			sec_protocol_options_set_tls_pre_shared_key_identity_hint (GetCheckedHandle (), pskIdentityHint.Handle);
 		}
 #endif

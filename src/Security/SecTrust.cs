@@ -30,7 +30,7 @@ namespace Security {
 		public SecTrust (SecCertificate certificate, SecPolicy policy)
 		{
 			if (certificate == null)
-				throw new ArgumentNullException ("certificate");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 
 			Initialize (certificate.Handle, policy);
 		}
@@ -77,7 +77,7 @@ namespace Security {
 		public void SetPolicy (SecPolicy policy)
 		{
 			if (policy == null)
-				throw new ArgumentNullException ("policy");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (policy));
 
 			SetPolicies (policy.Handle);
 		}
@@ -85,7 +85,7 @@ namespace Security {
 		public void SetPolicies (IEnumerable<SecPolicy> policies)
 		{
 			if (policies == null)
-				throw new ArgumentNullException ("policies");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (policies));
 
 			using (var array = NSArray.FromNSObjects (policies.ToArray ()))
 				SetPolicies (array.Handle);
@@ -94,7 +94,7 @@ namespace Security {
 		public void SetPolicies (NSArray policies)
 		{
 			if (policies == null)
-				throw new ArgumentNullException ("policies");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (policies));
 
 			SetPolicies (policies.Handle);
 		}
@@ -240,9 +240,9 @@ namespace Security {
 		{
 			// headers have `dispatch_queue_t _Nullable queue` but it crashes... don't trust headers, even for SecTrust
 			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
@@ -297,9 +297,9 @@ namespace Security {
 		public SecStatusCode Evaluate (DispatchQueue queue, SecTrustWithErrorCallback handler)
 		{
 			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
@@ -437,7 +437,7 @@ namespace Security {
 		public void SetOCSPResponse (NSData ocspResponse)
 		{
 			if (ocspResponse == null)
-				throw new ArgumentNullException ("ocspResponse");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ocspResponse));
 
 			SetOCSPResponse (ocspResponse.Handle);
 		}
@@ -453,7 +453,7 @@ namespace Security {
 		public void SetOCSPResponse (IEnumerable<NSData> ocspResponses)
 		{
 			if (ocspResponses == null)
-				throw new ArgumentNullException ("ocspResponses");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ocspResponses));
 
 			using (var array = NSArray.FromNSObjects (ocspResponses.ToArray ()))
 				SetOCSPResponse (array.Handle);
@@ -470,7 +470,7 @@ namespace Security {
 		public void SetOCSPResponse (NSArray ocspResponses)
 		{
 			if (ocspResponses == null)
-				throw new ArgumentNullException ("ocspResponses");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ocspResponses));
 
 			SetOCSPResponse (ocspResponses.Handle);
 		}

@@ -94,7 +94,7 @@ namespace Security {
 		static public SecPolicy CreatePolicy (NSString policyIdentifier, NSDictionary properties)
 		{
 			if (policyIdentifier == null)
-				throw new ArgumentNullException ("policyIdentifier");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (policyIdentifier));
 			IntPtr dh = properties == null ? IntPtr.Zero : properties.Handle;
 
 			// note: only accept known OIDs or return null (unit test will alert us if that change, FIXME in Apple code)

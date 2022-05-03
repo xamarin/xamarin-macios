@@ -52,7 +52,7 @@ namespace Security {
 		public SecTrust2 (SecTrust trust)
 		{
 			if (trust == null)
-				throw new ArgumentNullException (nameof (trust));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (trust));
 
 			Handle = sec_trust_create (trust.Handle);
 		}

@@ -226,7 +226,7 @@ namespace Security {
  		public void SetDistinguishedNamesForPeerHandler (Action<DispatchData> callback)
  		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			var block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_DistinguishedNamesForPeer, callback);
@@ -261,7 +261,7 @@ namespace Security {
  		public void SetOcspResponseForPeerHandler (Action<DispatchData> callback)
  		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			var block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_OcspReposeForPeer, callback);
@@ -296,7 +296,7 @@ namespace Security {
  		public void SetCertificateChainForPeerHandler (Action<SecCertificate> callback)
  		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			var block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_CertificateChainForPeer, callback);
@@ -330,7 +330,7 @@ namespace Security {
  		public void SetSignatureAlgorithmsForPeerHandler (Action<ushort> callback)
  		{
 			if (callback == null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			var block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_SignatureAlgorithmsForPeer, callback);
@@ -350,7 +350,7 @@ namespace Security {
 		public DispatchData? CreateSecret (string label, nuint exporterLength)
 		{
 			if (label == null)
-				throw new ArgumentNullException (nameof (label));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (label));
 			return CreateDispatchData (sec_protocol_metadata_create_secret (GetCheckedHandle (), (nuint) label.Length, label, exporterLength));
 		}
 
@@ -360,9 +360,9 @@ namespace Security {
 		public unsafe DispatchData? CreateSecret (string label, byte[] context, nuint exporterLength)
 		{
 			if (label == null)
-				throw new ArgumentNullException (nameof (label));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (label));
 			if (context == null)
-				throw new ArgumentNullException (nameof (context));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 			fixed (byte* p = context)
 				return CreateDispatchData (sec_protocol_metadata_create_secret_with_context (GetCheckedHandle (), (nuint) label.Length, label, (nuint) context.Length, p, exporterLength));
 		}
@@ -445,7 +445,7 @@ namespace Security {
 		public bool AccessPreSharedKeys (SecAccessPreSharedKeysHandler handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {

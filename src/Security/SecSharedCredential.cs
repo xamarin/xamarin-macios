@@ -39,9 +39,9 @@ namespace Security {
 		public static void AddSharedWebCredential (string domainName, string account, string password, Action<NSError> handler)
 		{
 			if (domainName == null)
-				throw new ArgumentNullException ("domainName");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (domainName));
 			if (account == null)
-				throw new ArgumentNullException ("account");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (account));
 			// we need to create our own block literal. We can reuse the SDActionArity1V12 which is generated and takes a
 			// NSError because a CFError is a toll-free bridget to CFError
 			unsafe {

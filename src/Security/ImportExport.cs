@@ -51,7 +51,7 @@ namespace Security {
 		static public SecStatusCode ImportPkcs12 (NSData data, NSDictionary options, out NSDictionary[] array)
 		{
 			if (options == null)
-				throw new ArgumentNullException ("options");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 			
 			IntPtr handle;
 			SecStatusCode code = SecPKCS12Import (data.Handle, options.Handle, out handle);

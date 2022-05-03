@@ -55,7 +55,7 @@ namespace Security {
 		public SecIdentity2 (SecIdentity identity)
 		{
 			if (identity == null)
-				throw new ArgumentNullException (nameof (identity));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 
 			InitializeHandle (sec_identity_create (identity.Handle));
 		}
@@ -66,9 +66,9 @@ namespace Security {
 		public SecIdentity2 (SecIdentity identity, params SecCertificate [] certificates)
 		{
 			if (identity == null)
-				throw new ArgumentNullException (nameof (identity));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			if (certificates == null)
-				throw new ArgumentNullException (nameof (certificates));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificates));
 			using (var nsarray = NSArray.FromObjects (certificates))
 				InitializeHandle (sec_identity_create_with_certificates (identity.Handle, nsarray.Handle));
 		}
@@ -135,7 +135,7 @@ namespace Security {
 		public bool AccessCertificates (Action</* sec_identity_t */SecCertificate2> handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
