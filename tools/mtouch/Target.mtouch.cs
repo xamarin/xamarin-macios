@@ -1092,7 +1092,7 @@ namespace Xamarin.Bundler
 								link_dependencies.AddRange (tasks);
 								break;
 							case SymbolMode.Linker:
-								compiler_flags.ReferenceSymbols (symbols);
+								compiler_flags.ReferenceSymbols (symbols, abi);
 								break;
 							default:
 								throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");
@@ -1470,7 +1470,7 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (GenerateReferencingSource (Path.Combine (App.Cache.Location, "reference.m"), GetRequiredSymbols ()));
 				break;
 			case SymbolMode.Linker:
-				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
+				linker_flags.ReferenceSymbols (GetRequiredSymbols (), abi);
 				break;
 			default:
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");

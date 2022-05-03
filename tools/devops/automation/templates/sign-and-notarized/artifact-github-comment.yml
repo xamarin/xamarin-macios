@@ -3,7 +3,7 @@ steps:
 
 - template: ../common/checkout.yml
 
-- template: download-artifacts.yml 
+- template: ../build/download-artifacts.yml 
   parameters:
     runTests: false  # we do not run tests on builds
     enableAPIDiff: false  # we do not run the api diff here.
