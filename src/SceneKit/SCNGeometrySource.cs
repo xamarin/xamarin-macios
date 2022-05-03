@@ -22,7 +22,7 @@ namespace SceneKit {
 
 		public static unsafe SCNGeometrySource FromVertices (SCNVector3 [] vertices)
 		{
-			if (vertices == null)
+			if (vertices is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException  (nameof (vertices));
 
 			fixed (SCNVector3 *ptr = &vertices [0])
@@ -31,7 +31,7 @@ namespace SceneKit {
 
 		public static unsafe SCNGeometrySource FromNormals (SCNVector3 [] normals)
 		{
-			if (normals == null)
+			if (normals is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException  (nameof (normals));
 
 			fixed (SCNVector3 *ptr = &normals[0])
@@ -40,7 +40,7 @@ namespace SceneKit {
 
 		public static unsafe SCNGeometrySource FromTextureCoordinates (CGPoint [] texcoords)
 		{
-			if (texcoords == null)
+			if (texcoords is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException  (nameof (texcoords));
 
 			fixed (CGPoint *ptr = &texcoords[0])

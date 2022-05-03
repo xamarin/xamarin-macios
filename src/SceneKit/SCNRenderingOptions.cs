@@ -20,7 +20,7 @@ namespace SceneKit
 		public SCNRenderingApi? RenderingApi {
 			get {
 				var val = GetNUIntValue (SCNRenderingOptionsKeys.RenderingApiKey);
-				if (val != null)
+				if (val is not null)
 					return (SCNRenderingApi)(uint) val;
 				return null;
 			}
