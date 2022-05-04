@@ -6,6 +6,9 @@
 //
 // Copyright 2016 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;

@@ -217,7 +217,7 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetXtroReporter);
 
-			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
+			var buildDotNetGeneratorProject = new TestProject ("bgen", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var buildDotNetGenerator = new MSBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
@@ -235,7 +235,7 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
+			var buildDotNetTestsProject = new TestProject ("dotnet", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var buildDotNetTests = new MSBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
