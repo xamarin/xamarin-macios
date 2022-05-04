@@ -363,7 +363,9 @@ namespace Microsoft.MaciOS.Nnyeah {
 			transformTable = new Dictionary<string, Transformation> ();
 
 			foreach (var xform in allTransforms) {
-				transformTable.Add (xform.Operand, xform);
+				if (!transformTable.ContainsKey (xform.Operand)) {
+					transformTable.Add (xform.Operand, xform);
+				}
 			}
 			return transformTable;
 		}
