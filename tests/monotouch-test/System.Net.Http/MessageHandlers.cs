@@ -489,6 +489,58 @@ namespace MonoTests.System.Net.Http
 			}
 		}
 
+		[Test]
+		public void RejectSslCertificatesWithCustomValidationCallbackNSUrlSessionHandler ()
+		{
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+
+#if __MACOS__
+			if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10, 0) && !TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 11, 0))
+				Assert.Ignore ("Fails on macOS 10.10: https://github.com/xamarin/maccore/issues/1645");
+#endif
+
+			bool validationCbWasExecuted = false;
+			bool done = false;
+			Exception ex = null;
+			Type expectedExceptionType = null;
+			HttpResponseMessage result = null;
+
+			var handler = new NSUrlSessionHandler {
+				ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => {
+					validationCbWasExecuted = true;
+					// return false, since we want to test that the exception is raised
+					return false;
+				}
+			};
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
+			{
+				try {
+					HttpClient client = new HttpClient (handler);
+					client.BaseAddress = NetworkResources.Httpbin.Uri;
+					var byteArray = new UTF8Encoding ().GetBytes ("username:password");
+					client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue ("Basic", Convert.ToBase64String(byteArray));
+					result = await client.GetAsync (NetworkResources.Httpbin.GetRedirectUrl (3));
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				Assert.True (validationCbWasExecuted, "Validation Callback called");
+				// assert the exception type
+				Assert.IsNotNull (ex, (result == null)? "Expected exception is missing and got no result" : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}");
+				Assert.IsInstanceOf (typeof (HttpRequestException), ex, "Exception type");
+				Assert.IsNotNull (ex.InnerException, "InnerException");
+				Assert.IsInstanceOf (expectedExceptionType, ex.InnerException, "InnerException type");
+			}
+		}
+
 #if !__WATCHOS__
 		[TestCase (typeof (HttpClientHandler))]
 #endif
@@ -538,6 +590,47 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
+				// assert that we did not get an exception
+				if (ex != null && ex.InnerException != null) {
+					// we could get here.. if we have a diff issue, in that case, lets get the exception message and assert is not the trust issue
+					Assert.AreNotEqual (ex.InnerException.Message, "Error: TrustFailure");
+				}
+			}
+		}
+
+		[Test]
+		public void AcceptSslCertificatesWithCustomValidationCallbackNSUrlSessionHandler ()
+		{
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+
+			bool callbackWasExecuted = false;
+			bool done = false;
+			Exception ex = null;
+
+			var handler = new NSUrlSessionHandler {
+				ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => {
+					callbackWasExecuted = true;
+					return true;
+				}
+			};
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
+			{
+				try {
+					var client = new HttpClient (handler);
+					var result = await client.GetAsync ("https://self-signed.badssl.com/"); // TODO move the URL to a constant
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				Assert.True (validationCbWasExecuted, "Validation Callback called");
 				// assert that we did not get an exception
 				if (ex != null && ex.InnerException != null) {
 					// we could get here.. if we have a diff issue, in that case, lets get the exception message and assert is not the trust issue
