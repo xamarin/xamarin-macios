@@ -1,6 +1,8 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 // Copyright 2019 Microsoft Corporation
 
+#nullable enable
+
 using System;
 using CoreImage;
 using Foundation;
@@ -34,7 +36,7 @@ namespace Photos {
 	public partial class PHLivePhotoEditingContext {
 
 		[Obsolete ("Use 'FrameProcessor2' instead.", true)]
-		public virtual PHLivePhotoFrameProcessingBlock FrameProcessor { get; set; }
+		public virtual PHLivePhotoFrameProcessingBlock? FrameProcessor { get; set; }
 	}
 
 #if MONOMAC
@@ -42,14 +44,14 @@ namespace Photos {
 
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
-		public static PHFetchResult FetchMoments (PHFetchOptions options)
+		public static PHFetchResult? FetchMoments (PHFetchOptions options)
 		{
 			return null;
 		}
 
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
-		public static PHFetchResult FetchMoments (PHCollectionList momentList, PHFetchOptions options)
+		public static PHFetchResult? FetchMoments (PHCollectionList momentList, PHFetchOptions options)
 		{
 			return null;
 		}
@@ -59,14 +61,14 @@ namespace Photos {
 
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
-		public static PHFetchResult FetchMomentLists (PHCollectionListSubtype subType, PHFetchOptions options)
+		public static PHFetchResult? FetchMomentLists (PHCollectionListSubtype subType, PHFetchOptions options)
 		{
 			return null;
 		}
 
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX)]
-		public static PHFetchResult FetchMomentLists (PHCollectionListSubtype subType, PHAssetCollection moment, PHFetchOptions options)
+		public static PHFetchResult? FetchMomentLists (PHCollectionListSubtype subType, PHAssetCollection moment, PHFetchOptions options)
 		{
 			return null;
 		}
@@ -75,7 +77,7 @@ namespace Photos {
 	public partial class PHContentEditingInput {
 		[Obsolete ("Compatibility stub - This was marked as unavailable on macOS with Xcode 11.")]
 		[Unavailable (PlatformName.MacOSX, message: "Use 'AudiovisualAsset' instead.")]
-		public virtual AVFoundation.AVAsset AvAsset {
+		public virtual AVFoundation.AVAsset? AvAsset {
 			get { return AudiovisualAsset; }
 		}
 	}
