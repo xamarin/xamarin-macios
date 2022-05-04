@@ -239,7 +239,7 @@ namespace CoreImage {
 
 #if MONOMAC
 #if NET
-		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 #if MONOMAC

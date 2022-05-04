@@ -1,4 +1,4 @@
-param ($SourcesDirectory, $LocalizeDirectory, $LocProjectPath)
+param ($SourcesDirectory, $LocProjectPath)
 
 $jsonFiles = @()
 $jsonTemplateFiles = Get-ChildItem -Recurse -Path "$SourcesDirectory" | Where-Object { $_.FullName -Match "\.template\.config\\localize\\.+\.en\.json" } # .NET templating pattern
@@ -15,19 +15,10 @@ $projectObject = Get-Content $LocProjectPath | ConvertFrom-Json
 $jsonFiles | ForEach-Object {
     $sourceFile = $_.FullName
     $outputPath = "$($_.DirectoryName + "\")"
-    $fullNameString = Convert-Path -Path $_.FullName
-    $maciosPathArray = $fullNameString -split "xamarin-macios", 2
-    $maciosPath = $maciosPathArray[1]
-    if ($null -eq $maciosPath) {
-        Write-Host "'fullNameString' could not be split at 'xamarin-macios'!"
-        exit 1
-    }
-    $lclFile = Join-Path -Path $LocalizeDirectory -ChildPath "$($maciosPath).lcl"
     $projectObject.Projects[0].LocItems += (@{
         SourceFile = $sourceFile
         CopyOption = "LangIDOnName"
         OutputPath = $outputPath
-        LclFile = $lclFile
     })
 }
 Pop-Location
