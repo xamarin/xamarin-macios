@@ -267,7 +267,7 @@ namespace SystemConfiguration {
 
 #if !NET
 				lock (typeof (NetworkReachability)){
-					if (callouth == null)
+					if (callouth is null)
 						callouth = Callback;
 				}
 #endif
