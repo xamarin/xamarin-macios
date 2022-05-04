@@ -140,7 +140,7 @@ namespace SystemConfiguration {
 		static IntPtr Create (IPAddress ip)
 		{
 			if (ip is null)
-				throw new ArgumentNullException (nameof (ip));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ip));
 
 			var s = new sockaddr_in (ip);
 			return CheckFailure (SCNetworkReachabilityCreateWithAddress (IntPtr.Zero, ref s));
@@ -154,7 +154,7 @@ namespace SystemConfiguration {
 		static IntPtr Create (string address)
 		{
 			if (address is null)
-				throw new ArgumentNullException (nameof (address));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (address));
 
 			return CheckFailure (SCNetworkReachabilityCreateWithName (IntPtr.Zero, address));
 		}
@@ -309,10 +309,10 @@ namespace SystemConfiguration {
 		public bool Schedule (CFRunLoop runLoop, string mode)
 		{
 			if (runLoop is null)
-				throw new ArgumentNullException (nameof (runLoop));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (runLoop));
 
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			var modeHandle = CFString.CreateNative (mode);
 			try {
@@ -333,10 +333,10 @@ namespace SystemConfiguration {
 		public bool Unschedule (CFRunLoop runLoop, string mode)
 		{
 			if (runLoop is null)
-				throw new ArgumentNullException (nameof (runLoop));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (runLoop));
 
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			var modeHandle = CFString.CreateNative (mode);
 			try {
