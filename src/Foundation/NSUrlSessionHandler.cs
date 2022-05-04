@@ -639,13 +639,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("macos")]
 		public SslProtocols SslProtocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
-		// We're ignoring this property, just like Xamarin.Android does:
-		// https://github.com/xamarin/xamarin-android/blob/09e8cb5c07ea6c39383185a3f90e53186749b802/src/Mono.Android/Xamarin.Android.Net/AndroidMessageHandler.cs#L160
-		[UnsupportedOSPlatform ("ios")]
-		[UnsupportedOSPlatform ("maccatalyst")]
-		[UnsupportedOSPlatform ("tvos")]
-		[UnsupportedOSPlatform ("macos")]
-		public Func<HttpRequestMessage, X509Certificate2, X509Chain, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback { get; set; }
+		public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback { get; set; }
 
 		// There's no way to turn off automatic decompression, so yes, we support it
 		public bool SupportsAutomaticDecompression {
@@ -886,19 +880,21 @@ namespace Foundation {
 #endif
 				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
 #if NET
-				var hasCallBack = trustCallbackForUrl is not null;
+				var hasCallBack = trustCallbackForUrl is not null || ServerCertificateCustomValidationCallback is not null;
 #else
-				var hasCallBack = trustCallback is not null || trustCallbackForUrl is not null;
+				var hasCallBack = trustCallback is not null || trustCallbackForUrl is not null || ServerCertificateCustomValidationCallback is not null;
 #endif
 				if (hasCallBack && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
 #if NET
 					// if the trust delegate allows to ignore the cert, do it. Since we are using nullables, if the delegate is not present, by default is false
-					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false);
+					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
+						(InvokeServerCertificateCustomValidationCallback (inflight.Request, challenge.ProtectionSpace.ServerSecTrust));
 #else
 					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
 					// more general one. Since we are using nullables, if the delegate is not present, by default is false
-					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) || 
-						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false);
+					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
+						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
+						(InvokeServerCertificateCustomValidationCallback (inflight.Request, challenge.ProtectionSpace.ServerSecTrust));
 #endif
 
 					if (trustSec) {
@@ -971,6 +967,35 @@ namespace Foundation {
 				} else {
 					completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 				}
+			}
+
+			bool InvokeServerCertificateCustomValidationCallback (HttpRequestMessage request, ServerSecTrust serverSecTrust)
+			{
+				if (ServerCertificateCustomValidationCallback is null)
+					return false;
+
+				var originalChain = serverSecTrust.GetCertificateChain (); // TODO does this work for older iOS and mac versions?
+				var certificates = new X509Certificate2 [originalChain.Length];
+				for (int i = 0; i < originalChain.Length; ++i)
+					certificates [i] = originalChain [i].ToX509Certificate2 ();
+
+				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
+
+				// the chain initialization is based on dotnet/runtime implementation in System.Net.Security.SecureChannel
+				var chain = new X509Chain ();
+				chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
+				chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
+				chain.ChainPolicy.ExtraStore.AddRange (certificates);
+				// chain.Build (); // TODO the Build function doesn't work on Android, but maybe it works on iOS/OSX?
+
+				// TODO is NSURLAuthenticationMethodServerTrust used for every request or only when there is a problem
+				// with the remote certificate?
+				var sslPolicyErrors = SslPolicyErrors.None;
+				// var sslPolicyErrors = SslPolicyErrors.RemoteCertificateChainErrors;
+				if (certificate is null)
+					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNotAvailable;
+
+				return ServerCertificateCustomValidationCallback (request, certificate, chain, sslPolicyErrors);
 			}
 
 			static readonly string RejectProtectionSpaceAuthType = "reject";
