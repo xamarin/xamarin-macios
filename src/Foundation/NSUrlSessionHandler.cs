@@ -969,12 +969,12 @@ namespace Foundation {
 				}
 			}
 
-			bool InvokeServerCertificateCustomValidationCallback (HttpRequestMessage request, ServerSecTrust serverSecTrust)
+			bool InvokeServerCertificateCustomValidationCallback (HttpRequestMessage request, SecTrust secTrust)
 			{
 				if (ServerCertificateCustomValidationCallback is null)
 					return false;
 
-				var originalChain = serverSecTrust.GetCertificateChain (); // TODO does this work for older iOS and mac versions?
+				var originalChain = secTrust.GetCertificateChain (); // TODO does this work for older iOS and mac versions?
 				var certificates = new X509Certificate2 [originalChain.Length];
 				for (int i = 0; i < originalChain.Length; ++i)
 					certificates [i] = originalChain [i].ToX509Certificate2 ();
