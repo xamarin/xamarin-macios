@@ -1,3 +1,5 @@
+#nullable enable
+
 #if __IOS__
 
 using System;
@@ -10,7 +12,9 @@ namespace StoreKit {
 
 		public virtual SKCloudServiceSetupAction? Action {
 			get {
-				return (SKCloudServiceSetupAction?) (SKCloudServiceSetupActionExtensions.GetValue (_Action));
+				if (_Action is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (_Action));
+				return (SKCloudServiceSetupAction?) (SKCloudServiceSetupActionExtensions.GetValue (_Action!));
 			}
 			set {
 				_Action = value != null ? SKCloudServiceSetupActionExtensions.GetConstant (value.Value) : null;
