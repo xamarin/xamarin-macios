@@ -1,6 +1,14 @@
 #nullable enable
 
 #if HAS_METALPERFORMANCESHADERSGRAPH
+// MetalPerformanceShadersGraph is not available in the tvOS simulator (the code from the static registrar won't compile)
+// Unfortunately we don't have a define that tells us we're building for the simulator, so exclude all of tvOS.
+#if !__TVOS__
+#define ENABLE_MNIST_TESTER
+#endif
+#endif
+
+#if ENABLE_MNIST_TESTER
 
 using System;
 using System.Collections.Generic;
