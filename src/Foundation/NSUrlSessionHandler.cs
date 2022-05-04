@@ -880,9 +880,9 @@ namespace Foundation {
 #endif
 				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
 #if NET
-				var hasCallBack = trustCallbackForUrl is not null || ServerCertificateCustomValidationCallback is not null;
+				var hasCallBack = trustCallbackForUrl is not null || sessionHandler.ServerCertificateCustomValidationCallback is not null;
 #else
-				var hasCallBack = trustCallback is not null || trustCallbackForUrl is not null || ServerCertificateCustomValidationCallback is not null;
+				var hasCallBack = trustCallback is not null || trustCallbackForUrl is not null || sessionHandler.ServerCertificateCustomValidationCallback is not null;
 #endif
 				if (hasCallBack && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
 #if NET
@@ -971,7 +971,7 @@ namespace Foundation {
 
 			bool InvokeServerCertificateCustomValidationCallback (HttpRequestMessage request, SecTrust secTrust)
 			{
-				if (ServerCertificateCustomValidationCallback is null)
+				if (sessionHandler.ServerCertificateCustomValidationCallback is null)
 					return false;
 
 				var originalChain = secTrust.GetCertificateChain (); // TODO does this work for older iOS and mac versions?
@@ -985,8 +985,6 @@ namespace Foundation {
 				// with the remote certificate?
 				var sslPolicyErrors = SslPolicyErrors.None;
 				// var sslPolicyErrors = SslPolicyErrors.RemoteCertificateChainErrors;
-				if (certificate is null)
-					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNotAvailable;
 
 				// the chain initialization is based on dotnet/runtime implementation in System.Net.Security.SecureChannel
 				var chain = new X509Chain ();
@@ -996,14 +994,17 @@ namespace Foundation {
 
 				// TODO the Build function doesn't work on Android, but maybe it works on iOS/OSX?
 				try {
-					if (!chain.Build (certificate)) {
+					if (certificate is null) {
+						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNotAvailable;
+					}
+					else if (!chain.Build (certificate)) {
 						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
 					}
 				} catch {
 					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
 				}
 
-				return ServerCertificateCustomValidationCallback (request, certificate, chain, sslPolicyErrors);
+				return sessionHandler.ServerCertificateCustomValidationCallback (request, certificate, chain, sslPolicyErrors);
 			}
 
 			static readonly string RejectProtectionSpaceAuthType = "reject";
