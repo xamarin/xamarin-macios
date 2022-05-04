@@ -17,7 +17,7 @@ namespace StoreKit {
 				return (SKCloudServiceSetupAction?) (SKCloudServiceSetupActionExtensions.GetValue (_Action!));
 			}
 			set {
-				_Action = value != null ? SKCloudServiceSetupActionExtensions.GetConstant (value.Value) : null;
+				_Action = value is not null ? SKCloudServiceSetupActionExtensions.GetConstant (value.Value) : null;
 			}
 		}
 	}
