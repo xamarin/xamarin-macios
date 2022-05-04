@@ -34,6 +34,9 @@ namespace SystemConfiguration {
 		IsDirect = 1<<17,
 #if NET
 		[UnsupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Unavailable (PlatformName.MacOSX)]
 #endif

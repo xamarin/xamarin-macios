@@ -251,6 +251,7 @@ namespace AppKit {
 		NSString TriggerOrderOut { get; }
 	}
 	
+	[NoiOS]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -8615,6 +8616,7 @@ namespace AppKit {
 
 	interface INSMenuDelegate { }
 
+	[NoiOS]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -11586,7 +11588,7 @@ namespace AppKit {
 		nint PrepareForNewContents (NSPasteboardContentsOptions options);
 	}
 	
-	[NoMacCatalyst]
+	[NoiOS][NoTV][NoMacCatalyst]
 #if !NET
 	// A class that implements only NSPasteboardWriting does not make sense, it's
 	// used to add pasteboard support to existing classes.
@@ -11661,7 +11663,7 @@ namespace AppKit {
 	interface INSPasteboardReading {}
 	interface INSPasteboardWriting {}
 
-	[NoMacCatalyst]
+	[NoMacCatalyst][NoTV][NoiOS]
 #if !NET
 	[BaseType (typeof (NSObject))]
 	// A class that implements only NSPasteboardReading does not make sense, it's
@@ -19846,6 +19848,7 @@ namespace AppKit {
 		bool DrawsVertically (nuint charIndex);
 	}
 
+	[NoiOS]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSTextDelegate))]
 	[Model]
@@ -20444,6 +20447,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[MacCatalyst (13,1)]
 	public enum NSTouchBarItemIdentifier
 	{
 		[MacCatalyst (13, 0)]
@@ -24189,7 +24193,7 @@ namespace AppKit {
 
 	// 10.9 for fields/notification but 10.10 for protocol
 	// attributes added to both cases in NSAccessibility.cs
-	[NoMacCatalyst]
+	[NoMacCatalyst][NoiOS][NoTV]
 	[Protocol]
 	interface NSAccessibility
 	{
@@ -26099,7 +26103,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
-	[NoMacCatalyst]
+	[NoMacCatalyst][NoiOS][NoTV]
 	[Protocol (Name = "NSAccessibilityElement")] // exists both as a type and a protocol in ObjC, Swift uses NSAccessibilityElementProtocol
 	interface NSAccessibilityElementProtocol {
 		[Abstract]
@@ -26125,6 +26129,8 @@ namespace AppKit {
 
 	[Mac (10,10)]
 	[NoMacCatalyst]
+	[NoiOS]
+	[NoTV]
 	[Protocol]
 	interface NSAccessibilityButton : NSAccessibilityElementProtocol {
 		[Abstract]
@@ -26604,6 +26610,7 @@ namespace AppKit {
 	[Protocol]
 	[Mac (10,11)]
 	[NoMacCatalyst]
+	[NoiOS]
 	interface NSUserInterfaceValidations
 	{
 		[Abstract]

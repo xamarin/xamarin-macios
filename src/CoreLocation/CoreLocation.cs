@@ -82,9 +82,9 @@ namespace CoreLocation {
 	public partial class CLPlacemark {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
-		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (10, 0)]
 		[Mac (11,0)]
