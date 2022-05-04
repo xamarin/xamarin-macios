@@ -70,7 +70,9 @@ namespace SystemConfiguration {
 				switch (address.AddressFamily) {
 				case AddressFamily.InterNetwork:
 					sin_family = 2;  // Address for IPv4
+#pragma warning disable CS0618 // Type or member is obsolete
 					sin_addr = (int) address.Address;
+#pragma warning restore CS0618 // Type or member is obsolete
 					break;
 				case AddressFamily.InterNetworkV6:
 					sin_family = 30; // Address for IPv6
