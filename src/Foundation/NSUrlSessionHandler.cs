@@ -981,19 +981,27 @@ namespace Foundation {
 
 				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
 
-				// the chain initialization is based on dotnet/runtime implementation in System.Net.Security.SecureChannel
-				var chain = new X509Chain ();
-				chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
-				chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
-				chain.ChainPolicy.ExtraStore.AddRange (certificates);
-				// chain.Build (); // TODO the Build function doesn't work on Android, but maybe it works on iOS/OSX?
-
 				// TODO is NSURLAuthenticationMethodServerTrust used for every request or only when there is a problem
 				// with the remote certificate?
 				var sslPolicyErrors = SslPolicyErrors.None;
 				// var sslPolicyErrors = SslPolicyErrors.RemoteCertificateChainErrors;
 				if (certificate is null)
 					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNotAvailable;
+
+				// the chain initialization is based on dotnet/runtime implementation in System.Net.Security.SecureChannel
+				var chain = new X509Chain ();
+				chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
+				chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
+				chain.ChainPolicy.ExtraStore.AddRange (certificates);
+
+				// TODO the Build function doesn't work on Android, but maybe it works on iOS/OSX?
+				try {
+					if (!chain.Build (certificate)) {
+						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
+					}
+				} catch {
+					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
+				}
 
 				return ServerCertificateCustomValidationCallback (request, certificate, chain, sslPolicyErrors);
 			}
