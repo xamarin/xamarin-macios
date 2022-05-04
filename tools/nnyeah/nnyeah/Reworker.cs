@@ -212,8 +212,11 @@ namespace Microsoft.MaciOS.Nnyeah {
 			// For any of nint, nuint, this will set the particular bool to true, false otherwise.
 			// This list will get passed to NativeIntegerAttribute, which is the special sauce
 			// that lets the runtime tell the difference between IntPtr and nint.
-			if (moduleMap.TypeIsNotPresent (type.ToString ())) {
-				throw new TypeNotFoundException (type.ToString ());
+
+			var typeAsString = type.ToString ();
+
+			if (moduleMap.TypeIsNotPresent (typeAsString)) {
+				throw new TypeNotFoundException (typeAsString);
 			}
 
 			if (type == module.TypeSystem.IntPtr || type == module.TypeSystem.UIntPtr) {
@@ -229,7 +232,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				nativeTypes.Add (false);
 				result = newNfloatTypeReference;
 				return true;
-			} else if (moduleMap.TryGetMappedType (type.ToString (), out var mappedType)) {
+			} else if (moduleMap.TryGetMappedType (typeAsString, out var mappedType)) {
 				result = mappedType;
 				return true;
 			} else if (type.IsGenericInstance) {
