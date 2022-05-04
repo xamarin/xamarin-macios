@@ -19,7 +19,7 @@ namespace Xharness.Jenkins {
 
 		public IEnumerator<NUnitExecuteTask> GetEnumerator ()
 		{
-			var netstandard2Project = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj")));
+			var netstandard2Project = new TestProject ("msbuild", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj")));
 			var buildiOSMSBuild = new MSBuildTask (jenkins: jenkins, testProject: netstandard2Project, processManager: processManager) {
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
@@ -41,7 +41,7 @@ namespace Xharness.Jenkins {
 			};
 			yield return nunitExecutioniOSMSBuild;
 			
-			var msbuildIntegrationTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "Xamarin.MacDev.Tests.csproj")));
+			var msbuildIntegrationTestsProject = new TestProject ("msbuild", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "Xamarin.MacDev.Tests.csproj")));
 			var buildiOSMSBuildIntegration = new MSBuildTask (jenkins: jenkins, testProject: msbuildIntegrationTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
@@ -63,7 +63,7 @@ namespace Xharness.Jenkins {
 			};
 			yield return nunitExecutioniOSMSBuildIntegration;
 
-			var installSourcesProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj")));
+			var installSourcesProject = new TestProject ("install-source", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "tools", "install-source", "InstallSourcesTests", "InstallSourcesTests.csproj")));
 			var buildInstallSources = new MSBuildTask (jenkins: jenkins, testProject: installSourcesProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
@@ -82,7 +82,7 @@ namespace Xharness.Jenkins {
 			yield return nunitExecutionInstallSource;
 
 			var buildMTouch = new MakeTask (jenkins: jenkins, processManager: processManager) {
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouchtests.sln"))),
+				TestProject = new TestProject ("mtouch", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouchtests.sln"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
@@ -91,7 +91,7 @@ namespace Xharness.Jenkins {
 			};
 			var nunitExecutionMTouch = new NUnitExecuteTask (jenkins, buildMTouch, processManager) {
 				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "bin", "Debug", "mtouchtests.dll"),
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouchtests.csproj"))),
+				TestProject = new TestProject ("mtouch", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "mtouch", "mtouchtests.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "MTouch tests",
 				Timeout = TimeSpan.FromMinutes (180),
@@ -101,7 +101,7 @@ namespace Xharness.Jenkins {
 			yield return nunitExecutionMTouch;
 
 			var buildGenerator = new MakeTask (jenkins: jenkins, processManager: processManager) {
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "src", "generator.sln"))),
+				TestProject = new TestProject ("generator", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "src", "generator.sln"))),
 				SpecifyPlatform = false,
 				SpecifyConfiguration = false,
 				Platform = TestPlatform.iOS,
@@ -110,7 +110,7 @@ namespace Xharness.Jenkins {
 			};
 			var runGenerator = new NUnitExecuteTask (jenkins, buildGenerator, processManager) {
 				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "generator", "bin", "Debug", "generator-tests.dll"),
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "generator", "generator-tests.csproj"))),
+				TestProject = new TestProject ("generator", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "generator", "generator-tests.csproj"))),
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Mode = "NUnit",
@@ -119,7 +119,7 @@ namespace Xharness.Jenkins {
 			};
 			yield return runGenerator;
 
-			var buildCecilTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "cecil-tests", "cecil-tests.csproj")));
+			var buildCecilTestsProject = new TestProject ("cecil", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "cecil-tests", "cecil-tests.csproj")));
 			buildCecilTestsProject.RestoreNugetsInProject = true;
 			var buildCecilTests = new MSBuildTask (jenkins: jenkins, testProject: buildCecilTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
@@ -138,7 +138,7 @@ namespace Xharness.Jenkins {
 			};
 			yield return runCecilTests;
 
-			var buildSampleTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "sampletester", "sampletester.csproj")));
+			var buildSampleTestsProject = new TestProject ("sampletester", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "sampletester", "sampletester.csproj")));
 			var buildSampleTests = new MSBuildTask (jenkins: jenkins, testProject: buildSampleTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
@@ -146,7 +146,7 @@ namespace Xharness.Jenkins {
 			};
 			var runSampleTests = new NUnitExecuteTask (jenkins, buildSampleTests, processManager) {
 				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "sampletester", "bin", "Debug", "sampletester.dll"),
-				TestProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "sampletester", "sampletester.csproj"))),
+				TestProject = new TestProject ("sampletester", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "sampletester", "sampletester.csproj"))),
 				Platform = TestPlatform.All,
 				TestName = "Sample tests",
 				Timeout = TimeSpan.FromDays (1), // These can take quite a while to execute.
