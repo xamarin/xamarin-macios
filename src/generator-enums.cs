@@ -92,7 +92,7 @@ public partial class Generator {
 			// skip value__ field 
 			if (f.IsSpecialName)
 				continue;
-			PrintPlatformAttributes (f);
+			PrintPlatformAttributes (f, is_enum: true);
 			CopyObsolete (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
 			var fa = AttributeManager.GetCustomAttribute<FieldAttribute> (f);
