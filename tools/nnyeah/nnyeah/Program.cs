@@ -46,7 +46,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				out var typeAndModuleMap, out var failureReason)) {
 				Console.Error.WriteLine (Errors.E0011, failureReason);
 			}
-			ReworkFile (infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
+			ReworkFile (infile!, outfile!, verbose, forceOverwrite, suppressWarnings, typeAndModuleMap!);
 		}
 
 		static bool TryLoadTypeAndModuleMap (string earlier, string later, bool publicOnly,
@@ -61,7 +61,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				var laterModule = ModuleDefinition.ReadModule (laterFile);
 
 				var comparingVisitor = new ComparingVisitor (earlierModule, laterModule, publicOnly);
-				var map = new TypeAndMemberMap ();
+				var map = new TypeAndMemberMap (laterModule);
 
 				comparingVisitor.TypeEvents.NotFound += (s, e) => { map.TypesNotPresent.Add (e.Original); };
 				comparingVisitor.TypeEvents.Found += (s, e) => { map.TypeMap.Add (e.Original, e.Mapped); };
@@ -91,7 +91,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 
 		static void ReworkFile (string infile, string outfile, bool verbose, bool forceOverwrite,
-			bool suppressWarnings)
+			bool suppressWarnings, TypeAndMemberMap typeMap)
 		{
 			var warnings = new List<string> ();
 			var transforms = new List<string> ();
@@ -108,7 +108,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 
 			using var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-			var reworker = new Reworker (stm);
+			var reworker = new Reworker (stm, typeMap);
 
 			try {
 				reworker.Load ();
@@ -130,8 +130,14 @@ namespace Microsoft.MaciOS.Nnyeah {
 					if (!suppressWarnings) {
 						warnings.ForEach (Console.WriteLine);
 					}
+				} catch (TypeNotFoundException e) {
+					Console.Error.Write (Errors.E0012, e.TypeName);
+					Environment.Exit (1);
+				} catch (MemberNotFoundException e) {
+					Console.Error.WriteLine (Errors.E0013, e.MemberName);
+					Environment.Exit (1);
 				} catch (Exception e) {
-					Console.Error.Write (Errors.E0004, e.Message);
+					Console.Error.WriteLine (Errors.E0004, e.Message);
 					Environment.Exit (1);
 				}
 			} else {
