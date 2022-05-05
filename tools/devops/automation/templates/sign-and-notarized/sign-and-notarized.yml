@@ -12,6 +12,12 @@ parameters:
 - name: keyringPass
   type: string
 
+- name: packageName
+  type: string
+
+- name: packagePattern
+  type: string
+
 - name: condition
   default: and(succeeded(), eq(variables['IsPRBuild'], 'False'))
 
@@ -23,7 +29,7 @@ steps:
   displayName: Download not notarized build
   inputs:
     artifact: 'not-signed-package'
-    patterns: '*.pkg'
+    patterns: ${{ parameters.packagePattern }}
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/package
 
@@ -31,68 +37,15 @@ steps:
     set -x
     set -e
 
-    # output vars for other steps to use and not need to recomputed the paths
-    IOS_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.ios-*" | xargs basename)
-    if [ -z "$IOS_PKG" ]; then
-      echo "Xamarin.iOS package not found."
+    PACKAGES=$(find $(Build.SourcesDirectory)/package -type f -name "${{ parameters.packagePattern }}" | xargs basename)
+    if [ -z "$PACKAGES" ]; then
+      echo "Packages ${{ parameters.packageName }} not found."
     else
-      IOS_PKG="$(Build.SourcesDirectory)/package/$IOS_PKG"
-      echo "##vso[task.setvariable variable=IOS_PKG;]$IOS_PKG"
-      echo "Xamarin.iOS package found at $IOS_PKG"
-    fi
-
-    MAC_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "xamarin.mac-*" | xargs basename)
-    if [ -z "$MAC_PKG" ]; then
-      echo "Xamarin.Mac package not found."
-    else
-      MAC_PKG="$(Build.SourcesDirectory)/package/$MAC_PKG"
-      echo "##vso[task.setvariable variable=MAC_PKG;]$MAC_PKG"
-      echo "Xamarin.Mac package found at $MAC_PKG"
-    fi
-
-    IOS_DOTNET_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "Microsoft.iOS.Bundle*.pkg" | xargs basename)
-    if [ -z "$IOS_DOTNET_PKG" ]; then
-      echo "Microsoft.iOS bundle not found."
-    else
-      IOS_DOTNET_PKG="$(Build.SourcesDirectory)/package/$IOS_DOTNET_PKG"
-      echo "##vso[task.setvariable variable=IOS_DOTNET_PKG;]$IOS_DOTNET_PKG"
-      echo "Microsoft.iOS bundle found at $IOS_DOTNET_PKG"
-    fi
-
-    TVOS_DOTNET_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "Microsoft.tvOS.Bundle*.pkg" | xargs basename)
-    if [ -z "$TVOS_DOTNET_PKG" ]; then
-      echo "Microsoft.tvOS bundle not found."
-    else
-      TVOS_DOTNET_PKG="$(Build.SourcesDirectory)/package/$TVOS_DOTNET_PKG"
-      echo "##vso[task.setvariable variable=TVOS_DOTNET_PKG;]$TVOS_DOTNET_PKG"
-      echo "Microsoft.tvOS package found at $TVOS_DOTNET_PKG"
-    fi
-
-    WATCHOS_DOTNET_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "Microsoft.watchOS.Bundle*.pkg" | xargs basename)
-    if [ -z "$WATCHOS_DOTNET_PKG" ]; then
-      echo "Microsoft.watchOS bundle not found."
-    else
-      WATCHOS_DOTNET_PKG="$(Build.SourcesDirectory)/package/$WATCHOS_DOTNET_PKG"
-      echo "##vso[task.setvariable variable=WATCHOS_DOTNET_PKG;]$WATCHOS_DOTNET_PKG"
-      echo "Microsoft.watchOS package found at $WATCHOS_DOTNET_PKG"
-    fi
-
-    MACOS_DOTNET_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "Microsoft.macOS.Bundle*.pkg" | xargs basename)
-    if [ -z "$MACOS_DOTNET_PKG" ]; then
-      echo "Microsoft.macOS bundle not found."
-    else
-      MACOS_DOTNET_PKG="$(Build.SourcesDirectory)/package/$MACOS_DOTNET_PKG"
-      echo "##vso[task.setvariable variable=MACOS_DOTNET_PKG;]$MACOS_DOTNET_PKG"
-      echo "Microsoft.macOS package found at $MACOS_DOTNET_PKG"
-    fi
-
-    MACCATALYST_DOTNET_PKG=$(find $(Build.SourcesDirectory)/package -type f -name "Microsoft.MacCatalyst.Bundle*.pkg" | xargs basename)
-    if [ -z "$MACCATALYST_DOTNET_PKG" ]; then
-      echo "Microsoft.MacCatalyst bundle not found."
-    else
-      MACCATALYST_DOTNET_PKG="$(Build.SourcesDirectory)/package/$MACCATALYST_DOTNET_PKG"
-      echo "##vso[task.setvariable variable=MACCATALYST_DOTNET_PKG;]$MACCATALYST_DOTNET_PKG"
-      echo "Microsoft.MacCatalyst package found at $MACCATALYST_DOTNET_PKG"
+      PACKAGES_PATH="$(Build.SourcesDirectory)/package/$PACKAGES"
+      set +x
+      echo "##vso[task.setvariable variable=PACKAGES;]$PACKAGES_PATH"
+      echo "${{ parameters.packageName }} package found at $PACKAGES_PATH"
+      set -x
     fi
   displayName: 'Retrieve packages to sign'
   condition: ${{ parameters.condition }}
@@ -101,9 +54,6 @@ steps:
 - ${{ if or(eq(parameters.skipESRP, true), eq(variables['IsPR'], 'True')) }}:
   - bash: |
       security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
-      PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG $MACCATALYST_DOTNET_PKG"
-      echo "Packages found at $PACKAGES"
-
       echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
     env:
       PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
@@ -122,8 +72,6 @@ steps:
 - ${{ else }}:
   - bash: |
       security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
-      PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG $MACCATALYST_DOTNET_PKG"
-      echo "Packages found at $PACKAGES"
       if [[ "$SYSTEM_DEBUG" == "true" ]]; then
         export ESRP_TEMP="$WORKING_DIR/esrp"
         echo "Temp dir is $ESRP_TEMP"
@@ -155,7 +103,7 @@ steps:
   displayName: 'Publish Artifact: ESRP temp'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/esrp.zip'
-    artifactName: ESRP-tmp
+    artifactName: ESRP-tmp-${{ parameters.packageName }}
   continueOnError: true
   condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
 
@@ -170,6 +118,6 @@ steps:
   displayName: 'Publish Notarized Classic Artifacts'
   inputs:
     targetPath: $(Build.SourcesDirectory)/package
-    artifactName: classic-signed
+    artifactName: classic-${{ parameters.packageName }}-signed
   continueOnError: true
   condition: ${{ parameters.condition }}
