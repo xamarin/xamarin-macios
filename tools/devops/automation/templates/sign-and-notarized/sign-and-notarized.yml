@@ -20,7 +20,7 @@ steps:
 - template: setup.yml
 
 - task: DownloadPipelineArtifact@2
-  displayName: Download not notaraized build
+  displayName: Download not notarized build
   inputs:
     artifact: 'not-signed-package'
     patterns: '*.pkg'
