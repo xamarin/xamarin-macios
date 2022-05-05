@@ -117,7 +117,7 @@ namespace Foundation {
 			if ((object?) x == (object?) y) // If both are null, or both are same instance, return true.
 				return true;
 
-			if (((object?) x == null) || ((object?) y == null)) // If one is null, but not both, return false.
+			if (x is null || y is null) // If one is null, but not both, return false.
 				return false;
 
 			return x.Equals (y);
