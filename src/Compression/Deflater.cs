@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Buffers;
 using System.Diagnostics;
@@ -105,8 +107,7 @@ namespace Compression
 				throw new InvalidOperationException ("GetDeflateOutput should only be called after providing input");
 
 			try {
-				int bytesRead;
-				ReadDeflateOutput (outputBuffer, StreamFlag.Continue, out bytesRead);
+				ReadDeflateOutput (outputBuffer, StreamFlag.Continue, out var bytesRead);
 				return bytesRead;
 			} finally {
 				// Before returning, make sure to release input buffer if necessary:
@@ -118,7 +119,10 @@ namespace Compression
 
 		private unsafe CompressionStatus ReadDeflateOutput (byte[] outputBuffer, StreamFlag flushCode, out int bytesRead)
 		{
-			if (outputBuffer?.Length < 0)
+			if (outputBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
+
+			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("outputbuffer length must be bigger than 0");
 			lock (SyncLock) {
 				fixed (byte* bufPtr = &outputBuffer[0]) {
