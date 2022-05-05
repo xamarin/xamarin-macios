@@ -3,10 +3,10 @@ namespace MacIntegration
 {
     public class MyClass
     {
-        public MyClass()
+        public MyClass ()
         {
         }
 
-        public nint Echo(nint x) => x;
+        public nint Echo (nint x) => x;
     }
 }
