@@ -33,9 +33,17 @@ using System.Runtime.InteropServices;
 
 using CoreFoundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGPDFPage.h
 	public partial class CGPDFPage : NativeObject {
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -44,12 +52,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGPDFPageRelease (/* CGPDFPageRef */ IntPtr page);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGPDFPageRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGPDFPageRelease (GetCheckedHandle ());
 		}

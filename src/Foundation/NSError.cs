@@ -27,9 +27,16 @@
 using System;
 using System.Diagnostics;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace Foundation {
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSErrorEventArgs : EventArgs {
 		public NSErrorEventArgs (NSError error)
 		{

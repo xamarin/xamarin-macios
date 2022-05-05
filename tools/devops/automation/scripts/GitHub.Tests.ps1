@@ -4,124 +4,8 @@ Github interaction unit tests.
 
 Import-Module ./GitHub -Force
 
-Describe 'Set-GitHubStatus' {
-    Context 'with all env variables present' {
-
-        It 'calls the rest method succesfully' {
-            # set the required enviroments in the context
-            $envVariables = @{
-                "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI";
-                "SYSTEM_TEAMPROJECT" = "SYSTEM_TEAMPROJECT";
-                "BUILD_BUILDID" = "BUILD_BUILDID";
-                "SYSTEM_JOBNAME" = "SYSTEM_JOBNAME";
-                "SYSTEM_STAGEDISPLAYNAME" = "SYSTEM_STAGEDISPLAYNAME"
-                "BUILD_REVISION" = "BUILD_REVISION";
-                "GITHUB_TOKEN" = "GITHUB_TOKEN"
-            }
-
-            $envVariables.GetEnumerator() | ForEach-Object { 
-                $key = $_.Key
-                Set-Item -Path "Env:$key" -Value $_.Value
-            }
-
-            Mock Invoke-RestMethod {
-                return @{"status"=200;}
-            }
-            $status = "error"
-            $context = "My context"
-            $description = "Testing Status API"
-
-            Set-GitHubStatus -Status $status -Description $description -Context $context
-
-            # assert the call and compare the expected parameters to the received ones
-            Assert-MockCalled -CommandName Invoke-RestMethod -Times 1 -Scope It -ParameterFilter {
-                # validate each of the params and the payload
-                if ($Uri -ne "https://api.github.com/repos/xamarin/xamarin-macios/statuses/BUILD_REVISION") {
-                    return $False
-                }
-                if ($Headers.Authorization -ne ("token {0}" -f $envVariables["GITHUB_TOKEN"])) {
-                    return $False
-                }
-                if ($Method -ne "POST") {
-                    return $False
-                }
-                if ($ContentType -ne "application/json") {
-                    return $False
-                }
-                # compare the payload
-                $bodyObj = ConvertFrom-Json $Body
-                if ($bodyObj.state -ne $status) {
-                    return $False
-                }
-
-                if ($bodyObj.context -ne $context) {
-                    return $False
-                }
-
-                if ($bodyObj.description -ne $description) {
-                    return $False
-                }
-
-                return $True
-            }
-        }
-
-        It 'calls the rest method with an error' {
-            # set the required enviroments in the context
-            $envVariables = @{
-                "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI";
-                "SYSTEM_TEAMPROJECT" = "SYSTEM_TEAMPROJECT";
-                "BUILD_BUILDID" = "BUILD_BUILDID";
-                "SYSTEM_JOBNAME" = "SYSTEM_JOBNAME";
-                "SYSTEM_STAGEDISPLAYNAME" = "SYSTEM_STAGEDISPLAYNAME"
-                "BUILD_REVISION" = "BUILD_REVISION";
-                "GITHUB_TOKEN" = "GITHUB_TOKEN"
-            }
-
-            $envVariables.GetEnumerator() | ForEach-Object { 
-                $key = $_.Key
-                Set-Item -Path "Env:$key" -Value $_.Value
-            }
-            Mock Invoke-RestMethod {
-                throw [System.Exception]::("Test")
-            }
-            #set env vars
-            { Set-GitHubStatus -Status $status -Description $description -Context $context } | Should -Throw
-        }
-    }
-    Context 'without an env var' {
-        It 'failed calling the rest method' {
-            Mock Invoke-RestMethod {
-                return @{"status"=200;}
-            }
-
-            # clear the env vars
-            $envVariables = @{
-                "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI";
-                "SYSTEM_TEAMPROJECT" = "SYSTEM_TEAMPROJECT";
-                "BUILD_BUILDID" = "BUILD_BUILDID";
-                "SYSTEM_JOBNAME" = "SYSTEM_JOBNAME";
-                "SYSTEM_STAGEDISPLAYNAME" = "SYSTEM_STAGEDISPLAYNAME"
-                "BUILD_REVISION" = "BUILD_REVISION";
-                "GITHUB_TOKEN" = "GITHUB_TOKEN"
-            }
-            $envVariables.GetEnumerator() | ForEach-Object { 
-                $key = $_.Key
-                Remove-Item -Path "Env:$key"
-            }
-
-            $status = "error"
-            $context = "My context"
-            $description = "Testing Status API"
-
-            { Set-GitHubStatus -Status $status -Description $description -Context $context } | Should -Throw
-            Assert-MockCalled -CommandName Invoke-RestMethod -Times 0 -Scope It 
-        }
-    }
-}
-
 Describe 'New-GitHubComment' {
-    Context 'with all env variables present' {
+    Context 'with all env variables present' -Skip {
 
         BeforeAll {
             $Script:envVariables = @{
@@ -192,7 +76,7 @@ Describe 'New-GitHubComment' {
         }
 
     }
-    Context 'without an env variable' {
+    Context 'without an env variable' -Skip {
         BeforeAll {
             # clear the env vars
             $envVariables = @{
@@ -228,7 +112,7 @@ Describe 'New-GitHubComment' {
 }
 
 Describe New-GitHubCommentFromFile {
-    Context 'file present' {
+    Context 'file present' -Skip {
 
         BeforeAll {
             $Script:tempPath = [System.IO.Path]::GetTempFileName()
@@ -280,7 +164,7 @@ Describe New-GitHubCommentFromFile {
 }
 
 Describe 'New-GitHubSummaryComment' {
-    Context 'all present variables' {
+    Context 'all present variables' -Skip {
 
         BeforeAll {
             # clear the env vars
@@ -311,7 +195,6 @@ Describe 'New-GitHubSummaryComment' {
         }
 
         It 'calls rest methods on a completed and succesful test run' {
-            Mock Set-GitHubStatus
             Mock New-GitHubCommentFromFile
             Mock Test-Path { return $true }
 
@@ -321,22 +204,6 @@ Describe 'New-GitHubSummaryComment' {
             New-GitHubSummaryComment -Context $Script:context -TestSummaryPath $Script:tempPath
 
             # assert rest calls
-            Assert-MockCalled -CommandName Set-GitHubStatus -Times 1 -Scope It -ParameterFilter {
-                if ($Status -ne "success") {
-                    return $False
-                }
-
-                if ($Context -ne $Script:context) {
-                    return $False
-                }
-
-                if ($Description -ne "Device tests passed on $Script:context.") {
-                    return $False
-                }
-
-                return $True
-            }
-
             Assert-MockCalled -CommandName New-GitHubCommentFromFile -Times 1 -Scope It -ParameterFilter {
                 if (-not ($Header -like "Device tests passed on $Script:context*")) {
                     return $False
@@ -355,29 +222,12 @@ Describe 'New-GitHubSummaryComment' {
         }
 
         It 'calls rest methods on a completed failed test run' {
-            Mock Set-GitHubStatus
             Mock New-GitHubCommentFromFile
             Mock Test-Path { return $true }
 
             Set-Item -Path "Env:TESTS_JOBSTATUS" -Value "Failed"
 
             New-GitHubSummaryComment -Context $Script:context -TestSummaryPath $Script:tempPath
-
-            Assert-MockCalled -CommandName Set-GitHubStatus -Times 1 -Scope It -ParameterFilter {
-                if ($Status -ne "failure") {
-                    return $False
-                }
-
-                if ($Context -ne $Script:context) {
-                    return $False
-                }
-
-                if ($Description -ne "Device tests failed on $Script:context.") {
-                    return $False
-                }
-
-                return $True
-            }
 
             Assert-MockCalled -CommandName New-GitHubCommentFromFile -Times 1 -Scope It -ParameterFilter {
                 if (-not ($Header -like "Device tests failed on $Script:context*")) {
@@ -397,29 +247,12 @@ Describe 'New-GitHubSummaryComment' {
         }
 
         It 'calls rest methods on a failed test run (TestSummay.md missing)' {
-            Mock Set-GitHubStatus
             Mock New-GitHubComment
             Mock Test-Path { return $false}
 
             Set-Item -Path "Env:TESTS_JOBSTATUS" -Value "Failed"
 
             New-GitHubSummaryComment -Context $Script:context -TestSummaryPath $Script:tempPath
-
-            Assert-MockCalled -CommandName Set-GitHubStatus -Times 1 -Scope It -ParameterFilter {
-                if ($Status -ne "failure") {
-                    return $False
-                }
-
-                if ($Context -ne $Script:context) {
-                    return $False
-                }
-
-                if (-not ($Description -like "Tests failed catastrophically on $Script:context (no summary found).")) {
-                    return $False
-                }
-
-                return $True
-            }
 
             Assert-MockCalled -CommandName New-GitHubComment -Times 1 -Scope It -ParameterFilter {
                 if ($Header -ne "Tests failed catastrophically on $Script:context (no summary found).") {
@@ -436,7 +269,7 @@ Describe 'New-GitHubSummaryComment' {
 
     }
 
-    Context 'missing variables' {
+    Context 'missing variables' -Skip {
 
         BeforeAll {
             $Script:envVariables = @{
@@ -489,7 +322,7 @@ Describe 'Test-JobSuccess' {
 }
 
 Describe 'Get-GitHubPRInfo' {
-    Context 'with all env variables present' {
+    Context 'with all env variables present' -Skip {
 
         BeforeAll {
             $Script:envVariables = @{
@@ -542,7 +375,7 @@ Describe 'Get-GitHubPRInfo' {
         }
 
     }
-    Context 'without an env variable' {
+    Context 'without an env variable' -Skip {
         BeforeAll {
             # clear the env vars
             $envVariables = @{

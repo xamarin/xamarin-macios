@@ -7,6 +7,8 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -25,6 +27,7 @@ namespace GameplayKit {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -40,6 +43,7 @@ namespace GameplayKit {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -55,6 +59,7 @@ namespace GameplayKit {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -69,8 +74,8 @@ namespace GameplayKit {
 				return points ?? (points = new Vector3 [3]);
 			}
 			set {
-				if (value == null)
-					throw new ArgumentNullException (nameof (value));
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				if (value.Length != 3)
 					throw new ArgumentOutOfRangeException (nameof (value), "The length of the Value array must be 3");
 				points = value;

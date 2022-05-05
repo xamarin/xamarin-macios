@@ -29,6 +29,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -71,7 +72,7 @@ namespace Network {
 		static void TrampolineEnumerateInterfacesHandler (IntPtr block, IntPtr inter)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWInterface>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwInterface = new NWInterface (inter, owns: false);
 				del (nwInterface);
 			}
@@ -80,8 +81,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateInterfaces (Action<NWInterface> handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateInterfacesHandler, handler);

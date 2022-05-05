@@ -537,7 +537,6 @@ namespace CoreMotion {
 		CMPedometerEventType Type { get; }
 	}
 
-	[NoMac]
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -556,7 +555,6 @@ namespace CoreMotion {
 		float PercentLikely { get; }
 	}
 
-	[NoMac]
 	[Watch (5,0), NoTV, NoMac, iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]

@@ -3,7 +3,7 @@
   "author": "Microsoft",
   "classifications": [ "macOS", "Mac Catalyst" ],
   "identity": "Microsoft.MacCatalyst.MacCatalystBinding",
-  "name": "MacCatalyst Binding Library (Preview)",
+  "name": "MacCatalyst Binding Library",
   "description": "A project for creating a .NET MacCatalyst binding library",
   "shortName": "maccatalystbinding",
   "tags": {

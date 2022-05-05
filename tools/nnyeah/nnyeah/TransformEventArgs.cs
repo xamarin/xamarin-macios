@@ -1,9 +1,7 @@
 using System;
 using System.Text;
 
-#nullable enable
-
-namespace nnyeah {
+namespace Microsoft.MaciOS.Nnyeah {
 	public class TransformEventArgs : BaseTransformEventArgs {
 		public TransformEventArgs (string containerName, string methodName, string targetOperand, uint addedCount, uint removedCount)
 			: base (containerName, methodName, targetOperand)
@@ -17,12 +15,10 @@ namespace nnyeah {
 
 		public override string HelpfulMessage ()
 		{
-			var sb = new StringBuilder ();
-			sb.Append ($"In {ContainerName}.{MethodName}, found reference to {TargetOperand}. Added {AddedCount} IL instructions");
 			if (RemovedCount > 0)
-				sb.Append ($" and removed {RemovedCount} IL instructions");
-			sb.Append ('.');
-			return sb.ToString ();
+				return string.Format (Errors.N0004, ContainerName, MethodName, TargetOperand, AddedCount, RemovedCount);
+
+			return string.Format (Errors.N0005, ContainerName, MethodName, TargetOperand, AddedCount);
 		}
 	}
 }

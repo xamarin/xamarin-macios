@@ -19,6 +19,12 @@ using ObjCRuntime;
 namespace ImageIO
 {
 
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     public static class CGImageAnimation
     {
 
@@ -28,6 +34,7 @@ namespace ImageIO
         [SupportedOSPlatform ("macos10.15")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
+        [SupportedOSPlatform ("maccatalyst")]
 #else
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
@@ -41,6 +48,7 @@ namespace ImageIO
         [SupportedOSPlatform ("macos10.15")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
+        [SupportedOSPlatform ("maccatalyst")]
 #else
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
@@ -54,6 +62,7 @@ namespace ImageIO
         [SupportedOSPlatform ("macos10.15")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
+        [SupportedOSPlatform ("maccatalyst")]
 #else
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]
@@ -86,6 +95,7 @@ namespace ImageIO
         [SupportedOSPlatform ("macos10.15")]
         [SupportedOSPlatform ("ios13.0")]
         [SupportedOSPlatform ("tvos13.0")]
+        [SupportedOSPlatform ("maccatalyst")]
 #else
         [Introduced (PlatformName.MacOSX, 10, 15, PlatformArchitecture.All)]
         [Introduced (PlatformName.iOS, 13, 0, PlatformArchitecture.All)]

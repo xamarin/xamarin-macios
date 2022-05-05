@@ -152,7 +152,7 @@ namespace Foundation {
 		public NSUrlSessionHandler (NSUrlSessionConfiguration configuration)
 		{
 			if (configuration is null)
-				throw new ArgumentNullException (nameof (configuration));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (configuration));
 
 			// HACK: we need to store the following because session.Configuration gets a copy of the object and the value gets lost
 			sessionType = configuration.SessionType;
@@ -578,7 +578,7 @@ namespace Foundation {
 			set {
 				// I believe it's possible to implement support for MaxAutomaticRedirections (it just has to be done)
 				if (value != int.MaxValue)
-					throw new ArgumentOutOfRangeException (nameof (value), value, "It's not possible to lower the max number of automatic redirections.");;
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to lower the max number of automatic redirections.");;
 			}
 		}
 
@@ -669,7 +669,7 @@ namespace Foundation {
 			get => true;
 			set {
 				if (!value)
-					throw new ArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies.");;
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies.");;
 			}
 		}
 #endif // NET
@@ -857,7 +857,13 @@ namespace Foundation {
 			[Preserve (Conditional = true)]
 			public override void WillCacheResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler)
 			{
-				completionHandler (sessionHandler.DisableCaching ? null! : proposedResponse);
+				var inflight = GetInflightData (dataTask);
+
+				if (inflight is null)
+					return;
+				// apple caches post request with a body, which should not happen. https://github.com/xamarin/maccore/issues/2571 
+				var disableCache = sessionHandler.DisableCaching || (inflight.Request.Method == HttpMethod.Post && inflight.Request.Content is not null);
+				completionHandler (disableCache ? null! : proposedResponse);
 			}
 
 			[Preserve (Conditional = true)]
@@ -1077,10 +1083,10 @@ namespace Foundation {
 			public MonoStreamContent (Stream content, int bufferSize)
 			{
 				if (content is null)
-					throw new ArgumentNullException ("content");
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (content));
 
 				if (bufferSize <= 0)
-					throw new ArgumentOutOfRangeException ("bufferSize");
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (bufferSize), bufferSize, "Buffer size must be >0");
 
 				this.content = content;
 				this.bufferSize = bufferSize;

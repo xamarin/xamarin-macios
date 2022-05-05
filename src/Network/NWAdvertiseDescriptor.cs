@@ -27,6 +27,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos12.0")]
 	[SupportedOSPlatform ("macos10.14")]
 	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12,0)]
 	[Mac (10,14)]
@@ -47,11 +48,11 @@ namespace Network {
 
 		public static NWAdvertiseDescriptor? CreateBonjourService (string name, string type, string? domain = null)
 		{
-			if (name == null)
-				throw new ArgumentNullException (nameof (name));
+			if (name is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
-			if (type == null)
-				throw new ArgumentNullException (nameof (type));
+			if (type is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (type));
 
 			var x = nw_advertise_descriptor_create_bonjour_service (name, type, domain);
 			if (x == IntPtr.Zero)
@@ -64,8 +65,8 @@ namespace Network {
 
 		public void SetTxtRecord (string txt)
 		{
-			if (txt == null)
-				throw new ArgumentNullException (nameof (txt));
+			if (txt is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (txt));
 			var n = System.Text.Encoding.UTF8.GetByteCount (txt);
 			nw_advertise_descriptor_set_txt_record (GetCheckedHandle (), txt, (nuint) n);
 		}
@@ -86,6 +87,7 @@ namespace Network {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -98,6 +100,7 @@ namespace Network {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -110,6 +113,7 @@ namespace Network {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]

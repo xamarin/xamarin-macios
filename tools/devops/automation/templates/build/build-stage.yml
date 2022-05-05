@@ -45,6 +45,9 @@ jobs:
 
   steps:
   - template: ../common/configure.yml
+    parameters: 
+      uploadArtifacts: true
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
@@ -61,6 +64,11 @@ jobs:
         agentPoolCI: $(CIBuildPool)
         agentPoolCIUrl: $(CIBuildPoolUrl)
 
+# This job performs the build of the nuget pkgs and the framework pkgs. There are two interesting dependencies in this job:
+#
+# - configure: Get the labels from gihub and populate the output.
+# - AgentPoolSelector: If the build was not manually triggered to use a specific pool, this job is used to decide if the build is using a 
+#                      private pool or a public one.
 - job: build
   dependsOn:
   - ${{ if eq(parameters.pool, 'automatic') }}:
@@ -111,7 +119,7 @@ jobs:
     clean: all
 
   steps:
-  - template: build.yml
+  - template: build-pkgs.yml
     parameters:
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
@@ -121,27 +129,3 @@ jobs:
       xqaCertPass: ${{ parameters.xqaCertPass }}
       enableDotnet: ${{ parameters.enableDotnet }}
       skipESRP: ${{ parameters.skipESRP }}
-      enableAPIDiff: false # this step should never execute the api diff, that should be left for the parallel job
-
-- job: upload_azure_blob
-  displayName: 'Upload packages to Azure & SBOM'
-  timeoutInMinutes: 1000
-  dependsOn:
-  - configure
-  - build # can start as soon as the packages are available
-  condition: succeeded()
-
-  variables:
-    Parameters.outputStorageUri: ''
-    NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
-    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
-
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: upload-azure.yml
-    parameters:
-      enableDotnet: ${{ parameters.enableDotnet }}
-      sbomFilter: '*.nupkg;*.pkg;*.msi'

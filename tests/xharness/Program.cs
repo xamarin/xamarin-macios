@@ -10,7 +10,7 @@ namespace Xharness {
 		{
 			Microsoft.DotNet.XHarness.iOS.Shared.SdkVersions.OverrideVersions (
 				xcode: Xamarin.SdkVersions.Xcode,
-				oSX: Xamarin.SdkVersions.OSX,
+				osx: Xamarin.SdkVersions.OSX,
 				iOS: Xamarin.SdkVersions.iOS,
 				watchOS: Xamarin.SdkVersions.WatchOS,
 				tVOS: Xamarin.SdkVersions.TVOS,
@@ -43,26 +43,26 @@ namespace Xharness {
 				{ "configure", "Creates project files and makefiles.", (v) => action = HarnessAction.Configure },
 				{ "autoconf", "Automatically decide what to configure.", (v) => configuration.AutoConf = true },
 				{ "rootdir=", "The root directory for the tests.", (v) => HarnessConfiguration.RootDirectory = v },
-				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => configuration.IOSTestProjects.Add (new iOSTestProject (v)) },
+				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => configuration.IOSTestProjects.Add (new iOSTestProject (null, v)) },
 				{ "watchos-container-template=", "The directory to use as a template for a watchos container app.", (v) => configuration.WatchOSContainerTemplate = v },
 				{ "watchos-app-template=", "The directory to use as a template for a watchos app.", (v) => configuration.WatchOSAppTemplate = v },
 				// Run
 				{ "run=", "Executes a project.", (v) =>
 					{
 						action = HarnessAction.Run;
-						configuration.IOSTestProjects.Add (new iOSTestProject (v));
+						configuration.IOSTestProjects.Add (new iOSTestProject (null, v));
 					}
 				},
 				{ "install=", "Installs a project.", (v) =>
 					{
 						action = HarnessAction.Install;
-						configuration.IOSTestProjects.Add (new iOSTestProject (v));
+						configuration.IOSTestProjects.Add (new iOSTestProject (null, v));
 					}
 				},
 				{ "uninstall=", "Uninstalls a project.", (v) =>
 					{
 						action = HarnessAction.Uninstall;
-						configuration.IOSTestProjects.Add (new iOSTestProject (v));
+						configuration.IOSTestProjects.Add (new iOSTestProject (null, v));
 					}
 				},
 				{ "sdkroot=", "Where Xcode is", (v) => configuration.SdkRoot = v },
