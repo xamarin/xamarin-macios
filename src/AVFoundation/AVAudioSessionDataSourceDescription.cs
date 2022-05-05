@@ -6,6 +6,9 @@
 using Foundation;
 using ObjCRuntime;
 using System;
+
+#nullable enable
+
 #if !MONOMAC
 
 namespace AVFoundation {
@@ -22,7 +25,7 @@ namespace AVFoundation {
 	}
 	
 	public partial class AVAudioSessionDataSourceDescription {
-		static internal AVAudioDataSourceLocation ToLocation (NSString l)
+		static internal AVAudioDataSourceLocation ToLocation (NSString? l)
 		{
 			if (l == AVAudioSession.LocationLower_)
 				return AVAudioDataSourceLocation.Lower;
@@ -32,7 +35,7 @@ namespace AVFoundation {
 				return AVAudioDataSourceLocation.Unknown;
 		}
 
-		static internal AVAudioDataSourceOrientation ToOrientation (NSString o)
+		static internal AVAudioDataSourceOrientation ToOrientation (NSString? o)
 		{
 			if (o == AVAudioSession.OrientationTop_)
 				return AVAudioDataSourceOrientation.Top;
@@ -45,7 +48,7 @@ namespace AVFoundation {
 			return AVAudioDataSourceOrientation.Unknown;
 		}
 		
-		static internal AVAudioDataSourcePolarPattern ToPolarPattern (NSString p)
+		static internal AVAudioDataSourcePolarPattern ToPolarPattern (NSString? p)
 		{
 			if (p == AVAudioSession.PolarPatternOmnidirectional_)
 				return AVAudioDataSourcePolarPattern.Omnidirectional;
@@ -56,7 +59,7 @@ namespace AVFoundation {
 			return AVAudioDataSourcePolarPattern.Unknown;
 		}
 		
-		static internal NSString ToToken (AVAudioDataSourcePolarPattern p)
+		static internal NSString? ToToken (AVAudioDataSourcePolarPattern p)
 		{
 			switch (p){
 			case AVAudioDataSourcePolarPattern.Omnidirectional:
@@ -83,9 +86,12 @@ namespace AVFoundation {
 		}
 
 #if !WATCH
-		public AVAudioDataSourcePolarPattern []SupportedPolarPatterns {
+		public AVAudioDataSourcePolarPattern []? SupportedPolarPatterns {
 			get {
 				var x = SupportedPolarPatterns_;
+				if (x is null)
+					return null;
+
 				int n = x.Length;
 				var r = new AVAudioDataSourcePolarPattern [n];
 				for (int i = 0; i < n; i++)

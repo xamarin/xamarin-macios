@@ -8,6 +8,8 @@ namespace StoreKit {
 #if NET
 		[SupportedOSPlatform ("ios7.1")]
 		[SupportedOSPlatform ("macos10.14")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,1)]
 		[Mac (10,14)]

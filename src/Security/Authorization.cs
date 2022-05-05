@@ -42,6 +42,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -66,6 +67,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -87,6 +89,7 @@ namespace Security {
 	//
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -98,6 +101,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -109,6 +113,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -122,6 +127,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -132,6 +138,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -141,6 +148,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.7")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -162,6 +170,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.7")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

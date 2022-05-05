@@ -21,6 +21,7 @@
 #nullable enable
 
 using System;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
@@ -45,6 +46,9 @@ namespace SearchKit
 		FindSimilar = 1 << 2
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class SKSearch : NativeObject
 	{
 		[Preserve (Conditional = true)]
@@ -109,6 +113,9 @@ namespace SearchKit
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class SKDocument : NativeObject
 	{
 		[DllImport (Constants.SearchKitLibrary)]
@@ -184,6 +191,7 @@ namespace SearchKit
 	}
 
 #if NET
+	[SupportedOSPlatform ("macos")]
 	public class SKIndex : DisposableObject
 #else
 	public class SKIndex : NativeObject
@@ -298,11 +306,11 @@ namespace SearchKit
 		}
 
 #if !NET
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 		}
 #endif
@@ -494,6 +502,9 @@ namespace SearchKit
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class SKSummary : NativeObject
 	{
 		[Preserve (Conditional = true)]

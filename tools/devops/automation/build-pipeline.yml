@@ -39,7 +39,7 @@ parameters:
 - name: runWindowsIntegration
   displayName: Run Windows integration tests
   type: boolean
-  default: false
+  default: true
 
 - name: runGovernanceTests
   displayName: Run Governance Checks
@@ -201,6 +201,7 @@ variables:
 - group: Xamarin Release
 - group: Xamarin Notarization
 - group: XamarinCompatLab                                     # provisionator-uri setting
+- group: VSEng DTL secrets
 - name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
   value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
 - name: AzDoBuildAccess.Token
@@ -288,8 +289,7 @@ stages:
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
   - stage: governance_checks
     displayName: 'Governance Checks'
-    dependsOn:
-    - build_packages
+    dependsOn: []
     jobs:
       - job: governance
         displayName: 'Governance Checks'
@@ -297,6 +297,28 @@ stages:
           vmImage: windows-latest
         steps:
         - template: templates/governance-checks.yml
+
+      - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+        - job: translations
+          displayName: 'Loc translations'
+          pool:
+            vmImage: windows-latest
+          steps:
+          - template: templates/loc-translations.yml
+
+
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - stage: clean
+    displayName: 'Clean up'
+    dependsOn: []
+    jobs:
+      - job:
+        displayName: 'Clean comments'
+        pool:
+          vmImage: windows-latest
+        steps:
+          - template: templates/common/clean.yml
+
 
 - stage: build_packages
   displayName: 'Build'
@@ -313,6 +335,17 @@ stages:
         enableDotnet: ${{ parameters.enableDotnet }}
         skipESRP: ${{ parameters.skipESRP }}
         pool: ${{ parameters.pool }}
+
+- stage: prepare_packages
+  displayName: 'Prepare packages'
+  dependsOn:
+  - build_packages
+  jobs:
+    - template: templates/sign-and-notarized/prepare-pkg-stage.yml
+      parameters:
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        enableDotnet: ${{ parameters.enableDotnet }}
+        skipESRP: ${{ parameters.skipESRP }}
 
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
@@ -353,6 +386,7 @@ stages:
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: ${{ variables['GitHub.Token'] }}
       xqaCertPass: $(xqa--certificates--password)
+      enableDotnet: ${{ parameters.enableDotnet }}
       condition: ${{ parameters.runTests }}
 
 # devices are optional and will only be ran when we set them OR in CI
@@ -374,6 +408,7 @@ stages:
           keyringPass: $(pass-XamarinQA-bot-login) 
           gitHubToken: ${{ variables['GitHub.Token'] }}
           xqaCertPass: $(xqa--certificates--password)
+          enableDotnet: ${{ parameters.enableDotnet }}
           condition: ${{ parameters.runDeviceTests }}
           parseLabels: false
 
@@ -387,6 +422,7 @@ stages:
         useImage: ${{ config.useImage }}
         statusContext: ${{ config.statusContext }}
         keyringPass: $(pass--lab--mac--builder--keychain)
+        enableDotnet: ${{ parameters.enableDotnet }}
         demands: ${{ config.demands }}
 
 - ${{ if eq(parameters.runWindowsIntegration, true) }}:
@@ -410,11 +446,12 @@ stages:
       useXamarinStorage: False
       testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
       statusContext: 'VSTS: device tests iOS32b'
-      extraBotDemands: 'xismoke-32'
+      extraBotDemands: ['xismoke-32']
       vsdropsPrefix: ${{ variables.vsdropsPrefix }}
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: ${{ variables['GitHub.Token'] }}
       xqaCertPass: $(xqa--certificates--password)
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.runSamples, true) }}:
   # TODO: Not the real step

@@ -569,7 +569,7 @@ namespace UserNotifications {
 		[Wrap ("!IsDefaultAction && !IsDismissAction")]
 		bool IsCustomAction { get; }
 
-		[iOS (13,0), TV (13,0), NoWatch, NoMac]
+		[iOS (13,0), NoWatch, NoMac]
 		[NullAllowed, Export ("targetScene")]
 		UIScene TargetScene { get; }
 	}

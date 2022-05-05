@@ -344,7 +344,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
-					has_dyn_msgSend = App.IsSimulatorBuild;
+					has_dyn_msgSend = App.IsSimulatorBuild || App.MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.UnwindManagedCode;
 					break;
 				case ApplePlatform.MacCatalyst:
 				case ApplePlatform.MacOSX:

@@ -25,10 +25,17 @@ using CoreMidi;
 #endif
 
 using MidiEndpointRef = System.Int32;
+using System.Runtime.Versioning;
 
 namespace AudioToolbox {
 
 	// MusicPlayer.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiNoteMessage {
 		public byte Channel;
@@ -48,6 +55,12 @@ namespace AudioToolbox {
 	}
 	
 	// MusicPlayer.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiChannelMessage {
 		public byte Status;
@@ -70,6 +83,10 @@ namespace AudioToolbox {
 	// IntPtr buffer with the data
 	//
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	public abstract class MidiData {
 #else
 	public abstract class _MidiData {
@@ -114,6 +131,10 @@ namespace AudioToolbox {
 
 #if !COREBUILD
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	public class MidiRawData : MidiData {
 #else
 	public class MidiRawData : _MidiData {
@@ -137,6 +158,12 @@ namespace AudioToolbox {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class MusicEventUserData : MidiRawData {
 		public MusicEventUserData () {}
 
@@ -161,6 +188,10 @@ namespace AudioToolbox {
 	// IntPtr buffer with the data
 	//
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	public class MidiMetaEvent : MidiData {
 #else
 	public class MidiMetaEvent : _MidiData {
@@ -187,6 +218,12 @@ namespace AudioToolbox {
 	}
 
 	// MusicPlayer.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct ExtendedNoteOnEvent {
 		public /* MusicDeviceInstrumentID */ uint InstrumentID;
@@ -203,7 +240,13 @@ namespace AudioToolbox {
 		public float Velocity;
 	}
 #endif
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class MusicTrack : DisposableObject
 	{
 #if !COREBUILD

@@ -5,6 +5,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVAssetDownloadStorageManagementPolicy {
 
@@ -18,7 +20,7 @@ namespace AVFoundation {
 		
 		public override AVAssetDownloadedAssetEvictionPriority Priority {
 			get { return AVAssetDownloadedAssetEvictionPriorityExtensions.GetValue (_Priority); }
-			set { _Priority = value.GetConstant (); }
+			set { _Priority = value.GetConstant () ?? throw new ArgumentOutOfRangeException (nameof (Priority)); }
 		}
 	}
 }

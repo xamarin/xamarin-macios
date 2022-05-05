@@ -49,23 +49,7 @@ parameters:
 
 steps:
 
-- checkout: self
-  path: s/xamarin-macios
-
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
-  - pwsh: |
-      git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
-      git fetch origin
-      $branch="$(Build.SourceBranch)".Replace("merge", "head")
-      $branch=$branch.Replace("refs", "origin")
-      Write-Host "Checking out branch $branch"
-      git checkout $branch
-      git branch -a
-    displayName: "Undo Github merge"
-    workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-
-- checkout: maccore
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+- template: ../common/checkout.yml
 
 - template: ../common/setup.yml
   parameters:
@@ -78,13 +62,14 @@ steps:
 # 3. Cancel the pipeline and do not execute any of the following steps.
 - pwsh: | 
     Import-Module ./MaciosCI.psd1
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
 
     if ( -not (Test-HDFreeSpace -Size 20)) {
-      Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "$Env:CONTEXT"
+      $statuses.SetStatus("error", "Not enough free space in the host.", "${{ parameters.statusContext }}")
       New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
       Stop-Pipeline
     } else {
-      Set-GitHubStatus -Status "pending" -Description "Device tests on VSTS have been started." -Context "$Env:CONTEXT"
+      $statuses.SetStatus("pending", "Device tests on VSTS have been started.", "${{ parameters.statusContext }}")
     }
   env:
     BUILD_REVISION: $(Build.SourceVersion)
@@ -123,25 +108,26 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
-# download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
+# download the not notarized pkgs since we do not need them to be signed
 - task: DownloadPipelineArtifact@2
-  displayName: Download json artifacts
+  displayName: Download not notaraized build
   inputs:
-    patterns: '**/*.json'
+    artifact: 'not-signed-package'
     allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts
+    path: $(Build.SourcesDirectory)/package
 
 - pwsh: |
-    Dir $(Build.SourcesDirectory)/artifacts
-    $json = Get-Content '$(Build.SourcesDirectory)/artifacts/pkg-info/artifacts.json' | Out-String | ConvertFrom-Json
-    foreach ($i in $json) {
-      if ($i.tag -like "xamarin-ios*" -and -not ($i.url -like "*notarized*")) {
-        $url = $i.url
-        Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$url"
+    $dir = "$(Build.SourcesDirectory)/package"
+    Dir $dir
+    $items = Get-ChildItem $dir -Recurse
+    foreach ($i in $items) {
+      if ($i.Name -like "xamarin.ios-*.pkg") {
+        $path = $i.FullName
+        Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$path"
       }
-      if ($i.url -match ".*/xamarin.mac-[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*[.]pkg$" -and -not ($i.url -like "*notarized*")) {
-        $url = $i.url
-        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$url"
+      if ($i.Name -like "xamarin.mac-*.pkg") {
+        $path = $i.FullName
+        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$path"
       }
     }
   displayName: 'Set iOS pkgs url'

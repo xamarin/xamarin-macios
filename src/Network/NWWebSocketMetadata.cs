@@ -30,6 +30,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -72,7 +73,7 @@ namespace Network {
 		static void TrampolinePongHandler (IntPtr block, IntPtr error)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWError?>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwError = (error == IntPtr.Zero)? null : new NWError (error, owns: false);
 				del (nwError);
 			}
@@ -81,11 +82,11 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetPongHandler (DispatchQueue queue, Action<NWError?> handler)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();

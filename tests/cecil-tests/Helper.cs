@@ -196,4 +196,14 @@ namespace Cecil.Tests {
 			return rv;
 		}
 	}
+
+	public static class CompatExtensions
+	{
+		// cecil-tests is not NET5 yet, this is required to foreach over a dictionary
+		public static void Deconstruct<T1, T2>(this KeyValuePair<T1, T2> tuple, out T1 key, out T2 value)
+		{
+			key = tuple.Key;
+			value = tuple.Value;
+		}
+	}
 }

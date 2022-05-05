@@ -501,6 +501,7 @@
 				TargetFramework=$(_ComputedTargetFrameworkMoniker)
 				UseLlvm=$(MtouchUseLlvm)
 				Verbosity=$(_BundlerVerbosity)
+				XamarinNativeLibraryDirectory=$(_XamarinNativeLibraryDirectory)
 				XamarinRuntime=$(_XamarinRuntime)
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
@@ -810,7 +811,7 @@
 
 	<!-- Native code -->
 
-	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets">
+	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets;ResolveFrameworkReferences">
 		<PropertyGroup>
 			<_PackageIdInfix Condition="'$(UseMonoRuntime)' == 'true'">Mono.</_PackageIdInfix>
 
@@ -1043,9 +1044,8 @@
 			<BTouchToolExe>bgen.dll</BTouchToolExe>
 			<BTouchToolPath>$(_XamarinSdkRootDirectory)\tools\lib\bgen</BTouchToolPath>
 			<BaseLibDllPath>$(_XamarinRefAssemblyPath)</BaseLibDllPath>
-			<BTouchCompiler>$(RoslynTargetsPath)/bincore/csc.dll</BTouchCompiler>
 			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
-			<_DotNetCscCompiler>$(RoslynTargetsPath)/bincore/csc.dll</_DotNetCscCompiler>
+			<_DotNetCscCompiler>$(RoslynTargetsPath)\bincore\csc.dll</_DotNetCscCompiler>
 		</PropertyGroup>
 
 		<ItemGroup>

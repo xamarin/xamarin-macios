@@ -47,13 +47,16 @@ namespace Xamarin.Utils
 			}
 		}
 
-		public void ReferenceSymbols (IEnumerable<Symbol> symbols)
+		public void ReferenceSymbols (IEnumerable<Symbol> symbols, Abi abi)
 		{
 			if (UnresolvedSymbols == null)
 				UnresolvedSymbols = new HashSet<string> ();
 
-			foreach (var symbol in symbols)
+			foreach (var symbol in symbols) {
+				if (symbol.ValidAbis.HasValue && (symbol.ValidAbis.Value & abi) == 0)
+					continue;
 				UnresolvedSymbols.Add (symbol.Prefix + symbol.Name);
+			}
 		}
 
 		public void AddDefine (string define)

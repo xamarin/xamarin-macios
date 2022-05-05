@@ -5,7 +5,7 @@ parameters:
 
 - name: dependsOn
   type: string
-  default: build_packages
+  default: prepare_packages
 
 stages:
 - stage: prepare_release
@@ -29,6 +29,7 @@ stages:
       artifactName: nuget-signed
       propsArtifactName: package
       signType: Real
+      useDateTimeVersion: true
 
   # Check - "xamarin-macios (Prepare Release Push NuGets)"
   - job: push_signed_nugets
