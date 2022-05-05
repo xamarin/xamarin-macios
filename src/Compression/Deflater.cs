@@ -65,7 +65,7 @@ namespace Compression
 		{
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
-			if (_inputBufferHandle.Pointer != null)
+			if (_inputBufferHandle.Pointer is not null)
 				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
 			if (0 == inputBuffer.Length) {
@@ -84,9 +84,9 @@ namespace Compression
 		{
 			if (! NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
-			if (inputBufferPtr == null)
+			if (inputBufferPtr is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputBufferPtr));
-			if (_inputBufferHandle.Pointer != null)
+			if (_inputBufferHandle.Pointer is not null)
 				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
 			if (count == 0) {
@@ -101,7 +101,7 @@ namespace Compression
 
 		internal int GetDeflateOutput (byte[] outputBuffer)
 		{
-			if (outputBuffer == null) 
+			if (outputBuffer is null) 
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (NeedsInput ())
 				throw new InvalidOperationException ("GetDeflateOutput should only be called after providing input");
@@ -147,7 +147,7 @@ namespace Compression
 
 		internal bool Finish (byte[] outputBuffer, out int bytesRead)
 		{
-			if (outputBuffer == null)
+			if (outputBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("Can't pass in an empty output buffer!");
@@ -161,13 +161,13 @@ namespace Compression
 		/// </summary>
 		internal unsafe bool Flush (byte[] outputBuffer, out int bytesRead)
 		{
-			if (outputBuffer == null)
+			if (outputBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("Can't pass in an empty output buffer!");
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
-			if (_inputBufferHandle.Pointer != null)
+			if (_inputBufferHandle.Pointer is not null)
 				throw new InvalidOperationException ("InputHandler should not be set");
 
 			// Note: we require that NeedsInput() == true, i.e. that 0 == _zlibStream.AvailIn.
