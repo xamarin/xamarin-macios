@@ -85,7 +85,7 @@ namespace Compression
 			if (! NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
 			if (inputBufferPtr == null)
-				throw new ArgumentNullException ( nameof (inputBufferPtr));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputBufferPtr));
 			if (_inputBufferHandle.Pointer != null)
 				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
@@ -102,7 +102,7 @@ namespace Compression
 		internal int GetDeflateOutput (byte[] outputBuffer)
 		{
 			if (outputBuffer == null) 
-				throw new ArgumentNullException (nameof (outputBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (NeedsInput ())
 				throw new InvalidOperationException ("GetDeflateOutput should only be called after providing input");
 
@@ -148,7 +148,7 @@ namespace Compression
 		internal bool Finish (byte[] outputBuffer, out int bytesRead)
 		{
 			if (outputBuffer == null)
-				throw new ArgumentNullException (nameof (outputBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("Can't pass in an empty output buffer!");
 
@@ -162,7 +162,7 @@ namespace Compression
 		internal unsafe bool Flush (byte[] outputBuffer, out int bytesRead)
 		{
 			if (outputBuffer == null)
-				throw new ArgumentNullException (nameof (outputBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("Can't pass in an empty output buffer!");
 			if (!NeedsInput ())
