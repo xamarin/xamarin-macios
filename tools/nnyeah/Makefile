@@ -8,7 +8,7 @@ install-local:: all-local
 IOS_DLL=$(TOP)/src/build/ios/native-64/Xamarin.iOS.dll
 
 $(IOS_DLL):
-	@echo "Thou shall run 'make all' in the root directory first"
+	@echo "Thou shalt run 'make all' in the root directory first"
 	@exit 1
 
 nnyeah/bin/Debug/net5.0/nnyeah.dll: $(IOS_DLL) $(wildcard **/*.cs) $(wildcard **/*.csproj) $(wildcard *.sln) Makefile
