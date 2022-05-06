@@ -17,23 +17,20 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 		tvOS,
 	}
 	public class Compiler {
-		const string kCompiler = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/csc";
+		const string MonoCompiler = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/csc";
 
 		public static async Task<string> CompileText (string text, string outputFile, PlatformName platformName, bool isLibrary)
 		{
-			var dir = Cache.CreateTemporaryDirectory ("compile-text"); 
-
+			var dir = Cache.CreateTemporaryDirectory ();
 			var outputCSFile = Path.Combine (dir, "LibraryFile.cs");
-			using var writer = new StreamWriter (outputCSFile);
-			writer.Write (text);
-			writer.Close ();
+			File.WriteAllText (outputCSFile, text);
 			return await Compile (outputFile, platformName, isLibrary, dir, outputCSFile);
 		}
 
 		public static async Task<string> Compile (string outputFile, PlatformName platformName, bool isLibrary, string workingDirectory, params string[] sourceFiles)
 		{
 			var compilerArgs = BuildCompilerArgs (sourceFiles, outputFile, platformName, isLibrary);
-			Execution execution = await Execution.RunAsync(kCompiler, compilerArgs, mergeOutput: true, workingDirectory: workingDirectory);
+			Execution execution = await Execution.RunAsync(MonoCompiler, compilerArgs, mergeOutput: true, workingDirectory: workingDirectory);
 			return execution!.StandardOutput.ToString()!;
 		}
 

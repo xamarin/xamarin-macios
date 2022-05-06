@@ -31,8 +31,8 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 			var testName = GetInvokingTestName (out var nameSpace, callingMethodName);
 			var testClassName = "NnyeahTest" + testName;
 
-			var initialLibraryDir = Cache.CreateTemporaryDirectory ("initial-library"); 
-			var finalLibraryDir = Cache.CreateTemporaryDirectory ("final-library"); 
+			var initialLibraryDir = Cache.CreateTemporaryDirectory ();
+			var finalLibraryDir = Cache.CreateTemporaryDirectory ();
 
 			var libCompilerOutput = await BuildLibrary (libraryCode, testName, initialLibraryDir);
 		}
