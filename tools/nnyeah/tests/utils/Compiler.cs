@@ -16,6 +16,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 		watchOS,
 		tvOS,
 	}
+
 	public class Compiler {
 		const string MonoCompiler = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/csc";
 
