@@ -341,13 +341,11 @@ stages:
   dependsOn:
   - build_packages
   jobs:
-    - template: templates/build/prepare-pkg-stage.yml
+    - template: templates/sign-and-notarized/prepare-pkg-stage.yml
       parameters:
         keyringPass: $(pass--lab--mac--builder--keychain)
         enableDotnet: ${{ parameters.enableDotnet }}
         skipESRP: ${{ parameters.skipESRP }}
-        pool: ${{ parameters.pool }}
-
 
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff

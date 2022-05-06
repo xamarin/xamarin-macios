@@ -35,7 +35,7 @@ namespace SceneKit
 
 		public static void ExportModule (JSContext context)
 		{
-			if (context == null)
+			if (context is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 
 			SCNExportJavaScriptModule (context.Handle);

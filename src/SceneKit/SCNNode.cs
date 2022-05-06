@@ -30,7 +30,7 @@ namespace SceneKit
 
 		public void AddNodes (params SCNNode [] nodes)
 		{
-			if (nodes == null)
+			if (nodes is null)
 				return;
 			foreach (var n in nodes)
 				AddChildNode (n);
@@ -50,7 +50,7 @@ namespace SceneKit
 #if !WATCH
 		public void AddAnimation (CAAnimation animation, string? key)
 		{
-			if (key == null) {
+			if (key is null) {
 				((ISCNAnimatable) this).AddAnimation (animation, (NSString?) null);
 			} else {
 				using (var s = new NSString (key))

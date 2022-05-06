@@ -15,16 +15,27 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 namespace Xharness.Jenkins.TestTasks {
 	public abstract class TestTasks : IEnvManager, IEventLogger, ITestTask {
 		static int counter;
-		static DriveInfo RootDrive;
+		static DriveInfo rootDrive;
+
+		protected readonly Stopwatch waitingDuration = new();
+
+		#region Private vars
+
+		ILog testLog;
+		bool? supportsParallelExecution;
+		string testName;
+		Task executeTask;
+
+		#endregion
 
 		#region Public vars
 
-		public Dictionary<string, string> Environment = new Dictionary<string, string> ();
+		public Dictionary<string, string> Environment = new ();
 		public Func<Task> Dependency; // a task that's feteched and awaited before this task's ExecuteAsync method
 		public Task InitialTask { get; set; } // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
-		public List<Resource> Resources = new List<Resource> ();
-
+		public List<Resource> Resources = new ();
+ 
 		#endregion
 
 		#region Properties
@@ -37,7 +48,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 		protected static string Timestamp => Harness.Helpers.Timestamp;
 		public string ProjectFile => TestProject?.Path;
-		public bool HasCustomTestName => test_name != null;
+		public bool HasCustomTestName => testName != null;
 
 		public bool NotStarted => (ExecutionResult & TestExecutingResult.StateMask) == TestExecutingResult.NotStarted;
 		public bool InProgress => (ExecutionResult & TestExecutingResult.InProgress) == TestExecutingResult.InProgress;
@@ -66,38 +77,23 @@ namespace Xharness.Jenkins.TestTasks {
 		public bool BuildFailure => (ExecutionResult & TestExecutingResult.BuildFailure) == TestExecutingResult.BuildFailure;
 		public bool HarnessException => (ExecutionResult & TestExecutingResult.HarnessException) == TestExecutingResult.HarnessException;
 
-		public Stopwatch DurationStopWatch { get; } = new Stopwatch ();
-		public TimeSpan Duration {
-			get {
-				return DurationStopWatch.Elapsed;
-			}
-		}
+		public Stopwatch DurationStopWatch { get; } = new ();
+		public TimeSpan Duration => DurationStopWatch.Elapsed;
 
-		string failure_message;
+		string failureMessage;
 		public string FailureMessage {
-			get { return failure_message; }
+			get { return failureMessage; }
 			set {
-				failure_message = value;
-				MainLog.WriteLine (failure_message);
+				failureMessage = value;
+				MainLog.WriteLine (failureMessage);
 			}
 		}
 
-
-		ILog test_log;
-		public ILog MainLog {
-			get {
-				if (test_log == null)
-					test_log = Logs.Create ($"main-{Timestamp}.log", "Main log");
-				return test_log;
-			}
-		}
+		public ILog MainLog 
+			=> testLog ??= Logs.Create ($"main-{Timestamp}.log", "Main log");
 
 		ILogs logs;
-		public ILogs Logs {
-			get {
-				return logs ?? (logs = new Logs (LogDirectory));
-			}
-		}
+		public ILogs Logs => logs ??= new Logs (LogDirectory);
 
 		IEnumerable<string> referencedNunitAndXunitTestAssemblies;
 		public IEnumerable<string> ReferencedNunitAndXunitTestAssemblies {
@@ -114,7 +110,7 @@ namespace Xharness.Jenkins.TestTasks {
 						csproj.LoadWithoutNetworkAccess (ProjectFile.Replace ("\\", "/"));
 						referencedNunitAndXunitTestAssemblies = csproj.GetNunitAndXunitTestReferences ();
 					} catch (Exception e) {
-						referencedNunitAndXunitTestAssemblies = new string [] { $"Exception: {e.Message}", $"Filename: {ProjectFile}" };
+						referencedNunitAndXunitTestAssemblies = new [] { $"Exception: {e.Message}", $"Filename: {ProjectFile}" };
 					}
 				} else {
 					referencedNunitAndXunitTestAssemblies = Enumerable.Empty<string> ();
@@ -146,26 +142,23 @@ namespace Xharness.Jenkins.TestTasks {
 		public virtual string Mode { get; set; }
 		public virtual string Variation { get; set; }
 
-
-		bool? supports_parallel_execution;
 		public virtual bool SupportsParallelExecution {
-			get => supports_parallel_execution ?? true;
-			set => supports_parallel_execution = value;
+			get => supportsParallelExecution ?? true;
+			set => supportsParallelExecution = value;
 		}
 
 		public virtual IEnumerable<ILog> AggregatedLogs => Logs;
 
-		TestExecutingResult execution_result;
+		TestExecutingResult executionResult;
 		public virtual TestExecutingResult ExecutionResult {
-			get => execution_result;
-			set => execution_result = value;
+			get => executionResult;
+			set => executionResult = value;
 		}
 
-		string test_name;
 		public virtual string TestName {
 			get {
-				if (test_name != null)
-					return test_name;
+				if (testName != null)
+					return testName;
 
 				var rv = Path.GetFileNameWithoutExtension (ProjectFile);
 				if (rv == null)
@@ -193,7 +186,7 @@ namespace Xharness.Jenkins.TestTasks {
 				}
 			}
 			set {
-				test_name = value;
+				testName = value;
 			}
 		}
 
@@ -203,14 +196,13 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public virtual void Reset ()
 		{
-			test_log = null;
-			failure_message = null;
+			testLog = null;
+			failureMessage = null;
 			logs = null;
 			DurationStopWatch.Reset ();
-			execution_result = TestExecutingResult.NotStarted;
-			execute_task = null;
+			executionResult = TestExecutingResult.NotStarted;
+			executeTask = null;
 		}
-
 
 		#endregion
 
@@ -221,22 +213,18 @@ namespace Xharness.Jenkins.TestTasks {
 
 		// VerifyRun is called in RunInternalAsync/ExecuteAsync to verify that the task can be executed/run.
 		// Typically used to fail tasks that don't have an available device, or if there's not enough disk space.
-		public virtual Task VerifyRunAsync ()
-		{
-			return VerifyDiskSpaceAsync ();
-		}
+		public virtual Task VerifyRunAsync () => VerifyDiskSpaceAsync ();
 
 		protected Task VerifyDiskSpaceAsync ()
 		{
 			if (Finished)
 				return Task.CompletedTask;
 
-			if (RootDrive == null)
-				RootDrive = new DriveInfo ("/");
-			var afs = RootDrive.AvailableFreeSpace;
+			rootDrive ??= new("/");
+			var afs = rootDrive.AvailableFreeSpace;
 			const long minSpaceRequirement = 1024 * 1024 * 1024; /* 1 GB */
 			if (afs < minSpaceRequirement) {
-				FailureMessage = $"Not enough space on the root drive '{RootDrive.Name}': {afs / (1024.0 * 1024):#.##} MB left of {minSpaceRequirement / (1024.0 * 1024):#.##} MB required";
+				FailureMessage = $"Not enough space on the root drive '{rootDrive.Name}': {afs / (1024.0 * 1024):#.##} MB left of {minSpaceRequirement / (1024.0 * 1024):#.##} MB required";
 				ExecutionResult = TestExecutingResult.Failed;
 			}
 			return Task.CompletedTask;
@@ -255,10 +243,8 @@ namespace Xharness.Jenkins.TestTasks {
 			InitialTask = TestProject.CreateCopyAsync (log, processManager, this, rootDirectory);
 		}
 
-		protected Stopwatch waitingDuration = new Stopwatch ();
 		public TimeSpan WaitingDuration => waitingDuration.Elapsed;
 
-		Task execute_task;
 		async Task RunInternalAsync ()
 		{
 			if (Finished)
@@ -279,8 +265,8 @@ namespace Xharness.Jenkins.TestTasks {
 
 				DurationStopWatch.Start ();
 
-				execute_task = ExecuteAsync ();
-				await execute_task;
+				executeTask = ExecuteAsync ();
+				await executeTask;
 
 				if (CompletedTask != null) {
 					if (CompletedTask.Status == TaskStatus.Created)
@@ -307,18 +293,10 @@ namespace Xharness.Jenkins.TestTasks {
 		}
 
 		public Task RunAsync ()
-		{
-			if (execute_task == null)
-				execute_task = RunInternalAsync ();
-			return execute_task;
-		}
-
+			=> executeTask ??= RunInternalAsync ();
 
 		public override string ToString ()
-		{
-			return ExecutionResult.ToString ();
-		}
-
+			=> ExecutionResult.ToString ();
 
 		protected void AddCILogFiles (StreamReader stream)
 		{
@@ -381,7 +359,7 @@ namespace Xharness.Jenkins.TestTasks {
 			return rv;
 		}
 
-		class BlockingWait : IAcquiredResource, IDisposable {
+		class BlockingWait : IAcquiredResource {
 			public IAcquiredResource Wrapped;
 			public Action OnDispose;
 
