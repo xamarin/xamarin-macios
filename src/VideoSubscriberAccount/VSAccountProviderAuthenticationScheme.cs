@@ -1,3 +1,5 @@
+#nullable enable
+
 #if !__MACCATALYST__
 using System;
 using System.Threading.Tasks;
@@ -9,12 +11,12 @@ namespace VideoSubscriberAccount {
 
 		// these are less common pattern so it's not automatically generated
 
-		public static NSString[] GetConstants (this VSAccountProviderAuthenticationScheme[] self)
+		public static NSString?[] GetConstants (this VSAccountProviderAuthenticationScheme[] self)
 		{
 			if (self == null)
 				throw new ArgumentNullException (nameof (self));
 			
-			var array = new NSString [self.Length];
+			var array = new NSString? [self.Length];
 			for (int n = 0; n < self.Length; n++)
 				array [n] = self [n].GetConstant ();
 			return array;

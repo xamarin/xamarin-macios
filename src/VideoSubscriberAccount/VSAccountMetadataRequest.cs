@@ -1,3 +1,5 @@
+#nullable enable
+
 #if !__MACCATALYST__
 using System;
 using System.Threading.Tasks;
@@ -21,7 +23,10 @@ namespace VideoSubscriberAccount {
 				return VSAccountProviderAuthenticationSchemeExtensions.GetValues (SupportedAuthenticationSchemesString);
 			}
 			set {
-				SupportedAuthenticationSchemesString = value?.GetConstants ();
+				if (value.GetConstants () is not null)
+					SupportedAuthenticationSchemesString = value.GetConstants ()!;
+				else
+					throw new ArgumentNullException (nameof (value));
 			}
 		}
 	}
