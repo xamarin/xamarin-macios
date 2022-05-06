@@ -668,7 +668,7 @@ namespace Compression
 				get {
 					if (_arrayPoolBuffer is null)
 						throw new InvalidOperationException (nameof (_arrayPoolBuffer));
-					return _arrayPoolBuffer!;
+					return _arrayPoolBuffer;
 				}
 			}
 			private int _arrayPoolBufferHighWaterMark;
