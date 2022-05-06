@@ -25,7 +25,7 @@ steps:
     path: $(Build.SourcesDirectory)/package
 
 - task: DownloadPipelineArtifact@2
-  displayName: Download not notaraized build
+  displayName: Download not notarized build
   inputs:
     artifact: 'classic-signed'
     allowFailedBuilds: true
