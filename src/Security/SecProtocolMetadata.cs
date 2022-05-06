@@ -206,13 +206,13 @@ namespace Security {
 		}
 
 		delegate void sec_protocol_metadata_access_distinguished_names_handler_t (IntPtr block, IntPtr dispatchData);
- 		static sec_protocol_metadata_access_distinguished_names_handler_t static_DistinguishedNamesForPeer = TrampolineDistinguishedNamesForPeer;
+		static sec_protocol_metadata_access_distinguished_names_handler_t static_DistinguishedNamesForPeer = TrampolineDistinguishedNamesForPeer;
 
  		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_distinguished_names_handler_t))]
  		static void TrampolineDistinguishedNamesForPeer (IntPtr block, IntPtr data)
  		{
  			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
- 			if (del is not null) {
+			if (del is not null) {
  				var dispatchData = new DispatchData (data, owns: false);
  				del (dispatchData);
  			}
@@ -247,7 +247,7 @@ namespace Security {
  		static void TrampolineOcspReposeForPeer (IntPtr block, IntPtr data)
  		{
  			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
- 			if (del is not null) {
+			if (del is not null) {
  				var dispatchData = new DispatchData (data, owns: false);
  				del (dispatchData);
  			}
@@ -282,7 +282,7 @@ namespace Security {
  		static void TrampolineCertificateChainForPeer (IntPtr block, IntPtr certificate)
  		{
  			var del = BlockLiteral.GetTarget<Action<SecCertificate>> (block);
- 			if (del is not null) {
+			if (del is not null) {
  				var secCertificate = new SecCertificate (certificate, owns: false);
  				del (secCertificate);
  			}
@@ -317,7 +317,7 @@ namespace Security {
  		static void TrampolineSignatureAlgorithmsForPeer (IntPtr block, ushort signatureAlgorithm)
  		{
  			var del = BlockLiteral.GetTarget<Action<ushort>> (block);
- 			if (del is not null) {
+			if (del is not null) {
  				del (signatureAlgorithm);
  			}
  		}
@@ -329,7 +329,7 @@ namespace Security {
  		[BindingImpl (BindingImplOptions.Optimizable)]
  		public void SetSignatureAlgorithmsForPeerHandler (Action<ushort> callback)
  		{
- 			if (callback is null)
+			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			var block_handler = new BlockLiteral ();
