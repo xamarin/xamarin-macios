@@ -49,9 +49,8 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <Content Include="$(NetRoot)/Microsoft.iOS.Ref/ref/net$(BundledNETCoreAppTargetFrameworkVersion)/Microsoft.iOS.dll;$(NetRoot)/Microsoft.macOS.Ref/ref/net$(BundledNETCoreAppTargetFrameworkVersion)/Microsoft.macOS.dll">
-
         <Pack>true</Pack>
-        <PackagePath>content/net6</PackagePath>
+        <PackagePath>content/net</PackagePath>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
