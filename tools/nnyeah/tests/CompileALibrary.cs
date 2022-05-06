@@ -1,29 +1,32 @@
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using NUnit.Framework;
+
+using Xamarin;
 
 namespace Microsoft.MaciOS.Nnyeah.Tests.SmokeTests {
 	[TestFixture]
 	public class CompileALibrary {
 		[Test]
-		public void BasicLibrary ()
+		public async Task BasicLibrary ()
 		{
-			using var provider = new DisposableTempDirectory ();
+			var dir = Cache.CreateTemporaryDirectory ("BasicLibrary"); 
 			var code = @"
 using System;
 public class Foo {
 	public nint Ident (nint e) => e;
 }
 ";
-			var output = TestRunning.BuildLibrary (code, "NoName", provider.DirectoryPath);
-			var expectedOutputFile = Path.Combine (provider.DirectoryPath, "NoName.dll");
+			var output = await TestRunning.BuildLibrary (code, "NoName", dir);
+			var expectedOutputFile = Path.Combine (dir, "NoName.dll");
 			Assert.IsTrue (File.Exists (expectedOutputFile));
 		}
 
 		[Test]
 		public void BasicExecutable ()
 		{
-			using var provider = new DisposableTempDirectory ();
+			var dir = Cache.CreateTemporaryDirectory ("BasicExecutable"); 
 		}
 	}
 }

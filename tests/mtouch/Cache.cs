@@ -4,6 +4,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 
+#nullable disable
+
 namespace Xamarin
 {
 	// A class that creates temporary directories next to the test assembly, and cleans the output on startup

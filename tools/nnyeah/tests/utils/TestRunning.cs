@@ -1,7 +1,11 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+
 using NUnit.Framework;
+
+using Xamarin;
 
 namespace Microsoft.MaciOS.Nnyeah.Tests {
 	public class TestRunning {
@@ -21,19 +25,19 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 			return callingMethodName;
 		}
 
-		public static void TestAndExecute (string libraryCode, string callingCode, string expectedOutput,
+		public static async Task TestAndExecute (string libraryCode, string callingCode, string expectedOutput,
 			string callingMethodName = "")
 		{
 			var testName = GetInvokingTestName (out var nameSpace, callingMethodName);
 			var testClassName = "NnyeahTest" + testName;
 
-			using var initialLibraryDir = new DisposableTempDirectory ();
-			using var finalLibraryDir = new DisposableTempDirectory ();
+			var initialLibraryDir = Cache.CreateTemporaryDirectory ("initial-library"); 
+			var finalLibraryDir = Cache.CreateTemporaryDirectory ("final-library"); 
 
-			var libCompilerOutput = BuildLibrary (libraryCode, testName, initialLibraryDir.DirectoryPath);
+			var libCompilerOutput = await BuildLibrary (libraryCode, testName, initialLibraryDir);
 		}
 
-		public static string BuildLibrary (string libraryCode, string libName, string outputDirectory, PlatformName platformName = PlatformName.macOS)
+		public static Task<string> BuildLibrary (string libraryCode, string libName, string outputDirectory, PlatformName platformName = PlatformName.macOS)
 		{
 			var outputPath = Path.Combine (outputDirectory, $"{libName}.dll");
 			return Compiler.CompileText (libraryCode, outputPath, platformName, isLibrary: true);
