@@ -21,9 +21,9 @@ namespace VideoSubscriberAccount {
 		public void CheckAccessStatus (VSAccountManagerAccessOptions accessOptions, Action<VSAccountAccessStatus, NSError> completionHandler)
 		{
 			if (accessOptions == null)
-				throw new ArgumentNullException (nameof (accessOptions));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (accessOptions));
 			if (completionHandler == null)
-				throw new ArgumentNullException (nameof (completionHandler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (completionHandler));
 
 			CheckAccessStatus (accessOptions.Dictionary, completionHandler);
 		}
@@ -31,7 +31,7 @@ namespace VideoSubscriberAccount {
 		public Task<VSAccountAccessStatus> CheckAccessStatusAsync (VSAccountManagerAccessOptions accessOptions)
 		{
 			if (accessOptions == null)
-				throw new ArgumentNullException (nameof (accessOptions));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (accessOptions));
 
 			return CheckAccessStatusAsync (accessOptions.Dictionary);
 		}

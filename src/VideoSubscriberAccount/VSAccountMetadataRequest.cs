@@ -26,7 +26,7 @@ namespace VideoSubscriberAccount {
 				if (value.GetConstants () is not null)
 					SupportedAuthenticationSchemesString = value.GetConstants ()!;
 				else
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			}
 		}
 	}

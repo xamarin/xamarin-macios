@@ -14,7 +14,7 @@ namespace VideoSubscriberAccount {
 		public static NSString?[] GetConstants (this VSAccountProviderAuthenticationScheme[] self)
 		{
 			if (self == null)
-				throw new ArgumentNullException (nameof (self));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (self));
 			
 			var array = new NSString? [self.Length];
 			for (int n = 0; n < self.Length; n++)
@@ -25,7 +25,7 @@ namespace VideoSubscriberAccount {
 		public static VSAccountProviderAuthenticationScheme[] GetValues (NSString[] constants)
 		{
 			if (constants == null)
-				throw new ArgumentNullException (nameof (constants));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (constants));
 
 			var array = new VSAccountProviderAuthenticationScheme [constants.Length];
 			for (int n = 0; n < constants.Length; n++)
