@@ -395,7 +395,7 @@ namespace Compression
 				while (true) {
 					int bytesRead = await readTask.ConfigureAwait (false);
 					EnsureNotDisposed ();
-					
+
 					if (bytesRead <= 0) {
 						// This indicates the base stream has received EOF
 						return 0;
@@ -627,8 +627,6 @@ namespace Compression
 		/// </summary>
 		private async Task WriteDeflaterOutputAsync (CancellationToken cancellationToken)
 		{
-			//EnsureDeflaterInitialized (out _deflater);
-			//EnsureBufferInitialized (out _buffer);
 			while (!Deflater.NeedsInput ()) {
 				int compressedBytes = Deflater.GetDeflateOutput (Buffer);
 				if (compressedBytes > 0) {
@@ -665,7 +663,14 @@ namespace Compression
 			private readonly CompressionStream _deflateStream;
 			private readonly Stream _destination;
 			private readonly CancellationToken _cancellationToken;
-			private byte[] _arrayPoolBuffer;
+			private byte[]? _arrayPoolBuffer;
+			byte[] ArrayPoolBuffer {
+				get {
+					if (_arrayPoolBuffer is null)
+						throw new InvalidOperationException (nameof (_arrayPoolBuffer));
+					return _arrayPoolBuffer!;
+				}
+			}
 			private int _arrayPoolBufferHighWaterMark;
 
 			public CopyToAsyncStream (CompressionStream deflateStream, Stream destination, int bufferSize, CancellationToken cancellationToken)
@@ -689,29 +694,29 @@ namespace Compression
 				try {
 					// Flush any existing data in the inflater to the destination stream.
 					while (true) {
-						int bytesRead = _deflateStream.Inflater.Inflate (_arrayPoolBuffer, 0, _arrayPoolBuffer.Length);
+						int bytesRead = _deflateStream.Inflater.Inflate (ArrayPoolBuffer, 0, ArrayPoolBuffer.Length);
 						if (bytesRead > 0) {
 							if (bytesRead > _arrayPoolBufferHighWaterMark) _arrayPoolBufferHighWaterMark = bytesRead;
-							await _destination.WriteAsync (_arrayPoolBuffer, 0, bytesRead, _cancellationToken).ConfigureAwait (false);
+							await _destination.WriteAsync (ArrayPoolBuffer, 0, bytesRead, _cancellationToken).ConfigureAwait (false);
 						}
 						else break;
 					}
 
 					// Now, use the source stream's CopyToAsync to push directly to our inflater via this helper stream
-					await _deflateStream.Stream.CopyToAsync (this, _arrayPoolBuffer.Length, _cancellationToken).ConfigureAwait (false);
+					await _deflateStream.Stream.CopyToAsync (this, ArrayPoolBuffer.Length, _cancellationToken).ConfigureAwait (false);
 				} finally {
 					_deflateStream.AsyncOperationCompleting ();
 
-					Array.Clear (_arrayPoolBuffer, 0, _arrayPoolBufferHighWaterMark); // clear only the most we used
-					ArrayPool<byte>.Shared.Return (_arrayPoolBuffer, clearArray: false);
-					//_arrayPoolBuffer = null;
+					Array.Clear (ArrayPoolBuffer, 0, _arrayPoolBufferHighWaterMark); // clear only the most we used
+					ArrayPool<byte>.Shared.Return (ArrayPoolBuffer, clearArray: false);
+					_arrayPoolBuffer = null;
 				}
 			}
 
 			public override async Task WriteAsync (byte[] buffer, int offset, int count, CancellationToken cancellationToken)
 			{
 				// Validate inputs
-				if (buffer == _arrayPoolBuffer)
+				if (buffer == ArrayPoolBuffer)
 					throw new ArgumentException (nameof (buffer));
 				_deflateStream.EnsureNotDisposed ();
 				if (count <= 0) {
@@ -727,10 +732,10 @@ namespace Compression
 
 				// While there's more decompressed data available, forward it to the destination stream.
 				while (true) {
-					int bytesRead = _deflateStream.Inflater.Inflate (_arrayPoolBuffer, 0, _arrayPoolBuffer.Length);
+					int bytesRead = _deflateStream.Inflater.Inflate (ArrayPoolBuffer, 0, ArrayPoolBuffer.Length);
 					if (bytesRead > 0) {
 						if (bytesRead > _arrayPoolBufferHighWaterMark) _arrayPoolBufferHighWaterMark = bytesRead;
-						await _destination.WriteAsync (_arrayPoolBuffer, 0, bytesRead, cancellationToken).ConfigureAwait (false);
+						await _destination.WriteAsync (ArrayPoolBuffer, 0, bytesRead, cancellationToken).ConfigureAwait (false);
 					}
 					else break;
 				}
