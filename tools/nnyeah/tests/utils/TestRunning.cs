@@ -13,8 +13,8 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 		{
 			var stackTrace = new System.Diagnostics.StackTrace ();
 			var callingMethod = stackTrace.GetFrame (2)!.GetMethod ();
-			if (callingMethod is null)
-				Assert.Fail ("unable to get calling test from stack frame.");
+			Assert.NotNull (callingMethod, "unable to get calling test from stack frame.");
+
 			if (string.IsNullOrEmpty (callingMethodName)) {
 				if (!callingMethod!.CustomAttributes.Any (x => x.AttributeType.Name == "TestAttribute")) {
 					Assert.Fail ("TestRunning expect invocations without an explicit `testName` parameter to be invoked from the [Test] method directly. Consider passing an explicit `testName`.");
