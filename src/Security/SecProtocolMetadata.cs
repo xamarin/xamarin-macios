@@ -179,7 +179,7 @@ namespace Security {
 
 		public bool EarlyDataAccepted => sec_protocol_metadata_get_early_data_accepted (GetCheckedHandle ()) != 0;
 
-		[DllImport (Constants.SecurityLibrary)]
+ 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool sec_protocol_metadata_challenge_parameters_are_equal (IntPtr metadataA, IntPtr metadataB);
 
@@ -192,7 +192,7 @@ namespace Security {
 			return sec_protocol_metadata_challenge_parameters_are_equal (metadataA.GetCheckedHandle (), metadataB.GetCheckedHandle ());
 		}
 
-		[DllImport (Constants.SecurityLibrary)]
+ 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		extern static bool sec_protocol_metadata_peers_are_equal (IntPtr metadataA, IntPtr metadataB);
 
@@ -206,25 +206,25 @@ namespace Security {
 		}
 
 		delegate void sec_protocol_metadata_access_distinguished_names_handler_t (IntPtr block, IntPtr dispatchData);
-		static sec_protocol_metadata_access_distinguished_names_handler_t static_DistinguishedNamesForPeer = TrampolineDistinguishedNamesForPeer;
+ 		static sec_protocol_metadata_access_distinguished_names_handler_t static_DistinguishedNamesForPeer = TrampolineDistinguishedNamesForPeer;
 
-		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_distinguished_names_handler_t))]
-		static void TrampolineDistinguishedNamesForPeer (IntPtr block, IntPtr data)
-		{
-			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
-			if (del is not null) {
-				var dispatchData = new DispatchData (data, owns: false);
-				del (dispatchData);
-			}
-		}
+ 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_distinguished_names_handler_t))]
+ 		static void TrampolineDistinguishedNamesForPeer (IntPtr block, IntPtr data)
+ 		{
+ 			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
+ 			if (del is not null) {
+ 				var dispatchData = new DispatchData (data, owns: false);
+ 				del (dispatchData);
+ 			}
+ 		}
 
-		[DllImport (Constants.SecurityLibrary)]
+ 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_protocol_metadata_access_distinguished_names (IntPtr handle, ref BlockLiteral callback);
+ 		static extern bool sec_protocol_metadata_access_distinguished_names (IntPtr handle, ref BlockLiteral callback);
 
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetDistinguishedNamesForPeerHandler (Action<DispatchData> callback)
-		{
+ 		[BindingImpl (BindingImplOptions.Optimizable)]
+ 		public void SetDistinguishedNamesForPeerHandler (Action<DispatchData> callback)
+ 		{
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
@@ -238,28 +238,28 @@ namespace Security {
 			} finally {
 				block_handler.CleanupBlock ();
 			}
-		}
+ 		}
 
 		delegate void sec_protocol_metadata_access_ocsp_response_handler_t (IntPtr block, IntPtr dispatchData);
-		static sec_protocol_metadata_access_ocsp_response_handler_t static_OcspReposeForPeer = TrampolineOcspReposeForPeer;
+ 		static sec_protocol_metadata_access_ocsp_response_handler_t static_OcspReposeForPeer = TrampolineOcspReposeForPeer;
 
-		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_ocsp_response_handler_t))]
-		static void TrampolineOcspReposeForPeer (IntPtr block, IntPtr data)
-		{
-			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
-			if (del is not null) {
-				var dispatchData = new DispatchData (data, owns: false);
-				del (dispatchData);
-			}
-		}
+ 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_ocsp_response_handler_t))]
+ 		static void TrampolineOcspReposeForPeer (IntPtr block, IntPtr data)
+ 		{
+ 			var del = BlockLiteral.GetTarget<Action<DispatchData>> (block);
+ 			if (del is not null) {
+ 				var dispatchData = new DispatchData (data, owns: false);
+ 				del (dispatchData);
+ 			}
+ 		}
 
-		[DllImport (Constants.SecurityLibrary)]
+ 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_protocol_metadata_access_ocsp_response (IntPtr handle, ref BlockLiteral callback);
+ 		static extern bool sec_protocol_metadata_access_ocsp_response (IntPtr handle, ref BlockLiteral callback);
 
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetOcspResponseForPeerHandler (Action<DispatchData> callback)
-		{
+ 		[BindingImpl (BindingImplOptions.Optimizable)]
+ 		public void SetOcspResponseForPeerHandler (Action<DispatchData> callback)
+ 		{
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
@@ -273,28 +273,28 @@ namespace Security {
 			} finally {
 				block_handler.CleanupBlock ();
 			}
-		}
+ 		}
 
 		delegate void sec_protocol_metadata_access_peer_certificate_chain_handler_t (IntPtr block, IntPtr certificate);
-		static sec_protocol_metadata_access_peer_certificate_chain_handler_t static_CertificateChainForPeer = TrampolineCertificateChainForPeer;
+ 		static sec_protocol_metadata_access_peer_certificate_chain_handler_t static_CertificateChainForPeer = TrampolineCertificateChainForPeer;
 
-		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_peer_certificate_chain_handler_t))]
-		static void TrampolineCertificateChainForPeer (IntPtr block, IntPtr certificate)
-		{
-			var del = BlockLiteral.GetTarget<Action<SecCertificate>> (block);
-			if (del is not null) {
-				var secCertificate = new SecCertificate (certificate, owns: false);
-				del (secCertificate);
-			}
-		}
+ 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_peer_certificate_chain_handler_t))]
+ 		static void TrampolineCertificateChainForPeer (IntPtr block, IntPtr certificate)
+ 		{
+ 			var del = BlockLiteral.GetTarget<Action<SecCertificate>> (block);
+ 			if (del is not null) {
+ 				var secCertificate = new SecCertificate (certificate, owns: false);
+ 				del (secCertificate);
+ 			}
+ 		}
 
-		[DllImport (Constants.SecurityLibrary)]
+ 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_protocol_metadata_access_peer_certificate_chain (IntPtr handle, ref BlockLiteral callback);
+ 		static extern bool sec_protocol_metadata_access_peer_certificate_chain (IntPtr handle, ref BlockLiteral callback);
 
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetCertificateChainForPeerHandler (Action<SecCertificate> callback)
-		{
+ 		[BindingImpl (BindingImplOptions.Optimizable)]
+ 		public void SetCertificateChainForPeerHandler (Action<SecCertificate> callback)
+ 		{
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
@@ -308,28 +308,28 @@ namespace Security {
 			} finally {
 				block_handler.CleanupBlock ();
 			}
-		}
+ 		}
 
 		delegate void sec_protocol_metadata_access_supported_signature_algorithms_handler_t (IntPtr block, ushort signatureAlgorithm);
-		static sec_protocol_metadata_access_supported_signature_algorithms_handler_t static_SignatureAlgorithmsForPeer = TrampolineSignatureAlgorithmsForPeer;
+ 		static sec_protocol_metadata_access_supported_signature_algorithms_handler_t static_SignatureAlgorithmsForPeer = TrampolineSignatureAlgorithmsForPeer;
 
-		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_supported_signature_algorithms_handler_t))]
-		static void TrampolineSignatureAlgorithmsForPeer (IntPtr block, ushort signatureAlgorithm)
-		{
-			var del = BlockLiteral.GetTarget<Action<ushort>> (block);
-			if (del is not null) {
-				del (signatureAlgorithm);
-			}
-		}
+ 		[MonoPInvokeCallback (typeof (sec_protocol_metadata_access_supported_signature_algorithms_handler_t))]
+ 		static void TrampolineSignatureAlgorithmsForPeer (IntPtr block, ushort signatureAlgorithm)
+ 		{
+ 			var del = BlockLiteral.GetTarget<Action<ushort>> (block);
+ 			if (del is not null) {
+ 				del (signatureAlgorithm);
+ 			}
+ 		}
 
-		[DllImport (Constants.SecurityLibrary)]
+ 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
-		static extern bool sec_protocol_metadata_access_supported_signature_algorithms (IntPtr handle, ref BlockLiteral callback);
+ 		static extern bool sec_protocol_metadata_access_supported_signature_algorithms (IntPtr handle, ref BlockLiteral callback);
 
-		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void SetSignatureAlgorithmsForPeerHandler (Action<ushort> callback)
-		{
-			if (callback is null)
+ 		[BindingImpl (BindingImplOptions.Optimizable)]
+ 		public void SetSignatureAlgorithmsForPeerHandler (Action<ushort> callback)
+ 		{
+ 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			var block_handler = new BlockLiteral ();
@@ -342,7 +342,7 @@ namespace Security {
 			} finally {
 				block_handler.CleanupBlock ();
 			}
-		}
+ 		}
 
 		[DllImport (Constants.SecurityLibrary)]
 		static extern /* OS_dispatch_data */ IntPtr sec_protocol_metadata_create_secret (/* OS_sec_protocol_metadata */ IntPtr metadata, /* size_t */ nuint label_len, /* const char*/ [MarshalAs(UnmanagedType.LPStr)] string label, /* size_t */ nuint exporter_length);
