@@ -43,7 +43,7 @@ namespace SceneKit
 
 		internal void Set (NSString key, SCNParticlePropertyController? value)
 		{
-			if (mutDict == null){
+			if (mutDict is null){
 				mutDict = new NSMutableDictionary (dict);
 				dict = mutDict;
 			}
@@ -183,7 +183,7 @@ namespace SceneKit
 		public SCNPropertyControllers? PropertyControllers {
 			get {
 				var weak = WeakPropertyControllers;
-				if (weak == null)
+				if (weak is null)
 					return null;
 				return new SCNPropertyControllers (weak);
 			}
