@@ -44,16 +44,9 @@ steps:
       set -x
       set -e
 
-      ls -lR $(Build.SourcesDirectory)
-
       FULL_PATH="$(Build.SourcesDirectory)/classic-${{ pkg.name }}-signed"
-      PACKAGES=$(find . f -name "${{ pkg.pattern }}" | xargs basename)
-      if [ -z "$PACKAGES" ]; then
-        echo "Packages ${{ parameters.packageName }} not found."
-      else
-        cp "$FULL_PATH/$PACKAGES" "$(Build.SourcesDirectory)/package"
-        cp "$FULL_PATH/notarized/$PACKAGES" "$(Build.SourcesDirectory)/package/notarized"
-      fi
+      cp "$FULL_PATH/*.pkg" "$(Build.SourcesDirectory)/package"
+      cp "$FULL_PATH/notarized/*.pkg" "$(Build.SourcesDirectory)/package/notarized"
     displayName: 'Move pkg ${{ pkg.name }} to its final destination'
 
 
