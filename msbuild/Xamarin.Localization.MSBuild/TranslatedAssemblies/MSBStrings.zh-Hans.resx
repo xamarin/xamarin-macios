@@ -1132,12 +1132,18 @@
         <value>已使用不同的元数据多次为 {0} 请求代码签名。已为一个项设置元数据“{1}={2}”，但未设置另一项。</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>已使用不同的元数据多次为 {0} 请求代码签名。元数据“{1}”已是每一项的值(一次为“{2}”，另一次为“{3}”)。</value>
+        <value>已使用不同的元数据多次为“{0}”请求代码签名。元数据“{1}”为每一项提供不同的值(一次为“{2}”，另一次为“{3}”)。</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>UIDeviceFamily 值 “6” 对此平台无效。它仅对 Mac Catalyst 有效。</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>UIDeviceFamily 值 “6” 需要 macOS 11.0。请将项目文件中的 “SupportedOSPlatformVersion” 设置为至少 14.0 (Mac Catalyst 版本等效于 macOS 11.0)。当前值为 {0} (等效于 macOS {1})。</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>找不到绑定资源包: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>值为“{1}”的未知属性“{0}”。</value>
     </data>
 </root>
