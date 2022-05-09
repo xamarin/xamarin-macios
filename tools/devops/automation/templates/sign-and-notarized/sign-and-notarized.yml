@@ -113,7 +113,7 @@ steps:
   displayName: 'Notarize & verify packages (ESRP)'
   condition: ${{ parameters.condition }}
 
-# always upload not matter what, since if we are not signing we need the artifact in the pipeline
+# always upload no matter what, since if we are not signing we need the artifact in the pipeline
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Notarized Classic Artifacts'
   inputs:
