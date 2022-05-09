@@ -13,8 +13,8 @@ namespace StoreKit {
 		public virtual SKCloudServiceSetupAction? Action {
 			get {
 				if (_Action is null)
-					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (_Action));
-				return (SKCloudServiceSetupAction?) (SKCloudServiceSetupActionExtensions.GetValue (_Action!));
+					return null;
+				return (SKCloudServiceSetupAction?) (SKCloudServiceSetupActionExtensions.GetValue (_Action));
 			}
 			set {
 				_Action = value is not null ? SKCloudServiceSetupActionExtensions.GetConstant (value.Value) : null;
