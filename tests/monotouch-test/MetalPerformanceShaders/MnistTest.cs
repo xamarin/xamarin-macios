@@ -184,7 +184,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 			this.imageSize = MnistData.ImageSize;
 			this.numClasses = MnistData.NumClasses;
 
-			Options = MPSGraphOptions.SynchronizeResults | MPSGraphOptions.Verbose;
+			Options = MPSGraphOptions.SynchronizeResults;// | MPSGraphOptions.Verbose;
 
 			Console.WriteLine (Options);
 
@@ -192,7 +192,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 			labelsPlaceholder = this.Placeholder (new [] { batchSize, numClasses }, null);
 
 			var variables = new List<MPSGraphTensor> ();
-			var reshapedInput = this.Reshape (sourcePlaceholder, shape: new [] { batchSize, imageSize, imageSize, 1 }, "reshapedInput");
+			var reshapedInput = this.Reshape (sourcePlaceholder, shape: new [] { batchSize, imageSize, imageSize, 1 }, null);
 
 			var conv0 = AddConvLayer (reshapedInput, weightsShape: new int [4] { 5, 5, 1, 32 }, convDesc, variables);
 			var pool0 = this.MaxPooling2D (conv0, poolDesc, null);
@@ -200,7 +200,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 			var conv1Tensor = AddConvLayer (pool0, weightsShape: new int [4] { 5, 5, 32, 64 }, convDesc, variables);
 			var pool1Tensor = this.MaxPooling2D (conv1Tensor, poolDesc, null);
 
-			var reshape = this.Reshape (pool1Tensor, new [] { -1, 64 * 7 * 7 }, "reshape");
+			var reshape = this.Reshape (pool1Tensor, new [] { -1, 64 * 7 * 7 }, null);
 
 			var fc0 = AddFullyConnectedLayer (reshape, weightsShape: new int [2] { 7 * 7 * 64, 1024 }, hasActivation: true, variables);
 			var fc1 = AddFullyConnectedLayer (fc0, weightsShape: new int [2] { 1024, numClasses }, hasActivation: false, variables);
