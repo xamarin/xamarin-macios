@@ -26,7 +26,7 @@ steps:
   displayName: 'Create target directories.'
 
 - task: DownloadPipelineArtifact@2
-  displayName: Download notaraized build dotnet
+  displayName: Download notarized build dotnet
   inputs:
     artifact: 'dotnet-signed'
     allowFailedBuilds: true
@@ -34,7 +34,7 @@ steps:
 
 - ${{ each pkg in parameters.packages }}:
   - task: DownloadPipelineArtifact@2
-    displayName: Download notaraized build ${{ pkg.name }}
+    displayName: Download notarized build ${{ pkg.name }}
     inputs:
       artifact: 'classic-${{ pkg.name }}-signed'
       allowFailedBuilds: true
