@@ -32,6 +32,7 @@ namespace MonoTouchFixtures.MetalPerformanceShadersGraph {
 		public void IsSupported ()
 		{
 			TestRuntime.AssertNotVirtualMachine ();
+			TestRuntime.AssertXcodeVersion (13, 0); // There are known bugs in early versions of MetalPerformanceShadersGraph that makes this test crash, so require macOS 12+.
 #if __TVOS__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Inconclusive ("Metal Performance Shaders Graph is not supported in the tvOS simulator");
