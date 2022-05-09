@@ -69,6 +69,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 						case "System.nuint":
 						case "System.nfloat":
 							break;
+						case null:
+							throw new InvalidOperationException ("Null NotFound type event");
 						default:
 							map.TypesNotPresent.Add (e.Original);
 							break;
@@ -101,15 +103,15 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		static Reworker? CreateReworker (string infile, TypeAndMemberMap typeMap)
 		{
-			var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-			var module = ModuleDefinition.ReadModule (stm);
-
 			try {
+				var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+				var module = ModuleDefinition.ReadModule (stm);
+
 				return Reworker.CreateReworker (stm, module, typeMap);
 			} catch (Exception e) {
 				Console.Error.WriteLine (Errors.E0003, infile, e.Message);
 				Environment.Exit (1);
-				return null;
+				throw;
 			}
 		}
 
