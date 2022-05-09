@@ -44,13 +44,9 @@ steps:
       set -x
       set -e
 
-      ls -lR "$(Build.ArtifactStagingDirectory)"
       FULL_PATH="$(Build.ArtifactStagingDirectory)/classic-${{ pkg.name }}-signed"
       ls -lR $FULL_PATH
-      cp "$FULL_PATH/*.pkg" "$(Build.SourcesDirectory)/package"
-      if [ -d "$FULL_PATH/notarized" ] then
-        cp "$FULL_PATH/notarized/*.pkg" "$(Build.SourcesDirectory)/package/notarized" || true
-      fi
+      cp -a "$FULL_PATH/." "$(Build.SourcesDirectory)/package"
     displayName: 'Move pkg ${{ pkg.name }} to its final destination'
 
 - template: generate-workspace-info.yml@templates
