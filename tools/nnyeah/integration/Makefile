@@ -20,8 +20,8 @@ run-$(1): $(1)/bin/Debug/$(1)Integration.dll
 
 endef
 
-$(eval $(call INTEGRATION_TEST_template,macOS,../../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono/Xamarin.Mac/Xamarin.Mac.dll,../../../_build/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.dll))
-$(eval $(call INTEGRATION_TEST_template,iOS,../../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.iOS/Xamarin.iOS.dll,../../../_build/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.dll))
+$(eval $(call INTEGRATION_TEST_template,macOS,$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/mono/Xamarin.Mac/Xamarin.Mac.dll,$(DOTNET_DESTDIR)/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.dll))
+$(eval $(call INTEGRATION_TEST_template,iOS,$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.iOS/Xamarin.iOS.dll,$(DOTNET_DESTDIR)/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.dll))
 
 all-local:: $(TEST_BUILD_TARGETS)
 install-local:: all-local
