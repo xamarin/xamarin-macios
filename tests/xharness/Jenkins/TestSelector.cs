@@ -10,120 +10,178 @@ using Microsoft.DotNet.XHarness.Common.Logging;
 namespace Xharness.Jenkins {
 
 	class TestSelection {
+		readonly Dictionary<string, bool> selection = new() {
+			{ "all", false },
+			{ "bcl", false },
+			{ "mac", true },
+			{ "ios", true },
+			{ "ios-64", true },
+			{ "ios-32", false },
+			{ "ios-extensions", false },
+			{ "ios-simulator", true },
+			{ "old-simulator", false },
+			{ "device", false },
+			{ "xtro", false },
+			{ "cecil", false },
+			{ "docs", false },
+			{ "bcl-xunit", false },
+			{ "bcl-nunit", false },
+			{ "mscorlib", false },
+			{ "non-monotouch", true }, 
+			{ "monotouch", true }, 
+			{ "dotnet", false },
+			{ "maccatalyst", true },
+			{ "tvos", true },
+			{ "watchos", true },
+			{ "mmp", false },
+			{ "msbuild", true },
+			{ "mtouch", false },
+			{ "btouch", false },
+			{ "mac-binding-project", false },
+			{ "system-permission", false },
+		};
 
-		public bool IncludeAll { get; set; }
-		public bool IncludeBcl { get; set; }
-		public bool IncludeMac { get; set; } = true;
-		public bool IncludeiOS { get; set; } = true;
-		public bool IncludeiOS64 { get; set; } = true;
-		public bool IncludeiOS32 { get; set; } = false; // broken in xcode 12 beta 3, not possible with DTK
-		public bool IncludeiOSExtensions { get; set; }
+		public bool IncludeAll {
+			get => selection["all"]; 
+			set => selection ["all"] = value;
+		}
+		public bool IncludeBcl {
+			get => selection ["bcl"];
+			set => selection ["bcl"] = value; 
+		}
+
+		public bool IncludeMac {
+			get => selection ["mac"];
+			set => selection ["mac"] = value;
+		}
+
+		public bool IncludeiOS {
+			get => selection ["ios"];
+			set => selection ["ios"] = value;
+		}
+
+		public bool IncludeiOS64 {
+			get => selection ["ios-64"];
+			set => selection ["ios-64"] = value;
+		}
+
+		public bool IncludeiOS32 {
+			get => selection ["ios-32"];
+			set => selection ["ios-32"] = value;
+		}
+
+		public bool IncludeiOSExtensions {
+			get => selection ["ios-extensions"];
+			set => selection ["ios-extensions"] = value;
+		}
+
+		public bool IncludeMacBindingProject  {
+			get => selection ["mac-binding-project"];
+			set => selection ["mac-binding-project"] = value;
+		}
+
 		public bool ForceExtensionBuildOnly { get; set; }
-		public bool IncludetvOS { get; set; } = true;
-		public bool IncludewatchOS { get; set; } = true;
-		public bool IncludeMmpTest { get; set; }
-		public bool IncludeMSBuild { get; set; } = true;
-		public bool IncludeMtouch { get; set; }
-		public bool IncludeBtouch { get; set; }
-		public bool IncludeMacBindingProject { get; set; }
-		public bool IncludeSimulator { get; set; } = true;
-		public bool IncludeOldSimulatorTests { get; set; }
-		public bool IncludeDevice { get; set; }
-		public bool IncludeXtro { get; set; }
-		public bool IncludeCecil { get; set; }
-		public bool IncludeDocs { get; set; }
-		public bool IncludeBCLxUnit { get; set; }
-		public bool IncludeBCLNUnit { get; set; }
-		public bool IncludeMscorlib { get; set; }
-		public bool IncludeNonMonotouch { get; set; } = true;
-		public bool IncludeMonotouch { get; set; } = true;
-		public bool IncludeDotNet { get; set; }
-		public bool IncludeMacCatalyst { get; set; } = true;
-		public bool IncludeSystemPermissionTests { get; set; }
+
+		public bool IncludetvOS {
+			get => selection ["tvos"];
+			set => selection ["tvos"] = value;
+		}
+		public bool IncludewatchOS { 
+			get => selection ["watchos"];
+			set => selection ["watchos"] = value;
+		}
+		public bool IncludeMmpTest { 
+			get => selection ["mmp"];
+			set => selection ["mmp"] = value;
+		}
+		public bool IncludeMSBuild {
+			get => selection ["msbuild"];
+			set => selection ["msbuild"] = value;
+		}
+		public bool IncludeMtouch {
+			get => selection ["mtouch"];
+			set => selection ["mtouch"] = value;
+		}
+		
+		public bool IncludeBtouch {
+			get => selection ["btouch"];
+			set => selection ["btouch"] = value;
+		}
+
+		public bool IncludeSimulator {
+			get => selection ["ios-simulator"];
+			set => selection ["ios-simulator"] = value;
+		}
+
+		public bool IncludeOldSimulatorTests {
+			get => selection ["old-simulator"];
+			set => selection ["old-simulator"] = value;
+		}
+
+		public bool IncludeDevice {
+			get => selection ["device"];
+			set => selection ["device"] = value;
+		}
+
+		public bool IncludeXtro {
+			get => selection ["xtro"];
+			set => selection ["xtro"] = value;
+		}
+
+		public bool IncludeCecil {
+			get => selection ["cecil"];
+			set => selection ["cecil"] = value;
+		}
+
+		public bool IncludeDocs {
+			get => selection ["docs"];
+			set => selection ["docs"] = value;
+		}
+
+		public bool IncludeBCLxUnit {
+			get => selection ["bcl-xunit"];
+			set => selection ["bcl-xunit"] = value;
+		}
+
+		public bool IncludeBCLNUnit {
+			get => selection ["bcl-nunit"];
+			set => selection ["bcl-nunit"] = value;
+		}
+
+		public bool IncludeMscorlib {
+			get => selection ["mscorlib"];
+			set => selection ["mscorlib"] = value;
+		}
+
+		public bool IncludeNonMonotouch {
+			get => selection ["non-monotouch"];
+			set => selection ["non-monotouch"] = value;
+		}
+
+		public bool IncludeMonotouch {
+			get => selection ["monotouch"];
+			set => selection ["monotouch"] = value;
+		}
+		public bool IncludeDotNet {
+			get => selection ["dotnet"];
+			set => selection ["dotnet"] = value;
+		}
+
+		public bool IncludeMacCatalyst {
+			get => selection ["maccatalyst"];
+			set => selection ["maccatalyst"] = value;
+		}
+		public bool IncludeSystemPermissionTests {
+			get => selection ["system-permission"];
+			set => selection ["system-permission"] = value;
+		}
 		
 		public void SetEnabled (string label, bool value)
 		{
-			switch (label) {
-			case "docs":
-				IncludeDocs = value;
-				break;
-			case "mtouch":
-				IncludeMtouch = value;
-				break;
-			case "mmp":
-				IncludeMmpTest = value;
-				break;
-			case "bcl":
-				IncludeBcl = value;
-				break;
-			case "bcl-xunit":
-				IncludeBCLxUnit = value;
-				break;
-			case "bcl-nunit":
-				IncludeBCLNUnit = value;
-				break;
-			case "btouch":
-				IncludeBtouch = value;
-				break;
-			case "device":
-				IncludeDevice = value;
-				break;
-			case "ios-extensions":
-				IncludeiOSExtensions = value;
-				break;
-			case "ios-32":
-				IncludeiOS32 = value;
-				break;
-			case "ios-64":
-				IncludeiOS64 = value;
-				break;
-			case "ios":
-				IncludeiOS = value;
-				break;
-			case "ios-simulator":
-				IncludeSimulator = value;
-				break;
-			case "mac":
-				IncludeMac = value;
-				break;
-			case "mac-binding-project":
-				IncludeMacBindingProject = value;
-				break;
-			case "mscorlib":
-				IncludeMscorlib = value;
-				break;
-			case "non-monotouch":
-				IncludeNonMonotouch = value;
-				break;
-			case "tvos":
-				IncludetvOS = value;
-				break;
-			case "watchos":
-				IncludewatchOS = value;
-				break;
-			case "xtro":
-				IncludeXtro = value;
-				break;
-			case "cecil":
-				IncludeCecil = value;
-				break;
-			case "dotnet":
-				IncludeDotNet = value;
-				break;
-			case "msbuild":
-				IncludeMSBuild = value;
-				break;
-			case "all":
-				IncludeAll = value;
-				break;
-			case "old-simulator":
-				IncludeOldSimulatorTests = value;
-				break;
-			case "system-permission":
-				IncludeSystemPermissionTests = value;
-				break;
-			default:
-				throw new InvalidOperationException ($"Not known label '{label}'");
+			if (selection.ContainsKey (label)) {
+				selection [label] = value;
+			} else {
+				throw new InvalidOperationException ($"Unknown label '{label}'");
 			}
 		}
 	}
