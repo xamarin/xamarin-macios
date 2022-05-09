@@ -395,9 +395,4 @@
 !missing-selector! UITabBarItemAppearance::copy not bound
 !missing-selector! UIToolbar::setTintColor: not bound
 !missing-selector! UIToolbar::tintColor not bound
-!extra-enum-value! Managed value 1 for UITextFieldDidEndEditingReason.Cancelled is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 3 for UIBlurEffectStyle.ExtraDark is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 30 for UIPressType.PageUp is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 31 for UIPressType.PageDown is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 6 for UIButtonType.Plain is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 8 for UIModalPresentationStyle.BlurOverFullScreen is available for the current platform while the value in the native header is not

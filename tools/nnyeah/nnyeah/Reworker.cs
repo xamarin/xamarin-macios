@@ -6,8 +6,7 @@ using Mono.Cecil.Rocks;
 using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-
-#nullable enable
+using Microsoft.MaciOS.Nnyeah.AssemblyComparator;
 
 namespace Microsoft.MaciOS.Nnyeah {
 	public class Reworker {
@@ -23,6 +22,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 		TypeReference nfloatTypeReference = EmptyTypeReference;
 		TypeReference newNfloatTypeReference = EmptyTypeReference;
 		ModuleReference newNfloatModuleReference = EmptyModuleReference;
+		TypeDefinition newNativeHandleTypeDefinition = EmptyTypeDefinition;
+		TypeAndMemberMap moduleMap;
 
 		Dictionary<string, Transformation> methodSubs = new Dictionary<string, Transformation> ();
 		Dictionary<string, Transformation> fieldSubs = new Dictionary<string, Transformation> ();
@@ -30,9 +31,10 @@ namespace Microsoft.MaciOS.Nnyeah {
 		public event EventHandler<WarningEventArgs>? WarningIssued;
 		public event EventHandler<TransformEventArgs>? Transformed;
 
-		public Reworker (Stream stm)
+		public Reworker (Stream stm, TypeAndMemberMap moduleMap)
 		{
 			this.stm = stm;
+			this.moduleMap = moduleMap;
 		}
 
 		public void Load ()
@@ -80,6 +82,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			newNfloatModuleReference = new ModuleReference ("System.Private.CoreLib");
 			newNfloatTypeReference = new TypeReference ("System.Runtime.InteropServices",
 				"NFloat", null, newNfloatModuleReference, true);
+			newNativeHandleTypeDefinition = moduleMap.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
 
 			// load the substitutions
 			methodSubs = LoadMethodSubs ();
@@ -209,6 +212,13 @@ namespace Microsoft.MaciOS.Nnyeah {
 			// For any of nint, nuint, this will set the particular bool to true, false otherwise.
 			// This list will get passed to NativeIntegerAttribute, which is the special sauce
 			// that lets the runtime tell the difference between IntPtr and nint.
+
+			var typeAsString = type.ToString ();
+
+			if (moduleMap.TypeIsNotPresent (typeAsString)) {
+				throw new TypeNotFoundException (typeAsString);
+			}
+
 			if (type == module.TypeSystem.IntPtr || type == module.TypeSystem.UIntPtr) {
 				nativeTypes.Add (false);
 				result = type;
@@ -221,6 +231,9 @@ namespace Microsoft.MaciOS.Nnyeah {
 				// changing the type to NFloat doesn't require changing the flags.
 				nativeTypes.Add (false);
 				result = newNfloatTypeReference;
+				return true;
+			} else if (moduleMap.TryGetMappedType (typeAsString, out var mappedType)) {
+				result = mappedType;
 				return true;
 			} else if (type.IsGenericInstance) {
 				return TryReworkGenericType ((GenericInstanceType) type, nativeTypes, out result);
@@ -259,6 +272,23 @@ namespace Microsoft.MaciOS.Nnyeah {
 		{
 			var changes = new List<Tuple<Instruction, Transformation>> ();
 			foreach (var instruction in body.Instructions) {
+				if (instruction.Operand?.ToString () is string operandText) {
+					if (moduleMap.TypeIsNotPresent (operandText)) {
+						throw new TypeNotFoundException (operandText);
+					}
+					if (moduleMap.MemberIsNotPresent (operandText)) {
+						throw new MemberNotFoundException (operandText);
+					}
+					if (moduleMap.TryGetMappedType (operandText, out var type)) {
+						var newInstruction = ChangeTypeInstruction (instruction, type);
+						changes.Add (new Tuple<Instruction, Transformation> (instruction, new Transformation (operandText, newInstruction)));
+						continue;
+					} else if (moduleMap.TryGetMappedMember (operandText, out var member)) {
+						var newInstruction = ChangeMemberInstruction (instruction, member);
+						changes.Add (new Tuple<Instruction, Transformation> (instruction, new Transformation (operandText, newInstruction)));
+						continue;
+					}
+				}
 				if (TryGetMethodTransform (instruction, out var transform)) {
 					changes.Add (new Tuple<Instruction, Transformation> (instruction, transform));
 					continue;
@@ -277,6 +307,41 @@ namespace Microsoft.MaciOS.Nnyeah {
 					var removed = trans.Action == TransformationAction.Remove || trans.Action == TransformationAction.Replace ? (uint) 1 : 0;
 					Transformed?.Invoke (this, new TransformEventArgs (body.Method.DeclaringType.FullName, body.Method.Name, trans.Operand, added, removed));
 				}
+			}
+		}
+
+		static Instruction ChangeTypeInstruction (Instruction instruction, TypeDefinition typeDef)
+		{
+			if (instruction.Operand is TypeReference) {
+				return Instruction.Create (instruction.OpCode, typeDef);
+			}
+			// should never happen
+			throw new ArgumentException (nameof (instruction));
+		}
+
+		static Instruction ChangeMemberInstruction (Instruction instruction, IMemberDefinition member)
+		{
+			switch (member) {
+			case MethodDefinition method:
+				if (instruction.Operand is MethodReference) {
+					return Instruction.Create (instruction.OpCode, method);
+				}
+				// should never happen
+				throw new ArgumentException (nameof (instruction));
+			case FieldDefinition field:
+				if (instruction.Operand is FieldReference) {
+					return Instruction.Create (instruction.OpCode, field);
+				}
+				// should never happen
+				throw new ArgumentException (nameof (instruction));
+			case EventDefinition @event:
+			case PropertyDefinition @property:
+				// AFAICT no instruction will ever have a property or event
+				// as its operand.
+				throw new ArgumentException (nameof (member));
+			default:
+				throw new ArgumentException ($"Unknown member of type {member.GetType ().Name}", nameof (member));
+
 			}
 		}
 

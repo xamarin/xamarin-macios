@@ -273,12 +273,6 @@ namespace AVFoundation {
 		}
 	}
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("macos10.10")]
-	[SupportedOSPlatform ("maccatalyst")]
-	[SupportedOSPlatform ("tvos")]
-#endif
 #if !COREBUILD
 	public static partial class AVMetadataIdentifiers {
 	}
@@ -419,6 +413,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 	[Mac (10,15)]
 #endif

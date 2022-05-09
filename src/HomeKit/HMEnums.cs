@@ -1072,6 +1072,7 @@ namespace HomeKit {
 
 #if !WATCH && !TVOS
 		[Obsolete ("Use 'GarageDoorOpener' instead.")]
+		[NoTV]
 		DoorOpener = GarageDoorOpener,
 #endif
 

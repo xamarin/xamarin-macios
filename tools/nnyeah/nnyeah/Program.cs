@@ -1,10 +1,10 @@
 using System;
 using System.IO;
-using System.Reflection;
 using Mono.Options;
 using System.Collections.Generic;
-
-#nullable enable
+using Microsoft.MaciOS.Nnyeah.AssemblyComparator;
+using Mono.Cecil;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.MaciOS.Nnyeah {
 	class Program {
@@ -15,8 +15,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			var verbose = false;
 			var forceOverwrite = false;
 			var suppressWarnings = false;
-			var warnings = new List<string> ();
-			var transforms = new List<string> ();
+			string? xamarinAssembly = null, microsoftAssembly = null;
 
 			var options = new OptionSet () {
 				{ "h|?|help", o => doHelp = true },
@@ -25,6 +24,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 				{ "v|verbose", o => verbose = true },
 				{ "f|force-overwrite", o => forceOverwrite = true },
 				{ "s|suppress-warnings", o => suppressWarnings = true },
+				{ "x|xamarin-assembly=", f => xamarinAssembly = f },
+				{ "m|microsoft-assembly=", f => microsoftAssembly = f },
 			};
 
 			try {
@@ -33,11 +34,67 @@ namespace Microsoft.MaciOS.Nnyeah {
 				doHelp = true;
 			}
 
+			var badForMungingAssembly = infile is null || outfile is null;
+			var badForComparingAssemblies = xamarinAssembly is null || microsoftAssembly is null;
 
-			if (doHelp || infile is null || outfile is null) {
+			if (doHelp || badForComparingAssemblies || badForMungingAssembly) {
 				PrintOptions (options, Console.Out);
 				Environment.Exit (0);
 			}
+
+			if (!TryLoadTypeAndModuleMap (xamarinAssembly!, microsoftAssembly!, publicOnly: true,
+				out var typeAndModuleMap, out var failureReason)) {
+				Console.Error.WriteLine (Errors.E0011, failureReason);
+			}
+			ReworkFile (infile!, outfile!, verbose, forceOverwrite, suppressWarnings, typeAndModuleMap!);
+		}
+
+		static bool TryLoadTypeAndModuleMap (string earlier, string later, bool publicOnly,
+			[NotNullWhen (returnValue: true)] out TypeAndMemberMap? result,
+			[NotNullWhen (returnValue: false)] out string? reason)
+		{
+			try {
+				using var ealierFile = TryOpenRead (earlier);
+				using var laterFile = TryOpenRead (later);
+
+				var earlierModule = ModuleDefinition.ReadModule (ealierFile);
+				var laterModule = ModuleDefinition.ReadModule (laterFile);
+
+				var comparingVisitor = new ComparingVisitor (earlierModule, laterModule, publicOnly);
+				var map = new TypeAndMemberMap (laterModule);
+
+				comparingVisitor.TypeEvents.NotFound += (s, e) => { map.TypesNotPresent.Add (e.Original); };
+				comparingVisitor.TypeEvents.Found += (s, e) => { map.TypeMap.Add (e.Original, e.Mapped); };
+
+				comparingVisitor.MethodEvents.NotFound += (s, e) => { map.MethodsNotPresent.Add (e.Original); };
+				comparingVisitor.MethodEvents.Found += (s, e) => { map.MethodMap.Add (e.Original, e.Mapped); };
+
+				comparingVisitor.FieldEvents.NotFound += (s, e) => { map.FieldsNotPresent.Add (e.Original); };
+				comparingVisitor.FieldEvents.Found += (s, e) => { map.FieldMap.Add (e.Original, e.Mapped); };
+
+				comparingVisitor.EventEvents.NotFound += (s, e) => { map.EventsNotPresent.Add (e.Original); };
+				comparingVisitor.EventEvents.Found += (s, e) => { map.EventMap.Add (e.Original, e.Mapped); };
+
+				comparingVisitor.PropertyEvents.NotFound += (s, e) => { map.PropertiesNotPresent.Add (e.Original); };
+				comparingVisitor.PropertyEvents.Found += (s, e) => { map.PropertyMap.Add (e.Original, e.Mapped); };
+
+				comparingVisitor.Visit ();
+				result = map;
+				reason = null;
+				return true;
+			} catch (Exception e) {
+				result = null;
+				reason = e.Message;
+				return false;
+			}
+		}
+
+
+		static void ReworkFile (string infile, string outfile, bool verbose, bool forceOverwrite,
+			bool suppressWarnings, TypeAndMemberMap typeMap)
+		{
+			var warnings = new List<string> ();
+			var transforms = new List<string> ();
 
 			if (!File.Exists (infile)) {
 				Console.Error.WriteLine (Errors.E0001, infile);
@@ -51,7 +108,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 
 			using var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-			var reworker = new Reworker (stm);
+			var reworker = new Reworker (stm, typeMap);
 
 			try {
 				reworker.Load ();
@@ -73,8 +130,14 @@ namespace Microsoft.MaciOS.Nnyeah {
 					if (!suppressWarnings) {
 						warnings.ForEach (Console.WriteLine);
 					}
+				} catch (TypeNotFoundException e) {
+					Console.Error.Write (Errors.E0012, e.TypeName);
+					Environment.Exit (1);
+				} catch (MemberNotFoundException e) {
+					Console.Error.WriteLine (Errors.E0013, e.MemberName);
+					Environment.Exit (1);
 				} catch (Exception e) {
-					Console.Error.Write (Errors.E0004, e.Message);
+					Console.Error.WriteLine (Errors.E0004, e.Message);
 					Environment.Exit (1);
 				}
 			} else {
@@ -84,9 +147,26 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 		}
 
+		static Stream TryOpenRead (string path)
+		{
+			try {
+				var stm = new FileStream (path, FileMode.Open, FileAccess.Read);
+				if (stm is null) {
+					Console.Error.WriteLine (Errors.E0006, path, "");
+					Environment.Exit (1);
+				}
+				return stm;
+			} catch (Exception e) {
+				Console.Error.WriteLine (Errors.E0006, path, e.Message);
+				Environment.Exit (1);
+			}
+			return new MemoryStream (); // never reached, thanks code analysis
+		}
+
 		static void PrintOptions (OptionSet options, TextWriter writer)
 		{
 			options.WriteOptionDescriptions (writer);
+			writer.WriteLine (Errors.N0007);
 		}
 	}
 }

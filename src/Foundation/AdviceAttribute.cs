@@ -36,7 +36,7 @@ namespace Foundation
 		AttributeTargets.Method | AttributeTargets.Property |
 		AttributeTargets.Field | AttributeTargets.Event |
 		AttributeTargets.Interface | AttributeTargets.Delegate,
-		Inherited=false)]
+		Inherited=false, AllowMultiple = true)]
 	public class AdviceAttribute : Attribute
 	{
 		public AdviceAttribute (string message)

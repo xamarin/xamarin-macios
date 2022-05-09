@@ -264,7 +264,7 @@ namespace CoreSpotlight {
 		[Export ("initWithItemContentType:")]
 		NativeHandle Constructor (string itemContentType);
 
-		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+		[iOS (14,0)][Mac (11,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithContentType:")]
 		NativeHandle Constructor (UTType contentType);

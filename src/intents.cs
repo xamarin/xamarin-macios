@@ -369,7 +369,12 @@ namespace Intents {
 		Unread,
 		Flagged,
 		Unflagged,
-		[iOS (11,0), Mac (10,13), Watch (4,0)]
+#if NET
+		[NoMac]
+#else
+		[Mac (10,13)]
+#endif
+		[iOS (11,0), Watch (4,0)]
 		Played,
 	}
 
@@ -388,7 +393,12 @@ namespace Intents {
 		Unread = (1 << 1),
 		Flagged = (1 << 2),
 		Unflagged = (1 << 3),
-		[iOS (11,0), Mac (10,13), Watch (4,0)]
+#if NET
+		[NoMac]
+#else
+		[Mac (10,13)]
+#endif
+		[iOS (11,0), Watch (4,0)]
 		Played = (1UL << 4),
 	}
 
@@ -554,9 +564,9 @@ namespace Intents {
 		FailurePaymentsAmountAboveMaximum,
 		FailurePaymentsCurrencyUnsupported,
 		FailureNoBankAccount,
-		[iOS (11,0), Watch (4,0)]
+		[iOS (11,0), Watch (4,0)][NoMac]
 		FailureNotEligible,
-		[iOS (11,1), Watch (4,1)]
+		[iOS (11,1), Watch (4,1)][NoMac]
 		FailureTermsAndConditionsAcceptanceRequired,
 	}
 
@@ -660,11 +670,10 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
-		[iOS (11,0), Mac (10,13), Watch (4,0)]
+		[iOS (11,0), Watch (4,0)]
 		InProgress,
-		[iOS (11,0), Mac (10,13), Watch (4,0)]
+		[iOS (11,0), Watch (4,0)]
 		Success,
 	}
 
@@ -685,7 +694,7 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		FailureMessageServiceNotAvailable,
-		[iOS (11,0), Mac (10,13), Watch (4,0)]
+		[iOS (11,0), Watch (4,0)]
 		FailureMessageTooManyResults,
 	}
 
@@ -703,7 +712,6 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
 	}
 
@@ -740,9 +748,7 @@ namespace Intents {
 		FailurePaymentsCurrencyUnsupported,
 		FailureInsufficientFunds,
 		FailureNoBankAccount,
-		[iOS (11, 0)]
-		[Mac (10, 13, 0)]
-		[Watch (4, 0)]
+		[iOS (11, 0)][Watch (4, 0)]
 		FailureNotEligible,
 		[iOS (11,1), Watch (4,1)]
 		FailureTermsAndConditionsAcceptanceRequired,
@@ -888,14 +894,12 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureCallingServiceNotAvailable,
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		FailureContactNotSupportedByApp,
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		FailureNoValidNumber,
 	}
 
@@ -934,10 +938,8 @@ namespace Intents {
 		Failure,
 		FailureRequiringAppLaunch,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureAppConfigurationRequired,
 		[iOS (10, 2)]
-		[Mac (10, 12, 2)]
 		FailureCallingServiceNotAvailable,
 		[Watch (4,0), iOS (11,0)]
 		FailureContactNotSupportedByApp,
@@ -1374,19 +1376,19 @@ namespace Intents {
 		MediaVideo,
 		MediaPass,
 		MediaAudio,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		PaymentSent,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		PaymentRequest,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		PaymentNote,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		Animoji,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		ActivitySnippet,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		File,
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		Link,
 	}
 
@@ -4152,12 +4154,12 @@ namespace Intents {
 		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson[] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName);
 		
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType);
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:messageType:")]
 		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson [] recipients, INMessageType messageType);
 
@@ -4167,7 +4169,7 @@ namespace Intents {
 		[Export ("identifier")]
 		string Identifier { get; }
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[NullAllowed, Export ("conversationIdentifier")]
 		string ConversationIdentifier { get; }
 
@@ -4183,11 +4185,11 @@ namespace Intents {
 		[NullAllowed, Export ("recipients", ArgumentSemantic.Copy)]
 		INPerson [] Recipients { get; }
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[NullAllowed, Export ("groupName", ArgumentSemantic.Copy)]
 		INSpeakableString GroupName { get; }
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Export ("messageType")]
 		INMessageType MessageType { get; }
 
@@ -5780,22 +5782,20 @@ namespace Intents {
 	[BaseType (typeof (INIntent))]
 	interface INSearchCallHistoryIntent {
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Export ("initWithDateCreated:recipient:callCapabilities:callTypes:unseen:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, [NullAllowed] NSNumber unseen);
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Wrap ("this (dateCreated, recipient, callCapabilities, callTypes, new NSNumber (unseen))")]
 		NativeHandle Constructor ([NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities, INCallRecordTypeOptions callTypes, bool unseen);
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (INDateComponentsRange, INPerson, INCallCapabilityOptions, INCallRecordTypeOptions, NSNumber)' instead.")]
 		[Export ("initWithCallType:dateCreated:recipient:callCapabilities:")]
 		NativeHandle Constructor (INCallRecordType callType, [NullAllowed] INDateComponentsRange dateCreated, [NullAllowed] INPerson recipient, INCallCapabilityOptions callCapabilities);
 
-		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'CallTypes' instead.")]
 		[Deprecated (PlatformName.WatchOS, 4, 0, message: "Use 'CallTypes' instead.")]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'CallTypes' instead.")]
 		[Export ("callType", ArgumentSemantic.Assign)]
@@ -5810,12 +5810,12 @@ namespace Intents {
 		[Export ("callCapabilities", ArgumentSemantic.Assign)]
 		INCallCapabilityOptions CallCapabilities { get; }
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Export ("callTypes", ArgumentSemantic.Assign)]
 		INCallRecordTypeOptions CallTypes { get; }
 
 		[Protected]
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[NullAllowed, Export ("unseen", ArgumentSemantic.Copy)]
 		NSNumber WeakUnseen { get; }
 	}
@@ -5858,7 +5858,10 @@ namespace Intents {
 		[Export ("resolveRecipientForSearchCallHistory:withCompletion:")]
 		void ResolveRecipient (INSearchCallHistoryIntent intent, Action<INPersonResolutionResult> completion);
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+#if !NET
+		[Mac (10,13)]
+#endif
+		[Watch (4,0), iOS (11,0)]
 		[Export ("resolveCallTypesForSearchCallHistory:withCompletion:")]
 		void ResolveCallTypes (INSearchCallHistoryIntent intent, Action<INCallRecordTypeOptionsResolutionResult> completion);
 
@@ -5888,7 +5891,7 @@ namespace Intents {
 		[Export ("code")]
 		INSearchCallHistoryIntentResponseCode Code { get; }
 
-		[Mac (10,13), iOS (11,0), Watch (4,0)]
+		[iOS (11,0), Watch (4,0)]
 		[NullAllowed, Export ("callRecords", ArgumentSemantic.Copy)]
 		INCallRecord [] CallRecords { get; set; }
 	}
@@ -5907,11 +5910,11 @@ namespace Intents {
 		[Deprecated (PlatformName.MacOSX, 10,14, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
 		[Deprecated (PlatformName.WatchOS, 5,0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
 		[Deprecated (PlatformName.iOS, 12,0, message: "Use the overload that takes 'conversationIdentifiers' instead.")]
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:")]
 		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames);
 
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		[Export ("initWithRecipients:senders:searchTerms:attributes:dateTimeRange:identifiers:notificationIdentifiers:speakableGroupNames:conversationIdentifiers:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INPerson [] recipients, [NullAllowed] INPerson [] senders, [NullAllowed] string [] searchTerms, INMessageAttributeOptions attributes, [NullAllowed] INDateComponentsRange dateTimeRange, [NullAllowed] string [] identifiers, [NullAllowed] string [] notificationIdentifiers, [NullAllowed] INSpeakableString [] speakableGroupNames, [NullAllowed] string [] conversationIdentifiers);
@@ -5970,19 +5973,19 @@ namespace Intents {
 		[Export ("groupNamesOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator GroupNamesOperator { get; }
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[NullAllowed, Export ("speakableGroupNames", ArgumentSemantic.Copy)]
 		INSpeakableString [] SpeakableGroupNames { get; }
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Export ("speakableGroupNamesOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator SpeakableGroupNamesOperator { get; }
 
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		[NullAllowed, Export ("conversationIdentifiers", ArgumentSemantic.Copy)]
 		string [] ConversationIdentifiers { get; }
 
-		[Watch (5,0), Mac (10,14), iOS (12,0)]
+		[Watch (5,0), iOS (12,0)]
 		[Export ("conversationIdentifiersOperator", ArgumentSemantic.Assign)]
 		INConditionalOperator ConversationIdentifiersOperator { get; }
 	}
@@ -6029,7 +6032,10 @@ namespace Intents {
 		[Export ("resolveGroupNamesForSearchForMessages:withCompletion:")]
 		void ResolveGroupNames (INSearchForMessagesIntent intent, Action<INStringResolutionResult []> completion);
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+#if !NET
+		[Mac (10,13)]
+#endif
+		[Watch (4,0), iOS (11,0)]
 		[Export ("resolveSpeakableGroupNamesForSearchForMessages:withCompletion:")]
 		void ResolveSpeakableGroupNames (INSearchForMessagesIntent intent, Action<INSpeakableStringResolutionResult []> completion);
 	}
@@ -7222,12 +7228,12 @@ namespace Intents {
 		[Export ("initWithContacts:")]
 		NativeHandle Constructor ([NullAllowed] INPerson [] contacts);
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Export ("initWithDestinationType:contacts:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (INCallDestinationType destinationType, [NullAllowed] INPerson [] contacts);
 
-		[Watch (4,0), Mac (10,13), iOS (11,0)]
+		[Watch (4,0), iOS (11,0)]
 		[Export ("destinationType", ArgumentSemantic.Assign)]
 		INCallDestinationType DestinationType { get; }
 
@@ -10105,7 +10111,10 @@ namespace Intents {
 		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:notebookItemIdentifier:")]
 		NativeHandle Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType, [NullAllowed] string notebookItemIdentifier);
 
-		[Watch (6,0), Mac (10,15), iOS (13,0)]
+#if !NET
+		[Mac (10,15)]
+#endif
+		[Watch (6,0), iOS (13,0)]
 		[Export ("initWithTitle:content:itemType:status:location:locationSearchType:dateTime:dateSearchType:temporalEventTriggerTypes:taskPriority:notebookItemIdentifier:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INSpeakableString title, [NullAllowed] string content, INNotebookItemType itemType, INTaskStatus status, [NullAllowed] CLPlacemark location, INLocationSearchType locationSearchType, [NullAllowed] INDateComponentsRange dateTime, INDateSearchType dateSearchType, INTemporalEventTriggerTypeOptions temporalEventTriggerTypes, INTaskPriority taskPriority, [NullAllowed] string notebookItemIdentifier);
@@ -11102,7 +11111,7 @@ namespace Intents {
 	[DisableDefaultCtor]
 	interface INPlayMediaIntent {
 
-		[Watch (6,0), Mac (10,15), iOS (13,0)]
+		[Watch (6,0), iOS (13,0)]
 		[Export ("initWithMediaItems:mediaContainer:playShuffled:playbackRepeatMode:resumePlayback:playbackQueueLocation:playbackSpeed:mediaSearch:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] INMediaItem [] mediaItems, [NullAllowed] INMediaItem mediaContainer, [NullAllowed, BindAs (typeof (bool?))] NSNumber playShuffled, INPlaybackRepeatMode playbackRepeatMode, [NullAllowed, BindAs (typeof (bool?))] NSNumber resumePlayback, INPlaybackQueueLocation playbackQueueLocation, [NullAllowed, BindAs (typeof (double?))] NSNumber playbackSpeed, [NullAllowed] INMediaSearch mediaSearch);
