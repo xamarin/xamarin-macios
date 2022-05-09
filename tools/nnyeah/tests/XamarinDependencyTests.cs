@@ -11,7 +11,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 		[Test]
 		public async Task HasReferenceTest ()
 		{
-			var dir = Cache.CreateTemporaryDirectory ("BasicLibrary");
+			var dir = Cache.CreateTemporaryDirectory ("HasReferenceTest");
 			var code = @"
 using System;
 public class Foo {
@@ -29,7 +29,7 @@ public class Foo {
 		[Test]
 		public async Task DoesntHaveReferenceTest ()
 		{
-			var dir = Cache.CreateTemporaryDirectory ("BasicLibrary");
+			var dir = Cache.CreateTemporaryDirectory ("DoesntHaveReferenceTest");
 			var code = @"
 using System;
 public class Foo {
