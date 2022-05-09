@@ -46,7 +46,7 @@ namespace Compression
 		Inflater Inflater {
 			get {
 				if (_inflater is null)
-					_inflater = new Inflater (_algorithm);
+					throw new InvalidOperationException ("Can't access an inflater when decompressing");
 				return _inflater;
 			}
 		}
@@ -54,7 +54,7 @@ namespace Compression
 		Deflater Deflater {
 			get {
 				if (_deflater is null)
-					_deflater = new Deflater (_algorithm);
+					throw new InvalidOperationException ("Can't access a deflater when compressing");
 				return _deflater;
 			}
 		}
@@ -62,7 +62,7 @@ namespace Compression
 		Byte[] Buffer {
 			get {
 				if (_buffer is null)
-					_buffer = ArrayPool<byte>.Shared.Rent (DefaultBufferSize);
+					throw new InvalidOperationException ("Buffer has not been initialized");
 				return _buffer;
 			}
 		}
@@ -125,7 +125,19 @@ namespace Compression
 
 			_deflater = new Deflater (algorithm);
 			_mode = CompressionMode.Compress;
+			InitializeBuffer ();
+		}
+
+		private void InitializeBuffer ()
+		{
 			_buffer = ArrayPool<byte>.Shared.Rent (DefaultBufferSize);
+		}
+
+		private void EnsureBufferInitialized ()
+		{
+			if (_buffer == null) {
+				InitializeBuffer ();
+			}
 		}
 
 		public Stream? BaseStream => _stream;
@@ -217,6 +229,7 @@ namespace Compression
 		{
 			EnsureDecompressionMode ();
 			EnsureNotDisposed ();
+			EnsureBufferInitialized ();
 
 			// Try to read a single byte from zlib without allocating an array, pinning an array, etc.
 			// If zlib doesn't have any data, fall back to the base stream implementation, which will do that.
@@ -359,6 +372,8 @@ namespace Compression
 			if (cancellationToken.IsCancellationRequested) {
 				return new ValueTask<int>(Task.FromCanceled<int> (cancellationToken));
 			}
+
+			EnsureBufferInitialized ();
 
 			bool cleanup = true;
 			AsyncOperationStarting ();
