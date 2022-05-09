@@ -113,11 +113,10 @@ steps:
   displayName: 'Notarize & verify packages (ESRP)'
   condition: ${{ parameters.condition }}
 
-# upload each of the pkgs into the pipeline artifacts
+# always upload not matter what, since if we are not signing we need the artifact in the pipeline
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Notarized Classic Artifacts'
   inputs:
     targetPath: $(Build.SourcesDirectory)/package
     artifactName: classic-${{ parameters.packageName }}-signed
   continueOnError: true
-  condition: ${{ parameters.condition }}
