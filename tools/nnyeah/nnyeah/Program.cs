@@ -34,12 +34,17 @@ namespace Microsoft.MaciOS.Nnyeah {
 				doHelp = true;
 			}
 
-			var badForMungingAssembly = infile is null || outfile is null;
-			var badForComparingAssemblies = xamarinAssembly is null || microsoftAssembly is null;
+			if (infile is null || outfile is null) {
+				ExitWithOptions (options, "File for conversion (--input) and output location (--output) are required options.");
+			}
 
-			if (doHelp || badForComparingAssemblies || badForMungingAssembly) {
-				PrintOptions (options, Console.Out);
-				Environment.Exit (0);
+			// TODO - Long term this should default to files packaged within the tool but allow overrides
+			if (xamarinAssembly is null || microsoftAssembly is null) {
+				ExitWithOptions (options, "Support legacy and NET assemblies --xamarin-assembly and --microsoft-assembly are currently required options.");
+			}
+
+			if (doHelp) {
+				ExitWithOptions (options);
 			}
 
 			if (!TryLoadTypeAndModuleMap (xamarinAssembly!, microsoftAssembly!, publicOnly: true,
@@ -47,6 +52,15 @@ namespace Microsoft.MaciOS.Nnyeah {
 				Console.Error.WriteLine (Errors.E0011, failureReason);
 			}
 			ReworkFile (infile!, outfile!, verbose, forceOverwrite, suppressWarnings, typeAndModuleMap!);
+		}
+
+		static void ExitWithOptions (OptionSet options, string? message = null)
+		{
+			if (message is not null) {
+				Console.Error.WriteLine (message);
+			}
+			PrintOptions (options, Console.Out);
+			Environment.Exit (0);
 		}
 
 		static bool TryLoadTypeAndModuleMap (string earlier, string later, bool publicOnly,
