@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Text;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -11,32 +10,34 @@ using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks {
 	public abstract class AOTCompileTaskBase : XamarinTask {
 		[Required]
-		public string AOTCompilerPath { get; set; }
+		public string AOTCompilerPath { get; set; } = string.Empty;
 
 		[Required]
-		public ITaskItem [] Assemblies { get; set; }
+		public ITaskItem [] Assemblies { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
-		public string InputDirectory { get; set; }
+		public string InputDirectory { get; set; } = string.Empty;
 
 		[Required]
-		public string MinimumOSVersion { get; set; }
+		public string MinimumOSVersion { get; set; } = string.Empty;
 
 		[Required]
-		public string OutputDirectory { get; set; }
+		public string OutputDirectory { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkDevPath { get; set; }
+		public string SdkDevPath { get; set; } = string.Empty;
 
 #region Output
 		[Output]
-		public ITaskItem[] AssemblyFiles { get; set; }
+		public ITaskItem[]? AssemblyFiles { get; set; }
 
 		[Output]
-		public ITaskItem[] FileWrites { get; set; }
+		public ITaskItem[]? FileWrites { get; set; }
 #endregion
 
 		public override bool Execute ()

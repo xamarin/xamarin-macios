@@ -1,0 +1,59 @@
+#  job that signs all the diff dotnet built artifacts.
+parameters:
+
+- name: condition
+  default: and(succeeded(), eq(variables['IsPRBuild'], 'False'))
+
+steps:
+
+- template: setup.yml
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download not notaraized build
+  inputs:
+    artifact: 'not-signed-package'
+    patterns: '!*.pkg'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/package
+
+- pwsh : |
+    # Get the list of files to sign
+    $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
+
+    # Add those files to an array
+    $SignFiles = @()
+    foreach($msi in $msiFiles) {
+        Write-Host "$($msi.FullName)"
+        $SignFiles += @{ "SrcPath"="$($msi.FullName)"}
+    }
+
+    Write-Host "$msiFiles"
+
+    # array of dicts
+    $SignFileRecord = @(
+      @{
+        "Certs" = "400";
+        "SignFileList" = $SignFiles;
+      }
+    )
+
+    $SignFileList = @{
+        "SignFileRecordList" = $SignFileRecord
+    }
+
+    # Write the json to a file
+    ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
+    dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
+  displayName: 'Sign .msi'
+  condition: ${{ parameters.condition }}
+
+- template: publish-nugets.yml
+
+# upload each of the pkgs into the pipeline artifacts
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Notarized Dotnet Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package
+    artifactName: dotnet-signed
+  continueOnError: true
+  condition: ${{ parameters.condition }}
