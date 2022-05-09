@@ -16,6 +16,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable disable
+
 namespace Xamarin.Utils {
 	public class Execution {
 		public string FileName;
