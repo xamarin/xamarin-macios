@@ -671,10 +671,21 @@ namespace LinkSdk {
 #if __WATCHOS__
 			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
 #endif
+			var exceptions = new List<Exception> ();
 			WebClient wc = new WebClient ();
-			// note: needs to be executed under Instrument to verify it does not leak
-			string s = wc.DownloadString (NetworkResources.MicrosoftUrl);
-			Assert.NotNull (s);
+			foreach (var url in NetworkResources.HttpsUrls) {
+				try {
+					// note: needs to be executed under Instrument to verify it does not leak
+					string s = wc.DownloadString (url);
+					Assert.NotNull (s);
+					return; // one url succeeded, that's enough
+				} catch (Exception e) {
+					var msg = $"Url '{http}' failed: {e.ToString ()}";
+					Console.WriteLine (msg); // If this keeps occurring locally for the same url, we might have to take it off the list of urls to test.
+					exceptions.Add (msg);
+				}
+			}
+			Assert.That (exceptions, Is.Empty, "At least one url should work");
 		}
 
 #if !__TVOS__ && !__WATCHOS__ && !__MACOS__

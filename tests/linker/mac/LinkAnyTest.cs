@@ -63,22 +63,35 @@ namespace LinkAnyTest {
 			}
 		}
 
-		[Test]
-		public void WebClientTest ()
+		void WebClientTest (string[] urls)
 		{
-			var wc = new WebClient ();
-			var data = wc.DownloadString (NetworkResources.MicrosoftUrl);
+			var exceptions = new List<Exception> ();
+			foreach (var url in urls) {
+				try {
+					var wc = new WebClient ();
+					var data = wc.DownloadString (url);
 
-			Assert.That (data, Is.Not.Empty, "Downloaded content");
+					Assert.That (data, Is.Not.Empty, "Downloaded content");
+					return; // one url succeeded, that's enough
+				} catch (Exception e) {
+					var msg = $"Url '{url}' failed: {e.ToString ()}";
+					Console.WriteLine (msg); // If this keeps occurring locally for the same url, we might have to take it off the list of urls to test.
+					exceptions.Add (msg);
+				}
+			}
+			Assert.That (exceptions, Is.Empty, "At least one url should work");
+		}
+
+		[Test]
+		public void WebClientTest_Http ()
+		{
+			WebClientTest (NetworkResources.HttpUrls);
 		}
 
 		[Test]
 		public void WebClientTest_Https ()
 		{
-			var wc = new WebClient ();
-			var data = wc.DownloadString (NetworkResources.MicrosoftUrl);
-
-			Assert.That (data, Is.Not.Empty, "Downloaded content");
+			WebClientTest (NetworkResources.HttpsUrls);
 		}
 
 		[Test]
@@ -91,15 +104,26 @@ namespace LinkAnyTest {
 
 				string data = null;
 
-				async Task GetWebPage (string url)
-				{
-					var wc = new WebClient ();
-					var task = wc.DownloadStringTaskAsync (new Uri (url));
-					data = await task;
-				}
+				var exceptions = new List<Exception> ();
+				foreach (var url in NetworkResources.HttpsUrls) {
+					try {
+						async Task GetWebPage (string url)
+						{
+							var wc = new WebClient ();
+							var task = wc.DownloadStringTaskAsync (new Uri (url));
+							data = await task;
+						}
 
-				GetWebPage (NetworkResources.MicrosoftUrl).Wait ();
-				Assert.That (data, Is.Not.Empty, "Downloaded content");
+						GetWebPage (url).Wait ();
+						Assert.That (data, Is.Not.Empty, "Downloaded content");
+						return; // one url succeeded, that's enough
+					} catch (Exception e) {
+						var msg = $"Url '{http}' failed: {e.ToString ()}";
+						Console.WriteLine (msg); // If this keeps occurring locally for the same url, we might have to take it off the list of urls to test.
+						exceptions.Add (msg);
+					}
+				}
+				Assert.That (exceptions, Is.Empty, "At least one url should work");
 			} finally {
 				SynchronizationContext.SetSynchronizationContext (current_sc);
 
