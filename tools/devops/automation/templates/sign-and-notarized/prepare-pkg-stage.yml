@@ -141,6 +141,7 @@ jobs:
   displayName: 'Publish GitHub Comment - Artifacts'
   timeoutInMinutes: 1000
   dependsOn:
+  - configure
   - upload_azure_blob
   condition: succeededOrFailed()
   variables:
