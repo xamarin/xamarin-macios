@@ -63,7 +63,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				var comparingVisitor = new ComparingVisitor (earlierModule, laterModule, publicOnly);
 				var map = new TypeAndMemberMap (laterModule);
 
-				comparingVisitor.TypeEvents.NotFound += (s, e) => { 
+				comparingVisitor.TypeEvents.NotFound += (_, e) => { 
 					switch (e.Original.ToString()) {
 						case "System.nint":
 						case "System.nuint":
@@ -131,8 +131,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 
 			if (CreateReworker (infile, typeMap) is Reworker reworker) {
-				reworker.WarningIssued += (s, e) => warnings.Add (e.HelpfulMessage ());
-				reworker.Transformed += (s, e) => warnings.Add (e.HelpfulMessage ());
+				reworker.WarningIssued += (_, e) => warnings.Add (e.HelpfulMessage ());
+				reworker.Transformed += (_, e) => warnings.Add (e.HelpfulMessage ());
 
 				try {
 					using var ostm = new FileStream (outfile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
