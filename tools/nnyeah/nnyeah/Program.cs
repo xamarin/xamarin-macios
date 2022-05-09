@@ -35,12 +35,12 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 
 			if (infile is null || outfile is null) {
-				ExitWithOptions (options, "File for conversion (--input) and output location (--output) are required options.");
+				ExitWithOptions (options, Errors.E0014);
 			}
 
 			// TODO - Long term this should default to files packaged within the tool but allow overrides
 			if (xamarinAssembly is null || microsoftAssembly is null) {
-				ExitWithOptions (options, "Support legacy and NET assemblies --xamarin-assembly and --microsoft-assembly are currently required options.");
+				ExitWithOptions (options, Errors.E0015);
 			}
 
 			if (doHelp) {
