@@ -25,7 +25,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTPropertyKeys.Type);
 
-				if (key == null)
+				if (key is null)
 					return VTPropertyType.Unset;
 				if (key == VTPropertyTypeKeys.Enumeration)
 					return VTPropertyType.Enumeration;
@@ -57,7 +57,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTPropertyKeys.ReadWriteStatus);
 
-				if (key == null)
+				if (key is null)
 					return VTReadWriteStatus.Unset;
 				if (key == VTPropertyReadWriteStatusKeys.ReadOnly)
 					return VTReadWriteStatus.ReadOnly;

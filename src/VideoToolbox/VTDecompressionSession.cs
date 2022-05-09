@@ -169,7 +169,7 @@ namespace VideoToolbox {
 			VTVideoDecoderSpecification decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
 			NSDictionary destinationImageBufferAttributes = null) // Undocumented options, probably always null
 		{
-			if (formatDescription == null)
+			if (formatDescription is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatDescription));
 
 			var callbackStruct = default (VTDecompressionOutputCallbackRecord);
@@ -177,8 +177,8 @@ namespace VideoToolbox {
 			IntPtr ret;
 
 			var result = VTDecompressionSessionCreate (IntPtr.Zero, formatDescription.Handle,
-				decoderSpecification != null ? decoderSpecification.Dictionary.Handle : IntPtr.Zero,
-				destinationImageBufferAttributes != null ? destinationImageBufferAttributes.Handle : IntPtr.Zero,
+				decoderSpecification is not null ? decoderSpecification.Dictionary.Handle : IntPtr.Zero,
+				destinationImageBufferAttributes.GetHandle (),
 				ref callbackStruct,
 				out ret);
 

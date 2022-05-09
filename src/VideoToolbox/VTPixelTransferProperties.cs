@@ -27,7 +27,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.ScalingMode);
 
-				if (key == null)
+				if (key is null)
 					return VTScalingMode.Unset;
 				if (key == VTPixelTransferPropertyKeys.ScalingMode_Normal)
 					return VTScalingMode.Normal;
@@ -64,7 +64,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DownsamplingMode);
 
-				if (key == null)
+				if (key is null)
 					return VTDownsamplingMode.Unset;
 				if (key == VTPixelTransferPropertyKeys.DownsamplingMode_Decimate)
 					return VTDownsamplingMode.Decimate;
@@ -99,7 +99,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationColorPrimaries);
 
-				if (key == null)
+				if (key is null)
 					return VTColorPrimaries.Unset;
 				if (key == CVImageBuffer.ColorPrimaries_ITU_R_709_2)
 					return VTColorPrimaries.ItuR7092;
@@ -144,7 +144,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationTransferFunction);
 
-				if (key == null)
+				if (key is null)
 					return VTTransferFunction.Unset;
 				if (key == CVImageBuffer.TransferFunction_ITU_R_709_2)
 					return VTTransferFunction.ItuR7092;
@@ -176,7 +176,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationYCbCrMatrix);
 
-				if (key == null)
+				if (key is null)
 					return VTYCbCrMatrix.Unset;
 				if (key == CVImageBuffer.YCbCrMatrix_ITU_R_709_2)
 					return VTYCbCrMatrix.ItuR7092;

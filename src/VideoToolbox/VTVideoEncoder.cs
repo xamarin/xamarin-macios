@@ -173,37 +173,37 @@ namespace VideoToolbox {
 			// added in Xcode 11 so the constants won't exists in earlier SDK, making all values optional
 
 			var constant = VTVideoEncoderList.GpuRegistryId;
-			if (constant != null) {
+			if (constant is not null) {
 				var gri = dict [constant] as NSNumber;
 				GpuRegistryId = gri?.UInt64Value; // optional
 			}
 
 			constant = VTVideoEncoderList.SupportedSelectionProperties;
-			if (constant != null) {
+			if (constant is not null) {
 				if (dict.TryGetValue (constant, out NSDictionary d)) // optional
 					SupportedSelectionProperties = d;
 			}
 
 			constant = VTVideoEncoderList.PerformanceRating;
-			if (constant != null) {
+			if (constant is not null) {
 				if (dict [constant] is NSNumber performanceRatingNum)
 					PerformanceRating = performanceRatingNum; // optional
 			}
 
 			constant = VTVideoEncoderList.QualityRating;
-			if (constant != null) {
+			if (constant is not null) {
 				if (dict [constant] is NSNumber qualityRatingNum)
 					QualityRating = qualityRatingNum; // optional
 			}
 
 			constant = VTVideoEncoderList.InstanceLimit;
-			if (constant != null) {
+			if (constant is not null) {
 				var il = dict [constant] as NSNumber;
 				InstanceLimit = il?.BoolValue; // optional
 			}
 
 			constant = VTVideoEncoderList.IsHardwareAccelerated;
-			if (constant != null) {
+			if (constant is not null) {
 				var ha = dict [constant] as NSNumber;
 				IsHardwareAccelerated = ha?.BoolValue; // optional
 			}
@@ -211,16 +211,16 @@ namespace VideoToolbox {
 			// added in xcode 12.2 so the constant won't exists in earlier SDK
 
 			constant = VTVideoEncoderList.SupportsFrameReordering;
-			if (constant != null) {
+			if (constant is not null) {
 				var sfr = dict [constant] as NSNumber;
-				SupportsFrameReordering = sfr == null ? true : sfr.BoolValue; // optional, default true
+				SupportsFrameReordering = sfr?.BoolValue ?? true; // optional, default true
 			}
 
 			// added in xcode 13
 			constant = VTVideoEncoderList.IncludeStandardDefinitionDVEncoders;
-			if (constant != null) {
+			if (constant is not null) {
 				var includeDef = dict [constant] as NSNumber;
-				IncludeStandardDefinitionDVEncoders = includeDef == null ? false : includeDef.BoolValue; // optional, default false 
+				IncludeStandardDefinitionDVEncoders = includeDef?.BoolValue ?? false; // optional, default false 
 			}
 		}
 
