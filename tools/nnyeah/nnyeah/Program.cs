@@ -137,7 +137,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 					Console.Error.WriteLine (Errors.E0013, e.MemberName);
 					Environment.Exit (1);
 				} catch (Exception e) {
-					Console.Error.Write (Errors.E0004, e.Message);
+					Console.Error.WriteLine (Errors.E0004, e.Message);
 					Environment.Exit (1);
 				}
 			} else {

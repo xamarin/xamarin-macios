@@ -5,10 +5,6 @@ parameters:
   type: string
   default: 'Real'
 
-- name: enableDotnet
-  type: boolean
-  default: false
-
 - name: skipESRP
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
@@ -21,33 +17,13 @@ parameters:
 
 steps:
 
-# DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: recursive
-  path: s/xamarin-macios
-
-- checkout: maccore
-  clean: true
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
-
-- checkout: templates
-  clean: true
-
-- checkout: release-scripts
-  clean: true
-
-# the ddsign plugin needs this version or it will crash and will make the sign step fail
-- task: UseDotNet@2
-  inputs:
-    packageType: sdk
-    version: 3.x
-  displayName: 'Install .NET Core SDK 3.x needed for ESRP'
+- template: setup.yml
 
 - task: DownloadPipelineArtifact@2
-  displayName: Download not notaraized build
+  displayName: Download not notarized build
   inputs:
     artifact: 'not-signed-package'
+    patterns: '*.pkg'
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/package
 
@@ -122,48 +98,6 @@ steps:
   condition: ${{ parameters.condition }}
   timeoutInMinutes: 180
 
-- task: MicroBuildSigningPlugin@3
-  displayName: 'Install Signing Plugin'
-  inputs:
-    signType: '${{ parameters.signatureType }}'
-    azureSubscription: 'MicroBuild Signing Task (DevDiv)'
-    zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
-  env:
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  condition: ${{ parameters.condition }}
-
-- ${{ if eq(parameters.enableDotnet, true) }}:
-  - pwsh : |
-      # Get the list of files to sign
-      $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
-
-      # Add those files to an array
-      $SignFiles = @()
-      foreach($msi in $msiFiles) {
-          Write-Host "$($msi.FullName)"
-          $SignFiles += @{ "SrcPath"="$($msi.FullName)"}
-      }
-
-      Write-Host "$msiFiles"
-
-      # array of dicts
-      $SignFileRecord = @(
-        @{
-          "Certs" = "400";
-          "SignFileList" = $SignFiles;
-        }
-      )
-
-      $SignFileList = @{
-          "SignFileRecordList" = $SignFileRecord
-      }
-
-      # Write the json to a file
-      ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
-      dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
-    displayName: 'Sign .msi'
-    condition: ${{ parameters.condition }}
-
 - ${{ if or(eq(parameters.skipESRP, true), eq(variables['IsPR'], 'True')) }}:
   - bash: |
       security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
@@ -225,59 +159,17 @@ steps:
   continueOnError: true
   condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
 
-- task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3
-  displayName: 'Install Notarizing Plugin'
-  inputs:
-    signType: 'Real'  # test is not present for mac..
-    azureSubscription: 'MicroBuild Signing Task (DevDiv)'
-    zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
-  env:
-      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  condition: ${{ parameters.condition }}
-
-# upload each of the pkgs into the pipeline artifacts
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Not Notarized Build Artifacts'
-  inputs:
-    targetPath: $(Build.SourcesDirectory)/package/notarized
-    artifactName: not-notarized-pkg
-  continueOnError: true
-  condition: ${{ parameters.condition }}
-
 - task: PowerShell@2
   inputs:
     filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
   displayName: 'Notarize & verify packages (ESRP)'
   condition: ${{ parameters.condition }}
 
-- ${{ if eq(parameters.enableDotnet, true) }}:
-  - template: publish-nugets.yml
-
-- template: generate-workspace-info.yml@templates
-  parameters:
-    GitHubToken: $(GitHub.Token)
-    ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
-
-# download workload json and add it to out package internal dir, this allows the rest of jobs
-# not to need several artifacts but just package-internal
-- task: DownloadPipelineArtifact@2
-  displayName: Download WorkloadRollback.json
-  inputs:
-    patterns: '**/WorkloadRollback.json'
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/package-internal
-
+# upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
-  displayName: 'Publish Build Internal Artifacts'
-  inputs:
-    targetPath: $(Build.SourcesDirectory)/package-internal
-    artifactName: package-internal
-  continueOnError: true
-
-
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Build Artifacts (notarized)'
+  displayName: 'Publish Notarized Classic Artifacts'
   inputs:
     targetPath: $(Build.SourcesDirectory)/package
-    artifactName: package
+    artifactName: classic-signed
   continueOnError: true
+  condition: ${{ parameters.condition }}
