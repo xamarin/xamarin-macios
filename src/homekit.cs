@@ -635,7 +635,7 @@ namespace HomeKit {
 		void UnblockAccessory (HMAccessory accessory, Action<NSError> completion);
 
 		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
-		[NoWatch, NoTV, iOS (10,0)]
+		[NoWatch, NoTV, iOS (10,0)][NoMacCatalyst]
 		[Async]
 		[Export ("addAndSetupAccessoriesWithCompletionHandler:")]
 		void AddAndSetupAccessories (Action<NSError> completion);

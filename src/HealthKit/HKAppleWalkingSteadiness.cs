@@ -11,6 +11,7 @@ namespace HealthKit {
 
 #if NET
 	[SupportedOSPlatform ("ios15.0")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 	[Watch (8,0)]
 	[iOS (15,0)]
@@ -24,8 +25,8 @@ namespace HealthKit {
 
 		public static bool TryGetClassification (HKQuantity value, out HKAppleWalkingSteadinessClassification? classification, out NSError? error)
 		{
-			if (value == null)
-				throw new ArgumentNullException (nameof (value));
+			if (value is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			classification = null;
 			error = null;
 			if (HKAppleWalkingSteadinessClassificationForQuantity (value.GetHandle (), out var classificationOut, out var errorPtr)) {

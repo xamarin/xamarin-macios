@@ -234,6 +234,7 @@ namespace NetworkExtension {
 	}
 
 #if !MONOMAC
+	[NoMac]
 	[iOS (9,0)]
 	[Native]
 	public enum NEHotspotHelperCommandType : long {
@@ -246,6 +247,7 @@ namespace NetworkExtension {
 		Logoff = 6
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[Native]
 	public enum NEHotspotHelperConfidence : long {
@@ -254,6 +256,7 @@ namespace NetworkExtension {
 		High = 2
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[Native]
 	public enum NEHotspotHelperResult : long {
