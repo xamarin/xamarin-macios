@@ -92,24 +92,10 @@ namespace Xharness.Jenkins {
 			if (!project.IsExecutableProject)
 				return false;
 			
-			if (project.IsBclTest ()) {
-				if (!project.IsBclxUnit ())
-					return TestSelection.IsEnabled (TestLabel.Bcl) || TestSelection.IsEnabled (TestLabel.BclNUnit);
-				if (project.IsMscorlib ()) 
-					return TestSelection.IsEnabled(TestLabel.Mscorlib);
-				return TestSelection.IsEnabled (TestLabel.Bcl) || TestSelection.IsEnabled (TestLabel.BclXUnit);
-			}
-
-			if (!TestSelection.IsEnabled (TestLabel.Monotouch) && project.IsMonotouch ())
-				return false;
-
-			if (!TestSelection.IsEnabled (TestLabel.NonMonotouch) && !project.IsMonotouch ())
-				return false;
-
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
 				return false;
 
-			return true;
+			return TestSelection.IsEnabled (project.Label);
 		}
 
 		public bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
