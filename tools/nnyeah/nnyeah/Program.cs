@@ -63,7 +63,17 @@ namespace Microsoft.MaciOS.Nnyeah {
 				var comparingVisitor = new ComparingVisitor (earlierModule, laterModule, publicOnly);
 				var map = new TypeAndMemberMap (laterModule);
 
-				comparingVisitor.TypeEvents.NotFound += (s, e) => { map.TypesNotPresent.Add (e.Original); };
+				comparingVisitor.TypeEvents.NotFound += (s, e) => { 
+					switch (e.Original.ToString()) {
+						case "System.nint":
+						case "System.nuint":
+						case "System.nfloat":
+							break;
+						default:
+							map.TypesNotPresent.Add (e.Original);
+							break;
+					}
+				};
 				comparingVisitor.TypeEvents.Found += (s, e) => { map.TypeMap.Add (e.Original, e.Mapped); };
 
 				comparingVisitor.MethodEvents.NotFound += (s, e) => { map.MethodsNotPresent.Add (e.Original); };
@@ -89,6 +99,20 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 		}
 
+		static Reworker? CreateReworker (string infile, TypeAndMemberMap typeMap)
+		{
+			var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+			var module = ModuleDefinition.ReadModule (stm);
+
+			try {
+				return Reworker.CreateReworker (stm, module, typeMap);
+			} catch (Exception e) {
+				Console.Error.WriteLine (Errors.E0003, infile, e.Message);
+				Environment.Exit (1);
+				return null;
+			}
+		}
+
 
 		static void ReworkFile (string infile, string outfile, bool verbose, bool forceOverwrite,
 			bool suppressWarnings, TypeAndMemberMap typeMap)
@@ -106,21 +130,10 @@ namespace Microsoft.MaciOS.Nnyeah {
 				Environment.Exit (1);
 			}
 
+			if (CreateReworker (infile, typeMap) is Reworker reworker) {
+				reworker.WarningIssued += (s, e) => warnings.Add (e.HelpfulMessage ());
+				reworker.Transformed += (s, e) => warnings.Add (e.HelpfulMessage ());
 
-			using var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-			var reworker = new Reworker (stm, typeMap);
-
-			try {
-				reworker.Load ();
-			} catch (Exception e) {
-				Console.Error.WriteLine (Errors.E0003, infile, e.Message);
-				Environment.Exit (1);
-			}
-
-			reworker.WarningIssued += (s, e) => warnings.Add (e.HelpfulMessage ());
-			reworker.Transformed += (s, e) => warnings.Add (e.HelpfulMessage ());
-
-			if (reworker.NeedsReworking ()) {
 				try {
 					using var ostm = new FileStream (outfile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
 					reworker.Rework (ostm);
