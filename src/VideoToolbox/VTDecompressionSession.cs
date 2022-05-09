@@ -170,7 +170,7 @@ namespace VideoToolbox {
 			NSDictionary destinationImageBufferAttributes = null) // Undocumented options, probably always null
 		{
 			if (formatDescription == null)
-				throw new ArgumentNullException ("formatDescription");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatDescription));
 
 			var callbackStruct = default (VTDecompressionOutputCallbackRecord);
 
@@ -229,10 +229,10 @@ namespace VideoToolbox {
 #endif
 		{	
 			if (outputCallback is null)
-				throw new ArgumentNullException (nameof (outputCallback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputCallback));
 
 			if (formatDescription is null)
-				throw new ArgumentNullException (nameof (formatDescription));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatDescription));
 
 			var callbackHandle = GCHandle.Alloc (outputCallback);
 			var callbackStruct = new VTDecompressionOutputCallbackRecord () {
@@ -270,7 +270,7 @@ namespace VideoToolbox {
 		public VTStatus DecodeFrame (CMSampleBuffer sampleBuffer, VTDecodeFrameFlags decodeFlags, IntPtr sourceFrame, out VTDecodeInfoFlags infoFlags)
 		{
 			if (sampleBuffer is null)
-				throw new ArgumentNullException (nameof (sampleBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
 
 			return VTDecompressionSessionDecodeFrame (GetCheckedHandle (), sampleBuffer.Handle, decodeFlags, sourceFrame, out infoFlags);
 		}
@@ -307,9 +307,9 @@ namespace VideoToolbox {
 			out VTDecodeInfoFlags infoFlags, VTDecompressionOutputHandler outputHandler)
 		{
 			if (sampleBuffer is null)
-				throw new ArgumentNullException (nameof (sampleBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
 			if (outputHandler is null)
-				throw new ArgumentNullException (nameof (outputHandler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputHandler));
 
 			var block = new BlockLiteral ();
 			block.SetupBlockUnsafe (decompressionOutputHandlerTrampoline, outputHandler);
@@ -335,7 +335,7 @@ namespace VideoToolbox {
 		public VTStatus CanAcceptFormatDescriptor (CMFormatDescription newDescriptor)
 		{
 			if (newDescriptor is null)
-				throw new ArgumentNullException (nameof (newDescriptor));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newDescriptor));
 
 			return VTDecompressionSessionCanAcceptFormatDescription (GetCheckedHandle (), newDescriptor.Handle);
 		}
@@ -361,7 +361,7 @@ namespace VideoToolbox {
 		public VTStatus SetDecompressionProperties (VTDecompressionProperties options)
 		{
 			if (options is null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 
 			return VTSessionSetProperties (GetCheckedHandle (), options.Dictionary.Handle);
 		}

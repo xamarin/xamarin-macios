@@ -264,7 +264,7 @@ namespace VideoToolbox {
 			NSDictionary frameProperties, CVImageBuffer sourceFrame, out VTEncodeInfoFlags infoFlags)
 		{
 			if (sourceFrame is null)
-				throw new ArgumentNullException (nameof (sourceFrame));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceFrame));
 
 			return EncodeFrame (imageBuffer, presentationTimestamp, duration, frameProperties, sourceFrame.GetCheckedHandle (), out infoFlags);
 		}
@@ -273,7 +273,7 @@ namespace VideoToolbox {
 			NSDictionary frameProperties, IntPtr sourceFrame, out VTEncodeInfoFlags infoFlags)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException (nameof (imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			
 			return VTCompressionSessionEncodeFrame (GetCheckedHandle (), imageBuffer.Handle, presentationTimestamp, duration,
 				frameProperties.GetHandle (),
@@ -314,7 +314,7 @@ namespace VideoToolbox {
 			VTCompressionOutputHandler outputHandler)
 		{
 			if (sourceFrame is null)
-				throw new ArgumentNullException (nameof (sourceFrame));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceFrame));
 
 			return EncodeFrame (imageBuffer, presentationTimestamp, duration, frameProperties, sourceFrame.GetCheckedHandle (), out infoFlags, outputHandler);
 		}
@@ -325,9 +325,9 @@ namespace VideoToolbox {
 			VTCompressionOutputHandler outputHandler)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException ((imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			if (outputHandler is null)
-				throw new ArgumentNullException (nameof (outputHandler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputHandler));
 
 			var block = new BlockLiteral ();
 			block.SetupBlockUnsafe (compressionOutputHandlerTrampoline, outputHandler);
@@ -458,7 +458,7 @@ namespace VideoToolbox {
 		public VTStatus SetCompressionProperties (VTCompressionProperties options)
 		{
 			if (options is null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 
 			return VTSessionSetProperties (GetCheckedHandle (), options!.Dictionary.Handle);
 		}
