@@ -18,6 +18,7 @@ namespace Extrospection {
 		public void Execute (string pchFile, IEnumerable<string> assemblyNames, string outputDirectory = "")
 		{
 			var managed_reader = new AssemblyReader () {
+				new MapNamesVisitor (), // must come first to map managed and native names.
 				new ReleaseAttributeCheck (),
 				new DesignatedInitializerCheck (),
 				new DllImportCheck (),
