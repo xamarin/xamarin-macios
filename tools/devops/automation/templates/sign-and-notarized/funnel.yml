@@ -38,17 +38,18 @@ steps:
     inputs:
       artifact: 'classic-${{ pkg.name }}-signed'
       allowFailedBuilds: true
-      path: '$(Build.SourcesDirectory)/classic-${{ pkg.name }}-signed'
+      path: '$(Build.ArtifactStagingDirectory)/classic-${{ pkg.name }}-signed'
 
   - bash: |
       set -x
       set -e
 
-      FULL_PATH="$(Build.SourcesDirectory)/classic-${{ pkg.name }}-signed"
+      ls -lr "$(Build.ArtifactStagingDirectory)"
+      FULL_PATH="$(Build.ArtifactStagingDirectory)/classic-${{ pkg.name }}-signed"
+      ls -lR $FULL_PATH
       cp "$FULL_PATH/*.pkg" "$(Build.SourcesDirectory)/package"
       cp "$FULL_PATH/notarized/*.pkg" "$(Build.SourcesDirectory)/package/notarized"
     displayName: 'Move pkg ${{ pkg.name }} to its final destination'
-
 
 - template: generate-workspace-info.yml@templates
   parameters:
