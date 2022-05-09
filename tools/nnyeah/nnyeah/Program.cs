@@ -35,16 +35,19 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 
 			if (infile is null || outfile is null) {
-				ExitWithOptions (options, Errors.E0014);
+				Console.Error.WriteLine (Errors.E0014);
+				Environment.Exit (1);
 			}
 
 			// TODO - Long term this should default to files packaged within the tool but allow overrides
 			if (xamarinAssembly is null || microsoftAssembly is null) {
-				ExitWithOptions (options, Errors.E0015);
+				Console.Error.WriteLine (Errors.E0015);
+				Environment.Exit (1);
 			}
 
 			if (doHelp) {
-				ExitWithOptions (options);
+				PrintOptions (options, Console.Out);
+				Environment.Exit (0);
 			}
 
 			if (!TryLoadTypeAndModuleMap (xamarinAssembly!, microsoftAssembly!, publicOnly: true,
@@ -52,15 +55,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 				Console.Error.WriteLine (Errors.E0011, failureReason);
 			}
 			ReworkFile (infile!, outfile!, verbose, forceOverwrite, suppressWarnings, typeAndModuleMap!);
-		}
-
-		static void ExitWithOptions (OptionSet options, string? message = null)
-		{
-			if (message is not null) {
-				Console.Error.WriteLine (message);
-			}
-			PrintOptions (options, Console.Out);
-			Environment.Exit (0);
 		}
 
 		static bool TryLoadTypeAndModuleMap (string earlier, string later, bool publicOnly,
