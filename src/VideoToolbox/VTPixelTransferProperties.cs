@@ -5,6 +5,9 @@
 //     
 // Copyright 2015 Xamarin Inc.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;

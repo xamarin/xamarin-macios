@@ -4,6 +4,9 @@
 //     
 // Copyright 2014 Xamarin Inc.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -30,7 +33,7 @@ namespace VideoToolbox {
 			/* CFDictionaryRef */ IntPtr options,	// documented to accept NULL (no other thing)
 			/* CFArrayRef* */ out IntPtr listOfVideoEncodersOut);
 
-		static public VTVideoEncoder [] GetEncoderList ()
+		static public VTVideoEncoder []? GetEncoderList ()
 		{
 			IntPtr array;
 			if (VTCopyVideoEncoderList (IntPtr.Zero, out array) != VTStatus.Ok)
@@ -73,7 +76,7 @@ namespace VideoToolbox {
 		[iOS (13,0)]
 		[TV (13,0)]
 #endif
-		public NSDictionary SupportedSelectionProperties {get; private set; }
+		public NSDictionary? SupportedSelectionProperties {get; private set; }
 
 #if NET
 		[SupportedOSPlatform ("macos10.14.6")]
@@ -85,7 +88,7 @@ namespace VideoToolbox {
 		[iOS (13,0)]
 		[TV (13,0)]
 #endif
-		public NSNumber PerformanceRating { get; private set; }
+		public NSNumber? PerformanceRating { get; private set; }
 
 #if NET
 		[SupportedOSPlatform ("macos10.14.6")]
@@ -97,7 +100,7 @@ namespace VideoToolbox {
 		[iOS (13,0)]
 		[TV (13,0)]
 #endif
-		public NSNumber QualityRating { get; private set; }
+		public NSNumber? QualityRating { get; private set; }
 
 #if NET
 		[SupportedOSPlatform ("macos10.14.6")]
@@ -157,7 +160,11 @@ namespace VideoToolbox {
 
 		internal VTVideoEncoder (NSDictionary dict)
 		{
-			CodecType = (dict [VTVideoEncoderList.CodecType] as NSNumber).Int32Value;
+			if (dict [VTVideoEncoderList.CodecType] is NSNumber codecTypeNum)
+				CodecType = codecTypeNum.Int32Value;
+			else
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException ("VTVideoEncoder 'dict [VTVideoEncoderList.CodecType]' could not be casted to NSNumber.");
+
 			CodecName = dict [VTVideoEncoderList.CodecName] as NSString;
 			DisplayName = dict [VTVideoEncoderList.DisplayName] as NSString;
 			EncoderId = dict [VTVideoEncoderList.EncoderID] as NSString;
@@ -179,12 +186,14 @@ namespace VideoToolbox {
 
 			constant = VTVideoEncoderList.PerformanceRating;
 			if (constant != null) {
-				PerformanceRating = dict [constant] as NSNumber; // optional
+				if (dict [constant] is NSNumber performanceRatingNum)
+					PerformanceRating = performanceRatingNum; // optional
 			}
 
 			constant = VTVideoEncoderList.QualityRating;
 			if (constant != null) {
-				QualityRating = dict [constant] as NSNumber; // optional
+				if (dict [constant] is NSNumber qualityRatingNum)
+					QualityRating = qualityRatingNum; // optional
 			}
 
 			constant = VTVideoEncoderList.InstanceLimit;
@@ -245,11 +254,11 @@ namespace VideoToolbox {
 		[iOS (11,0)]
 		[TV (11,0)]
 #endif
-		public static VTSupportedEncoderProperties GetSupportedEncoderProperties (int width, int height, CMVideoCodecType codecType, NSDictionary encoderSpecification = null)
+		public static VTSupportedEncoderProperties? GetSupportedEncoderProperties (int width, int height, CMVideoCodecType codecType, NSDictionary? encoderSpecification = null)
 		{
 			IntPtr encoderIdPtr = IntPtr.Zero;
 			IntPtr supportedPropertiesPtr = IntPtr.Zero;
-			var result = VTCopySupportedPropertyDictionaryForEncoder (width, height, codecType, encoderSpecification == null ? IntPtr.Zero : encoderSpecification.Handle, out encoderIdPtr, out supportedPropertiesPtr);
+			var result = VTCopySupportedPropertyDictionaryForEncoder (width, height, codecType, encoderSpecification.GetHandle (), out encoderIdPtr, out supportedPropertiesPtr);
 
 			if (result != VTStatus.Ok) {
 				if (encoderIdPtr != IntPtr.Zero)
@@ -280,7 +289,7 @@ namespace VideoToolbox {
 	[TV (11,0)]
 #endif
 	public class VTSupportedEncoderProperties {
-		public string EncoderId { get; set; }
-		public NSDictionary SupportedProperties { get; set; }
+		public string? EncoderId { get; set; }
+		public NSDictionary? SupportedProperties { get; set; }
 	}
 }

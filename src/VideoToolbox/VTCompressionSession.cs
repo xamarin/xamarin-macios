@@ -68,7 +68,7 @@ namespace VideoToolbox {
 		// Here for legacy code, which would only work under duress (user had to manually ref the CMSampleBuffer on the callback)
 		//
 		static CompressionOutputCallback? _static_CompressionOutputCallback;
-		static CompressionOutputCallback static_CompressionOutputCallback {
+		static CompressionOutputCallback? static_CompressionOutputCallback {
 			get {
 				if (_static_CompressionOutputCallback is null)
 					_static_CompressionOutputCallback = new CompressionOutputCallback (CompressionCallback);
@@ -117,7 +117,7 @@ namespace VideoToolbox {
 		// End region of legacy code
 
 		static CompressionOutputCallback? _static_newCompressionOutputCallback;
-		static CompressionOutputCallback static_newCompressionOutputCallback {
+		static CompressionOutputCallback? static_newCompressionOutputCallback {
 			get {
 				if (_static_newCompressionOutputCallback is null)
 					_static_newCompressionOutputCallback = new CompressionOutputCallback (NewCompressionCallback);
@@ -173,7 +173,7 @@ namespace VideoToolbox {
 #if NET
 			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes?.Dictionary);
 #else
-			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes == null ? null : sourceImageBufferAttributes.Dictionary, static_CompressionOutputCallback);
+			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes?.Dictionary, static_CompressionOutputCallback);
 #endif
 		}
 
@@ -184,7 +184,7 @@ namespace VideoToolbox {
 #if NET
 		        delegate* unmanaged</* void* CM_NULLABLE */ IntPtr, /* void* CM_NULLABLE */ IntPtr, /* OSStatus */ VTStatus, VTEncodeInfoFlags, /* CMSampleBufferRef CM_NULLABLE */ IntPtr, void> staticCback)
 #else
-		        CompressionOutputCallback staticCback)
+		        CompressionOutputCallback? staticCback)
 #endif
 		{
 			var callbackHandle = default (GCHandle);
@@ -460,7 +460,7 @@ namespace VideoToolbox {
 			if (options is null)
 				throw new ArgumentNullException (nameof (options));
 
-			return VTSessionSetProperties (GetCheckedHandle (), options.Dictionary.Handle);
+			return VTSessionSetProperties (GetCheckedHandle (), options!.Dictionary.Handle);
 		}
 	}	
 }

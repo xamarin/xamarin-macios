@@ -5,6 +5,9 @@
 //     
 // Copyright 2015 Xamarin Inc.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -17,7 +20,7 @@ using CoreVideo;
 
 namespace VideoToolbox {
 	public partial class VTDecompressionProperties {
-		public CVPixelBufferPool PixelBufferPool {
+		public CVPixelBufferPool? PixelBufferPool {
 			get {
 				return GetNativeValue<CVPixelBufferPool> (VTDecompressionPropertyKey.PixelBufferPool);
 			}

@@ -5,6 +5,9 @@
 //     
 // Copyright 2015 Xamarin Inc.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -319,7 +322,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public List<VTDataRateLimit> DataRateLimits { 
+		public List<VTDataRateLimit>? DataRateLimits { 
 			get { 
 				using (var arr = GetNativeValue <NSArray> (VTCompressionPropertyKey.DataRateLimits)) {
 					if (arr == null)
@@ -488,7 +491,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTMultiPassStorage MultiPassStorage {
+		public VTMultiPassStorage? MultiPassStorage {
 			get	{
 				return GetNativeValue<VTMultiPassStorage> (VTCompressionPropertyKey.MultiPassStorage);
 			}
@@ -508,7 +511,7 @@ namespace VideoToolbox {
 		[Introduced (PlatformName.TvOS, 13,0)]
 #endif
 		public VTAlphaChannelMode AlphaChannelMode {
-			get => VTAlphaChannelModeExtensions.GetValue (GetNSStringValue (VTCompressionPropertyKey.AlphaChannelMode));
+			get => VTAlphaChannelModeExtensions.GetValue (GetNSStringValue (VTCompressionPropertyKey.AlphaChannelMode)!);
 			set => SetStringValue (VTCompressionPropertyKey.AlphaChannelMode, value.GetConstant ());
 		}
 
