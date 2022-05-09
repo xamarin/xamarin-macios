@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
@@ -65,7 +66,7 @@ namespace LinkAnyTest {
 
 		void WebClientTest (string[] urls)
 		{
-			var exceptions = new List<Exception> ();
+			var exceptions = new List<string> ();
 			foreach (var url in urls) {
 				try {
 					var wc = new WebClient ();
@@ -104,7 +105,7 @@ namespace LinkAnyTest {
 
 				string data = null;
 
-				var exceptions = new List<Exception> ();
+				var exceptions = new List<string> ();
 				foreach (var url in NetworkResources.HttpsUrls) {
 					try {
 						async Task GetWebPage (string url)
@@ -118,7 +119,7 @@ namespace LinkAnyTest {
 						Assert.That (data, Is.Not.Empty, "Downloaded content");
 						return; // one url succeeded, that's enough
 					} catch (Exception e) {
-						var msg = $"Url '{http}' failed: {e.ToString ()}";
+						var msg = $"Url '{url}' failed: {e.ToString ()}";
 						Console.WriteLine (msg); // If this keeps occurring locally for the same url, we might have to take it off the list of urls to test.
 						exceptions.Add (msg);
 					}
