@@ -97,13 +97,11 @@ namespace Xamarin.Linker.Steps
 			foreach (var type in assembly.MainModule.Types)
 				modified |= ProcessType (type);
 
+			// Make sure the linker saves any changes in the assembly.
 			if (modified) {
 				var action = Context.Annotations.GetAction (assembly);
-				switch (action) {
-				case AssemblyAction.Copy:
+				if (action == AssemblyAction.Copy)
 					Context.Annotations.SetAction (assembly, AssemblyAction.Save);
-					break;
-				}
 			}
 		}
 
