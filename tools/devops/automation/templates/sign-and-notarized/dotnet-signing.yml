@@ -49,7 +49,7 @@ steps:
 
 - pwsh: |
     mv $(Build.SourcesDirectory)/package/bundle.zip $(Build.ArtifactStagingDirectory)/not-signed-bundle.zip
-    $bundlePath = $(Build.ArtifactStagingDirectory)/bundle
+    $bundlePath = "$(Build.ArtifactStagingDirectory)/bundle"
     unzip $(Build.ArtifactStagingDirectory)/not-signed-bundle.zip -d $bundlePath
     $patterns = @(
       "*.iOS.dll",
