@@ -1,5 +1,7 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 #if WATCH
 
 using System;
@@ -16,20 +18,20 @@ namespace WatchKit {
 		public void PushController (string name, string context)
 		{
 			using (var ns = context == null ? null : new NSString (context)) {
-				PushController (name, (NSObject) ns);
+				PushController (name, (NSObject?) ns);
 			}
 		}
 
 		public void PresentController (string name, string context)
 		{
 			using (var ns = context == null ? null : new NSString (context)) {
-				PresentController (name, (NSObject) ns);
+				PresentController (name, (NSObject?) ns);
 			}
 		}
 
 		public void PresentController (string [] names, string [] contexts)
 		{
-			NSObject[] array = null;
+			NSObject[]? array = null;
 			try {
 				if (contexts != null) {
 					array = new NSObject [contexts.Length];
