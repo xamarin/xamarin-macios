@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 
@@ -99,10 +101,10 @@ namespace CoreText {
 			var value = dictionary [key];
 			if (value == null)
 				return Array.Empty<string> ();
-			return CFArray.StringArrayFromHandle (value.Handle);
+			return CFArray.StringArrayFromHandle (value.Handle)!;
 		}
 
-		public static string GetStringValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
+		public static string? GetStringValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
 		{
 			var value = dictionary [key];
 			if (value == null)
@@ -170,13 +172,13 @@ namespace CoreText {
 		{
 			List<string> v;
 			if (value == null || (v = new List<string>(value)).Count == 0)
-				SetValue (dictionary, key, (NSObject) null);
+				SetValue (dictionary, key, (NSObject?) null);
 			else
 				using (var array = NSArray.FromStrings (v.ToArray ()))
 					SetValue (dictionary, key, array);
 		}
 
-		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, NSObject value)
+		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, NSObject? value)
 		{
 			if (value != null)
 				dictionary [key] = value;
@@ -184,10 +186,10 @@ namespace CoreText {
 				dictionary.Remove (key);
 		}
 
-		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, string value)
+		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, string? value)
 		{
 			if (value == null)
-				SetValue (dictionary, key, (NSObject) null);
+				SetValue (dictionary, key, (NSObject?) null);
 			else
 				using (var s = new NSString (value))
 					SetValue (dictionary, key, (NSObject) s);
@@ -198,7 +200,7 @@ namespace CoreText {
 		{
 			List<NativeHandle> v;
 			if (value == null || (v = GetHandles (value)).Count == 0) 
-				SetNativeValue (dictionary, key, (INativeObject) null);
+				SetNativeValue (dictionary, key, (INativeObject?) null);
 			else 
 				using (var array = CFArray.FromIntPtrs (v.ToArray ()))
 					SetNativeValue (dictionary, key, array);
@@ -213,7 +215,7 @@ namespace CoreText {
 			return v;
 		}
 
-		public static void SetNativeValue (NSDictionary dictionary, NSObject key, INativeObject value)
+		public static void SetNativeValue (NSDictionary dictionary, NSObject key, INativeObject? value)
 		{
 			if (value != null) {
 				AssertWritable (dictionary);

@@ -257,7 +257,7 @@ namespace CoreText {
 
 		public NSDictionary Dictionary {get; private set;}
 
-		public string Name {
+		public string? Name {
 			get {return Adapter.GetStringValue (Dictionary, CTFontFeatureKey.Name);}
 			set {Adapter.SetValue (Dictionary, CTFontFeatureKey.Name, value);}
 		}
@@ -411,7 +411,7 @@ namespace CoreText {
 			}
 		}
 
-		public string Name {
+		public string? Name {
 			get {return Adapter.GetStringValue (Dictionary, CTFontFeatureSelectorKey.Name);}
 			set {Adapter.SetValue (Dictionary, CTFontFeatureSelectorKey.Name, value);}
 		}
@@ -1741,7 +1741,7 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTFontVariationAxisKey.DefaultValue, value);}
 		}
 
-		public string Name {
+		public string? Name {
 			get {return Adapter.GetStringValue (Dictionary, CTFontVariationAxisKey.Name);}
 			set {Adapter.SetValue (Dictionary, CTFontVariationAxisKey.Name, value);}
 		}

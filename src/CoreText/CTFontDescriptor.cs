@@ -166,22 +166,22 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Url, value);}
 		}
 
-		public string Name {
+		public string? Name {
 			get {return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.Name);}
 			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Name, value);}
 		}
 
-		public string DisplayName {
+		public string? DisplayName {
 			get {return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.DisplayName);}
 			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.DisplayName, value);}
 		}
 
-		public string FamilyName {
+		public string? FamilyName {
 			get {return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.FamilyName);}
 			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FamilyName, value);}
 		}
 
-		public string StyleName {
+		public string? StyleName {
 			get {return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.StyleName);}
 			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.StyleName, value);}
 		}

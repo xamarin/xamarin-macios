@@ -24,6 +24,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -150,7 +153,7 @@ namespace CoreText {
 			self.handle = new GCHandle ();
 		}
 
-		internal static CTRunDelegateOperations GetOperations (IntPtr refCon)
+		internal static CTRunDelegateOperations? GetOperations (IntPtr refCon)
 		{
 			GCHandle c = GCHandle.FromIntPtr (refCon);
 
@@ -221,7 +224,7 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTRunDelegateGetRefCon (IntPtr runDelegate);
 
-		public CTRunDelegateOperations Operations {
+		public CTRunDelegateOperations? Operations {
 			get {
 				return CTRunDelegateOperations.GetOperations (CTRunDelegateGetRefCon (Handle));
 			}

@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 
 using ObjCRuntime;
@@ -54,12 +57,12 @@ namespace CoreText {
 		static CTBaselineClassID ()
 		{
 			var handle = Libraries.CoreText.Handle;
-			Roman = Dlfcn.GetStringConstant (handle, "kCTBaselineClassRoman");
-			IdeographicCentered = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicCentered");
-			IdeographicLow = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicLow");
-			IdeographicHigh = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicHigh");
-			Hanging = Dlfcn.GetStringConstant (handle, "kCTBaselineClassHanging");
-			Math = Dlfcn.GetStringConstant (handle, "kCTBaselineClassMath");
+			Roman = Dlfcn.GetStringConstant (handle, "kCTBaselineClassRoman")!;
+			IdeographicCentered = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicCentered")!;
+			IdeographicLow = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicLow")!;
+			IdeographicHigh = Dlfcn.GetStringConstant (handle, "kCTBaselineClassIdeographicHigh")!;
+			Hanging = Dlfcn.GetStringConstant (handle, "kCTBaselineClassHanging")!;
+			Math = Dlfcn.GetStringConstant (handle, "kCTBaselineClassMath")!;
 		}
 #endif
 
@@ -104,8 +107,8 @@ namespace CoreText {
 		static CTBaselineFontID ()
 		{
 			var handle = Libraries.CoreText.Handle;
-			Reference = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceFont");
-			Original = Dlfcn.GetStringConstant (handle, "kCTBaselineOriginalFont");
+			Reference = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceFont")!;
+			Original = Dlfcn.GetStringConstant (handle, "kCTBaselineOriginalFont")!;
 		}
 #endif // !NET
 

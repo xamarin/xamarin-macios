@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -46,10 +49,10 @@ namespace CoreText {
 		static CTFontTraitKey ()
 		{
 			var handle = Libraries.CoreText.Handle;
-			Symbolic  = Dlfcn.GetStringConstant (handle, "kCTFontSymbolicTrait");
-			Weight    = Dlfcn.GetStringConstant (handle, "kCTFontWeightTrait");
-			Width     = Dlfcn.GetStringConstant (handle, "kCTFontWidthTrait");
-			Slant     = Dlfcn.GetStringConstant (handle, "kCTFontSlantTrait");
+			Symbolic  = Dlfcn.GetStringConstant (handle, "kCTFontSymbolicTrait")!;
+			Weight    = Dlfcn.GetStringConstant (handle, "kCTFontWeightTrait")!;
+			Width     = Dlfcn.GetStringConstant (handle, "kCTFontWidthTrait")!;
+			Slant     = Dlfcn.GetStringConstant (handle, "kCTFontSlantTrait")!;
 		}
 	}
 #endif

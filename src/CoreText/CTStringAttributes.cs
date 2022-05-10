@@ -28,6 +28,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -106,28 +109,28 @@ namespace CoreText {
 		static CTStringAttributeKey ()
 		{
 			var handle = Libraries.CoreText.Handle;
-			Font                        = Dlfcn.GetStringConstant (handle, "kCTFontAttributeName");
-			ForegroundColorFromContext  = Dlfcn.GetStringConstant (handle, "kCTForegroundColorFromContextAttributeName");
-			KerningAdjustment           = Dlfcn.GetStringConstant (handle, "kCTKernAttributeName");
-			LigatureFormation           = Dlfcn.GetStringConstant (handle, "kCTLigatureAttributeName");
-			ForegroundColor             = Dlfcn.GetStringConstant (handle, "kCTForegroundColorAttributeName");
-			BackgroundColor             = Dlfcn.GetStringConstant (handle, "kCTBackgroundColorAttributeName");
-			ParagraphStyle              = Dlfcn.GetStringConstant (handle, "kCTParagraphStyleAttributeName");
-			StrokeWidth                 = Dlfcn.GetStringConstant (handle, "kCTStrokeWidthAttributeName");
-			StrokeColor                 = Dlfcn.GetStringConstant (handle, "kCTStrokeColorAttributeName");
-			UnderlineStyle              = Dlfcn.GetStringConstant (handle, "kCTUnderlineStyleAttributeName");
-			Superscript                 = Dlfcn.GetStringConstant (handle, "kCTSuperscriptAttributeName");
-			UnderlineColor              = Dlfcn.GetStringConstant (handle, "kCTUnderlineColorAttributeName");
-			VerticalForms               = Dlfcn.GetStringConstant (handle, "kCTVerticalFormsAttributeName");
-			HorizontalInVerticalForms   = Dlfcn.GetStringConstant (handle, "kCTHorizontalInVerticalFormsAttributeName");
-			GlyphInfo                   = Dlfcn.GetStringConstant (handle, "kCTGlyphInfoAttributeName");
-			CharacterShape              = Dlfcn.GetStringConstant (handle, "kCTCharacterShapeAttributeName");
-			RunDelegate                 = Dlfcn.GetStringConstant (handle, "kCTRunDelegateAttributeName");
-			BaselineOffset              = Dlfcn.GetStringConstant (handle, "kCTBaselineOffsetAttributeName");
-			BaselineClass               = Dlfcn.GetStringConstant (handle, "kCTBaselineClassAttributeName");
-			BaselineInfo                = Dlfcn.GetStringConstant (handle, "kCTBaselineInfoAttributeName");
-			BaselineReferenceInfo       = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceInfoAttributeName");
-			WritingDirection            = Dlfcn.GetStringConstant (handle, "kCTWritingDirectionAttributeName");
+			Font                        = Dlfcn.GetStringConstant (handle, "kCTFontAttributeName")!;
+			ForegroundColorFromContext  = Dlfcn.GetStringConstant (handle, "kCTForegroundColorFromContextAttributeName")!;
+			KerningAdjustment           = Dlfcn.GetStringConstant (handle, "kCTKernAttributeName")!;
+			LigatureFormation           = Dlfcn.GetStringConstant (handle, "kCTLigatureAttributeName")!;
+			ForegroundColor             = Dlfcn.GetStringConstant (handle, "kCTForegroundColorAttributeName")!;
+			BackgroundColor             = Dlfcn.GetStringConstant (handle, "kCTBackgroundColorAttributeName")!;
+			ParagraphStyle              = Dlfcn.GetStringConstant (handle, "kCTParagraphStyleAttributeName")!;
+			StrokeWidth                 = Dlfcn.GetStringConstant (handle, "kCTStrokeWidthAttributeName")!;
+			StrokeColor                 = Dlfcn.GetStringConstant (handle, "kCTStrokeColorAttributeName")!;
+			UnderlineStyle              = Dlfcn.GetStringConstant (handle, "kCTUnderlineStyleAttributeName")!;
+			Superscript                 = Dlfcn.GetStringConstant (handle, "kCTSuperscriptAttributeName")!;
+			UnderlineColor              = Dlfcn.GetStringConstant (handle, "kCTUnderlineColorAttributeName")!;
+			VerticalForms               = Dlfcn.GetStringConstant (handle, "kCTVerticalFormsAttributeName")!;
+			HorizontalInVerticalForms   = Dlfcn.GetStringConstant (handle, "kCTHorizontalInVerticalFormsAttributeName")!;
+			GlyphInfo                   = Dlfcn.GetStringConstant (handle, "kCTGlyphInfoAttributeName")!;
+			CharacterShape              = Dlfcn.GetStringConstant (handle, "kCTCharacterShapeAttributeName")!;
+			RunDelegate                 = Dlfcn.GetStringConstant (handle, "kCTRunDelegateAttributeName")!;
+			BaselineOffset              = Dlfcn.GetStringConstant (handle, "kCTBaselineOffsetAttributeName")!;
+			BaselineClass               = Dlfcn.GetStringConstant (handle, "kCTBaselineClassAttributeName")!;
+			BaselineInfo                = Dlfcn.GetStringConstant (handle, "kCTBaselineInfoAttributeName")!;
+			BaselineReferenceInfo       = Dlfcn.GetStringConstant (handle, "kCTBaselineReferenceInfoAttributeName")!;
+			WritingDirection            = Dlfcn.GetStringConstant (handle, "kCTWritingDirectionAttributeName")!;
 		}
 	}
 #endif // !NET
@@ -155,7 +158,7 @@ namespace CoreText {
 
 		public NSDictionary Dictionary {get; private set;}
 
-		public CTFont Font {
+		public CTFont? Font {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.Font.Handle);
 				return h == IntPtr.Zero ? null : new CTFont (h, false);
@@ -193,7 +196,7 @@ namespace CoreText {
 			}
 		}
 
-		public CGColor ForegroundColor {
+		public CGColor? ForegroundColor {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.ForegroundColor.Handle);
 				return h == IntPtr.Zero ? null : new CGColor (h, false);
@@ -210,7 +213,7 @@ namespace CoreText {
 		[iOS (10,0)]
 		[Mac (10,12)]
 #endif
-		public CGColor BackgroundColor {
+		public CGColor? BackgroundColor {
 			get {
 				var h = IntPtr.Zero;
 				var x = CTStringAttributeKey.BackgroundColor;
@@ -225,7 +228,7 @@ namespace CoreText {
 			}
 		}
 
-		public CTParagraphStyle ParagraphStyle {
+		public CTParagraphStyle? ParagraphStyle {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.ParagraphStyle.Handle);
 				return h == IntPtr.Zero ? null : new CTParagraphStyle (h, false);
@@ -239,7 +242,7 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.StrokeWidth, value);}
 		}
 
-		public CGColor StrokeColor {
+		public CGColor? StrokeColor {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.StrokeColor.Handle);
 				return h == IntPtr.Zero ? null : new CGColor (h, false);
@@ -309,7 +312,7 @@ namespace CoreText {
 			}
 		}
 
-		public CGColor UnderlineColor {
+		public CGColor? UnderlineColor {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.UnderlineColor.Handle);
 				return h == IntPtr.Zero ? null : new CGColor (h, false);
@@ -368,7 +371,7 @@ namespace CoreText {
 			set { Adapter.SetValue (Dictionary, CTStringAttributeKey.BaselineOffset, value); }
 		}
 
-		public CTGlyphInfo GlyphInfo {
+		public CTGlyphInfo? GlyphInfo {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.GlyphInfo.Handle);
 				return h == IntPtr.Zero ? null : new CTGlyphInfo (h, false);
@@ -381,7 +384,7 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTStringAttributeKey.CharacterShape, value);}
 		}
 
-		public CTRunDelegate RunDelegate {
+		public CTRunDelegate? RunDelegate {
 			get {
 				var h = CFDictionary.GetValue (Dictionary.Handle, CTStringAttributeKey.RunDelegate.Handle);
 				return h == IntPtr.Zero ? null : new CTRunDelegate (h, false);
