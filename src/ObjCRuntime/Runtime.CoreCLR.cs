@@ -91,7 +91,7 @@ namespace ObjCRuntime {
 		[System.Diagnostics.Conditional ("VERBOSE_LOG")]
 		static void log_coreclr_render (string message, params object[] argumentsToRender)
 		{
-			var args = new string[argumentsToRender.Length];
+			var args = new string [argumentsToRender.Length];
 			for (var i = 0; i < args.Length; i++) {
 				string arg;
 				var obj = argumentsToRender [i];
@@ -105,7 +105,7 @@ namespace ObjCRuntime {
 					// Don't call ToString on an INativeObject, we may end up with infinite recursion.
 					arg = $"{inativeobj.Handle.ToString ()} ({obj.GetType ()})";
 				} else {
-					var toString = obj.ToString();
+					var toString = obj.ToString ();
 					var eol = toString.IndexOf ('\n');
 					if (eol != -1)
 						toString = toString.Substring (0, eol - 1) + " [...]";
