@@ -1763,12 +1763,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_ParseBundlerArguments">
 		<ParseBundlerArguments
+			Aot="@(_AotArguments)"
 			ExtraArgs="$(_BundlerArguments)"
 			NoSymbolStrip="$(NoSymbolStrip)"
 			NoDSymUtil="$(NoDSymUtil)"
 			PackageDebugSymbols="$(PackageDebugSymbols)"
 			Verbosity="$(_BundlerVerbosity)"
 			>
+			<Output TaskParameter="Aot" ItemName="_AotArguments" />
 			<Output TaskParameter="CustomBundleName" PropertyName="_CustomBundleName" />
 			<Output TaskParameter="CustomLinkFlags" ItemName="_CustomLinkFlags" />
 			<Output TaskParameter="DlSym" ItemName="_BundlerDlsym" />

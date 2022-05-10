@@ -146,6 +146,9 @@
     <Compile Include="..\..\src\ObjCRuntime\LinkWithAttribute.cs">
       <Link>external\src\ObjCRuntime\LinkWithAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\NativeNameAttribute.cs">
+      <Link>src\ObjCRuntime\NativeNameAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
       <Link>external\src\ObjCRuntime\PlatformAvailability2.cs</Link>
     </Compile>
