@@ -54,7 +54,7 @@ steps:
     $patterns = @(
       "*.iOS.dll",
       "*.tvOS.dll",
-      "*.Mac.dll", "*.macOS.dll",
+      "*.Mac.dll", "*.macOS.dll", "*XamMac.dll",
       "*.MacCatalyst.dll",
       "*.WatchOS.dll"
     )
