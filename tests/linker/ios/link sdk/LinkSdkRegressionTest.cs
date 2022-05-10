@@ -671,7 +671,7 @@ namespace LinkSdk {
 #if __WATCHOS__
 			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
 #endif
-			var exceptions = new List<Exception> ();
+			var exceptions = new List<string> ();
 			WebClient wc = new WebClient ();
 			foreach (var url in NetworkResources.HttpsUrls) {
 				try {
@@ -680,7 +680,7 @@ namespace LinkSdk {
 					Assert.NotNull (s);
 					return; // one url succeeded, that's enough
 				} catch (Exception e) {
-					var msg = $"Url '{http}' failed: {e.ToString ()}";
+					var msg = $"Url '{url}' failed: {e.ToString ()}";
 					Console.WriteLine (msg); // If this keeps occurring locally for the same url, we might have to take it off the list of urls to test.
 					exceptions.Add (msg);
 				}
