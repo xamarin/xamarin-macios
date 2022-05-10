@@ -23,7 +23,7 @@ namespace Vision {
 				throw new InvalidOperationException ($"Only '{nameof (VNHumanBodyPoseObservationJointName)}' and '{nameof (VNHumanHandPoseObservationJointName)}' are supported.");
 
 			NSString[] keys = AvailableKeys;
-			if (keys == null)
+			if (keys is null)
 				return null;
 
 			if (keys.Length == 0)
@@ -43,7 +43,7 @@ namespace Vision {
 				throw new InvalidOperationException ($"Only '{nameof (VNHumanBodyPoseObservationJointsGroupName)}' and '{nameof (VNHumanHandPoseObservationJointsGroupName)}' are supported.");
 
 			NSString[] keys = AvailableGroupKeys;
-			if (keys == null)
+			if (keys is null)
 				return null;
 
 			if (keys.Length == 0)

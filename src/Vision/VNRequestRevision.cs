@@ -18,7 +18,7 @@ namespace Vision {
 
 		internal static T []? GetSupportedVersions<T> (NSIndexSet indexSet) where T : Enum
 		{
-			if (indexSet == null)
+			if (indexSet is null)
 				return null;
 
 			var count = indexSet.Count;
