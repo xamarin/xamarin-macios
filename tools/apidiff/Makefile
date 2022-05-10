@@ -16,7 +16,7 @@ MONO_API_INFO = $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tools/mono-api-info.ex
 MONO_API_HTML = $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tools/mono-api-html.exe
 MONO_BUILD = $(SYSTEM_MONO)
 
-MONO_API_INFO_EXEC = $(MONO_BUILD) --debug $(MONO_API_INFO)
+MONO_API_INFO_EXEC = $(MONO_BUILD) --debug $(MONO_API_INFO) --ignore-inherited-interfaces
 MONO_API_HTML_EXEC = $(MONO_BUILD) --debug $(MONO_API_HTML)
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
