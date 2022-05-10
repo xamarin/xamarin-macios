@@ -106,11 +106,13 @@ namespace ObjCRuntime {
 					arg = $"{inativeobj.Handle.ToString ()} ({obj.GetType ()})";
 				} else {
 					var toString = obj.ToString ();
+					// Print one line, and at most 256 characters.
+					var strLength = Math.Min (256, toString.Length);
 					var eol = toString.IndexOf ('\n');
-					if (eol != -1)
-						toString = toString.Substring (0, eol - 1) + " [...]";
-					if (toString.Length > 256)
-						toString = toString.Substring (0, 256) + " [...]";
+					if (eol != -1 && eol < strLength)
+						strLength = eol;
+					if (strLength != toString.Length)
+						toString = toString.Substring (0, strLength) + " [...]";
 
 					arg = $"{toString} ({obj.GetType ()})";
 				}
