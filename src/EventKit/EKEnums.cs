@@ -121,7 +121,7 @@ namespace EventKit {
 	}
 
 	// NSUInteger -> EKTypes.h
-	[Native]
+	[Native ("EKCalendarEventAvailabilityMask")]
 	[Flags]
 	public enum EKCalendarEventAvailability : ulong {
 		None = 0,

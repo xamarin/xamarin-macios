@@ -893,6 +893,9 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "MPSGraphCompilationDescriptor":
+				// Runtime lookup doesn't work, but executing it works fine.
+				return true;
 			case "MPSImageDescriptor":
 				switch (selectorName) {
 				case "copyWithZone:":
