@@ -208,7 +208,7 @@ namespace CoreText {
 		static IntPtr Create (CTRunDelegateOperations operations)
 		{
 			if (operations == null)
-				throw new ArgumentNullException (nameof (operations));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (operations));
 
 			CTRunDelegateCallbacks callbacks = operations.GetCallbacks ();
 			return CTRunDelegateCreate (ref callbacks, operations.Handle);

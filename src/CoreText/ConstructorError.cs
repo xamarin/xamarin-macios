@@ -42,7 +42,7 @@ namespace CoreText {
 		public static Exception ArgumentNull (object self, string argument)
 		{
 			GC.SuppressFinalize (self);
-			return new ArgumentNullException (argument);
+			return ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (argument));
 		}
 
 		public static Exception Unknown (object self)

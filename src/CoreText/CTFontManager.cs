@@ -116,7 +116,7 @@ namespace CoreText {
 		public static bool IsFontSupported (NSUrl url)
 		{
 			if (url == null)
-				throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			return CTFontManagerIsSupportedFont (url.Handle);
 		}
 #elif !XAMCORE_3_0
@@ -134,7 +134,7 @@ namespace CoreText {
 		public static bool IsFontSupported (NSUrl url)
 		{
 			if (url == null)
-				throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			return false;
 		}
 #endif
@@ -145,7 +145,7 @@ namespace CoreText {
 		public static NSError? RegisterFontsForUrl (NSUrl fontUrl, CTFontManagerScope scope)
 		{
 			if (fontUrl == null)
-				throw new ArgumentNullException ("fontUrl");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fontUrl));
 			
 			IntPtr error = IntPtr.Zero;
 
@@ -163,7 +163,7 @@ namespace CoreText {
 		static NSArray EnsureNonNullArray (object [] items, string name)
 		{
 			if (items == null)
-				throw new ArgumentNullException (name);
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			foreach (var i in items)
 				if (i == null)
@@ -325,7 +325,7 @@ namespace CoreText {
 		public static NSError? UnregisterFontsForUrl (NSUrl fontUrl, CTFontManagerScope scope)
 		{
 			if (fontUrl == null)
-				throw new ArgumentNullException ("fontUrl");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fontUrl));
 
 			IntPtr error = IntPtr.Zero;
 
@@ -472,7 +472,7 @@ namespace CoreText {
 		public static CTFontDescriptor[] GetFonts (NSUrl url)
 		{
 			if (url == null)
-				throw new ArgumentNullException ("url");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			var arrayPtr = CTFontManagerCreateFontDescriptorsFromURL (url.Handle);
 			if (arrayPtr == IntPtr.Zero)
@@ -494,7 +494,7 @@ namespace CoreText {
 		public static bool RegisterGraphicsFont (CGFont font, out NSError? error)
 		{
 			if (font == null)
-				throw new ArgumentNullException ("font");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			IntPtr h = IntPtr.Zero;
 			bool ret;
 			try {
@@ -517,7 +517,7 @@ namespace CoreText {
 		public static bool UnregisterGraphicsFont (CGFont font, out NSError? error)
 		{
 			if (font == null)
-				throw new ArgumentNullException ("font");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			IntPtr h = IntPtr.Zero;
 			bool ret;
 			try {
@@ -726,7 +726,7 @@ namespace CoreText {
 		public static CTFontDescriptor? CreateFontDescriptor (NSData data)
 		{
 			if (data == null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			var p = CTFontManagerCreateFontDescriptorFromData (data.Handle);
 			if (p == IntPtr.Zero)
@@ -763,7 +763,7 @@ namespace CoreText {
 		public static CTFontDescriptor[]? CreateFontDescriptors (NSData data)
 		{
 			if (data == null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			var p = CTFontManagerCreateFontDescriptorsFromData (data.Handle);
 			// Copy/Create rule - we must release the CFArrayRef
@@ -879,7 +879,7 @@ namespace CoreText {
 		public static void RequestFonts (CTFontDescriptor[] fontDescriptors, CTFontManagerRequestFontsHandler completionHandler)
 		{
 			if (completionHandler == null)
-				throw new ArgumentNullException (nameof (completionHandler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (completionHandler));
 
 			using (var arr = EnsureNonNullArray (fontDescriptors, nameof (fontDescriptors))) {
 				BlockLiteral block_handler = new BlockLiteral ();

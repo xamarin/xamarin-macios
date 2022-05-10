@@ -152,7 +152,7 @@ namespace CoreText {
 		public CTStringAttributes (NSDictionary dictionary)
 		{
 			if (dictionary == null)
-				throw new ArgumentNullException ("dictionary");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 

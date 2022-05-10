@@ -155,7 +155,7 @@ namespace CoreText {
 		public CTFontDescriptorAttributes (NSDictionary dictionary)
 		{
 			if (dictionary is null)
-				throw new ArgumentNullException (nameof (dictionary));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
@@ -379,7 +379,7 @@ namespace CoreText {
 		static IntPtr Create (string name, nfloat size)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 			var nameHandle = CFString.CreateNative (name);
 			try {
 				return CTFontDescriptorCreateWithNameAndSize (nameHandle, size);
@@ -405,7 +405,7 @@ namespace CoreText {
 		public CTFontDescriptor? WithAttributes (NSDictionary attributes)
 		{
 			if (attributes is null)
-				throw new ArgumentNullException (nameof (attributes));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (attributes));
 			return CreateDescriptor (CTFontDescriptorCreateCopyWithAttributes (Handle, attributes.Handle));
 		}
 
@@ -419,7 +419,7 @@ namespace CoreText {
 		public CTFontDescriptor? WithAttributes (CTFontDescriptorAttributes attributes)
 		{
 			if (attributes == null)
-				throw new ArgumentNullException (nameof (attributes));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (attributes));
 			return CreateDescriptor (CTFontDescriptorCreateCopyWithAttributes (Handle, attributes.Dictionary.Handle));
 		}
 
@@ -688,7 +688,7 @@ namespace CoreText {
 		public NSObject? GetAttribute (NSString attribute)
 		{
 			if (attribute is null)
-				throw new ArgumentNullException (nameof (attribute));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (attribute));
 			return Runtime.GetNSObject<NSObject> (CTFontDescriptorCopyAttribute (Handle, attribute.Handle), true);
 		}
 
