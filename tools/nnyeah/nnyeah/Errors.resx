@@ -76,10 +76,13 @@
 		<value>Type {0} not found.</value>
 	</data>
 	<data name="E0011" xml:space="preserve">
-		<value>Error while attempting to compare assemblies: {1}</value>
+		<value>Error while attempting to compare assemblies: {0}</value>
 	</data>
 	<data name="E0012" xml:space="preserve">
-		<value>UiquingStringDictionary entry with key {0} has illegal value {1}.</value>
+		<value>Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
+	</data>
+	<data name="E0013" xml:space="preserve">
+		<value>Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
 	</data>
 </root>
 
