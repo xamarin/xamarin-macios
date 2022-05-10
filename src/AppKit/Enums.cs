@@ -868,10 +868,9 @@ namespace AppKit {
 #endregion
 	
 #region NSWindow
-	// This enum is called NSWindowStyleMask in the headers.
 	[NoMacCatalyst]
 	[Flags]
-	[Native]
+	[Native ("NSWindowStyleMask")]
 	public enum NSWindowStyle : ulong {
 		Borderless	       					= 0 << 0,
 		Titled		       					= 1 << 0,
