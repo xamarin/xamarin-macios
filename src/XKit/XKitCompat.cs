@@ -1,3 +1,5 @@
+#nullable enable
+
 #if !NET
 using System;
 using Foundation;
