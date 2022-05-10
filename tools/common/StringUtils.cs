@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-#nullable disable
+#nullable enable 
 
 namespace Xamarin.Utils {
 	internal class StringUtils {
@@ -20,9 +20,9 @@ namespace Xamarin.Utils {
 		static char[] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
 		static char [] mustQuoteCharactersProcess = { ' ', '\\', '"', '\'' };
 
-		public static string[] Quote (params string[] array)
+		public static string[]? Quote (params string[] array)
 		{
-			if (array == null || array.Length == 0)
+			if (array is null || array.Length == 0)
 				return array;
 
 			var rv = new string [array.Length];
@@ -53,16 +53,16 @@ namespace Xamarin.Utils {
 			return s.ToString ();
 		}
 
-		public static string [] QuoteForProcess (IList<string> arguments)
+		public static string[]? QuoteForProcess (IList<string> arguments)
 		{
-			if (arguments == null)
+			if (arguments is null)
 				return Array.Empty<string> ();
 			return QuoteForProcess (arguments.ToArray ());
 		}
 
-		public static string [] QuoteForProcess (params string [] array)
+		public static string[]? QuoteForProcess (params string [] array)
 		{
-			if (array == null || array.Length == 0)
+			if (array is null || array.Length == 0)
 				return array;
 
 			var rv = new string [array.Length];
@@ -106,9 +106,9 @@ namespace Xamarin.Utils {
 			return string.Join (" ", QuoteForProcess (arguments));
 		}
 
-		public static string Unquote (string input)
+		public static string? Unquote (string input)
 		{
-			if (input == null || input.Length == 0 || input [0] != shellQuoteChar)
+			if (input is null || input.Length == 0 || input [0] != shellQuoteChar)
 				return input;
 
 			var builder = new StringBuilder ();
@@ -124,24 +124,23 @@ namespace Xamarin.Utils {
 			return builder.ToString ();
 		}
 
-		public static bool TryParseArguments (string quotedArguments, out string [] argv, out Exception ex)
+		public static bool TryParseArguments (string quotedArguments, out string []? argv, out Exception? ex)
 		{
 			var builder = new StringBuilder ();
 			var args = new List<string> ();
-			string argument;
 			int i = 0, j;
 			char c;
 
 			while (i < quotedArguments.Length) {
 				c = quotedArguments [i];
 				if (c != ' ' && c != '\t') {
-					if ((argument = GetArgument (builder, quotedArguments, i, out j, out ex)) == null) {
+					if (GetArgument (builder, quotedArguments, i, out j, out ex) is string argument) {
+						args.Add (argument);
+						i = j;
+					} else {
 						argv = null;
 						return false;
 					}
-
-					args.Add (argument);
-					i = j;
 				}
 
 				i++;
@@ -153,7 +152,7 @@ namespace Xamarin.Utils {
 			return true;
 		}
 
-		static string GetArgument (StringBuilder builder, string buf, int startIndex, out int endIndex, out Exception ex)
+		static string? GetArgument (StringBuilder builder, string buf, int startIndex, out int endIndex, out Exception? ex)
 		{
 			bool escaped = false;
 			char qchar, c = '\0';
@@ -184,16 +183,17 @@ namespace Xamarin.Utils {
 					break;
 				} else if (qchar == '\0' && (c == '\'' || c == '"')) {
 					string sofar = builder.ToString ();
-					string embedded;
 
-					if ((embedded = GetArgument (builder, buf, i, out endIndex, out ex)) == null)
-						return null;
+					if (GetArgument (builder, buf, i, out endIndex, out ex) is string embedded ) {
+						i = endIndex;
+						builder.Clear ();
+						builder.Append (sofar);
+						builder.Append (embedded);
+						continue;
+					}
 
-					i = endIndex;
-					builder.Clear ();
-					builder.Append (sofar);
-					builder.Append (embedded);
-					continue;
+					return null;
+
 				} else {
 					builder.Append (c);
 				}
@@ -233,7 +233,7 @@ namespace Xamarin.Utils {
 		// If the original array is null, a new array is also created, with just the new value.
 		internal static T [] CopyAndAdd<T>(this T[] array, T value)
 		{
-			if (array == null || array.Length == 0)
+			if (array is null || array.Length == 0)
 				return new T [] { value };
 			var tmpArray = array;
 			Array.Resize (ref array, array.Length + 1);
