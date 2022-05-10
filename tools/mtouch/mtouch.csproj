@@ -395,6 +395,9 @@
     <Compile Include="..\..\src\ObjCRuntime\LinkWithAttribute.cs">
       <Link>src\ObjCRuntime\LinkWithAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\NativeNameAttribute.cs">
+      <Link>src\ObjCRuntime\NativeNameAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
       <Link>external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs</Link>
     </Compile>

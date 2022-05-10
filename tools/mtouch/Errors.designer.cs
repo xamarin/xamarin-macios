@@ -2497,6 +2497,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid {0} found on &apos;{1}&apos;. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+        /// </summary>
+        public static string MT4124_I {
+            get {
+                return ResourceManager.GetString("MT4124_I", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The registrar found an invalid type &apos;{0}&apos; in signature for method &apos;{1}&apos;: The interface must have a Protocol attribute specifying its wrapper type.
         ///		.
         /// </summary>
