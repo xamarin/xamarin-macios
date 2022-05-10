@@ -791,6 +791,8 @@ public class NamespaceManager
 			ImplicitNamespaces.Add ("ModelIO");
 		if (Frameworks.HaveMetal)
 			ImplicitNamespaces.Add ("Metal");
+		if (Frameworks.HaveMetalPerformanceShadersGraph)
+			ImplicitNamespaces.Add ("MetalPerformanceShadersGraph");
 
 		if (Frameworks.HaveCoreImage)
 			ImplicitNamespaces.Add ("CoreImage");
