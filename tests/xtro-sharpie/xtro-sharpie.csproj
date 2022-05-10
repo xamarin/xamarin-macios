@@ -104,6 +104,7 @@
     <Compile Include="ReleaseAttributeCheck.cs" />
     <Compile Include="NullabilityCheck.cs" />
     <Compile Include="UIAppearanceCheck.cs" />
+    <Compile Include="MapNamesCheck.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
