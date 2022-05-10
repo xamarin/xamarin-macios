@@ -54,6 +54,7 @@ namespace Xamarin.Linker {
 		public const string MediaPlayer = nameof (MediaPlayer);
 		public const string MetalKit = nameof (MetalKit);
 		public const string MetalPerformanceShaders = nameof (MetalPerformanceShaders);
+		public const string MetalPerformanceShadersGraph = nameof (MetalPerformanceShadersGraph);
 		public const string ModelIO = nameof (ModelIO);
 		public const string MultipeerConnectivity = nameof (MultipeerConnectivity);
 		public const string NaturalLanguage = nameof (NaturalLanguage);
