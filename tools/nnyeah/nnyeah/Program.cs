@@ -87,7 +87,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				comparingVisitor.TypeEvents.Found += (s, e) => { map.TypeMap.Add (e.Original, e.Mapped); };
 
 				comparingVisitor.MethodEvents.NotFound += (s, e) => { map.MethodsNotPresent.Add (e.Original); };
-				comparingVisitor.MethodEvents.Found += (s, e) => { if (!map.MethodMap.ContainsKey(e.Original)) { map.MethodMap.Add (e.Original, e.Mapped); } };
+				comparingVisitor.MethodEvents.Found += (s, e) => { map.MethodMap.Add (e.Original, e.Mapped); };
 
 				comparingVisitor.FieldEvents.NotFound += (s, e) => { map.FieldsNotPresent.Add (e.Original); };
 				comparingVisitor.FieldEvents.Found += (s, e) => { map.FieldMap.Add (e.Original, e.Mapped); };

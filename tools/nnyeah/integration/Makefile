@@ -16,7 +16,7 @@ TEST_RUN_TARGETS += run-$(1)
 run-$(1): $(1)/bin/Debug/$(1)Integration.dll
 	$(Q) rm -rf Converted/$(1)
 	$(Q) mkdir -p Converted/$(1)
-	-$(Q) $(SYSTEM_DOTNET) run --project ../nnyeah/nnyeah.csproj --input=$(1)/bin/Debug/$(1)Integration.dll --output=Converted/$(1)/$(1)Integration.dll --xamarin-assembly=$(2) --microsoft-assembly=$(3)
+	$(Q) $(SYSTEM_DOTNET) run --project ../nnyeah/nnyeah.csproj --input=$(1)/bin/Debug/$(1)Integration.dll --output=Converted/$(1)/$(1)Integration.dll --xamarin-assembly=$(2) --microsoft-assembly=$(3)
 
 endef
 

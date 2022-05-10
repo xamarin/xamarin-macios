@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Mono.Cecil;
+using MonoMod.Utils;
 
 #nullable enable
 
@@ -57,7 +58,7 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 				if (e.Kind == VisitKind.Start) {
 					var typeElements = typeStack.Peek ();
 					var member = e.Member;
-					typeElements.Methods.Add (new TypeElement<MethodDefinition> (member.ToString (), member));
+					typeElements.Methods.Add (new TypeElement<MethodDefinition> (member.GetID (), member));
 				}
 			};
 
