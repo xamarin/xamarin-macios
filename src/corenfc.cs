@@ -666,11 +666,11 @@ namespace CoreNFC {
 	}
 
 	[iOS (13,0)]
-	[Native]
 #if NET
+	[Native]
 	enum NFCFeliCaEncryptionId
 #else
-	[Advice ("The native name of this enum is 'NFCFeliCaEncryptionId'.")]
+	[Native ("NFCFeliCaEncryptionId")]
 	enum EncryptionId
 #endif
 		: long {
@@ -705,11 +705,11 @@ namespace CoreNFC {
 	}
 
 	[iOS (13,0)]
-	[Native]
 #if NET
+	[Native]
 	enum NFCFeliCaPollingRequestCode
 #else
-	[Advice ("The native name of this enum is 'NFCFeliCaPollingRequestCode'.")]
+	[Native ("NFCFeliCaPollingRequestCode")]
 	enum PollingRequestCode
 #endif
 		: long {
@@ -719,11 +719,11 @@ namespace CoreNFC {
 	}
 
 	[iOS (13,0)]
-	[Native]
 #if NET
+	[Native]
 	enum NFCFeliCaPollingTimeSlot
 #else
-	[Advice ("The native name of this enum is 'NFCFeliCaPollingTimeSlot'.")]
+	[Native ("NFCFeliCaPollingTimeSlot")]
 	enum PollingTimeSlot
 #endif
 		: long {
@@ -736,10 +736,10 @@ namespace CoreNFC {
 
 	[iOS (13,0)]
 	[Flags]
+	[NativeName ("NFCISO15693RequestFlag")]
 #if NET
 	enum NFCIso15693RequestFlag
 #else
-	[Advice ("The native name of this enum is 'NFCIso15693RequestFlag'.")]
 	enum RequestFlag
 #endif
 		: byte {
@@ -766,11 +766,11 @@ namespace CoreNFC {
 	}
 
 	[iOS (13,0)]
-	[Native]
 #if NET
+	[Native]
 	enum NFCVasErrorCode
 #else
-	[Advice ("The native name of this enum is 'NFCVasErrorCode'.")]
+	[Native ("NFCVASErrorCode")]
 	enum VasErrorCode
 #endif
 		: long {
@@ -785,11 +785,11 @@ namespace CoreNFC {
 	}
 
 	[iOS (13,0)]
-	[Native]
 #if NET
+	[Native]
 	enum NFCVasMode 
 #else
-	[Advice ("The native name of this enum is 'NFCVasMode'.")]
+	[Native ("NFCVASMode")]
 	enum VasMode 
 #endif
 		: long {
