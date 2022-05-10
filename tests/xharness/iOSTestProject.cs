@@ -12,8 +12,8 @@ namespace Xharness {
 		public bool SkipDeviceVariations;
 		public bool BuildOnly;
 
-		public iOSTestProject (string path, bool isExecutableProject = true)
-			: base (path, isExecutableProject)
+		public iOSTestProject (string label, string path, bool isExecutableProject = true)
+			: base (label, path, isExecutableProject)
 		{
 			Name = System.IO.Path.GetFileNameWithoutExtension (path);
 		}
@@ -28,7 +28,7 @@ namespace Xharness {
 
 		public override TestProject Clone ()
 		{
-			return CompleteClone (new iOSTestProject (Path, IsExecutableProject));
+			return CompleteClone (new iOSTestProject (Label, Path, IsExecutableProject));
 		}
 
 		protected override TestProject CompleteClone (TestProject project)

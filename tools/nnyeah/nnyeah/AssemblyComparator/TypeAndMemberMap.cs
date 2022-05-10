@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Collections.Generic;
+using Mono.Cecil;
 using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
@@ -8,46 +10,62 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	[XmlRoot]
 	public class TypeAndMemberMap {
 		public List<string> TypesNotPresent { get; init; } = new List<string> ();
-		public UniquingStringDictionary TypeMap { get; init; } = new UniquingStringDictionary ();
+		public Dictionary<string, TypeDefinition> TypeMap { get; init; } = new Dictionary<string, TypeDefinition> ();
 
 		public List<string> MethodsNotPresent { get; init; } = new List<string> ();
-		public UniquingStringDictionary MethodMap { get; init; } = new UniquingStringDictionary ();
+		public Dictionary<string, MethodDefinition> MethodMap { get; init; } = new Dictionary<string, MethodDefinition> ();
 
 		public List<string> FieldsNotPresent { get; init; } = new List<string> ();
-		public UniquingStringDictionary FieldMap { get; init; } = new UniquingStringDictionary ();
+		public Dictionary<string, FieldDefinition> FieldMap { get; init; } = new Dictionary<string, FieldDefinition> ();
 
 		public List<string> EventsNotPresent { get; init; } = new List<string> ();
-		public UniquingStringDictionary EventMap { get; init; } = new UniquingStringDictionary ();
+		public Dictionary<string, EventDefinition> EventMap { get; init; } = new Dictionary<string, EventDefinition> ();
 
 		public List<string> PropertiesNotPresent { get; init; } = new List<string> ();
-		public UniquingStringDictionary PropertyMap { get; init; } = new UniquingStringDictionary ();
+		public Dictionary<string, PropertyDefinition> PropertyMap { get; init; } = new Dictionary<string, PropertyDefinition> ();
 
-		public TypeAndMemberMap ()
+		public ModuleDefinition MicrosoftModule { get; init; }
+
+		public TypeAndMemberMap (ModuleDefinition module)
 		{
+			MicrosoftModule = module;
 		}
 
-		public void ToXml (string path)
+		public bool TypeIsNotPresent (string typeName)
 		{
-			using var stm = new FileStream (path, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
-			ToXml (stm);
+			return TypesNotPresent.Contains (typeName);
 		}
 
-		public void ToXml (Stream stm)
+		public bool TryGetMappedType (string typeName, [NotNullWhen (returnValue: true)] out TypeDefinition? result)
 		{
-			var serializer = new XmlSerializer (typeof (TypeAndMemberMap));
-			serializer.Serialize (stm, this);
+			return TypeMap.TryGetValue (typeName, out result);
 		}
 
-		public static TypeAndMemberMap? FromXml (string path)
+		public bool MemberIsNotPresent (string member)
 		{
-			using var stm = new FileStream (path, FileMode.Open, FileAccess.Read, FileShare.Read);
-			return FromXml (stm);
+			return MethodsNotPresent.Contains (member) ||
+				FieldsNotPresent.Contains (member) ||
+				EventsNotPresent.Contains (member) ||
+				PropertiesNotPresent.Contains (member);
 		}
 
-		public static TypeAndMemberMap? FromXml (Stream stm)
+		public bool TryGetMappedMember (string memberName, [NotNullWhen (returnValue: true)] out IMemberDefinition? member)
 		{
-			var serializer = new XmlSerializer (typeof (TypeAndMemberMap));
-			return (TypeAndMemberMap?)serializer.Deserialize (stm);
+			if (MethodMap.TryGetValue (memberName, out var method)) {
+				member = method;
+				return true;
+			} else if (FieldMap.TryGetValue (memberName, out var field)) {
+				member = field;
+				return true;
+			} else if (EventMap.TryGetValue (memberName, out var @event)) {
+				member = @event;
+				return true;
+			} else if (PropertyMap.TryGetValue (memberName, out var property)) {
+				member = property;
+				return true;
+			}
+			member = null;
+			return false;
 		}
 	}
 }
