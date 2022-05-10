@@ -59,7 +59,7 @@ namespace WatchKit {
 		{
 			var del = action as Delegate;
 			if (del == null)
-				throw new ArgumentNullException ("action");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			var met = del.Method;
 			// <quote>The method must be defined on the current interface controller object.</quote>
 			if (met.DeclaringType != GetType ())
