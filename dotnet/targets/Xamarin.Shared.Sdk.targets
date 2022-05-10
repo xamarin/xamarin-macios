@@ -995,6 +995,7 @@
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			AotArguments="@(_AotArguments)"
 			Assemblies="@(_AssembliesToAOT)"
 			AOTCompilerPath="$(_AOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"
