@@ -143,7 +143,7 @@ namespace CoreText {
 		static void Deallocate (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return;
 
 			self.Dispose ();
@@ -164,7 +164,7 @@ namespace CoreText {
 		static nfloat GetAscent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return 0;
 			return (nfloat) self.GetAscent ();
 		}
@@ -173,7 +173,7 @@ namespace CoreText {
 		static nfloat GetDescent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return 0;
 			return (nfloat) self.GetDescent ();
 		}
@@ -182,7 +182,7 @@ namespace CoreText {
 		static nfloat GetWidth (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return 0;
 			return (nfloat) self.GetWidth ();
 		}
@@ -207,7 +207,7 @@ namespace CoreText {
 
 		static IntPtr Create (CTRunDelegateOperations operations)
 		{
-			if (operations == null)
+			if (operations is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (operations));
 
 			CTRunDelegateCallbacks callbacks = operations.GetCallbacks ();

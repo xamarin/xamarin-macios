@@ -217,7 +217,7 @@ namespace CoreText {
 		public unsafe CGAffineTransform? Matrix {
 			get {
 				var d = (NSData) Dictionary [CTFontDescriptorAttributeKey.Matrix];
-				if (d == null)
+				if (d is null)
 					return null;
 				return Marshal.PtrToStructure<CGAffineTransform> (d.Bytes);
 			}
@@ -418,7 +418,7 @@ namespace CoreText {
 
 		public CTFontDescriptor? WithAttributes (CTFontDescriptorAttributes attributes)
 		{
-			if (attributes == null)
+			if (attributes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (attributes));
 			return CreateDescriptor (CTFontDescriptorCreateCopyWithAttributes (Handle, attributes.Dictionary.Handle));
 		}
@@ -734,7 +734,7 @@ namespace CoreText {
 			// FIXME: the P/Invoke used below is wrong, it expects a block, not a function pointer.
 			// throwing a NIE instead of crashing until this is implemented properly.
 			throw new NotImplementedException ();
-//			var ma = mandatoryAttributes == null ? IntPtr.Zero : mandatoryAttributes.Handle;
+//			var ma = mandatoryAttributes is null ? IntPtr.Zero : mandatoryAttributes.Handle;
 //			// FIXME: SIGSEGV probably due to mandatoryAttributes mismatch
 //			using (var ar = CFArray.FromNativeObjects (descriptors)) {
 //				return CTFontDescriptorMatchFontDescriptorsWithProgressHandler (ar.Handle, ma, progressHandler);

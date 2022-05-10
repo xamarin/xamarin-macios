@@ -67,7 +67,7 @@ namespace CoreText {
 		public static int? GetInt32Value (IDictionary<NSObject, NSObject> dictionary, NSObject key)
 		{
 			var value = dictionary [key];
-			if (value == null)
+			if (value is null)
 				return null;
 			return ((NSNumber) value).Int32Value;
 		}
@@ -75,7 +75,7 @@ namespace CoreText {
 		public static nuint? GetUnsignedIntegerValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
 		{
 			var value = dictionary [key];
-			if (value == null)
+			if (value is null)
 				return null;
 			return ((NSNumber) value).NUIntValue;
 		}
@@ -91,7 +91,7 @@ namespace CoreText {
 		public static float? GetSingleValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
 		{
 			var value = dictionary [key];
-			if (value == null)
+			if (value is null)
 				return null;
 			return ((NSNumber) value).FloatValue;
 		}
@@ -99,7 +99,7 @@ namespace CoreText {
 		public static string[] GetStringArray (IDictionary<NSObject, NSObject> dictionary, NSObject key)
 		{
 			var value = dictionary [key];
-			if (value == null)
+			if (value is null)
 				return Array.Empty<string> ();
 			return CFArray.StringArrayFromHandle (value.Handle)!;
 		}
@@ -107,7 +107,7 @@ namespace CoreText {
 		public static string? GetStringValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
 		{
 			var value = dictionary [key];
-			if (value == null)
+			if (value is null)
 				return null;
 			return ((NSString) value).ToString ();
 		}
@@ -115,7 +115,7 @@ namespace CoreText {
 		public static uint? GetUInt32Value (IDictionary<NSObject, NSObject> dictionary, NSObject key)
 		{
 			var value = dictionary [key];
-			if (value == null)
+			if (value is null)
 				return null;
 			return ((NSNumber) value).UInt32Value;
 		}
@@ -123,7 +123,7 @@ namespace CoreText {
 		public static bool? GetBoolValue (NSDictionary dictionary, NSObject key)
 		{
 			var value = dictionary [key];
-			if (value == null)
+			if (value is null)
 				return null;
 			return ((NSNumber) value).BoolValue;
 		}
@@ -171,7 +171,7 @@ namespace CoreText {
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, IEnumerable<string> value)
 		{
 			List<string> v;
-			if (value == null || (v = new List<string>(value)).Count == 0)
+			if (value is null || (v = new List<string>(value)).Count == 0)
 				SetValue (dictionary, key, (NSObject?) null);
 			else
 				using (var array = NSArray.FromStrings (v.ToArray ()))
@@ -180,7 +180,7 @@ namespace CoreText {
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, NSObject? value)
 		{
-			if (value != null)
+			if (value is not null)
 				dictionary [key] = value;
 			else
 				dictionary.Remove (key);
@@ -188,7 +188,7 @@ namespace CoreText {
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, string? value)
 		{
-			if (value == null)
+			if (value is null)
 				SetValue (dictionary, key, (NSObject?) null);
 			else
 				using (var s = new NSString (value))
@@ -199,7 +199,7 @@ namespace CoreText {
 			where T : INativeObject
 		{
 			List<NativeHandle> v;
-			if (value == null || (v = GetHandles (value)).Count == 0) 
+			if (value is null || (v = GetHandles (value)).Count == 0) 
 				SetNativeValue (dictionary, key, (INativeObject?) null);
 			else 
 				using (var array = CFArray.FromIntPtrs (v.ToArray ()))
@@ -217,7 +217,7 @@ namespace CoreText {
 
 		public static void SetNativeValue (NSDictionary dictionary, NSObject key, INativeObject? value)
 		{
-			if (value != null) {
+			if (value is not null) {
 				AssertWritable (dictionary);
 				CFMutableDictionary.SetValue (dictionary.Handle, key.Handle, value.Handle);
 			}

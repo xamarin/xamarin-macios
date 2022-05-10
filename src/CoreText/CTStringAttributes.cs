@@ -151,7 +151,7 @@ namespace CoreText {
 
 		public CTStringAttributes (NSDictionary dictionary)
 		{
-			if (dictionary == null)
+			if (dictionary is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
@@ -217,13 +217,13 @@ namespace CoreText {
 			get {
 				var h = IntPtr.Zero;
 				var x = CTStringAttributeKey.BackgroundColor;
-				if (x != null)
+				if (x is not null)
 					h = CFDictionary.GetValue (Dictionary.Handle, x.Handle);
 				return h == IntPtr.Zero ? null : new CGColor (h, false);
 			}
 			set {
 				var x = CTStringAttributeKey.BackgroundColor;
-				if (x != null)
+				if (x is not null)
 					Adapter.SetNativeValue (Dictionary, x, value);
 			}
 		}
@@ -346,11 +346,11 @@ namespace CoreText {
 		public int? HorizontalInVerticalForms {
 			get {
 				var x = CTStringAttributeKey.HorizontalInVerticalForms;
-				return x != null ? Adapter.GetInt32Value (Dictionary, x) : null;
+				return x is not null ? Adapter.GetInt32Value (Dictionary, x) : null;
 			}
 			set {
 				var x = CTStringAttributeKey.HorizontalInVerticalForms;
-				if (x != null)
+				if (x is not null)
 					Adapter.SetValue (Dictionary, x, value);
 			}
 		}
@@ -398,7 +398,7 @@ namespace CoreText {
 				return value == IntPtr.Zero ? (CTBaselineClass?) null : CTBaselineClassID.FromHandle (value);
 			}
 			set {
-				var ns_value = value == null ? null : CTBaselineClassID.ToNSString (value.Value);
+				var ns_value = value is null ? null : CTBaselineClassID.ToNSString (value.Value);
 				Adapter.SetNativeValue (Dictionary, CTStringAttributeKey.BaselineClass, ns_value);
 			}
 		}

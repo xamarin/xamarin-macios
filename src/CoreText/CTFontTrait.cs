@@ -105,7 +105,7 @@ namespace CoreText {
 
 		public CTFontTraits (NSDictionary dictionary)
 		{
-			if (dictionary == null)
+			if (dictionary is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
