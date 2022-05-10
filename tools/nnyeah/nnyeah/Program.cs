@@ -34,10 +34,18 @@ namespace Microsoft.MaciOS.Nnyeah {
 				doHelp = true;
 			}
 
-			var badForMungingAssembly = infile is null || outfile is null;
-			var badForComparingAssemblies = xamarinAssembly is null || microsoftAssembly is null;
+			if (infile is null || outfile is null) {
+				Console.Error.WriteLine (Errors.E0014);
+				Environment.Exit (1);
+			}
 
-			if (doHelp || badForComparingAssemblies || badForMungingAssembly) {
+			// TODO - Long term this should default to files packaged within the tool but allow overrides
+			if (xamarinAssembly is null || microsoftAssembly is null) {
+				Console.Error.WriteLine (Errors.E0015);
+				Environment.Exit (1);
+			}
+
+			if (doHelp) {
 				PrintOptions (options, Console.Out);
 				Environment.Exit (0);
 			}
