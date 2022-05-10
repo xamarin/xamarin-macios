@@ -460,7 +460,7 @@ namespace VideoToolbox {
 			if (options is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 
-			return VTSessionSetProperties (GetCheckedHandle (), options!.Dictionary.Handle);
+			return VTSessionSetProperties (GetCheckedHandle (), options.Dictionary.Handle);
 		}
 	}	
 }
