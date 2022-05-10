@@ -7,13 +7,15 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using CoreGraphics;
 
 namespace Vision {
 	public partial class VNFaceLandmarkRegion2D {
 
-		public virtual CGPoint [] NormalizedPoints {
+		public virtual CGPoint []? NormalizedPoints {
 			get {
 				var ret = _GetNormalizedPoints ();
 				if (ret == IntPtr.Zero)
@@ -30,7 +32,7 @@ namespace Vision {
 			}
 		}
 
-		public virtual CGPoint [] GetPointsInImage (CGSize imageSize)
+		public virtual CGPoint []? GetPointsInImage (CGSize imageSize)
 		{
 			// return the address of the array of pointCount points
 			// or NULL if the conversion could not take place.

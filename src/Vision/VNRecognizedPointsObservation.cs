@@ -7,6 +7,8 @@
 // Copyright (c) Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -14,7 +16,7 @@ using ObjCRuntime;
 namespace Vision {
 	public partial class VNRecognizedPointsObservation {
 
-		public T [] GetAvailableKeys<T> () where T : Enum
+		public T []? GetAvailableKeys<T> () where T : Enum
 		{
 			var type = typeof (T);
 			if (!(type == typeof (VNHumanBodyPoseObservationJointName) || type == typeof (VNHumanHandPoseObservationJointName)))
@@ -34,7 +36,7 @@ namespace Vision {
 			return null;
 		}
 
-		public T [] GetAvailableGroupKeys<T> () where T : Enum
+		public T []? GetAvailableGroupKeys<T> () where T : Enum
 		{
 			var type = typeof (T);
 			if (!(type == typeof (VNHumanBodyPoseObservationJointsGroupName) || type == typeof (VNHumanHandPoseObservationJointsGroupName)))

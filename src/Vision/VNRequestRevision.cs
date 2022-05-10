@@ -7,6 +7,8 @@
 // Copyright 2018 Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -14,7 +16,7 @@ using ObjCRuntime;
 namespace Vision {
 	public partial class VNRequest {
 
-		internal static T [] GetSupportedVersions<T> (NSIndexSet indexSet) where T : Enum
+		internal static T []? GetSupportedVersions<T> (NSIndexSet indexSet) where T : Enum
 		{
 			if (indexSet == null)
 				return null;
