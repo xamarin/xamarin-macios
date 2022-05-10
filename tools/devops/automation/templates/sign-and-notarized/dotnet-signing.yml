@@ -47,6 +47,48 @@ steps:
   displayName: 'Sign .msi'
   condition: ${{ parameters.condition }}
 
+- pwsh: |
+    mv $(Build.SourcesDirectory)/package/bundle.zip $(Build.ArtifactStagingDirectory)/not-signed-bundle.zip
+    $bundlePath = $(Build.ArtifactStagingDirectory)/bundle
+    unzip $(Build.ArtifactStagingDirectory)/not-signed-bundle.zip -d $bundlePath
+    $patterns = @(
+      "*.iOS.dll",
+      "*.tvOS.dll",
+      "*.Mac.dll", "*.macOS.dll",
+      "*.MacCatalyst.dll",
+      "*.WatchOS.dll"
+    )
+    $files = @()
+    foreach ($p in $patterns) {
+      $files += Get-ChildItem -Path $bundlePath -Recurse  -Filter $p
+    }
+
+    $SignFiles = @()
+    foreach($f in $files) {
+        Write-Host "$($f.FullName)"
+        $SignFiles += @{ "SrcPath"="$($f.FullName)"}
+    }
+
+    $SignFileRecord = @(
+      @{
+        "Certs" = "400";
+        "SignFileList" = $SignFiles;
+      }
+    )
+
+    $SignFileList = @{
+        "SignFileRecordList" = $SignFileRecord
+    }
+
+    # Write the json to a file
+    ConvertTo-Json -InputObject $SignFileList -Depth 100 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/bundle.json -Force
+    dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/bundle.json
+    # rezip and move back
+    ditto -c -k --sequesterRsrc --keepParent $bundlePath bundle.zip
+    mv bundle.zip $(Build.SourcesDirectory)/package/bundle.zip
+  displayName: 'Sign bundle.zip'
+  workingDirectory: $(Build.ArtifactStagingDirectory)
+
 - template: publish-nugets.yml
 
 # always upload no matter what, since if we are not signing we need the artifact in the pipeline
