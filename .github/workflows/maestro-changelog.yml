@@ -9,21 +9,21 @@ jobs:
     # if: github.actor == 'dotnet-maestro[bot]'
 
     steps:
-    - run: |
+    - name: 'Dump environment'
+      run: |
         set -e
         set -x
         env | sort
-      name: 'Dump environment'
 
-    - run: |
+    - name: 'Compute changelog'
+      run: |
         set -e
         set -x
         git clone https://github.com/spouliot/dotnet-tools
         cd dotnet-tools/changelog
-      name: 'Compute changelog'
 
-    - uses: actions/github-script@v5
-      name: 'Add changelog'
+    - name: 'Add changelog'
+      uses: actions/github-script@v5
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
@@ -32,4 +32,4 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo,
             body: '👋 Changelog goes here! 👋'
-          })'
+          })
