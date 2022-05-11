@@ -76,7 +76,7 @@ stages:
       SKIP_TESTS: $[ dependencies.configure.outputs['labels.skip-all-tests'] ]
 
     steps:
-    - ${{ if contains(variables['SKIP_TESTS'], 'skip-all-tests') }}:
+    - ${{ if contains(variables['SKIP_TESTS'], 'True') }}:
       - pwsh: |
           Write-Host "Mac tests were skipped because the 'skip-all-tests' label was passed."
         displayName: 'Skip mac tests.'
