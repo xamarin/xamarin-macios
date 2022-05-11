@@ -56,10 +56,12 @@ report_error ()
 }
 trap report_error ERR
 
-if test -z "$PR_ID"; then
-	BASE=HEAD
-else
-	BASE="origin/pr/$PR_ID/merge"
+if test -z "$BASE"; then
+	if test -z "$PR_ID"; then
+		BASE=HEAD^1
+	else
+		BASE="origin/pr/$PR_ID/merge^1"
+	fi
 fi
 
 if ! git rev-parse "$BASE" >/dev/null 2>&1; then
@@ -69,7 +71,7 @@ if ! git rev-parse "$BASE" >/dev/null 2>&1; then
 	exit 0
 fi
 
-./tools/compare-commits.sh --base="$BASE^1" "--failure-file=$COMPARE_FAILURE_FILE"
+./tools/compare-commits.sh --base="$BASE" "--failure-file=$COMPARE_FAILURE_FILE"
 
 mkdir -p "$API_COMPARISON"
 
