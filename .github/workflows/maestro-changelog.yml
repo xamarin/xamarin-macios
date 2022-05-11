@@ -23,10 +23,9 @@ jobs:
         dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} | tee changelog.txt 2>&1
 
         rm -f changelog2.txt
-        #echo "CHANGELOG_MESSAGE=changelog\\nline2" >> changelog2.txt
         echo "CHANGELOG_MESSAGE<<EOF" >> changelog2.txt
         echo -n "changelog.txt\\nline2\\n" >> changelog2.txt
-        cat changelog.txt | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' >> changelog2.txt
+        cat changelog.txt | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/xxx/g' >> changelog2.txt
         echo "" >> changelog2.txt
         echo EOF >> changelog2.txt
         cat changelog2.txt
