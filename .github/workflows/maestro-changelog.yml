@@ -43,6 +43,7 @@ jobs:
           const commentId = ""
           console.log (comments)
           console.log ("adding changelog")
+          console.log ("existing comments: " + comments.length)
           for (const comment in allComments) {
             console.log("comment: " + comment)
             console.log("body: " + comment.body)
