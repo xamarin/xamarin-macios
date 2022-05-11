@@ -510,9 +510,20 @@ namespace VideoToolbox {
 		[Introduced (PlatformName.iOS, 13,0)]
 		[Introduced (PlatformName.TvOS, 13,0)]
 #endif
-		public VTAlphaChannelMode AlphaChannelMode {
-			get => VTAlphaChannelModeExtensions.GetValue (GetNSStringValue (VTCompressionPropertyKey.AlphaChannelMode)!);
-			set => SetStringValue (VTCompressionPropertyKey.AlphaChannelMode, value.GetConstant ());
+		public VTAlphaChannelMode? AlphaChannelMode {
+			get {
+				var alphaChannelMode = GetNSStringValue (VTCompressionPropertyKey.AlphaChannelMode);
+				if (alphaChannelMode is null)
+					return null;
+				return VTAlphaChannelModeExtensions.GetValue (alphaChannelMode);
+			}
+			set {
+				if (value is VTAlphaChannelMode mode)
+					SetStringValue (VTCompressionPropertyKey.AlphaChannelMode, mode.GetConstant ());
+				else
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
+
+			}
 		}
 
 	}

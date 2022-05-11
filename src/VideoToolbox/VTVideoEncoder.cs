@@ -186,14 +186,12 @@ namespace VideoToolbox {
 
 			constant = VTVideoEncoderList.PerformanceRating;
 			if (constant is not null) {
-				if (dict [constant] is NSNumber performanceRatingNum)
-					PerformanceRating = performanceRatingNum; // optional
+				PerformanceRating = dict [constant] as NSNumber; // optional
 			}
 
 			constant = VTVideoEncoderList.QualityRating;
 			if (constant is not null) {
-				if (dict [constant] is NSNumber qualityRatingNum)
-					QualityRating = qualityRatingNum; // optional
+				QualityRating = dict [constant] as NSNumber; // optional
 			}
 
 			constant = VTVideoEncoderList.InstanceLimit;
