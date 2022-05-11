@@ -17,12 +17,13 @@ jobs:
     - name: 'Compute changelog'
       run: |
         set -exo pipefail
-        git clone https://github.com/spouliot/dotnet-tools
-        cd dotnet-tools/changelog
-        dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} | tee changelog.txt 2>&1
+        #git clone https://github.com/spouliot/dotnet-tools
+        #cd dotnet-tools/changelog
+        #dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} | tee changelog.txt 2>&1
 
         rm -f changelog2.txt
         echo "CHANGELOG_MESSAGE<<EOF" >> changelog2.txt
+        echo "DEBUG MESSAGE" >> changelog2.txt
         cat changelog.txt | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' >> changelog2.txt
         echo EOF >> changelog2.txt
         cat changelog2.txt
@@ -34,12 +35,12 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          const comments = await github.rest.issues.listComments({
+          const comments = github.rest.issues.listComments({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo
           })
-          const allComments = comments // await github.paginate(comments)
+          const allComments = await github.paginate(comments)
           const commentId = ""
           console.log (comments)
           console.log ("adding changelog")
@@ -52,6 +53,10 @@ jobs:
               break
             }
           }
+
+          console.log("skipping adding comment id: " + commentId)
+          return
+
           if (commentId == "") {
             github.rest.issues.createComment({
               owner: context.repo.owner,
