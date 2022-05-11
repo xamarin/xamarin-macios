@@ -34,10 +34,18 @@ namespace Microsoft.MaciOS.Nnyeah {
 				doHelp = true;
 			}
 
-			var badForMungingAssembly = infile is null || outfile is null;
-			var badForComparingAssemblies = xamarinAssembly is null || microsoftAssembly is null;
+			if (infile is null || outfile is null) {
+				Console.Error.WriteLine (Errors.E0014);
+				Environment.Exit (1);
+			}
 
-			if (doHelp || badForComparingAssemblies || badForMungingAssembly) {
+			// TODO - Long term this should default to files packaged within the tool but allow overrides
+			if (xamarinAssembly is null || microsoftAssembly is null) {
+				Console.Error.WriteLine (Errors.E0015);
+				Environment.Exit (1);
+			}
+
+			if (doHelp) {
 				PrintOptions (options, Console.Out);
 				Environment.Exit (0);
 			}
@@ -63,7 +71,19 @@ namespace Microsoft.MaciOS.Nnyeah {
 				var comparingVisitor = new ComparingVisitor (earlierModule, laterModule, publicOnly);
 				var map = new TypeAndMemberMap (laterModule);
 
-				comparingVisitor.TypeEvents.NotFound += (s, e) => { map.TypesNotPresent.Add (e.Original); };
+				comparingVisitor.TypeEvents.NotFound += (_, e) => { 
+					switch (e.Original.ToString()) {
+						case "System.nint":
+						case "System.nuint":
+						case "System.nfloat":
+							break;
+						case null:
+							throw new InvalidOperationException ("Null NotFound type event");
+						default:
+							map.TypesNotPresent.Add (e.Original);
+							break;
+					}
+				};
 				comparingVisitor.TypeEvents.Found += (s, e) => { map.TypeMap.Add (e.Original, e.Mapped); };
 
 				comparingVisitor.MethodEvents.NotFound += (s, e) => { map.MethodsNotPresent.Add (e.Original); };
@@ -89,6 +109,20 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 		}
 
+		static Reworker? CreateReworker (string infile, TypeAndMemberMap typeMap)
+		{
+			try {
+				var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+				var module = ModuleDefinition.ReadModule (stm);
+
+				return Reworker.CreateReworker (stm, module, typeMap);
+			} catch (Exception e) {
+				Console.Error.WriteLine (Errors.E0003, infile, e.Message);
+				Environment.Exit (1);
+				throw;
+			}
+		}
+
 
 		static void ReworkFile (string infile, string outfile, bool verbose, bool forceOverwrite,
 			bool suppressWarnings, TypeAndMemberMap typeMap)
@@ -106,21 +140,10 @@ namespace Microsoft.MaciOS.Nnyeah {
 				Environment.Exit (1);
 			}
 
+			if (CreateReworker (infile, typeMap) is Reworker reworker) {
+				reworker.WarningIssued += (_, e) => warnings.Add (e.HelpfulMessage ());
+				reworker.Transformed += (_, e) => warnings.Add (e.HelpfulMessage ());
 
-			using var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-			var reworker = new Reworker (stm, typeMap);
-
-			try {
-				reworker.Load ();
-			} catch (Exception e) {
-				Console.Error.WriteLine (Errors.E0003, infile, e.Message);
-				Environment.Exit (1);
-			}
-
-			reworker.WarningIssued += (s, e) => warnings.Add (e.HelpfulMessage ());
-			reworker.Transformed += (s, e) => warnings.Add (e.HelpfulMessage ());
-
-			if (reworker.NeedsReworking ()) {
 				try {
 					using var ostm = new FileStream (outfile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
 					reworker.Rework (ostm);

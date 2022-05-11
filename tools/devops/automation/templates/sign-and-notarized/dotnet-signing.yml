@@ -49,11 +49,10 @@ steps:
 
 - template: publish-nugets.yml
 
-# upload each of the pkgs into the pipeline artifacts
+# always upload no matter what, since if we are not signing we need the artifact in the pipeline
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Notarized Dotnet Artifacts'
   inputs:
     targetPath: $(Build.SourcesDirectory)/package
     artifactName: dotnet-signed
   continueOnError: true
-  condition: ${{ parameters.condition }}
