@@ -35,7 +35,7 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          const commentId = ""
+          var commentId = ""
           await github.paginate(github.rest.issues.listComments,
           {
             issue_number: context.issue.number,
