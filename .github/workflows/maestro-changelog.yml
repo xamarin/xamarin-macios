@@ -30,7 +30,7 @@ jobs:
         cat changelog2.txt >> $GITHUB_ENV
 
     - name: 'Add changelog'
-      uses: actions/github-script@v5
+      uses: actions/github-script@v6
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
@@ -42,6 +42,7 @@ jobs:
           const allComments = comments // await github.paginate(comments)
           const commentId = ""
           console.log (comments)
+          console.log ("adding changelog")
           for (const comment in allComments) {
             console.log("comment: " + comment)
             console.log("body: " + comment.body)
@@ -58,7 +59,7 @@ jobs:
               body: '${{ env.CHANGELOG_MESSAGE }}'
             })
           } else {
-            github.rest.issues.createComment({
+            github.rest.issues.updateComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               comment_id: commentId,
