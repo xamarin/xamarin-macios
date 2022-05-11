@@ -7,4 +7,12 @@ namespace Microsoft.MaciOS.Nnyeah {
 		Append,
 		Warn,
 	}
+
+	public enum PlatformName {
+		None, // desktop managed executable
+		macOS, // Xamarin.Mac app
+		iOS,
+		watchOS,
+		tvOS,
+	}
 }

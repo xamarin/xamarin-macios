@@ -102,24 +102,35 @@ $(APIDIFF_DIR)/diff/%.html: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/
 	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/$*.xml) $(abspath $(APIDIFF_DIR)/temp/$*.xml) $(APIDIFF_IGNORE) $(abspath $@)
 	$(Q) touch $@
 
-$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS.xml $(MONO_API_HTML)
+$(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS-converted.xml: $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS.xml
+	$(Q) sed 's/assembly name="Xamarin.iOS"/assembly name="Microsoft.iOS"/' $< > $@
+
+$(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac-converted.xml: $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac.xml
+	$(Q) sed 's/assembly name="Xamarin.Mac"/assembly name="Microsoft.macOS"/' $< > $@
+
+$(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS-converted.xml: $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS.xml
+	$(Q) sed 's/assembly name="Xamarin.TVOS"/assembly name="Microsoft.tvOS"/' $< > $@
+
+$(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst-as-iOS.xml: $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.xml
+	$(Q) sed -e 's/assembly name="Microsoft.MacCatalyst"/assembly name="Microsoft.iOS"/' $< > $@
+
+$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS-converted.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS.xml) $(abspath $<) $(APIDIFF_IGNORE) $(abspath $@)
+	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS-converted.xml) $(abspath $<) $(APIDIFF_IGNORE) $(abspath $@)
 	$(Q) touch $@
 
-$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.xml $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac.xml $(MONO_API_HTML)
+$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.xml $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac-converted.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac.xml) $(abspath $<) $(APIDIFF_IGNORE) $(abspath $@)
+	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac-converted.xml) $(abspath $<) $(APIDIFF_IGNORE) $(abspath $@)
 	$(Q) touch $@
 
-$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS.xml $(MONO_API_HTML)
+$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS-converted.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS.xml) $(abspath $<) $(APIDIFF_IGNORE) $(abspath $@)
+	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS-converted.xml) $(abspath $<) $(APIDIFF_IGNORE) $(abspath $@)
 	$(Q) touch $@
 
-$(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.xml $(MONO_API_HTML)
+$(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst-as-iOS.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(Q) sed -e 's_<assembly name="Xamarin.MacCatalyst" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.xml > $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst-as-iOS.xml
 	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $<) $(abspath $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst-as-iOS.xml) $(APIDIFF_IGNORE) $(abspath $@)
 
 # this is a hack to show the difference between iOS and tvOS
