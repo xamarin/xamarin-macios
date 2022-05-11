@@ -73,7 +73,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 				PlatformName.iOS => "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS",
 				PlatformName.tvOS => "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS",
 				PlatformName.watchOS => "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.WatchOS",
-				_ => throw new NotImplementedException (),
+				_ => throw new NotImplementedException (platformName.ToString ()),
 			};
 
 		public static string XamarinLibName (PlatformName platformName) =>
@@ -82,7 +82,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 				PlatformName.iOS => "Xamarin.iOS",
 				PlatformName.tvOS => "Xamarin.TVOS",
 				PlatformName.watchOS => "Xamarin.WatchOS",
-				_ => throw new NotImplementedException (),
+				_ => throw new NotImplementedException (platformName.ToString ()),
 			};
 
 		public static string XamarinPlatformLibraryPath (PlatformName platformName) =>
@@ -93,8 +93,8 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 				PlatformName.macOS => Path.Combine (buildDirectory, "Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/lib/net6.0"),
 				PlatformName.iOS => Path.Combine (buildDirectory, "Microsoft.iOS.Runtime.ios-arm/runtimes/ios-arm/lib/net6.0"),
 				PlatformName.tvOS => Path.Combine (buildDirectory, "Microsoft.tvOS.Runtime.tvossimulator-x64/runtimes/tvossimulator-x64/lib/net6.0"),
-				PlatformName.watchOS => throw new NotImplementedException (),
-				_ => throw new NotImplementedException (),
+				PlatformName.watchOS => throw new NotImplementedException ("No WatchOS yet"),
+				_ => throw new NotImplementedException (platformName.ToString ()),
 			};
 
 		public static string MicrosoftLibName (PlatformName platformName) =>
@@ -102,8 +102,8 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 				PlatformName.macOS => "Microsoft.macOS",
 				PlatformName.iOS => "Microsoft.iOS",
 				PlatformName.tvOS => "Xamarin.tvOS",
-				PlatformName.watchOS => throw new NotImplementedException (),
-				_ => throw new NotImplementedException (),
+				PlatformName.watchOS => throw new NotImplementedException ("no WatchOS yet"),
+				_ => throw new NotImplementedException (platformName.ToString ()),
 			};
 
 		public static string MicrosoftPlatformLibraryPath (PlatformName platformName) =>
