@@ -19,7 +19,6 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 
 	public class Compiler {
 		const string MonoCompiler = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/csc";
-		const string buildDirectory = "../../../../../../_build";
 
 		public static async Task<string> CompileText (string text, string outputFile, PlatformName platformName, bool isLibrary)
 		{
