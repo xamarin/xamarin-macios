@@ -65,7 +65,7 @@ namespace Xamarin.Utils {
 			try {
 				var p = new Process ();
 				p.StartInfo.FileName = FileName;
-				p.StartInfo.Arguments = StringUtils.FormatArguments (Arguments);
+				p.StartInfo.Arguments = Arguments is not null ? StringUtils.FormatArguments (Arguments) : "";
 				p.StartInfo.UseShellExecute = false;
 				p.StartInfo.RedirectStandardInput = false;
 				p.StartInfo.RedirectStandardOutput = true;
@@ -96,7 +96,7 @@ namespace Xamarin.Utils {
 					try {
 						if (Log != null) {
 							if (!string.IsNullOrEmpty (p.StartInfo.WorkingDirectory))
-								Log.Write ($"cd {StringUtils.Quote (p.StartInfo.WorkingDirectory)} && ");
+								Log.Write ($"cd {StringUtils.Quote (p.StartInfo.WorkingDirectory!)} && ");
 							Log.WriteLine ("{0} {1}", p.StartInfo.FileName, p.StartInfo.Arguments);
 						}
 
