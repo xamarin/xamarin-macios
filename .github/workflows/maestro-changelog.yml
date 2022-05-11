@@ -42,6 +42,8 @@ jobs:
           const allComments = await github.paginate(comments)
           const commentId = ""
           for (const comment in allComments) {
+            console.log(comment)
+            console.log(comment.body)
             if (comment.body.contains (".net ChangeLog for")) {
               commentId = comment.id;
               break
