@@ -24,7 +24,6 @@ jobs:
 
         rm -f changelog2.txt
         echo "CHANGELOG_MESSAGE<<EOF" >> changelog2.txt
-        echo -n "changelog.txt\\nline2\\n" >> changelog2.txt
         cat changelog.txt | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' >> changelog2.txt
         echo EOF >> changelog2.txt
         cat changelog2.txt
@@ -40,5 +39,5 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '👋 Changelog goes here! 👋 ${{ env.CHANGELOG_MESSAGE }}'
+            body: '${{ env.CHANGELOG_MESSAGE }}'
           })
