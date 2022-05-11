@@ -22,11 +22,15 @@ jobs:
         cd dotnet-tools/changelog
         dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} | tee changelog.txt 2>&1
 
-        #echo "CHANGELOG_MESSAGE=changelog\\nline2" >> $GITHUB_ENV
-        echo "CHANGELOG_MESSAGE<<EOF" >> $GITHUB_ENV
-        echo "changelog.txt\\nline2" >> $GITHUB_ENV
-        cat changelog.txt | tr $'\n' '-----' >> $GITHUB_ENV
-        echo EOF >> $GITHUB_ENV
+        rm -f changelog2.txt
+        #echo "CHANGELOG_MESSAGE=changelog\\nline2" >> changelog2.txt
+        echo "CHANGELOG_MESSAGE<<EOF" >> changelog2.txt
+        echo "changelog.txt\\nline2" >> changelog2.txt
+        cat changelog.txt | tr $'\n' '-' >> changelog2.txt
+        echo EOF >> changelog2.txt
+        cat changelog2.txt
+
+        cat changelog2.txt >> $GITHUB_ENV
 
     - name: 'Add changelog'
       uses: actions/github-script@v5
