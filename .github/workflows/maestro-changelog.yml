@@ -8,12 +8,6 @@ jobs:
     if: github.actor == 'dotnet-maestro[bot]'
 
     steps:
-    - name: 'Dump environment'
-      run: |
-        set -e
-        set -x
-        env | sort
-
     - name: 'Compute changelog'
       run: |
         set -exo pipefail
