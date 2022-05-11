@@ -45,7 +45,7 @@ jobs:
           {
             console.log ("comments:")
             console.log (comments);
-            const changelogComment = comments.find(comment => comment.body.contains (".net ChangeLog for"))
+            const changelogComment = comments.find(comment => comment.body.includes (".net ChangeLog for"))
             commentId = changelogComment.id
           })
           console.log("skipping adding comment id: " + commentId)
