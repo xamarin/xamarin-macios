@@ -5,8 +5,7 @@ jobs:
   add-changelog:
     name: Add changelog
     runs-on: ubuntu-latest
-    # disable condition while testing
-    # if: github.actor == 'dotnet-maestro[bot]'
+    if: github.actor == 'dotnet-maestro[bot]'
 
     steps:
     - name: 'Dump environment'
