@@ -17,7 +17,7 @@ jobs:
 
     - name: 'Compute changelog'
       run: |
-        set -exo pipeline
+        set -exo pipefail
         git clone https://github.com/spouliot/dotnet-tools
         cd dotnet-tools/changelog
         dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} | tee changelog.txt 2>&1
@@ -34,5 +34,5 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: '👋 Changelog goes here! 👋'
+            body: '👋 Changelog goes here! 👋 ${{ env.CHANGELOG_MESSAGE }}'
           })
