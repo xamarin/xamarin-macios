@@ -35,20 +35,18 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          const comments = github.rest.issues.listComments({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo
-          })
+          const commentId = ""
           await github.paginate(github.rest.issues.listComments,
           {
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo
-          }).then((paginatedComments) =>
+          }).then((comments) =>
           {
-            console.log ("paginatedComments:")
-            console.log (paginatedComments);
+            console.log ("comments:")
+            console.log (comments);
+            const changelogComment = comments.find(comment => comment.body.contains (".net ChangeLog for"))
+            commentId = changelogComment.id
           })
           console.log("skipping adding comment id: " + commentId)
           return
