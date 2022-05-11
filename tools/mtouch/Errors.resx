@@ -1534,6 +1534,10 @@
 		</value>
 	</data>		
 	
+	<data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
+
 	<data name="MT4125" xml:space="preserve">
 		<value>The registrar found an invalid type '{0}' in signature for method '{1}': The interface must have a Protocol attribute specifying its wrapper type.
 		</value>

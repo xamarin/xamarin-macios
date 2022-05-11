@@ -45,6 +45,9 @@ using CoreLocation;
 #if !__TVOS__
 using Contacts;
 #endif
+#if HAS_COREMIDI
+using CoreMidi;
+#endif
 #if !(__TVOS__ && NET)
 using WebKit;
 #endif
@@ -5646,4 +5649,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	}
 #endif // !__TVOS__
 #endif // !__WATCHOS__
+
+#if HAS_COREMIDI
+	// This type exports methods with 'MidiCIDeviceIdentification' parameters, which is a struct with different casing in Objective-C ("MIDI...")
+	class ExportedMethodWithStructWithManagedCasing : NSObject {
+		[Export ("doSomething:")]
+		public void DoSomething (MidiCIDeviceIdentification arg) { }
+
+		[Export ("doSomething2:")]
+		public void DoSomething2 (ref MidiCIDeviceIdentification arg) { }
+
+		[Export ("doSomething3")]
+		public MidiCIDeviceIdentification DoSomething3 () { return default (MidiCIDeviceIdentification); }
+
+		[Export ("doSomething4:")]
+		public void DoSomething4 (out MidiCIDeviceIdentification arg) { arg = default (MidiCIDeviceIdentification); }
+	}
+#endif
 }

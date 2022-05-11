@@ -52,12 +52,14 @@ namespace CoreMidi {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[NativeName ("MIDIProtocolID")]
 	public enum MidiProtocolId {
 		Protocol_1_0 = 1,
 		Protocol_2_0 = 2,
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[NativeName ("MIDICVStatus")]
 	public enum MidiCVStatus : uint {
 		RegisteredPnc = 0,
 		AssignablePnc = 1,
@@ -78,6 +80,7 @@ namespace CoreMidi {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[NativeName ("MIDIMessageType")]
 	public enum MidiMessageType : uint {
 		Utility = 0,
 		System = 1,
@@ -88,6 +91,7 @@ namespace CoreMidi {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[NativeName ("MIDISysExStatus")]
 	public enum MidiSysExStatus : uint {
 		Complete = 0,
 		Start = 1,
@@ -96,6 +100,7 @@ namespace CoreMidi {
 	}
 
 	[Mac (11, 0), iOS (14, 0)]
+	[NativeName ("MIDISystemStatus")]
 	public enum MidiSystemStatus : uint {
 		StartOfExclusive = 240,
 		EndOfExclusive = 247,
