@@ -16,8 +16,7 @@ namespace Cecil.Tests {
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))] // call this method with every .net6 library
 		public void GetAllObsoletedThings (string assemblyPath)
 		{
-			var assembly = Helper.GetAssembly (assemblyPath, readSymbols: true)!;
-			Assert.That (assembly, Is.Not.Null, "Must find the assembly");
+			var assembly = Helper.GetAssembly (assemblyPath, readSymbols: true);
 
 			// Make a list of Obsolete things
 			var found = new HashSet<string> ();
