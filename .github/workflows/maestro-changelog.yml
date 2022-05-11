@@ -1,0 +1,35 @@
+name: Add changelog for Maestro bump
+on: pull_request
+
+jobs:
+  add-changelog:
+    name: Add changelog
+    runs-on: ubuntu-latest
+    # disable condition while testing
+    # if: github.actor == 'dotnet-maestro[bot]'
+
+    steps:
+    - run: |
+        set -e
+        set -x
+        env | sort
+      name: 'Dump environment'
+
+    - run: |
+        set -e
+        set -x
+        git clone https://github.com/spouliot/dotnet-tools
+        cd dotnet-tools/changelog
+      name: 'Compute changelog'
+
+    - uses: actions/github-script@v5
+      name: 'Add changelog'
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '👋 Changelog goes here! 👋'
+          })'
