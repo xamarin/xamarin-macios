@@ -73,9 +73,15 @@ stages:
     variables:
       PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
       GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
+      SKIP_TESTS: $[ dependencies.configure.outputs['labels.skip-all-tests'] ]
 
     steps:
-    - template: build.yml
-      parameters:
-        statusContext: ${{ parameters.statusContext }}
-        keyringPass: ${{ parameters.keyringPass }} 
+    - ${{ if contains(variables['SKIP_TESTS'], 'skip-all-tests') }}:
+      - template: build.yml
+        parameters:
+          statusContext: ${{ parameters.statusContext }}
+          keyringPass: ${{ parameters.keyringPass }}
+    - ${{ else }}:
+      - pwsh: |
+          Write-Host "Mac tests were skipped because the 'skip-all-tests' label was passed."
+        displayName: 'Skip mac tests.'

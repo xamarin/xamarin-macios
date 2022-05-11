@@ -104,6 +104,7 @@ steps:
         "skip-nugets",
         "skip-signing",
         "skip-external-tests",
+        "skip-all-tests",
         "trigger-device-tests",
         "run-sample-tests",
         "skip-packaged-xamarin-mac-tests",
