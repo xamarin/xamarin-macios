@@ -39,7 +39,7 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo
           })
-          const allComments = await github.paginage(comments)
+          const allComments = await github.paginate(comments)
           const commentId = ""
           for (const comment in allComments) {
             if (comment.body.contains (".net ChangeLog for")) {
