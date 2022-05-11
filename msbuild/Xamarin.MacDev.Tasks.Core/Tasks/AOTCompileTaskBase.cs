@@ -14,6 +14,8 @@ using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class AOTCompileTaskBase : XamarinTask {
+		public ITaskItem [] AotArguments { get; set; } = Array.Empty<ITaskItem> ();
+
 		[Required]
 		public string AOTCompilerPath { get; set; } = string.Empty;
 
@@ -71,6 +73,7 @@ namespace Xamarin.MacDev.Tasks {
 				{ "MONO_PATH", Path.GetFullPath (InputDirectory) },
 			};
 
+			var globalAotArguments = AotArguments?.Select (v => v.ItemSpec).ToList ();
 			for (var i = 0; i < Assemblies.Length; i++) {
 				var asm = Assemblies [i];
 				var input = inputs [i];
@@ -95,6 +98,8 @@ namespace Xamarin.MacDev.Tasks {
 					return false;
 				}
 				arguments.Add ($"{string.Join (",", parsedArguments)}");
+				if (globalAotArguments is not null)
+					arguments.Add ($"--aot={string.Join (",", globalAotArguments)}");
 				arguments.AddRange (parsedProcessArguments);
 				arguments.Add (input);
 

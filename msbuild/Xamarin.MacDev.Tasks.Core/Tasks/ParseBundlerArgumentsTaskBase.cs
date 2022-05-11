@@ -11,6 +11,9 @@ namespace Xamarin.MacDev.Tasks {
 		public string ExtraArgs { get; set; }
 
 		[Output]
+		public ITaskItem [] Aot { get; set; }
+
+		[Output]
 		public ITaskItem [] DlSym { get; set; }
 
 		[Output]
@@ -65,6 +68,7 @@ namespace Xamarin.MacDev.Tasks {
 				var args = CommandLineArgumentBuilder.Parse (ExtraArgs);
 				List<string> xml = null;
 				List<string> customLinkFlags = null;
+				var aot = new List<ITaskItem> ();
 				var envVariables = new List<ITaskItem> ();
 				var dlsyms = new List<ITaskItem> ();
 
@@ -100,6 +104,9 @@ namespace Xamarin.MacDev.Tasks {
 					}
 
 					switch (name) {
+					case "aot":
+						aot.Add (new TaskItem (value));
+						break;
 					case "nosymbolstrip":
 						// There's also a version that takes symbols as arguments:
 						// --nosymbolstrip:symbol1,symbol2
@@ -206,6 +213,12 @@ namespace Xamarin.MacDev.Tasks {
 					if (DlSym != null)
 						dlsyms.AddRange (DlSym);
 					DlSym = dlsyms.ToArray ();
+				}
+
+				if (aot.Count > 0) {
+					if (Aot is not null)
+						aot.AddRange (Aot);
+					Aot = aot.ToArray ();
 				}
 			}
 
