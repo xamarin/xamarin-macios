@@ -25,7 +25,7 @@ jobs:
         #echo "CHANGELOG_MESSAGE=changelog\\nline2" >> $GITHUB_ENV
         echo "CHANGELOG_MESSAGE<<EOF" >> $GITHUB_ENV
         echo "changelog.txt\\nline2" >> $GITHUB_ENV
-        cat changelog.txt >> $GITHUB_ENV
+        cat changelog.txt | tr $'\n' '-----' >> $GITHUB_ENV
         echo EOF >> $GITHUB_ENV
 
     - name: 'Add changelog'
