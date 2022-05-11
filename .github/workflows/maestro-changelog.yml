@@ -17,17 +17,18 @@ jobs:
     - name: 'Compute changelog'
       run: |
         set -exo pipefail
-        #git clone https://github.com/spouliot/dotnet-tools
-        #cd dotnet-tools/changelog
-        #dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} | tee changelog.txt 2>&1
+        git clone https://github.com/spouliot/dotnet-tools
+        cd dotnet-tools/changelog
+        dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} > changelog.txt 2>&1
 
+        # need to replace newlines with actual "\n"
         rm -f changelog2.txt
         echo "CHANGELOG_MESSAGE<<EOF" >> changelog2.txt
-        echo "DEBUG MESSAGE" >> changelog2.txt
-        #cat changelog.txt | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' >> changelog2.txt
+        cat changelog.txt | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' >> changelog2.txt
         echo EOF >> changelog2.txt
         cat changelog2.txt
 
+        # export the changelog message
         cat changelog2.txt >> $GITHUB_ENV
 
     - name: 'Add changelog'
@@ -35,21 +36,19 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
+          // check if we've already added a changelog to this PR, and if so, update that comment, otherwise add a new comment
           var commentId = ""
-          await github.paginate(github.rest.issues.listComments,
+          await github.paginate (github.rest.issues.listComments,
           {
-            issue_number: context.issue.number,
             owner: context.repo.owner,
-            repo: context.repo.repo
-          }).then((comments) =>
+            repo: context.repo.repo,
+            issue_number: context.issue.number
+          }).then ((comments) =>
           {
-            console.log ("comments:")
-            console.log (comments);
             const changelogComment = comments.find(comment => comment.body.includes (".net ChangeLog for") && comment.user.login == 'github-actions[bot]')
             commentId = changelogComment.id
           })
           if (commentId == "") {
-            console.log("creating comment!")
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -57,7 +56,6 @@ jobs:
               body: '${{ env.CHANGELOG_MESSAGE }}'
             })
           } else {
-            console.log("updating comment id: " + commentId)
             github.rest.issues.updateComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
