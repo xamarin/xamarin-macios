@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-
+using System.Reflection;
 using Xamarin;
 using Xamarin.Utils;
 using System.Collections.Generic;
@@ -18,6 +18,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 
 	public class Compiler {
 		const string MonoCompiler = "/Library/Frameworks/Mono.framework/Versions/Current/Commands/csc";
+		const string buildDirectory = "../../../../../../_build";
 
 		public static async Task<string> CompileText (string text, string outputFile, PlatformName platformName, bool isLibrary)
 		{
@@ -63,10 +64,10 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 
 		static string PlatformLibPath (PlatformName platformName, string libName)
 		{
-			return Path.Combine (PlatformLibDirectory (platformName), $"{libName}.dll");
+			return Path.Combine (XamarinPlatformLibDirectory (platformName), $"{libName}.dll");
 		}
 
-		static string PlatformLibDirectory (PlatformName platformName) =>
+		public static string XamarinPlatformLibDirectory (PlatformName platformName) =>
 			platformName switch {
 				PlatformName.macOS => "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/",
 				PlatformName.iOS => "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS",
@@ -75,7 +76,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 				_ => throw new NotImplementedException (),
 			};
 
-		static string XamarinLibName (PlatformName platformName) =>
+		public static string XamarinLibName (PlatformName platformName) =>
 			platformName switch {
 				PlatformName.macOS => "Xamarin.Mac",
 				PlatformName.iOS => "Xamarin.iOS",
@@ -83,5 +84,30 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 				PlatformName.watchOS => "Xamarin.WatchOS",
 				_ => throw new NotImplementedException (),
 			};
+
+		public static string XamarinPlatformLibraryPath (PlatformName platformName) =>
+			Path.Combine (XamarinPlatformLibDirectory (platformName), $"{XamarinLibName (platformName)}.dll");
+
+		public static string MicrosoftPlatformLibDirectory (PlatformName platformName) =>
+			platformName switch {
+				PlatformName.macOS => Path.Combine (buildDirectory, "Microsoft.macOS.Runtime.osx-arm64/runtimes/osx-arm64/lib/net6.0"),
+				PlatformName.iOS => Path.Combine (buildDirectory, "Microsoft.iOS.Runtime.ios-arm/runtimes/ios-arm/lib/net6.0"),
+				PlatformName.tvOS => Path.Combine (buildDirectory, "Microsoft.tvOS.Runtime.tvossimulator-x64/runtimes/tvossimulator-x64/lib/net6.0"),
+				PlatformName.watchOS => throw new NotImplementedException (),
+				_ => throw new NotImplementedException (),
+			};
+
+		public static string MicrosoftLibName (PlatformName platformName) =>
+			platformName switch {
+				PlatformName.macOS => "Microsoft.macOS",
+				PlatformName.iOS => "Microsoft.iOS",
+				PlatformName.tvOS => "Xamarin.tvOS",
+				PlatformName.watchOS => throw new NotImplementedException (),
+				_ => throw new NotImplementedException (),
+			};
+
+		public static string MicrosoftPlatformLibraryPath (PlatformName platformName) =>
+						Path.Combine (MicrosoftPlatformLibDirectory (platformName), $"{MicrosoftLibName (platformName)}.dll");
+
 	}
 }
