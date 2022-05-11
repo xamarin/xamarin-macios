@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -32,7 +31,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 		{
 			var compilerArgs = BuildCompilerArgs (sourceFiles, outputFile, platformName, isLibrary);
 			Execution execution = await Execution.RunAsync(MonoCompiler, compilerArgs, mergeOutput: true, workingDirectory: workingDirectory);
-			return execution!.StandardOutput.ToString()!;
+			return execution!.StandardOutput?.ToString()!;
 		}
 
 		static List<string> BuildCompilerArgs (string[] sourceFiles, string outputFile, PlatformName platformName,
