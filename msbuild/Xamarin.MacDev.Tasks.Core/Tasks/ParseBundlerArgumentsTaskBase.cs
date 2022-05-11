@@ -46,6 +46,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Output]
 		public string Registrar { get; set; }
 
+		[Output]
+		public string RequirePInvokeWrappers { get; set; }
+
 		// This is input too
 		[Output]
 		public string NoStrip { get; set; }
@@ -147,6 +150,9 @@ namespace Xamarin.MacDev.Tasks {
 						break;
 					case "package-debug-symbols":
 						PackageDebugSymbols = string.IsNullOrEmpty (value) ? "true" : value;
+						break;
+					case "require-pinvoke-wrappers":
+						RequirePInvokeWrappers = string.IsNullOrEmpty (value) ? "true" : value;
 						break;
 					case "registrar":
 						value = hasValue ? value : nextValue; // requires a value, which might be the next option

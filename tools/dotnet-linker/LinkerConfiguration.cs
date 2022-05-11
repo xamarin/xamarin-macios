@@ -57,6 +57,8 @@ namespace Xamarin.Linker {
 
 		Dictionary<string, List<MSBuildItem>> msbuild_items = new Dictionary<string, List<MSBuildItem>> ();
 
+		internal PInvokeWrapperGenerator PInvokeWrapperGenerationState;
+
 		public static LinkerConfiguration GetInstance (LinkContext context, bool createIfNotFound = true)
 		{
 			if (!configurations.TryGetValue (context, out var instance) && createIfNotFound) {
@@ -231,6 +233,11 @@ namespace Xamarin.Linker {
 				case "Registrar":
 					Application.ParseRegistrar (value);
 					break;
+				case "RequirePInvokeWrappers":
+					if (!TryParseOptionalBoolean (value, out var require_pinvoke_wrappers))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					Application.RequiresPInvokeWrappers = require_pinvoke_wrappers.Value;
+					break;
 				case "RuntimeConfigurationFile":
 					Application.RuntimeConfigurationFile = value;
 					break;
@@ -401,6 +408,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    RelativeAppBundlePath: {RelativeAppBundlePath}");
 				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
 				Console.WriteLine ($"    RuntimeConfigurationFile: {Application.RuntimeConfigurationFile}");
+				Console.WriteLine ($"    RequirePInvokeWrappers: {Application.RequiresPInvokeWrappers}");
 				Console.WriteLine ($"    SdkDevPath: {Driver.SdkRoot}");
 				Console.WriteLine ($"    SdkRootDirectory: {SdkRootDirectory}");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
