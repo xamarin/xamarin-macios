@@ -39,11 +39,11 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo
           })
-          const allComments = await github.paginate(comments)
+          const allComments = comments // await github.paginate(comments)
           const commentId = ""
           for (const comment in allComments) {
-            console.log(comment)
-            console.log(comment.body)
+            console.log("comment: " + comment)
+            console.log("body: " + comment.body)
             if (comment.body.contains (".net ChangeLog for")) {
               commentId = comment.id;
               break
