@@ -45,12 +45,11 @@ jobs:
           {
             console.log ("comments:")
             console.log (comments);
-            const changelogComment = comments.find(comment => comment.body.includes (".net ChangeLog for"))
+            const changelogComment = comments.find(comment => comment.body.includes (".net ChangeLog for") && comment.user.login == 'github-actions[bot]')
             commentId = changelogComment.id
           })
-          console.log("skipping adding comment id: " + commentId)
-          return
           if (commentId == "") {
+            console.log("creating comment!")
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -58,6 +57,7 @@ jobs:
               body: '${{ env.CHANGELOG_MESSAGE }}'
             })
           } else {
+            console.log("updating comment id: " + commentId)
             github.rest.issues.updateComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
