@@ -23,10 +23,10 @@ namespace VideoSubscriberAccount {
 				return VSAccountProviderAuthenticationSchemeExtensions.GetValues (SupportedAuthenticationSchemesString);
 			}
 			set {
-				if (value.GetConstants () is not null)
-					SupportedAuthenticationSchemesString = value.GetConstants ()!;
-				else
+				var constants = value.GetConstants ();
+				if (constants is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
+				SupportedAuthenticationSchemesString = constants!;
 			}
 		}
 	}
