@@ -24,7 +24,7 @@ jobs:
         rm -f changelog2.txt
         echo "CHANGELOG_MESSAGE<<EOF" >> changelog2.txt
         echo "DEBUG MESSAGE" >> changelog2.txt
-        cat changelog.txt | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' >> changelog2.txt
+        #cat changelog.txt | sed -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g' >> changelog2.txt
         echo EOF >> changelog2.txt
         cat changelog2.txt
 
@@ -53,10 +53,8 @@ jobs:
               break
             }
           }
-
           console.log("skipping adding comment id: " + commentId)
           return
-
           if (commentId == "") {
             github.rest.issues.createComment({
               owner: context.repo.owner,
