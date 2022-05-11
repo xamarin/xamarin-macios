@@ -25,13 +25,11 @@ public class Foo {
 			var expectedOutputFile = Path.Combine (dir, "NoName.dll");
 			var targetRewrite = Path.Combine (dir, "NoNameRemoved.dll");
 
-			try {
+			Assert.DoesNotThrow (() => {
 				Program.ProcessAssembly (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS),
 					Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS), expectedOutputFile,
 					targetRewrite, verbose: false, forceOverwrite: true, suppressWarnings: true);
-			} catch (Exception e) {
-				Assert.Fail ($"Test failed with exception {e.Message} {e.StackTrace}");
-			}
+			}, "Failed to process assembly");
 
 			Assert.IsTrue (File.Exists (targetRewrite), "target file not created");
 			var module = ModuleDefinition.ReadModule (targetRewrite);
