@@ -84,7 +84,7 @@ steps:
       # decide if we add the run-dotnet-tests label (if not present) this is done only for main
       # we can use $ref for that :)
       $xharnessLabels = $tags -join ","
-      if ($Env:ENABLE_DOTNET -eq "True" -and -not ("run-dotnet-tests" -in $xharnessLabels) -and -not ("skip-all-tests" -in $xharnessLabels)) {
+      if (($Env:ENABLE_DOTNET -eq "True") -and (-not ("run-dotnet-tests" -in $xharnessLabels)) -and (-not ("skip-all-tests" -in $xharnessLabels))) {
         Write-Host "Adding label run-dotnet-tests to xharness."
         $tags.Add("run-dotnet-tests")
         if ($xharnessLabels -eq "") {
