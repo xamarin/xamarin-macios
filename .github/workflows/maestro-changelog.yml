@@ -21,9 +21,10 @@ jobs:
         git clone https://github.com/spouliot/dotnet-tools
         cd dotnet-tools/changelog
         dotnet run https://github.com/$GITHUB_REPOSITORY/pull/${GITHUB_REF_NAME/\/*/} | tee changelog.txt 2>&1
-        echo "CHANGELOG_MESSAGE<<EOF" >> $GITHUB_ENV
-        cat changelog.txt >> $GITHUB_ENV
-        echo EOF >> $GITHUB_ENV
+        echo "CHANGELOG_MESSAGE=changelog" >> $GITHUB_ENV
+        #echo "CHANGELOG_MESSAGE<<EOF" >> $GITHUB_ENV
+        #cat changelog.txt >> $GITHUB_ENV
+        #echo EOF >> $GITHUB_ENV
 
     - name: 'Add changelog'
       uses: actions/github-script@v5
