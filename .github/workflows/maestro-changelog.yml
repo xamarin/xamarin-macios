@@ -34,9 +34,31 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          github.rest.issues.createComment({
+          const comments = github.rest.issues.listComments({
             issue_number: context.issue.number,
             owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: '${{ env.CHANGELOG_MESSAGE }}'
+            repo: context.repo.repo
           })
+          const allComments = await github.paginage(comments)
+          const commentId = ""
+          for (const comment in allComments) {
+            if (comment.body.contains (".net ChangeLog for")) {
+              commentId = comment.id;
+              break
+            }
+          }
+          if (commentId == "") {
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: '${{ env.CHANGELOG_MESSAGE }}'
+            })
+          } else {
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: commentId,
+              body: '${{ env.CHANGELOG_MESSAGE }}'
+            })
+          }
