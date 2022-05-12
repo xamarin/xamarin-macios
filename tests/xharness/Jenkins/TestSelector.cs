@@ -10,179 +10,166 @@ using Microsoft.DotNet.XHarness.Common.Logging;
 namespace Xharness.Jenkins {
 
 	class TestSelection {
-		readonly Dictionary<string, bool> selection = new() {
-			{ "all", false },
-			{ "bcl", false },
-			{ "mac", true },
-			{ "ios", true },
-			{ "ios-64", true },
-			{ "ios-32", false },
-			{ "ios-extensions", false },
-			{ "ios-simulator", true },
-			{ "old-simulator", false },
-			{ "device", false },
-			{ "xtro", false },
-			{ "cecil", false },
-			{ "docs", false },
-			{ "bcl-xunit", false },
-			{ "bcl-nunit", false },
-			{ "mscorlib", false },
-			{ "non-monotouch", true }, 
-			{ "monotouch", true }, 
-			{ "dotnet", false },
-			{ "maccatalyst", true },
-			{ "tvos", true },
-			{ "watchos", true },
-			{ "mmp", false },
-			{ "msbuild", true },
-			{ "mtouch", false },
-			{ "btouch", false },
-			{ "mac-binding-project", false },
-			{ "system-permission", false },
-		};
+		TestLabel selection =
+			TestLabel.Mac |
+			TestLabel.iOS |
+			TestLabel.iOs64 |
+			TestLabel.iOSSimulator |
+			TestLabel.NonMonotouch |
+			TestLabel.Monotouch |
+			TestLabel.MacCatalyst |
+			TestLabel.tvOS |
+			TestLabel.watchOS |
+			TestLabel.Msbuild;
 
 		public bool IncludeAll {
-			get => selection["all"]; 
-			set => selection ["all"] = value;
+			get => selection.HasFlag (TestLabel.All);
+			set => SetEnabled (TestLabel.All, value);
 		}
 		public bool IncludeBcl {
-			get => selection ["bcl"];
-			set => selection ["bcl"] = value; 
+			get => selection.HasFlag (TestLabel.Bcl);
+			set => SetEnabled (TestLabel.Bcl, value);
 		}
 
 		public bool IncludeMac {
-			get => selection ["mac"];
-			set => selection ["mac"] = value;
+			get => selection.HasFlag (TestLabel.Mac);
+			set => SetEnabled (TestLabel.Mac, value);
 		}
 
 		public bool IncludeiOS {
-			get => selection ["ios"];
-			set => selection ["ios"] = value;
+			get => selection.HasFlag (TestLabel.iOS);
+			set => SetEnabled (TestLabel.iOS, value);
 		}
 
 		public bool IncludeiOS64 {
-			get => selection ["ios-64"];
-			set => selection ["ios-64"] = value;
+			get => selection.HasFlag (TestLabel.iOs64);
+			set => SetEnabled (TestLabel.iOs64, value);
 		}
 
 		public bool IncludeiOS32 {
-			get => selection ["ios-32"];
-			set => selection ["ios-32"] = value;
+			get => selection.HasFlag (TestLabel.iOS32);
+			set => SetEnabled (TestLabel.iOS32, value);
 		}
 
 		public bool IncludeiOSExtensions {
-			get => selection ["ios-extensions"];
-			set => selection ["ios-extensions"] = value;
+			get => selection.HasFlag (TestLabel.iOSExtension);
+			set => SetEnabled (TestLabel.iOSExtension, value);
 		}
 
-		public bool IncludeMacBindingProject  {
-			get => selection ["mac-binding-project"];
-			set => selection ["mac-binding-project"] = value;
+		public bool IncludeMacBindingProject {
+			get => selection.HasFlag (TestLabel.MacBindingProject);
+			set => SetEnabled (TestLabel.MacBindingProject, value);
 		}
 
 		public bool ForceExtensionBuildOnly { get; set; }
 
 		public bool IncludetvOS {
-			get => selection ["tvos"];
-			set => selection ["tvos"] = value;
+			get => selection.HasFlag (TestLabel.tvOS);
+			set => SetEnabled (TestLabel.tvOS, value);
 		}
-		public bool IncludewatchOS { 
-			get => selection ["watchos"];
-			set => selection ["watchos"] = value;
+		public bool IncludewatchOS {
+			get => selection.HasFlag (TestLabel.watchOS);
+			set => SetEnabled (TestLabel.watchOS, value);
 		}
-		public bool IncludeMmpTest { 
-			get => selection ["mmp"];
-			set => selection ["mmp"] = value;
+		public bool IncludeMmpTest {
+			get => selection.HasFlag (TestLabel.Mmp);
+			set => SetEnabled (TestLabel.Mmp, value);
 		}
 		public bool IncludeMSBuild {
-			get => selection ["msbuild"];
-			set => selection ["msbuild"] = value;
+			get => selection.HasFlag (TestLabel.Msbuild);
+			set => SetEnabled (TestLabel.Msbuild, value);
 		}
 		public bool IncludeMtouch {
-			get => selection ["mtouch"];
-			set => selection ["mtouch"] = value;
+			get => selection.HasFlag (TestLabel.Mtouch);
+			set => SetEnabled (TestLabel.Mtouch, value);
 		}
 		
 		public bool IncludeBtouch {
-			get => selection ["btouch"];
-			set => selection ["btouch"] = value;
+			get => selection.HasFlag (TestLabel.Btouch);
+			set => SetEnabled (TestLabel.Btouch, value);
 		}
 
 		public bool IncludeSimulator {
-			get => selection ["ios-simulator"];
-			set => selection ["ios-simulator"] = value;
+			get => selection.HasFlag (TestLabel.iOSSimulator);
+			set => SetEnabled (TestLabel.iOSSimulator, value);
 		}
 
 		public bool IncludeOldSimulatorTests {
-			get => selection ["old-simulator"];
-			set => selection ["old-simulator"] = value;
+			get => selection.HasFlag (TestLabel.OldiOSSimulator);
+			set => SetEnabled (TestLabel.OldiOSSimulator, value);
 		}
 
 		public bool IncludeDevice {
-			get => selection ["device"];
-			set => selection ["device"] = value;
+			get => selection.HasFlag (TestLabel.Device);
+			set => SetEnabled (TestLabel.Device, value);
 		}
 
 		public bool IncludeXtro {
-			get => selection ["xtro"];
-			set => selection ["xtro"] = value;
+			get => selection.HasFlag (TestLabel.Xtro);
+			set => SetEnabled (TestLabel.Xtro, value);
 		}
 
 		public bool IncludeCecil {
-			get => selection ["cecil"];
-			set => selection ["cecil"] = value;
+			get => selection.HasFlag (TestLabel.Cecil);
+			set => SetEnabled (TestLabel.Cecil, value);
 		}
 
 		public bool IncludeDocs {
-			get => selection ["docs"];
-			set => selection ["docs"] = value;
+			get => selection.HasFlag (TestLabel.Docs);
+			set => SetEnabled (TestLabel.Docs, value);
 		}
 
 		public bool IncludeBCLxUnit {
-			get => selection ["bcl-xunit"];
-			set => selection ["bcl-xunit"] = value;
+			get => selection.HasFlag (TestLabel.BclXUnit);
+			set => SetEnabled (TestLabel.BclXUnit, value);
 		}
 
 		public bool IncludeBCLNUnit {
-			get => selection ["bcl-nunit"];
-			set => selection ["bcl-nunit"] = value;
+			get => selection.HasFlag (TestLabel.BclNUnit);
+			set => SetEnabled (TestLabel.BclNUnit, value);
 		}
 
 		public bool IncludeMscorlib {
-			get => selection ["mscorlib"];
-			set => selection ["mscorlib"] = value;
+			get => selection.HasFlag (TestLabel.Mscorlib);
+			set => SetEnabled (TestLabel.Mscorlib, value);
 		}
 
 		public bool IncludeNonMonotouch {
-			get => selection ["non-monotouch"];
-			set => selection ["non-monotouch"] = value;
+			get => selection.HasFlag (TestLabel.NonMonotouch);
+			set => SetEnabled (TestLabel.NonMonotouch, value);
 		}
 
 		public bool IncludeMonotouch {
-			get => selection ["monotouch"];
-			set => selection ["monotouch"] = value;
+			get => selection.HasFlag (TestLabel.Monotouch);
+			set => SetEnabled (TestLabel.Monotouch, value);
 		}
 		public bool IncludeDotNet {
-			get => selection ["dotnet"];
-			set => selection ["dotnet"] = value;
+			get => selection.HasFlag (TestLabel.Dotnet);
+			set => SetEnabled (TestLabel.Dotnet, value);
 		}
 
 		public bool IncludeMacCatalyst {
-			get => selection ["maccatalyst"];
-			set => selection ["maccatalyst"] = value;
+			get => selection.HasFlag (TestLabel.MacCatalyst);
+			set => SetEnabled (TestLabel.MacCatalyst, value);
 		}
 		public bool IncludeSystemPermissionTests {
-			get => selection ["system-permission"];
-			set => selection ["system-permission"] = value;
+			get => selection.HasFlag (TestLabel.SystemPermission);
+			set => SetEnabled (TestLabel.SystemPermission, value);
+		}
+
+		void SetEnabled (TestLabel label, bool enable)
+		{
+			if (enable) {
+				selection |= label;
+			} else {
+				selection &= ~label;
+			}
 		}
 		
 		public void SetEnabled (string label, bool value)
 		{
-			if (selection.ContainsKey (label)) {
-				selection [label] = value;
-			} else {
-				throw new InvalidOperationException ($"Unknown label '{label}'");
-			}
+			var testLabel = label.GetLabel ();
+			SetEnabled (testLabel, value);
 		}
 	}
 	/// <summary>
