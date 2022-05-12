@@ -1,0 +1,122 @@
+# Provides all the steps to sign and notarize pks and msi
+parameters:
+
+- name: signatureType
+  type: string
+  default: 'Real'
+
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
+- name: keyringPass
+  type: string
+
+- name: packageName
+  type: string
+
+- name: packagePattern
+  type: string
+
+- name: condition
+  default: and(succeeded(), eq(variables['IsPRBuild'], 'False'))
+
+steps:
+
+- template: setup.yml
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download not notarized build
+  inputs:
+    artifact: 'not-signed-package'
+    patterns: ${{ parameters.packagePattern }}
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/package
+
+- bash: |
+    set -x
+    set -e
+
+    PACKAGES=$(find $(Build.SourcesDirectory)/package -type f -name "${{ parameters.packagePattern }}" | xargs basename)
+    if [ -z "$PACKAGES" ]; then
+      echo "Packages ${{ parameters.packageName }} not found."
+    else
+      PACKAGES_PATH="$(Build.SourcesDirectory)/package/$PACKAGES"
+      set +x
+      echo "##vso[task.setvariable variable=PACKAGES;]$PACKAGES_PATH"
+      echo "${{ parameters.packageName }} package found at $PACKAGES_PATH"
+      set -x
+    fi
+  displayName: 'Retrieve packages to sign'
+  condition: ${{ parameters.condition }}
+  timeoutInMinutes: 180
+
+- ${{ if or(eq(parameters.skipESRP, true), eq(variables['IsPR'], 'True')) }}:
+  - bash: |
+      security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
+      echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+    env:
+      PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
+      MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
+      APP_ID: $(XamarinAppId)
+      INSTALL_ID: $(XamarinAppId)
+      APPLE_ACCOUNT: $(XamarinUserId)
+      APPLE_PASS: $(XamarinPassword)
+      TEAM_ID: $(TeamID)
+      KEYCHAIN: $(SigningKeychain)
+    name: notarize
+    displayName: 'Signing PR Build'
+    timeoutInMinutes: 180
+    condition: ${{ parameters.condition }}
+
+- ${{ else }}:
+  - bash: |
+      security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
+      if [[ "$SYSTEM_DEBUG" == "true" ]]; then
+        export ESRP_TEMP="$WORKING_DIR/esrp"
+        echo "Temp dir is $ESRP_TEMP"
+        mkdir -p "$ESRP_TEMP"
+      fi
+
+      echo "$PACKAGES" | xargs -t python3 $(Build.SourcesDirectory)/release-scripts/esrp_sign.py -vv -c "8025" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS"
+      ls -R $(Build.SourcesDirectory)/package
+    env:
+      WORKING_DIR: $(System.DefaultWorkingDirectory)
+      PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
+      MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
+    name: notarize
+    displayName: 'Signing Release Build (ESRP)'
+    timeoutInMinutes: 180
+    condition: ${{ parameters.condition }}
+
+- task: ArchiveFiles@1
+  displayName: 'Archive ESRP temp'
+  inputs:
+    rootFolder: '$(System.DefaultWorkingDirectory)/esrp'
+    includeRootFolder: false
+    archiveFile: '$(Build.ArtifactStagingDirectory)/esrp.zip'
+  continueOnError: true
+  condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
+
+# Upload the esrp temp dir
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: ESRP temp'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/esrp.zip'
+    artifactName: ESRP-tmp-${{ parameters.packageName }}
+  continueOnError: true
+  condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
+
+- task: PowerShell@2
+  inputs:
+    filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
+  displayName: 'Notarize & verify packages (ESRP)'
+  condition: ${{ parameters.condition }}
+
+# always upload no matter what, since if we are not signing we need the artifact in the pipeline
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Notarized Classic Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package
+    artifactName: classic-${{ parameters.packageName }}-signed
+  continueOnError: true
