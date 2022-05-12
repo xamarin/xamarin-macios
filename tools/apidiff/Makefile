@@ -406,7 +406,7 @@ DIRS += $(APIDIFF_DIR)/temp $(OUTPUT_DIR)/diff
 $(DIRS):
 	$(Q) mkdir -p $@
 
-# make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
+# make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # defining a .SECONDARY rule will prevent that deletion.
 .SECONDARY:
 
