@@ -31,6 +31,7 @@ namespace Security {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	// CF_ENUM(uint16_t, tls_protocol_version_t)
+	[NativeName ("tls_protocol_version_t")]
 	public enum TlsProtocolVersion : ushort {
 		Tls10 = 769,
 		Tls11 = 770,
@@ -42,6 +43,7 @@ namespace Security {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	// CF_ENUM(uint16_t, tls_ciphersuite_t)
+	[NativeName ("tls_ciphersuite_t")]
 	public enum TlsCipherSuite: ushort {
 		RsaWith3desEdeCbcSha = 10,
 		RsaWithAes128CbcSha = 47,
@@ -73,6 +75,7 @@ namespace Security {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	// CF_ENUM(uint16_t, tls_ciphersuite_group_t)
+	[NativeName ("tls_ciphersuite_group_t")]
 	public enum TlsCipherSuiteGroup : ushort {
 		Default,
 		Compatibility,

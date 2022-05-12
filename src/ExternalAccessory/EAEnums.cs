@@ -45,7 +45,7 @@ namespace ExternalAccessory {
 	// NSInteger -> EAAccessoryManager.h
 	[TV (10,0)]
 	[Mac (10, 13)]
-	[Native]
+	[Native ("EABluetoothAccessoryPickerErrorCode")]
 	[ErrorDomain ("EABluetoothAccessoryPickerErrorDomain")]
 	public enum EABluetoothAccessoryPickerError : long {
 		AlreadyConnected,

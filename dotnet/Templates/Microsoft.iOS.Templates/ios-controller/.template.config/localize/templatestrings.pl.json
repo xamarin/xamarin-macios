@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Szablon kontrolera systemu iOS (wersja zapoznawcza)",
+  "name": "iOS Controller template",
   "description": "Klasa kontrolera systemu iOS",
   "symbols/namespace/description": "przestrzeń nazw wygenerowanego kodu."
 }
