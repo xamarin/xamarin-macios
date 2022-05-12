@@ -429,27 +429,15 @@ merger.exe: merger.cs
 ifdef INCLUDE_IOS
 ios-markdown: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(OUTPUT_DIR)/diff/xi/Xamarin.iOS/ ios $(abspath $@)
-dotnet-ios-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/ dotnet-ios $(APIDIFF_DIR)
-dotnet-legacy-ios-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/ dotnet-legacy-ios $(APIDIFF_DIR)
 else
 ios-markdown: ; @true
-dotnet-ios-markdown: ; @true
-dotnet-legacy-ios-markdown: ; @true
 endif
 
 ifdef INCLUDE_TVOS
 tvos-markdown: merger.exe $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(OUTPUT_DIR)/diff/xi/Xamarin.TVOS/ tvos $(abspath $@)
-dotnet-tv-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.tvOS.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/ dotnet-tvos $(APIDIFF_DIR)
-dotnet-legacy-tv-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.tvOS.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/ dotnet-legacy-tvos $(APIDIFF_DIR)
 else
 tvos-markdown: ; @true
-dotnet-tv-markdown: ; @true
-dotnet-legacy-tv-markdown: ; @true
 endif
 
 ifdef INCLUDE_WATCH
@@ -459,42 +447,14 @@ else
 watchos-markdown: ; @true
 endif
 
-ifdef INCLUDE_MACCATALYST
-dotnet-maccatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/ dotnet-maccatalyst $(APIDIFF_DIR) $(APIDIFF_DIR)
-ifdef ENABLE_DOTNET
-dotnet-iOS-MacCatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS-MacCatalyst.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Dotnet.iOS-MacCatalyst $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/ dotnet-maccatios $(APIDIFF_DIR)
-else
-dotnet-iOS-MacCatalyst-markdown: ; @true
-endif # ENABLE_DOTNET
-else
-dotnet-maccatalyst-markdown: ; @true
-dotnet-iOS-MacCatalyst-markdown: ; @true
-endif
-
 ifdef INCLUDE_MAC
 macos-markdown: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(OUTPUT_DIR)/diff/xm/Xamarin.Mac/ macos $(abspath $@)
-dotnet-macos-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.macOS.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/ dotnet-macos $(APIDIFF_DIR)
-dotnet-legacy-macos-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.macOS.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/ dotnet-legacy-macos $(APIDIFF_DIR)
 else
 macos-markdown: ; @true
-dotnet-macos-markdown: ; @true
-dotnet-legacy-macos-markdown: ; @true
 endif
 
-ifdef ENABLE_DOTNET
-dotnet-markdown: dotnet-ios-markdown dotnet-macos-markdown dotnet-maccatalyst-markdown dotnet-tv-markdown
-dotnet-legacy-markdown: dotnet-legacy-ios-markdown dotnet-legacy-macos-markdown dotnet-legacy-tv-markdown
-else
-dotnet-markdown: ; @true
-dotnet-legacy-markdown: ; @true
-endif
-
-all-markdowns: ios-markdown tvos-markdown watchos-markdown macos-markdown dotnet-markdown dotnet-legacy-markdown dotnet-iOS-MacCatalyst-markdown
+all-markdowns: ios-markdown tvos-markdown watchos-markdown macos-markdown
 
 $(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
