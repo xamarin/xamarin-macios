@@ -97,7 +97,7 @@ else
 	STATUS_MESSAGE=":information_source: API Diff (from PR only) (please review changes)"
 	set +x
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
-	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS;isOutput=true]error"
+	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS;isOutput=true]success"
 	set -x
 fi
 
