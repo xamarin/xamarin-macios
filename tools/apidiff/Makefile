@@ -163,7 +163,7 @@ $(APIDIFF_DIR)/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/M
 
 $(APIDIFF_DIR)/%-api-diff.html:
 	$(Q) rm -f $@
-	mkdir -p $$(dirname "$@");
+	$(Q) mkdir -p $$(dirname "$@");
 	$(Q) touch $@-toc
 	$(Q_GEN) for file in $?; do \
 		if [[ "x0" != "x`stat -L -f %z $$file`" ]]; then  \
@@ -418,7 +418,7 @@ $(DIRS):
 .SECONDARY:
 
 merger.exe: merger.cs
-	$(Q) $(SYSTEM_CSC) -debug $< -out:$@
+	$(Q) $(SYSTEM_CSC) -debug $< -out:$@ /nologo
 
 ifdef INCLUDE_IOS
 ios-markdown: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
