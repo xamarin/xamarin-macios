@@ -402,12 +402,6 @@ ifdef ENABLE_DOTNET
 update-refs: $(DOTNET_REFS)
 endif
 
-# targets to verify that the 32-bit and 64-bit assemblies have identical API.
-
-verify-reference-assemblies-ios: $(APIDIFF_DIR)/temp/native-32/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/native-64/Xamarin.iOS.xml
-	$(Q) diff $(APIDIFF_DIR)/temp/native-32/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/native-64/Xamarin.iOS.xml -u
-	@echo iOS reference assemblies are identical
-
 clean-local::
 	rm -rf temp references updated-references diff dotnet *.exe* api-diff.html
 	rm -rf *.dll* bundle-*.zip $(UNZIP_STAMPS)
@@ -489,9 +483,6 @@ endif
 	$(Q) $(CP) api-diff.html index.html
 	@# remove empty files so they're not uploaded
 	@-find $(CURDIR)/diff -size 0 | xargs rm
-ifdef INCLUDE_IOS
-	$(MAKE) verify-reference-assemblies-ios -j8
-endif
 
 jenkins-api-diff:
 	-$(MAKE) wrench-api-diff
