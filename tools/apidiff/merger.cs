@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -20,9 +21,6 @@ class Merger {
 		if (!Directory.Exists (path))
 			throw new DirectoryNotFoundException (path);
 
-		if (destinationPath is not null && !Directory.Exists (destinationPath))
-			throw new DirectoryNotFoundException (destinationPath);
-
 		var content = new StringWriter ();
 		var files = Directory.GetFileSystemEntries (path, "*.md");
 		Array.Sort (files);
@@ -30,6 +28,8 @@ class Merger {
 		string to = "unknown";
 		bool lookForVersion = false;
 		foreach (var file in files) {
+			if (new FileInfo (file).Length == 0)
+				continue;
 			// skip everything before and including title (single #) from each file, we already have one
 			string? foundTitle = null;
 			foreach (var line in File.ReadAllLines (file)) {
@@ -55,6 +55,7 @@ class Merger {
 				}
 			}
 		}
+		var hasVersions = from != "unknown" && to != "unknown";
 
 		// https://github.com/MicrosoftDocs/xamarin-docs/blob/live/contributing-guidelines/template.md#file-name
 		var filename = $"{os}-{from}-{to}".Replace ('.', '-').ToLowerInvariant () + ".md";
@@ -65,11 +66,18 @@ class Merger {
 		var guid = new Guid (digest[0..16]);
 
 		var headers = new StringWriter ();
-		var title = $"{platform} SDK API diff: {from} vs {to}";
+		var title = $"{platform} SDK API diff";
+		if (hasVersions) {
+			title += $": {from} vs {to}";
+		}
 		// https://github.com/MicrosoftDocs/xamarin-docs/blob/live/contributing-guidelines/template.md#metadata
 		headers.WriteLine ("---");
 		headers.WriteLine ($"title: \"{title}\"");
-		headers.WriteLine ($"description: List of API changes between {platform} versions {from} and {to}.");
+		if (hasVersions) {
+			headers.WriteLine ($"description: List of API changes between {platform} versions {from} and {to}.");
+		} else {
+			headers.WriteLine ($"description: List of API changes for {platform}.");
+		}
 		headers.WriteLine ($"author: spouliot");
 		headers.WriteLine ($"ms.author: sepoulio");
 		headers.WriteLine ($"ms.date: {DateTime.Now.ToString ("d", new CultureInfo ("en-US"))}");
@@ -81,15 +89,13 @@ class Merger {
 		headers.WriteLine ($"# {title}");
 		headers.WriteLine ();
 
-		var filePath = destinationPath is not null ? Path.Combine (destinationPath, filename) : filename;
+		var filePath = destinationPath;
 		File.WriteAllText (filePath, headers.ToString ());
 
 		var alldiffs = content.ToString ();
 		if (alldiffs.Length == 0)
 			alldiffs = "No changes were found between both versions."; // should not happen for releases (versions change)
 		File.AppendAllText (filePath, alldiffs);
-		if (File.Exists ("api-diff.html"))
-			File.AppendAllText ("api-diff.html", $"\n<h2><a href=\"{filePath}\">{platform} API diff (markdown)</a></h2>");
 	}
 
 	public static int Main (string [] args)
