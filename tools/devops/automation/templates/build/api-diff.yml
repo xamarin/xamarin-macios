@@ -10,7 +10,6 @@ steps:
 
 - bash: |
     git restore .
-    git submodule foreach git reset --hard
   displayName: 'Reset git changes'
   workingDirectory: $(Build.SourcesDirectory)/xamarin-macios
 
