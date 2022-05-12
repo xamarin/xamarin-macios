@@ -515,32 +515,12 @@ $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS-MacCatalyst.md: $(
 	$(Q) touch $@
 
 wrench-api-diff:
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.iOS"
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.WatchOS"
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.TVOS"
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.MacCatalyst"
 ifdef INCLUDE_MAC
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xm"
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xm/4.5"
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xm/Xamarin.Mac"
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/mac-api-diff.html"
-endif
-ifdef INCLUDE_IOS
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/ios-api-diff.html"
-ifdef INCLUDE_WATCH
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/watchos-api-diff.html"
-endif
-ifdef INCLUDE_TVOS
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/tvos-api-diff.html"
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/diff/ios-to-tvos.html"
-endif
 endif
 	$(Q) $(MAKE) $(UNZIP_STAMPS)
 	$(Q) $(MAKE) all -j8
 	$(Q) $(MAKE) all-markdowns
 	$(Q) $(CP) api-diff.html index.html
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/index.html"
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"
 	@# remove empty files so they're not uploaded
 	@-find $(CURDIR)/diff -size 0 | xargs rm
 ifdef INCLUDE_IOS
