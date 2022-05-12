@@ -267,7 +267,7 @@ endif
 # easy-to-type helper targets.
 # one rule to create all the api diffs
 
-all-local:: $(OUTPUT_DIR)/api-diff.html
+all-local:: $(OUTPUT_DIR)/api-diff.html all-markdowns
 
 # Rules to re-create the reference infos from the current stable 'bundle.zip' assemblies
 
@@ -414,34 +414,28 @@ merger.exe: merger.cs
 	$(Q) $(SYSTEM_CSC) -debug $< -out:$@ /nologo
 
 ifdef INCLUDE_IOS
-ios-markdown: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+$(OUTPUT_DIR)/ios-api-diff.md: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(OUTPUT_DIR)/diff/xi/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(OUTPUT_DIR)/diff/xi/Xamarin.iOS/ ios $(abspath $@)
-else
-ios-markdown: ; @true
+all-markdowns:: $(OUTPUT_DIR)/ios-api-diff.md
 endif
 
 ifdef INCLUDE_TVOS
-tvos-markdown: merger.exe $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+$(OUTPUT_DIR)/tvos-api-diff.md: merger.exe $(foreach file,$(TVOS_ASSEMBLIES),$(OUTPUT_DIR)/diff/xi/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(OUTPUT_DIR)/diff/xi/Xamarin.TVOS/ tvos $(abspath $@)
-else
-tvos-markdown: ; @true
+all-markdowns:: $(OUTPUT_DIR)/tvos-api-diff.md
 endif
 
 ifdef INCLUDE_WATCH
-watchos-markdown: merger.exe $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
+$(OUTPUT_DIR)/watchos-api-diff.md: merger.exe $(foreach file,$(WATCHOS_ASSEMBLIES),$(OUTPUT_DIR)/diff/xi/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.WatchOS $(OUTPUT_DIR)/diff/xi/Xamarin.WatchOS/ watchos $(abspath $@)
-else
-watchos-markdown: ; @true
+all-markdowns:: $(OUTPUT_DIR)/watchos-api-diff.md
 endif
 
 ifdef INCLUDE_MAC
-macos-markdown: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).md)
+$(OUTPUT_DIR)/mac-api-diff.md: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(OUTPUT_DIR)/diff/xm/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(OUTPUT_DIR)/diff/xm/Xamarin.Mac/ macos $(abspath $@)
-else
-macos-markdown: ; @true
+all-markdowns:: $(OUTPUT_DIR)/mac-api-diff.md
 endif
-
-all-markdowns: ios-markdown tvos-markdown watchos-markdown macos-markdown
 
 wrench-api-diff:
 ifdef INCLUDE_MAC
