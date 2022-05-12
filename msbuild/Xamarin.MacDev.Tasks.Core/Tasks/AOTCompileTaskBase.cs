@@ -90,11 +90,11 @@ namespace Xamarin.MacDev.Tasks {
 
 				var arguments = new List<string> ();
 				if (!StringUtils.TryParseArguments (aotArguments, out var parsedArguments, out var ex)) {
-					Log.LogError (MSBStrings.E7071, /* Unable to parse the AOT compiler arguments: {0} ({1}) */ aotArguments, ex.Message);
+					Log.LogError (MSBStrings.E7071, /* Unable to parse the AOT compiler arguments: {0} ({1}) */ aotArguments, ex!.Message);
 					return false;
 				}
 				if (!StringUtils.TryParseArguments (processArguments, out var parsedProcessArguments, out var ex2)) {
-					Log.LogError (MSBStrings.E7071, /* Unable to parse the AOT compiler arguments: {0} ({1}) */ processArguments, ex2.Message);
+					Log.LogError (MSBStrings.E7071, /* Unable to parse the AOT compiler arguments: {0} ({1}) */ processArguments, ex2!.Message);
 					return false;
 				}
 				arguments.Add ($"{string.Join (",", parsedArguments)}");
