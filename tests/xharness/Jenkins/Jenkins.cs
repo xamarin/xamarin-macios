@@ -162,7 +162,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "dotnet-wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !(TestSelection.IsEnabled (TestLabel.Xtro) && TestSelection.IsEnabled (TestLabel.Dotnet)),
+				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro) && !TestSelection.IsEnabled (TestLabel.Dotnet),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
