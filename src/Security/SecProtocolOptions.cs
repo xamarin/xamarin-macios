@@ -6,6 +6,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -46,8 +49,8 @@ namespace Security {
 
 		public void SetLocalIdentity (SecIdentity2 identity)
 		{
-			if (identity == null)
-				throw new ArgumentNullException (nameof (identity));
+			if (identity is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			sec_protocol_options_set_local_identity (GetCheckedHandle (), identity.GetCheckedHandle ());
 		}
 
@@ -434,8 +437,8 @@ namespace Security {
 
 		public void AddTlsApplicationProtocol (string applicationProtocol)
 		{
-			if (applicationProtocol == null)
-				throw new ArgumentNullException (nameof (applicationProtocol));
+			if (applicationProtocol is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationProtocol));
 			sec_protocol_options_add_tls_application_protocol (GetCheckedHandle (), applicationProtocol);
 		}
 
@@ -444,8 +447,8 @@ namespace Security {
 
 		public void SetTlsServerName (string serverName)
 		{
-			if (serverName == null)
-				throw new ArgumentNullException (nameof (serverName));
+			if (serverName is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (serverName));
 			sec_protocol_options_set_tls_server_name (GetCheckedHandle (), serverName);
 		}
 
@@ -496,8 +499,8 @@ namespace Security {
 #endif
 		public void SetTlsDiffieHellmanParameters (DispatchData parameters)
 		{
-			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+			if (parameters is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			sec_protocol_options_set_tls_diffie_hellman_parameters (GetCheckedHandle (), parameters.Handle);
 		}
 
@@ -506,8 +509,8 @@ namespace Security {
 
 		public void AddPreSharedKey (DispatchData parameters)
 		{
-			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+			if (parameters is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			sec_protocol_options_set_tls_diffie_hellman_parameters (GetCheckedHandle (), parameters.Handle);
 		}
 
@@ -557,10 +560,10 @@ namespace Security {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetKeyUpdateCallback (SecProtocolKeyUpdate keyUpdate, DispatchQueue keyUpdateQueue)
 		{
-			if (keyUpdate == null)
-				throw new ArgumentNullException (nameof (keyUpdate));
-			if (keyUpdateQueue == null)
-				throw new ArgumentNullException (nameof (keyUpdateQueue));
+			if (keyUpdate is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyUpdate));
+			if (keyUpdateQueue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyUpdateQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
@@ -598,7 +601,7 @@ namespace Security {
 #endif
 		public bool IsEqual (SecProtocolOptions other)
 		{
-			if (other == null)
+			if (other is null)
 				return false;
 			return sec_protocol_options_are_equal (GetCheckedHandle (), other.Handle);
 		}
@@ -616,9 +619,9 @@ namespace Security {
 #endif
 		static public bool IsEqual (SecProtocolOptions optionsA, SecProtocolOptions optionsB)
 		{
-			if (optionsA == null)
-				return (optionsB == null);
-			else if (optionsB == null)
+			if (optionsA is null)
+				return (optionsB is null);
+			else if (optionsB is null)
 				return false;
 			return sec_protocol_options_are_equal (optionsA.Handle, optionsB.Handle);
 		}
@@ -650,8 +653,8 @@ namespace Security {
 #endif
 		public void SetTlsPreSharedKeyIdentityHint (DispatchData pskIdentityHint)
 		{
-			if (pskIdentityHint == null)
-				throw new ArgumentNullException (nameof (pskIdentityHint));
+			if (pskIdentityHint is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pskIdentityHint));
 			sec_protocol_options_set_tls_pre_shared_key_identity_hint (GetCheckedHandle (), pskIdentityHint.Handle);
 		}
 #endif
