@@ -140,12 +140,6 @@ $(OUTPUT_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TF
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $<) $(abspath $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst-as-iOS.xml) $(APIDIFF_IGNORE) $(abspath $@)
 
-# this is a hack to show the difference between iOS and tvOS
-$(APIDIFF_DIR)/diff/ios-to-tvos.html: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml $(MONO_API_HTML)
-	$(Q) mkdir -p $(dir $@)
-	$(Q) sed -e 's_<assembly name="Xamarin.TVOS" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml > $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml
-	$(QF_GEN) $(MONO_API_HTML_EXEC) $(abspath $<) $(abspath $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml) $(abspath $@)
-
 # create diff files for all the assemblies per platform
 
 
@@ -197,7 +191,6 @@ ifdef INCLUDE_WATCH
 API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/watchos-api-diff.html
 endif
 ifdef INCLUDE_TVOS
-API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/diff/ios-to-tvos.html
 API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/tvos-api-diff.html
 endif
 ifdef INCLUDE_MACCATALYST
