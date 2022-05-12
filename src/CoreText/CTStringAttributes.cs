@@ -419,6 +419,8 @@ namespace CoreText {
 			var dict = ptr == IntPtr.Zero ? new NSMutableDictionary () : new NSMutableDictionary (ptr);
 
 			var key = CTBaselineClassID.ToNSString (baselineClass);
+			if (key is null)
+				throw new InvalidOperationException (nameof (key));
 			Adapter.SetValue (dict, key, new NSNumber (offset));
 
 			if (ptr == IntPtr.Zero)
