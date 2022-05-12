@@ -22,3 +22,7 @@
     path = external/MonoTouch.Dialog
     url = ../../migueldeicaza/MonoTouch.Dialog
     branch = dotnet
+[submodule "api-tools"]
+	path = external/api-tools
+	url = ../../rolfbjarne/api-tools
+	branch = main
