@@ -229,7 +229,6 @@ namespace Compression
 		{
 			EnsureDecompressionMode ();
 			EnsureNotDisposed ();
-			EnsureBufferInitialized ();
 
 			// Try to read a single byte from zlib without allocating an array, pinning an array, etc.
 			// If zlib doesn't have any data, fall back to the base stream implementation, which will do that.
@@ -259,6 +258,7 @@ namespace Compression
 		{
 			EnsureDecompressionMode ();
 			EnsureNotDisposed ();
+			EnsureBufferInitialized ();
 
 			int totalRead = 0;
 
