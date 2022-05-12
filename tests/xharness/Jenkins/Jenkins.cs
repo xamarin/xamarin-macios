@@ -94,16 +94,16 @@ namespace Xharness.Jenkins {
 			
 			if (project.IsBclTest ()) {
 				if (!project.IsBclxUnit ())
-					return TestSelection.IncludeBcl || TestSelection.IncludeBCLNUnit;
+					return TestSelection.IsEnabled (TestLabel.Bcl) || TestSelection.IsEnabled(TestLabel.BclNUnit);
 				if (project.IsMscorlib ()) 
-					return TestSelection.IncludeMscorlib;
-				return TestSelection.IncludeBcl || TestSelection.IncludeBCLxUnit;
+					return TestSelection.IsEnabled(TestLabel.Mscorlib);
+				return TestSelection.IsEnabled(TestLabel.Bcl) || TestSelection.IsEnabled(TestLabel.BclXUnit);
 			}
 
-			if (!TestSelection.IncludeMonotouch && project.IsMonotouch ())
+			if (!TestSelection.IsEnabled(TestLabel.Monotouch) && project.IsMonotouch ())
 				return false;
 
-			if (!TestSelection.IncludeNonMonotouch && !project.IsMonotouch ())
+			if (!TestSelection.IsEnabled(TestLabel.NonMonotouch) && !project.IsMonotouch ())
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -156,7 +156,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !TestSelection.IncludeXtro,
+				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
@@ -176,7 +176,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "dotnet-wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !TestSelection.IncludeXtro && !TestSelection.IncludeDotNet,
+				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro) && !TestSelection.IsEnabled (TestLabel.Dotnet),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
@@ -205,7 +205,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Mode = ".NET",
-				Ignored = !TestSelection.IncludeBtouch,
+				Ignored = !TestSelection.IsEnabled (TestLabel.Btouch),
 			};
 			Tasks.Add (runDotNetGenerator);
 
@@ -216,14 +216,14 @@ namespace Xharness.Jenkins {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
 				ProjectConfiguration = "Debug",
-				Ignored = !TestSelection.IncludeDotNet,
+				Ignored = !TestSelection.IsEnabled (TestLabel.Dotnet),
 			};
 			var runDotNetTests = new DotNetTestTask (this, buildDotNetTests, processManager) {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
 				Timeout = TimeSpan.FromMinutes (240),
-				Ignored = !TestSelection.IncludeDotNet,
+				Ignored = !TestSelection.IsEnabled (TestLabel.Dotnet),
 			};
 			Tasks.Add (runDotNetTests);
 

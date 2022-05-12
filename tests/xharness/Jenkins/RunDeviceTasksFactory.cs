@@ -20,7 +20,7 @@ namespace Xharness.Jenkins {
 				if (project.SkipDeviceVariations)
 					continue;
 
-				bool ignored = project.Ignore ?? !jenkins.TestSelection.IncludeDevice;
+				bool ignored = project.Ignore ?? !jenkins.TestSelection.IsEnabled (TestLabel.Device);
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 				if (project.IsDotNetProject)
@@ -61,7 +61,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IncludeiOS64 });
+						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled(TestLabel.iOs64) });
 
 					var build32 = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
 						ProjectConfiguration = project.Name != "dont link" ? "Debug32" : "Release32",
@@ -78,7 +78,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IncludeiOS32 });
+						candidates: jenkins.Devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.iOS32)});
 
 					if (createTodayExtension) {
 						var todayProject = project.GenerateVariations ? project.AsTodayExtensionProject () : project;
@@ -97,7 +97,7 @@ namespace Xharness.Jenkins {
 							tunnelBore: jenkins.TunnelBore,
 							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IncludeiOSExtensions, BuildOnly = jenkins.ForceExtensionBuildOnly });
+							candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled(TestLabel.iOSExtension), BuildOnly = jenkins.ForceExtensionBuildOnly });
 					}
 				}
 
@@ -118,7 +118,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IncludetvOS });
+						candidates: jenkins.Devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled(TestLabel.tvOS) });
 				}
 
 				if (createwatchOS) {
@@ -139,7 +139,7 @@ namespace Xharness.Jenkins {
 							tunnelBore: jenkins.TunnelBore,
 							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.ConnectedWatch) { Ignored = !jenkins.TestSelection.IncludewatchOS });
+							candidates: jenkins.Devices.ConnectedWatch) { Ignored = !jenkins.TestSelection.IsEnabled(TestLabel.watchOS) });
 					}
 
 					if (!project.SkipwatchOSARM64_32Variation) {
@@ -158,7 +158,7 @@ namespace Xharness.Jenkins {
 							tunnelBore: jenkins.TunnelBore,
 							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IncludewatchOS });
+							candidates: jenkins.Devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled(TestLabel.watchOS) });
 					}
 				}
 				foreach (var task in projectTasks) {

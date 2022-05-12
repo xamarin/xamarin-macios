@@ -22,142 +22,9 @@ namespace Xharness.Jenkins {
 			TestLabel.watchOS |
 			TestLabel.Msbuild;
 
-		public bool IncludeAll {
-			get => selection.HasFlag (TestLabel.All);
-			set => SetEnabled (TestLabel.All, value);
-		}
-		public bool IncludeBcl {
-			get => selection.HasFlag (TestLabel.Bcl);
-			set => SetEnabled (TestLabel.Bcl, value);
-		}
-
-		public bool IncludeMac {
-			get => selection.HasFlag (TestLabel.Mac);
-			set => SetEnabled (TestLabel.Mac, value);
-		}
-
-		public bool IncludeiOS {
-			get => selection.HasFlag (TestLabel.iOS);
-			set => SetEnabled (TestLabel.iOS, value);
-		}
-
-		public bool IncludeiOS64 {
-			get => selection.HasFlag (TestLabel.iOs64);
-			set => SetEnabled (TestLabel.iOs64, value);
-		}
-
-		public bool IncludeiOS32 {
-			get => selection.HasFlag (TestLabel.iOS32);
-			set => SetEnabled (TestLabel.iOS32, value);
-		}
-
-		public bool IncludeiOSExtensions {
-			get => selection.HasFlag (TestLabel.iOSExtension);
-			set => SetEnabled (TestLabel.iOSExtension, value);
-		}
-
-		public bool IncludeMacBindingProject {
-			get => selection.HasFlag (TestLabel.MacBindingProject);
-			set => SetEnabled (TestLabel.MacBindingProject, value);
-		}
-
 		public bool ForceExtensionBuildOnly { get; set; }
 
-		public bool IncludetvOS {
-			get => selection.HasFlag (TestLabel.tvOS);
-			set => SetEnabled (TestLabel.tvOS, value);
-		}
-		public bool IncludewatchOS {
-			get => selection.HasFlag (TestLabel.watchOS);
-			set => SetEnabled (TestLabel.watchOS, value);
-		}
-		public bool IncludeMmpTest {
-			get => selection.HasFlag (TestLabel.Mmp);
-			set => SetEnabled (TestLabel.Mmp, value);
-		}
-		public bool IncludeMSBuild {
-			get => selection.HasFlag (TestLabel.Msbuild);
-			set => SetEnabled (TestLabel.Msbuild, value);
-		}
-		public bool IncludeMtouch {
-			get => selection.HasFlag (TestLabel.Mtouch);
-			set => SetEnabled (TestLabel.Mtouch, value);
-		}
-		
-		public bool IncludeBtouch {
-			get => selection.HasFlag (TestLabel.Btouch);
-			set => SetEnabled (TestLabel.Btouch, value);
-		}
-
-		public bool IncludeSimulator {
-			get => selection.HasFlag (TestLabel.iOSSimulator);
-			set => SetEnabled (TestLabel.iOSSimulator, value);
-		}
-
-		public bool IncludeOldSimulatorTests {
-			get => selection.HasFlag (TestLabel.OldiOSSimulator);
-			set => SetEnabled (TestLabel.OldiOSSimulator, value);
-		}
-
-		public bool IncludeDevice {
-			get => selection.HasFlag (TestLabel.Device);
-			set => SetEnabled (TestLabel.Device, value);
-		}
-
-		public bool IncludeXtro {
-			get => selection.HasFlag (TestLabel.Xtro);
-			set => SetEnabled (TestLabel.Xtro, value);
-		}
-
-		public bool IncludeCecil {
-			get => selection.HasFlag (TestLabel.Cecil);
-			set => SetEnabled (TestLabel.Cecil, value);
-		}
-
-		public bool IncludeDocs {
-			get => selection.HasFlag (TestLabel.Docs);
-			set => SetEnabled (TestLabel.Docs, value);
-		}
-
-		public bool IncludeBCLxUnit {
-			get => selection.HasFlag (TestLabel.BclXUnit);
-			set => SetEnabled (TestLabel.BclXUnit, value);
-		}
-
-		public bool IncludeBCLNUnit {
-			get => selection.HasFlag (TestLabel.BclNUnit);
-			set => SetEnabled (TestLabel.BclNUnit, value);
-		}
-
-		public bool IncludeMscorlib {
-			get => selection.HasFlag (TestLabel.Mscorlib);
-			set => SetEnabled (TestLabel.Mscorlib, value);
-		}
-
-		public bool IncludeNonMonotouch {
-			get => selection.HasFlag (TestLabel.NonMonotouch);
-			set => SetEnabled (TestLabel.NonMonotouch, value);
-		}
-
-		public bool IncludeMonotouch {
-			get => selection.HasFlag (TestLabel.Monotouch);
-			set => SetEnabled (TestLabel.Monotouch, value);
-		}
-		public bool IncludeDotNet {
-			get => selection.HasFlag (TestLabel.Dotnet);
-			set => SetEnabled (TestLabel.Dotnet, value);
-		}
-
-		public bool IncludeMacCatalyst {
-			get => selection.HasFlag (TestLabel.MacCatalyst);
-			set => SetEnabled (TestLabel.MacCatalyst, value);
-		}
-		public bool IncludeSystemPermissionTests {
-			get => selection.HasFlag (TestLabel.SystemPermission);
-			set => SetEnabled (TestLabel.SystemPermission, value);
-		}
-
-		void SetEnabled (TestLabel label, bool enable)
+		public void SetEnabled (TestLabel label, bool enable)
 		{
 			if (enable) {
 				selection |= label;
@@ -171,6 +38,9 @@ namespace Xharness.Jenkins {
 			var testLabel = label.GetLabel ();
 			SetEnabled (testLabel, value);
 		}
+
+		public bool IsEnabled (TestLabel label)
+			=> selection.HasFlag (label);
 	}
 	/// <summary>
 	/// Allows to select the tests to be ran depending on certain conditions such as labels of modified files.
@@ -306,16 +176,22 @@ namespace Xharness.Jenkins {
 		{
 			if (labels.Contains ("skip-" + testname + "-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
-				if (testname == "ios") 
-					selection.IncludeiOS32 = selection.IncludeiOS64 = false;
+				if (testname == "ios") {
+					selection.SetEnabled (TestLabel.iOs64, false);
+					selection.SetEnabled (TestLabel.iOS32, false);
+				}
+
 				selection.SetEnabled(testname, false);
 				return true;
 			}
 
 			if (labels.Contains ("run-" + testname + "-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
-				if (testname == "ios")
-					selection.IncludeiOS32 = selection.IncludeiOS64 = true;
+				if (testname == "ios") {
+					selection.SetEnabled (TestLabel.iOs64, true);
+					selection.SetEnabled (TestLabel.iOS32, true);
+				}
+
 				selection.SetEnabled (testname, true);
 				return true;
 			}
@@ -428,7 +304,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (labels, "monotouch", selection); 
 
 			if (SetEnabled (labels, "system-permission", selection))
-				Harness.IncludeSystemPermissionTests = selection.IncludeSystemPermissionTests; 
+				Harness.IncludeSystemPermissionTests = selection.IsEnabled(TestLabel.SystemPermission); 
 
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
@@ -438,18 +314,18 @@ namespace Xharness.Jenkins {
 				if (!changed) { // don't override any value set using labels
 					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
 					if (!string.IsNullOrEmpty (branchName)) {
-						selection.IncludeDocs = branchName == "main";
-						if (selection.IncludeDocs)
+						selection.SetEnabled(TestLabel.Docs, branchName == "main");
+						if (selection.IsEnabled(TestLabel.Docs))
 							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'main'.");
 					} else if (pullRequest > 0) {
-						selection.IncludeDocs = vcs.GetPullRequestTargetBranch (pullRequest) == "main";
-						if (selection.IncludeDocs)
+						selection.SetEnabled(TestLabel.Docs, vcs.GetPullRequestTargetBranch (pullRequest) == "main");
+						if (selection.IsEnabled (TestLabel.Docs))
 							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'main'.");
 					}
 				}
 			} else {
-				if (selection.IncludeDocs) {
-					selection.IncludeDocs = false; // could have been enabled by 'run-all-tests', so disable it if we can't run it.
+				if (selection.IsEnabled (TestLabel.Docs)) {
+					selection.SetEnabled(TestLabel.Docs, false); // could have been enabled by 'run-all-tests', so disable it if we can't run it.
 					MainLog.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
 				}
 			}
@@ -458,7 +334,7 @@ namespace Xharness.Jenkins {
 			// - enabled by default if using a beta Xcode, otherwise disabled by default
 			changed = SetEnabled (labels, "old-simulator", selection);
 			if (!changed && jenkins.IsBetaXcode) {
-				selection.IncludeOldSimulatorTests = true;
+				selection.SetEnabled (TestLabel.OldiOSSimulator, true);
 				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
 			}
 		}
@@ -481,29 +357,29 @@ namespace Xharness.Jenkins {
 
 			if (!Harness.INCLUDE_IOS) {
 				MainLog.WriteLine ("The iOS build is disabled, so any iOS tests will be disabled as well.");
-				selection.IncludeiOS = false;
-				selection.IncludeiOS64 = false;
-				selection.IncludeiOS32 = false;
+				selection.SetEnabled(TestLabel.iOS, false);
+				selection.SetEnabled (TestLabel.iOs64, false);
+				selection.SetEnabled (TestLabel.iOS32, false);
 			}
 
 			if (!Harness.INCLUDE_WATCH) {
 				MainLog.WriteLine ("The watchOS build is disabled, so any watchOS tests will be disabled as well.");
-				selection.IncludewatchOS = false;
+				selection.SetEnabled(TestLabel.watchOS, false);
 			}
 
 			if (!Harness.INCLUDE_TVOS) {
 				MainLog.WriteLine ("The tvOS build is disabled, so any tvOS tests will be disabled as well.");
-				selection.IncludetvOS = false;
+				selection.SetEnabled (TestLabel.tvOS, false);
 			}
 
 			if (!Harness.INCLUDE_MAC) {
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
-				selection.IncludeMac = false;
+				selection.SetEnabled(TestLabel.Mac, false);
 			}
 
 			if (!Harness.ENABLE_DOTNET) {
 				MainLog.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
-				selection.IncludeDotNet = false;
+				selection.SetEnabled(TestLabel.Dotnet, false);
 			}
 		}
 	}

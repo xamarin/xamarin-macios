@@ -65,11 +65,11 @@ namespace Xharness.Jenkins {
 		{
 
 			foreach (var project in jenkins.Harness.MacTestProjects) {
-				bool ignored = !jenkins.TestSelection.IncludeMac;
+				bool ignored = !jenkins.TestSelection.IsEnabled(TestLabel.Mac);
 				if (project.Ignore == true)
 					ignored = true;
 
-				if (!jenkins.TestSelection.IncludeMmpTest && project.Path.Contains ("mmptest"))
+				if (!jenkins.TestSelection.IsEnabled(TestLabel.Mmp) && project.Path.Contains ("mmptest"))
 					ignored = true;
 
 				if (!jenkins.IsIncluded (project))
