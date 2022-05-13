@@ -52,7 +52,7 @@ report_error ()
 	rm -f "$COMPARE_FAILURE_FILE"
 	echo "*** Comparing API & creating generator diff failed ***"
 	MESSAGE="*** Comparing API & creating generator diff failed ***"
-	exit 0
+	exit 1
 }
 trap report_error ERR
 

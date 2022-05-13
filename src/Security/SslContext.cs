@@ -258,7 +258,7 @@ namespace Security {
 		internal unsafe SslStatus Read (byte[] data, int offset, int size, out nint processed)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			fixed (byte *d = &data [offset])
 				result = SSLRead (Handle, d, size, out processed);
 			return result;
@@ -278,7 +278,7 @@ namespace Security {
 		internal unsafe SslStatus Write (byte[] data, int offset, int size, out nint processed)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			fixed (byte *d = &data [offset])
 				result = SSLWrite (Handle, d, size, out processed);
 			return result;
@@ -344,7 +344,7 @@ namespace Security {
 		public unsafe SslStatus SetEnabledCiphers (IEnumerable<SslCipherSuite> ciphers)
 		{
 			if (ciphers is null)
-				throw new ArgumentNullException (nameof (ciphers));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ciphers));
 
 			var array = ciphers.ToArray ();
 			fixed (SslCipherSuite *p = array)
@@ -652,7 +652,7 @@ namespace Security {
 		public int SetSessionConfig (NSString config)
 		{
 			if (config is null)
-				throw new ArgumentNullException (nameof (config));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (config));
 			
 			return SSLSetSessionConfig (Handle, config.Handle);
 		}
@@ -955,7 +955,7 @@ namespace Security {
 		public int SetOcspResponse (NSData response)
 		{
 			if (response is null)
-				throw new ArgumentNullException (nameof (response));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (response));
 			return SSLSetOCSPResponse (Handle, response.Handle);
 		}
 

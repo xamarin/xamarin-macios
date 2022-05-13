@@ -1053,7 +1053,11 @@ function Get-GitHubPRInfo {
 
     $url = "https://api.github.com/repos/xamarin/xamarin-macios/pulls/$ChangeId"
 
-    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' }
+    $headers = @{
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
+    }
+
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' -Headers $headers }
     Write-Host $request
     return $request
 }
