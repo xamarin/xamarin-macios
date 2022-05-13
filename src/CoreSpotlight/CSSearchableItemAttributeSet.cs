@@ -1,5 +1,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 #if IOS || MONOMAC
 
 using System;
@@ -10,7 +12,7 @@ namespace CoreSpotlight {
 
 	public partial class CSSearchableItemAttributeSet {
 
-		public INSSecureCoding this [CSCustomAttributeKey key] {
+		public INSSecureCoding? this [CSCustomAttributeKey key] {
 			get {
 				return ValueForCustomKey (key);
 			}
