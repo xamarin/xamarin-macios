@@ -27,7 +27,7 @@
 	<!-- AfterConnect belongs to Xamarin.Messaging.Build.targets -->
 	<Target Name="AfterConnect" Condition="'$(IsRemoteBuild)' == 'true'" DependsOnTargets="_VerifyXcodeVersion" />
 	
-	<Target Name="_VerifyXcodeVersion" Condition="'$(IsRemoteBuild)' == 'true'">
+	<Target Name="_VerifyXcodeVersion" Condition="'$(IsRemoteBuild)' == 'true' And '$(IsMacEnabled)' == 'true'">
 		<VerifyXcodeVersion SessionId="$(BuildSessionId)" />
 	</Target>
 
