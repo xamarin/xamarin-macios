@@ -80,7 +80,7 @@ namespace WebKit {
 #endif
 		{
 			if (handler == null)
-				throw new ArgumentNullException ("handler");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			var obj = new DomNodeEventProxy (this, handler);
 			AddEventListener (type, obj, useCapture);
 			return obj;
@@ -93,7 +93,7 @@ namespace WebKit {
 #endif
 		{
 			if (callback == null)
-				throw new ArgumentNullException ("callback");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 			var obj = new DomNodeEventProxy2 (callback);
 			AddEventListener (type, obj, useCapture);
 			return obj;
