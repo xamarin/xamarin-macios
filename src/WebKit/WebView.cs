@@ -37,7 +37,7 @@ namespace WebKit {
 		public static void DecideUse (NSObject decisionToken)
 		{
 			if (decisionToken is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (token));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (decisionToken));
 			
 			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selUse);
 		}
