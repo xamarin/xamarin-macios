@@ -36,7 +36,7 @@ namespace WebKit {
 		public WebActionMouseButton MouseButton {
 			get {
 				var number = ActionInformation[WebPolicyDelegate.WebActionButtonKey] as NSNumber;
-				if (number == null) {
+				if (number is null) {
 					return WebActionMouseButton.None;
 				}
 
