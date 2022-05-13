@@ -1,10 +1,11 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-
+using System.Reflection;
 using Xamarin;
 using Xamarin.Utils;
 using System.Collections.Generic;
+using Xamarin.Tests;
 
 namespace Microsoft.MaciOS.Nnyeah.Tests {
 
@@ -58,30 +59,43 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 
 		static void AppendPlatformReference (List<string> args, PlatformName platformName, string libName)
 		{
-			args.Add("/reference:" + PlatformLibPath (platformName, libName));
+			args.Add ("/reference:" + Path.Combine (XamarinPlatformLibDirectory (platformName), libName + ".dll"));
 		}
 
-		static string PlatformLibPath (PlatformName platformName, string libName)
+		public static string XamarinPlatformLibDirectory (PlatformName platformName)
 		{
-			return Path.Combine (PlatformLibDirectory (platformName), $"{libName}.dll");
+			return new FileInfo (XamarinPlatformLibraryPath (platformName)).DirectoryName!;
 		}
 
-		static string PlatformLibDirectory (PlatformName platformName) =>
+		public static string XamarinLibName (PlatformName platformName) =>
+			Path.GetFileNameWithoutExtension (XamarinPlatformLibraryPath (platformName)).ToString ();
+
+		public static string XamarinPlatformLibraryPath (PlatformName platformName) =>
 			platformName switch {
-				PlatformName.macOS => "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/",
-				PlatformName.iOS => "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS",
-				PlatformName.tvOS => "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS",
-				PlatformName.watchOS => "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.WatchOS",
-				_ => throw new NotImplementedException (),
+				PlatformName.macOS => Configuration.XamarinMacFullDll,
+				PlatformName.iOS => Configuration.XamarinIOSDll,
+				PlatformName.tvOS => Configuration.XamarinTVOSDll,
+				PlatformName.watchOS => Configuration.XamarinWatchOSDll,
+				_ => throw new NotImplementedException (platformName.ToString ()),
 			};
 
-		static string XamarinLibName (PlatformName platformName) =>
+		public static string MicrosoftPlatformLibDirectory (PlatformName platformName) =>
+			Configuration.GetRefDirectory (PlatformNameToApplePlatform (platformName));
+
+		public static string MicrosoftLibName (PlatformName platformName) =>
+			Path.GetFileNameWithoutExtension (Configuration.GetBaseLibraryName (PlatformNameToApplePlatform (platformName), true));
+
+		public static string MicrosoftPlatformLibraryPath (PlatformName platformName) =>
+						Path.Combine (MicrosoftPlatformLibDirectory (platformName),
+							Configuration.GetBaseLibraryName (PlatformNameToApplePlatform (platformName), true));
+
+		public static ApplePlatform PlatformNameToApplePlatform (PlatformName platformName) =>
 			platformName switch {
-				PlatformName.macOS => "Xamarin.Mac",
-				PlatformName.iOS => "Xamarin.iOS",
-				PlatformName.tvOS => "Xamarin.TVOS",
-				PlatformName.watchOS => "Xamarin.WatchOS",
-				_ => throw new NotImplementedException (),
+				PlatformName.macOS => ApplePlatform.MacOSX,
+				PlatformName.iOS => ApplePlatform.iOS,
+				PlatformName.tvOS => ApplePlatform.TVOS,
+				PlatformName.watchOS => ApplePlatform.WatchOS,
+				_ => throw new NotImplementedException (platformName.ToString ()),
 			};
 	}
 }

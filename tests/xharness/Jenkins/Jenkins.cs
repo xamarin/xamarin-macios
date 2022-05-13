@@ -60,7 +60,7 @@ namespace Xharness.Jenkins {
 		public bool IncludeMscorlib;
 		public bool IncludeNonMonotouch = true;
 		public bool IncludeMonotouch = true;
-		public bool IncludeDotNet;
+		public bool IncludeDotNet = true;
 		public bool IncludeMacCatalyst = true;
 
 		public bool CleanSuccessfulTestRuns = true;
