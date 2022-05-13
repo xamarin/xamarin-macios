@@ -1132,12 +1132,18 @@
         <value>La signature du code a été demandée plusieurs fois pour «{0}», avec des métadonnées différentes. Les métadonnées « {1}={2} » ont été définies pour un élément, mais pas pour l’autre.</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>La signature du code a été demandée plusieurs fois pour «{0}», avec des métadonnées différentes. Les métadonnées «{1}» ont été des valeurs pour chaque élément (une fois qu’il s’agit de «{2}», une autre fois il s’agit de «{3}»).</value>
+        <value>La signature du code a été demandée plusieurs fois pour '{0}', avec des métadonnées différentes. Les métadonnées '{1}' ont des valeurs différentes pour chaque élément (une fois qu’il s’agit de '{2}', une autre fois il s’agit de '{3}').</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>La valeur UIDeviceFamily « 6 » n’est pas valide pour cette plateforme. Il n’est valide que pour Mac Catalyst.</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>La valeur UIDeviceFamily « 6 » nécessite macOS 11.0. Définissez « SupportedOSPlatformVersion » dans le fichier projet sur au moins 14.0 (l’équivalent de macOS 11.0 dans la version Mac Migrate). La valeur actuelle est {0} (équivaut à macOS {1}).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Package de ressources de liaison introuvable : {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>Propriété inconnue '{0}' avec la valeur '{1}'.</value>
     </data>
 </root>

@@ -84,5 +84,11 @@
 	<data name="E0013" xml:space="preserve">
 		<value>Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
 	</data>
+	<data name="E0014" xml:space="preserve">
+		<value>File for conversion (--input) and output location (--output) are required options.</value>
+	</data>
+	<data name="E0015" xml:space="preserve">
+		<value>Support legacy and NET assemblies --xamarin-assembly and --microsoft-assembly are currently required options.</value>
+	</data>
 </root>
 

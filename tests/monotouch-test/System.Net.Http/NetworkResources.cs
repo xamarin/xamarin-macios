@@ -9,12 +9,20 @@ namespace MonoTests.System.Net.Http
 	{
 		public static readonly string MicrosoftUrl = "https://www.microsoft.com";
 		public static readonly Uri MicrosoftUri = new Uri (MicrosoftUrl);
+		public static readonly string MicrosoftHttpUrl = "http://www.microsoft.com";
 		public static readonly string XamarinUrl = "https://dotnet.microsoft.com/apps/xamarin";
+		public static readonly string XamarinHttpUrl = "http://dotnet.microsoft.com/apps/xamarin";
 		public static readonly Uri XamarinUri = new Uri (XamarinUrl);
 		public static readonly string StatsUrl = "https://api.imgur.com/2/stats";
 
-		public static readonly string [] Urls = {
+		public static readonly string [] HttpsUrls = {
 			MicrosoftUrl,
+			XamarinUrl,
+		};
+
+		public static readonly string [] HttpUrls = {
+			MicrosoftHttpUrl,
+			XamarinHttpUrl,
 		};
 
 		// Robots urls, useful when we want to get a small file
