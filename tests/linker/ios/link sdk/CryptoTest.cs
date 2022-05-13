@@ -84,8 +84,6 @@ namespace LinkSdk {
 			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
 #endif
 			WebClient wc = new WebClient ();
-			// the certificate contains (several rules) the host name
-			Assert.NotNull (wc.DownloadString (NetworkResources.MicrosoftUrl));
 
 			// IP are (generally) not allowed
 			foreach (var ip in Dns.GetHostAddresses ("www.google.com")) {
