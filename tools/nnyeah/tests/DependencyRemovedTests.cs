@@ -10,16 +10,18 @@ using Xamarin;
 namespace Microsoft.MaciOS.Nnyeah.Tests {
 	[TestFixture]
 	public class DependencyRemovedTests {
-		[Test]
-		[Ignore ("doesn't remove dependency")]
-		public async Task BasicDependencyRemoved ()
+		[TestCase ("nint")]
+		[TestCase ("nuint")]
+// nfloat has an issue on write.
+//		[TestCase ("nfloat")]
+		public async Task BasicDependencyRemoved (string type)
 		{
-			var dir = Cache.CreateTemporaryDirectory ("DependencyRemoved");
-			var code = @"
+			var dir = Cache.CreateTemporaryDirectory ($"DependencyRemoved_{type}");
+			var code = @$"
 using System;
-public class Foo {
-	public nint Ident (nint e) => e;
-}
+public class Foo {{
+	public {type} Ident ({type} e) => e;
+}}
 ";
 			var output = await TestRunning.BuildLibrary (code, "NoName", dir);
 			var expectedOutputFile = Path.Combine (dir, "NoName.dll");
@@ -29,9 +31,9 @@ public class Foo {
 				Program.ProcessAssembly (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS),
 					Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS), expectedOutputFile,
 					targetRewrite, verbose: false, forceOverwrite: true, suppressWarnings: true);
-			}, "Failed to process assembly");
+			}, $"Failed to process assembly for type {type}");
 
-			Assert.IsTrue (File.Exists (targetRewrite), "target file not created");
+			Assert.IsTrue (File.Exists (targetRewrite), $"target file not created for type {type}");
 			var module = ModuleDefinition.ReadModule (targetRewrite);
 
 			var platform = module.XamarinPlatformName ();

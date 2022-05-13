@@ -78,11 +78,21 @@ namespace Microsoft.MaciOS.Nnyeah {
 				?? MakeNativeIntegerAttribute (module, EmbeddedAttributeTypeRef);
 
 			NativeIntegerAttributeTypeRef = new TypeReference (NativeIntegerAttributeTypeDef.Namespace,
-				NativeIntegerAttributeTypeDef.Name, NativeIntegerAttributeTypeDef.Module,NativeIntegerAttributeTypeDef.Scope);
+				NativeIntegerAttributeTypeDef.Name, NativeIntegerAttributeTypeDef.Module, NativeIntegerAttributeTypeDef.Scope);
 
-			NintTypeReference = module.GetType (string.Empty, "System.nint");
-			NuintTypeReference = module.GetType (string.Empty, "System.nuint");
-			NfloatTypeReference = module.GetType (string.Empty, "System.nfloat");
+
+			// if these type references aren't found in the module
+			// then we don't ever need to worry about reworking them
+			// and EmptyTypeReference is a fine substitute.
+			if (!module.TryGetTypeReference ("System.nint", out NintTypeReference)) {
+				NintTypeReference = EmptyTypeReference;
+			}
+			if (!module.TryGetTypeReference ("System.nuint", out NuintTypeReference)) {
+				NuintTypeReference = EmptyTypeReference;
+			}
+			if (!module.TryGetTypeReference ("System.nfloat", out NfloatTypeReference)) {
+				NfloatTypeReference = EmptyTypeReference;
+			}
 
 			NewNfloatModuleReference = new ModuleReference ("System.Private.CoreLib");
 			NewNfloatTypeReference = new TypeReference ("System.Runtime.InteropServices", "NFloat", null, NewNfloatModuleReference, true);
@@ -234,8 +244,30 @@ namespace Microsoft.MaciOS.Nnyeah {
 			foreach (var type in Module.Types) {
 				ReworkType (type);
 			}
+			RemoveXamarinReferences ();
 			Module.Write (stm);
 			stm.Flush ();
+		}
+
+		void RemoveXamarinReferences ()
+		{
+			for (int i = Module.AssemblyReferences.Count - 1; i >= 0; i--) {
+				if (IsXamarinReference (Module.AssemblyReferences [i])) {
+					Module.AssemblyReferences.RemoveAt (i);
+				}
+			}
+		}
+
+		static HashSet<string> XamarinAssemblyNames = new HashSet<string> () {
+			"Xamarin.Mac",
+			"Xamarin.iOS",
+			"Xamarin.TVOS",
+			"Xamarin.WatchOS",
+		};
+
+		static bool IsXamarinReference (AssemblyNameReference reference)
+		{
+			return XamarinAssemblyNames.Contains (reference.Name);
 		}
 
 		void ReworkType (TypeDefinition definition)
@@ -534,5 +566,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 			return new MethodReference (".ctor", type.Module.TypeSystem.Void, type) { HasThis = true };
 		}
+
+		static TypeReference EmptyTypeReference = new TypeReference ("none", "still_none", null, null);
 	}
 }
