@@ -355,10 +355,10 @@ namespace Xharness.Jenkins {
 				if (Harness.InCI) {
 					Task.Factory.StartNew (async () => {
 						while (true) {
-							await Task.Delay (TimeSpan.FromMinutes (10));
+							await Task.Delay (TimeSpan.FromSeconds (10));
 							var averages = new double [3];
 							getloadavg (averages, averages.Length);
-							Console.WriteLine ($"Still running tests. Please be patient. Load averages: {averages [0],6:0.00} {averages [1],6:0.00} {averages [2],6:0.00}");
+							Console.WriteLine ($"{DateTime.UtcNow.ToString ("O")} Still running tests. Please be patient. Load averages: {averages [0],6:0.00} {averages [1],6:0.00} {averages [2],6:0.00}");
 						}
 					});
 
@@ -366,11 +366,11 @@ namespace Xharness.Jenkins {
 						while (true) {
 							var rv = await GetProcessListAsync (MainLog);
 							if (rv.Success) {
-								Console.WriteLine ($"Current process list from 'ps auxww':\n\t\t{string.Join ("\n\t\t", rv.Output.Split ('\n'))}");
+								Console.WriteLine ($"{DateTime.UtcNow.ToString ("O")} Current process list from 'ps auxww':\n\t\t{string.Join ("\n\t\t", rv.Output.Split ('\n'))}");
 							} else {
-								Console.WriteLine ($"Failed to list processes: {rv.Output}");
+								Console.WriteLine ($"{DateTime.UtcNow.ToString ("O")} Failed to list processes: {rv.Output}");
 							}
-							await Task.Delay (TimeSpan.FromHours (1));
+							await Task.Delay (TimeSpan.FromMinutes (15));
 						}
 					});
 				}
