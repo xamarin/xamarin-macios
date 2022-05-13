@@ -44,8 +44,8 @@ steps:
     $make_config = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/Make.config"
     $Env:DOTNET_TFM = "net_something"
     foreach ($line in Get-Content -Path $make_config) {
-      if ($line.StartsWith ("DOTNET_TFM=")) {
-        DOTNET_TFM = $line.Substring (11)
+      if ($line.StartsWith("DOTNET_TFM=")) {
+        DOTNET_TFM = $line.Substring(11)
       }
     }
     Write-Host "##vso[task.setvariable variable=DOTNET_TFM;isOutput=true]$Env:DOTNET_TFM"
