@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Aplicación iOS (versión preliminar)",
+  "name": "iOS Application",
   "description": "Proyecto para crear una aplicación de iOS de .NET",
   "symbols/bundleId/description": "Invalida CFBundleIdentifier en Info.plist",
   "symbols/minOSVersion/description": "Invalida SupportedOSPlatformVersion en el archivo de proyecto",
