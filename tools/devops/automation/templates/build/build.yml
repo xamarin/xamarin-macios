@@ -140,12 +140,6 @@ steps:
         $configVars.Add("RunMacTests", "True")
       }
 
-      if ($Env:SkipPublicJenkins -eq "True") {
-        $configVars.Add("SkipPublicJenkins", "True")
-      } else {
-        $configVars.Add("SkipPublicJenkins", "False")
-      }
-
       $configVars.Add("RunSampleTests", $Env:RunSampleTests)
       $configVars.Add("RunInternalTests", $Env:RunInternalTests)
 
@@ -163,7 +157,6 @@ steps:
       $configVars.Add("RunExternalTests", "True")
       $configVars.Add("RunMacTests", "True")
       $configVars.Add("RunSampleTests", "False")
-      $configVars.Add("SkipPublicJenkins", "False")
 
       # if a developer decided to trigger one without device tests, allow it
       if ($Env:RUN_DEVICE_TESTS -eq "true") {
