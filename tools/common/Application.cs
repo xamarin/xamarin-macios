@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -1606,6 +1607,35 @@ namespace Xamarin.Bundler {
 			aotArguments.Add ($"outfile={outputFile}");
 			if (enable_llvm)
 				aotArguments.Add ($"llvm-outfile={llvmOutputFile}");
+
+#if NET
+			// If the interpreter is enabled, and we're building for x86_64, we're AOT-compiling but we
+			// don't have access to infinite trampolines. So we're bumping the trampoline count (unless
+			// the developer has already set a value) to something higher than the default.
+			//
+			// Ref:
+			// * https://github.com/xamarin/xamarin-macios/issues/14887
+			// * https://github.com/dotnet/runtime/issues/68808
+			if (interp && (abi & Abi.x86_64) == Abi.x86_64) {
+				// The default values are here: https://github.com/dotnet/runtime/blob/main/src/mono/mono/mini/aot-compiler.c#L13945-L13953
+				// Let's try 4x the default values.
+				var trampolines = new []
+				{
+					(Name: "ntrampolines", Default: 4096),
+					(Name: "nrgctx-trampolines", Default: 4096),
+					(Name: "nimt-trampolines", Default: 512),
+					(Name: "nrgctx-fetch-trampolines", Default: 128),
+					(Name: "ngsharedvt-trampolines", Default: 512),
+					(Name: "nftnptr-arg-trampolines", Default: 128),
+					(Name: "nunbox-arbitrary-trampolines", Default: 256),
+				};
+				foreach (var tramp in trampolines) {
+					var nameWithEq = tramp.Name + "=";
+					if (!aotArguments.Any (v => v.StartsWith (nameWithEq, StringComparison.Ordinal)))
+						aotArguments.Add (nameWithEq + (tramp.Default * 4).ToString (CultureInfo.InvariantCulture));
+				}
+			}
+#endif
 		}
 
 		public string AssemblyName {
