@@ -6,6 +6,8 @@
 //
 // Copyright 2013 Xamarin Inc
 
+#nullable enable
+
 using System;
 
 using Foundation;
@@ -27,7 +29,7 @@ namespace WebKit {
 			get { return (WebNavigationType)((NSNumber)ActionInformation[WebPolicyDelegate.WebActionNavigationTypeKey]).Int32Value; }
 		}
 
-		public NSDictionary ElementInfo {
+		public NSDictionary? ElementInfo {
 			get { return ActionInformation[WebPolicyDelegate.WebActionElementKey] as NSDictionary; }
 		}
 
@@ -46,7 +48,7 @@ namespace WebKit {
 			get { return ((NSNumber)ActionInformation[WebPolicyDelegate.WebActionModifierFlagsKey]).UInt32Value; }
 		}
 
-		public NSUrl OriginalUrl {
+		public NSUrl? OriginalUrl {
 			get { return ActionInformation[WebPolicyDelegate.WebActionOriginalUrlKey] as NSUrl; }
 		}
 	}

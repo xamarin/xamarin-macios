@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -24,15 +26,17 @@ namespace WebKit {
 
 		public T Current {
 			get {
-				return _container [_index];
+				return _container! [_index];
 			}
 		}
 
-		object IEnumerator.Current {
+		object? IEnumerator.Current {
 			get { return ((IEnumerator<T>) this).Current; }
 		}
 
 		public bool MoveNext () {
+			if (_container is null)
+				return false;
 			return ++_index < _container.Count;
 		}
 
@@ -40,7 +44,7 @@ namespace WebKit {
 			_index = -1;
 		}
 
-		IIndexedContainer<T> _container;
+		IIndexedContainer<T>? _container;
 		int _index;
 	}
 
