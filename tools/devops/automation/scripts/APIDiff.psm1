@@ -129,9 +129,10 @@ class APIDiffComment {
         $stringBuilder.AppendLine("")
 
         # group the platforms as how the diffs were done
+        $indexPlatform = @("index")
         $commonPlatforms = "iOS", "macOS", "tvOS"
-        $legacyPlatforms = @{Title="API diff (Xamarin)"; Platforms=@("index" + $commonPlatforms + "watchOS");}
-        $dotnetPlatforms = @{Title="API diff (.NET)"; Platforms=@("index" + $commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
+        $legacyPlatforms = @{Title="API diff (Xamarin)"; Platforms=@($indexPlatform + $commonPlatforms + "watchOS");}
+        $dotnetPlatforms = @{Title="API diff (.NET)"; Platforms=@($indexPlatform + $commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
         $dotnetLegacyPlatforms = @{Title="API diff (Xamarin vs .NET)"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
         $dotnetMaciOSPlatforms = @{Title="API diff (iOS vs Mac Catalyst)"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
         $platforms = @($legacyPlatforms, $dotnetPlatforms, $dotnetLegacyPlatforms, $dotnetMaciOSPlatforms)
