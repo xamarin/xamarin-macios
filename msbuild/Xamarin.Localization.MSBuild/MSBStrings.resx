@@ -524,6 +524,11 @@
         <value>{0} exited with code {1}
         </value>
     </data>
+
+    <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
     
     <data name="M0119" xml:space="preserve">
         <value>Skipping `{0}' as the output file, `{1}', is newer.
