@@ -76,8 +76,8 @@ class APIDiffComment {
         [object] $prContent,
         [object] $stableContent,
         [string] $generatorContent) {
-        $this.FromPR = $null -ne $prContent ? [APIDiff]::new("API Current PR diff", $prContent) : $null
-        $this.FromStable = $null -ne $stableContent ? [APIDiff]::new("API diff", $stableContent) : $null
+        $this.FromPR = $null -ne $prContent ? [APIDiff]::new("API diff (for current PR)", $prContent) : $null
+        $this.FromStable = $null -ne $stableContent ? [APIDiff]::new("API diff (vs stable)", $stableContent) : $null
         $this.Generator = $null -ne $generatorContent ? $generatorContent : $null
     }
 
@@ -130,10 +130,10 @@ class APIDiffComment {
 
         # group the platforms as how the diffs were done
         $commonPlatforms = "iOS", "macOS", "tvOS"
-        $legacyPlatforms = @{Title="API diff"; Platforms=@($commonPlatforms + "watchOS");}
-        $dotnetPlatforms = @{Title="dotnet API diff"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
-        $dotnetLegacyPlatforms = @{Title="dotnet legacy API diff"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
-        $dotnetMaciOSPlatforms = @{Title="dotnet iOS-MacCatalayst API diff"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
+        $legacyPlatforms = @{Title="API diff (Xamarin)"; Platforms=@("index" + $commonPlatforms + "watchOS");}
+        $dotnetPlatforms = @{Title="API diff (.NET)"; Platforms=@("index" + $commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
+        $dotnetLegacyPlatforms = @{Title="API diff (Xamarin vs .NET)"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
+        $dotnetMaciOSPlatforms = @{Title="API diff (iOS vs Mac Catalyst)"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
         $platforms = @($legacyPlatforms, $dotnetPlatforms, $dotnetLegacyPlatforms, $dotnetMaciOSPlatforms)
 
         foreach ($group in $platforms) {
