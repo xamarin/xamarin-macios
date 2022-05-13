@@ -11,6 +11,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -48,8 +51,8 @@ namespace Security {
 
 		public SecCertificate2 (SecCertificate certificate)
 		{
-			if (certificate == null)
-				throw new ArgumentNullException (nameof (certificate));
+			if (certificate is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 			InitializeHandle (sec_certificate_create (certificate.Handle));
 		}
 

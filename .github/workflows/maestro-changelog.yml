@@ -40,7 +40,8 @@ jobs:
           }).then ((comments) =>
           {
             const changelogComment = comments.find(comment => comment.body.includes (".net ChangeLog for") && comment.user.login == 'github-actions[bot]')
-            commentId = changelogComment.id
+            if (changelogComment)
+              commentId = changelogComment.id
           })
           if (commentId == "") {
             github.rest.issues.createComment({

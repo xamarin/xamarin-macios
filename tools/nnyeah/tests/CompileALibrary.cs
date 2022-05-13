@@ -28,5 +28,19 @@ public class Foo {
 		{
 			var dir = Cache.CreateTemporaryDirectory ("BasicExecutable");
 		}
+
+		[Test]
+		public void HasXamarinMacOSFile ()
+		{
+			var xamarinDll = Compiler.XamarinPlatformLibraryPath (PlatformName.macOS);
+			Assert.IsTrue (File.Exists (xamarinDll), "Xamarin file doesn't exist");
+		}
+
+		[Test]
+		public void HasMicrosoftMacOSFile ()
+		{
+			var microsoftDll = Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS);
+			Assert.IsTrue (File.Exists (microsoftDll));
+		}
 	}
 }
