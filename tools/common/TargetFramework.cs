@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+#nullable disable // until we get around to fixing this file
+
 namespace Xamarin.Utils
 {
 	public struct TargetFramework : IEquatable<TargetFramework>
