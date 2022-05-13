@@ -493,6 +493,7 @@
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				RelativeAppBundlePath=$(_RelativeAppBundlePath)
 				Registrar=$(_BundlerRegistrar)
+				RequirePInvokeWrappers=$(_RequirePInvokeWrappers)
 				RuntimeConfigurationFile=$(_RuntimeConfigurationFile)
 				SdkDevPath=$(_SdkDevPath)
 				SdkRootDirectory=$(_XamarinSdkRootDirectory)
@@ -995,6 +996,7 @@
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			AotArguments="@(_AotArguments)"
 			Assemblies="@(_AssembliesToAOT)"
 			AOTCompilerPath="$(_AOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"
