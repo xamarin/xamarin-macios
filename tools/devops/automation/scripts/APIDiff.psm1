@@ -132,10 +132,10 @@ class APIDiffComment {
             $indexEntry = $diff.Platforms["index"]
             $stringBuilder.Append("API diff: ")
             if ($null -ne $indexEntry.Html) {
-                $stringBuilder.Append("[vsdrops]($($indexEntry.Html))")
+                $stringBuilder.Append(" [vsdrops]($($indexEntry.Html))")
             }
             if ($null -ne $indexEntry.Gist) {
-                $stringBuilder.Append("[gist]($($indexEntry.Gist))")
+                $stringBuilder.Append(" [gist]($($indexEntry.Gist))")
             }
             $stringBuilder.AppendLine()
             $stringBuilder.AppendLine("")
