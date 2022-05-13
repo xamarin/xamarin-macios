@@ -94,16 +94,16 @@ namespace Xharness.Jenkins {
 			
 			if (project.IsBclTest ()) {
 				if (!project.IsBclxUnit ())
-					return TestSelection.IsEnabled (TestLabel.Bcl) || TestSelection.IsEnabled(TestLabel.BclNUnit);
+					return TestSelection.IsEnabled (TestLabel.Bcl) || TestSelection.IsEnabled (TestLabel.BclNUnit);
 				if (project.IsMscorlib ()) 
 					return TestSelection.IsEnabled(TestLabel.Mscorlib);
-				return TestSelection.IsEnabled(TestLabel.Bcl) || TestSelection.IsEnabled(TestLabel.BclXUnit);
+				return TestSelection.IsEnabled (TestLabel.Bcl) || TestSelection.IsEnabled (TestLabel.BclXUnit);
 			}
 
-			if (!TestSelection.IsEnabled(TestLabel.Monotouch) && project.IsMonotouch ())
+			if (!TestSelection.IsEnabled (TestLabel.Monotouch) && project.IsMonotouch ())
 				return false;
 
-			if (!TestSelection.IsEnabled(TestLabel.NonMonotouch) && !project.IsMonotouch ())
+			if (!TestSelection.IsEnabled (TestLabel.NonMonotouch) && !project.IsMonotouch ())
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -176,7 +176,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "dotnet-wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro) && !TestSelection.IsEnabled (TestLabel.Dotnet),
+				Ignored = !(TestSelection.IsEnabled (TestLabel.Xtro) && TestSelection.IsEnabled (TestLabel.Dotnet)),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};

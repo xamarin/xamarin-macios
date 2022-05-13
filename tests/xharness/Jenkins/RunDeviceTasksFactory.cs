@@ -61,7 +61,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled(TestLabel.iOs64) });
+						candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.iOs64) });
 
 					var build32 = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager) {
 						ProjectConfiguration = project.Name != "dont link" ? "Debug32" : "Release32",
@@ -118,7 +118,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled(TestLabel.tvOS) });
+						candidates: jenkins.Devices.ConnectedTV.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.tvOS) });
 				}
 
 				if (createwatchOS) {
@@ -139,7 +139,7 @@ namespace Xharness.Jenkins {
 							tunnelBore: jenkins.TunnelBore,
 							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.ConnectedWatch) { Ignored = !jenkins.TestSelection.IsEnabled(TestLabel.watchOS) });
+							candidates: jenkins.Devices.ConnectedWatch) { Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.watchOS) });
 					}
 
 					if (!project.SkipwatchOSARM64_32Variation) {
@@ -158,7 +158,7 @@ namespace Xharness.Jenkins {
 							tunnelBore: jenkins.TunnelBore,
 							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled(TestLabel.watchOS) });
+							candidates: jenkins.Devices.ConnectedWatch32_64.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.watchOS) });
 					}
 				}
 				foreach (var task in projectTasks) {

@@ -11,16 +11,14 @@ namespace Xharness.Jenkins {
 
 	class TestSelection {
 		TestLabel selection =
-			TestLabel.Mac |
-			TestLabel.iOS |
-			TestLabel.iOs64 |
-			TestLabel.iOSSimulator |
-			TestLabel.NonMonotouch |
-			TestLabel.Monotouch |
-			TestLabel.MacCatalyst |
 			TestLabel.tvOS |
 			TestLabel.watchOS |
-			TestLabel.Msbuild;
+			TestLabel.Msbuild |
+			TestLabel.iOSSimulator |
+			TestLabel.Monotouch |
+			TestLabel.NonMonotouch |
+			TestLabel.Dotnet |
+			TestLabel.MacCatalyst;
 
 		public bool ForceExtensionBuildOnly { get; set; }
 
@@ -304,7 +302,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (labels, "monotouch", selection); 
 
 			if (SetEnabled (labels, "system-permission", selection))
-				Harness.IncludeSystemPermissionTests = selection.IsEnabled(TestLabel.SystemPermission); 
+				Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission); 
 
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
@@ -315,7 +313,7 @@ namespace Xharness.Jenkins {
 					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
 					if (!string.IsNullOrEmpty (branchName)) {
 						selection.SetEnabled(TestLabel.Docs, branchName == "main");
-						if (selection.IsEnabled(TestLabel.Docs))
+						if (selection.IsEnabled (TestLabel.Docs))
 							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'main'.");
 					} else if (pullRequest > 0) {
 						selection.SetEnabled(TestLabel.Docs, vcs.GetPullRequestTargetBranch (pullRequest) == "main");
