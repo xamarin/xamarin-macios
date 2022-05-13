@@ -128,17 +128,32 @@ class APIDiffComment {
         $stringBuilder.AppendLine("$($diff.Message)")
         $stringBuilder.AppendLine("")
 
+        if ($diff.Platforms.ContainsKey("index")) {
+            $indexEntry = $diff.Platforms["index"]
+            $stringBuilder.Append("API diff: ")
+            if ($null -ne $indexEntry.Html) {
+                $stringBuilder.Append("[vsdrops]($($indexEntry.Html))")
+            }
+            if ($null -ne $indexEntry.Gist) {
+                $stringBuilder.Append("[gist]($($indexEntry.Gist))")
+            }
+            $stringBuilder.AppendLine()
+            $stringBuilder.AppendLine("")
+        } else {
+            $stringBuilder.AppendLine("No index!")
+            $stringBuilder.AppendLine("")
+        }
+
         # group the platforms as how the diffs were done
-        $indexPlatform = @("index")
         $commonPlatforms = "iOS", "macOS", "tvOS"
-        $legacyPlatforms = @{Title="API diff (Xamarin)"; Platforms=@($indexPlatform + $commonPlatforms + "watchOS");}
-        $dotnetPlatforms = @{Title="API diff (.NET)"; Platforms=@($indexPlatform + $commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
-        $dotnetLegacyPlatforms = @{Title="API diff (Xamarin vs .NET)"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
-        $dotnetMaciOSPlatforms = @{Title="API diff (iOS vs Mac Catalyst)"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
+        $legacyPlatforms = @{Title="Xamarin"; Platforms=@($commonPlatforms + "watchOS");}
+        $dotnetPlatforms = @{Title=".NET"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
+        $dotnetLegacyPlatforms = @{Title="Xamarin vs .NET"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
+        $dotnetMaciOSPlatforms = @{Title="iOS vs Mac Catalyst (.NET)"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
         $platforms = @($legacyPlatforms, $dotnetPlatforms, $dotnetLegacyPlatforms, $dotnetMaciOSPlatforms)
 
         foreach ($group in $platforms) {
-            $stringBuilder.AppendLine("<details><summary>View $($group.Title)</summary>")
+            $stringBuilder.AppendLine("<details><summary>$($group.Title)</summary>")
             $stringBuilder.AppendLine("") # no new line results in a bad rendering in the links
 
             foreach ($platform in $group.Platforms) {
