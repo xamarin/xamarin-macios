@@ -269,35 +269,19 @@ endif
 
 # New Dotnet vs. Stable Legacy
 ifdef INCLUDE_IOS
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS-api-diff.html'>Microsoft.iOS New Dotnet vs Legacy Stable API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Microsoft.iOS New Dotnet vs Legacy Stable API diff is empty</h2>" >> $@; \
-	fi;
-ifdef INCLUDE_TVOS
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS-api-diff.html'>Microsoft.tvOS New Dotnet vs Legacy Stable API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Microsoft.tvOS New Dotnet vs Legacy Stable API diff is empty</h2>" >> $@; \
-	fi;
+	$(Q) echo "<h2><a href='dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS-api-diff.html'>Microsoft.iOS (.NET) vs Xamarin.iOS (stable) API diff</a></h2>" >> $@
 endif
+ifdef INCLUDE_TVOS
+	$(Q) echo "<h2><a href='dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS-api-diff.html'>Microsoft.tvOS (.NET) vs Xamarin.TVOS (stable) API diff</a></h2>" >> $@
 endif
 ifdef INCLUDE_MAC
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS-api-diff.html'>Microsoft.macOS New Dotnet vs Legacy Stable API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Microsoft.macOS New Dotnet vs Legacy Stable API diff is empty</h2>" >> $@; \
-	fi;
+	$(Q) echo "<h2><a href='dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS-api-diff.html'>Microsoft.macOS (.NET) vs Xamarin.Mac (stable) API diff</a></h2>" >> $@
 endif
 
 # Dotnet iOS vs. Dotnet MacCatalyst
 ifdef INCLUDE_IOS
 ifdef INCLUDE_MACCATALYST
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst-api-diff.html'>Microsoft.iOS-MacCatalyst Dotnet iOS vs Dotnet MacCatalyst API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Microsoft.iOS-MacCatalyst Dotnet iOS vs Dotnet MacCatalyst API diff is empty</h2>" >> $@; \
-	fi;
+	$(Q) echo "<h2><a href='dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst-api-diff.html'>Microsoft.iOS vs Microsoft.MacCatalyst API diff</a></h2>" >> $@
 endif
 endif
 endif # ENABLE_DOTNET
