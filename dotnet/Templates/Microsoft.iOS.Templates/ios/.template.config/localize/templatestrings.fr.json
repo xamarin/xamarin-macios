@@ -1,6 +1,6 @@
 {
   "author": "Microsoft",
-  "name": "Application iOS (préversion)",
+  "name": "iOS Application",
   "description": "Projet de création d’une application .NET iOS",
   "symbols/bundleId/description": "Remplace CFBundleIdentifier dans Info.plist",
   "symbols/minOSVersion/description": "Remplace SupportedOSPlatformVersion dans le fichier projet",
