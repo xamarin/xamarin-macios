@@ -531,6 +531,7 @@ namespace AudioToolbox {
 #endif
 
 	[Flags]
+	[NativeName ("AudioChannelBitmap")]
 	public enum AudioChannelBit : uint // UInt32 mChannelBitmap in AudioChannelLayout
 	{
 		Left                       = 1<<0,

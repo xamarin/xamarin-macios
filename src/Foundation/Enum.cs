@@ -817,7 +817,7 @@ namespace Foundation  {
 	}
 
 	[Flags]
-	[Native]
+	[Native ("NSAttributedStringEnumerationOptions")]
 	public enum NSAttributedStringEnumeration : ulong {
 		None = 0,
 		Reverse = 1 << 1,

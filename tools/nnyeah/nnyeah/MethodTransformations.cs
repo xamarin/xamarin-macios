@@ -174,22 +174,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 					Instruction.Create (OpCodes.Call, mref)
 				}));
 
-			var iconvertibleTypeRef = new TypeReference ("System", "IConvertible", module, module.TypeSystem.CoreLibrary);
-			var iformatProviderTypeRef = new TypeReference ("System", "IFormatProvider", module, module.TypeSystem.CoreLibrary);
-			var iformatProviderVar = new VariableDefinition (iformatProviderTypeRef);
-			mref = new MethodReference ("ToBoolean", module.TypeSystem.Boolean, iconvertibleTypeRef);
-			mref = module.ImportReference (mref);
-			allTransforms.Add (new Transformation ("System.Boolean System.nint::System.IConvertible.ToBoolean(System.IFormatProvider)",
-				TransformationAction.Replace,
-				new List<Instruction> () {
-					Instruction.Create (OpCodes.Stloc, iformatProviderVar),
-					Instruction.Create (OpCodes.Unbox, module.TypeSystem.IntPtr),
-					Instruction.Create (OpCodes.Conv_I8),
-					Instruction.Create (OpCodes.Box, module.TypeSystem.Int64),
-					Instruction.Create (OpCodes.Ldloc, iformatProviderVar),
-					Instruction.Create (OpCodes.Call, mref)
-				}));
-
 			var marshalTypeReference = new TypeReference ("System.Runtime.InteropServices", "Marshal", module, module.TypeSystem.CoreLibrary);
 			mref = new MethodReference ("CopyArray", module.TypeSystem.Void, marshalTypeReference);
 			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.IntPtr));
