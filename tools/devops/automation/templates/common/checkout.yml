@@ -17,7 +17,7 @@ steps:
       git submodule update --recursive --init
       git clean -xffd
       git submodule foreach --recursive git clean -xffd
-      $hash = git rev-parse HEAD 
+      $hash = git rev-parse HEAD
       Write-Host "##vso[task.setvariable variable=GIT_HASH;isOutput=true]$hash"
     name: fix_commit
     displayName: "Undo Github merge"
