@@ -175,7 +175,7 @@ namespace Xharness.Jenkins {
 			if (labels.Contains ("skip-" + testname + "-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
 				if (testname == "ios") {
-					selection.SetEnabled (TestLabel.iOs64, false);
+					selection.SetEnabled (TestLabel.iOS64, false);
 					selection.SetEnabled (TestLabel.iOS32, false);
 				}
 
@@ -186,7 +186,7 @@ namespace Xharness.Jenkins {
 			if (labels.Contains ("run-" + testname + "-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
 				if (testname == "ios") {
-					selection.SetEnabled (TestLabel.iOs64, true);
+					selection.SetEnabled (TestLabel.iOS64, true);
 					selection.SetEnabled (TestLabel.iOS32, true);
 				}
 
@@ -356,7 +356,7 @@ namespace Xharness.Jenkins {
 			if (!Harness.INCLUDE_IOS) {
 				MainLog.WriteLine ("The iOS build is disabled, so any iOS tests will be disabled as well.");
 				selection.SetEnabled(TestLabel.iOS, false);
-				selection.SetEnabled (TestLabel.iOs64, false);
+				selection.SetEnabled (TestLabel.iOS64, false);
 				selection.SetEnabled (TestLabel.iOS32, false);
 			}
 

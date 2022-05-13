@@ -18,90 +18,64 @@ namespace Xharness {
 
 	[Flags]
 	public enum TestLabel {
-		//{ "all", false },
-		[Label ("all")]
-		All,
-		//{ "bcl", false },
+		[Label ("none")]
+		None = 0,
 		[Label ("bcl")]
-		Bcl,
-		//{ "mac", true },
+		Bcl = 1 << 0,
 		[Label ("mac")]
-		Mac,
-		//{ "ios", true },
+		Mac = 1 << 1,
 		[Label ("ios")]
-		iOS,
-		//{ "ios-32", false },
+		iOS = 1 << 2,
 		[Label ("ios-32")]
-		iOS32,
-		//{ "ios-64", true },
+		iOS32 = 1 << 3,
 		[Label ("ios-64")]
-		iOs64,
-		//{ "ios-extensions", false },
+		iOS64 = 1 << 4,
 		[Label ("ios-extensions")]
-		iOSExtension,
-		//{ "ios-simulator", true },
+		iOSExtension = 1 << 5,
 		[Label ("ios-simulator")]
-		iOSSimulator,
-		//{ "old-simulator", false },
+		iOSSimulator = 1 << 6,
 		[Label ("old-simulator")]
-		OldiOSSimulator,
-		//{ "device", false },
+		OldiOSSimulator = 1 << 7,
 		[Label ("device")]
-		Device,
-		//{ "xtro", false },
+		Device = 1 << 8,
 		[Label ("xtro")]
-		Xtro,
-		//{ "cecil", false },
+		Xtro = 1 << 9,
 		[Label ("cecil")]
-		Cecil,
-		//{ "docs", false },
+		Cecil = 1 << 10,
 		[Label ("docs")]
-		Docs,
-		//{ "bcl-xunit", false },
+		Docs = 1 << 11,
 		[Label ("bcl-xunit")]
-		BclXUnit,
-		//{ "bcl-nunit", false },
+		BclXUnit = 1 << 12,
 		[Label ("bcl-nunit")]
-		BclNUnit,
-		//{ "mscorlib", false },
+		BclNUnit = 1 << 13,
 		[Label ("mscorlib")]
-		Mscorlib,
-		//{ "non-monotouch", true }, 
+		Mscorlib = 1 << 14,
 		[Label ("non-monotouch")]
-		NonMonotouch,
-		//{ "monotouch", true }, 
+		NonMonotouch = 1 << 15,
 		[Label ("monotouch")]
-		Monotouch,
-		//{ "dotnet", false },
+		Monotouch = 1 << 16,
 		[Label ("dotnet")]
-		Dotnet,
-		//{ "maccatalyst", true },
+		Dotnet = 1 << 17,
 		[Label ("maccatalyst")]
-		MacCatalyst,
-		//{ "tvos", true },
+		MacCatalyst = 1 << 18,
 		[Label ("tvos")]
-		tvOS,
-		//{ "watchos", true },
+		tvOS = 1 << 19,
 		[Label ("watchos")]
-		watchOS,
-		//{ "mmp", false },
+		watchOS = 1 << 20,
 		[Label ("mmp")]
-		Mmp,
-		//{ "msbuild", true },
+		Mmp = 1 << 21,
 		[Label ("msbuild")]
-		Msbuild,
-		//{ "mtouch", false },
+		Msbuild = 1 << 22,
 		[Label ("mtouch")]
-		Mtouch,
-		//{ "btouch", false },
+		Mtouch = 1 << 23,
 		[Label ("btouch")]
-		Btouch,
-		//{ "mac-binding-project", false },
+		Btouch = 1 << 24,
 		[Label ("mac-binding-project")]
-		MacBindingProject,
-		//{ "system-permission", false },
+		MacBindingProject = 1 << 25,
 		[Label ("system-permission")]
-		SystemPermission,
+		SystemPermission = 1 << 26,
+		[Label ("all")]
+		All = ~None,
 	}
 
 	static class TestLabelExtensions {
