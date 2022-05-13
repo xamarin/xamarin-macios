@@ -65,6 +65,12 @@ namespace Introspection {
 					return true;
 				break;
 #endif // !__WATCHOS__
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
 			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;

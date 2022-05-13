@@ -19,10 +19,9 @@ namespace Cecil.Tests {
 		static Dictionary<string, AssemblyDefinition> cache = new Dictionary<string, AssemblyDefinition> ();
 
 		// make sure we load assemblies only once into memory
-		public static AssemblyDefinition? GetAssembly (string assembly, ReaderParameters? parameters = null, bool readSymbols = false)
+		public static AssemblyDefinition GetAssembly (string assembly, ReaderParameters? parameters = null, bool readSymbols = false)
 		{
-			if (!File.Exists (assembly))
-				return null;
+			Assert.That (assembly, Does.Exist, "Assembly existence");
 			if (!cache.TryGetValue (assembly, out var ad)) {
 				if (parameters == null) {
 					var resolver = new DefaultAssemblyResolver ();
@@ -164,17 +163,26 @@ namespace Cecil.Tests {
 
 		public static IEnumerable PlatformAssemblies {
 			get {
-				// we want to process 32/64 bits individually since their content can differ
-				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "iOS", "Xamarin.iOS.dll"));
-				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "iOS", "Xamarin.iOS.dll"));
+				if (Configuration.include_ios) {
+					// we want to process 32/64 bits individually since their content can differ
+					yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "iOS", "Xamarin.iOS.dll"));
+					yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "iOS", "Xamarin.iOS.dll"));
+				}
 
-				// XamarinWatchOSDll is stripped of its IL
-				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "watchOS", "Xamarin.WatchOS.dll"));
-				// XamarinTVOSDll is stripped of it's IL
-				yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "tvOS", "Xamarin.TVOS.dll"));
+				if (Configuration.include_watchos) {
+					// XamarinWatchOSDll is stripped of its IL
+					yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "watchOS", "Xamarin.WatchOS.dll"));
+				}
 
-				yield return new TestCaseData (Configuration.XamarinMacMobileDll);
-				yield return new TestCaseData (Configuration.XamarinMacFullDll);
+				if (Configuration.include_tvos) {
+					// XamarinTVOSDll is stripped of it's IL
+					yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "64bits", "tvOS", "Xamarin.TVOS.dll"));
+				}
+
+				if (Configuration.include_mac) {
+					yield return new TestCaseData (Configuration.XamarinMacMobileDll);
+					yield return new TestCaseData (Configuration.XamarinMacFullDll);
+				}
 			}
 		}
 
@@ -184,8 +192,10 @@ namespace Cecil.Tests {
 
 		public static IEnumerable TaskAssemblies {
 			get {
-				yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXI, "lib", "msbuild", "iOS", "Xamarin.iOS.Tasks.dll"));
-				yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXM, "lib", "msbuild",  "Xamarin.Mac.Tasks.dll"));
+				if (Configuration.include_ios)
+					yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXI, "lib", "msbuild", "iOS", "Xamarin.iOS.Tasks.dll"));
+				if (Configuration.include_mac)
+					yield return CreateTestFixtureDataFromPath (Path.Combine (Configuration.SdkRootXM, "lib", "msbuild",  "Xamarin.Mac.Tasks.dll"));
 			}
 		}
 

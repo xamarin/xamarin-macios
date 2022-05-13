@@ -1,5 +1,5 @@
 {
   "author": "Microsoft",
-  "name": "MacCatalyst 系結程式庫 (預覽)",
+  "name": "MacCatalyst Binding Library",
   "description": "用於建立 .NET 6 MacCatalyst 繫結程式庫的專案"
 }
