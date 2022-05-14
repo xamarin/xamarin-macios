@@ -11,6 +11,7 @@ namespace Xharness.Jenkins {
 
 	class TestSelection {
 		TestLabel selection =
+			TestLabel.None |
 			TestLabel.tvOS |
 			TestLabel.watchOS |
 			TestLabel.Msbuild |
