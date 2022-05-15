@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -228,7 +229,11 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, cecilPrefixes, "cecil", selection);
 			SetEnabled (files, dotnetFilenames, "dotnet", selection);
 			SetEnabled (files, msbuildFilenames, "msbuild", selection);
+			// xharness will run all tests, but we do not want to run the device tests
+			// if they were nto selected
+			var devicesEnabled = selection.IsEnabled (TestLabel.Device);
 			SetEnabled (files, xharnessPrefix, "all", selection);
+			selection.SetEnabled (TestLabel.Device, devicesEnabled);
 		}
 
 		void SelectTestsByLabel (int pullRequest, TestSelection selection)
