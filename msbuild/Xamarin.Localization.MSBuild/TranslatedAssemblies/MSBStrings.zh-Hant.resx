@@ -423,6 +423,10 @@
         <value>{0} 已結束。代碼: {1}
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>因為輸出檔案 `{1}' 為較新的檔案，所以跳過 `{0}'。
         </value>

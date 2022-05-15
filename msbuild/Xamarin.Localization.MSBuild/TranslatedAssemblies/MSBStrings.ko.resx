@@ -423,6 +423,10 @@
         <value>{0}이(가) 코드 {1}(으)로 종료됨
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>출력 파일로 '{0}'을(를) 건너뜁니다. '{1}'이(가) 더 최신입니다.
         </value>
