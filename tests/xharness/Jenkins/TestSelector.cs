@@ -49,10 +49,12 @@ namespace Xharness.Jenkins {
 			// there are two possible cases, either we are setting a test label OR a 
 			if (label.TryGetLabel (out TestLabel tLabel)) {
 				SetEnabled (tLabel, value);
+				return;
 			}
 
 			if (label.TryGetLabel (out PlatformLabel pLabel)) {
 				SetEnabled (pLabel, value);
+				return;
 			}
 
 			throw new InvalidOperationException ($"Unknown label '{label}'");
