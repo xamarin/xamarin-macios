@@ -75,17 +75,12 @@ namespace LinkSdk {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("Crash https://github.com/dotnet/runtime/issues/54239")]
-#endif
 		public void SSL_IP_5706 ()
 		{
 #if __WATCHOS__
 			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
 #endif
 			WebClient wc = new WebClient ();
-			// the certificate contains (several rules) the host name
-			Assert.NotNull (wc.DownloadString (NetworkResources.MicrosoftUrl));
 
 			// IP are (generally) not allowed
 			foreach (var ip in Dns.GetHostAddresses ("www.google.com")) {
