@@ -181,7 +181,7 @@ namespace Xharness.Jenkins {
 					selection.SetEnabled (TestLabel.iOS32, false);
 				}
 
-				selection.SetEnabled(testname, false);
+				selection.SetEnabled (testname, false);
 				return true;
 			}
 
@@ -230,7 +230,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, dotnetFilenames, "dotnet", selection);
 			SetEnabled (files, msbuildFilenames, "msbuild", selection);
 			// xharness will run all tests, but we do not want to run the device tests
-			// if they were nto selected
+			// if they were not selected
 			var devicesEnabled = selection.IsEnabled (TestLabel.Device);
 			SetEnabled (files, xharnessPrefix, "all", selection);
 			selection.SetEnabled (TestLabel.Device, devicesEnabled);
@@ -318,18 +318,18 @@ namespace Xharness.Jenkins {
 				if (!changed) { // don't override any value set using labels
 					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
 					if (!string.IsNullOrEmpty (branchName)) {
-						selection.SetEnabled(TestLabel.Docs, branchName == "main");
+						selection.SetEnabled (TestLabel.Docs, branchName == "main");
 						if (selection.IsEnabled (TestLabel.Docs))
 							MainLog.WriteLine ("Enabled 'docs' tests because the current branch is 'main'.");
 					} else if (pullRequest > 0) {
-						selection.SetEnabled(TestLabel.Docs, vcs.GetPullRequestTargetBranch (pullRequest) == "main");
+						selection.SetEnabled (TestLabel.Docs, vcs.GetPullRequestTargetBranch (pullRequest) == "main");
 						if (selection.IsEnabled (TestLabel.Docs))
 							MainLog.WriteLine ("Enabled 'docs' tests because the target branch is 'main'.");
 					}
 				}
 			} else {
 				if (selection.IsEnabled (TestLabel.Docs)) {
-					selection.SetEnabled(TestLabel.Docs, false); // could have been enabled by 'run-all-tests', so disable it if we can't run it.
+					selection.SetEnabled (TestLabel.Docs, false); // could have been enabled by 'run-all-tests', so disable it if we can't run it.
 					MainLog.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
 				}
 			}
@@ -361,14 +361,14 @@ namespace Xharness.Jenkins {
 
 			if (!Harness.INCLUDE_IOS) {
 				MainLog.WriteLine ("The iOS build is disabled, so any iOS tests will be disabled as well.");
-				selection.SetEnabled(TestLabel.iOS, false);
+				selection.SetEnabled (TestLabel.iOS, false);
 				selection.SetEnabled (TestLabel.iOS64, false);
 				selection.SetEnabled (TestLabel.iOS32, false);
 			}
 
 			if (!Harness.INCLUDE_WATCH) {
 				MainLog.WriteLine ("The watchOS build is disabled, so any watchOS tests will be disabled as well.");
-				selection.SetEnabled(TestLabel.watchOS, false);
+				selection.SetEnabled (TestLabel.watchOS, false);
 			}
 
 			if (!Harness.INCLUDE_TVOS) {
