@@ -21,7 +21,7 @@ namespace Xharness.Jenkins {
 		public readonly IHardwareDeviceLoader Devices;
 		readonly IMlaunchProcessManager processManager;
 		public ITunnelBore TunnelBore { get; private set; }
-		public TestSelection TestSelection { get; } = new();
+		public TestSelection TestSelection { get; } = new ();
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
 		public JenkinsDeviceLoader DeviceLoader { get; private set; }
