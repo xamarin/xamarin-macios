@@ -18,11 +18,13 @@ namespace MonoTests.System.Net.Http
 		public static readonly string [] HttpsUrls = {
 			MicrosoftUrl,
 			XamarinUrl,
+			Httpbin.Url,
 		};
 
 		public static readonly string [] HttpUrls = {
 			MicrosoftHttpUrl,
 			XamarinHttpUrl,
+			Httpbin.HttpUrl,
 		};
 
 		// Robots urls, useful when we want to get a small file
@@ -51,6 +53,7 @@ namespace MonoTests.System.Net.Http
 			public static readonly string PostUrl = "https://httpbin.org/post";
 			public static readonly string PutUrl = "https://httpbin.org/put";
 			public static readonly string CookiesUrl = $"https://httpbin.org/cookies";
+			public static readonly string HttpUrl = "http://httpbin.org";
 
 
 			public static string GetAbsoluteRedirectUrl (int count) => $"https://httpbin.org/absolute-redirect/{count}";
