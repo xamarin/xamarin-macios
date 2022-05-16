@@ -90,8 +90,8 @@ namespace Xharness {
 
 		public static TestLabel GetLabel (this string self)
 		{
-			foreach (var value in Enum.GetValues<TestLabel> ()) {
-				if (value.GetLabel () == self) {
+			foreach (var obj in Enum.GetValues (typeof(TestLabel))) {
+				if (obj is TestLabel value && value.GetLabel () == self) {
 					return value;
 				}
 			}
