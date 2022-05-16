@@ -405,6 +405,9 @@
     <Compile Include="..\..\src\ObjCRuntime\LinkWithAttribute.cs">
       <Link>src\ObjCRuntime\LinkWithAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\NativeNameAttribute.cs">
+      <Link>src\ObjCRuntime\NativeNameAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
       <Link>src\ObjCRuntime\PlatformAvailability2.cs</Link>
     </Compile>

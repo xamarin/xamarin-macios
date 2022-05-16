@@ -611,8 +611,16 @@ namespace Xamarin.Bundler {
 			get { return Path.GetFileNameWithoutExtension (AppDirectory); }
 		}
 
+		bool? requires_pinvoke_wrappers;
 		public bool RequiresPInvokeWrappers {
 			get {
+				if (requires_pinvoke_wrappers.HasValue)
+					return requires_pinvoke_wrappers.Value;
+
+				// By default this is disabled for .NET
+				if (Driver.IsDotNet)
+					return false;
+
 				if (Platform == ApplePlatform.MacOSX)
 					return false;
 
@@ -623,6 +631,9 @@ namespace Xamarin.Bundler {
 					return false;
 
 				return MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.ThrowManagedException || MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.Abort;
+			}
+			set {
+				requires_pinvoke_wrappers = value;
 			}
 		}
 
