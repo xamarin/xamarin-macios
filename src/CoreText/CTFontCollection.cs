@@ -51,11 +51,11 @@ namespace CoreText {
 
 #if !NET
 	public static class CTFontCollectionOptionKey {
-		public static readonly NSString RemoveDuplicates;
+		public static readonly NSString? RemoveDuplicates;
 
 		static CTFontCollectionOptionKey ()
 		{
-			RemoveDuplicates = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTFontCollectionRemoveDuplicatesOption")!;
+			RemoveDuplicates = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTFontCollectionRemoveDuplicatesOption");
 		}
 	}
 #endif
@@ -91,7 +91,7 @@ namespace CoreText {
 			}
 			set {
 				var v = value ? (int?) 1 : null;
-				Adapter.SetValue (Dictionary, CTFontCollectionOptionKey.RemoveDuplicates, v);
+				Adapter.SetValue (Dictionary, CTFontCollectionOptionKey.RemoveDuplicates!, v);
 			}
 		}
 	}

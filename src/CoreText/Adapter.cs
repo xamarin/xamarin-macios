@@ -64,56 +64,70 @@ namespace CoreText {
 				: b;
 		}
 
-		public static int? GetInt32Value (IDictionary<NSObject, NSObject> dictionary, NSObject key)
+		public static int? GetInt32Value (IDictionary<NSObject, NSObject> dictionary, NSObject? key)
 		{
+			if (key is null)
+				return null;
 			var value = dictionary [key];
 			if (value is null)
 				return null;
 			return ((NSNumber) value).Int32Value;
 		}
 
-		public static nuint? GetUnsignedIntegerValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
+		public static nuint? GetUnsignedIntegerValue (IDictionary<NSObject, NSObject> dictionary, NSObject? key)
 		{
+			if (key is null)
+				return null;
 			var value = dictionary [key];
 			if (value is null)
 				return null;
 			return ((NSNumber) value).NUIntValue;
 		}
 
-		public static T[] GetNativeArray<T> (NSDictionary dictionary, NSObject key, Converter<NativeHandle, T> converter)
+		public static T[]? GetNativeArray<T> (NSDictionary dictionary, NSObject? key, Converter<NativeHandle, T> converter)
 		{
+			if (key is null)
+				return null;
 			var cfArrayRef = CFDictionary.GetValue (dictionary.Handle, key.Handle);
 			if (cfArrayRef == NativeHandle.Zero || CFArray.GetCount (cfArrayRef) == 0)
 				return new T [0];
 			return NSArray.ArrayFromHandle (cfArrayRef, converter);
 		}
 
-		public static float? GetSingleValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
+		public static float? GetSingleValue (IDictionary<NSObject, NSObject> dictionary, NSObject? key)
 		{
+			if (key is null)
+				return null;
 			var value = dictionary [key];
 			if (value is null)
 				return null;
 			return ((NSNumber) value).FloatValue;
 		}
 
-		public static string[] GetStringArray (IDictionary<NSObject, NSObject> dictionary, NSObject key)
+		public static string[]? GetStringArray (IDictionary<NSObject, NSObject> dictionary, NSObject? key)
 		{
+			if (key is null)
+				return null;
 			var value = dictionary [key];
 			if (value is null)
 				return Array.Empty<string> ();
 			return CFArray.StringArrayFromHandle (value.Handle)!;
 		}
 
-		public static string? GetStringValue (IDictionary<NSObject, NSObject> dictionary, NSObject key)
+		public static string? GetStringValue (IDictionary<NSObject, NSObject> dictionary, NSObject? key)
 		{
+			if (key is null)
+				return null;
 			var value = dictionary [key];
 			if (value is null)
 				return null;
 			return ((NSString) value).ToString ();
 		}
 
-		public static uint? GetUInt32Value (IDictionary<NSObject, NSObject> dictionary, NSObject key)
+		public static uint? GetUInt32Value (IDictionary<NSObject, NSObject> dictionary, NSObject? key)
 		{
+			if (key is null)
+				return null;
 			var value = dictionary [key];
 			if (value is null)
 				return null;
@@ -130,6 +144,8 @@ namespace CoreText {
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, int? value)
 		{
+			if (key is null)
+				throw new ArgumentOutOfRangeException (nameof (key));
 			if (value.HasValue)
 				dictionary [key] = new NSNumber (value.Value);
 			else
@@ -138,6 +154,8 @@ namespace CoreText {
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, float? value)
 		{
+			if (key is null)
+				throw new ArgumentOutOfRangeException (nameof (key));
 			if (value.HasValue)
 				dictionary [key] = new NSNumber (value.Value);
 			else
@@ -146,6 +164,8 @@ namespace CoreText {
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, uint? value)
 		{
+			if (key is null)
+				throw new ArgumentOutOfRangeException (nameof (key));
 			if (value.HasValue)
 				dictionary [key] = new NSNumber (value.Value);
 			else
@@ -154,6 +174,8 @@ namespace CoreText {
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, bool? value)
 		{
+			if (key is null)
+				throw new ArgumentOutOfRangeException (nameof (key));
 			if (value.HasValue)
 				dictionary [key] = new NSNumber (value.Value);
 			else
@@ -162,14 +184,18 @@ namespace CoreText {
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, nuint? value)
 		{
+			if (key is null)
+				throw new ArgumentOutOfRangeException (nameof (key));
 			if (value.HasValue)
 				dictionary [key] = new NSNumber (value.Value);
 			else
 				dictionary.Remove (key);
 		}
 
-		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, IEnumerable<string> value)
+		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, IEnumerable<string>? value)
 		{
+			if (key is null)
+				throw new ArgumentOutOfRangeException (nameof (key));
 			List<string> v;
 			if (value is null || (v = new List<string>(value)).Count == 0)
 				SetValue (dictionary, key, (NSObject?) null);
@@ -180,6 +206,8 @@ namespace CoreText {
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, NSObject? value)
 		{
+			if (key is null)
+				throw new ArgumentOutOfRangeException (nameof (key));
 			if (value is not null)
 				dictionary [key] = value;
 			else
@@ -188,6 +216,8 @@ namespace CoreText {
 
 		public static void SetValue (IDictionary<NSObject, NSObject> dictionary, NSObject key, string? value)
 		{
+			if (key is null)
+				throw new ArgumentOutOfRangeException (nameof (key));
 			if (value is null)
 				SetValue (dictionary, key, (NSObject?) null);
 			else
@@ -195,9 +225,11 @@ namespace CoreText {
 					SetValue (dictionary, key, (NSObject) s);
 		}
 
-		public static void SetNativeValue<T> (NSDictionary dictionary, NSObject key, IEnumerable<T> value)
+		public static void SetNativeValue<T> (NSDictionary dictionary, NSObject key, IEnumerable<T>? value)
 			where T : INativeObject
 		{
+			if (key is null)
+				throw new ArgumentOutOfRangeException (nameof (key));
 			List<NativeHandle> v;
 			if (value is null || (v = GetHandles (value)).Count == 0) 
 				SetNativeValue (dictionary, key, (INativeObject?) null);
@@ -217,6 +249,8 @@ namespace CoreText {
 
 		public static void SetNativeValue (NSDictionary dictionary, NSObject key, INativeObject? value)
 		{
+			if (key is null)
+				throw new ArgumentOutOfRangeException (nameof (key));
 			if (value is not null) {
 				AssertWritable (dictionary);
 				CFMutableDictionary.SetValue (dictionary.Handle, key.Handle, value.Handle);
