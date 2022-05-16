@@ -75,7 +75,7 @@ namespace Xharness {
 		[Label ("xtro")]
 		Xtro = 1 << 27,
 		[Label ("all")]
-		All =  Bcl | BclNUnit | BclXUnit | Btouch | Cecil | Device | Docs | Dotnet | iOS | 
+		All =  (TestLablel) 0xFFFFFFFF,
 		       iOSExtension | iOSSimulator | iOS32 | iOS64 | Mac | MacBindingProject | MacCatalyst | Mmp | Mscorlib | 
 		       Monotouch | Msbuild | Mtouch | NonMonotouch | OldiOSSimulator | SystemPermission | tvOS | watchOS | Xtro
 	}
@@ -85,15 +85,13 @@ namespace Xharness {
 		{
 			var enumType = typeof(TestLabel);
 			var name = Enum.GetName(typeof(TestLabel), self);
-			var attr = enumType.GetField(name).GetCustomAttributes(false)
-				.OfType<LabelAttribute>().SingleOrDefault();
+			var attr = enumType.GetField (name).GetCustomAttribute<LabelAttribute> ();
 			return attr.Label;
 		}
 
 		public static TestLabel GetLabel (this string self)
 		{
-			foreach (var l in Enum.GetValues (typeof(TestLabel))) {
-				var value = (TestLabel) l;
+			foreach (var value in Enum.GetValues<TestLabel> ()) {
 				if (value.GetLabel () == self) {
 					return value;
 				}
