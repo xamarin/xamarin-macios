@@ -367,9 +367,10 @@ namespace Xharness.Jenkins {
 				MainLog.WriteLine ("The environment variable 'PR_ID' was not found, so no pull requests will be checked for test selection.");
 
 			// First check if can auto-select any tests based on which files were modified.
-			// This will only enable additional tests, never disable tests.
-			if (pullRequest > 0)
-				SelectTestsByModifiedFiles (pullRequest, selection);
+			// This will only enable additional tests, never disable tests
+// TODO: This was disabled for testing.	
+//			if (pullRequest > 0)
+//				SelectTestsByModifiedFiles (pullRequest, selection);
 			
 			// Then we check for labels. Labels are manually set, so those override
 			// whatever we did automatically.
