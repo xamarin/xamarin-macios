@@ -280,7 +280,7 @@ namespace CoreText {
 			}
 		}
 
-		public IEnumerable<CTFontFeatureSelectors> Selectors {
+		public IEnumerable<CTFontFeatureSelectors>? Selectors {
 			get {
 				return Adapter.GetNativeArray (Dictionary, CTFontFeatureKey.Selectors,
 						d => CTFontFeatureSelectors.Create (FeatureGroup, Runtime.GetNSObject<NSDictionary> (d)!));
@@ -2318,7 +2318,7 @@ namespace CoreText {
 		static extern IntPtr CTFontCopyName (IntPtr font, IntPtr nameKey);
 		public string? GetName (CTFontNameKey nameKey)
 		{
-			return CFString.FromHandle (CTFontCopyName (Handle, CTFontNameKeyId.ToId (nameKey).Handle), releaseHandle: true);
+			return CFString.FromHandle (CTFontCopyName (Handle, CTFontNameKeyId.ToId (nameKey).GetHandle ()), releaseHandle: true);
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
@@ -2332,7 +2332,7 @@ namespace CoreText {
 		public string? GetLocalizedName (CTFontNameKey nameKey, out string? actualLanguage)
 		{
 			IntPtr actual;
-			var ret = CFString.FromHandle (CTFontCopyLocalizedName (Handle, CTFontNameKeyId.ToId (nameKey).Handle, out actual), releaseHandle: true);
+			var ret = CFString.FromHandle (CTFontCopyLocalizedName (Handle, CTFontNameKeyId.ToId (nameKey).GetHandle (), out actual), releaseHandle: true);
 			actualLanguage = CFString.FromHandle (actual, releaseHandle: true);
 			return ret;
 		}

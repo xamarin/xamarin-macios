@@ -161,65 +161,29 @@ namespace CoreText {
 
 		public NSDictionary Dictionary {get; private set;}
 
-		public NSUrl? Url {
-			get {
-				if (CTFontDescriptorAttributeKey.Url is NSString url)
-					return (NSUrl) Dictionary [url];
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.Url is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.Url));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Url, value);
-			}
+		public NSUrl Url {
+			get {return (NSUrl) Dictionary [CTFontDescriptorAttributeKey.Url];}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Url!, value);}
 		}
 
 		public string? Name {
-			get {
-				if (CTFontDescriptorAttributeKey.Name is NSString name)
-					return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.Name);
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.Name is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.Name));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Name, value);}
+			get {return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.Name);}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Name!, value);}
 		}
 
 		public string? DisplayName {
-			get {
-				if (CTFontDescriptorAttributeKey.DisplayName is NSString displayName)
-					return Adapter.GetStringValue (Dictionary, displayName);
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.DisplayName is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.DisplayName));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.DisplayName, value);}
+			get {return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.DisplayName);}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.DisplayName!, value);}
 		}
 
 		public string? FamilyName {
-			get {
-				if (CTFontDescriptorAttributeKey.FamilyName is NSString familyName)
-					return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.FamilyName);
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.FamilyName is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.FamilyName));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FamilyName, value);}
+			get {return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.FamilyName);}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FamilyName!, value);}
 		}
 
 		public string? StyleName {
-			get {
-				if (CTFontDescriptorAttributeKey.StyleName is NSString styleName)
-					return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.StyleName);
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.StyleName is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.StyleName));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.StyleName, value);}
+			get {return Adapter.GetStringValue (Dictionary, CTFontDescriptorAttributeKey.StyleName);}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.StyleName!, value);}
 		}
 
 		public CTFontTraits? Traits {
@@ -229,10 +193,7 @@ namespace CoreText {
 				return null;
 			}
 			set {
-				if (CTFontDescriptorAttributeKey.Traits is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.Traits));
-
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Traits, value?.Dictionary);
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Traits!, value?.Dictionary);
 			}
 		}
 
@@ -243,24 +204,14 @@ namespace CoreText {
 				return null;
 			}
 			set {
-				if (CTFontDescriptorAttributeKey.Variation is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.Variation));
-
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Variation, value?.Dictionary);
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Variation!, value?.Dictionary);
 			}
 		}
 
 		// CFNumber
 		public float? Size {
-			get {
-				if (CTFontDescriptorAttributeKey.Size is NSString size)
-					return Adapter.GetSingleValue (Dictionary, size);
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.Size is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.Size));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Size, value);}
+			get {return Adapter.GetSingleValue (Dictionary, CTFontDescriptorAttributeKey.Size);}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Size!, value);}
 		}
 
 		public unsafe CGAffineTransform? Matrix {
@@ -273,13 +224,13 @@ namespace CoreText {
 				if (CTFontDescriptorAttributeKey.Matrix is null)
 					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.Matrix));
 				if (!value.HasValue)
-					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Matrix, (NSObject?) null);
+					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Matrix!, (NSObject?) null);
 				else {
 					byte[] data = new byte [sizeof (CGAffineTransform)];
 					fixed (byte* p = data) {
 						Marshal.StructureToPtr (value.Value, (IntPtr) p, false);
 					}
-					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Matrix, NSData.FromArray (data));
+					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Matrix!, NSData.FromArray (data));
 				}
 			}
 		}
@@ -290,63 +241,28 @@ namespace CoreText {
 					return Adapter.GetNativeArray (Dictionary, cascadeList, d => new CTFontDescriptor (d, false));
 				return null;
 			}
-			set {
-				if (CTFontDescriptorAttributeKey.CascadeList is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.CascadeList));
-				if (value is null)
-					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				Adapter.SetNativeValue (Dictionary, CTFontDescriptorAttributeKey.CascadeList, value);}
+			set {Adapter.SetNativeValue (Dictionary, CTFontDescriptorAttributeKey.CascadeList!, value);}
 		}
 
-		public NSCharacterSet? CharacterSet {
-			get {
-				if (CTFontDescriptorAttributeKey.CharacterSet is NSString characterSet)
-					return (NSCharacterSet) Dictionary[characterSet];
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.CharacterSet is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.CharacterSet));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.CharacterSet, value);}
+		public NSCharacterSet CharacterSet {
+			get {return (NSCharacterSet) Dictionary [CTFontDescriptorAttributeKey.CharacterSet];}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.CharacterSet!, value);}
 		}
 
 		public IEnumerable<string>? Languages {
-			get {
-				if (CTFontDescriptorAttributeKey.Languages is NSString languages)
-					return Adapter.GetStringArray (Dictionary, languages);
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.Languages is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.Languages));
-				if (value is null)
-					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Languages, value);}
+			get {return Adapter.GetStringArray (Dictionary, CTFontDescriptorAttributeKey.Languages);}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Languages!, value);}
 		}
 
 		// float represented as a CFNumber
 		public float? BaselineAdjust {
-			get {
-				if (CTFontDescriptorAttributeKey.BaselineAdjust is NSString baselineAdjust)
-					return Adapter.GetSingleValue (Dictionary, baselineAdjust);
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.BaselineAdjust is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.BaselineAdjust));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.BaselineAdjust, value);}
+			get {return Adapter.GetSingleValue (Dictionary, CTFontDescriptorAttributeKey.BaselineAdjust);}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.BaselineAdjust!, value);}
 		}
 
 		public float? MacintoshEncodings {
-			get {
-				if (CTFontDescriptorAttributeKey.MacintoshEncodings is NSString macintoshEncodings)
-					return Adapter.GetSingleValue (Dictionary, macintoshEncodings);
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.MacintoshEncodings is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.MacintoshEncodings));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.MacintoshEncodings, value);}
+			get {return Adapter.GetSingleValue (Dictionary, CTFontDescriptorAttributeKey.MacintoshEncodings);}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.MacintoshEncodings!, value);}
 		}
 
 		public IEnumerable<CTFontFeatures>? Features {
@@ -363,10 +279,10 @@ namespace CoreText {
 
 				List<CTFontFeatures> v;
 				if (value is null || (v = new List<CTFontFeatures> (value)).Count == 0) {
-					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features, (NSObject?) null);
+					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features!, (NSObject?) null);
 					return;
 				}
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features,
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features!,
 						NSArray.FromNSObjects ((IList<NSObject>) v.ConvertAll (e => (NSObject) e.Dictionary)));
 			}
 		}
@@ -384,28 +300,19 @@ namespace CoreText {
 					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.Features));
 				List<CTFontFeatureSettings> v;
 				if (value is null || (v = new List<CTFontFeatureSettings> (value)).Count == 0) {
-					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features, (NSObject?) null);
+					Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Features!, (NSObject?) null);
 					return;
 				}
 
-				if (CTFontDescriptorAttributeKey.FeatureSettings is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.FeatureSettings));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FeatureSettings,
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FeatureSettings!,
 						NSArray.FromNSObjects ((IList<NSObject>) v.ConvertAll (e => (NSObject) e.Dictionary)));
 			}
 		}
 
 		// CFNumber
 		public float? FixedAdvance {
-			get {
-				if (CTFontDescriptorAttributeKey.FixedAdvance is NSString fixedAdvance)
-					return Adapter.GetSingleValue (Dictionary, fixedAdvance);
-				return null;
-			}
-			set {
-				if (CTFontDescriptorAttributeKey.FixedAdvance is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.FixedAdvance));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FixedAdvance, value);}
+			get {return Adapter.GetSingleValue (Dictionary, CTFontDescriptorAttributeKey.FixedAdvance);}
+			set {Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FixedAdvance!, value);}
 		}
 
 		public CTFontOrientation? FontOrientation {
@@ -417,9 +324,7 @@ namespace CoreText {
 				return null;
 			}
 			set {
-				if (CTFontDescriptorAttributeKey.FontOrientation is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.FontOrientation));
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FontOrientation, 
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FontOrientation!, 
 						value.HasValue ? (uint?) value.Value : null);
 			}
 		}
@@ -433,10 +338,7 @@ namespace CoreText {
 				return null;
 			}
 			set {
-				if (CTFontDescriptorAttributeKey.FontFormat is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.FontFormat));
-
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FontFormat, 
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.FontFormat!, 
 						value.HasValue ? (uint?) value.Value : null);
 			}
 		}
@@ -450,10 +352,7 @@ namespace CoreText {
 				return null;
 			}
 			set {
-				if (CTFontDescriptorAttributeKey.RegistrationScope is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.RegistrationScope));
-
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.RegistrationScope,
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.RegistrationScope!,
 				value.HasValue ? (nuint?) (ulong) value.Value : null);
 			}
 		}
@@ -467,10 +366,7 @@ namespace CoreText {
 				return null;
 			}
 			set {
-				if (CTFontDescriptorAttributeKey.Priority is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.Priority));
-
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Priority, 
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Priority!, 
 						value.HasValue ? (uint?) value.Value : null);
 			}
 		}
@@ -482,11 +378,8 @@ namespace CoreText {
 				return null;
 			}
 			set {
-				if (CTFontDescriptorAttributeKey.Enabled is null)
-					throw new ArgumentOutOfRangeException (nameof (CTFontDescriptorAttributeKey.Enabled));
-
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Enabled, 
-						value is not null && value.Value ? new NSNumber (1) : null);
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Enabled!, 
+						value ? new NSNumber (1) : null);
 			}
 		}
 	}

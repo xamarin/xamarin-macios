@@ -95,7 +95,7 @@ namespace CoreText {
 				if (CTFontCollectionOptionKey.RemoveDuplicates is null)
 					throw new ArgumentOutOfRangeException (nameof (CTFontCollectionOptionKey.RemoveDuplicates));
 				var v = value ? (int?) 1 : null;
-				Adapter.SetValue (Dictionary, CTFontCollectionOptionKey.RemoveDuplicates, v);
+				Adapter.SetValue (Dictionary, CTFontCollectionOptionKey.RemoveDuplicates!, v);
 			}
 		}
 	}

@@ -41,18 +41,18 @@ namespace CoreText {
 
 #if !NET
 	public static class CTFontTraitKey {
-		public static readonly NSString Symbolic;
-		public static readonly NSString Weight;
-		public static readonly NSString Width;
-		public static readonly NSString Slant;
+		public static readonly NSString? Symbolic;
+		public static readonly NSString? Weight;
+		public static readonly NSString? Width;
+		public static readonly NSString? Slant;
 
 		static CTFontTraitKey ()
 		{
 			var handle = Libraries.CoreText.Handle;
-			Symbolic  = Dlfcn.GetStringConstant (handle, "kCTFontSymbolicTrait")!;
-			Weight    = Dlfcn.GetStringConstant (handle, "kCTFontWeightTrait")!;
-			Width     = Dlfcn.GetStringConstant (handle, "kCTFontWidthTrait")!;
-			Slant     = Dlfcn.GetStringConstant (handle, "kCTFontSlantTrait")!;
+			Symbolic  = Dlfcn.GetStringConstant (handle, "kCTFontSymbolicTrait");
+			Weight    = Dlfcn.GetStringConstant (handle, "kCTFontWeightTrait");
+			Width     = Dlfcn.GetStringConstant (handle, "kCTFontWidthTrait");
+			Slant     = Dlfcn.GetStringConstant (handle, "kCTFontSlantTrait");
 		}
 	}
 #endif
@@ -115,7 +115,7 @@ namespace CoreText {
 		// CFNumber
 		public uint? Symbolic {
 			get {return Adapter.GetUInt32Value (Dictionary, CTFontTraitKey.Symbolic);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Symbolic, value);}
+			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Symbolic!, value);}
 		}
 
 		public CTFontSymbolicTraits? SymbolicTraits {
@@ -147,19 +147,19 @@ namespace CoreText {
 		// CFNumber representing a float value 
 		public float? Weight {
 			get {return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Weight);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Weight, value);}
+			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Weight!, value);}
 		}
 
 		// CFNumber representing a float value 
 		public float? Width {
 			get {return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Width);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Width, value);}
+			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Width!, value);}
 		}
 
 		// CFNumber representing a float value 
 		public float? Slant {
 			get {return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Slant);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Slant, value);}
+			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Slant!, value);}
 		}
 
 		internal const int  ClassMaskShift      = 28;
