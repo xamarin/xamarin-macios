@@ -91,20 +91,9 @@ namespace Xharness.Jenkins {
 		{
 			if (!project.IsExecutableProject)
 				return false;
-			
-			if (project.IsBclTest ()) {
-				if (!project.IsBclxUnit ())
-					return TestSelection.IsEnabled (TestLabel.Bcl) || TestSelection.IsEnabled (TestLabel.BclNUnit);
-				if (project.IsMscorlib ()) 
-					return TestSelection.IsEnabled(TestLabel.Mscorlib);
-				return TestSelection.IsEnabled (TestLabel.Bcl) || TestSelection.IsEnabled (TestLabel.BclXUnit);
-			}
-
-			if (!TestSelection.IsEnabled (TestLabel.Monotouch) && project.IsMonotouch ())
-				return false;
-
-			if (!TestSelection.IsEnabled (TestLabel.NonMonotouch) && !project.IsMonotouch ())
-				return false;
+			// if explicitly enabled via a label, it is included.
+			if (TestSelection.IsEnabled (project.Label))
+				return true;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
 				return false;
@@ -191,7 +180,7 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetXtroReporter);
 
-			var buildDotNetGeneratorProject = new TestProject ("bgen", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
+			var buildDotNetGeneratorProject = new TestProject (TestLabel.Bgen, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var buildDotNetGenerator = new MSBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
@@ -209,7 +198,7 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			var buildDotNetTestsProject = new TestProject ("dotnet", Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
+			var buildDotNetTestsProject = new TestProject (TestLabel.Dotnet, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var buildDotNetTests = new MSBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
