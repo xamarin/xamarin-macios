@@ -1,5 +1,7 @@
 // Copyright 2015 Xamarin Inc.
 
+#nullable enable
+
 #if !COREBUILD
 
 using System;
