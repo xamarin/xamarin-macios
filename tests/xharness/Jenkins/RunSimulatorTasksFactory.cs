@@ -20,7 +20,7 @@ namespace Xharness.Jenkins {
 				if (!project.IsExecutableProject)
 					continue;
 
-				bool ignored = project.Ignore ?? !jenkins.TestSelection.IsEnabled (TestLabel.iOSSimulator);
+				bool ignored = project.Ignore ?? !jenkins.TestSelection.IsEnabled (PlatformLabel.iOSSimulator);
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 
@@ -48,13 +48,13 @@ namespace Xharness.Jenkins {
 						switch (testPlatform) {
 						case TestPlatform.iOS_Unified:
 						case TestPlatform.iOS_TodayExtension64:
-							configIgnored |= !jenkins.TestSelection.IsEnabled (TestLabel.iOS64);
+							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS64);
 							break;
 						case TestPlatform.tvOS:
-							configIgnored |= !jenkins.TestSelection.IsEnabled (TestLabel.tvOS);
+							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.tvOS);
 							break;
 						case TestPlatform.watchOS:
-							configIgnored |= !jenkins.TestSelection.IsEnabled (TestLabel.watchOS);
+							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.watchOS);
 							break;
 						default:
 							Console.WriteLine ("Unknown test platform for ignore check: {0}", testPlatform);

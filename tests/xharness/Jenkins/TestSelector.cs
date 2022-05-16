@@ -13,14 +13,16 @@ namespace Xharness.Jenkins {
 	class TestSelection {
 		TestLabel selection =
 			TestLabel.None |
-			TestLabel.tvOS |
-			TestLabel.watchOS |
 			TestLabel.Msbuild |
-			TestLabel.iOSSimulator |
 			TestLabel.Monotouch |
-			TestLabel.NonMonotouch |
-			TestLabel.Dotnet |
-			TestLabel.MacCatalyst;
+			TestLabel.Dotnet;
+		
+		PlatformLabel platform =
+			PlatformLabel.None |
+			PlatformLabel.tvOS |
+			PlatformLabel.watchOS |
+			PlatformLabel.iOSSimulator |
+			PlatformLabel.MacCatalyst;
 
 		public bool ForceExtensionBuildOnly { get; set; }
 
@@ -33,14 +35,34 @@ namespace Xharness.Jenkins {
 			}
 		}
 		
+		public void SetEnabled (PlatformLabel label, bool enable)
+		{
+			if (enable) {
+				platform |= label;
+			} else {
+				platform &= ~label;
+			}
+		}
+
 		public void SetEnabled (string label, bool value)
 		{
-			var testLabel = label.GetLabel ();
-			SetEnabled (testLabel, value);
+			// there are two possible cases, either we are setting a test label OR a 
+			if (label.TryGetLabel (out TestLabel tLabel)) {
+				SetEnabled (tLabel, value);
+			}
+
+			if (label.TryGetLabel (out PlatformLabel pLabel)) {
+				SetEnabled (pLabel, value);
+			}
+
+			throw new InvalidOperationException ($"Unknown label '{label}'");
 		}
 
 		public bool IsEnabled (TestLabel label)
 			=> selection.HasFlag (label);
+
+		public bool IsEnabled (PlatformLabel label)
+			=> platform.HasFlag (label);
 	}
 	/// <summary>
 	/// Allows to select the tests to be ran depending on certain conditions such as labels of modified files.
@@ -177,8 +199,8 @@ namespace Xharness.Jenkins {
 			if (labels.Contains ("skip-" + testname + "-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
 				if (testname == "ios") {
-					selection.SetEnabled (TestLabel.iOS64, false);
-					selection.SetEnabled (TestLabel.iOS32, false);
+					selection.SetEnabled (PlatformLabel.iOS64, false);
+					selection.SetEnabled (PlatformLabel.iOS32, false);
 				}
 
 				selection.SetEnabled (testname, false);
@@ -188,8 +210,8 @@ namespace Xharness.Jenkins {
 			if (labels.Contains ("run-" + testname + "-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
 				if (testname == "ios") {
-					selection.SetEnabled (TestLabel.iOS64, true);
-					selection.SetEnabled (TestLabel.iOS32, true);
+					selection.SetEnabled (PlatformLabel.iOS64, true);
+					selection.SetEnabled (PlatformLabel.iOS32, true);
 				}
 
 				selection.SetEnabled (testname, true);
@@ -229,11 +251,7 @@ namespace Xharness.Jenkins {
 			SetEnabled (files, cecilPrefixes, "cecil", selection);
 			SetEnabled (files, dotnetFilenames, "dotnet", selection);
 			SetEnabled (files, msbuildFilenames, "msbuild", selection);
-			// xharness will run all tests, but we do not want to run the device tests
-			// if they were not selected
-			var devicesEnabled = selection.IsEnabled (TestLabel.Device);
 			SetEnabled (files, xharnessPrefix, "all", selection);
-			selection.SetEnabled (TestLabel.Device, devicesEnabled);
 		}
 
 		void SelectTestsByLabel (int pullRequest, TestSelection selection)
@@ -338,7 +356,7 @@ namespace Xharness.Jenkins {
 			// - enabled by default if using a beta Xcode, otherwise disabled by default
 			changed = SetEnabled (labels, "old-simulator", selection);
 			if (!changed && jenkins.IsBetaXcode) {
-				selection.SetEnabled (TestLabel.OldiOSSimulator, true);
+				selection.SetEnabled (PlatformLabel.OldiOSSimulator, true);
 				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
 			}
 		}
@@ -361,24 +379,24 @@ namespace Xharness.Jenkins {
 
 			if (!Harness.INCLUDE_IOS) {
 				MainLog.WriteLine ("The iOS build is disabled, so any iOS tests will be disabled as well.");
-				selection.SetEnabled (TestLabel.iOS, false);
-				selection.SetEnabled (TestLabel.iOS64, false);
-				selection.SetEnabled (TestLabel.iOS32, false);
+				selection.SetEnabled (PlatformLabel.iOS, false);
+				selection.SetEnabled (PlatformLabel.iOS64, false);
+				selection.SetEnabled (PlatformLabel.iOS32, false);
 			}
 
 			if (!Harness.INCLUDE_WATCH) {
 				MainLog.WriteLine ("The watchOS build is disabled, so any watchOS tests will be disabled as well.");
-				selection.SetEnabled (TestLabel.watchOS, false);
+				selection.SetEnabled (PlatformLabel.watchOS, false);
 			}
 
 			if (!Harness.INCLUDE_TVOS) {
 				MainLog.WriteLine ("The tvOS build is disabled, so any tvOS tests will be disabled as well.");
-				selection.SetEnabled (TestLabel.tvOS, false);
+				selection.SetEnabled (PlatformLabel.tvOS, false);
 			}
 
 			if (!Harness.INCLUDE_MAC) {
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
-				selection.SetEnabled (TestLabel.Mac, false);
+				selection.SetEnabled (PlatformLabel.Mac, false);
 			}
 
 			if (!Harness.ENABLE_DOTNET) {
