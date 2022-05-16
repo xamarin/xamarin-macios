@@ -49,10 +49,12 @@ namespace Xharness.Jenkins {
 			// there are two possible cases, either we are setting a test label OR a 
 			if (label.TryGetLabel (out TestLabel tLabel)) {
 				SetEnabled (tLabel, value);
+				return;
 			}
 
 			if (label.TryGetLabel (out PlatformLabel pLabel)) {
 				SetEnabled (pLabel, value);
+				return;
 			}
 
 			throw new InvalidOperationException ($"Unknown label '{label}'");
@@ -368,9 +370,8 @@ namespace Xharness.Jenkins {
 
 			// First check if can auto-select any tests based on which files were modified.
 			// This will only enable additional tests, never disable tests
-// TODO: This was disabled for testing.	
-//			if (pullRequest > 0)
-//				SelectTestsByModifiedFiles (pullRequest, selection);
+			if (pullRequest > 0)
+				SelectTestsByModifiedFiles (pullRequest, selection);
 			
 			// Then we check for labels. Labels are manually set, so those override
 			// whatever we did automatically.
