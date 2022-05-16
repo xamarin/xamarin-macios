@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using Mono.Unix.Native;
 
 #nullable enable
@@ -17,7 +18,7 @@ namespace Xharness {
 	}
 
 	[Flags]
-	public enum TestLabel {
+	public enum TestLabel : ulong {
 		[Label ("none")]
 		None = 0,
 		[Label ("bcl")]
@@ -75,9 +76,7 @@ namespace Xharness {
 		[Label ("xtro")]
 		Xtro = 1 << 27,
 		[Label ("all")]
-		All =  (TestLablel) 0xFFFFFFFF,
-		       iOSExtension | iOSSimulator | iOS32 | iOS64 | Mac | MacBindingProject | MacCatalyst | Mmp | Mscorlib | 
-		       Monotouch | Msbuild | Mtouch | NonMonotouch | OldiOSSimulator | SystemPermission | tvOS | watchOS | Xtro
+		All =  0xFFFFFFFF,
 	}
 
 	static class TestLabelExtensions {
@@ -91,8 +90,8 @@ namespace Xharness {
 
 		public static TestLabel GetLabel (this string self)
 		{
-			foreach (var value in Enum.GetValues<TestLabel> ()) {
-				if (value.GetLabel () == self) {
+			foreach (var obj in Enum.GetValues (typeof(TestLabel))) {
+				if (obj is TestLabel value && value.GetLabel () == self) {
 					return value;
 				}
 			}
