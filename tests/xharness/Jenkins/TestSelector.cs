@@ -378,12 +378,12 @@ namespace Xharness.Jenkins {
 
 			if (!Harness.INCLUDE_MAC) {
 				MainLog.WriteLine ("The macOS build is disabled, so any macOS tests will be disabled as well.");
-				selection.SetEnabled(TestLabel.Mac, false);
+				selection.SetEnabled (TestLabel.Mac, false);
 			}
 
 			if (!Harness.ENABLE_DOTNET) {
 				MainLog.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
-				selection.SetEnabled(TestLabel.Dotnet, false);
+				selection.SetEnabled (TestLabel.Dotnet, false);
 			}
 		}
 	}
