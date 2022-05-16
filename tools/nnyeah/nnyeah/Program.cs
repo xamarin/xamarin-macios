@@ -7,7 +7,7 @@ using Mono.Cecil;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.MaciOS.Nnyeah {
-	class Program {
+	public class Program {
 		static void Main (string [] args)
 		{
 			var doHelp = false;
@@ -49,7 +49,14 @@ namespace Microsoft.MaciOS.Nnyeah {
 				PrintOptions (options, Console.Out);
 				Environment.Exit (0);
 			}
+			ProcessAssembly (xamarinAssembly!, microsoftAssembly!, infile!,
+				outfile!, verbose, forceOverwrite, suppressWarnings);
+		}
 
+		public static void ProcessAssembly (string xamarinAssembly,
+			string microsoftAssembly, string infile, string outfile, bool verbose,
+			bool forceOverwrite, bool suppressWarnings)
+		{
 			if (!TryLoadTypeAndModuleMap (xamarinAssembly!, microsoftAssembly!, publicOnly: true,
 				out var typeAndModuleMap, out var failureReason)) {
 				Console.Error.WriteLine (Errors.E0011, failureReason);

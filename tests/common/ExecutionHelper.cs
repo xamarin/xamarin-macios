@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 using Xamarin.Utils;
 
+#nullable disable // until we get around to fixing this file
+
 namespace Xamarin.Tests
 {
 	class XBuild

@@ -52,7 +52,7 @@ report_error ()
 	rm -f "$COMPARE_FAILURE_FILE"
 	echo "*** Comparing API & creating generator diff failed ***"
 	MESSAGE="*** Comparing API & creating generator diff failed ***"
-	exit 0
+	exit 1
 }
 trap report_error ERR
 
@@ -97,7 +97,7 @@ else
 	STATUS_MESSAGE=":information_source: API Diff (from PR only) (please review changes)"
 	set +x
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
-	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS;isOutput=true]error"
+	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS;isOutput=true]success"
 	set -x
 fi
 
