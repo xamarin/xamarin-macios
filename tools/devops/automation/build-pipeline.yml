@@ -89,15 +89,32 @@ parameters:
   displayName: Simulator test configurations to run
   type: object
   default: [
-    {
-      testPrefix: 'simulator',
-      stageName: 'simulator',
-      displayName: 'Simulator Tests',
-      useXamarinStorage: False,
-      testsLabels: '--label=run-all-tests,skip-device-tests', # TODO same as calling jenkins, we need to use diff one in ci an
-      statusContext: 'VSTS: simulator tests iOS',
-      makeTarget: 'jenkins',
-    }
+    'bcl',
+    'bgen',
+    'binding',
+    'bindings-framework',
+    'bindings-xcframework',
+    'btouch',
+    'cecil',
+    'docs',
+    'dotnet',
+    'fsharp',
+    'framework',
+    'geneator',
+    'interdependent-binding-projects',
+    'install-source',
+    'introspection',
+    'linker',
+    'library-projects',
+    'mac-binding-project',
+    'mmp',
+    'mononative',
+    'monotouch',
+    'msbuild',
+    'mtouch',
+    'xammac',
+    'xcframework',
+    'xtro'
   ]
 
 - name: deviceTestsConfigurations
@@ -368,20 +385,20 @@ stages:
 # Test stages
 
 # always run simulator tests
-- ${{ each config in parameters.simTestsConfigurations }}:
+- ${{ each label in parameters.simTestsConfigurations }}:
   - template: templates/tests/stage.yml
     parameters:
-      testPrefix: ${{ config.testPrefix }} 
-      stageName: ${{ config.stageName }} 
-      displayName: ${{ config.displayName }} 
+      testPrefix: "simulator_${{ replace(label, '-', '_') }}"
+      stageName: "simulator_${{ replace(label, '-', '_') }}"
+      displayName: 'Simulator Tests - ${{ label }}'
       testPool: '' # use the default
-      useXamarinStorage: ${{ config.useXamarinStorage }} 
-      testsLabels: ${{ config.testsLabels }}
-      statusContext: ${{ config.statusContext }} 
+      useXamarinStorage: false
+      testsLabels: '--label=skip-all-tests,run-ios64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-${{ label }}-tests'
+      statusContext: 'VSTS: simulator tests iOS - ${{ label }}'
       ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
         makeTarget: 'wrench-jenkins' # override when we are running on CI or manually to run all tests
       ${{ else }}:
-        makeTarget: ${{ config.makeTarget }} 
+        makeTarget: 'jenkins'
       vsdropsPrefix: ${{ variables.vsdropsPrefix }}
       keyringPass: $(pass--lab--mac--builder--keychain)
       gitHubToken: ${{ variables['GitHub.Token'] }}
