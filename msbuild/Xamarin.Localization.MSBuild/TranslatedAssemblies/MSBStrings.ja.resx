@@ -423,6 +423,10 @@
         <value>{0} がコード {1} で終了しました
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>出力ファイル '{1}' のほうが新しいため、'{0}' をスキップしています。
         </value>

@@ -27,6 +27,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		TypeReference NewNfloatTypeReference;
 		ModuleReference NewNfloatModuleReference;
 		TypeDefinition NewNativeHandleTypeDefinition;
+		AssemblyNameReference InteropServicesAssembly;
 
 		TypeAndMemberMap ModuleMap;
 
@@ -80,6 +81,11 @@ namespace Microsoft.MaciOS.Nnyeah {
 			NativeIntegerAttributeTypeRef = new TypeReference (NativeIntegerAttributeTypeDef.Namespace,
 				NativeIntegerAttributeTypeDef.Name, NativeIntegerAttributeTypeDef.Module, NativeIntegerAttributeTypeDef.Scope);
 
+			if (moduleMap.MicrosoftModule.AssemblyReferences.FirstOrDefault (an => an.Name == "System.Runtime.InteropServices") is AssemblyNameReference validReference) {
+				InteropServicesAssembly = validReference;
+			} else {
+				throw new NotSupportedException ($"Assembly {moduleMap.MicrosoftModule.Name} does not have reference to System.Runtime.InteropServices. This is not possible.");
+			}
 
 			// if these type references aren't found in the module
 			// then we don't ever need to worry about reworking them
@@ -92,10 +98,9 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 			if (!module.TryGetTypeReference ("System.nfloat", out NfloatTypeReference)) {
 				NfloatTypeReference = EmptyTypeReference;
+			} else {
+				NewNfloatTypeReference = module.ImportReference (new TypeReference ("System.Runtime.InteropServices", "NFloat", null, InteropServicesAssembly, true));
 			}
-
-			NewNfloatModuleReference = new ModuleReference ("System.Private.CoreLib");
-			NewNfloatTypeReference = new TypeReference ("System.Runtime.InteropServices", "NFloat", null, NewNfloatModuleReference, true);
 			NewNativeHandleTypeDefinition = moduleMap.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
 
 			// These must be called last as they depend on Module and NativeIntegerAttributeTypeRef to be setup

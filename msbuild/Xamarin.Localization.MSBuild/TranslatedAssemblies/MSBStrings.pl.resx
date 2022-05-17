@@ -423,6 +423,10 @@
         <value>{0} — zakończono z kodem {1}
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>Element „{0}” zostanie pominięty, ponieważ plik wyjściowy „{1}” jest nowszy.
         </value>

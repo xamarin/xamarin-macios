@@ -1232,6 +1232,9 @@
 		<value>BindAsAttribute non valide trouvé sur '{0}' : le type enum sous-jacent de {1} est introuvable. Entrez un rapport de bogue sur https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Le registrar a trouvé un type non valide '{0}' dans la signature de la méthode '{1}' : l'interface doit avoir un attribut Protocol spécifiant son type de wrapper.
 		</value>
