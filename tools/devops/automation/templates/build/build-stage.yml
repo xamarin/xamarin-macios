@@ -103,7 +103,6 @@ jobs:
     TriggerDeviceTests: $[ dependencies.configure.outputs['labels.trigger-device-tests'] ]
     RunSampleTests: $[ dependencies.configure.outputs['labels.run-sample-tests'] ]
     SkipPackagedXamarinMacTests: $[ dependencies.configure.outputs['labels.skip-packaged-xamarin-mac-tests'] ]
-    SkipPublicJenkins: $[ dependencies.configure.outputs['labels.skip-public-jenkins'] ]
     SkipApiComparison: $[ dependencies.configure.outputs['labels.skip-api-comparison'] ]
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
     PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]

@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -50,8 +52,8 @@ namespace Compression
 
 		public unsafe int Inflate (byte[] bytes, int offset, int length)
 		{
-			if (bytes == null)
-				throw new ArgumentNullException (nameof (bytes));
+			if (bytes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			// If Inflate is called on an invalid or unready inflater, return 0 to indicate no bytes have been read.
 			if (length == 0)
 				return 0;
@@ -68,7 +70,7 @@ namespace Compression
 			if (destination.Length == 0)
 				return 0;
 
-			fixed (byte* bufPtr = &MemoryMarshal.GetReference (destination))
+			fixed (byte* bufPtr = &MemoryMarshal.GetReference (destination!))
 			{
 				return InflateVerified (bufPtr, destination.Length);
 			}
@@ -78,8 +80,7 @@ namespace Compression
 		{
 			// State is valid; attempt inflation
 			try {
-				int bytesRead;
-				var errCode = ReadInflateOutput (bufPtr, length, out bytesRead);
+				var errCode = ReadInflateOutput (bufPtr, length, out var bytesRead);
 				if (errCode == CompressionStatus.End) {
 					_finished = true;
 				}
@@ -97,8 +98,8 @@ namespace Compression
 
 		public void SetInput (byte[] inputBuffer, int startIndex, int count)
 		{
-			if (inputBuffer == null)
-				throw new ArgumentNullException (nameof (inputBuffer));
+			if (inputBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputBuffer));
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
 			if (_inputBufferHandle.IsAllocated)

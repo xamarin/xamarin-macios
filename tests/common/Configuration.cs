@@ -9,6 +9,8 @@ using NUnit.Framework;
 
 using Xamarin.Utils;
 
+#nullable disable // until we get around to fixing this file
+
 namespace Xamarin.Tests
 {
 	static partial class Configuration
@@ -1027,6 +1029,13 @@ namespace Xamarin.Tests
 			environment ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 			
+			// This is set by `dotnet test` and can cause building legacy projects to fail to build with:
+			// Microsoft.NET.Build.Extensions.ConflictResolution.targets(30,5):
+			// error MSB4062: The "ResolvePackageFileConflicts" task could not be loaded from the assembly Microsoft.NET.Build.Extensions.Tasks.dll.
+			// Invalid Image Confirm that the <UsingTask> declaration is correct, that the assembly and all its dependencies are available,
+			// and that the task contains a public class that implements Microsoft.Build.Framework.ITask.
+			environment ["MSBuildExtensionsPath"] = null;
+
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
