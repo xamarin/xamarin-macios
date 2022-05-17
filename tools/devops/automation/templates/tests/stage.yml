@@ -140,35 +140,39 @@ stages:
           gitHubToken: ${{ parameters.gitHubToken }}
           xqaCertPass: ${{ parameters.xqaCertPass }}
 
-    - job: "upload_vsdrops_${{ replace(label, '-', '_') }}"
-      displayName: 'Upload report to vsdrops'
-      timeoutInMinutes: 1000
-      dependsOn: "tests_${{ replace(label, '-', '_') }}" # can start as soon as the tests are done
-      condition: succeededOrFailed()
-      pool:
-        vmImage: 'windows-latest'
-        workspace:
-          clean: all
-      steps:
-      - template: ../common/upload-vsdrops.yml
-        parameters:
-          testPrefix: "${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}"
-          provisioningFailed: $[ dependencies.tests_${{ replace(label, '-', '_') }}.outputs['runTests.PROVISIONING_FAILED']
+  - job: upload_vsdrops
+    displayName: 'Upload report to vsdrops'
+    timeoutInMinutes: 1000
+    dependsOn: 
+    - ${{ each label in parameters.simTestsConfigurations }}:
+      - tests_${{ replace(label, '-', '_') }}
+    condition: succeededOrFailed()
+    pool:
+      vmImage: 'windows-latest'
+      workspace:
+        clean: all
+    steps:
+    - template: ../common/upload-vsdrops.yml
+      parameters:
+        testPrefix: ${{ parameters.testPrefix }}
+        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
-    - job: "upload_vsts_tests_${{ replace(label, '-', '_') }}"
-      displayName: 'Upload xml to vsts'
-      timeoutInMinutes: 1000
-      dependsOn: "tests_${{ replace(label, '-', '_') }}" # can start as soon as the tests are done
-      condition: succeededOrFailed()
-      pool:
-        vmImage: 'windows-latest'
-        workspace:
-          clean: all
-      steps:
-      - template: ../common/upload-vsts-tests.yml
-        parameters:
-          testPrefix: "${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}"
-          provisioningFailed: $[ dependencies.tests_${{ replace(label, '-', '_') }}.outputs['runTests.PROVISIONING_FAILED']
+  - job: upload_vsts_tests
+    displayName: 'Upload xml to vsts'
+    timeoutInMinutes: 1000
+    dependsOn: 
+    - ${{ each label in parameters.simTestsConfigurations }}:
+      - tests_${{ replace(label, '-', '_') }}
+    condition: succeededOrFailed()
+    pool:
+      vmImage: 'windows-latest'
+      workspace:
+        clean: all
+    steps:
+    - template: ../common/upload-vsts-tests.yml
+      parameters:
+        testPrefix: ${{ parameters.testPrefix }}
+        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
@@ -176,8 +180,8 @@ stages:
     dependsOn: # has to wait for the tests to be done AND the data to be uploaded
     - ${{ each label in parameters.simTestsConfigurations }}:
       - tests_${{ replace(label, '-', '_') }}
-      - upload_vsdrops_${{ replace(label, '-', '_') }}
-      - upload_vsts_tests_${{ replace(label, '-', '_') }}
+    - upload_vsdrops
+    - upload_vsts_tests
     condition: succeededOrFailed()
     variables:
       ${{ each label in parameters.simTestsConfigurations }}:
