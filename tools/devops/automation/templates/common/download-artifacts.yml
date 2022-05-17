@@ -9,35 +9,39 @@ parameters:
   type: boolean
   default: true
 
+- name: simTestsConfigurations
+  type: object
+
 steps:
 
 - ${{ if eq(parameters.runTests, true) }}:
-  # Download the Html Report that was added by the tests job.
-  - task: DownloadPipelineArtifact@2
-    displayName: Download html report 
-    inputs:
-      patterns: 'HtmlReport-${{ parameters.testPrefix }}/HtmlReport.zip'
-      allowFailedBuilds: true
-      path: $(System.DefaultWorkingDirectory)/Reports
+  - ${{ each label in parameters.simTestsConfigurations }}:
+    # Download the Html Report that was added by the tests job.
+    - task: DownloadPipelineArtifact@2
+      displayName: Download html report 
+      inputs:
+        patterns: "HtmlReport-${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}/HtmlReport.zip"
+        allowFailedBuilds: true
+        path: $(System.DefaultWorkingDirectory)/Reports
 
-  # Unzip report.
-  - task: ExtractFiles@1
-    displayName: 'Extract HtmlReport'
-    continueOnError: true # there might not be an html report, but we should continue processing other steps anyway
-    inputs:
-      archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.testPrefix }}/HtmlReport.zip'
-      destinationFolder: '$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.testPrefix }}'
+    # Unzip report.
+    - task: ExtractFiles@1
+      displayName: 'Extract HtmlReport'
+      continueOnError: true # there might not be an html report, but we should continue processing other steps anyway
+      inputs:
+        archiveFilePatterns: "$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}/HtmlReport.zip"
+        destinationFolder: "$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}"
 
-  # Download the test report to write the comment.
-  - task: DownloadPipelineArtifact@2
-    displayName: Download Test Summary
-    inputs:
-      patterns: '**/TestSummary-${{ parameters.testPrefix }}/TestSummary.md'
-      allowFailedBuilds: true
-      path: $(System.DefaultWorkingDirectory)\Reports
+    # Download the test report to write the comment.
+    - task: DownloadPipelineArtifact@2
+      displayName: Download Test Summary
+      inputs:
+        patterns: "**/TestSummary-${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}/TestSummary.md"
+        allowFailedBuilds: true
+        path: $(System.DefaultWorkingDirectory)\Reports
 
-  - powershell: |
-      Write-Host "##vso[task.setvariable variable=TEST_SUMMARY_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.testPrefix }}\TestSummary.md"
-      Write-Host "##vso[task.setvariable variable=HTML_REPORT_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport-${{ parameters.testPrefix }}"
-    displayName: Publish artifact paths
-    name: artifacts # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
+    - powershell: |
+        Write-Host "##vso[task.setvariable variable=TEST_SUMMARY_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}\TestSummary.md"
+        Write-Host "##vso[task.setvariable variable=HTML_REPORT_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport-${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}"
+      displayName: Publish artifact paths
+      name: artifacts # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
