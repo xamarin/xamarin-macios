@@ -423,6 +423,10 @@
         <value>{0} è terminato con il codice {1}
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>`{0}' verrà ignorato come file di output. Il più recente è `{1}'.
         </value>
@@ -1132,12 +1136,18 @@
         <value>La firma del codice è stata richiesta più volte per '{0}', con metadati diversi. I metadati '{1}={2}' sono stati impostati per un elemento, ma non per l'altro.</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>La firma del codice è stata richiesta più volte per '{0}', con metadati diversi. I metadati '{1}' contengono valori per ogni elemento (una volta è '{2}', un'altra volta è '{3}').</value>
+        <value>La firma del codice è stata richiesta più volte per '{0}', con metadati diversi. I metadati '{1}' contengono valori diversi per ogni elemento (una volta è '{2}', un'altra volta è '{3}').</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>Il valore '6' di UIDeviceFamily non è valido per questa piattaforma. È valido solo per Mac Catalyst.</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>Il valore '6' di UIDeviceFamily richiede macOS 11.0. Impostare 'SupportedOSPlatformVersion' nel file di progetto su almeno 14.0 (l'equivalente della versione Mac Catalyst di macOS 11.0). Il valore corrente è {0} (equivalente a macOS {1}).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Non è stato possibile trovare il pacchetto di risorse di binding: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>Proprietà sconosciuta '{0}' con valore '{1}'.</value>
     </data>
 </root>

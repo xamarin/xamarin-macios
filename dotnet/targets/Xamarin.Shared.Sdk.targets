@@ -493,6 +493,7 @@
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				RelativeAppBundlePath=$(_RelativeAppBundlePath)
 				Registrar=$(_BundlerRegistrar)
+				RequirePInvokeWrappers=$(_RequirePInvokeWrappers)
 				RuntimeConfigurationFile=$(_RuntimeConfigurationFile)
 				SdkDevPath=$(_SdkDevPath)
 				SdkRootDirectory=$(_XamarinSdkRootDirectory)
@@ -871,7 +872,7 @@
 			<!-- We need it for device builds for mobile platforms -->
 			<_RunAotCompiler Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">true</_RunAotCompiler>
 			<!-- We need it if the interpreter is enabled, no matter where -->
-			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != ''">true</_RunAotCompiler>
+			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != '' And '$(_PlatformName)' != 'macOS'">true</_RunAotCompiler>
 			<!-- We need it for Mac Catalyst on arm64 -->
 			<_RunAotCompiler Condition="'$(RuntimeIdentifier)' == 'maccatalyst-arm64'">true</_RunAotCompiler>
 			<!-- We need it for iOS/tvOS simulator on arm64 -->
@@ -995,6 +996,7 @@
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			AotArguments="@(_AotArguments)"
 			Assemblies="@(_AssembliesToAOT)"
 			AOTCompilerPath="$(_AOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"

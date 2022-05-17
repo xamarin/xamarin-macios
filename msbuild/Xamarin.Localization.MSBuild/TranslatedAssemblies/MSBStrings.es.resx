@@ -423,6 +423,10 @@
         <value>{0} finalizó con el código {1}.
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>Se omite "{0}" porque el archivo de salida, "{1}", es más reciente.
         </value>
@@ -1132,12 +1136,18 @@
         <value>Se ha solicitado varias veces la firma de código para '{0}', con metadatos diferentes. Los metadatos '{1}={2}' se han establecido para un elemento, pero no para el otro.</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>Se ha solicitado varias veces la firma de código para '{0}', con metadatos diferentes. Los metadatos '{1}' han sido valores para cada elemento (una vez es '{2}', otra vez es '{3}').</value>
+        <value>La firma de código se ha solicitado varias veces para \"{0}\", con metadatos diferentes. EL metadato \"{1}\" tiene valores diferentes para cada elemento (una vez es \"{2}\", otra vez es \"{3}\").</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>El valor “6” de UIDeviceFamily no es válido para esta plataforma. Solo es válido para MacTalk.</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>El valor “6” de UIDeviceFamily requiere macOS 11.0. Establezca “SupportedOSPlatformVersion” en el archivo de proyecto en al menos 14.0 (la versión de Mac Runtime equivalente a macOS 11.0). El valor actual es {0} (equivalente a macOS {1}).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>No se encontró el paquete de recursos de enlace: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>Propiedad desconocida \"{0}\" con el valor \"{1}\".</value>
     </data>
 </root>
