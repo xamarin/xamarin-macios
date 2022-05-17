@@ -104,7 +104,7 @@ stages:
       dependsOn:
       - ${{ if eq(parameters.parseLabels, true) }}:
         - configure
-      displayName: 'Running ${{ parameters.displayName }} - ${{ label }}' 
+      displayName: 'Running ${{ label}} - ${{ parameters.displayName }}' 
       timeoutInMinutes: 1000
 
       variables:
