@@ -302,9 +302,6 @@ namespace Xharness.Jenkins {
 			SetEnabled (labels, "mtouch", selection); 
 			SetEnabled (labels, "mmp", selection); 
 			SetEnabled (labels, "bcl", selection); 
-			SetEnabled (labels, "bcl-xunit", selection); 
-			SetEnabled (labels, "bcl-nunit", selection); 
-			SetEnabled (labels, "mscorlib", selection); 
 			SetEnabled (labels, "btouch", selection); 
 			SetEnabled (labels, "mac-binding-project", selection); 
 			SetEnabled (labels, "ios-extensions", selection); 
@@ -324,7 +321,6 @@ namespace Xharness.Jenkins {
 			SetEnabled (labels, "mac", selection); 
 			SetEnabled (labels, "msbuild", selection); 
 			SetEnabled (labels, "ios-simulator", selection); 
-			SetEnabled (labels, "non-monotouch", selection); 
 			SetEnabled (labels, "monotouch", selection); 
 
 			if (SetEnabled (labels, "system-permission", selection))
