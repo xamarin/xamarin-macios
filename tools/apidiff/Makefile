@@ -16,8 +16,8 @@ MONO_API_INFO = $(API_TOOLS_PATH)/mono-api-info/bin/Debug/net6.0/mono-api-info.d
 MONO_API_HTML = $(API_TOOLS_PATH)/mono-api-html/bin/Debug/net6.0/mono-api-html.dll
 MONO_BUILD = $(SYSTEM_MONO)
 
-MONO_API_INFO_EXEC = $(SYSTEM_DOTNET) $(MONO_API_INFO) --ignore-inherited-interfaces
-MONO_API_HTML_EXEC = $(SYSTEM_DOTNET) $(MONO_API_HTML)
+MONO_API_INFO_EXEC = $(DOTNET) $(MONO_API_INFO) --ignore-inherited-interfaces
+MONO_API_HTML_EXEC = $(DOTNET) $(MONO_API_HTML)
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
@@ -54,11 +54,11 @@ MAC_ARCH_ASSEMBLIES =                       native-64/Xamarin.Mac
 APIDIFF_IGNORE = -i 'INSObjectProtocol'
 
 $(MONO_API_INFO): $(wildcard $(API_TOOLS_PATH)/mono-api-info/*.cs*)
-	$(Q) $(SYSTEM_DOTNET) build $(API_TOOLS_PATH)/mono-api-info/mono-api-info.csproj /bl:$@.binlog $(MSBUILD_VERBOSITY)
+	$(Q) $(DOTNET) build $(API_TOOLS_PATH)/mono-api-info/mono-api-info.csproj /bl:$@.binlog $(MSBUILD_VERBOSITY)
 	$(Q) touch $@
 
 $(MONO_API_HTML): $(wildcard $(API_TOOLS_PATH)/mono-api-html/*.cs*)
-	$(Q) $(SYSTEM_DOTNET) build $(API_TOOLS_PATH)/mono-api-html/mono-api-html.csproj /bl:$@.binlog $(MSBUILD_VERBOSITY)
+	$(Q) $(DOTNET) build $(API_TOOLS_PATH)/mono-api-html/mono-api-html.csproj /bl:$@.binlog $(MSBUILD_VERBOSITY)
 	$(Q) touch $@
 
 # create api info. Directory hierarchy is based on installed hierarchy
