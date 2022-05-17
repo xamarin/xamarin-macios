@@ -83,14 +83,14 @@ namespace Xharness {
 		public static string GetLabel (this TestLabel self)
 		{
 			var enumType = typeof(TestLabel);
-			var name = Enum.GetName(typeof(TestLabel), self);
+			var name = Enum.GetName (typeof (TestLabel), self);
 			var attr = enumType.GetField (name).GetCustomAttribute<LabelAttribute> ();
 			return attr.Label;
 		}
 
 		public static TestLabel GetLabel (this string self)
 		{
-			foreach (var obj in Enum.GetValues (typeof(TestLabel))) {
+			foreach (var obj in Enum.GetValues (typeof (TestLabel))) {
 				if (obj is TestLabel value && value.GetLabel () == self) {
 					return value;
 				}
