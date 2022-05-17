@@ -169,10 +169,10 @@ stages:
       workspace:
         clean: all
     steps:
-    - template: ../common/upload-vsts-tests.yml
+    - template: upload-vsts-tests.yml
       parameters:
         testPrefix: ${{ parameters.testPrefix }}
-        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
+        simTestsConfigurations: ${{ parameters.simTestsConfigurations }} 
 
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
