@@ -443,8 +443,7 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 	if (xamarin_executable_name) {
 		assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
-		if (exception_gchandle != NULL)
-			xamarin_process_managed_exception_gchandle (exception_gchandle);
+		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while opening the main executable");
 	} else {
 		const char *last_slash = strrchr (argv [0], '/');
 		const char *basename = last_slash ? last_slash + 1 : argv [0];
@@ -452,17 +451,14 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 		assembly = xamarin_open_and_register (aname, &exception_gchandle);
 		xamarin_free (aname);
-
-		if (exception_gchandle != NULL)
-			xamarin_process_managed_exception_gchandle (exception_gchandle);
+		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while opening an assembly");
 	}
 
 	if (xamarin_supports_dynamic_registration) {
 		MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
 		xamarin_register_entry_assembly (rassembly, &exception_gchandle);
 		xamarin_mono_object_release (&rassembly);
-		if (exception_gchandle != NULL)
-			xamarin_process_managed_exception_gchandle (exception_gchandle);
+		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while opening the entry assembly");
 	}
 
 	DEBUG_LAUNCH_TIME_PRINT ("\tAssembly register time");

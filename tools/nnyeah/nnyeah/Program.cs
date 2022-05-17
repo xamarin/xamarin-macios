@@ -58,15 +58,19 @@ namespace Microsoft.MaciOS.Nnyeah {
 			bool forceOverwrite, bool suppressWarnings)
 		{
 			if (!TryLoadTypeAndModuleMap (xamarinAssembly!, microsoftAssembly!, publicOnly: true,
-				out var typeAndModuleMap, out var failureReason)) {
+				out var typeAndModuleMap, out var failureReason, out var xamarinModule,
+				out var microsoftModule)) {
 				Console.Error.WriteLine (Errors.E0011, failureReason);
 			}
-			ReworkFile (infile!, outfile!, verbose, forceOverwrite, suppressWarnings, typeAndModuleMap!);
+			ReworkFile (infile!, outfile!, verbose, forceOverwrite, suppressWarnings, typeAndModuleMap!,
+				xamarinModule!, microsoftModule!);
 		}
 
 		static bool TryLoadTypeAndModuleMap (string earlier, string later, bool publicOnly,
 			[NotNullWhen (returnValue: true)] out TypeAndMemberMap? result,
-			[NotNullWhen (returnValue: false)] out string? reason)
+			[NotNullWhen (returnValue: false)] out string? reason,
+			[NotNullWhen (returnValue: true)] out ModuleDefinition? xamarinModule,
+			[NotNullWhen (returnValue: true)] out ModuleDefinition? microsoftModule)
 		{
 			try {
 				using var ealierFile = TryOpenRead (earlier);
@@ -76,7 +80,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				var laterModule = ModuleDefinition.ReadModule (laterFile);
 
 				var comparingVisitor = new ComparingVisitor (earlierModule, laterModule, publicOnly);
-				var map = new TypeAndMemberMap (laterModule);
+				var map = new TypeAndMemberMap ();
 
 				comparingVisitor.TypeEvents.NotFound += (_, e) => { 
 					switch (e.Original.ToString()) {
@@ -108,21 +112,27 @@ namespace Microsoft.MaciOS.Nnyeah {
 				comparingVisitor.Visit ();
 				result = map;
 				reason = null;
+				xamarinModule = earlierModule;
+				microsoftModule = laterModule;
 				return true;
 			} catch (Exception e) {
 				result = null;
 				reason = e.Message;
+				xamarinModule = null;
+				microsoftModule = null;
 				return false;
 			}
 		}
 
-		static Reworker? CreateReworker (string infile, TypeAndMemberMap typeMap)
+		static Reworker? CreateReworker (string infile, TypeAndMemberMap typeMap,
+			ModuleDefinition xamarinModule, ModuleDefinition microsoftModule)
 		{
 			try {
 				var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 				var module = ModuleDefinition.ReadModule (stm);
+				var moduleContainer = new ModuleContainer (module, xamarinModule, microsoftModule);
 
-				return Reworker.CreateReworker (stm, module, typeMap);
+				return Reworker.CreateReworker (stm, moduleContainer, typeMap);
 			} catch (Exception e) {
 				Console.Error.WriteLine (Errors.E0003, infile, e.Message);
 				Environment.Exit (1);
@@ -132,7 +142,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 
 		static void ReworkFile (string infile, string outfile, bool verbose, bool forceOverwrite,
-			bool suppressWarnings, TypeAndMemberMap typeMap)
+			bool suppressWarnings, TypeAndMemberMap typeMap, ModuleDefinition xamarinModule,
+			ModuleDefinition microsoftModule)
 		{
 			var warnings = new List<string> ();
 			var transforms = new List<string> ();
@@ -147,7 +158,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				Environment.Exit (1);
 			}
 
-			if (CreateReworker (infile, typeMap) is Reworker reworker) {
+			if (CreateReworker (infile, typeMap, xamarinModule, microsoftModule) is Reworker reworker) {
 				reworker.WarningIssued += (_, e) => warnings.Add (e.HelpfulMessage ());
 				reworker.Transformed += (_, e) => warnings.Add (e.HelpfulMessage ());
 

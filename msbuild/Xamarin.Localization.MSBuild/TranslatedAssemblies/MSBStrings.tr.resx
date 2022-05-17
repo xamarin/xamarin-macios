@@ -423,6 +423,10 @@
         <value>{0}, {1} kodu ile çıkış yaptı
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>`{1}' çıkış dosyası daha yeni olduğundan `{0}' atlanıyor.
         </value>
