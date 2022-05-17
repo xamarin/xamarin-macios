@@ -359,6 +359,14 @@ namespace Xharness.Jenkins {
 							var averages = new double [3];
 							getloadavg (averages, averages.Length);
 							Console.WriteLine ($"{DateTime.UtcNow.ToString ("O")} Still running tests. Please be patient. Load averages: {averages [0],6:0.00} {averages [1],6:0.00} {averages [2],6:0.00}");
+							if (averages [0] > 10) {
+								var rv = await GetProcessListAsync (MainLog);
+								if (rv.Success) {
+									Console.WriteLine ($"{DateTime.UtcNow.ToString ("O")} Current process list from 'ps auxww' (due to high load average):\n\t\t{string.Join ("\n\t\t", rv.Output.Split ('\n'))}");
+								} else {
+									Console.WriteLine ($"{DateTime.UtcNow.ToString ("O")} Failed to list processes (due to high load average): {rv.Output}");
+								}
+							}
 						}
 					});
 
@@ -370,7 +378,7 @@ namespace Xharness.Jenkins {
 							} else {
 								Console.WriteLine ($"{DateTime.UtcNow.ToString ("O")} Failed to list processes: {rv.Output}");
 							}
-							await Task.Delay (TimeSpan.FromMinutes (15));
+							await Task.Delay (TimeSpan.FromMinutes (5));
 						}
 					});
 				}
