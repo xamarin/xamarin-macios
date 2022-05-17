@@ -103,7 +103,7 @@ namespace Xamarin.Utils {
 
 		public static string FormatArguments (IList<string> arguments)
 		{
-			return string.Join (" ", QuoteForProcess (arguments));
+			return string.Join (" ", QuoteForProcess (arguments)!);
 		}
 
 		public static string? Unquote (string input)
