@@ -6,8 +6,10 @@ parameters:
   type: string 
   default: 'ios' # default context, since we started dealing with iOS devices. 
 
-- name: simTestsConfigurations
-  type: object
+# did the provisioning work?
+- name: provisioningFailed
+  type: string 
+  default: 'False'
 
 steps:
 
@@ -16,15 +18,13 @@ steps:
 - template: download-artifacts.yml 
   parameters:
     testPrefix: ${{ parameters.testPrefix }}
-    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
 
-- ${{ each label in parameters.simTestsConfigurations }}:
-  - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
-    displayName: 'Publish to Artifact Services Drop'
-    inputs:
-      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-      dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}'
-      buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}'
-      sourcePath: $(HTML_REPORT_PATH_${{ uper(replace(label, '-', '_')) }})
-      detailedLog: true
-      usePat: true 
+- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+  displayName: 'Publish to Artifact Services Drop'
+  inputs:
+    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}'
+    sourcePath: $(HTML_REPORT_PATH)
+    detailedLog: true
+    usePat: true 

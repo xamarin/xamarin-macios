@@ -71,6 +71,7 @@ parameters:
   default: true
 
 - name: simTestsConfigurations
+  displayName: Simulator test configurations to run
   type: object
 
 stages:
@@ -154,7 +155,7 @@ stages:
     - template: ../common/upload-vsdrops.yml
       parameters:
         testPrefix: ${{ parameters.testPrefix }}
-        simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
   - job: upload_vsts_tests
     displayName: 'Upload xml to vsts'
