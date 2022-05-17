@@ -152,10 +152,10 @@ stages:
       workspace:
         clean: all
     steps:
-    - template: ../common/upload-vsdrops.yml
+    - template: upload-vsdrops.yml
       parameters:
         testPrefix: ${{ parameters.testPrefix }}
-        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
+        simTestsConfigurations: ${{ parameters.simTestsConfigurations }} 
 
   - job: upload_vsts_tests
     displayName: 'Upload xml to vsts'

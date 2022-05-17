@@ -1,0 +1,30 @@
+
+# job that downloads the html report from the artifacts and uploads them into vsdrops.
+parameters:
+
+- name: testPrefix
+  type: string 
+  default: 'ios' # default context, since we started dealing with iOS devices. 
+
+- name: simTestsConfigurations
+  type: object
+
+steps:
+
+- template: ../common/checkout.yml
+
+- template: download-artifacts.yml 
+  parameters:
+    testPrefix: ${{ parameters.testPrefix }}
+    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+
+- ${{ each label in parameters.simTestsConfigurations }}:
+  - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+    displayName: 'Publish to Artifact Services Drop'
+    inputs:
+      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+      dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}'
+      buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}'
+      sourcePath: $(HTML_REPORT_PATH_${{ upper(replace(label, '-', '_')) }})
+      detailedLog: true
+      usePat: true 
