@@ -1,3 +1,5 @@
+// #define NNYEAH_IN_PROCESS
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,7 +32,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 			}
 		}
 
-		string GetNETPlatform (ApplePlatform platform)
+		string GetNetPlatform (ApplePlatform platform)
 		{
 			switch (platform)
 			{
@@ -53,6 +55,18 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 			Assert.Zero (execution.ExitCode, $"Build Output: {execution.StandardOutput}");
 		}
 
+		async Task ExecuteNnyeah (string inputPath, string convertedPath, ApplePlatform platform)
+		{
+#if NNYEAH_IN_PROCESS
+			Program.ProcessAssembly (GetLegacyPlatform(platform), GetNetPlatform(platform), inputPath, convertedPath, true, true, false);
+#else
+			var args = new List<string> { Nnyeah, $"--input={inputPath}", $"--output={convertedPath}", $"--xamarin-assembly={GetLegacyPlatform(platform)}", 
+				$"--microsoft-assembly={GetNetPlatform(platform)}", "--force-overwrite"};
+			Execution execution = await Execution.RunAsync (DotNet.Executable, args, null, mergeOutput: true);
+			Assert.Zero (execution.ExitCode, $"Nnyeah Output: {execution.StandardOutput}");
+#endif
+		}
+
 		// [Test]
 		// [TestCase("API/macOSIntegration.csproj", "API/bin/Debug/macOSIntegration.dll", "Consumer/macOS/macOS.csproj", ApplePlatform.MacOSX)]
 		// [TestCase("API/iOSIntegration.csproj", "API/bin/Debug/iOSIntegration.dll", "Consumer/ios/ios.csproj", ApplePlatform.iOS)]
@@ -66,10 +80,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 			string inputPath = Path.Combine (IntegrationRoot, libraryPath);
 			string convertedPath = Path.Combine (convertedDir, Path.GetFileName (libraryPath));
 
-			var args = new List<string> { Nnyeah, $"--input={inputPath}", $"--output={convertedPath}", $"--xamarin-assembly={GetLegacyPlatform(platform)}", 
-				$"--microsoft-assembly={GetNETPlatform(platform)}", "--force-overwrite"};
-			Execution execution = await Execution.RunAsync (DotNet.Executable, args, null, mergeOutput: true);
-			Assert.Zero (execution.ExitCode, $"Nnyeah Output: {execution.StandardOutput}");
+			await ExecuteNnyeah (inputPath, convertedPath, platform);
 
 			DotNet.AssertBuild (Path.Combine (IntegrationRoot, consumerProject));
 		}
@@ -96,10 +107,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 
 			string convertedPath = Path.Combine (convertedDir, Path.GetFileName (libraryPath));
 
-			var args = new List<string> { Nnyeah, $"--input={nugetPath}", $"--output={convertedPath}", $"--xamarin-assembly={GetLegacyPlatform(platform)}", 
-				$"--microsoft-assembly={GetNETPlatform(platform)}", "--force-overwrite"};
-			Execution execution = await Execution.RunAsync (DotNet.Executable, args, null, mergeOutput: true);
-			Assert.Zero (execution.ExitCode, $"Nnyeah Output: {execution.StandardOutput}");
+			await ExecuteNnyeah (nugetPath, convertedPath, platform);
 		}
 	}
 }
