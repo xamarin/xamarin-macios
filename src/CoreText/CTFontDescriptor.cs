@@ -371,15 +371,15 @@ namespace CoreText {
 			}
 		}
 
-		public bool? Enabled {
+		public bool Enabled {
 			get {
-				if (CTFontDescriptorAttributeKey.Enabled is NSString enabledKey && Dictionary[enabledKey] is NSNumber value)
+				var value = (NSNumber) Dictionary [CTFontDescriptorAttributeKey.Enabled];
+					if (value is null)
+						return false;
 					return value.Int32Value != 0;
-				return null;
 			}
 			set {
-				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Enabled!, 
-						value ? new NSNumber (1) : null);
+				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Enabled!, value ? new NSNumber (1) : null);
 			}
 		}
 	}

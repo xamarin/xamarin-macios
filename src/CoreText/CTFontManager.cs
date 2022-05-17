@@ -538,10 +538,10 @@ namespace CoreText {
 		{
 			var handle = Libraries.CoreText.Handle;
 #if !XAMCORE_3_0
-			ErrorDomain  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorDomain")!;
+			ErrorDomain  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorDomain");
 #endif
 #pragma warning disable CS0618 // Type or member is obsolete
-			ErrorFontUrlsKey  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorFontURLsKey")!;
+			ErrorFontUrlsKey  = Dlfcn.GetStringConstant (handle, "kCTFontManagerErrorFontURLsKey");
 #pragma warning restore CS0618 // Type or member is obsolete
 		}
 #endif // !NET
@@ -565,11 +565,11 @@ namespace CoreText {
 		}
 
 #if !XAMCORE_3_0
-		public readonly static NSString ErrorDomain;
+		public readonly static NSString? ErrorDomain;
 #endif
 #if !NET
 		[Obsolete ("Use the 'CTFontManagerErrorKeys.FontUrlsKey' property instead.")]
-		public readonly static NSString ErrorFontUrlsKey;
+		public readonly static NSString? ErrorFontUrlsKey;
 #endif
 
 		public static partial class Notifications {
