@@ -423,6 +423,10 @@
         <value>{0} foi encerrado com o código {1}
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>Ignorando `{0}' como o arquivo de saída. `{1}' é mais recente.
         </value>
