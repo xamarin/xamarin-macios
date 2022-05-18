@@ -393,7 +393,7 @@ stages:
     displayName: 'Simulator tests'
     testPool: '' # use the default
     useXamarinStorage: false
-    testsLabels: '--label=skip-all-tests,run-ios64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests'
+    testsLabels: '--label=skip-all-tests,run-ios-64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests'
     statusContext: 'VSTS: simulator tests iOS'
     makeTarget: 'jenkins'
     vsdropsPrefix: ${{ variables.vsdropsPrefix }}
