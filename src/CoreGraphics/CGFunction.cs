@@ -133,7 +133,7 @@ namespace CoreGraphics {
 			this.evaluate = callback;
 
 			var gch = GCHandle.Alloc (this);
-			var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain != null ? domain.Length / 2 : 0, domain, range != null ? range.Length / 2 : 0, range, ref cbacks);
+			var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain is not null ? domain.Length / 2 : 0, domain, range is not null ? range.Length / 2 : 0, range, ref cbacks);
 			InitializeHandle (handle);
 		}
 

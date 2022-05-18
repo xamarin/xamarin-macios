@@ -210,42 +210,42 @@ namespace CoreGraphics {
 		public CGImagePropertiesExif? Exif {
 			get {
 				var dict = GetNSDictionary (Keys.ExifDictionary);
-				return dict == null ? null : new CGImagePropertiesExif (dict);
+				return dict is null ? null : new CGImagePropertiesExif (dict);
 			}
 		}
 
 		public CGImagePropertiesGps? Gps {
 			get {
 				var dict = GetNSDictionary (Keys.GPSDictionary);
-				return dict == null ? null : new CGImagePropertiesGps (dict);
+				return dict is null ? null : new CGImagePropertiesGps (dict);
 			}
 		}
 
 		public CGImagePropertiesIptc? Iptc {
 			get {
 				var dict = GetNSDictionary (Keys.IPTCDictionary);
-				return dict == null ? null : new CGImagePropertiesIptc (dict);
+				return dict is null ? null : new CGImagePropertiesIptc (dict);
 			}
 		}
 
 		public CGImagePropertiesPng? Png {
 			get {
 				var dict = GetNSDictionary (Keys.PNGDictionary);
-				return dict == null ? null : new CGImagePropertiesPng (dict);
+				return dict is null ? null : new CGImagePropertiesPng (dict);
 			}
 		}
 
 		public CGImagePropertiesJfif? Jfif {
 			get {
 				var dict = GetNSDictionary (Keys.JFIFDictionary);
-				return dict == null ? null : new CGImagePropertiesJfif (dict);
+				return dict is null ? null : new CGImagePropertiesJfif (dict);
 			}
 		}
 
 		public CGImagePropertiesTiff? Tiff {
 			get {
 				var dict = GetNSDictionary (Keys.TIFFDictionary);
-				return dict == null ? null : new CGImagePropertiesTiff (dict);
+				return dict is null ? null : new CGImagePropertiesTiff (dict);
 			}
 		}
 
