@@ -89,12 +89,20 @@ namespace Xharness.Jenkins {
 
 		public bool IsIncluded (TestProject project)
 		{
-			if (!project.IsExecutableProject)
+			MainLog.WriteLine ($"Testing {project.Name} with label {project.Label.ToString ()} is included.");
+			if (!project.IsExecutableProject) {
+				MainLog.WriteLine ($"Ignoring {project.Name} because is not a executable project.");
 				return false;
+			}
 
-			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
+			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection") {
+				MainLog.WriteLine ($"Ignoring {project.Name} because we cannot include the system permission tests");
 				return false;
+			}
 
+			MainLog.WriteLine ($"Selected tests are {TestSelection.SelectedTests.ToString ()}");
+			MainLog.WriteLine ($"Selected platforms are {TestSelection.SelectedPlatforms.ToString () }");
+			MainLog.WriteLine ($"Prohect {project.Name} is included: {TestSelection.IsEnabled (project.Label)}");
 			return TestSelection.IsEnabled (project.Label);
 		}
 

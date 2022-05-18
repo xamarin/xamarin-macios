@@ -26,6 +26,9 @@ namespace Xharness.Jenkins {
 
 		public bool ForceExtensionBuildOnly { get; set; }
 
+		public TestLabel SelectedTests => selection;
+		public PlatformLabel SelectedPlatforms => platform;
+
 		public void SetEnabled (TestLabel label, bool enable)
 		{
 			if (enable) {
