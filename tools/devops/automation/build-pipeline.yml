@@ -385,26 +385,23 @@ stages:
 # Test stages
 
 # always run simulator tests
-- ${{ each label in parameters.simTestsConfigurations }}:
-  - template: templates/tests/stage.yml
-    parameters:
-      testPrefix: "simulator_${{ replace(label, '-', '_') }}"
-      stageName: "simulator_${{ replace(label, '-', '_') }}"
-      displayName: 'Simulator Tests - ${{ label }}'
-      testPool: '' # use the default
-      useXamarinStorage: false
-      testsLabels: '--label=skip-all-tests,run-ios64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests,run-${{ label }}-tests'
-      statusContext: 'VSTS: simulator tests iOS - ${{ label }}'
-      ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
-        makeTarget: 'wrench-jenkins' # override when we are running on CI or manually to run all tests
-      ${{ else }}:
-        makeTarget: 'jenkins'
-      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-      keyringPass: $(pass--lab--mac--builder--keychain)
-      gitHubToken: ${{ variables['GitHub.Token'] }}
-      xqaCertPass: $(xqa--certificates--password)
-      enableDotnet: ${{ parameters.enableDotnet }}
-      condition: ${{ parameters.runTests }}
+- template: templates/tests/stage.yml
+  parameters:
+    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+    testPrefix: 'simulator_'
+    stageName: 'simulator_tests'
+    displayName: 'Simulator tests'
+    testPool: '' # use the default
+    useXamarinStorage: false
+    testsLabels: '--label=skip-all-tests,run-ios64-tests,run-ios-simulator-tests,run-tvos-tests,run-watchos-tests,run-mac-tests,run-maccatalyst-tests'
+    statusContext: 'VSTS: simulator tests iOS'
+    makeTarget: 'jenkins'
+    vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+    keyringPass: $(pass--lab--mac--builder--keychain)
+    gitHubToken: ${{ variables['GitHub.Token'] }}
+    xqaCertPass: $(xqa--certificates--password)
+    enableDotnet: ${{ parameters.enableDotnet }}
+    condition: ${{ parameters.runTests }}
 
 # devices are optional and will only be ran when we set them OR in CI
 - ${{ if eq(parameters.runDeviceTests, true) }}:

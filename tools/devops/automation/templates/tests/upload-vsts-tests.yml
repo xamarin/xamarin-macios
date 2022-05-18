@@ -1,0 +1,28 @@
+# imports the xml to the vsts test results for the job
+parameters:
+
+- name: testPrefix
+  type: string 
+  default: 'ios' # default context, since we started dealing with iOS devices. 
+
+- name: simTestsConfigurations
+  type: object
+
+steps:
+
+- template: ../common/checkout.yml
+
+- template: download-artifacts.yml 
+  parameters:
+    testPrefix: ${{ parameters.testPrefix }}
+    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+
+# Upload test results to vsts.
+- task: PublishTestResults@2
+  displayName: 'Publish NUnit Device Test Results'
+  inputs:
+    testResultsFormat: NUnit
+    testResultsFiles: '**/vsts-*.xml'
+    failTaskOnFailedTests: true
+  continueOnError: true
+  condition: succeededOrFailed()

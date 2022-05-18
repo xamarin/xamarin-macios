@@ -70,6 +70,10 @@ parameters:
   type: boolean
   default: true
 
+- name: simTestsConfigurations
+  displayName: Simulator test configurations to run
+  type: object
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -95,89 +99,96 @@ stages:
           uploadArtifacts: false
           enableDotnet: ${{ parameters.enableDotnet }}
 
-  - job: tests
-    dependsOn:
-    - ${{ if eq(parameters.parseLabels, true) }}:
-      - configure
-    displayName: 'Run ${{ parameters.testPrefix }} Device Tests'
-    timeoutInMinutes: 1000
+  - ${{ each label in parameters.simTestsConfigurations }}:
+    - job: "tests_${{ replace(label, '-', '_') }}"
+      dependsOn:
+      - ${{ if eq(parameters.parseLabels, true) }}:
+        - configure
+      displayName: 'Running ${{ label}} - ${{ parameters.displayName }}' 
+      timeoutInMinutes: 1000
 
-    variables:
-      # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-      PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
-      # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
-      BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-      XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
-      ${{ if eq(parameters.testPool, '') }}:
-        AgentPoolComputed: $(PRBuildPool)
-      ${{ else }}:
-        AgentPoolComputed: ${{ parameters.testPool }}
+      variables:
+        # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
+        PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+        # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
+        BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+        XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
+        ${{ if eq(parameters.testPool, '') }}:
+          AgentPoolComputed: $(PRBuildPool)
+        ${{ else }}:
+          AgentPoolComputed: ${{ parameters.testPool }}
 
-    pool:
-      name: $(AgentPoolComputed)
-      demands: 
-      - Agent.OS -equals Darwin
-      - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
-      - ${{ each demand in parameters.extraBotDemands }}:
-        - demand
-      workspace:
-        clean: all
-    steps:
-    - template: build.yml
-      parameters:
-        testsLabels: ${{ parameters.testsLabels }}
-        statusContext: ${{ parameters.statusContext }}
-        useXamarinStorage: ${{ parameters.useXamarinStorage }}
-        vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-        keyringPass: ${{ parameters.keyringPass }}
-        testPrefix: ${{ parameters.testPrefix }}
-        makeTarget: ${{ parameters.makeTarget }}
-        gitHubToken: ${{ parameters.gitHubToken }}
-        xqaCertPass: ${{ parameters.xqaCertPass }}
+      pool:
+        name: $(AgentPoolComputed)
+        demands: 
+        - Agent.OS -equals Darwin
+        - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+        - ${{ each demand in parameters.extraBotDemands }}:
+          - demand
+        workspace:
+          clean: all
+      steps:
+      - template: build.yml
+        parameters:
+          testsLabels: '${{ parameters.testsLabels }},run-${{ label }}-tests'
+          statusContext: '${{ parameters.statusContext }} - ${{ label }}'
+          useXamarinStorage: ${{ parameters.useXamarinStorage }}
+          vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+          keyringPass: ${{ parameters.keyringPass }}
+          testPrefix: "${{ parameters.testPrefix }}${{ replace(label, '-', '_') }}"
+          makeTarget: ${{ parameters.makeTarget }}
+          gitHubToken: ${{ parameters.gitHubToken }}
+          xqaCertPass: ${{ parameters.xqaCertPass }}
 
   - job: upload_vsdrops
     displayName: 'Upload report to vsdrops'
     timeoutInMinutes: 1000
-    dependsOn: tests # can start as soon as the tests are done
+    dependsOn: 
+    - ${{ each label in parameters.simTestsConfigurations }}:
+      - tests_${{ replace(label, '-', '_') }}
     condition: succeededOrFailed()
     pool:
       vmImage: 'windows-latest'
       workspace:
         clean: all
     steps:
-    - template: ../common/upload-vsdrops.yml
+    - template: upload-vsdrops.yml
       parameters:
         testPrefix: ${{ parameters.testPrefix }}
-        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
+        simTestsConfigurations: ${{ parameters.simTestsConfigurations }} 
 
   - job: upload_vsts_tests
     displayName: 'Upload xml to vsts'
     timeoutInMinutes: 1000
-    dependsOn: tests # can start as soon as the tests are done
+    dependsOn: 
+    - ${{ each label in parameters.simTestsConfigurations }}:
+      - tests_${{ replace(label, '-', '_') }}
     condition: succeededOrFailed()
     pool:
       vmImage: 'windows-latest'
       workspace:
         clean: all
     steps:
-    - template: ../common/upload-vsts-tests.yml
+    - template: upload-vsts-tests.yml
       parameters:
         testPrefix: ${{ parameters.testPrefix }}
-        provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
+        simTestsConfigurations: ${{ parameters.simTestsConfigurations }} 
 
   - job: publish_html
     displayName: 'Publish Html report in VSDrops'
     timeoutInMinutes: 1000
     dependsOn: # has to wait for the tests to be done AND the data to be uploaded
-    - tests
+    - ${{ each label in parameters.simTestsConfigurations }}:
+      - tests_${{ replace(label, '-', '_') }}
     - upload_vsdrops
     - upload_vsts_tests
     condition: succeededOrFailed()
     variables:
-      # Define the variable FOO from the previous job
-      # Note the use of single quotes!
-      TESTS_BOT: $[ dependencies.tests.outputs['runTests.TESTS_BOT'] ]
-      TESTS_JOBSTATUS: $[ dependencies.tests.outputs['runTests.TESTS_JOBSTATUS'] ]
+      ${{ each label in parameters.simTestsConfigurations }}:
+        # Define the variable FOO from the previous job
+        # Note the use of single quotes!
+        TESTS_BOT_${{ upper(replace(label, '-', '_')) }}: $[ dependencies.tests_${{ replace(label, '-', '_') }}.outputs['runTests.TESTS_BOT'] ]
+        TESTS_JOBSTATUS_${{ upper(replace(label, '-', '_')) }}: $[ dependencies.tests_${{ replace(label, '-', '_') }}.outputs['runTests.TESTS_JOBSTATUS'] ]
     pool:
       vmImage: 'windows-latest'
       workspace:
