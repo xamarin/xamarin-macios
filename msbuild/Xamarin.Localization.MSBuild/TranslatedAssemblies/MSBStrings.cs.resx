@@ -423,6 +423,10 @@
         <value>{0} skončilo s kódem {1}.
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>Přeskakuje se {0}, protože výstupní soubor {1} je novější.
         </value>

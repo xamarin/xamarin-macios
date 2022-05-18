@@ -25,7 +25,7 @@ steps:
 
 - bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/vsts-compare.sh
   displayName: 'API & Generator comparison'
-  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  condition: succeeded()
   name: apiGeneratorDiff
   continueOnError: true # this isn't fatal, the github comment will show how bad this really is
   env:
@@ -50,7 +50,7 @@ steps:
     rootFolder: $(Build.ArtifactStagingDirectory)/apicomparison
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/apicomparison.zip'
-  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  condition: succeeded()
   continueOnError: true
 
 - task: PublishPipelineArtifact@1
@@ -58,7 +58,7 @@ steps:
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/apicomparison.zip'
     artifactName: apicomparison
-  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  condition: succeeded()
   continueOnError: true
 
 - template: ../common/status.yml
@@ -97,7 +97,7 @@ steps:
     set -x
   displayName: 'API diff (from stable)'
   name: apidiff
-  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  condition: succeeded()
   continueOnError: true
   env:
     BUILD_REVISION: 'jenkins'
@@ -121,7 +121,7 @@ steps:
     rootFolder: $(Build.SourcesDirectory)/xamarin-macios/tools/apidiff
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/apidiff-stable.zip'
-  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  condition: succeeded()
   continueOnError: true
 
 - task: PublishPipelineArtifact@1
@@ -129,5 +129,5 @@ steps:
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/apidiff-stable.zip'
     artifactName: apidiff-stable
-  condition: and(succeeded(), contains(variables['configuration.SkipPublicJenkins'], 'False'))
+  condition: succeeded()
   continueOnError: true

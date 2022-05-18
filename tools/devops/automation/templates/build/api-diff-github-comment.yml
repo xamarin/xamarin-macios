@@ -40,6 +40,16 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
+    # figure out DOTNET_TFM
+    $make_config = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/Make.config"
+    $Env:DOTNET_TFM = "net_something"
+    foreach ($line in Get-Content -Path $make_config) {
+      if ($line.StartsWith("DOTNET_TFM=")) {
+        $Env:DOTNET_TFM = $line.Substring(11)
+      }
+    }
+    Write-Host "##vso[task.setvariable variable=DOTNET_TFM;isOutput=true]$Env:DOTNET_TFM"
+
     $apiDiffRoot = "$Env:STABLE_APIDIFF_PATH"
     $filePatterns = @{
       "iOS" = "^ios-[0-9\-]*\.md$";
@@ -92,14 +102,14 @@ steps:
       "tvOS" = $apiDiffRoot + "tvos-api-diff.html";
       "watchOS" =$apiDiffRoot + "watchos-api-diff.html";
       "index"= $apiDiffRoot + "api-diff.html";
-      "dotnet-iOS" = $apiDiffRoot + "dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html";
-      "dotnet-tvOS" = $apiDiffRoot + "dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.TVOS-api-diff.html";
-      "dotnet-MacCatalyst" = $apiDiffRoot + "dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst-api-diff.html";
-      "dotnet-macOS" = $apiDiffRoot + "dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html";
-      "dotnet-legacy-iOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html";
-      "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.TVOS-api-diff.html";
-      "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html";
-      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst-api-diff.html";
+      "dotnet-iOS" = $apiDiffRoot + "dotnet/Microsoft.iOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.iOS-api-diff.html";
+      "dotnet-tvOS" = $apiDiffRoot + "dotnet/Microsoft.tvOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.TVOS-api-diff.html";
+      "dotnet-MacCatalyst" = $apiDiffRoot + "dotnet/Microsoft.MacCatalyst.Ref/ref/$Env:DOTNET_TFM/Microsoft.MacCatalyst-api-diff.html";
+      "dotnet-macOS" = $apiDiffRoot + "dotnet/Microsoft.macOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.macOS-api-diff.html";
+      "dotnet-legacy-iOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.iOS-api-diff.html";
+      "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.TVOS-api-diff.html";
+      "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.macOS-api-diff.html";
+      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.iOS.MacCatalyst-api-diff.html";
     }
 
     # build a json object that will be used by the comment to write the data for users
@@ -175,14 +185,14 @@ steps:
       "tvOS" = $apiDiffRoot + "tvos-api-diff.html";
       "watchOS" =$apiDiffRoot + "watchos-api-diff.html";
       "index"= $apiDiffRoot + "api-diff.html";
-      "dotnet-iOS" = $apiDiffRoot + "dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html";
-      "dotnet-tvOS" = $apiDiffRoot + "dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.TVOS-api-diff.html";
-      "dotnet-MacCatalyst" = $apiDiffRoot + "dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst-api-diff.html";
-      "dotnet-macOS" = $apiDiffRoot + "dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html";
-      "dotnet-legacy-iOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html";
-      "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.TVOS-api-diff.html";
-      "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html";
-      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst-api-diff.html";
+      "dotnet-iOS" = $apiDiffRoot + "dotnet/Microsoft.iOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.iOS-api-diff.html";
+      "dotnet-tvOS" = $apiDiffRoot + "dotnet/Microsoft.tvOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.tvOS-api-diff.html";
+      "dotnet-MacCatalyst" = $apiDiffRoot + "dotnet/Microsoft.MacCatalyst.Ref/ref/$Env:DOTNET_TFM/Microsoft.MacCatalyst-api-diff.html";
+      "dotnet-macOS" = $apiDiffRoot + "dotnet/Microsoft.macOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.macOS-api-diff.html";
+      "dotnet-legacy-iOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.iOS-api-diff.html";
+      "dotnet-legacy-tvOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.tvOS-api-diff.html";
+      "dotnet-legacy-macOS" = $apiDiffRoot + "dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.macOS-api-diff.html";
+      "dotnet-macCatiOS" = $apiDiffRoot + "dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$Env:DOTNET_TFM/Microsoft.iOS.MacCatalyst-api-diff.html";
     }
 
     # build a json object that will be used by the comment to write the data for users
