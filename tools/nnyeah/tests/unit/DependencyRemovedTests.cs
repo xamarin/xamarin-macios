@@ -12,8 +12,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 	public class DependencyRemovedTests {
 		[TestCase ("nint")]
 		[TestCase ("nuint")]
-// nfloat has an issue on write.
-//		[TestCase ("nfloat")]
+		[TestCase ("nfloat")]
 		public async Task BasicDependencyRemoved (string type)
 		{
 			var dir = Cache.CreateTemporaryDirectory ($"DependencyRemoved_{type}");
@@ -37,7 +36,7 @@ public class Foo {{
 			var module = ModuleDefinition.ReadModule (targetRewrite);
 
 			var platform = module.XamarinPlatformName ();
-			Assert.AreEqual (Microsoft.MaciOS.Nnyeah.PlatformName.None, platform);
+			Assert.AreEqual (Microsoft.MaciOS.Nnyeah.PlatformName.None, platform, "still has Xamarin dependency");
 		}
 	}
 }

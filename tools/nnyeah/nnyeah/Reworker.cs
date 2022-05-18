@@ -13,8 +13,9 @@ namespace Microsoft.MaciOS.Nnyeah {
 	public class Reworker {
 		// Module does not copy it's input stream, so we'll keep it referenced here
 		// to prevent 'Cannot access a closed file' crashes with Cecil
-		FileStream Stream;		
-		ModuleDefinition Module;
+		FileStream Stream;
+		ModuleContainer Modules;
+		ModuleDefinition ModuleToEdit => Modules.ModuleToEdit;
 
 		TypeDefinition EmbeddedAttributeTypeDef;
 		TypeDefinition NativeIntegerAttributeTypeDef;
@@ -25,8 +26,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 		TypeReference NuintTypeReference;
 		TypeReference NfloatTypeReference;
 		TypeReference NewNfloatTypeReference;
-		ModuleReference NewNfloatModuleReference;
 		TypeDefinition NewNativeHandleTypeDefinition;
+		AssemblyNameReference InteropServicesAssembly;
 
 		TypeAndMemberMap ModuleMap;
 
@@ -52,55 +53,60 @@ namespace Microsoft.MaciOS.Nnyeah {
 				);
 		}
 
-		public static Reworker? CreateReworker (FileStream stream, ModuleDefinition module, TypeAndMemberMap moduleMap)
+		public static Reworker? CreateReworker (FileStream stream, ModuleContainer modules, TypeAndMemberMap moduleMap)
 		{
-			if (!NeedsReworking (module)) {
+			if (!NeedsReworking (modules.ModuleToEdit)) {
 				return null;
 			}
-			return new Reworker (stream, module, moduleMap);
+			return new Reworker (stream, modules, moduleMap);
 		}
 
-		Reworker (FileStream stream, ModuleDefinition module, TypeAndMemberMap moduleMap)
+		Reworker (FileStream stream, ModuleContainer modules, TypeAndMemberMap moduleMap)
 		{
 			Stream = stream;
-			Module = module;
+			Modules = modules;
 			ModuleMap = moduleMap;
 
-			CompilerGeneratedAttributeTypeRef = FetchFromSystemRuntime (module, "System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
-			EmbeddedAttributeTypeDef = module.Types.FirstOrDefault (td => td.FullName == "Microsoft.CodeAnalysis.EmbeddedAttribute")
-				?? MakeEmbeddedAttribute (module);
+			CompilerGeneratedAttributeTypeRef = FetchFromSystemRuntime (ModuleToEdit, "System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
+			EmbeddedAttributeTypeDef = ModuleToEdit.Types.FirstOrDefault (td => td.FullName == "Microsoft.CodeAnalysis.EmbeddedAttribute")
+				?? MakeEmbeddedAttribute (ModuleToEdit);
 
-			EmbeddedAttributeTypeRef = module.ImportReference (new TypeReference (EmbeddedAttributeTypeDef.Namespace,
+			EmbeddedAttributeTypeRef = ModuleToEdit.ImportReference (new TypeReference (EmbeddedAttributeTypeDef.Namespace,
 				EmbeddedAttributeTypeDef.Name, EmbeddedAttributeTypeDef.Module, EmbeddedAttributeTypeDef.Scope));
 
 
-			NativeIntegerAttributeTypeDef = module.Types.FirstOrDefault (td => td.FullName == "System.Runtime.CompilerServices.NativeIntegerAttribute")
-				?? MakeNativeIntegerAttribute (module, EmbeddedAttributeTypeRef);
+			NativeIntegerAttributeTypeDef = ModuleToEdit.Types.FirstOrDefault (td => td.FullName == "System.Runtime.CompilerServices.NativeIntegerAttribute")
+				?? MakeNativeIntegerAttribute (ModuleToEdit, EmbeddedAttributeTypeRef);
 
 			NativeIntegerAttributeTypeRef = new TypeReference (NativeIntegerAttributeTypeDef.Namespace,
 				NativeIntegerAttributeTypeDef.Name, NativeIntegerAttributeTypeDef.Module, NativeIntegerAttributeTypeDef.Scope);
 
+			if (modules.MicrosoftModule.AssemblyReferences.FirstOrDefault (an => an.Name == "System.Runtime.InteropServices") is AssemblyNameReference validReference) {
+				InteropServicesAssembly = validReference;
+			} else {
+				throw new NotSupportedException ($"Assembly {modules.MicrosoftModule.Name} does not have reference to System.Runtime.InteropServices. This is not possible.");
+			}
 
 			// if these type references aren't found in the module
 			// then we don't ever need to worry about reworking them
 			// and EmptyTypeReference is a fine substitute.
-			if (!module.TryGetTypeReference ("System.nint", out NintTypeReference)) {
+			if (!ModuleToEdit.TryGetTypeReference ("System.nint", out NintTypeReference)) {
 				NintTypeReference = EmptyTypeReference;
 			}
-			if (!module.TryGetTypeReference ("System.nuint", out NuintTypeReference)) {
+			if (!ModuleToEdit.TryGetTypeReference ("System.nuint", out NuintTypeReference)) {
 				NuintTypeReference = EmptyTypeReference;
 			}
-			if (!module.TryGetTypeReference ("System.nfloat", out NfloatTypeReference)) {
+			if (!ModuleToEdit.TryGetTypeReference ("System.nfloat", out NfloatTypeReference)) {
 				NfloatTypeReference = EmptyTypeReference;
+				NewNfloatTypeReference = EmptyTypeReference;
+			} else {
+				NewNfloatTypeReference = ModuleToEdit.ImportReference (new TypeReference ("System.Runtime.InteropServices", "NFloat", null, InteropServicesAssembly, true));
 			}
-
-			NewNfloatModuleReference = new ModuleReference ("System.Private.CoreLib");
-			NewNfloatTypeReference = new TypeReference ("System.Runtime.InteropServices", "NFloat", null, NewNfloatModuleReference, true);
-			NewNativeHandleTypeDefinition = moduleMap.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
+			NewNativeHandleTypeDefinition = modules.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
 
 			// These must be called last as they depend on Module and NativeIntegerAttributeTypeRef to be setup
-			MethodSubs = LoadMethodSubs (module);
-			FieldSubs = LoadFieldSubs (module);
+			MethodSubs = LoadMethodSubs ();
+			FieldSubs = LoadFieldSubs ();
 		}
 
 		static TypeReference FetchFromSystemRuntime (ModuleDefinition module, string nameSpace, string typeName)
@@ -213,47 +219,47 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		CustomAttribute NativeIntAttribute (List<bool> nativeTypes)
 		{
-			var nativeIntAttr = new CustomAttribute (new MethodReference (".ctor", Module.TypeSystem.Void, NativeIntegerAttributeTypeRef));
+			var nativeIntAttr = new CustomAttribute (new MethodReference (".ctor", Modules.TypeSystem.Void, NativeIntegerAttributeTypeRef));
 			if (nativeTypes.Count > 1) {
-				var boolArrayParameter = new ParameterDefinition (Module.TypeSystem.Boolean.MakeArrayType ());
+				var boolArrayParameter = new ParameterDefinition (Modules.TypeSystem.Boolean.MakeArrayType ());
 				nativeIntAttr.Constructor.Parameters.Add (boolArrayParameter);
-				var boolArray = nativeTypes.Select (b => new CustomAttributeArgument (Module.TypeSystem.Boolean, b)).ToArray ();
-				nativeIntAttr.ConstructorArguments.Add (new CustomAttributeArgument (Module.TypeSystem.Boolean.MakeArrayType (), boolArray));
+				var boolArray = nativeTypes.Select (b => new CustomAttributeArgument (Modules.TypeSystem.Boolean, b)).ToArray ();
+				nativeIntAttr.ConstructorArguments.Add (new CustomAttributeArgument (Modules.TypeSystem.Boolean.MakeArrayType (), boolArray));
 			}
 			return nativeIntAttr;
 		}
 
-		Dictionary<string, Transformation> LoadMethodSubs (ModuleDefinition module)
+		Dictionary<string, Transformation> LoadMethodSubs ()
 		{
 			var methodSubSource = new MethodTransformations ();
-			var subs = methodSubSource.GetTransforms (module, NativeIntAttribute);
+			var subs = methodSubSource.GetTransforms (Modules, NativeIntAttribute);
 
 			return subs;
 		}
 
-		Dictionary<string, Transformation> LoadFieldSubs (ModuleDefinition module)
+		Dictionary<string, Transformation> LoadFieldSubs ()
 		{
 			var fieldSubSource = new FieldTransformations ();
-			var subs = fieldSubSource.GetTransforms (module);
+			var subs = fieldSubSource.GetTransforms (ModuleToEdit);
 
 			return subs;
 		}
 
 		public void Rework (Stream stm)
 		{
-			foreach (var type in Module.Types) {
+			foreach (var type in ModuleToEdit.Types) {
 				ReworkType (type);
 			}
 			RemoveXamarinReferences ();
-			Module.Write (stm);
+			ModuleToEdit.Write (stm);
 			stm.Flush ();
 		}
 
 		void RemoveXamarinReferences ()
 		{
-			for (int i = Module.AssemblyReferences.Count - 1; i >= 0; i--) {
-				if (IsXamarinReference (Module.AssemblyReferences [i])) {
-					Module.AssemblyReferences.RemoveAt (i);
+			for (int i = ModuleToEdit.AssemblyReferences.Count - 1; i >= 0; i--) {
+				if (IsXamarinReference (ModuleToEdit.AssemblyReferences [i])) {
+					ModuleToEdit.AssemblyReferences.RemoveAt (i);
 				}
 			}
 		}
@@ -377,13 +383,13 @@ namespace Microsoft.MaciOS.Nnyeah {
 				throw new TypeNotFoundException (typeAsString);
 			}
 
-			if (type == Module.TypeSystem.IntPtr || type == Module.TypeSystem.UIntPtr) {
+			if (type == Modules.TypeSystem.IntPtr || type == Modules.TypeSystem.UIntPtr) {
 				nativeTypes.Add (false);
 				result = type;
 				return false;
 			} else if (type == NintTypeReference || type == NuintTypeReference) {
 				nativeTypes.Add (true);
-				result = type == NintTypeReference ? Module.TypeSystem.IntPtr : Module.TypeSystem.UIntPtr;
+				result = type == NintTypeReference ? Modules.TypeSystem.IntPtr : Modules.TypeSystem.UIntPtr;
 				return true;
 			} else if (type == NfloatTypeReference) {
 				// changing the type to NFloat doesn't require changing the flags.

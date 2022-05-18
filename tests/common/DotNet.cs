@@ -10,6 +10,8 @@ using Xamarin.Utils;
 
 using NUnit.Framework;
 
+#nullable disable
+
 namespace Xamarin.Tests {
 	public static class DotNet {
 		static string dotnet_executable;

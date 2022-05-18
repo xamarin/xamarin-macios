@@ -253,6 +253,7 @@ void			xamarin_process_nsexception (NSException *exc);
 void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception);
 void			xamarin_process_managed_exception (MonoObject *exc);
 void			xamarin_process_managed_exception_gchandle (GCHandle gchandle);
+void			xamarin_process_fatal_exception_gchandle (GCHandle gchandle, const char *message);
 void			xamarin_throw_product_exception (int code, const char *message);
 GCHandle		xamarin_create_product_exception (int code, const char *message);
 GCHandle		xamarin_create_product_exception_with_inner_exception (int code, GCHandle inner_exception_gchandle /* will be freed */, const char *message);

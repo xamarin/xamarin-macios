@@ -423,6 +423,10 @@
         <value>{0} завершает работу с кодом {1}.
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>"{0}" пропускается, так как выходной файл "{1}" более новый.
         </value>

@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <Reference Include="macOSIntegration">
-      <HintPath>../../API/Converted/macOS/macOSIntegration.dll</HintPath>
+      <HintPath>../../API/Converted/macOSIntegration.dll</HintPath>
     </Reference>
       <Compile Include="../Consumer.cs" Link="Consumer.cs" />
   </ItemGroup>
