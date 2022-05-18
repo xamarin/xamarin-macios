@@ -463,6 +463,7 @@
 			<_CustomLinkerOptions>
 				AreAnyAssembliesTrimmed=$(_AreAnyAssembliesTrimmed)
 				AssemblyName=$(AssemblyName).dll
+				@(_AotArguments -> 'AOTArgument=%(Identity)')
 				AOTCompiler=$(_AOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
 				AppBundleManifestPath=$(_AppBundleManifestPath)
@@ -996,7 +997,6 @@
 		<AOTCompile
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			AotArguments="@(_AotArguments)"
 			Assemblies="@(_AssembliesToAOT)"
 			AOTCompilerPath="$(_AOTCompiler)"
 			InputDirectory="$(_AOTInputDirectory)"

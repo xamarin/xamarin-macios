@@ -1,3 +1,5 @@
+# Disabling this action since we do something similar already in the CI
+
 name: Sync Localization Branch
 on:
   pull_request:

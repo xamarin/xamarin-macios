@@ -1,3 +1,5 @@
+// #define NNYEAH_IN_PROCESS
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +17,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 	public class IntegrationExamples {
 		string IntegrationRoot => Path.Combine (Configuration.SourceRoot, "tools", "nnyeah", "integration");
 		string Nnyeah => Path.Combine (Configuration.SourceRoot, "tools", "nnyeah", "nnyeah", "bin", "Debug", "net6.0", "nnyeah.dll");
+		string NnyeahNupkg => Path.Combine (Configuration.SourceRoot, "tools", "nnyeah", "nupkg");
 
 		// TODO - This code, and passing xamarin-assembly/microsoft-assembly should be removed long term from nnyeah
 		string GetLegacyPlatform (ApplePlatform platform)
@@ -30,7 +33,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 			}
 		}
 
-		string GetNETPlatform (ApplePlatform platform)
+		string GetNetPlatform (ApplePlatform platform)
 		{
 			switch (platform)
 			{
@@ -53,6 +56,31 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 			Assert.Zero (execution.ExitCode, $"Build Output: {execution.StandardOutput}");
 		}
 
+		async Task ExecuteNnyeah (string tmpDir, string inputPath, string convertedPath, ApplePlatform platform)
+		{
+#if NNYEAH_IN_PROCESS
+			Program.ProcessAssembly (GetLegacyPlatform(platform), GetNetPlatform(platform), inputPath, convertedPath, true, true, false);
+#else
+			var args = new List<string> { "nnyeah", $"--input={inputPath}", $"--output={convertedPath}", $"--xamarin-assembly={GetLegacyPlatform(platform)}", 
+				$"--microsoft-assembly={GetNetPlatform(platform)}", "--force-overwrite"};
+			Execution execution = await Execution.RunAsync (DotNet.Executable, args, null, mergeOutput: true, workingDirectory: tmpDir);
+			Assert.Zero (execution.ExitCode, $"Nnyeah Output: {execution.StandardOutput}");
+#endif
+		}
+
+		async Task InstallNnyeah (string dir)
+		{
+#if !NNYEAH_IN_PROCESS
+			var args = new List<string> { "new", "tool-manifest" };
+			Execution execution = await Execution.RunAsync (DotNet.Executable, args, null, mergeOutput: true, workingDirectory: dir);
+			Assert.Zero (execution.ExitCode, execution.StandardOutput!.ToString());
+
+			args = new List<string> { "tool", "install", "nnyeah", "--local", "--add-source", NnyeahNupkg };
+			execution = await Execution.RunAsync (DotNet.Executable, args, null, mergeOutput: true, workingDirectory: dir);
+			Assert.Zero (execution.ExitCode, execution.StandardOutput!.ToString());
+#endif
+		}
+
 		// [Test]
 		// [TestCase("API/macOSIntegration.csproj", "API/bin/Debug/macOSIntegration.dll", "Consumer/macOS/macOS.csproj", ApplePlatform.MacOSX)]
 		// [TestCase("API/iOSIntegration.csproj", "API/bin/Debug/iOSIntegration.dll", "Consumer/ios/ios.csproj", ApplePlatform.iOS)]
@@ -66,10 +94,10 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 			string inputPath = Path.Combine (IntegrationRoot, libraryPath);
 			string convertedPath = Path.Combine (convertedDir, Path.GetFileName (libraryPath));
 
-			var args = new List<string> { Nnyeah, $"--input={inputPath}", $"--output={convertedPath}", $"--xamarin-assembly={GetLegacyPlatform(platform)}", 
-				$"--microsoft-assembly={GetNETPlatform(platform)}", "--force-overwrite"};
-			Execution execution = await Execution.RunAsync (DotNet.Executable, args, null, mergeOutput: true);
-			Assert.Zero (execution.ExitCode, $"Nnyeah Output: {execution.StandardOutput}");
+			var tmpDir = Cache.CreateTemporaryDirectory ("BuildAndRunSynthetic");
+
+			await InstallNnyeah (tmpDir);
+			await ExecuteNnyeah (tmpDir, inputPath, convertedPath, platform);
 
 			DotNet.AssertBuild (Path.Combine (IntegrationRoot, consumerProject));
 		}
@@ -78,28 +106,26 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 		// [TestCase("https://api.nuget.org/v3-flatcontainer/xamarin.forms.googlemaps/3.3.0/xamarin.forms.googlemaps.3.3.0.nupkg", "lib/Xamarin.iOS10/Xamarin.Forms.GoogleMaps.iOS.dll", ApplePlatform.iOS)]
 		public async Task NugetExamples (string downloadUrl, string libraryPath, ApplePlatform platform)
 		{
-			var dir = Cache.CreateTemporaryDirectory ("NugetExamples");
+			var tmpDir = Cache.CreateTemporaryDirectory ("NugetExamples");
 
 			// Remove the leading / from the download uri
-			var nupkgPath = Path.Combine (dir, downloadUrl.Split ('/').Last());
-			var nugetPath = Path.Combine (dir, libraryPath);
+			var nupkgPath = Path.Combine (tmpDir, downloadUrl.Split ('/').Last());
+			var nugetPath = Path.Combine (tmpDir, libraryPath);
 
 			using (var client = new HttpClient()) {
 				var response = await client.GetAsync (downloadUrl);
 				var fs = new FileStream (nupkgPath, FileMode.CreateNew);
 				await response.Content.CopyToAsync(fs);
 			}
-			System.IO.Compression.ZipFile.ExtractToDirectory (nupkgPath, dir);
+			System.IO.Compression.ZipFile.ExtractToDirectory (nupkgPath, tmpDir);
 
-			string convertedDir = Path.Combine (dir, "Converted");
+			string convertedDir = Path.Combine (tmpDir, "Converted");
 			Directory.CreateDirectory (convertedDir);
 
 			string convertedPath = Path.Combine (convertedDir, Path.GetFileName (libraryPath));
 
-			var args = new List<string> { Nnyeah, $"--input={nugetPath}", $"--output={convertedPath}", $"--xamarin-assembly={GetLegacyPlatform(platform)}", 
-				$"--microsoft-assembly={GetNETPlatform(platform)}", "--force-overwrite"};
-			Execution execution = await Execution.RunAsync (DotNet.Executable, args, null, mergeOutput: true);
-			Assert.Zero (execution.ExitCode, $"Nnyeah Output: {execution.StandardOutput}");
+			await InstallNnyeah (tmpDir);
+			await ExecuteNnyeah (tmpDir, nugetPath, convertedPath, platform);
 		}
 	}
 }
