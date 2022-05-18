@@ -694,6 +694,8 @@ namespace ObjCRuntime {
 				var ex = tie.InnerException ?? tie;
 				// This will re-throw the original exception and preserve the stacktrace.
 				ExceptionDispatchInfo.Capture (ex).Throw ();
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (8042, e, Errors.MX8042 /* An exception occurred while trying to invoke the function {0}: {1}. */, GetMethodFullName (method), e.Message);
 			}
 
 			// Copy any byref parameters back out again
