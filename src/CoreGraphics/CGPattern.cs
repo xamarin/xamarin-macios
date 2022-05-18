@@ -105,7 +105,7 @@ namespace CoreGraphics {
 		public CGPattern (CGRect bounds, CGAffineTransform matrix, nfloat xStep, nfloat yStep, CGPatternTiling tiling, bool isColored, DrawPattern drawPattern)
 		{
 			if (drawPattern == null)
-				throw new ArgumentNullException (nameof (drawPattern));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (drawPattern));
 
 			gch = GCHandle.Alloc (drawPattern);
 			Handle = CGPatternCreate (GCHandle.ToIntPtr (gch), bounds, matrix, xStep, yStep, tiling, isColored, ref callbacks);
