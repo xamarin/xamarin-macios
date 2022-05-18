@@ -397,7 +397,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				result = NewNfloatTypeReference;
 				return true;
 			} else if (ModuleMap.TryGetMappedType (typeAsString, out var mappedType)) {
-				result = mappedType;
+				result = ModuleToEdit.ImportReference (mappedType);
 				return true;
 			} else if (type.IsGenericInstance) {
 				return TryReworkGenericType ((GenericInstanceType) type, nativeTypes, out result);
@@ -474,27 +474,27 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 		}
 
-		static Instruction ChangeTypeInstruction (Instruction instruction, TypeDefinition typeDef)
+		Instruction ChangeTypeInstruction (Instruction instruction, TypeReference typeReference)
 		{
 			if (instruction.Operand is TypeReference) {
-				return Instruction.Create (instruction.OpCode, typeDef);
+				return Instruction.Create (instruction.OpCode, ModuleToEdit.ImportReference (typeReference));
 			}
 			// should never happen
 			throw new ArgumentException (nameof (instruction));
 		}
 
-		static Instruction ChangeMemberInstruction (Instruction instruction, IMemberDefinition member)
+		Instruction ChangeMemberInstruction (Instruction instruction, IMemberDefinition member)
 		{
 			switch (member) {
 			case MethodDefinition method:
 				if (instruction.Operand is MethodReference) {
-					return Instruction.Create (instruction.OpCode, method);
+					return Instruction.Create (instruction.OpCode, ModuleToEdit.ImportReference (method));
 				}
 				// should never happen
 				throw new ArgumentException (nameof (instruction));
 			case FieldDefinition field:
 				if (instruction.Operand is FieldReference) {
-					return Instruction.Create (instruction.OpCode, field);
+					return Instruction.Create (instruction.OpCode, ModuleToEdit.ImportReference (field));
 				}
 				// should never happen
 				throw new ArgumentException (nameof (instruction));
