@@ -91,14 +91,11 @@ namespace Xharness.Jenkins {
 		{
 			if (!project.IsExecutableProject)
 				return false;
-			// if explicitly enabled via a label, it is included.
-			if (TestSelection.IsEnabled (project.Label))
-				return true;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
 				return false;
 
-			return true;
+			return TestSelection.IsEnabled (project.Label)
 		}
 
 		public bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
