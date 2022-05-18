@@ -26,7 +26,9 @@ namespace WebKit {
 
 		public T Current {
 			get {
-				return _container! [_index];
+				if (_container is null)
+					throw new ObjectDisposedException (nameof (_container));
+				return _container [_index];
 			}
 		}
 
