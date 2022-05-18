@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -114,9 +117,10 @@ namespace CoreGraphics {
 		static void DrawCallback (IntPtr voidptr, IntPtr cgcontextptr)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (voidptr);
-			DrawPattern draw_pattern = (DrawPattern) gch.Target;
-			using (var ctx = new CGContext (cgcontextptr, false))
-				draw_pattern (ctx);
+			if (gch.Target is DrawPattern draw_pattern) {
+				using (var ctx = new CGContext (cgcontextptr, false))
+					draw_pattern (ctx);
+			}
 		}
 
 #if !MONOMAC
