@@ -115,6 +115,10 @@ namespace Xamarin.Linker {
 					// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
 					Application.RootAssemblies.Add (value);
 					break;
+				case "AOTArgument":
+					if (!string.IsNullOrEmpty (value))
+						Application.AotArguments.Add (value);
+					break;
 				case "AOTCompiler":
 					AOTCompiler = value;
 					break;
@@ -380,6 +384,7 @@ namespace Xamarin.Linker {
 			if (Verbosity > 0) {
 				Console.WriteLine ($"LinkerConfiguration:");
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
+				Console.WriteLine ($"    AOTArguments: {string.Join (", ", Application.AotArguments)}");
 				Console.WriteLine ($"    AOTOutputDirectory: {AOTOutputDirectory}");
 				Console.WriteLine ($"    AppBundleManifestPath: {Application.InfoPListPath}");
 				Console.WriteLine ($"    AreAnyAssembliesTrimmed: {Application.AreAnyAssembliesTrimmed}");

@@ -4104,5 +4104,14 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8041", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception occurred while trying to invoke the function {0}: {1}..
+        /// </summary>
+        public static string MX8042 {
+            get {
+                return ResourceManager.GetString("MX8042", resourceCulture);
+            }
+        }
     }
 }
