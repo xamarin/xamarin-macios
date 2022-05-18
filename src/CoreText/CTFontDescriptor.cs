@@ -374,9 +374,9 @@ namespace CoreText {
 		public bool Enabled {
 			get {
 				var value = (NSNumber) Dictionary [CTFontDescriptorAttributeKey.Enabled];
-					if (value is null)
-						return false;
-					return value.Int32Value != 0;
+				if (value is null)
+					return false;
+				return value.Int32Value != 0;
 			}
 			set {
 				Adapter.SetValue (Dictionary, CTFontDescriptorAttributeKey.Enabled!, value ? new NSNumber (1) : null);
