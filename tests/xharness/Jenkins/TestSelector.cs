@@ -26,7 +26,11 @@ namespace Xharness.Jenkins {
 
 		public bool ForceExtensionBuildOnly { get; set; }
 
-		public TestLabel SelectedTests => selection;
+		public TestLabel SelectedTests {
+			get => selection;
+			set => selection = value;
+		}
+		
 		public PlatformLabel SelectedPlatforms => platform;
 
 		public void SetEnabled (TestLabel label, bool enable)
@@ -225,13 +229,13 @@ namespace Xharness.Jenkins {
 
 			if (labels.Contains ("skip-all-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-all-tests' is set.", testname);
-				selection.SetEnabled (testname, false);
+				selection.SelectedTests = TestLabel.None;
 				return true;
 			}
 
 			if (labels.Contains ("run-all-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-all-tests' is set.", testname);
-				selection.SetEnabled (testname, true);
+				selection.SelectedTests = TestLabel.All;
 				return true;
 			}
 			// respect any default value
