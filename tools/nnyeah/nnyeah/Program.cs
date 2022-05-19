@@ -23,8 +23,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 			try {
 				Main2 (args);
 				return 0;
-			} catch (ConversionException c) {
-				Console.Error.WriteLine (c.Message);
+			} catch (Exception e) {
+				Console.Error.WriteLine (e.Message);
 				return 1;
 			}
 		}
