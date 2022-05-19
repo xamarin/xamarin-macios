@@ -305,30 +305,20 @@ namespace Xharness.Jenkins {
 
 			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
 
-			// disabled by default
-			SetEnabled (labels, "mtouch", selection); 
-			SetEnabled (labels, "mmp", selection); 
-			SetEnabled (labels, "bcl", selection); 
-			SetEnabled (labels, "btouch", selection); 
-			SetEnabled (labels, "mac-binding-project", selection); 
-			SetEnabled (labels, "ios-extensions", selection); 
-			SetEnabled (labels, "device", selection); 
-			SetEnabled (labels, "xtro", selection); 
-			SetEnabled (labels, "cecil", selection); 
-			SetEnabled (labels, "old-simulator", selection); 
-			SetEnabled (labels, "dotnet", selection); 
-			SetEnabled (labels, "all", selection); 
+			// loop over all possible tests
+			foreach (var label in TestLabel.None.GetLabels ()) {
+				SetEnabled (labels, label, selection); 
+			}
 
-			// enabled by default
+			// manually done instead of a loop because order does matter
 			SetEnabled (labels, "ios-32",  selection); 
 			SetEnabled (labels, "ios-64", selection); 
 			SetEnabled (labels, "ios", selection); 
 			SetEnabled (labels, "tvos", selection); 
 			SetEnabled (labels, "watchos", selection); 
 			SetEnabled (labels, "mac", selection); 
-			SetEnabled (labels, "msbuild", selection); 
+			SetEnabled (labels, "maccatalyst", selection); 
 			SetEnabled (labels, "ios-simulator", selection); 
-			SetEnabled (labels, "monotouch", selection); 
 
 			if (SetEnabled (labels, "system-permission", selection))
 				Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission); 

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 #nullable enable
 
@@ -127,6 +129,16 @@ namespace Xharness {
 
 			label = default;
 			return false;
+		}
+		
+		public static IEnumerable<string> GetLabels<T> (this T self) where T : Enum
+		{
+			var enumType = self.GetType ();
+			foreach (var obj in Enum.GetValues (enumType)) {
+				 var name = Enum.GetName(typeof(T), obj);
+				 var attr = enumType.GetField (name).GetCustomAttribute<LabelAttribute> ();
+				 yield return attr.Label;
+			}
 		}
 	}
 }
