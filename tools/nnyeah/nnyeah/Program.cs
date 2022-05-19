@@ -7,8 +7,30 @@ using Mono.Cecil;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.MaciOS.Nnyeah {
+	public class ConversionException : Exception {
+		public ConversionException (string message) : base (message)
+		{
+		}
+
+		public ConversionException (string message, params object? [] args) : base (string.Format(message, args))
+		{
+		}
+	}
+
 	public class Program {
-		static void Main (string [] args)
+		static int Main (string [] args)
+		{
+			try {
+				Main2 (args);
+				return 0;
+			}
+			catch (ConversionException c) {
+				Console.Error.WriteLine (c.Message);
+				return 1;
+			}
+		}
+
+		static void Main2 (string [] args)
 		{
 			var doHelp = false;
 			string? infile = null, outfile = null;
@@ -35,22 +57,20 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 
 			if (infile is null || outfile is null) {
-				Console.Error.WriteLine (Errors.E0014);
-				Environment.Exit (1);
+				throw new ConversionException (Errors.E0014);
 			}
 
 			// TODO - Long term this should default to files packaged within the tool but allow overrides
 			if (xamarinAssembly is null || microsoftAssembly is null) {
-				Console.Error.WriteLine (Errors.E0015);
-				Environment.Exit (1);
+				throw new ConversionException (Errors.E0015);
 			}
 
 			if (doHelp) {
 				PrintOptions (options, Console.Out);
-				Environment.Exit (0);
 			}
-			ProcessAssembly (xamarinAssembly!, microsoftAssembly!, infile!,
-				outfile!, verbose, forceOverwrite, suppressWarnings);
+			else {
+				ProcessAssembly (xamarinAssembly!, microsoftAssembly!, infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
+			}
 		}
 
 		public static void ProcessAssembly (string xamarinAssembly,
@@ -134,9 +154,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 				return Reworker.CreateReworker (stm, moduleContainer, typeMap);
 			} catch (Exception e) {
-				Console.Error.WriteLine (Errors.E0003, infile, e.Message);
-				Environment.Exit (1);
-				throw;
+				throw new ConversionException (Errors.E0003, infile, e.Message);
 			}
 		}
 
@@ -149,13 +167,11 @@ namespace Microsoft.MaciOS.Nnyeah {
 			var transforms = new List<string> ();
 
 			if (!File.Exists (infile)) {
-				Console.Error.WriteLine (Errors.E0001, infile);
-				Environment.Exit (1);
+				throw new ConversionException (Errors.E0001, infile);
 			}
 
 			if (File.Exists (outfile) && !forceOverwrite) {
-				Console.Error.WriteLine (Errors.E0002, outfile);
-				Environment.Exit (1);
+				throw new ConversionException (Errors.E0002, outfile);
 			}
 
 			if (CreateReworker (infile, typeMap, xamarinModule, microsoftModule) is Reworker reworker) {
@@ -172,14 +188,11 @@ namespace Microsoft.MaciOS.Nnyeah {
 						warnings.ForEach (Console.WriteLine);
 					}
 				} catch (TypeNotFoundException e) {
-					Console.Error.Write (Errors.E0012, e.TypeName);
-					Environment.Exit (1);
+					throw new ConversionException (Errors.E0012, e.TypeName);
 				} catch (MemberNotFoundException e) {
-					Console.Error.WriteLine (Errors.E0013, e.MemberName);
-					Environment.Exit (1);
+					throw new ConversionException (Errors.E0013, e.MemberName);
 				} catch (Exception e) {
-					Console.Error.WriteLine (Errors.E0004, e.Message);
-					Environment.Exit (1);
+					throw new ConversionException (Errors.E0004, e.Message);
 				}
 			} else {
 				if (verbose) {
@@ -193,15 +206,12 @@ namespace Microsoft.MaciOS.Nnyeah {
 			try {
 				var stm = new FileStream (path, FileMode.Open, FileAccess.Read);
 				if (stm is null) {
-					Console.Error.WriteLine (Errors.E0006, path, "");
-					Environment.Exit (1);
+					throw new ConversionException (Errors.E0006, path, "");
 				}
 				return stm;
 			} catch (Exception e) {
-				Console.Error.WriteLine (Errors.E0006, path, e.Message);
-				Environment.Exit (1);
+				throw new ConversionException (Errors.E0006, path, e.Message);
 			}
-			return new MemoryStream (); // never reached, thanks code analysis
 		}
 
 		static void PrintOptions (OptionSet options, TextWriter writer)
