@@ -12,6 +12,7 @@ resources:
       branches:
       - main
       - release/*
+      - net7.0
       stages:
       - prepare_release
 
