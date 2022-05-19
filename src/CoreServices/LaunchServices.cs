@@ -19,6 +19,8 @@
 //
 // NOTE: KEEP IN SYNC WITH TESTS!
 
+#nullable enable
+
 #if MONOMAC
 
 using System;
@@ -98,7 +100,7 @@ namespace CoreServices
 #else
 		[Mac (10, 10)]
 #endif
-		public static NSUrl GetDefaultApplicationUrlForUrl (NSUrl url, LSRoles roles = LSRoles.All)
+		public static NSUrl? GetDefaultApplicationUrlForUrl (NSUrl url, LSRoles roles = LSRoles.All)
 		{
 			if (url == null)
 				throw new ArgumentNullException (nameof (url));
@@ -121,7 +123,7 @@ namespace CoreServices
 #else
 		[Mac (10, 10)]
 #endif
-		public static NSUrl GetDefaultApplicationUrlForContentType (string contentType, LSRoles roles = LSRoles.All)
+		public static NSUrl? GetDefaultApplicationUrlForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
 			if (contentType == null)
 				throw new ArgumentNullException (nameof (contentType));
@@ -208,7 +210,7 @@ namespace CoreServices
 			return LSOpenCFURLRef (url.Handle, (void **)0);
 		}
 
-		public unsafe static LSResult Open (NSUrl url, out NSUrl launchedUrl)
+		public unsafe static LSResult Open (NSUrl url, out NSUrl? launchedUrl)
 		{
 			if (url == null)
 				throw new ArgumentNullException (nameof (url));
@@ -241,7 +243,7 @@ namespace CoreServices
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyAllRoleHandlersForContentType (IntPtr inContentType, LSRoles inRole);
 
-		public static string [] GetAllRoleHandlersForContentType (string contentType, LSRoles roles = LSRoles.All)
+		public static string?[]? GetAllRoleHandlersForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
 			if (contentType == null)
 				throw new ArgumentNullException (nameof (contentType));
@@ -305,7 +307,7 @@ namespace CoreServices
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetApplicationUrlsForUrl' instead.")]
 #endif
-		public static string [] GetAllHandlersForUrlScheme (string urlScheme)
+		public static string?[]? GetAllHandlersForUrlScheme (string urlScheme)
 		{
 			if (urlScheme == null)
 				throw new ArgumentNullException (nameof (urlScheme));
