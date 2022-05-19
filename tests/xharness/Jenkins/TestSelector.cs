@@ -26,6 +26,13 @@ namespace Xharness.Jenkins {
 
 		public bool ForceExtensionBuildOnly { get; set; }
 
+		public TestLabel SelectedTests {
+			get => selection;
+			set => selection = value;
+		}
+		
+		public PlatformLabel SelectedPlatforms => platform;
+
 		public void SetEnabled (TestLabel label, bool enable)
 		{
 			if (enable) {
@@ -222,13 +229,13 @@ namespace Xharness.Jenkins {
 
 			if (labels.Contains ("skip-all-tests")) {
 				MainLog.WriteLine ("Disabled '{0}' tests because the label 'skip-all-tests' is set.", testname);
-				selection.SetEnabled (testname, false);
+				selection.SelectedTests = TestLabel.None;
 				return true;
 			}
 
 			if (labels.Contains ("run-all-tests")) {
 				MainLog.WriteLine ("Enabled '{0}' tests because the label 'run-all-tests' is set.", testname);
-				selection.SetEnabled (testname, true);
+				selection.SelectedTests = TestLabel.All;
 				return true;
 			}
 			// respect any default value
@@ -298,34 +305,20 @@ namespace Xharness.Jenkins {
 
 			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
 
-			// disabled by default
-			SetEnabled (labels, "mtouch", selection); 
-			SetEnabled (labels, "mmp", selection); 
-			SetEnabled (labels, "bcl", selection); 
-			SetEnabled (labels, "bcl-xunit", selection); 
-			SetEnabled (labels, "bcl-nunit", selection); 
-			SetEnabled (labels, "mscorlib", selection); 
-			SetEnabled (labels, "btouch", selection); 
-			SetEnabled (labels, "mac-binding-project", selection); 
-			SetEnabled (labels, "ios-extensions", selection); 
-			SetEnabled (labels, "device", selection); 
-			SetEnabled (labels, "xtro", selection); 
-			SetEnabled (labels, "cecil", selection); 
-			SetEnabled (labels, "old-simulator", selection); 
-			SetEnabled (labels, "dotnet", selection); 
-			SetEnabled (labels, "all", selection); 
+			// loop over all possible tests
+			foreach (var label in TestLabel.None.GetLabels ()) {
+				SetEnabled (labels, label, selection); 
+			}
 
-			// enabled by default
+			// manually done instead of a loop because order does matter
 			SetEnabled (labels, "ios-32",  selection); 
 			SetEnabled (labels, "ios-64", selection); 
 			SetEnabled (labels, "ios", selection); 
 			SetEnabled (labels, "tvos", selection); 
 			SetEnabled (labels, "watchos", selection); 
 			SetEnabled (labels, "mac", selection); 
-			SetEnabled (labels, "msbuild", selection); 
+			SetEnabled (labels, "maccatalyst", selection); 
 			SetEnabled (labels, "ios-simulator", selection); 
-			SetEnabled (labels, "non-monotouch", selection); 
-			SetEnabled (labels, "monotouch", selection); 
 
 			if (SetEnabled (labels, "system-permission", selection))
 				Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission); 
