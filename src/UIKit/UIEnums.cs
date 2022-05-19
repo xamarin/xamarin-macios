@@ -101,7 +101,7 @@ namespace UIKit {
 	} 
 
 	// NSUInteger -> UIControl.h
-	[Native]
+	[Native ("UIControlEvents")]
 	[Flags]
 	[NoWatch]
 	public enum UIControlEvent : ulong {
@@ -670,7 +670,7 @@ namespace UIKit {
 	}
 
 	// NSInteger -> UITableViewCell.h
-	[Native]
+	[Native ("UITableViewCellAccessoryType")]
 	[NoWatch]
 	public enum UITableViewCellAccessory : long {
 		None,                
@@ -683,7 +683,7 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UITableViewCell.h
-	[Native]
+	[Native ("UITableViewCellStateMask")]
 	[Flags]
 	[NoWatch]
 	public enum UITableViewCellState : ulong {
@@ -764,7 +764,7 @@ namespace UIKit {
 	}
 
 	// NSUInteger -> UIApplication.h
-	[Native]
+	[Native ("UIDataDetectorTypes")]
 	[Flags]
 	[NoTV][NoWatch]
 	public enum UIDataDetectorType : ulong {
@@ -2597,7 +2597,7 @@ namespace UIKit {
 
 	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[iOS (13,4), NoWatch, TV (13,4)]
-	[Native]
+	[Native ("UIKeyboardHIDUsage")]
 	public enum UIKeyboardHidUsage : long {
 		KeyboardErrorRollOver = 1,
 		KeyboardPostFail = 2,

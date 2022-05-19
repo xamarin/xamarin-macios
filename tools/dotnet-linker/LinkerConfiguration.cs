@@ -57,6 +57,8 @@ namespace Xamarin.Linker {
 
 		Dictionary<string, List<MSBuildItem>> msbuild_items = new Dictionary<string, List<MSBuildItem>> ();
 
+		internal PInvokeWrapperGenerator PInvokeWrapperGenerationState;
+
 		public static LinkerConfiguration GetInstance (LinkContext context, bool createIfNotFound = true)
 		{
 			if (!configurations.TryGetValue (context, out var instance) && createIfNotFound) {
@@ -112,6 +114,10 @@ namespace Xamarin.Linker {
 				case "AssemblyName":
 					// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
 					Application.RootAssemblies.Add (value);
+					break;
+				case "AOTArgument":
+					if (!string.IsNullOrEmpty (value))
+						Application.AotArguments.Add (value);
 					break;
 				case "AOTCompiler":
 					AOTCompiler = value;
@@ -230,6 +236,11 @@ namespace Xamarin.Linker {
 					break;
 				case "Registrar":
 					Application.ParseRegistrar (value);
+					break;
+				case "RequirePInvokeWrappers":
+					if (!TryParseOptionalBoolean (value, out var require_pinvoke_wrappers))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					Application.RequiresPInvokeWrappers = require_pinvoke_wrappers.Value;
 					break;
 				case "RuntimeConfigurationFile":
 					Application.RuntimeConfigurationFile = value;
@@ -373,6 +384,7 @@ namespace Xamarin.Linker {
 			if (Verbosity > 0) {
 				Console.WriteLine ($"LinkerConfiguration:");
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
+				Console.WriteLine ($"    AOTArguments: {string.Join (", ", Application.AotArguments)}");
 				Console.WriteLine ($"    AOTOutputDirectory: {AOTOutputDirectory}");
 				Console.WriteLine ($"    AppBundleManifestPath: {Application.InfoPListPath}");
 				Console.WriteLine ($"    AreAnyAssembliesTrimmed: {Application.AreAnyAssembliesTrimmed}");
@@ -401,6 +413,7 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    RelativeAppBundlePath: {RelativeAppBundlePath}");
 				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
 				Console.WriteLine ($"    RuntimeConfigurationFile: {Application.RuntimeConfigurationFile}");
+				Console.WriteLine ($"    RequirePInvokeWrappers: {Application.RequiresPInvokeWrappers}");
 				Console.WriteLine ($"    SdkDevPath: {Driver.SdkRoot}");
 				Console.WriteLine ($"    SdkRootDirectory: {SdkRootDirectory}");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");

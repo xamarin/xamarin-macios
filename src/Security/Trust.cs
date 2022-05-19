@@ -72,7 +72,7 @@ namespace Security {
 		public SecTrust (X509Certificate certificate, SecPolicy? policy)
 		{
 			if (certificate is null)
-				throw new ArgumentNullException (nameof (certificate));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 
 			using (SecCertificate cert = new SecCertificate (certificate)) {
 				Initialize (cert.Handle, policy);
@@ -82,7 +82,7 @@ namespace Security {
 		public SecTrust (X509Certificate2 certificate, SecPolicy? policy)
 		{
 			if (certificate is null)
-				throw new ArgumentNullException (nameof (certificate));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 
 			using (SecCertificate cert = new SecCertificate (certificate)) {
 				Initialize (cert.Handle, policy);
@@ -92,7 +92,7 @@ namespace Security {
 		public SecTrust (X509CertificateCollection certificates, SecPolicy? policy)
 		{
 			if (certificates is null)
-				throw new ArgumentNullException (nameof (certificates));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificates));
 
 			SecCertificate[] array = new SecCertificate [certificates.Count];
 			int i = 0;
@@ -104,7 +104,7 @@ namespace Security {
 		public SecTrust (X509Certificate2Collection certificates, SecPolicy? policy)
 		{
 			if (certificates is null)
-				throw new ArgumentNullException (nameof (certificates));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificates));
 
 			SecCertificate[] array = new SecCertificate [certificates.Count];
 			int i = 0;

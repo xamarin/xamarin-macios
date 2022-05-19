@@ -78,7 +78,7 @@ namespace MediaPlayer {
 	[NoTV]
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
-	[Native]
+	[Native ("MPMovieMediaTypeMask")]
 	[Flags]
 	public enum MPMovieMediaType : long {
 		None = 0,

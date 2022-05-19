@@ -13,7 +13,7 @@ namespace ReplayKit {
 	[iOS (9,0)]
 	[TV (10,0)]
 	[Mac (11,0)]
-	[Native]
+	[Native ("RPRecordingErrorCode")]
 	[ErrorDomain ("RPRecordingErrorDomain")]
 	public enum RPRecordingError : long {
 		None = 0,

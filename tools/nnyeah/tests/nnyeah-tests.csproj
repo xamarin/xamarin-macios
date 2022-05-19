@@ -17,7 +17,16 @@
   <ItemGroup>
     <Compile Include="../../common/Execution.cs" Link="Execution.cs" />
     <Compile Include="../../common/StringUtils.cs" Link="StringUtils.cs" />
+    <Compile Include="../../common/TargetFramework.cs" Link="TargetFramework.cs" />
+    <Compile Include="../../common/ApplePlatform.cs" Link="ApplePlatform.cs" />
 
     <Compile Include="../../../tests/mtouch/Cache.cs" Link="Cache.cs" />
+    <Compile Include="../../../tests/common/Configuration.cs" Link="Configuration.cs" />
+    <Compile Include="../../../tests/common/Profile.cs" Link="Profile.cs" />
+    <Compile Include="../../../tests/common/ExecutionHelper.cs" Link="ExecutionHelper.cs" />
+    <Compile Include="../../../tests/common/DotNet.cs" Link="DotNet.cs" />    
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nnyeah\nnyeah.csproj" />
   </ItemGroup>
 </Project>

@@ -16213,11 +16213,20 @@ namespace AppKit {
 #endif
 
 #if NET
+		[Sealed]
+		[Export ("addToolTipRect:owner:userData:")]
+		nint AddToolTip (CGRect rect, NSObject owner, IntPtr userData);
+#endif
+
+#if NET
 		[Wrap ("AddToolTip (rect, owner, IntPtr.Zero)")]
 #else
 		[Wrap ("AddToolTip (rect, (NSObject)owner, IntPtr.Zero)")]
 #endif
 		nint AddToolTip (CGRect rect, INSToolTipOwner owner);
+
+		[Wrap ("AddToolTip (rect, owner, IntPtr.Zero)")]
+		nint AddToolTip (CGRect rect, NSObject owner);
 
 		[Export ("removeToolTip:")]
 		void RemoveToolTip (nint tag);

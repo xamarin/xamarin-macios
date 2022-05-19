@@ -9,45 +9,36 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.MaciOS.Nnyeah.AssemblyComparator;
 
 namespace Microsoft.MaciOS.Nnyeah {
-	public class Reworker {
-		Stream stm;
-		ModuleDefinition module = EmptyModule;
-		TypeDefinition embeddedAttributeTypeDef = EmptyTypeDefinition;
-		TypeDefinition nativeIntegerAttributeTypeDef = EmptyTypeDefinition;
-		TypeReference nativeIntegerAttributeTypeRef = EmptyTypeReference;
-		TypeReference compilerGeneratedAttributeTypeRef = EmptyTypeReference;
-		TypeReference embeddedAttributeTypeRef = EmptyTypeReference;
-		TypeReference nintTypeReference = EmptyTypeReference;
-		TypeReference nuintTypeReference = EmptyTypeReference;
-		TypeReference nfloatTypeReference = EmptyTypeReference;
-		TypeReference newNfloatTypeReference = EmptyTypeReference;
-		ModuleReference newNfloatModuleReference = EmptyModuleReference;
-		TypeDefinition newNativeHandleTypeDefinition = EmptyTypeDefinition;
-		TypeAndMemberMap moduleMap;
 
-		Dictionary<string, Transformation> methodSubs = new Dictionary<string, Transformation> ();
-		Dictionary<string, Transformation> fieldSubs = new Dictionary<string, Transformation> ();
+	public class Reworker {
+		// Module does not copy it's input stream, so we'll keep it referenced here
+		// to prevent 'Cannot access a closed file' crashes with Cecil
+		FileStream Stream;
+		ModuleContainer Modules;
+		ModuleDefinition ModuleToEdit => Modules.ModuleToEdit;
+
+		TypeDefinition EmbeddedAttributeTypeDef;
+		TypeDefinition NativeIntegerAttributeTypeDef;
+		TypeReference NativeIntegerAttributeTypeRef;
+		TypeReference CompilerGeneratedAttributeTypeRef;
+		TypeReference EmbeddedAttributeTypeRef;
+		TypeReference NintTypeReference;
+		TypeReference NuintTypeReference;
+		TypeReference NfloatTypeReference;
+		TypeReference NewNfloatTypeReference;
+		TypeDefinition NewNativeHandleTypeDefinition;
+		AssemblyNameReference InteropServicesAssembly;
+
+		TypeAndMemberMap ModuleMap;
+
+		Dictionary<string, Transformation> MethodSubs;
+		Dictionary<string, Transformation> FieldSubs;
 
 		public event EventHandler<WarningEventArgs>? WarningIssued;
 		public event EventHandler<TransformEventArgs>? Transformed;
 
-		public Reworker (Stream stm, TypeAndMemberMap moduleMap)
+		public static bool NeedsReworking (ModuleDefinition module)
 		{
-			this.stm = stm;
-			this.moduleMap = moduleMap;
-		}
-
-		public void Load ()
-		{
-			if (module != EmptyModule)
-				return;
-			module = ModuleDefinition.ReadModule (stm);
-		}
-
-		public bool NeedsReworking ()
-		{
-			CheckModule ();
-
 			// simple predicate for seeing if there any references
 			// to types we need to care about.
 			// IntPtr is for future handling of types that
@@ -62,38 +53,227 @@ namespace Microsoft.MaciOS.Nnyeah {
 				);
 		}
 
-		void CheckModule ()
+		public static Reworker? CreateReworker (FileStream stream, ModuleContainer modules, TypeAndMemberMap moduleMap)
 		{
-			if (module == EmptyModule)
-				throw new Exception (Errors.E0005);
+			if (!NeedsReworking (modules.ModuleToEdit)) {
+				return null;
+			}
+			return new Reworker (stream, modules, moduleMap);
+		}
+
+		Reworker (FileStream stream, ModuleContainer modules, TypeAndMemberMap moduleMap)
+		{
+			Stream = stream;
+			Modules = modules;
+			ModuleMap = moduleMap;
+
+			CompilerGeneratedAttributeTypeRef = FetchFromSystemRuntime (ModuleToEdit, "System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
+			EmbeddedAttributeTypeDef = ModuleToEdit.Types.FirstOrDefault (td => td.FullName == "Microsoft.CodeAnalysis.EmbeddedAttribute")
+				?? MakeEmbeddedAttribute (ModuleToEdit);
+
+			EmbeddedAttributeTypeRef = ModuleToEdit.ImportReference (new TypeReference (EmbeddedAttributeTypeDef.Namespace,
+				EmbeddedAttributeTypeDef.Name, EmbeddedAttributeTypeDef.Module, EmbeddedAttributeTypeDef.Scope));
+
+
+			NativeIntegerAttributeTypeDef = ModuleToEdit.Types.FirstOrDefault (td => td.FullName == "System.Runtime.CompilerServices.NativeIntegerAttribute")
+				?? MakeNativeIntegerAttribute (ModuleToEdit, EmbeddedAttributeTypeRef);
+
+			NativeIntegerAttributeTypeRef = new TypeReference (NativeIntegerAttributeTypeDef.Namespace,
+				NativeIntegerAttributeTypeDef.Name, NativeIntegerAttributeTypeDef.Module, NativeIntegerAttributeTypeDef.Scope);
+
+			if (modules.MicrosoftModule.AssemblyReferences.FirstOrDefault (an => an.Name == "System.Runtime.InteropServices") is AssemblyNameReference validReference) {
+				InteropServicesAssembly = validReference;
+			} else {
+				throw new NotSupportedException ($"Assembly {modules.MicrosoftModule.Name} does not have reference to System.Runtime.InteropServices. This is not possible.");
+			}
+
+			// if these type references aren't found in the module
+			// then we don't ever need to worry about reworking them
+			// and EmptyTypeReference is a fine substitute.
+			if (!ModuleToEdit.TryGetTypeReference ("System.nint", out NintTypeReference)) {
+				NintTypeReference = EmptyTypeReference;
+			}
+			if (!ModuleToEdit.TryGetTypeReference ("System.nuint", out NuintTypeReference)) {
+				NuintTypeReference = EmptyTypeReference;
+			}
+			if (!ModuleToEdit.TryGetTypeReference ("System.nfloat", out NfloatTypeReference)) {
+				NfloatTypeReference = EmptyTypeReference;
+				NewNfloatTypeReference = EmptyTypeReference;
+			} else {
+				NewNfloatTypeReference = ModuleToEdit.ImportReference (new TypeReference ("System.Runtime.InteropServices", "NFloat", null, InteropServicesAssembly, true));
+			}
+			NewNativeHandleTypeDefinition = modules.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
+
+			// These must be called last as they depend on Module and NativeIntegerAttributeTypeRef to be setup
+			MethodSubs = LoadMethodSubs ();
+			FieldSubs = LoadFieldSubs ();
+		}
+
+		static TypeReference FetchFromSystemRuntime (ModuleDefinition module, string nameSpace, string typeName)
+		{
+			var type = module.GetTypeReferences ().FirstOrDefault (tr => tr.Namespace == nameSpace && tr.Name == typeName);
+			if (type is not null)
+				return type;
+
+			type = new TypeReference (nameSpace, typeName, module, new AssemblyNameReference ("System.Runtime", new Version ("6.0.0.0")));
+			return module.ImportReference (type);
+		}
+
+		static TypeDefinition MakeEmbeddedAttribute (ModuleDefinition module)
+		{
+			// make type definition
+			var typeDef = new TypeDefinition ("Microsoft.CodeAnalysis", "EmbeddedAttribute",
+				TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.NotPublic | TypeAttributes.Sealed,
+				module.TypeSystem.Object);
+			module.Types.Add (typeDef);
+			// make reference
+			var embeddedAttributeTypeRef = module.ImportReference (new TypeReference (typeDef.Namespace, typeDef.Name, typeDef.Module, typeDef.Scope));
+
+			// add inheritance
+			typeDef.BaseType = module.ImportReference (typeof (Attribute));
+
+			// add [CompilerGenerated]
+			var attr_CompilerGenerated_1 = new CustomAttribute (module.ImportReference (typeof (System.Runtime.CompilerServices.CompilerGeneratedAttribute).GetConstructor (new Type [0] { })));
+			typeDef.CustomAttributes.Add (attr_CompilerGenerated_1);
+
+			// add default constructor
+			var ctor = new MethodDefinition (".ctor", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName,
+				module.TypeSystem.Void);
+			typeDef.Methods.Add (ctor);
+			var il_ctor_4 = ctor.Body.GetILProcessor ();
+			il_ctor_4.Emit (OpCodes.Ldarg_0);
+			il_ctor_4.Emit (OpCodes.Call, module.ImportReference (DefaultCtorFor (typeDef.BaseType)));
+			il_ctor_4.Emit (OpCodes.Ret);
+
+			// add [EmbeddedAttribute] - requires both the constructor above and the type ref
+			var embeddedAttr = new CustomAttribute (new MethodReference (".ctor", module.TypeSystem.Void, embeddedAttributeTypeRef));
+			typeDef.CustomAttributes.Add (embeddedAttr);
+
+			return typeDef;
+		}
+
+		static TypeDefinition MakeNativeIntegerAttribute (ModuleDefinition module, TypeReference embeddedAttributeTypeRef)
+		{
+			var typeDef = new TypeDefinition ("System.Runtime.CompilerServices", "NativeIntegerAttribute", TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.NotPublic | TypeAttributes.Sealed, module.TypeSystem.Object);
+			module.Types.Add (typeDef);
+			typeDef.BaseType = module.ImportReference (typeof (Attribute));
+
+			// add [CompilerGenerated]
+			var attr_CompilerGenerated = new CustomAttribute (module.ImportReference (typeof (System.Runtime.CompilerServices.CompilerGeneratedAttribute).GetConstructor (new Type [0] { })));
+			typeDef.CustomAttributes.Add (attr_CompilerGenerated);
+
+			// add [Embedded]
+			var attr_Embedded = new CustomAttribute (new MethodReference (".ctor", module.TypeSystem.Void, embeddedAttributeTypeRef));
+			typeDef.CustomAttributes.Add (attr_Embedded);
+
+			// add [AttributeUsage(...)]
+			var attr_AttributeUsage = new CustomAttribute (module.ImportReference (typeof (System.AttributeUsageAttribute).GetConstructor (new Type [1] { typeof (AttributeTargets) })));
+			attr_AttributeUsage.ConstructorArguments.Add (new CustomAttributeArgument (module.ImportReference (typeof (AttributeTargets)), AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Parameter | AttributeTargets.ReturnValue | AttributeTargets.GenericParameter));
+			attr_AttributeUsage.Properties.Add (new CustomAttributeNamedArgument ("AllowMultiple", new CustomAttributeArgument (module.TypeSystem.Boolean, false)));
+			attr_AttributeUsage.Properties.Add (new CustomAttributeNamedArgument ("Inherited", new CustomAttributeArgument (module.TypeSystem.Boolean, false)));
+			typeDef.CustomAttributes.Add (attr_AttributeUsage);
+
+			var transformFlags = new FieldDefinition ("TransformFlags", FieldAttributes.Public, module.TypeSystem.Boolean.MakeArrayType ());
+			typeDef.Fields.Add (transformFlags);
+
+			// default ctor
+			var defaultCtor = new MethodDefinition (".ctor", MethodAttributes.Public | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName | MethodAttributes.HideBySig, module.TypeSystem.Void);
+			typeDef.Methods.Add (defaultCtor);
+			defaultCtor.Body.InitLocals = true;
+			var il_defaultCtor = defaultCtor.Body.GetILProcessor ();
+			il_defaultCtor.Emit (OpCodes.Ldarg_0);
+			il_defaultCtor.Emit (OpCodes.Call, module.ImportReference (DefaultCtorFor (typeDef.BaseType)));
+			il_defaultCtor.Emit (OpCodes.Nop);
+			il_defaultCtor.Emit (OpCodes.Ldarg_0);
+			il_defaultCtor.Emit (OpCodes.Ldc_I4_1);
+			il_defaultCtor.Emit (OpCodes.Newarr, module.TypeSystem.Boolean);
+			il_defaultCtor.Emit (OpCodes.Dup);
+			il_defaultCtor.Emit (OpCodes.Ldc_I4_0);
+			il_defaultCtor.Emit (OpCodes.Ldc_I4_1);
+			il_defaultCtor.Emit (OpCodes.Stelem_I1);
+			il_defaultCtor.Emit (OpCodes.Stfld, transformFlags);
+			il_defaultCtor.Emit (OpCodes.Ret);
+
+			// ctor (byte[] P_0)
+			var arrayCtor = new MethodDefinition (".ctor", MethodAttributes.Public | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName | MethodAttributes.HideBySig,
+				module.TypeSystem.Void);
+			typeDef.Methods.Add (arrayCtor);
+			arrayCtor.Body.InitLocals = true;
+			var il_arrayCtor = arrayCtor.Body.GetILProcessor ();
+			il_arrayCtor.Emit (OpCodes.Ldarg_0);
+			il_arrayCtor.Emit (OpCodes.Call, module.ImportReference (DefaultCtorFor (typeDef.BaseType)));
+
+			//Parameters of 'public NativeIntegerAttribute(bool[] P_0)'
+			var p_P_0_14 = new ParameterDefinition ("P_0", ParameterAttributes.None, module.TypeSystem.Boolean.MakeArrayType ());
+			arrayCtor.Parameters.Add (p_P_0_14);
+
+			//TransformFlags = P_0;
+			var Ldarg_0_15 = il_arrayCtor.Create (OpCodes.Ldarg_0);
+			il_arrayCtor.Append (Ldarg_0_15);
+			il_arrayCtor.Emit (OpCodes.Ldarg_1);
+			il_arrayCtor.Emit (OpCodes.Stfld, transformFlags);
+			il_arrayCtor.Emit (OpCodes.Ret);
+
+			return typeDef;
+		}
+
+		CustomAttribute NativeIntAttribute (List<bool> nativeTypes)
+		{
+			var nativeIntAttr = new CustomAttribute (new MethodReference (".ctor", Modules.TypeSystem.Void, NativeIntegerAttributeTypeRef));
+			if (nativeTypes.Count > 1) {
+				var boolArrayParameter = new ParameterDefinition (Modules.TypeSystem.Boolean.MakeArrayType ());
+				nativeIntAttr.Constructor.Parameters.Add (boolArrayParameter);
+				var boolArray = nativeTypes.Select (b => new CustomAttributeArgument (Modules.TypeSystem.Boolean, b)).ToArray ();
+				nativeIntAttr.ConstructorArguments.Add (new CustomAttributeArgument (Modules.TypeSystem.Boolean.MakeArrayType (), boolArray));
+			}
+			return nativeIntAttr;
+		}
+
+		Dictionary<string, Transformation> LoadMethodSubs ()
+		{
+			var methodSubSource = new MethodTransformations ();
+			var subs = methodSubSource.GetTransforms (Modules, NativeIntAttribute);
+
+			return subs;
+		}
+
+		Dictionary<string, Transformation> LoadFieldSubs ()
+		{
+			var fieldSubSource = new FieldTransformations ();
+			var subs = fieldSubSource.GetTransforms (ModuleToEdit);
+
+			return subs;
 		}
 
 		public void Rework (Stream stm)
 		{
-			CheckModule ();
-
-			// get the types that we need to refer to later
-			FetchCompilerGeneratedAttributeTypeRef ();
-			AddEmbeddedAttributeIfNeeded ();
-			AddNativeIntegerAttributeIfNeeded ();
-			module.TryGetTypeReference ("System.nint", out nintTypeReference);
-			module.TryGetTypeReference ("System.nuint", out nuintTypeReference);
-			module.TryGetTypeReference ("System.nfloat", out nfloatTypeReference);
-			newNfloatModuleReference = new ModuleReference ("System.Private.CoreLib");
-			newNfloatTypeReference = new TypeReference ("System.Runtime.InteropServices",
-				"NFloat", null, newNfloatModuleReference, true);
-			newNativeHandleTypeDefinition = moduleMap.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
-
-			// load the substitutions
-			methodSubs = LoadMethodSubs ();
-			fieldSubs = LoadFieldSubs ();
-
-			foreach (var type in module.Types) {
+			foreach (var type in ModuleToEdit.Types) {
 				ReworkType (type);
 			}
-
-			module.Write (stm);
+			RemoveXamarinReferences ();
+			ModuleToEdit.Write (stm);
 			stm.Flush ();
+		}
+
+		void RemoveXamarinReferences ()
+		{
+			for (int i = ModuleToEdit.AssemblyReferences.Count - 1; i >= 0; i--) {
+				if (IsXamarinReference (ModuleToEdit.AssemblyReferences [i])) {
+					ModuleToEdit.AssemblyReferences.RemoveAt (i);
+				}
+			}
+		}
+
+		static HashSet<string> XamarinAssemblyNames = new HashSet<string> () {
+			"Xamarin.Mac",
+			"Xamarin.iOS",
+			"Xamarin.TVOS",
+			"Xamarin.WatchOS",
+		};
+
+		static bool IsXamarinReference (AssemblyNameReference reference)
+		{
+			return XamarinAssemblyNames.Contains (reference.Name);
 		}
 
 		void ReworkType (TypeDefinition definition)
@@ -187,21 +367,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 			ReworkMethods (EventMethods (@event));
 		}
 
-		CustomAttribute NativeIntAttribute (List<bool> nativeTypes)
-		{
-			var nativeIntAttr = new CustomAttribute (new MethodReference (".ctor", module.TypeSystem.Void, nativeIntegerAttributeTypeRef));
-			if (nativeTypes.Count > 1) {
-				var boolArrayParameter = new ParameterDefinition (module.TypeSystem.Boolean.MakeArrayType ());
-				nativeIntAttr.Constructor.Parameters.Add (boolArrayParameter);
-				var boolArray = nativeTypes.Select (b =>
-					new CustomAttributeArgument (module.TypeSystem.Boolean, b)).ToArray ();
-
-				nativeIntAttr.ConstructorArguments.Add (new CustomAttributeArgument (module.TypeSystem.Boolean.MakeArrayType (),
-					boolArray));
-			}
-			return nativeIntAttr;
-		}
-
 		bool TryReworkTypeReference (TypeReference type, List<bool> nativeTypes, [NotNullWhen (returnValue: true)] out TypeReference result)
 		{
 			// what happens here? if the type gets changed, the flag will get set to true
@@ -212,28 +377,27 @@ namespace Microsoft.MaciOS.Nnyeah {
 			// For any of nint, nuint, this will set the particular bool to true, false otherwise.
 			// This list will get passed to NativeIntegerAttribute, which is the special sauce
 			// that lets the runtime tell the difference between IntPtr and nint.
-
 			var typeAsString = type.ToString ();
 
-			if (moduleMap.TypeIsNotPresent (typeAsString)) {
+			if (ModuleMap.TypeIsNotPresent (typeAsString)) {
 				throw new TypeNotFoundException (typeAsString);
 			}
 
-			if (type == module.TypeSystem.IntPtr || type == module.TypeSystem.UIntPtr) {
+			if (type == Modules.TypeSystem.IntPtr || type == Modules.TypeSystem.UIntPtr) {
 				nativeTypes.Add (false);
 				result = type;
 				return false;
-			} else if (type == nintTypeReference || type == nuintTypeReference) {
+			} else if (type == NintTypeReference || type == NuintTypeReference) {
 				nativeTypes.Add (true);
-				result = type == nintTypeReference ? module.TypeSystem.IntPtr : module.TypeSystem.UIntPtr;
+				result = type == NintTypeReference ? Modules.TypeSystem.IntPtr : Modules.TypeSystem.UIntPtr;
 				return true;
-			} else if (type == nfloatTypeReference) {
+			} else if (type == NfloatTypeReference) {
 				// changing the type to NFloat doesn't require changing the flags.
 				nativeTypes.Add (false);
-				result = newNfloatTypeReference;
+				result = NewNfloatTypeReference;
 				return true;
-			} else if (moduleMap.TryGetMappedType (typeAsString, out var mappedType)) {
-				result = mappedType;
+			} else if (ModuleMap.TryGetMappedType (typeAsString, out var mappedType)) {
+				result = ModuleToEdit.ImportReference (mappedType);
 				return true;
 			} else if (type.IsGenericInstance) {
 				return TryReworkGenericType ((GenericInstanceType) type, nativeTypes, out result);
@@ -273,17 +437,17 @@ namespace Microsoft.MaciOS.Nnyeah {
 			var changes = new List<Tuple<Instruction, Transformation>> ();
 			foreach (var instruction in body.Instructions) {
 				if (instruction.Operand?.ToString () is string operandText) {
-					if (moduleMap.TypeIsNotPresent (operandText)) {
+					if (ModuleMap.TypeIsNotPresent (operandText)) {
 						throw new TypeNotFoundException (operandText);
 					}
-					if (moduleMap.MemberIsNotPresent (operandText)) {
+					if (ModuleMap.MemberIsNotPresent (operandText)) {
 						throw new MemberNotFoundException (operandText);
 					}
-					if (moduleMap.TryGetMappedType (operandText, out var type)) {
+					if (ModuleMap.TryGetMappedType (operandText, out var type)) {
 						var newInstruction = ChangeTypeInstruction (instruction, type);
 						changes.Add (new Tuple<Instruction, Transformation> (instruction, new Transformation (operandText, newInstruction)));
 						continue;
-					} else if (moduleMap.TryGetMappedMember (operandText, out var member)) {
+					} else if (ModuleMap.TryGetMappedMember (operandText, out var member)) {
 						var newInstruction = ChangeMemberInstruction (instruction, member);
 						changes.Add (new Tuple<Instruction, Transformation> (instruction, new Transformation (operandText, newInstruction)));
 						continue;
@@ -310,27 +474,27 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 		}
 
-		static Instruction ChangeTypeInstruction (Instruction instruction, TypeDefinition typeDef)
+		Instruction ChangeTypeInstruction (Instruction instruction, TypeReference typeReference)
 		{
 			if (instruction.Operand is TypeReference) {
-				return Instruction.Create (instruction.OpCode, typeDef);
+				return Instruction.Create (instruction.OpCode, ModuleToEdit.ImportReference (typeReference));
 			}
 			// should never happen
 			throw new ArgumentException (nameof (instruction));
 		}
 
-		static Instruction ChangeMemberInstruction (Instruction instruction, IMemberDefinition member)
+		Instruction ChangeMemberInstruction (Instruction instruction, IMemberDefinition member)
 		{
 			switch (member) {
 			case MethodDefinition method:
 				if (instruction.Operand is MethodReference) {
-					return Instruction.Create (instruction.OpCode, method);
+					return Instruction.Create (instruction.OpCode, ModuleToEdit.ImportReference (method));
 				}
 				// should never happen
 				throw new ArgumentException (nameof (instruction));
 			case FieldDefinition field:
 				if (instruction.Operand is FieldReference) {
-					return Instruction.Create (instruction.OpCode, field);
+					return Instruction.Create (instruction.OpCode, ModuleToEdit.ImportReference (field));
 				}
 				// should never happen
 				throw new ArgumentException (nameof (instruction));
@@ -352,7 +516,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				result = null;
 				return false;
 			}
-			if (instr.Operand is MethodReference method && methodSubs.TryGetValue (method.ToString (), out result)) {
+			if (instr.Operand is MethodReference method && MethodSubs.TryGetValue (method.ToString (), out result)) {
 				return true;
 			}
 			result = null;
@@ -367,145 +531,11 @@ namespace Microsoft.MaciOS.Nnyeah {
 				result = null;
 				return false;
 			}
-			if (instr.Operand is FieldReference field && fieldSubs.TryGetValue (field.ToString (), out result)) {
+			if (instr.Operand is FieldReference field && FieldSubs.TryGetValue (field.ToString (), out result)) {
 				return true;
 			}
 			result = null;
 			return false;
-		}
-
-		void FetchCompilerGeneratedAttributeTypeRef ()
-		{
-			compilerGeneratedAttributeTypeRef = FetchFromSystemRuntime ("System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
-		}
-
-		TypeReference FetchFromSystemRuntime (string nameSpace, string typeName)
-		{
-			var type = module.GetTypeReferences ().FirstOrDefault (tr => tr.Namespace == nameSpace && tr.Name == typeName);
-			if (type is not null)
-				return type;
-			type = new TypeReference (nameSpace, typeName, module, new AssemblyNameReference ("System.Runtime", new Version ("6.0.0.0")));
-			var finalReference = module.ImportReference (type);
-			return finalReference;
-		}
-
-		void AddEmbeddedAttributeIfNeeded ()
-		{
-			embeddedAttributeTypeDef = module.Types.FirstOrDefault (td => td.FullName == "Microsoft.CodeAnalysis.EmbeddedAttribute")
-				?? MakeEmbeddedAttribute ();
-			if (embeddedAttributeTypeRef is null)
-				embeddedAttributeTypeRef = module.ImportReference (new TypeReference (embeddedAttributeTypeDef.Namespace,
-					embeddedAttributeTypeDef.Name, embeddedAttributeTypeDef.Module, embeddedAttributeTypeDef.Scope));
-		}
-
-		TypeDefinition MakeEmbeddedAttribute ()
-		{
-			// make type definition
-			var typeDef = new TypeDefinition ("Microsoft.CodeAnalysis", "EmbeddedAttribute",
-				TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.NotPublic | TypeAttributes.Sealed,
-				module.TypeSystem.Object);
-			module.Types.Add (typeDef);
-			// make reference
-			embeddedAttributeTypeRef = module.ImportReference (new TypeReference (typeDef.Namespace, typeDef.Name, typeDef.Module, typeDef.Scope));
-
-			// add inheritance
-			typeDef.BaseType = module.ImportReference (typeof (Attribute));
-
-			// add [CompilerGenerated]
-			var attr_CompilerGenerated_1 = new CustomAttribute (module.ImportReference (typeof (System.Runtime.CompilerServices.CompilerGeneratedAttribute).GetConstructor (new Type [0] { })));
-			typeDef.CustomAttributes.Add (attr_CompilerGenerated_1);
-
-			// add default constructor
-			var ctor = new MethodDefinition (".ctor", MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName,
-				module.TypeSystem.Void);
-			typeDef.Methods.Add (ctor);
-			var il_ctor_4 = ctor.Body.GetILProcessor ();
-			il_ctor_4.Emit (OpCodes.Ldarg_0);
-			il_ctor_4.Emit (OpCodes.Call, module.ImportReference (DefaultCtorFor (typeDef.BaseType)));
-			il_ctor_4.Emit (OpCodes.Ret);
-
-			// add [EmbeddedAttribute] - requires both the constructor above and the type ref
-			var embeddedAttr = new CustomAttribute (new MethodReference (".ctor", module.TypeSystem.Void, embeddedAttributeTypeRef));
-			typeDef.CustomAttributes.Add (embeddedAttr);
-
-			return typeDef;
-		}
-
-		void AddNativeIntegerAttributeIfNeeded ()
-		{
-			nativeIntegerAttributeTypeDef = module.Types.FirstOrDefault (td => td.FullName == "System.Runtime.CompilerServices.NativeIntegerAttribute")
-				?? MakeNativeIntegerAttribute ();
-
-			if (nativeIntegerAttributeTypeRef is null) {
-				nativeIntegerAttributeTypeRef = new TypeReference (nativeIntegerAttributeTypeDef.Namespace,
-					nativeIntegerAttributeTypeDef.Name, nativeIntegerAttributeTypeDef.Module,
-					nativeIntegerAttributeTypeDef.Scope);
-			}
-		}
-
-		TypeDefinition MakeNativeIntegerAttribute ()
-		{
-			var typeDef = new TypeDefinition ("System.Runtime.CompilerServices", "NativeIntegerAttribute", TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.NotPublic | TypeAttributes.Sealed, module.TypeSystem.Object);
-			module.Types.Add (typeDef);
-			typeDef.BaseType = module.ImportReference (typeof (Attribute));
-
-			// add [CompilerGenerated]
-			var attr_CompilerGenerated = new CustomAttribute (module.ImportReference (typeof (System.Runtime.CompilerServices.CompilerGeneratedAttribute).GetConstructor (new Type [0] { })));
-			typeDef.CustomAttributes.Add (attr_CompilerGenerated);
-
-			// add [Embedded]
-			var attr_Embedded = new CustomAttribute (new MethodReference (".ctor", module.TypeSystem.Void, embeddedAttributeTypeRef));
-			typeDef.CustomAttributes.Add (attr_Embedded);
-
-			// add [AttributeUsage(...)]
-			var attr_AttributeUsage = new CustomAttribute (module.ImportReference (typeof (System.AttributeUsageAttribute).GetConstructor (new Type [1] { typeof (AttributeTargets) })));
-			attr_AttributeUsage.ConstructorArguments.Add (new CustomAttributeArgument (module.ImportReference (typeof (AttributeTargets)), AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Parameter | AttributeTargets.ReturnValue | AttributeTargets.GenericParameter));
-			attr_AttributeUsage.Properties.Add (new CustomAttributeNamedArgument ("AllowMultiple", new CustomAttributeArgument (module.TypeSystem.Boolean, false)));
-			attr_AttributeUsage.Properties.Add (new CustomAttributeNamedArgument ("Inherited", new CustomAttributeArgument (module.TypeSystem.Boolean, false)));
-			typeDef.CustomAttributes.Add (attr_AttributeUsage);
-
-			var transformFlags = new FieldDefinition ("TransformFlags", FieldAttributes.Public, module.TypeSystem.Boolean.MakeArrayType ());
-			typeDef.Fields.Add (transformFlags);
-
-			// default ctor
-			var defaultCtor = new MethodDefinition (".ctor", MethodAttributes.Public | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName | MethodAttributes.HideBySig, module.TypeSystem.Void);
-			typeDef.Methods.Add (defaultCtor);
-			defaultCtor.Body.InitLocals = true;
-			var il_defaultCtor = defaultCtor.Body.GetILProcessor ();
-			il_defaultCtor.Emit (OpCodes.Ldarg_0);
-			il_defaultCtor.Emit (OpCodes.Call, module.ImportReference (DefaultCtorFor (typeDef.BaseType)));
-			il_defaultCtor.Emit (OpCodes.Nop);
-			il_defaultCtor.Emit (OpCodes.Ldarg_0);
-			il_defaultCtor.Emit (OpCodes.Ldc_I4_1);
-			il_defaultCtor.Emit (OpCodes.Newarr, module.TypeSystem.Boolean);
-			il_defaultCtor.Emit (OpCodes.Dup);
-			il_defaultCtor.Emit (OpCodes.Ldc_I4_0);
-			il_defaultCtor.Emit (OpCodes.Ldc_I4_1);
-			il_defaultCtor.Emit (OpCodes.Stelem_I1);
-			il_defaultCtor.Emit (OpCodes.Stfld, transformFlags);
-			il_defaultCtor.Emit (OpCodes.Ret);
-
-			// ctor (byte[] P_0)
-			var arrayCtor = new MethodDefinition (".ctor", MethodAttributes.Public | MethodAttributes.RTSpecialName | MethodAttributes.SpecialName | MethodAttributes.HideBySig,
-				module.TypeSystem.Void);
-			typeDef.Methods.Add (arrayCtor);
-			arrayCtor.Body.InitLocals = true;
-			var il_arrayCtor = arrayCtor.Body.GetILProcessor ();
-			il_arrayCtor.Emit (OpCodes.Ldarg_0);
-			il_arrayCtor.Emit (OpCodes.Call, module.ImportReference (DefaultCtorFor (typeDef.BaseType)));
-
-			//Parameters of 'public NativeIntegerAttribute(bool[] P_0)'
-			var p_P_0_14 = new ParameterDefinition ("P_0", ParameterAttributes.None, module.TypeSystem.Boolean.MakeArrayType ());
-			arrayCtor.Parameters.Add (p_P_0_14);
-
-			//TransformFlags = P_0;
-			var Ldarg_0_15 = il_arrayCtor.Create (OpCodes.Ldarg_0);
-			il_arrayCtor.Append (Ldarg_0_15);
-			il_arrayCtor.Emit (OpCodes.Ldarg_1);
-			il_arrayCtor.Emit (OpCodes.Stfld, transformFlags);
-			il_arrayCtor.Emit (OpCodes.Ret);
-
-			return typeDef;
 		}
 
 		static IEnumerable<MethodDefinition> PropMethods (PropertyDefinition prop)
@@ -543,25 +573,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 			return new MethodReference (".ctor", type.Module.TypeSystem.Void, type) { HasThis = true };
 		}
 
-		Dictionary<string, Transformation> LoadMethodSubs ()
-		{
-			var methodSubSource = new MethodTransformations ();
-			var subs = methodSubSource.GetTransforms (module, NativeIntAttribute);
-
-			return subs;
-		}
-
-		Dictionary<string, Transformation> LoadFieldSubs ()
-		{
-			var fieldSubSource = new FieldTransformations ();
-			var subs = fieldSubSource.GetTransforms (module);
-
-			return subs;
-		}
-
-		static TypeDefinition EmptyTypeDefinition = new TypeDefinition ("none", "still_none", TypeAttributes.NotPublic);
 		static TypeReference EmptyTypeReference = new TypeReference ("none", "still_none", null, null);
-		static ModuleDefinition EmptyModule = ModuleDefinition.CreateModule ("ThisIsNotARealModule", ModuleKind.Dll);
-		static ModuleReference EmptyModuleReference = new ModuleReference ("ThisIsNotARealModuleReference");
 	}
 }

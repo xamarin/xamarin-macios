@@ -423,6 +423,10 @@
         <value>{0}, {1} kodu ile çıkış yaptı
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>`{1}' çıkış dosyası daha yeni olduğundan `{0}' atlanıyor.
         </value>
@@ -1132,12 +1136,18 @@
         <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. '{1}={2}' meta verileri bir öğe için ayarlandı ancak diğer öğe için ayarlanmadı.</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. '{1}' meta verileri her bir öğe için değerler teşkil eder (bazen bu '{2}' olabilirken başka durumlarda ise '{3}' olabilir).</value>
+        <value>Kod imzalama işlemi '{0}' için farklı meta verilerle birden çok kez istendi. '{1}' meta verileri her bir öğe için farklı değerlere sahip (bazen bu '{2}' olabilirken başka durumlarda ise '{3}' olabilir).</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>UIDeviceFamily değeri '6' bu platform için geçerli değil. Yalnızca Mac Catalyst için geçerlidir.</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>UIDeviceFamily değeri '6', macOS 11.0 gerektirir. Lütfen proje dosyasındaki 'SupportedOSPlatformVersion' sürümünü en az 14.0 olarak ayarlayın (macOS 11.0'ın Mac Catalyst sürümüne eşdeğer). Geçerli değer: {0} (macOS {1} sürümüne eşdeğer).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Bağlama kaynak paketi bulunamadı: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>'{0}' değerine sahip bilinmeyen özellik '{1}'.</value>
     </data>
 </root>
