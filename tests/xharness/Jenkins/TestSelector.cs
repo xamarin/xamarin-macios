@@ -305,24 +305,28 @@ namespace Xharness.Jenkins {
 
 			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
 
-			// loop over all possible tests
-			foreach (var label in TestLabel.None.GetLabels ()) {
-				SetEnabled (labels, label, selection); 
+			// when parsing the labels, other matters, for example:
+			// 1. skip-all-tests, run-ios-tests
+			// 2. run-ios-tests, skip-all-tests
+			// the first example means that we start with all the tests disabled, and then we enable the ios tests
+			// the second examples means that we have all tests disable because the skip-all-tests is last
+			// In order to make this work we need to get the first label, decide if it is skip or run, then set it
+			var regexp = new Regex("(skip-|run-)(.*)(-tests)");
+			foreach (var label in labels) {
+				// use a regexp to parse the label, the possibilities are
+				// skip-*-tests
+				// run-*-tests
+				// if we have a match, we decide if we skip or run and set the label accordingly
+				if (!regexp.IsMatch (label))
+					continue;
+				var match = regexp.Match (label);
+				var skip = match.Groups [1].Value == "skip-";
+				selection.SetEnabled (match.Groups[2].Value, skip);
 			}
 
-			// manually done instead of a loop because order does matter
-			SetEnabled (labels, "ios-32",  selection); 
-			SetEnabled (labels, "ios-64", selection); 
-			SetEnabled (labels, "ios", selection); 
-			SetEnabled (labels, "tvos", selection); 
-			SetEnabled (labels, "watchos", selection); 
-			SetEnabled (labels, "mac", selection); 
-			SetEnabled (labels, "maccatalyst", selection); 
-			SetEnabled (labels, "ios-simulator", selection); 
+			Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission); 
 
-			if (SetEnabled (labels, "system-permission", selection))
-				Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission); 
-
+			// TODO: Do we use docs?
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
 			// - enabled by default if the current branch is main (or, for a pull request, if the target branch is main)
