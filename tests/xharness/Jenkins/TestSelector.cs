@@ -305,7 +305,7 @@ namespace Xharness.Jenkins {
 
 			MainLog.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
 
-			// when parsing the labels, other matters, for example:
+			// when parsing the labels, order matters, for example:
 			// 1. skip-all-tests, run-ios-tests
 			// 2. run-ios-tests, skip-all-tests
 			// the first example means that we start with all the tests disabled, and then we enable the ios tests
@@ -319,8 +319,10 @@ namespace Xharness.Jenkins {
 				// if we have a match, we decide if we skip or run and set the label accordingly
 				if (!regexp.IsMatch (label))
 					continue;
+				MainLog.WriteLine ($"Label {label} matches regexp.");
 				var match = regexp.Match (label);
 				var skip = match.Groups [1].Value == "skip-";
+				MainLog.WriteLine ($"Setting label {match.Groups[2].Value} to be enabled: {skip}");
 				selection.SetEnabled (match.Groups[2].Value, skip);
 			}
 
