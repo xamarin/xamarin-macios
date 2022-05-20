@@ -324,6 +324,7 @@ namespace Xharness.Jenkins {
 				var run = match.Groups [1].Value == "run-";
 				MainLog.WriteLine ($"Setting label {match.Groups[2].Value} to be enabled: {run}");
 				selection.SetEnabled (match.Groups[2].Value, !run);
+				MainLog.WriteLine ($"Selected tests are {selection.SelectedTests}");
 			}
 
 			Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission); 
@@ -332,7 +333,7 @@ namespace Xharness.Jenkins {
 			// docs is a bit special:
 			// - can only be executed if the Xamarin-specific parts of the build is enabled
 			// - enabled by default if the current branch is main (or, for a pull request, if the target branch is main)
-			var changed = SetEnabled (labels, "docs", selection);
+			/*var changed = SetEnabled (labels, "docs", selection);
 			if (Harness.ENABLE_XAMARIN) {
 				if (!changed) { // don't override any value set using labels
 					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
@@ -360,6 +361,7 @@ namespace Xharness.Jenkins {
 				selection.SetEnabled (PlatformLabel.OldiOSSimulator, true);
 				MainLog.WriteLine ("Enabled 'old-simulator' tests because we're using a beta Xcode.");
 			}
+			*/
 		}
 		
 		public void SelectTests (TestSelection selection)
