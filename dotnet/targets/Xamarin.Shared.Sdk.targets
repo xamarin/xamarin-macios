@@ -1808,6 +1808,60 @@
 
 	<Target Name="_PrepareRun" DependsOnTargets="$(_PrepareRunDependsOn)" BeforeTargets="Run" />
 
+	<!--
+		Add a 'global using nfloat = System.Runtime.InteropServices.NFloat' to ease migration from Xamarin.
+		We're not using a the Usings item group, because this code shows a warning in .NET 7:
+			The type name 'nfloat' only contains lower-cased ascii characters. Such names may become reserved for the language.
+		and we want to hide this warning.
+		Note: we only add this if compiling using C# 10 or later.
+		This code is a slightly modified version of this:
+		https://github.com/dotnet/sdk/blob/1eee82034899436f8ddb0e379612a32ce0dfb9e4/src/Tasks/Microsoft.NET.Build.Tasks/targets/Microsoft.NET.GenerateGlobalUsings.targets#L26-L55
+	-->
+	<!--
+		Note that this must run before every invocation of CoreCompile to ensure that all compiler
+		runs see the generated global usings. There is at least one scenario involving Xaml
+		where CoreCompile is invoked without other potential hooks such as Compile or CoreBuild,
+		etc., so we hook directly on to CoreCompile. Furthermore, we  must run *after*
+		PrepareForBuild to ensure that the intermediate directory has been created.
+
+		Targets that generate Compile items are also expected to run before
+		BeforeCompile targets (common targets convention).
+	-->
+	<Target Name="GenerateGlobalnfloatUsing"
+		BeforeTargets="BeforeCompile;CoreCompile"
+		AfterTargets="PrepareForBuild"
+		Condition="'$(Language)' == 'C#'
+						And '$(NoNFloatUsing)' != 'true'
+						And ('$(LangVersion)' == ''
+							Or '$(LangVersion)' == 'preview'
+							Or '$(LangVersion)' == 'latest'
+							Or '$(LangVersion)' == 'latestMajor'
+							Or '$(LangVersion)' == 'default'
+							Or $([MSBuild]::VersionGreaterThanOrEquals('$(LangVersion)','10.0'))
+					)">
+
+		<PropertyGroup>
+			<GeneratedNFloatGlobalUsingFile Condition="'$(GeneratedNFloatGlobalUsingsFile)' ==''">$(IntermediateOutputPath)$(MSBuildProjectName).nfloat.g$(DefaultLanguageSourceExtension)</GeneratedNFloatGlobalUsingFile>
+			<GeneratedNFloatGlobalUsing>
+#pragma warning disable CS8981
+global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
+#pragma warning restore CS8981
+			</GeneratedNFloatGlobalUsing>
+		</PropertyGroup>
+
+		<WriteLinesToFile
+			File="$(GeneratedNFloatGlobalUsingFile)"
+			Lines="$(GeneratedNFloatGlobalUsing)"
+			Overwrite="true"
+			WriteOnlyWhenDifferent="true" />
+
+		<ItemGroup>
+			<Compile Include="$(GeneratedNFloatGlobalUsingFile)" />
+			<!-- Performing a clean and waiting without a build results in build warnings in VS due to all the missing namespaces, so we'll avoid recording it in FileWrites -->
+		</ItemGroup>
+	</Target>
+
+
 	<!-- Import existing targets -->
 
 	<PropertyGroup>
