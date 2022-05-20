@@ -361,7 +361,7 @@ namespace CoreServices
 			ulong sinceWhenId, TimeSpan latency, FSEventStreamCreateFlags flags)
 			: this (new () {
 				Allocator = allocator,
-				NSPathsToWatch = pathsToWatch ?? ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pathsToWatch)),
+				NSPathsToWatch = pathsToWatch ?? throw new ArgumentNullException (nameof (pathsToWatch)),
 				SinceWhenId = sinceWhenId,
 				Latency = latency,
 				Flags = flags
@@ -371,7 +371,7 @@ namespace CoreServices
 
 		public FSEventStream (string [] pathsToWatch, TimeSpan latency, FSEventStreamCreateFlags flags)
 			: this (new () {
-				PathsToWatch = pathsToWatch ?? ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pathsToWatch)),
+				PathsToWatch = pathsToWatch ?? throw new ArgumentNullException (nameof (pathsToWatch)),
 				Latency = latency,
 				Flags = flags
 			})
