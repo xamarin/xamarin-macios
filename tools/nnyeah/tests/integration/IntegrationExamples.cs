@@ -84,7 +84,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 
 		[Test]
 		[TestCase ("API/macOSIntegration.csproj", "API/bin/Debug/macOSIntegration.dll", "Consumer/macOS/macOS.csproj", ApplePlatform.MacOSX)]
-		[TestCase("API/iOSIntegration.csproj", "API/bin/Debug/iOSIntegration.dll", "Consumer/ios/ios.csproj", ApplePlatform.iOS)]
+		[TestCase ("API/iOSIntegration.csproj", "API/bin/Debug/iOSIntegration.dll", "Consumer/ios/ios.csproj", ApplePlatform.iOS)]
 		public async Task BuildAndRunSynthetic (string libraryProject, string libraryPath, string consumerProject, ApplePlatform platform)
 		{
 			await AssertLegacyBuild (Path.Combine (IntegrationRoot, libraryProject), platform);
