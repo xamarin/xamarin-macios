@@ -148,7 +148,7 @@ namespace CoreFoundation {
 		public void SetRegistrationHandler (Action handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException ("handler");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			DispatchBlock.Invoke (
 				delegate {
@@ -170,7 +170,7 @@ namespace CoreFoundation {
 		public void SetCancelHandler (Action handler)
 		{
 			if (handler == null)
-				throw new ArgumentNullException ("handler");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			DispatchBlock.Invoke (
 				delegate {
@@ -580,7 +580,7 @@ namespace CoreFoundation {
 			public VnodeMonitor (string path, VnodeMonitorKind vnodeKind, DispatchQueue? queue = null)
 			{
 				if (path == null)
-					throw new ArgumentNullException ("path");
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 
 				fd = open (path, O_EVTONLY);
 				if (fd == -1)

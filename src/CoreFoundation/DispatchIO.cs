@@ -90,9 +90,9 @@ namespace CoreFoundation {
 		public static void Read (int fd, nuint size, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
 			if (handler is null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			if (dispatchQueue is null)
-				throw new ArgumentNullException (nameof (dispatchQueue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
@@ -107,11 +107,11 @@ namespace CoreFoundation {
 		public static void Write (int fd, DispatchData dispatchData, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
 			if (dispatchData is null)
-				throw new ArgumentNullException (nameof (dispatchData));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchData));
 			if (handler is null)
-				throw new ArgumentNullException (nameof (handler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			if (dispatchQueue is null)
-				throw new ArgumentNullException (nameof (dispatchQueue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);

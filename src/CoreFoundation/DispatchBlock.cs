@@ -57,21 +57,21 @@ namespace CoreFoundation {
 		public static DispatchBlock Create (Action action, DispatchBlockFlags flags = DispatchBlockFlags.None)
 		{
 			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			return new DispatchBlock (action, flags);
 		}
 
 		public static DispatchBlock Create (Action action, DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority)
 		{
 			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			return new DispatchBlock (action, flags, qosClass, relative_priority);
 		}
 
 		public static DispatchBlock Create (DispatchBlock block, DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority)
 		{
 			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 			return block.Create (flags, qosClass, relative_priority);
 		}
 
@@ -98,7 +98,7 @@ namespace CoreFoundation {
 		static IntPtr create (Action action, DispatchBlockFlags flags)
 		{
 			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
@@ -120,7 +120,7 @@ namespace CoreFoundation {
 		static IntPtr create (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority, Action action)
 		{
 			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
@@ -145,7 +145,7 @@ namespace CoreFoundation {
 		public void Notify (DispatchQueue queue, Action notification)
 		{
 			if (notification == null)
-				throw new ArgumentNullException (nameof (notification));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (notification));
 			using (var block = new DispatchBlock (notification))
 				Notify (queue, block);
 		}
@@ -153,9 +153,9 @@ namespace CoreFoundation {
 		public void Notify (DispatchQueue queue, DispatchBlock notification)
 		{
 			if (queue is null)
-				throw new ArgumentNullException (nameof (queue));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			if (notification == null)
-				throw new ArgumentNullException (nameof (notification));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (notification));
 			dispatch_block_notify (GetCheckedHandle (), queue.GetCheckedHandle (), notification.GetCheckedHandle ());
 		}
 

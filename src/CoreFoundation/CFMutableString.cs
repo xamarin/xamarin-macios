@@ -49,7 +49,7 @@ namespace CoreFoundation {
 		{
 			// not really needed - but it's consistant with other .ctor
 			if (@string == null)
-				throw new ArgumentNullException (nameof (@string));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@string));
 			// NSMallocException Out of memory. We suggest restarting the application. If you have an unsaved document, create a backup copy in Finder, then try to save.
 			if (maxLength < 0)
 				throw new ArgumentException (nameof (maxLength));
@@ -64,7 +64,7 @@ namespace CoreFoundation {
 		public CFMutableString (CFString theString, nint maxLength = default (nint))
 		{
 			if (theString == null)
-				throw new ArgumentNullException (nameof (theString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (theString));
 			// NSMallocException Out of memory. We suggest restarting the application. If you have an unsaved document, create a backup copy in Finder, then try to save.
 			if (maxLength < 0)
 				throw new ArgumentException (nameof (maxLength));
@@ -77,7 +77,7 @@ namespace CoreFoundation {
 		public void Append (string @string)
 		{
 			if (@string == null)
-				throw new ArgumentNullException (nameof (@string));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@string));
 			str = null; // destroy any cached value
 			CFStringAppendCharacters (Handle, @string, @string.Length);
 		}
@@ -115,7 +115,7 @@ namespace CoreFoundation {
 		bool Transform (ref CFRange range, IntPtr transform, bool reverse)
 		{
 			if (transform == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (transform));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (transform));
 			str = null; // destroy any cached value
 			return CFStringTransform (Handle, ref range, transform, reverse);
 		}
@@ -153,7 +153,7 @@ namespace CoreFoundation {
 		bool Transform (IntPtr transform, bool reverse)
 		{
 			if (transform == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (transform));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (transform));
 			str = null; // destroy any cached value
 			return CFStringTransform (Handle, IntPtr.Zero, transform, reverse);
 		}

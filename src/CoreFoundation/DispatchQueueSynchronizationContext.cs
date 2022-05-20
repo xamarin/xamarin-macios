@@ -42,7 +42,7 @@ namespace CoreFoundation {
 		public DispatchQueueSynchronizationContext (DispatchQueue dispatchQueue)
 		{
 			if (dispatchQueue is null)
-				throw new ArgumentNullException ("dispatchQueue");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 			this.queue = dispatchQueue;
 		}
 

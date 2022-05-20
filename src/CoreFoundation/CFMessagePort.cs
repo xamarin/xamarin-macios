@@ -216,7 +216,7 @@ namespace CoreFoundation {
 		public static CFMessagePort? CreateLocalPort (string? name, CFMessagePortCallBack callback, CFAllocator? allocator = null)
 		{
 			if (callback is null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 			
 			return CreateLocalPort (allocator, name, callback, context: null);
 		}
@@ -355,7 +355,7 @@ namespace CoreFoundation {
 		public static CFMessagePort? CreateRemotePort (CFAllocator? allocator, string name)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			var n = CFString.CreateNative (name);
 			try {
