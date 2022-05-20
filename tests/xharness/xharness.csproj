@@ -161,6 +161,7 @@
     <Compile Include="TestImporter\Xamarin\AssemblyLocator.cs" />
     <Compile Include="TestImporter\Xamarin\ProjectFilter.cs" />
     <Compile Include="TestImporter\Xamarin\TestAssemblyDefinition.cs" />
+    <Compile Include="TestLabel.cs" />
     <Compile Include="TestPlatform.cs" />
     <Compile Include="TestPlatformExtensions.cs" />
     <Compile Include="TestProject.cs" />

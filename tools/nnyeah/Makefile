@@ -6,6 +6,7 @@ all-local:: nnyeah/bin/Debug/net6.0/nnyeah.dll
 install-local:: all-local
 
 IOS_DLL=$(TOP)/src/build/ios/native-64/Xamarin.iOS.dll
+NUPKG_VERSION=$(shell grep '<PackageVersion>' nnyeah/nnyeah.csproj | sed 's_.*<PackageVersion>\(.*\)</PackageVersion>.*_\1_')
 
 $(IOS_DLL):
 	@echo "Thou shalt run 'make all' in the root directory first"
@@ -17,24 +18,23 @@ global.json: $(TOP)/global6.json
 # Example TEST_FILTER:
 #    TEST_FILTER="--filter FullyQualifiedName~BuildMyCocoaApp"
 # Docs: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test#filter-option-details
-run-tests: global.json
+run-tests:: global.json ./nupkg/nnyeah.$(NUPKG_VERSION).nupkg
 	$(DOTNET) test tests/nnyeah-tests.csproj $(TEST_FILTER)
 
 
-nnyeah/bin/Debug/net6.0/nnyeah.dll: $(IOS_DLL) $(wildcard **/*.cs) $(wildcard **/*.csproj) $(wildcard *.sln) Makefile  global.json
+nnyeah/bin/Debug/net6.0/nnyeah.dll: $(IOS_DLL) $(wildcard **/*.cs) $(wildcard **/*.csproj) $(wildcard *.sln) global.json
 	$(Q_BUILD) $(DOTNET) build "/bl:$@.binlog" /restore $(MSBUILD_VERBOSITY) $(wildcard *.sln)
 
 clean:
 	$(Q_BUILD) $(DOTNET) build "/bl:$@.binlog" /restore $(MSBUILD_VERBOSITY) /t:Clean $(wildcard *.sln)
 
-NUPKG_VERSION=$(shell grep '<PackageVersion>' nnyeah/nnyeah.csproj | sed 's_.*<PackageVersion>\(.*\)</PackageVersion>.*_\1_')
 
-nuget::
+./nupkg/nnyeah.$(NUPKG_VERSION).nupkg: nnyeah/bin/Debug/net6.0/nnyeah.dll
 	$(Q) $(DOTNET) pack nnyeah/nnyeah.csproj
 	$(Q) mkdir -p nupkg
 	$(Q) cp nnyeah/bin/Debug/nnyeah.$(NUPKG_VERSION).nupkg ./nupkg/nnyeah.$(NUPKG_VERSION).nupkg
 
-nuget-install:: nuget
+nuget-install:: ./nupkg/nnyeah.$(NUPKG_VERSION).nupkg
 	$(Q) dotnet tool install --add-source ./nupkg -g nnyeah
 
 nuget-uninstall::
