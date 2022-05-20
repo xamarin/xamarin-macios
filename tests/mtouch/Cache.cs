@@ -19,7 +19,7 @@ namespace Xamarin
 
 		static Cache ()
 		{
-			root = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), "tmp-test-dir");
+			root = Path.Combine (Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location)!, "tmp-test-dir");
 			if (Directory.Exists (root)) {
 				var movedRoot = root + DateTime.UtcNow.Ticks.ToString () + "-deletion-in-progress";
 				// The temporary directory can be big, and it can take a while to clean it out.
@@ -50,7 +50,7 @@ namespace Xamarin
 			if (string.IsNullOrEmpty (name)) {
 				var calling_method = new System.Diagnostics.StackFrame (1).GetMethod ();
 				if (calling_method is not null) {
-					name = calling_method.DeclaringType.FullName + "." + calling_method.Name;
+					name = calling_method.DeclaringType!.FullName + "." + calling_method.Name;
 				} else {
 					name = "unknown-test";
 				}

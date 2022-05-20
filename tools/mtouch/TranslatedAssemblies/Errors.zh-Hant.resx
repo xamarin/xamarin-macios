@@ -1232,6 +1232,9 @@
 		<value>在 '{0}' 中找到無效的 BindAsAttribute: 找不到 {1} 的基礎列舉類型。請前往 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 報告
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>登錄器在方法 '{1}' 的簽章中找到無效的類型 '{0}': 該介面必須具有指定其包裝函式類型的 Protocol 屬性。
 		</value>

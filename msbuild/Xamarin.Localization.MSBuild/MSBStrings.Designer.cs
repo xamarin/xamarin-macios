@@ -638,6 +638,16 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} exited with code {1}:
+        ///{2}.
+        /// </summary>
+        public static string E0118 {
+            get {
+                return ResourceManager.GetString("E0118", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error saving `{0}&apos;: {1}
         ///        .
         /// </summary>
