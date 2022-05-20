@@ -155,7 +155,7 @@ namespace CoreFoundation {
 		public void SetTargetQueue (DispatchQueue queue)
 		{
 			// note: null is allowed because DISPATCH_TARGET_QUEUE_DEFAULT is defined as NULL (dispatch/queue.h)
-			IntPtr q = queue is null ? IntPtr.Zero : queue.Handle;
+			IntPtr q = queue.GetHandle ();
 			dispatch_set_target_queue (Handle, q);
 		}
 
