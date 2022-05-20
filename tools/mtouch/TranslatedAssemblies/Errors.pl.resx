@@ -1232,6 +1232,9 @@
 		<value>Odnaleziono nieprawidłowy atrybut BindAsAttribute w elemencie „{0}”: nie można odnaleźć podstawowego typu wyliczeniowego {1}. Zarejestruj raport o usterce w witrynie https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Rejestrator odnalazł nieprawidłowy typ „{0}” w sygnaturze dla metody „{1}”: interfejs musi mieć atrybut protokołu określający jego typ otoki.
 		</value>

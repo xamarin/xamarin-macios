@@ -14,6 +14,9 @@ steps:
       $branch=$branch.Replace("refs", "origin")
       Write-Host "Checking out branch $branch"
       git checkout $branch
+      git submodule update --recursive --init
+      git clean -xffd
+      git submodule foreach --recursive git clean -xffd
       $hash = git rev-parse HEAD
       Write-Host "##vso[task.setvariable variable=GIT_HASH;isOutput=true]$hash"
     name: fix_commit

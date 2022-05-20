@@ -5,6 +5,7 @@
     <RootNamespace>ceciltests</RootNamespace>
     <AssemblyName>cecil-tests</AssemblyName>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

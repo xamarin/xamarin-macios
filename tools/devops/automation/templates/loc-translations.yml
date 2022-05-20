@@ -52,7 +52,7 @@ steps:
     git push origin --delete Localization
 
     git checkout -b Localization
-    git push origin Localization
+    git push --force-with-lease origin Localization
   displayName: "Create a new Localization branch from main"
   workingDirectory: $(Build.SourcesDirectory)
 
