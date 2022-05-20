@@ -22,7 +22,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 
 		public static async Task<string> CompileText (string text, string outputFile, PlatformName platformName, bool isLibrary)
 		{
-			var dir = Cache.CreateTemporaryDirectory ();
+			var dir = Cache.CreateTemporaryDirectory ("CompileText");
 			var outputCSFile = Path.Combine (dir, "LibraryFile.cs");
 			File.WriteAllText (outputCSFile, text);
 			return await Compile (outputFile, platformName, isLibrary, dir, outputCSFile);
