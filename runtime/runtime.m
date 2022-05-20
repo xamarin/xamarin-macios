@@ -2548,12 +2548,17 @@ xamarin_vm_initialize ()
 {
 	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
 	char *icu_dat_file_path = NULL;
+	int subtractPropertyCount = 0;
 
-	char path [1024];
-	if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
-		LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
+	if (xamarin_icu_dat_file_name != NULL && *xamarin_icu_dat_file_name != 0) {
+		char path [1024];
+		if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
+			LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
+		} else {
+			icu_dat_file_path = path;
+		}
 	} else {
-		icu_dat_file_path = path;
+		subtractPropertyCount++;
 	}
 
 	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
@@ -2565,23 +2570,23 @@ xamarin_vm_initialize ()
 		"APP_CONTEXT_BASE_DIRECTORY", // path to where the managed assemblies are (usually at least - RID-specific assemblies will be in subfolders)
 		"APP_PATHS",
 		"PINVOKE_OVERRIDE",
-		"ICU_DAT_FILE_PATH",
 		"TRUSTED_PLATFORM_ASSEMBLIES",
 		"NATIVE_DLL_SEARCH_DIRECTORIES",
 		"RUNTIME_IDENTIFIER",
+		"ICU_DAT_FILE_PATH", // Must be last.
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
-		icu_dat_file_path,
 		trusted_platform_assemblies,
 		native_dll_search_directories,
 		RUNTIMEIDENTIFIER,
+		icu_dat_file_path, // might be NULL, if so we say we're passing one property less that what we really are (to skip this last one). This also means that this property must be the last one
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
-	int propertyCount = sizeof (propertyValues) / sizeof (propertyValues [0]);
+	int propertyCount = (int) (sizeof (propertyValues) / sizeof (propertyValues [0])) - subtractPropertyCount;
 	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
 	xamarin_free (pinvokeOverride);
 
