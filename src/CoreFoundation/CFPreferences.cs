@@ -10,6 +10,8 @@
 //
 // Note: currently only the "high level" API is bound
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -30,7 +32,7 @@ namespace CoreFoundation
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFPreferencesCopyAppValue (IntPtr key, IntPtr applicationId);
 
-		public static readonly NSString CurrentApplication;
+		public static readonly NSString? CurrentApplication;
 
 		/*public static readonly NSString AnyApplication;
 		public static readonly NSString CurrentHost;
@@ -50,12 +52,14 @@ namespace CoreFoundation
 			AnyUser = Dlfcn.GetStringConstant (handle, "kCFPreferencesAnyUser");*/
 		}
 
-		public static object GetAppValue (string key)
+		public static object? GetAppValue (string key)
 		{
+			if (CurrentApplication is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (CurrentApplication));
 			return GetAppValue (key, CurrentApplication);
 		}
 
-		public static object GetAppValue (string key, string applicationId)
+		public static object? GetAppValue (string key, string applicationId)
 		{
 			if (applicationId == null) {
 				throw new ArgumentNullException ("applicationId");
@@ -66,7 +70,7 @@ namespace CoreFoundation
 			}
 		}
 
-		public static object GetAppValue (string key, NSString applicationId)
+		public static object? GetAppValue (string key, NSString applicationId)
 		{
 			if (key == null) {
 				throw new ArgumentNullException ("key");
@@ -94,10 +98,12 @@ namespace CoreFoundation
 
 		public static void SetAppValue (string key, object value)
 		{
+			if (CurrentApplication is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (CurrentApplication));
 			SetAppValue (key, value, CurrentApplication);
 		}
 
-		public static void SetAppValue (string key, object value, string applicationId)
+		public static void SetAppValue (string key, object? value, string applicationId)
 		{
 			if (applicationId == null) {
 				throw new ArgumentNullException ("applicationId");
@@ -108,7 +114,7 @@ namespace CoreFoundation
 			}
 		}
 
-		public static void SetAppValue (string key, object value, NSString applicationId)
+		public static void SetAppValue (string key, object? value, NSString applicationId)
 		{
 			if (key == null) {
 				throw new ArgumentNullException ("key");
@@ -142,12 +148,16 @@ namespace CoreFoundation
 					return;
 				}
 
-				throw new ArgumentException ("unsupported type: " + value.GetType (), "value");
+				if (value is not null)
+					throw new ArgumentException ("unsupported type: " + value.GetType (), "value");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (nsnumber));
 			}
 		}
 
 		public static void RemoveAppValue (string key)
 		{
+			if (CurrentApplication is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (CurrentApplication));
 			SetAppValue (key, null, CurrentApplication);
 		}
 
@@ -168,6 +178,8 @@ namespace CoreFoundation
 
 		public static bool GetAppBooleanValue (string key)
 		{
+			if (CurrentApplication is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (CurrentApplication));
 			return GetAppBooleanValue (key, CurrentApplication);
 		}
 
@@ -201,6 +213,8 @@ namespace CoreFoundation
 
 		public static nint GetAppIntegerValue (string key)
 		{
+			if (CurrentApplication is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (CurrentApplication));
 			return GetAppIntegerValue (key, CurrentApplication);
 		}
 
@@ -233,6 +247,8 @@ namespace CoreFoundation
 
 		public static void AddSuitePreferencesToApp (string suiteId)
 		{
+			if (CurrentApplication is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (CurrentApplication));
 			AddSuitePreferencesToApp (CurrentApplication, suiteId);
 		}
 
@@ -265,6 +281,8 @@ namespace CoreFoundation
 
 		public static void RemoveSuitePreferencesFromApp (string suiteId)
 		{
+			if (CurrentApplication is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (CurrentApplication));
 			RemoveSuitePreferencesFromApp (CurrentApplication, suiteId);
 		}
 
@@ -298,6 +316,8 @@ namespace CoreFoundation
 
 		public static bool AppSynchronize ()
 		{
+			if (CurrentApplication is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (CurrentApplication));
 			return AppSynchronize (CurrentApplication);
 		}
 
@@ -327,6 +347,8 @@ namespace CoreFoundation
 
 		public static bool AppValueIsForced (string key)
 		{
+			if (CurrentApplication is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (CurrentApplication));
 			return AppValueIsForced (key, CurrentApplication);
 		}
 

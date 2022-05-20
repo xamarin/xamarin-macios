@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -42,10 +45,10 @@ namespace CoreFoundation {
 #endif
 	public static class CFErrorDomain {
 
-		public static readonly NSString Cocoa;
-		public static readonly NSString Mach;
-		public static readonly NSString OSStatus;
-		public static readonly NSString Posix;
+		public static readonly NSString? Cocoa;
+		public static readonly NSString? Mach;
+		public static readonly NSString? OSStatus;
+		public static readonly NSString? Posix;
 
 		static CFErrorDomain ()
 		{
@@ -65,11 +68,11 @@ namespace CoreFoundation {
 #endif
 	public static class CFExceptionDataKey {
 
-		public static readonly NSString Description;
-		public static readonly NSString LocalizedDescription;
-		public static readonly NSString LocalizedFailureReason;
-		public static readonly NSString LocalizedRecoverySuggestion;
-		public static readonly NSString UnderlyingError;
+		public static readonly NSString? Description;
+		public static readonly NSString? LocalizedDescription;
+		public static readonly NSString? LocalizedFailureReason;
+		public static readonly NSString? LocalizedRecoverySuggestion;
+		public static readonly NSString? UnderlyingError;
 
 		static CFExceptionDataKey ()
 		{
@@ -90,7 +93,7 @@ namespace CoreFoundation {
 #endif
 	public class CFException : Exception {
 
-		public CFException (string description, NSString domain, nint code, string failureReason, string recoverySuggestion)
+		public CFException (string? description, NSString? domain, nint? code, string? failureReason, string? recoverySuggestion)
 			: base (description)
 		{
 			Code                = code;
@@ -111,7 +114,7 @@ namespace CoreFoundation {
 
 			var e = new CFException (
 					CFString.FromHandle (CFErrorCopyDescription (cfErrorHandle), releaseHandle: true),
-					(NSString) Runtime.GetNSObject (CFErrorGetDomain (cfErrorHandle)),
+					Runtime.GetNSObject (CFErrorGetDomain (cfErrorHandle)) as NSString,
 					CFErrorGetCode (cfErrorHandle),
 					CFString.FromHandle (CFErrorCopyFailureReason (cfErrorHandle), releaseHandle: true),
 					CFString.FromHandle (CFErrorCopyRecoverySuggestion (cfErrorHandle), releaseHandle: true));
@@ -119,8 +122,10 @@ namespace CoreFoundation {
 			var cfUserInfo = CFErrorCopyUserInfo (cfErrorHandle);
 			if (cfUserInfo != IntPtr.Zero) {
 				using (var userInfo = new NSDictionary (cfUserInfo)) {
-					foreach (var i in userInfo)
-						e.Data.Add (i.Key?.ToString (), i.Value?.ToString ());
+					foreach (var i in userInfo) {
+						if (i.Key is not null)
+							e.Data.Add (i.Key.ToString (), i.Value?.ToString ());
+					}
 				}
 			}
 			if (release)
@@ -128,10 +133,10 @@ namespace CoreFoundation {
 			return e;
 		}
 
-		public nint Code {get; private set;}
-		public NSString Domain {get; private set;}
-		public string FailureReason {get; private set;}
-		public string RecoverySuggestion {get; private set;}
+		public nint? Code {get; private set;}
+		public NSString? Domain {get; private set;}
+		public string? FailureReason {get; private set;}
+		public string? RecoverySuggestion {get; private set;}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFErrorCopyDescription (IntPtr err);

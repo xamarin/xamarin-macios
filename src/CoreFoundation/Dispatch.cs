@@ -30,6 +30,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -126,7 +129,7 @@ namespace CoreFoundation {
 		public override bool Equals (object other)
 		{
 			var od = other as DispatchQueue;
-			if (od == null)
+			if (od is null)
 				return false;
 			return od.Handle == Handle;
 		}
@@ -152,7 +155,7 @@ namespace CoreFoundation {
 		public void SetTargetQueue (DispatchQueue queue)
 		{
 			// note: null is allowed because DISPATCH_TARGET_QUEUE_DEFAULT is defined as NULL (dispatch/queue.h)
-			IntPtr q = queue == null ? IntPtr.Zero : queue.Handle;
+			IntPtr q = queue is null ? IntPtr.Zero : queue.Handle;
 			dispatch_set_target_queue (Handle, q);
 		}
 
@@ -247,7 +250,7 @@ namespace CoreFoundation {
 		[TV (10,0)]
 		[Watch (3,0)]
 #endif
-		public DispatchQueue (string label, Attributes attributes, DispatchQueue target = null)
+		public DispatchQueue (string label, Attributes attributes, DispatchQueue? target = null)
 			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
 		{
 		}
@@ -256,7 +259,7 @@ namespace CoreFoundation {
 		// Properties and methods
 		//
 
-		public string Label {
+		public string? Label {
 			get {
 				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (GetCheckedHandle ()));
 			}
@@ -270,7 +273,7 @@ namespace CoreFoundation {
 #else
 		[iOS (7,0)]
 #endif
-		public static string CurrentQueueLabel {
+		public static string? CurrentQueueLabel {
 			get {
 				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (IntPtr.Zero));
 			}
@@ -521,7 +524,7 @@ namespace CoreFoundation {
 			dispatch_queue_set_specific (GetCheckedHandle (), key, (IntPtr) GCHandle.Alloc (context), free_gchandle);
 		}
 
-		public object GetSpecific (IntPtr key)
+		public object? GetSpecific (IntPtr key)
 		{
 			GCHandle gchandle = (GCHandle) dispatch_queue_get_specific (GetCheckedHandle (), key);
 			return gchandle.Target;
@@ -661,10 +664,9 @@ namespace CoreFoundation {
 		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object other)
 		{
-			DispatchQueue o = other as DispatchQueue;
-			if (o == null)
-				return false;
-			return (o.Handle == Handle);
+			if (other is DispatchQueue o)
+				return (o.Handle == Handle);
+			return false;
 		}
 #endif
 
@@ -902,7 +904,7 @@ namespace CoreFoundation {
 		{
 		}
 
-		public static DispatchGroup Create ()
+		public static DispatchGroup? Create ()
 		{
 			var ptr = dispatch_group_create ();
 			if (ptr == IntPtr.Zero)
@@ -913,7 +915,7 @@ namespace CoreFoundation {
 
 		public void DispatchAsync (DispatchQueue queue, Action action)
 		{
-			if (queue == null)
+			if (queue is null)
 				throw new ArgumentNullException ("queue");
 			if (action == null)
 				throw new ArgumentNullException ("action");
@@ -923,7 +925,7 @@ namespace CoreFoundation {
 
 		public void Notify (DispatchQueue queue, DispatchBlock block)
 		{
-			if (queue == null)
+			if (queue is null)
 				throw new ArgumentNullException (nameof (queue));
 			if (block == null)
 				throw new ArgumentNullException (nameof (block));
@@ -932,7 +934,7 @@ namespace CoreFoundation {
 
 		public void Notify (DispatchQueue queue, Action action)
 		{
-			if (queue == null)
+			if (queue is null)
 				throw new ArgumentNullException ("queue");
 			if (action == null)
 				throw new ArgumentNullException ("action");

@@ -25,6 +25,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if !WATCH
 
 using System;
@@ -68,8 +70,8 @@ namespace CoreFoundation {
 		#region Property Keys
 
 #if !MONOMAC
-		static NSString kCFProxyAutoConfigurationHTTPResponseKey;
-		static NSString AutoConfigurationHTTPResponseKey {
+		static NSString? kCFProxyAutoConfigurationHTTPResponseKey;
+		static NSString? AutoConfigurationHTTPResponseKey {
 			get {
 				if (kCFProxyAutoConfigurationHTTPResponseKey == null)
 					kCFProxyAutoConfigurationHTTPResponseKey = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyAutoConfigurationHTTPResponseKey");
@@ -79,8 +81,8 @@ namespace CoreFoundation {
 		}
 #endif
 		
-		static NSString kCFProxyAutoConfigurationJavaScriptKey;
-		static NSString AutoConfigurationJavaScriptKey {
+		static NSString? kCFProxyAutoConfigurationJavaScriptKey;
+		static NSString? AutoConfigurationJavaScriptKey {
 			get {
 				if (kCFProxyAutoConfigurationJavaScriptKey == null)
 					kCFProxyAutoConfigurationJavaScriptKey = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyAutoConfigurationJavaScriptKey");
@@ -89,8 +91,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyAutoConfigurationURLKey;
-		static NSString AutoConfigurationURLKey {
+		static NSString? kCFProxyAutoConfigurationURLKey;
+		static NSString? AutoConfigurationURLKey {
 			get {
 				if (kCFProxyAutoConfigurationURLKey == null)
 					kCFProxyAutoConfigurationURLKey = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyAutoConfigurationURLKey");
@@ -99,8 +101,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyHostNameKey;
-		static NSString HostNameKey {
+		static NSString? kCFProxyHostNameKey;
+		static NSString? HostNameKey {
 			get {
 				if (kCFProxyHostNameKey == null)
 					kCFProxyHostNameKey = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyHostNameKey");
@@ -109,8 +111,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyPasswordKey;
-		static NSString PasswordKey {
+		static NSString? kCFProxyPasswordKey;
+		static NSString? PasswordKey {
 			get {
 				if (kCFProxyPasswordKey == null)
 					kCFProxyPasswordKey = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyPasswordKey");
@@ -119,8 +121,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyPortNumberKey;
-		static NSString PortNumberKey {
+		static NSString? kCFProxyPortNumberKey;
+		static NSString? PortNumberKey {
 			get {
 				if (kCFProxyPortNumberKey == null)
 					kCFProxyPortNumberKey = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyPortNumberKey");
@@ -129,8 +131,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyTypeKey;
-		static NSString ProxyTypeKey {
+		static NSString? kCFProxyTypeKey;
+		static NSString? ProxyTypeKey {
 			get {
 				if (kCFProxyTypeKey == null)
 					kCFProxyTypeKey = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyTypeKey");
@@ -139,8 +141,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyUsernameKey;
-		static NSString UsernameKey {
+		static NSString? kCFProxyUsernameKey;
+		static NSString? UsernameKey {
 			get {
 				if (kCFProxyUsernameKey == null)
 					kCFProxyUsernameKey = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyUsernameKey");
@@ -151,8 +153,8 @@ namespace CoreFoundation {
 		#endregion Property Keys
 		
 		#region Proxy Types
-		static NSString kCFProxyTypeNone;
-		static NSString CFProxyTypeNone {
+		static NSString? kCFProxyTypeNone;
+		static NSString? CFProxyTypeNone {
 			get {
 				if (kCFProxyTypeNone == null)
 					kCFProxyTypeNone = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyTypeNone");
@@ -161,8 +163,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyTypeAutoConfigurationURL;
-		static NSString CFProxyTypeAutoConfigurationURL {
+		static NSString? kCFProxyTypeAutoConfigurationURL;
+		static NSString? CFProxyTypeAutoConfigurationURL {
 			get {
 				if (kCFProxyTypeAutoConfigurationURL == null)
 					kCFProxyTypeAutoConfigurationURL = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyTypeAutoConfigurationURL");
@@ -171,8 +173,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyTypeAutoConfigurationJavaScript;
-		static NSString CFProxyTypeAutoConfigurationJavaScript {
+		static NSString? kCFProxyTypeAutoConfigurationJavaScript;
+		static NSString? CFProxyTypeAutoConfigurationJavaScript {
 			get {
 				if (kCFProxyTypeAutoConfigurationJavaScript == null)
 					kCFProxyTypeAutoConfigurationJavaScript = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyTypeAutoConfigurationJavaScript");
@@ -181,8 +183,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyTypeFTP;
-		static NSString CFProxyTypeFTP {
+		static NSString? kCFProxyTypeFTP;
+		static NSString? CFProxyTypeFTP {
 			get {
 				if (kCFProxyTypeFTP == null)
 					kCFProxyTypeFTP = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyTypeFTP");
@@ -191,8 +193,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyTypeHTTP;
-		static NSString CFProxyTypeHTTP {
+		static NSString? kCFProxyTypeHTTP;
+		static NSString? CFProxyTypeHTTP {
 			get {
 				if (kCFProxyTypeHTTP == null)
 					kCFProxyTypeHTTP = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyTypeHTTP");
@@ -201,8 +203,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyTypeHTTPS;
-		static NSString CFProxyTypeHTTPS {
+		static NSString? kCFProxyTypeHTTPS;
+		static NSString? CFProxyTypeHTTPS {
 			get {
 				if (kCFProxyTypeHTTPS == null)
 					kCFProxyTypeHTTPS = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyTypeHTTPS");
@@ -211,8 +213,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFProxyTypeSOCKS;
-		static NSString CFProxyTypeSOCKS {
+		static NSString? kCFProxyTypeSOCKS;
+		static NSString? CFProxyTypeSOCKS {
 			get {
 				if (kCFProxyTypeSOCKS == null)
 					kCFProxyTypeSOCKS = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFProxyTypeSOCKS");
@@ -244,7 +246,7 @@ namespace CoreFoundation {
 					return CFProxyType.HTTP;
 			}
 			
-			if (CFProxyTypeHTTP != null) {
+			if (CFProxyTypeHTTPS != null) {
 				if (type.Handle == CFProxyTypeHTTPS.Handle)
 					return CFProxyType.HTTPS;
 			}
@@ -266,7 +268,7 @@ namespace CoreFoundation {
 		}
 #endif
 		
-		public NSString AutoConfigurationJavaScript {
+		public NSString? AutoConfigurationJavaScript {
 			get {
 				if (AutoConfigurationJavaScriptKey == null)
 					return null;
@@ -275,7 +277,7 @@ namespace CoreFoundation {
 			}
 		}
 		
-		public NSUrl AutoConfigurationUrl {
+		public NSUrl? AutoConfigurationUrl {
 			get {
 				if (AutoConfigurationURLKey == null)
 					return null;
@@ -284,25 +286,25 @@ namespace CoreFoundation {
 			}
 		}
 		
-		public string HostName {
+		public string? HostName {
 			get {
 				if (HostNameKey == null)
 					return null;
 				
 				NSString v = (NSString) settings[HostNameKey];
 				
-				return v != null ? v.ToString () : null;
+				return v?.ToString ();
 			}
 		}
 		
-		public string Password {
+		public string? Password {
 			get {
 				if (PasswordKey == null)
 					return null;
 				
 				NSString v = (NSString) settings[PasswordKey];
 				
-				return v != null ? v.ToString () : null;
+				return v?.ToString ();
 			}
 		}
 		
@@ -326,14 +328,14 @@ namespace CoreFoundation {
 			}
 		}
 		
-		public string Username {
+		public string? Username {
 			get {
 				if (UsernameKey == null)
 					return null;
 				
 				NSString v = (NSString) settings[UsernameKey];
 				
-				return v != null ? v.ToString () : null;
+				return v?.ToString ();
 			}
 		}
 	}
@@ -357,8 +359,8 @@ namespace CoreFoundation {
 		}
 		
 		#region Global Proxy Setting Constants
-		static NSString kCFNetworkProxiesHTTPEnable;
-		static NSString CFNetworkProxiesHTTPEnable {
+		static NSString? kCFNetworkProxiesHTTPEnable;
+		static NSString? CFNetworkProxiesHTTPEnable {
 			get {
 				if (kCFNetworkProxiesHTTPEnable == null)
 					kCFNetworkProxiesHTTPEnable = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFNetworkProxiesHTTPEnable");
@@ -367,8 +369,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFNetworkProxiesHTTPPort;
-		static NSString CFNetworkProxiesHTTPPort {
+		static NSString? kCFNetworkProxiesHTTPPort;
+		static NSString? CFNetworkProxiesHTTPPort {
 			get {
 				if (kCFNetworkProxiesHTTPPort == null)
 					kCFNetworkProxiesHTTPPort = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFNetworkProxiesHTTPPort");
@@ -377,8 +379,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFNetworkProxiesHTTPProxy;
-		static NSString CFNetworkProxiesHTTPProxy {
+		static NSString? kCFNetworkProxiesHTTPProxy;
+		static NSString? CFNetworkProxiesHTTPProxy {
 			get {
 				if (kCFNetworkProxiesHTTPProxy == null)
 					kCFNetworkProxiesHTTPProxy = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFNetworkProxiesHTTPProxy");
@@ -387,8 +389,8 @@ namespace CoreFoundation {
 			}
 		}
 		
-		static NSString kCFNetworkProxiesProxyAutoConfigEnable;
-		static NSString CFNetworkProxiesProxyAutoConfigEnable {
+		static NSString? kCFNetworkProxiesProxyAutoConfigEnable;
+		static NSString? CFNetworkProxiesProxyAutoConfigEnable {
 			get {
 				if (kCFNetworkProxiesProxyAutoConfigEnable == null)
 					kCFNetworkProxiesProxyAutoConfigEnable = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFNetworkProxiesProxyAutoConfigEnable");
@@ -398,8 +400,8 @@ namespace CoreFoundation {
 		}
 		
 #if !MONOMAC
-		static NSString kCFNetworkProxiesProxyAutoConfigJavaScript;
-		static NSString CFNetworkProxiesProxyAutoConfigJavaScript {
+		static NSString? kCFNetworkProxiesProxyAutoConfigJavaScript;
+		static NSString? CFNetworkProxiesProxyAutoConfigJavaScript {
 			get {
 				if (kCFNetworkProxiesProxyAutoConfigJavaScript == null)
 					kCFNetworkProxiesProxyAutoConfigJavaScript = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFNetworkProxiesProxyAutoConfigJavaScript");
@@ -409,8 +411,8 @@ namespace CoreFoundation {
 		}
 #endif
 		
-		static NSString kCFNetworkProxiesProxyAutoConfigURLString;
-		static NSString CFNetworkProxiesProxyAutoConfigURLString {
+		static NSString? kCFNetworkProxiesProxyAutoConfigURLString;
+		static NSString? CFNetworkProxiesProxyAutoConfigURLString {
 			get {
 				if (kCFNetworkProxiesProxyAutoConfigURLString == null)
 					kCFNetworkProxiesProxyAutoConfigURLString = Dlfcn.GetStringConstant (Libraries.CFNetwork.Handle, "kCFNetworkProxiesProxyAutoConfigURLString");
@@ -442,14 +444,14 @@ namespace CoreFoundation {
 			}
 		}
 		
-		public string HTTPProxy {
+		public string? HTTPProxy {
 			get {
 				if (CFNetworkProxiesHTTPProxy == null)
 					return null;
 				
 				NSString v = (NSString) settings[CFNetworkProxiesHTTPProxy];
 				
-				return v != null ? v.ToString () : null;
+				return v?.ToString ();
 			}
 		}
 		
@@ -465,26 +467,26 @@ namespace CoreFoundation {
 		}
 		
 #if !MONOMAC
-		public string ProxyAutoConfigJavaScript {
+		public string? ProxyAutoConfigJavaScript {
 			get {
 				if (CFNetworkProxiesProxyAutoConfigJavaScript == null)
 					return null;
 				
 				NSString v = (NSString) settings[CFNetworkProxiesProxyAutoConfigJavaScript];
 				
-				return v != null ? v.ToString () : null;
+				return v?.ToString ();
 			}
 		}
 #endif
 
-		public string ProxyAutoConfigURLString {
+		public string? ProxyAutoConfigURLString {
 			get {
 				if (CFNetworkProxiesProxyAutoConfigURLString == null)
 					return null;
 				
 				NSString v = (NSString) settings[CFNetworkProxiesProxyAutoConfigURLString];
 				
-				return v != null ? v.ToString () : null;
+				return v?.ToString ();
 			}
 		}
 	}
@@ -501,14 +503,14 @@ namespace CoreFoundation {
 			/* CFStringRef __nonnull */ IntPtr proxyAutoConfigurationScript,
 			/* CFURLRef __nonnull */ IntPtr targetURL, /* CFErrorRef  __nullable * __nullable */ out IntPtr error);
 		
-		static NSArray CopyProxiesForAutoConfigurationScript (NSString proxyAutoConfigurationScript, NSUrl targetURL)
+		static NSArray? CopyProxiesForAutoConfigurationScript (NSString proxyAutoConfigurationScript, NSUrl targetURL)
 		{
 			IntPtr err;
 			IntPtr native = CFNetworkCopyProxiesForAutoConfigurationScript (proxyAutoConfigurationScript.Handle, targetURL.Handle, out err);
 			return native == IntPtr.Zero ? null : new NSArray (native);
 		}
 		
-		public static CFProxy[] GetProxiesForAutoConfigurationScript (NSString proxyAutoConfigurationScript, NSUrl targetURL)
+		public static CFProxy[]? GetProxiesForAutoConfigurationScript (NSString proxyAutoConfigurationScript, NSUrl targetURL)
 		{
 			if (proxyAutoConfigurationScript == null)
 				throw new ArgumentNullException ("proxyAutoConfigurationScript");
@@ -532,14 +534,17 @@ namespace CoreFoundation {
 			}
 		}
 		
-		public static CFProxy[] GetProxiesForAutoConfigurationScript (NSString proxyAutoConfigurationScript, Uri targetUri)
+		public static CFProxy[]? GetProxiesForAutoConfigurationScript (NSString proxyAutoConfigurationScript, Uri targetUri)
 		{
 			// proxyAutoConfigurationScript checked later
 			if (targetUri == null)
 				throw new ArgumentNullException ("targetUri");
-			
-			using (var targetURL = NSUrl.FromString (targetUri.AbsoluteUri))
+
+			using (var targetURL = NSUrl.FromString (targetUri.AbsoluteUri)) {
+				if (targetURL is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (targetURL));
 				return GetProxiesForAutoConfigurationScript (proxyAutoConfigurationScript, targetURL);
+			}
 		}
 		
 		[DllImport (Constants.CFNetworkLibrary)]
@@ -548,21 +553,24 @@ namespace CoreFoundation {
 			/* CFURLRef __nonnull */ IntPtr url, 
 			/* CFDictionaryRef __nonnull */ IntPtr proxySettings);
 		
-		static NSArray CopyProxiesForURL (NSUrl url, NSDictionary proxySettings)
+		static NSArray? CopyProxiesForURL (NSUrl url, NSDictionary proxySettings)
 		{
 			IntPtr native = CFNetworkCopyProxiesForURL (url.Handle, proxySettings.Handle);
 			return native == IntPtr.Zero ? null : new NSArray (native);
 		}
 		
-		public static CFProxy[] GetProxiesForURL (NSUrl url, CFProxySettings proxySettings)
+		public static CFProxy[]? GetProxiesForURL (NSUrl url, CFProxySettings? proxySettings)
 		{
 			if (url == null)
 				throw new ArgumentNullException ("url");
 			
 			if (proxySettings == null)
 				proxySettings = GetSystemProxySettings ();
+
+			if (proxySettings == null)
+				return null;
 			
-			using (NSArray array = CopyProxiesForURL (url, proxySettings.Dictionary)) {
+			using (NSArray? array = CopyProxiesForURL (url, proxySettings.Dictionary)) {
 				if (array == null)
 					return null;
 			
@@ -578,19 +586,22 @@ namespace CoreFoundation {
 			}
 		}
 		
-		public static CFProxy[] GetProxiesForUri (Uri uri, CFProxySettings proxySettings)
+		public static CFProxy[]? GetProxiesForUri (Uri uri, CFProxySettings? proxySettings)
 		{
 			if (uri == null)
 				throw new ArgumentNullException ("uri");
 			
-			using (NSUrl url = NSUrl.FromString (uri.AbsoluteUri))
+			using (NSUrl? url = NSUrl.FromString (uri.AbsoluteUri)) {
+				if (url is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 				return GetProxiesForURL (url, proxySettings);
+			}
 		}
 		
 		[DllImport (Constants.CFNetworkLibrary)]
 		extern static /* CFDictionaryRef __nullable */ IntPtr CFNetworkCopySystemProxySettings ();
 		
-		public static CFProxySettings GetSystemProxySettings ()
+		public static CFProxySettings? GetSystemProxySettings ()
 		{
 			IntPtr native = CFNetworkCopySystemProxySettings ();
 			
@@ -608,16 +619,16 @@ namespace CoreFoundation {
 		// helper delegate to reuse code
 		delegate IntPtr CreatePACCFRunLoopSource (CFProxyAutoConfigurationResultCallbackInternal cb, ref CFStreamClientContext context);
 
-		static CFProxy[] ParseProxies (IntPtr proxyList)
+		static CFProxy[]? ParseProxies (IntPtr proxyList)
 		{
-			CFProxy[] proxies = null;
+			CFProxy[]? proxies = null;
 			if (proxyList != IntPtr.Zero) {
 				// it was retained in the cbs.
 				using (var array = new CFArray (proxyList, false)) {
 					proxies = new CFProxy [array.Count];
 					for (int i = 0; i < proxies.Length; i++) {
 						var dict = Runtime.GetNSObject<NSDictionary> (array.GetValue (i));
-						proxies[i] = new CFProxy (dict);
+						proxies[i] = new CFProxy (dict!);
 					}
 				}
 			}
@@ -631,7 +642,7 @@ namespace CoreFoundation {
 			public IntPtr ErrorPtr; // Pointer to the Error
 			public IntPtr CFRunLoopPtr; // Pointer to the runloop, needed to be stopped
 
-			public CFProxy [] ProxyList {
+			public CFProxy []? ProxyList {
 				get {
 					if (ProxyListPtr != IntPtr.Zero)
 						return ParseProxies (ProxyListPtr);
@@ -639,7 +650,7 @@ namespace CoreFoundation {
 				}
 			}
 
-			public NSError Error {
+			public NSError? Error {
 				get {
 					if (ErrorPtr != IntPtr.Zero) 
 						return Runtime.GetNSObject<NSError> (ErrorPtr);
@@ -658,7 +669,7 @@ namespace CoreFoundation {
 			// CFNetworkExecuteProxyAutoConfigurationScript or CFNetworkExecuteProxyAutoConfigurationURL call
 			// that triggered this callback.
 			// Well, that is NOT TRUE, the client passed is the client.Info pointer not the client.
-			var pacCbData =  (PACProxyCallbackData) Marshal.PtrToStructure (client, typeof (PACProxyCallbackData));
+			var pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (client, typeof (PACProxyCallbackData))!;
 			// make sure is not released, will be released by the parsing method.
 			if (proxyList != IntPtr.Zero) {
 				CFObject.CFRetain (proxyList);
@@ -674,10 +685,10 @@ namespace CoreFoundation {
 			runLoop.Stop ();
 		}
 
-		static async Task<(CFProxy[] proxies, NSError error)> ExecutePacCFRunLoopSourceAsync (CreatePACCFRunLoopSource factory, CancellationToken cancellationToken)
+		static async Task<(CFProxy[]? proxies, NSError? error)> ExecutePacCFRunLoopSourceAsync (CreatePACCFRunLoopSource factory, CancellationToken cancellationToken)
 		{
-			CFProxy[] proxies = null;
-			NSError outError = null;
+			CFProxy[]? proxies = null;
+			NSError? outError = null;
 			if (cancellationToken.IsCancellationRequested)
 				throw new OperationCanceledException ("Operation was cancelled.");
 
@@ -717,7 +728,7 @@ namespace CoreFoundation {
 					if (cancellationToken.IsCancellationRequested)
 						throw new OperationCanceledException ("Operation was cancelled.");
 
-					pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (pacDataPtr, typeof (PACProxyCallbackData));
+					pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (pacDataPtr, typeof (PACProxyCallbackData))!;
 					// get data from the struct
 					proxies = pacCbData.ProxyList;
 					outError = pacCbData.Error;
@@ -736,7 +747,7 @@ namespace CoreFoundation {
 			return (proxies: proxies, error: outError);
 		}
 
-		static CFProxy[] ExecutePacCFRunLoopSourceBlocking (CreatePACCFRunLoopSource factory, out NSError outError)
+		static CFProxy[]? ExecutePacCFRunLoopSourceBlocking (CreatePACCFRunLoopSource factory, out NSError? outError)
 		{
 			var runLoop = CFRunLoop.Current;
 			outError = null;
@@ -757,7 +768,7 @@ namespace CoreFoundation {
 					runLoop.RunInMode (mode, double.MaxValue, false);
 					runLoop.RemoveSource (loopSource, mode);
 				}
-				pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (pacDataPtr, typeof (PACProxyCallbackData));
+				pacCbData = (PACProxyCallbackData) Marshal.PtrToStructure (pacDataPtr, typeof (PACProxyCallbackData))!;
 				// get data from the struct
 				outError = pacCbData.Error;
 				return pacCbData.ProxyList;
@@ -777,7 +788,7 @@ namespace CoreFoundation {
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext  clientContext);
 
-		public static CFProxy[] ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, out NSError outError)
+		public static CFProxy[]? ExecuteProxyAutoConfigurationScript (string proxyAutoConfigurationScript, Uri targetUrl, out NSError? outError)
 		{
 			outError = null;
 			if (proxyAutoConfigurationScript == null)
@@ -795,7 +806,7 @@ namespace CoreFoundation {
 			}
 		}
 		
-		public static async Task<(CFProxy[] proxies, NSError error)> ExecuteProxyAutoConfigurationScriptAsync (string proxyAutoConfigurationScript, Uri targetUrl, CancellationToken cancellationToken)
+		public static async Task<(CFProxy[]? proxies, NSError? error)> ExecuteProxyAutoConfigurationScriptAsync (string proxyAutoConfigurationScript, Uri targetUrl, CancellationToken cancellationToken)
 		{
 			if (proxyAutoConfigurationScript == null)
 				throw new ArgumentNullException (nameof (proxyAutoConfigurationScript));
@@ -820,7 +831,7 @@ namespace CoreFoundation {
 			/* CFProxyAutoConfigurationResultCallback __nonnull */ CFProxyAutoConfigurationResultCallbackInternal cb,
 			/* CFStreamClientContext * __nonnull */ ref CFStreamClientContext clientContext);
 
-		public static CFProxy[] ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, out NSError outError)
+		public static CFProxy[]? ExecuteProxyAutoConfigurationUrl (Uri proxyAutoConfigurationUrl, Uri targetUrl, out NSError? outError)
 		{ 
 			outError = null;
 			if (proxyAutoConfigurationUrl == null)
@@ -838,7 +849,7 @@ namespace CoreFoundation {
 			}
 		}
 
-		public static async Task<(CFProxy[] proxies, NSError error)> ExecuteProxyAutoConfigurationUrlAsync (Uri proxyAutoConfigurationUrl, Uri targetUrl, CancellationToken cancellationToken)
+		public static async Task<(CFProxy[]? proxies, NSError? error)> ExecuteProxyAutoConfigurationUrlAsync (Uri proxyAutoConfigurationUrl, Uri targetUrl, CancellationToken cancellationToken)
 		{
 			// similar to the sync method, but we will spawn a thread and wait in an async manner to an autoreset event to be fired
 			if (proxyAutoConfigurationUrl == null)
@@ -858,14 +869,14 @@ namespace CoreFoundation {
 		}
 		
 		class CFWebProxy : IWebProxy {
-			ICredentials credentials;
+			ICredentials? credentials;
 			bool userSpecified;
 			
 			public CFWebProxy ()
 			{
 			}
 			
-			public ICredentials Credentials {
+			public ICredentials? Credentials {
 				get { return credentials; }
 				set {
 					userSpecified = true;
@@ -873,7 +884,7 @@ namespace CoreFoundation {
 				}
 			}
 			
-			static Uri GetProxyUri (CFProxy proxy, out NetworkCredential credentials)
+			static Uri? GetProxyUri (CFProxy proxy, out NetworkCredential? credentials)
 			{
 				string protocol;
 				
@@ -890,10 +901,10 @@ namespace CoreFoundation {
 					return null;
 				}
 				
-				string username = proxy.Username;
-				string password = proxy.Password;
-				string hostname = proxy.HostName;
-				int port = proxy.Port;
+				string? username = proxy?.Username;
+				string? password = proxy?.Password;
+				string? hostname = proxy?.HostName;
+				int? port = proxy?.Port;
 				string uri;
 				
 				if (username != null)
@@ -906,9 +917,9 @@ namespace CoreFoundation {
 				return new Uri (uri, UriKind.Absolute);
 			}
 			
-			static Uri GetProxyUriFromScript (NSString script, Uri targetUri, out NetworkCredential credentials)
+			static Uri? GetProxyUriFromScript (NSString script, Uri targetUri, out NetworkCredential? credentials)
 			{
-				CFProxy[] proxies = CFNetwork.GetProxiesForAutoConfigurationScript (script, targetUri);
+				CFProxy[]? proxies = CFNetwork.GetProxiesForAutoConfigurationScript (script, targetUri);
 				
 				if (proxies == null) {
 					credentials = null;
@@ -940,21 +951,21 @@ namespace CoreFoundation {
 			
 			public Uri GetProxy (Uri targetUri)
 			{
-				NetworkCredential credentials = null;
-				Uri proxy = null;
+				NetworkCredential? credentials = null;
+				Uri? proxy = null;
 				
 				if (targetUri == null)
 					throw new ArgumentNullException ("targetUri");
 				
 				try {
-					CFProxySettings settings = CFNetwork.GetSystemProxySettings ();
-					CFProxy[] proxies = CFNetwork.GetProxiesForUri (targetUri, settings);
+					CFProxySettings? settings = CFNetwork.GetSystemProxySettings ();
+					CFProxy[]? proxies = CFNetwork.GetProxiesForUri (targetUri, settings);
 					
 					if (proxies != null) {
 						for (int i = 0; i < proxies.Length && proxy == null; i++) {
 							switch (proxies[i].ProxyType) {
 							case CFProxyType.AutoConfigurationJavaScript:
-								proxy = GetProxyUriFromScript (proxies[i].AutoConfigurationJavaScript, targetUri, out credentials);
+								proxy = GetProxyUriFromScript (proxies[i].AutoConfigurationJavaScript!, targetUri, out credentials);
 								break;
 							case CFProxyType.AutoConfigurationUrl:
 								// unsupported proxy type (requires fetching script from remote url)

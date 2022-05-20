@@ -1,5 +1,7 @@
 // Copyright 2019 Microsoft Corporation
 
+#nullable enable
+
 #if !COREBUILD
 
 using System;
@@ -102,7 +104,7 @@ namespace CoreFoundation {
 
 		public bool Transform (ref CFRange range, string transform, bool reverse)
 		{
-			var t = NSString.CreateNative (transform);
+			var t = CreateNative (transform);
 			try {
 				return Transform (ref range, t, reverse);
 			} finally {
@@ -140,7 +142,7 @@ namespace CoreFoundation {
 
 		public bool Transform (string transform, bool reverse)
 		{
-			var t = NSString.CreateNative (transform);
+			var t = CreateNative (transform);
 			try {
 				return Transform (t, reverse);
 			} finally {

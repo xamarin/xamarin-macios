@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -132,9 +135,9 @@ namespace CoreFoundation {
 
 		public static DispatchData Concat (DispatchData data1, DispatchData data2)
 		{
-			if (data1 == null)
+			if (data1 is null)
 				throw new ArgumentNullException (nameof (data1));
-			if (data2 == null)
+			if (data2 is null)
 				throw new ArgumentNullException (nameof (data2));
 
 			return new DispatchData (dispatch_data_create_concat (data1.Handle, data2.Handle), owns: true);

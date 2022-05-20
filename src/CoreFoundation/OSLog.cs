@@ -20,6 +20,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#nullable enable
+
 using System;
 
 using Foundation;
@@ -46,7 +48,7 @@ namespace CoreFoundation {
 #endif
 	public sealed class OSLog : NativeObject {
 
-		static OSLog _default;
+		static OSLog? _default;
 
 		public static OSLog Default {
 			get {

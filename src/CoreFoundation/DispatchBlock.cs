@@ -7,6 +7,9 @@
 // Copyright 2019 Microsoft Corp.
 //
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -149,7 +152,7 @@ namespace CoreFoundation {
 
 		public void Notify (DispatchQueue queue, DispatchBlock notification)
 		{
-			if (queue == null)
+			if (queue is null)
 				throw new ArgumentNullException (nameof (queue));
 			if (notification == null)
 				throw new ArgumentNullException (nameof (notification));
@@ -184,7 +187,7 @@ namespace CoreFoundation {
 		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 		delegate void DispatchBlockCallback (IntPtr block);
 
-		public static explicit operator Action (DispatchBlock block)
+		public static explicit operator Action? (DispatchBlock block)
 		{
 			if (block == null)
 				return null;
@@ -198,7 +201,7 @@ namespace CoreFoundation {
 
 		public void Invoke ()
 		{
-			((Action) this) ();
+			((Action) this!) ();
 		}
 
 		//

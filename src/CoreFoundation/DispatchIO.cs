@@ -30,6 +30,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -43,7 +46,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreFoundation {
 
-	public delegate void DispatchIOHandler (DispatchData data, int error);
+	public delegate void DispatchIOHandler (DispatchData? data, int error);
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -86,9 +89,9 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void Read (int fd, nuint size, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				throw new ArgumentNullException (nameof (handler));
-			if (dispatchQueue == null)
+			if (dispatchQueue is null)
 				throw new ArgumentNullException (nameof (dispatchQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -103,11 +106,11 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void Write (int fd, DispatchData dispatchData, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
-			if (dispatchData == null)
+			if (dispatchData is null)
 				throw new ArgumentNullException (nameof (dispatchData));
-			if (handler == null)
+			if (handler is null)
 				throw new ArgumentNullException (nameof (handler));
-			if (dispatchQueue == null)
+			if (dispatchQueue is null)
 				throw new ArgumentNullException (nameof (dispatchQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
