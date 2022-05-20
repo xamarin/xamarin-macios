@@ -134,8 +134,9 @@ namespace Xamarin.Tests {
 				var output = new StringBuilder ();
 				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10)).Result;
 				if (assert_success && rv.ExitCode != 0) {
+					var outputStr = output.ToString ();
 					Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
-					Console.WriteLine (output);
+					Console.WriteLine (outputStr);
 					Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
 				}
 				return new ExecutionResult {
