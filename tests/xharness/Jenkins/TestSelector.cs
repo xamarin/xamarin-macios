@@ -321,9 +321,9 @@ namespace Xharness.Jenkins {
 					continue;
 				MainLog.WriteLine ($"Label {label} matches regexp.");
 				var match = regexp.Match (label);
-				var skip = match.Groups [1].Value == "skip-";
-				MainLog.WriteLine ($"Setting label {match.Groups[2].Value} to be enabled: {skip}");
-				selection.SetEnabled (match.Groups[2].Value, skip);
+				var run = match.Groups [1].Value == "run-";
+				MainLog.WriteLine ($"Setting label {match.Groups[2].Value} to be enabled: {run}");
+				selection.SetEnabled (match.Groups[2].Value, !run);
 			}
 
 			Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission); 
