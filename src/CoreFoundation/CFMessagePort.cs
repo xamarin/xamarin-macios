@@ -348,7 +348,7 @@ namespace CoreFoundation {
 			lock (invalidationHandles)
 				invalidationHandles.TryGetValue (messagePort, out callback);
 
-			if (callback != null)
+			if (callback is not null)
 				callback.Invoke ();
 		}
 

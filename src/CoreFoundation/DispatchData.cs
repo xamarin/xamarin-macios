@@ -66,7 +66,7 @@ namespace CoreFoundation {
 		//
 		public static DispatchData FromByteBuffer (byte [] buffer)
 		{
-			if (buffer == null)
+			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			var b = Marshal.AllocHGlobal (buffer.Length);
 			Marshal.Copy (buffer, 0, b, buffer.Length);
@@ -76,7 +76,7 @@ namespace CoreFoundation {
 
 		public static DispatchData FromByteBuffer (byte [] buffer, int start, int length)
 		{
-			if (buffer == null)
+			if (buffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			if (start < 0 || start >= buffer.Length)
 				throw new ArgumentException (nameof (start));

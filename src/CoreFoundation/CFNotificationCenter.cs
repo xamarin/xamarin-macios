@@ -103,9 +103,8 @@ namespace CoreFoundation {
 		public CFNotificationObserverToken AddObserver (string name, INativeObject objectToObserve, Action<string,NSDictionary?> notificationHandler,
 								CFNotificationSuspensionBehavior suspensionBehavior = CFNotificationSuspensionBehavior.DeliverImmediately)
 		{
-			if (darwinnc is not null && darwinnc.Handle == Handle){
-				if (name is null)
-					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name), "When using the Darwin Notification Center, the value passed must not be null");
+			if (darwinnc is not null && darwinnc.Handle == Handle && name is null){
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException ($"{nameof (name)}: When using the Darwin Notification Center, the value passed must not be null");
 			}
 
 			var strHandle = CFString.CreateNative (name);

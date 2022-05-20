@@ -56,21 +56,21 @@ namespace CoreFoundation {
 
 		public static DispatchBlock Create (Action action, DispatchBlockFlags flags = DispatchBlockFlags.None)
 		{
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			return new DispatchBlock (action, flags);
 		}
 
 		public static DispatchBlock Create (Action action, DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority)
 		{
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			return new DispatchBlock (action, flags, qosClass, relative_priority);
 		}
 
 		public static DispatchBlock Create (DispatchBlock block, DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority)
 		{
-			if (block == null)
+			if (block is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 			return block.Create (flags, qosClass, relative_priority);
 		}
@@ -97,7 +97,7 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		static IntPtr create (Action action, DispatchBlockFlags flags)
 		{
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -119,7 +119,7 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		static IntPtr create (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority, Action action)
 		{
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			BlockLiteral block_handler = new BlockLiteral ();
@@ -144,7 +144,7 @@ namespace CoreFoundation {
 
 		public void Notify (DispatchQueue queue, Action notification)
 		{
-			if (notification == null)
+			if (notification is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (notification));
 			using (var block = new DispatchBlock (notification))
 				Notify (queue, block);
@@ -154,7 +154,7 @@ namespace CoreFoundation {
 		{
 			if (queue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
-			if (notification == null)
+			if (notification is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (notification));
 			dispatch_block_notify (GetCheckedHandle (), queue.GetCheckedHandle (), notification.GetCheckedHandle ());
 		}
@@ -189,7 +189,7 @@ namespace CoreFoundation {
 
 		public static explicit operator Action? (DispatchBlock block)
 		{
-			if (block == null)
+			if (block is null)
 				return null;
 
 			unsafe {

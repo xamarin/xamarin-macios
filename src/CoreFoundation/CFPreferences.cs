@@ -61,7 +61,7 @@ namespace CoreFoundation
 
 		public static object? GetAppValue (string key, string applicationId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -72,9 +72,9 @@ namespace CoreFoundation
 
 		public static object? GetAppValue (string key, NSString applicationId)
 		{
-			if (key == null) {
+			if (key is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			} else if (applicationId == null) {
+			} else if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -105,7 +105,7 @@ namespace CoreFoundation
 
 		public static void SetAppValue (string key, object? value, string applicationId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -116,14 +116,14 @@ namespace CoreFoundation
 
 		public static void SetAppValue (string key, object? value, NSString applicationId)
 		{
-			if (key == null) {
+			if (key is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			} else if (applicationId == null) {
+			} else if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
 			using (var cfKey = new CFString (key)) {
-				if (value == null) {
+				if (value is null) {
 					CFPreferencesSetAppValue (cfKey.Handle, IntPtr.Zero, applicationId.Handle);
 				} else if (value is string) {
 					using (var valueStr = new CFString ((string)value)) {
@@ -141,7 +141,7 @@ namespace CoreFoundation
 				}
 
 				var nsnumber = NSNumber.FromObject (value);
-				if (nsnumber != null) {
+				if (nsnumber is not null) {
 					using (nsnumber) {
 						CFPreferencesSetAppValue (cfKey.Handle, nsnumber.Handle, applicationId.Handle);
 					}
@@ -185,7 +185,7 @@ namespace CoreFoundation
 
 		public static bool GetAppBooleanValue (string key, string applicationId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -196,9 +196,9 @@ namespace CoreFoundation
 
 		public static bool GetAppBooleanValue (string key, NSString applicationId)
 		{
-			if (key == null) {
+			if (key is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			} else if (applicationId == null) {
+			} else if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -220,7 +220,7 @@ namespace CoreFoundation
 
 		public static nint GetAppIntegerValue (string key, string applicationId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -231,9 +231,9 @@ namespace CoreFoundation
 
 		public static nint GetAppIntegerValue (string key, NSString applicationId)
 		{
-			if (key == null) {
+			if (key is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			} else if (applicationId == null) {
+			} else if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -254,7 +254,7 @@ namespace CoreFoundation
 
 		public static void AddSuitePreferencesToApp (string applicationId, string suiteId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -265,9 +265,9 @@ namespace CoreFoundation
 
 		public static void AddSuitePreferencesToApp (NSString applicationId, string suiteId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
-			} else if (suiteId == null) {
+			} else if (suiteId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (suiteId));
 			}
 
@@ -288,7 +288,7 @@ namespace CoreFoundation
 
 		public static void RemoveSuitePreferencesFromApp (string applicationId, string suiteId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -299,9 +299,9 @@ namespace CoreFoundation
 
 		public static void RemoveSuitePreferencesFromApp (NSString applicationId, string suiteId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
-			} else if (suiteId == null) {
+			} else if (suiteId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (suiteId));
 			}
 
@@ -323,7 +323,7 @@ namespace CoreFoundation
 
 		public static bool AppSynchronize (string applicationId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -334,7 +334,7 @@ namespace CoreFoundation
 
 		public static bool AppSynchronize (NSString applicationId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -354,7 +354,7 @@ namespace CoreFoundation
 
 		public static bool AppValueIsForced (string key, string applicationId)
 		{
-			if (applicationId == null) {
+			if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 
@@ -365,9 +365,9 @@ namespace CoreFoundation
 
 		public static bool AppValueIsForced (string key, NSString applicationId)
 		{
-			if (key == null) {
+			if (key is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
-			} else if (applicationId == null) {
+			} else if (applicationId is null) {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationId));
 			}
 

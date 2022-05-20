@@ -374,7 +374,7 @@ namespace CoreFoundation {
 			GCHandle gch = GCHandle.FromIntPtr (context);
 			var obj = gch.Target as Tuple<Action, DispatchQueue>;
 			gch.Free ();
-			if (obj != null) {
+			if (obj is not null) {
 				var sc = SynchronizationContext.Current;
 
 				// Set GCD synchronization context. Mainly used when await executes inside GCD to continue
@@ -383,13 +383,13 @@ namespace CoreFoundation {
 				//
 				// This assumes that only 1 queue can run on thread at the same time
 				//
-				if (sc == null)
+				if (sc is null)
 					SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (obj.Item2));
 
 				try {
 					obj.Item1 ();
 				} finally {
-					if (sc == null)
+					if (sc is null)
 						SynchronizationContext.SetSynchronizationContext (null);
 				}
 			}
@@ -402,7 +402,7 @@ namespace CoreFoundation {
 			GCHandle gch = GCHandle.FromIntPtr (context);
 			var obj = gch.Target as Tuple<Action<long>, DispatchQueue>;
 			gch.Free ();
-			if (obj != null) {
+			if (obj is not null) {
 				var sc = SynchronizationContext.Current;
 
 				// Set GCD synchronization context. Mainly used when await executes inside GCD to continue
@@ -411,13 +411,13 @@ namespace CoreFoundation {
 				//
 				// This assumes that only 1 queue can run on thread at the same time
 				//
-				if (sc == null)
+				if (sc is null)
 					SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (obj.Item2));
 
 				try {
 					obj.Item1 ((long) count);
 				} finally {
-					if (sc == null)
+					if (sc is null)
 						SynchronizationContext.SetSynchronizationContext (null);
 				}
 			}
@@ -434,7 +434,7 @@ namespace CoreFoundation {
 
 		public void DispatchAsync (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			
 			dispatch_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
@@ -442,7 +442,7 @@ namespace CoreFoundation {
 
 		public void DispatchAsync (DispatchBlock block)
 		{
-			if (block == null)
+			if (block is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_async (GetCheckedHandle (), block.GetCheckedHandle ());
@@ -450,7 +450,7 @@ namespace CoreFoundation {
 
 		public void DispatchSync (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			
 			dispatch_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
@@ -458,7 +458,7 @@ namespace CoreFoundation {
 
 		public void DispatchSync (DispatchBlock block)
 		{
-			if (block == null)
+			if (block is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_sync (GetCheckedHandle (), block.GetCheckedHandle ());
@@ -466,7 +466,7 @@ namespace CoreFoundation {
 
 		public void DispatchBarrierAsync (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			
 			dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
@@ -474,7 +474,7 @@ namespace CoreFoundation {
 
 		public void DispatchBarrierAsync (DispatchBlock block)
 		{
-			if (block == null)
+			if (block is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_barrier_async (GetCheckedHandle (), block.GetCheckedHandle ());
@@ -482,7 +482,7 @@ namespace CoreFoundation {
 
 		public void DispatchBarrierSync (Action action)
 		{
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_barrier_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
@@ -490,7 +490,7 @@ namespace CoreFoundation {
 
 		public void DispatchBarrierSync (DispatchBlock block)
 		{
-			if (block == null)
+			if (block is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_barrier_sync (GetCheckedHandle (), block.GetCheckedHandle ());
@@ -498,7 +498,7 @@ namespace CoreFoundation {
 
 		public void DispatchAfter (DispatchTime when, Action action)
 		{
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_after_f (when.Nanoseconds, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
@@ -506,7 +506,7 @@ namespace CoreFoundation {
 
 		public void DispatchAfter (DispatchTime when, DispatchBlock block)
 		{
-			if (block == null)
+			if (block is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_after (when.Nanoseconds, GetCheckedHandle (), block.GetCheckedHandle ());
@@ -514,7 +514,7 @@ namespace CoreFoundation {
 
 		public void Submit (Action<int> action, long times)
 		{
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch_iterations);
 		}
@@ -673,15 +673,15 @@ namespace CoreFoundation {
 #if !NET
 		public static bool operator == (DispatchQueue left, DispatchQueue right)
 		{
-			if ((object) left == null)
-				return (object) right == null;
+			if (left as object is null)
+				return right as object is null;
 			return left.Equals (right);
 		}
 
 		public static bool operator != (DispatchQueue left, DispatchQueue right)
 		{
-			if ((object) left == null)
-				return (object) right != null;
+			if (left as object is null)
+				return right as object is not null;
 			return !left.Equals (right);
 		}
 
@@ -917,7 +917,7 @@ namespace CoreFoundation {
 		{
 			if (queue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_group_async_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
@@ -927,7 +927,7 @@ namespace CoreFoundation {
 		{
 			if (queue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
-			if (block == null)
+			if (block is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 			dispatch_group_notify (GetCheckedHandle (), queue.Handle, block.GetCheckedHandle ());
 		}
@@ -936,7 +936,7 @@ namespace CoreFoundation {
 		{
 			if (queue is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
-			if (action == null)
+			if (action is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_group_notify_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);

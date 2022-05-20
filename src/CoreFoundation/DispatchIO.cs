@@ -74,7 +74,7 @@ namespace CoreFoundation {
 		static void Trampoline_DispatchReadWriteHandler (IntPtr block, IntPtr dispatchData, int error)
 		{
 			var del = BlockLiteral.GetTarget<DispatchIOHandler> (block);
-			if (del != null) {
+			if (del is not null) {
 				var dd = dispatchData == IntPtr.Zero ? null : new DispatchData (dispatchData, owns: false);
 				del (dd, error);
 			}

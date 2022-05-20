@@ -585,7 +585,7 @@ namespace CoreFoundation {
 		protected void CheckError ()
 		{
 			var exc = GetError ();
-			if (exc != null)
+			if (exc is not null)
 				throw exc;
 		}
 
@@ -688,35 +688,35 @@ namespace CoreFoundation {
 		protected virtual void OnOpenCompleted (StreamEventArgs args)
 		{
 			var e = OpenCompletedEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnHasBytesAvailableEvent (StreamEventArgs args)
 		{
 			var e = HasBytesAvailableEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnCanAcceptBytesEvent (StreamEventArgs args)
 		{
 			var e = CanAcceptBytesEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnErrorEvent (StreamEventArgs args)
 		{
 			var e = ErrorEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnClosedEvent (StreamEventArgs args)
 		{
 			var e = ClosedEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 

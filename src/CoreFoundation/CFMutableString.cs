@@ -48,13 +48,13 @@ namespace CoreFoundation {
 		public CFMutableString (string @string = "", nint maxLength = default (nint))
 		{
 			// not really needed - but it's consistant with other .ctor
-			if (@string == null)
+			if (@string is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@string));
 			// NSMallocException Out of memory. We suggest restarting the application. If you have an unsaved document, create a backup copy in Finder, then try to save.
 			if (maxLength < 0)
 				throw new ArgumentException (nameof (maxLength));
 			Handle = CFStringCreateMutable (IntPtr.Zero, maxLength);
-			if (@string != null)
+			if (@string is not null)
 				CFStringAppendCharacters (Handle, @string, @string.Length);
 		}
 
@@ -63,7 +63,7 @@ namespace CoreFoundation {
 
 		public CFMutableString (CFString theString, nint maxLength = default (nint))
 		{
-			if (theString == null)
+			if (theString is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (theString));
 			// NSMallocException Out of memory. We suggest restarting the application. If you have an unsaved document, create a backup copy in Finder, then try to save.
 			if (maxLength < 0)
@@ -76,7 +76,7 @@ namespace CoreFoundation {
 
 		public void Append (string @string)
 		{
-			if (@string == null)
+			if (@string is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@string));
 			str = null; // destroy any cached value
 			CFStringAppendCharacters (Handle, @string, @string.Length);

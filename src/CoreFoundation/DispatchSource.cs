@@ -113,7 +113,7 @@ namespace CoreFoundation {
 
 		public void SetEventHandler (Action handler)
 		{
-			if (handler == null){
+			if (handler is null){
 				dispatch_source_set_event_handler_f (GetCheckedHandle (), IntPtr.Zero);
 				return;
 			}
@@ -121,7 +121,7 @@ namespace CoreFoundation {
 			DispatchBlock.Invoke (
 				delegate {
 					var sc = SynchronizationContext.Current;
-					if (sc == null) {
+					if (sc is null) {
 						if (queue is null)
 							ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 						SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (queue));
@@ -129,7 +129,7 @@ namespace CoreFoundation {
 					try {
 						handler ();
 					} finally {
-						if (sc == null)
+						if (sc is null)
 							SynchronizationContext.SetSynchronizationContext (null);
 					}
 				}, block=> dispatch_source_set_event_handler (GetCheckedHandle (), block));
@@ -147,13 +147,13 @@ namespace CoreFoundation {
 		
 		public void SetRegistrationHandler (Action handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			DispatchBlock.Invoke (
 				delegate {
 					var sc = SynchronizationContext.Current;
-					if (sc == null) {
+					if (sc is null) {
 						if (queue is null)
 							ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 						SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (queue));
@@ -161,7 +161,7 @@ namespace CoreFoundation {
 					try {
 						handler ();
 					} finally {
-						if (sc == null)
+						if (sc is null)
 							SynchronizationContext.SetSynchronizationContext (null);
 					}
 				}, block => dispatch_source_set_registration_handler (GetCheckedHandle (), block));
@@ -169,13 +169,13 @@ namespace CoreFoundation {
 
 		public void SetCancelHandler (Action handler)
 		{
-			if (handler == null)
+			if (handler is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			DispatchBlock.Invoke (
 				delegate {
 					var sc = SynchronizationContext.Current;
-					if (sc == null) {
+					if (sc is null) {
 						if (queue is null)
 							ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 						SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (queue));
@@ -183,7 +183,7 @@ namespace CoreFoundation {
 					try {
 						handler ();
 					} finally {
-						if (sc == null)
+						if (sc is null)
 							SynchronizationContext.SetSynchronizationContext (null);
 					}
 				}, block => dispatch_source_set_cancel_handler (GetCheckedHandle (), block));
@@ -579,7 +579,7 @@ namespace CoreFoundation {
 			
 			public VnodeMonitor (string path, VnodeMonitorKind vnodeKind, DispatchQueue? queue = null)
 			{
-				if (path == null)
+				if (path is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 
 				fd = open (path, O_EVTONLY);

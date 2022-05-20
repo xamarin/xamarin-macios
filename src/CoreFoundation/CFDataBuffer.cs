@@ -81,7 +81,7 @@ namespace CoreFoundation {
 
 		protected virtual void Dispose (bool disposing)
 		{
-			if (data != null) {
+			if (data is not null) {
 				data.Dispose ();
 				data = null;
 			}
