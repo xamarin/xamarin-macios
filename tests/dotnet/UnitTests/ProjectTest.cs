@@ -519,19 +519,27 @@ namespace Xamarin.Tests {
 
 			// Create a file that isn't a crash report.
 			File.WriteAllText (Path.Combine (appPath, "otherfile.txt"), "A file");
+			var otherFileInDir = Path.Combine (appPath, "otherdir", "otherfile.log");
+			Directory.CreateDirectory (Path.GetDirectoryName (otherFileInDir)!);
+			File.WriteAllText (otherFileInDir, "A log");
 
 			// Build again - this time it'll fail
 			var rv = DotNet.Build (project_path, properties);
 			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			Assert.AreEqual (1, warnings.Length, "Warning Count");
-			Assert.AreEqual ($"Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/{Configuration.DotNetTfm}-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherfile.txt", warnings [0].Message, "Warning");
+			Assert.AreEqual ($"Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:\nbin/Debug/{Configuration.DotNetTfm}-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherfile.txt\nbin/Debug/{Configuration.DotNetTfm}-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherdir\nbin/Debug/{Configuration.DotNetTfm}-maccatalyst/maccatalyst-x64/MySimpleApp.app/otherdir/otherfile.log", warnings [0].Message, "Warning");
 
-			// Remove the offending file
-			File.Delete (Path.Combine (appPath, "otherfile.txt"));
+			// Build again, asking for automatic removal of the extraneous files.
+			var enableAutomaticCleanupProperties = new Dictionary<string, string> (properties);
+			enableAutomaticCleanupProperties ["EnableAutomaticAppBundleRootDirectoryCleanup"] = "true";
+			rv = DotNet.AssertBuild (project_path, enableAutomaticCleanupProperties);
+			warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).ToArray ();
+			Assert.AreEqual (0, warnings.Length, "Warning Count");
 
-			// Build yet again
-			DotNet.AssertBuild (project_path, properties);
+			// Verify that the files were in fact removed.
+			Assert.That (Path.Combine (appPath, "otherfile.txt"), Does.Not.Exist, "otherfile");
+			Assert.That (Path.GetDirectoryName (otherFileInDir), Does.Not.Exist, "otherdir");
 		}
 
 		[Test]
