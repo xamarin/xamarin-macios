@@ -13,13 +13,13 @@
       <Replacement>@MACOS_PACK_VERSION_SHORT@</Replacement>
     </ShortNames>
     <ShortNames Include="Microsoft.MacCatalyst.Runtime.maccatalyst">
-      <Replacement>Microsoft.MacCatalyst.Runtime</Replacement>
+      <Replacement>MacCatalyst.Runtime</Replacement>
     </ShortNames>
     <ShortNames Include="Microsoft.NET.Sdk.MacCatalyst.Manifest">
-      <Replacement>Microsoft.MacCatalyst.Manifest</Replacement>
+      <Replacement>MacCatalyst.Manifest</Replacement>
     </ShortNames>
     <ShortNames Include="Microsoft.tvOS.Runtime.tvossimulator">
-      <Replacement>Microsoft.tvOS.Runtime</Replacement>
+      <Replacement>tvOS.Runtime</Replacement>
     </ShortNames>
     <ComponentResources Include="ios" Version="@IOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for iOS" Description=".NET SDK Workload for building iOS applications."/>
     <ComponentResources Include="maccatalyst" Version="@MACCATALYST_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for Mac Catalyst" Description=".NET SDK Workload for building macOS applications with Mac Catalyst."/>
