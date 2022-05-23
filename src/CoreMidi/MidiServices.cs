@@ -351,7 +351,7 @@ namespace CoreMidi {
 
 		public void SetData (IntPtr property, NSData data)
 		{
-			if (data == null)
+			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			MIDIObjectSetDataProperty (handle, property, data.Handle);
 		}
@@ -379,7 +379,7 @@ namespace CoreMidi {
 
 		public void SetString (IntPtr property, string value)
 		{
-			if (value == null)
+			if (value is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			using (var nsval = new NSString (value)){
 				MIDIObjectSetDictionaryProperty (handle, property, nsval.Handle);
@@ -652,12 +652,12 @@ namespace CoreMidi {
 			switch (id){
 			case MidiNotificationMessageId.SetupChanged:
 				var esc = client?.SetupChanged;
-				if (esc != null)
+				if (esc is not null)
 					esc (client, EventArgs.Empty);
 				break;
 			case MidiNotificationMessageId.ObjectAdded:
 				var eoa = client?.ObjectAdded;
-				if (eoa != null){
+				if (eoa is not null){
 					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification))!;
 					eoa (client, new ObjectAddedOrRemovedEventArgs (MidiObjectFromType (data.ParentType, data.Parent),
 											MidiObjectFromType (data.ChildType, data.Child)));
@@ -665,7 +665,7 @@ namespace CoreMidi {
 				break;
 			case MidiNotificationMessageId.ObjectRemoved:
 				var eor = client?.ObjectRemoved;
-				if (eor != null){
+				if (eor is not null){
 					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification))!;
 					eor (client, new ObjectAddedOrRemovedEventArgs (MidiObjectFromType (data.ParentType, data.Parent),
 											MidiObjectFromType (data.ChildType, data.Child)));
@@ -673,7 +673,7 @@ namespace CoreMidi {
 				break;
 			case MidiNotificationMessageId.PropertyChanged:
 				var epc = client?.PropertyChanged;
-				if (epc != null){
+				if (epc is not null){
 					var data = (MidiObjectPropertyChangeNotification) Marshal.PtrToStructure (message, typeof (MidiObjectPropertyChangeNotification))!;
 					epc (client, new ObjectPropertyChangedEventArgs (
 						     MidiObjectFromType (data.ObjectType, data.ObjectHandle), CFString.FromHandle (data.PropertyName)));
@@ -681,17 +681,17 @@ namespace CoreMidi {
 				break;
 			case MidiNotificationMessageId.ThruConnectionsChanged:
 				var e = client?.ThruConnectionsChanged;
-				if (e != null)
+				if (e is not null)
 					e (client, EventArgs.Empty);
 				break;
 			case MidiNotificationMessageId.SerialPortOwnerChanged:
 				e = client?.SerialPortOwnerChanged;
-				if (e != null)
+				if (e is not null)
 					e (client, EventArgs.Empty);
 				break;
 			case MidiNotificationMessageId.IOError:
 				var eio = client?.IOError;
-				if (eio != null){
+				if (eio is not null){
 					var data = (MidiIOErrorNotification) Marshal.PtrToStructure (message, typeof (MidiIOErrorNotification))!;
 					eio (client, new IOErrorEventArgs (new MidiDevice (data.DeviceRef), data.ErrorCode));
 				}
@@ -782,7 +782,7 @@ namespace CoreMidi {
 		
 		MidiPacket (long timestamp, byte [] bytes, int start, int length, bool check)
 		{
-			if (bytes == null)
+			if (bytes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			if (length > UInt16.MaxValue)
 				throw new ArgumentException ("length is bigger than 64k");
@@ -827,7 +827,7 @@ namespace CoreMidi {
 
 		public IntPtr Bytes {
 			get {
-				if (bytes == null)
+				if (bytes is null)
 					return byteptr;
 				unsafe {
 					fixed (byte *p = &bytes [start]){
@@ -917,7 +917,7 @@ namespace CoreMidi {
 				dest += 8;
 				Marshal.WriteInt16 (buffer, dest, (short) packet_size);
 				dest += 2;
-				if (packet.ByteArray == null) {
+				if (packet.ByteArray is null) {
 					Buffer.MemoryCopy ((void*) packet.BytePointer, (void*) (buffer + dest), packet_size, packet_size);
 				} else {
 					Marshal.Copy (packet.ByteArray, packet.start, buffer + dest, packet_size);
@@ -1019,7 +1019,7 @@ namespace CoreMidi {
 
 			if (gch.Target is MidiPort port) {
 				var e = port.MessageReceived;
-				if (e != null) {
+				if (e is not null) {
 					using (var args = new MidiPacketsEventArgs (packetList)) {
 						e (port, args);
 					}
@@ -1035,14 +1035,14 @@ namespace CoreMidi {
 
 		public MidiError ConnectSource (MidiEndpoint endpoint)
 		{
-			if (endpoint == null)
+			if (endpoint is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			return (MidiError) MIDIPortConnectSource (handle, endpoint.handle, GCHandle.ToIntPtr (gch));
 		}
 
 		public MidiError Disconnect (MidiEndpoint endpoint)
 		{
-			if (endpoint == null)
+			if (endpoint is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			return (MidiError) MIDIPortDisconnectSource (handle, endpoint.handle);
 		}
@@ -1087,9 +1087,9 @@ namespace CoreMidi {
 #endif
 		public MidiError Send (MidiEndpoint endpoint, MidiPacket [] packets)
 		{
-			if (endpoint == null)
+			if (endpoint is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
-			if (packets == null)
+			if (packets is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (packets));
 			var p = MidiPacket.CreatePacketList (packets);
 			var code = MIDISend (handle, endpoint.handle, p);
@@ -2219,7 +2219,7 @@ namespace CoreMidi {
 
 			if (gch.Target is MidiEndpoint port) {
 				var e = port.MessageReceived;
-				if (e != null)
+				if (e is not null)
 					e (port, new MidiPacketsEventArgs (packetList));
 			}
 		}
@@ -2246,7 +2246,7 @@ namespace CoreMidi {
 #endif
 		public MidiError Received (MidiPacket [] packets)
 		{
-			if (packets == null)
+			if (packets is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (packets));
 
 			var block = MidiPacket.CreatePacketList (packets);
@@ -2271,7 +2271,7 @@ namespace CoreMidi {
 		public bool IsNetworkSession {
 			get {
 				using (var dict =  GetDictionaryProperties (true)){
-					if (dict == null)
+					if (dict is null)
 						return false;
 					
 					using (var key = new NSString ("apple.midirtp.session"))
@@ -2528,7 +2528,7 @@ namespace CoreMidi {
 
 		public MidiPacket [] Packets {
 			get {
-				if (list == null)
+				if (list is null)
 					list = MidiPacket.ReadPacketList (packetList);
 				return list;
 			}
@@ -2544,7 +2544,7 @@ namespace CoreMidi {
 		{
 			// The list of packets may have pointers into packetList, make sure
 			// we invalidate those pointers.
-			if (list != null) {
+			if (list is not null) {
 				foreach (var packet in list)
 					packet.Dispose ();
 			}

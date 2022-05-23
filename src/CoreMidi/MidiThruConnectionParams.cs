@@ -70,7 +70,7 @@ namespace CoreMidi {
 				return map_value ?? (map_value = new byte [128]);
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				if (value.Length != 128)
 					throw new ArgumentOutOfRangeException (nameof (value), "The length of the Value array must be 128");
@@ -338,15 +338,15 @@ namespace CoreMidi {
 					connectionParams.ChannelMap[i] = ChannelMap[i];
 			}
 
-			connectionParams.NumControlTransforms = Controls != null ? (ushort) Controls.Length : (ushort) 0;
-			connectionParams.NumMaps = Maps != null ? (ushort) Maps.Length : (ushort) 0;
+			connectionParams.NumControlTransforms = Controls is not null ? (ushort) Controls.Length : (ushort) 0;
+			connectionParams.NumMaps = Maps is not null ? (ushort) Maps.Length : (ushort) 0;
 
 			var paramsSize = Marshal.SizeOf (typeof (MidiThruConnectionParamsStruct));
 			var controlsSize = Marshal.SizeOf (typeof (MidiControlTransform));
 			// Get the full size of the struct, static + dynamic parts
 			var fullSize = paramsSize +
-				(Controls == null ? 0 : controlsSize * Controls.Length) +
-				(Maps == null ? 0 : 128 * Maps.Length);
+				(Controls is null ? 0 : controlsSize * Controls.Length) +
+				(Maps is null ? 0 : 128 * Maps.Length);
 			var buffer = Marshal.AllocHGlobal (fullSize);
 			var bufferEnd = IntPtr.Add (buffer, Marshal.SizeOf (typeof (MidiThruConnectionParamsStruct)));
 
