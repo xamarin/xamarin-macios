@@ -36,6 +36,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Jenkins\ErrorKnowledgeBaseTests.cs" />
+    <Compile Include="Jenkins\TestSelectionTests.cs" />
+    <Compile Include="Jenkins\TestSelectorTests.cs" />
     <Compile Include="TestImporter\Templates\Tests\PListExtensionsTests.cs" />
     <Compile Include="TestImporter\Tests\ProjectDefinitionTests.cs" />
     <Compile Include="Tests\BCLTestImportTargetFactoryTest.cs" />
