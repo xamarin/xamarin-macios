@@ -38,7 +38,7 @@ namespace WebKit {
 
 		public bool MoveNext () {
 			if (_container is null)
-				return false;
+				throw new ObjectDisposedException (nameof (_container));
 			return ++_index < _container.Count;
 		}
 
