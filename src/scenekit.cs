@@ -3010,6 +3010,9 @@ namespace SceneKit {
 
 	[Watch (3,0)]
 	[iOS (8,0)]
+	[MacCatalyst (13, 0)]
+	[TV (9, 0)]
+	[Mac (10, 8)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SCNSceneRenderer {

@@ -524,6 +524,11 @@
         <value>{0} exited with code {1}
         </value>
     </data>
+
+    <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
     
     <data name="M0119" xml:space="preserve">
         <value>Skipping `{0}' as the output file, `{1}', is newer.
@@ -1414,6 +1419,10 @@
 
     <data name="E7099" xml:space="preserve">
         <value>The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}).</value>
+    </data>
+
+    <data name="W7100" xml:space="preserve">
+        <value>Could not find the binding resource package: {0}</value>
     </data>
 
     <data name="E7101" xml:space="preserve">

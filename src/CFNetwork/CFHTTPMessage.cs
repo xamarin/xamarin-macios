@@ -294,6 +294,7 @@ namespace CoreServices {
 			[UnsupportedOSPlatform ("tvos12.0")]
 			[UnsupportedOSPlatform ("macos10.14")]
 			[UnsupportedOSPlatform ("ios12.0")]
+			[UnsupportedOSPlatform ("maccatalyst")]
 #if TVOS
 			[Obsolete ("Starting with tvos12.0 not available anymore.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #elif MONOMAC

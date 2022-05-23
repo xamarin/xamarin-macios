@@ -20,6 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -36,6 +39,8 @@ namespace UIKit {
 #if NET
 	[SupportedOSPlatform ("tvos11.0")]
 	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst13.1")]
+	[SupportedOSPlatform ("macos10.15")]
 #else
 	[Watch (4,0)]
 	[TV (11,0)]
@@ -71,10 +76,10 @@ namespace UIKit {
 			return (Bottom == other.Bottom);
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
-			if (obj is NSDirectionalEdgeInsets)
-				return Equals ((NSDirectionalEdgeInsets) obj);
+			if (obj is NSDirectionalEdgeInsets insets)
+				return Equals (insets);
 			return false;
 		}
 

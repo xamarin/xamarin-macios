@@ -16,6 +16,10 @@ steps:
 
 - template: ../common/checkout.yml
 
+- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache and kills processes at the end
+  parameters:
+    CleanseProcesses: true
+
 # Write a generic failure message to the failure comment file, so a failure will be reported
 # if something goes wrong before we successfully complete the tests (in which case we delete the file).
 - pwsh: |
@@ -112,22 +116,21 @@ steps:
   timeoutInMinutes: 30
   enabled: false
 
-# download the artifacts.json, which will use to find the URI of the built pkg to later be installed by provisionator
 - task: DownloadPipelineArtifact@2
-  displayName: Download artifacts.json
+  displayName: Download not notaraized build
   inputs:
-    patterns: '**/*.json'
+    artifact: 'not-signed-package'
     allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/artifacts
+    path: $(Build.SourcesDirectory)/package
 
 - pwsh: |
-    Dir $(Build.SourcesDirectory)/artifacts
-    $json = Get-Content '$(Build.SourcesDirectory)/artifacts/pkg-info/artifacts.json' | Out-String | ConvertFrom-Json
-    foreach ($i in $json) {
-      if ($i.url -match ".*/xamarin.mac-[0-9]*[.][0-9]*[.][0-9]*[.][0-9]*[.]pkg$" -and -not ($i.url -like "*notarized*")) {
-        $url = $i.url
-        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$url"
-        break
+    $dir = "$(Build.SourcesDirectory)/package"
+    Dir $dir
+    $items = Get-ChildItem $dir -Recurse
+    foreach ($i in $items) {
+      if ($i.Name -like "xamarin.mac-*.pkg") {
+        $path = $i.FullName
+        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$path"
       }
     }
   displayName: 'Set Mac pkgs url'

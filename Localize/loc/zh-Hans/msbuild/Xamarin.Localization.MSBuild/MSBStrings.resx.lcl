@@ -1816,6 +1816,15 @@
         </Str>
         <Disp Icon="Str" />
       </Item>
+      <Item ItemId=";E7101" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Unknown property '{0}' with value '{1}'.]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[值为“{1}”的未知属性“{0}”。]]></Val>
+          </Tgt>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
       <Item ItemId=";InvalidFramework" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
           <Val><![CDATA[Invalid framework: {0}]]></Val>
@@ -2412,9 +2421,21 @@
       </Item>
       <Item ItemId=";W7097" ItemType="0;.resx" PsrId="211" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has been values for each item (once it's '{2}', another time it's '{3}').]]></Val>
+          <Val><![CDATA[Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has different values for each item (once it's '{2}', another time it's '{3}').]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[已使用不同的元数据多次为 {0} 请求代码签名。元数据“{1}”已是每一项的值(一次为“{2}”，另一次为“{3}”)。]]></Val>
+            <Val><![CDATA[已使用不同的元数据多次为“{0}”请求代码签名。元数据“{1}”为每一项提供不同的值(一次为“{2}”，另一次为“{3}”)。]]></Val>
+          </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has been values for each item (once it's '{2}', another time it's '{3}').]]></Val>
+          </Prev>
+        </Str>
+        <Disp Icon="Str" />
+      </Item>
+      <Item ItemId=";W7100" ItemType="0;.resx" PsrId="211" Leaf="true">
+        <Str Cat="Text">
+          <Val><![CDATA[Could not find the binding resource package: {0}]]></Val>
+          <Tgt Cat="Text" Stat="Loc" Orig="New">
+            <Val><![CDATA[找不到绑定资源包: {0}]]></Val>
           </Tgt>
         </Str>
         <Disp Icon="Str" />

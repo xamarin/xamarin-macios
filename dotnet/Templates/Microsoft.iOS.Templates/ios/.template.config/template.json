@@ -3,7 +3,7 @@
     "author": "Microsoft",
     "classifications": [ "iOS", "Mobile" ],
     "identity": "Microsoft.iOS.iOSApp",
-    "name": "iOS Application (Preview)",
+    "name": "iOS Application",
     "description": "A project for creating a .NET iOS application",
     "shortName": "ios",
     "tags": {

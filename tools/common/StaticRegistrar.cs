@@ -1862,6 +1862,28 @@ namespace Registrar {
 			return rv;
 		}
 
+		NativeNameAttribute GetNativeNameAttribute (TypeReference type)
+		{
+			if (!TryGetAttribute ((ICustomAttributeProvider) type, ObjCRuntime, "NativeNameAttribute", out var attrib))
+				return null;
+
+			return CreateNativeNameAttribute (attrib, type);
+		}
+
+		static NativeNameAttribute CreateNativeNameAttribute (ICustomAttribute attrib, TypeReference type)
+		{
+			if (attrib.HasFields)
+				throw ErrorHelper.CreateError (4124, Errors.MT4124_I, "NativeNameAttribute", type.FullName);
+
+			switch (attrib.ConstructorArguments.Count) {
+			case 1:
+				var t1 = (string) attrib.ConstructorArguments [0].Value;
+				return new NativeNameAttribute (t1);
+			default:
+				throw ErrorHelper.CreateError (4124, Errors.MT4124_I, "NativeNameAttribute", type.FullName);
+			}
+		}
+
 		protected override BindAsAttribute GetBindAsAttribute (PropertyDefinition property)
 		{
 			if (property == null)
@@ -2540,7 +2562,7 @@ namespace Registrar {
 				} else if (td.IsValueType) {
 					if (IsPlatformType (td)) {
 						CheckNamespace (td, exceptions);
-						return td.Name;
+						return GetNativeName (td);
 					}
 					return CheckStructure (td, descriptiveMethodName, inMethod);
 				} else {
@@ -2549,6 +2571,15 @@ namespace Registrar {
 			}
 		}
 		
+		string GetNativeName (TypeDefinition type)
+		{
+			var attrib = GetNativeNameAttribute (type);
+			if (attrib is null)
+				return type.Name;
+
+			return attrib.NativeName;
+		}
+
 		string GetPrintfFormatSpecifier (TypeDefinition type, out bool unknown)
 		{
 			unknown = false;
@@ -4282,7 +4313,7 @@ namespace Registrar {
 			}
 
 			// Might be an implementation of an optional protocol member.
-			var allProtocols = obj_method.DeclaringType.AllProtocols;
+			var allProtocols = obj_method.DeclaringType.AllProtocolsInHierarchy;
 			if (allProtocols != null) {
 				string selector = null;
 
@@ -4329,7 +4360,7 @@ namespace Registrar {
 			}
 
 			// Might be an implementation of an optional protocol member.
-			var allProtocols = obj_method.DeclaringType.AllProtocols;
+			var allProtocols = obj_method.DeclaringType.AllProtocolsInHierarchy;
 			if (allProtocols != null) {
 				string selector = null;
 
@@ -4353,7 +4384,7 @@ namespace Registrar {
 								continue;
 							if (!TypeMatch (pMethod.ReturnType, method.ReturnType))
 								continue;
-							if (ParametersMatch (method.Parameters, pMethod.Parameters))
+							if (!ParametersMatch (method.Parameters, pMethod.Parameters))
 								continue;
 
 							MethodDefinition extensionMethod = pMethod.Method;
@@ -4402,8 +4433,21 @@ namespace Registrar {
 
 			if (!method.HasCustomAttributes)
 				return false;
-			
-			var t = method.DeclaringType;
+
+			var type = method.DeclaringType;
+			while (type is not null && (object) type != (object) type.BaseType) {
+				if (MapProtocolMember (type, method, out extensionMethod))
+					return true;
+
+				type = type.BaseType?.Resolve ();
+			}
+
+			return false;
+		}
+
+		public bool MapProtocolMember (TypeDefinition t, MethodDefinition method, out MethodDefinition extensionMethod)
+		{
+			extensionMethod = null;
 
 			if (!t.HasInterfaces)
 				return false;

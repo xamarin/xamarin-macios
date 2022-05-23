@@ -39,13 +39,6 @@ steps:
     MacDeveloper: $(mac-developer)
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
-# the ddsign plugin needs this version or it will crash and will make the sign step fail
-- task: UseDotNet@2
-  inputs:
-    packageType: sdk
-    version: 3.x
-  displayName: 'Install .NET Core SDK 3.x needed for ESRP'
-  
 - task: UseDotNet@2
   inputs:
     packageType: sdk
@@ -147,12 +140,6 @@ steps:
         $configVars.Add("RunMacTests", "True")
       }
 
-      if ($Env:SkipPublicJenkins -eq "True") {
-        $configVars.Add("SkipPublicJenkins", "True")
-      } else {
-        $configVars.Add("SkipPublicJenkins", "False")
-      }
-
       $configVars.Add("RunSampleTests", $Env:RunSampleTests)
       $configVars.Add("RunInternalTests", $Env:RunInternalTests)
 
@@ -170,7 +157,6 @@ steps:
       $configVars.Add("RunExternalTests", "True")
       $configVars.Add("RunMacTests", "True")
       $configVars.Add("RunSampleTests", "False")
-      $configVars.Add("SkipPublicJenkins", "False")
 
       # if a developer decided to trigger one without device tests, allow it
       if ($Env:RUN_DEVICE_TESTS -eq "true") {

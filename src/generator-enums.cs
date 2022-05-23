@@ -41,6 +41,12 @@ public partial class Generator {
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
 	}
 
+	void CopyNativeName (ICustomAttributeProvider provider)
+	{
+		foreach (var oa in AttributeManager.GetCustomAttributes<NativeNameAttribute> (provider))
+			print ("[NativeName (\"{0}\")]", oa.NativeName);
+	}
+
 	// caller already:
 	//	- setup the header and namespace
 	//	- call/emit PrintPlatformAttributes on the type
@@ -80,6 +86,7 @@ public partial class Generator {
 			print (sb.ToString ());
 		}
 		CopyObsolete (type);
+		CopyNativeName (type);
 
 		var unique_constants = new HashSet<string> ();
 		var fields = new Dictionary<FieldInfo, FieldAttribute> ();
@@ -92,7 +99,7 @@ public partial class Generator {
 			// skip value__ field 
 			if (f.IsSpecialName)
 				continue;
-			PrintPlatformAttributes (f);
+			PrintPlatformAttributes (f, is_enum: true);
 			CopyObsolete (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
 			var fa = AttributeManager.GetCustomAttribute<FieldAttribute> (f);

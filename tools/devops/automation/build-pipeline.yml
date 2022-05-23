@@ -39,7 +39,7 @@ parameters:
 - name: runWindowsIntegration
   displayName: Run Windows integration tests
   type: boolean
-  default: false
+  default: true
 
 - name: runGovernanceTests
   displayName: Run Governance Checks
@@ -201,6 +201,7 @@ variables:
 - group: Xamarin Release
 - group: Xamarin Notarization
 - group: XamarinCompatLab                                     # provisionator-uri setting
+- group: VSEng DTL secrets
 - name: GitHub.Token                                          # Override the GitHub.Token setting defined in the Xamarin Release group
   value: $(github--pat--vs-mobiletools-engineering-service2)  # Use a token dedicated to critical production workflows and help avoid GitHub throttling
 - name: AzDoBuildAccess.Token
@@ -335,6 +336,17 @@ stages:
         skipESRP: ${{ parameters.skipESRP }}
         pool: ${{ parameters.pool }}
 
+- stage: prepare_packages
+  displayName: 'Prepare packages'
+  dependsOn:
+  - build_packages
+  jobs:
+    - template: templates/sign-and-notarized/prepare-pkg-stage.yml
+      parameters:
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        enableDotnet: ${{ parameters.enableDotnet }}
+        skipESRP: ${{ parameters.skipESRP }}
+
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
     displayName: 'API diff'
@@ -349,8 +361,8 @@ stages:
           enableDotnet: ${{ parameters.enableDotnet }}
           pool: ${{ parameters.pool }}
 
-# .NET 6 Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
-- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(parameters.forceInsertion, true))) }}:
+# .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
+- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(parameters.forceInsertion, true))) }}:
   - template: templates/release/vs-insertion-prep.yml
 
 # Test stages

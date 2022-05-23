@@ -1,0 +1,5 @@
+MySingleView.exe=MySingleView.dll
+Xamarin.iOS.dll=Microsoft.iOS.dll
+Xamarin.iOS.aotdata.arm64=Microsoft.iOS.aotdata.arm64
+mscorlib.aotdata.arm64=System.Private.CoreLib.aotdata.arm64
+mscorlib.dll=System.Private.CoreLib.dll

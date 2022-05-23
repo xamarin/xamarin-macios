@@ -52,6 +52,7 @@
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\BindingImplAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\LinkWithAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\NativeAttribute.cs" />
+    <Compile Include="$(RepositoryPath)\src\ObjCRuntime\NativeNameAttribute.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\PlatformAvailability2.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\PlatformAvailabilityShadow.cs" />
     <Compile Include="$(RepositoryPath)\src\ObjCRuntime\Registrar.core.cs" />

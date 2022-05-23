@@ -638,6 +638,16 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} exited with code {1}:
+        ///{2}.
+        /// </summary>
+        public static string E0118 {
+            get {
+                return ResourceManager.GetString("E0118", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error saving `{0}&apos;: {1}
         ///        .
         /// </summary>
@@ -2683,11 +2693,20 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Code signing has been requested multiple times for &apos;{0}&apos;, with different metadata. The metadata &apos;{1}&apos; has been values for each item (once it&apos;s &apos;{2}&apos;, another time it&apos;s &apos;{3}&apos;)..
+        ///   Looks up a localized string similar to Code signing has been requested multiple times for &apos;{0}&apos;, with different metadata. The metadata &apos;{1}&apos; has different values for each item (once it&apos;s &apos;{2}&apos;, another time it&apos;s &apos;{3}&apos;)..
         /// </summary>
         public static string W7097 {
             get {
                 return ResourceManager.GetString("W7097", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find the binding resource package: {0}.
+        /// </summary>
+        public static string W7100 {
+            get {
+                return ResourceManager.GetString("W7100", resourceCulture);
             }
         }
     }
