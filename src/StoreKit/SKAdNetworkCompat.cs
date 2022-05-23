@@ -7,6 +7,8 @@
 // Copyright 2018 Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using System.ComponentModel;
 

@@ -886,7 +886,7 @@ MonoException *
 mono_get_exception_out_of_memory ()
 {
 	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_OutOfMemoryException, NULL);
-	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
+	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
 	return rv;
 }
 

@@ -5644,7 +5644,11 @@ namespace Foundation
 		NSDictionary ToDictionary ();
 	
 		[Export ("volatileDomainNames")]
+#if XAMCORE_5_0
+		string [] VolatileDomainNames { get; }
+#else
 		string [] VolatileDomainNames ();
+#endif
 	
 		[Export ("volatileDomainForName:")]
 		NSDictionary GetVolatileDomain (string domainName);

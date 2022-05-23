@@ -36,6 +36,8 @@ namespace Xamarin.Linker.Steps {
 			switch (attr_type.Namespace) {
 			case Namespaces.ObjCRuntime:
 				switch (attr_type.Name) {
+				case "NativeNameAttribute":
+					return true;
 				case "AdoptsAttribute":
 					return LinkContext.App.Optimizations.RegisterProtocols == true;
 				}

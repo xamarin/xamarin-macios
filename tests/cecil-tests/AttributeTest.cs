@@ -42,10 +42,6 @@ namespace Cecil.Tests {
 		public void ChildElementsListAvailabilityForAllPlatformsOnParent (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly is null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-				return;
-			}
 
 			HashSet<string> found = new HashSet<string> ();
 			foreach (var prop in Helper.FilterProperties (assembly, a => HasAnyAvailabilityAttribute (a))) {
@@ -498,10 +494,6 @@ namespace Cecil.Tests {
 		public void AllAttributedItemsMustIncludeCurrentPlatform (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly is null) {
-				Assert.Ignore ("{assemblyPath} could not be found (might be disabled in build)");
-				return;
-			}
 
 			string platformName = AssemblyToAttributeName (assemblyPath);
 

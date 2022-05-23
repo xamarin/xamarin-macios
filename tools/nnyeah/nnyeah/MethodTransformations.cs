@@ -8,12 +8,19 @@ namespace Microsoft.MaciOS.Nnyeah {
 		static List<Transformation>? allTransforms;
 		static Dictionary<string, Transformation>? transformTable;
 
-		public Dictionary<string, Transformation> GetTransforms (ModuleDefinition module, Func<List<bool>, CustomAttribute> attrBuilder)
+		public Dictionary<string, Transformation> GetTransforms (ModuleContainer modules, Func<List<bool>, CustomAttribute> attrBuilder)
 		{
+			var moduleToEdit = modules.ModuleToEdit;
 			if (transformTable is not null) {
 				return transformTable;
 			}
 
+			// handy abbreviations
+			var intPtrType = moduleToEdit.TypeSystem.IntPtr;
+			var uintPtrType = moduleToEdit.TypeSystem.UIntPtr;
+			var boolType = moduleToEdit.TypeSystem.Boolean;
+			var stringType = moduleToEdit.TypeSystem.String;
+			
 			// there are two types of transforms here: ones that can be made statically
 			// and ones that need more in the way of state and intermediate variables.
 
@@ -23,192 +30,176 @@ namespace Microsoft.MaciOS.Nnyeah {
 			allTransforms.AddRange (transforms);
 
 			// nint
-			var mref = new MethodReference ("CompareTo", module.TypeSystem.Int32, module.TypeSystem.IntPtr);
-			var parm = new ParameterDefinition (module.TypeSystem.IntPtr);
+			var mref = new MethodReference ("CompareTo", moduleToEdit.TypeSystem.Int32, intPtrType);
+			var parm = new ParameterDefinition (intPtrType);
 			parm.CustomAttributes.Add (attrBuilder (singleBool));
 			mref.Parameters.Add (parm);
 			allTransforms.Add (new Transformation ("System.Int32 System.nint::CompareTo(System.nint)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("CompareTo", module.TypeSystem.Int32, module.TypeSystem.IntPtr);
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Object));
+			mref = new MethodReference ("CompareTo", moduleToEdit.TypeSystem.Int32, intPtrType);
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Object));
 			allTransforms.Add (new Transformation ("System.Int32 System.nint::CompareTo(System.Object)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("Equals", module.TypeSystem.Boolean, module.TypeSystem.IntPtr);
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Object));
+			mref = new MethodReference ("Equals", boolType, intPtrType);
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Object));
 			allTransforms.Add (new Transformation ("System.Boolean System.nint::Equals(System.Object)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("Equals", module.TypeSystem.Boolean, module.TypeSystem.IntPtr);
-			parm = new ParameterDefinition (module.TypeSystem.IntPtr);
+			mref = new MethodReference ("Equals", boolType, intPtrType);
+			parm = new ParameterDefinition (intPtrType);
 			parm.CustomAttributes.Add (attrBuilder (singleBool));
 			mref.Parameters.Add (parm);
 			allTransforms.Add (new Transformation ("System.Boolean System.nint::Equals(System.nint)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("GetHashCode", module.TypeSystem.Int32, module.TypeSystem.IntPtr);
+			mref = new MethodReference ("GetHashCode", moduleToEdit.TypeSystem.Int32, intPtrType);
 			allTransforms.Add (new Transformation ("System.Int32 System.nint::GetHashCode ()",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("ToString", module.TypeSystem.String, module.TypeSystem.IntPtr);
+			mref = new MethodReference ("ToString", stringType, intPtrType);
 			allTransforms.Add (new Transformation ("System.String System.nint::ToString()",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			var formatProviderTypeRef = module.ImportReference (typeof (IFormatProvider));
+			var formatProviderTypeRef = moduleToEdit.ImportReference (typeof (IFormatProvider));
 
 			var formatProviderParam = new ParameterDefinition (formatProviderTypeRef);
-			mref = new MethodReference ("ToString", module.TypeSystem.String, module.TypeSystem.IntPtr);
+			mref = new MethodReference ("ToString", stringType, intPtrType);
 			mref.Parameters.Add (formatProviderParam);
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.String System.nint::ToString(System.IFormatProvider)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			var stringParam = new ParameterDefinition (module.TypeSystem.String);
-			mref = new MethodReference ("ToString", module.TypeSystem.String, module.TypeSystem.IntPtr);
+			var stringParam = new ParameterDefinition (stringType);
+			mref = new MethodReference ("ToString", stringType, intPtrType);
 			mref.Parameters.Add (stringParam);
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.String System.nint::ToString(System.String)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("ToString", module.TypeSystem.String, module.TypeSystem.IntPtr);
+			mref = new MethodReference ("ToString", stringType, intPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (formatProviderParam);
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.String System.nint::ToString(System.String,System.IFormatProvider)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("Parse", module.TypeSystem.IntPtr, module.TypeSystem.IntPtr);
+			mref = new MethodReference ("Parse", intPtrType, intPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.MethodReturnType.CustomAttributes.Add (attrBuilder (singleBool));
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nint System.nint::Parse(System.String)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("Parse", module.TypeSystem.IntPtr, module.TypeSystem.IntPtr);
+			mref = new MethodReference ("Parse", intPtrType, intPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (formatProviderParam);
 			mref.MethodReturnType.CustomAttributes.Add (attrBuilder (singleBool));
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nint System.nint::Parse(System.String,System.IFormatProvider)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			var globNumberStylesTypeRef = module.ImportReference (typeof (System.Globalization.NumberStyles));
+			var globNumberStylesTypeRef = moduleToEdit.ImportReference (typeof (System.Globalization.NumberStyles));
 			var globNumberStylesParam = new ParameterDefinition (globNumberStylesTypeRef);
-			mref = new MethodReference ("Parse", module.TypeSystem.IntPtr, module.TypeSystem.IntPtr);
+			mref = new MethodReference ("Parse", intPtrType, intPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (globNumberStylesParam);
 			mref.MethodReturnType.CustomAttributes.Add (attrBuilder (singleBool));
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nint System.nint::Parse(System.String,System.Globalization.NumberStyles)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("Parse", module.TypeSystem.IntPtr, module.TypeSystem.IntPtr);
+			mref = new MethodReference ("Parse", intPtrType, intPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (globNumberStylesParam);
 			mref.Parameters.Add (formatProviderParam);
 			mref.MethodReturnType.CustomAttributes.Add (attrBuilder (singleBool));
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nint System.nint::Parse(System.String,System.Globalization.NumberStyles,System.IFormatProvider)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			var nintRefParam = new ParameterDefinition (module.TypeSystem.IntPtr);
+			var nintRefParam = new ParameterDefinition (intPtrType);
 			nintRefParam.CustomAttributes.Add (attrBuilder (singleBool));
 			nintRefParam.IsOut = true;
-			mref = new MethodReference ("TryParse", module.TypeSystem.Boolean, module.TypeSystem.IntPtr);
+			mref = new MethodReference ("TryParse", boolType, intPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (nintRefParam);
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.Boolean System.nint::TryParse(System.String,System.nint&)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("TryParse", module.TypeSystem.Boolean, module.TypeSystem.IntPtr);
+			mref = new MethodReference ("TryParse", boolType, intPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (globNumberStylesParam);
 			mref.Parameters.Add (formatProviderParam);
 			mref.Parameters.Add (nintRefParam);
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.Boolean System.nint::TryParse(System.String,System.Globalization.NumberStyles,System.IFormatProvider,System.nint&)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			var decimalTypeReference = new TypeReference ("System", "Decimal", module, module.TypeSystem.CoreLibrary);
+			var decimalTypeReference = new TypeReference ("System", "Decimal", moduleToEdit, moduleToEdit.TypeSystem.CoreLibrary);
 			mref = new MethodReference ("op_Implicit", decimalTypeReference, decimalTypeReference);
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int64));
-			mref = module.ImportReference (mref);
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Int64));
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.Decimal System.nint::op_Implicit(System.nint)",
 				TransformationAction.Replace,
 				new List<Instruction> () {
 					Instruction.Create (OpCodes.Conv_I8),
 					Instruction.Create (OpCodes.Call, mref) }));
 
-			mref = new MethodReference ("op_Explicit", module.TypeSystem.Int64, decimalTypeReference);
+			mref = new MethodReference ("op_Explicit", moduleToEdit.TypeSystem.Int64, decimalTypeReference);
 			mref.Parameters.Add (new ParameterDefinition (decimalTypeReference));
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nint System.nint::op_Explicit(System.Decimal)",
 				TransformationAction.Replace,
 				new List<Instruction> () {
 					Instruction.Create (OpCodes.Call, mref),
 					Instruction.Create (OpCodes.Conv_I) }));
 
-			var nfloatTypeRef = new TypeReference ("System.Runtime.InteropServices", "NFloat", module, module.TypeSystem.CoreLibrary);
-			mref = new MethodReference (".ctor", module.TypeSystem.Void, nfloatTypeRef);
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Double));
-			mref = module.ImportReference (mref);
+			var nfloatTypeRef = new TypeReference ("System.Runtime.InteropServices", "NFloat", moduleToEdit, moduleToEdit.TypeSystem.CoreLibrary);
+			mref = new MethodReference (".ctor", moduleToEdit.TypeSystem.Void, nfloatTypeRef);
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Double));
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nfloat System.nint::op_Implicit(System.nint)",
 				TransformationAction.Replace,
 				new List<Instruction> () {
 					Instruction.Create (OpCodes.Conv_R8),
 					Instruction.Create (OpCodes.Newobj, mref) }));
 
-			var nintVar = new VariableDefinition (module.TypeSystem.Int64);
-			var typeCodeRef = new TypeReference ("System", "TypeCode", module, module.TypeSystem.CoreLibrary);
-			mref = new MethodReference ("GetTypeCode", typeCodeRef, module.TypeSystem.Int64);
-			mref = module.ImportReference (mref);
+			var nintVar = new VariableDefinition (moduleToEdit.TypeSystem.Int64);
+			var typeCodeRef = new TypeReference ("System", "TypeCode", moduleToEdit, moduleToEdit.TypeSystem.CoreLibrary);
+			mref = new MethodReference ("GetTypeCode", typeCodeRef, moduleToEdit.TypeSystem.Int64);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.TypeCode System.nint::GetTypeCode()",
 				TransformationAction.Replace,
 				new List<Instruction> () {
-					Instruction.Create (OpCodes.Ldobj, module.TypeSystem.IntPtr),
+					Instruction.Create (OpCodes.Ldobj, intPtrType),
 					Instruction.Create (OpCodes.Conv_I8),
 					Instruction.Create (OpCodes.Stloc, nintVar),
 					Instruction.Create (OpCodes.Ldloca, nintVar),
 					Instruction.Create (OpCodes.Call, mref)
 				}));
 
-			var iconvertibleTypeRef = new TypeReference ("System", "IConvertible", module, module.TypeSystem.CoreLibrary);
-			var iformatProviderTypeRef = new TypeReference ("System", "IFormatProvider", module, module.TypeSystem.CoreLibrary);
-			var iformatProviderVar = new VariableDefinition (iformatProviderTypeRef);
-			mref = new MethodReference ("ToBoolean", module.TypeSystem.Boolean, iconvertibleTypeRef);
-			mref = module.ImportReference (mref);
-			allTransforms.Add (new Transformation ("System.Boolean System.nint::System.IConvertible.ToBoolean(System.IFormatProvider)",
-				TransformationAction.Replace,
-				new List<Instruction> () {
-					Instruction.Create (OpCodes.Stloc, iformatProviderVar),
-					Instruction.Create (OpCodes.Unbox, module.TypeSystem.IntPtr),
-					Instruction.Create (OpCodes.Conv_I8),
-					Instruction.Create (OpCodes.Box, module.TypeSystem.Int64),
-					Instruction.Create (OpCodes.Ldloc, iformatProviderVar),
-					Instruction.Create (OpCodes.Call, mref)
-				}));
-
-			var marshalTypeReference = new TypeReference ("System.Runtime.InteropServices", "Marshal", module, module.TypeSystem.CoreLibrary);
-			mref = new MethodReference ("CopyArray", module.TypeSystem.Void, marshalTypeReference);
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.IntPtr));
-			mref.Parameters.Add (new ParameterDefinition (new ArrayType (module.TypeSystem.IntPtr)));
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
-			mref = module.ImportReference (mref);
+			var marshalTypeReference = new TypeReference ("System.Runtime.InteropServices", "Marshal", moduleToEdit, moduleToEdit.TypeSystem.CoreLibrary);
+			mref = new MethodReference ("CopyArray", moduleToEdit.TypeSystem.Void, marshalTypeReference);
+			mref.Parameters.Add (new ParameterDefinition (intPtrType));
+			mref.Parameters.Add (new ParameterDefinition (new ArrayType (intPtrType)));
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Int32));
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Int32));
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.Void System.nint::CopyArray(System.IntPtr,System.nint[],System.Int32,System.Int32)",
 				TransformationAction.Replace,
 				new List<Instruction> () {
 					Instruction.Create (OpCodes.Call, mref)
 				}));
 
-			mref = new MethodReference ("CopyArray", module.TypeSystem.Void, marshalTypeReference);
-			mref.Parameters.Add (new ParameterDefinition (new ArrayType (module.TypeSystem.IntPtr)));
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.IntPtr));
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Int32));
-			mref = module.ImportReference (mref);
+			mref = new MethodReference ("CopyArray", moduleToEdit.TypeSystem.Void, marshalTypeReference);
+			mref.Parameters.Add (new ParameterDefinition (new ArrayType (intPtrType)));
+			mref.Parameters.Add (new ParameterDefinition (intPtrType));
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Int32));
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Int32));
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.Void System.nint::CopyArray(System.nint[],System.Int32,System.IntPtr,System.Int32)",
 				TransformationAction.Replace,
 				new List<Instruction> () {
@@ -218,140 +209,140 @@ namespace Microsoft.MaciOS.Nnyeah {
 			//"System.nint System.nint::op_Explicit(System.nfloat)"
 
 			// nuint
-			mref = new MethodReference ("CompareTo", module.TypeSystem.Int32, module.TypeSystem.UIntPtr);
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.UIntPtr));
+			mref = new MethodReference ("CompareTo", moduleToEdit.TypeSystem.Int32, uintPtrType);
+			mref.Parameters.Add (new ParameterDefinition (uintPtrType));
 			parm.CustomAttributes.Add (attrBuilder (singleBool));
 			allTransforms.Add (new Transformation ("System.Int32 System.nuint::CompareTo(System.nuint)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("CompareTo", module.TypeSystem.Int32, module.TypeSystem.UIntPtr);
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Object));
+			mref = new MethodReference ("CompareTo", moduleToEdit.TypeSystem.Int32, uintPtrType);
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Object));
 			allTransforms.Add (new Transformation ("System.Int32 System.nuint::CompareTo(System.Object)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("Equals", module.TypeSystem.Boolean, module.TypeSystem.UIntPtr);
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Object));
+			mref = new MethodReference ("Equals", boolType, uintPtrType);
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Object));
 			allTransforms.Add (new Transformation ("System.Boolean System.nuint::Equals(System.Object)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("Equals", module.TypeSystem.Boolean, module.TypeSystem.UIntPtr);
-			parm = new ParameterDefinition (module.TypeSystem.UIntPtr);
+			mref = new MethodReference ("Equals", boolType, uintPtrType);
+			parm = new ParameterDefinition (uintPtrType);
 			parm.CustomAttributes.Add (attrBuilder (singleBool));
 			mref.Parameters.Add (parm);
 			allTransforms.Add (new Transformation ("System.Boolean System.nuint::Equals(System.nuint)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("GetHashCode", module.TypeSystem.Int32, module.TypeSystem.UIntPtr);
+			mref = new MethodReference ("GetHashCode", moduleToEdit.TypeSystem.Int32, uintPtrType);
 			allTransforms.Add (new Transformation ("System.Int32 System.nuint::GetHashCode()",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("ToString", module.TypeSystem.String, module.TypeSystem.UIntPtr);
+			mref = new MethodReference ("ToString", stringType, uintPtrType);
 			allTransforms.Add (new Transformation ("System.String System.nuint::ToString()",
 				Instruction.Create (OpCodes.Call, mref)));
 
 			formatProviderParam = new ParameterDefinition (formatProviderTypeRef);
-			mref = new MethodReference ("ToString", module.TypeSystem.String, module.TypeSystem.UIntPtr);
+			mref = new MethodReference ("ToString", stringType, uintPtrType);
 			mref.Parameters.Add (formatProviderParam);
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.String System.nuint::ToString(System.IFormatProvider)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			stringParam = new ParameterDefinition (module.TypeSystem.String);
-			mref = new MethodReference ("ToString", module.TypeSystem.String, module.TypeSystem.UIntPtr);
+			stringParam = new ParameterDefinition (stringType);
+			mref = new MethodReference ("ToString", stringType, uintPtrType);
 			mref.Parameters.Add (stringParam);
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.String System.nuint::ToString(System.String)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("Parse", module.TypeSystem.UIntPtr, module.TypeSystem.UIntPtr);
+			mref = new MethodReference ("Parse", uintPtrType, uintPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.MethodReturnType.CustomAttributes.Add (attrBuilder (singleBool));
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nuint System.nuint::Parse(System.String)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("Parse", module.TypeSystem.UIntPtr, module.TypeSystem.UIntPtr);
+			mref = new MethodReference ("Parse", uintPtrType, uintPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (formatProviderParam);
 			mref.MethodReturnType.CustomAttributes.Add (attrBuilder (singleBool));
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nuint System.nuint::Parse(System.String,System.IFormatProvider)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			globNumberStylesTypeRef = module.ImportReference (typeof (System.Globalization.NumberStyles));
+			globNumberStylesTypeRef = moduleToEdit.ImportReference (typeof (System.Globalization.NumberStyles));
 			globNumberStylesParam = new ParameterDefinition (globNumberStylesTypeRef);
-			mref = new MethodReference ("Parse", module.TypeSystem.UIntPtr, module.TypeSystem.UIntPtr);
+			mref = new MethodReference ("Parse", uintPtrType, uintPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (globNumberStylesParam);
 			mref.MethodReturnType.CustomAttributes.Add (attrBuilder (singleBool));
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nuint System.nuint::Parse(System.String,System.Globalization.NumberStyles)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("Parse", module.TypeSystem.UIntPtr, module.TypeSystem.UIntPtr);
+			mref = new MethodReference ("Parse", uintPtrType, uintPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (globNumberStylesParam);
 			mref.Parameters.Add (formatProviderParam);
 			mref.MethodReturnType.CustomAttributes.Add (attrBuilder (singleBool));
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nuint System.nuint::Parse(System.String,System.Globalization.NumberStyles,System.IFormatProvider)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			nintRefParam = new ParameterDefinition (module.TypeSystem.UIntPtr);
+			nintRefParam = new ParameterDefinition (uintPtrType);
 			nintRefParam.CustomAttributes.Add (attrBuilder (singleBool));
 			nintRefParam.IsOut = true;
-			mref = new MethodReference ("TryParse", module.TypeSystem.Boolean, module.TypeSystem.UIntPtr);
+			mref = new MethodReference ("TryParse", boolType, uintPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (nintRefParam);
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.Boolean System.nuint::TryParse(System.String,System.nuint&)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			mref = new MethodReference ("TryParse", module.TypeSystem.Boolean, module.TypeSystem.UIntPtr);
+			mref = new MethodReference ("TryParse", boolType, uintPtrType);
 			mref.Parameters.Add (stringParam);
 			mref.Parameters.Add (globNumberStylesParam);
 			mref.Parameters.Add (formatProviderParam);
 			mref.Parameters.Add (nintRefParam);
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.Boolean System.nuint::TryParse(System.String,System.Globalization.NumberStyles,System.IFormatProvider,System.nuint&)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			decimalTypeReference = new TypeReference ("System", "Decimal", module, module.TypeSystem.CoreLibrary);
+			decimalTypeReference = new TypeReference ("System", "Decimal", moduleToEdit, moduleToEdit.TypeSystem.CoreLibrary);
 			mref = new MethodReference ("op_Implicit", decimalTypeReference, decimalTypeReference);
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.UInt64));
-			mref = module.ImportReference (mref);
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.UInt64));
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.Decimal System.nuint::op_Implicit(System.nuint)",
 				TransformationAction.Replace,
 				new List<Instruction> () {
 					Instruction.Create (OpCodes.Conv_U8),
 					Instruction.Create (OpCodes.Call, mref) }));
 
-			mref = new MethodReference ("op_Explicit", module.TypeSystem.UInt64, decimalTypeReference);
+			mref = new MethodReference ("op_Explicit", moduleToEdit.TypeSystem.UInt64, decimalTypeReference);
 			mref.Parameters.Add (new ParameterDefinition (decimalTypeReference));
-			mref = module.ImportReference (mref);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nuint System.nuint::op_Explicit(System.Decimal)",
 				TransformationAction.Replace,
 				new List<Instruction> () {
 					Instruction.Create (OpCodes.Call, mref),
 					Instruction.Create (OpCodes.Conv_U) }));
 
-			nfloatTypeRef = new TypeReference ("System.Runtime.InteropServices", "NFloat", module, module.TypeSystem.CoreLibrary);
-			mref = new MethodReference (".ctor", module.TypeSystem.Void, nfloatTypeRef);
-			mref.Parameters.Add (new ParameterDefinition (module.TypeSystem.Double));
-			mref = module.ImportReference (mref);
+			nfloatTypeRef = new TypeReference ("System.Runtime.InteropServices", "NFloat", moduleToEdit, moduleToEdit.TypeSystem.CoreLibrary);
+			mref = new MethodReference (".ctor", moduleToEdit.TypeSystem.Void, nfloatTypeRef);
+			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Double));
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.nfloat System.nuint::op_Implicit(System.nuint)",
 				TransformationAction.Replace,
 				new List<Instruction> () {
 					Instruction.Create (OpCodes.Conv_R8),
 					Instruction.Create (OpCodes.Newobj, mref) }));
 
-			var nuintVar = new VariableDefinition (module.TypeSystem.UInt64);
-			mref = new MethodReference ("GetTypeCode", typeCodeRef, module.TypeSystem.UInt64);
-			mref = module.ImportReference (mref);
+			var nuintVar = new VariableDefinition (moduleToEdit.TypeSystem.UInt64);
+			mref = new MethodReference ("GetTypeCode", typeCodeRef, moduleToEdit.TypeSystem.UInt64);
+			mref = moduleToEdit.ImportReference (mref);
 			allTransforms.Add (new Transformation ("System.TypeCode System.nuint::GetTypeCode()",
 				TransformationAction.Replace,
 				new List<Instruction> () {
-					Instruction.Create (OpCodes.Ldobj, module.TypeSystem.UIntPtr),
+					Instruction.Create (OpCodes.Ldobj, uintPtrType),
 					Instruction.Create (OpCodes.Conv_U8),
 					Instruction.Create (OpCodes.Stloc, nuintVar),
 					Instruction.Create (OpCodes.Ldloca, nuintVar),

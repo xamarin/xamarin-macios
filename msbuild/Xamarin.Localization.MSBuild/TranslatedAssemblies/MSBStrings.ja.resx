@@ -423,6 +423,10 @@
         <value>{0} がコード {1} で終了しました
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>出力ファイル '{1}' のほうが新しいため、'{0}' をスキップしています。
         </value>
@@ -1132,12 +1136,18 @@
         <value>異なるメタデータを持つ '{0}' のコード署名が複数回要求されています。メタデータ '{1}={2}' が 1 つの項目に設定されていますが、もう一方の項目には設定されていません。</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>異なるメタデータを持つ '{0}' のコード署名が複数回要求されています。メタデータ '{1}' は各項目の値です ('{2}' になると、'{3}' になります)。</value>
+        <value>異なるメタデータを持つ '{0}' のコード署名が複数回要求されています。メタデータ '{1}' は項目ごとに異なる値を持ちます ('{2}' になったり、'{3}' になったりします)。</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>このプラットフォームでは、UIDeviceFamily 値 '6' は無効です。Mac Catalyst でのみ有効です。</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>UIDeviceFamily 値 '6' には macOS 11.0 が必要です。プロジェクト ファイルの 「SupportedOSPlatformVersion」 を 14.0 (macOS 11.0 と同等の Mac Catalyst バージョン) 以上に設定してください。現在の値は {0} (macOS {1}と同等)です。</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>バインド リソース パッケージが見つかりませんでした: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>値 '{1}' のプロパティ '{0}' が不明です。</value>
     </data>
 </root>

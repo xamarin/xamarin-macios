@@ -715,6 +715,7 @@ namespace CoreImage {
 	}
 
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+	[NativeName ("CIRAWDecoderVersion")]
 	public enum CIRawDecoderVersion : long {
 		
 		[Field ("CIRAWDecoderVersionNone")]

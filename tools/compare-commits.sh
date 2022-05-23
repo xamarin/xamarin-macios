@@ -155,11 +155,6 @@ rm -Rf "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_DIR"
 mkdir -p "$OUTPUT_SRC_DIR"
 
-# The top-level NuGet.config interferes with the build in XmlSync (for some
-# reason NuGet picks up the top-level NuGet.config instead of the NuGet.config
-# in XmlSync - even though all documentation I've read states otherwise).
-mv "$ROOT_DIR/NuGet.config" "$ROOT_DIR/NuGet.config.disabled"
-
 cd "$OUTPUT_SRC_DIR"
 git clone https://github.com/xamarin/xamarin-macios --reference "$ROOT_DIR"
 cd xamarin-macios
@@ -179,9 +174,6 @@ if ! make install -j8; then
 	report_error_line "${RED}Error: 'make install' failed for the hash $WHITE$BASE_HASH$CLEAR.${CLEAR}"
 	exit 1
 fi
-
-# Restore NuGet.config
-mv "$ROOT_DIR/NuGet.config.disabled" "$ROOT_DIR/NuGet.config"
 
 #
 # API diff

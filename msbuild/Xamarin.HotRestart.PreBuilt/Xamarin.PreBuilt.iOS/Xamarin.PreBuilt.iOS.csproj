@@ -13,7 +13,7 @@
     <MtouchExtraArgs>--registrar:dynamic</MtouchExtraArgs>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.4" />
+    <PackageReference Include="Xamarin.iOS.HotRestart.Application" Version="1.1.5" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\appiconfg.png" />

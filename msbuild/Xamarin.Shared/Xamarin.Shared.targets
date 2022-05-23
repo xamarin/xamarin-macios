@@ -1763,12 +1763,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<Target Name="_ParseBundlerArguments">
 		<ParseBundlerArguments
+			Aot="@(_AotArguments)"
 			ExtraArgs="$(_BundlerArguments)"
 			NoSymbolStrip="$(NoSymbolStrip)"
 			NoDSymUtil="$(NoDSymUtil)"
 			PackageDebugSymbols="$(PackageDebugSymbols)"
 			Verbosity="$(_BundlerVerbosity)"
 			>
+			<Output TaskParameter="Aot" ItemName="_AotArguments" />
 			<Output TaskParameter="CustomBundleName" PropertyName="_CustomBundleName" />
 			<Output TaskParameter="CustomLinkFlags" ItemName="_CustomLinkFlags" />
 			<Output TaskParameter="DlSym" ItemName="_BundlerDlsym" />
@@ -1780,6 +1782,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="Optimize" PropertyName="_BundlerOptimize"/>
 			<Output TaskParameter="PackageDebugSymbols" PropertyName="PackageDebugSymbols" />
 			<Output TaskParameter="Registrar" PropertyName="_BundlerRegistrar" />
+			<Output TaskParameter="RequirePInvokeWrappers" PropertyName="_RequirePInvokeWrappers" />
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
 			<Output TaskParameter="NoStrip" PropertyName="EnableAssemblyILStripping" />
