@@ -9,12 +9,22 @@ namespace MonoTests.System.Net.Http
 	{
 		public static readonly string MicrosoftUrl = "https://www.microsoft.com";
 		public static readonly Uri MicrosoftUri = new Uri (MicrosoftUrl);
+		public static readonly string MicrosoftHttpUrl = "http://www.microsoft.com";
 		public static readonly string XamarinUrl = "https://dotnet.microsoft.com/apps/xamarin";
+		public static readonly string XamarinHttpUrl = "http://dotnet.microsoft.com/apps/xamarin";
 		public static readonly Uri XamarinUri = new Uri (XamarinUrl);
 		public static readonly string StatsUrl = "https://api.imgur.com/2/stats";
 
-		public static readonly string [] Urls = {
+		public static readonly string [] HttpsUrls = {
 			MicrosoftUrl,
+			XamarinUrl,
+			Httpbin.Url,
+		};
+
+		public static readonly string [] HttpUrls = {
+			MicrosoftHttpUrl,
+			XamarinHttpUrl,
+			Httpbin.HttpUrl,
 		};
 
 		// Robots urls, useful when we want to get a small file
@@ -43,6 +53,7 @@ namespace MonoTests.System.Net.Http
 			public static readonly string PostUrl = "https://httpbin.org/post";
 			public static readonly string PutUrl = "https://httpbin.org/put";
 			public static readonly string CookiesUrl = $"https://httpbin.org/cookies";
+			public static readonly string HttpUrl = "http://httpbin.org";
 
 
 			public static string GetAbsoluteRedirectUrl (int count) => $"https://httpbin.org/absolute-redirect/{count}";
