@@ -324,13 +324,13 @@ namespace CoreMidi {
 			if (Sources?.Length > 0 && connectionParams.Sources is not null) {
 				connectionParams.NumSources = (uint)Sources.Length;
 				for (int i = 0; i < Sources.Length; i++)
-					connectionParams.Sources [i] = Sources [i];
+					connectionParams.Sources[i] = Sources[i];
 			}
 
 			if (Destinations?.Length > 0 && connectionParams.Destinations is not null) {
 				connectionParams.NumDestinations = (uint)Destinations.Length;
 				for (int i = 0; i < Destinations.Length; i++)
-					connectionParams.Destinations [i] = Destinations [i];
+					connectionParams.Destinations[i] = Destinations[i];
 			}
 
 			if (ChannelMap?.Length > 0 && connectionParams.ChannelMap is not null) {
