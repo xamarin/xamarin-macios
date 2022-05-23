@@ -36,6 +36,10 @@ namespace IntegrationAPI
 #pragma warning disable CS0067 // The event 'NIntAPI.Event' is never used
         public event EventWithNInt Event;
 #pragma warning disable CS0067 // The event 'NIntAPI.Event' is never used
+	public nint Sum (nint a, nint b) => a + b;
+	public nint Prod (nint a, nint b) => a * b;
+	public long ToLong (nint a) => (long)a;
+	public nuint ToNUint (nint a) => (nuint)a;
     }
 
     public class NUIntAPI
@@ -50,6 +54,10 @@ namespace IntegrationAPI
 #pragma warning disable CS0067 // The event 'NUIntAPI.Event' is never used
         public event EventWithNUInt Event;
 #pragma warning disable CS0067 // The event 'NUIntAPI.Event' is never used
+	public nuint Sum (nuint a, nuint b) => a + b;
+	public nuint Prod (nuint a, nuint b) => a * b;
+	public long ToLong (nuint a) => (long)a;
+	public nint ToNInt (nuint a) => (nint)a;
     }
 
     public class NFloatAPI
@@ -64,5 +72,8 @@ namespace IntegrationAPI
 #pragma warning disable CS0067 // The event 'NFloatAPI.Event' is never used
         public event EventWithNFloat Event;
 #pragma warning disable CS0067 // The event 'NFloatAPI.Event' is never used
+	public nfloat Sum (nfloat a, nfloat b) => a + b;
+	public nfloat Prod (nfloat a, nfloat b) => a * b;
+	public double ToDouble (nfloat a) => (double)a;
     }
 }
