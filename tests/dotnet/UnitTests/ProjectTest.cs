@@ -418,7 +418,8 @@ namespace Xamarin.Tests {
 		[Test]
 		[TestCase ("iossimulator-x64", false)]
 		[TestCase ("ios-arm64", true)]
-		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild)
+		[TestCase ("ios-arm64", true, "PublishTrimmed=true;UseInterpreter=true")]
+		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild, string extraProperties = null)
 		{
 			if (isDeviceBuild)
 				Configuration.AssertDeviceAvailable ();
@@ -429,6 +430,12 @@ namespace Xamarin.Tests {
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifier);
 			properties ["IsMacEnabled"] = "false";
+			if (extraProperties is not null) {
+				foreach (var assignment in extraProperties.Split (';')) {
+					var split = assignment.Split ('=');
+					properties [split [0]] = split [1];
+				}
+			}
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerDidNotExecute (result);
 			var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
