@@ -925,12 +925,13 @@ xamarin_open_assembly (const char *name)
 	char path [1024];
 	MonoAssembly *assembly;
 	bool exists = false;
+	MonoImageOpenStatus status = MONO_IMAGE_OK;
 
 #if MONOMAC
 	if (xamarin_get_is_mkbundle ()) {
-		assembly = mono_assembly_open (name, NULL);
+		assembly = mono_assembly_open (name, &status);
 		if (assembly == NULL)
-			xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
+			xamarin_assertion_message ("Failed to open the assembly '%s' from the app: %i (errno: %i). This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name, (int) status, errno);
 		return assembly;
 	}
 #endif
@@ -954,9 +955,9 @@ xamarin_open_assembly (const char *name)
 	if (!exists)
 		xamarin_assertion_message ("Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
 
-	assembly = mono_assembly_open (path, NULL);
+	assembly = mono_assembly_open (path, &status);
 	if (assembly == NULL)
-		xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
+		xamarin_assertion_message ("Failed to open the assembly '%s' from the app: %i (errno: %i). This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name, (int) status, errno);
 
 	return assembly;
 }
