@@ -70,7 +70,7 @@ namespace Xharness {
 		[Label ("system-permission")]
 		SystemPermission = 1 << 24,
 		[Label ("tvos")]
-		tvOS = 1 << 15,
+		tvOS = 1 << 25,
 		[Label ("watchos")]
 		watchOS = 1 << 26,
 		[Label ("xtro")]

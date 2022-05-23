@@ -7,6 +7,8 @@
 //   Rolf Bjarne Kvinge
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System.Collections.Generic;
