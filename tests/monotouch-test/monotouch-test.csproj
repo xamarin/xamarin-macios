@@ -223,6 +223,8 @@
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
+    <Compile Include="SceneKit\SCNVector3Test.cs" />
+    <Compile Include="SceneKit\SCNVector4Test.cs" />
   </ItemGroup>
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
