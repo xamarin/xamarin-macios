@@ -1,6 +1,7 @@
 using System.Text;
 
 using IntegrationAPI;
+using System.Runtime.InteropServices;
 
 namespace ConsumerTests
 {
@@ -11,7 +12,7 @@ namespace ConsumerTests
 
 			NIntTest (output);
 			NUIntTest (output);
-//			NFloatTest (output);
+			NFloatTest (output);
 
 			if (output.Length == 0) {
 				return "Test Successful";
@@ -54,21 +55,21 @@ namespace ConsumerTests
 			}
 		}
 
-//		static void NFloatTest (StringBuilder output)
-//		{
-//			var n = new NFloatAPI ();
-//
-//			if (n.EchoMethod (-12.0) != 12.0) {
-//				output.AppendLine ("nfloat method failure");
-//			}
-//			n.Prop = 13.0;
-//			if (n.Prop != 13.0) {
-//				output.AppendLine ("nfloat prop failure");
-//			}
-//			n.Field = 14.0;
-//			if (n.Field != 14.0) {
-//				output.AppendLine ("nfloat field failure");
-//			}
-//		}
+		static void NFloatTest (StringBuilder output)
+		{
+			var n = new NFloatAPI ();
+
+			if (n.EchoMethod ((NFloat)(-12.0)) != -12.0) {
+				output.AppendLine ("nfloat method failure");
+			}
+			n.Prop = (NFloat)13.0;
+			if (n.Prop != 13.0) {
+				output.AppendLine ("nfloat prop failure");
+			}
+			n.Field = (NFloat)14.0;
+			if (n.Field != 14.0) {
+				output.AppendLine ("nfloat field failure");
+			}
+		}
 	}
 }
