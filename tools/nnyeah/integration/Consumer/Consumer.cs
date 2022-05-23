@@ -1,6 +1,7 @@
 using System.Text;
 
 using IntegrationAPI;
+using System.Runtime.InteropServices;
 
 namespace ConsumerTests
 {
@@ -58,14 +59,14 @@ namespace ConsumerTests
 		{
 			var n = new NFloatAPI ();
 
-			if (n.EchoMethod (-12.0) != 12.0) {
+			if (n.EchoMethod ((NFloat)(-12.0)) != -12.0) {
 				output.AppendLine ("nfloat method failure");
 			}
-			n.Prop = 13.0;
+			n.Prop = (NFloat)13.0;
 			if (n.Prop != 13.0) {
 				output.AppendLine ("nfloat prop failure");
 			}
-			n.Field = 14.0;
+			n.Field = (NFloat)14.0;
 			if (n.Field != 14.0) {
 				output.AppendLine ("nfloat field failure");
 			}
