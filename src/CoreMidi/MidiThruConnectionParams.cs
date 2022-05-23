@@ -71,7 +71,7 @@ namespace CoreMidi {
 			}
 			set {
 				if (value == null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				if (value.Length != 128)
 					throw new ArgumentOutOfRangeException (nameof (value), "The length of the Value array must be 128");
 				map_value = value;

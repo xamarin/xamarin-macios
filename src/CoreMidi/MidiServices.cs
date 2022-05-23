@@ -352,7 +352,7 @@ namespace CoreMidi {
 		public void SetData (IntPtr property, NSData data)
 		{
 			if (data == null)
-				throw new ArgumentNullException ("data");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			MIDIObjectSetDataProperty (handle, property, data.Handle);
 		}
 		
@@ -380,7 +380,7 @@ namespace CoreMidi {
 		public void SetString (IntPtr property, string value)
 		{
 			if (value == null)
-				throw new ArgumentNullException ("value");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			using (var nsval = new NSString (value)){
 				MIDIObjectSetDictionaryProperty (handle, property, nsval.Handle);
 			}
@@ -783,7 +783,7 @@ namespace CoreMidi {
 		MidiPacket (long timestamp, byte [] bytes, int start, int length, bool check)
 		{
 			if (bytes == null)
-				throw new ArgumentNullException ("bytes");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			if (length > UInt16.MaxValue)
 				throw new ArgumentException ("length is bigger than 64k");
 			
@@ -1036,14 +1036,14 @@ namespace CoreMidi {
 		public MidiError ConnectSource (MidiEndpoint endpoint)
 		{
 			if (endpoint == null)
-				throw new ArgumentNullException ("endpoint");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			return (MidiError) MIDIPortConnectSource (handle, endpoint.handle, GCHandle.ToIntPtr (gch));
 		}
 
 		public MidiError Disconnect (MidiEndpoint endpoint)
 		{
 			if (endpoint == null)
-				throw new ArgumentNullException ("endpoint");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			return (MidiError) MIDIPortDisconnectSource (handle, endpoint.handle);
 		}
 		
@@ -1088,9 +1088,9 @@ namespace CoreMidi {
 		public MidiError Send (MidiEndpoint endpoint, MidiPacket [] packets)
 		{
 			if (endpoint == null)
-				throw new ArgumentNullException ("endpoint");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			if (packets == null)
-				throw new ArgumentNullException ("packets");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (packets));
 			var p = MidiPacket.CreatePacketList (packets);
 			var code = MIDISend (handle, endpoint.handle, p);
 			Marshal.FreeHGlobal (p);
@@ -2247,7 +2247,7 @@ namespace CoreMidi {
 		public MidiError Received (MidiPacket [] packets)
 		{
 			if (packets == null)
-				throw new ArgumentNullException ("packets");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (packets));
 
 			var block = MidiPacket.CreatePacketList (packets);
 			var code = MIDIReceived (handle, block);
