@@ -25,14 +25,13 @@ stages:
       usePipelineArtifactTasks: true
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
-  - template: nuget-msi-convert/job/v2.yml@templates
+  - template: nuget-msi-convert/job/v3.yml@templates
     parameters:
       yamlResourceName: templates
       dependsOn: signing
       artifactName: nuget-signed
       propsArtifactName: package
       signType: Real
-      useDateTimeVersion: true
 
   # Check - "xamarin-macios (Prepare Release Push NuGets)"
   - job: push_signed_nugets
