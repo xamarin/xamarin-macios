@@ -39,6 +39,12 @@ using NativeHandle = System.IntPtr;
 #nullable enable
 
 namespace CoreImage {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CIAutoAdjustmentFilterOptions {
 
 		// The default value is true.
@@ -53,12 +59,18 @@ namespace CoreImage {
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 #endif
 		public bool? AutoAdjustCrop;
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 #endif
@@ -73,7 +85,7 @@ namespace CoreImage {
 				n++;
 			if (ImageOrientation.HasValue)
 				n++;
-			if (Features != null && Features.Length != 0)
+			if (Features is not null && Features.Length != 0)
 				n++;
 			if (AutoAdjustCrop.HasValue && AutoAdjustCrop.Value == true)
 				n++;
@@ -90,7 +102,7 @@ namespace CoreImage {
 			if (RedEye.HasValue && RedEye.Value == false){
 				dict.LowlevelSetObject (CFBoolean.FalseHandle, CIImage.AutoAdjustRedEyeKey.Handle);
 			}
-			if (Features != null && Features.Length != 0){
+			if (Features is not null && Features.Length != 0){
 				dict.LowlevelSetObject (NSArray.FromObjects (Features), CIImage.AutoAdjustFeaturesKey.Handle);
 			}
 			if (ImageOrientation.HasValue){
@@ -116,7 +128,7 @@ namespace CoreImage {
 
 		static CIFilter [] WrapFilters (NSArray filters)
 		{
-			if (filters == null)
+			if (filters is null)
 				return new CIFilter [0];
 
 			nuint count = filters.Count;
@@ -134,7 +146,7 @@ namespace CoreImage {
 
 		public static CIImage FromCGImage (CGImage image, CGColorSpace colorSpace)
 		{
-			if (colorSpace == null)
+			if (colorSpace is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorSpace));
 			
 			using (var arr = NSArray.FromIntPtrs (new [] { colorSpace.Handle })){
@@ -154,7 +166,7 @@ namespace CoreImage {
 		
 		public CIFilter [] GetAutoAdjustmentFilters (CIAutoAdjustmentFilterOptions? options)
 		{
-			var dict = options == null ? null : options.ToDictionary ();
+			var dict = options?.ToDictionary ();
 			return WrapFilters (_GetAutoAdjustmentFilters (dict));
 		}
 
@@ -203,11 +215,11 @@ namespace CoreImage {
 
 		public static CIImage FromProvider (ICIImageProvider provider, nuint width, nuint height, CIFormat pixelFormat, CGColorSpace colorSpace, CIImageProviderOptions options)
 		{
-			return FromProvider (provider, width, height, CIImage.CIFormatToInt (pixelFormat), colorSpace, options == null ? null : options.Dictionary);
+			return FromProvider (provider, width, height, CIImage.CIFormatToInt (pixelFormat), colorSpace, options?.Dictionary);
 		}
 
 		public CIImage (ICIImageProvider provider, nuint width, nuint height, CIFormat pixelFormat, CGColorSpace colorSpace, CIImageProviderOptions options)
-			: this (provider, width, height, CIImage.CIFormatToInt (pixelFormat), colorSpace, options == null ? null : options.Dictionary)
+			: this (provider, width, height, CIImage.CIFormatToInt (pixelFormat), colorSpace, options?.Dictionary)
 		{
 		}
 	}

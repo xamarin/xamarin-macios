@@ -1232,6 +1232,9 @@
 		<value>BindAsAttribute inválido encontrado em '{0}': não foi possível encontrar o tipo enumerado subjacente de {1}. Registre um relatório de bugs em https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>O registrador encontrou um tipo '{0}' inválido na assinatura do método '{1}': a interface precisa ter um atributo de Protocolo especificando seu tipo de wrapper.
 		</value>
@@ -1516,6 +1519,9 @@
 		<value>O registrador não pode computar a assinatura de bloco para o delegado do tipo {0} no método {1} porque não foi possível encontrar o Método de invocação do tipo do delegado.
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>O registrador encontrou um tipo não ideal de “{0}”: o tipo não tem um construtor que tenha dois argumentos (ObjCRuntime.NativeHandle, bool). No entanto, um construtor que aceita dois argumentos (System.IntPtr, bool) foi encontrado (e será usado em seu lugar). É altamente recomendável alterar a assinatura do construtor (System.IntPtr, bool) para ser (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Compilador '{0}' ausente. Instale o componente 'Ferramentas de Linha de Comando' do Xcode
 		</value>
@@ -1699,6 +1705,11 @@
 		<value>A ferramenta xcrun não pôde encontrar o resultado ao procurar a ferramenta '{0}' (o arquivo '{1}' não existe). Verifique o log de build para obter detalhes.
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>Ocorreu um erro ao executar as etapas do vinculador personalizado. Revise o log da build para obter mais informações.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>Erro de consistência interna. Registre um relatório de bugs em https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>

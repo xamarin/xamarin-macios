@@ -41,6 +41,9 @@ using NativeHandle = System.IntPtr;
 #nullable enable
 
 namespace CoreVideo {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class CVDisplayLink : NativeObject {
 		GCHandle callbackHandle;
 		
@@ -211,12 +214,12 @@ namespace CoreVideo {
 		[DllImport (Constants.CoreVideoLibrary)]
 		extern static void CVDisplayLinkRelease (IntPtr handle);
 		
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CVDisplayLinkRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CVDisplayLinkRelease (GetCheckedHandle ());
 		}

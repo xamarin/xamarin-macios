@@ -1,4 +1,7 @@
 #if MONOMAC
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;

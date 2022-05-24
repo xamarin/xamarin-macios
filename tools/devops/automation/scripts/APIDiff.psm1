@@ -38,7 +38,7 @@ class APIDiff {
         $this.Result = $content.result
         $this.Message = $content.message
         $this.Platforms = @{}
-        
+
         # loop over the gists and create the Platform diff as needed
         if ($null -ne $content.gist -and $null -ne $content.gist.Keys) {
             foreach ($platform in $content.gist.Keys) {
@@ -76,15 +76,22 @@ class APIDiffComment {
         [object] $prContent,
         [object] $stableContent,
         [string] $generatorContent) {
-        $this.FromPR = $null -ne $prContent ? [APIDiff]::new("API Current PR diff", $prContent) : $null
-        $this.FromStable = $null -ne $stableContent ? [APIDiff]::new("API diff", $stableContent) : $null
+        $this.FromPR = $null -ne $prContent ? [APIDiff]::new("API diff (for current PR)", $prContent) : $null
+        $this.FromStable = $null -ne $stableContent ? [APIDiff]::new("API diff (vs stable)", $stableContent) : $null
         $this.Generator = $null -ne $generatorContent ? $generatorContent : $null
     }
 
     static [hashtable] ConvertToHashTable($obj) {
         $result = @{}
-        $obj.psobject.properties | Foreach { $result[$_.Name] = $_.Value }
-        return $result
+        foreach($property in $obj.psobject.properties.name )
+        {
+            $value = $obj.$property
+            if ($value.GetType().Name -eq "PSCustomObject") {
+                $value = [APIDiffComment]::ConvertToHashTable($value)
+            }
+            $result[$property] = $value
+        }
+       return $result
     }
 
     static [APIDiffComment] FromJsonFiles (
@@ -108,7 +115,7 @@ class APIDiffComment {
         } else {
             # read the json file, convert it to an object and add a line for each artifact
             $stableContent =  Get-Content $stableContentPath | ConvertFrom-Json
-            $stableContent = [APIDiffComment]::ConvertToHashTable($stableContentPath)
+            $stableContent = [APIDiffComment]::ConvertToHashTable($stableContent)
         }
 
         return [APIDiffComment]::new($prContent, $stableContent, $generatorContent)
@@ -117,17 +124,36 @@ class APIDiffComment {
     [void] WriteDiff($diff, $stringBuilder) {
         # loop over the platforms and write the data
         $stringBuilder.AppendLine("# $($diff.Header)")
+        $stringBuilder.AppendLine("")
+        $stringBuilder.AppendLine("$($diff.Message)")
+        $stringBuilder.AppendLine("")
+
+        if ($diff.Platforms.ContainsKey("index")) {
+            $indexEntry = $diff.Platforms["index"]
+            $stringBuilder.Append("API diff: ")
+            if ($null -ne $indexEntry.Html) {
+                $stringBuilder.Append(" [vsdrops]($($indexEntry.Html))")
+            }
+            if ($null -ne $indexEntry.Gist) {
+                $stringBuilder.Append(" [gist]($($indexEntry.Gist))")
+            }
+            $stringBuilder.AppendLine()
+            $stringBuilder.AppendLine("")
+        } else {
+            $stringBuilder.AppendLine("No index!")
+            $stringBuilder.AppendLine("")
+        }
 
         # group the platforms as how the diffs were done
         $commonPlatforms = "iOS", "macOS", "tvOS"
-        $legacyPlatforms = @{Title="API diff"; Platforms=@($commonPlatforms + "watchOS");}
-        $dotnetPlatforms = @{Title="dotnet API diff"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
-        $dotnetLegacyPlatforms = @{Title="dotnet legacy API diff"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
-        $dotnetMaciOSPlatforms = @{Title="dotnet iOS-MacCatalayst API diff"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
+        $legacyPlatforms = @{Title="Xamarin"; Platforms=@($commonPlatforms + "watchOS");}
+        $dotnetPlatforms = @{Title=".NET"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
+        $dotnetLegacyPlatforms = @{Title="Xamarin vs .NET"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
+        $dotnetMaciOSPlatforms = @{Title="iOS vs Mac Catalyst (.NET)"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
         $platforms = @($legacyPlatforms, $dotnetPlatforms, $dotnetLegacyPlatforms, $dotnetMaciOSPlatforms)
 
         foreach ($group in $platforms) {
-            $stringBuilder.AppendLine("<details><summary>View $($group.Title)</summary>")
+            $stringBuilder.AppendLine("<details><summary>$($group.Title)</summary>")
             $stringBuilder.AppendLine("") # no new line results in a bad rendering in the links
 
             foreach ($platform in $group.Platforms) {
@@ -185,3 +211,39 @@ class APIDiffComment {
         }
     }
 }
+
+<# 
+    .SYNOPSIS
+        Creates a new APIDiffComment object from the data present in the given hash table.
+#>
+function New-APIDiffComment {
+    param (
+        [object]
+        $PRContent,
+        [object]
+        $StableContent,
+        [string]
+        $GeneratorContent
+    )
+    return [APIDiffComment]::new($PRContent, $StableContent, $GeneratorContent)
+}
+
+
+<# 
+    .SYNOPSIS
+        Creates a new APIDiffComment object from the data present in a json file. 
+#>
+function New-APIDiffCommentFromFiles {
+    param (
+        [string]
+        $PRContentPath,
+        [string]
+        $StableContentPath,
+        [string]
+        $GeneratorContent
+    )
+    return [APIDiffComment]::FromJsonFiles($PRContentPath, $StableContentPath, $GeneratorContent)
+}
+
+Export-ModuleMember -Function New-APIDiffComment
+Export-ModuleMember -Function New-APIDiffCommentFromFiles

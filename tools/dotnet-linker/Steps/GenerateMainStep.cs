@@ -55,6 +55,24 @@ namespace Xamarin {
 				if (app.EnableDebug)
 					item.Metadata.Add ("Arguments", "-DDEBUG");
 				items.Add (item);
+
+				if (app.RequiresPInvokeWrappers) {
+					var state = Configuration.PInvokeWrapperGenerationState;
+					if (state.Started) {
+						// The generator is 'started' by the linker, which means it may not
+						// be started if the linker was not executed due to re-using cached results.
+						state.End ();
+					}
+					item = new MSBuildItem {
+						Include = state.SourcePath,
+						Metadata = {
+							{ "Arch", abi.AsArchString () },
+						},
+					};
+					if (app.EnableDebug)
+						item.Metadata.Add ("Arguments", "-DDEBUG");
+					items.Add (item);
+				}
 			}
 
 			Configuration.WriteOutputForMSBuild ("_MainFile", items);
@@ -76,6 +94,25 @@ namespace Xamarin {
 						},
 					});
 				}
+			}
+
+			string extensionlib = null;
+			if (app.IsTVExtension) {
+				extensionlib = "libtvextension-dotnet.a";
+			} else if (app.IsExtension) {
+				if (app.XamarinRuntime == Bundler.XamarinRuntime.CoreCLR) {
+					extensionlib = "libextension-dotnet-coreclr.a";
+				} else {
+					extensionlib = "libextension-dotnet.a";
+				}
+			}
+			if (!string.IsNullOrEmpty (extensionlib)) {
+				linkWith.Add (new MSBuildItem {
+					Include = Path.Combine (Configuration.XamarinNativeLibraryDirectory, extensionlib),
+					Metadata = {
+						{ "ForceLoad", "true" },
+					}
+				});
 			}
 
 			Configuration.WriteOutputForMSBuild ("_MainLinkWith", linkWith);

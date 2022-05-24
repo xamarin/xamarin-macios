@@ -42,22 +42,16 @@ reload: $(TARGETS)
 	$(Q) $(DOTNET) build-server shutdown # make sure msbuild picks up any new task assemblies we built
 
 compare compare-size: $(TARGETS)
-	rm -rf packages
-	cd size-comparison && git clean -xfdq
-	time $(MAKE) build-oldnet
-	time $(MAKE) build-dotnet
-	$(MAKE) report
+	$(MAKE) -C size-comparison/MySingleView $@
 
 report:
-	appcompare $(abspath size-comparison/MySingleView/oldnet/bin/iPhone/Release/MySingleView.app) $(abspath size-comparison/MySingleView/dotnet/bin/iPhone/Release/net6.0-ios/ios-arm64/MySingleView.app) \
-		--output-markdown $(CURDIR)/report.md --gist --mapping-file $(CURDIR)/size-comparison/MySingleView.map
+	$(MAKE) -C size-comparison/MySingleView $@
 
-COMMON_ARGS=/p:Platform=iPhone /p:Configuration=Release
 build-oldnet:
-	$(SYSTEM_MSBUILD) $(XBUILD_VERBOSITY) size-comparison/MySingleView/oldnet/MySingleView.csproj $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
+	$(MAKE) -C size-comparison/MySingleView $@
 
 build-dotnet: $(TARGETS)
-	$(DOTNET) build size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
+	$(MAKE) -C size-comparison/MySingleView $@
 
 run-dotnet: $(TARGETS)
 	$(DOTNET) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj --runtime ios-arm64 $(COMMON_ARGS) /bl:$@.binlog $(MSBUILD_VERBOSITY)
@@ -66,9 +60,10 @@ run-dotnet-sim: $(TARGETS)
 	$(DOTNET) build -t:Run size-comparison/MySingleView/dotnet/MySingleView.csproj /p:Configuration=Release --runtime iossimulator-x64 /p:Platform=iPhoneSimulator /bl:$@.binlog
 
 # this target will copy NuGet.config and global.json to the directories that need it for their .NET build to work correctly.
+
 copy-dotnet-config: $(TARGETS)
 	$(Q) for dir in $(abspath $(TOP))/tests/*/dotnet $(abspath $(TOP))/tests/linker/*/*/dotnet; do \
-		$(CP) -c NuGet.config global.json "$$dir"; \
+		rsync -a NuGet.config global.json "$$dir"; \
 	done
-	$(Q) $(CP) -c NuGet.config global.json $(TOP)/external/Touch.Unit/Touch.Client/dotnet
-	$(Q) $(CP) -c NuGet.config global.json $(TOP)/external/MonoTouch.Dialog/MonoTouch.Dialog/dotnet
+	$(Q) rsync -a NuGet.config global.json $(TOP)/external/Touch.Unit/Touch.Client/dotnet
+	$(Q) rsync -a NuGet.config global.json $(TOP)/external/MonoTouch.Dialog/MonoTouch.Dialog/dotnet

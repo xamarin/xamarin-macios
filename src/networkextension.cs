@@ -14,6 +14,13 @@ using OS_nw_interface = System.IntPtr;
 using NativeHandle = System.IntPtr;
 #endif
 
+#if MONOMAC
+using NEHotspotHelperOptions = Foundation.NSObject;
+using NEHotspotHelperResult = Foundation.NSObject;
+using NEHotspotHelperCommandType = Foundation.NSObject;
+using NEHotspotHelperConfidence = Foundation.NSObject;
+#endif
+
 namespace NetworkExtension {
 
 	// Just to satisfy the core dll contract, the right type will be used on the generated file
@@ -303,10 +310,15 @@ namespace NetworkExtension {
 	[DisableDefaultCtor]
 	interface NEAppRule : NSSecureCoding, NSCopying
 	{
+		[iOS (9, 0)][MacCatalyst (13, 1)][NoTV][NoWatch]
+#if NET
+		[NoMac]
+#endif
 		[Export ("initWithSigningIdentifier:")]
 		NativeHandle Constructor (string signingIdentifier);
 
-		[NoiOS, NoTV, NoWatch, MacCatalyst (15,0)]
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		[Mac (10, 11)]
 		[Export ("initWithSigningIdentifier:designatedRequirement:")]
 		NativeHandle Constructor (string signingIdentifier, string designatedRequirement);
 
@@ -733,10 +745,11 @@ namespace NetworkExtension {
 		NSUuid FilterFlowIdentifier { get; }
 	}
 
-#if !MONOMAC
+	[NoMac]
 	[iOS (9,0)]
 	delegate void NEHotspotHelperHandler (NEHotspotHelperCommand cmd);
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotHelper {
@@ -758,12 +771,14 @@ namespace NetworkExtension {
 	}
 
 	[Static]
+	[NoMac]
 	[iOS (9,0)]
 	interface NEHotspotHelperOptionInternal {
 		[Field ("kNEHotspotHelperOptionDisplayName")]
 		NSString DisplayName { get; }
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[Category]
 	[BaseType (typeof (NSMutableUrlRequest))]
@@ -772,6 +787,7 @@ namespace NetworkExtension {
 		void BindTo (NEHotspotHelperCommand command);
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotHelperCommand {
@@ -794,6 +810,7 @@ namespace NetworkExtension {
 		NWUdpSession CreateUdpSession (NWEndpoint endpoint);
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface NEHotspotHelperResponse {
@@ -807,6 +824,7 @@ namespace NetworkExtension {
 		void Deliver ();
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof(NSObject))]
 	interface NEHotspotNetwork {
@@ -848,7 +866,6 @@ namespace NetworkExtension {
 		[Export ("securityType")]
 		NEHotspotNetworkSecurityType SecurityType { get; }
 	}
-#endif
 
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof(NSObject))]

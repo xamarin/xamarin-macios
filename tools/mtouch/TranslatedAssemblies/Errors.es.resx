@@ -1232,6 +1232,9 @@
 		<value>Se encontró un objeto BindAsAttribute no válido en "{0}": no se pudo encontrar el tipo de enumeración subyacente de {1}. Presente un informe de errores en https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>El registrador encontró un tipo "{0}" no válido en la signatura del método "{1}": la interfaz debe tener un atributo de protocolo que especifique su tipo de contenedor.
 		</value>
@@ -1516,6 +1519,9 @@
 		<value>El registrador no puede calcular la firma de bloque para el delegado de tipo {0} en el método {1} porque no ha podido encontrar el método de invocación del tipo de delegado.
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>El registrador encontró un tipo "{0}" no óptimo: el tipo no tiene un constructor que tome dos argumentos (ObjCRuntime.NativeHandle, bool). Sin embargo, se encontró un constructor que toma dos argumentos (System.IntPtr, bool) y se usará en su lugar. Se recomienda encarecidamente cambiar la signatura del constructor (System.IntPtr, bool) para que sea (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Falta el compilador "{0}". Instale el componente "Herramientas de línea de comandos" de Xcode.
 		</value>
@@ -1699,6 +1705,11 @@
 		<value>No se encontró ningún resultado al buscar la herramienta "{0}" con xcrun (no existe el archivo "{1}"). Compruebe el registro de compilación para obtener más detalles.
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>Error al ejecutar los pasos del vinculador personalizado. Revise el registro de compilación para más información.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>Error de coherencia interna. Presente un informe de errores en https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>

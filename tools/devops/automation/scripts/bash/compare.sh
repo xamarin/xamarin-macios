@@ -31,6 +31,11 @@ if test -z "$XAM_TOP"; then
     exit 1
 fi
 
+if test -z "$WORKSPACE"; then
+	echo "Variable WORKSPACE is missing."
+	exit 1
+fi
+
 cd $XAM_TOP
 
 MARKDOWN_INDENT="&nbsp;&nbsp;&nbsp;&nbsp;"
@@ -47,14 +52,16 @@ report_error ()
 	rm -f "$COMPARE_FAILURE_FILE"
 	echo "*** Comparing API & creating generator diff failed ***"
 	MESSAGE="*** Comparing API & creating generator diff failed ***"
-	exit 0
+	exit 1
 }
 trap report_error ERR
 
-if test -z "$PR_ID"; then
-	BASE=HEAD
-else
-	BASE="origin/pr/$PR_ID/merge"
+if test -z "$BASE"; then
+	if test -z "$PR_ID"; then
+		BASE=HEAD^1
+	else
+		BASE="origin/pr/$PR_ID/merge^1"
+	fi
 fi
 
 if ! git rev-parse "$BASE" >/dev/null 2>&1; then
@@ -64,7 +71,7 @@ if ! git rev-parse "$BASE" >/dev/null 2>&1; then
 	exit 0
 fi
 
-./tools/compare-commits.sh --base="$BASE^1" "--failure-file=$COMPARE_FAILURE_FILE"
+./tools/compare-commits.sh --base="$BASE" "--failure-file=$COMPARE_FAILURE_FILE"
 
 mkdir -p "$API_COMPARISON"
 
@@ -76,13 +83,22 @@ cp -R ./tools/comparison/generator-diff "$API_COMPARISON"
 
 if ! grep "href=" "$API_COMPARISON/api-diff.html" >/dev/null 2>&1; then
 	STATUS_MESSAGE=":white_check_mark: API Diff (from PR only) (no change)"
+	set +x
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
+	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS;isOutput=true]success"
+	set -x
 elif perl -0777 -pe 's/<script type="text\/javascript">.*?<.script>/script removed/gs' "$API_COMPARISON"/*.html | grep data-is-breaking; then
 	STATUS_MESSAGE=":warning: API Diff (from PR only) (:fire: breaking changes :fire:)"
+	set +x
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
+	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS;isOutput=true]error"
+	set -x
 else
 	STATUS_MESSAGE=":information_source: API Diff (from PR only) (please review changes)"
+	set +x
 	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS_MESSAGE;isOutput=true]$STATUS_MESSAGE"
+	echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_STATUS;isOutput=true]success"
+	set -x
 fi
 
 if ! test -s $API_COMPARISON/generator-diff/generator.diff; then
@@ -99,5 +115,7 @@ if test -f "$COMPARE_FAILURE_FILE"; then
 	cp "$COMPARE_FAILURE_FILE" "$API_COMPARISON"
 fi
 MESSAGE="*** Comparing API & creating generator diff completed ***"
+set +x
 echo "##vso[task.setvariable variable=API_GENERATOR_DIFF_MESSAGE;isOutput=true]$MESSAGE"
 echo "##vso[task.setvariable variable=API_GENERATOR_BUILT;isOutput=true]True"
+set -x

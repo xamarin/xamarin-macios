@@ -12,6 +12,7 @@ resources:
       branches:
       - main
       - release/*
+      - net7.0
       stages:
       - prepare_release
 
@@ -31,7 +32,7 @@ jobs:
 
   - task: UseDotNet@2
     inputs:
-      version: 5.0.200
+      version: 6.0.201
 
   - download: macios
     artifact: AssetManifests

@@ -126,6 +126,8 @@
 /src/metalkit.cs
 /src/MetalPerformanceShaders
 /src/metalperformanceshaders.cs
+/src/MetalPerformanceShadersGraph @praeclarum
+/src/metalperformanceshadersgraph.cs @praeclarum
 /src/MobileCoreServices
 /src/mobilecoreservices.cs
 /src/ModelIO
@@ -201,6 +203,7 @@
 /tools/linker
 /tools/mmp @chamons
 /tools/mtouch @rolfbjarne
+/tools/nnyeah @stephen-hawley
 
 configure @rolfbjarne
 Make.* @rolfbjarne

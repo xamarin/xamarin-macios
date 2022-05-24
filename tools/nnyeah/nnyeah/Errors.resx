@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+	</resheader>
+
+	<data name="N0001" xml:space="preserve">
+		<value>IConvertible interfaces are not supported yet. If this code gets called, it will fail. Consider contacting the library maintainer to request a dotnet 6 upgrade.</value>
+	</data>
+
+	<data name="N0002" xml:space="preserve">
+		<value>CopyArray for nuint is not supported yet. If this method is called, it will not function correctly.</value>
+	</data>
+
+	<data name="N0003" xml:space="preserve">
+		<value>Package does not need changes - no output generated.</value>
+	</data>
+
+	<data name="N0004" xml:space="preserve">
+		<value>In {0}.{1}, found reference to {2}. Added {3} IL instructions and removed {4} IL instructions.</value>
+	</data>
+
+	<data name="N0005" xml:space="preserve">
+		<value>In {0}.{1}, found reference to {2}. Added {3} IL instructions.</value>
+	</data>
+
+	<data name="N0006" xml:space="preserve">
+		<value>In {0}.{1}, found reference to {2} - this is not transformable and will likely not work if invoked.</value>
+	</data>
+
+	<data name="N0007" xml:space="preserve">
+		<value>If you want to compare assemblies, the earlier and later assembly options *must* be set.</value>
+	</data>
+
+	<data name="N0008" xml:space="preserve">
+		<value>Unexpected error - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
+	
+	<data name="E0001" xml:space="preserve">
+		<value>Input file '{0}' doesn't exist.</value>
+	</data>
+
+	<data name="E0002" xml:space="preserve">
+		<value>Output file '{0}' already exists. Use '--force-overwrite' if you want to overwrite it.</value>
+	</data>
+
+	<data name="E0003" xml:space="preserve">
+		<value>Unable to read module from file {0}: {1}.</value>
+	</data>
+
+	<data name="E0004" xml:space="preserve">
+		<value>Unable to generate output file, unexpected exception: {0}.</value>
+	</data>
+
+	<data name="E0005" xml:space="preserve">
+		<value>Module is not loaded. Call Load first.</value>
+	</data>
+	<data name="E0006" xml:space="preserve">
+		<value>Unable to open file {0} {1}</value>
+	</data>
+	<data name="E0007" xml:space="preserve">
+		<value>This should never happen.</value>
+	</data>
+	<data name="E0008" xml:space="preserve">
+		<value>Unexpected visit kind: {0}.</value>
+	</data>
+	<data name="E0009" xml:space="preserve">
+		<value>After visiting, type stack is not empty. This is bad.</value>
+	</data>
+	<data name="E0010" xml:space="preserve">
+		<value>Type {0} not found.</value>
+	</data>
+	<data name="E0011" xml:space="preserve">
+		<value>Error while attempting to compare assemblies: {0}</value>
+	</data>
+	<data name="E0012" xml:space="preserve">
+		<value>Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
+	</data>
+	<data name="E0013" xml:space="preserve">
+		<value>Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
+	</data>
+	<data name="E0014" xml:space="preserve">
+		<value>File for conversion (--input) and output location (--output) are required options.</value>
+	</data>
+	<data name="E0015" xml:space="preserve">
+		<value>Support legacy and NET assemblies --xamarin-assembly and --microsoft-assembly are currently required options.</value>
+	</data>
+</root>
+

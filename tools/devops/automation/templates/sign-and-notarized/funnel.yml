@@ -1,0 +1,78 @@
+# funnel job that will download all the signed artifacts and puts them in the final location
+parameters:
+- name: packages
+  type: object
+
+steps:
+
+# DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
+- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+  submodules: recursive
+  path: s/xamarin-macios
+
+- checkout: maccore
+  clean: true
+  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+- checkout: templates
+  clean: true
+
+- checkout: release-scripts
+  clean: true
+
+- bash: |
+    mkdir -p $(Build.SourcesDirectory)/package/notarized
+  displayName: 'Create target directories.'
+
+- task: DownloadPipelineArtifact@2
+  displayName: Download notarized build dotnet
+  inputs:
+    artifact: 'dotnet-signed'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/package
+
+- ${{ each pkg in parameters.packages }}:
+  - task: DownloadPipelineArtifact@2
+    displayName: Download notarized build ${{ pkg.name }}
+    inputs:
+      artifact: 'classic-${{ pkg.name }}-signed'
+      allowFailedBuilds: true
+      path: '$(Build.ArtifactStagingDirectory)/classic-${{ pkg.name }}-signed'
+
+  - bash: |
+      set -x
+      set -e
+
+      FULL_PATH="$(Build.ArtifactStagingDirectory)/classic-${{ pkg.name }}-signed"
+      ls -lR $FULL_PATH
+      cp -a "$FULL_PATH/." "$(Build.SourcesDirectory)/package"
+    displayName: 'Move pkg ${{ pkg.name }} to its final destination'
+
+- template: generate-workspace-info.yml@templates
+  parameters:
+    GitHubToken: $(GitHub.Token)
+    ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+# download workload json and add it to out package internal dir, this allows the rest of jobs
+# not to need several artifacts but just package-internal
+- task: DownloadPipelineArtifact@2
+  displayName: Download WorkloadRollback.json
+  inputs:
+    patterns: '**/WorkloadRollback.json'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/package-internal
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Internal Artifacts'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package-internal
+    artifactName: package-internal
+  continueOnError: true
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Build Artifacts (notarized)'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/package
+    artifactName: package
+  continueOnError: true

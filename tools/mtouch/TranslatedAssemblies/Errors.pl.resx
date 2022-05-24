@@ -1232,6 +1232,9 @@
 		<value>Odnaleziono nieprawidłowy atrybut BindAsAttribute w elemencie „{0}”: nie można odnaleźć podstawowego typu wyliczeniowego {1}. Zarejestruj raport o usterce w witrynie https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Rejestrator odnalazł nieprawidłowy typ „{0}” w sygnaturze dla metody „{1}”: interfejs musi mieć atrybut protokołu określający jego typ otoki.
 		</value>
@@ -1516,6 +1519,9 @@
 		<value>Rejestrator nie może obliczyć sygnatury bloku dla delegata typu {0} w metodzie {1}, ponieważ nie może znaleźć metody Invoke typu delegata.
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>Rejestrator znalazł nieoptymalny typ „{0}“: typ nie ma konstruktora, który przyjmuje dwa argumenty (ObjCRuntime.NativeHandle, bool). Znaleziono jednak konstruktor, który przyjmuje dwa argumenty (System.IntPtr, bool) i zostanie użyty zamiast niego. Zdecydowanie zaleca się zmianę podpisu konstruktora (System.IntPtr, bool) na (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Brak kompilatora „{0}”. Zainstaluj składnik „Command-Line Tools” środowiska Xcode
 		</value>
@@ -1699,6 +1705,11 @@
 		<value>Narzędziu xcrun nie udało się znaleźć wyniku podczas wyszukiwania narzędzia „{0}” (plik „{1}” nie istnieje). Sprawdź dziennik kompilacji, aby uzyskać szczegółowe informacje.
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>Wystąpił błąd podczas wykonywania niestandardowych kroków konsolidatora. Aby uzyskać więcej informacji, przejrzyj dziennik kompilacji.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>Wewnętrzny błąd spójności. Zarejestruj raport o usterce w witrynie https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>

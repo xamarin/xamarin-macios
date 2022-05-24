@@ -25,6 +25,9 @@ SUPPORTS_MACCATALYST:=$(shell echo '$(MACOS_MAJOR_VERSION).$(MACOS_MINOR_VERSION
 CONFIG?=Debug
 LAUNCH_ARGUMENTS=--autostart --autoexit
 
+# Time test runs out after 5 minutes (300 seconds)
+RUN_WITH_TIMEOUT=./run-with-timeout.sh 300
+
 .stamp-configure-projects-mac: Makefile xharness/xharness.exe
 	$(Q) $(MAKE) .stamp-xharness-configure
 	$(Q) touch $@
@@ -52,7 +55,7 @@ build-mac-full-dontlink: linker/mac/dont\ link/generated-projects/full/dont\ lin
 
 exec-mac-full-dontlink:
 	@echo "ℹ️  Executing the 'dont link' test for Xamarin.Mac (Full profile) ℹ️"
-	$(Q) "linker/mac/dont link/generated-projects/full/bin/x86/$(CONFIG)-full/dont link.app/Contents/MacOS/dont link"
+	$(Q) $(RUN_WITH_TIMEOUT) "linker/mac/dont link/generated-projects/full/bin/x86/$(CONFIG)-full/dont link.app/Contents/MacOS/dont link"
 
 # macOS/legacy/system
 build-mac-system-dontlink: linker/mac/dont\ link/generated-projects/system/dont\ link-mac-system.csproj .stamp-nuget-restore-mac
@@ -60,7 +63,7 @@ build-mac-system-dontlink: linker/mac/dont\ link/generated-projects/system/dont\
 
 exec-mac-system-dontlink:
 	@echo "ℹ️  Executing the 'dont link' test for Xamarin.Mac (System profile) ℹ️"
-	$(Q) "linker/mac/dont link/generated-projects/system/bin/x86/$(CONFIG)-system/dont link.app/Contents/MacOS/dont link"
+	$(Q) $(RUN_WITH_TIMEOUT) "linker/mac/dont link/generated-projects/system/bin/x86/$(CONFIG)-system/dont link.app/Contents/MacOS/dont link"
 
 #
 # introspection
@@ -72,7 +75,7 @@ build-mac-modern-introspection: introspection/Mac/introspection-mac.csproj .stam
 
 exec-mac-modern-introspection:
 	@echo "ℹ️  Executing the 'introspection' test for Xamarin.Mac (Modern profile) ℹ️"
-	$(Q) introspection/Mac/bin/x86/$(CONFIG)/introspection.app/Contents/MacOS/introspection
+	$(Q) $(RUN_WITH_TIMEOUT) introspection/Mac/bin/x86/$(CONFIG)/introspection.app/Contents/MacOS/introspection
 
 #
 # xammac tests
@@ -84,7 +87,7 @@ build-mac-modern-xammac_tests: xammac_tests/xammac_tests.csproj .stamp-nuget-res
 
 exec-mac-modern-xammac_tests:
 	@echo "ℹ️  Executing the 'xammac' test for Xamarin.Mac (Modern profile) ℹ️"
-	$(Q) xammac_tests/bin/x86/$(CONFIG)/xammac_tests.app/Contents/MacOS/xammac_tests
+	$(Q) $(RUN_WITH_TIMEOUT) xammac_tests/bin/x86/$(CONFIG)/xammac_tests.app/Contents/MacOS/xammac_tests
 
 #
 # link all
@@ -96,7 +99,7 @@ build-mac-modern-linkall: linker/mac/link\ all/link\ all-mac.csproj .stamp-nuget
 
 exec-mac-modern-linkall:
 	@echo "ℹ️  Executing the 'link all' test for Xamarin.Mac (Modern profile) ℹ️"
-	$(Q) "./linker/mac/link all/bin/x86/$(CONFIG)/link all.app/Contents/MacOS/link all"
+	$(Q) $(RUN_WITH_TIMEOUT) "./linker/mac/link all/bin/x86/$(CONFIG)/link all.app/Contents/MacOS/link all"
 
 #
 # link sdk
@@ -108,51 +111,77 @@ build-mac-modern-linksdk: linker/mac/link\ sdk/link\ sdk-mac.csproj .stamp-nuget
 
 exec-mac-modern-linksdk:
 	@echo "ℹ️  Executing the 'link sdk' test for Xamarin.Mac (Modern profile) ℹ️"
-	$(Q) "./linker/mac/link sdk/bin/x86/$(CONFIG)/link sdk.app/Contents/MacOS/link sdk"
+	$(Q) $(RUN_WITH_TIMEOUT) "./linker/mac/link sdk/bin/x86/$(CONFIG)/link sdk.app/Contents/MacOS/link sdk"
+
+### .NET dependency projects
+
+# We have library projects that are used in multiple test projects.
+# If those test projects are built in parallel, these library projects
+# might be built in multiple build processes at once, and that
+# may turn into build errors when the simultaneous builds stomp
+# on eachother. So here we build those library projects first, serialized,
+# so that when the test projects need them, they're already built.
+
+.stamp-copy-dotnet-config:
+	$(Q) $(MAKE) -C dotnet copy-dotnet-config
+	$(Q) touch $@
+
+define DotNetDependentProject
+.stamp-dotnet-dependency-$(2)-$(1): Makefile .stamp-copy-dotnet-config
+	$$(Q) $$(MAKE) -C "$(1)/dotnet/$(2)" build
+	$$(Q) touch $$@
+
+.stamp-dotnet-dependency-$(2):: .stamp-dotnet-dependency-$(2)-$(1)
+	$$(Q) touch $$@
+endef
+$(eval $(call DotNetDependentProject,BundledResources,macOS))
+$(eval $(call DotNetDependentProject,BundledResources,MacCatalyst))
+$(eval $(call DotNetDependentProject,EmbeddedResources,macOS))
+$(eval $(call DotNetDependentProject,EmbeddedResources,MacCatalyst))
 
 ### .NET normal tests
 
 define DotNetNormalTest
 # macOS/.NET/x64
-build-mac-dotnet-x64-$(1):
+build-mac-dotnet-x64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-x64
 
 exec-mac-dotnet-x64-$(1):
 	@echo "ℹ️  Executing the '$(1)' test for macOS/.NET (x64) ℹ️"
-	$$(Q) "./$(1)/dotnet/macOS/bin/$(CONFIG)/net6.0-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
 
 # macOS/.NET/arm64
-build-mac-dotnet-arm64-$(1):
+build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-arm64
 
 exec-mac-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for macOS/.NET (arm64) ℹ️"
-	$$(Q) "./$(1)/dotnet/macOS/bin/$(CONFIG)/net6.0-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
 else
 	@echo "⚠️  Not executing the '$(1)' test for macOS/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
 
 # MacCatalyst/.NET/x64
-build-maccatalyst-dotnet-x64-$(1):
+build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 	$$(Q_BUILD) $$(MAKE) -C "$(1)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-x64
 
 exec-maccatalyst-dotnet-x64-$(1):
 ifeq ($(SUPPORTS_MACCATALYST),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (x64) ℹ️"
-	$$(Q) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/net6.0-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (x64) - macOS version $(MACOS_VERSION) is too old ⚠️"
 endif
 
 # MacCatalyst/.NET/arm64
-build-maccatalyst-dotnet-arm64-$(1):
+build-maccatalyst-dotnet-arm64-$(1):.stamp-dotnet-dependency-MacCatalyst
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-arm64
 
 exec-maccatalyst-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(1)' test for Mac Catalyst/.NET (arm64) ℹ️"
-	$$(Q) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/net6.0-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(RUN_WITH_TIMEOUT) "./$(1)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(1)' test for Mac Catalyst/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
@@ -183,45 +212,45 @@ $(eval $(call DotNetNormalTest,introspection,introspection))
 
 define DotNetLinkerTest
 # macOS/.NET/x64
-build-mac-dotnet-x64-$(1):
+build-mac-dotnet-x64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q_BUILD) $$(MAKE) -C "linker/ios/$(2)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-x64
 
 exec-mac-dotnet-x64-$(1):
 	@echo "ℹ️  Executing the '$(2)' test for macOS/.NET (x64) ℹ️"
-	$$(Q) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/net6.0-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-x64/$(2).app/Contents/MacOS/$(2)"
 
 # macOS/.NET/arm64
-build-mac-dotnet-arm64-$(1):
+build-mac-dotnet-arm64-$(1): .stamp-dotnet-dependency-macOS
 	$$(Q) $$(MAKE) -C "linker/ios/$(2)/dotnet/macOS" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=osx-arm64
 
 exec-mac-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(2)' test for macOS/.NET (arm64) ℹ️"
-	$$(Q) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/net6.0-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
+	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/macOS/bin/$(CONFIG)/$(DOTNET_TFM)-macos/osx-arm64/$(2).app/Contents/MacOS/$(2)"
 else
 	@echo "⚠️  Not executing the '$(2)' test for macOS/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif
 
 # MacCatalyst/.NET/x64
-build-maccatalyst-dotnet-x64-$(1):
+build-maccatalyst-dotnet-x64-$(1): .stamp-dotnet-dependency-MacCatalyst
 	$$(Q_BUILD) $$(MAKE) -C "linker/ios/$(2)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-x64
 
 exec-maccatalyst-dotnet-x64-$(1):
 ifeq ($(SUPPORTS_MACCATALYST),1)
 	@echo "ℹ️  Executing the '$(2)' test for Mac Catalyst/.NET (x64) ℹ️"
-	$$(Q) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/net6.0-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-x64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(2)' test for Mac Catalyst/.NET (x64) - macOS version $(MACOS_VERSION) is too old ⚠️"
 endif
 
 # MacCatalyst/.NET/arm64
-build-maccatalyst-dotnet-arm64-$(1):
+build-maccatalyst-dotnet-arm64-$(1): .stamp-dotnet-dependency-MacCatalyst
 	$$(Q) $$(MAKE) -C "linker/ios/$(2)/dotnet/MacCatalyst" build BUILD_ARGUMENTS=/p:RuntimeIdentifier=maccatalyst-arm64
 
 exec-maccatalyst-dotnet-arm64-$(1):
 ifeq ($(IS_APPLE_SILICON),1)
 	@echo "ℹ️  Executing the '$(2)' test for Mac Catalyst/.NET (arm64) ℹ️"
-	$$(Q) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/net6.0-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
+	$$(Q) $(RUN_WITH_TIMEOUT) "./linker/ios/$(2)/dotnet/MacCatalyst/bin/$(CONFIG)/$(DOTNET_TFM)-maccatalyst/maccatalyst-arm64/$(2).app/Contents/MacOS/$(2)" $(LAUNCH_ARGUMENTS)
 else
 	@echo "⚠️  Not executing the '$(2)' test for Mac Catalyst/.NET (arm64) - not executing on Apple Silicon ⚠️"
 endif

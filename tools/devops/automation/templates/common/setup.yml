@@ -6,7 +6,9 @@ parameters:
   type: string
 
 steps:
-- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache
+- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache and kills processes at the end
+  parameters:
+    CleanseProcesses: true
 
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'
@@ -93,5 +95,7 @@ steps:
 
 - pwsh: |
     # some steps expect this to be set to be able to get the correct nuget name
-    Write-Host "##vso[task.setvariable variable=BRANCH_NAME]$(Build.SourceBranchName)"
+    Write-Host "##vso[task.setvariable variable=BRANCH_NAME]$Env:BRANCH_NAME"
   displayName: 'Set Jenkins variables'
+  env:
+    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]

@@ -6,6 +6,9 @@
 // Authors:
 //   Miguel de Icaza 
 //
+
+#nullable enable
+
 using System.Runtime.InteropServices;
 
 namespace CoreMotion {
@@ -13,6 +16,8 @@ namespace CoreMotion {
 	// CMMagnetometer.h
 #if NET
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Mac (10,15)]
 #endif

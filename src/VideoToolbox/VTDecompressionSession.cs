@@ -27,6 +27,8 @@ namespace VideoToolbox {
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[iOS (8,0)]
 	[TV (10,2)]
@@ -167,16 +169,16 @@ namespace VideoToolbox {
 			VTVideoDecoderSpecification decoderSpecification = null, // hardware acceleration is default behavior on iOS. no opt-in required.
 			NSDictionary destinationImageBufferAttributes = null) // Undocumented options, probably always null
 		{
-			if (formatDescription == null)
-				throw new ArgumentNullException ("formatDescription");
+			if (formatDescription is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatDescription));
 
 			var callbackStruct = default (VTDecompressionOutputCallbackRecord);
 
 			IntPtr ret;
 
 			var result = VTDecompressionSessionCreate (IntPtr.Zero, formatDescription.Handle,
-				decoderSpecification != null ? decoderSpecification.Dictionary.Handle : IntPtr.Zero,
-				destinationImageBufferAttributes != null ? destinationImageBufferAttributes.Handle : IntPtr.Zero,
+				decoderSpecification is not null ? decoderSpecification.Dictionary.Handle : IntPtr.Zero,
+				destinationImageBufferAttributes.GetHandle (),
 				ref callbackStruct,
 				out ret);
 
@@ -227,10 +229,10 @@ namespace VideoToolbox {
 #endif
 		{	
 			if (outputCallback is null)
-				throw new ArgumentNullException (nameof (outputCallback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputCallback));
 
 			if (formatDescription is null)
-				throw new ArgumentNullException (nameof (formatDescription));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (formatDescription));
 
 			var callbackHandle = GCHandle.Alloc (outputCallback);
 			var callbackStruct = new VTDecompressionOutputCallbackRecord () {
@@ -268,7 +270,7 @@ namespace VideoToolbox {
 		public VTStatus DecodeFrame (CMSampleBuffer sampleBuffer, VTDecodeFrameFlags decodeFlags, IntPtr sourceFrame, out VTDecodeInfoFlags infoFlags)
 		{
 			if (sampleBuffer is null)
-				throw new ArgumentNullException (nameof (sampleBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
 
 			return VTDecompressionSessionDecodeFrame (GetCheckedHandle (), sampleBuffer.Handle, decodeFlags, sourceFrame, out infoFlags);
 		}
@@ -305,9 +307,9 @@ namespace VideoToolbox {
 			out VTDecodeInfoFlags infoFlags, VTDecompressionOutputHandler outputHandler)
 		{
 			if (sampleBuffer is null)
-				throw new ArgumentNullException (nameof (sampleBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
 			if (outputHandler is null)
-				throw new ArgumentNullException (nameof (outputHandler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputHandler));
 
 			var block = new BlockLiteral ();
 			block.SetupBlockUnsafe (decompressionOutputHandlerTrampoline, outputHandler);
@@ -333,7 +335,7 @@ namespace VideoToolbox {
 		public VTStatus CanAcceptFormatDescriptor (CMFormatDescription newDescriptor)
 		{
 			if (newDescriptor is null)
-				throw new ArgumentNullException (nameof (newDescriptor));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newDescriptor));
 
 			return VTDecompressionSessionCanAcceptFormatDescription (GetCheckedHandle (), newDescriptor.Handle);
 		}
@@ -359,7 +361,7 @@ namespace VideoToolbox {
 		public VTStatus SetDecompressionProperties (VTDecompressionProperties options)
 		{
 			if (options is null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 
 			return VTSessionSetProperties (GetCheckedHandle (), options.Dictionary.Handle);
 		}
@@ -368,6 +370,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 		[iOS (11,0)]
@@ -381,6 +384,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,13)]
 		[iOS (11,0)]

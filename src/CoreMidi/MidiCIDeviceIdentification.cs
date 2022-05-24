@@ -10,6 +10,7 @@ namespace CoreMidi {
 #if NET
 	[SupportedOSPlatform ("macos10.14")]
 	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
 	[NoWatch]
@@ -17,6 +18,7 @@ namespace CoreMidi {
 	[Mac (10,14)]
 	[iOS (12,0)]
 #endif
+	[NativeName ("MIDICIDeviceIdentification")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiCIDeviceIdentification {
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 3)]

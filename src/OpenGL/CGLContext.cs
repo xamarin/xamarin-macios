@@ -40,6 +40,7 @@ using NativeHandle = System.IntPtr;
 
 namespace OpenGL {
 #if NET
+	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("macos10.14")]
 #if MONOMAC
 	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -68,12 +69,12 @@ namespace OpenGL {
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static void CGLReleaseContext (IntPtr handle);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGLRetainContext (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGLReleaseContext (GetCheckedHandle ());
 		}

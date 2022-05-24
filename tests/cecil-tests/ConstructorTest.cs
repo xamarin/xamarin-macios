@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -29,7 +28,7 @@ namespace Cecil.Tests {
 			return true;
 		}
 
-		static MethodDefinition GetConstructor (TypeDefinition type, params (string Namespace, string Name) [] parameterTypes)
+		static MethodDefinition? GetConstructor (TypeDefinition type, params (string Namespace, string Name) [] parameterTypes)
 		{
 			foreach (var ctor in type.Methods) {
 				if (IsMatch (ctor, parameterTypes))
@@ -38,9 +37,9 @@ namespace Cecil.Tests {
 			return null;
 		}
 
-		static string GetLocation (MethodDefinition method)
+		static string GetLocation (MethodDefinition? method)
 		{
-			if (method.DebugInformation.HasSequencePoints) {
+			if (method?.DebugInformation?.HasSequencePoints == true) {
 				var seq = method.DebugInformation.SequencePoints [0];
 				return seq.Document.Url + ":" + seq.StartLine + ": ";
 			}
@@ -58,7 +57,7 @@ namespace Cecil.Tests {
 			return false;
 		}
 
-		static bool VerifyInstructions (MethodDefinition method, IList<Instruction> instructions, out string reason)
+		static bool VerifyInstructions (MethodDefinition method, IList<Instruction> instructions, out string? reason)
 		{
 			reason = null;
 
@@ -70,7 +69,7 @@ namespace Cecil.Tests {
 				instructions [0].OpCode == OpCodes.Ldarg_0 &&
 				instructions [1].OpCode == OpCodes.Ldarg_1 &&
 				instructions [2].OpCode == OpCodes.Call) {
-				var targetMethod = (instructions [2].Operand as MethodReference).Resolve ();
+				var targetMethod = (instructions [2].Operand as MethodReference)!.Resolve ();
 				if (!targetMethod.IsConstructor) {
 					reason = $"Calls another method which is not a constructor: {targetMethod.FullName}";
 					return false;
@@ -85,7 +84,7 @@ namespace Cecil.Tests {
 					return true;
 
 				if (instructions [3].OpCode == OpCodes.Ldarg_0 && instructions [4].OpCode == OpCodes.Ldc_I4_0 && instructions [5].OpCode == OpCodes.Call) {
-					targetMethod = (instructions [5].Operand as MethodReference).Resolve ();
+					targetMethod = (instructions [5].Operand as MethodReference)!.Resolve ();
 					if (targetMethod.Name != "set_IsDirectBinding") {
 						reason = $"Calls unknown method: {targetMethod.FullName}";
 						return false;
@@ -96,7 +95,7 @@ namespace Cecil.Tests {
 				}
 
 				if (instructions [3].OpCode == OpCodes.Ldarg_0 && instructions [4].OpCode == OpCodes.Call) {
-					targetMethod = (instructions [4].Operand as MethodReference).Resolve ();
+					targetMethod = (instructions [4].Operand as MethodReference)!.Resolve ();
 					if (targetMethod.Name != "MarkDirtyIfDerived") {
 						reason = $"Calls unknown method: {targetMethod.FullName}";
 						return false;
@@ -113,7 +112,7 @@ namespace Cecil.Tests {
 				instructions [1].OpCode == OpCodes.Ldarg_1 &&
 				(instructions [2].OpCode == OpCodes.Ldarg_2 || instructions [2].OpCode == OpCodes.Ldc_I4_0) &&
 				instructions [3].OpCode == OpCodes.Call) {
-				var targetMethod = (instructions [3].Operand as MethodReference).Resolve ();
+				var targetMethod = (instructions [3].Operand as MethodReference)!.Resolve ();
 				if (!targetMethod.IsConstructor) {
 					reason = $"Calls another method which is not a constructor (2): {targetMethod.FullName}";
 					return false;
@@ -135,7 +134,7 @@ namespace Cecil.Tests {
 				(instructions [2].OpCode == OpCodes.Ldarg_2 || instructions [2].OpCode == OpCodes.Ldc_I4_0) &&
 				(instructions [3].OpCode == OpCodes.Ldc_I4_0 || instructions [3].OpCode == OpCodes.Ldc_I4_1) &&
 				instructions [4].OpCode == OpCodes.Call) {
-				var targetMethod = (instructions [4].Operand as MethodReference).Resolve ();
+				var targetMethod = (instructions [4].Operand as MethodReference)!.Resolve ();
 				if (!targetMethod.IsConstructor) {
 					reason = $"Calls another method which is not a constructor (2): {targetMethod.FullName}";
 					return false;
@@ -156,7 +155,7 @@ namespace Cecil.Tests {
 			return false;
 		}
 
-		static bool VerifyConstructor (MethodDefinition ctor, out string failureReason)
+		static bool VerifyConstructor (MethodDefinition? ctor, out string? failureReason)
 		{
 			failureReason = null;
 			// There's nothing wrong with a constructor that doesn't exist
@@ -175,7 +174,7 @@ namespace Cecil.Tests {
 			return true;
 		}
 
-		public static bool ImplementsINativeObject (TypeDefinition type)
+		public static bool ImplementsINativeObject (TypeDefinition? type)
 		{
 			if (type is null)
 				return false;
@@ -189,7 +188,7 @@ namespace Cecil.Tests {
 			return ImplementsINativeObject (type.BaseType?.Resolve ());
 		}
 
-		public static bool SubclassesNSObject (TypeDefinition type)
+		public static bool SubclassesNSObject (TypeDefinition? type)
 		{
 			if (type is null)
 				return false;
@@ -225,9 +224,6 @@ namespace Cecil.Tests {
 			return method.IsPublic;
 		}
 
-#if NET
-		[Ignore ("To be fixed after the move to an outside bot: https://github.com/xamarin/maccore/issues/2547.")]
-#endif
 		[Test]
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]
@@ -239,7 +235,6 @@ namespace Cecil.Tests {
 
 			var failures = new List<string> ();
 			foreach (var dll in Configuration.GetBaseLibraryImplementations (platform)) {
-				Console.WriteLine (dll);
 				using (var ad = AssemblyDefinition.ReadAssembly (dll, new ReaderParameters (ReadingMode.Deferred) { ReadSymbols = true })) {
 					foreach (var type in ad.MainModule.Types) {
 						// Skip classes we know aren't (properly) reference counted.
@@ -368,9 +363,6 @@ namespace Cecil.Tests {
 			return false;
 		}
 
-#if NET
-		[Ignore ("To be fixed after the move to an outside bot: https://github.com/xamarin/maccore/issues/2547.")]
-#endif
 		[Test]
 		[TestCase (ApplePlatform.iOS)]
 		[TestCase (ApplePlatform.TVOS)]

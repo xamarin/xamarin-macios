@@ -9,6 +9,8 @@ using NUnit.Framework;
 
 using Xamarin.Utils;
 
+#nullable disable // until we get around to fixing this file
+
 namespace Xamarin.Tests
 {
 	static partial class Configuration
@@ -24,6 +26,7 @@ namespace Xamarin.Tests
 		public static string DotNetBclDir;
 		public static string DotNetCscCommand;
 		public static string DotNetExecutable;
+		public static string DotNetTfm;
 		public static string mt_src_root;
 		public static string sdk_version;
 		public static string watchos_sdk_version;
@@ -212,6 +215,13 @@ namespace Xamarin.Tests
 			return result;
 		}
 
+		static IList<string> GetVariableArray (string variable, string @default = "")
+		{
+			// variables with more than one value are wrapped in ', get the var remove the '' and split
+			var value = GetVariable (variable, @default).Trim ('\'');
+			return value.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+		}
+
 		public static string EvaluateVariable (string variable)
 		{
 			var output = new StringBuilder ();
@@ -290,6 +300,7 @@ namespace Xamarin.Tests
 			DotNetBclDir = GetVariable ("DOTNET_BCL_DIR", null);
 			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
 			DotNetExecutable = GetVariable ("DOTNET", null);
+			DotNetTfm = GetVariable ("DOTNET_TFM", null);
 
 			XcodeVersionString = GetXcodeVersion (xcode_root);
 #if MONOMAC
@@ -318,31 +329,18 @@ namespace Xamarin.Tests
 
 		public static string RootPath {
 			get {
-				if (IsVsts) {
-					var workingDir = Environment.GetEnvironmentVariable ("SYSTEM_DEFAULTWORKINGDIRECTORY");
-					var git = Path.Combine (workingDir, ".git");
-					if (Directory.Exists (git)) {
-						return workingDir;
-					} else {
-						var xamarin = Path.Combine (workingDir, "xamarin-macios");
-						if (!Directory.Exists (xamarin))
-							throw new Exception ($"Could not find the xamarin-macios repo given the test working directory {workingDir}");
-						return xamarin;
-					}
-				} else {
-					var dir = TestAssemblyDirectory;
-					var path = Path.Combine (dir, ".git");
-					while (!Directory.Exists (path) && path.Length > 3) {
-						dir = Path.GetDirectoryName (dir);
-						if (dir is null)
-							throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
-						path = Path.Combine (dir, ".git");
-					}
-					path = Path.GetDirectoryName (path);
-					if (!Directory.Exists (path))
+				var dir = TestAssemblyDirectory;
+				var path = Path.Combine (dir, ".git");
+				while (!Directory.Exists (path) && path.Length > 3) {
+					dir = Path.GetDirectoryName (dir);
+					if (dir is null)
 						throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
-					return path;
+					path = Path.Combine (dir, ".git");
 				}
+				path = Path.GetDirectoryName (path);
+				if (!Directory.Exists (path))
+					throw new Exception ($"Could not find the xamarin-macios repo given the test assembly directory {TestAssemblyDirectory}");
+				return path;
 			}
 		}
 
@@ -509,7 +507,7 @@ namespace Xamarin.Tests
 		public static string GetDotNetRoot ()
 		{
 			if (IsVsts) {
-				return EvaluateVariable ("DOTNET_DIR");
+				return Path.Combine (EvaluateVariable ("DOTNET_DIR"), "packs");
 			} else {
 				return Path.Combine (SourceRoot, "_build");
 			}
@@ -517,22 +515,39 @@ namespace Xamarin.Tests
 
 		public static string GetRefDirectory (ApplePlatform platform)
 		{
-			return Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform), "ref", "net6.0");
+			var rv = Path.Combine (GetDotNetRoot (), GetRefNuGetName (platform));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			rv = Path.Combine (rv, "ref", DotNetTfm);
+			return rv;
 		}
 
 		public static string GetRefDirectory (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetRefNuGetName (targetFramework), "ref", "net6.0");
+				return GetRefDirectory (targetFramework.Platform);
 
 			// This is only applicable for .NET
 			throw new InvalidOperationException (targetFramework.ToString ());
 		}
 
+		public static string GetNuGetVersionNoMetadata (TargetFramework framework)
+		{
+			return GetNuGetVersionNoMetadata (framework.Platform);
+		}
+
+		public static string GetNuGetVersionNoMetadata (ApplePlatform platform)
+		{
+			return GetVariable ($"{platform.AsString ().ToUpper ()}_NUGET_VERSION_NO_METADATA", string.Empty);
+		}
+
 		// This is only applicable for .NET
 		public static string GetRuntimeDirectory (ApplePlatform platform, string runtimeIdentifier)
 		{
-			return Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier), "runtimes", runtimeIdentifier);
+			var rv = Path.Combine (GetDotNetRoot (), GetRuntimeNuGetName (platform, runtimeIdentifier));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return Path.Combine (rv, "runtimes", runtimeIdentifier);
 		}
 
 		public static string GetTargetDirectory (ApplePlatform platform)
@@ -552,7 +567,7 @@ namespace Xamarin.Tests
 		public static string GetSdkRoot (TargetFramework targetFramework)
 		{
 			if (targetFramework.IsDotNet)
-				return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (targetFramework), "tools");
+				return GetSdkRoot (targetFramework.Platform);
 			switch (targetFramework.Platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
@@ -568,7 +583,10 @@ namespace Xamarin.Tests
 		// Only valid for .NET
 		public static string GetSdkRoot (ApplePlatform platform)
 		{
-			return Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform), "tools");
+			var rv = Path.Combine (GetDotNetRoot (), GetSdkNuGetName (platform));
+			if (UseSystem)
+				rv = Path.Combine (rv, GetNuGetVersionNoMetadata (platform));
+			return Path.Combine (rv, "tools");
 		}
 
 		public static string SdkRootXI {
@@ -788,9 +806,20 @@ namespace Xamarin.Tests
 
 		public static IList<string> GetRuntimeIdentifiers (ApplePlatform platform)
 		{
-			// variables with more than one value are wrapped in ', get the var remove the '' and split
-			var variable = GetVariable ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS", string.Empty).Trim ('\'');
-			return variable.Split (new char [] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+			return GetVariableArray ($"DOTNET_{platform.AsString ().ToUpper ()}_RUNTIME_IDENTIFIERS");
+		}
+
+		public static IList<string> GetArchitectures (ApplePlatform platform)
+		{
+			var rv = new List<string> ();
+			foreach (var rid in GetRuntimeIdentifiers (platform))
+				rv.AddRange (GetArchitectures (rid));
+			return rv;
+		}
+
+		public static IList<string> GetArchitectures (string runtimeIdentifier)
+		{
+			return GetVariableArray ($"DOTNET_{runtimeIdentifier}_ARCHITECTURES");
 		}
 
 		public static IEnumerable<string> GetBaseLibraryImplementations ()
@@ -804,7 +833,7 @@ namespace Xamarin.Tests
 		{
 			var runtimeIdentifiers = GetRuntimeIdentifiers (platform);
 			foreach (var rid in runtimeIdentifiers) {
-				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", "net6.0");
+				var libdir = Path.Combine (GetRuntimeDirectory (platform, rid), "lib", DotNetTfm);
 				yield return Path.Combine (libdir, GetBaseLibraryName (platform, true));
 			}
 		}
@@ -1000,6 +1029,13 @@ namespace Xamarin.Tests
 			environment ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 			
+			// This is set by `dotnet test` and can cause building legacy projects to fail to build with:
+			// Microsoft.NET.Build.Extensions.ConflictResolution.targets(30,5):
+			// error MSB4062: The "ResolvePackageFileConflicts" task could not be loaded from the assembly Microsoft.NET.Build.Extensions.Tasks.dll.
+			// Invalid Image Confirm that the <UsingTask> declaration is correct, that the assembly and all its dependencies are available,
+			// and that the task contains a public class that implements Microsoft.Build.Framework.ITask.
+			environment ["MSBuildExtensionsPath"] = null;
+
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:

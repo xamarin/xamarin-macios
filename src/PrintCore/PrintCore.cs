@@ -13,6 +13,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.IO;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
@@ -25,6 +26,9 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace PrintCore {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPrintCoreBase : NativeObject {
 		[Preserve (Conditional = true)]
 		internal PMPrintCoreBase (NativeHandle handle, bool owns)
@@ -38,21 +42,27 @@ namespace PrintCore {
 		[DllImport (Constants.PrintCoreLibrary)]
 		internal extern static OSStatus PMRelease (PMObject obj);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			PMRetain (Handle);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			PMRelease (Handle);
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPrintException : Exception {
 		public PMPrintException (PMStatusCode code) : base (code.ToString ()){}
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPrintSession : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreateSession (out IntPtr session);
@@ -105,7 +115,7 @@ namespace PrintCore {
 		public void AssignDefaultSettings (PMPrintSettings settings)
 		{
 			if (settings is null)
-				throw new ArgumentNullException (nameof (settings));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 			PMSessionDefaultPrintSettings (Handle, settings.Handle);
 		}
 
@@ -115,7 +125,7 @@ namespace PrintCore {
 		public void AssignDefaultPageFormat (PMPageFormat pageFormat)
 		{
 			if (pageFormat is null)
-				throw new ArgumentNullException (nameof (pageFormat));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pageFormat));
 			PMSessionDefaultPageFormat (Handle, pageFormat.Handle);
 		}
 		
@@ -146,7 +156,7 @@ namespace PrintCore {
 		public PMStatusCode ValidatePrintSettings (PMPrintSettings settings, out bool changed)
 		{
 			if (settings is null)
-				throw new ArgumentNullException (nameof (settings));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 			
 			var code = PMSessionValidatePrintSettings (Handle, settings.Handle, out var c);
 			if (code != PMStatusCode.Ok){
@@ -158,6 +168,9 @@ namespace PrintCore {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPrintSettings : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreatePrintSettings (out IntPtr session);
@@ -242,7 +255,7 @@ namespace PrintCore {
 		public PMStatusCode CopySettings (PMPrintSettings destination)
 		{
 			if (destination is null)
-				throw new ArgumentNullException (nameof (destination));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destination));
 			return PMCopyPrintSettings (Handle, destination.Handle);
 		}
 
@@ -316,6 +329,9 @@ namespace PrintCore {
 		
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPageFormat : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreatePageFormat (out IntPtr handle);
@@ -401,6 +417,9 @@ namespace PrintCore {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPaper : PMPrintCoreBase {
 		[Preserve (Conditional = true)]
 		internal PMPaper (NativeHandle handle, bool owns) : base (handle, owns) {}
@@ -454,7 +473,7 @@ namespace PrintCore {
 		public string? GetLocalizedName (PMPrinter printer)
 		{
 			if (printer is null)
-				throw new ArgumentNullException (nameof (printer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (printer));
 			var code = PMPaperCreateLocalizedName (Handle, printer.Handle, out var name);
 			if (code != PMStatusCode.Ok)
 				return null;
@@ -463,6 +482,9 @@ namespace PrintCore {
 		
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMPrinter : PMPrintCoreBase {
 		[DllImport (Constants.PrintCoreLibrary)]
 		extern static PMStatusCode PMCreateGenericPrinter (out IntPtr session);
@@ -489,7 +511,7 @@ namespace PrintCore {
 		static IntPtr Create (string printerId)
 		{
 			if (printerId is null)
-				throw new ArgumentNullException (nameof (printerId));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (printerId));
 
 			var printerIdHandle = CFString.CreateNative (printerId);
 			try {
@@ -625,9 +647,9 @@ namespace PrintCore {
 		public PMStatusCode TryPrintFile (PMPrintSettings settings, PMPageFormat? pageFormat, NSUrl fileUrl, string? mimeType = null)
 		{
 			if (settings is null)
-				throw new ArgumentNullException (nameof (settings));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 			if (fileUrl is null)
-				throw new ArgumentNullException (nameof (fileUrl));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (fileUrl));
 				    
 			IntPtr mime = CFString.CreateNative (mimeType);
 			try {
@@ -643,9 +665,9 @@ namespace PrintCore {
 		public PMStatusCode TryPrintFromProvider (PMPrintSettings settings, PMPageFormat? pageFormat, CGDataProvider provider, string? mimeType = null)
 		{
 			if (settings is null)
-				throw new ArgumentNullException (nameof (settings));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 			if (provider is null)
-				throw new ArgumentNullException (nameof (provider));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (provider));
 				    
 			IntPtr mime = CFString.CreateNative (mimeType);
 			try {
@@ -663,7 +685,7 @@ namespace PrintCore {
 		public PMResolution GetOutputResolution (PMPrintSettings settings)
 		{
 			if (settings is null)
-				throw new ArgumentNullException (nameof (settings));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 
 			if (PMPrinterGetOutputResolution (Handle, settings.Handle, out var res) == PMStatusCode.Ok)
 				return res;
@@ -673,7 +695,7 @@ namespace PrintCore {
 		public void SetOutputResolution (PMPrintSettings settings, PMResolution res)
 		{
 			if (settings is null)
-				throw new ArgumentNullException (nameof (settings));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 			PMPrinterSetOutputResolution (Handle, settings.Handle, ref res);
 		}
 
@@ -739,6 +761,9 @@ namespace PrintCore {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class PMServer : PMPrintCoreBase {
 		// A private constructor so that nobody can create an instance of this class.
 		PMServer ()

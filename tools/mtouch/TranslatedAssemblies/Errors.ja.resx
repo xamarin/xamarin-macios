@@ -1233,6 +1233,9 @@
 		<value>'{0}' に無効な BindAsAttribute が見つかりました: 基になる列挙型 {1} が見つかりませんでした。https://github.com/xamarin/xamarin-macios/issues/new にバグ報告をお寄せください
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>レジストラーにより、メソッド '{1}' のシグネチャ内で無効な型 '{0}' が検出されました: インターフェイスには、それのラッパー型を指定するプロトコル属性が必要です。
 		</value>
@@ -1517,6 +1520,9 @@
 		<value>デリゲート型の Invoke メソッドが見つからなかったため、レジストラーでは、メソッド {1} の型 {0} のデリゲートについてブロック シグネチャを計算できません。
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>レジストラーで最適でない型 '{0}' が見つかりました。この型には、2 つの (ObjCRuntime.NativeHandle, bool) 引数を受け取るコンストラクターがありません。ただし、2 つの (System.IntPtr, bool) 引数を受け取るコンストラクターが見つかりました (代わりに使用されます)。(System.IntPtr, bool) コンストラクターの署名を (ObjCRuntime.NativeHandle, bool) に変更することを強くお勧めします。</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>'{0}' コンパイラがありません。Xcode の 'Command-Line Tools' コンポーネントをインストールしてください
 		</value>
@@ -1700,6 +1706,11 @@
 		<value>ツール '{0}' を検索しているときにツール xcrun で結果が見つかりませんでした (ファイル '{1}' が存在しません)。詳細については、ビルド ログをご確認ください。
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>カスタム リンカー ステップの実行中にエラーが発生しました。詳細については、ビルド ログを確認してください。</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>内部整合性エラーです。https://github.com/xamarin/xamarin-macios/issues/new にバグ報告をお寄せください。
 		</value>

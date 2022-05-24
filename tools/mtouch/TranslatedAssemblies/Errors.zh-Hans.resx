@@ -1232,6 +1232,9 @@
 		<value>在 "{0}" 上找到的 BindAsAttribute 无效: 找不到基本枚举类型 {1}。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>注册器在方法 "{1}" 的签名中找到无效的类型 "{0}": 接口必须具有指定其包装类型的 Protocol 特性。
 		</value>
@@ -1516,6 +1519,9 @@
 		<value>注册器无法计算方法 {1} 中 {0} 类型委托的块签名，因为它找不到委托类型的 Invoke 方法。
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>注册机构找到了非最佳类型 `{0}`: 该类型不具有采用两个(ObjCRuntime.NativeHandle, bool)参数的构造函数。但是，找到了一个采用两个(System.IntPtr, bool)参数的构造函数(并将改用此函数)。强烈建议将(System.IntPtr, bool)构造函数的签名更改为(ObjCRuntime.NativeHandle, bool)。</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>缺少 "{0}" 编译器。请安装 Xcode“命令行工具”组件
 		</value>
@@ -1699,6 +1705,11 @@
 		<value>查找工具“{0}”时，工具 xcrun 未能找到结果(文件“{1}”不存在)。请查看生成日志了解详细信息。
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>执行自定义链接器步骤时出错。请查看生成日志以获取详细信息。</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>内部一致性错误。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告。
 		</value>

@@ -1,0 +1,10 @@
+{
+  "author": "Microsoft",
+  "name": "iOS Tabbed Application",
+  "description": "A project for creating a .NET iOS tabbed application",
+  "symbols/bundleId/description": "Overrides CFBundleIdentifier in the Info.plist",
+  "symbols/minOSVersion/description": "Overrides SupportedOSPlatformVersion in the project file",
+  "symbols/deviceFamily/choices/universal/description": "Support both iPhone and iPad devices",
+  "symbols/deviceFamily/choices/iphone/description": "Support only iPhone devices",
+  "symbols/deviceFamily/choices/ipad/description": "Support only iPad devices"
+}

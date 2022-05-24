@@ -1232,6 +1232,9 @@
 		<value>BindAsAttribute non valide trouvé sur '{0}' : le type enum sous-jacent de {1} est introuvable. Entrez un rapport de bogue sur https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Le registrar a trouvé un type non valide '{0}' dans la signature de la méthode '{1}' : l'interface doit avoir un attribut Protocol spécifiant son type de wrapper.
 		</value>
@@ -1516,6 +1519,9 @@
 		<value>Le registrar ne peut pas calculer la signature de bloc pour le délégué de type {0} dans la méthode {1}, car il n'a pas pu trouver la méthode Invoke du type délégué.
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>Le bureau d’enregistrement a trouvé un type «{0}» non optimal : le type n’a pas de constructeur qui accepte deux arguments (ObjCRuntime.NativeHandle, bool). Toutefois, un constructeur qui accepte deux arguments (System.IntPtr, bool) a été trouvé (et sera utilisé à la place). Il est vivement recommandé de remplacer la signature du constructeur (System.IntPtr, bool) par (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Compilateur '{0}' manquant. Installez le composant 'Command-Line Tools' (Outils en ligne de commande) de Xcode
 		</value>
@@ -1699,6 +1705,11 @@
 		<value>L'outil xcrun n'a trouvé aucun résultat durant la recherche de l'outil '{0}' (le fichier '{1}' n'existe pas). Pour plus d'informations, consultez le journal de génération.
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>Une erreur s’est produite lors de l’exécution des étapes de l’éditeur de liens personnalisé. Pour plus d’informations, consultez le journal des builds.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>Erreur de cohérence interne. Entrez un rapport de bogue sur https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>

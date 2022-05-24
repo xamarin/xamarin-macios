@@ -17,9 +17,6 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-#if !NET
-	[Watch (6,0)]
-#endif
 	public partial class CMMemoryPool : NativeObject
 	{
 		[DllImport(Constants.CoreMediaLibrary)]

@@ -3,8 +3,8 @@
   "author": "Microsoft",
   "classifications": [ "macOS", "Mac Catalyst" ],
   "identity": "Microsoft.MacCatalyst.MacCatalystApp",
-  "name": "MacCatalyst Application (Preview)",
-  "description": "A project for creating a .NET 6 MacCatalyst application",
+  "name": "MacCatalyst Application",
+  "description": "A project for creating a .NET MacCatalyst application",
   "shortName": "maccatalyst",
   "tags": {
     "language": "C#",

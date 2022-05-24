@@ -11,6 +11,8 @@ using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if !WATCH

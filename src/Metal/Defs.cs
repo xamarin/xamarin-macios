@@ -18,6 +18,12 @@ using ObjCRuntime;
 
 namespace Metal {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLOrigin {
 		public nint X, Y, Z;
 		public MTLOrigin (nint x, nint y, nint z){
@@ -32,6 +38,12 @@ namespace Metal {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLSize {
 		public nint Width, Height, Depth;
 		
@@ -43,11 +55,19 @@ namespace Metal {
 	}
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class MTLVertexFormatExtensions {
 
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
@@ -58,6 +78,8 @@ namespace Metal {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
@@ -70,6 +92,12 @@ namespace Metal {
 	}
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLScissorRect {
 		public nuint X, Y, Width, Height;
 
@@ -87,6 +115,12 @@ namespace Metal {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLViewport {
 		public double OriginX, OriginY, Width, Height, ZNear, ZFar;
 		public MTLViewport (double originX, double originY, double width, double height, double znear, double zfar)
@@ -105,6 +139,12 @@ namespace Metal {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MTLSamplePosition
 	{
@@ -120,6 +160,12 @@ namespace Metal {
 	}
 
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLClearColor {
 		public double Red, Green, Blue, Alpha;
 
@@ -132,6 +178,12 @@ namespace Metal {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLRegion {
 		public MTLOrigin Origin;
 		public MTLSize   Size;
@@ -194,6 +246,12 @@ namespace Metal {
 		}
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Explicit)]
 	public struct MTLClearValue {
 		[FieldOffset (0)]
@@ -233,6 +291,12 @@ namespace Metal {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLDispatchThreadgroupsIndirectArguments {
 		public uint ThreadGroupsPerGrid1;
 		public uint ThreadGroupsPerGrid2;
@@ -243,6 +307,7 @@ namespace Metal {
 	[SupportedOSPlatform ("macos10.14")]
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Mac (10,14)]
 	[iOS (12,0)]
@@ -259,6 +324,12 @@ namespace Metal {
 		public uint StageInSize3;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLDrawPrimitivesIndirectArguments {
 		public uint VertexCount;
 		public uint InstanceCount;
@@ -266,6 +337,12 @@ namespace Metal {
 		public uint BaseInstance;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct MTLDrawIndexedPrimitivesIndirectArguments {
 		public uint IndexCount;
 		public uint InstanceCount;
@@ -278,6 +355,7 @@ namespace Metal {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -302,6 +380,7 @@ namespace Metal {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -330,6 +409,7 @@ namespace Metal {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -356,6 +436,7 @@ namespace Metal {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -413,6 +494,7 @@ namespace Metal {
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Mac (10,15)]
 	[iOS (13,0)]

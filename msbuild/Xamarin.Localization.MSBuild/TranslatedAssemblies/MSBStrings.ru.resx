@@ -423,6 +423,10 @@
         <value>{0} завершает работу с кодом {1}.
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>"{0}" пропускается, так как выходной файл "{1}" более новый.
         </value>
@@ -1074,6 +1078,9 @@
             {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
+  <data name="E7085" xml:space="preserve">
+        <value>Задаче "{0}" не было присвоено значение для обязательного параметра "{1}", а также отсутствовали метаданные "{2}" ресурса {3}.</value>
+    </data>
   <data name="W7085" xml:space="preserve">
         <value>Создается сжатый пакет ресурсов привязки, так как во входных данных присутствуют символические ссылки.</value>
     </data>
@@ -1086,7 +1093,7 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="E7088" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <value>Значение "{0}" метаданных "PublishFolderType" для элемента "{1}" не распознано. Файл не будет скопирован в пакет приложений.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1094,14 +1101,14 @@
         </comment>
     </data>
   <data name="E7089" xml:space="preserve">
-        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <value>В файле "{0}" не указаны метаданные "PublishFolderType", и не удалось вычислить значение по умолчанию. Файл не будет скопирован в пакет приложений.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: path to a file
         </comment>
     </data>
   <data name="E7090" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <value>Значение "{0}" метаданных "PublishFolderType" для элемента "{1}" не распознано. Файл не будет скопирован в пакет приложений. Если копирование файла в пакет приложений не предполагается, удалите метаданные "{2}" элемента.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1117,9 +1124,30 @@
         <value>Недопустимая платформа файла "{0}": {1}</value>
     </data>
   <data name="W7093" xml:space="preserve">
-        <value>The binding resource package {0} does not exist.</value>
+        <value>Пакет ресурсов привязки {0} не существует.</value>
     </data>
   <data name="E7094" xml:space="preserve">
-        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+        <value>Файл или каталог "{0}" не является инфраструктурой или файлом в рамках инфраструктуры.</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>Подписывание кода было запрошено несколько раз для “{0}” с разными метаданными. Метаданные для одного из них: “{1}”, а метаданные для другого: “{2}”</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>Подписывание кода было запрошено несколько раз для “{0}” с разными метаданными. Метаданные “{1}={2}” были заданы для одного элемента, но не для другого.</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>Подписывание кода было запрошено несколько раз для \"{0}\" с разными метаданными. У метаданных \"{1}\" были разные значения для каждого элемента (один раз это \"{2}\", в другой раз \"{3}\").</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>Значение UIDeviceFamily \"6\" недопустимо для этой платформы. Это допустимо только для Mac Catalyst.</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>Для значения UIDeviceFamily \"6\" требуется macOS 11.0. Установите для параметра SupportedOSPlatformVersion в файле проекта значение не менее 14.0 (версия Mac Catalyst, эквивалентная macOS 11.0). Текущее значение равно {0} (эквивалентно macOS {1}).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Не удалось найти пакет ресурсов привязки: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>Неизвестное свойство \"{0}\" со значением \"{1}\".</value>
     </data>
 </root>

@@ -62,7 +62,13 @@ namespace CoreFoundation {
 		Background      = 0x09,
 		Unspecified     = 0x00,
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public abstract class DispatchObject : NativeObject
 	{
 #if !COREBUILD
@@ -85,12 +91,12 @@ namespace CoreFoundation {
 		[DllImport (Constants.libcLibrary)]
 		extern static IntPtr dispatch_retain (IntPtr o);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			dispatch_retain (Handle);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			dispatch_release (Handle);
 		}
@@ -160,6 +166,7 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 		[iOS (10,0)]
@@ -175,6 +182,7 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 		[iOS (10,0)]
@@ -186,6 +194,12 @@ namespace CoreFoundation {
 #endif // !COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public sealed class DispatchQueue : DispatchObject  {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
@@ -226,6 +240,7 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 		[iOS (10,0)]
@@ -249,6 +264,9 @@ namespace CoreFoundation {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -287,6 +305,10 @@ namespace CoreFoundation {
 		}
 	
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if MONOMAC
@@ -508,6 +530,8 @@ namespace CoreFoundation {
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,10)]
 		[iOS (8,0)]
@@ -523,6 +547,8 @@ namespace CoreFoundation {
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,10)]
 		[iOS (8,0)]
@@ -545,6 +571,7 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 		[iOS (10,0)]
@@ -585,6 +612,10 @@ namespace CoreFoundation {
 		extern static void dispatch_after (/* dispath_time_t */ ulong time, IntPtr queue, IntPtr block);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios6.0")]
 #if MONOMAC
@@ -616,6 +647,8 @@ namespace CoreFoundation {
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,10)]
 		[iOS (8,0)]
@@ -676,6 +709,7 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
 #else
@@ -688,6 +722,7 @@ namespace CoreFoundation {
 
 #if NET
 			[SupportedOSPlatform ("macos10.12")]
+			[SupportedOSPlatform ("maccatalyst")]
 			[SupportedOSPlatform ("ios10.0")]
 			[SupportedOSPlatform ("tvos10.0")]
 #else
@@ -701,6 +736,8 @@ namespace CoreFoundation {
 #if NET
 			[SupportedOSPlatform ("macos10.10")]
 			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("tvos")]
+			[SupportedOSPlatform ("maccatalyst")]
 #else
 			[Mac (10,10)]
 			[iOS (8,0)]
@@ -710,6 +747,8 @@ namespace CoreFoundation {
 #if NET
 			[SupportedOSPlatform ("macos10.10")]
 			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("tvos")]
+			[SupportedOSPlatform ("maccatalyst")]
 #else
 			[Mac (10,10)]
 			[iOS (8,0)]
@@ -776,6 +815,7 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,12)]
 		[iOS (10,0)]
@@ -793,7 +833,13 @@ namespace CoreFoundation {
 	}
 
 	// Some insights from: https://opensource.apple.com/source/libdispatch/libdispatch-442.1.4/src/time.c
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public struct DispatchTime
 	{
 #if !COREBUILD
@@ -836,6 +882,12 @@ namespace CoreFoundation {
 #endif // !COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class DispatchGroup : DispatchObject
 	{
 #if !COREBUILD

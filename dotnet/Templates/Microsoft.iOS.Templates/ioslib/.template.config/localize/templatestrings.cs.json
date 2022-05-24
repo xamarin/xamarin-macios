@@ -1,5 +1,5 @@
 {
   "author": "Microsoft",
-  "name": "iOS Class Library (Preview)",
-  "description": "A project for creating a .NET 6 iOS class library"
+  "name": "iOS Class Library",
+  "description": "Projekt pro vytvoření knihovny tříd .NET pro iOS"
 }

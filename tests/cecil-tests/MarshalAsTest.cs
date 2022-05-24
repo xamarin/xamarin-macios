@@ -15,13 +15,10 @@ namespace Cecil.Tests {
 
 	[TestFixture]
 	public class MarshalAsTest {
-		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
 		public void TestAssembly (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
-			if (assembly == null)
-				Assert.Ignore ($"{assemblyPath} could not be found (might be disabled in build)");
-
 			var failedMethods = new List<string> ();
 			List<string>? failures = null;
 			var checkedTypes = new List<TypeReference> ();

@@ -1,4 +1,4 @@
-Using module ./APIDiff.psm1
+using module ".\\APIDiff.psm1"
 
 Describe "Platform diff tests" {
 
@@ -158,8 +158,8 @@ Describe "API diff tests" {
 Describe "API diff comment tests" {
     BeforeAll {
         # this headers help to check the content is there
-        $prHeader = "API Current PR diff"
-        $stableHeader = "API diff"
+        $prHeader = "API diff (for current PR)"
+        $stableHeader = "API diff (vs stable)"
         $result = "Success"
         $message = "Review diff."
 

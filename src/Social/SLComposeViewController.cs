@@ -6,6 +6,9 @@
 //
 // Copyright 2012 Xamarin Inc
 //
+
+#nullable enable
+
 #if !MONOMAC
 using System;
 using ObjCRuntime;

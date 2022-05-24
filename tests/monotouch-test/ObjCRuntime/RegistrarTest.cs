@@ -45,6 +45,9 @@ using CoreLocation;
 #if !__TVOS__
 using Contacts;
 #endif
+#if HAS_COREMIDI
+using CoreMidi;
+#endif
 #if !(__TVOS__ && NET)
 using WebKit;
 #endif
@@ -190,7 +193,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.True (Messaging.bool_objc_msgSend_IntPtr (receiver, new Selector ("INativeObject1:").Handle, new CGPath ().Handle), "#a2");
 			
 			Assert.That ((NativeHandle) Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, false), Is.EqualTo (NativeHandle.Zero), "#b1");
-			Assert.That ((NativeHandle) Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, true), Is.Not.EqualTo (NativeHandle.Zero), "#b2");
+			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, true);
+			Assert.That ((NativeHandle) ptr, Is.Not.EqualTo (NativeHandle.Zero), "#b2");
+			CGPathRelease (ptr);
 			
 			void_objc_msgSend_out_IntPtr_bool (receiver, new Selector ("INativeObject3:create:").Handle, out ptr, true);
 			Assert.That (ptr, Is.Not.EqualTo (NativeHandle.Zero), "#c1");
@@ -212,6 +217,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (ptr, Is.Not.EqualTo (NativeHandle.Zero), "#e2");
 			path = Runtime.GetINativeObject<CGPath> (ptr, false);
 			path.AddArc (1, 2, 3, 4, 5, false); // this should crash if we get back a bogus ptr
+			CGPathRelease (ptr);
 		}
 
 		[Test]
@@ -437,6 +443,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal static extern IntPtr object_getClass (IntPtr obj);
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static void CGPathRelease (/* CGPathRef */ IntPtr path);
 
 		[Test]
 		public void TestNonVirtualProperty ()
@@ -871,6 +880,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 			
 			[Export ("INativeObject2:")]
+			[return: ReleaseAttribute] // can't return an INativeObject without retaining it (we can autorelease NSObjects, but that doesn't work for INativeObjects)
 			static CGPath INativeObject2 (bool create)
 			{
 				return create ? new CGPath () : null;
@@ -889,6 +899,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 			
 			[Export ("INativeObject5:")]
+			[return: ReleaseAttribute] // can't return an INativeObject without retaining it (we can autorelease NSObjects, but that doesn't work for INativeObjects)
 			static CGPath INativeObject5 (bool create)
 			{
 				return create ? new CGPath () : null;
@@ -5638,4 +5649,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	}
 #endif // !__TVOS__
 #endif // !__WATCHOS__
+
+#if HAS_COREMIDI
+	// This type exports methods with 'MidiCIDeviceIdentification' parameters, which is a struct with different casing in Objective-C ("MIDI...")
+	class ExportedMethodWithStructWithManagedCasing : NSObject {
+		[Export ("doSomething:")]
+		public void DoSomething (MidiCIDeviceIdentification arg) { }
+
+		[Export ("doSomething2:")]
+		public void DoSomething2 (ref MidiCIDeviceIdentification arg) { }
+
+		[Export ("doSomething3")]
+		public MidiCIDeviceIdentification DoSomething3 () { return default (MidiCIDeviceIdentification); }
+
+		[Export ("doSomething4:")]
+		public void DoSomething4 (out MidiCIDeviceIdentification arg) { arg = default (MidiCIDeviceIdentification); }
+	}
+#endif
 }

@@ -28,6 +28,7 @@ namespace Network {
 	[SupportedOSPlatform ("tvos13.0")]
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (13,0)]
 	[Mac (10,15)]
@@ -66,7 +67,7 @@ namespace Network {
 		static void TrampolineEnumerateHeadersHandler (IntPtr block, string header, string value)
 		{
 			var del = BlockLiteral.GetTarget<Action<string, string>> (block);
-			if (del != null) {
+			if (del is not null) {
 				del (header, value);
 			}
 		}
@@ -74,8 +75,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool EnumerateAdditionalHeaders (Action<string, string> handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateHeadersHandler, handler);

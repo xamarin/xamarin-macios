@@ -42,7 +42,7 @@ namespace SceneKit {
 
 			for (nint i = 0; i < count; i++) {
 				var item = NSValue.FromSCNMatrix4 (items [i]);
-				var h = item == null ? NSNull.Null.Handle : item.Handle;
+				var h = item?.Handle ??  NSNull.Null.Handle;
 				Marshal.WriteIntPtr (buf, (int)(i * IntPtr.Size), h);
 			}
 
@@ -55,6 +55,8 @@ namespace SceneKit {
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 10)]
 #endif
@@ -65,6 +67,8 @@ namespace SceneKit {
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10, 10)]
 #endif

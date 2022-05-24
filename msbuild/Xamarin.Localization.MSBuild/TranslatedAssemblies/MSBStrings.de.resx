@@ -423,6 +423,10 @@
         <value>{0} mit Code {1} beendet
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>"{0}" wird als Ausgabedatei übersprungen, "{1}" ist neuer.
         </value>
@@ -1074,6 +1078,9 @@
             {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
+  <data name="E7085" xml:space="preserve">
+        <value>Für den Task "{0}" wurde kein Wert für den erforderlichen Parameter "{1}" angegeben, und für die Ressource "{3}" wurden auch keine Metadaten vom Typ "{2}" angegeben.</value>
+    </data>
   <data name="W7085" xml:space="preserve">
         <value>Ein komprimiertes Bindungsressourcenpaket wird erstellt, da in der Eingabe Symlinks vorhanden sind.</value>
     </data>
@@ -1086,7 +1093,7 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="E7088" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <value>Der PublishFolderType-Metadatenwert „{0}“ für das Element „{1}“ wird nicht erkannt. Die Datei wird nicht in das App-Bundle kopiert.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1094,14 +1101,14 @@
         </comment>
     </data>
   <data name="E7089" xml:space="preserve">
-        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <value>Die Datei „{0}“ gibt keine PublishFolderType-Metadaten an, und ein Standardwert konnte nicht berechnet werden. Die Datei wird nicht in das App-Bundle kopiert.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: path to a file
         </comment>
     </data>
   <data name="E7090" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <value>Der PublishFolderType-Metadatenwert „{0}“ für das Element „{1}“ wird nicht erkannt. Die Datei wird nicht in das App-Bundle kopiert. Wenn die Datei nicht in das App-Bundle kopiert werden soll, entfernen Sie die Metadaten „{2}“ für das Element.</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1117,9 +1124,30 @@
         <value>Die Datei "{0}" ist kein gültiges Framework: {1}</value>
     </data>
   <data name="W7093" xml:space="preserve">
-        <value>The binding resource package {0} does not exist.</value>
+        <value>Das Bindungsressourcenpaket {0} ist nicht vorhanden.</value>
     </data>
   <data name="E7094" xml:space="preserve">
-        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+        <value>Die Datei oder das Verzeichnis „{0}“ ist weder ein Framework noch eine Datei innerhalb eines Frameworks.</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>Das Codesignieren wurde für „{0}“ mehrmals mit unterschiedlichen Metadaten angefordert. Die Metadaten für eines sind: „{1}“, während die Metadaten für das andere: „{2}“ sind</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>Das Codesignieren wurde für „{0}“ mehrmals mit unterschiedlichen Metadaten angefordert. Die Metadaten „{1}={2}“ wurden für ein Element festgelegt, aber nicht für das andere.</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>Das Codesignieren wurde für „{0}“ mehrfach mit unterschiedlichen Metadaten angefordert. Die Metadaten „{1}“ haben unterschiedliche Werte für jedes Element (einmal ist es „{2}“ ist, ein anderes Mal ist es „{3}“).</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>Der UIDeviceFamily-Wert \"6\" ist für diese Plattform ungültig. Sie ist nur für Mac Catalyst gültig.</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>Für den UIDeviceFamily-Wert \"6\" ist macOS 11.0 erforderlich. Legen Sie \"SupportedOSPlatformVersion\" in der Projektdatei auf mindestens 14.0 (die Mac-Äquivalentversion von macOS 11.0) fest. Der aktuelle Wert ist {0} (entspricht macOS {1}).</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>Das Bindungsressourcenpaket {0} wurde nicht gefunden.</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>Unbekannte Eigenschaft „{0}“ mit dem Wert „{1}“.</value>
     </data>
 </root>

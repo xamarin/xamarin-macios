@@ -339,6 +339,7 @@ namespace Xamarin.Tests {
 			Assert.That (missingFiles, Is.Empty, "No missing files");
 
 			AssertDynamicLibraryId (platform, appPath, assemblyDirectory, "libSkipInstallNameTool.dylib");
+			AssertLibraryArchitectures (appPath, runtimeIdentifiers);
 		}
 
 		void AssertDynamicLibraryId (ApplePlatform platform, string appPath, string dylibDirectory, string library)
@@ -535,19 +536,15 @@ namespace Xamarin.Tests {
 		// Debug
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.iOS, "iossimulator-x64", CodeSignature.Frameworks, "Debug")]
-#if !NET //ignore due to https://github.com/xamarin/maccore/issues/2548
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", CodeSignature.All, "Debug")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;maccatalyst-arm64", CodeSignature.All, "Debug")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.None, "Debug")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", CodeSignature.None, "Debug")]
-#endif
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.Frameworks, "Debug")]
+		[TestCase (ApplePlatform.MacOSX, "osx-x64;osx-arm64", CodeSignature.Frameworks, "Debug")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Debug")]
 		// Release
 		[TestCase (ApplePlatform.iOS, "ios-arm64;ios-arm", CodeSignature.All, "Release")]
-#if !NET // ignore due to https://github.com/xamarin/maccore/issues/2548
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64;maccatalyst-arm64", CodeSignature.All, "Release")]
-		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.None, "Release")]
-#endif
+		[TestCase (ApplePlatform.MacOSX, "osx-x64", CodeSignature.Frameworks, "Release")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64", CodeSignature.All, "Release")]
 		public void Build (ApplePlatform platform, string runtimeIdentifiers, CodeSignature signature, string configuration)
 		{
@@ -667,5 +664,44 @@ namespace Xamarin.Tests {
 				.ToArray ();
 
 		}
+
+		void AssertLibraryArchitectures (string appBundle, string[] runtimeIdentifiers)
+		{
+			var renderArchitectures = (IEnumerable<Abi> architectures) => {
+				return string.Join (", ",
+					architectures.
+						// ARMv7s is kind of special in that we don't target it by default for ios-arm
+						Where (v => v != Abi.ARMv7s).
+						// Sort to get stable results
+						OrderBy (v => v).
+						// Render to a string to make it easy to understand what's going on in test failures
+						Select (v => v.ToString ()));
+			};
+			var expectedArchitectures = renderArchitectures (
+				runtimeIdentifiers.
+					Select (rid => Configuration.GetArchitectures (rid)).
+					SelectMany (v => v).
+					Select (v => {
+						if (v == "x86")
+							return Abi.i386;
+						return Enum.Parse<Abi> (v, true);
+					})
+			);
+			var libraries = Directory.EnumerateFiles (appBundle, "*", SearchOption.AllDirectories)
+				.Where (file => {
+					// dylibs
+					if (file.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase))
+						return true;
+					// frameworks
+					if (Path.GetFileName (Path.GetDirectoryName (file)) == Path.GetFileName (file) + ".framework")
+						return true;
+					// nothing else
+					return false;
+				});
+			foreach (var lib in libraries) {
+				var libArchitectures = renderArchitectures (MachO.GetArchitectures (lib));
+				Assert.AreEqual (expectedArchitectures, libArchitectures, $"Architectures in {lib}");
+			}
+		}		
 	}
 }

@@ -18,6 +18,8 @@ using UIKit;
 using CloudKit;
 #if !TVOS
 using Contacts;
+#else
+using CNContact = System.Object;
 #endif
 #if !WATCH
 using MediaPlayer;
@@ -1254,7 +1256,7 @@ namespace UIKit {
 	}
 
 	[NoWatch]
-	[TV (11,0), iOS (11,0)]
+	[TV (11,0), iOS (11,0)][NoMac]
 	[Protocol]
 	interface UIAccessibilityContentSizeCategoryImageAdjusting {
 		[Abstract]
@@ -2647,11 +2649,11 @@ namespace UIKit {
 		[Export ("iconWithSystemImageName:")]
 		UIApplicationShortcutIcon FromSystemImageName (string systemImageName);
 
-#if IOS // This is inside ContactsUI.framework
+		// This is inside ContactsUI.framework
+		[NoMac][NoTV][NoWatch]
 		[NoMacCatalyst]
 		[Static, Export ("iconWithContact:")]
 		UIApplicationShortcutIcon FromContact (CNContact contact);
-#endif // IOS
 	}
 
 	[NoTV]
@@ -2977,6 +2979,7 @@ namespace UIKit {
 
 	[BaseType (typeof (NSObject))]
 	[Model]
+	[NoMac]
 	[Protocol]
 	interface UIApplicationDelegate {
 
@@ -6251,6 +6254,7 @@ namespace UIKit {
 	}
 
 	[NoWatch]
+	[NoMac]
 	[BaseType (typeof(NSObject))]
 	[Model]
 	[Protocol]
@@ -10314,11 +10318,11 @@ namespace UIKit {
 		[Export ("setItems:options:")]
 		void SetItems (NSDictionary<NSString, NSObject>[] items, NSDictionary options);
 		
-#if !TVOS
+		[NoTV]
 		[iOS (10,0)]
 		[Wrap ("SetItems (items, pasteboardOptions.GetDictionary ()!)")]
 		void SetItems (NSDictionary<NSString, NSObject> [] items, UIPasteboardOptions pasteboardOptions);
-#endif
+
 		[NoWatch, NoTV, iOS (10, 0)]
 		[Export ("hasStrings")]
 		bool HasStrings { get; }
@@ -10383,14 +10387,13 @@ namespace UIKit {
 		NSString Find { get; }
 	}
 
-#if !TVOS
 	[NoWatch, NoTV, iOS (10, 0)]
 	[StrongDictionary ("UIPasteboardOptionKeys")]
 	interface UIPasteboardOptions {
 		NSDate ExpirationDate { get; set; }
 		bool LocalOnly { get; set; }
 	}
-#endif
+
 	[NoWatch, NoTV, iOS (10,0)]
 	[Static]
 	interface UIPasteboardOptionKeys {
@@ -10862,7 +10865,7 @@ namespace UIKit {
 		[Export ("canPerformAction:withSender:")]
 		bool CanPerform (Selector action, [NullAllowed] NSObject withSender);
 
-		[Export ("undoManager")]
+		[Export ("undoManager"), NullAllowed]
 		NSUndoManager UndoManager { get; }
 
 		[iOS (13,0), TV (13,0)]
@@ -11373,6 +11376,7 @@ namespace UIKit {
 		UIRefreshControl RefreshControl { get; set; }
 	}
 
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -14148,6 +14152,7 @@ namespace UIKit {
 	}
 
 	[BaseType (typeof(UIScrollViewDelegate))]
+	[NoMac]
 	[Model]
 	[Protocol]
 	interface UITextViewDelegate {
@@ -18511,6 +18516,7 @@ namespace UIKit {
 
 	interface IUIFocusItem {}
 	[iOS (10,0)]
+	[NoMac]
 	[Protocol]
 	interface UIFocusItem : UIFocusEnvironment
 	{
@@ -18769,6 +18775,7 @@ namespace UIKit {
 
 	interface IUIFocusEnvironment {}
 	[NoWatch]
+	[NoMac]
 	[iOS (9,0)]
 	[Protocol]
 	interface UIFocusEnvironment {
@@ -20403,7 +20410,7 @@ namespace UIKit {
 
 	interface IUISceneDelegate { }
 
-	[iOS (13,0), TV (13,0), NoWatch]
+	[iOS (13,0), TV (13,0), NoWatch, NoMac]
 #if NET
 	[Protocol, Model]
 #else
@@ -22594,6 +22601,7 @@ namespace UIKit {
 
 	[NoWatch, TV (14,0), iOS (14,0)]
 	[MacCatalyst (14,0)]
+	[NoMac]
 	[Protocol]
 	interface UIContentConfiguration : NSCopying {
 
@@ -22608,7 +22616,7 @@ namespace UIKit {
 
 	interface IUIContentView {}
 
-	[NoWatch, TV (14,0), iOS (14,0)]
+	[NoWatch, TV (14,0), iOS (14,0)][NoMac]
 	[MacCatalyst (14,0)]
 	[Protocol]
 	interface UIContentView {
