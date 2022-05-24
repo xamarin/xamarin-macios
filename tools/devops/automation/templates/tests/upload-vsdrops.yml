@@ -3,28 +3,27 @@
 parameters:
 
 - name: testPrefix
-  type: string 
+  type: string
   default: 'ios' # default context, since we started dealing with iOS devices. 
 
-- name: simTestsConfigurations
-  type: object
+- name: label
+  type: string
 
 steps:
 
 - template: ../common/checkout.yml
 
-- template: download-artifacts.yml 
+- template: download-artifacts.yml
   parameters:
     testPrefix: ${{ parameters.testPrefix }}
-    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+    label: ${{ parameters.label }}
 
-- ${{ each label in parameters.simTestsConfigurations }}:
-  - task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
-    displayName: 'Publish to Artifact Services Drop'
-    inputs:
-      dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-      dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}'
-      buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}'
-      sourcePath: $(HTML_REPORT_PATH_${{ upper(replace(label, '-', '_')) }})
-      detailedLog: true
-      usePat: true 
+- task: ms-vscs-artifact.build-tasks.artifactDropTask-1.artifactDropTask@0
+  displayName: 'Publish to Artifact Services Drop'
+  inputs:
+    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}'
+    sourcePath: $(HTML_REPORT_PATH)
+    detailedLog: true
+    usePat: true 

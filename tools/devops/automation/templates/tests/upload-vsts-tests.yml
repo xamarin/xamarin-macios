@@ -5,8 +5,8 @@ parameters:
   type: string 
   default: 'ios' # default context, since we started dealing with iOS devices. 
 
-- name: simTestsConfigurations
-  type: object
+- name: label
+  type: string
 
 steps:
 
@@ -15,7 +15,7 @@ steps:
 - template: download-artifacts.yml 
   parameters:
     testPrefix: ${{ parameters.testPrefix }}
-    simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
+    label: ${{ parameters.label }}
 
 # Upload test results to vsts.
 - task: PublishTestResults@2
