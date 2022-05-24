@@ -86,7 +86,7 @@ namespace SpriteKit
 			if (types.Length == 0)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (types), "Length must be greater than zero.");
 
-			using (var classes = new NSMutableSet<Class> (types.Length)) {
+			using (var classes = new NSMutableSet<Class> ((nint) types.Length)) {
 				foreach (var type in types)
 					classes.Add (new Class (type));
 				return Create (filename, classes.Handle, out error);
