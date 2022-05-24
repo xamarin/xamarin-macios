@@ -45,6 +45,24 @@ namespace ConsumerTests
 			if (n.ToLong (42) != 42) {
 				output.AppendLine ("nint conversion failure");
 			}
+			if (n.Less (4, 3)) {
+				output.AppendLine ("nint less failure (0)");
+			}
+			if (n.Less (2, 2)) {
+				output.AppendLine ("nint less failure (1)");
+			}
+			if (!n.Less (2, 3)) {
+				output.AppendLine ("nint less failure (2)");
+			}
+			if (!n.Greater (4, 3)) {
+				output.AppendLine ("nint greater failure (0)");
+			}
+			if (n.Greater (2, 2)) {
+				output.AppendLine ("nint greater failure (1)");
+			}
+			if (n.Greater (2, 3)) {
+				output.AppendLine ("nint greater failure (2)");
+			}
 		}
 
 		static void NUIntTest (StringBuilder output)
@@ -71,6 +89,33 @@ namespace ConsumerTests
 			if (n.ToLong (42) != 42) {
 				output.AppendLine ("nuint conversion failure");
 			}
+			if (n.Less (4, 3)) {
+				output.AppendLine ("nuint less failure (0)");
+			}
+			if (n.Less (2, 2)) {
+				output.AppendLine ("nuint less failure (1)");
+			}
+			if (!n.Less (2, 3)) {
+				output.AppendLine ("nuint less failure (2)");
+			}
+			if (!n.Greater (4, 3)) {
+				output.AppendLine ("nuint greater failure (0)");
+			}
+			if (n.Greater (2, 2)) {
+				output.AppendLine ("nuint greater failure (1)");
+			}
+			if (n.Greater (2, 3)) {
+				output.AppendLine ("nuint greater failure (2)");
+			}
+			if (n.Eq (4, 3)) {
+				output.AppendLine ("nuint equal failure (0)");
+			}
+			if (!n.Eq (2, 2)) {
+				output.AppendLine ("nuint equal failure (1)");
+			}
+			if (n.Eq (2, 3)) {
+				output.AppendLine ("nuint equal failure (2)");
+			}
 		}
 
 		static void NFloatTest (StringBuilder output)
@@ -96,6 +141,33 @@ namespace ConsumerTests
 			}
 			if (n.ToDouble ((NFloat)42.0) != 42.0) {
 				output.AppendLine ("nfloat conversion failure");
+			}
+			if (n.Less ((NFloat)4.0, (NFloat)3.0)) {
+				output.AppendLine ("nfloat less failure (0)");
+			}
+			if (n.Less ((NFloat)2.0, (NFloat)2.0)) {
+				output.AppendLine ("nfloat less failure (1)");
+			}
+			if (!n.Less ((NFloat)2.0, (NFloat)3.0)) {
+				output.AppendLine ("nfloat less failure (2)");
+			}
+			if (!n.Greater ((NFloat)4.0, (NFloat)3.0)) {
+				output.AppendLine ("nfloat greater failure (0)");
+			}
+			if (n.Greater ((NFloat)2.0, (NFloat)2.0)) {
+				output.AppendLine ("nfloat greater failure (1)");
+			}
+			if (n.Greater ((NFloat)2.0, (NFloat)3.0)) {
+				output.AppendLine ("nfloat greater failure (2)");
+			}
+			if (n.Eq ((NFloat)4.0, (NFloat)3.0)) {
+				output.AppendLine ("nfloat equal failure (0)");
+			}
+			if (!n.Eq ((NFloat)2.0, (NFloat)2.0)) {
+				output.AppendLine ("nfloat equal failure (1)");
+			}
+			if (n.Eq ((NFloat)2.0, (NFloat)3.0)) {
+				output.AppendLine ("nfloat equal failure (2)");
 			}
 		}
 	}
