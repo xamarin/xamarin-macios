@@ -269,6 +269,7 @@ namespace ObjCRuntime
 				type_size = 8;
 				return true;
 			case "IntPtr":
+			case "UIntPtr":
 #if !NET
 			case "nfloat":
 #endif
