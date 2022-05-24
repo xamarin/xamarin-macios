@@ -85,10 +85,8 @@ namespace HomeKit {
 		class ServiceTypeList<T> : List<T> {
 			public new void Add (T? item)
 			{
-				if (item is null)
-					return;
-
-				base.Add (item);
+				if (item is not null)
+					base.Add (item);
 			}
 		}
 
