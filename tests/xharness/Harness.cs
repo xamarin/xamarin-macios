@@ -263,17 +263,17 @@ namespace Xharness {
 			var debugAndRelease = new string [] { "Debug", "Release" };
 
 			var projects = new [] {
-				new { ProjectPath = "introspection", IsFSharp = false, Configurations = noConfigurations, },
-				new { ProjectPath = "monotouch-test", IsFSharp = false, Configurations = noConfigurations, },
-				new { ProjectPath = Path.Combine ("linker", "ios", "dont link"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { ProjectPath = Path.Combine ("linker", "ios", "link sdk"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { ProjectPath = Path.Combine ("linker", "ios", "link all"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { ProjectPath = Path.Combine ("linker", "ios", "trimmode copy"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { ProjectPath = Path.Combine ("linker", "ios", "trimmode link"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { ProjectPath = "fsharp", IsFSharp = true, Configurations = noConfigurations, },
-				new { ProjectPath = "framework-test", IsFSharp = false, Configurations = noConfigurations, },
-				new { ProjectPath = "interdependent-binding-projects", IsFSharp = false, Configurations = noConfigurations, },
-				new { ProjectPath = "xcframework-test", IsFSharp = false, Configurations = noConfigurations, },
+				new { Label = TestLabel.Introspection ,ProjectPath = "introspection", IsFSharp = false, Configurations = noConfigurations, },
+				new { Label = TestLabel.Monotouch, ProjectPath = "monotouch-test", IsFSharp = false, Configurations = noConfigurations, },
+				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "dont link"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "link sdk"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "link all"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "trimmode copy"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { Label = TestLabel.Linker, ProjectPath = Path.Combine ("linker", "ios", "trimmode link"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { Label = TestLabel.Fsharp, ProjectPath = "fsharp", IsFSharp = true, Configurations = noConfigurations, },
+				new { Label = TestLabel.Framework, ProjectPath = "framework-test", IsFSharp = false, Configurations = noConfigurations, },
+				new { Label = TestLabel.InterdependentBindingProjects, ProjectPath = "interdependent-binding-projects", IsFSharp = false, Configurations = noConfigurations, },
+				new { Label = TestLabel.Xcframework, ProjectPath = "xcframework-test", IsFSharp = false, Configurations = noConfigurations, },
 			};
 
 			// If .NET is not enabled, then ignore, otherwise leave undecided for other code to determine.
@@ -283,7 +283,7 @@ namespace Xharness {
 				var projectName = Path.GetFileName (projectPath);
 				var projExtension = projectInfo.IsFSharp ? ".fsproj" : ".csproj";
 
-				IOSTestProjects.Add (new iOSTestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "iOS", projectName + projExtension))) {
+				IOSTestProjects.Add (new iOSTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "iOS", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					SkipiOSVariation = false,
@@ -296,7 +296,7 @@ namespace Xharness {
 					Configurations = projectInfo.Configurations,
 				});
 
-				IOSTestProjects.Add (new iOSTestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "tvOS", projectName + projExtension))) {
+				IOSTestProjects.Add (new iOSTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "tvOS", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					SkipiOSVariation = true,
@@ -310,7 +310,7 @@ namespace Xharness {
 					Configurations = projectInfo.Configurations,
 				});
 
-				MacTestProjects.Add (new MacTestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "macOS", projectName + projExtension))) {
+				MacTestProjects.Add (new MacTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "macOS", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					TargetFrameworkFlavors = MacFlavors.DotNet,
@@ -320,7 +320,7 @@ namespace Xharness {
 					Configurations = projectInfo.Configurations,
 				});
 
-				MacTestProjects.Add (new MacTestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "MacCatalyst", projectName + projExtension))) {
+				MacTestProjects.Add (new MacTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "MacCatalyst", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					TargetFrameworkFlavors = MacFlavors.MacCatalyst,
