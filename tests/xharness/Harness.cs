@@ -283,7 +283,7 @@ namespace Xharness {
 				var projectName = Path.GetFileName (projectPath);
 				var projExtension = projectInfo.IsFSharp ? ".fsproj" : ".csproj";
 
-				IOSTestProjects.Add (new iOSTestProject (TestLabel.Dotnet, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "iOS", projectName + projExtension))) {
+				IOSTestProjects.Add (new iOSTestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "iOS", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					SkipiOSVariation = false,
@@ -296,7 +296,7 @@ namespace Xharness {
 					Configurations = projectInfo.Configurations,
 				});
 
-				IOSTestProjects.Add (new iOSTestProject (TestLabel.Dotnet, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "tvOS", projectName + projExtension))) {
+				IOSTestProjects.Add (new iOSTestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "tvOS", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					SkipiOSVariation = true,
@@ -310,7 +310,7 @@ namespace Xharness {
 					Configurations = projectInfo.Configurations,
 				});
 
-				MacTestProjects.Add (new MacTestProject (TestLabel.Dotnet, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "macOS", projectName + projExtension))) {
+				MacTestProjects.Add (new MacTestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "macOS", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					TargetFrameworkFlavors = MacFlavors.DotNet,
@@ -320,7 +320,7 @@ namespace Xharness {
 					Configurations = projectInfo.Configurations,
 				});
 
-				MacTestProjects.Add (new MacTestProject (TestLabel.Dotnet, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "MacCatalyst", projectName + projExtension))) {
+				MacTestProjects.Add (new MacTestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "MacCatalyst", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					TargetFrameworkFlavors = MacFlavors.MacCatalyst,

@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
@@ -170,7 +169,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "dotnet-wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !(TestSelection.IsEnabled (TestLabel.Xtro) && TestSelection.IsEnabled (TestLabel.Dotnet)),
+				Ignored = !(TestSelection.IsEnabled (TestLabel.Xtro) && TestSelection.IsEnabled (PlatformLabel.Dotnet)),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
@@ -185,7 +184,7 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetXtroReporter);
 
-			var buildDotNetGeneratorProject = new TestProject (TestLabel.Bgen, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
+			var buildDotNetGeneratorProject = new TestProject (TestLabel.Btouch, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var buildDotNetGenerator = new MSBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
@@ -199,25 +198,25 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Mode = ".NET",
-				Ignored = !TestSelection.IsEnabled (TestLabel.Btouch),
+				Ignored = !TestSelection.IsEnabled (TestLabel.Btouch) || !TestSelection.IsEnabled (PlatformLabel.Dotnet),
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			var buildDotNetTestsProject = new TestProject (TestLabel.Dotnet, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
+			var buildDotNetTestsProject = new TestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var buildDotNetTests = new MSBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
 				ProjectConfiguration = "Debug",
-				Ignored = !TestSelection.IsEnabled (TestLabel.Dotnet),
+				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest),
 			};
 			var runDotNetTests = new DotNetTestTask (this, buildDotNetTests, processManager) {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
 				Timeout = TimeSpan.FromMinutes (240),
-				Ignored = !TestSelection.IsEnabled (TestLabel.Dotnet),
+				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest),
 			};
 			Tasks.Add (runDotNetTests);
 

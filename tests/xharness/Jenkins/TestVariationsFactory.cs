@@ -267,7 +267,7 @@ namespace Xharness.Jenkins {
 						clone.Xml.Save (clone.Path);
 					});
 
-					ignored |= clone.IsDotNetProject && !jenkins.TestSelection.IsEnabled (TestLabel.Dotnet);
+					ignored |= clone.IsDotNetProject && !jenkins.TestSelection.IsEnabled (PlatformLabel.Dotnet);
 
 					var build = new MSBuildTask (jenkins: jenkins, testProject: clone, processManager: processManager);
 					build.ProjectConfiguration = configuration;

@@ -61,7 +61,7 @@ namespace Xharness.Jenkins {
 							break;
 						}
 
-						configIgnored |= project.IsDotNetProject && !jenkins.TestSelection.IsEnabled (TestLabel.Dotnet);
+						configIgnored |= project.IsDotNetProject && !jenkins.TestSelection.IsEnabled (PlatformLabel.Dotnet);
 
 						var derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 						derived.ProjectConfiguration = config;

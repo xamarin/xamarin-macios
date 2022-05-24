@@ -36,8 +36,8 @@ namespace Xharness {
 		Cecil = 1 << 7,
 		[Label ("docs")]
 		Docs = 1 << 8,
-		[Label ("dotnet")]
-		Dotnet = 1 << 9,
+		[Label ("dotnettest")]
+		DotnetTest = 1 << 9,
 		[Label ("fsharp")]
 		Fsharp = 1 << 10,
 		[Label("framework")]
@@ -105,6 +105,8 @@ namespace Xharness {
 		tvOS = 1 << 10,
 		[Label ("watchos")]
 		watchOS = 1 << 11,
+		[Label ("dotnet")]
+		Dotnet = 1 << 12,
 		[Label ("all")]
 		All =  0xFFFFFFFF, 
 	}

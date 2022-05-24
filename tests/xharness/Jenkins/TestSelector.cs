@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.DotNet.XHarness.Common.Logging;
 
@@ -15,7 +14,7 @@ namespace Xharness.Jenkins {
 			TestLabel.None |
 			TestLabel.Msbuild |
 			TestLabel.Monotouch |
-			TestLabel.Dotnet;
+			TestLabel.DotnetTest;
 		
 		PlatformLabel platform =
 			PlatformLabel.None |
@@ -23,7 +22,8 @@ namespace Xharness.Jenkins {
 			PlatformLabel.watchOS |
 			PlatformLabel.iOS |
 			PlatformLabel.iOSSimulator |
-			PlatformLabel.MacCatalyst;
+			PlatformLabel.MacCatalyst |
+			PlatformLabel.Dotnet;
 
 		public bool ForceExtensionBuildOnly { get; set; }
 
@@ -57,8 +57,11 @@ namespace Xharness.Jenkins {
 			// there are two possible cases, either we are setting a test label OR a 
 			if (label.TryGetLabel (out TestLabel tLabel)) {
 				SetEnabled (tLabel, value);
-				if (tLabel == TestLabel.All) { // we are overlapping here with the All label, can be all tests and all platforms
+				// some labels overlap, not idea, but is just a few
+				switch (tLabel) {
+				case TestLabel.All:
 					SetEnabled (PlatformLabel.All, value);
+					break;
 				}
 				return;
 			}
@@ -446,7 +449,7 @@ namespace Xharness.Jenkins {
 
 			if (!Harness.ENABLE_DOTNET) {
 				MainLog?.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
-				selection.SetEnabled (TestLabel.Dotnet, false);
+				selection.SetEnabled (PlatformLabel.Dotnet, false);
 			}
 		}
 	}

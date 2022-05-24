@@ -28,8 +28,8 @@ namespace Xharness.Tests.Jenkins {
 			Assert.IsTrue (selection.SelectedTests.HasFlag (TestLabel.Monotouch), "monotouch");
 			Assert.IsTrue (selection.IsEnabled (TestLabel.Monotouch), "IsEnabled (monotouch)");
 			
-			Assert.IsTrue (selection.SelectedTests.HasFlag (TestLabel.Dotnet), "dotnet");
-			Assert.IsTrue (selection.IsEnabled (TestLabel.Dotnet), "IsEnabled (dotnet)");
+			Assert.IsTrue (selection.SelectedTests.HasFlag (TestLabel.DotnetTest), "dotnet");
+			Assert.IsTrue (selection.IsEnabled (TestLabel.DotnetTest), "IsEnabled (dotnet)");
 			
 			// Assert platforms
 			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.tvOS), "tvos");
