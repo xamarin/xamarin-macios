@@ -15929,16 +15929,12 @@ namespace AppKit {
 		void WillRemoveSubview ([NullAllowed] NSView subview);
 
 		[Export ("removeFromSuperview")]
-		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperview ();
 
 		[Export ("replaceSubview:with:")][PostGet ("Subviews")]
 		void ReplaceSubviewWith (NSView oldView, NSView newView);
 
 		[Export ("removeFromSuperviewWithoutNeedingDisplay")]
-		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperviewWithoutNeedingDisplay ();
 
 		[Export ("resizeSubviewsWithOldSize:")]
