@@ -36,7 +36,7 @@ namespace Xharness {
 		Cecil = 1 << 7,
 		[Label ("docs")]
 		Docs = 1 << 8,
-		[Label ("dotnettest")]
+		[Label ("dotnettests")]
 		DotnetTest = 1 << 9,
 		[Label ("fsharp")]
 		Fsharp = 1 << 10,
