@@ -88,6 +88,12 @@ namespace Microsoft.MaciOS.Nnyeah {
                 return ResourceManager.GetString("N0007", resourceCulture);
             }
         }
+
+        internal static string N0008 {
+            get {
+                return ResourceManager.GetString("N0008", resourceCulture);
+            }
+        }
         
         internal static string E0001 {
             get {

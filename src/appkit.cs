@@ -20246,7 +20246,24 @@ namespace AppKit {
 		bool Enabled { [Bind ("isEnabled")]get; set; }
 
 		[Export ("image", ArgumentSemantic.Retain), NullAllowed]
+#if XAMCORE_5_0 && __MACCATALYST__
+		UIImage Image { get; set; }
+#else
 		NSImage Image { get; set; }
+#endif
+
+		// We incorrectly bound 'Image' as NSImage in Mac Catalyst.
+		// Provide this alternative until we can make 'Image' correct in XAMCORE_5_0
+		// Obsolete this member in XAMCORE_5_0
+		// and remove it in XAMCORE_6_0
+#if __MACCATALYST__ && !XAMCORE_6_0
+#if XAMCORE_5_0
+		[Obsolete ("Use 'Image' instead.")]
+#endif
+		[Sealed]
+		[Export ("image", ArgumentSemantic.Retain), NullAllowed]
+		UIImage UIImage { get; set; }
+#endif
 
 		[NoMacCatalyst]
 		[Export ("view", ArgumentSemantic.Retain)]
@@ -27831,8 +27848,15 @@ namespace AppKit {
 	[Mac (10,15)]
 	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
+#if XAMCORE_5_0
+	[DisableDefaultCtor]
+#endif
 	interface NSMenuToolbarItem
 	{
+		[DesignatedInitializer]
+		[Export ("initWithItemIdentifier:")]
+		NativeHandle Constructor (string itemIdentifier);
+
 		[NoMacCatalyst]
 		[Export ("menu", ArgumentSemantic.Strong)]
 		NSMenu Menu { get; set; }
@@ -28207,8 +28231,15 @@ namespace AppKit {
 	[Mac (10,15)]
 	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
+#if XAMCORE_5_0
+	[DisableDefaultCtor]
+#endif
 	interface NSSharingServicePickerToolbarItem
 	{
+		[DesignatedInitializer]
+		[Export ("initWithItemIdentifier:")]
+		NativeHandle Constructor (string itemIdentifier);
+
 		[NoMacCatalyst]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]

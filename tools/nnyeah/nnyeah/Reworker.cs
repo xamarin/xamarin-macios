@@ -11,7 +11,7 @@ using Microsoft.MaciOS.Nnyeah.AssemblyComparator;
 namespace Microsoft.MaciOS.Nnyeah {
 
 	public class Reworker {
-		const string kNetCoreAppDependency = "NETCoreApp,Version=v6.0";
+		const string NetCoreAppDependency = "NETCoreApp,Version=v6.0";
 		// Module does not copy it's input stream, so we'll keep it referenced here
 		// to prevent 'Cannot access a closed file' crashes with Cecil
 		FileStream Stream;
@@ -292,7 +292,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		{
 			if (TryGetTargetFrameworkAttribute (out var attribute)) {
 				if (attribute.ConstructorArguments.Count == 1) { // should always be true
-					attribute.ConstructorArguments [0] = new CustomAttributeArgument (ModuleToEdit.TypeSystem.String, kNetCoreAppDependency);
+					attribute.ConstructorArguments [0] = new CustomAttributeArgument (ModuleToEdit.TypeSystem.String, NetCoreAppDependency);
 				}
 			}
 		}
