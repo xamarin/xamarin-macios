@@ -141,7 +141,7 @@ stages:
           xqaCertPass: ${{ parameters.xqaCertPass }}
 
     - job: upload_vsdrops_${{ replace(label, '-', '_') }}
-      displayName: 'Upload report to vsdrops'
+      displayName: 'Upload ${{ label }} report to vsdrops'
       timeoutInMinutes: 1000
       dependsOn: 
       - tests_${{ replace(label, '-', '_') }}
@@ -157,7 +157,7 @@ stages:
           label: ${{ label }}
 
     - job: upload_vsts_tests_${{ replace(label, '-', '_') }}
-      displayName: 'Upload xml to vsts'
+      displayName: 'Upload ${{ label }} xml to vsts'
       timeoutInMinutes: 1000
       dependsOn: 
       - tests_${{ replace(label, '-', '_') }}
