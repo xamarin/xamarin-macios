@@ -21,7 +21,7 @@ namespace Xamarin.Utils {
 	public class Execution {
 		public string? FileName;
 		public IList<string>? Arguments;
-		public IDictionary<string, string>? Environment;
+		public IDictionary<string, string?>? Environment;
 		public string? WorkingDirectory;
 		public TimeSpan? Timeout;
 		public CancellationToken? CancellationToken;
@@ -81,7 +81,7 @@ namespace Xamarin.Utils {
 
 				if (Environment != null) {
 					foreach (var kvp in Environment) {
-						if (kvp.Value == null) {
+						if (kvp.Value is null) {
 							p.StartInfo.EnvironmentVariables.Remove (kvp.Key);
 						} else {
 							p.StartInfo.EnvironmentVariables [kvp.Key] = kvp.Value;
@@ -154,7 +154,7 @@ namespace Xamarin.Utils {
 			return tcs.Task;
 		}
 
-		public static Task<Execution> RunWithCallbacksAsync (string filename, IList<string> arguments, Dictionary<string, string>? environment = null, Action<string>? standardOutput = null, Action<string>? standardError = null, TextWriter? log = null, string? workingDirectory = null, TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
+		public static Task<Execution> RunWithCallbacksAsync (string filename, IList<string> arguments, Dictionary<string, string?>? environment = null, Action<string>? standardOutput = null, Action<string>? standardError = null, TextWriter? log = null, string? workingDirectory = null, TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			CallbackWriter? outputCallback = null;
 			CallbackWriter? errorCallback = null;
@@ -167,7 +167,7 @@ namespace Xamarin.Utils {
 			return RunAsync (filename, arguments, environment, outputCallback, errorCallback, log, workingDirectory, timeout, cancellationToken);
 		}
 
-		public static Task<Execution> RunAsync (string filename, IList<string> arguments, Dictionary<string, string>? environment = null, TextWriter? standardOutput = null, TextWriter? standardError = null, TextWriter? log = null, string? workingDirectory = null, TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
+		public static Task<Execution> RunAsync (string filename, IList<string> arguments, Dictionary<string, string?>? environment = null, TextWriter? standardOutput = null, TextWriter? standardError = null, TextWriter? log = null, string? workingDirectory = null, TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			return new Execution {
 				FileName = filename,
@@ -182,14 +182,14 @@ namespace Xamarin.Utils {
 			}.RunAsync ();
 		}
 
-		public static Task<Execution> RunAsync (string filename, IList<string> arguments, Dictionary<string, string>? environment = null, bool mergeOutput = false, string? workingDirectory = null, TextWriter? log = null, TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
+		public static Task<Execution> RunAsync (string filename, IList<string> arguments, Dictionary<string, string?>? environment = null, bool mergeOutput = false, string? workingDirectory = null, TextWriter? log = null, TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			var standardOutput = new StringWriter ();
 			var standardError = mergeOutput ? standardOutput : new StringWriter ();
 			return RunAsync (filename, arguments, environment, standardOutput, standardError, log, workingDirectory, timeout, cancellationToken);
 		}
 
-		public static Task<Execution> RunWithStringBuildersAsync (string filename, IList<string> arguments, Dictionary<string, string>? environment = null, StringBuilder? standardOutput = null, StringBuilder? standardError = null, TextWriter? log = null, string? workingDirectory = null, TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
+		public static Task<Execution> RunWithStringBuildersAsync (string filename, IList<string> arguments, Dictionary<string, string?>? environment = null, StringBuilder? standardOutput = null, StringBuilder? standardError = null, TextWriter? log = null, string? workingDirectory = null, TimeSpan? timeout = null, CancellationToken? cancellationToken = null)
 		{
 			var stdout = standardOutput == null ? null : new StringWriter (standardOutput);
 			var stderr = standardError == null ? null : (standardOutput == standardError ? stdout : new StringWriter (standardError));

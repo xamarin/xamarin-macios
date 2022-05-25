@@ -21,7 +21,6 @@ namespace Xharness.Jenkins {
 		public readonly IHardwareDeviceLoader Devices;
 		readonly IMlaunchProcessManager processManager;
 		public ITunnelBore TunnelBore { get; private set; }
-		public TestSelection TestSelection { get; } = new ();
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
 		public JenkinsDeviceLoader DeviceLoader { get; private set; }
@@ -35,7 +34,34 @@ namespace Xharness.Jenkins {
 		public bool Populating { get; private set; } = true;
 
 		public IHarness Harness { get; }
+		public bool IncludeAll;
+		public bool IncludeBcl;
+		public bool IncludeMac = true;
+		public bool IncludeiOS = true;
+		public bool IncludeiOS64 = true;
+		public bool IncludeiOS32 = false; // broken in xcode 12 beta 3, not possible with DTK
+		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
+		public bool IncludetvOS = true;
+		public bool IncludewatchOS = true;
+		public bool IncludeMmpTest;
+		public bool IncludeMSBuild = true;
+		public bool IncludeMtouch;
+		public bool IncludeBtouch;
+		public bool IncludeMacBindingProject;
+		public bool IncludeSimulator = true;
+		public bool IncludeOldSimulatorTests;
+		public bool IncludeDevice;
+		public bool IncludeXtro;
+		public bool IncludeCecil;
+		public bool IncludeDocs;
+		public bool IncludeBCLxUnit;
+		public bool IncludeBCLNUnit;
+		public bool IncludeMscorlib;
+		public bool IncludeNonMonotouch = true;
+		public bool IncludeMonotouch = true;
+		public bool IncludeDotNet = true;
+		public bool IncludeMacCatalyst = true;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
@@ -76,7 +102,7 @@ namespace Xharness.Jenkins {
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			Simulators = new SimulatorLoader (processManager, new SimulatorSelector ());
 			Devices = new HardwareDeviceLoader (processManager);
-			testSelector = new TestSelector (this, new GitHub (harness, processManager));
+			testSelector = new TestSelector (this, processManager, new GitHub (harness, processManager));
 			testVariationsFactory = new TestVariationsFactory (this, processManager);
 			DeviceLoader = new JenkinsDeviceLoader (Simulators, Devices, Logs);
 			resourceManager = new ResourceManager ();
@@ -94,16 +120,16 @@ namespace Xharness.Jenkins {
 			
 			if (project.IsBclTest ()) {
 				if (!project.IsBclxUnit ())
-					return TestSelection.IsEnabled (TestLabel.Bcl) || TestSelection.IsEnabled (TestLabel.BclNUnit);
+					return IncludeBcl || IncludeBCLNUnit;
 				if (project.IsMscorlib ()) 
-					return TestSelection.IsEnabled(TestLabel.Mscorlib);
-				return TestSelection.IsEnabled (TestLabel.Bcl) || TestSelection.IsEnabled (TestLabel.BclXUnit);
+					return IncludeMscorlib;
+				return IncludeBcl || IncludeBCLxUnit;
 			}
 
-			if (!TestSelection.IsEnabled (TestLabel.Monotouch) && project.IsMonotouch ())
+			if (!IncludeMonotouch && project.IsMonotouch ())
 				return false;
 
-			if (!TestSelection.IsEnabled (TestLabel.NonMonotouch) && !project.IsMonotouch ())
+			if (!IncludeNonMonotouch && !project.IsMonotouch ())
 				return false;
 
 			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
@@ -119,7 +145,7 @@ namespace Xharness.Jenkins {
 			// Missing:
 			// api-diff
 
-			testSelector.SelectTests (TestSelection);
+			testSelector.SelectTests ();
 
 			DeviceLoader.LoadAllAsync ().DoNotAwait ();
 
@@ -156,7 +182,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro),
+				Ignored = !IncludeXtro,
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
@@ -176,7 +202,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "dotnet-wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !(TestSelection.IsEnabled (TestLabel.Xtro) && TestSelection.IsEnabled (TestLabel.Dotnet)),
+				Ignored = !(IncludeXtro && IncludeDotNet),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
@@ -205,7 +231,7 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Mode = ".NET",
-				Ignored = !TestSelection.IsEnabled (TestLabel.Btouch),
+				Ignored = !IncludeBtouch,
 			};
 			Tasks.Add (runDotNetGenerator);
 
@@ -216,14 +242,14 @@ namespace Xharness.Jenkins {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
 				ProjectConfiguration = "Debug",
-				Ignored = !TestSelection.IsEnabled (TestLabel.Dotnet),
+				Ignored = !IncludeDotNet,
 			};
 			var runDotNetTests = new DotNetTestTask (this, buildDotNetTests, processManager) {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
 				Timeout = TimeSpan.FromMinutes (240),
-				Ignored = !TestSelection.IsEnabled (TestLabel.Dotnet),
+				Ignored = !IncludeDotNet,
 			};
 			Tasks.Add (runDotNetTests);
 

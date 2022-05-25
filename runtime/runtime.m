@@ -2555,7 +2555,7 @@ xamarin_vm_initialize ()
 		if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
 			LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
 		} else {
-			icu_dat_file_path = path;
+			icu_dat_file_path = strdup (path);
 		}
 	} else {
 		subtractPropertyCount++;
@@ -2592,6 +2592,9 @@ xamarin_vm_initialize ()
 
 	xamarin_free (trusted_platform_assemblies);
 	xamarin_free (native_dll_search_directories);
+
+	if (icu_dat_file_path != NULL)
+		free (icu_dat_file_path);
 
 	if (!rv)
 		xamarin_assertion_message ("Failed to initialize the VM");
