@@ -2435,6 +2435,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<BCSymbolMapName>%(Filename)%(Extension).bcsymbolmap</BCSymbolMapName>
 			</_PostProcessingItem>
 
+			<!-- Add any items from app extensions -->
+			<_PostProcessingItem Include="@(_AppExtensionPostProcessingItems -> '$(_AppBundleName)$(AppBundleExtension)\$(_AppPlugInsRelativePath)%(Identity)')" Condition="@(_AppExtensionPostProcessingItems->Count()) &gt; 0" /> <!-- The condition here shouldn't be necessary, but https://github.com/dotnet/msbuild/issues/4056 -->
+
 			<!-- Add any items from watch app -->
 			<!-- We must update metadata with paths relative to the root of the app bundle to be relative to the root of the current app bundle -->
 			<_PostProcessingItem Include="@(_WatchAppPostProcessingItems -> '$(_AppBundleName)$(AppBundleExtension)/Watch/%(Identity)')" />
