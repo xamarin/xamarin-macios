@@ -22,7 +22,7 @@ steps:
   displayName: 'Publish to Artifact Services Drop'
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}-${{ label }}'
+    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}-${{ parameters.label }}'
     buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}${{ parameters.label }}'
     sourcePath: $(HTML_REPORT_PATH)
     detailedLog: true
