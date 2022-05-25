@@ -24,6 +24,8 @@ parameters:
 steps:
 
 - template: setup.yml
+  parameters:
+    skipESRP: ${{ parameters.skipESRP }}
 
 - task: DownloadPipelineArtifact@2
   displayName: Download not notarized build
