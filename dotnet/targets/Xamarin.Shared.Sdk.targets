@@ -267,6 +267,11 @@
 			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_MustTrim)' == 'true'">true</PublishTrimmed>
 		</PropertyGroup>
 		<Error Condition="'$(_MustTrim)' == 'true' And '$(PublishTrimmed)' != 'true'" Text="$(_PlatformName) projects must build with PublishTrimmed=true. Current value: $(PublishTrimmed)." />
+		<PropertyGroup Condition="'$(PublishTrimmed)' != '' And '$(IsMacEnabled)' != 'true'">
+			<_PreviousPublishTrimmedValue>$(PublishTrimmed)</_PreviousPublishTrimmedValue>
+			<PublishTrimmed />
+		</PropertyGroup>
+		<Warning Condition="'$(_PreviousPublishTrimmedValue)' != ''" Text="The linker has been disabled because there's no connection to a Mac." />
 	</Target>
 
 	<Target Name="_WarnRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashMessage)' != ''">
@@ -756,7 +761,7 @@
 	</Target>
 
 
-	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish">
+	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish" Condition="'$(IsMacEnabled)' == 'true'">
 		<!-- Load _MainFile -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />

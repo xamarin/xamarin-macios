@@ -18,8 +18,6 @@ namespace Xamarin.Tests
 		public const string XI_ProductName = "MonoTouch";
 		public const string XM_ProductName = "Xamarin.Mac";
 
-		const string XS_PATH = "/Applications/Visual Studio.app/Contents/Resources";
-
 		static string mt_root;
 		static string ios_destdir;
 		static string mac_destdir;
@@ -610,12 +608,6 @@ namespace Xamarin.Tests
 		public static string BinDirXM {
 			get {
 				return Path.Combine (SdkRootXM, "bin");
-			}
-		}
-
-		static string XSIphoneDir {
-			get {
-				return Path.Combine (XS_PATH, "lib", "monodevelop", "AddIns", "MonoDevelop.IPhone");
 			}
 		}
 
