@@ -63,6 +63,15 @@ namespace ConsumerTests
 			if (n.Greater (2, 3)) {
 				output.AppendLine ("nint greater failure (2)");
 			}
+			if (n.And (7, 3) != 3) {
+				output.AppendLine ("nint And failure");
+			}
+			if (n.Or (9, 3) != 12) {
+				output.AppendLine ("nint Or failure");
+			}
+			if (n.Xor (9, 3) != 11) {
+				output.AppendLine ("nint Xor failure");
+			}
 		}
 
 		static void NUIntTest (StringBuilder output)
@@ -115,6 +124,15 @@ namespace ConsumerTests
 			}
 			if (n.Eq (2, 3)) {
 				output.AppendLine ("nuint equal failure (2)");
+			}
+			if (n.And (7, 3) != 3) {
+				output.AppendLine ("nuint And failure");
+			}
+			if (n.Or (9, 3) != 12) {
+				output.AppendLine ("nuint Or failure");
+			}
+			if (n.Xor (9, 3) != 11) {
+				output.AppendLine ("nuint Xor failure");
 			}
 		}
 
