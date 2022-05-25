@@ -11,6 +11,7 @@ using Microsoft.MaciOS.Nnyeah.AssemblyComparator;
 namespace Microsoft.MaciOS.Nnyeah {
 
 	public class Reworker {
+		const string NetCoreAppDependency = "NETCoreApp,Version=v6.0";
 		// Module does not copy it's input stream, so we'll keep it referenced here
 		// to prevent 'Cannot access a closed file' crashes with Cecil
 		FileStream Stream;
@@ -20,13 +21,20 @@ namespace Microsoft.MaciOS.Nnyeah {
 		TypeDefinition EmbeddedAttributeTypeDef;
 		TypeDefinition NativeIntegerAttributeTypeDef;
 		TypeReference NativeIntegerAttributeTypeRef;
+		MethodReference NativeIntegerCtorNoArgsRef;
+		MethodReference NativeIntegerCtorOneArgRef;
 		TypeReference CompilerGeneratedAttributeTypeRef;
+		MethodReference CompilerGeneratedCtorRef;
 		TypeReference EmbeddedAttributeTypeRef;
+		MethodReference EmbeddedAttributeCtorRef;
 		TypeReference NintTypeReference;
 		TypeReference NuintTypeReference;
 		TypeReference NfloatTypeReference;
 		TypeReference NewNfloatTypeReference;
 		TypeDefinition NewNativeHandleTypeDefinition;
+		TypeReference AttributeTypeReference;
+		TypeReference AttributeTargetsTypeReference;
+		TypeReference AttributeUsageTypeReference;
 		AssemblyNameReference InteropServicesAssembly;
 
 		TypeAndMemberMap ModuleMap;
@@ -67,19 +75,29 @@ namespace Microsoft.MaciOS.Nnyeah {
 			Modules = modules;
 			ModuleMap = moduleMap;
 
-			CompilerGeneratedAttributeTypeRef = FetchFromSystemRuntime (ModuleToEdit, "System.Runtime.CompilerServices", "CompilerGeneratedAttribute");
+			AttributeTypeReference = ImportNamedTypeReferenceWithFallback ("System.Attribute", typeof (Attribute));
+			AttributeTargetsTypeReference = ImportNamedTypeReferenceWithFallback ("System.AttributeTargets", typeof (AttributeTargets));
+			AttributeUsageTypeReference = ImportNamedTypeReferenceWithFallback ("System.AttributeUsageAttribute", typeof (AttributeUsageAttribute));
+			CompilerGeneratedAttributeTypeRef = ImportNamedTypeReferenceWithFallback ("System.Runtime.CompilerServices.CompilerGeneratedAttribute", typeof (System.Runtime.CompilerServices.CompilerGeneratedAttribute));
+			CompilerGeneratedCtorRef = new MethodReference (".ctor", ModuleToEdit.TypeSystem.Void, CompilerGeneratedAttributeTypeRef);
+			CompilerGeneratedCtorRef.HasThis = true;
+
 			EmbeddedAttributeTypeDef = ModuleToEdit.Types.FirstOrDefault (td => td.FullName == "Microsoft.CodeAnalysis.EmbeddedAttribute")
 				?? MakeEmbeddedAttribute (ModuleToEdit);
 
 			EmbeddedAttributeTypeRef = ModuleToEdit.ImportReference (new TypeReference (EmbeddedAttributeTypeDef.Namespace,
 				EmbeddedAttributeTypeDef.Name, EmbeddedAttributeTypeDef.Module, EmbeddedAttributeTypeDef.Scope));
 
+			EmbeddedAttributeCtorRef = CtorWithNArgs (EmbeddedAttributeTypeDef, 0);
 
 			NativeIntegerAttributeTypeDef = ModuleToEdit.Types.FirstOrDefault (td => td.FullName == "System.Runtime.CompilerServices.NativeIntegerAttribute")
-				?? MakeNativeIntegerAttribute (ModuleToEdit, EmbeddedAttributeTypeRef);
+				?? MakeNativeIntegerAttribute (ModuleToEdit);
 
 			NativeIntegerAttributeTypeRef = new TypeReference (NativeIntegerAttributeTypeDef.Namespace,
 				NativeIntegerAttributeTypeDef.Name, NativeIntegerAttributeTypeDef.Module, NativeIntegerAttributeTypeDef.Scope);
+
+			NativeIntegerCtorNoArgsRef = NativeIntegerAttributeTypeDef.Methods.First (m => m.Name == ".ctor" && m.Parameters.Count == 0);
+			NativeIntegerCtorOneArgRef = NativeIntegerAttributeTypeDef.Methods.First (m => m.Name == ".ctor" && m.Parameters.Count == 1);
 
 			if (modules.MicrosoftModule.AssemblyReferences.FirstOrDefault (an => an.Name == "System.Runtime.InteropServices") is AssemblyNameReference validReference) {
 				InteropServicesAssembly = validReference;
@@ -109,6 +127,15 @@ namespace Microsoft.MaciOS.Nnyeah {
 			FieldSubs = LoadFieldSubs ();
 		}
 
+		TypeReference ImportNamedTypeReferenceWithFallback (string name, Type fallback)
+		{
+			if (Modules.MicrosoftModule.TryGetTypeReference (name, out var resultType)) {
+				return ModuleToEdit.ImportReference (resultType);
+			} else {
+				return ModuleToEdit.ImportReference (fallback);
+			}
+		}
+
 		static TypeReference FetchFromSystemRuntime (ModuleDefinition module, string nameSpace, string typeName)
 		{
 			var type = module.GetTypeReferences ().FirstOrDefault (tr => tr.Namespace == nameSpace && tr.Name == typeName);
@@ -119,21 +146,19 @@ namespace Microsoft.MaciOS.Nnyeah {
 			return module.ImportReference (type);
 		}
 
-		static TypeDefinition MakeEmbeddedAttribute (ModuleDefinition module)
+		TypeDefinition MakeEmbeddedAttribute (ModuleDefinition module)
 		{
 			// make type definition
 			var typeDef = new TypeDefinition ("Microsoft.CodeAnalysis", "EmbeddedAttribute",
 				TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.NotPublic | TypeAttributes.Sealed,
 				module.TypeSystem.Object);
 			module.Types.Add (typeDef);
-			// make reference
-			var embeddedAttributeTypeRef = module.ImportReference (new TypeReference (typeDef.Namespace, typeDef.Name, typeDef.Module, typeDef.Scope));
 
 			// add inheritance
-			typeDef.BaseType = module.ImportReference (typeof (Attribute));
+			typeDef.BaseType = AttributeTypeReference;
 
 			// add [CompilerGenerated]
-			var attr_CompilerGenerated_1 = new CustomAttribute (module.ImportReference (typeof (System.Runtime.CompilerServices.CompilerGeneratedAttribute).GetConstructor (new Type [0] { })));
+			var attr_CompilerGenerated_1 = new CustomAttribute (module.ImportReference (CompilerGeneratedCtorRef));
 			typeDef.CustomAttributes.Add (attr_CompilerGenerated_1);
 
 			// add default constructor
@@ -146,29 +171,33 @@ namespace Microsoft.MaciOS.Nnyeah {
 			il_ctor_4.Emit (OpCodes.Ret);
 
 			// add [EmbeddedAttribute] - requires both the constructor above and the type ref
-			var embeddedAttr = new CustomAttribute (new MethodReference (".ctor", module.TypeSystem.Void, embeddedAttributeTypeRef));
+			var embeddedAttr = new CustomAttribute (ctor);
 			typeDef.CustomAttributes.Add (embeddedAttr);
 
 			return typeDef;
 		}
 
-		static TypeDefinition MakeNativeIntegerAttribute (ModuleDefinition module, TypeReference embeddedAttributeTypeRef)
+		TypeDefinition MakeNativeIntegerAttribute (ModuleDefinition module)
 		{
 			var typeDef = new TypeDefinition ("System.Runtime.CompilerServices", "NativeIntegerAttribute", TypeAttributes.AnsiClass | TypeAttributes.BeforeFieldInit | TypeAttributes.NotPublic | TypeAttributes.Sealed, module.TypeSystem.Object);
 			module.Types.Add (typeDef);
-			typeDef.BaseType = module.ImportReference (typeof (Attribute));
+			typeDef.BaseType = AttributeTypeReference; //module.ImportReference (typeof (Attribute));
 
 			// add [CompilerGenerated]
-			var attr_CompilerGenerated = new CustomAttribute (module.ImportReference (typeof (System.Runtime.CompilerServices.CompilerGeneratedAttribute).GetConstructor (new Type [0] { })));
+			var attr_CompilerGenerated = new CustomAttribute (module.ImportReference (CompilerGeneratedCtorRef));
 			typeDef.CustomAttributes.Add (attr_CompilerGenerated);
 
 			// add [Embedded]
-			var attr_Embedded = new CustomAttribute (new MethodReference (".ctor", module.TypeSystem.Void, embeddedAttributeTypeRef));
+			var attr_Embedded = new CustomAttribute (EmbeddedAttributeCtorRef);
 			typeDef.CustomAttributes.Add (attr_Embedded);
 
 			// add [AttributeUsage(...)]
-			var attr_AttributeUsage = new CustomAttribute (module.ImportReference (typeof (System.AttributeUsageAttribute).GetConstructor (new Type [1] { typeof (AttributeTargets) })));
-			attr_AttributeUsage.ConstructorArguments.Add (new CustomAttributeArgument (module.ImportReference (typeof (AttributeTargets)), AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Parameter | AttributeTargets.ReturnValue | AttributeTargets.GenericParameter));
+			var attrUsageCtorReference = new MethodReference (".ctor", module.TypeSystem.Void, AttributeTargetsTypeReference);
+			attrUsageCtorReference.HasThis = true;
+			attrUsageCtorReference.Parameters.Add (new ParameterDefinition (AttributeTargetsTypeReference));
+			module.ImportReference (attrUsageCtorReference);
+			var attr_AttributeUsage = new CustomAttribute (attrUsageCtorReference);
+			attr_AttributeUsage.ConstructorArguments.Add (new CustomAttributeArgument (AttributeTargetsTypeReference, AttributeTargets.Class | AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Event | AttributeTargets.Parameter | AttributeTargets.ReturnValue | AttributeTargets.GenericParameter));
 			attr_AttributeUsage.Properties.Add (new CustomAttributeNamedArgument ("AllowMultiple", new CustomAttributeArgument (module.TypeSystem.Boolean, false)));
 			attr_AttributeUsage.Properties.Add (new CustomAttributeNamedArgument ("Inherited", new CustomAttributeArgument (module.TypeSystem.Boolean, false)));
 			typeDef.CustomAttributes.Add (attr_AttributeUsage);
@@ -219,7 +248,10 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		CustomAttribute NativeIntAttribute (List<bool> nativeTypes)
 		{
-			var nativeIntAttr = new CustomAttribute (new MethodReference (".ctor", Modules.TypeSystem.Void, NativeIntegerAttributeTypeRef));
+			var methodReference = nativeTypes.Count == 1 ?
+				NativeIntegerCtorNoArgsRef : NativeIntegerCtorOneArgRef;
+
+			var nativeIntAttr = new CustomAttribute (methodReference);
 			if (nativeTypes.Count > 1) {
 				var boolArrayParameter = new ParameterDefinition (Modules.TypeSystem.Boolean.MakeArrayType ());
 				nativeIntAttr.Constructor.Parameters.Add (boolArrayParameter);
@@ -250,9 +282,31 @@ namespace Microsoft.MaciOS.Nnyeah {
 			foreach (var type in ModuleToEdit.Types) {
 				ReworkType (type);
 			}
+			ChangeTargetFramework ();
 			RemoveXamarinReferences ();
 			ModuleToEdit.Write (stm);
 			stm.Flush ();
+		}
+
+		void ChangeTargetFramework ()
+		{
+			if (TryGetTargetFrameworkAttribute (out var attribute)) {
+				if (attribute.ConstructorArguments.Count == 1) { // should always be true
+					attribute.ConstructorArguments [0] = new CustomAttributeArgument (ModuleToEdit.TypeSystem.String, NetCoreAppDependency);
+				}
+			}
+		}
+
+		bool TryGetTargetFrameworkAttribute ([NotNullWhen (returnValue: true)] out CustomAttribute? result)
+		{
+			foreach (var attribute in ModuleToEdit.Assembly.CustomAttributes) {
+				if (attribute.AttributeType.FullName == "System.Runtime.Versioning.TargetFrameworkAttribute") {
+					result = attribute;
+					return true;
+				}
+			}
+			result = null;
+			return false;
 		}
 
 		void RemoveXamarinReferences ()
@@ -573,6 +627,9 @@ namespace Microsoft.MaciOS.Nnyeah {
 			return new MethodReference (".ctor", type.Module.TypeSystem.Void, type) { HasThis = true };
 		}
 
+		static MethodReference CtorWithNArgs (TypeDefinition type, int args) =>
+			type.Methods.First (m => m.Name == ".ctor" && m.Parameters.Count == args);
+		
 		static TypeReference EmptyTypeReference = new TypeReference ("none", "still_none", null, null);
 	}
 }
