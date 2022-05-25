@@ -66,6 +66,7 @@ namespace Xharness {
 
 		protected virtual TestProject CompleteClone (TestProject rv)
 		{
+			rv.Label = Label;
 			rv.Path = Path;
 			rv.IsExecutableProject = IsExecutableProject;
 			rv.IsDotNetProject = IsDotNetProject;
