@@ -40,6 +40,9 @@ namespace IntegrationAPI
 	public nint Prod (nint a, nint b) => a * b;
 	public long ToLong (nint a) => (long)a;
 	public nuint ToNUint (nint a) => (nuint)a;
+	public bool Less (nint a, nint b) => a < b;
+	public bool Greater (nint a, nint b) => a > b;
+	public bool Eq (nint a, nint b) => a == b;
     }
 
     public class NUIntAPI
@@ -58,6 +61,9 @@ namespace IntegrationAPI
 	public nuint Prod (nuint a, nuint b) => a * b;
 	public long ToLong (nuint a) => (long)a;
 	public nint ToNInt (nuint a) => (nint)a;
+	public bool Less (nuint a, nuint b) => a < b;
+	public bool Greater (nuint a, nuint b) => a > b;
+	public bool Eq (nuint a, nuint b) => a == b;
     }
 
     public class NFloatAPI
@@ -75,5 +81,8 @@ namespace IntegrationAPI
 	public nfloat Sum (nfloat a, nfloat b) => a + b;
 	public nfloat Prod (nfloat a, nfloat b) => a * b;
 	public double ToDouble (nfloat a) => (double)a;
+	public bool Less (nfloat a, nfloat b) => a < b;
+	public bool Greater (nfloat a, nfloat b) => a > b;
+	public bool Eq (nfloat a, nfloat b) => a == b;
     }
 }
