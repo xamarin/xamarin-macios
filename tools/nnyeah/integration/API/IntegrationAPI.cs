@@ -43,6 +43,9 @@ namespace IntegrationAPI
 	public bool Less (nint a, nint b) => a < b;
 	public bool Greater (nint a, nint b) => a > b;
 	public bool Eq (nint a, nint b) => a == b;
+	public nint And (nint a, nint b) => a & b;
+	public nint Or (nint a, nint b) => a | b;
+	public nint Xor (nint a, nint b) => a ^ b;
     }
 
     public class NUIntAPI
@@ -64,6 +67,9 @@ namespace IntegrationAPI
 	public bool Less (nuint a, nuint b) => a < b;
 	public bool Greater (nuint a, nuint b) => a > b;
 	public bool Eq (nuint a, nuint b) => a == b;
+	public nuint And (nuint a, nuint b) => a & b;
+	public nuint Or (nuint a, nuint b) => a | b;
+	public nuint Xor (nuint a, nuint b) => a ^ b;
     }
 
     public class NFloatAPI
