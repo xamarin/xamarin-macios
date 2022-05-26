@@ -11,16 +11,11 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.SmokeTests {
 		[Test]
 		public async Task BasicLibrary ()
 		{
-			var dir = Cache.CreateTemporaryDirectory ("BasicLibrary");
-			var code = @"
+			await TestRunning.BuildTemporaryLibrary (@"
 using System;
 public class Foo {
 	public nint Ident (nint e) => e;
-}
-";
-			var output = await TestRunning.BuildLibrary (code, "NoName", dir);
-			var expectedOutputFile = Path.Combine (dir, "NoName.dll");
-			Assert.IsTrue (File.Exists (expectedOutputFile));
+}");
 		}
 
 		[Test]

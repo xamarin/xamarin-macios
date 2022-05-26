@@ -22,7 +22,7 @@ public class Foo {{
 	public {type} Ident ({type} e) => e;
 }}
 ";
-			var output = await TestRunning.BuildLibrary (code, "NoName", dir);
+			await TestRunning.BuildLibrary (code, "NoName", dir);
 			var expectedOutputFile = Path.Combine (dir, "NoName.dll");
 			var targetRewrite = Path.Combine (dir, "NoNameRemoved.dll");
 
