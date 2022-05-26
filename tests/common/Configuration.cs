@@ -1153,11 +1153,5 @@ namespace Xamarin.Tests
 			Thread.Sleep (1000);
 		}
 
-		// Two-part version: 6.0, 7.0, etc.
-		public static string DotNetVersion {
-			get {
-				return DotNetTfm.Replace ("net", string.Empty);
-			}
-		}
 	}
 }
