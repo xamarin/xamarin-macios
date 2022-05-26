@@ -25,6 +25,11 @@ namespace Xamarin.Tests {
 				ValidateSuccessfulBuild = validateSuccessfulBuild;
 				Execute = execute;
 			}
+
+			public override string ToString ()
+			{
+				return $"Platform: {Platform} Template: {Template} ValidateSuccessfulBuild: {ValidateSuccessfulBuild} Execute: {Execute}";
+			}
 		}
 
 		public static TemplateInfo[] Templates = {
