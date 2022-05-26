@@ -1,4 +1,5 @@
 ﻿using System;
+using Foundation;
 
 namespace IntegrationAPI
 {
@@ -64,5 +65,15 @@ namespace IntegrationAPI
 #pragma warning disable CS0067 // The event 'NFloatAPI.Event' is never used
         public event EventWithNFloat Event;
 #pragma warning disable CS0067 // The event 'NFloatAPI.Event' is never used
+    }
+
+    public class NSObjectDerived : NSObject {
+        public NSObjectDerived (IntPtr p) : base (p) { }
+        public NSObjectDerived (IntPtr p, bool b) : base (p, b) { }
+
+    }
+    public class NSObjectDerivedSubclass : NSObjectDerived {
+        public NSObjectDerivedSubclass (IntPtr p) : base (p) { }
+        public NSObjectDerivedSubclass (IntPtr p, bool b) : base (p, b) { }
     }
 }

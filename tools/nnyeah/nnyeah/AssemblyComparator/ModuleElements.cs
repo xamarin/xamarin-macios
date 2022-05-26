@@ -12,12 +12,12 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 		{
 		}
 
-		public static ModuleElements Import (ModuleDefinition module, bool publicOnly)
+		public static ModuleElements Import (ModuleDefinition module, NNyeahAssemblyResolver resolver, bool publicOnly)
 		{
 			var moduleElements = new ModuleElements ();
 			var typeStack = new Stack<TypeElements> ();
 
-			var visitor = new ModuleVisitor (module, publicOnly);
+			var visitor = new ModuleVisitor (module, resolver, publicOnly);
 
 			visitor.TypeVisited += (s, e) => {
 				if (e.Kind == VisitKind.Start) {

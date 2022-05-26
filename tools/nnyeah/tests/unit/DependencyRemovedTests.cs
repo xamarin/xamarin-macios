@@ -27,7 +27,7 @@ public class Foo {{
 			var targetRewrite = Path.Combine (dir, "NoNameRemoved.dll");
 
 			Assert.DoesNotThrow (() => {
-				Program.ProcessAssembly (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS),
+				AssemblyConverter.Convert (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS),
 					Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS), expectedOutputFile,
 					targetRewrite, verbose: false, forceOverwrite: true, suppressWarnings: true);
 			}, $"Failed to process assembly for type {type}");

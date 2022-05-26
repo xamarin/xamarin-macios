@@ -41,7 +41,7 @@ public class Foo {
 			Assert.IsTrue (File.Exists (libraryFile));
 
 			var convertedFile = Path.Combine (dir, "NoName-Converted.dll");
-			Program.ProcessAssembly (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS), Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS), libraryFile, convertedFile, true, true, false);
+			AssemblyConverter.Convert (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS), Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS), libraryFile, convertedFile, true, true, false);
 		}
 
 		[Test]

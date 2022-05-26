@@ -2,6 +2,7 @@ using System.Text;
 
 using IntegrationAPI;
 using System.Runtime.InteropServices;
+using ObjCRuntime;
 
 namespace ConsumerTests
 {
@@ -13,6 +14,7 @@ namespace ConsumerTests
 			NIntTest (output);
 			NUIntTest (output);
 			NFloatTest (output);
+			NSObjectCtor (output);
 
 			if (output.Length == 0) {
 				return "Test Successful";
@@ -70,6 +72,12 @@ namespace ConsumerTests
 			if (n.Field != 14.0) {
 				output.AppendLine ("nfloat field failure");
 			}
+		}
+
+		static void NSObjectCtor (StringBuilder output)
+		{
+			var n = new NSObjectDerived (NativeHandle.Zero);
+			var n2 = new NSObjectDerived (NativeHandle.Zero, true);
 		}
 	}
 }
