@@ -68,6 +68,12 @@ namespace LinkSdk {
 				// caching means it will be called at least for the first run, but it might not
 				// be called again in subsequent requests (unless it expires)
 				Assert.That (trust_validation_callback, Is.GreaterThan (0), "validation done");
+			} catch (WebException we) {
+				// The remote server returned an error: (502) Bad Gateway.
+				// The remote server returned an error: (503) Service Unavailable.
+				if (we.Message.Contains ("(502)") || we.Message.Contains ("(503)"))
+					Assert.Inconclusive (we.Message);
+				throw;
 			}
 			finally {
 				ServicePointManager.ServerCertificateValidationCallback = null;
@@ -84,8 +90,6 @@ namespace LinkSdk {
 			Assert.Ignore ("WatchOS doesn't support BSD sockets, which our network stack currently requires.");
 #endif
 			WebClient wc = new WebClient ();
-			// the certificate contains (several rules) the host name
-			Assert.NotNull (wc.DownloadString (NetworkResources.MicrosoftUrl));
 
 			// IP are (generally) not allowed
 			foreach (var ip in Dns.GetHostAddresses ("www.google.com")) {
