@@ -88,14 +88,6 @@ bool IsAtLeastVersion(string actualVer, string minVer)
     return actualVerChars.Length > minVerChars.Length;
 }
 
-void CreateSetting (string settingFile, string key, string value) => Exec ("defaults", "write", settingFile, key, value);
-string GetSettingValue (string settingFile, string keyName) => Exec ("defaults", "read", settingFile, keyName).FirstOrDefault ();
-void DeleteSafe (string file)
-{
-	if (File.Exists (file))
-		File.Delete (file);
-}
-
 void RemoveXcodeSymlinks (string xcodePath)
 {
 	Console.WriteLine ($"Checkig if '{xcodePath}' is a symlink...");

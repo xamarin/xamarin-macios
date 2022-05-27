@@ -25,6 +25,7 @@ public class Foo {
 		}
 
 		[Test]
+		[Ignore ("This test was failing. See this issue: https://github.com/xamarin/xamarin-macios/issues/15120")]
 		public async Task LibraryWithXamarinReference ()
 		{
 			var dir = Cache.CreateTemporaryDirectory ("LibraryWithXamarinReference");

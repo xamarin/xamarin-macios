@@ -27848,8 +27848,15 @@ namespace AppKit {
 	[Mac (10,15)]
 	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
+#if XAMCORE_5_0
+	[DisableDefaultCtor]
+#endif
 	interface NSMenuToolbarItem
 	{
+		[DesignatedInitializer]
+		[Export ("initWithItemIdentifier:")]
+		NativeHandle Constructor (string itemIdentifier);
+
 		[NoMacCatalyst]
 		[Export ("menu", ArgumentSemantic.Strong)]
 		NSMenu Menu { get; set; }
@@ -28224,8 +28231,15 @@ namespace AppKit {
 	[Mac (10,15)]
 	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
+#if XAMCORE_5_0
+	[DisableDefaultCtor]
+#endif
 	interface NSSharingServicePickerToolbarItem
 	{
+		[DesignatedInitializer]
+		[Export ("initWithItemIdentifier:")]
+		NativeHandle Constructor (string itemIdentifier);
+
 		[NoMacCatalyst]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
