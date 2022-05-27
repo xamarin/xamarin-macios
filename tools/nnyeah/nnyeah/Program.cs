@@ -69,7 +69,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		{
 		}
 
-		public ConversionException (string message, params object? [] args) : base (string.Format(message, args))
+		public ConversionException (string message, params object? [] args) : base (string.Format (message, args))
 		{
 		}
 	}
