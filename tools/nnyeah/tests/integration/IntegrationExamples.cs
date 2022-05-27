@@ -57,7 +57,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 
 		void ExecuteNnyeah (string tmpDir, string inputPath, string convertedPath, ApplePlatform platform)
 		{
-			AssemblyConverter.Convert (GetLegacyPlatform(platform), GetNetPlatform(platform), inputPath, convertedPath, true, true, false);
+			AssemblyConverter.Convert (GetLegacyPlatform (platform), GetNetPlatform (platform), inputPath, convertedPath, true, true, false);
 		}
 
 		[Test]

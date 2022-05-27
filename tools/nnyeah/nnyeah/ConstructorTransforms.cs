@@ -48,13 +48,13 @@ namespace Microsoft.MaciOS.Nnyeah {
 
         public bool IsNSObjectDerived (TypeReference? typeReference)
         {
-            if (typeReference == null) {
+            if (typeReference is null) {
                 return false;
             }
             if (typeReference.FullName == "Foundation.NSObject") {
                 return true;
             }
-            return IsNSObjectDerived (typeReference.Resolve().BaseType);
+            return IsNSObjectDerived (typeReference.Resolve ().BaseType);
         }
 
         public void ReworkAsNeeded (TypeDefinition definition)

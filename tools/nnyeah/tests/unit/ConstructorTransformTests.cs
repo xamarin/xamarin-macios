@@ -67,7 +67,7 @@ using Foundation;
 public class Foo : NSObject {
     public Foo (IntPtr p, bool b) : base (p, b) { }
 }");
-            CreateTestTransform(type).ReworkAsNeeded (type);
+            CreateTestTransform (type).ReworkAsNeeded (type);
 
             var ctor = type.GetConstructors ().First ();
             Assert.AreEqual ("ObjCRuntime.NativeHandle", ctor.Parameters[0].ParameterType.FullName);
@@ -99,7 +99,7 @@ using Foundation;
 public class Foo : NSObject {
     public Foo (IntPtr p) : base (p) { Console.Error.WriteLine (typeof(int)); }
 }");
-            Assert.Throws<ConversionException>(() => CreateTestTransform (type).ReworkAsNeeded (type));
+            Assert.Throws<ConversionException> (() => CreateTestTransform (type).ReworkAsNeeded (type));
         }
 
         [Test]
