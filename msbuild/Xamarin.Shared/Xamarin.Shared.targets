@@ -343,10 +343,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS') And '$(EnableAutomaticAppBundleRootDirectoryCleanup)' == 'true'"
 			Files="@(_FilesInAppBundleRootDirectory)"
 		/>
+		<!-- Create a separate item group for directories, excluding anything with length <= 1. This is an additional protection against accidentally wiping out the hard drive: https://github.com/dotnet/msbuild/issues/4105 -->
+		<ItemGroup>
+			<_DirectoriesInAppBundleRootDirectory Include="@(_FilesInAppBundleRootDirectory)" Condition="$([MSBuild]::ValueOrDefault('%(Identity)', '').Length) &gt; 1" />
+		</ItemGroup>
 		<RemoveDir
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And ('$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS') And '$(EnableAutomaticAppBundleRootDirectoryCleanup)' == 'true'"
-			Directories="@(_FilesInAppBundleRootDirectory)"
+			Directories="@(_DirectoriesInAppBundleRootDirectory)"
 		/>
 		<Warning
 				Text="Found files in the root directory of the app bundle. This will likely cause codesign to fail. Files:%0a@(_FilesInAppBundleRootDirectory, '%0a')"
