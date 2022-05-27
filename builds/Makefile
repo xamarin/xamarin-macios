@@ -143,6 +143,10 @@ endif
 	$(Q) $(CP) ./downloads/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
 	$(Q) touch $@
 
+.stamp-install-t4: $(TOP)/.config/dotnet-tools.json
+	$(SYSTEM_DOTNET) tool restore
+	$(Q) touch $@
+
 BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
 
 package-download/global.json: $(TOP)/global6.json Makefile
@@ -161,6 +165,7 @@ endif
 DOTNET_DOWNLOADS = \
 	downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))) \
 	.stamp-download-dotnet-packages \
+	.stamp-install-t4 \
 
 dotnet: $(DOTNET_DOWNLOADS)
 ifdef ENABLE_DOTNET
