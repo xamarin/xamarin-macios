@@ -1,4 +1,4 @@
-// #define NNYEAH_IN_PROCESS
+#define NNYEAH_IN_PROCESS
 
 using System;
 using System.Collections.Generic;
@@ -53,7 +53,8 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 			var environment = Configuration.GetBuildEnvironment (platform);
 
 			Execution execution = await Execution.RunAsync (MSBuildPath, new List<string>() { project }, environment, mergeOutput: true);
-			Assert.Zero (execution.ExitCode, $"Build Output: {execution.StandardOutput}");
+			var output = execution.StandardOutput?.ToString () ?? "";
+			Assert.Zero (execution.ExitCode, $"Build Output: {output}");
 		}
 
 		async Task ExecuteNnyeah (string tmpDir, string inputPath, string convertedPath, ApplePlatform platform)
@@ -81,9 +82,9 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 #endif
 		}
 
-		// [Test]
-		// [TestCase("API/macOSIntegration.csproj", "API/bin/Debug/macOSIntegration.dll", "Consumer/macOS/macOS.csproj", ApplePlatform.MacOSX)]
-		// [TestCase("API/iOSIntegration.csproj", "API/bin/Debug/iOSIntegration.dll", "Consumer/ios/ios.csproj", ApplePlatform.iOS)]
+		[Test]
+		[TestCase ("API/macOSIntegration.csproj", "API/bin/Debug/macOSIntegration.dll", "Consumer/macOS/macOS.csproj", ApplePlatform.MacOSX)]
+		[TestCase ("API/iOSIntegration.csproj", "API/bin/Debug/iOSIntegration.dll", "Consumer/ios/ios.csproj", ApplePlatform.iOS)]
 		public async Task BuildAndRunSynthetic (string libraryProject, string libraryPath, string consumerProject, ApplePlatform platform)
 		{
 			await AssertLegacyBuild (Path.Combine (IntegrationRoot, libraryProject), platform);
