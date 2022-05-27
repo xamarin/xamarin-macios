@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.810.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "monotouch-test", "monotouch-test.csproj", "{AC6D070F-2ED4-4701-B701-81915B931D1D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Debug64|iPhone = Debug64|iPhone
+		Debug32|iPhone = Debug32|iPhone
+		Release|iPhone = Release|iPhone
+		Release32|iPhone = Release32|iPhone
+		Release64|iPhone = Release64|iPhone
+		Release-bitcode|iPhone = Release-bitcode|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Debug|iPhone.Build.0 = Debug|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Debug64|iPhone.ActiveCfg = Debug64|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Debug64|iPhone.Build.0 = Debug64|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Debug32|iPhone.ActiveCfg = Debug32|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Debug32|iPhone.Build.0 = Debug32|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Release|iPhone.ActiveCfg = Release|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Release|iPhone.Build.0 = Release|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Release32|iPhone.ActiveCfg = Release32|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Release32|iPhone.Build.0 = Release32|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Release64|iPhone.ActiveCfg = Release64|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Release64|iPhone.Build.0 = Release64|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Release-bitcode|iPhone.ActiveCfg = Release-bitcode|iPhone
+		{AC6D070F-2ED4-4701-B701-81915B931D1D}.Release-bitcode|iPhone.Build.0 = Release-bitcode|iPhone
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EF1403AC-6951-4076-A890-D2774D720A25}
+	EndGlobalSection
+EndGlobal
