@@ -30,6 +30,27 @@ public class Foo {
 		}
 
 		[Test]
+		[Ignore ("This test was failing. See this issue: https://github.com/xamarin/xamarin-macios/issues/15120")]
+		public async Task LibraryWithXamarinReference ()
+		{
+			var dir = Cache.CreateTemporaryDirectory ("LibraryWithXamarinReference");
+			var code = @"
+using System;
+using Foundation;
+
+public class Foo {
+	public bool IsStaleHandle (NSObject o) => o.Handle != IntPtr.Zero;
+}
+";
+			await TestRunning.BuildLibrary (code, "NoName", dir);
+			var libraryFile = Path.Combine (dir, "NoName.dll");
+			Assert.IsTrue (File.Exists (libraryFile));
+
+			var convertedFile = Path.Combine (dir, "NoName-Converted.dll");
+			Program.ProcessAssembly (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS), Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS), libraryFile, convertedFile, true, true, false);
+		}
+
+		[Test]
 		public void HasXamarinMacOSFile ()
 		{
 			var xamarinDll = Compiler.XamarinPlatformLibraryPath (PlatformName.macOS);
