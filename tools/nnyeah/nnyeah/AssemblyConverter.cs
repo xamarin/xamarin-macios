@@ -108,8 +108,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		public TypeAndModuleMap (string infile, string outfile, NNyeahAssemblyResolver resolver)
 		{        
-			// TODO - I'm not sure using the Stream API is needed here
-			// ReadModule has an override that takes a path
 			using var inFileStream = TryOpenRead (infile);
 			using var outFileStream = TryOpenRead (outfile);
 

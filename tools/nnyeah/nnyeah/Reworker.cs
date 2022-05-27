@@ -284,11 +284,11 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		public void Rework (Stream stm)
 		{
+			ReplacePlatformAssemblyReference ();
 			foreach (var type in ModuleToEdit.Types) {
 				ReworkType (type);
 			}
 			ChangeTargetFramework ();
-			ReplacePlatformAssemblyReference ();
 			ModuleToEdit.Write (stm);
 			stm.Flush ();
 		}

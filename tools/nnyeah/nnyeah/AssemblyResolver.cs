@@ -3,7 +3,7 @@ using Mono.Cecil;
 
 
 namespace Microsoft.MaciOS.Nnyeah {
-	public class NNyeahAssemblyResolver : DefaultAssemblyResolver{
+	public class NNyeahAssemblyResolver : DefaultAssemblyResolver {
 		public NNyeahAssemblyResolver (string infile, string xamarinAssembly) : base ()
 		{
 			// When resolving assemblies, look next to the platform assembly AND

@@ -9,14 +9,14 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	public class ModuleVisitor {
 		ModuleDefinition Module;
 		bool PublicOnly;
-		public ModuleVisitor (ModuleDefinition module, NNyeahAssemblyResolver resolver, bool publicOnly)
+		public ModuleVisitor (ModuleDefinition module, bool publicOnly)
 		{
 			Module = module;
 			PublicOnly = publicOnly;
 		}
 
-		public ModuleVisitor (Stream stm, NNyeahAssemblyResolver resolver, bool publicOnly)
-			: this (ModuleDefinition.ReadModule (stm), resolver, publicOnly)
+		public ModuleVisitor (Stream stm, bool publicOnly)
+			: this (ModuleDefinition.ReadModule (stm), publicOnly)
 		{
 		}
 

@@ -17,7 +17,7 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 			var moduleElements = new ModuleElements ();
 			var typeStack = new Stack<TypeElements> ();
 
-			var visitor = new ModuleVisitor (module, resolver, publicOnly);
+			var visitor = new ModuleVisitor (module, publicOnly);
 
 			visitor.TypeVisited += (s, e) => {
 				if (e.Kind == VisitKind.Start) {
