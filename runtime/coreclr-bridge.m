@@ -465,8 +465,12 @@ xamarin_bridge_compute_properties (int inputCount, const char **inputKeys, const
 
 	// Copy the input properties
 	for (int i = 0; i < inputCount; i++) {
-		(*outputKeys) [i + runtimeConfigCount] = strdup (inputKeys [i]);
-		(*outputValues) [i + runtimeConfigCount] = strdup (inputValues [i]);
+		if (inputKeys [i] != NULL && inputValues [i] != NULL) {
+			(*outputKeys) [i + runtimeConfigCount] = strdup (inputKeys [i]);
+			(*outputValues) [i + runtimeConfigCount] = strdup (inputValues [i]);
+		} else {
+			NSLog (@PRODUCT ": No name/value specified for runtime property %s=%s", inputKeys [i], inputValues [i]);
+		}
 	}
 
 	if (buf != NULL)
