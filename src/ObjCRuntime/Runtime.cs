@@ -39,6 +39,7 @@ namespace ObjCRuntime {
 		static List <object> delegates;
 		static List <Assembly> assemblies;
 		static Dictionary <IntPtr, GCHandle> object_map;
+		static Dictionary <IntPtr, bool> usertype_cache;
 		static object lock_obj;
 		static IntPtr NSObjectClass;
 		static bool initialized;
@@ -272,6 +273,7 @@ namespace ObjCRuntime {
 			Runtime.options = options;
 			delegates = new List<object> ();
 			object_map = new Dictionary <IntPtr, GCHandle> (IntPtrEqualityComparer);
+			usertype_cache = new Dictionary <IntPtr, bool> (IntPtrEqualityComparer);
 			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			lock_obj = new object ();
@@ -1735,11 +1737,23 @@ namespace ObjCRuntime {
 			throw new ArgumentException ($"'{type.FullName}' is an unknown protocol");
 		}
 
-		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal static bool IsUserType (IntPtr self)
 		{
 			var cls = Class.object_getClass (self);
+			if (!usertype_cache.TryGetValue (cls, out var result)) {
+				result = SlowIsUserType (cls);
+				usertype_cache.Add (cls, result);
+			}
+			return result;
+		}
 
+#if __MACOS__
+		static IntPtr selSetGCHandle = Selector.GetHandle ("xamarinSetGCHandle:flags:");
+#endif
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		static bool SlowIsUserType (IntPtr cls)
+		{
 			unsafe {
 				if (options->RegistrationMap is not null && options->RegistrationMap->map_count > 0) {
 					var map = options->RegistrationMap->map;
@@ -1752,8 +1766,11 @@ namespace ObjCRuntime {
 						return false;
 				}
 			}
-
+#if __MACOS__
+			return Class.class_getInstanceMethod (cls, selSetGCHandle) != IntPtr.Zero;
+#else
 			return Class.class_getInstanceMethod (cls, Selector.GetHandle ("xamarinSetGCHandle:flags:")) != IntPtr.Zero;
+#endif
 		}
 
 		static unsafe int FindUserTypeIndex (MTClassMap* map, int lo, int hi, IntPtr cls)
