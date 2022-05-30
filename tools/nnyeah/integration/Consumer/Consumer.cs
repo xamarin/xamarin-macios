@@ -63,6 +63,33 @@ namespace ConsumerTests
 			if (n.Greater (2, 3)) {
 				output.AppendLine ("nint greater failure (2)");
 			}
+			if (n.And (7, 3) != 3) {
+				output.AppendLine ("nint And failure");
+			}
+			if (n.Or (9, 3) != 12) {
+				output.AppendLine ("nint Or failure");
+			}
+			if (n.Xor (9, 3) != 11) {
+				output.AppendLine ("nint Xor failure");
+			}
+			if (n.ToNint ((sbyte)7) != (nint)7) {
+				output.AppendLine ("nint implicit failure (sbyte)");
+			}
+			if (n.ToNint ((sbyte)8) != (nint)8) {
+				output.AppendLine ("nint implicit failure (byte)");
+			}
+			if (n.ToNint ((short)9) != (nint)9) {
+				output.AppendLine ("nint implicit failure (short)");
+			}
+			if (n.ToNint ((char)10) != (nint)10) {
+				output.AppendLine ("nint implicit failure (char)");
+			}
+			if (n.ToNint (11) != (nint)11) {
+				output.AppendLine ("nint implicit failure (int)");
+			}
+			if (n.PlusOne (7) != (nint)8) {
+				output.AppendLine ("nint ++ failure");
+			}
 		}
 
 		static void NUIntTest (StringBuilder output)
@@ -116,6 +143,30 @@ namespace ConsumerTests
 			if (n.Eq (2, 3)) {
 				output.AppendLine ("nuint equal failure (2)");
 			}
+			if (n.And (7, 3) != 3) {
+				output.AppendLine ("nuint And failure");
+			}
+			if (n.Or (9, 3) != 12) {
+				output.AppendLine ("nuint Or failure");
+			}
+			if (n.Xor (9, 3) != 11) {
+				output.AppendLine ("nuint Xor failure");
+			}
+			if (n.ToNuint ((byte)5) != (nuint)5) {
+				output.AppendLine ("nuint implicit failure (byte)");
+			}
+			if (n.ToNuint ((ushort)6) != (nuint)6) {
+				output.AppendLine ("nuint implicit failure (ushort)");
+			}
+			if (n.ToNuint ((uint)7) != (nuint)7) {
+				output.AppendLine ("nuint implicit failure (uint)");
+			}
+			if (n.ToNuint ((char)8) != (nuint)8) {
+				output.AppendLine ("nuint implicit failure (char)");
+			}
+			if (n.PlusOne (27) != (nuint)27) {
+				output.AppendLine ("nuint ++ failure");
+			}
 		}
 
 		static void NFloatTest (StringBuilder output)
@@ -168,6 +219,36 @@ namespace ConsumerTests
 			}
 			if (n.Eq ((NFloat)2.0, (NFloat)3.0)) {
 				output.AppendLine ("nfloat equal failure (2)");
+			}
+			if (n.ToNFloat ((sbyte)4) != (NFloat)4) {
+				output.AppendLine ("nfloat implicit failure (sbyte)");
+			}
+			if (n.ToNFloat ((byte)5) != (NFloat)5) {
+				output.AppendLine ("nfloat implicit failure (byte)");
+			}
+			if (n.ToNFloat ((char)6) != (NFloat)6) {
+				output.AppendLine ("nfloat implicit failure (char)");
+			}
+			if (n.ToNFloat ((short)7) != (NFloat)7) {
+				output.AppendLine ("nfloat implicit failure (short)");
+			}
+			if (n.ToNFloat ((ushort)8) != (NFloat)8) {
+				output.AppendLine ("nfloat implicit failure (ushort)");
+			}
+			if (n.ToNFloat ((int)9) != (NFloat)9) {
+				output.AppendLine ("nfloat implicit failure (int)");
+			}
+			if (n.ToNFloat ((uint)10) != (NFloat)10) {
+				output.AppendLine ("nfloat implicit failure (uint)");
+			}
+			if (n.ToNFloat ((long)11) != (NFloat)11) {
+				output.AppendLine ("nfloat implicit failure (long)");
+			}
+			if (n.ToNFloat ((ulong)12) != (NFloat)12) {
+				output.AppendLine ("nfloat implicit failure (ulong)");
+			}
+			if (n.ToNFloat ((float)13) != (NFloat)13) {
+				output.AppendLine ("nfloat implicit failure (float)");
 			}
 		}
 	}
