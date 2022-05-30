@@ -1740,11 +1740,19 @@ namespace ObjCRuntime {
 		internal static bool IsUserType (IntPtr self)
 		{
 			var cls = Class.object_getClass (self);
-			if (!usertype_cache.TryGetValue (cls, out var result)) {
-				result = SlowIsUserType (cls);
-				usertype_cache.Add (cls, result);
+			lock (usertype_cache) {
+#if NET
+				var result = CollectionsMarshal.GetValueRefOrAddDefault (usertype_cache, cls, out var exists);
+				if (!exists)
+					result = SlowIsUserType (cls);
+#else
+				if (!usertype_cache.TryGetValue (cls, out var result)) {
+					result = SlowIsUserType (cls);
+					usertype_cache.Add (cls, result);
+				}
+#endif
+				return result;
 			}
-			return result;
 		}
 
 #if __MACOS__
