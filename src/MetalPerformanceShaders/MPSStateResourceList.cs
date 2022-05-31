@@ -19,14 +19,14 @@ namespace MetalPerformanceShaders {
 	public partial class MPSStateResourceList {
 		public static MPSStateResourceList? Create (params MTLTextureDescriptor [] descriptors)
 		{
-			if (descriptors == null)
+			if (descriptors is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptors));
 			if (descriptors.Length > 10)
 				throw new ArgumentException ("Only 10 parameters are currently supported.");
 
 			var arr = new IntPtr [10];
 			for (int i = 0; i < descriptors.Length; ++i) {
-				if (descriptors [i] == null)
+				if (descriptors [i] is null)
 					throw new ArgumentException ($"'{nameof (descriptors)}[{i}]' was null.");
 				arr [i] = descriptors [i].Handle;
 			}
@@ -43,7 +43,7 @@ namespace MetalPerformanceShaders {
 
 		public static MPSStateResourceList? Create (params nuint [] bufferSizes)
 		{
-			if (bufferSizes == null)
+			if (bufferSizes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bufferSizes));
 			if (bufferSizes.Length > 10)
 				throw new ArgumentException ("Only 10 parameters are currently supported.");

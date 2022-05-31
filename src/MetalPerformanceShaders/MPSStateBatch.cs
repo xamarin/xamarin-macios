@@ -34,7 +34,7 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSState>' instead of `MPSState[]` because array 'Handle' matters.
 		public static nuint IncrementReadCount (NSArray<MPSState> stateBatch, nint amount)
 		{
-			if (stateBatch == null)
+			if (stateBatch is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
 
 			return MPSStateBatchIncrementReadCount (stateBatch.Handle, amount);
@@ -46,9 +46,9 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSState>' instead of `MPSState[]` because array 'Handle' matters.
 		public static void Synchronize (NSArray<MPSState> stateBatch, IMTLCommandBuffer commandBuffer)
 		{
-			if (stateBatch == null)
+			if (stateBatch is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
-			if (commandBuffer == null)
+			if (commandBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (commandBuffer));
 
 			MPSStateBatchSynchronize (stateBatch.Handle, commandBuffer.Handle);

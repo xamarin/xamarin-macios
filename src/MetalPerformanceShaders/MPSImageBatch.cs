@@ -34,7 +34,7 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSImage>' instead of `MPSImage[]` because image array 'Handle' matters.
 		public static nuint IncrementReadCount (NSArray<MPSImage> imageBatch, nint amount)
 		{
-			if (imageBatch == null)
+			if (imageBatch is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
 
 			return MPSImageBatchIncrementReadCount (imageBatch.Handle, amount);
@@ -46,9 +46,9 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSImage>' instead of `MPSImage[]` because image array 'Handle' matters.
 		public static void Synchronize (NSArray<MPSImage> imageBatch, IMTLCommandBuffer commandBuffer)
 		{
-			if (imageBatch == null)
+			if (imageBatch is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
-			if (commandBuffer == null)
+			if (commandBuffer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (commandBuffer));
 
 			MPSImageBatchSynchronize (imageBatch.Handle, commandBuffer.Handle);
@@ -118,9 +118,9 @@ namespace MetalPerformanceShaders {
 		//[BindingImpl (BindingImplOptions.Optimizable)]
 		//public static nint Iterate (NSArray<MPSImage> imageBatch, MPSImageBatchIterator iterator)
 		//{
-		//	if (imageBatch == null)
+		//	if (imageBatch is null)
 		//		ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
-		//	if (iterator == null)
+		//	if (iterator is null)
 		//		ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (iterator));
 		//	unsafe {
 		//		BlockLiteral* block_ptr_iterator;

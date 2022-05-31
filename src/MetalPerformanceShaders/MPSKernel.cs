@@ -19,7 +19,7 @@ namespace MetalPerformanceShaders {
 
 		public static bool Supports (IMTLDevice device)
 		{
-			return MPSSupportsMTLDevice (device == null ? IntPtr.Zero : device.Handle);
+			return MPSSupportsMTLDevice (device.GetHandle ());
 		}
 
 #if NET
@@ -54,7 +54,7 @@ namespace MetalPerformanceShaders {
 		internal unsafe static float []? GetTransform (IntPtr transform)
 		{
 			var t = (float*) transform;
-			if (t == null)
+			if (t is null)
 				return null;
 			return new float [3] { t [0], t [1], t [2] };
 		}
@@ -95,7 +95,7 @@ namespace MetalPerformanceShaders {
 		[Mac (10,14)]
 		[iOS (12,0)]
 #endif
-		public static void HintTemporaryMemoryHighWaterMark (IMTLCommandBuffer commandBuffer, nuint sizeInBytes) => MPSHintTemporaryMemoryHighWaterMark (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, sizeInBytes);
+		public static void HintTemporaryMemoryHighWaterMark (IMTLCommandBuffer commandBuffer, nuint sizeInBytes) => MPSHintTemporaryMemoryHighWaterMark (commandBuffer.GetHandle (), sizeInBytes);
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
@@ -159,7 +159,7 @@ namespace MetalPerformanceShaders {
 		public MPSImageDilate (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] values)
 			: base (NSObjectFlag.Empty)
 		{
-			if (values == null)
+			if (values is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 
 			unsafe {
@@ -269,7 +269,7 @@ namespace MetalPerformanceShaders {
 		public MPSImageSobel (IMTLDevice device, float[] transform)
 			: base (NSObjectFlag.Empty)
 		{
-			if (transform == null)
+			if (transform is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (transform));
 
 			unsafe {
@@ -289,7 +289,7 @@ namespace MetalPerformanceShaders {
 		public MPSCnnConvolution (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
+			if (kernelWeights is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
@@ -321,7 +321,7 @@ namespace MetalPerformanceShaders {
 		public MPSCnnFullyConnected (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
+			if (kernelWeights is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
@@ -349,7 +349,7 @@ namespace MetalPerformanceShaders {
 		public MPSImagePyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
 			: base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
+			if (kernelWeights is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
@@ -365,7 +365,7 @@ namespace MetalPerformanceShaders {
 		public MPSImageGaussianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
 			: base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
+			if (kernelWeights is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
@@ -379,7 +379,7 @@ namespace MetalPerformanceShaders {
 		[DesignatedInitializer]
 		public MPSImageLaplacianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
+			if (kernelWeights is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
@@ -395,7 +395,7 @@ namespace MetalPerformanceShaders {
 		[DesignatedInitializer]
 		public MPSImageLaplacianPyramidSubtract (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
+			if (kernelWeights is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
@@ -411,7 +411,7 @@ namespace MetalPerformanceShaders {
 		[DesignatedInitializer]
 		public MPSImageLaplacianPyramidAdd (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
+			if (kernelWeights is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
