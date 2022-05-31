@@ -673,15 +673,15 @@ namespace CoreFoundation {
 #if !NET
 		public static bool operator == (DispatchQueue left, DispatchQueue right)
 		{
-			if (left as object is null)
-				return right as object is null;
+			if (left is null)
+				return right is null;
 			return left.Equals (right);
 		}
 
 		public static bool operator != (DispatchQueue left, DispatchQueue right)
 		{
-			if (left as object is null)
-				return right as object is not null;
+			if (left is null)
+				return right is not null;
 			return !left.Equals (right);
 		}
 

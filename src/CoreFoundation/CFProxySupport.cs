@@ -901,10 +901,10 @@ namespace CoreFoundation {
 					return null;
 				}
 				
-				string? username = proxy?.Username;
-				string? password = proxy?.Password;
-				string? hostname = proxy?.HostName;
-				int? port = proxy?.Port;
+				var username = proxy?.Username;
+				var password = proxy?.Password;
+				var hostname = proxy?.HostName;
+				var port = proxy?.Port;
 				string uri;
 				
 				if (username is not null)

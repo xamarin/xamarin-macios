@@ -125,6 +125,7 @@ namespace CoreFoundation
 			using (var cfKey = new CFString (key)) {
 				if (value is null) {
 					CFPreferencesSetAppValue (cfKey.Handle, IntPtr.Zero, applicationId.Handle);
+					return;
 				} else if (value is string) {
 					using (var valueStr = new CFString ((string)value)) {
 						CFPreferencesSetAppValue (cfKey.Handle, valueStr.Handle, applicationId.Handle);
@@ -148,9 +149,7 @@ namespace CoreFoundation
 					return;
 				}
 
-				if (value is not null)
-					throw new ArgumentException ("unsupported type: " + value.GetType (), "value");
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (nsnumber));
+				throw new ArgumentException ("unsupported type: " + value.GetType (), "value");
 			}
 		}
 

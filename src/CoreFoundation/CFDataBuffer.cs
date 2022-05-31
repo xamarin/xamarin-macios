@@ -32,6 +32,7 @@
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
+using ObjCRuntime;
 
 namespace CoreFoundation {
 
@@ -68,7 +69,7 @@ namespace CoreFoundation {
 		}
 
 		public IntPtr Handle {
-			get { return data?.Handle ?? IntPtr.Zero; }
+			get { return data.GetHandle (); }
 		}
 
 		public byte[] Data {
