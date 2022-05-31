@@ -1742,7 +1742,7 @@ namespace ObjCRuntime {
 			var cls = Class.object_getClass (self);
 			lock (usertype_cache) {
 #if NET
-				var result = CollectionsMarshal.GetValueRefOrAddDefault (usertype_cache, cls, out var exists);
+				ref var result = ref CollectionsMarshal.GetValueRefOrAddDefault (usertype_cache, cls, out var exists);
 				if (!exists)
 					result = SlowIsUserType (cls);
 #else
