@@ -761,7 +761,7 @@ namespace CoreMidi {
 #if !COREBUILD
 		public long TimeStamp;
 		IntPtr byteptr;
-		byte []? bytes;
+		byte [] bytes = Array.Empty<byte> ();
 		int    start;
 		public ushort Length;
 
@@ -817,7 +817,7 @@ namespace CoreMidi {
 			byteptr = IntPtr.Zero;
 		}
 
-		internal byte[]? ByteArray {
+		internal byte[] ByteArray {
 			get { return bytes; }
 		}
 
@@ -1020,9 +1020,8 @@ namespace CoreMidi {
 			if (gch.Target is MidiPort port) {
 				var e = port.MessageReceived;
 				if (e is not null) {
-					using (var args = new MidiPacketsEventArgs (packetList)) {
+					using (var args = new MidiPacketsEventArgs (packetList))
 						e (port, args);
-					}
 				}
 			}
 		}
