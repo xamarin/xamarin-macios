@@ -77,7 +77,7 @@ namespace Xharness.Jenkins {
 				TestName = "Install Sources tests",
 				Mode = "iOS",
 				Timeout = TimeSpan.FromMinutes (60),
-				Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) && !jenkins.TestSelection.IsEnabled (PlatformLabel.iOSSimulator),
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.InstallSource) && !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) && !jenkins.TestSelection.IsEnabled (PlatformLabel.iOSSimulator),
 			};
 			yield return nunitExecutionInstallSource;
 
@@ -115,7 +115,7 @@ namespace Xharness.Jenkins {
 				TestName = "Generator tests",
 				Mode = "NUnit",
 				Timeout = TimeSpan.FromMinutes (10),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Btouch),
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Generator),
 			};
 			yield return runGenerator;
 
