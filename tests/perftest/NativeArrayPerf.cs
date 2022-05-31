@@ -32,5 +32,17 @@ namespace PerfTest {
 			var native = CFArray.Create (array);
 			CFString.ReleaseNative (native); // that's a `CFObject.CFRelease` with a null-check
 		}
+
+		int error;
+
+		[Benchmark]
+		public void ArrayFromHandleFunc ()
+		{
+			var native = CFArray.Create (array);
+			var managed = CFArray.ArrayFromHandle<NSNumber> (native);
+			if (managed.Length != array.Length)
+				error++;
+			CFString.ReleaseNative (native); // that's a `CFObject.CFRelease` with a null-check
+		}
 	}
 }
