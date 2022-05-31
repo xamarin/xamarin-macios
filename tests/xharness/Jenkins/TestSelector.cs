@@ -357,9 +357,16 @@ namespace Xharness.Jenkins {
 					continue;
 				MainLog?.WriteLine ($"Label {label} matches regexp.");
 				var match = regexp.Match (label);
+				var matchedLabel = match.Groups [2].Value;  
 				var run = match.Groups [1].Value == "run-";
-				MainLog?.WriteLine ($"Setting label {match.Groups [2].Value} to be enabled: {run}");
-				labelSelectedTests.Add (match.Groups[2].Value, run);
+				MainLog?.WriteLine ($"Setting label {matchedLabel} to be enabled: {run}");
+				if (labelSelectedTests.ContainsKey (matchedLabel)) {
+					// if we find a label more than once, we or the value so that we always run the tests if there
+					// was a single run-* match
+					labelSelectedTests [matchedLabel] |= run;
+				} else {
+					labelSelectedTests.Add (matchedLabel, run);
+				}
 				MainLog?.WriteLine ($"Selected tests are {selection.SelectedTests}");
 			}
 
