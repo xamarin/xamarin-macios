@@ -8,20 +8,22 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	public class ComparingVisitor {
 		ModuleDefinition EarlierModule, LaterModule;
 		bool PublicOnly;
+		NNyeahAssemblyResolver Resolver;
 
-		public ComparingVisitor (ModuleDefinition earlierModule, ModuleDefinition laterModule, bool publicOnly)
+		public ComparingVisitor (ModuleDefinition earlierModule, ModuleDefinition laterModule, NNyeahAssemblyResolver resolver, bool publicOnly)
 		{
 			EarlierModule = earlierModule;
 			LaterModule = laterModule;
 			PublicOnly = publicOnly;
+			Resolver = resolver;
 		}
 
 		public void Visit ()
 		{
-			var earlierElements = ModuleElements.Import (EarlierModule, PublicOnly);
+			var earlierElements = ModuleElements.Import (EarlierModule, Resolver, PublicOnly);
 			if (earlierElements is null)
 				throw new Exception (Errors.E0007);
-			var laterElements = ModuleElements.Import (LaterModule, PublicOnly);
+			var laterElements = ModuleElements.Import (LaterModule, Resolver, PublicOnly);
 			if (laterElements is null)
 				throw new Exception (Errors.E0007);
 			var reworker = new TypeReworker (EarlierModule);
