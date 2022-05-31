@@ -7,6 +7,8 @@
 // Copyright 2019 Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -78,7 +80,7 @@ namespace MetalPerformanceShaders {
 #endif
 		public static nuint GetResourceSize (NSArray<MPSImage> imageBatch)
 		{
-			if (imageBatch == null)
+			if (imageBatch is null)
 				throw new ArgumentNullException (nameof (imageBatch));
 
 			return MPSImageBatchResourceSize (imageBatch.Handle);

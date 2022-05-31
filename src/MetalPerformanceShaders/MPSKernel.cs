@@ -1,5 +1,7 @@
 // Copyright 2015-2016 Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreGraphics;
@@ -43,13 +45,13 @@ namespace MetalPerformanceShaders {
 		[Mac (10,15)]
 		[iOS (13,0)]
 #endif
-		public static IMTLDevice GetPreferredDevice (MPSDeviceOptions options)
+		public static IMTLDevice? GetPreferredDevice (MPSDeviceOptions options)
 		{
 			var h = MPSGetPreferredDevice ((nuint)(ulong) options);
 			return Runtime.GetINativeObject<IMTLDevice> (h, false);
 		}
 
-		internal unsafe static float [] GetTransform (IntPtr transform)
+		internal unsafe static float []? GetTransform (IntPtr transform)
 		{
 			var t = (float*) transform;
 			if (t == null)
@@ -118,7 +120,7 @@ namespace MetalPerformanceShaders {
 		[Mac (10,14)]
 		[iOS (12,0)]
 #endif
-		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, seconds);
+		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer is null ? IntPtr.Zero : commandBuffer.Handle, seconds);
 #endif
 	}
 
@@ -188,7 +190,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] Transform {
+		public float[]? Transform {
 			get { return MPSKernel.GetTransform (_Transform); }
 		}
 	}
@@ -205,7 +207,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] Transform {
+		public float[]? Transform {
 			get { return MPSKernel.GetTransform (_Transform); }
 		}
 	}
@@ -222,7 +224,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] Transform {
+		public float[]? Transform {
 			get { return MPSKernel.GetTransform (_Transform); }
 		}
 	}
@@ -239,7 +241,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] Transform {
+		public float[]? Transform {
 			get { return MPSKernel.GetTransform (_Transform); }
 		}
 	}
@@ -256,7 +258,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] Transform {
+		public float[]? Transform {
 			get { return MPSKernel.GetTransform (_Transform); }
 		}
 	}
@@ -276,7 +278,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] ColorTransform {
+		public float[]? ColorTransform {
 			get { return MPSKernel.GetTransform (_ColorTransform); }
 		}
 	}
@@ -476,7 +478,7 @@ namespace MetalPerformanceShaders {
 		[Mac (10,13,4)]
 		[iOS (11,3)]
 #endif
-		public static MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
+		public new static MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 		{
 			unsafe {
 				fixed (void* outputBiasTermsHandle = outputBiasTerms)

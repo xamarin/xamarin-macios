@@ -7,6 +7,8 @@
 // Copyright 2019 Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
@@ -15,7 +17,7 @@ using ObjCRuntime;
 
 namespace MetalPerformanceShaders {
 	public partial class MPSStateResourceList {
-		public static MPSStateResourceList Create (params MTLTextureDescriptor [] descriptors)
+		public static MPSStateResourceList? Create (params MTLTextureDescriptor [] descriptors)
 		{
 			if (descriptors == null)
 				throw new ArgumentNullException (nameof (descriptors));
@@ -29,7 +31,7 @@ namespace MetalPerformanceShaders {
 				arr [i] = descriptors [i].Handle;
 			}
 
-			MPSStateResourceList ret;
+			MPSStateResourceList? ret;
 			// Learned the hard way about arm64's variadic arguments calling conventions are different...
 			if (Runtime.IsARM64CallingConvention)
 				ret = Runtime.GetNSObject<MPSStateResourceList> (IntPtr_objc_msgSend_IntPtrx3_FakeIntPtrx5_IntPtrx10 (class_ptr, Selector.GetHandle ("resourceListWithTextureDescriptors:"), arr [0], IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, arr [1], arr [2], arr [3], arr [4], arr [5], arr [6], arr [7], arr [8], arr [9], IntPtr.Zero));
@@ -39,7 +41,7 @@ namespace MetalPerformanceShaders {
 			return ret;
 		}
 
-		public static MPSStateResourceList Create (params nuint [] bufferSizes)
+		public static MPSStateResourceList? Create (params nuint [] bufferSizes)
 		{
 			if (bufferSizes == null)
 				throw new ArgumentNullException (nameof (bufferSizes));
@@ -52,7 +54,7 @@ namespace MetalPerformanceShaders {
 					Marshal.Copy ((IntPtr) ptr, arr, 0, bufferSizes.Length);
 			}
 
-			MPSStateResourceList ret;
+			MPSStateResourceList? ret;
 			// Learned the hard way about arm64's variadic arguments calling conventions are different...
 			if (Runtime.IsARM64CallingConvention)
 				ret = Runtime.GetNSObject<MPSStateResourceList> (IntPtr_objc_msgSend_IntPtrx3_FakeIntPtrx5_IntPtrx10 (class_ptr, Selector.GetHandle ("resourceListWithBufferSizes:"), arr [0], IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero, arr [1], arr [2], arr [3], arr [4], arr [5], arr [6], arr [7], arr [8], arr [9], IntPtr.Zero));
