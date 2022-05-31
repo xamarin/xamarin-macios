@@ -120,7 +120,7 @@ namespace MetalPerformanceShaders {
 		[Mac (10,14)]
 		[iOS (12,0)]
 #endif
-		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer is null ? IntPtr.Zero : commandBuffer.Handle, seconds);
+		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer.GetHandle (), seconds);
 #endif
 	}
 
