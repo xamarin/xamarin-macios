@@ -33,7 +33,7 @@ namespace CoreFoundation {
 	interface CFArray {
 
 		[Internal][Field ("kCFNull")]
-		IntPtr /* CFNullRef */ CFNullHandle { get; }
+		IntPtr /* CFNullRef */ _CFNullHandle { get; }
 	}
 
 	[Partial]
