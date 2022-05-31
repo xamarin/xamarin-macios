@@ -108,7 +108,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ReadItemsFromFile" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ResolveNativeReferences" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ScnTool" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask TaskName="Xamarin.MacDev.Tasks.SmartCopy" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SpotlightIndexer" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.SymbolStrip" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.TextureAtlas" AssemblyFile="$(_TaskAssemblyName)" />
@@ -1149,11 +1148,15 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_CopyResourcesToBundle" DependsOnTargets="_ComputeBundleResourceOutputPaths"
 		Inputs = "@(_BundleResourceWithOutputPath)"
 		Outputs = "@(_BundleResourceWithOutputPath -> '%(OutputPath)')" >
-		<SmartCopy
+		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
-			SourceFiles = "@(_BundleResourceWithOutputPath)"
-			DestinationFiles = "@(_BundleResourceWithOutputPath -> '%(OutputPath)')"
+			CopyFromWindows="true"
+			ToolExe="$(DittoExe)"
+			ToolPath="$(DittoPath)"
+			Source="%(_BundleResourceWithOutputPath.Identity)"
+			Destination="%(_BundleResourceWithOutputPath.OutputPath)"
+			TouchDestinationFiles="true"
 		/>
 	</Target>
 
