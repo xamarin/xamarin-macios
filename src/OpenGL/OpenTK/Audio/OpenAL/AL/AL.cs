@@ -7,6 +7,9 @@
  * http://www.OpenTK.net */
 #endregion
 
+#nullable enable
+#pragma warning disable CS3021 // Type or member does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute
+
 #if OPENTK_DLL
 
 using System;
