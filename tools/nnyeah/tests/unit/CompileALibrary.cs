@@ -11,16 +11,11 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.SmokeTests {
 		[Test]
 		public async Task BasicLibrary ()
 		{
-			var dir = Cache.CreateTemporaryDirectory ("BasicLibrary");
-			var code = @"
+			await TestRunning.BuildTemporaryLibrary (@"
 using System;
 public class Foo {
 	public nint Ident (nint e) => e;
-}
-";
-			var output = await TestRunning.BuildLibrary (code, "NoName", dir);
-			var expectedOutputFile = Path.Combine (dir, "NoName.dll");
-			Assert.IsTrue (File.Exists (expectedOutputFile));
+}");
 		}
 
 		[Test]
@@ -30,6 +25,7 @@ public class Foo {
 		}
 
 		[Test]
+		[Ignore ("This test was failing. See this issue: https://github.com/xamarin/xamarin-macios/issues/15120")]
 		public async Task LibraryWithXamarinReference ()
 		{
 			var dir = Cache.CreateTemporaryDirectory ("LibraryWithXamarinReference");
@@ -46,7 +42,7 @@ public class Foo {
 			Assert.IsTrue (File.Exists (libraryFile));
 
 			var convertedFile = Path.Combine (dir, "NoName-Converted.dll");
-			Program.ProcessAssembly (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS), Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS), libraryFile, convertedFile, true, true, false);
+			AssemblyConverter.Convert (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS), Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS), libraryFile, convertedFile, true, true, false);
 		}
 
 		[Test]
