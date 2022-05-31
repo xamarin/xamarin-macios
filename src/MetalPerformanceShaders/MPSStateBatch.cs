@@ -35,7 +35,7 @@ namespace MetalPerformanceShaders {
 		public static nuint IncrementReadCount (NSArray<MPSState> stateBatch, nint amount)
 		{
 			if (stateBatch == null)
-				throw new ArgumentNullException (nameof (stateBatch));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
 
 			return MPSStateBatchIncrementReadCount (stateBatch.Handle, amount);
 		}
@@ -47,9 +47,9 @@ namespace MetalPerformanceShaders {
 		public static void Synchronize (NSArray<MPSState> stateBatch, IMTLCommandBuffer commandBuffer)
 		{
 			if (stateBatch == null)
-				throw new ArgumentNullException (nameof (stateBatch));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
 			if (commandBuffer == null)
-				throw new ArgumentNullException (nameof (commandBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (commandBuffer));
 
 			MPSStateBatchSynchronize (stateBatch.Handle, commandBuffer.Handle);
 		}
@@ -81,7 +81,7 @@ namespace MetalPerformanceShaders {
 		public static nuint GetResourceSize (NSArray<MPSState> stateBatch)
 		{
 			if (stateBatch is null)
-				throw new ArgumentNullException (nameof (stateBatch));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stateBatch));
 
 			return MPSStateBatchResourceSize (stateBatch.Handle);
 		}

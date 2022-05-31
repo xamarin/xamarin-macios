@@ -160,7 +160,7 @@ namespace MetalPerformanceShaders {
 			: base (NSObjectFlag.Empty)
 		{
 			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 
 			unsafe {
 				fixed (float* ptr = values)
@@ -270,7 +270,7 @@ namespace MetalPerformanceShaders {
 			: base (NSObjectFlag.Empty)
 		{
 			if (transform == null)
-				throw new ArgumentNullException (nameof (transform));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (transform));
 
 			unsafe {
 				fixed (float* ptr = transform)
@@ -290,7 +290,7 @@ namespace MetalPerformanceShaders {
 			: base (NSObjectFlag.Empty)
 		{
 			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
 				fixed (float* kernelWeightsptr = kernelWeights)
@@ -322,7 +322,7 @@ namespace MetalPerformanceShaders {
 			: base (NSObjectFlag.Empty)
 		{
 			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
 				fixed (float* kernelWeightsptr = kernelWeights)
@@ -350,7 +350,7 @@ namespace MetalPerformanceShaders {
 			: base (NSObjectFlag.Empty)
 		{
 			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
 				fixed (float* ptr = kernelWeights)
@@ -366,7 +366,7 @@ namespace MetalPerformanceShaders {
 			: base (NSObjectFlag.Empty)
 		{
 			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
 				fixed (float* ptr = kernelWeights)
@@ -380,7 +380,7 @@ namespace MetalPerformanceShaders {
 		public MPSImageLaplacianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
 		{
 			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
 
@@ -396,7 +396,7 @@ namespace MetalPerformanceShaders {
 		public MPSImageLaplacianPyramidSubtract (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
 		{
 			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
 
@@ -412,7 +412,7 @@ namespace MetalPerformanceShaders {
 		public MPSImageLaplacianPyramidAdd (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
 		{
 			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
 

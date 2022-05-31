@@ -35,7 +35,7 @@ namespace MetalPerformanceShaders {
 		public static nuint IncrementReadCount (NSArray<MPSImage> imageBatch, nint amount)
 		{
 			if (imageBatch == null)
-				throw new ArgumentNullException (nameof (imageBatch));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
 
 			return MPSImageBatchIncrementReadCount (imageBatch.Handle, amount);
 		}
@@ -47,9 +47,9 @@ namespace MetalPerformanceShaders {
 		public static void Synchronize (NSArray<MPSImage> imageBatch, IMTLCommandBuffer commandBuffer)
 		{
 			if (imageBatch == null)
-				throw new ArgumentNullException (nameof (imageBatch));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
 			if (commandBuffer == null)
-				throw new ArgumentNullException (nameof (commandBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (commandBuffer));
 
 			MPSImageBatchSynchronize (imageBatch.Handle, commandBuffer.Handle);
 		}
@@ -81,7 +81,7 @@ namespace MetalPerformanceShaders {
 		public static nuint GetResourceSize (NSArray<MPSImage> imageBatch)
 		{
 			if (imageBatch is null)
-				throw new ArgumentNullException (nameof (imageBatch));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
 
 			return MPSImageBatchResourceSize (imageBatch.Handle);
 		}
@@ -119,9 +119,9 @@ namespace MetalPerformanceShaders {
 		//public static nint Iterate (NSArray<MPSImage> imageBatch, MPSImageBatchIterator iterator)
 		//{
 		//	if (imageBatch == null)
-		//		throw new ArgumentNullException (nameof (imageBatch));
+		//		ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
 		//	if (iterator == null)
-		//		throw new ArgumentNullException (nameof (iterator));
+		//		ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (iterator));
 		//	unsafe {
 		//		BlockLiteral* block_ptr_iterator;
 		//		BlockLiteral block_iterator;
