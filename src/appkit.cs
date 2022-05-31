@@ -4896,23 +4896,18 @@ namespace AppKit {
 		void Add (NSObject object1);
 
 		[Export ("addItemsWithObjectValues:")]
-		[PostGet ("Values")]
 		void Add (NSObject [] items);
 
 		[Export ("insertItemWithObjectValue:atIndex:")]
-		[PostGet ("Values")]
 		void Insert (NSObject object1, nint index);
 
 		[Export ("removeItemWithObjectValue:")]
-		[PostGet ("Values")]
 		void Remove (NSObject object1);
 
 		[Export ("removeItemAtIndex:")]
-		[PostGet ("Values")]
 		void RemoveAt (nint index);
 
 		[Export ("removeAllItems")]
-		[PostGet ("Values")]
 		void RemoveAll ();
 
 		[Export ("selectItemWithObjectValue:")]
@@ -5020,23 +5015,18 @@ namespace AppKit {
 		void Add (NSObject object1);
 
 		[Export ("addItemsWithObjectValues:")]
-		[PostGet ("Values")]
 		void Add (NSObject [] items);
 
 		[Export ("insertItemWithObjectValue:atIndex:")]
-		[PostGet ("Values")]
 		void Insert (NSObject object1, nint index);
 
 		[Export ("removeItemWithObjectValue:")]
-		[PostGet ("Values")]
 		void Remove (NSObject object1);
 
 		[Export ("removeItemAtIndex:")]
-		[PostGet ("Values")]
 		void RemoveAt (nint index);
 
 		[Export ("removeAllItems")]
-		[PostGet ("Values")]
 		void RemoveAll ();
 
 		[Export ("selectItemWithObjectValue:")]
@@ -5920,11 +5910,9 @@ namespace AppKit {
 		void SetWindow ([NullAllowed] NSWindow window);
 
 		[Export ("addWindowController:")]
-		[PostGet ("WindowControllers")]
 		void AddWindowController (NSWindowController windowController);
 
 		[Export ("removeWindowController:")]
-		[PostGet ("WindowControllers")]
 		void RemoveWindowController (NSWindowController windowController);
 
 		[Export ("showWindows")]
@@ -6155,11 +6143,9 @@ namespace AppKit {
 		NSDocument DocumentForWindow (NSWindow window);
 
 		[Export ("addDocument:")]
-		[PostGet ("Documents")]
 		void AddDocument (NSDocument document);
 
 		[Export ("removeDocument:")]
-		[PostGet ("Documents")]
 		void RemoveDocument (NSDocument document);
 
 		[Export ("newDocument:")]
@@ -13213,11 +13199,9 @@ namespace AppKit {
 		nfloat RequiredThickness { get; }
 
 		[Export ("addMarker:")]
-		[PostGet ("Markers")]
 		void AddMarker (NSRulerMarker marker);
 
 		[Export ("removeMarker:")]
-		[PostGet ("Markers")]
 		void RemoveMarker (NSRulerMarker marker);
 
 		[Export ("trackMarker:withMouseEvent:")]
@@ -14944,16 +14928,16 @@ namespace AppKit {
 		[Export ("splitViewItems", ArgumentSemantic.Copy)]
 		NSSplitViewItem [] SplitViewItems { get; set; }
 
-		[Export ("addSplitViewItem:")][PostGet ("SplitViewItems")]
+		[Export ("addSplitViewItem:")]
 		void AddSplitViewItem (NSSplitViewItem splitViewItem);
 
-		[Export ("insertSplitViewItem:atIndex:")][PostGet ("SplitViewItems")]
+		[Export ("insertSplitViewItem:atIndex:")]
 		void InsertSplitViewItem (NSSplitViewItem splitViewItem, nint index);
 
-		[Export ("removeSplitViewItem:")][PostGet ("SplitViewItems")]
+		[Export ("removeSplitViewItem:")]
 		void RemoveSplitViewItem (NSSplitViewItem splitViewItem);
 
-		[Export ("splitViewItemForViewController:")][PostGet ("SplitViewItems")]
+		[Export ("splitViewItemForViewController:")]
 		NSSplitViewItem GetSplitViewItem (NSViewController viewController);
 
 		[Mac (10,11)]
@@ -15193,19 +15177,19 @@ namespace AppKit {
 		[Static, Export ("stackViewWithViews:")]
 		NSStackView FromViews (NSView [] views);
 
-		[Export ("addView:inGravity:")][PostGet ("Views")]
+		[Export ("addView:inGravity:")]
 		void AddView (NSView aView, NSStackViewGravity gravity);
 
-		[Export ("insertView:atIndex:inGravity:")][PostGet ("Views")]
+		[Export ("insertView:atIndex:inGravity:")]
 		void InsertView (NSView aView, nuint index, NSStackViewGravity gravity);
 
-		[Export ("removeView:")][PostGet ("Views")]
+		[Export ("removeView:")]
 		void RemoveView (NSView aView);
 
 		[Export ("viewsInGravity:")]
 		NSView [] ViewsInGravity (NSStackViewGravity gravity);
 
-		[Export ("setViews:inGravity:")][PostGet ("Views")] 
+		[Export ("setViews:inGravity:")]
 		void SetViews (NSView [] views, NSStackViewGravity gravity);
 
 		[Export ("setVisibilityPriority:forView:")]
@@ -15904,10 +15888,10 @@ namespace AppKit {
 		[Export ("viewDidUnhide")]
 		void ViewDidUnhide ();
 
-		[Export ("addSubview:")][PostGet ("Subviews")]
+		[Export ("addSubview:")]
 		void AddSubview (NSView aView);
 
-		[Export ("addSubview:positioned:relativeTo:")][PostGet ("Subviews")]
+		[Export ("addSubview:positioned:relativeTo:")]
 		void AddSubview (NSView aView, NSWindowOrderingMode place, [NullAllowed] NSView otherView);
 
 		[Export ("viewWillMoveToWindow:")]
@@ -15929,16 +15913,12 @@ namespace AppKit {
 		void WillRemoveSubview ([NullAllowed] NSView subview);
 
 		[Export ("removeFromSuperview")]
-		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperview ();
 
-		[Export ("replaceSubview:with:")][PostGet ("Subviews")]
+		[Export ("replaceSubview:with:")]
 		void ReplaceSubviewWith (NSView oldView, NSView newView);
 
 		[Export ("removeFromSuperviewWithoutNeedingDisplay")]
-		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperviewWithoutNeedingDisplay ();
 
 		[Export ("resizeSubviewsWithOldSize:")]
@@ -16398,16 +16378,16 @@ namespace AppKit {
 		[Export ("constraints")]
 		NSLayoutConstraint [] Constraints { get; }
 		
-		[Export ("addConstraint:")][PostGet ("Constraints")]
+		[Export ("addConstraint:")]
 		void AddConstraint (NSLayoutConstraint constraint);
 
-		[Export ("addConstraints:")][PostGet ("Constraints")]
+		[Export ("addConstraints:")]
 		void AddConstraints (NSLayoutConstraint [] constraints);
 
-		[Export ("removeConstraint:")][PostGet ("Constraints")]
+		[Export ("removeConstraint:")]
 		void RemoveConstraint (NSLayoutConstraint constraint);
 
-		[Export ("removeConstraints:")][PostGet ("Constraints")]
+		[Export ("removeConstraints:")]
 		void RemoveConstraints (NSLayoutConstraint [] constraints);
 
 		[Export ("layoutSubtreeIfNeeded")]
@@ -16639,11 +16619,11 @@ namespace AppKit {
 		NSGestureRecognizer [] GestureRecognizers { get; set; }
 
 		[Mac (10,10)]
-		[Export ("addGestureRecognizer:")][PostGet("GestureRecognizers")]
+		[Export ("addGestureRecognizer:")]
 		void AddGestureRecognizer (NSGestureRecognizer gestureRecognizer);
 
 		[Mac (10,10)]
-		[Export ("removeGestureRecognizer:")][PostGet("GestureRecognizers")]
+		[Export ("removeGestureRecognizer:")]
 		void RemoveGestureRecognizer (NSGestureRecognizer gestureRecognizer);
 
 		[Export ("prepareForReuse")]
@@ -16966,7 +16946,7 @@ namespace AppKit {
 		NSViewController [] ChildViewControllers { get; set; }
 
 		[Mac (10,10)]
-		[Export ("addChildViewController:")][PostGet("ChildViewControllers")]
+		[Export ("addChildViewController:")]
 		void AddChildViewController (NSViewController childViewController);
 
 		[Mac (10,10)]
@@ -16974,11 +16954,11 @@ namespace AppKit {
 		void RemoveFromParentViewController ();
 
 		[Mac (10,10)]
-		[Export ("insertChildViewController:atIndex:")][PostGet("ChildViewControllers")]
+		[Export ("insertChildViewController:atIndex:")]
 		void InsertChildViewController (NSViewController childViewController, nint index);
 
 		[Mac (10,10)]
-		[Export ("removeChildViewControllerAtIndex:")][PostGet("ChildViewControllers")]
+		[Export ("removeChildViewControllerAtIndex:")]
 		void RemoveChildViewController (nint index);
 
 		[Mac (10,10)]
@@ -18095,13 +18075,13 @@ namespace AppKit {
 		[Export ("controlSize")]
 		NSControlSize ControlSize { get; set; }
 
-		[Export ("addTabViewItem:")][PostGet ("Items")]
+		[Export ("addTabViewItem:")]
 		void Add (NSTabViewItem tabViewItem);
 
-		[Export ("insertTabViewItem:atIndex:")][PostGet ("Items")]
+		[Export ("insertTabViewItem:atIndex:")]
 		void Insert (NSTabViewItem tabViewItem, nint index);
 
-		[Export ("removeTabViewItem:")][PostGet ("Items")]
+		[Export ("removeTabViewItem:")]
 		void Remove (NSTabViewItem tabViewItem);
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
@@ -18170,13 +18150,13 @@ namespace AppKit {
 		[Export ("selectedTabViewItemIndex")]
 		nint SelectedTabViewItemIndex { get; set; }
 
-		[Export ("addTabViewItem:")][PostGet("TabViewItems")]
+		[Export ("addTabViewItem:")]
 		void AddTabViewItem (NSTabViewItem tabViewItem);
 
-		[Export ("insertTabViewItem:atIndex:")][PostGet("TabViewItems")]
+		[Export ("insertTabViewItem:atIndex:")]
 		void InsertTabViewItem (NSTabViewItem tabViewItem, nint index);
 
-		[Export ("removeTabViewItem:")][PostGet("TabViewItems")]
+		[Export ("removeTabViewItem:")]
 		void RemoveTabViewItem (NSTabViewItem tabViewItem);
 
 		[Export ("tabViewItemForViewController:")]
@@ -21303,10 +21283,10 @@ namespace AppKit {
 		[Export ("standardWindowButton:")]
 		NSButton StandardWindowButton (NSWindowButton b);
 	
-		[Export ("addChildWindow:ordered:")][PostGet ("ChildWindows")]
+		[Export ("addChildWindow:ordered:")]
 		void AddChildWindow (NSWindow  childWin, NSWindowOrderingMode place);
 	
-		[Export ("removeChildWindow:")][PostGet ("ChildWindows")]
+		[Export ("removeChildWindow:")]
 		void RemoveChildWindow (NSWindow  childWin);
 	
 		[Export ("childWindows")]
