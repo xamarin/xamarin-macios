@@ -94,5 +94,8 @@
 	<data name="E0015" xml:space="preserve">
 		<value>Support legacy and NET assemblies --xamarin-assembly and --microsoft-assembly are currently required options.</value>
 	</data>
+	<data name="E0016" xml:space="preserve">
+		<value>Error while processing constructor on type {0} in the old assembly. Constructors that do non-trivial work are not supported.</value>
+	</data>
 </root>
 
