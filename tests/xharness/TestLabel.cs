@@ -42,7 +42,7 @@ namespace Xharness {
 		Fsharp = 1 << 10,
 		[Label("framework")]
 		Framework = 1 << 11,
-		[Label ("geneator")]
+		[Label ("generator")]
 		Generator = 1 << 12,
 		[Label ("interdependent-binding-projects")]
 		InterdependentBindingProjects = 1 << 13,

@@ -100,7 +100,7 @@ parameters:
     'dotnettests',
     'fsharp',
     'framework',
-    'geneator',
+    'generator',
     'interdependent-binding-projects',
     'install-source',
     'introspection',
