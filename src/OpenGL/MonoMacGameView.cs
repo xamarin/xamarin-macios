@@ -330,7 +330,6 @@ namespace OpenTK.Platform.MacOS
 				AssertValid ();
 				if (size != value) {
 					size = value;
-
 					// This method will be called on the main thread when resizing, but we may be drawing on a secondary thread through the display link
 					// Add a mutex around to avoid the threads accessing the context simultaneously
 					OpenGLContext.CGLContext.Lock ();

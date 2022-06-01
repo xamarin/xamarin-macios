@@ -750,7 +750,7 @@ namespace OpenTK
         public Quaterniond(double[] doubleArray)
         {
             if (doubleArray is null || doubleArray.GetLength(0) < 4)
-                throw new MissingFieldException();
+                throw new MissingFieldException ();
 
             this.W = doubleArray[0];
             this.X = doubleArray[1];

@@ -278,7 +278,7 @@ namespace OpenTK
         public Matrix3d(double[] doubleArray)
         {
             if (doubleArray is null || doubleArray.GetLength(0) < 9)
-                throw new MissingFieldException();
+                throw new MissingFieldException ();
 
             this.R0C0 = doubleArray[0];
             this.R0C1 = doubleArray[1];

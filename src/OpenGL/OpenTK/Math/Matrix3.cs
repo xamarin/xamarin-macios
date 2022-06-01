@@ -277,7 +277,7 @@ namespace OpenTK
         public Matrix3(float[] floatArray)
         {
             if (floatArray is null || floatArray.GetLength(0) < 9)
-                throw new MissingFieldException();
+                throw new MissingFieldException ();
 
             this.R0C0 = floatArray[0];
             this.R0C1 = floatArray[1];
