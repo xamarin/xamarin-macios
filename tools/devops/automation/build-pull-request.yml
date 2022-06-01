@@ -178,6 +178,8 @@ resources:
 
 variables:
 - template: templates/variables.yml
+- name: MicrobuildConnector
+  value: ''
 
 trigger: none
 
