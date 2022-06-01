@@ -1271,7 +1271,7 @@
 	<Target Name="_ComputeDefaultLinkMode" DependsOnTargets="_DetectSdkLocations">
 		<PropertyGroup Condition="'$(TrimMode)' != ''">
 			<!-- If TrimMode is set, then that's the default link mode -->
-			<_DefaultLinkMode>TrimMode</_DefaultLinkMode>
+			<_DefaultLinkMode>$(TrimMode)</_DefaultLinkMode>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(TrimMode)' == ''">
 			<_DefaultLinkMode Condition="'$(_PlatformName)' == 'macOS'">None</_DefaultLinkMode> <!-- Linking is off by default for macOS apps -->
