@@ -91,10 +91,6 @@ parameters:
   default: [
     'bcl',
     'bgen',
-    'binding',
-    'bindings-framework',
-    'bindings-xcframework',
-    'btouch',
     'cecil',
     'docs',
     'dotnettests',
