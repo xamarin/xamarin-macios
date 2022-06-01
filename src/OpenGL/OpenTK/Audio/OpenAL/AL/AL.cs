@@ -502,7 +502,7 @@ namespace OpenTK.Audio.OpenAL
         [CLSCompliant(false)]
         public static void DeleteSources(uint[] sources)
         {
-            if (sources == null)
+            if (sources is null)
                 ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sources));
             if (sources.Length == 0) throw new ArgumentOutOfRangeException();
             DeleteBuffers(sources.Length, ref sources[0]);
@@ -512,7 +512,7 @@ namespace OpenTK.Audio.OpenAL
         /// <param name="sources">An array of source names identifying the sources to be deleted.</param>
         public static void DeleteSources(int[] sources)
         {
-            if (sources == null)
+            if (sources is null)
                 ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sources));
             if (sources.Length == 0) throw new ArgumentOutOfRangeException();
             DeleteBuffers(sources.Length, ref sources[0]);
@@ -1394,7 +1394,7 @@ namespace OpenTK.Audio.OpenAL
         [CLSCompliant(false)]
         public static void DeleteBuffers(uint[] buffers)
         {
-            if (buffers == null)
+            if (buffers is null)
                 ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffers));
             if (buffers.Length == 0) throw new ArgumentOutOfRangeException();
             DeleteBuffers(buffers.Length, ref buffers[0]);
@@ -1404,7 +1404,7 @@ namespace OpenTK.Audio.OpenAL
         /// <param name="buffers">Pointer to an array of buffer names identifying the buffers to be deleted.</param>
         public static void DeleteBuffers(int[] buffers)
         {
-            if (buffers == null)
+            if (buffers is null)
                 ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffers));
             if (buffers.Length == 0) throw new ArgumentOutOfRangeException();
             DeleteBuffers(buffers.Length, ref buffers[0]);

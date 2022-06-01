@@ -142,8 +142,8 @@ namespace OpenTK.Audio
             StructLayoutAttribute[] attr = (StructLayoutAttribute[])
                 type.GetCustomAttributes(typeof(StructLayoutAttribute), true);
 
-            if ((attr == null) ||
-                (attr != null && attr.Length > 0 && attr[0].Value != LayoutKind.Explicit && attr[0].Pack != 1))
+            if ((attr is null) ||
+                (attr is not null && attr.Length > 0 && attr[0].Value != LayoutKind.Explicit && attr[0].Pack != 1))
                 return false;
 
             return true;

@@ -145,9 +145,9 @@ namespace OpenTK.Platform.MacOS
 		NSViewController? GetViewController ()
 		{
 			NSResponder? r = this;
-			while (r != null) {
+			while (r is not null) {
 				var c = r as NSViewController;
-				if (c != null)
+				if (c is not null)
 					return c;
 				r = r.NextResponder;
 			}
@@ -168,7 +168,7 @@ namespace OpenTK.Platform.MacOS
 		{
 			if (!animating) {
 				if (displayLinkSupported) {
-					if (displayLink != null && !displayLink.IsRunning)
+					if (displayLink is not null && !displayLink.IsRunning)
 						displayLink.Start ();
 				} else {
 					// Can't use TimeSpan.FromSeconds() as that only has 1ms
@@ -201,7 +201,7 @@ namespace OpenTK.Platform.MacOS
 		{
 			if (animating) {
 				if (displayLinkSupported) {
-					if (displayLink != null && displayLink.IsRunning)
+					if (displayLink is not null && displayLink.IsRunning)
 						displayLink.Stop ();
 
 				} else if (animationTimer is not null) {
@@ -230,14 +230,14 @@ namespace OpenTK.Platform.MacOS
 		public virtual string Title {
 			get {
 				AssertValid ();
-				if (Window != null)
+				if (Window is not null)
 					return Window.Title;
 				else
 					throw new NotSupportedException();
 			}
 			set {
 				AssertValid ();
-				if (Window != null)
+				if (Window is not null)
 					Window.Title = value;
 				else
 					throw new NotSupportedException();
@@ -247,7 +247,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnTitleChanged (EventArgs e)
 		{
 			var h = TitleChanged;
-			if (h != null)
+			if (h is not null)
 				h (this, EventArgs.Empty);
 		}
 
@@ -272,7 +272,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnVisibleChanged (EventArgs e)
 		{
 			var h = VisibleChanged;
-			if (h != null)
+			if (h is not null)
 				h (this, EventArgs.Empty);
 		}
 
@@ -297,7 +297,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnWindowStateChanged (EventArgs e)
 		{
 			var h = WindowStateChanged;
-			if (h != null)
+			if (h is not null)
 				h (this, EventArgs.Empty);
 		}
 
@@ -347,7 +347,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnResize (EventArgs e)
 		{
 			var h = Resize;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
@@ -390,7 +390,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnClosed (EventArgs e)
 		{
 			var h = Closed;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
@@ -411,7 +411,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnDisposed (EventArgs e)
 		{
 			var h = Disposed;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
@@ -534,7 +534,7 @@ namespace OpenTK.Platform.MacOS
 
 		private void SetupDisplayLink ()
 		{
-			if (displayLink != null)
+			if (displayLink is not null)
 				return;
 
 			// Create a display link capable of being used with all active displays
@@ -570,7 +570,7 @@ namespace OpenTK.Platform.MacOS
 		protected virtual void OnLoad (EventArgs e)
 		{
 			var h = Load;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
@@ -578,21 +578,21 @@ namespace OpenTK.Platform.MacOS
 		{
 			var h = Unload;
 			Stop ();
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
 		protected virtual void OnUpdateFrame (FrameEventArgs e)
 		{
 			var h = UpdateFrame;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 
 		protected virtual void OnRenderFrame (FrameEventArgs e)
 		{
 			var h = RenderFrame;
-			if (h != null)
+			if (h is not null)
 				h (this, e);
 		}
 

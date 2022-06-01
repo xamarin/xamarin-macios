@@ -749,7 +749,8 @@ namespace OpenTK
         /// <param name="doubleArray">The array of doubles for the components of the Quaterniond.</param>
         public Quaterniond(double[] doubleArray)
         {
-            if (doubleArray == null || doubleArray.GetLength(0) < 4) throw new MissingFieldException();
+            if (doubleArray is null || doubleArray.GetLength(0) < 4)
+                throw new MissingFieldException();
 
             this.W = doubleArray[0];
             this.X = doubleArray[1];
