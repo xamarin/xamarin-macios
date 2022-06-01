@@ -30,7 +30,7 @@ steps:
 - checkout: release-scripts
   clean: true
 
-- ${{ if eq(parameters.skipESRP, true) }}: # do not install if not needd.
+- ${{ if eq(parameters.skipESRP, false) }}: # do not install if not needd.
   # the ddsign plugin needs this version or it will crash and will make the sign step fail
   - task: UseDotNet@2
     inputs:

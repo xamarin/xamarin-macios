@@ -179,6 +179,8 @@ resources:
 variables:
 - template: templates/variables.yml
 
+trigger: none
+
 pr:
   autoCancel: true
   branches:
