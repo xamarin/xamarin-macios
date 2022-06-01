@@ -1723,6 +1723,9 @@ namespace CarPlay {
 		[Export ("initWithImage:handler:")]
 		NativeHandle Constructor (UIImage image, [NullAllowed] Action<CPNowPlayingButton> handler);
 
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+
 		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
 		UIImage Image { get; }
 	}
@@ -1926,23 +1929,38 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingShuffleButton {}
+	interface CPNowPlayingShuffleButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingAddToLibraryButton {}
+	interface CPNowPlayingAddToLibraryButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingMoreButton {}
+	interface CPNowPlayingMoreButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingPlaybackRateButton {}
+	interface CPNowPlayingPlaybackRateButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingRepeatButton {}
+	interface CPNowPlayingRepeatButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	interface ICPListTemplateItem { }
 
