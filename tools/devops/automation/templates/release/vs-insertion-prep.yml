@@ -48,7 +48,7 @@ stages:
           *.nupkg
 
     - task: NuGetCommand@2
-      displayName: Publish Nugets to dotnet6
+      displayName: Publish Nugets to dotnet7
       inputs:
         command: push
         packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
@@ -63,7 +63,7 @@ stages:
           *.nupkg
 
     - task: NuGetCommand@2
-      displayName: Publish Nugets to dotnet6
+      displayName: Publish VS MSI Nugets to dotnet7
       inputs:
         command: push
         packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
