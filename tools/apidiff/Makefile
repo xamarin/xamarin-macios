@@ -17,6 +17,9 @@ ifeq ($(OUTPUT_DIR),)
 OUTPUT_DIR=output
 endif
 
+ifndef SKIP_IOS_VS_MACCATALYST
+INCLUDE_IOS_VS_MACCATALYST=1
+endif
 
 MONO_API_INFO = $(API_TOOLS_PATH)/mono-api-info/bin/Debug/net6.0/mono-api-info.dll
 MONO_API_HTML = $(API_TOOLS_PATH)/mono-api-html/bin/Debug/net6.0/mono-api-html.dll
@@ -186,7 +189,9 @@ API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/tvos-api-diff.html
 endif
 ifdef INCLUDE_MACCATALYST
 ifdef ENABLE_DOTNET
+ifdef INCLUDE_IOS_VS_MACCATALYST
 API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html
+endif
 endif
 endif
 endif # INCLUDE_IOS
@@ -231,7 +236,9 @@ endif
 	@# .NET: Microsoft.iOS vs Microsoft.MacCatalyst
 ifdef INCLUDE_IOS
 ifdef INCLUDE_MACCATALYST
+ifdef INCLUDE_IOS_VS_MACCATALYST
 	$(Q) echo "<li>Microsoft.iOS vs Microsoft.MacCatalyst: <a href='diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html'>html</a> <a href='diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.md'>markdown</a></li>" >> $@
+endif
 endif
 endif
 	$(Q) echo "</ul>" >> $@
