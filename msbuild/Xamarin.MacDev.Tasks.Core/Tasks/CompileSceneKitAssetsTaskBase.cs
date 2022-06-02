@@ -195,6 +195,14 @@ namespace Xamarin.MacDev.Tasks
 					// .. and remove the @OriginalItemSpec which is for @asset
 					scnassetsItem.RemoveMetadata ("OriginalItemSpec");
 
+					// The Link metadata is for the asset, but 'scnassetsItem' is the containing *.scnasset directory,
+					// so we need to update the Link metadata accordingly (if it exists).
+					var link = scnassetsItem.GetMetadata ("Link");
+					if (!string.IsNullOrEmpty (link)) {
+						link = link.Substring (0, link.Length - (asset.ItemSpec.Length - scnassets.Length));
+						scnassetsItem.SetMetadata ("Link", link);
+					}
+
 					var assetMetadata = asset.GetMetadata ("DefiningProjectFullPath");
 					if (assetMetadata != scnassetsItem.GetMetadata ("DefiningProjectFullPath")) {
 						// xbuild doesn't set this, so we'll do it
