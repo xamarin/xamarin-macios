@@ -7,6 +7,8 @@
 // Copyright 2018-2019 Microsoft Corporation
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
