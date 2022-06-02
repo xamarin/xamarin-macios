@@ -238,8 +238,10 @@ steps:
     make -C tests ${{ parameters.makeTarget }} || RC=$?
     if [ $RC -eq 0 ]; then
       echo "##vso[task.setvariable variable=TESTS_JOBSTATUS_$TEST_PREFIX;isOutput=true]Succeeded"
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS_$TEST_PREFIX]Succeeded"
     else
       echo "##vso[task.setvariable variable=TESTS_JOBSTATUS_$TEST_PREFIX;isOutput=true]Failed"
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS_$TEST_PREFIX]Failed"
     fi
   env:
     TEST_PREFIX: ${{ upper(parameters.testPrefix) }}
@@ -259,8 +261,9 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
+    $status = Get-ChildItem -Path "Env:TESTS_JOBSTATUS_${{ upper(parameters.testPrefix) }}"
     $testResultsPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
-    $testResult = New-TestResults -Path $testResultsPath -Status "$(runTests.TESTS_JOBSTATUS)" -Context "${{ parameters.statusContext }}"
+    $testResult = New-TestResults -Path $testResultsPath -Status "$($status.Value)" -Context "${{ parameters.statusContext }}"
 
     $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
     $statuses.SetStatus($testResult.GetStatus())
