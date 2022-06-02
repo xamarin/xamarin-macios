@@ -5486,6 +5486,7 @@ namespace MetalPerformanceShaders {
 		void ReloadFromDataSources ();
 
 		[Export ("encodeToCommandBuffer:sourceImages:sourceStates:intermediateImages:destinationStates:")]
+		[return: NullAllowed]
 		MPSImage EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage[] sourceImages, [NullAllowed] MPSState[] sourceStates, [NullAllowed] NSMutableArray<MPSImage> intermediateImages, [NullAllowed] NSMutableArray<MPSState> destinationStates);
 
 		[TV (11,3), Mac (10,13,4), iOS (11,3)]
@@ -5494,6 +5495,7 @@ namespace MetalPerformanceShaders {
 		NSArray<MPSImage> EncodeBatch (IMTLCommandBuffer commandBuffer, NSArray<MPSImage> [] sourceImages, [NullAllowed] NSArray<MPSState>[] sourceStates, [NullAllowed] NSMutableArray<NSArray<MPSImage>> intermediateImages, [NullAllowed] NSMutableArray<NSArray<MPSState>> destinationStates);
 
 		[Export ("encodeToCommandBuffer:sourceImages:")]
+		[return: NullAllowed]
 		MPSImage EncodeToCommandBuffer (IMTLCommandBuffer commandBuffer, MPSImage[] sourceImages);
 
 		[Export ("encodeBatchToCommandBuffer:sourceImages:sourceStates:")]
