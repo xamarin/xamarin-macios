@@ -191,6 +191,7 @@ pr:
     - d16-*
     - xcode*
     - release/*
+    - net*
   paths:
     exclude:
     - .github
