@@ -933,7 +933,6 @@ xamarin_open_assembly (const char *name)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	char path [1024];
-	MonoAssembly *assembly;
 	bool exists = false;
 
 #if MONOMAC
@@ -948,7 +947,7 @@ xamarin_open_assembly (const char *name)
 		// Check if we already have the assembly in memory
 		xamarin_get_assembly_name_without_extension (name, path, sizeof (path));
 		MonoAssemblyName *aname = mono_assembly_name_new (path);
-		assembly = mono_assembly_loaded (aname);
+		MonoAssembly *assembly = mono_assembly_loaded (aname);
 		mono_assembly_name_free (aname);
 		if (assembly)
 			return assembly;
