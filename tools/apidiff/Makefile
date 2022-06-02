@@ -190,6 +190,9 @@ API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_ASSEMBLIES),$(OUTPUT_DIR)/d
 API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_LEGACY_ASSEMBLIES),$(OUTPUT_DIR)/diff/dotnet/legacy-diff/$(assembly).html)
 endif
 
+$(OUTPUT_DIR)/index.html: $(OUTPUT_DIR)/api-diff.html
+	$(Q) $(CP) $< $@
+
 define ApiDiffReport
 	if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)-api-diff.html >/dev/null 2>&1; then  \
 		echo "<h2><a href='dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)-api-diff.html'>Microsoft.$(1) (.NET) API diff</a></h2>" >> $(2); \
@@ -253,7 +256,7 @@ endif
 # easy-to-type helper targets.
 # one rule to create all the api diffs
 
-all-local:: $(OUTPUT_DIR)/api-diff.html all-markdowns
+all-local:: $(OUTPUT_DIR)/index.html $(OUTPUT_DIR)/api-diff.md all-markdowns
 
 # Rules to re-create the reference infos from the current stable 'bundle.zip' assemblies
 
