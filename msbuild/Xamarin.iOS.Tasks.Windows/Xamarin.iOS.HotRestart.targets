@@ -195,7 +195,7 @@
 			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			Entitlements="$(_HotRestartEntitlementsFile)"
-			CompiledEntitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			CompiledEntitlements="$(HotRestartAppBundlePath)\Entitlements.plist"
 			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfileId)"
 			SdkIsSimulator="False"

@@ -270,7 +270,7 @@ namespace CoreGraphics {
 		public void SetUrl (NSUrl url, CGRect region)
 		{
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			CGPDFContextSetURLForRect (Handle, url.Handle, region);
 		}
 
@@ -280,7 +280,7 @@ namespace CoreGraphics {
 		public void AddDestination (string name, CGPoint point)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			var nameHandle = CFString.CreateNative (name);
 			try {
@@ -296,7 +296,7 @@ namespace CoreGraphics {
 		public void SetDestination (string name, CGRect rect)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			var nameHandle = CFString.CreateNative (name);
 			try {

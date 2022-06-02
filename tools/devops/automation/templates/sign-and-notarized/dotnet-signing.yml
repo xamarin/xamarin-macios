@@ -84,7 +84,7 @@ steps:
     ConvertTo-Json -InputObject $SignFileList -Depth 100 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/bundle.json -Force
     dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/bundle.json
     # rezip and move back
-    ditto -c -k --sequesterRsrc --keepParent $bundlePath bundle.zip
+    ditto -c -k --sequesterRsrc $bundlePath bundle.zip
     mv bundle.zip $(Build.SourcesDirectory)/package/bundle.zip
   displayName: 'Sign bundle.zip'
   workingDirectory: $(Build.ArtifactStagingDirectory)

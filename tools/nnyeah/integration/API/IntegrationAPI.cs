@@ -1,4 +1,5 @@
 ﻿using System;
+using Foundation;
 
 namespace IntegrationAPI
 {
@@ -43,6 +44,15 @@ namespace IntegrationAPI
 	public bool Less (nint a, nint b) => a < b;
 	public bool Greater (nint a, nint b) => a > b;
 	public bool Eq (nint a, nint b) => a == b;
+	public nint And (nint a, nint b) => a & b;
+	public nint Or (nint a, nint b) => a | b;
+	public nint Xor (nint a, nint b) => a ^ b;
+	public nint ToNint (sbyte a) => a;
+	public nint ToNint (byte a) => a;
+	public nint ToNint (short a) => a;
+	public nint ToNint (char a) => a;
+	public nint ToNint (int a) => a;
+	public nint PlusOne (nint a) => a++;
     }
 
     public class NUIntAPI
@@ -64,6 +74,14 @@ namespace IntegrationAPI
 	public bool Less (nuint a, nuint b) => a < b;
 	public bool Greater (nuint a, nuint b) => a > b;
 	public bool Eq (nuint a, nuint b) => a == b;
+	public nuint And (nuint a, nuint b) => a & b;
+	public nuint Or (nuint a, nuint b) => a | b;
+	public nuint Xor (nuint a, nuint b) => a ^ b;
+	public nuint ToNuint (byte a) => a;
+	public nuint ToNuint (ushort a) => a;
+	public nuint ToNuint (char a) => a;
+	public nuint ToNuint (uint a) => a;
+	public nuint PlusOne (nuint a) => a++;
     }
 
     public class NFloatAPI
@@ -84,5 +102,25 @@ namespace IntegrationAPI
 	public bool Less (nfloat a, nfloat b) => a < b;
 	public bool Greater (nfloat a, nfloat b) => a > b;
 	public bool Eq (nfloat a, nfloat b) => a == b;
+	public nfloat ToNFloat (sbyte a) => a;
+	public nfloat ToNFloat (byte a) => a;
+	public nfloat ToNFloat (char a) => a;
+	public nfloat ToNFloat (short a) => a;
+	public nfloat ToNFloat (ushort a) => a;
+	public nfloat ToNFloat (int a) => a;
+	public nfloat ToNFloat (uint a) => a;
+	public nfloat ToNFloat (long a) => a;
+	public nfloat ToNFloat (ulong a) => a;
+	public nfloat ToNFloat (float a) => a;
+    }
+
+    public class NSObjectDerived : NSObject {
+        public NSObjectDerived (IntPtr p) : base (p) { }
+        public NSObjectDerived (IntPtr p, bool b) : base (p, b) { }
+
+    }
+    public class NSObjectDerivedSubclass : NSObjectDerived {
+        public NSObjectDerivedSubclass (IntPtr p) : base (p) { }
+        public NSObjectDerivedSubclass (IntPtr p, bool b) : base (p, b) { }
     }
 }

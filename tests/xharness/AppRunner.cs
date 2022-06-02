@@ -324,12 +324,10 @@ namespace Xharness {
 				if (!await FindSimulatorAsync ())
 					return 1;
 
-				if (runMode != RunMode.WatchOS) {
-					var stdout_log = Logs.CreateFile ($"stdout-{Harness.Helpers.Timestamp}.log", "Standard output");
-					var stderr_log = Logs.CreateFile ($"stderr-{Harness.Helpers.Timestamp}.log", "Standard error");
-					args.Add (new SetStdoutArgument (stdout_log));
-					args.Add (new SetStderrArgument (stderr_log));
-				}
+				var stdout_log = Logs.CreateFile ($"stdout-{Harness.Helpers.Timestamp}.log", "Standard output");
+				var stderr_log = Logs.CreateFile ($"stderr-{Harness.Helpers.Timestamp}.log", "Standard error");
+				args.Add (new SetStdoutArgument (stdout_log));
+				args.Add (new SetStderrArgument (stderr_log));
 
 				var simulators = new [] { simulator, companionSimulator }.Where (s => s != null);
 				var systemLogs = new List<ICaptureLog> ();
