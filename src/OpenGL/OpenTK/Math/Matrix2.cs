@@ -206,7 +206,7 @@ namespace OpenTK
         /// <param name="floatArray">The array of floats for the components of the matrix.</param>
         public Matrix2(float[] floatArray)
         {
-            if (floatArray is null || floatArray.GetLength(0) < 9)
+            if (floatArray is null || floatArray.GetLength (0) < 9)
                 throw new MissingFieldException ();
 
             this.R0C0 = floatArray[0];

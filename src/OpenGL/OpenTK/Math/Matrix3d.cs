@@ -277,7 +277,7 @@ namespace OpenTK
         /// <param name="doubleArray">The array of doubles for the components of the matrix.</param>
         public Matrix3d(double[] doubleArray)
         {
-            if (doubleArray is null || doubleArray.GetLength(0) < 9)
+            if (doubleArray is null || doubleArray.GetLength (0) < 9)
                 throw new MissingFieldException ();
 
             this.R0C0 = doubleArray[0];

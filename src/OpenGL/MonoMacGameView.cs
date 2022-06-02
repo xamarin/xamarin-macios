@@ -110,7 +110,7 @@ namespace OpenTK.Platform.MacOS
 			if (animating) {
 				if (displayLinkSupported) {
 					// Render Scene only if the display link is running
-					if (displayLink is not null && displayLink.IsRunning)
+					if (displayLink?.IsRunning == true)
 						RenderScene ();
 				} else {
 					RenderScene ();
@@ -126,7 +126,7 @@ namespace OpenTK.Platform.MacOS
 				OpenGLContext.View = this;
 		}
 
-		public NSOpenGLContext? OpenGLContext {
+		public NSOpenGLContext OpenGLContext {
 			get {
 				if (openGLContext is null)
 					throw new InvalidOperationException ("Operation requires an OpenGLContext, which hasn't been created yet.");
@@ -134,7 +134,7 @@ namespace OpenTK.Platform.MacOS
 			}
 		}
 
-		public NSOpenGLPixelFormat? PixelFormat {
+		public NSOpenGLPixelFormat PixelFormat {
 			get {
 				if (pixelFormat is null)
 					throw new InvalidOperationException ("Operation requires a PixelFormat that cannot be null.");
