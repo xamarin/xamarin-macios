@@ -101,7 +101,7 @@ mkdir -p "$OUTPUT_DIR"
 # Only show git colors locally. The normal "has-controlling-terminal" doesn't work, because
 # we always capture the output to indent it (thus the git processes never have a controlling
 # terminal)
-if test -z "$BUILD_REVISION"; then
+if test -z "${BUILD_REVISION:-}"; then
 	GIT_COLOR=--color=always
 	GIT_COLOR_P=(-c "color.status=always")
 else
