@@ -125,7 +125,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			// These must be called last as they depend on Module and NativeIntegerAttributeTypeRef to be setup
 			var intPtrCtor = modules.XamarinModule.Types.First (t => t.FullName == "Foundation.NSObject").Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr)");
 			var intPtrCtorWithBool = modules.XamarinModule.Types.First (t => t.FullName == "Foundation.NSObject").Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr,System.Boolean)");
-			ConstructorTransforms = new ConstructorTransforms (ModuleToEdit.ImportReference (NewNativeHandleTypeDefinition), intPtrCtor, intPtrCtorWithBool);
+			ConstructorTransforms = new ConstructorTransforms (ModuleToEdit.ImportReference (NewNativeHandleTypeDefinition), intPtrCtor, intPtrCtorWithBool, WarningIssued, Transformed);
 			ConstructorTransforms.AddTransforms (ModuleMap);
 
 			MethodSubs = LoadMethodSubs ();
