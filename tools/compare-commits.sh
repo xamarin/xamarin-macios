@@ -9,8 +9,7 @@ BLUE=$(tput setaf 6 2>/dev/null || true)
 RED=$(tput setaf 9 2>/dev/null || true)
 CLEAR=$(tput sgr0 2>/dev/null || true)
 
-# Clone files on High Sierra, instead of copying them. Much faster.
-
+# Clone files on AFPS, instead of copying them. Much faster.
 CP="cp"
 if df -t apfs / >/dev/null 2>&1; then
 	CP="cp -c"
@@ -94,7 +93,7 @@ ROOT_DIR=$(git rev-parse --show-toplevel)
 cd "$ROOT_DIR"
 ROOT_DIR=$(pwd)
 
-# Only show colors locally. The normal "has-controlling-terminal" doesn't work, because
+# Only show git colors locally. The normal "has-controlling-terminal" doesn't work, because
 # we always capture the output to indent it (thus the git processes never have a controlling
 # terminal)
 if test -z "$BUILD_REVISION"; then
