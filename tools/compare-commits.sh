@@ -98,12 +98,15 @@ ROOT_DIR=$(pwd)
 # terminal)
 if test -z "$BUILD_REVISION"; then
 	GIT_COLOR=--color=always
-	GIT_COLOR_P="-c color.status=always"
+	GIT_COLOR_P=(-c "color.status=always")
+else
+	GIT_COLOR=
+	GIT_COLOR_P=()
 fi
 
 if [ -n "$(git status --porcelain --ignore-submodule)" ]; then
 	report_error_line "${RED}** Error: Working directory isn't clean:${CLEAR}"
-	git $GIT_COLOR_P status --ignore-submodule | sed 's/^/    /' | while read line; do report_error_line "$line"; done
+	git "${GIT_COLOR_P[@]}" status --ignore-submodule | sed 's/^/    /' | while read line; do report_error_line "$line"; done
 	exit 1
 fi
 
