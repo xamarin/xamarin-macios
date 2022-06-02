@@ -219,6 +219,15 @@ endef
 
 $(OUTPUT_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
 	$(QF_GEN) echo "<h1>API diffs</h1>" > $@
+
+ifdef INCLUDE_XAMARIN_LEGACY
+	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/*-api-diff.html),! test -s "$(html)" &&) true; then \
+		echo "<h2>Legacy Xamarin (empty diffs)</h2>" >> "$@"; \
+	elif grep BreakingChangesDetected "$(OUTPUT_DIR)"/*-api-diff.html &> /dev/null; then \
+		echo "<h2>Legacy Xamarin ($(HTML_BREAKING_CHANGES_MESSAGE))</h2>" >> "$@"; \
+	else \
+		echo "<h2>Legacy Xamarin ($(HTML_NO_BREAKING_CHANGES_MESSAGE))</h2>" >> "$@"; \
+	fi
 	$(Q) echo "<ul>" >> $@
 ifdef INCLUDE_IOS
 	$(Q) ./report-status.sh "iOS" "$(OUTPUT_DIR)" html "ios-api-diff.html" "ios-api-diff.md" "$@"
@@ -233,6 +242,7 @@ ifdef INCLUDE_MAC
 	$(Q) ./report-status.sh "macOS" "$(OUTPUT_DIR)" html "mac-api-diff.html" "mac-api-diff.md" "$@"
 endif
 	$(Q) echo "</ul>" >> $@
+endif # INCLUDE_XAMARIN_LEGACY
 	$(Q) echo "<ul>" >> $@
 
 	@# New .NET vs Stable .NET
