@@ -25,8 +25,10 @@ For support requests use https://www.xamarin.com/support
 
 <details>
 <summary>Version information</summary>
+
 ```
 ```
+
 </details>
 
 ### Build Logs

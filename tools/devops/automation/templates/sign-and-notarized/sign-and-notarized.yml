@@ -21,9 +21,15 @@ parameters:
 - name: condition
   default: and(succeeded(), eq(variables['IsPRBuild'], 'False'))
 
+- name: signingSetupSteps
+  type: stepList
+  default: []
+
 steps:
 
-- template: setup.yml
+- ${{ each step in parameters.signingSetupSteps }}:
+  - ${{ each pair in step }}:
+      ${{ pair.key }}: ${{ pair.value }}       
 
 - task: DownloadPipelineArtifact@2
   displayName: Download not notarized build
