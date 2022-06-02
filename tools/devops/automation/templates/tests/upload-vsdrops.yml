@@ -24,6 +24,6 @@ steps:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
     dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}'
     buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}${{ parameters.label }}'
-    sourcePath: $[variables[format('HTML_REPORT_PATH_{0}', upper(replace(parameters.label, '-', '_')))]]
+    sourcePath: $(HTML_REPORT_PATH_${{ upper(replace(parameters.label, '-', '_')) }})
     detailedLog: true
     usePat: true
