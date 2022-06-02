@@ -11,6 +11,10 @@ parameters:
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
 
+- name: signingSetupSteps
+  type: stepList
+  default: []
+
 - name: packages
   type: object
   default: [
@@ -73,6 +77,7 @@ jobs:
     steps:
     - template: sign-and-notarized.yml
       parameters:
+        signingSetupSteps: ${{ parameters.signingSetupSteps }}
         keyringPass: ${{ parameters.keyringPass }}
         skipESRP: ${{ parameters.skipESRP }}
         packageName: ${{ pkg.name }}

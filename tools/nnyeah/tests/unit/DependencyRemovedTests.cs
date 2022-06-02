@@ -22,12 +22,12 @@ public class Foo {{
 	public {type} Ident ({type} e) => e;
 }}
 ";
-			var output = await TestRunning.BuildLibrary (code, "NoName", dir);
+			await TestRunning.BuildLibrary (code, "NoName", dir);
 			var expectedOutputFile = Path.Combine (dir, "NoName.dll");
 			var targetRewrite = Path.Combine (dir, "NoNameRemoved.dll");
 
 			Assert.DoesNotThrow (() => {
-				Program.ProcessAssembly (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS),
+				AssemblyConverter.Convert (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS),
 					Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS), expectedOutputFile,
 					targetRewrite, verbose: false, forceOverwrite: true, suppressWarnings: true);
 			}, $"Failed to process assembly for type {type}");
