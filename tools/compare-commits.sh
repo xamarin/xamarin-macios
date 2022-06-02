@@ -93,6 +93,11 @@ ROOT_DIR=$(git rev-parse --show-toplevel)
 cd "$ROOT_DIR"
 ROOT_DIR=$(pwd)
 
+if test -z "$OUTPUT_DIR"; then
+	OUTPUT_DIR="$ROOT_DIR/tools/comparison"
+fi
+mkdir -p "$OUTPUT_DIR"
+
 # Only show git colors locally. The normal "has-controlling-terminal" doesn't work, because
 # we always capture the output to indent it (thus the git processes never have a controlling
 # terminal)
