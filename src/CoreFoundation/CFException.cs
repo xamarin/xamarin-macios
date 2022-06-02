@@ -93,7 +93,7 @@ namespace CoreFoundation {
 #endif
 	public class CFException : Exception {
 
-		public CFException (string? description, NSString? domain, nint? code, string? failureReason, string? recoverySuggestion)
+		public CFException (string? description, NSString? domain, nint code, string? failureReason, string? recoverySuggestion)
 			: base (description)
 		{
 			Code                = code;
@@ -133,7 +133,7 @@ namespace CoreFoundation {
 			return e;
 		}
 
-		public nint? Code {get; private set;}
+		public nint Code {get; private set;}
 		public NSString? Domain {get; private set;}
 		public string? FailureReason {get; private set;}
 		public string? RecoverySuggestion {get; private set;}
