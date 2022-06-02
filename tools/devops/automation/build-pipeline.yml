@@ -195,6 +195,8 @@ variables:
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
   - template: templates/vsts-variables.yml
 - template: templates/variables.yml
+- name: MicrobuildConnector
+  value: 'MicroBuild Signing Task (DevDiv)'
 
 trigger:
   branches:
@@ -245,3 +247,6 @@ stages:
     simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
+    signingSetupSteps:
+      - template: ./templates/sign-and-notarized/setup.yml
+
