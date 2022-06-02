@@ -17,6 +17,9 @@ ifeq ($(OUTPUT_DIR),)
 OUTPUT_DIR=output
 endif
 
+ifndef SKIP_XAMARIN_VS_DOTNET
+INCLUDE_XAMARIN_VS_DOTNET=1
+endif
 ifndef SKIP_IOS_VS_MACCATALYST
 INCLUDE_IOS_VS_MACCATALYST=1
 endif
@@ -197,7 +200,9 @@ endif
 endif # INCLUDE_IOS
 ifdef ENABLE_DOTNET
 API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_ASSEMBLIES),$(OUTPUT_DIR)/diff/dotnet/$(assembly).html)
+ifdef INCLUDE_XAMARIN_VS_DOTNET
 API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_LEGACY_ASSEMBLIES),$(OUTPUT_DIR)/diff/dotnet/legacy-diff/$(assembly).html)
+endif
 endif
 
 $(OUTPUT_DIR)/index.html: $(OUTPUT_DIR)/api-diff.html
@@ -243,6 +248,8 @@ endif
 endif
 	$(Q) echo "</ul>" >> $@
 
+ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_XAMARIN_VS_DOTNET
 	$(Q) echo "<h2>Legacy Xamarin (stable) vs .NET</h2>" >> $@
 	$(Q) echo "<ul>" >> $@
 	@# .NET vs legacy (stable)
@@ -256,6 +263,8 @@ ifdef INCLUDE_MAC
 	$(Q) echo "<li>macOS: <a href='diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.html'>html</a> <a href='diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.md'>markdown</a></li>" >> $@
 endif
 	$(Q) echo "</ul>" >> $@
+endif # INCLUDE_XAMARIN_VS_DOTNET
+endif # INCLUDE_XAMARIN_LEGACY
 
 # easy-to-type helper targets.
 # one rule to create all the api diffs
