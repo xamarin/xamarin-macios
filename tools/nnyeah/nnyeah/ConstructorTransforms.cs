@@ -38,15 +38,17 @@ namespace Microsoft.MaciOS.Nnyeah {
 
         static bool IsIntPtrCtor (MethodDefinition d)
         {
+            if (d.Name != ".ctor")
+                return false;
             bool isSingle = d.Parameters.Count == 1 &&
                 d.Parameters.First ().ParameterType.FullName == "System.IntPtr";
             bool isDouble = d.Parameters.Count == 2 &&
-                d.Parameters.First ().ParameterType.FullName == "System.IntPtr" ||
+                d.Parameters.First ().ParameterType.FullName == "System.IntPtr" &&
                 d.Parameters.Last ().ParameterType.FullName == "System.Boolean";
             return isSingle || isDouble;
         }
 
-        public bool IsNSObjectDerived (TypeReference? typeReference)
+        static bool IsNSObjectDerived (TypeReference? typeReference)
         {
             if (typeReference is null) {
                 return false;

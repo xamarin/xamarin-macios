@@ -79,7 +79,7 @@ namespace CoreGraphics {
 		{
 			// not it's a __nullable parameter but it would return nil (see unit tests) and create an invalid instance
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			return CGDataConsumerCreateWithCFData (data.Handle);
 		}
 
@@ -95,7 +95,7 @@ namespace CoreGraphics {
 		{
 			// not it's a __nullable parameter but it would return nil (see unit tests) and create an invalid instance
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			return CGDataConsumerCreateWithURL (url.Handle);
 		}
 

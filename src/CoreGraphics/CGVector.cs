@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -73,7 +75,7 @@ namespace CoreGraphics {
 #endif
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is CGVector vector)
 				return dx == vector.dx && dy == vector.dy;
@@ -101,7 +103,7 @@ namespace CoreGraphics {
 #else
 		[iOS (8,0)]
 #endif
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return CFString.FromHandle (NSStringFromCGVector (this));
 		}
