@@ -26,11 +26,6 @@ parameters:
   type: boolean
   default: true
 
-- name: runDeviceTests
-  displayName: Run Device Tests 
-  type: boolean
-  default: false
-
 - name: runOldMacOSTests
   displayName: Run Tests on older macOS versions 
   type: boolean
@@ -60,16 +55,6 @@ parameters:
   displayName: Enable API diff generation
   type: boolean
   default: true
-
-- name: forceInsertion
-  displayName: Force Insertion 
-  type: boolean
-  default: false 
-
-- name: skipESRP
-  displayName: Skip ESRP
-  type: boolean
-  default: false # only to be used when testing the CI and we do not need a signed pkg
 
 # We are doing some black magic. We have several templates that 
 # are executed with different parameters. 
@@ -192,18 +177,20 @@ resources:
     endpoint: xamarin
 
 variables:
-- ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-  - template: templates/vsts-variables.yml
 - template: templates/variables.yml
 - name: MicrobuildConnector
-  value: 'MicroBuild Signing Task (DevDiv)'
+  value: ''
 
-trigger:
+trigger: none
+
+pr:
+  autoCancel: true
   branches:
     include:
-    - '*'
-    exclude:
-    - refs/heads/locfiles/*
+    - main
+    - d16-*
+    - xcode*
+    - release/*
   paths:
     exclude:
     - .github
@@ -218,35 +205,21 @@ trigger:
     - tools/mtouch/README.md
     - msbuild/Xamarin.Localization.MSBuild/README.md
 
-schedules:
-
-# the translations team wants a green build, we can do that on sundays even if 
-# the code did not change and without the device tests.
-- cron: "0 12 * * 0"
-  displayName: Weekly Translations build (Sunday @ noon)
-  branches:
-    include:
-    - main
-  always: true
-
 stages:
 - template: templates/main-stage.yml
   parameters:
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
     runTests: ${{ parameters.runTests }}
-    runDeviceTests: ${{ parameters.runDeviceTests }}
+    runDeviceTests: false
     runOldMacOSTests: ${{ parameters.runOldMacOSTests }}
     runWindowsIntegration: ${{ parameters.runWindowsIntegration }}
     runGovernanceTests: ${{ parameters.runGovernanceTests }}
     runSamples: ${{ parameters.runSamples }}
     enableDotnet: ${{ parameters.enableDotnet }}
     enableAPIDiff: ${{ parameters.enableAPIDiff }}
-    forceInsertion: ${{ parameters.forceInsertion }}
-    skipESRP: ${{ parameters.skipESRP }}
+    forceInsertion: false
+    skipESRP: true
     simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
-    signingSetupSteps:
-      - template: ./templates/sign-and-notarized/setup.yml
-

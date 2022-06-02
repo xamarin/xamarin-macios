@@ -1,4 +1,5 @@
 ﻿using System;
+using Foundation;
 
 namespace IntegrationAPI
 {
@@ -111,5 +112,15 @@ namespace IntegrationAPI
 	public nfloat ToNFloat (long a) => a;
 	public nfloat ToNFloat (ulong a) => a;
 	public nfloat ToNFloat (float a) => a;
+    }
+
+    public class NSObjectDerived : NSObject {
+        public NSObjectDerived (IntPtr p) : base (p) { }
+        public NSObjectDerived (IntPtr p, bool b) : base (p, b) { }
+
+    }
+    public class NSObjectDerivedSubclass : NSObjectDerived {
+        public NSObjectDerivedSubclass (IntPtr p) : base (p) { }
+        public NSObjectDerivedSubclass (IntPtr p, bool b) : base (p, b) { }
     }
 }
