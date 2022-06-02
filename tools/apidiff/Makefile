@@ -292,6 +292,94 @@ endif # DOTNET
 		echo "" >> $@; \
 	fi
 
+#
+# Collect all the diffs into a single api-diff.md file
+#
+
+define ApiDiffReportMarkdown
+	$(Q) ./report-status.sh "$(1)" "$(OUTPUT_DIR)" markdown "diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).html" "diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).md" "$(2)"
+
+endef
+
+$(OUTPUT_DIR)/api-diff.md: $(API_DIFF_DEPENDENCIES)
+ifdef INCLUDE_XAMARIN_LEGACY
+	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/*-api-diff.html),! test -s "$(html)" &&) true; then \
+		echo "<details><summary>Legacy Xamarin (empty diffs)</summary>" >> "$@"; \
+	elif grep BreakingChangesDetected "$(OUTPUT_DIR)"/*-api-diff.html &> /dev/null; then \
+		echo "<details><summary>Legacy Xamarin ($(MARKDOWN_BREAKING_CHANGES_MESSAGE))</summary>" >> "$@"; \
+	else \
+		echo "<details><summary>Legacy Xamarin ($(MARKDOWN_NO_BREAKING_CHANGES_MESSAGE))</summary>" >> "$@"; \
+	fi
+	$(Q) echo "" >> $@
+ifdef INCLUDE_IOS
+	$(Q) ./report-status.sh "iOS" "$(OUTPUT_DIR)" markdown "ios-api-diff.html" "ios-api-diff.md" "$@"
+endif
+ifdef INCLUDE_TVOS
+	$(Q) ./report-status.sh "tvOS" "$(OUTPUT_DIR)" markdown "tvos-api-diff.html" "tvos-api-diff.md" "$@"
+endif
+ifdef INCLUDE_WATCH
+	$(Q) ./report-status.sh "watchOS" "$(OUTPUT_DIR)" markdown "watchos-api-diff.html" "watchos-api-diff.md" "$@"
+endif
+ifdef INCLUDE_MAC
+	$(Q) ./report-status.sh "macOS" "$(OUTPUT_DIR)" markdown "mac-api-diff.html" "mac-api-diff.md" "$@"
+endif
+	$(Q) echo "" >> $@
+	$(Q) echo "</details>" >> "$@"
+	$(Q) echo "" >> $@
+endif # INCLUDE_XAMARIN_LEGACY
+
+ifdef ENABLE_DOTNET
+	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/diff/dotnet/Microsoft.*.Ref/ref/$(DOTNET_TFM)/Microsoft.*.html),! test -s "$(html)" &&) true; then \
+		echo "<details><summary>NET (empty diffs)</summary>" >> "$@"; \
+	elif grep BreakingChangesDetected "$(OUTPUT_DIR)"/diff/dotnet/Microsoft.*.Ref/ref/"$(DOTNET_TFM)"/Microsoft.*.html &> /dev/null; then \
+		echo "<details><summary>.NET ($(MARKDOWN_BREAKING_CHANGES_MESSAGE))</summary>" >> "$@"; \
+	else \
+		echo "<details><summary>.NET ($(MARKDOWN_NO_BREAKING_CHANGES_MESSAGE))</summary>" >> "$@"; \
+	fi
+	$(Q) echo "" >> $@
+
+	@# New .NET vs Stable .NET
+	$(Q) $(foreach platform,$(DOTNET_PLATFORMS),$(call ApiDiffReportMarkdown,$(platform),$@))
+
+	@# .NET: Microsoft.iOS vs Microsoft.MacCatalyst
+ifdef INCLUDE_IOS
+ifdef INCLUDE_MACCATALYST
+ifdef INCLUDE_IOS_VS_MACCATALYST
+	$(Q) echo "* Microsoft.iOS vs Microsoft.MacCatalyst: [vsdrops](diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html) [gist](diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.md)" >> $@
+endif # INCLUDE_IOS_VS_MACCATALYST
+endif # INCLUDE_MACCATALYST
+endif # INCLUDE_IOS
+	$(Q) echo "" >> $@
+	$(Q) echo "</details>" >> "$@"
+	$(Q) echo "" >> $@
+
+	@# .NET vs legacy (stable)
+ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_XAMARIN_VS_DOTNET
+	$(Q) echo "<details><summary>Legacy Xamarin (stable) vs .NET</summary>" >> "$@"
+	$(Q) echo "" >> $@
+ifdef INCLUDE_IOS
+	$(Q) echo "* iOS: [vsdrops](diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.html) [gist](diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.md)" >> $@
+endif
+ifdef INCLUDE_TVOS
+	$(Q) echo "* tvOS: [vsdrops](diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.html) [gist](diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.md)" >> $@
+endif
+ifdef INCLUDE_MAC
+	$(Q) echo "* macOS: [vsdrops](diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.html) [gist](diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.md)" >> $@
+endif
+	$(Q) echo "" >> $@
+	$(Q) echo "</details>" >> "$@"
+	$(Q) echo "" >> $@
+endif # INCLUDE_XAMARIN_VS_DOTNET
+endif # INCLUDE_XAMARIN_LEGACY
+
+endif # DOTNET
+	$(Q) if grep "$(MARKDOWN_BREAKING_CHANGES_MESSAGE)" $@ >/dev/null 2>&1; then \
+		echo "" >> $@; \
+		echo "<!-- BreakingChangesDetected -->" >> $@; \
+		echo "" >> $@; \
+	fi
+
 # easy-to-type helper targets.
 # one rule to create all the api diffs
 
