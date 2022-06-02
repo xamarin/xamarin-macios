@@ -134,10 +134,6 @@ function upon_exit ()
 		echo "API diff: $APIDIFF_FILE"
 	fi
 
-	if test -f "$ROOT_DIR/NuGet.config.disabled"; then
-		mv "$ROOT_DIR/NuGet.config.disabled" "$ROOT_DIR/NuGet.config"
-	fi
-
 	# Clean up after ourselves (but leave the comparison)
 	rm -Rf "$OUTPUT_SRC_DIR"
 	rm -Rf "$OUTPUT_DIR/build"
