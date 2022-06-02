@@ -25,6 +25,11 @@ MONO_BUILD = $(SYSTEM_MONO)
 MONO_API_INFO_EXEC = $(SYSTEM_DOTNET) $(MONO_API_INFO) --ignore-inherited-interfaces
 MONO_API_HTML_EXEC = $(SYSTEM_DOTNET) $(MONO_API_HTML)
 
+export HTML_BREAKING_CHANGES_MESSAGE=❗️Breaking changes❗️
+export HTML_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
+export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking changes :heavy_exclamation_mark:
+export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
+
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
 MONO_ASSEMBLIES = mscorlib System System.Core System.Numerics\
@@ -193,47 +198,32 @@ endif
 $(OUTPUT_DIR)/index.html: $(OUTPUT_DIR)/api-diff.html
 	$(Q) $(CP) $< $@
 
-define ApiDiffReport
-	if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)-api-diff.html'>Microsoft.$(1) (.NET) API diff</a></h2>" >> $(2); \
-	else \
-		echo "<h2>Microsoft.$(1) (.NET) API diff is empty</h2>" >> $(2); \
-	fi;
+#
+# Collect all the diffs into a single api-diff.html file
+#
+
+define ApiDiffReportHtml
+	$(Q) ./report-status.sh "$(1)" "$(OUTPUT_DIR)" html "diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).html" "diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).md" "$(2)"
+
 endef
 
 $(OUTPUT_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
 	$(QF_GEN) echo "<h1>API diffs</h1>" > $@
 ifdef INCLUDE_IOS
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/ios-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='ios-api-diff.html'>Xamarin.iOS API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Xamarin.iOS API diff is empty</h2>" >> $@; \
-	fi;
+	$(Q) ./report-status.sh "iOS" "$(OUTPUT_DIR)" html "ios-api-diff.html" "ios-api-diff.md" "$@"
+endif
 ifdef INCLUDE_TVOS
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/tvos-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='tvos-api-diff.html'>Xamarin.TVOS API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Xamarin.TVOS API diff is empty</h2>" >> $@; \
-	fi;
+	$(Q) ./report-status.sh "tvOS" "$(OUTPUT_DIR)" html "tvos-api-diff.html" "tvos-api-diff.md" "$@"
 endif
 ifdef INCLUDE_WATCH
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/watchos-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='watchos-api-diff.html'>Xamarin.WatchOS API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Xamarin.WatchOS API diff is empty</h2>" >> $@; \
-	fi;
-endif
+	$(Q) ./report-status.sh "watchOS" "$(OUTPUT_DIR)" html "watchos-api-diff.html" "watchos-api-diff.md" "$@"
 endif
 ifdef INCLUDE_MAC
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/mac-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='mac-api-diff.html'>Xamarin.Mac API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Xamarin.Mac API diff is empty</h2>" >> $@; \
-	fi;
+	$(Q) ./report-status.sh "macOS" "$(OUTPUT_DIR)" html "mac-api-diff.html" "mac-api-diff.md" "$@"
 endif
 
 	@# New .NET vs Stable .NET
-	$(Q) $(foreach platform,$(DOTNET_PLATFORMS),$(call ApiDiffReport,$(platform),$@))
+	$(Q) $(foreach platform,$(DOTNET_PLATFORMS),$(call ApiDiffReportHtml,$(platform),$@))
 
 	@# .NET vs legacy (stable)
 ifdef INCLUDE_IOS
