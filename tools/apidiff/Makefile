@@ -286,6 +286,12 @@ endif # INCLUDE_XAMARIN_VS_DOTNET
 endif # INCLUDE_XAMARIN_LEGACY
 
 endif # DOTNET
+	$(Q) if grep "$(HTML_BREAKING_CHANGES_MESSAGE)" $@ >/dev/null 2>&1; then \
+		echo "" >> $@; \
+		echo "<!-- BreakingChangesDetected -->" >> $@; \
+		echo "" >> $@; \
+	fi
+
 # easy-to-type helper targets.
 # one rule to create all the api diffs
 
