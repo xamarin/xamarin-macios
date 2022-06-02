@@ -71,7 +71,6 @@ parameters:
   default: true
 
 - name: simTestsConfigurations
-  displayName: Simulator test configurations to run
   type: object
 
 stages:
@@ -194,6 +193,7 @@ stages:
     steps:
     - template: publish-html.yml
       parameters:
+        simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         testPrefix: ${{ parameters.testPrefix }}

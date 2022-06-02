@@ -237,11 +237,12 @@ steps:
     RC=0
     make -C tests ${{ parameters.makeTarget }} || RC=$?
     if [ $RC -eq 0 ]; then
-      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS_$TEST_PREFIX;isOutput=true]Succeeded"
     else
-      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS_$TEST_PREFIX;isOutput=true]Failed"
     fi
   env:
+    TEST_PREFIX: ${{ upper(parameters.testPrefix) }}
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
     VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }};/tests/' # uri used to create the vsdrops index using full uri
