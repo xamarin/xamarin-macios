@@ -243,6 +243,15 @@ ifdef INCLUDE_MAC
 endif
 	$(Q) echo "</ul>" >> $@
 endif # INCLUDE_XAMARIN_LEGACY
+
+ifdef ENABLE_DOTNET
+	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/diff/dotnet/Microsoft.*.Ref/ref/$(DOTNET_TFM)/Microsoft.*.html),! test -s "$(html)" &&) true; then \
+		echo "<h2>.NET (empty diffs)</h2>" >> "$@"; \
+	elif grep BreakingChangesDetected "$(OUTPUT_DIR)"/diff/dotnet/Microsoft.*.Ref/ref/"$(DOTNET_TFM)"/Microsoft.*.html &> /dev/null; then \
+		echo "<h2>.NET ($(HTML_BREAKING_CHANGES_MESSAGE))</h2>" >> "$@"; \
+	else \
+		echo "<h2>.NET ($(HTML_NO_BREAKING_CHANGES_MESSAGE))</h2>" >> "$@"; \
+	fi
 	$(Q) echo "<ul>" >> $@
 
 	@# New .NET vs Stable .NET
@@ -276,6 +285,7 @@ endif
 endif # INCLUDE_XAMARIN_VS_DOTNET
 endif # INCLUDE_XAMARIN_LEGACY
 
+endif # DOTNET
 # easy-to-type helper targets.
 # one rule to create all the api diffs
 
