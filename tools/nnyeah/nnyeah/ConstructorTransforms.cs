@@ -1,3 +1,4 @@
+using System;
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
 using System.Linq;
@@ -13,12 +14,17 @@ namespace Microsoft.MaciOS.Nnyeah {
         TypeReference NewNativeHandleTypeDefinition;
         MethodDefinition IntPtrCtor;
         MethodDefinition IntPtrCtorWithBool;
+        EventHandler<WarningEventArgs>? WarningIssued;
+        EventHandler<TransformEventArgs>? Transformed;
 
-        public ConstructorTransforms (TypeReference newNativeHandleTypeDefinition, MethodDefinition intPtrCtor, MethodDefinition intPtrCtorWithBool)
+        public ConstructorTransforms (TypeReference newNativeHandleTypeDefinition, MethodDefinition intPtrCtor, MethodDefinition intPtrCtorWithBool,
+            EventHandler<WarningEventArgs>? warningIssued, EventHandler<TransformEventArgs>? transformed)
         {
             NewNativeHandleTypeDefinition = newNativeHandleTypeDefinition;
             IntPtrCtor = intPtrCtor;
             IntPtrCtorWithBool = intPtrCtorWithBool;
+            WarningIssued = warningIssued;
+            Transformed = transformed;
         }
 
         public void AddTransforms (TypeAndMemberMap moduleMap)
@@ -48,15 +54,38 @@ namespace Microsoft.MaciOS.Nnyeah {
             return isSingle || isDouble;
         }
 
-        static bool IsNSObjectDerived (TypeReference? typeReference)
+        bool IsNSObjectDerived (TypeReference? typeReference)
         {
-            if (typeReference is null) {
+            if (typeReference is null)
                 return false;
+            var initialTypeReference = typeReference!;
+            TypeReference? firstIssuedTypeReference = null;
+            var reworkNeededOnTheWayUp = false;
+            while (true) {
+                if (typeReference is null) {
+                    return false;
+                }
+                if (typeReference.FullName == "Foundation.NSObject") {
+                    if (reworkNeededOnTheWayUp && firstIssuedTypeReference is not null) {
+                        WarningIssued?.Invoke (this, new WarningEventArgs (initialTypeReference.DeclaringType.FullName,
+                            initialTypeReference.Name, "IntPtr", String.Format (Errors.N0009, initialTypeReference.FullName,
+                            firstIssuedTypeReference.FullName)));
+                    }
+                    return true;
+                }
+                typeReference = typeReference.Resolve ().BaseType;
+                if (!reworkNeededOnTheWayUp && typeReference is not null) {
+                    var typeDefinition = typeReference.Resolve ();
+                    if (typeDefinition is not null) {
+                        if (typeDefinition.Methods.Any (IsIntPtrCtor)) {
+                            if (typeDefinition.Module != initialTypeReference.Module) {
+                                reworkNeededOnTheWayUp = true;
+                                firstIssuedTypeReference = typeDefinition;
+							}
+						}
+                    }
+				}
             }
-            if (typeReference.FullName == "Foundation.NSObject") {
-                return true;
-            }
-            return IsNSObjectDerived (typeReference.Resolve ().BaseType);
         }
 
         public void ReworkAsNeeded (TypeDefinition definition)
@@ -70,6 +99,8 @@ namespace Microsoft.MaciOS.Nnyeah {
                         throw new ConversionException (Errors.E0016);
                     }
                     ctor.Parameters[0].ParameterType = NewNativeHandleTypeDefinition;
+                    Transformed?.Invoke (this, new TransformEventArgs (ctor.DeclaringType.FullName,
+                        ctor.Name, "IntPtr", 0, 0));
                 }
             }
         }
