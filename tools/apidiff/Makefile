@@ -232,10 +232,10 @@ ifdef INCLUDE_MAC
 	fi;
 endif
 
-# New Dotnet vs Stable Dotnet
+	@# New .NET vs Stable .NET
 	$(Q) $(foreach platform,$(DOTNET_PLATFORMS),$(call ApiDiffReport,$(platform),$@))
 
-# New Dotnet vs. Stable Legacy
+	@# .NET vs legacy (stable)
 ifdef INCLUDE_IOS
 	$(Q) echo "<h2><a href='dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS-api-diff.html'>Microsoft.iOS (.NET) vs Xamarin.iOS (stable) API diff</a></h2>" >> $@
 endif
@@ -246,7 +246,7 @@ ifdef INCLUDE_MAC
 	$(Q) echo "<h2><a href='dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS-api-diff.html'>Microsoft.macOS (.NET) vs Xamarin.Mac (stable) API diff</a></h2>" >> $@
 endif
 
-# Dotnet iOS vs. Dotnet MacCatalyst
+	@# .NET: Microsoft.iOS vs Microsoft.MacCatalyst
 ifdef INCLUDE_IOS
 ifdef INCLUDE_MACCATALYST
 	$(Q) echo "<h2><a href='dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst-api-diff.html'>Microsoft.iOS vs Microsoft.MacCatalyst API diff</a></h2>" >> $@
