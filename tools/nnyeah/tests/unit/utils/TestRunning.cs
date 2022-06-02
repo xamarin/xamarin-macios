@@ -34,13 +34,22 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 			var initialLibraryDir = Cache.CreateTemporaryDirectory ();
 			var finalLibraryDir = Cache.CreateTemporaryDirectory ();
 
-			var libCompilerOutput = await BuildLibrary (libraryCode, testName, initialLibraryDir);
+			await BuildLibrary (libraryCode, testName, initialLibraryDir);
 		}
 
-		public static Task<string> BuildLibrary (string libraryCode, string libName, string outputDirectory, PlatformName platformName = PlatformName.macOS)
+		public static async Task BuildLibrary (string libraryCode, string libName, string outputDirectory, PlatformName platformName = PlatformName.macOS)
 		{
 			var outputPath = Path.Combine (outputDirectory, $"{libName}.dll");
-			return Compiler.CompileText (libraryCode, outputPath, platformName, isLibrary: true);
+			string msg = await Compiler.CompileText (libraryCode, outputPath, platformName, isLibrary: true);
+			Assert.IsTrue (File.Exists (outputPath), $"Compile failed with output: {msg}");
+		}
+
+		public static async Task<string> BuildTemporaryLibrary (string code)
+		{
+			var dir = Cache.CreateTemporaryDirectory ("BuildTemporaryLibrary");
+			await TestRunning.BuildLibrary (code, "NoName", dir);
+			var libraryFile = Path.Combine (dir, "NoName.dll");
+			return libraryFile;
 		}
 	}
 }
