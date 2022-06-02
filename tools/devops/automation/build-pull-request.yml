@@ -230,7 +230,7 @@ variables:
 - name: CIBuild
   value: true
 - name: MicrobuildConnector
-  value: 'MicroBuild Signing Task (DevDiv)'
+  value: ''
 
 trigger:
   branches:
