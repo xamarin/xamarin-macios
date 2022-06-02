@@ -436,21 +436,3 @@ $(OUTPUT_DIR)/mac-api-diff.md: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(OUT
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(OUTPUT_DIR)/diff/xm/Xamarin.Mac/ macos $(abspath $@)
 all-markdowns:: $(OUTPUT_DIR)/mac-api-diff.md
 endif
-
-wrench-api-diff:
-ifdef INCLUDE_MAC
-endif
-	$(Q) $(MAKE) $(UNZIP_STAMPS)
-	$(Q) $(MAKE) all -j8
-	$(Q) $(MAKE) all-markdowns
-	$(Q) $(CP) api-diff.html index.html
-	@# remove empty files so they're not uploaded
-	@-find $(CURDIR)/diff -size 0 | xargs rm
-
-jenkins-api-diff:
-	-$(MAKE) wrench-api-diff
-	$(Q) mkdir -p $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) *.md $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) -R dotnet $(JENKINS_RESULTS_DIRECTORY)/api-diff
