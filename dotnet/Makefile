@@ -143,6 +143,7 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Workloads/vs-workload.template.props
 		-e "s/@PACK_VERSION_SHORT@/$(IOS_NUGET_VERSION).$(IOS_NUGET_COMMIT_DISTANCE)/g" \
 		-e "s/@MACOS_PACK_VERSION_LONG@/$(MACOS_NUGET_VERSION_NO_METADATA)/g" \
 		-e "s/@MACOS_PACK_VERSION_SHORT@/$(MACOS_NUGET_VERSION).$(MACOS_NUGET_COMMIT_DISTANCE)/g" \
+		-e "s/@VSMAN_VERSION@/$(firstword $(subst net, ,$(DOTNET_TFM)))/g" \
 		$< > $@.tmp
 	$(Q) mv $@.tmp $@
 
