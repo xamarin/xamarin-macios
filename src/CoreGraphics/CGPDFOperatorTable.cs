@@ -97,7 +97,7 @@ namespace CoreGraphics {
 		public void SetCallback (string name, Action<CGPDFScanner?,object?>? callback)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			if (callback is null)
 				CGPDFOperatorTableSetCallback (Handle, name, (CGPDFOperatorCallback?) null);
@@ -118,7 +118,7 @@ namespace CoreGraphics {
 		public void SetCallback (string name, Action<IntPtr,IntPtr>? callback)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			CGPDFOperatorTableSetCallback (Handle, name, callback);
 		}
@@ -129,7 +129,7 @@ namespace CoreGraphics {
 		public unsafe void SetCallback (string name, delegate* unmanaged<IntPtr, IntPtr, void> callback)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			CGPDFOperatorTableSetCallback (Handle, name, callback);
 		}

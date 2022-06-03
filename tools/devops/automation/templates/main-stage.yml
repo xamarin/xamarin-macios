@@ -61,6 +61,10 @@ parameters:
 - name: macTestsConfigurations
   type: object
 
+- name: signingSetupSteps
+  type: stepList
+  default: []
+
 stages:
 
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
@@ -120,6 +124,7 @@ stages:
   jobs:
     - template: ./sign-and-notarized/prepare-pkg-stage.yml
       parameters:
+        signingSetupSteps: ${{ parameters.signingSetupSteps }}
         keyringPass: $(pass--lab--mac--builder--keychain)
         enableDotnet: ${{ parameters.enableDotnet }}
         skipESRP: ${{ parameters.skipESRP }}

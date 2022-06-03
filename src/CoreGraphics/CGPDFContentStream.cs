@@ -65,7 +65,7 @@ namespace CoreGraphics {
 		static IntPtr Create (CGPDFStream stream, NSDictionary? streamResources = null, CGPDFContentStream? parent = null)
 		{
 			if (stream is null)
-				throw new ArgumentNullException (nameof (stream));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stream));
 
 			return CGPDFContentStreamCreateWithStream (stream.Handle, streamResources.GetHandle (), parent.GetHandle ());
 		}
@@ -100,9 +100,9 @@ namespace CoreGraphics {
 		public CGPDFObject? GetResource (string category, string name)
 		{
 			if (category is null)
-				throw new ArgumentNullException (nameof (category));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (category));
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			var h = CGPDFContentStreamGetResource (Handle, category, name);
 			return (h == IntPtr.Zero) ? null : new CGPDFObject (h);

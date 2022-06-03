@@ -38,7 +38,8 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
             return new ConstructorTransforms (
                 netAssembly.GetType("ObjCRuntime.NativeHandle"),
                 legacyNSObject.Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr)"),
-                legacyNSObject.Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr,System.Boolean)")
+                legacyNSObject.Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr,System.Boolean)"),
+                warningIssued: null, transformed: null
             );
         }
         

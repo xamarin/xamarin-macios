@@ -640,11 +640,12 @@ xamarin_mono_object_release_at_process_exit (MonoObject *mobj)
 MonoAssembly *
 mono_assembly_open (const char * filename, MonoImageOpenStatus * status)
 {
-	assert (status == NULL);
-
 	MonoAssembly *rv = xamarin_find_assembly (filename);
 
 	LOG_CORECLR (stderr, "mono_assembly_open (%s, %p) => MonoObject=%p GCHandle=%p\n", filename, status, rv, rv->gchandle);
+
+	if (status != NULL)
+		*status = rv == NULL ? MONO_IMAGE_ERROR_ERRNO : MONO_IMAGE_OK;
 
 	return rv;
 }
