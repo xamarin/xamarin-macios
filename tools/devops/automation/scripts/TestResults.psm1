@@ -71,11 +71,11 @@ class ParallelTestsResults {
     [TestResults[]] $Results
 
     ParallelTestsResults (
-        [string] $context,
-        [TestResults[]] $results
+        [TestResults[]] $results,
+        [string] $context
     ) {
-        $this.Content = $context
         $this.Results = $results
+        $this.Context = $context
     }
 
     [object] GetFailingTests() {
@@ -86,6 +86,11 @@ class ParallelTestsResults {
             }
         }
         return $failingTests
+    }
+
+    [bool] IsSuccess() {
+        $failingTests = $this.GetFailingTests()
+        return $failingTests.Count -eq 0
     }
 
     [string] GetTestCount() {
@@ -138,4 +143,15 @@ function New-TestResults {
     return [TestResults]::new($Path, $Status, $Label, $Context)
 }
 
+function New-ParallelTestsResults {
+    param (
+        [object[]]
+        $Results,
+        [string]
+        $Context
+    )
+    return [ParallelTestsResults]::new($Results, $Context)
+}
+
 Export-ModuleMember -Function New-TestResults
+Export-ModuleMember -Function New-ParallelTestsResults

@@ -46,14 +46,15 @@ steps:
 - pwsh: |
     $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/$Env:DEVICE_PREFIX/;/tests/vsdrops_index.html"
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:TESTS_SUMMARY" -DeviceTest
+
     $labels = "$Env:LABELS".Split(";")
     $testResults = [System.Collections.ArrayList]@()
     foreach ($label in $labels) {
-
+      $label = $label.Replace("-", "_")
       $status = Get-ChildItem -Path "Env:TESTS_JOBSTATUS_$($label.ToUpper())"
       $testSummaryPath= Get-ChildItem -Path "Env:TEST_SUMMARY_PATH_$($label.ToUpper())"
       $htmlReportPath = Get-ChildItem -Path "Env:HTML_REPORT_PATH_$($label.ToUpper())"
+
       Write-Host "Test results for $label $($status.Value)"
       Write-Host "Test summary path for $label $($testSummaryPath.Value)"
       Write-Host "Html report path for $label $($htmlReportPath.Value)"
@@ -62,11 +63,16 @@ steps:
       $testResults.Add($result)
     }
 
-    Write-Host $response
-    if($Env:TESTS_JOBSTATUS -ne "Succeeded")
-    {
+    $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT"
+    $success = $parallelResults.IsSuccess()
+    $emoji = ":rocket:"
+    if (-not $success) {
       Set-PipelineResult -Status partiallySucceeded
+      $emoji = ":fire:"
     }
+
+    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
+    $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults)
   env:
     LABELS: ${{ join(';', parameters.simTestsConfigurations) }}
     BUILD_REVISION: $(Build.SourceVersion)
