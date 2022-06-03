@@ -48,13 +48,18 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $response = New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:TESTS_SUMMARY" -DeviceTest
     $labels = "$Env:LABELS".Split(";")
+    $testResults = [System.Collections.ArrayList]@()
     foreach ($label in $labels) {
+
       $status = Get-ChildItem -Path "Env:TESTS_JOBSTATUS_$($label.ToUpper())"
       $testSummaryPath= Get-ChildItem -Path "Env:TEST_SUMMARY_PATH_$($label.ToUpper())"
       $htmlReportPath = Get-ChildItem -Path "Env:HTML_REPORT_PATH_$($label.ToUpper())"
-      Write-Host "Test results for $label status: $($status.Value)"
-      Write-Host "Test summary path for $label: $($testSummaryPath.Value)"
-      Write-Host "Html report path for $label: $($htmlReportPath.Value)"
+      Write-Host "Test results for $label $($status.Value)"
+      Write-Host "Test summary path for $label $($testSummaryPath.Value)"
+      Write-Host "Html report path for $label $($htmlReportPath.Value)"
+
+      $result = New-TestResults -Path $testSummaryPath.Value -Status $status.Value -Label $label -Context "$Env:CONTEXT - $label"
+      $testResults.Add($result)
     }
 
     Write-Host $response
