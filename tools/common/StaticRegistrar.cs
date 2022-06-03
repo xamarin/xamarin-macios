@@ -2506,6 +2506,7 @@ namespace Registrar {
 			case "System.Drawing.PointF": return App.Platform == ApplePlatform.MacOSX ? "NSPoint" : "CGPoint";
 			case "System.Drawing.SizeF": return App.Platform == ApplePlatform.MacOSX ? "NSSize" : "CGSize";
 			case "System.String": return "NSString *";
+			case "System.UIntPtr":
 			case "System.IntPtr": return "void *";
 			case "System.SByte": return "signed char";
 			case "System.Byte": return "unsigned char";
@@ -2530,6 +2531,7 @@ namespace Registrar {
 				throw ErrorHelper.CreateError (4102, Errors.MT4102, "System.DateTime", "Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector": return "SEL";
 			case "ObjCRuntime.Class": return "Class";
+			case "ObjCRuntime.NativeHandle": return "void *";
 			default:
 				if (type.FullName == NFloatTypeName) {
 					CheckNamespace ("CoreGraphics", exceptions);
