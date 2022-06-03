@@ -16,7 +16,7 @@ type MainClass =
         Thread.Sleep (3000)
         Console.WriteLine ($"The process didn't exit within 3s of returning from Main. Assuming something is deadlocked, and will now exit immediately and forcefully (with exit code {exit_code}).")
         Console.Out.Flush ()
-        Console.Err.Flush ()
+        Console.Error.Flush ()
         PInvokes._exit (exit_code)
 
     static member asyncMainTask (args: string[]) : int =
