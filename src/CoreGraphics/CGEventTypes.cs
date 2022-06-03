@@ -8,6 +8,8 @@
  *    Miguel de Icaza
  */
 
+#nullable enable
+
 #if MONOMAC || __MACCATALYST__
 
 using System;
