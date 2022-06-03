@@ -135,7 +135,7 @@ function New-TestResults {
         [string]
         $Context
     )
-    return [TestResults]::new($Path, $Status, $Context)
+    return [TestResults]::new($Path, $Status, $Label, $Context)
 }
 
 Export-ModuleMember -Function New-TestResults
