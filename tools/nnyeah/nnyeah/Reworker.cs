@@ -41,6 +41,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		Dictionary<string, Transformation> MethodSubs;
 		Dictionary<string, Transformation> FieldSubs;
+		ConstructorTransforms ConstructorTransforms;
 
 		public event EventHandler<WarningEventArgs>? WarningIssued;
 		public event EventHandler<TransformEventArgs>? Transformed;
@@ -49,15 +50,14 @@ namespace Microsoft.MaciOS.Nnyeah {
 		{
 			// simple predicate for seeing if there any references
 			// to types we need to care about.
-			// IntPtr is for future handling of types that
-			// descend from NObject and need to have the constructor
-			// changed to NHandle
+			// Foundation.NSObject is for handling of types that
+			// descend from NObject and need to have the constructor changed 
 			return module.GetTypeReferences ().Any (
 				tr =>
 					tr.FullName == "System.nint" ||
 					tr.FullName == "System.nuint" ||
 					tr.FullName == "System.nfloat" ||
-					tr.FullName == "System.IntPtr"
+					tr.FullName == "Foundation.NSObject"
 				);
 		}
 
@@ -123,6 +123,11 @@ namespace Microsoft.MaciOS.Nnyeah {
 			NewNativeHandleTypeDefinition = modules.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
 
 			// These must be called last as they depend on Module and NativeIntegerAttributeTypeRef to be setup
+			var intPtrCtor = modules.XamarinModule.Types.First (t => t.FullName == "Foundation.NSObject").Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr)");
+			var intPtrCtorWithBool = modules.XamarinModule.Types.First (t => t.FullName == "Foundation.NSObject").Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr,System.Boolean)");
+			ConstructorTransforms = new ConstructorTransforms (ModuleToEdit.ImportReference (NewNativeHandleTypeDefinition), intPtrCtor, intPtrCtorWithBool, WarningIssued, Transformed);
+			ConstructorTransforms.AddTransforms (ModuleMap);
+
 			MethodSubs = LoadMethodSubs ();
 			FieldSubs = LoadFieldSubs ();
 		}
@@ -279,11 +284,11 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		public void Rework (Stream stm)
 		{
+			ReplacePlatformAssemblyReference ();
 			foreach (var type in ModuleToEdit.Types) {
 				ReworkType (type);
 			}
 			ChangeTargetFramework ();
-			RemoveXamarinReferences ();
 			ModuleToEdit.Write (stm);
 			stm.Flush ();
 		}
@@ -309,11 +314,11 @@ namespace Microsoft.MaciOS.Nnyeah {
 			return false;
 		}
 
-		void RemoveXamarinReferences ()
+		void ReplacePlatformAssemblyReference ()
 		{
 			for (int i = ModuleToEdit.AssemblyReferences.Count - 1; i >= 0; i--) {
 				if (IsXamarinReference (ModuleToEdit.AssemblyReferences [i])) {
-					ModuleToEdit.AssemblyReferences.RemoveAt (i);
+					ModuleToEdit.AssemblyReferences[i] = new AssemblyNameReference (Modules.MicrosoftModule.Assembly.Name.Name, Modules.MicrosoftModule.Assembly.Name.Version);
 				}
 			}
 		}
@@ -332,6 +337,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		void ReworkType (TypeDefinition definition)
 		{
+			ConstructorTransforms.ReworkAsNeeded (definition);
+
 			foreach (var field in definition.Fields) {
 				ReworkField (field);
 			}

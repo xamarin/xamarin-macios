@@ -37,7 +37,7 @@ steps:
   displayName: 'Install Signing Plugin'
   inputs:
     signType: '${{ parameters.signatureType }}'
-    azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+    azureSubscription: $(MicrobuildConnector)
     zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
   env:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -47,7 +47,7 @@ steps:
   displayName: 'Install Notarizing Plugin'
   inputs:
     signType: 'Real'  # test is not present for mac..
-    azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+    azureSubscription: $(MicrobuildConnector)
     zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
   env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)

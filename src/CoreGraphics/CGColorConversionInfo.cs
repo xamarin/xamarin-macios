@@ -104,7 +104,7 @@ namespace CoreGraphics {
 			// the API won't return a valid instance if no triple is given, i.e. at least one is needed. 
 			// `null` is accepted to mark the end of the list, not to make it optional
 			if ((triples is null) || (triples.Length == 0))
-				throw new ArgumentNullException (nameof (triples));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (triples));
 			if (triples.Length > 3)
 				throw new ArgumentException ("A maximum of 3 triples are supported");
 			
@@ -150,9 +150,9 @@ namespace CoreGraphics {
 		{
 			// API accept null arguments but returns null, which we can't use
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (destination is null)
-				throw new ArgumentNullException (nameof (destination));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destination));
 			return CGColorConversionInfoCreate (source.Handle, destination.Handle);
 		}
 
@@ -178,9 +178,9 @@ namespace CoreGraphics {
 		static IntPtr Create (CGColorSpace source, CGColorSpace destination, NSDictionary? options)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (destination is null)
-				throw new ArgumentNullException (nameof (destination));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destination));
 
 			return CGColorConversionInfoCreateWithOptions (source.Handle, destination.Handle, options.GetHandle ());
 		}

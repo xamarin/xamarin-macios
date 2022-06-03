@@ -1054,11 +1054,6 @@
 			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
 			<_DotNetCscCompiler>$(RoslynTargetsPath)\bincore\csc.dll</_DotNetCscCompiler>
 		</PropertyGroup>
-
-		<ItemGroup>
-			<_BTouchCompileCommand Include="$(DOTNET_HOST_PATH)" />
-			<_BTouchCompileCommand Include="$(RoslynTargetsPath)/bincore/csc.dll" />
-		</ItemGroup>
 	</Target>
 
 	<Target Name="_ComputeNativeExecutableInputs" DependsOnTargets="_ComputeVariables">

@@ -111,7 +111,7 @@
 
   <ItemGroup>
     <!-- Add a reference to our custom nfloat reference assembly for .NET 6 (but only for .NET 6, once we switch to .NET 7 this can be removed) -->
-    <PackageReference Include="System.Runtime.InteropServices.NFloat.Internal" Condition="'$(BundledNETCorePlatformsPackageVersion.Substring(0,1))' == '6'" Version="[6.0.1, )" IsImplicitlyDefined="true" />
+    <PackageReference Include="System.Runtime.InteropServices.NFloat.Internal" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0'))" Version="[6.0.1, )" IsImplicitlyDefined="true" />
   </ItemGroup>
 
   <!--
