@@ -15156,9 +15156,11 @@ namespace UIKit {
 		[Export ("isViewLoaded")]
 		bool IsViewLoaded { get; }
 		
+		[NullAllowed]
 		[Export ("nibName", ArgumentSemantic.Copy)]
 		string NibName { get; }
 
+		[NullAllowed]
 		[Export ("nibBundle", ArgumentSemantic.Retain)]
 		NSBundle NibBundle { get; }
 		
@@ -15287,9 +15289,11 @@ namespace UIKit {
 		[Export ("hidesBottomBarWhenPushed")]
 		bool HidesBottomBarWhenPushed { get; set; }
 
+		[NullAllowed]
 		[Export ("splitViewController", ArgumentSemantic.Retain)]
 		UISplitViewController SplitViewController { get; }
 
+		[NullAllowed]
 		[Export ("tabBarController", ArgumentSemantic.Retain)]
 		UITabBarController TabBarController { get; }
 
@@ -15298,6 +15302,7 @@ namespace UIKit {
 		[NullAllowed, Export ("tabBarObservedScrollView", ArgumentSemantic.Strong)]
 		UIScrollView TabBarObservedScrollView { get; set; }
 
+		[NullAllowed]
 		[Export ("navigationController", ArgumentSemantic.Retain)]
 		UINavigationController NavigationController { get; }
 
@@ -15345,12 +15350,15 @@ namespace UIKit {
 		bool DisablesAutomaticKeyboardDismissal { get; }
 
 		[Export ("storyboard", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		UIStoryboard Storyboard { get;  }
 
 		[Export ("presentedViewController")]
+		[NullAllowed]
 		UIViewController PresentedViewController { get;  }
 
 		[Export ("presentingViewController")]
+		[NullAllowed]
 		UIViewController PresentingViewController { get;  }
 
 		[Export ("definesPresentationContext", ArgumentSemantic.Assign)]
@@ -15440,7 +15448,7 @@ namespace UIKit {
 		// 6.0
 		//
 		[Export ("shouldPerformSegueWithIdentifier:sender:")]
-		bool ShouldPerformSegue (string segueIdentifier, NSObject sender);
+		bool ShouldPerformSegue (string segueIdentifier, [NullAllowed] NSObject sender);
 
 #if !NET
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CanPerformUnwindSegueAction' instead.")]
@@ -15569,11 +15577,13 @@ namespace UIKit {
 		[NoTV]
 		[iOS (7,0)]
 		[Export ("childViewControllerForStatusBarStyle")]
+		[return: NullAllowed]
 		UIViewController ChildViewControllerForStatusBarStyle ();
 
 		[NoTV]
 		[iOS (7,0)]
 		[Export ("childViewControllerForStatusBarHidden")]
+		[return: NullAllowed]
 		UIViewController ChildViewControllerForStatusBarHidden ();
 
 		[iOS (7,0)]
@@ -15604,6 +15614,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[Export ("targetViewControllerForAction:sender:")]
+		[return: NullAllowed]
 		UIViewController GetTargetViewControllerForAction (Selector action,  [NullAllowed] NSObject sender);
 	
 		[iOS (8,0)]
@@ -15623,15 +15634,18 @@ namespace UIKit {
 		UITraitCollection GetOverrideTraitCollectionForChildViewController (UIViewController childViewController);
 
 		[iOS (8,0)]
+		[NullAllowed]
 		[Export ("extensionContext")]
 		NSExtensionContext ExtensionContext { get; }
 
 		[iOS (8,0)]
+		[NullAllowed]
 		[Export ("presentationController")]
 		UIPresentationController PresentationController { get; }
 
 		[NoTV]
 		[iOS (8,0)]
+		[NullAllowed]
 		[Export ("popoverPresentationController")]
 		UIPopoverPresentationController PopoverPresentationController { get; }
 
@@ -16258,6 +16272,7 @@ namespace UIKit {
 	[Category, BaseType (typeof (UIViewController))]
 	partial interface TransitionCoordinator_UIViewController {
 		[Export ("transitionCoordinator")]
+		[return: NullAllowed]
 		IUIViewControllerTransitionCoordinator GetTransitionCoordinator ();
 	}
 
@@ -16769,6 +16784,7 @@ namespace UIKit {
 	partial interface UISplitViewController_UIViewController {
 		[iOS (8,0)]
 		[Export ("splitViewController", ArgumentSemantic.Retain)]
+		[return: NullAllowed]
 		UISplitViewController GetSplitViewController ();
 		
 		[iOS (8,0)]
