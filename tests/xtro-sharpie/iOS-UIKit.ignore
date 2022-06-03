@@ -103,7 +103,6 @@
 !extra-null-allowed! 'System.Void UIKit.UISimpleTextPrintFormatter::.ctor(Foundation.NSAttributedString)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UISimpleTextPrintFormatter::.ctor(System.String)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UITabBar::BeginCustomizingItems(UIKit.UITabBarItem[])' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void UIKit.UITableView::DeselectRow(Foundation.NSIndexPath,System.Boolean)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UITextDragPreviewRenderer::Adjust(CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGPoint)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UITextDragPreviewRenderer::Adjust(CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGPoint)' has a extraneous [NullAllowed] on parameter #1
 !extra-null-allowed! 'System.Void UIKit.UITextDragPreviewRenderer::Adjust(CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGRect&,CoreGraphics.CGPoint)' has a extraneous [NullAllowed] on parameter #2
@@ -141,16 +140,12 @@
 !missing-null-allowed! 'Foundation.NSIndexPath UIKit.UICollectionView::IndexPathForItemAtPoint(CoreGraphics.CGPoint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath UIKit.UICollectionViewFocusUpdateContext::get_NextFocusedIndexPath()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath UIKit.UICollectionViewFocusUpdateContext::get_PreviouslyFocusedIndexPath()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableView::get_IndexPathForSelectedRow()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableView::IndexPathForCell(UIKit.UITableViewCell)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableView::IndexPathForRowAtPoint(CoreGraphics.CGPoint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableViewDelegate::WillDeselectRow(UIKit.UITableView,Foundation.NSIndexPath)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableViewDelegate::WillSelectRow(UIKit.UITableView,Foundation.NSIndexPath)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableViewFocusUpdateContext::get_NextFocusedIndexPath()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath UIKit.UITableViewFocusUpdateContext::get_PreviouslyFocusedIndexPath()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath[] UIKit.UICollectionView::GetIndexPathsForSelectedItems()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexPath[] UIKit.UICollectionViewLayoutInvalidationContext::get_InvalidatedItemIndexPaths()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSIndexPath[] UIKit.UITableView::get_IndexPathsForSelectedRows()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSIndexSet UIKit.UIPasteboard::ItemSetWithPasteboardTypes(System.String[])' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSNumber[] UIKit.UIImagePickerController::AvailableCaptureModesForCameraDevice(UIKit.UIImagePickerControllerCameraDevice)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject UIKit.UIActivityItemProvider::get_PlaceholderItem()' is missing an [NullAllowed] on return type
@@ -266,7 +261,6 @@
 !missing-null-allowed! 'System.Void UIKit.UISegmentedControl::SetImage(UIKit.UIImage,System.nint)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UISegmentedControl::SetTitle(System.String,System.nint)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UITabBarController::SetViewControllers(UIKit.UIViewController[],System.Boolean)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void UIKit.UITableView::RegisterNibForHeaderFooterViewReuse(UIKit.UINib,Foundation.NSString)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UITableViewController::set_TableView(UIKit.UITableView)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void UIKit.UITableViewDelegate::DidEndEditing(UIKit.UITableView,Foundation.NSIndexPath)' is missing an [NullAllowed] on parameter #1
 !missing-null-allowed! 'System.Void UIKit.UITableViewHeaderFooterView::.ctor(Foundation.NSString)' is missing an [NullAllowed] on parameter #0
@@ -366,11 +360,6 @@
 !missing-null-allowed! 'UIKit.UIResponder UIKit.UIResponder::get_NextResponder()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIScreen UIKit.UIScreen::get_MirroredScreen()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIScreenMode UIKit.UIScreen::get_PreferredMode()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UITableViewCell UIKit.UITableView::CellAt(Foundation.NSIndexPath)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UITableViewCell UIKit.UITableView::DequeueReusableCell(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UITableViewHeaderFooterView UIKit.UITableView::DequeueReusableHeaderFooterView(Foundation.NSString)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UITableViewHeaderFooterView UIKit.UITableView::GetFooterView(System.nint)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'UIKit.UITableViewHeaderFooterView UIKit.UITableView::GetHeaderView(System.nint)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UITextField[] UIKit.UIAlertController::get_TextFields()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UITextInputMode UIKit.UIResponder::get_TextInputMode()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UITextPosition UIKit.UITextInputTokenizer::GetPosition(UIKit.UITextPosition,UIKit.UITextGranularity,UIKit.UITextDirection)' is missing an [NullAllowed] on return type

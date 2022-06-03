@@ -12757,15 +12757,18 @@ namespace UIKit {
 		CGRect RectForRowAtIndexPath (NSIndexPath indexPath);
 
 		[Export ("indexPathForRowAtPoint:")]
+		[return: NullAllowed]
 		NSIndexPath IndexPathForRowAtPoint (CGPoint point);
 		
 		[Export ("indexPathForCell:")]
+		[return: NullAllowed]
 		NSIndexPath IndexPathForCell (UITableViewCell cell);
 
 		[Export ("indexPathsForRowsInRect:")][Internal]
 		IntPtr _IndexPathsForRowsInRect (CGRect rect);
 
 		[Export ("cellForRowAtIndexPath:")]
+		[return: NullAllowed]
 		UITableViewCell CellAt (NSIndexPath ns);
 
 		[Export ("visibleCells")]
@@ -12821,6 +12824,7 @@ namespace UIKit {
 		[Export ("allowsSelectionDuringEditing")]
 		bool AllowsSelectionDuringEditing { get; set; }
 
+		[NullAllowed]
 		[Export ("indexPathForSelectedRow")]
 		NSIndexPath IndexPathForSelectedRow { get; }
 
@@ -12828,7 +12832,7 @@ namespace UIKit {
 		void SelectRow ([NullAllowed] NSIndexPath indexPath, bool animated,  UITableViewScrollPosition scrollPosition);
 
 		[Export ("deselectRowAtIndexPath:animated:")]
-		void DeselectRow ([NullAllowed] NSIndexPath indexPath, bool animated);
+		void DeselectRow (NSIndexPath indexPath, bool animated);
 
 		[Export ("sectionIndexMinimumDisplayRowCount")]
 		nint SectionIndexMinimumDisplayRowCount { get; set; }
@@ -12850,9 +12854,11 @@ namespace UIKit {
 		UIView TableFooterView { get; set; }
 
 		[Export ("dequeueReusableCellWithIdentifier:")]
+		[return: NullAllowed]
 		UITableViewCell DequeueReusableCell (string identifier);
 
 		[Export ("dequeueReusableCellWithIdentifier:")][Sealed]
+		[return: NullAllowed]
 		UITableViewCell DequeueReusableCell (NSString identifier);
 
 		// 3.2
@@ -12878,6 +12884,7 @@ namespace UIKit {
                 [Export ("moveRowAtIndexPath:toIndexPath:")]
                 void MoveRow (NSIndexPath fromIndexPath, NSIndexPath toIndexPath);
 
+                [NullAllowed]
                 [Export ("indexPathsForSelectedRows")]
                 NSIndexPath [] IndexPathsForSelectedRows { get; }
 
@@ -12902,22 +12909,25 @@ namespace UIKit {
 		UIColor SectionIndexTrackingBackgroundColor { get; set;  }
 
 		[Export ("headerViewForSection:")]
+		[return: NullAllowed]
 		UITableViewHeaderFooterView GetHeaderView (nint section);
 
 		[Export ("footerViewForSection:")]
+		[return: NullAllowed]
 		UITableViewHeaderFooterView GetFooterView (nint section);
 
 		[Export ("dequeueReusableCellWithIdentifier:forIndexPath:")]
 		UITableViewCell DequeueReusableCell (NSString reuseIdentifier, NSIndexPath indexPath);
 
 		[Export ("dequeueReusableHeaderFooterViewWithIdentifier:")]
+		[return: NullAllowed]
 		UITableViewHeaderFooterView DequeueReusableHeaderFooterView (NSString reuseIdentifier);
 
 		[Export ("registerClass:forCellReuseIdentifier:"), Internal]
 		void RegisterClassForCellReuse (IntPtr /*Class*/ cellClass, NSString reuseIdentifier);
 
 		[Export ("registerNib:forHeaderFooterViewReuseIdentifier:")]
-		void RegisterNibForHeaderFooterViewReuse (UINib nib, NSString reuseIdentifier);
+		void RegisterNibForHeaderFooterViewReuse ([NullAllowed] UINib nib, NSString reuseIdentifier);
 
 		[Export ("registerClass:forHeaderFooterViewReuseIdentifier:"), Internal]
 		void RegisterClassForHeaderFooterViewReuse (IntPtr /*Class*/ aClass, NSString reuseIdentifier);
