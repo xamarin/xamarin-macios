@@ -3564,13 +3564,13 @@ namespace UIKit {
 		void RegisterClassForCell (IntPtr /* Class */cellClass, NSString reuseIdentifier);
 
 		[Export ("registerNib:forCellWithReuseIdentifier:")]
-		void RegisterNibForCell (UINib nib, NSString reuseIdentifier);
+		void RegisterNibForCell ([NullAllowed] UINib nib, NSString reuseIdentifier);
 
 		[Export ("registerClass:forSupplementaryViewOfKind:withReuseIdentifier:"), Protected]
 		void RegisterClassForSupplementaryView (IntPtr /*Class*/ viewClass, NSString kind, NSString reuseIdentifier);
 
 		[Export ("registerNib:forSupplementaryViewOfKind:withReuseIdentifier:")]
-		void RegisterNibForSupplementaryView (UINib nib, NSString kind, NSString reuseIdentifier);
+		void RegisterNibForSupplementaryView ([NullAllowed] UINib nib, NSString kind, NSString reuseIdentifier);
 
 		[Export ("dequeueReusableCellWithReuseIdentifier:forIndexPath:")]
 		UICollectionReusableView DequeueReusableCell (NSString reuseIdentifier, NSIndexPath indexPath);
@@ -3587,10 +3587,11 @@ namespace UIKit {
 		UICollectionReusableView DequeueConfiguredReusableSupplementaryView (UICollectionViewSupplementaryRegistration registration, NSIndexPath indexPath);
 
 		[Export ("indexPathsForSelectedItems")]
+		[return: NullAllowed]
 		NSIndexPath [] GetIndexPathsForSelectedItems ();
 
 		[Export ("selectItemAtIndexPath:animated:scrollPosition:")]
-		void SelectItem (NSIndexPath indexPath, bool animated, UICollectionViewScrollPosition scrollPosition);
+		void SelectItem ([NullAllowed] NSIndexPath indexPath, bool animated, UICollectionViewScrollPosition scrollPosition);
 
 		[Export ("deselectItemAtIndexPath:animated:")]
 		void DeselectItem (NSIndexPath indexPath, bool animated);
@@ -3608,18 +3609,23 @@ namespace UIKit {
 		nint NumberOfItemsInSection (nint section);
 
 		[Export ("layoutAttributesForItemAtIndexPath:")]
+		[return: NullAllowed]
 		UICollectionViewLayoutAttributes GetLayoutAttributesForItem (NSIndexPath indexPath);
 
 		[Export ("layoutAttributesForSupplementaryElementOfKind:atIndexPath:")]
+		[return: NullAllowed]
 		UICollectionViewLayoutAttributes GetLayoutAttributesForSupplementaryElement (NSString elementKind, NSIndexPath indexPath);
 
 		[Export ("indexPathForItemAtPoint:")]
+		[return: NullAllowed]
 		NSIndexPath IndexPathForItemAtPoint (CGPoint point);
 
 		[Export ("indexPathForCell:")]
+		[return: NullAllowed]
 		NSIndexPath IndexPathForCell (UICollectionViewCell cell);
 
 		[Export ("cellForItemAtIndexPath:")]
+		[return: NullAllowed]
 		UICollectionViewCell CellForItem (NSIndexPath indexPath);
 
 		[Export ("visibleCells")]
@@ -3661,7 +3667,7 @@ namespace UIKit {
 
 		[Export ("performBatchUpdates:completion:")]
 		[Async]
-		void PerformBatchUpdates (Action updates, [NullAllowed] UICompletionHandler completed);
+		void PerformBatchUpdates ([NullAllowed] Action updates, [NullAllowed] UICompletionHandler completed);
 
 		//
 		// 7.0
@@ -3670,7 +3676,7 @@ namespace UIKit {
 		[Export ("startInteractiveTransitionToCollectionViewLayout:completion:")]
 		[Async (ResultTypeName="UICollectionViewTransitionResult")]
 		UICollectionViewTransitionLayout StartInteractiveTransition (UICollectionViewLayout newCollectionViewLayout,
-									     UICollectionViewLayoutInteractiveTransitionCompletion completion);
+									     [NullAllowed] UICollectionViewLayoutInteractiveTransitionCompletion completion);
 
 		[iOS (7,0)]
 		[Export ("setCollectionViewLayout:animated:completion:")]
