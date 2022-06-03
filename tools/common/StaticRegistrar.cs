@@ -2386,7 +2386,7 @@ namespace Registrar {
 			case "System.UIntPtr":
 				name.Append ('p');
 				body.AppendLine ("void *v{0};", size);
-				size += 4; // for now at least...
+				size += Is64Bits ? 8 : 4;
 				break;
 			default:
 				bool found = false;
