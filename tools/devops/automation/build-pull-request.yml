@@ -187,10 +187,7 @@ pr:
   autoCancel: true
   branches:
     include:
-    - main
-    - d16-*
-    - xcode*
-    - release/*
+    - '*'  # yes, you do need the quote, * has meaning in yamls
   paths:
     exclude:
     - .github
