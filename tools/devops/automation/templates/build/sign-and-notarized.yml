@@ -207,6 +207,12 @@ steps:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     condition: ${{ parameters.condition }}
 
+  - task: PowerShell@2
+    inputs:
+      filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
+    displayName: 'Notarize & verify packages (ESRP)'
+    condition: ${{ parameters.condition }}
+
 # upload each of the pkgs into the pipeline artifacts
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Not Notarized Build Artifacts'
@@ -216,8 +222,3 @@ steps:
   continueOnError: true
   condition: ${{ parameters.condition }}
 
-- task: PowerShell@2
-  inputs:
-    filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
-  displayName: 'Notarize & verify packages (ESRP)'
-  condition: ${{ parameters.condition }}
