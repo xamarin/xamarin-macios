@@ -30,6 +30,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -126,7 +129,7 @@ namespace CoreFoundation {
 		public override bool Equals (object other)
 		{
 			var od = other as DispatchQueue;
-			if (od == null)
+			if (od is null)
 				return false;
 			return od.Handle == Handle;
 		}
@@ -152,7 +155,7 @@ namespace CoreFoundation {
 		public void SetTargetQueue (DispatchQueue queue)
 		{
 			// note: null is allowed because DISPATCH_TARGET_QUEUE_DEFAULT is defined as NULL (dispatch/queue.h)
-			IntPtr q = queue == null ? IntPtr.Zero : queue.Handle;
+			IntPtr q = queue.GetHandle ();
 			dispatch_set_target_queue (Handle, q);
 		}
 
@@ -247,7 +250,7 @@ namespace CoreFoundation {
 		[TV (10,0)]
 		[Watch (3,0)]
 #endif
-		public DispatchQueue (string label, Attributes attributes, DispatchQueue target = null)
+		public DispatchQueue (string label, Attributes attributes, DispatchQueue? target = null)
 			: base (dispatch_queue_create_with_target (label, attributes?.Create () ?? IntPtr.Zero, target.GetHandle ()), true)
 		{
 		}
@@ -256,7 +259,7 @@ namespace CoreFoundation {
 		// Properties and methods
 		//
 
-		public string Label {
+		public string? Label {
 			get {
 				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (GetCheckedHandle ()));
 			}
@@ -270,7 +273,7 @@ namespace CoreFoundation {
 #else
 		[iOS (7,0)]
 #endif
-		public static string CurrentQueueLabel {
+		public static string? CurrentQueueLabel {
 			get {
 				return Marshal.PtrToStringAnsi (dispatch_queue_get_label (IntPtr.Zero));
 			}
@@ -371,7 +374,7 @@ namespace CoreFoundation {
 			GCHandle gch = GCHandle.FromIntPtr (context);
 			var obj = gch.Target as Tuple<Action, DispatchQueue>;
 			gch.Free ();
-			if (obj != null) {
+			if (obj is not null) {
 				var sc = SynchronizationContext.Current;
 
 				// Set GCD synchronization context. Mainly used when await executes inside GCD to continue
@@ -380,13 +383,13 @@ namespace CoreFoundation {
 				//
 				// This assumes that only 1 queue can run on thread at the same time
 				//
-				if (sc == null)
+				if (sc is null)
 					SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (obj.Item2));
 
 				try {
 					obj.Item1 ();
 				} finally {
-					if (sc == null)
+					if (sc is null)
 						SynchronizationContext.SetSynchronizationContext (null);
 				}
 			}
@@ -399,7 +402,7 @@ namespace CoreFoundation {
 			GCHandle gch = GCHandle.FromIntPtr (context);
 			var obj = gch.Target as Tuple<Action<long>, DispatchQueue>;
 			gch.Free ();
-			if (obj != null) {
+			if (obj is not null) {
 				var sc = SynchronizationContext.Current;
 
 				// Set GCD synchronization context. Mainly used when await executes inside GCD to continue
@@ -408,13 +411,13 @@ namespace CoreFoundation {
 				//
 				// This assumes that only 1 queue can run on thread at the same time
 				//
-				if (sc == null)
+				if (sc is null)
 					SynchronizationContext.SetSynchronizationContext (new DispatchQueueSynchronizationContext (obj.Item2));
 
 				try {
 					obj.Item1 ((long) count);
 				} finally {
-					if (sc == null)
+					if (sc is null)
 						SynchronizationContext.SetSynchronizationContext (null);
 				}
 			}
@@ -431,88 +434,88 @@ namespace CoreFoundation {
 
 		public void DispatchAsync (Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			
 			dispatch_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchAsync (DispatchBlock block)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_async (GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void DispatchSync (Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			
 			dispatch_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchSync (DispatchBlock block)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_sync (GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void DispatchBarrierAsync (Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			
 			dispatch_barrier_async_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchBarrierAsync (DispatchBlock block)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_barrier_async (GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void DispatchBarrierSync (Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_barrier_sync_f (Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchBarrierSync (DispatchBlock block)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_barrier_sync (GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void DispatchAfter (DispatchTime when, Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_after_f (when.Nanoseconds, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch);
 		}
 
 		public void DispatchAfter (DispatchTime when, DispatchBlock block)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			dispatch_after (when.Nanoseconds, GetCheckedHandle (), block.GetCheckedHandle ());
 		}
 
 		public void Submit (Action<int> action, long times)
 		{
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			dispatch_apply_f ((IntPtr) times, Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, this)), static_dispatch_iterations);
 		}
 		
@@ -521,7 +524,7 @@ namespace CoreFoundation {
 			dispatch_queue_set_specific (GetCheckedHandle (), key, (IntPtr) GCHandle.Alloc (context), free_gchandle);
 		}
 
-		public object GetSpecific (IntPtr key)
+		public object? GetSpecific (IntPtr key)
 		{
 			GCHandle gchandle = (GCHandle) dispatch_queue_get_specific (GetCheckedHandle (), key);
 			return gchandle.Target;
@@ -661,25 +664,24 @@ namespace CoreFoundation {
 		// `Equals` and `GetHashCode` based on the Handle property.
 		public override bool Equals (object other)
 		{
-			DispatchQueue o = other as DispatchQueue;
-			if (o == null)
-				return false;
-			return (o.Handle == Handle);
+			if (other is DispatchQueue o)
+				return (o.Handle == Handle);
+			return false;
 		}
 #endif
 
 #if !NET
 		public static bool operator == (DispatchQueue left, DispatchQueue right)
 		{
-			if ((object) left == null)
-				return (object) right == null;
+			if (left is null)
+				return right is null;
 			return left.Equals (right);
 		}
 
 		public static bool operator != (DispatchQueue left, DispatchQueue right)
 		{
-			if ((object) left == null)
-				return (object) right != null;
+			if (left is null)
+				return right is not null;
 			return !left.Equals (right);
 		}
 
@@ -902,7 +904,7 @@ namespace CoreFoundation {
 		{
 		}
 
-		public static DispatchGroup Create ()
+		public static DispatchGroup? Create ()
 		{
 			var ptr = dispatch_group_create ();
 			if (ptr == IntPtr.Zero)
@@ -913,29 +915,29 @@ namespace CoreFoundation {
 
 		public void DispatchAsync (DispatchQueue queue, Action action)
 		{
-			if (queue == null)
-				throw new ArgumentNullException ("queue");
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_group_async_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
 		}
 
 		public void Notify (DispatchQueue queue, DispatchBlock block)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 			dispatch_group_notify (GetCheckedHandle (), queue.Handle, block.GetCheckedHandle ());
 		}
 
 		public void Notify (DispatchQueue queue, Action action)
 		{
-			if (queue == null)
-				throw new ArgumentNullException ("queue");
-			if (action == null)
-				throw new ArgumentNullException ("action");
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			dispatch_group_notify_f (GetCheckedHandle (), queue.Handle, (IntPtr) GCHandle.Alloc (Tuple.Create (action, queue)), DispatchQueue.static_dispatch);
 		}

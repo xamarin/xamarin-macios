@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -63,8 +66,8 @@ namespace CoreFoundation {
 		//
 		public static DispatchData FromByteBuffer (byte [] buffer)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException (nameof (buffer));
+			if (buffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			var b = Marshal.AllocHGlobal (buffer.Length);
 			Marshal.Copy (buffer, 0, b, buffer.Length);
 			var dd = dispatch_data_create (b, (nuint) buffer.Length, IntPtr.Zero, destructor: free);
@@ -73,8 +76,8 @@ namespace CoreFoundation {
 
 		public static DispatchData FromByteBuffer (byte [] buffer, int start, int length)
 		{
-			if (buffer == null)
-				throw new ArgumentNullException (nameof (buffer));
+			if (buffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			if (start < 0 || start >= buffer.Length)
 				throw new ArgumentException (nameof (start));
 			if (length < 0)
@@ -94,7 +97,7 @@ namespace CoreFoundation {
 		public static DispatchData FromBuffer (IntPtr buffer, nuint size)
 		{
 			if (buffer == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (buffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			var dd = dispatch_data_create (buffer, (nuint) size, IntPtr.Zero, destructor: IntPtr.Zero);
 			return new DispatchData (dd, owns: true);
 		}
@@ -132,10 +135,10 @@ namespace CoreFoundation {
 
 		public static DispatchData Concat (DispatchData data1, DispatchData data2)
 		{
-			if (data1 == null)
-				throw new ArgumentNullException (nameof (data1));
-			if (data2 == null)
-				throw new ArgumentNullException (nameof (data2));
+			if (data1 is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data1));
+			if (data2 is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data2));
 
 			return new DispatchData (dispatch_data_create_concat (data1.Handle, data2.Handle), owns: true);
 		}
