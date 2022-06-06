@@ -901,6 +901,7 @@ namespace CoreFoundation {
 					return null;
 				}
 				
+				//[SuppressMessage ("Microsoft.Security", "CS002:SecretInNextLine", Justification="No credentials are stored, they are retrived from the OS Proxy settings.")]
 				var username = proxy?.Username;
 				var password = proxy?.Password;
 				var hostname = proxy?.HostName;
