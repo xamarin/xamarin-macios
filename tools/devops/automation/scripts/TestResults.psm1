@@ -5,6 +5,8 @@ class TestResults {
     [string] $TestsJobStatus # the value of the env var that lets us know if the tests passed or not can be null or empty
     [string] $Label
     [string] $Context
+    hidden [int] $Passed
+    hidden [int] $Failed
 
     TestResults (
         [string] $path,
@@ -16,6 +18,8 @@ class TestResults {
         $this.TestsJobStatus = $status
         $this.Label = $label
         $this.Context = $context
+        $this.Passed = -1
+        $this.Failed = -1
     }
 
     [bool] IsSuccess() {
@@ -64,6 +68,69 @@ class TestResults {
         } 
         return $status
     }
+
+    [object] GetPassedTests() {
+        if ($this.Passed -eq -1 -or $this.Failed -eq -1) {
+            # the result file is diff if the result was a success or not
+            if ($this.IsSuccess()) {
+                $this.Failed = 0
+                # in this case, the file contains a single line with the number and the following
+                # pattern:
+                # "# :tada: All 69 tests passed :tada:"
+                $regexp = "(# :tada: All )(?<passed>[0-9]+)( tests passed :tada:)"
+                $content = Get-Content $this.ResultsPath | Select -First 1
+                if ($content -match $regexp) {
+                    $this.Passed = $matches.passed -as [int]
+                } else {
+                    throw "Unknown result pattern '$content'"
+                }
+            } else {
+                # in this case, the file contains a lot more data, since it has the result summary + the list of
+                # failing tests, for example:
+                #
+                # # Test results
+                # <details>
+                # <summary>4 tests failed, 144 tests passed.</summary>
+                #
+                ## Failed tests
+                #
+                # * fsharp/watchOS 32-bits - simulator/Debug: Crashed
+                # * introspection/watchOS 32-bits - simulator/Debug: Crashed
+                # * dont link/watchOS 32-bits - simulator/Debug: Crashed
+                # * mono-native-compat/watchOS 32-bits - simulator/Debug: Crashed
+                #</details>
+                #
+                # first, we do know that the line we are looking for has <summary> so we find the line (I do not trust
+                # the format so we loop)
+                $content = "" 
+                foreach ($line in Get-Content -Path $this.ResultsPath)
+                {
+                    if ($line.Contains("<summary>")){
+                        $content = $line
+                        break
+                    }
+                }
+                if ($content) {
+                    # we need to parse with a regexp the following
+                    # <summary>4 tests failed, 144 tests passed.</summary>
+                    $regexp = "/(\<summary\>)(?<failed>[0-9]+)( tests failed, )(?<passed>[0-9]+)( tests passed\.\<\/summary\>)"
+                    if ($content -match $regexp) {
+                        $this.Passed = $matches.passed -as [int]
+                        $this.Failed = $matches.failed -as [int]
+                    } else {
+                        throw "Unknown result pattern '$content'"
+                    }
+                } else {
+                    throw "Unknown result pattern of a failed test"
+                }
+
+            }
+        } 
+        return [PSCustomObject]@{
+            Passed = $this.Passed
+            Failed = $this.Failed
+        }
+    }
 }
 
 class ParallelTestsResults {
@@ -93,8 +160,22 @@ class ParallelTestsResults {
         return $failingTests.Count -eq 0
     }
 
-    [string] GetTestCount() {
-        return ""
+    [string] GetTotalTestCount() {
+        # each test result knows the failure and the passes. 
+        $passedTests = 0
+        $failedTests = 0
+        foreach($r in $this.Results)
+        {
+            $result = $r.GetPassedTests()
+            $passedTests += $result.Passed 
+            $failedTests += $result.Failed 
+        }
+        # we return the patterns we already know
+        if ($failedTests -eq 0) {
+            return ":tada: All $passedTests tests passed :tada:"
+        } else {
+            return "$failedTests tests failed, $passedTests tests passed."
+        }
     }
 
     [void] WriteComment($stringBuilder) {
@@ -106,11 +187,21 @@ class ParallelTestsResults {
         if ($failingTests.Count -eq 0) {
             $stringBuilder.AppendLine(":white_check_mark: All tests passed on $($this.Context).")
             $stringBuilder.AppendLine("")
-            $stringBuilder.AppendLine($this.GetTestCount())
+            $stringBuilder.AppendLine($this.GetTotalTestCount())
+            # enumerate the tests context and its tests, since it is nice to know
+            $stringBuilder.AppendLine("")
+            $stringBuilder.AppendLine("## Tests counts")
+            foreach($r in $this.Results)
+            {
+                $stringBuilder.AppendLine("<details><summary>Tests for $($r.Label)</summary>")
+                $result = $r.GetPassedTests()
+                $stringBuilder.Append("$($result.Context) - All $($result.Passed) tests passed")
+                $stringBuilder.AppendLine("</details>")
+            }
         } else {
             $stringBuilder.AppendLine(":x: Tests failed on $($this.Context)") 
             $stringBuilder.AppendLine("")
-            $stringBuilder.AppendLine($this.GetTestCount())
+            $stringBuilder.AppendLine($this.GetTotalTestCount())
             $stringBuilder.AppendLine("")
             $stringBuilder.AppendLine("## Failures")
             # loop over all results and add the content
