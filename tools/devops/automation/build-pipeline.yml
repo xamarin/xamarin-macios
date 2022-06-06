@@ -232,6 +232,7 @@ schedules:
 stages:
 - template: templates/main-stage.yml
   parameters:
+    isPR: false
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
     runTests: ${{ parameters.runTests }}
@@ -249,4 +250,6 @@ stages:
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
     signingSetupSteps:
       - template: ./templates/sign-and-notarized/setup.yml
+        parameters:
+          isPR: false
 

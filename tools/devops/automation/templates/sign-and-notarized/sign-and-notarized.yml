@@ -19,11 +19,14 @@ parameters:
   type: string
 
 - name: condition
-  default: and(succeeded(), eq(variables['IsPRBuild'], 'False'))
+  default: succeeded()
 
 - name: signingSetupSteps
   type: stepList
   default: []
+
+- name: isPR
+  type: boolean
 
 steps:
 
@@ -54,10 +57,10 @@ steps:
       set -x
     fi
   displayName: 'Retrieve packages to sign'
-  condition: ${{ parameters.condition }}
+  condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false)) }}
   timeoutInMinutes: 180
 
-- ${{ if or(eq(parameters.skipESRP, true), eq(variables['IsPR'], 'True')) }}:
+- ${{ if or(eq(parameters.skipESRP, true), eq(parameters.isPR, true)) }}:
   - bash: |
       security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
       echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
@@ -73,7 +76,7 @@ steps:
     name: notarize
     displayName: 'Signing PR Build'
     timeoutInMinutes: 180
-    condition: ${{ parameters.condition }}
+    condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false)) }}
 
 - ${{ else }}:
   - bash: |
@@ -93,7 +96,7 @@ steps:
     name: notarize
     displayName: 'Signing Release Build (ESRP)'
     timeoutInMinutes: 180
-    condition: ${{ parameters.condition }}
+    condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false)) }}
 
 - task: ArchiveFiles@1
   displayName: 'Archive ESRP temp'
@@ -102,7 +105,7 @@ steps:
     includeRootFolder: false
     archiveFile: '$(Build.ArtifactStagingDirectory)/esrp.zip'
   continueOnError: true
-  condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
+  condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false), eq(variables['System.debug'], 'true')) }}
 
 # Upload the esrp temp dir
 - task: PublishPipelineArtifact@1
@@ -111,13 +114,13 @@ steps:
     targetPath: '$(Build.ArtifactStagingDirectory)/esrp.zip'
     artifactName: ESRP-tmp-${{ parameters.packageName }}
   continueOnError: true
-  condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
+  condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false), eq(variables['System.debug'], 'true')) }}
 
 - task: PowerShell@2
   inputs:
     filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
   displayName: 'Notarize & verify packages (ESRP)'
-  condition: ${{ parameters.condition }}
+  condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false)) }}
 
 # always upload no matter what, since if we are not signing we need the artifact in the pipeline
 - task: PublishPipelineArtifact@1

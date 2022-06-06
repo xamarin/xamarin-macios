@@ -15,10 +15,14 @@ parameters:
   type: boolean
   default: false
 
+- name: isPR
+  type: boolean
+
 steps:
 - template: build.yml
   parameters:
     runDeviceTests: false
+    isPR: ${{ parameters.isPR }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     keyringPass: ${{ parameters.keyringPass }}
     gitHubToken: ${{ parameters.gitHubToken }}

@@ -2,11 +2,16 @@
 parameters:
 
 - name: condition
-  default: and(succeeded(), eq(variables['IsPRBuild'], 'False'))
+  default: succeeded()
+
+- name: isPR
+  type: boolean
 
 steps:
 
 - template: setup.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - task: DownloadPipelineArtifact@2
   displayName: Download not notaraized build
@@ -45,7 +50,7 @@ steps:
     ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
     dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
   displayName: 'Sign .msi'
-  condition: ${{ parameters.condition }}
+  condition: ${{ and( eq(parameters.condition, true), eq(parameters.isPR, false)) }}
 
 - pwsh: |
     mv $(Build.SourcesDirectory)/package/bundle.zip $(Build.ArtifactStagingDirectory)/not-signed-bundle.zip
