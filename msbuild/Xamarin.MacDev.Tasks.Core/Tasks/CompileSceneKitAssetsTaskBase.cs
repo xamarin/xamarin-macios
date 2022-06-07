@@ -199,7 +199,7 @@ namespace Xamarin.MacDev.Tasks
 					// so we need to update the Link metadata accordingly (if it exists).
 					var link = scnassetsItem.GetMetadata ("Link");
 					if (!string.IsNullOrEmpty (link)) {
-						var newLinkLength =link.Length - (asset.ItemSpec.Length - scnassets.Length);
+						var newLinkLength = link.Length - (asset.ItemSpec.Length - scnassets.Length);
 						if (newLinkLength > 0 && newLinkLength < link.Length) {
 							link = link.Substring (0, newLinkLength);
 							scnassetsItem.SetMetadata ("Link", link);
