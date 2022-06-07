@@ -419,7 +419,7 @@ namespace Xamarin.Tests {
 		[TestCase ("iossimulator-x64", false)]
 		[TestCase ("ios-arm64", true)]
 		[TestCase ("ios-arm64", true, "PublishTrimmed=true;UseInterpreter=true")]
-		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild, string extraProperties = null)
+		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild, string? extraProperties = null)
 		{
 			if (isDeviceBuild)
 				Configuration.AssertDeviceAvailable ();
