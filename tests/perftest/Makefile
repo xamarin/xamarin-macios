@@ -2,15 +2,7 @@ TOP=../..
 
 include $(TOP)/Make.config
 
-dotnet/global.json: $(TOP)/NuGet.config Makefile
-	$(Q) $(MAKE) -C ../dotnet $(notdir $@)
-	$(Q) $(CP) ../dotnet/$(notdir $@) $@
-
-dotnet/NuGet.config: $(TOP)/NuGet.config Makefile
-	$(Q) $(MAKE) -C ../dotnet $(notdir $@)
-	$(Q) $(CP) ../dotnet/$(notdir $@) $@
-
-TARGETS=dotnet/NuGet.config dotnet/global.json
+TARGETS=
 
 ifeq ("$(BENCHMARK_OUTPUT_PATH)","")
 BENCHMARK_OUTPUT_PATH:=$(abspath $(CURDIR)/output/$(shell date +%Y-%m-%d--%H:%M:%S))

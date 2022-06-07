@@ -46,7 +46,6 @@ namespace Xamarin.MacDev.Tasks {
 </plist>";
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-			Configuration.CopyDotNetSupportingFiles (tmpdir);
 			var csprojPath = Path.Combine (tmpdir, "PartialAppManifest.csproj");
 			File.WriteAllText (csprojPath, csproj);
 
