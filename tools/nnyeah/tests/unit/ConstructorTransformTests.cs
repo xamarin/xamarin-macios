@@ -3,6 +3,8 @@ using NUnit.Framework;
 using Mono.Cecil;
 using Mono.Cecil.Rocks;
 using System.Linq;
+using Mono.Cecil.Cil;
+using System.Collections.Generic;
 
 namespace Microsoft.MaciOS.Nnyeah.Tests {
 
@@ -138,5 +140,115 @@ public class Foo {
             Assert.AreEqual ("System.IntPtr", ctor.Parameters[0].ParameterType.FullName);
         }
 
+        void AssertInstruction (Instruction instruction, string value)
+        {
+            // Instruction.ToString() has a offset such as "IL_0010:" so use contain to sidestep
+            Assert.True (instruction.ToString ().Contains (value), $"Instruction was: {instruction}");
+        }
+
+        void AssertInstructionBeforeNewobj (IList<Instruction> instructions, string instructionValue)
+        {
+            foreach (var createInstruction in instructions.Where (i => i.OpCode.Code == Mono.Cecil.Cil.Code.Newobj))
+            {
+                var createInstructionIndex = instructions.IndexOf (createInstruction);
+                var instructionBeforeCreate = instructions[createInstructionIndex - 1];
+                AssertInstruction (instructionBeforeCreate, instructionValue);
+            }
+        }
+
+        [Test]
+        public async Task DerivedFromNSObjectInvocation ()
+        {
+            var type = await CompileTypeForTest (@"
+using System;
+using Foundation;
+public class Foo : NSObject {
+    public Foo (IntPtr p) : base (p) { }
+
+    public static Foo Create () {
+        var ptr = IntPtr.Zero;
+        return new Foo (ptr);
+    }
+}
+
+");
+            CreateTestTransform (type).ReworkAsNeeded (type);
+            var instructions = type.GetMethods ().First (m => m.Name == "Create").Body.Instructions;
+            AssertInstructionBeforeNewobj (instructions, "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+        }
+
+        [Test]
+        public async Task NotDerivedFromNSObjectInvocation ()
+        {
+            var type = await CompileTypeForTest (@"
+using System;
+public class Foo {
+    public Foo (IntPtr p) { }
+
+    public static Foo Create () {
+        var ptr = IntPtr.Zero;
+        return new Foo (ptr);
+    }
+}
+
+");
+            CreateTestTransform (type).ReworkAsNeeded (type);
+
+            var instructions = type.GetMethods ().First (m => m.Name == "Create").Body.Instructions;
+            // This is the instruction normally before the newobj
+            AssertInstructionBeforeNewobj (instructions, "ldloc.0");
+        }
+
+        [Test]
+        public async Task DerivedFromNSObjectMultipleInvocations ()
+        {
+            var type = await CompileTypeForTest (@"
+using System;
+using Foundation;
+public class Foo : NSObject {
+    public Foo (IntPtr p) : base (p) { }
+
+    public static Foo Create () {
+        var x = new Foo (IntPtr.Zero);
+        var y = new Foo (IntPtr.Zero);
+        var z = new Foo (IntPtr.Zero);
+        return z;
+    }
+}
+
+");
+            CreateTestTransform (type).ReworkAsNeeded (type);
+            var instructions = type.GetMethods ().First (m => m.Name == "Create").Body.Instructions;
+            AssertInstructionBeforeNewobj (instructions, "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+     }
+
+        [Test]
+        public async Task DerivedFromNSObjectInvocationWithBool ()
+        {
+            var type = await CompileTypeForTest (@"
+using System;
+using Foundation;
+public class Foo : NSObject {
+    public Foo (IntPtr p, bool b) : base (p, b) { }
+
+    public static Foo Create () {
+        var ptr = IntPtr.Zero;
+        return new Foo (ptr, true);
+    }
+}
+
+");
+            CreateTestTransform (type).ReworkAsNeeded (type);
+
+            var create = type.GetMethods ().First (m => m.Name == "Create");
+            var instructions = create.Body.Instructions;
+
+            var createInstruction = instructions.First (i => i.OpCode.Code == Mono.Cecil.Cil.Code.Newobj);
+            var createInstructionIndex = instructions.IndexOf (createInstruction);
+            
+            AssertInstruction (instructions[createInstructionIndex - 3], "stloc");
+            AssertInstruction (instructions[createInstructionIndex - 2], "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+            AssertInstruction (instructions[createInstructionIndex - 1], "ldloc");
+        } 
     }
 }
