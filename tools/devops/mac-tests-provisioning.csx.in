@@ -10,7 +10,6 @@ using static Xamarin.Provisioning.ProvisioningScript;
 Item ("@MONO_PACKAGE@");
 Item ("@VS_PACKAGE@");
 Item ("@XM_PACKAGE@");
-DotNetCoreSdk ("@SYSTEM_DOTNET_VERSION@");
 
 BrewPackages ("p7zip");
 

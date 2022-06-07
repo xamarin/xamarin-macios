@@ -933,55 +933,6 @@ function check_simulators ()
 	fi
 }
 
-function check_dotnet ()
-{
-	if test -n "$IGNORE_DOTNET"; then return; fi
-
-	local DOTNET_VERSION
-	local DOTNET_FILENAME
-	local URL
-	local INSTALL_DIR
-	local CACHED_FILE
-	local DOWNLOADED_FILE
-
-	DOTNET_VERSION=$(grep "^SYSTEM_DOTNET_VERSION=" dotnet.config | sed 's/.*=//')
-	ARCH=$(arch)
-	if [[ "$ARCH" =~ "arm64" ]]; then
-		URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-arm64.pkg
-	else
-		URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-x64.pkg
-	fi
-	INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
-
-	if test -d "$INSTALL_DIR"; then
-		ok "Found dotnet $DOTNET_VERSION in $INSTALL_DIR (exactly $DOTNET_VERSION is required)."
-		return
-	fi
-	if test -z "$PROVISION_DOTNET"; then
-		fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$URL${COLOR_RESET}."
-		fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
-		return
-	fi
-
-	DOTNET_FILENAME=$(basename "$URL")
-
-	CACHED_FILE=$HOME/Library/Caches/xamarin-macios/$DOTNET_FILENAME
-	if test -f "$CACHED_FILE"; then
-		log "Found cached version in $CACHED_FILE, will install from cache."
-		DOWNLOADED_FILE="$HOME/Library/Caches/xamarin-macios/$DOTNET_FILENAME"
-	else
-		log "Downloading dotnet $DOTNET_VERSION from $URL..."
-		mkdir -p "$PROVISION_DOWNLOAD_DIR"
-		DOWNLOADED_FILE="$PROVISION_DOWNLOAD_DIR/$DOTNET_FILENAME"
-		curl -f -L "$URL" -o "$DOWNLOADED_FILE"
-	fi
-
-	log "Installing dotnet $DOTNET_VERSION into $INSTALL_DIR..."
-	$SUDO installer -pkg "$DOWNLOADED_FILE" -target /
-
-	ok "Installed dotnet $DOTNET_VERSION into $INSTALL_DIR."
-}
-
 echo "Checking system..."
 
 check_osx_version
@@ -995,7 +946,6 @@ check_cmake
 check_7z
 check_objective_sharpie
 check_simulators
-check_dotnet ""
 if test -z "$IGNORE_DOTNET"; then
 	ok "Installed .NET SDKs:"
 	(IFS=$'\n'; for i in $(/usr/local/share/dotnet/dotnet --list-sdks); do log "$i"; done)

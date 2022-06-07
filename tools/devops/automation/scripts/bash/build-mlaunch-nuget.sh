@@ -48,7 +48,7 @@ cp -c "$IOS_DESTDIR$MONOTOUCH_PREFIX/bin/mlaunch" "$MLAUNCH_WORK_DIR/mlaunch/bin
 cp -c -r "$XAM_TOP"/tools/mlaunch/nupkg/* "$MLAUNCH_WORK_DIR"
 
 # We need to override global.json to use .NET 6.0
-cp -c "$XAM_TOP/global6.json" "$MLAUNCH_WORK_DIR/global.json"
+cp -c "$XAM_TOP/global.json" "$MLAUNCH_WORK_DIR/global.json"
 
 # Version calculation
 XCODE_VERSION=$(grep XCODE_VERSION= "$XAM_TOP/Make.config" | sed 's/.*=//')

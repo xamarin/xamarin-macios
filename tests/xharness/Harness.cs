@@ -209,7 +209,7 @@ namespace Xharness {
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
 
 			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
-			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, config ["SYSTEM_DOTNET"], config ["DOTNET"]);
+			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, "/usr/local/share/dotnet/dotnet", config ["DOTNET"]);
 			TunnelBore = new TunnelBore (processManager);
 		}
 

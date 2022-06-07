@@ -1,5 +1,2 @@
 *.air
 *.metallib
-global.json
-NuGet.config
-
