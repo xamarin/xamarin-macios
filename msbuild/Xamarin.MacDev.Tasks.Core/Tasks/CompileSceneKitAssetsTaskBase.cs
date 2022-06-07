@@ -164,7 +164,6 @@ namespace Xamarin.MacDev.Tasks
 			var bundleResources = new List<ITaskItem> ();
 			var modified = new HashSet<string> ();
 			var items = new List<ITaskItem> ();
-			string metadata;
 
 			foreach (var asset in SceneKitAssets) {
 				if (!File.Exists (asset.ItemSpec))
@@ -178,9 +177,7 @@ namespace Xamarin.MacDev.Tasks
 				if (scnassets.Length == 0)
 					continue;
 
-				metadata = asset.GetMetadata ("LogicalName");
-				if (!string.IsNullOrEmpty (metadata))
-					asset.SetMetadata ("LogicalName", string.Empty);
+				asset.RemoveMetadata ("LogicalName");
 
 				var bundleName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty(SessionId));
 				var output = new TaskItem (Path.Combine (intermediate, bundleName));
