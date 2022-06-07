@@ -98,8 +98,10 @@ namespace HomeKit {
 
 	public partial class HMAccessorySetupManager {
 
+#pragma warning disable CS0618 // HMChipServiceTopology and HMErrorHandler is obsolete
 		public virtual void AddAndSetUpAccessories (HMChipServiceTopology topology, HMErrorHandler completion) => throw new InvalidOperationException ();
 		public virtual Task AddAndSetUpAccessoriesAsync (HMChipServiceTopology topology) => throw new InvalidOperationException ();
+#pragma warning restore CS0618 // HMChipServiceTopology and HMErrorHandler is obsolete
 
 	} /* class HMAccessorySetupManager */
 

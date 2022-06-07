@@ -126,7 +126,7 @@ DOWNLOAD_DOTNET_VERSION=$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)
 endif
 endif
 
-.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))) package-download/global.json package-download/NuGet.config
+.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET_TARBALL_NAME)))
 	$(Q_GEN) cd package-download && $(DOTNET) \
 		build \
 		download-packages.proj \
@@ -139,28 +139,15 @@ endif
 		/p:ToolChainManifestVersionBand="$(TOOLCHAIN_MANIFEST_VERSION_BAND)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
-	$(Q) $(CP) ./downloads/microsoft.net.workload.mono.toolchain.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
-	$(Q) $(CP) ./downloads/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
+	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.mono.toolchain.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
+	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
 	$(Q) touch $@
 
-.stamp-install-t4: $(TOP)/.config/dotnet-tools.json
-	$(SYSTEM_DOTNET) tool restore
+.stamp-install-t4: $(TOP)/.config/dotnet-tools.json .stamp-download-dotnet-packages
+	$(DOTNET) tool restore
 	$(Q) touch $@
 
 BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
-
-package-download/global.json: $(TOP)/global6.json Makefile
-	$(Q) $(CP) $< $@
-
-# put any downloaded packages in our own directory, not in ~
-package-download/NuGet.config: $(TOP)/NuGet.config Makefile
-	$(Q) $(CP) $< $@
-	$(Q) $(CP) $< $@.tmp
-	$(Q) nuget config -Set globalPackagesFolder=$(abspath $(CURDIR)/downloads) -Config $@.tmp
-ifdef CUSTOM_DOTNET
-	$(Q) nuget sources add -Name dev-runtime-feed -Source $(abspath $(DOTNET_RUNTIME_PATH)/artifacts/packages/Release/Shipping) -ConfigFile $@.tmp
-endif
-	$(Q) mv $@.tmp $@
 
 DOTNET_DOWNLOADS = \
 	downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))) \

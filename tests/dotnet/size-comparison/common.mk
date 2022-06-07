@@ -3,12 +3,7 @@ TOP=../../../..
 include $(TOP)/Make.config
 
 TARGETS += \
-	.config.stamp \
 	.install-workloads.stamp \
-
-.config.stamp: Makefile
-	$(Q) $(MAKE) -C ../.. NuGet.config global.json
-	$(Q) touch $@
 
 all-local:: compare
 

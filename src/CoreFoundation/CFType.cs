@@ -47,7 +47,7 @@ namespace CoreFoundation {
 		public string? GetDescription (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (handle));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handle));
 			
 			return CFString.FromHandle (CFCopyDescription (handle));
 		}

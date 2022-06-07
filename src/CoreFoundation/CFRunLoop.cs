@@ -285,7 +285,7 @@ namespace CoreFoundation {
 		public CFRunLoopExitReason RunInMode (NSString mode, double seconds, bool returnAfterSourceHandled)
 		{
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			return CFRunLoopRunInMode (mode.Handle, seconds, returnAfterSourceHandled);
 		}
@@ -296,9 +296,9 @@ namespace CoreFoundation {
 		public void AddSource (CFRunLoopSource source, NSString mode)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			CFRunLoopAddSource (Handle, source.Handle, mode.Handle);
 		}
@@ -310,9 +310,9 @@ namespace CoreFoundation {
 		public bool ContainsSource (CFRunLoopSource source, NSString mode)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			return CFRunLoopContainsSource (Handle, source.Handle, mode.Handle);
 		}
@@ -323,9 +323,9 @@ namespace CoreFoundation {
 		public void RemoveSource (CFRunLoopSource source, NSString mode)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			CFRunLoopRemoveSource (Handle, source.Handle, mode.Handle);
 		}
