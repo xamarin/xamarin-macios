@@ -92,7 +92,7 @@ steps:
   condition: and(${{ parameters.condition }}, contains(variables['configuration.BuildPkgs'], 'True'))
   timeoutInMinutes: 180
 
-- ${{ if and(eq(parameters.skipESRP, false), eq(variables['IsPR'], 'False')) }}:
+- ${{ if eq(parameters.skipESRP, false) }}:
   - task: MicroBuildSigningPlugin@3
     displayName: 'Install Signing Plugin'
     inputs:
@@ -103,7 +103,7 @@ steps:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     condition: ${{ parameters.condition }}
 
-- ${{ if and(eq(parameters.enableDotnet, true), eq(parameters.skipESRP, false), eq(variables['IsPR'], 'False')) }}:
+- ${{ if and(eq(parameters.enableDotnet, true), eq(parameters.skipESRP, false)) }}:
   - pwsh : |
       # Get the list of files to sign
       $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
@@ -135,7 +135,7 @@ steps:
     displayName: 'Sign .msi'
     condition: ${{ parameters.condition }}
 
-- ${{ if or(eq(parameters.skipESRP, true), eq(variables['IsPR'], 'True')) }}:
+- ${{ if eq(parameters.skipESRP, true) }}:
   - bash: |
       security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
       PACKAGES="$IOS_PKG $MAC_PKG $IOS_DOTNET_PKG $TVOS_DOTNET_PKG $WATCHOS_DOTNET_PKG $MACOS_DOTNET_PKG $MACCATALYST_DOTNET_PKG"
@@ -196,7 +196,7 @@ steps:
   continueOnError: true
   condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
 
-- ${{ if and(eq(parameters.skipESRP, false), eq(variables['IsPR'], 'False')) }}:
+- ${{ if eq(parameters.skipESRP, false) }}:
   - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3
     displayName: 'Install Notarizing Plugin'
     inputs:
@@ -213,12 +213,12 @@ steps:
     displayName: 'Notarize & verify packages (ESRP)'
     condition: ${{ parameters.condition }}
 
-# upload each of the pkgs into the pipeline artifacts
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Not Notarized Build Artifacts'
-  inputs:
-    targetPath: $(Build.SourcesDirectory)/package/notarized
-    artifactName: not-notarized-pkg
-  continueOnError: true
-  condition: ${{ parameters.condition }}
+  # upload each of the pkgs into the pipeline artifacts
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Notarized Build Artifacts'
+    inputs:
+      targetPath: $(Build.SourcesDirectory)/package/notarized
+      artifactName: not-notarized-pkg
+    continueOnError: true
+    condition: ${{ parameters.condition }}
 
