@@ -213,12 +213,12 @@ steps:
     displayName: 'Notarize & verify packages (ESRP)'
     condition: ${{ parameters.condition }}
 
-# upload each of the pkgs into the pipeline artifacts
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Not Notarized Build Artifacts'
-  inputs:
-    targetPath: $(Build.SourcesDirectory)/package/notarized
-    artifactName: not-notarized-pkg
-  continueOnError: true
-  condition: ${{ parameters.condition }}
+  # upload each of the pkgs into the pipeline artifacts
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Notarized Build Artifacts'
+    inputs:
+      targetPath: $(Build.SourcesDirectory)/package/notarized
+      artifactName: not-notarized-pkg
+    continueOnError: true
+    condition: ${{ parameters.condition }}
 
