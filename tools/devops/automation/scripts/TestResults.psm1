@@ -85,47 +85,51 @@ class TestResults {
                     throw "Unknown result pattern '$content'"
                 }
             } else {
-                # in this case, the file contains a lot more data, since it has the result summary + the list of
-                # failing tests, for example:
-                #
-                # # Test results
-                # <details>
-                # <summary>4 tests failed, 144 tests passed.</summary>
-                #
-                ## Failed tests
-                #
-                # * fsharp/watchOS 32-bits - simulator/Debug: Crashed
-                # * introspection/watchOS 32-bits - simulator/Debug: Crashed
-                # * dont link/watchOS 32-bits - simulator/Debug: Crashed
-                # * mono-native-compat/watchOS 32-bits - simulator/Debug: Crashed
-                #</details>
-                #
-                # first, we do know that the line we are looking for has <summary> so we find the line (I do not trust
-                # the format so we loop)
-                $content = "" 
-                foreach ($line in Get-Content -Path $this.ResultsPath)
-                {
-                    if ($line.Contains("<summary>")){
-                        $content = $line
-                        break
-                    }
-                }
-                if ($content) {
-                    # we need to parse with a regexp the following
-                    # <summary>4 tests failed, 144 tests passed.</summary>
-                    $regexp = "/(\<summary\>)(?<failed>[0-9]+)( tests failed, )(?<passed>[0-9]+)( tests passed\.\<\/summary\>)"
-                    if ($content -match $regexp) {
-                        $this.Passed = $matches.passed -as [int]
-                        $this.Failed = $matches.failed -as [int]
-                    } else {
-                        throw "Unknown result pattern '$content'"
-                    }
+                if ($this.TestsJobStatus -eq "") {
+                    $this.Passed = -1
+                    $this.Failed = -1
                 } else {
-                    throw "Unknown result pattern of a failed test"
+                    # in this case, the file contains a lot more data, since it has the result summary + the list of
+                    # failing tests, for example:
+                    #
+                    # # Test results
+                    # <details>
+                    # <summary>4 tests failed, 144 tests passed.</summary>
+                    #
+                    ## Failed tests
+                    #
+                    # * fsharp/watchOS 32-bits - simulator/Debug: Crashed
+                    # * introspection/watchOS 32-bits - simulator/Debug: Crashed
+                    # * dont link/watchOS 32-bits - simulator/Debug: Crashed
+                    # * mono-native-compat/watchOS 32-bits - simulator/Debug: Crashed
+                    #</details>
+                    #
+                    # first, we do know that the line we are looking for has <summary> so we find the line (I do not trust
+                    # the format so we loop)
+                    $content = ""
+                    foreach ($line in Get-Content -Path $this.ResultsPath)
+                    {
+                        if ($line.Contains("<summary>")){
+                            $content = $line
+                            break
+                        }
+                    }
+                    if ($content) {
+                        # we need to parse with a regexp the following
+                        # <summary>4 tests failed, 144 tests passed.</summary>
+                        $regexp = "/(\<summary\>)(?<failed>[0-9]+)( tests failed, )(?<passed>[0-9]+)( tests passed\.\<\/summary\>)"
+                        if ($content -match $regexp) {
+                            $this.Passed = $matches.passed -as [int]
+                            $this.Failed = $matches.failed -as [int]
+                        } else {
+                            throw "Unknown result pattern '$content'"
+                        }
+                    } else {
+                        throw "Unknown result pattern of a failed test"
+                    }
                 }
-
             }
-        } 
+        }
         return [PSCustomObject]@{
             Passed = $this.Passed
             Failed = $this.Failed
@@ -205,12 +209,18 @@ class ParallelTestsResults {
             $stringBuilder.AppendLine("")
             $stringBuilder.AppendLine("## Failures")
             # loop over all results and add the content
-            foreach ($result in $failingTests)
+            foreach ($r in $failingTests)
             {
-                # create a detail per test result with the name of the test and will contain the exact summary
-                $stringBuilder.AppendLine("<details><summary>Tests for $($result.Label)</summary>")
-                $result.WriteComment($stringBuilder)
-                $stringBuilder.AppendLine("</details>")
+                # get the result, if -1, we had a crash, else we print the result
+                $result = $r.GetPassedTests()
+                $stringBuilder.AppendLine("<details><summary>Tests for $($r.Label)</summary>")
+                if ($result.Passed -eq -1 -or $result.Failed -eq -1) {
+                    $stringBuilder.AppendLine("Tests failed catastrophically on $($r.Context) (no summary found).")
+                } else {
+                    # create a detail per test result with the name of the test and will contain the exact summary
+                    $r.WriteComment($stringBuilder)
+                    $stringBuilder.AppendLine("</details>")
+                }
             }
         }
     }
