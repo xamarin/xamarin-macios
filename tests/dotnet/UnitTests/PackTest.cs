@@ -26,7 +26,6 @@ namespace Xamarin.Tests {
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var outputPath = Path.Combine (tmpdir, "OutputPath");
@@ -57,7 +56,6 @@ namespace Xamarin.Tests {
 
 			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var outputPath = Path.Combine (tmpdir, "OutputPath");
@@ -115,7 +113,6 @@ namespace Xamarin.Tests {
 
 			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var outputPath = Path.Combine (tmpdir, "OutputPath");

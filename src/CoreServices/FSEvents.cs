@@ -296,7 +296,7 @@ namespace CoreServices
 		public FSEventStream (FSEventStreamCreateOptions options)
 		{
 			if (options is null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 
 			NSArray pathsToWatch;
 

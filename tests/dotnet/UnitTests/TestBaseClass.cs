@@ -263,8 +263,6 @@ namespace Xamarin.Tests {
 
 			File.WriteAllText (csproj, sb.ToString ());
 
-			Configuration.CopyDotNetSupportingFiles (dir);
-
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			appPath = Path.Combine (dir, "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, name + ".app");
 
