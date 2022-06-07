@@ -79,7 +79,9 @@ class TestResults {
                 # "# :tada: All 69 tests passed :tada:"
                 $regexp = "(# :tada: All )(?<passed>[0-9]+)( tests passed :tada:)"
                 $content = Get-Content $this.ResultsPath | Select -First 1
-                if ($content -match $regexp) {
+                if ($content -eq "# No tests selected.") {
+                    $this.Passed = 0
+                } elseif ($content -match $regexp) {
                     $this.Passed = $matches.passed -as [int]
                 } else {
                     throw "Unknown result pattern '$content'"
