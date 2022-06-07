@@ -164,7 +164,6 @@ namespace Xamarin.MacDev.Tasks
 			var bundleResources = new List<ITaskItem> ();
 			var modified = new HashSet<string> ();
 			var items = new List<ITaskItem> ();
-			string metadata;
 
 			foreach (var asset in SceneKitAssets) {
 				if (!File.Exists (asset.ItemSpec))
@@ -178,9 +177,7 @@ namespace Xamarin.MacDev.Tasks
 				if (scnassets.Length == 0)
 					continue;
 
-				metadata = asset.GetMetadata ("LogicalName");
-				if (!string.IsNullOrEmpty (metadata))
-					asset.SetMetadata ("LogicalName", string.Empty);
+				asset.RemoveMetadata ("LogicalName");
 
 				var bundleName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty(SessionId));
 				var output = new TaskItem (Path.Combine (intermediate, bundleName));
@@ -194,6 +191,17 @@ namespace Xamarin.MacDev.Tasks
 
 					// .. and remove the @OriginalItemSpec which is for @asset
 					scnassetsItem.RemoveMetadata ("OriginalItemSpec");
+
+					// The Link metadata is for the asset, but 'scnassetsItem' is the containing *.scnasset directory,
+					// so we need to update the Link metadata accordingly (if it exists).
+					var link = scnassetsItem.GetMetadata ("Link");
+					if (!string.IsNullOrEmpty (link)) {
+						var newLinkLength = link.Length - (asset.ItemSpec.Length - scnassets.Length);
+						if (newLinkLength > 0 && newLinkLength < link.Length) {
+							link = link.Substring (0, newLinkLength);
+							scnassetsItem.SetMetadata ("Link", link);
+						}
+					}
 
 					var assetMetadata = asset.GetMetadata ("DefiningProjectFullPath");
 					if (assetMetadata != scnassetsItem.GetMetadata ("DefiningProjectFullPath")) {

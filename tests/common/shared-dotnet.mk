@@ -11,7 +11,7 @@ TESTNAME:=$(notdir $(shell dirname "$(shell dirname "$(CURDIR)")"))
 endif
 
 prepare:
-	$(Q) $(MAKE) -C $(TOP)/tests/dotnet copy-dotnet-config
+	@# nothing to do here right now
 
 reload:
 	$(Q) $(MAKE) -C $(TOP) -j8 all
