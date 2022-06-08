@@ -15,6 +15,22 @@ parameters:
 steps:
 
 - ${{ if eq(parameters.runTests, true) }}:
+  # Download the Html Report that was added by the tests job.
+  - task: DownloadPipelineArtifact@2
+    displayName: Download html report 
+    inputs:
+      patterns: "HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/HtmlReport.zip"
+      allowFailedBuilds: true
+      path: $(System.DefaultWorkingDirectory)/Reports
+
+  # Unzip report.
+  - task: ExtractFiles@1
+    displayName: 'Extract HtmlReport'
+    continueOnError: true # there might not be an html report, but we should continue processing other steps anyway
+    inputs:
+      archiveFilePatterns: "$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/HtmlReport.zip"
+      destinationFolder: "$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}"
+
   # Download the test report to write the comment.
   - task: DownloadPipelineArtifact@2
     displayName: Download Test Summary
@@ -26,5 +42,6 @@ steps:
   - powershell: |
       $label="${{ replace(parameters.label, '-', '_') }}"
       Write-Host "##vso[task.setvariable variable=TEST_SUMMARY_PATH_$($label.ToUpper())]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.testPrefix }}$label\TestSummary.md"
+      Write-Host "##vso[task.setvariable variable=HTML_REPORT_PATH_$($label.ToUpper())]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport-${{ parameters.testPrefix }}$label"
     displayName: Publish artifact paths
     name: artifacts_${{ replace(parameters.label, '-', '_') }} # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
