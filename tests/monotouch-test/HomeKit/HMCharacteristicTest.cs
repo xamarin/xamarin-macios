@@ -8,7 +8,7 @@
 // Copyright 2022 Microsoft. All rights reserved.
 //
 
-#if HAS_HOMEKIT
+#if HAS_HOMEKIT && !MONOMAC
 
 using System;
 using NUnit.Framework;
