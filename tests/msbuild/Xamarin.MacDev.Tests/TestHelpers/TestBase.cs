@@ -65,7 +65,6 @@ namespace Xamarin.Tests
 			var rv = Configuration.CloneTestDirectory (Configuration.TestProjectsDirectory);
 
 			if (mode == ExecutionMode.DotNet) {
-				Configuration.CopyDotNetSupportingFiles (rv);
 				Configuration.FixupTestFiles (rv, "dotnet");
 			}
 

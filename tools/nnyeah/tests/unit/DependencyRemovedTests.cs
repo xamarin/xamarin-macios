@@ -12,8 +12,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 	public class DependencyRemovedTests {
 		[TestCase ("nint")]
 		[TestCase ("nuint")]
-// nfloat has an issue on write.
-//		[TestCase ("nfloat")]
+		[TestCase ("nfloat")]
 		public async Task BasicDependencyRemoved (string type)
 		{
 			var dir = Cache.CreateTemporaryDirectory ($"DependencyRemoved_{type}");
@@ -23,12 +22,12 @@ public class Foo {{
 	public {type} Ident ({type} e) => e;
 }}
 ";
-			var output = await TestRunning.BuildLibrary (code, "NoName", dir);
+			await TestRunning.BuildLibrary (code, "NoName", dir);
 			var expectedOutputFile = Path.Combine (dir, "NoName.dll");
 			var targetRewrite = Path.Combine (dir, "NoNameRemoved.dll");
 
 			Assert.DoesNotThrow (() => {
-				Program.ProcessAssembly (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS),
+				AssemblyConverter.Convert (Compiler.XamarinPlatformLibraryPath (PlatformName.macOS),
 					Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS), expectedOutputFile,
 					targetRewrite, verbose: false, forceOverwrite: true, suppressWarnings: true);
 			}, $"Failed to process assembly for type {type}");
@@ -37,7 +36,7 @@ public class Foo {{
 			var module = ModuleDefinition.ReadModule (targetRewrite);
 
 			var platform = module.XamarinPlatformName ();
-			Assert.AreEqual (Microsoft.MaciOS.Nnyeah.PlatformName.None, platform);
+			Assert.AreEqual (Microsoft.MaciOS.Nnyeah.PlatformName.None, platform, "still has Xamarin dependency");
 		}
 	}
 }

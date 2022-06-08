@@ -63,16 +63,6 @@ steps:
   displayName: Generate constants files 
   timeoutInMinutes: 15
 
-- bash: |
-    set -x
-    set -e
-
-    make global6.json
-    make -C tests/dotnet global.json NuGet.config
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-  displayName: 'Generate global.json'
-  timeoutInMinutes: 5
-
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
   inputs:
@@ -83,7 +73,7 @@ steps:
     set -x
     set -e
 
-    make global6.json
+    make global.json
     make -C builds dotnet
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Bootstrap dotnet
@@ -145,8 +135,6 @@ steps:
       PLATFORMS="$PLATFORMS $CURRENT"
     done
 
-    rm global.json
-    cp global6.json global.json
     $DOTNET workload install --from-rollback-file $ROLLBACK_PATH --source $DOTNET_NUPKG_DIR $SOURCES --verbosity diag $PLATFORMS
 
     var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET_DIR)

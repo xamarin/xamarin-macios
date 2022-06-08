@@ -1232,6 +1232,9 @@
 		<value>L'attributo BindAsAttribute trovato in '{0}' non è valido: non è stato possibile trovare un tipo enumerazione sottostante di {1}. Caricare un report sui bug all'indirizzo https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Il registrar ha trovato un tipo non valido '{0}' nella firma per il metodo '{1}': L'interfaccia deve includere un attributo Protocol che ne specifica il tipo di wrapper.
 		</value>
@@ -1739,5 +1742,12 @@
 	</data>
   <data name="MX8041" xml:space="preserve">
 		<value>Impossibile creare un'istanza del tipo di {0}.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

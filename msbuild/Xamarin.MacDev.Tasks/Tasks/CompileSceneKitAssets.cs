@@ -1,8 +1,7 @@
-using System;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class CompileSceneKitAssets : CompileSceneKitAssetsTaskBase, ICancelableTask
 	{

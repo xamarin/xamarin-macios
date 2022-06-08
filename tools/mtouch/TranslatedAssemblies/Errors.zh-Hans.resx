@@ -1232,6 +1232,9 @@
 		<value>在 "{0}" 上找到的 BindAsAttribute 无效: 找不到基本枚举类型 {1}。请在 https://github.com/xamarin/xamarin-macios/issues/new 提交 Bug 报告
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>注册器在方法 "{1}" 的签名中找到无效的类型 "{0}": 接口必须具有指定其包装类型的 Protocol 特性。
 		</value>
@@ -1739,5 +1742,12 @@
 	</data>
   <data name="MX8041" xml:space="preserve">
 		<value>无法创建类型 {0} 的实例。</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

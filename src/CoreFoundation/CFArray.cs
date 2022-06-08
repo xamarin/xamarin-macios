@@ -53,6 +53,9 @@ namespace CoreFoundation {
 	// interesting bits: https://github.com/opensource-apple/CF/blob/master/CFArray.c
 	public partial class CFArray : NativeObject {
 
+		// this cache the handle instead of issuing a native call
+		internal static NativeHandle CFNullHandle = _CFNullHandle;
+
 #if !NET
 		internal CFArray (NativeHandle handle)
 			: base (handle, false)

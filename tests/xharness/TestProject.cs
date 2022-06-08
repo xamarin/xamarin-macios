@@ -197,14 +197,6 @@ namespace Xharness {
 						}
 					}
 				}
-
-				// The global.json and NuGet.config files make sure we use the locally built packages.
-				var dotnet_test_dir = System.IO.Path.Combine (test.RootDirectory, "dotnet");
-				var global_json = System.IO.Path.Combine (dotnet_test_dir, "global.json");
-				var nuget_config = System.IO.Path.Combine (dotnet_test_dir, "NuGet.config");
-				var target_directory = directory;
-				File.Copy (global_json, System.IO.Path.Combine (target_directory, System.IO.Path.GetFileName (global_json)), true);
-				File.Copy (nuget_config, System.IO.Path.Combine (target_directory, System.IO.Path.GetFileName (nuget_config)), true);
 			}
 
 			var projectReferences = new List<TestProject> ();
