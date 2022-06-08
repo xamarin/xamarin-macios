@@ -38,6 +38,7 @@ steps:
 - ${{ each label in parameters.simTestsConfigurations }}:
   - template: download-artifacts.yml 
     parameters:
+      downloadHtmlReport: false
       testPrefix: ${{ parameters.testPrefix }}
       label: ${{ label }}
 
