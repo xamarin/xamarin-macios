@@ -119,7 +119,7 @@ class TestResults {
                     if ($content) {
                         # we need to parse with a regexp the following
                         # <summary>4 tests failed, 144 tests passed.</summary>
-                        $regexp = "/(\<summary\>)(?<failed>[0-9]+)( tests failed, )(?<passed>[0-9]+)( tests passed\.\<\/summary\>)"
+                        $regexp = "(\<summary\>)(?<failed>[0-9]+)( tests failed, )(?<passed>[0-9]+)( tests passed\.\</summary\>)"
                         if ($content -match $regexp) {
                             $this.Passed = $matches.passed -as [int]
                             $this.Failed = $matches.failed -as [int]
