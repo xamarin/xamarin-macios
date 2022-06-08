@@ -302,7 +302,7 @@ steps:
   displayName: 'Publish NUnit Device Test Results'
   inputs:
     testResultsFormat: NUnit
-    testResultsFiles: 'xamarin-macios/jenkins-results/**/vsts-*.xml'
+    testResultsFiles: '**/vsts-*.xml'
     failTaskOnFailedTests: true
   continueOnError: true
   condition: succeededOrFailed()
