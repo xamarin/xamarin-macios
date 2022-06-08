@@ -16,10 +16,10 @@ DOTNET_DIRECTORIES += \
 # dotnet-linker.csproj.inc contains the dotnet_linker_dependencies variable used to determine if mtouch needs to be rebuilt or not.
 dotnet-linker.csproj.inc: export BUILD_EXECUTABLE=$(DOTNET) build
 dotnet-linker.csproj.inc: export BUILD_VERBOSITY=$(DOTNET_BUILD_VERBOSITY)
-dotnet-linker.csproj.inc: global.json
+dotnet-linker.csproj.inc:
 -include dotnet-linker.csproj.inc
 
-$(BUILD_DIR)/dotnet-linker%dll $(BUILD_DIR)/dotnet-linker%pdb: Makefile global.json $(dotnet_linker_dependencies)
+$(BUILD_DIR)/dotnet-linker%dll $(BUILD_DIR)/dotnet-linker%pdb: Makefile $(dotnet_linker_dependencies)
 	$(Q_DOTNET_BUILD) $(DOTNET) build dotnet-linker.csproj $(DOTNET_BUILD_VERBOSITY)
 	$(Q) touch $(BUILD_DIR)/dotnet-linker.dll $(BUILD_DIR)/dotnet-linker.pdb
 
@@ -31,13 +31,6 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call InstallTemplate,$(platform)
 
 $(DOTNET_DIRECTORIES):
 	$(Q) mkdir -p $@
-
-# This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
-	$(Q_GEN) \
-		printf "{\n" > $@; \
-		printf "\t\"sdk\": { \"version\": \"$(DOTNET_VERSION)\" }\n" >> $@; \
-		printf "}\n" >> $@
 
 all-local:: $(DOTNET_TARGETS)
 install-local:: $(DOTNET_TARGETS)
