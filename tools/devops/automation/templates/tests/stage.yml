@@ -129,6 +129,7 @@ stages:
       steps:
       - template: build.yml
         parameters:
+          label: ${{ label }}
           testsLabels: '${{ parameters.testsLabels }},run-${{ label }}-tests'
           statusContext: '${{ parameters.statusContext }} - ${{ label }}'
           useXamarinStorage: ${{ parameters.useXamarinStorage }}
@@ -138,22 +139,6 @@ stages:
           makeTarget: ${{ parameters.makeTarget }}
           gitHubToken: ${{ parameters.gitHubToken }}
           xqaCertPass: ${{ parameters.xqaCertPass }}
-
-    - job: upload_vsdrops_${{ replace(label, '-', '_') }}
-      displayName: 'Upload ${{ label }} report to vsdrops'
-      timeoutInMinutes: 1000
-      dependsOn: 
-      - tests_${{ replace(label, '-', '_') }}
-      condition: succeededOrFailed()
-      pool:
-        vmImage: 'windows-latest'
-        workspace:
-          clean: all
-      steps:
-      - template: upload-vsdrops.yml
-        parameters:
-          testPrefix: ${{ parameters.testPrefix }}
-          label: ${{ label }}
 
     - job: upload_vsts_tests_${{ replace(label, '-', '_') }}
       displayName: 'Upload ${{ label }} xml to vsts'
@@ -177,7 +162,6 @@ stages:
     dependsOn: # has to wait for the tests to be done AND the data to be uploaded
     - ${{ each label in parameters.simTestsConfigurations }}:
       - tests_${{ replace(label, '-', '_') }}
-      - upload_vsdrops_${{ replace(label, '-', '_') }}
       - upload_vsts_tests_${{ replace(label, '-', '_') }}
     condition: succeededOrFailed()
     variables:

@@ -7,6 +7,9 @@ parameters:
   type: string
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
+- name: label
+  type: string
+
 - name: useXamarinStorage
   type: boolean
   default: false  # xamarin-storage will disappear, so by default do not use it
@@ -283,6 +286,16 @@ steps:
       Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
     }
   displayName: Set TestSummary
+
+- task: artifactDropTask@1
+  displayName: 'Publish to Artifact Services Drop'
+  inputs:
+    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}${{ parameters.label }}'
+    sourcePath: 'xamarin-macios/jenkins-results'
+    detailedLog: true
+    usePat: true
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
