@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.MaciOS.Nnyeah.AssemblyComparator;
 using System.Collections.Generic;
 using Mono.Cecil.Cil;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.MaciOS.Nnyeah {
 	// Converting constructors from Legacy to NET6 have some special concerns:
@@ -26,13 +27,15 @@ namespace Microsoft.MaciOS.Nnyeah {
 		MethodDefinition IntPtrCtorWithBool;
 
 		// NativeHandle::op_Implicit(IntPtr)
-		MethodDefinition NativeHandleOpImplicit;
+		MethodReference NativeHandleOpImplicit;
 
 		EventHandler<WarningEventArgs>? WarningIssued;
 		EventHandler<TransformEventArgs>? Transformed;
 
+		HashSet<MethodDefinition> TransformedConstructors = new HashSet<MethodDefinition> ();
+
 		public ConstructorTransforms (TypeReference newNativeHandleTypeDefinition, MethodDefinition intPtrCtor, MethodDefinition intPtrCtorWithBool,
-			EventHandler<WarningEventArgs>? warningIssued, EventHandler<TransformEventArgs>? transformed)
+			MethodReference nativeHandleOpImplicit, EventHandler<WarningEventArgs>? warningIssued, EventHandler<TransformEventArgs>? transformed)
 		{
 			NewNativeHandleTypeDefinition = newNativeHandleTypeDefinition;
 			IntPtrCtor = intPtrCtor;
@@ -43,7 +46,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			// Get the definition of System.Bool from the ctor we already have
 			BoolTypeDefinition = intPtrCtorWithBool.Parameters[1].ParameterType;
 
-			NativeHandleOpImplicit = NewNativeHandleTypeDefinition.Resolve ().GetMethods ().First (m => m.FullName == "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+			NativeHandleOpImplicit = nativeHandleOpImplicit;
 		}
 
 		public void AddTransforms (TypeAndMemberMap moduleMap)
@@ -123,6 +126,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 					if (ctor.Body.Instructions.Count > 7) {
 						throw new ConversionException (Errors.E0016, definition);
 					}
+					TransformedConstructors.Add (ctor);
+
 					ctor.Parameters [0].ParameterType = NewNativeHandleTypeDefinition;
 					Transformed?.Invoke (this, new TransformEventArgs (ctor.DeclaringType.FullName,
 						ctor.Name, "IntPtr", 0, 0));
@@ -131,6 +136,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		}
 
+		// TODO - There is non-trivial overlap between this and the TryGetConstructorCallTransformation
+		// codepath below. While it works, unification would be nice.
 		void ReworkCodeBlockAsNeeded (IEnumerable<MethodDefinition> methods)
 		{
 			foreach (var method in methods) {
@@ -191,6 +198,33 @@ namespace Microsoft.MaciOS.Nnyeah {
 						throw new ConversionException (Errors.E0017, method, method.DeclaringType);
 				}
 			}
+		}
+
+		public bool TryGetConstructorCallTransformation (Instruction instruction, [NotNullWhen (returnValue: true)] out Transformation? result)
+		{
+			if (instruction.OpCode.Code == Mono.Cecil.Cil.Code.Newobj &&
+				instruction.Operand is MethodDefinition invokedMethod &&
+				TransformedConstructors.Contains (invokedMethod)) {
+				switch (invokedMethod.Parameters.Count) {
+				case 1:
+					result = new Transformation (null!, TransformationAction.Insert, new List<Instruction> () {
+						Instruction.Create (OpCodes.Call, NativeHandleOpImplicit)
+					});
+					break;
+				case 2:
+					result = new Transformation (null!, TransformationAction.Insert, new List<Instruction> () {
+						Instruction.Create (OpCodes.Stloc, new VariableDefinition (BoolTypeDefinition)),
+						Instruction.Create (OpCodes.Call, NativeHandleOpImplicit),
+						Instruction.Create (OpCodes.Ldloc, new VariableDefinition (BoolTypeDefinition)),
+					});
+					break;
+				default:
+					throw new ConversionException (Errors.E0017, invokedMethod, invokedMethod.DeclaringType);
+				}
+				return true;
+			}
+			result = null;
+			return false;
 		}
 	}
 }

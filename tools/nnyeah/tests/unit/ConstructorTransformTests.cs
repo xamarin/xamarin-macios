@@ -20,11 +20,12 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 			var netAssembly = ModuleDefinition.ReadModule (netPlatform, readerParams);
 
 			var legacyNSObject = legacyAssembly.Types.First (t => t.FullName == "Foundation.NSObject");
-
+			var nativeHandle = netAssembly.GetType("ObjCRuntime.NativeHandle");
 			return new ConstructorTransforms (
-				netAssembly.GetType("ObjCRuntime.NativeHandle"),
+				nativeHandle,
 				legacyNSObject.Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr)"),
 				legacyNSObject.Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr,System.Boolean)"),
+				nativeHandle.Resolve ().GetMethods ().First (m => m.FullName == "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)"),
 				warningIssued: null, transformed: null
 			);
 		}
@@ -130,13 +131,29 @@ public class Foo {
 			Assert.True (instruction.ToString ().Contains (value), $"Instruction was: {instruction}");
 		}
 
+		bool IsNewObjInstruction (Instruction i) => i.OpCode.Code == Mono.Cecil.Cil.Code.Newobj;
+
 		void AssertInstructionBeforeNewobj (IList<Instruction> instructions, string instructionValue)
 		{
-			foreach (var createInstruction in instructions.Where (i => i.OpCode.Code == Mono.Cecil.Cil.Code.Newobj))
-			{
+			foreach (var createInstruction in instructions.Where (IsNewObjInstruction)) {
 				var createInstructionIndex = instructions.IndexOf (createInstruction);
 				var instructionBeforeCreate = instructions[createInstructionIndex - 1];
 				AssertInstruction (instructionBeforeCreate, instructionValue);
+			}
+		}
+
+		void AssertNativeHandleCtorCalled (IList<Instruction> instructions)
+		{
+			foreach (var createInstruction in instructions.Where (IsNewObjInstruction)) {
+				// Some calls might have ,System.Boolean suffix, so don't add final ')'
+				AssertInstruction (createInstruction, "::.ctor(ObjCRuntime.NativeHandle");
+			}
+		}
+
+		void AssertIntPtrCtorCalled (IList<Instruction> instructions)
+		{
+			foreach (var createInstruction in instructions.Where (IsNewObjInstruction)) {
+				AssertInstruction (createInstruction, "::.ctor(System.IntPtr)");
 			}
 		}
 
@@ -159,6 +176,56 @@ public class Foo : NSObject {
 			CreateTestTransform (type).ReworkAsNeeded (type);
 			var instructions = type.GetMethods ().First (m => m.Name == "Create").Body.Instructions;
 			AssertInstructionBeforeNewobj (instructions, "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+			AssertNativeHandleCtorCalled (instructions);
+		}
+
+		[Test]
+		public async Task CallingAnotherIntPtr ()
+		{
+			var pathToModule = await TestRunning.BuildTemporaryLibrary (@"
+using System;
+using Foundation;
+	public class Buzz : NSObject {
+		public Buzz (IntPtr p) : base (p) { } 
+	}
+	public class Foo {
+		Buzz f;
+		public Foo () {
+			f = new Buzz (IntPtr.Zero); 
+		}
+	}
+");
+			// As this uses remapping called from Reworker, we have to call the entire machinery
+			var editedModule = ReworkerHelper.GetReworkedModule (pathToModule);
+			var type = editedModule!.GetType ("Foo");
+
+			var instructions = type.GetConstructors ().First ().Body.Instructions;
+			AssertInstructionBeforeNewobj (instructions, "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+			AssertNativeHandleCtorCalled (instructions);
+		}
+
+		[Test]
+		public async Task PrivateClass ()
+		{
+			var pathToModule = await TestRunning.BuildTemporaryLibrary (@"
+using System;
+using Foundation;
+    class Foo : NSObject {
+    	class Bar : NSObject {
+			public Bar (IntPtr p) : base (p) { }
+		}
+
+    	public NSObject Create () {
+			return new Bar (IntPtr.Zero); 
+		}
+	}
+");
+			// As this uses remapping called from Reworker, we have to call the entire machinery
+			var editedModule = ReworkerHelper.GetReworkedModule (pathToModule);
+			var type = editedModule!.GetType ("Foo");
+			var instructions = type.GetMethods ().First (m => m.Name == "Create").Body.Instructions;
+			AssertInstructionBeforeNewobj (instructions, "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+			AssertNativeHandleCtorCalled (instructions);
 		}
 
 		[Test]
@@ -229,12 +296,13 @@ public class Foo : NSObject {
 			var create = type.GetMethods ().First (m => m.Name == "Create");
 			var instructions = create.Body.Instructions;
 
-			var createInstruction = instructions.First (i => i.OpCode.Code == Mono.Cecil.Cil.Code.Newobj);
+			var createInstruction = instructions.First (IsNewObjInstruction);
 			var createInstructionIndex = instructions.IndexOf (createInstruction);
 
 			AssertInstruction (instructions[createInstructionIndex - 3], "stloc");
 			AssertInstruction (instructions[createInstructionIndex - 2], "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
 			AssertInstruction (instructions[createInstructionIndex - 1], "ldloc");
+			AssertNativeHandleCtorCalled (instructions);
 		} 
 	}
 }
