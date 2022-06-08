@@ -103,9 +103,8 @@ namespace CoreFoundation {
 		public CFNotificationObserverToken AddObserver (string name, INativeObject objectToObserve, Action<string,NSDictionary?> notificationHandler,
 								CFNotificationSuspensionBehavior suspensionBehavior = CFNotificationSuspensionBehavior.DeliverImmediately)
 		{
-			if (darwinnc is not null && darwinnc.Handle == Handle){
-				if (name is null)
-					throw new ArgumentNullException (nameof (name), "When using the Darwin Notification Center, the value passed must not be null");
+			if (darwinnc is not null && darwinnc.Handle == Handle && name is null){
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name), "When using the Darwin Notification Center, the value passed must not be null");
 			}
 
 			var strHandle = CFString.CreateNative (name);
@@ -189,7 +188,7 @@ namespace CoreFoundation {
 		{
 			// The name of the notification to post.This value must not be NULL.
 			if (notification is null)
-				throw new ArgumentNullException (nameof (notification));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (notification));
 
 			var strHandle = CFString.CreateNative (notification);
 			CFNotificationCenterPostNotificationWithOptions (
@@ -204,7 +203,7 @@ namespace CoreFoundation {
 		public void RemoveObserver (CFNotificationObserverToken token)
 		{
 			if (token is null)
-				throw new ArgumentNullException (nameof (token));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (token));
 			if (token.nameHandle == IntPtr.Zero && token.stringName != NullNotificationName)
 				throw new ObjectDisposedException (nameof (token));
 			if (token.centerHandle != Handle)

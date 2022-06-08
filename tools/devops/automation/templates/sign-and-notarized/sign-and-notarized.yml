@@ -117,7 +117,7 @@ steps:
     continueOnError: true
     condition: ${{ and(eq(parameters.condition, true), eq(variables['System.debug'], 'true')) }}
 
-- ${{ if eq(parameters.isPR, false)) }}: 
+- ${{ if eq(parameters.isPR, false) }}: 
   - task: PowerShell@2
     inputs:
       filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1

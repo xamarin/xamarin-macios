@@ -31,7 +31,7 @@ steps:
 
 # the ddsign plugin needs this version or it will crash and will make the sign step fail
 
-- ${{ if eq(parameters.isPR, false)) }}:
+- ${{ if eq(parameters.isPR, false) }}:
   - task: UseDotNet@2
     inputs:
       packageType: sdk

@@ -11,13 +11,7 @@ include $(TOP)/Make.config
 .libs/macos .libs/dotnet/macos:
 	$(Q) mkdir -p $@
 
-NuGet.config: $(TOP)/tests/dotnet/NuGet.config
-	$(Q) $(CP) $< $@
-
-global.json: $(TOP)/tests/dotnet/global.json
-	$(Q) $(CP) $< $@
-
-bin/Debug/$(DOTNET_TFM)-macos/custom-type-assembly.dll: custom-type-assembly.csproj custom-type-assembly.cs global.json NuGet.config
+bin/Debug/$(DOTNET_TFM)-macos/custom-type-assembly.dll: custom-type-assembly.csproj custom-type-assembly.cs
 	$(Q) $(DOTNET) build $< "/bl:$@.binlog" $(MSBUILD_VERBOSITY)
 
 ifdef INCLUDE_XAMARIN_LEGACY
