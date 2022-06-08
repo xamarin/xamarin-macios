@@ -57,7 +57,7 @@ steps:
       set -x
     fi
   displayName: 'Retrieve packages to sign'
-  condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false)) }}
+  condition: ${{ parameters.condition }}
   timeoutInMinutes: 180
 
 - ${{ if or(eq(parameters.skipESRP, true), eq(parameters.isPR, true)) }}:
@@ -76,7 +76,7 @@ steps:
     name: notarize
     displayName: 'Signing PR Build'
     timeoutInMinutes: 180
-    condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false)) }}
+    condition: ${{ parameters.condition }}
 
 - ${{ else }}:
   - bash: |
@@ -96,31 +96,33 @@ steps:
     name: notarize
     displayName: 'Signing Release Build (ESRP)'
     timeoutInMinutes: 180
-    condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false)) }}
+    condition: ${{ parameters.condition }}
 
-- task: ArchiveFiles@1
-  displayName: 'Archive ESRP temp'
-  inputs:
-    rootFolder: '$(System.DefaultWorkingDirectory)/esrp'
-    includeRootFolder: false
-    archiveFile: '$(Build.ArtifactStagingDirectory)/esrp.zip'
-  continueOnError: true
-  condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false), eq(variables['System.debug'], 'true')) }}
+- ${{ if eq(parameters.isPR, false) }}:
+  - task: ArchiveFiles@1
+    displayName: 'Archive ESRP temp'
+    inputs:
+      rootFolder: '$(System.DefaultWorkingDirectory)/esrp'
+      includeRootFolder: false
+      archiveFile: '$(Build.ArtifactStagingDirectory)/esrp.zip'
+    continueOnError: true
+    condition: ${{ and(eq(parameters.condition, true), eq(variables['System.debug'], 'true')) }}
 
-# Upload the esrp temp dir
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: ESRP temp'
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/esrp.zip'
-    artifactName: ESRP-tmp-${{ parameters.packageName }}
-  continueOnError: true
-  condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false), eq(variables['System.debug'], 'true')) }}
+  # Upload the esrp temp dir
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: ESRP temp'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/esrp.zip'
+      artifactName: ESRP-tmp-${{ parameters.packageName }}
+    continueOnError: true
+    condition: ${{ and(eq(parameters.condition, true), eq(variables['System.debug'], 'true')) }}
 
-- task: PowerShell@2
-  inputs:
-    filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
-  displayName: 'Notarize & verify packages (ESRP)'
-  condition: ${{ and(eq(parameters.condition, true), eq(parameters.isPR, false)) }}
+- ${{ if eq(parameters.isPR, false)) }}: 
+  - task: PowerShell@2
+    inputs:
+      filePath: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/notarize.ps1
+    displayName: 'Notarize & verify packages (ESRP)'
+    condition: ${{ parameters.condition }}
 
 # always upload no matter what, since if we are not signing we need the artifact in the pipeline
 - task: PublishPipelineArtifact@1

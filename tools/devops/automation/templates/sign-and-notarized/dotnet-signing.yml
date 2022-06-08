@@ -21,36 +21,37 @@ steps:
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/package
 
-- pwsh : |
-    # Get the list of files to sign
-    $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
+- ${{ if eq(parameters.isPR, false) }}:
+  - pwsh : |
+      # Get the list of files to sign
+      $msiFiles = Get-ChildItem -Path $(Build.SourcesDirectory)/package/ -Filter "*.msi"
 
-    # Add those files to an array
-    $SignFiles = @()
-    foreach($msi in $msiFiles) {
-        Write-Host "$($msi.FullName)"
-        $SignFiles += @{ "SrcPath"="$($msi.FullName)"}
-    }
-
-    Write-Host "$msiFiles"
-
-    # array of dicts
-    $SignFileRecord = @(
-      @{
-        "Certs" = "400";
-        "SignFileList" = $SignFiles;
+      # Add those files to an array
+      $SignFiles = @()
+      foreach($msi in $msiFiles) {
+          Write-Host "$($msi.FullName)"
+          $SignFiles += @{ "SrcPath"="$($msi.FullName)"}
       }
-    )
 
-    $SignFileList = @{
-        "SignFileRecordList" = $SignFileRecord
-    }
+      Write-Host "$msiFiles"
 
-    # Write the json to a file
-    ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
-    dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
-  displayName: 'Sign .msi'
-  condition: ${{ and( eq(parameters.condition, true), eq(parameters.isPR, false)) }}
+      # array of dicts
+      $SignFileRecord = @(
+        @{
+          "Certs" = "400";
+          "SignFileList" = $SignFiles;
+        }
+      )
+
+      $SignFileList = @{
+          "SignFileRecordList" = $SignFileRecord
+      }
+
+      # Write the json to a file
+      ConvertTo-Json -InputObject $SignFileList -Depth 5 | Out-File -FilePath $(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json -Force
+      dotnet $Env:MBSIGN_APPFOLDER/ddsignfiles.dll /filelist:$(Build.ArtifactStagingDirectory)/MsiFiles2Notarize.json
+    displayName: 'Sign .msi'
+    condition: ${{ parameters.condition }}
 
 - pwsh: |
     mv $(Build.SourcesDirectory)/package/bundle.zip $(Build.ArtifactStagingDirectory)/not-signed-bundle.zip
