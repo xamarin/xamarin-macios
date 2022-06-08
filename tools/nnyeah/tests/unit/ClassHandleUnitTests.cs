@@ -68,10 +68,8 @@ public class Handlicious : NSObject {
 			Assert.IsNotNull (editedModule, "edited module is null (oops)");
 
 			var type = editedModule!.Types.First (t => t.Name == "Handlicious");
-			Assert.IsNotNull (type, "didn't get an edited type");
 
 			var method = type.Methods.First (m => m.Name == "DoAThing");
-			Assert.IsNotNull (method, "didn't get a method");
 
 			for (int i = 0; i < method.Body.Instructions.Count; i++) {
 				var instr = method.Body.Instructions [i];
