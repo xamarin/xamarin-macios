@@ -246,7 +246,7 @@ steps:
     set -e
 
     mkdir -p $(System.DefaultWorkingDirectory)/diagnostic-sim-output
-    xcrun simctl diagnose -b -X --output $(System.DefaultWorkingDirectory)/diagnostic-sim-output
+    xcrun simctl diagnose -b -X --output=$(System.DefaultWorkingDirectory)/diagnostic-sim-output
 
   displayName: 'Collect diagnostic info from simulators'
   name: collectSimulatorInfo
