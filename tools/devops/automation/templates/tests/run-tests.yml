@@ -297,6 +297,16 @@ steps:
     detailedLog: true
     usePat: true
 
+# Upload test results to vsts.
+- task: PublishTestResults@2
+  displayName: 'Publish NUnit Device Test Results'
+  inputs:
+    testResultsFormat: NUnit
+    testResultsFiles: 'xamarin-macios/jenkins-results/**/vsts-*.xml'
+    failTaskOnFailedTests: true
+  continueOnError: true
+  condition: succeededOrFailed()
+
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
   displayName: 'Archive HtmlReport'
