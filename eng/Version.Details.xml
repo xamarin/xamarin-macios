@@ -1,25 +1,25 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="7.0.100-preview.6.22281.2">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="7.0.100-preview.6.22306.4">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>1746ccc702ca0f47ea7d41d2cf473785a1186436</Sha>
+      <Sha>1e2223659dbf25fc00f9119ad70629aae1f3d05f</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="7.0.100-1.22273.1" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/linker</Uri>
       <Sha>d794136809e207f9cfe02914af68b308106cc2c3</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.0-preview.5.22272.3" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.0-preview.6.22304.5" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>0864cc5539e0ddd109b443b0bee804878cd7ba76</Sha>
+      <Sha>bad2ab053c53f68a9b7b8ed7d0867fc58261bc9a</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.0-preview.5.22273.7" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.0-preview.6.22303.7" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
-      <Sha>67d0c9fd4ebd0dafea4847b9637c1c86ec3b2890</Sha>
+      <Sha>b806844373440a538192181652d466b621a14494</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.Manifest-7.0.100" Version="7.0.0-preview.5.22252.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.Manifest-7.0.100" Version="7.0.0-preview.5.22268.1" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>aeb9a3591b687c3f141e43b330604b34da738149</Sha>
+      <Sha>dca71051151e0515887671938196f3b87ad1c19f</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
