@@ -78,6 +78,7 @@ namespace Xharness {
 		All =  Int64.MaxValue, 
 	}
 
+	[Flags]
 	public enum PlatformLabel : uint {
 		[Label ("none")]
 		None = 0,

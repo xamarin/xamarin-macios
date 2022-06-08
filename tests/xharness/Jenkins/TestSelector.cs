@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -92,73 +93,6 @@ namespace Xharness.Jenkins {
 
 		ILog? MainLog => jenkins?.MainLog;
 		IHarness? Harness => jenkins?.Harness;
-		
-		// We select tests based on a prefix of the modified files.
-		// Add entries here to check for more prefixes.
-		static readonly string [] mtouchPrefixes = {
-			"tests/mtouch",
-			"tests/common",
-			"tools/mtouch",
-			"tools/common",
-			"tools/linker",
-			"src/ObjCRuntime/Registrar.cs",
-			"mk/mono.mk",
-			"msbuild",
-			"runtime",
-		};
-		static readonly string[] mmpPrefixes = {
-			"tests/mmptest",
-			"tests/common",
-			"tools/mmp",
-			"tools/common",
-			"tools/linker",
-			"src/ObjCRuntime/Registrar.cs",
-			"mk/mono.mk",
-			"msbuild",
-		};
-		static readonly string[] bclPrefixes = {
-			"tests/bcl-test",
-			"tests/common",
-			"mk/mono.mk",
-		};
-		static readonly string [] btouchPrefixes = {
-			"src/btouch.cs",
-			"src/generator.cs",
-			"src/generator-",
-			"src/Makefile.generator",
-			"tests/bgen",
-			"tests/generator",
-			"tests/common",
-		};
-		static readonly string [] macBindingProject = new [] {
-			"msbuild",
-			"tests/mac-binding-project",
-			"tests/common/mac",
-		}.Intersect (btouchPrefixes).ToArray ();
-		
-		static readonly string [] xtroPrefixes = {
-			"tests/xtro-sharpie",
-			"src",
-			"Make.config",
-		};
-		static readonly string [] cecilPrefixes = {
-			"tests/cecil-tests",
-			"src",
-			"Make.config",
-		};
-		static readonly string [] dotnetFilenames = {
-			"msbuild",
-			".*dotnet.*",
-			"eng", // bumping .NET modifies files in this directory
-		};
-		static readonly string [] msbuildFilenames = {
-			"msbuild",
-			"tests/msbuild",
-		};
-
-		static readonly string [] xharnessPrefix = {
-			"tests/xharness",
-		};
 
 		#endregion
 
@@ -167,116 +101,21 @@ namespace Xharness.Jenkins {
 			this.jenkins = jenkins;
 			this.vcs = versionControlSystem;
 		}
-		
+
 		void DisableKnownFailingDeviceTests ()
 		{
 			// https://github.com/xamarin/maccore/issues/1008
 			jenkins.ForceExtensionBuildOnly = true;
-		}
-		
-		// 'filenames' is a list of filename prefixes, unless the name has a star character, in which case it's interpreted as a regex expression.
-		void SetEnabled (IEnumerable<string> files, string [] filenames, string testname, TestSelection selection)
-		{
-			MainLog?.WriteLine ($"Checking if test {testname} should be enabled according to the modified files.");
-
-			// Compute any regexes we might need out of the loop.
-			var regexes = new Regex [filenames.Length];
-			for (var i = 0; i < filenames.Length; i++) {
-				// If the prefix contains a star, treat it is as a regex.
-				if (filenames [i].IndexOf ('*') == -1)
-					continue;
-
-				var regex = new Regex (filenames [i]);
-				regexes [i] = regex;
-			}
-
-			foreach (var file in files) {
-				MainLog?.WriteLine ($"Checking for file {file}"); 
-				for (var i = 0; i < filenames.Length; i++) {
-					var prefix = filenames [i];
-					if (file.StartsWith (prefix, StringComparison.Ordinal)) {
-						selection.SetEnabled (testname, true);
-						MainLog?.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches prefix '{2}'", testname, file, prefix);
-						return;
-					}
-
-					if (regexes [i]?.IsMatch (file) == true) {
-						selection.SetEnabled (testname, true);
-						MainLog?.WriteLine ("Enabled '{0}' tests because the modified file '{1}' matches regex '{2}'", testname, file, prefix);
-						return;
-					}
-				}
-			}
-		}
-		
-		// Returns true if the value was changed.
-		bool SetEnabled (HashSet<string> labels, string testname, TestSelection selection)
-		{
-			if (labels.Contains ("skip-" + testname + "-tests")) {
-				MainLog?.WriteLine ("Disabled '{0}' tests because the label 'skip-{0}-tests' is set.", testname);
-				if (testname == "ios") {
-					selection.SetEnabled (PlatformLabel.iOS64, false);
-					selection.SetEnabled (PlatformLabel.iOS32, false);
-				}
-
-				selection.SetEnabled (testname, false);
-				return true;
-			}
-
-			if (labels.Contains ("run-" + testname + "-tests")) {
-				MainLog?.WriteLine ("Enabled '{0}' tests because the label 'run-{0}-tests' is set.", testname);
-				if (testname == "ios") {
-					selection.SetEnabled (PlatformLabel.iOS64, true);
-					selection.SetEnabled (PlatformLabel.iOS32, true);
-				}
-
-				selection.SetEnabled (testname, true);
-				return true;
-			}
-
-			if (labels.Contains ("skip-all-tests")) {
-				MainLog?.WriteLine ("Disabled '{0}' tests because the label 'skip-all-tests' is set.", testname);
-				selection.SelectedTests = TestLabel.None;
-				return true;
-			}
-
-			if (labels.Contains ("run-all-tests")) {
-				MainLog?.WriteLine ("Enabled '{0}' tests because the label 'run-all-tests' is set.", testname);
-				selection.SelectedTests = TestLabel.All;
-				return true;
-			}
-			// respect any default value
-			return false;
-		}
-
-		void SelectTestsByModifiedFiles (int pullRequest, TestSelection selection)
-		{
-			// toArray so that we do not always enumerate all the time.
-			var files = vcs.GetModifiedFiles (pullRequest).ToArray ();
-
-			MainLog?.WriteLine ("Found {0} modified file(s) in the pull request #{1}.", files.Count (), pullRequest);
-			foreach (var f in files)
-				MainLog?.WriteLine ("    {0}", f);
-			
-			SetEnabled (files, mtouchPrefixes, "mtouch", selection);
-			SetEnabled (files, mmpPrefixes, "mmp", selection);
-			SetEnabled (files, bclPrefixes, "bcl", selection);
-			SetEnabled (files, btouchPrefixes, "btouch", selection);
-			SetEnabled (files, macBindingProject, "mac-binding-project", selection);
-			SetEnabled (files, xtroPrefixes, "xtro", selection);
-			SetEnabled (files, cecilPrefixes, "cecil", selection);
-			SetEnabled (files, dotnetFilenames, "dotnet", selection);
-			SetEnabled (files, msbuildFilenames, "msbuild", selection);
-			SetEnabled (files, xharnessPrefix, "all", selection);
 		}
 
 		IEnumerable<string> GetPullRequestLabels (int pullRequest)
 		{
 			if (pullRequest > 0) {
 				var labels = vcs.GetLabels (pullRequest);
-				if (labels.Any ()) {
-					MainLog?.WriteLine ($"Found {labels.Count ()} label(s) in the pull request #{pullRequest}: {string.Join (", ", labels)}");
-					return labels;
+				var pullRequestLabels = labels as string[] ?? labels.ToArray ();
+				if (pullRequestLabels.Length > 0) {
+					MainLog?.WriteLine ($"Found {pullRequestLabels.Length} label(s) in the pull request #{pullRequest}: {string.Join (", ", pullRequestLabels)}");
+					return pullRequestLabels;
 				}
 			}
 
@@ -284,12 +123,12 @@ namespace Xharness.Jenkins {
 			return Array.Empty<string> ();
 		}
 
-		IEnumerable<string> GetEnviromentLabels ()
+		IEnumerable<string> GetEnvironmentLabels ()
 		{
 			var envLabels = Environment.GetEnvironmentVariable ("XHARNESS_LABELS");
 			if (!string.IsNullOrEmpty (envLabels)) {
 				var labels = envLabels.Split (new char [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-				MainLog?.WriteLine ($"Found {labels.Count ()} label(s) in the environment variable XHARNESS_LABELS: {string.Join (", ", labels)}");
+				MainLog?.WriteLine ($"Found {labels.Length} label(s) in the environment variable XHARNESS_LABELS: {string.Join (", ", labels)}");
 				return labels;
 			}
 
@@ -302,11 +141,11 @@ namespace Xharness.Jenkins {
 			var customLabelsFile = Path.Combine (HarnessConfiguration.RootDirectory, "..", "jenkins", "custom-labels.txt");
 			if (File.Exists (customLabelsFile)) {
 				var customLabels = File.ReadAllLines (customLabelsFile).Select ((v) => v.Trim ()).Where (v => v.Length > 0 && v [0] != '#');
-				if (customLabels.Count () > 0) {
-					MainLog?.WriteLine ($"Found {customLabels.Count ()} label(s) in {customLabelsFile}: {string.Join (", ", customLabels)}");
-					return customLabels;
+				var customFileLabels = customLabels as string[] ?? customLabels.ToArray ();
+				if (customFileLabels.Length > 0) {
+					MainLog?.WriteLine ($"Found {customFileLabels.Length} label(s) in {customLabelsFile}: {string.Join (", ", customFileLabels)}");
+					return customFileLabels;
 				}
-
 				MainLog?.WriteLine ($"No labels were in {customLabelsFile}.");
 			} else {
 				MainLog?.WriteLine ($"The custom labels file {customLabelsFile} does not exist.");
@@ -331,10 +170,10 @@ namespace Xharness.Jenkins {
 			var labels = new HashSet<string> ();
 			labels.UnionWith (GetHarnessLabels ());
 			labels.UnionWith (GetPullRequestLabels (pullRequest));
-			labels.UnionWith (GetEnviromentLabels ());
+			labels.UnionWith (GetEnvironmentLabels ());
 			labels.UnionWith (GetCustomFileLabels ());
 			
-			MainLog?.WriteLine ($"In total found {labels.Count ()} label(s): {string.Join (", ", labels.ToArray ())}");
+			MainLog?.WriteLine ($"In total found {labels.Count} label(s): {string.Join (", ", labels.ToArray ())}");
 			return labels;
 		}
 
@@ -418,12 +257,6 @@ namespace Xharness.Jenkins {
 			if (!int.TryParse (Environment.GetEnvironmentVariable ("PR_ID"), out int pullRequest))
 				MainLog?.WriteLine ("The environment variable 'PR_ID' was not found, so no pull requests will be checked for test selection.");
 
-			// First check if can auto-select any tests based on which files were modified.
-			// This will only enable additional tests, never disable tests
-// TODO: This was disabled for testing.	
-//			if (pullRequest > 0)
-//				SelectTestsByModifiedFiles (pullRequest, selection);
-			
 			// Then we check for labels. Labels are manually set, so those override
 			// whatever we did automatically.
 			var labels = GetAllLabels (pullRequest);
