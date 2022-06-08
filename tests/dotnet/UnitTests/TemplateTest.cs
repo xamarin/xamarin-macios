@@ -90,7 +90,6 @@ namespace Xamarin.Tests {
 
 			Configuration.IgnoreIfIgnoredPlatform (info.Platform);
 			var tmpDir = Cache.CreateTemporaryDirectory ();
-			Configuration.CopyDotNetSupportingFiles (tmpDir);
 			var outputDir = Path.Combine (tmpDir, info.Template);
 			DotNet.AssertNew (outputDir, info.Template);
 			var csproj = Path.Combine (outputDir, info.Template + ".csproj");
