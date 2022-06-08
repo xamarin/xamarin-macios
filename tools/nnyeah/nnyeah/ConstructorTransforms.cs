@@ -138,10 +138,10 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 		}
 
-		// (Instruction Index, Number of Ctor Arguments)
-		List<(int, int)> FindConstructorInstructionIndex (IList<Instruction> instructions)
+		// (Instruction, Number of Ctor Arguments)
+		List<(Instruction, int)> FindConstructorInstruction (IList<Instruction> instructions)
 		{
-			var index = new List<(int, int)> ();
+			var index = new List<(Instruction, int)> ();
 			for (int i = 0 ; i < instructions.Count ; i++) {
 				Instruction instruction = instructions[i];
 				if (instruction.OpCode.Code == Code.Newobj && instruction.Operand is MethodDefinition invokedMethod) {
@@ -149,14 +149,14 @@ namespace Microsoft.MaciOS.Nnyeah {
 						switch (invokedMethod.Parameters.Count) {
 						case 1: {
 							if (invokedMethod.Parameters[0].ParameterType.ToString () == "System.IntPtr") {
-								index.Add ((i, 1));
+								index.Add ((instruction, 1));
 							}
 							break;
 						}
 						case 2: {
 							if (invokedMethod.Parameters[0].ParameterType.ToString () == "System.IntPtr" &&
 								invokedMethod.Parameters[1].ParameterType.ToString () == "System.Boolean") {
-								index.Add ((i, 2));
+								index.Add ((instruction, 2));
 							}
 							break;
 						}
@@ -173,17 +173,18 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		void ReworkCodeBlockAsNeeded (MethodDefinition method)
 		{
-			foreach ((int index, int argCount) in FindConstructorInstructionIndex (method.Body.Instructions)) {
+			var processor = method.Body.GetILProcessor ();
+			foreach ((Instruction instruction, int argCount) in FindConstructorInstruction (method.Body.Instructions)) {
 				switch (argCount) {
 					case 1:
-						method.Body.Instructions.Insert (index, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
+						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
 						break;
 					case 2: {
 						var variable = new VariableDefinition (BoolTypeDefinition);
 						method.Body.Variables.Add (variable);
-						method.Body.Instructions.Insert (index, Instruction.Create (OpCodes.Ldloc, variable));
-						method.Body.Instructions.Insert (index, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
-						method.Body.Instructions.Insert (index, Instruction.Create (OpCodes.Stloc, variable));
+						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Stloc, variable));
+						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
+						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Ldloc, variable));
 						break;
 					}
 					default:
