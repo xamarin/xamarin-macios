@@ -201,7 +201,11 @@ class ParallelTestsResults {
             {
                 $stringBuilder.AppendLine("<details><summary>Tests for $($r.Label)</summary>")
                 $result = $r.GetPassedTests()
-                $stringBuilder.Append("$($result.Context) - All $($result.Passed) tests passed")
+                if ($result.Passed -eq 0) {
+                    $stringBuilder.Append("$($r.Context) - No tests selected.")
+                } else {
+                    $stringBuilder.Append("$($r.Context) - All $($result.Passed) tests passed")
+                }
                 $stringBuilder.AppendLine("</details>")
             }
         } else {
