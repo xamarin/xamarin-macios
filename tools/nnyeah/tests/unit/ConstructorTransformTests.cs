@@ -10,30 +10,14 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 
 	[TestFixture]
 	public class ConstructorTransformTests {
-		static ReaderParameters ReaderParameters {
-			get {
-				var legacyPlatform = Compiler.XamarinPlatformLibraryPath (PlatformName.macOS);
-				var netPlatform = Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS);
-
-				// We must use a resolver here as the types will be Resolved()'ed later
-				return new ReaderParameters { AssemblyResolver = new NNyeahAssemblyResolver (legacyPlatform, netPlatform) };
-			}
-		}
-
-		static async Task<TypeDefinition> CompileTypeForTest (string code)
-		{
-			string lib = await TestRunning.BuildTemporaryLibrary (code);
-			var module = ModuleDefinition.ReadModule (lib, ReaderParameters);
-			return module.GetType ("Foo");
-		}
-
 		static ConstructorTransforms CreateTestTransform (TypeDefinition type) 
 		{
 			var legacyPlatform = Compiler.XamarinPlatformLibraryPath (PlatformName.macOS);
 			var netPlatform = Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS);
 
-			var legacyAssembly = ModuleDefinition.ReadModule (legacyPlatform, ReaderParameters);
-			var netAssembly = ModuleDefinition.ReadModule (netPlatform, ReaderParameters);
+			var readerParams = ReworkerHelper.ReaderParameters;
+			var legacyAssembly = ModuleDefinition.ReadModule (legacyPlatform, readerParams);
+			var netAssembly = ModuleDefinition.ReadModule (netPlatform, readerParams);
 
 			var legacyNSObject = legacyAssembly.Types.First (t => t.FullName == "Foundation.NSObject");
 
@@ -48,7 +32,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 		[Test]
 		public async Task DerivedFromNSObject ()
 		{
-			var type = await CompileTypeForTest (@"
+			var type = await ReworkerHelper.CompileTypeForTest (@"
 using System;
 using Foundation;
 public class Foo : NSObject {
@@ -64,7 +48,7 @@ public class Foo : NSObject {
 		[Test]
 		public async Task DerivedFromNSObjectWithBool ()
 		{
-			var type = await CompileTypeForTest (@"
+			var type = await ReworkerHelper.CompileTypeForTest (@"
 using System;
 using Foundation;
 public class Foo : NSObject {
@@ -80,7 +64,7 @@ public class Foo : NSObject {
 		// [Test] - https://github.com/xamarin/xamarin-macios/issues/15133
 		public async Task InvokeCtor ()
 		{
-			var type = await CompileTypeForTest (@"
+			var type = await ReworkerHelper.CompileTypeForTest (@"
 using System;
 using Foundation;
 public class Foo : NSObject {
@@ -96,7 +80,7 @@ public class Foo : NSObject {
 		[Test]
 		public async Task RefuseToProcessCtorWithBehavior ()
 		{
-			var type = await CompileTypeForTest (@"
+			var type = await ReworkerHelper.CompileTypeForTest (@"
 using System;
 using Foundation;
 public class Foo : NSObject {
@@ -108,7 +92,7 @@ public class Foo : NSObject {
 		[Test]
 		public async Task DerivedFromNSObjectDerived ()
 		{
-			var type = await CompileTypeForTest (@"
+			var type = await ReworkerHelper.CompileTypeForTest (@"
 using System;
 using Foundation;
 public class BaseFoo : NSObject {
@@ -127,7 +111,7 @@ public class Foo : BaseFoo {
 		[Test]
 		public async Task NotNSObjectJustIntPtr ()
 		{
-			var type = await CompileTypeForTest (@"
+			var type = await ReworkerHelper.CompileTypeForTest (@"
 using System;
 using Foundation;
 public class Foo {
@@ -159,7 +143,7 @@ public class Foo {
 		[Test]
 		public async Task DerivedFromNSObjectInvocation ()
 		{
-			var type = await CompileTypeForTest (@"
+			var type = await ReworkerHelper.CompileTypeForTest (@"
 using System;
 using Foundation;
 public class Foo : NSObject {
@@ -180,7 +164,7 @@ public class Foo : NSObject {
 		[Test]
 		public async Task NotDerivedFromNSObjectInvocation ()
 		{
-			var type = await CompileTypeForTest (@"
+			var type = await ReworkerHelper.CompileTypeForTest (@"
 using System;
 public class Foo {
 	public Foo (IntPtr p) { }
@@ -197,12 +181,13 @@ public class Foo {
 			var instructions = type.GetMethods ().First (m => m.Name == "Create").Body.Instructions;
 			// This is the instruction normally before the newobj
 			AssertInstructionBeforeNewobj (instructions, "ldloc.0");
+			AssertIntPtrCtorCalled (instructions);
 		}
 
 		[Test]
 		public async Task DerivedFromNSObjectMultipleInvocations ()
 		{
-			var type = await CompileTypeForTest (@"
+			var type = await ReworkerHelper.CompileTypeForTest (@"
 using System;
 using Foundation;
 public class Foo : NSObject {
@@ -220,12 +205,13 @@ public class Foo : NSObject {
 			CreateTestTransform (type).ReworkAsNeeded (type);
 			var instructions = type.GetMethods ().First (m => m.Name == "Create").Body.Instructions;
 			AssertInstructionBeforeNewobj (instructions, "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+			AssertNativeHandleCtorCalled (instructions);
 		}
 
 		[Test]
 		public async Task DerivedFromNSObjectInvocationWithBool ()
 		{
-			var type = await CompileTypeForTest (@"
+			var type = await ReworkerHelper.CompileTypeForTest (@"
 using System;
 using Foundation;
 public class Foo : NSObject {
