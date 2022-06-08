@@ -333,6 +333,23 @@ partial class TestRuntime
 	public static bool CheckXcodeVersion (int major, int minor, int build = 0)
 	{
 		switch (major) {
+		case 14:
+			switch (minor) {
+			case 0:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (9, 0);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (16, 0);
+#elif __IOS__
+				return CheckiOSSystemVersion (16, 0);
+#elif MONOMAC
+				return CheckMacSystemVersion (13, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
+			default:
+				throw new NotImplementedException ($"Missing version logic for checking for Xcode {major}.{minor}");
+			}
 		case 13:
 			switch (minor) {
 			case 0:
@@ -799,7 +816,7 @@ partial class TestRuntime
 			throw new NotImplementedException ();
 #endif
 		default:
-			throw new NotImplementedException ();
+			throw new NotImplementedException ($"Missing version logic for checking for Xcode {major}.{minor}");
 		}
 	}
 
