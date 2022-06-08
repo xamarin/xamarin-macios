@@ -633,7 +633,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			return false;
 		}
 
-		static IEnumerable<MethodDefinition> PropMethods (PropertyDefinition prop)
+		internal static IEnumerable<MethodDefinition> PropMethods (PropertyDefinition prop)
 		{
 			if (prop.GetMethod is not null)
 				yield return prop.GetMethod;
@@ -643,7 +643,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				yield return method;
 		}
 
-		static IEnumerable<MethodDefinition> EventMethods (EventDefinition @event)
+		internal static IEnumerable<MethodDefinition> EventMethods (EventDefinition @event)
 		{
 			if (@event.AddMethod is not null)
 				yield return @event.AddMethod;
