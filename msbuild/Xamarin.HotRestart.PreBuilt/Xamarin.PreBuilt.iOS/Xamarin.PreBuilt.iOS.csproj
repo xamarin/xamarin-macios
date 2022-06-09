@@ -11,7 +11,7 @@
     <_LinkMode>None</_LinkMode>
     <UseInterpreter>true</UseInterpreter>
     <MtouchExtraArgs>--registrar:dynamic</MtouchExtraArgs>
-    <!-- disable code signing unless we're on building in CI, to avoid requiring code signing during developer builds (who will usually never need the prebuilt app) -->
+    <!-- disable code signing unless we're building in CI, to avoid requiring code signing during developer builds (who will usually never need the prebuilt app) -->
     <EnableCodeSigning Condition="'$(BUILD_REVISION)' == ''">false</EnableCodeSigning>
   </PropertyGroup>
   <ItemGroup>
