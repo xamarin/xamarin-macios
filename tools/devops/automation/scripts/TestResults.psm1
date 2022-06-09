@@ -27,7 +27,7 @@ class TestResults {
     }
 
     [void] WriteComment($stringBuilder) {
-        $stringBuilder.AppendLine("## Test results - $(this.Context)")
+        $stringBuilder.AppendLine("## Test results - $($this.Context)")
         $stringBuilder.AppendLine("")
         if (-not (Test-Path $this.ResultsPath -PathType Leaf)) {
              $stringBuilder.AppendLine(":fire: Tests failed catastrophically on $($this.Context) (no summary found).") 
