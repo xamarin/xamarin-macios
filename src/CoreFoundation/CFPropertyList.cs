@@ -68,7 +68,7 @@ namespace CoreFoundation
 			FromData (NSData data, CFPropertyListMutabilityOptions options = CFPropertyListMutabilityOptions.Immutable)
 		{
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			if (data.Handle == IntPtr.Zero)
 				throw new ObjectDisposedException (nameof (data));
 

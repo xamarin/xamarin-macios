@@ -2329,6 +2329,7 @@ namespace Registrar {
 			n = "struct trampoline_struct_" + name.ToString ();
 			if (!structures.Contains (n)) {
 				structures.Add (n);
+				declarations.WriteLine ($"// {structure.FullName} (+other structs with same layout)");
 				declarations.WriteLine ("{0} {{\n{1}}};", n, body.ToString ());
 			}
 			
@@ -2386,7 +2387,7 @@ namespace Registrar {
 			case "System.UIntPtr":
 				name.Append ('p');
 				body.AppendLine ("void *v{0};", size);
-				size += 4; // for now at least...
+				size += Is64Bits ? 8 : 4;
 				break;
 			default:
 				bool found = false;
@@ -2506,6 +2507,7 @@ namespace Registrar {
 			case "System.Drawing.PointF": return App.Platform == ApplePlatform.MacOSX ? "NSPoint" : "CGPoint";
 			case "System.Drawing.SizeF": return App.Platform == ApplePlatform.MacOSX ? "NSSize" : "CGSize";
 			case "System.String": return "NSString *";
+			case "System.UIntPtr":
 			case "System.IntPtr": return "void *";
 			case "System.SByte": return "signed char";
 			case "System.Byte": return "unsigned char";
@@ -2530,6 +2532,7 @@ namespace Registrar {
 				throw ErrorHelper.CreateError (4102, Errors.MT4102, "System.DateTime", "Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector": return "SEL";
 			case "ObjCRuntime.Class": return "Class";
+			case "ObjCRuntime.NativeHandle": return "void *";
 			default:
 				if (type.FullName == NFloatTypeName) {
 					CheckNamespace ("CoreGraphics", exceptions);
@@ -4982,7 +4985,7 @@ namespace Registrar {
 				sb.WriteLine ("{");
 				if (is_stret) {
 					sb.StringBuilder.AppendLine ("#if defined (__arm64__)");
-					sb.WriteLine ("xamarin_process_managed_exception (xamarin_create_system_entry_point_not_found_exception (\"{0}\"));", pinfo.EntryPoint);
+					sb.WriteLine ("xamarin_process_managed_exception ((MonoObject *) xamarin_create_system_entry_point_not_found_exception (\"{0}\"));", pinfo.EntryPoint);
 					sb.StringBuilder.AppendLine ("#else");
 				}
 				sb.WriteLine ("@try {");

@@ -2,9 +2,10 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using System.Collections.Generic;
+using Task = System.Threading.Tasks.Task;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
+using TaskItem = Microsoft.Build.Utilities.TaskItem;
 
 using Xamarin.MacDev;
 using Xamarin.Utils;
@@ -87,74 +88,32 @@ namespace Xamarin.MacDev.Tasks
 			return File.Exists (path) ? path : ToolExe;
 		}
 
-		static ProcessStartInfo GetProcessStartInfo (IDictionary<string, string> environment, string tool, string args)
-		{
-			var startInfo = new ProcessStartInfo (tool, args);
-
-			startInfo.WorkingDirectory = Environment.CurrentDirectory;
-
-			foreach (var variable in environment)
-				startInfo.EnvironmentVariables[variable.Key] = variable.Value;
-
-			startInfo.RedirectStandardOutput = true;
-			startInfo.UseShellExecute = false;
-			startInfo.CreateNoWindow = true;
-
-			return startInfo;
-		}
-
-		int CopySceneKitAssets (string scnassets, string output, string intermediate)
+		Task CopySceneKitAssets (string scnassets, string output, string intermediate)
 		{
 			var environment = new Dictionary<string, string> ();
-			var args = new CommandLineArgumentBuilder ();
+			var args = new List<string> ();
 
 			environment.Add ("PATH", DeveloperRootBinDir);
-			environment.Add ("DEVELOPER_DIR", SdkDevPath);
 			environment.Add ("XCODE_DEVELOPER_USR_PATH", DeveloperRootBinDir);
 
-			args.AddQuoted (Path.GetFullPath (scnassets));
+			args.Add (Path.GetFullPath (scnassets));
 			args.Add ("-o");
-			args.AddQuoted (Path.GetFullPath (output));
-			args.AddQuotedFormat ("--sdk-root={0}", SdkRoot);
+			args.Add (Path.GetFullPath (output));
+			args.Add ($"--sdk-root={SdkRoot}");
 
 			if (AppleSdkSettings.XcodeVersion.Major >= 10) {
 				var platform = PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp);
 				if (platform != null)
-					args.AddQuotedFormat ("--target-platform={0}", platform);
+					args.Add ($"--target-platform={platform}");
 
-				args.AddQuotedFormat ("--target-version={0}", SdkVersion);
+				args.Add ($"--target-version={SdkVersion}");
 			} else {
-				args.AddQuotedFormat ("--target-version-{0}={1}", OperatingSystem, SdkVersion);
+				args.Add ($"--target-version-{OperatingSystem}={SdkVersion}");
 			}
-			args.AddQuotedFormat ("--target-build-dir={0}", Path.GetFullPath (intermediate));
-			args.AddQuotedFormat ("--resources-folder-path={0}", AppBundleName);
+			args.Add ($"--target-build-dir={Path.GetFullPath (intermediate)}");
+			args.Add ($"--resources-folder-path={AppBundleName}");
 
-			var startInfo = GetProcessStartInfo (environment, GetFullPathToTool (), args.ToString ());
-
-			try {
-				using (var process = new Process ()) {
-					Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, startInfo.FileName, startInfo.Arguments);
-
-					process.StartInfo = startInfo;
-					process.OutputDataReceived += (sender, e) => {
-						if (e.Data == null)
-							return;
-
-						Log.LogMessage (MessageImportance.Low, "{0}", e.Data);
-					};
-
-					process.Start ();
-					process.BeginOutputReadLine ();
-					process.WaitForExit ();
-
-					Log.LogMessage (MessageImportance.Low, MSBStrings.M0116, startInfo.FileName);
-
-					return process.ExitCode;
-				}
-			} catch (Exception ex) {
-				Log.LogError (MSBStrings.E0003, startInfo.FileName, ex.Message);
-				return -1;
-			}
+			return ExecuteAsync (GetFullPathToTool (), args, sdkDevPath: SdkDevPath, environment: environment, showErrorIfFailure: true);
 		}
 
 		public override bool Execute ()
@@ -164,7 +123,6 @@ namespace Xamarin.MacDev.Tasks
 			var bundleResources = new List<ITaskItem> ();
 			var modified = new HashSet<string> ();
 			var items = new List<ITaskItem> ();
-			string metadata;
 
 			foreach (var asset in SceneKitAssets) {
 				if (!File.Exists (asset.ItemSpec))
@@ -178,9 +136,7 @@ namespace Xamarin.MacDev.Tasks
 				if (scnassets.Length == 0)
 					continue;
 
-				metadata = asset.GetMetadata ("LogicalName");
-				if (!string.IsNullOrEmpty (metadata))
-					asset.SetMetadata ("LogicalName", string.Empty);
+				asset.RemoveMetadata ("LogicalName");
 
 				var bundleName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty(SessionId));
 				var output = new TaskItem (Path.Combine (intermediate, bundleName));
@@ -194,6 +150,17 @@ namespace Xamarin.MacDev.Tasks
 
 					// .. and remove the @OriginalItemSpec which is for @asset
 					scnassetsItem.RemoveMetadata ("OriginalItemSpec");
+
+					// The Link metadata is for the asset, but 'scnassetsItem' is the containing *.scnasset directory,
+					// so we need to update the Link metadata accordingly (if it exists).
+					var link = scnassetsItem.GetMetadata ("Link");
+					if (!string.IsNullOrEmpty (link)) {
+						var newLinkLength = link.Length - (asset.ItemSpec.Length - scnassets.Length);
+						if (newLinkLength > 0 && newLinkLength < link.Length) {
+							link = link.Substring (0, newLinkLength);
+							scnassetsItem.SetMetadata ("Link", link);
+						}
+					}
 
 					var assetMetadata = asset.GetMetadata ("DefiningProjectFullPath");
 					if (assetMetadata != scnassetsItem.GetMetadata ("DefiningProjectFullPath")) {
@@ -221,13 +188,14 @@ namespace Xamarin.MacDev.Tasks
 			if (!Directory.Exists (intermediate))
 				Directory.CreateDirectory (intermediate);
 
+			var tasks = new List<Task> ();
 			foreach (var item in items) {
 				var bundleDir = BundleResource.GetLogicalName (ProjectDir, prefixes, new TaskItem (item), !string.IsNullOrEmpty(SessionId));
 				var output = Path.Combine (intermediate, bundleDir);
 
-				if (CopySceneKitAssets (item.ItemSpec, output, intermediate) == -1)
-					return false;
+				tasks.Add (CopySceneKitAssets (item.ItemSpec, output, intermediate));
 			}
+			Task.WaitAll (tasks.ToArray ());
 
 			BundleResources = bundleResources.ToArray ();
 
