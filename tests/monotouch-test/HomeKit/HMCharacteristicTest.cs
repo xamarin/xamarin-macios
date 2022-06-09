@@ -27,6 +27,7 @@ namespace MonoTouchFixtures.HomeKit
 		[Test]
 		public void WriteValueNullTest ()
 		{
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14,0);
 			var characteristic = new HMCharacteristic ();
 			Assert.Throws<ArgumentNullException> (delegate { characteristic.WriteValue (null, null); }, $"WriteValue should accept a null argument for 'value'.");
 		}

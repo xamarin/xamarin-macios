@@ -87,10 +87,10 @@
 		<value>Error while attempting to compare assemblies: {0}</value>
 	</data>
 	<data name="E0012" xml:space="preserve">
-		<value>Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
+		<value>Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6.</value>
 	</data>
 	<data name="E0013" xml:space="preserve">
-		<value>Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
+		<value>Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6.</value>
 	</data>
 	<data name="E0014" xml:space="preserve">
 		<value>File for conversion (--input) and output location (--output) are required options.</value>
@@ -100,6 +100,9 @@
 	</data>
 	<data name="E0016" xml:space="preserve">
 		<value>Error while processing constructor on type {0} in the old assembly. Constructors that do non-trivial work are not supported.</value>
+	</data>
+	<data name="E0017" xml:space="preserve">
+		<value>Error while processing method {0} on type {1} in the old assembly. Method was not of expected structure. Conversion can't continue. Your best option is to port the old assembly to .NET 6.</value>
 	</data>
 </root>
 
