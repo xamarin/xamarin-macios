@@ -27,8 +27,6 @@ class TestResults {
     }
 
     [void] WriteComment($stringBuilder) {
-        $stringBuilder.AppendLine("## Test results - $($this.Context)")
-        $stringBuilder.AppendLine("")
         if (-not (Test-Path $this.ResultsPath -PathType Leaf)) {
              $stringBuilder.AppendLine(":fire: Tests failed catastrophically on $($this.Context) (no summary found).") 
         } else {
@@ -183,9 +181,14 @@ class ParallelTestsResults {
         foreach($r in $this.Results)
         {
             $result = $r.GetPassedTests()
-            $passedTests += $result.Passed
-            $failedTests += $result.Failed
+            if ($result.Passed -eq -1 -or $result.Failed -eq -1) {
+                continue
+            } else {
+                $passedTests += $result.Passed
+                $failedTests += $result.Failed
+            }
         }
+
         # we return the patterns we already know
         if ($failedTests -eq 0) {
             return ":tada: All $passedTests tests passed :tada:"
@@ -195,14 +198,11 @@ class ParallelTestsResults {
     }
 
     [void] PrintSuccessMessage($testResult, $stringBuilder) {
-        $stringBuilder.AppendLine("### Label $($testResult.Label)")
         $result = $testResult.GetPassedTests()
         if ($result.Passed -eq 0) {
-            $stringBuilder.Append("No tests selected.")
+            $stringBuilder.Append("* :warning: $($testResult.Label): No tests selected.")
         } else {
-            $stringBuilder.AppendLine("<details><summary>Tests for $($testResult.Label)</summary>")
-            $stringBuilder.Append("$($testResult.Context) - All $($result.Passed) tests passed")
-            $stringBuilder.AppendLine("</details>")
+            $stringBuilder.AppendLine(":white_check_mark: $($testResult.Label): All $($result.Passed) tests passed</summary>")
         }
     }
 
@@ -233,17 +233,19 @@ class ParallelTestsResults {
             # loop over all results and add the content
             foreach ($r in $failingTests)
             {
-                $stringBuilder.AppendLine("### Label $($r.Label)")
                 # print diff messages if the tests crash or if the tests did indeed fail
                 # get the result, if -1, we had a crash, else we print the result
                 $result = $r.GetPassedTests()
                 if ($result.Passed -eq -1 -or $result.Failed -eq -1) {
-                    $stringBuilder.AppendLine("Tests for $($r.Label) failed catastrophically on $($r.Context) (no summary found).")
+                    $stringBuilder.AppendLine("* :fire: **$($r.Label)** tests failed catastrophically on $($r.Context) (no summary found).")
                 } else {
-                    $stringBuilder.AppendLine("<details><summary>Failed tests for $($r.Label)</summary>")
                     # create a detail per test result with the name of the test and will contain the exact summary
-                    $r.WriteComment($stringBuilder)
-                    $stringBuilder.AppendLine("</details>")
+                    $stringBuilder.AppendLine("* :x: <details><summary>$($r.Label) failed tests</summary>")
+                    foreach ($line in Get-Content -Path $r.ResultsPath)
+                    {
+                        $stringBuilder.AppendLine(" $line") # the extra space is needed for the multiline list item
+                    }
+                    $stringBuilder.AppendLine(" </details>") # the extra space is needed for the multiline list item
                 }
             }
             $successfulTests = $this.GetSuccessfulTests()

@@ -45,7 +45,7 @@ steps:
     - task: DownloadPipelineArtifact@2
       displayName: Download Test Summary
       inputs:
-        patterns: "**/TestSummary-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/TestSummary.md"
+        artifact: "TestSummary-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}"
         allowFailedBuilds: true
         path: $(System.DefaultWorkingDirectory)\Reports
 
