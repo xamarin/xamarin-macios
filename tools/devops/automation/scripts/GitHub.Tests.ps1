@@ -399,3 +399,38 @@ Describe 'Get-GitHubPRInfo' {
         }
     }
 }
+
+
+Describe 'Convert-Markdown' {
+    Context 'with all env variables present' {
+        BeforeAll {
+            $Script:envVariables = @{
+                "GITHUB_TOKEN" = "GITHUB_TOKEN";
+            }
+
+            $Script:envVariables.GetEnumerator() | ForEach-Object { 
+                $key = $_.Key
+                Set-Item -Path "Env:$key" -Value $_.Value
+            }
+        }
+
+        It 'calls the method successfully' {
+            Mock New-GistWithFiles {
+                return "https://gist.github.com/somethingsomething"
+            } -ModuleName 'GitHub'
+            $rootDirectory = "root"
+            $inputContents = "[vsdrops](whatever) --- [gist](subdir/file) === [gist](inexistent/file)"
+
+            $fullDirectory = Join-Path $rootDirectory "subdir"
+            $fullPath = Join-Path $fullDirectory "file"
+            New-Item -Path "." -Name $fullDirectory -ItemType "directory" -Force
+            Set-Content -Path $fullPath -Value "content"
+
+            $converted = Convert-Markdown -RootDirectory $rootDirectory -InputContents $inputContents -VSDropsPrefix "vsdropsprefix/"
+
+            $converted | Should -BeExactly "[vsdrops](vsdropsprefix/whatever) --- [gist](https://gist.github.com/somethingsomething) === (could not create gist: file 'root/inexistent/file' does not exist)"
+
+            Remove-Item -Path $rootDirectory -Recurse
+        }
+    }
+}

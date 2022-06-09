@@ -248,6 +248,11 @@ class GitHubComments {
         [string] $commentTitle,
         [string] $commentEmoji
     ) {
+        # Don't write a header if none was provided
+        if ($commentTitle.Length -eq 0) {
+            return
+        }
+
         if ([string]::IsNullOrEmpty($Env:PR_ID)) {
             $prefix = "[CI Build]"
         } else {
@@ -255,6 +260,7 @@ class GitHubComments {
         }
 
         $stringBuilder.AppendLine("# $commentEmoji $prefix $commentTitle $commentEmoji")
+        $stringBuilder.AppendLine()
     }
 
     [void] WriteCommentFooter(
@@ -263,13 +269,16 @@ class GitHubComments {
         $targetUrl = Get-TargetUrl
         $stringBuilder.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
         $hashUrl = $null
+        $hashSource = $null
         if ([GitHubComments]::IsPR()) {
             $changeId = [GitHubComments]::GetPRID()
             $hashUrl = "https://github.com/$($this.Org)/$($this.Repo)/pull/$changeId/commits/$($this.Hash)"
+            $hashSource = " [PR build]"
         } else {
             $hashUrl= "https://github.com/$($this.Org)/$($this.Repo)/commit/$($this.Hash)"
+            $hashSource = " [CI build]"
         }
-        $stringBuilder.AppendLine("Hash: [$($this.Hash)]($hashUrl)")
+        $stringBuilder.AppendLine("Hash: [$($this.Hash)]($hashUrl) $hashSource")
     }
 
     [string] GetCommentUrl() {
@@ -324,7 +333,6 @@ class GitHubComments {
 
         # header
         $this.WriteCommentHeader($msg, $commentTitle, $commentEmoji)
-        $msg.AppendLine()
 
         # content
         $commentObject.WriteComment($msg)
@@ -346,7 +354,6 @@ class GitHubComments {
 
         # header
         $this.WriteCommentHeader($msg, $commentTitle, $commentEmoji)
-        $msg.AppendLine()
 
         if (-not (Test-Path $filePath -PathType Leaf)) {
             throw [System.IO.FileNotFoundException]::new($filePath)
@@ -374,7 +381,6 @@ class GitHubComments {
 
         # header
         $this.WriteCommentHeader($msg, $commentTitle, $commentEmoji)
-        $msg.AppendLine()
 
         # content
         $msg.AppendLine($content)
@@ -768,65 +774,6 @@ function Test-JobSuccess {
 
 <# 
     .SYNOPSIS
-        Helper function used to create the content in the comment with the APIDiff
-
-    .PARAMETER APIDiff
-        The path to the the json that contains the content for the PR API diff.
-
-    .PARAMETER APIGeneratorDiffJson
-        The path to the json that contains the content for the generator diffs with stable.
-
-    .PARAMETER APIGeneratorDiff
-        The path to the json that contains the content for the generator diffs.
-#>
-function Write-APIDiffContent {
-    param (
-
-        [Parameter(Mandatory)]
-        [System.Text.StringBuilder]
-        $StringBuilder,
-
-        [String]
-        $APIDiff="",
-
-        [string]
-        $APIGeneratorDiffJson="",
-
-        [string]
-        $APIGeneratorDiff=""
-    )
-
-    if ([string]::IsNullOrEmpty($APIDiff)) {
-        $StringBuilder.AppendLine("* :warning: API diff urls have not been provided.")
-    } else {
-        Write-Diffs -StringBuilder $sb -Header "API diff" -APIDiff $APIDiff
-    }
-    if ([string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
-        $StringBuilder.AppendLine("* :warning: API Current PR diff urls have not been provided.")
-    } else {
-        Write-Diffs -StringBuilder $sb -Header "API Current PR diff" -APIDiff $APIGeneratorDiffJson
-    }
-    if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
-        Write-Host "Parsing Generator diff in path $APIGeneratorDiff"
-        if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
-            $StringBuilder.AppendLine("* :warning: Path $APIGeneratorDiff was not found!")
-        } else {
-            $StringBuilder.AppendLine("# Generator diff")
-            $StringBuilder.AppendLine("")
-            # ugly workaround to get decent new lines
-            foreach ($line in Get-Content -Path $APIGeneratorDiff)
-            {
-                $StringBuilder.AppendLine($line)
-            }
-            $StringBuilder.AppendLine($apidiffcomments)
-        }
-    } else {
-        $StringBuilder.AppendLine("* :warning: Generator diff comments have not been provided.")
-    }
-}
-
-<# 
-    .SYNOPSIS
         Add a new comment that contains the summaries to the Html Report as well as set the status accordingly.
 
     .PARAMETER Context
@@ -861,15 +808,6 @@ function New-GitHubSummaryComment {
         [string]
         $Artifacts="",
 
-        [string]
-        $APIDiff="",
-
-        [string]
-        $APIGeneratorDiffJson="",
-
-        [string]
-        $APIGeneratorDiff="",
-
         [switch]
         $DeviceTest
     )
@@ -902,8 +840,6 @@ function New-GitHubSummaryComment {
     }
 
     if (-not $DeviceTest) {
-        Write-APIDiffContent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
-
         $artifactComment = New-ArtifactsFromJsonFile -Content $Artifacts
         $artifactComment.WriteComment($sb)
     }
@@ -946,84 +882,6 @@ function New-GitHubSummaryComment {
         }
     }
     return $request
-}
-
-function Write-Diffs {
-    param (
-        [Parameter(Mandatory)]
-        [System.Text.StringBuilder]
-        $StringBuilder,
-
-        [Parameter(Mandatory)]
-        [String]
-        $Header,
-
-        [String]
-        $APIDiff
-    )
-
-    Write-Host "Parsing API diff in path $APIDiff"
-    if (-not (Test-Path $APIDiff -PathType Leaf)) {
-        $StringBuilder.AppendLine("Path $APIDiff was not found!")
-    } else {
-        # read the json file, convert it to an object and add a line for each artifact
-        $json =  Get-Content $APIDiff | ConvertFrom-Json
-        # we are dealing with an object, not a dictionary
-        $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
-        $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
-        if ($hasHtmlLinks -or $hasMDlinks) {
-            $StringBuilder.AppendLine("# $Header")
-            Write-Host "Message is '$($json.message)'"
-            $StringBuilder.AppendLine($json.message)
-
-            $commonPlatforms = "iOS", "macOS", "tvOS"
-            $legacyPlatforms = @{Title="API diff"; Platforms=@($commonPlatforms + "watchOS");}
-            $dotnetPlatforms = @{Title="dotnet API diff"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
-            $dotnetLegacyPlatforms = @{Title="dotnet legacy API diff"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
-            $dotnetMaciOSPlatforms = @{Title="dotnet iOS-MacCatalayst API diff"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
-            $platforms = @($legacyPlatforms, $dotnetPlatforms, $dotnetLegacyPlatforms, $dotnetMaciOSPlatforms)
-
-            foreach ($linkGroup in $platforms) {
-                $StringBuilder.AppendLine("<details><summary>View $($linkGroup.Title)</summary>")
-                $StringBuilder.AppendLine("") # no new line results in a bad rendering in the links
-                $htmlLink = ""
-                $gistLink = ""
-
-                foreach ($linkPlatform in $linkGroup.Platforms) {
-                    $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
-                    $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
-
-                    # some do not have md, some do not have html
-                    if ($platformHasHtmlLinks) {
-                        Write-Host "Found html link for $linkPlatform"
-                        $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform
-                        $htmlLink = "[vsdrops]($htmlLinkUrl)"
-                    }
-
-                    if ($platformHasMDlinks) {
-                        Write-Host "Found gist link for $linkPlatform"
-                        $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform
-                        $gistLink = "[gist]($gistLinkUrl)"
-                    }
-
-                    if (($htmlLink -eq "") -and ($gistLink -eq "")) {
-                        $StringBuilder.AppendLine("* :fire: $linkPlatform :fire: Missing files")
-                    } else {
-                        # I don't like extra ' ' when we are missing vars, use join
-                        $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
-                        $StringBuilder.AppendLine($line)
-                    }
-                }
-                $StringBuilder.AppendLine("</details>")
-                $StringBuilder.AppendLine("")
-            }
-            $StringBuilder.AppendLine("")
-        } else {
-            $StringBuilder.AppendLine("# API diff")
-            $StringBuilder.AppendLine("")
-            $StringBuilder.AppendLine("**No api diff data found.**")
-        }
-    }
 }
 
 <# 
@@ -1307,6 +1165,61 @@ function Push-RepositoryDispatch {
     Write-Host $request.Content
 }
 
+# This function processes markdown, and replaces:
+#     1. "[vsdrops](" with "[vsdrops](https://link/to/vsdrops/".
+#     2. "[gist](file)" with "[gist](url)" after uploading "file" to a gist.
+# It also takes a root directory parameter, which is where files to gist should be searched for
+function Convert-Markdown {
+    param (
+        [string]
+        $RootDirectory,
+
+        [string]
+        $InputContents,
+
+        [string]
+        $VSDropsPrefix
+    )
+
+    $InputContents = $InputContents.Replace("[vsdrops](", "[vsdrops](" + $VSDropsPrefix)
+
+    $startIndex = $InputContents.IndexOf("[gist](", $index)
+    while ($startIndex -gt 0) {
+        $endIndex =$InputContents.IndexOf(")", $startIndex + 7)
+        if ($endIndex -gt $startIndex) {
+            $fileToGist = $InputContents.Substring($startIndex + 7, $endIndex - $startIndex - 7)
+            $fullPath = Join-Path -Path $RootDirectory -ChildPath $fileToGist
+            if (Test-Path $fullPath -PathType leaf) {
+                $gistContent = Get-Content -Path $fullPath -Raw
+                if ($gistContent.Length -eq 0) {
+                        $gistText = "[empty gist]"
+                } else {
+                    # github only accepts filename without path components
+                    $filenameForGist = [System.Linq.Enumerable]::Last($fileToGist.Split("/", [StringSplitOptions]::RemoveEmptyEntries))
+                    $obj = New-GistObjectDefinition -Name $filenameForGist -Path $fullPath -Type "markdown"
+                    $filesToGist = ($obj)
+                    try {
+                        $gistUrl = New-GistWithFiles $fileToGist $filesToGist
+                        $gistText = "[gist](" + $gistUrl + ")"
+                    } catch {
+                        Write-Host "Unable to create gist: $_"
+                        $gistText = "Unable to create gist: $($_.Exception.Message)"
+                    }
+                }
+            } else {
+                $gistText = "(could not create gist: file '$fullPath' does not exist)"
+            }
+            $InputContents = $InputContents.Substring(0, $startIndex) + $gistText + $InputContents.Substring($endIndex + 1)
+        } else {
+            break
+        }
+
+        $startIndex = $InputContents.IndexOf("[gist](", $endIndex)
+    }
+
+    return $InputContents
+}
+
 # module exports, any other functions are private and should not be used outside the module.
 Export-ModuleMember -Function New-GitHubComment
 Export-ModuleMember -Function New-GitHubCommentFromFile
@@ -1317,6 +1230,7 @@ Export-ModuleMember -Function New-GistWithFiles
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
 Export-ModuleMember -Function Push-RepositoryDispatch 
+Export-ModuleMember -Function Convert-Markdown
 
 # new future API that uses objects.
 Export-ModuleMember -Function New-GitHubCommentsObject
