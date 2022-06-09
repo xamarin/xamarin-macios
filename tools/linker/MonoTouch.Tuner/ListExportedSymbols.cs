@@ -40,6 +40,18 @@ namespace Xamarin.Linker.Steps
 		}
 
 #if NET
+		protected override void EndProcess ()
+		{
+			if (state?.Started == true) {
+				// The generator is 'started' by the linker, which means it may not
+				// be started if the linker was not executed due to re-using cached results.
+				state.End ();
+			}
+			base.EndProcess ();
+		}
+#endif
+
+#if NET
 		public LinkerConfiguration Configuration {
 			get {
 				return LinkerConfiguration.GetInstance (Context);

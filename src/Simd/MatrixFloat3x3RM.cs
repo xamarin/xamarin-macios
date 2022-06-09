@@ -21,10 +21,13 @@ using System.ComponentModel;
 using System.Numerics;
 using System.Runtime.InteropServices;
 
+using ObjCRuntime;
+
 // This type does not come from the CoreGraphics framework
 #if NET
 namespace CoreGraphics
 {
+	[NativeName ("GLKMatrix3")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct RMatrix3 : IEquatable<RMatrix3>
 	{
