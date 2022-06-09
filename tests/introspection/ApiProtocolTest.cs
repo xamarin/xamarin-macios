@@ -487,6 +487,8 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "NSUserActivityRestoring":
+				return true;
 			}
 			return false;
 		}
@@ -714,7 +716,9 @@ namespace Introspection {
 
 					if (t.IsPublic && !ConformTo (klass.Handle, protocol)) {
 						// note: some internal types, e.g. like UIAppearance subclasses, return false (and there's not much value in changing this)
-						list.Add ($"Type {t.FullName} (native: {klass.Name}) does not conform {protocolName}");
+						var msg = $"Type {t.FullName} (native: {klass.Name}) does not conform {protocolName}";
+						list.Add (msg);
+						ReportError (msg);
 					}
 				}
 			}
