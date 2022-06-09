@@ -221,3 +221,7 @@ stages:
     simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
+    signingSetupSteps:
+      - template: ./templates/sign-and-notarized/setup.yml
+        parameters:
+          isPR: true
