@@ -55,12 +55,13 @@ jobs:
         agentPoolCI: $(CIBuildPool)
         agentPoolCIUrl: $(CIBuildPoolUrl)
 
+# Detect changes
 - job: api_diff
   dependsOn:
   - ${{ if eq(parameters.pool, 'automatic') }}:
     - AgentPoolSelector
   - configure
-  displayName: 'Generate API diff'
+  displayName: 'Detect API changes'
   timeoutInMinutes: 1000
   variables:
     ${{ if eq(parameters.pool, 'automatic') }}:
@@ -81,8 +82,9 @@ jobs:
   workspace:
     clean: all
 
+  # build the source code and compute the api diffs
   steps:
-  - template: build-api-diff.yml
+  - template: api-diff-build-and-detect.yml
     parameters:
       isPR: ${{ parameters.isPR }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
@@ -90,55 +92,21 @@ jobs:
       gitHubToken: ${{ parameters.gitHubToken }}
       xqaCertPass: ${{ parameters.xqaCertPass }}
       enableDotnet: ${{ parameters.enableDotnet }}
+      prID: variables['PrID']
 
-- job: upload_vsdrops
-  displayName: 'Upload API diff to VSDrops'
+# Upload results to vsdrops & publish to github
+- job: publish_change_detection_results
+  displayName: 'Upload / Publish change detection results to VSDrops / GitHub'
   timeoutInMinutes: 1000
-  dependsOn: # can start as soon as the tests are done and the api diff
-  - api_diff
-  condition: succeededOrFailed() 
-
-  variables:
-    API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
-
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: upload-vsdrops.yml
-    parameters:
-      testPrefix: sim
-      runTests: false
-
-
-- job: api_diff_github_comment
-  displayName: 'Publish API diff to GitHub'
-  timeoutInMinutes: 1000
-  dependsOn: # has to wait for the tests to be done AND the data to be uploaded
+  dependsOn: # can start as soon as the api diff is done
   - configure
   - api_diff
-  - upload_vsdrops
   condition: succeededOrFailed()
-  variables:
-    # Define the variable FOO from the previous job
-    # Note the use of single quotes!
-    BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
-    TESTS_BOT: $[ dependencies.api_diff.outputs['build.TESTS_BOT'] ]
-    APIDIFF_MESSAGE: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_MESSAGE'] ]
-    APIDIFF_BUILT: $[ dependencies.api_diff.outputs['apidiff.APIDIFF_BUILT'] ]
-    API_GENERATOR_DIFF_BUILT: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_BUILT'] ]
-    API_GENERATOR_DIFF_STATUS_MESSAGE: $[ dependencies.api_diff.outputs['apiGeneratorDiff.API_GENERATOR_DIFF_STATUS_MESSAGE'] ]
-    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
-    GIT_HASH: $[ dependencies.api_diff.outputs['fix_commit.GIT_HASH'] ]
   pool:
     vmImage: 'windows-latest'
     workspace:
       clean: all
+  variables:
+    GIT_HASH: $[ dependencies.api_diff.outputs['fix_commit.GIT_HASH'] ]
   steps:
-  - template: api-diff-github-comment.yml
-    parameters:
-      statusContext: "Build"
-      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
-      enableAPIDiff: true
-      testPrefix: sim
+  - template: api-diff-process-results.yml

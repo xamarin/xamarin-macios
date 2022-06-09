@@ -516,6 +516,13 @@ namespace Xamarin.Bundler
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out LinkContext, out assemblies);
 
+			var state = MarshalNativeExceptionsState;
+			if (state?.Started == true) {
+				// The generator is 'started' by the linker, which means it may not
+				// be started if the linker was not executed due to re-using cached results.
+				state.End ();
+			}
+
 			ErrorHelper.Show (LinkContext.Exceptions);
 
 			Driver.Watch ("Link Assemblies", 1);
@@ -881,12 +888,6 @@ namespace Xamarin.Bundler
 
 			// Write P/Invokes
 			var state = MarshalNativeExceptionsState;
-			if (state.Started) {
-				// The generator is 'started' by the linker, which means it may not
-				// be started if the linker was not executed due to re-using cached results.
-				state.End ();
-			}
-
 			var ifile = state.SourcePath;
 			var mode = App.LibPInvokesLinkMode;
 			foreach (var abi in GetArchitectures (mode)) {

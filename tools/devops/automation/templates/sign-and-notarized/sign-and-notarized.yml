@@ -63,7 +63,7 @@ steps:
 - ${{ if or(eq(parameters.skipESRP, true), eq(parameters.isPR, true)) }}:
   - bash: |
       security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
-      echo "$PACKAGES" | xargs python $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
+      echo "$PACKAGES" | xargs python3 $(Build.SourcesDirectory)/release-scripts/sign_and_notarize.py --no_notarization -a "$APP_ID" -i "$INSTALL_ID" -u "$APPLE_ACCOUNT" -p "$APPLE_PASS" -t "$TEAM_ID" -d $(Build.SourcesDirectory)/package/notarized -e "$MAC_ENTITLEMENTS" -k "$KEYCHAIN"
     env:
       PRODUCTSIGN_KEYCHAIN_PASSWORD: ${{ parameters.keyringPass }}
       MAC_ENTITLEMENTS: $(Build.SourcesDirectory)/xamarin-macios/mac-entitlements.plist
