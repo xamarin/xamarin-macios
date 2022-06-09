@@ -161,6 +161,16 @@ class ParallelTestsResults {
         return $failingTests
     }
 
+    [object] GetSuccessfulTests() {
+        $successfulTests = [System.Collections.ArrayList]@()
+        foreach ($result in $this.Results) {
+            if (-not $result.IsSuccess()) {
+                $successfulTests.Add($result)
+            }
+        }
+        return $successfulTests 
+    }
+
     [bool] IsSuccess() {
         $failingTests = $this.GetFailingTests()
         return $failingTests.Count -eq 0
@@ -173,14 +183,26 @@ class ParallelTestsResults {
         foreach($r in $this.Results)
         {
             $result = $r.GetPassedTests()
-            $passedTests += $result.Passed 
-            $failedTests += $result.Failed 
+            $passedTests += $result.Passed
+            $failedTests += $result.Failed
         }
         # we return the patterns we already know
         if ($failedTests -eq 0) {
             return ":tada: All $passedTests tests passed :tada:"
         } else {
             return "$failedTests tests failed, $passedTests tests passed."
+        }
+    }
+
+    [void] PrintSuccessMessage($testResult, $stringBuilder) {
+        $stringBuilder.AppendLine("### Label $($testResult.Label)")
+        $result = $testResult.GetPassedTests()
+        if ($result.Passed -eq 0) {
+            $stringBuilder.Append("No tests selected.")
+        } else {
+            $stringBuilder.AppendLine("<details><summary>Tests for $($testResult.Label)</summary>")
+            $stringBuilder.Append("$($testResult.Context) - All $($result.Passed) tests passed")
+            $stringBuilder.AppendLine("</details>")
         }
     }
 
@@ -199,34 +221,35 @@ class ParallelTestsResults {
             $stringBuilder.AppendLine("## Tests counts")
             foreach($r in $this.Results)
             {
-                $stringBuilder.AppendLine("<details><summary>Tests for $($r.Label)</summary>")
-                $result = $r.GetPassedTests()
-                if ($result.Passed -eq 0) {
-                    $stringBuilder.Append("$($r.Context) - No tests selected.")
-                } else {
-                    $stringBuilder.Append("$($r.Context) - All $($result.Passed) tests passed")
-                }
-                $stringBuilder.AppendLine("</details>")
+                $this.PrintSuccessMessage($r, $stringBuilder)
             }
         } else {
-            $stringBuilder.AppendLine(":x: Tests failed on $($this.Context)") 
+            $stringBuilder.AppendLine(":x: Tests failed on $($this.Context)")
             $stringBuilder.AppendLine("")
             $stringBuilder.AppendLine($this.GetTotalTestCount())
             $stringBuilder.AppendLine("")
             $stringBuilder.AppendLine("## Failures")
+            $stringBuilder.AppendLine("")
             # loop over all results and add the content
             foreach ($r in $failingTests)
             {
+                $stringBuilder.AppendLine("### Label $($r.Label)")
+                # print diff messages if the tests crash or if the tests did indeed fail
                 # get the result, if -1, we had a crash, else we print the result
                 $result = $r.GetPassedTests()
-                $stringBuilder.AppendLine("<details><summary>Tests for $($r.Label)</summary>")
                 if ($result.Passed -eq -1 -or $result.Failed -eq -1) {
-                    $stringBuilder.AppendLine("Tests failed catastrophically on $($r.Context) (no summary found).")
+                    $stringBuilder.AppendLine("Tests for $($r.Label) failed catastrophically on $($r.Context) (no summary found).")
                 } else {
+                    $stringBuilder.AppendLine("<details><summary>Failed tests for $($r.Label)</summary>")
                     # create a detail per test result with the name of the test and will contain the exact summary
                     $r.WriteComment($stringBuilder)
                     $stringBuilder.AppendLine("</details>")
                 }
+            }
+            $successfulTests = $this.GetSuccessfulTests()
+            $stringBuilder.AppendLine("## Successes")
+            foreach ($r in $successfulTests) {
+                $this.PrintSuccessMessage($r, $stringBuilder)
             }
         }
     }
