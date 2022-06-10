@@ -198,30 +198,22 @@ variables:
 - name: MicrobuildConnector
   value: 'MicroBuild Signing Task (DevDiv)'
 
-trigger:
+trigger: none
+
+schedules:
+
+# the translations team wants a green build, we can do that on sundays even if 
+# the code did not change and without the device tests.
+- cron: "0 12 * * 0"
+  displayName: Weekly Translations build (Sunday @ noon)
   branches:
     include:
-    - '*'
-    exclude:
-    - refs/heads/locfiles/*
-  paths:
-    exclude:
-    - .github
-    - docs
-    - CODEOWNERS
-    - ISSUE_TEMPLATE.md
-    - LICENSE
-    - NOTICE.txt
-    - SECURITY.MD
-    - README.md
-    - src/README.md
-    - tools/mtouch/README.md
-    - msbuild/Xamarin.Localization.MSBuild/README.md
+    - main
+  always: true
 
 stages:
 - template: templates/main-stage.yml
   parameters:
-    isPR: false
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
     runTests: ${{ parameters.runTests }}
@@ -239,6 +231,4 @@ stages:
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
     signingSetupSteps:
       - template: ./templates/sign-and-notarized/setup.yml
-        parameters:
-          isPR: false
 
