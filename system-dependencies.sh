@@ -281,6 +281,33 @@ function install_mono () {
 	rm -f $MONO_PKG
 }
 
+function download_xcode_platforms ()
+{
+	local XCODE_DEVELOPER_ROOT="$1"
+	local TVOS_VERSION="$2"
+	local WATCHOS_VERSION="$3"
+
+	if ! is_at_least_version "$XCODE_VERSION" 14.0; then
+		# Nothing to do here
+		log "This version of Xcode ($XCODE_VERSION) does not have any additional platforms to download"
+		return
+	fi
+
+	if test -d /Library/Developer/CoreSimulator/Volumes/tvOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/"tvOS $TVOS_VERSION".simruntime; then
+		if test -d /Library/Developer/CoreSimulator/Volumes/watchOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/"watchOS $WATCHOS_VERSION".simruntime; then
+			log "All the additional platforms have already been downloaded for this version of Xcode"
+			return
+		fi
+	fi
+
+	if ! test -z "$PROVISION_XCODE"; then
+		fail "Xcode has additional platforms that must be downloaded. Execute './system-dependencies.sh --provision-xcode' to execute those tasks."
+		return
+	fi
+
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" --downloadAllPlatforms
+}
+
 function run_xcode_first_launch ()
 {
 	local XCODE_VERSION="$1"
@@ -524,6 +551,8 @@ function check_xcode () {
 	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
 	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
 	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
+
+	download_xcode_platforms "$XCODE_DEVELOPER_ROOT" "$TVOS_SDK_VERSION" "$WATCH_SDK_VERSION"
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator${IOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
