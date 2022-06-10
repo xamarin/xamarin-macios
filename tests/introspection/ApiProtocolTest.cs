@@ -489,6 +489,22 @@ namespace Introspection {
 				break;
 			case "NSUserActivityRestoring":
 				return true;
+#if __MACCATALYST__
+			case "UIScrollViewDelegate":
+				// The headers say PKCanvasViewDelegate implements UIScrollViewDelegate
+				if (type.Name == "PKCanvasViewDelegate")
+					return true;
+				break;
+#endif
+			case "NSExtensionRequestHandling":
+				if (type.Name == "HMChipServiceRequestHandler") // Apple removed this class
+					return true;
+				break;
+			case "VNRequestRevisionProviding":
+				// Conformance added in Xcode 13
+				if (type.Name == "VNRecognizedText" && !TestRuntime.CheckXcodeVersion (13, 0))
+					return true;
+				break;
 			}
 			return false;
 		}
