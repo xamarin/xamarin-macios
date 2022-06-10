@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.MaciOS.Nnyeah.AssemblyComparator;
 using System.Collections.Generic;
 using Mono.Cecil.Cil;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Microsoft.MaciOS.Nnyeah {
 	// Converting constructors from Legacy to NET6 have some special concerns:
@@ -26,13 +27,15 @@ namespace Microsoft.MaciOS.Nnyeah {
 		MethodDefinition IntPtrCtorWithBool;
 
 		// NativeHandle::op_Implicit(IntPtr)
-		MethodDefinition NativeHandleOpImplicit;
+		MethodReference NativeHandleOpImplicit;
 
 		EventHandler<WarningEventArgs>? WarningIssued;
 		EventHandler<TransformEventArgs>? Transformed;
 
+		Dictionary<string, MethodDefinition> TransformedConstructors = new Dictionary<string, MethodDefinition> ();
+
 		public ConstructorTransforms (TypeReference newNativeHandleTypeDefinition, MethodDefinition intPtrCtor, MethodDefinition intPtrCtorWithBool,
-			EventHandler<WarningEventArgs>? warningIssued, EventHandler<TransformEventArgs>? transformed)
+			MethodReference nativeHandleOpImplicit, EventHandler<WarningEventArgs>? warningIssued, EventHandler<TransformEventArgs>? transformed)
 		{
 			NewNativeHandleTypeDefinition = newNativeHandleTypeDefinition;
 			IntPtrCtor = intPtrCtor;
@@ -43,7 +46,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			// Get the definition of System.Bool from the ctor we already have
 			BoolTypeDefinition = intPtrCtorWithBool.Parameters[1].ParameterType;
 
-			NativeHandleOpImplicit = NewNativeHandleTypeDefinition.Resolve ().GetMethods ().First (m => m.FullName == "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+			NativeHandleOpImplicit = nativeHandleOpImplicit;
 		}
 
 		public void AddTransforms (TypeAndMemberMap moduleMap)
@@ -123,14 +126,18 @@ namespace Microsoft.MaciOS.Nnyeah {
 					if (ctor.Body.Instructions.Count > 7) {
 						throw new ConversionException (Errors.E0016, definition);
 					}
+
 					ctor.Parameters [0].ParameterType = NewNativeHandleTypeDefinition;
 					Transformed?.Invoke (this, new TransformEventArgs (ctor.DeclaringType.FullName,
 						ctor.Name, "IntPtr", 0, 0));
+					TransformedConstructors.Add (ctor.ToString (), ctor);
 				}
 			}
 
 		}
 
+		// TODO - There is non-trivial overlap between this and the TryGetConstructorCallTransformation
+		// codepath below. While it works, unification would be nice.
 		void ReworkCodeBlockAsNeeded (IEnumerable<MethodDefinition> methods)
 		{
 			foreach (var method in methods) {
@@ -138,10 +145,10 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 		}
 
-		// (Instruction Index, Number of Ctor Arguments)
-		List<(int, int)> FindConstructorInstructionIndex (IList<Instruction> instructions)
+		// (Instruction, Number of Ctor Arguments)
+		List<(Instruction, int)> FindConstructorInstruction (IList<Instruction> instructions)
 		{
-			var index = new List<(int, int)> ();
+			var index = new List<(Instruction, int)> ();
 			for (int i = 0 ; i < instructions.Count ; i++) {
 				Instruction instruction = instructions[i];
 				if (instruction.OpCode.Code == Code.Newobj && instruction.Operand is MethodDefinition invokedMethod) {
@@ -149,14 +156,14 @@ namespace Microsoft.MaciOS.Nnyeah {
 						switch (invokedMethod.Parameters.Count) {
 						case 1: {
 							if (invokedMethod.Parameters[0].ParameterType.ToString () == "System.IntPtr") {
-								index.Add ((i, 1));
+								index.Add ((instruction, 1));
 							}
 							break;
 						}
 						case 2: {
 							if (invokedMethod.Parameters[0].ParameterType.ToString () == "System.IntPtr" &&
 								invokedMethod.Parameters[1].ParameterType.ToString () == "System.Boolean") {
-								index.Add ((i, 2));
+								index.Add ((instruction, 2));
 							}
 							break;
 						}
@@ -173,23 +180,53 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		void ReworkCodeBlockAsNeeded (MethodDefinition method)
 		{
-			foreach ((int index, int argCount) in FindConstructorInstructionIndex (method.Body.Instructions)) {
+			if (method.Body is null)
+				return;
+			var processor = method.Body.GetILProcessor ();
+			foreach ((Instruction instruction, int argCount) in FindConstructorInstruction (method.Body.Instructions)) {
 				switch (argCount) {
 					case 1:
-						method.Body.Instructions.Insert (index, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
+						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
 						break;
 					case 2: {
 						var variable = new VariableDefinition (BoolTypeDefinition);
 						method.Body.Variables.Add (variable);
-						method.Body.Instructions.Insert (index, Instruction.Create (OpCodes.Ldloc, variable));
-						method.Body.Instructions.Insert (index, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
-						method.Body.Instructions.Insert (index, Instruction.Create (OpCodes.Stloc, variable));
+						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Stloc, variable));
+						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Call, NativeHandleOpImplicit));
+						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Ldloc, variable));
 						break;
 					}
 					default:
 						throw new ConversionException (Errors.E0017, method, method.DeclaringType);
 				}
 			}
+		}
+
+		public bool TryGetConstructorCallTransformation (Instruction instruction, [NotNullWhen (returnValue: true)] out Transformation? result)
+		{
+			if (instruction.OpCode == OpCodes.Newobj &&
+				instruction.Operand is MethodReference invokedMethod &&
+				TransformedConstructors.TryGetValue (invokedMethod.ToString (), out var originalCtor)) {
+				switch (originalCtor.Parameters.Count) {
+				case 1:
+					result = new Transformation (instruction.ToString (), TransformationAction.Insert, new List<Instruction> () {
+						Instruction.Create (OpCodes.Call, NativeHandleOpImplicit)
+					});
+					break;
+				case 2:
+					result = new Transformation (instruction.ToString (), TransformationAction.Insert, new List<Instruction> () {
+						Instruction.Create (OpCodes.Stloc, new VariableDefinition (BoolTypeDefinition)),
+						Instruction.Create (OpCodes.Call, NativeHandleOpImplicit),
+						Instruction.Create (OpCodes.Ldloc, new VariableDefinition (BoolTypeDefinition)),
+					});
+					break;
+				default:
+					throw new ConversionException (Errors.E0017, invokedMethod, invokedMethod.DeclaringType);
+				}
+				return true;
+			}
+			result = null;
+			return false;
 		}
 	}
 }
