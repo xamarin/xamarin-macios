@@ -3564,13 +3564,13 @@ namespace UIKit {
 		void RegisterClassForCell (IntPtr /* Class */cellClass, NSString reuseIdentifier);
 
 		[Export ("registerNib:forCellWithReuseIdentifier:")]
-		void RegisterNibForCell (UINib nib, NSString reuseIdentifier);
+		void RegisterNibForCell ([NullAllowed] UINib nib, NSString reuseIdentifier);
 
 		[Export ("registerClass:forSupplementaryViewOfKind:withReuseIdentifier:"), Protected]
 		void RegisterClassForSupplementaryView (IntPtr /*Class*/ viewClass, NSString kind, NSString reuseIdentifier);
 
 		[Export ("registerNib:forSupplementaryViewOfKind:withReuseIdentifier:")]
-		void RegisterNibForSupplementaryView (UINib nib, NSString kind, NSString reuseIdentifier);
+		void RegisterNibForSupplementaryView ([NullAllowed] UINib nib, NSString kind, NSString reuseIdentifier);
 
 		[Export ("dequeueReusableCellWithReuseIdentifier:forIndexPath:")]
 		UICollectionReusableView DequeueReusableCell (NSString reuseIdentifier, NSIndexPath indexPath);
@@ -3587,10 +3587,11 @@ namespace UIKit {
 		UICollectionReusableView DequeueConfiguredReusableSupplementaryView (UICollectionViewSupplementaryRegistration registration, NSIndexPath indexPath);
 
 		[Export ("indexPathsForSelectedItems")]
+		[return: NullAllowed]
 		NSIndexPath [] GetIndexPathsForSelectedItems ();
 
 		[Export ("selectItemAtIndexPath:animated:scrollPosition:")]
-		void SelectItem (NSIndexPath indexPath, bool animated, UICollectionViewScrollPosition scrollPosition);
+		void SelectItem ([NullAllowed] NSIndexPath indexPath, bool animated, UICollectionViewScrollPosition scrollPosition);
 
 		[Export ("deselectItemAtIndexPath:animated:")]
 		void DeselectItem (NSIndexPath indexPath, bool animated);
@@ -3608,18 +3609,23 @@ namespace UIKit {
 		nint NumberOfItemsInSection (nint section);
 
 		[Export ("layoutAttributesForItemAtIndexPath:")]
+		[return: NullAllowed]
 		UICollectionViewLayoutAttributes GetLayoutAttributesForItem (NSIndexPath indexPath);
 
 		[Export ("layoutAttributesForSupplementaryElementOfKind:atIndexPath:")]
+		[return: NullAllowed]
 		UICollectionViewLayoutAttributes GetLayoutAttributesForSupplementaryElement (NSString elementKind, NSIndexPath indexPath);
 
 		[Export ("indexPathForItemAtPoint:")]
+		[return: NullAllowed]
 		NSIndexPath IndexPathForItemAtPoint (CGPoint point);
 
 		[Export ("indexPathForCell:")]
+		[return: NullAllowed]
 		NSIndexPath IndexPathForCell (UICollectionViewCell cell);
 
 		[Export ("cellForItemAtIndexPath:")]
+		[return: NullAllowed]
 		UICollectionViewCell CellForItem (NSIndexPath indexPath);
 
 		[Export ("visibleCells")]
@@ -3661,7 +3667,7 @@ namespace UIKit {
 
 		[Export ("performBatchUpdates:completion:")]
 		[Async]
-		void PerformBatchUpdates (Action updates, [NullAllowed] UICompletionHandler completed);
+		void PerformBatchUpdates ([NullAllowed] Action updates, [NullAllowed] UICompletionHandler completed);
 
 		//
 		// 7.0
@@ -3670,7 +3676,7 @@ namespace UIKit {
 		[Export ("startInteractiveTransitionToCollectionViewLayout:completion:")]
 		[Async (ResultTypeName="UICollectionViewTransitionResult")]
 		UICollectionViewTransitionLayout StartInteractiveTransition (UICollectionViewLayout newCollectionViewLayout,
-									     UICollectionViewLayoutInteractiveTransitionCompletion completion);
+									     [NullAllowed] UICollectionViewLayoutInteractiveTransitionCompletion completion);
 
 		[iOS (7,0)]
 		[Export ("setCollectionViewLayout:animated:completion:")]
@@ -12757,15 +12763,18 @@ namespace UIKit {
 		CGRect RectForRowAtIndexPath (NSIndexPath indexPath);
 
 		[Export ("indexPathForRowAtPoint:")]
+		[return: NullAllowed]
 		NSIndexPath IndexPathForRowAtPoint (CGPoint point);
 		
 		[Export ("indexPathForCell:")]
+		[return: NullAllowed]
 		NSIndexPath IndexPathForCell (UITableViewCell cell);
 
 		[Export ("indexPathsForRowsInRect:")][Internal]
 		IntPtr _IndexPathsForRowsInRect (CGRect rect);
 
 		[Export ("cellForRowAtIndexPath:")]
+		[return: NullAllowed]
 		UITableViewCell CellAt (NSIndexPath ns);
 
 		[Export ("visibleCells")]
@@ -12821,6 +12830,7 @@ namespace UIKit {
 		[Export ("allowsSelectionDuringEditing")]
 		bool AllowsSelectionDuringEditing { get; set; }
 
+		[NullAllowed]
 		[Export ("indexPathForSelectedRow")]
 		NSIndexPath IndexPathForSelectedRow { get; }
 
@@ -12828,7 +12838,7 @@ namespace UIKit {
 		void SelectRow ([NullAllowed] NSIndexPath indexPath, bool animated,  UITableViewScrollPosition scrollPosition);
 
 		[Export ("deselectRowAtIndexPath:animated:")]
-		void DeselectRow ([NullAllowed] NSIndexPath indexPath, bool animated);
+		void DeselectRow (NSIndexPath indexPath, bool animated);
 
 		[Export ("sectionIndexMinimumDisplayRowCount")]
 		nint SectionIndexMinimumDisplayRowCount { get; set; }
@@ -12850,9 +12860,11 @@ namespace UIKit {
 		UIView TableFooterView { get; set; }
 
 		[Export ("dequeueReusableCellWithIdentifier:")]
+		[return: NullAllowed]
 		UITableViewCell DequeueReusableCell (string identifier);
 
 		[Export ("dequeueReusableCellWithIdentifier:")][Sealed]
+		[return: NullAllowed]
 		UITableViewCell DequeueReusableCell (NSString identifier);
 
 		// 3.2
@@ -12878,6 +12890,7 @@ namespace UIKit {
                 [Export ("moveRowAtIndexPath:toIndexPath:")]
                 void MoveRow (NSIndexPath fromIndexPath, NSIndexPath toIndexPath);
 
+                [NullAllowed]
                 [Export ("indexPathsForSelectedRows")]
                 NSIndexPath [] IndexPathsForSelectedRows { get; }
 
@@ -12902,22 +12915,25 @@ namespace UIKit {
 		UIColor SectionIndexTrackingBackgroundColor { get; set;  }
 
 		[Export ("headerViewForSection:")]
+		[return: NullAllowed]
 		UITableViewHeaderFooterView GetHeaderView (nint section);
 
 		[Export ("footerViewForSection:")]
+		[return: NullAllowed]
 		UITableViewHeaderFooterView GetFooterView (nint section);
 
 		[Export ("dequeueReusableCellWithIdentifier:forIndexPath:")]
 		UITableViewCell DequeueReusableCell (NSString reuseIdentifier, NSIndexPath indexPath);
 
 		[Export ("dequeueReusableHeaderFooterViewWithIdentifier:")]
+		[return: NullAllowed]
 		UITableViewHeaderFooterView DequeueReusableHeaderFooterView (NSString reuseIdentifier);
 
 		[Export ("registerClass:forCellReuseIdentifier:"), Internal]
 		void RegisterClassForCellReuse (IntPtr /*Class*/ cellClass, NSString reuseIdentifier);
 
 		[Export ("registerNib:forHeaderFooterViewReuseIdentifier:")]
-		void RegisterNibForHeaderFooterViewReuse (UINib nib, NSString reuseIdentifier);
+		void RegisterNibForHeaderFooterViewReuse ([NullAllowed] UINib nib, NSString reuseIdentifier);
 
 		[Export ("registerClass:forHeaderFooterViewReuseIdentifier:"), Internal]
 		void RegisterClassForHeaderFooterViewReuse (IntPtr /*Class*/ aClass, NSString reuseIdentifier);
@@ -15156,9 +15172,11 @@ namespace UIKit {
 		[Export ("isViewLoaded")]
 		bool IsViewLoaded { get; }
 		
+		[NullAllowed]
 		[Export ("nibName", ArgumentSemantic.Copy)]
 		string NibName { get; }
 
+		[NullAllowed]
 		[Export ("nibBundle", ArgumentSemantic.Retain)]
 		NSBundle NibBundle { get; }
 		
@@ -15287,9 +15305,11 @@ namespace UIKit {
 		[Export ("hidesBottomBarWhenPushed")]
 		bool HidesBottomBarWhenPushed { get; set; }
 
+		[NullAllowed]
 		[Export ("splitViewController", ArgumentSemantic.Retain)]
 		UISplitViewController SplitViewController { get; }
 
+		[NullAllowed]
 		[Export ("tabBarController", ArgumentSemantic.Retain)]
 		UITabBarController TabBarController { get; }
 
@@ -15298,6 +15318,7 @@ namespace UIKit {
 		[NullAllowed, Export ("tabBarObservedScrollView", ArgumentSemantic.Strong)]
 		UIScrollView TabBarObservedScrollView { get; set; }
 
+		[NullAllowed]
 		[Export ("navigationController", ArgumentSemantic.Retain)]
 		UINavigationController NavigationController { get; }
 
@@ -15345,12 +15366,15 @@ namespace UIKit {
 		bool DisablesAutomaticKeyboardDismissal { get; }
 
 		[Export ("storyboard", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		UIStoryboard Storyboard { get;  }
 
 		[Export ("presentedViewController")]
+		[NullAllowed]
 		UIViewController PresentedViewController { get;  }
 
 		[Export ("presentingViewController")]
+		[NullAllowed]
 		UIViewController PresentingViewController { get;  }
 
 		[Export ("definesPresentationContext", ArgumentSemantic.Assign)]
@@ -15440,7 +15464,7 @@ namespace UIKit {
 		// 6.0
 		//
 		[Export ("shouldPerformSegueWithIdentifier:sender:")]
-		bool ShouldPerformSegue (string segueIdentifier, NSObject sender);
+		bool ShouldPerformSegue (string segueIdentifier, [NullAllowed] NSObject sender);
 
 #if !NET
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CanPerformUnwindSegueAction' instead.")]
@@ -15569,11 +15593,13 @@ namespace UIKit {
 		[NoTV]
 		[iOS (7,0)]
 		[Export ("childViewControllerForStatusBarStyle")]
+		[return: NullAllowed]
 		UIViewController ChildViewControllerForStatusBarStyle ();
 
 		[NoTV]
 		[iOS (7,0)]
 		[Export ("childViewControllerForStatusBarHidden")]
+		[return: NullAllowed]
 		UIViewController ChildViewControllerForStatusBarHidden ();
 
 		[iOS (7,0)]
@@ -15604,6 +15630,7 @@ namespace UIKit {
 
 		[iOS (8,0)]
 		[Export ("targetViewControllerForAction:sender:")]
+		[return: NullAllowed]
 		UIViewController GetTargetViewControllerForAction (Selector action,  [NullAllowed] NSObject sender);
 	
 		[iOS (8,0)]
@@ -15623,15 +15650,18 @@ namespace UIKit {
 		UITraitCollection GetOverrideTraitCollectionForChildViewController (UIViewController childViewController);
 
 		[iOS (8,0)]
+		[NullAllowed]
 		[Export ("extensionContext")]
 		NSExtensionContext ExtensionContext { get; }
 
 		[iOS (8,0)]
+		[NullAllowed]
 		[Export ("presentationController")]
 		UIPresentationController PresentationController { get; }
 
 		[NoTV]
 		[iOS (8,0)]
+		[NullAllowed]
 		[Export ("popoverPresentationController")]
 		UIPopoverPresentationController PopoverPresentationController { get; }
 
@@ -16258,6 +16288,7 @@ namespace UIKit {
 	[Category, BaseType (typeof (UIViewController))]
 	partial interface TransitionCoordinator_UIViewController {
 		[Export ("transitionCoordinator")]
+		[return: NullAllowed]
 		IUIViewControllerTransitionCoordinator GetTransitionCoordinator ();
 	}
 
@@ -16769,6 +16800,7 @@ namespace UIKit {
 	partial interface UISplitViewController_UIViewController {
 		[iOS (8,0)]
 		[Export ("splitViewController", ArgumentSemantic.Retain)]
+		[return: NullAllowed]
 		UISplitViewController GetSplitViewController ();
 		
 		[iOS (8,0)]

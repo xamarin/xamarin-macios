@@ -785,6 +785,11 @@ namespace Xamarin.Bundler {
 
 			CheckSystemMonoVersion ();
 
+			if (App.RequiresPInvokeWrappers) {
+				var state = BuildTarget.LinkerOptions.MarshalNativeExceptionsState;
+				state.End ();
+			}
+
 			if (App.Registrar == RegistrarMode.Static) {
 				registrarPath = Path.Combine (App.Cache.Location, "registrar.m");
 				var registrarH = Path.Combine (App.Cache.Location, "registrar.h");
@@ -1002,7 +1007,6 @@ namespace Xamarin.Bundler {
 
 					if (App.RequiresPInvokeWrappers) {
 						var state = BuildTarget.LinkerOptions.MarshalNativeExceptionsState;
-						state.End ();
 						args.Add (state.SourcePath);
 					}
 
