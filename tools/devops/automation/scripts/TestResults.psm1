@@ -7,6 +7,7 @@ class TestResults {
     [string] $Context
     hidden [int] $Passed
     hidden [int] $Failed
+    hidden [string[]] $NotTestSummaryLabels = @("install-source")
 
     TestResults (
         [string] $path,
@@ -28,7 +29,7 @@ class TestResults {
 
     [void] WriteComment($stringBuilder) {
         if (-not (Test-Path $this.ResultsPath -PathType Leaf)) {
-             $stringBuilder.AppendLine(":fire: Tests failed catastrophically on $($this.Context) (no summary found).") 
+             $stringBuilder.AppendLine(":fire: Tests failed catastrophically on $($this.Context) (no summary found).")
         } else {
             if ($this.TestsJobStatus -eq "") {
                 $stringBuilder.AppendLine(":x: Tests didn't execute on $($this.Context).")
@@ -40,7 +41,7 @@ class TestResults {
                     $stringBuilder.AppendLine($line)
                 }
             } else {
-                $stringBuilder.AppendLine(":x: Tests failed on $($this.Context)") 
+                $stringBuilder.AppendLine(":x: Tests failed on $($this.Context)")
                 $stringBuilder.AppendLine("")
                 foreach ($line in Get-Content -Path $this.ResultsPath)
                 {
@@ -63,7 +64,7 @@ class TestResults {
             } else {
                 $status = [GitHubStatus]::new("error", "Tests failed on $($this.Context).", $this.Context)
             }
-        } 
+        }
         return $status
     }
 
@@ -72,60 +73,69 @@ class TestResults {
             # the result file is diff if the result was a success or not
             if ($this.IsSuccess()) {
                 $this.Failed = 0
-                # in this case, the file contains a single line with the number and the following
-                # pattern:
-                # "# :tada: All 69 tests passed :tada:"
-                $regexp = "(# :tada: All )(?<passed>[0-9]+)( tests passed :tada:)"
-                $content = Get-Content $this.ResultsPath | Select -First 1
-                if ($content -eq "# No tests selected.") {
-                    $this.Passed = 0
-                } elseif ($content -match $regexp) {
-                    $this.Passed = $matches.passed -as [int]
+                if ($this.NotTestSummaryLabels.Contains($this.Label)) {
+                    $this.Passed = 1
                 } else {
-                    throw "Unknown result pattern '$content'"
+                    # in this case, the file contains a single line with the number and the following
+                    # pattern:
+                    # "# :tada: All 69 tests passed :tada:"
+                    $regexp = "(# :tada: All )(?<passed>[0-9]+)( tests passed :tada:)"
+                    $content = Get-Content $this.ResultsPath | Select -First 1
+                    if ($content -eq "# No tests selected.") {
+                        $this.Passed = 0
+                    } elseif ($content -match $regexp) {
+                        $this.Passed = $matches.passed -as [int]
+                    } else {
+                        throw "Unknown result pattern '$content'"
+                    }
                 }
             } else {
                 if ($this.TestsJobStatus -eq "") {
                     $this.Passed = -1
                     $this.Failed = -1
                 } else {
-                    # in this case, the file contains a lot more data, since it has the result summary + the list of
-                    # failing tests, for example:
-                    #
-                    # # Test results
-                    # <details>
-                    # <summary>4 tests failed, 144 tests passed.</summary>
-                    #
-                    ## Failed tests
-                    #
-                    # * fsharp/watchOS 32-bits - simulator/Debug: Crashed
-                    # * introspection/watchOS 32-bits - simulator/Debug: Crashed
-                    # * dont link/watchOS 32-bits - simulator/Debug: Crashed
-                    # * mono-native-compat/watchOS 32-bits - simulator/Debug: Crashed
-                    #</details>
-                    #
-                    # first, we do know that the line we are looking for has <summary> so we find the line (I do not trust
-                    # the format so we loop)
-                    $content = ""
-                    foreach ($line in Get-Content -Path $this.ResultsPath)
-                    {
-                        if ($line.Contains("<summary>")){
-                            $content = $line
-                            break
-                        }
-                    }
-                    if ($content) {
-                        # we need to parse with a regexp the following
-                        # <summary>4 tests failed, 144 tests passed.</summary>
-                        $regexp = "(\<summary\>)(?<failed>[0-9]+)( tests failed, )(?<passed>[0-9]+)( tests passed\.\</summary\>)"
-                        if ($content -match $regexp) {
-                            $this.Passed = $matches.passed -as [int]
-                            $this.Failed = $matches.failed -as [int]
-                        } else {
-                            throw "Unknown result pattern '$content'"
-                        }
+                    if ($this.NotTestSummaryLabels.Contains($this.Label)) {
+                        $this.Passed = 0
+                        $this.Failed = 1
                     } else {
-                        throw "Unknown result pattern of a failed test"
+                        # in this case, the file contains a lot more data, since it has the result summary + the list of
+                        # failing tests, for example:
+                        #
+                        # # Test results
+                        # <details>
+                        # <summary>4 tests failed, 144 tests passed.</summary>
+                        #
+                        ## Failed tests
+                        #
+                        # * fsharp/watchOS 32-bits - simulator/Debug: Crashed
+                        # * introspection/watchOS 32-bits - simulator/Debug: Crashed
+                        # * dont link/watchOS 32-bits - simulator/Debug: Crashed
+                        # * mono-native-compat/watchOS 32-bits - simulator/Debug: Crashed
+                        #</details>
+                        #
+                        # first, we do know that the line we are looking for has <summary> so we find the line (I do not trust
+                        # the format so we loop)
+                        $content = ""
+                        foreach ($line in Get-Content -Path $this.ResultsPath)
+                        {
+                            if ($line.Contains("<summary>")){
+                                $content = $line
+                                break
+                            }
+                        }
+                        if ($content) {
+                            # we need to parse with a regexp the following
+                            # <summary>4 tests failed, 144 tests passed.</summary>
+                            $regexp = "(\<summary\>)(?<failed>[0-9]+)( tests failed, )(?<passed>[0-9]+)( tests passed\.\</summary\>)"
+                            if ($content -match $regexp) {
+                                $this.Passed = $matches.passed -as [int]
+                                $this.Failed = $matches.failed -as [int]
+                            } else {
+                                throw "Unknown result pattern '$content'"
+                            }
+                        } else {
+                            throw "Unknown result pattern of a failed test"
+                        }
                     }
                 }
             }
@@ -166,7 +176,7 @@ class ParallelTestsResults {
                 $successfulTests.Add($result)
             }
         }
-        return $successfulTests 
+        return $successfulTests
     }
 
     [bool] IsSuccess() {
@@ -175,7 +185,7 @@ class ParallelTestsResults {
     }
 
     [string] GetTotalTestCount() {
-        # each test result knows the failure and the passes. 
+        # each test result knows the failure and the passes.
         $passedTests = 0
         $failedTests = 0
         foreach($r in $this.Results)
@@ -208,8 +218,8 @@ class ParallelTestsResults {
 
     [void] WriteComment($stringBuilder) {
         $stringBuilder.AppendLine("# Test results")
-        # We need to add a small summary at the top. We check if it was a success, if that is 
-        # the case, we just need to state it and 
+        # We need to add a small summary at the top. We check if it was a success, if that is
+        # the case, we just need to state it and
         $failingTests = $this.GetFailingTests()
 
         if ($failingTests.Count -eq 0) {
@@ -241,9 +251,13 @@ class ParallelTestsResults {
                 } else {
                     # create a detail per test result with the name of the test and will contain the exact summary
                     $stringBuilder.AppendLine("* :x: <details><summary>$($r.Label) failed tests</summary>")
-                    foreach ($line in Get-Content -Path $r.ResultsPath)
-                    {
-                        $stringBuilder.AppendLine(" $line") # the extra space is needed for the multiline list item
+                    if (Test-Path -Path $r.ResultsPath -PathType Leaf) {
+                        foreach ($line in Get-Content -Path $r.ResultsPath)
+                        {
+                            $stringBuilder.AppendLine(" $line") # the extra space is needed for the multiline list item
+                        }
+                    } else {
+                        $stringBuilder.AppendLine(" Test has no summaty file.")
                     }
                     $stringBuilder.AppendLine(" </details>") # the extra space is needed for the multiline list item
                 }
@@ -257,7 +271,7 @@ class ParallelTestsResults {
     }
 }
 
-<# 
+<#
     .SYNOPSIS
         Creates a new TestResults object.
 #>
@@ -275,6 +289,10 @@ function New-TestResults {
     return [TestResults]::new($Path, $Status, $Label, $Context)
 }
 
+<#
+    .SYNOPSIS
+        Creates a new ParallelTestsResult object.
+#>
 function New-ParallelTestsResults {
     param (
         [object[]]

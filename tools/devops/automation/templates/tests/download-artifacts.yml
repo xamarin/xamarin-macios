@@ -44,6 +44,7 @@ steps:
     # Download the test report to write the comment.
     - task: DownloadPipelineArtifact@2
       displayName: Download Test Summary
+      continueOnError: true # there are tests that do not have the test results, so far only the install_sources has it
       inputs:
         artifact: "TestSummary-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}"
         allowFailedBuilds: true
