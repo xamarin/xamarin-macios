@@ -485,6 +485,11 @@ namespace Introspection {
 					if (!TestRuntime.CheckXcodeVersion (11,0))
 						return true;
 					break;
+				case "VNRecognizedText":
+					// Conformance added in Xcode 13
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
 				}
 				break;
 			case "NSUserActivityRestoring":
@@ -498,11 +503,6 @@ namespace Introspection {
 #endif
 			case "NSExtensionRequestHandling":
 				if (type.Name == "HMChipServiceRequestHandler") // Apple removed this class
-					return true;
-				break;
-			case "VNRequestRevisionProviding":
-				// Conformance added in Xcode 13
-				if (type.Name == "VNRecognizedText" && !TestRuntime.CheckXcodeVersion (13, 0))
 					return true;
 				break;
 			}
