@@ -219,6 +219,9 @@ steps:
     echo "Running tests on $AGENT_NAME"
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
 
+    # uri used to create the vsdrops index using full uri
+    export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/$PARAMETERS_TESTPREFIX;/tests/"
+
     make -C builds download -j || true
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
@@ -232,9 +235,9 @@ steps:
   env:
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
-    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }};/tests/' # uri used to create the vsdrops index using full uri
     USE_TCP_TUNNEL: 'true'
     BUILD_REVISION: $(Build.SourceVersion)
+    PARAMETERS_TESTPREFIX: '${{ parameters.testPrefix }}'
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
