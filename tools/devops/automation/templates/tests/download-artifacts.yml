@@ -46,11 +46,12 @@ steps:
       displayName: Download Test Summary
       continueOnError: true # there are tests that do not have the test results, so far only the install_sources has it
       inputs:
-        artifact: "TestSummary-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}"
+        artifact: "**/TestSummary-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/*"
         allowFailedBuilds: true
         path: $(System.DefaultWorkingDirectory)\Reports
 
   - powershell: |
+      Get-ChildItem $(System.DefaultWorkingDirectory)\\Reports -Recurse
       $label="${{ replace(parameters.label, '-', '_') }}"
       Write-Host "##vso[task.setvariable variable=TEST_SUMMARY_PATH_$($label.ToUpper())]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.testPrefix }}$label\TestSummary.md"
       Write-Host "##vso[task.setvariable variable=HTML_REPORT_PATH_$($label.ToUpper())]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport-${{ parameters.testPrefix }}$label"
