@@ -11,13 +11,13 @@ namespace PassKit {
 		static public PKContactFields GetValue (NSSet set)
 		{
 			var fields = PKContactFields.None;
-			if (set == null)
+			if (set is null)
 				return fields;
 
 			foreach (PKContactFields value in Enum.GetValues (typeof (PKContactFields))) {
 				var constant = value.GetConstant ();
 				// None does not have an associated native value and Contains would throw an ANE
-				if ((constant != null) && set.Contains (constant))
+				if ((constant is not null) && set.Contains (constant))
 				    fields |= value;
 			}
 			return fields;
@@ -33,7 +33,7 @@ namespace PassKit {
 				if (values.HasFlag (value)) {
 					var constant = value.GetConstant ();
 					// None does not have an associated native value and Contains would throw an ANE
-					if (constant != null)
+					if (constant is not null)
 						set.Add (constant);
 				}
 			}
