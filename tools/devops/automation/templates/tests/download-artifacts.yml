@@ -46,7 +46,7 @@ steps:
       displayName: Download Test Summary
       continueOnError: true # there are tests that do not have the test results, so far only the install_sources has it
       inputs:
-        artifact: "**/TestSummary-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/*"
+        patterns: "**/TestSummary-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/*.md"
         allowFailedBuilds: true
         path: $(System.DefaultWorkingDirectory)\Reports
 
