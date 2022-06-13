@@ -143,6 +143,13 @@ namespace Xamarin.Utils
 			}
 			AddOtherFlag ("-lz");
 			AddOtherFlag ("-liconv");
+
+			if (Driver.XcodeVersion.Major >= 14) {
+				// This solves a warning:
+				//     ld: warning: could not create compact unwind for _BrotliBuildHistogramsWithContext: registers 27 not saved contiguously in frame
+				AddOtherFlag ("-Wl,-no_compact_unwind");
+				AddOtherFlag ("-Wl,-keep_dwarf_unwind");
+			}
 		}
 
 		public void LinkWithXamarin ()

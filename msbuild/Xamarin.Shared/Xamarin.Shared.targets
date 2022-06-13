@@ -1748,6 +1748,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="SdkPlatform" PropertyName="_SdkPlatform" />
 			<Output TaskParameter="SdkIsSimulator" PropertyName="_SdkIsSimulator" />
 			<Output TaskParameter="XamarinSdkRoot" PropertyName="_XamarinSdkRoot" />
+			<Output TaskParameter="XcodeVersion" PropertyName="_XcodeVersion" />
 		</DetectSdkLocations>
 	</Target>
 
