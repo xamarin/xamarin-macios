@@ -96,10 +96,12 @@ namespace xsiminstaller {
 			};
 
 			var others = os.Parse (args);
-			if (others.Count () > 0) {
+			if (others.Any ()) {
 				Console.WriteLine ("Unexpected arguments:");
 				foreach (var arg in others)
 					Console.WriteLine ("\t{0}", arg);
+				Console.WriteLine ("Expected arguments are:");
+				os.WriteOptionDescriptions (Console.Out);
 				return 1;
 			}
 
