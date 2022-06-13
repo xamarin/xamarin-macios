@@ -167,8 +167,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 							}
 							break;
 						}
-						default:
-							throw new ConversionException (Errors.E0017, invokedMethod, invokedMethod.DeclaringType);
 						}
 					}
 				}
@@ -196,8 +194,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 						processor.InsertBefore (instruction, Instruction.Create (OpCodes.Ldloc, variable));
 						break;
 					}
-					default:
-						throw new ConversionException (Errors.E0017, method, method.DeclaringType);
 				}
 			}
 		}
@@ -221,7 +217,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 					});
 					break;
 				default:
-					throw new ConversionException (Errors.E0017, invokedMethod, invokedMethod.DeclaringType);
+					result = null;
+					return false;
 				}
 				return true;
 			}
