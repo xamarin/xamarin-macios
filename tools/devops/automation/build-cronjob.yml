@@ -192,31 +192,22 @@ resources:
     endpoint: xamarin
 
 variables:
-- ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-  - template: templates/vsts-variables.yml
 - template: templates/variables.yml
 - name: MicrobuildConnector
-  value: 'MicroBuild Signing Task (DevDiv)'
+  value: ''
 
-trigger:
+trigger: none
+
+schedules:
+
+# the translations team wants a green build, we can do that on sundays even if 
+# the code did not change and without the device tests.
+- cron: "0 12 * * 0"
+  displayName: Weekly Translations build (Sunday @ noon)
   branches:
     include:
-    - '*'
-    exclude:
-    - refs/heads/locfiles/*
-  paths:
-    exclude:
-    - .github
-    - docs
-    - CODEOWNERS
-    - ISSUE_TEMPLATE.md
-    - LICENSE
-    - NOTICE.txt
-    - SECURITY.MD
-    - README.md
-    - src/README.md
-    - tools/mtouch/README.md
-    - msbuild/Xamarin.Localization.MSBuild/README.md
+    - main
+  always: true
 
 stages:
 - template: templates/main-stage.yml

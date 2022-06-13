@@ -66,7 +66,7 @@ PowerShellVersion = '7.0.3'
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-NestedModules = @('APIDiff.psm1', 
+NestedModules = @(
                'Artifacts.psm1', 
                'GitHub.psm1', 
                'MLaunch.psm1', 
