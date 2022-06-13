@@ -35,9 +35,13 @@ parameters:
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
 
+- name: isPR
+  type: boolean
+
 steps:
 - template: build.yml
   parameters:
+    isPR: ${{ parameters.isPR }}
     runDeviceTests: ${{ parameters.runDeviceTests }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     keyringPass: ${{ parameters.keyringPass }}
