@@ -15,17 +15,14 @@ steps:
 
 
 - template: uninstall-certificates/v1.yml@templates
-  condition: always()
   parameters:
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
 # this will always be executed, is the default condition in the template
 - template: uninstall-certificates/v1.yml@templates
-  condition: always()
   parameters:
     HostedMacKeychainPassword: ${{ parameters.keyringPass }}
 
 - template: mac-agent-logs.yml
-  condition: always()
   parameters:
     outputPath: agent-logs.log
