@@ -21,6 +21,9 @@ parameters:
   type: string
   default: automatic
 
+- name: isPR
+  type: boolean
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -83,6 +86,7 @@ jobs:
   steps:
   - template: api-diff-build-and-detect.yml
     parameters:
+      isPR: ${{ parameters.isPR }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
       keyringPass: ${{ parameters.keyringPass }}
       gitHubToken: ${{ parameters.gitHubToken }}
