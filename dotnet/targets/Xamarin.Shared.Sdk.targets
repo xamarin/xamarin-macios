@@ -1148,7 +1148,7 @@
 			<_LinkNativeExecutableInputs Include="@(_FileNativeReference)" />
 		</ItemGroup>
 
-		<ItemGroup Condition="'$(_XamarinRuntime)' == 'MonoVM' And $([MSBuild]:::VersionGreaterThanOrEquals('$(_XcodeVersion)','14.0'))">
+		<ItemGroup Condition="'$(_XamarinRuntime)' == 'MonoVM' And $([MSBuild]::VersionGreaterThanOrEquals('$(_XcodeVersion)','14.0'))">
 			<_MainLinkerFlags Include="-Wl,-no_compact_unwind" />
 			<_MainLinkerFlags Include="-Wl,-keep_dwarf_unwind" />
 		</ItemGroup>
