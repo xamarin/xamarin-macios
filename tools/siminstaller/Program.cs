@@ -82,6 +82,8 @@ namespace xsiminstaller {
 			var install = new List<string> ();
 			var only_check = false;
 			var force = false;
+			var printHelp = false;
+			
 			var os = new OptionSet {
 				{ "xcode=", "The Xcode.app to use", (v) => xcode_app = v },
 				{ "install=", "ID of simulator to install. Can be repeated multiple times.", (v) => install.Add (v) },
@@ -90,14 +92,22 @@ namespace xsiminstaller {
 				{ "f|force", "Install again even if already installed.", (v) => force = true },
 				{ "v|verbose", "Increase verbosity", (v) => verbose++ },
 				{ "q|quiet", "Decrease verbosity", (v) => verbose-- },
+				{ "h|help", "Print this help message", (v) => printHelp = true },
 			};
 
 			var others = os.Parse (args);
-			if (others.Count () > 0) {
+			if (others.Any ()) {
 				Console.WriteLine ("Unexpected arguments:");
 				foreach (var arg in others)
 					Console.WriteLine ("\t{0}", arg);
+				Console.WriteLine ("Expected arguments are:");
+				os.WriteOptionDescriptions (Console.Out);
 				return 1;
+			}
+
+			if (printHelp) {
+				os.WriteOptionDescriptions (Console.Out);
+				return 0;
 			}
 
 			if (string.IsNullOrEmpty (xcode_app)) {

@@ -52,6 +52,9 @@ parameters:
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
 
+- name: isPR
+  type: boolean
+
 - name: simTestsConfigurations
   type: object
 
@@ -107,6 +110,7 @@ stages:
   jobs:
     - template: ./build/build-stage.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
         runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
@@ -124,6 +128,7 @@ stages:
   jobs:
     - template: ./sign-and-notarized/prepare-pkg-stage.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         signingSetupSteps: ${{ parameters.signingSetupSteps }}
         keyringPass: $(pass--lab--mac--builder--keychain)
         enableDotnet: ${{ parameters.enableDotnet }}
@@ -136,6 +141,7 @@ stages:
     jobs:
       - template: ./build/api-diff-stage.yml
         parameters:
+          isPR: ${{ parameters.isPR }}
           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
           keyringPass: $(pass--lab--mac--builder--keychain)
           gitHubToken: ${{ variables['GitHub.Token'] }}
@@ -146,6 +152,8 @@ stages:
 # .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
 - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(parameters.forceInsertion, true))) }}:
   - template: ./release/vs-insertion-prep.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
 
 # Test stages
 
