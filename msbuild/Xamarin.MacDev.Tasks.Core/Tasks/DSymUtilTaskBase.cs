@@ -55,7 +55,13 @@ namespace Xamarin.MacDev.Tasks
 			args.Add ("dsymutil");
 			args.Add ("-num-threads");
 			args.Add ("4");
-			args.Add ("-z");
+			if (AppleSdkSettings.XcodeVersion < new Version (13, 3)) {
+				// Apple removed the -z / --minimize option in Xocde 13.3, so now if you use it you get a warning: "ignoring unknown option: -z"
+				// So just don't pass -z when Xcode >= 13.3
+				// Ref: https://github.com/llvm/llvm-project/commit/5d07dc897707f877c45cab6c7e4b65dad7d3ff6d
+				// Ref: https://github.com/dotnet/runtime/issues/66770
+				args.Add ("-z");
+			}
 			args.Add ("-o");
 			args.Add (dSymDir);
 
