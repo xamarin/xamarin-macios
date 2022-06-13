@@ -19,6 +19,10 @@ parameters:
   type: boolean
   default: false
 
+- name: isPR
+  type: boolean
+  default: false
+
 - name: buildSteps 
   type: stepList 
   default: []
@@ -100,8 +104,6 @@ steps:
     # a branch in origin
 
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual" -or $buildReason -eq "IndividualCI") -and ($buildSourceBranchName -eq "merge")) ) {
-      $configVars.Add("IsPR", "True")
-
       $configVars.Add("BuildPkgs", "True")
 
       # interesting case, we have build-pkg and skip-pkg... if that is the case, we build it, but we set a warning
@@ -145,8 +147,6 @@ steps:
 
     } else {
       # set the defaults, all the things! o/
-      $configVars.Add("IsPR", "False")
-
       # build pkg, nugets and sign them
       $configVars.Add("BuildPkgs", "True")
       $configVars.Add("BuildNugets", "True")
@@ -214,7 +214,10 @@ steps:
     ./configure $CONFIGURE_FLAGS
     echo $(cat $(Build.SourcesDirectory)/xamarin-macios/configure.inc)
   env:
-    IsPR: $(configuration.IsPR)
+    ${{ if eq(parameters.isPR, true) }}:
+      IsPR: 'True'
+    ${{ else }}:
+      IsPR: 'False'
     ${{ if eq(parameters.enableDotnet, true) }}:
       EnableDotNet: 'True'
   displayName: "Configure build"
