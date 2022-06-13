@@ -2452,6 +2452,15 @@ xamarin_insert_dllmap ()
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSend_stret",      lib, "xamarin_dyn_objc_msgSend_stret");
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSendSuper_stret", lib, "xamarin_dyn_objc_msgSendSuper_stret");
 #endif
+
+	// Xcode 14 beta 1: dlopen is broken, see below.
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.A.dylib", "objc_msgSend",            lib, "xamarin_dyn_objc_msgSend");
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.A.dylib", "objc_msgSendSuper",       lib, "xamarin_dyn_objc_msgSendSuper");
+#if !defined (__arm64__)
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.A.dylib", "objc_msgSend_stret",      lib, "xamarin_dyn_objc_msgSend_stret");
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.A.dylib", "objc_msgSendSuper_stret", lib, "xamarin_dyn_objc_msgSendSuper_stret");
+#endif
+
 	LOG (PRODUCT ": Added dllmap for objc_msgSend");
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 
@@ -2647,7 +2656,7 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 		symbol = dlsym (RTLD_DEFAULT, entrypointName);
 #if !defined (CORECLR_RUNTIME) // we're intercepting objc_msgSend calls using the managed System.Runtime.InteropServices.ObjectiveC.Bridge.SetMessageSendCallback instead.
 #if defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
-	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
+	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib") || !strcmp (libraryName, "/usr/lib/libobjc.A.dylib")) {
 		if (xamarin_marshal_objectivec_exception_mode != MarshalObjectiveCExceptionModeDisable) {
 			if (!strcmp (entrypointName, "objc_msgSend")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSend;
