@@ -26,7 +26,7 @@ steps:
   - ${{ if eq(parameters.downloadHtmlReport, true) }}:
     # Download the Html Report that was added by the tests job.
     - task: DownloadPipelineArtifact@2
-      displayName: Download html report 
+      displayName: Download html report ${{ parameters.Label }}
       inputs:
         patterns: "HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/HtmlReport.zip"
         allowFailedBuilds: true
@@ -43,10 +43,10 @@ steps:
   - ${{ if eq(parameters.downloadTestSummary, true) }}:
     # Download the test report to write the comment.
     - task: DownloadPipelineArtifact@2
-      displayName: Download Test Summary
+      displayName: Download Test Summary ${{ parameters.label }}
       continueOnError: true # there are tests that do not have the test results, so far only the install_sources has it
       inputs:
-        patterns: "**/TestSummary-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/*.md"
+        patterns: "TestSummary-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/TestSummary.md"
         allowFailedBuilds: true
         path: $(System.DefaultWorkingDirectory)\Reports
 
