@@ -24,7 +24,11 @@ class TestResults {
     }
 
     [bool] IsSuccess() {
-        return $this.TestsJobStatus -eq "Succeeded"
+        if ($this.NotTestSummaryLabels.Contains($this.Label)) {
+            return $this.TestsJobStatus -eq "Succeeded"
+        } else {
+            return Test-Path $this.ResultsPath -PathType Leaf -and $this.TestsJobStatus -eq "Succeeded"
+        }
     }
 
     [void] WriteComment($stringBuilder) {
@@ -90,7 +94,7 @@ class TestResults {
                     }
                 }
             } else {
-                if ($this.TestsJobStatus -eq "") {
+                if ($this.TestsJobStatus -eq "" -or Test-Path $this.ResultsPath -PathType Leaf) {
                     $this.Passed = -1
                     $this.Failed = -1
                 } else {
@@ -188,11 +192,12 @@ class ParallelTestsResults {
         # each test result knows the failure and the passes.
         $passedTests = 0
         $failedTests = 0
+        $crashedTests = 0
         foreach($r in $this.Results)
         {
             $result = $r.GetPassedTests()
             if ($result.Passed -eq -1 -or $result.Failed -eq -1) {
-                continue
+                $crashedTests += 1
             } else {
                 $passedTests += $result.Passed
                 $failedTests += $result.Failed
@@ -203,7 +208,7 @@ class ParallelTestsResults {
         if ($failedTests -eq 0) {
             return ":tada: All $passedTests tests passed :tada:"
         } else {
-            return "$failedTests tests failed, $passedTests tests passed."
+            return "$crashedTests tests crashed, $failedTests tests failed, $passedTests tests passed."
         }
     }
 
