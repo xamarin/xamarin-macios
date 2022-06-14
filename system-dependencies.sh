@@ -308,7 +308,7 @@ function download_xcode_platforms ()
 		return
 	fi
 
-	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" --downloadAllPlatforms
+	$SUDO "$XCODE_DEVELOPER_ROOT/usr/bin/xcodebuild" -downloadAllPlatforms
 }
 
 function run_xcode_first_launch ()
