@@ -144,7 +144,7 @@ namespace Xamarin.Utils
 			AddOtherFlag ("-lz");
 			AddOtherFlag ("-liconv");
 
-			if (Driver.XcodeVersion.Major >= 14) {
+			if (Driver.XcodeVersion.Major >= 14 && Application.BitCodeMode == BitCodeMode.None) {
 				// This solves a warning:
 				//     ld: warning: could not create compact unwind for _BrotliBuildHistogramsWithContext: registers 27 not saved contiguously in frame
 				AddOtherFlag ("-Wl,-no_compact_unwind");
