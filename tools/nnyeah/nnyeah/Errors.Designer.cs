@@ -200,15 +200,6 @@ namespace Microsoft.MaciOS.Nnyeah {
                 return ResourceManager.GetString("E0016", resourceCulture);
             }
         }
-
-        /// <summary>
-        ///   Looks up a localized string similar to Error while processing constructor on type {0} in the old assembly. Constructors that do non-trivial work are not supported..
-        /// </summary>
-        internal static string E0017 {
-            get {
-                return ResourceManager.GetString("E0017", resourceCulture);
-            }
-        }
         
         /// <summary>
         ///   Looks up a localized string similar to IConvertible interfaces are not supported yet. If this code gets called, it will fail. Consider contacting the library maintainer to request a dotnet 6 upgrade..

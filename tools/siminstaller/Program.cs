@@ -78,7 +78,7 @@ namespace xsiminstaller {
 		public static int Main (string [] args)
 		{
 			var exit_code = 0;
-			string xcode_app = null;
+			string? xcode_app = null;
 			var install = new List<string> ();
 			var only_check = false;
 			var force = false;
@@ -278,7 +278,7 @@ namespace xsiminstaller {
 			return exit_code;
 		}
 
-		static bool IsInstalled (string identifier, out Version installedVersion)
+		static bool IsInstalled (string identifier, out Version? installedVersion)
 		{
 			if (TryExecuteAndCapture ($"pkgutil", $"--pkg-info {identifier}", out var pkgInfo, out _)) {
 				var lines = pkgInfo.Split ('\n');
