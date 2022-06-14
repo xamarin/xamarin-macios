@@ -5040,8 +5040,10 @@ public partial class Generator : IMemberGatherer {
 		} else if ((body_options & BodyOption.CondStoreRet) == BodyOption.CondStoreRet) {
 			// nothing to do
 		} else if ((body_options & BodyOption.MarkRetDirty) == BodyOption.MarkRetDirty) {
-			print ("MarkDirty ();");
-			print ("{0} = ret;", var_name);
+			print ("if (!Runtime.DisableWeakPropertyStorage) {");
+			print ("\tMarkDirty ();");
+			print ("\t{0} = ret;", var_name);
+			print ("}");
 		}
 
 		if ((postget != null) && (postget.Length > 0)) {
@@ -5559,8 +5561,10 @@ public partial class Generator : IMemberGatherer {
 					GenerateMethodBody (minfo, setter, sel, null_allowed, null, BodyOption.None, pi);
 					if (!minfo.is_static && !is_interface_impl && DoesPropertyNeedBackingField (pi)) {
 						if (!DoesPropertyNeedDirtyCheck (pi, export)) {
+							print ("if (!Runtime.DisableWeakPropertyStorage) {");
 							print ("\tMarkDirty ();");
 							print ("\t{0} = value;", var_name);
+							print ("}");
 						}
 					}
 				}
@@ -7629,6 +7633,7 @@ public partial class Generator : IMemberGatherer {
 					print ("{"); indent++;
 
 					if (isProtocolizedEventBacked) {
+						print ("Runtime.EnsureWeakPropertyStorage ();");
 						// If our delegate not null and it isn't the same type as our property
 						//   - We're in one of two cases: The user += an Event and then assigned their own delegate or the inverse
 						//   - One of them isn't being called anymore no matter what. Throw an exception.

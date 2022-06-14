@@ -205,6 +205,17 @@ namespace ObjCRuntime {
 			}
 		}
 
+		// FIXME: teach the linker to remove this option
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static bool DisableWeakPropertyStorage { get; set; }
+
+		public static void EnsureWeakPropertyStorage ()
+		{
+			if (!DisableWeakPropertyStorage)
+				return;
+			throw new InvalidOperationException ($"Events are not supported when disabling weak property storage.");
+		}
+
 		internal static bool Initialized {
 			get { return initialized; }
 		}
