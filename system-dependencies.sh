@@ -283,9 +283,12 @@ function install_mono () {
 
 function download_xcode_platforms ()
 {
+	local XCODE_VERSION
 	local XCODE_DEVELOPER_ROOT="$1"
 	local TVOS_VERSION="$2"
 	local WATCHOS_VERSION="$3"
+
+	XCODE_VERSION=$(grep ^XCODE_VERSION= Make.config | sed 's/.*=//')
 
 	if ! is_at_least_version "$XCODE_VERSION" 14.0; then
 		# Nothing to do here
@@ -295,7 +298,7 @@ function download_xcode_platforms ()
 
 	if test -d /Library/Developer/CoreSimulator/Volumes/tvOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/"tvOS $TVOS_VERSION".simruntime; then
 		if test -d /Library/Developer/CoreSimulator/Volumes/watchOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/"watchOS $WATCHOS_VERSION".simruntime; then
-			log "All the additional platforms have already been downloaded for this version of Xcode"
+			log "All the additional platforms have already been downloaded for this version of Xcode ($XCODE_VERSION)"
 			return
 		fi
 	fi
