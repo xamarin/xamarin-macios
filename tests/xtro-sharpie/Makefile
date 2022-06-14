@@ -73,6 +73,7 @@ XMACOS_RID = osx-x64
 
 $(XMACOS_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s macosx$(MACOS_SDK_VERSION) -a $(XMACOS_ARCH) \
+		-exclude NearbyInteraction \
 		-exclude RealityKit \
 		-exclude JavaNativeFoundation \
 		$(CORETELEPHONY_HEADERS) \
@@ -84,6 +85,7 @@ XMACCATALYST_RID = maccatalyst-x64
 $(XMACCATALYST_PCH): .stamp-check-sharpie
 	$(SHARPIE) sdk-db --xcode $(XCODE) -s ios$(MACCATALYST_SDK_VERSION)-macabi -a $(XMACCATALYST_ARCH) \
 	-exclude AGL \
+	-exclude AudioVideoBridging \
 	-exclude CalendarStore \
 	-exclude Carbon \
 	-exclude ClockKit \
