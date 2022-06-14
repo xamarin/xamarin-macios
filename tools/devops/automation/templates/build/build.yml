@@ -64,12 +64,6 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
 
-- bash: |
-    set -x
-    set -e
-    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
-  displayName: 'Provision simulators'
-
 # Use the env variables that were set by the label parsing in the configure step
 # print some useful logging to allow to know what is going on AND allow make some
 # choices, there are labels that contradict each other (skip-package vs build-packages)
