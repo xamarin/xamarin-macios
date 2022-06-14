@@ -92,13 +92,21 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 			}
 
 			nativeTypes.Clear ();
+			var isNSObject = method.DeclaringType.Name == "NSObject";
 			if (TryReworkTypeReference (method.ReturnType, nativeTypes, out var newReturnType)) {
 				method.ReturnType = newReturnType;
-			} else if (method.Name == "get_ClassHandle" && method.ReturnType.ToString () == "System.IntPtr") {
+			} else if (IsHandleMethod (method)) {
 				method.ReturnType = newNHandleTypeReference;
 			}
 
 			return method;
+		}
+
+		static bool IsHandleMethod (MethodDefinition method)
+		{
+			return method.DeclaringType.Name == "NSObject" &&
+				(method.Name == "get_ClassHandle" || method.Name == "get_Handle") &&
+				method.ReturnType.ToString () == "System.IntPtr";
 		}
 
 		bool TryReworkTypeReference (TypeReference type, List<bool> nativeTypes, [NotNullWhen (returnValue: true)] out TypeReference result)
