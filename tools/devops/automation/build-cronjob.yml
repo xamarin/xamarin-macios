@@ -192,11 +192,9 @@ resources:
     endpoint: xamarin
 
 variables:
-- ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
-  - template: templates/vsts-variables.yml
 - template: templates/variables.yml
 - name: MicrobuildConnector
-  value: 'MicroBuild Signing Task (DevDiv)'
+  value: ''
 
 trigger: none
 
