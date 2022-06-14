@@ -27,7 +27,7 @@ class TestResults {
         if ($this.NotTestSummaryLabels.Contains($this.Label)) {
             return $this.TestsJobStatus -eq "Succeeded"
         } else {
-            return Test-Path $this.ResultsPath -PathType Leaf -and $this.TestsJobStatus -eq "Succeeded"
+            return (Test-Path $this.ResultsPath -PathType Leaf) -and ($this.TestsJobStatus -eq "Succeeded")
         }
     }
 
@@ -94,7 +94,7 @@ class TestResults {
                     }
                 }
             } else {
-                if ($this.TestsJobStatus -eq "" -or Test-Path $this.ResultsPath -PathType Leaf) {
+                if ($this.TestsJobStatus -eq "" -or (Test-Path $this.ResultsPath -PathType Leaf)) {
                     $this.Passed = -1
                     $this.Failed = -1
                 } else {
