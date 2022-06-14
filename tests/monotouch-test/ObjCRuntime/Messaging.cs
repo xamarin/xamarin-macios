@@ -260,5 +260,18 @@ namespace ObjCRuntime
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		public extern static void void_objc_msgSend_IntPtr_IntPtr_BlockLiteral (IntPtr receiver, IntPtr selector, IntPtr p1, IntPtr p2, ref BlockLiteral p3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		public extern static void void_objc_msgSend_NSRange_out_NSRange_ref_NSRange (IntPtr receiver, IntPtr selector, _LongNSRange p1, out _LongNSRange p2, ref _LongNSRange p3);
+	}
+
+	public struct _LongNSRange {
+		public long Location;
+		public long Length;
+		public _LongNSRange (long location, long length)
+		{
+			Location = location;
+			Length = length;
+		}
 	}
 }
