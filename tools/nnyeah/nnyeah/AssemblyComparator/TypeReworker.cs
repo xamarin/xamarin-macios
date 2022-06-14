@@ -92,7 +92,6 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 			}
 
 			nativeTypes.Clear ();
-			var isNSObject = method.DeclaringType.Name == "NSObject";
 			if (TryReworkTypeReference (method.ReturnType, nativeTypes, out var newReturnType)) {
 				method.ReturnType = newReturnType;
 			} else if (IsHandleMethod (method)) {
