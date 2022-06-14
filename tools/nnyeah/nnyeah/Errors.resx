@@ -101,8 +101,5 @@
 	<data name="E0016" xml:space="preserve">
 		<value>Error while processing constructor on type {0} in the old assembly. Constructors that do non-trivial work are not supported.</value>
 	</data>
-	<data name="E0017" xml:space="preserve">
-		<value>Error while processing method {0} on type {1} in the old assembly. Method was not of expected structure. Conversion can't continue. Your best option is to port the old assembly to .NET 6.</value>
-	</data>
 </root>
 
