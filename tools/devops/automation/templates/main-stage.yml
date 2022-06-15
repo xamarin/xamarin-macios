@@ -91,7 +91,7 @@ stages:
           - template: loc-translations.yml
 
 
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+- ${{ if parameters.isPR }}:
   - stage: clean
     displayName: 'Clean up'
     dependsOn: []
