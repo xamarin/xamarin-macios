@@ -81,6 +81,8 @@ stages:
           vmImage: windows-latest
         steps:
         - template: governance-checks.yml
+          parameters:
+            isPR: ${{ parameters.isPR }}
 
       - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
         - job: translations
@@ -206,6 +208,7 @@ stages:
   - ${{ each config in parameters.macTestsConfigurations }}:
     - template: ./mac/stage.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         stageName: ${{ config.stageName }}
         displayName: ${{ config.displayName }}
         macPool: ${{ config.macPool }}
@@ -229,6 +232,7 @@ stages:
 - ${{ if eq(variables['Build.Reason'], 'Schedule') }}: 
   - template: ./tests/stage.yml
     parameters:
+      isPR: ${{ parameters.isPR }}
       testPrefix: 'iOS32b'
       stageName: 'ios32b_device'
       displayName: 'iOS32b Device Tests'

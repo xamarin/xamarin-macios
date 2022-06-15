@@ -1,3 +1,8 @@
+parameters:
+
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: ./common/checkout.yml

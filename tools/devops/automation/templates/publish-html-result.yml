@@ -12,6 +12,8 @@ parameters:
 steps:
 
 - template: ./common/checkout.yml
+  parameters:
+    isPR: ${{ eq(parameters.reason, "pr") }}
 
 - checkout: macios.ci 
   clean: true

@@ -70,6 +70,9 @@ parameters:
   type: boolean
   default: true
 
+- name: isPR
+  type: boolean
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -125,6 +128,7 @@ stages:
     steps:
     - template: build.yml
       parameters:
+        parameters: ${{ parameters.isPR }} 
         testsLabels: ${{ parameters.testsLabels }}
         statusContext: ${{ parameters.statusContext }}
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
