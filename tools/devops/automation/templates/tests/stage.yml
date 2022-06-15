@@ -128,7 +128,7 @@ stages:
     steps:
     - template: build.yml
       parameters:
-        parameters: ${{ parameters.isPR }} 
+        isPR: ${{ parameters.isPR }} 
         testsLabels: ${{ parameters.testsLabels }}
         statusContext: ${{ parameters.statusContext }}
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
