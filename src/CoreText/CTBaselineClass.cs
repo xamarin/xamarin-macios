@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 
 using ObjCRuntime;
@@ -44,12 +47,12 @@ namespace CoreText {
 
 	static partial class CTBaselineClassID {
 #if !NET
-		public static readonly NSString Roman;
-		public static readonly NSString IdeographicCentered;
-		public static readonly NSString IdeographicLow;
-		public static readonly NSString IdeographicHigh;
-		public static readonly NSString Hanging;
-		public static readonly NSString Math;
+		public static readonly NSString? Roman;
+		public static readonly NSString? IdeographicCentered;
+		public static readonly NSString? IdeographicLow;
+		public static readonly NSString? IdeographicHigh;
+		public static readonly NSString? Hanging;
+		public static readonly NSString? Math;
 
 		static CTBaselineClassID ()
 		{
@@ -63,7 +66,7 @@ namespace CoreText {
 		}
 #endif
 
-		public static NSString ToNSString (CTBaselineClass key)
+		public static NSString? ToNSString (CTBaselineClass key)
 		{
 			switch (key) {
 				case CTBaselineClass.Roman:                return Roman;
@@ -79,12 +82,12 @@ namespace CoreText {
 
 		public static CTBaselineClass FromHandle (IntPtr handle)
 		{
-			if (handle == Roman.Handle)                return CTBaselineClass.Roman;
-			if (handle == IdeographicCentered.Handle)  return CTBaselineClass.IdeographicCentered;
-			if (handle == IdeographicLow.Handle)       return CTBaselineClass.IdeographicLow;
-			if (handle == IdeographicHigh.Handle)      return CTBaselineClass.IdeographicHigh;
-			if (handle == Hanging.Handle)              return CTBaselineClass.Hanging;
-			if (handle == Math.Handle)                 return CTBaselineClass.Math;
+			if (handle == Roman?.Handle)                return CTBaselineClass.Roman;
+			if (handle == IdeographicCentered?.Handle)  return CTBaselineClass.IdeographicCentered;
+			if (handle == IdeographicLow?.Handle)       return CTBaselineClass.IdeographicLow;
+			if (handle == IdeographicHigh?.Handle)      return CTBaselineClass.IdeographicHigh;
+			if (handle == Hanging?.Handle)              return CTBaselineClass.Hanging;
+			if (handle == Math?.Handle)                 return CTBaselineClass.Math;
 
 			throw new ArgumentOutOfRangeException ("handle");
 		}
@@ -98,8 +101,8 @@ namespace CoreText {
 
 	static partial class CTBaselineFontID {
 #if !NET
-		public static readonly NSString Reference;
-		public static readonly NSString Original;
+		public static readonly NSString? Reference;
+		public static readonly NSString? Original;
 
 		static CTBaselineFontID ()
 		{
@@ -109,7 +112,7 @@ namespace CoreText {
 		}
 #endif // !NET
 
-		public static NSString ToNSString (CTBaselineFont key)
+		public static NSString? ToNSString (CTBaselineFont key)
 		{
 			switch (key) {
 				case CTBaselineFont.Reference: return Reference;
