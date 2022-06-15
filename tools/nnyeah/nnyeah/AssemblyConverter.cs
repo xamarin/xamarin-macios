@@ -101,7 +101,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		}
 	}
 
-	class TypeAndModuleMap {
+	public class TypeAndModuleMap {
 		public TypeAndMemberMap TypeMap;
 		public ModuleDefinition XamarinModule;
 		public ModuleDefinition MicrosoftModule;

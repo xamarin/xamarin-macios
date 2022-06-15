@@ -917,22 +917,27 @@ xamarin_file_exists (const char *path)
 	return stat (path, &buffer) == 0;
 }
 
+static MonoAssembly *
+xamarin_open_assembly_or_assert (const char *name)
+{
+	MonoImageOpenStatus status = MONO_IMAGE_OK;
+	MonoAssembly *assembly = mono_assembly_open (name, &status);
+	if (assembly == NULL)
+		xamarin_assertion_message ("Failed to open the assembly '%s' from the app: %i (errno: %i). This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name, (int) status, errno);
+	return assembly;
+}
+
 // Returns a retained MonoObject. Caller must release.
 MonoAssembly *
 xamarin_open_assembly (const char *name)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	char path [1024];
-	MonoAssembly *assembly;
 	bool exists = false;
 
 #if MONOMAC
-	if (xamarin_get_is_mkbundle ()) {
-		assembly = mono_assembly_open (name, NULL);
-		if (assembly == NULL)
-			xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
-		return assembly;
-	}
+	if (xamarin_get_is_mkbundle ())
+		return xamarin_open_assembly_or_assert (name);
 #endif
 
 	exists = xamarin_locate_assembly_resource (name, NULL, name, path, sizeof (path));
@@ -942,7 +947,7 @@ xamarin_open_assembly (const char *name)
 		// Check if we already have the assembly in memory
 		xamarin_get_assembly_name_without_extension (name, path, sizeof (path));
 		MonoAssemblyName *aname = mono_assembly_name_new (path);
-		assembly = mono_assembly_loaded (aname);
+		MonoAssembly *assembly = mono_assembly_loaded (aname);
 		mono_assembly_name_free (aname);
 		if (assembly)
 			return assembly;
@@ -954,11 +959,7 @@ xamarin_open_assembly (const char *name)
 	if (!exists)
 		xamarin_assertion_message ("Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
 
-	assembly = mono_assembly_open (path, NULL);
-	if (assembly == NULL)
-		xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
-
-	return assembly;
+	return xamarin_open_assembly_or_assert (path);
 }
 
 bool

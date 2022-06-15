@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -34,7 +36,7 @@ namespace CoreGraphics {
 #endif // MONOMAC
 
 #if !COREBUILD
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return CFString.FromHandle (NSStringFromCGPoint (this));
 		}

@@ -9,18 +9,10 @@ Xamarin.PreBuilt.iOS.app.zip: .build-stamp
 	$(Q) rm -rf $@
 	$(Q_GEN) cd $(APP_DIR) && zip -9r $(abspath $@) .
 
-NuGet.config: $(TOP)/tests/dotnet/NuGet.config $(TOP)/NuGet.config
-	$(Q) $(MAKE) $@ -C $(dir $<)
-	$(Q) $(CP) $< $@
-
-global.json: $(TOP)/tests/dotnet/global.json $(TOP)/global6.json
-	$(Q) $(MAKE) $@ -C $(dir $<)
-	$(Q) $(CP) $< $@
-
 $(TOP)/tests/dotnet/%:
 	$(Q) $(MAKE) -C $(dir $@) $*
 
-.build-stamp: $(wildcard Xamarin.PreBuilt.iOS/*) Makefile NuGet.config global.json
+.build-stamp: $(wildcard Xamarin.PreBuilt.iOS/*) Makefile
 	$(Q_GEN) $(DOTNET) build Xamarin.PreBuilt.iOS/Xamarin.PreBuilt.iOS.csproj "/bl:$(abspath ./msbuild.binlog)" $(MSBUILD_VERBOSITY)
 	$(Q) touch $@
 

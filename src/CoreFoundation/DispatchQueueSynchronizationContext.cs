@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Threading;
 
@@ -38,8 +41,8 @@ namespace CoreFoundation {
 
 		public DispatchQueueSynchronizationContext (DispatchQueue dispatchQueue)
 		{
-			if (dispatchQueue == null)
-				throw new ArgumentNullException ("dispatchQueue");
+			if (dispatchQueue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 			this.queue = dispatchQueue;
 		}
 
@@ -48,12 +51,12 @@ namespace CoreFoundation {
 			return new DispatchQueueSynchronizationContext (queue);
 		}
 
-		public override void Post (SendOrPostCallback d, object state)
+		public override void Post (SendOrPostCallback d, object? state)
 		{
 			queue.DispatchAsync (() => d (state));
 		}
 
-		public override void Send (SendOrPostCallback d, object state)
+		public override void Send (SendOrPostCallback d, object? state)
 		{
 			queue.DispatchSync (() => d (state));
 		}

@@ -124,7 +124,6 @@ namespace Xamarin.Tests {
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
@@ -157,7 +156,6 @@ namespace Xamarin.Tests {
 			var project_dir = Path.Combine (dotnet_bindings_dir, platform);
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.fsproj");
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
@@ -185,7 +183,6 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = BinLog.PrintToLines (result.BinLogPath).ToList ();
 			Console.WriteLine (string.Join ("\n", lines));
@@ -217,7 +214,6 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
@@ -248,7 +244,6 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
 			var result = DotNet.AssertBuild (project_path, verbosity);
 			var lines = BinLog.PrintToLines (result.BinLogPath);
 			// Find the resulting binding assembly from the build log
@@ -281,55 +276,44 @@ namespace Xamarin.Tests {
 			var project_path = Path.Combine (project_dir, $"{assemblyName}.csproj");
 
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir);
-			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test"));
-			Configuration.CopyDotNetSupportingFiles (dotnet_bindings_dir.Replace (assemblyName, "bindings-test2"));
-			var cleanupSupportFiles = Configuration.CopyDotNetSupportingFiles (
-				Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client", "dotnet"),
-				Path.Combine (Configuration.SourceRoot, "external", "MonoTouch.Dialog", "MonoTouch.Dialog", "dotnet")
-			);
-			try {
-				var result = DotNet.AssertBuild (project_path, verbosity);
-				var lines = BinLog.PrintToLines (result.BinLogPath);
-				// Find the resulting binding assembly from the build log
-				var assemblies = lines.
-					Select (v => v.Trim ()).
-					Where (v => {
-						if (v.Length < 10)
-							return false;
-						if (v [0] != '/')
-							return false;
-						if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
-							return false;
-						if (!v.Contains ("/bin/", StringComparison.Ordinal))
-							return false;
-						if (!v.Contains ($"{assemblyName}.app", StringComparison.Ordinal))
-							return false;
-						return true;
-					});
-				Assert.That (assemblies, Is.Not.Empty, "Assemblies");
-				// Make sure there's no other assembly confusing our logic
-				assemblies = assemblies.Distinct ();
-				Assert.That (assemblies.Count (), Is.EqualTo (1), $"Unique assemblies: {string.Join (", ", assemblies)}");
-				var asm = assemblies.First ();
-				Assert.That (asm, Does.Exist, "Assembly existence");
+			var result = DotNet.AssertBuild (project_path, verbosity);
+			var lines = BinLog.PrintToLines (result.BinLogPath);
+			// Find the resulting binding assembly from the build log
+			var assemblies = lines.
+				Select (v => v.Trim ()).
+				Where (v => {
+					if (v.Length < 10)
+						return false;
+					if (v [0] != '/')
+						return false;
+					if (!v.EndsWith ($"{assemblyName}.dll", StringComparison.Ordinal))
+						return false;
+					if (!v.Contains ("/bin/", StringComparison.Ordinal))
+						return false;
+					if (!v.Contains ($"{assemblyName}.app", StringComparison.Ordinal))
+						return false;
+					return true;
+				});
+			Assert.That (assemblies, Is.Not.Empty, "Assemblies");
+			// Make sure there's no other assembly confusing our logic
+			assemblies = assemblies.Distinct ();
+			Assert.That (assemblies.Count (), Is.EqualTo (1), $"Unique assemblies: {string.Join (", ", assemblies)}");
+			var asm = assemblies.First ();
+			Assert.That (asm, Does.Exist, "Assembly existence");
 
-				// Verify that the resources have been linked away
-				var asmDir = Path.GetDirectoryName (asm)!;
-				var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-				Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for interdependent-binding-projects.dll");
+			// Verify that the resources have been linked away
+			var asmDir = Path.GetDirectoryName (asm)!;
+			var ad = AssemblyDefinition.ReadAssembly (asm, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			Assert.That (ad.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for interdependent-binding-projects.dll");
 
-				var ad1 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-				// The native library is removed from the resources by the linker
-				Assert.That (ad1.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test.dll");
+			var ad1 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			// The native library is removed from the resources by the linker
+			Assert.That (ad1.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test.dll");
 
-				var ad2 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test2.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
-				// The native library is removed from the resources by the linker
-				Assert.That (ad2.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test2.dll");
-			} finally {
-				foreach (var file in cleanupSupportFiles)
-					File.Delete (file);
-			}
+			var ad2 = AssemblyDefinition.ReadAssembly (Path.Combine (asmDir, "bindings-test2.dll"), new ReaderParameters { ReadingMode = ReadingMode.Deferred });
+			// The native library is removed from the resources by the linker
+			Assert.That (ad2.MainModule.Resources.Count, Is.EqualTo (0), "0 resources for bindings-test2.dll");
+
 		}
 
 		[Test]
@@ -368,12 +352,6 @@ namespace Xamarin.Tests {
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
 			var project_path = Path.Combine (Configuration.SourceRoot, "tests", "monotouch-test", "dotnet", platform.AsString (), "monotouch-test.csproj");
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (Path.GetDirectoryName (project_path)));
-			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "bindings-test", "dotnet"));
-			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "bindings-test2", "dotnet"));
-			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "EmbeddedResources", "dotnet"));
-			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "tests", "fsharplibrary", "dotnet"));
-			Configuration.CopyDotNetSupportingFiles (Path.Combine (Configuration.SourceRoot, "external", "Touch.Unit", "Touch.Client", "dotnet"));
 			Clean (project_path);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			if (additionalProperties != null) {
@@ -419,7 +397,7 @@ namespace Xamarin.Tests {
 		[TestCase ("iossimulator-x64", false)]
 		[TestCase ("ios-arm64", true)]
 		[TestCase ("ios-arm64", true, "PublishTrimmed=true;UseInterpreter=true")]
-		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild, string extraProperties = null)
+		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild, string? extraProperties = null)
 		{
 			if (isDeviceBuild)
 				Configuration.AssertDeviceAvailable ();
@@ -847,9 +825,6 @@ namespace Xamarin.Tests {
 			Clean (extensionProjectDir);
 			Clean (consumingProjectDir);
 
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (extensionProjectDir));
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (consumingProjectDir));
-
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
 			
 			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "MySimpleApp.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
@@ -941,6 +916,27 @@ namespace Xamarin.Tests {
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {minOS} (equivalent to macOS 10.15.2).", errors [0].Message, "Error message");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		// [TestCase (ApplePlatform.TVOS, "tvos-arm64")] // Currently doesn't work because we overwrite the required MtouchExtraArgs in tests/nunit.frameworks.target in this test.
+		// [TestCase (ApplePlatform.TVOS, "tvossimulator-x64")] // Currently doesn't work because we emit signatures with structs from the MetalPerformanceShaders framework, which isn't available in the tvOS simulator.
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void PInvokeWrapperGenerator (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var extraArgs = "--require-pinvoke-wrappers:true --registrar:static"; // enable the static registrar too, see https://github.com/xamarin/xamarin-macios/issues/15190.
+			properties ["MonoBundlingExtraArgs"] = extraArgs;
+			properties ["MtouchExtraArgs"] = extraArgs;
+
+			DotNet.AssertBuild (project_path, properties);
 		}
 	}
 }

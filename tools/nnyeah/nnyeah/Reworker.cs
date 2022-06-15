@@ -36,6 +36,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		TypeReference AttributeTargetsTypeReference;
 		TypeReference AttributeUsageTypeReference;
 		AssemblyNameReference InteropServicesAssembly;
+		MethodReference NativeHandleGetHandleReference;
 
 		TypeAndMemberMap ModuleMap;
 
@@ -125,8 +126,10 @@ namespace Microsoft.MaciOS.Nnyeah {
 			// These must be called last as they depend on Module and NativeIntegerAttributeTypeRef to be setup
 			var intPtrCtor = modules.XamarinModule.Types.First (t => t.FullName == "Foundation.NSObject").Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr)");
 			var intPtrCtorWithBool = modules.XamarinModule.Types.First (t => t.FullName == "Foundation.NSObject").Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr,System.Boolean)");
-			ConstructorTransforms = new ConstructorTransforms (ModuleToEdit.ImportReference (NewNativeHandleTypeDefinition), intPtrCtor, intPtrCtorWithBool);
+			var nativeHandleOpImplicit = NewNativeHandleTypeDefinition.Resolve ().GetMethods ().First (m => m.FullName == "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+			ConstructorTransforms = new ConstructorTransforms (ModuleToEdit.ImportReference (NewNativeHandleTypeDefinition), intPtrCtor, intPtrCtorWithBool, ModuleToEdit.ImportReference (nativeHandleOpImplicit), WarningIssued, Transformed);
 			ConstructorTransforms.AddTransforms (ModuleMap);
+			NativeHandleGetHandleReference = NewNativeHandleTypeDefinition.Methods.First (m => m.Name == "get_Handle");
 
 			MethodSubs = LoadMethodSubs ();
 			FieldSubs = LoadFieldSubs ();
@@ -337,6 +340,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		void ReworkType (TypeDefinition definition)
 		{
+			// This must occur before general processing as
+			// the list of transformed constructors is used later for rewriting
 			ConstructorTransforms.ReworkAsNeeded (definition);
 
 			foreach (var field in definition.Fields) {
@@ -514,11 +519,15 @@ namespace Microsoft.MaciOS.Nnyeah {
 						continue;
 					}
 				}
-				if (TryGetMethodTransform (instruction, out var transform)) {
+				if (TryGetMethodTransform (body, instruction, out var transform)) {
 					changes.Add (new Tuple<Instruction, Transformation> (instruction, transform));
 					continue;
 				}
 				if (TryGetFieldTransform (instruction, out transform)) {
+					changes.Add (new Tuple<Instruction, Transformation> (instruction, transform));
+					continue;
+				}
+				if (ConstructorTransforms.TryGetConstructorCallTransformation (instruction, out transform)) {
 					changes.Add (new Tuple<Instruction, Transformation> (instruction, transform));
 					continue;
 				}
@@ -533,6 +542,14 @@ namespace Microsoft.MaciOS.Nnyeah {
 					Transformed?.Invoke (this, new TransformEventArgs (body.Method.DeclaringType.FullName, body.Method.Name, trans.Operand, added, removed));
 				}
 			}
+
+			// Stunt optimization - there will only have been
+			// a need to patch class handle references if and only
+			// if there had been a prior change to this method.
+			// This is because the call to get_ClassHandle gets
+			// redirected by TryGetMappedMember
+			if (changes.Count > 0)
+				PatchClassHandleReference (body);
 		}
 
 		Instruction ChangeTypeInstruction (Instruction instruction, TypeReference typeReference)
@@ -570,18 +587,42 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 		}
 
-		bool TryGetMethodTransform (Instruction instr, [NotNullWhen (returnValue: true)] out Transformation? result)
+		static bool IsCallInstruction (Instruction instr)
 		{
-			if (instr.OpCode != OpCodes.Call && instr.OpCode != OpCodes.Calli
-				&& instr.OpCode != OpCodes.Callvirt) {
+			return instr.OpCode == OpCodes.Call ||
+				instr.OpCode == OpCodes.Calli ||
+				instr.OpCode == OpCodes.Callvirt;
+		}
+
+		bool TryGetMethodTransform (MethodBody body, Instruction instr, [NotNullWhen (returnValue: true)] out Transformation? result)
+		{
+			if (!IsCallInstruction (instr)) {
 				result = null;
 				return false;
 			}
+
 			if (instr.Operand is MethodReference method && MethodSubs.TryGetValue (method.ToString (), out result)) {
 				return true;
 			}
 			result = null;
 			return false;
+		}
+
+		void PatchClassHandleReference (MethodBody body)
+		{
+			ILProcessor processor = body.GetILProcessor ();
+			for (int i = body.Instructions.Count - 1; i >= 0; i--) {
+				var instr = body.Instructions [i];
+				if (!IsCallInstruction (instr))
+					continue;
+				var operandStr = instr.Operand.ToString ()!;
+				if (operandStr == "ObjCRuntime.NativeHandle Foundation.NSObject::get_ClassHandle()") {
+					var reference = ModuleToEdit.ImportReference (NativeHandleGetHandleReference);
+					processor.InsertAfter (instr, Instruction.Create (OpCodes.Call, reference));
+					Transformed?.Invoke (this, new TransformEventArgs (body.Method.DeclaringType.FullName,
+						body.Method.Name, operandStr, 1, 0));
+				}
+			}
 		}
 
 		bool TryGetFieldTransform (Instruction instr, [NotNullWhen (returnValue: true)] out Transformation? result)
@@ -599,7 +640,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			return false;
 		}
 
-		static IEnumerable<MethodDefinition> PropMethods (PropertyDefinition prop)
+		internal static IEnumerable<MethodDefinition> PropMethods (PropertyDefinition prop)
 		{
 			if (prop.GetMethod is not null)
 				yield return prop.GetMethod;
@@ -609,7 +650,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				yield return method;
 		}
 
-		static IEnumerable<MethodDefinition> EventMethods (EventDefinition @event)
+		internal static IEnumerable<MethodDefinition> EventMethods (EventDefinition @event)
 		{
 			if (@event.AddMethod is not null)
 				yield return @event.AddMethod;

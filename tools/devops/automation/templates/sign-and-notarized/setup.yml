@@ -5,12 +5,11 @@ parameters:
   type: string
   default: 'Real'
 
-- name: condition
-  default: and(succeeded(), eq(variables['IsPRBuild'], 'False'))
-
-- name: skipESRP
+- name: isPR
   type: boolean
-  default: false # only to be used when testing the CI and we do not need a signed pkg
+
+- name: condition
+  default: succeeded()
 
 steps:
 
@@ -30,8 +29,9 @@ steps:
 - checkout: release-scripts
   clean: true
 
-- ${{ if eq(parameters.skipESRP, false) }}: # do not install if not needd.
-  # the ddsign plugin needs this version or it will crash and will make the sign step fail
+# the ddsign plugin needs this version or it will crash and will make the sign step fail
+
+- ${{ if eq(parameters.isPR, false) }}:
   - task: UseDotNet@2
     inputs:
       packageType: sdk
@@ -42,7 +42,7 @@ steps:
     displayName: 'Install Signing Plugin'
     inputs:
       signType: '${{ parameters.signatureType }}'
-      azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+      azureSubscription: $(MicrobuildConnector)
       zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
     env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
@@ -52,7 +52,7 @@ steps:
     displayName: 'Install Notarizing Plugin'
     inputs:
       signType: 'Real'  # test is not present for mac..
-      azureSubscription: 'MicroBuild Signing Task (DevDiv)'
+      azureSubscription: $(MicrobuildConnector)
       zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
     env:
         SYSTEM_ACCESSTOKEN: $(System.AccessToken)

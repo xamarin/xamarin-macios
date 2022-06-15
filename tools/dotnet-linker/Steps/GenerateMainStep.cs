@@ -58,11 +58,6 @@ namespace Xamarin {
 
 				if (app.RequiresPInvokeWrappers) {
 					var state = Configuration.PInvokeWrapperGenerationState;
-					if (state.Started) {
-						// The generator is 'started' by the linker, which means it may not
-						// be started if the linker was not executed due to re-using cached results.
-						state.End ();
-					}
 					item = new MSBuildItem {
 						Include = state.SourcePath,
 						Metadata = {

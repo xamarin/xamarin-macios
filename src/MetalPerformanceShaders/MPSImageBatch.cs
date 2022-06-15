@@ -7,6 +7,8 @@
 // Copyright 2019 Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -32,8 +34,8 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSImage>' instead of `MPSImage[]` because image array 'Handle' matters.
 		public static nuint IncrementReadCount (NSArray<MPSImage> imageBatch, nint amount)
 		{
-			if (imageBatch == null)
-				throw new ArgumentNullException (nameof (imageBatch));
+			if (imageBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
 
 			return MPSImageBatchIncrementReadCount (imageBatch.Handle, amount);
 		}
@@ -44,10 +46,10 @@ namespace MetalPerformanceShaders {
 		// Using 'NSArray<MPSImage>' instead of `MPSImage[]` because image array 'Handle' matters.
 		public static void Synchronize (NSArray<MPSImage> imageBatch, IMTLCommandBuffer commandBuffer)
 		{
-			if (imageBatch == null)
-				throw new ArgumentNullException (nameof (imageBatch));
-			if (commandBuffer == null)
-				throw new ArgumentNullException (nameof (commandBuffer));
+			if (imageBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
+			if (commandBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (commandBuffer));
 
 			MPSImageBatchSynchronize (imageBatch.Handle, commandBuffer.Handle);
 		}
@@ -78,8 +80,8 @@ namespace MetalPerformanceShaders {
 #endif
 		public static nuint GetResourceSize (NSArray<MPSImage> imageBatch)
 		{
-			if (imageBatch == null)
-				throw new ArgumentNullException (nameof (imageBatch));
+			if (imageBatch is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
 
 			return MPSImageBatchResourceSize (imageBatch.Handle);
 		}
@@ -116,10 +118,10 @@ namespace MetalPerformanceShaders {
 		//[BindingImpl (BindingImplOptions.Optimizable)]
 		//public static nint Iterate (NSArray<MPSImage> imageBatch, MPSImageBatchIterator iterator)
 		//{
-		//	if (imageBatch == null)
-		//		throw new ArgumentNullException (nameof (imageBatch));
-		//	if (iterator == null)
-		//		throw new ArgumentNullException (nameof (iterator));
+		//	if (imageBatch is null)
+		//		ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBatch));
+		//	if (iterator is null)
+		//		ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (iterator));
 		//	unsafe {
 		//		BlockLiteral* block_ptr_iterator;
 		//		BlockLiteral block_iterator;
