@@ -425,7 +425,6 @@ skip_nested_brace (const char *type)
 		case '}':
 			return type++;
 		default:
-			type++;
 			break;
 		}
 	}

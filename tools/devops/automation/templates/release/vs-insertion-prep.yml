@@ -7,11 +7,14 @@ parameters:
   type: string
   default: prepare_packages
 
+- name: isPR
+  type: boolean
+
 stages:
 - stage: prepare_release
   displayName: Prepare Release
   dependsOn: ${{ parameters.dependsOn }}
-  condition: and(or(eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'), eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')), eq(variables.IsPRBuild, 'False'), eq(${{ parameters.enableDotnet }}, true))
+  condition: and(or(eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'), eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')), eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
 
   jobs:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
@@ -107,4 +110,4 @@ stages:
     pushToShippingFeed: true
     nupkgArtifactName: nuget-signed
     msiNupkgArtifactName: vs-msi-nugets
-    condition: eq(variables.IsPRBuild, 'False')
+    condition: eq(${{ parameters.isPR }}, false)
