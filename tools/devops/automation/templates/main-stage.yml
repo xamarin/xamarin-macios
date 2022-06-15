@@ -223,6 +223,7 @@ stages:
 - ${{ if eq(parameters.runWindowsIntegration, true) }}:
   - template: ./windows/stage.yml
     parameters:
+      isPR: ${{ parameters.isPR }}
       stageName: windows_integration
       displayName: 'Windows Integration Tests'
       pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
