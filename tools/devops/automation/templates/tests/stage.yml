@@ -168,7 +168,6 @@ stages:
     - template: ../common/upload-vsts-tests.yml
       parameters:
         isPR: ${{ parameters.isPR }}
-      parameters:
         testPrefix: ${{ parameters.testPrefix }}
         provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
