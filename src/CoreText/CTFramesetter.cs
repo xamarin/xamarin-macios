@@ -69,7 +69,7 @@ namespace CoreText {
 		public CTFrame? GetFrame (NSRange stringRange, CGPath path, CTFrameAttributes? frameAttributes)
 		{
 			if (path is null)
-				throw new ArgumentNullException (nameof (path));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			var frame = CTFramesetterCreateFrame (Handle, stringRange, path.Handle, frameAttributes.GetHandle ());
 			if (frame == IntPtr.Zero)
 				return null;
@@ -128,7 +128,7 @@ namespace CoreText {
 		public static CTFramesetter? Create (CTTypesetter typesetter)
 		{
 			if (typesetter is null)
-				throw new ArgumentNullException (nameof (typesetter));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (typesetter));
 
 			var ret = CTFramesetterCreateWithTypesetter (typesetter.Handle);
 			if (ret == IntPtr.Zero)
