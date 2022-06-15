@@ -91,7 +91,7 @@ namespace OpenTK.Platform.MacOS
 				Console.WriteLine ("No OpenGL pixel format");
 
 			// NSOpenGLView does not handle context sharing, so we draw to a custom NSView instead
-			openGLContext = new NSOpenGLContext (PixelFormat, context);
+			openGLContext = new NSOpenGLContext (ActualPixelFormat, context);
 
 			openGLContext.MakeCurrentContext ();
 
@@ -130,7 +130,7 @@ namespace OpenTK.Platform.MacOS
 			get => openGLContext;
 		}
 
-		public NSOpenGLContext ActualOpenGLContext {
+		NSOpenGLContext ActualOpenGLContext {
 			get {
 				if (openGLContext is null)
 					throw new InvalidOperationException ("Operation requires an OpenGLContext, which hasn't been created yet.");
@@ -138,7 +138,11 @@ namespace OpenTK.Platform.MacOS
 			}
 		}
 
-		public NSOpenGLPixelFormat PixelFormat {
+		public NSOpenGLPixelFormat? PixelFormat {
+			get => pixelFormat;
+		}
+
+		NSOpenGLPixelFormat ActualPixelFormat {
 			get {
 				if (pixelFormat is null)
 					throw new InvalidOperationException ("Operation requires a PixelFormat that cannot be null.");
@@ -548,7 +552,7 @@ namespace OpenTK.Platform.MacOS
 
 			// Set the display link for the current renderer
 			CGLContext cglContext = ActualOpenGLContext.CGLContext;
-			CGLPixelFormat cglPixelFormat = PixelFormat.CGLPixelFormat;
+			CGLPixelFormat cglPixelFormat = ActualPixelFormat.CGLPixelFormat;
 			displayLink.SetCurrentDisplay (cglContext, cglPixelFormat);
 
 		}
