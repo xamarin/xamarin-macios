@@ -53,6 +53,9 @@
 
 		<!-- XAMCORE_3_0 is always defined for .NET -->
 		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
+
+		<!-- Don't show warnings about platform availability -->
+		<NoWarn Condition="'$(IncludeCS1416Warnigs)' != 'true'">CA1416;$(NoWarn)</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
