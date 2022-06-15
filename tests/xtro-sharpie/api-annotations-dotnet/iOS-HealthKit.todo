@@ -1,0 +1,153 @@
+!deprecated-attribute-missing! HKActivitySummary::appleExerciseTimeGoal missing a [Deprecated] attribute
+!deprecated-attribute-missing! HKActivitySummary::appleStandHoursGoal missing a [Deprecated] attribute
+!deprecated-attribute-missing! HKActivitySummary::setAppleExerciseTimeGoal: missing a [Deprecated] attribute
+!deprecated-attribute-missing! HKActivitySummary::setAppleStandHoursGoal: missing a [Deprecated] attribute
+!deprecated-attribute-missing! HKWorkout::totalDistance missing a [Deprecated] attribute
+!deprecated-attribute-missing! HKWorkout::totalEnergyBurned missing a [Deprecated] attribute
+!deprecated-attribute-missing! HKWorkout::totalFlightsClimbed missing a [Deprecated] attribute
+!deprecated-attribute-missing! HKWorkout::totalSwimmingStrokeCount missing a [Deprecated] attribute
+!extra-designated-initializer! HKWorkoutRouteQuery::initWithRoute:dataHandler: is incorrectly decorated with an [DesignatedInitializer] attribute
+!missing-enum! HKHeartRateRecoveryTestType not bound
+!missing-enum! HKPrismBase not bound
+!missing-enum! HKUserMotionContext not bound
+!missing-enum! HKVisionEye not bound
+!missing-enum! HKVisionPrescriptionType not bound
+!missing-enum-value! HKCategoryValueSleepAnalysis native value HKCategoryValueSleepAnalysisAsleepCore = 3 not bound
+!missing-enum-value! HKCategoryValueSleepAnalysis native value HKCategoryValueSleepAnalysisAsleepDeep = 4 not bound
+!missing-enum-value! HKCategoryValueSleepAnalysis native value HKCategoryValueSleepAnalysisAsleepREM = 5 not bound
+!missing-enum-value! HKSwimmingStrokeStyle native value HKSwimmingStrokeStyleKickboard = 6 not bound
+!missing-enum-value! HKWorkoutActivityType native value HKWorkoutActivityTypeSwimBikeRun = 82 not bound
+!missing-enum-value! HKWorkoutActivityType native value HKWorkoutActivityTypeTransition = 83 not bound
+!missing-field! HKMetadataKeyHeartRateRecoveryActivityDuration not bound
+!missing-field! HKMetadataKeyHeartRateRecoveryActivityType not bound
+!missing-field! HKMetadataKeyHeartRateRecoveryMaxObservedRecoveryHeartRate not bound
+!missing-field! HKMetadataKeyHeartRateRecoveryTestType not bound
+!missing-field! HKMetadataKeyQuantityClampedToLowerBound not bound
+!missing-field! HKMetadataKeyQuantityClampedToUpperBound not bound
+!missing-field! HKMetadataKeySessionEstimate not bound
+!missing-field! HKMetadataKeySWOLFScore not bound
+!missing-field! HKMetadataKeyUserMotionContext not bound
+!missing-field! HKPredicateKeyPathWorkoutActivity not bound
+!missing-field! HKPredicateKeyPathWorkoutActivityAverageQuantity not bound
+!missing-field! HKPredicateKeyPathWorkoutActivityDuration not bound
+!missing-field! HKPredicateKeyPathWorkoutActivityEndDate not bound
+!missing-field! HKPredicateKeyPathWorkoutActivityMaximumQuantity not bound
+!missing-field! HKPredicateKeyPathWorkoutActivityMinimumQuantity not bound
+!missing-field! HKPredicateKeyPathWorkoutActivityStartDate not bound
+!missing-field! HKPredicateKeyPathWorkoutActivitySumQuantity not bound
+!missing-field! HKPredicateKeyPathWorkoutActivityType not bound
+!missing-field! HKPredicateKeyPathWorkoutAverageQuantity not bound
+!missing-field! HKPredicateKeyPathWorkoutMaximumQuantity not bound
+!missing-field! HKPredicateKeyPathWorkoutMinimumQuantity not bound
+!missing-field! HKPredicateKeyPathWorkoutSumQuantity not bound
+!missing-field! HKQuantityTypeIdentifierHeartRateRecoveryOneMinute not bound
+!missing-field! HKQuantityTypeIdentifierRunningGroundContactTime not bound
+!missing-field! HKQuantityTypeIdentifierRunningPower not bound
+!missing-field! HKQuantityTypeIdentifierRunningSpeed not bound
+!missing-field! HKQuantityTypeIdentifierRunningStrideLength not bound
+!missing-field! HKQuantityTypeIdentifierRunningVerticalOscillation not bound
+!missing-field! HKVisionPrescriptionTypeIdentifier not bound
+!missing-pinvoke! HKCategoryValueSleepAnalysisAsleepValues is not bound
+!missing-protocol-conformance! HKElectrocardiogramVoltageMeasurement should conform to NSCopying
+!missing-selector! +HKContactsPrescription::prescriptionWithRightEyeSpecification:leftEyeSpecification:brand:dateIssued:expirationDate:device:metadata: not bound
+!missing-selector! +HKGlassesPrescription::prescriptionWithRightEyeSpecification:leftEyeSpecification:description:dateIssued:expirationDate:device:metadata: not bound
+!missing-selector! +HKObjectType::visionPrescriptionType not bound
+!missing-selector! +HKQuery::predicateForCategorySamplesEqualToValues: not bound
+!missing-selector! +HKQuery::predicateForWorkoutActivitiesWithOperatorType:duration: not bound
+!missing-selector! +HKQuery::predicateForWorkoutActivitiesWithOperatorType:quantityType:averageQuantity: not bound
+!missing-selector! +HKQuery::predicateForWorkoutActivitiesWithOperatorType:quantityType:maximumQuantity: not bound
+!missing-selector! +HKQuery::predicateForWorkoutActivitiesWithOperatorType:quantityType:minimumQuantity: not bound
+!missing-selector! +HKQuery::predicateForWorkoutActivitiesWithOperatorType:quantityType:sumQuantity: not bound
+!missing-selector! +HKQuery::predicateForWorkoutActivitiesWithStartDate:endDate:options: not bound
+!missing-selector! +HKQuery::predicateForWorkoutActivitiesWithWorkoutActivityType: not bound
+!missing-selector! +HKQuery::predicateForWorkoutsWithActivityPredicate: not bound
+!missing-selector! +HKQuery::predicateForWorkoutsWithOperatorType:quantityType:averageQuantity: not bound
+!missing-selector! +HKQuery::predicateForWorkoutsWithOperatorType:quantityType:maximumQuantity: not bound
+!missing-selector! +HKQuery::predicateForWorkoutsWithOperatorType:quantityType:minimumQuantity: not bound
+!missing-selector! +HKQuery::predicateForWorkoutsWithOperatorType:quantityType:sumQuantity: not bound
+!missing-selector! +HKUnit::degreeHKUnitUnit not bound
+!missing-selector! +HKUnit::diopterUnit not bound
+!missing-selector! +HKUnit::prismDiopterUnit not bound
+!missing-selector! +HKUnit::radianHKUnitUnit not bound
+!missing-selector! +HKUnit::radianHKUnitUnitWithMetricPrefix: not bound
+!missing-selector! +HKUnit::wattUnit not bound
+!missing-selector! +HKUnit::wattUnitWithMetricPrefix: not bound
+!missing-selector! +HKVisionPrescription::prescriptionWithType:dateIssued:expirationDate:device:metadata: not bound
+!missing-selector! HKActivitySummary::exerciseTimeGoal not bound
+!missing-selector! HKActivitySummary::setExerciseTimeGoal: not bound
+!missing-selector! HKActivitySummary::setStandHoursGoal: not bound
+!missing-selector! HKActivitySummary::standHoursGoal not bound
+!missing-selector! HKAttachment::contentType not bound
+!missing-selector! HKAttachment::creationDate not bound
+!missing-selector! HKAttachment::identifier not bound
+!missing-selector! HKAttachment::metadata not bound
+!missing-selector! HKAttachment::name not bound
+!missing-selector! HKAttachment::size not bound
+!missing-selector! HKAttachmentStore::addAttachmentToObject:name:contentType:URL:metadata:completion: not bound
+!missing-selector! HKAttachmentStore::getAttachmentsForObject:completion: not bound
+!missing-selector! HKAttachmentStore::getDataForAttachment:completion: not bound
+!missing-selector! HKAttachmentStore::initWithHealthStore: not bound
+!missing-selector! HKAttachmentStore::removeAttachment:fromObject:completion: not bound
+!missing-selector! HKAttachmentStore::streamDataForAttachment:dataHandler: not bound
+!missing-selector! HKContactsLensSpecification::baseCurve not bound
+!missing-selector! HKContactsLensSpecification::diameter not bound
+!missing-selector! HKContactsLensSpecification::initWithSphere:cylinder:axis:addPower:baseCurve:diameter: not bound
+!missing-selector! HKContactsPrescription::brand not bound
+!missing-selector! HKContactsPrescription::leftEye not bound
+!missing-selector! HKContactsPrescription::rightEye not bound
+!missing-selector! HKGlassesLensSpecification::farPupillaryDistance not bound
+!missing-selector! HKGlassesLensSpecification::initWithSphere:cylinder:axis:addPower:vertexDistance:prism:farPupillaryDistance:nearPupillaryDistance: not bound
+!missing-selector! HKGlassesLensSpecification::nearPupillaryDistance not bound
+!missing-selector! HKGlassesLensSpecification::prism not bound
+!missing-selector! HKGlassesLensSpecification::vertexDistance not bound
+!missing-selector! HKGlassesPrescription::glassesDescription not bound
+!missing-selector! HKGlassesPrescription::leftEye not bound
+!missing-selector! HKGlassesPrescription::rightEye not bound
+!missing-selector! HKHealthStore::requestPerObjectReadAuthorizationForType:predicate:completion: not bound
+!missing-selector! HKLensSpecification::addPower not bound
+!missing-selector! HKLensSpecification::axis not bound
+!missing-selector! HKLensSpecification::cylinder not bound
+!missing-selector! HKLensSpecification::sphere not bound
+!missing-selector! HKObjectType::requiresPerObjectAuthorization not bound
+!missing-selector! HKVisionPrescription::dateIssued not bound
+!missing-selector! HKVisionPrescription::expirationDate not bound
+!missing-selector! HKVisionPrescription::prescriptionType not bound
+!missing-selector! HKVisionPrism::amount not bound
+!missing-selector! HKVisionPrism::angle not bound
+!missing-selector! HKVisionPrism::eye not bound
+!missing-selector! HKVisionPrism::horizontalAmount not bound
+!missing-selector! HKVisionPrism::horizontalBase not bound
+!missing-selector! HKVisionPrism::initWithAmount:angle:eye: not bound
+!missing-selector! HKVisionPrism::initWithVerticalAmount:verticalBase:horizontalAmount:horizontalBase:eye: not bound
+!missing-selector! HKVisionPrism::verticalAmount not bound
+!missing-selector! HKVisionPrism::verticalBase not bound
+!missing-selector! HKWorkout::allStatistics not bound
+!missing-selector! HKWorkout::statisticsForType: not bound
+!missing-selector! HKWorkout::workoutActivities not bound
+!missing-selector! HKWorkoutActivity::allStatistics not bound
+!missing-selector! HKWorkoutActivity::duration not bound
+!missing-selector! HKWorkoutActivity::endDate not bound
+!missing-selector! HKWorkoutActivity::initWithWorkoutConfiguration:startDate:endDate:metadata: not bound
+!missing-selector! HKWorkoutActivity::metadata not bound
+!missing-selector! HKWorkoutActivity::startDate not bound
+!missing-selector! HKWorkoutActivity::statisticsForType: not bound
+!missing-selector! HKWorkoutActivity::UUID not bound
+!missing-selector! HKWorkoutActivity::workoutConfiguration not bound
+!missing-selector! HKWorkoutActivity::workoutEvents not bound
+!missing-selector! HKWorkoutBuilder::addWorkoutActivity:completion: not bound
+!missing-selector! HKWorkoutBuilder::allStatistics not bound
+!missing-selector! HKWorkoutBuilder::updateActivityWithUUID:addMedatata:completion: not bound
+!missing-selector! HKWorkoutBuilder::updateActivityWithUUID:endDate:completion: not bound
+!missing-selector! HKWorkoutBuilder::workoutActivities not bound
+!missing-selector! HKWorkoutRouteQuery::initWithRoute:dateInterval:dataHandler: not bound
+!missing-type! HKAttachment not bound
+!missing-type! HKAttachmentStore not bound
+!missing-type! HKContactsLensSpecification not bound
+!missing-type! HKContactsPrescription not bound
+!missing-type! HKGlassesLensSpecification not bound
+!missing-type! HKGlassesPrescription not bound
+!missing-type! HKLensSpecification not bound
+!missing-type! HKPrescriptionType not bound
+!missing-type! HKVisionPrescription not bound
+!missing-type! HKVisionPrism not bound
+!missing-type! HKWorkoutActivity not bound

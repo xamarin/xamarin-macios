@@ -1,1 +1,14 @@
 !extra-enum-value! Managed value 3 for NEOnDemandRuleInterfaceType.Cellular is available for the current platform while the value in the native header is not
+!missing-enum! NEVPNConnectionError not bound
+!missing-field! NEVPNConnectionErrorDomain not bound
+!missing-selector! NEDNSOverHTTPSSettings::identityReference not bound
+!missing-selector! NEDNSOverHTTPSSettings::setIdentityReference: not bound
+!missing-selector! NEDNSOverTLSSettings::identityReference not bound
+!missing-selector! NEDNSOverTLSSettings::setIdentityReference: not bound
+!missing-selector! NEEthernetTunnelNetworkSettings::ethernetAddress not bound
+!missing-selector! NEEthernetTunnelNetworkSettings::initWithTunnelRemoteAddress:ethernetAddress:mtu: not bound
+!missing-selector! NEIPv4Settings::router not bound
+!missing-selector! NEIPv4Settings::setRouter: not bound
+!missing-selector! NEVPNConnection::fetchLastDisconnectErrorWithCompletionHandler: not bound
+!missing-type! NEEthernetTunnelNetworkSettings not bound
+!missing-type! NEEthernetTunnelProvider not bound

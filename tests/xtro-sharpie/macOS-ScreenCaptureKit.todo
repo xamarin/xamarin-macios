@@ -1,1 +1,14 @@
 !missing-field! SCStreamErrorDomain not bound
+!missing-enum-value! SCStreamErrorCode native value SCStreamErrorFailedToStartAudioCapture = -3818 not bound
+!missing-enum-value! SCStreamErrorCode native value SCStreamErrorFailedToStopAudioCapture = -3819 not bound
+!missing-enum-value! SCStreamErrorCode native value SCStreamErrorUserStopped = -3817 not bound
+!missing-enum-value! SCStreamOutputType native value SCStreamOutputTypeAudio = 1 not bound
+!missing-selector! SCStream::synchronizationClock not bound
+!missing-selector! SCStreamConfiguration::capturesAudio not bound
+!missing-selector! SCStreamConfiguration::channelCount not bound
+!missing-selector! SCStreamConfiguration::excludesCurrentProcessAudio not bound
+!missing-selector! SCStreamConfiguration::sampleRate not bound
+!missing-selector! SCStreamConfiguration::setCapturesAudio: not bound
+!missing-selector! SCStreamConfiguration::setChannelCount: not bound
+!missing-selector! SCStreamConfiguration::setExcludesCurrentProcessAudio: not bound
+!missing-selector! SCStreamConfiguration::setSampleRate: not bound

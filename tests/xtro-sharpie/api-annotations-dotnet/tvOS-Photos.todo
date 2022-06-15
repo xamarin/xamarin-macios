@@ -1,0 +1,22 @@
+!missing-enum! PHObjectType not bound
+!missing-enum-value! PHAssetCollectionSubtype native value PHAssetCollectionSubtypeSmartAlbumCinematic = 218 not bound
+!missing-enum-value! PHAssetMediaSubtype native value PHAssetMediaSubtypeVideoCinematic = 2097152 not bound
+!missing-enum-value! PHPhotosError native value PHPhotosErrorNetworkError = 3169 not bound
+!missing-enum-value! PHPhotosError native value PHPhotosErrorPersistentChangeDetailsUnavailable = 3210 not bound
+!missing-enum-value! PHPhotosError native value PHPhotosErrorPersistentChangeTokenExpired = 3105 not bound
+!missing-selector! PHAsset::hasAdjustments not bound
+!missing-selector! PHAssetResource::pixelHeight not bound
+!missing-selector! PHAssetResource::pixelWidth not bound
+!missing-selector! PHPersistentChange::changeDetailsForObjectType:error: not bound
+!missing-selector! PHPersistentChange::changeToken not bound
+!missing-selector! PHPersistentChangeFetchResult::enumerateChangesWithBlock: not bound
+!missing-selector! PHPersistentObjectChangeDetails::deletedLocalIdentifiers not bound
+!missing-selector! PHPersistentObjectChangeDetails::insertedLocalIdentifiers not bound
+!missing-selector! PHPersistentObjectChangeDetails::objectType not bound
+!missing-selector! PHPersistentObjectChangeDetails::updatedLocalIdentifiers not bound
+!missing-selector! PHPhotoLibrary::currentChangeToken not bound
+!missing-selector! PHPhotoLibrary::fetchPersistentChangesSinceToken:error: not bound
+!missing-type! PHPersistentChange not bound
+!missing-type! PHPersistentChangeFetchResult not bound
+!missing-type! PHPersistentChangeToken not bound
+!missing-type! PHPersistentObjectChangeDetails not bound

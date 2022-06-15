@@ -1,0 +1,3 @@
+!missing-selector! +SFSafariViewControllerDataStore::defaultDataStore not bound
+!missing-selector! SFSafariViewControllerDataStore::clearWebsiteDataWithCompletionHandler: not bound
+!missing-type! SFSafariViewControllerDataStore not bound

@@ -7,3 +7,5 @@
 !missing-enum-value! MidiSysExStatus native value kMIDISysExStatusMixedDataSetPayload = 9 not bound
 !missing-pinvoke! MIDIEventListForEachEvent is not bound
 ## appended from unclassified file
+!missing-pinvoke! MIDIBluetoothDriverActivateAllConnections is not bound
+!missing-pinvoke! MIDIBluetoothDriverDisconnect is not bound
