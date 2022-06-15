@@ -1,3 +1,0 @@
-## not available on macOS as of Xcode12 beta 4
-!missing-enum! NIErrorCode not bound
-!missing-enum! NINearbyObjectRemovalReason not bound
