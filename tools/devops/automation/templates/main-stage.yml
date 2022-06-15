@@ -163,6 +163,7 @@ stages:
 - ${{ each config in parameters.simTestsConfigurations }}:
   - template: ./tests/stage.yml
     parameters:
+      isPR: ${{ parameters.isPR }}
       testPrefix: ${{ config.testPrefix }} 
       stageName: ${{ config.stageName }} 
       displayName: ${{ config.displayName }} 
@@ -187,6 +188,7 @@ stages:
     - ${{ each config in parameters.deviceTestsConfigurations }}:
       - template: ./tests/stage.yml
         parameters:
+          isPR: ${{ parameters.isPR }}
           testPrefix: ${{ config.testPrefix }} 
           stageName: ${{ config.stageName }} 
           displayName: ${{ config.displayName }} 
