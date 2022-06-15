@@ -90,6 +90,7 @@ namespace Xamarin
 		}
 
 		[Test]
+		[Ignore ("Issue with dlopen: https://github.com/xamarin/xamarin-macios/issues/15231")]
 		public void ExceptionMarshaling ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -3917,6 +3918,7 @@ public class TestApp {
 		[TestCase ("HttpClientHandler", "HttpClientHandler")]
 		[TestCase (null, "NSUrlSessionHandler")]
 		[TestCase ("", "NSUrlSessionHandler")]
+		[Ignore ("Issue with dlopen: https://github.com/xamarin/xamarin-macios/issues/15231")]
 		public void HttpClientHandler (string mtouchHandler, string expectedHandler)
 		{
 			var testCode = $@"
