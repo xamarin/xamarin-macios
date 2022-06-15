@@ -205,6 +205,7 @@ pr:
 stages:
 - template: templates/main-stage.yml
   parameters:
+    isPR: true
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
     runTests: ${{ parameters.runTests }}
@@ -220,3 +221,7 @@ stages:
     simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
+    signingSetupSteps:
+      - template: ./templates/sign-and-notarized/setup.yml
+        parameters:
+          isPR: true

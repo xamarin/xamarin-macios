@@ -15,6 +15,9 @@ parameters:
   type: stepList
   default: []
 
+- name: isPR
+  type: boolean
+
 - name: packages
   type: object
   default: [
@@ -77,6 +80,7 @@ jobs:
     steps:
     - template: sign-and-notarized.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         signingSetupSteps: ${{ parameters.signingSetupSteps }}
         keyringPass: ${{ parameters.keyringPass }}
         skipESRP: ${{ parameters.skipESRP }}
@@ -96,6 +100,8 @@ jobs:
 
     steps:
     - template: dotnet-signing.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
 
 - job: funnel_job
   dependsOn:
