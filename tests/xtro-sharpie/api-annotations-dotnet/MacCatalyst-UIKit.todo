@@ -15,8 +15,6 @@
 !extra-null-allowed! 'System.Void UIKit.UIDynamicAnimator::AddBehavior(UIKit.UIDynamicBehavior)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UIDynamicAnimator::RemoveBehavior(UIKit.UIDynamicBehavior)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UIMarkupTextPrintFormatter::.ctor(System.String)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void UIKit.UIMenuItem::set_Action(ObjCRuntime.Selector)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.Void UIKit.UIMenuItem::set_Title(System.String)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UINavigationController::SetViewControllers(UIKit.UIViewController[],System.Boolean)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UINavigationController::set_ViewControllers(UIKit.UIViewController[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void UIKit.UIPopoverPresentationControllerDelegate::WillRepositionPopover(UIKit.UIPopoverPresentationController,CoreGraphics.CGRect&,UIKit.UIView&)' has a extraneous [NullAllowed] on parameter #1
