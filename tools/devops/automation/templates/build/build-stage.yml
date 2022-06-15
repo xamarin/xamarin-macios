@@ -33,6 +33,9 @@ parameters:
   type: string
   default: automatic
 
+- name: isPR
+  type: boolean
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -120,6 +123,7 @@ jobs:
   steps:
   - template: build-pkgs.yml
     parameters:
+      isPR: ${{ parameters.isPR }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

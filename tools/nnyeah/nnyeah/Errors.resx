@@ -44,6 +44,10 @@
 	<data name="N0008" xml:space="preserve">
 		<value>Unexpected error - Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
 	</data>
+
+	<data name="N0009" xml:space="preserve">
+		<value>Type {0} inherits from the type {1} which is in a separate assembly which will also need conversion</value>
+	</data>
 	
 	<data name="E0001" xml:space="preserve">
 		<value>Input file '{0}' doesn't exist.</value>
@@ -83,10 +87,10 @@
 		<value>Error while attempting to compare assemblies: {0}</value>
 	</data>
 	<data name="E0012" xml:space="preserve">
-		<value>Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
+		<value>Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6.</value>
 	</data>
 	<data name="E0013" xml:space="preserve">
-		<value>Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
+		<value>Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can't continue. Your best option is to port the old assembly to .NET 6.</value>
 	</data>
 	<data name="E0014" xml:space="preserve">
 		<value>File for conversion (--input) and output location (--output) are required options.</value>

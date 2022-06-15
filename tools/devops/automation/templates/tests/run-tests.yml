@@ -60,16 +60,6 @@ steps:
   displayName: Generate constants files 
   timeoutInMinutes: 15
 
-- bash: |
-    set -x
-    set -e
-
-    make global6.json
-    make -C tests/dotnet global.json NuGet.config
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-  displayName: 'Generate global.json'
-  timeoutInMinutes: 5
-
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
   inputs:
@@ -80,7 +70,7 @@ steps:
     set -x
     set -e
 
-    make global6.json
+    make global.json
     make -C builds dotnet
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Bootstrap dotnet
@@ -142,8 +132,6 @@ steps:
       PLATFORMS="$PLATFORMS $CURRENT"
     done
 
-    rm global.json
-    cp global6.json global.json
     $DOTNET workload install --from-rollback-file $ROLLBACK_PATH --source $DOTNET_NUPKG_DIR $SOURCES --verbosity diag $PLATFORMS
 
     var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET_DIR)
@@ -231,6 +219,9 @@ steps:
     echo "Running tests on $AGENT_NAME"
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
 
+    # uri used to create the vsdrops index using full uri
+    export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/$PARAMETERS_TESTPREFIX;/tests/"
+
     make -C builds download -j || true
     make -C builds downloads -j || true
     make -C builds .stamp-mono-ios-sdk-destdir -j || true
@@ -244,9 +235,9 @@ steps:
   env:
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
-    VSDROPS_URI: '${{ parameters.vsdropsPrefix }}/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }};/tests/' # uri used to create the vsdrops index using full uri
     USE_TCP_TUNNEL: 'true'
     BUILD_REVISION: $(Build.SourceVersion)
+    PARAMETERS_TESTPREFIX: '${{ parameters.testPrefix }}'
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job

@@ -12,17 +12,13 @@ $(IOS_DLL):
 	@echo "Thou shalt run 'make all' in the root directory first"
 	@exit 1
 
-global.json: $(TOP)/global6.json
-	$(CP) $< $@
-
 # Example TEST_FILTER:
 #    TEST_FILTER="--filter FullyQualifiedName~BuildMyCocoaApp"
 # Docs: https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-test#filter-option-details
-run-tests:: global.json ./nupkg/nnyeah.$(NUPKG_VERSION).nupkg
+run-tests:: ./nupkg/nnyeah.$(NUPKG_VERSION).nupkg
 	$(DOTNET) test tests/nnyeah-tests.csproj $(TEST_FILTER)
 
-
-nnyeah/bin/Debug/net6.0/nnyeah.dll: $(IOS_DLL) $(wildcard **/*.cs) $(wildcard **/*.csproj) $(wildcard *.sln) global.json
+nnyeah/bin/Debug/net6.0/nnyeah.dll: $(IOS_DLL) $(wildcard **/*.cs) $(wildcard **/*.csproj) $(wildcard *.sln)
 	$(Q_BUILD) $(DOTNET) build "/bl:$@.binlog" /restore $(MSBUILD_VERBOSITY) $(wildcard *.sln)
 
 clean:
