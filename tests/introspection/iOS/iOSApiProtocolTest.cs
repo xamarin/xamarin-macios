@@ -171,6 +171,8 @@ namespace Introspection {
 				break;
 #endif
 			case "UIAccessibilityElement":
+				if (protocolName == "UIResponderStandardEditActions" && !TestRuntime.CheckXcodeVersion (11, 0))
+					return true;
 				if (protocolName == "UIUserActivityRestoring")
 					return true;
 				break;
