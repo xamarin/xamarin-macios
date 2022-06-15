@@ -17,8 +17,8 @@ parameters:
   type: boolean
   default: true
 
-- name: label
-  type: string
+- name: simTestsConfigurations
+  type: object
 
 steps:
 
@@ -28,17 +28,18 @@ steps:
     - task: DownloadPipelineArtifact@2
       displayName: Download html report ${{ parameters.Label }}
       inputs:
-        patterns: "HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/HtmlReport.zip"
+        patterns: "**/HtmlReport.zip"
         allowFailedBuilds: true
         path: $(System.DefaultWorkingDirectory)/Reports
 
-    # Unzip report.
-    - task: ExtractFiles@1
-      displayName: 'Extract HtmlReport'
-      continueOnError: true # there might not be an html report, but we should continue processing other steps anyway
-      inputs:
-        archiveFilePatterns: "$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/HtmlReport.zip"
-        destinationFolder: "$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}"
+    - ${{ each label in parameters.simTestsConfigurations }}:
+      # Unzip report.
+      - task: ExtractFiles@1
+        displayName: 'Extract HtmlReport'
+        continueOnError: true # there might not be an html report, but we should continue processing other steps anyway
+        inputs:
+          archiveFilePatterns: "$(System.DefaultWorkingDirectory)/Reports/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/HtmlReport.zip"
+          destinationFolder: "$(System.DefaultWorkingDirectory)/HtmlReport-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}"
 
   - ${{ if eq(parameters.downloadTestSummary, true) }}:
     # Download the test report to write the comment.
@@ -46,14 +47,6 @@ steps:
       displayName: Download Test Summary ${{ parameters.label }}
       continueOnError: true # there are tests that do not have the test results, so far only the install_sources has it
       inputs:
-        patterns: "TestSummary-${{ parameters.testPrefix }}${{ replace(parameters.label, '-', '_') }}/TestSummary.md"
+        patterns: "**/TestSummary.md"
         allowFailedBuilds: true
         path: $(System.DefaultWorkingDirectory)\Reports
-
-  - powershell: |
-      Get-ChildItem $(System.DefaultWorkingDirectory)\\Reports -Recurse
-      $label="${{ replace(parameters.label, '-', '_') }}"
-      Write-Host "##vso[task.setvariable variable=TEST_SUMMARY_PATH_$($label.ToUpper())]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.testPrefix }}$label\TestSummary.md"
-      Write-Host "##vso[task.setvariable variable=HTML_REPORT_PATH_$($label.ToUpper())]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\HtmlReport-${{ parameters.testPrefix }}$label"
-    displayName: Publish artifact paths
-    name: artifacts_${{ replace(parameters.label, '-', '_') }} # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
