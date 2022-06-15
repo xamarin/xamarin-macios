@@ -415,11 +415,20 @@ namespace Extrospection {
 		public static string GetFramework (MethodDefinition method)
 		{
 			string framework = null;
-			if (method.HasPInvokeInfo)
+			if (method.HasPInvokeInfo) {
 				framework = Path.GetFileNameWithoutExtension (method.PInvokeInfo.Module.Name);
+				switch (framework) {
+				case "libobjc.A":
+					framework = "libobjc";
+					break;
+				case "libSystem.B":
+					framework = "libSystem";
+					break;
+				}
+			}
 			else
 				framework = GetFramework (method.DeclaringType);
-			return MapFramework (framework);
+			return MapFramework (framework, method.DeclaringType.Namespace);
 		}
 
 		public static string GetFramework (MemberReference member)
@@ -439,13 +448,12 @@ namespace Extrospection {
 			return MapFramework (header_file.Substring (start, fxh - start));
 		}
 
-		public static string MapFramework (string candidate)
+		public static string MapFramework (string candidate, string @namespace = null)
 		{
 			switch (candidate) {
 			case "AVFAudio":
 				return "AVFoundation";
 			case "libc": // dispatch_*
-				return "CoreFoundation";
 			case "libobjc":
 			case "libSystem": // dlopen, dlerror, dlsym, dlclose
 				return "ObjCRuntime";
