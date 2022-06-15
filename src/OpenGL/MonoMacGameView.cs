@@ -122,11 +122,15 @@ namespace OpenTK.Platform.MacOS
 		public override void LockFocus ()
 		{
 			base.LockFocus ();
-			if (OpenGLContext.View != this)
-				OpenGLContext.View = this;
+			if (ActualOpenGLContext.View != this)
+				ActualOpenGLContext.View = this;
 		}
 
-		public NSOpenGLContext OpenGLContext {
+		public NSOpenGLContext? OpenGLContext {
+			get => openGLContext;
+		}
+
+		public NSOpenGLContext ActualOpenGLContext {
 			get {
 				if (openGLContext is null)
 					throw new InvalidOperationException ("Operation requires an OpenGLContext, which hasn't been created yet.");
@@ -332,13 +336,13 @@ namespace OpenTK.Platform.MacOS
 					size = value;
 					// This method will be called on the main thread when resizing, but we may be drawing on a secondary thread through the display link
 					// Add a mutex around to avoid the threads accessing the context simultaneously
-					OpenGLContext.CGLContext.Lock ();
+					ActualOpenGLContext.CGLContext.Lock ();
 
 					// Delegate to the scene object to update for a change in the view size
 					OnResize (EventArgs.Empty);
-					OpenGLContext.Update ();
+					ActualOpenGLContext.Update ();
 
-					OpenGLContext.CGLContext.Unlock ();
+					ActualOpenGLContext.CGLContext.Unlock ();
 				}
 			}
 		}
@@ -432,14 +436,14 @@ namespace OpenTK.Platform.MacOS
 		public virtual void MakeCurrent ()
 		{
 			AssertValid ();
-			OpenGLContext.MakeCurrentContext ();
+			ActualOpenGLContext.MakeCurrentContext ();
 		}
 
 		public virtual void SwapBuffers ()
 		{
 			AssertValid ();
 			// basically SwapBuffers is the same as FlushBuffer on OSX
-			OpenGLContext.FlushBuffer ();
+			ActualOpenGLContext.FlushBuffer ();
 		}
 
 		private bool SwapInterval { get; set; }
@@ -457,7 +461,7 @@ namespace OpenTK.Platform.MacOS
 			OnLoad (EventArgs.Empty);
 
 			// Synchronize buffer swaps with vertical refresh rate
-			OpenGLContext.SwapInterval = SwapInterval;
+			ActualOpenGLContext.SwapInterval = SwapInterval;
 
 			if (displayLinkSupported) 
 				SetupDisplayLink ();
@@ -481,7 +485,7 @@ namespace OpenTK.Platform.MacOS
 			DisplaylinkSupported = false;
 
 			// Synchronize buffer swaps with vertical refresh rate
-			OpenGLContext.SwapInterval = SwapInterval;
+			ActualOpenGLContext.SwapInterval = SwapInterval;
 
 			if (displayLinkSupported)
 				SetupDisplayLink ();
@@ -495,10 +499,10 @@ namespace OpenTK.Platform.MacOS
 			// This method will be called on both the main thread (through DrawRect:) and a secondary thread (through the display link rendering loop)
 			// Also, when resizing the view, Reshape is called on the main thread, but we may be drawing on a secondary thread
 			// Add a mutex around to avoid the threads accessing the context simultaneously 
-			OpenGLContext.CGLContext.Lock ();
+			ActualOpenGLContext.CGLContext.Lock ();
 
 			// Make sure we draw to the right context
-			OpenGLContext.MakeCurrentContext ();
+			ActualOpenGLContext.MakeCurrentContext ();
 
 			var curUpdateTime = DateTime.Now;
 			if (prevUpdateTime.Ticks == 0) {
@@ -526,9 +530,9 @@ namespace OpenTK.Platform.MacOS
 			OnRenderFrame (renderEventArgs);
 			prevRenderTime = curRenderTime;
 
-			OpenGLContext.FlushBuffer ();
+			ActualOpenGLContext.FlushBuffer ();
 
-			OpenGLContext.CGLContext.Unlock ();
+			ActualOpenGLContext.CGLContext.Unlock ();
 		}
 
 		private void SetupDisplayLink ()
@@ -543,7 +547,7 @@ namespace OpenTK.Platform.MacOS
 			displayLink.SetOutputCallback (MyDisplayLinkOutputCallback);
 
 			// Set the display link for the current renderer
-			CGLContext cglContext = OpenGLContext.CGLContext;
+			CGLContext cglContext = ActualOpenGLContext.CGLContext;
 			CGLPixelFormat cglPixelFormat = PixelFormat.CGLPixelFormat;
 			displayLink.SetCurrentDisplay (cglContext, cglPixelFormat);
 
