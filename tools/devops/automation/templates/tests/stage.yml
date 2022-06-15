@@ -151,6 +151,7 @@ stages:
     steps:
     - template: ../common/upload-vsdrops.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         testPrefix: ${{ parameters.testPrefix }}
         provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
@@ -165,6 +166,8 @@ stages:
         clean: all
     steps:
     - template: ../common/upload-vsts-tests.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
       parameters:
         testPrefix: ${{ parameters.testPrefix }}
         provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
@@ -189,6 +192,7 @@ stages:
     steps:
     - template: ../common/publish-html.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         testPrefix: ${{ parameters.testPrefix }}

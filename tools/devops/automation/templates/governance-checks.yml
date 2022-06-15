@@ -6,6 +6,8 @@ parameters:
 steps:
 
 - template: ./common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - task: CredScan@3
   displayName: "Run CredScan"

@@ -28,6 +28,9 @@ parameters:
   type: string 
   default: 'False'
 
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: checkout.yml
