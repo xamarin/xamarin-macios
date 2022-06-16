@@ -15,6 +15,7 @@ class TestResults {
         [string] $label,
         [string] $context
     ) {
+        Write-Debug "TestsResuts::new($path, $status, $label, $context)"
         $this.ResultsPath = $path
         $this.TestsJobStatus = $status
         $this.Label = $label
@@ -24,10 +25,15 @@ class TestResults {
     }
 
     [bool] IsSuccess() {
+        Write-Debug "\tIsSuccess()"
         if ($this.NotTestSummaryLabels.Contains($this.Label)) {
+            Write-Debug "\t\tFound special label $($this.Label), checking only status."
             return $this.TestsJobStatus -eq "Succeeded"
         } else {
-            return (Test-Path $this.ResultsPath -PathType Leaf) -and ($this.TestsJobStatus -eq "Succeeded")
+            $hasResultsPath = Test-Path $this.ResultsPath -PathType Leaf
+            Write-Debug "\t\tPath $($this.ResultsPath) exits? $hasResultsPath"
+            Write-Debug "\t\tTest status: $($this.TestsJobStatus)"
+            return $hasResultsPath -and ($this.TestsJobStatus -eq "Succeeded")
         }
     }
 
@@ -73,11 +79,15 @@ class TestResults {
     }
 
     [object] GetPassedTests() {
+        Write-Debug "GetPassedTests()"
         if ($this.Passed -eq -1 -or $this.Failed -eq -1) {
+            Write-Debug "\tCalcualte results."
             # the result file is diff if the result was a success or not
             if ($this.IsSuccess()) {
+                Write-Debug "IsSuccess() => TRUE"
                 $this.Failed = 0
                 if ($this.NotTestSummaryLabels.Contains($this.Label)) {
+                    Write-Debug "\t\tFound special label $($this.Label), adding a single pass."
                     $this.Passed = 1
                 } else {
                     # in this case, the file contains a single line with the number and the following
@@ -86,19 +96,27 @@ class TestResults {
                     $regexp = "(# :tada: All )(?<passed>[0-9]+)( tests passed :tada:)"
                     $content = Get-Content $this.ResultsPath | Select -First 1
                     if ($content -eq "# No tests selected.") {
+                        Write-Debug "\t\tNo tests selected"
                         $this.Passed = 0
                     } elseif ($content -match $regexp) {
+                        Write-Debug "Did match regexp"
                         $this.Passed = $matches.passed -as [int]
+                        Write-Debug "Passed tests count: $($this.Passed)"
                     } else {
                         throw "Unknown result pattern '$content'"
                     }
                 }
             } else {
+                Write-Debug "IsSuccess() => FALSE"
+                $fileIsPresent = Test-Path $this.ResultsPath -PathType Leaf
                 if ($this.TestsJobStatus -eq "" -or (Test-Path $this.ResultsPath -PathType Leaf)) {
-                    $this.Passed = -1
-                    $this.Failed = -1
+                    Write-Debug "\t\tTests job status: $($this.TestsJobStatus)"
+                    Write-Debug "\t\tNot Found results path: $fileIsPresent"
+                    $this.Passed = -2
+                    $this.Failed = -2
                 } else {
                     if ($this.NotTestSummaryLabels.Contains($this.Label)) {
+                        Write-Debug "\t\tFound special label $($this.Label), adding a single fail."
                         $this.Passed = 0
                         $this.Failed = 1
                     } else {
@@ -132,8 +150,10 @@ class TestResults {
                             # <summary>4 tests failed, 144 tests passed.</summary>
                             $regexp = "(\<summary\>)(?<failed>[0-9]+)( tests failed, )(?<passed>[0-9]+)( tests passed\.\</summary\>)"
                             if ($content -match $regexp) {
+                                Write-Debug "\t\tMatched regexpt."
                                 $this.Passed = $matches.passed -as [int]
                                 $this.Failed = $matches.failed -as [int]
+                                Write-Debug "\t\tPassed: $($this.Passed) Failed: $($this.Failed)"
                             } else {
                                 throw "Unknown result pattern '$content'"
                             }
@@ -196,7 +216,7 @@ class ParallelTestsResults {
         foreach($r in $this.Results)
         {
             $result = $r.GetPassedTests()
-            if ($result.Passed -eq -1 -or $result.Failed -eq -1) {
+            if ($result.Passed -eq -2 -or $result.Failed -eq -2) {
                 $crashedTests += 1
             } else {
                 $passedTests += $result.Passed

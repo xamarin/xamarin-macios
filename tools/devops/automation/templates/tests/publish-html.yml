@@ -69,7 +69,7 @@ steps:
       $emoji = ":fire:"
     }
 
-    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
+    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH -Debug
     $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults)
   env:
     LABELS: ${{ join(';', parameters.simTestsConfigurations) }}
