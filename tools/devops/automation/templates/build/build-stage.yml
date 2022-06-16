@@ -33,6 +33,9 @@ parameters:
   type: string
   default: automatic
 
+- name: signAndNotarize
+  type: boolean
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -121,6 +124,7 @@ jobs:
   steps:
   - template: build-pkgs.yml
     parameters:
+      signAndNotarize: ${{ parameters.signAndNotarize }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

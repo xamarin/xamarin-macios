@@ -324,6 +324,7 @@ stages:
   jobs:
     - template: templates/build/build-stage.yml
       parameters:
+        signAndNotarize: false
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
         runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
