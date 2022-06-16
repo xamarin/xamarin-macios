@@ -51,6 +51,7 @@ steps:
     $testResults = [System.Collections.ArrayList]@()
     foreach ($label in $labels) {
       $label = $label.Replace("-", "_")
+      $status = Get-Item "Env:TESTS_JOBSTATUS_$($label.ToUpper())"
       $testSummaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.testPrefix }}$label\TestSummary.md"
 
       Write-Host "Test results for $label $($status.Value)"
