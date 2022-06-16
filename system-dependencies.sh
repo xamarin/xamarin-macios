@@ -281,38 +281,6 @@ function install_mono () {
 	rm -f $MONO_PKG
 }
 
-function install_visual_studio () {
-	local VS="/Applications/Visual Studio.app"
-	local VS_URL=`grep MIN_VISUAL_STUDIO_URL= Make.config | sed 's/.*=//'`
-	local MIN_VISUAL_STUDIO_VERSION=`grep MIN_VISUAL_STUDIO_VERSION= Make.config | sed 's/.*=//'`
-
-	if test -z $VS_URL; then
-		fail "No MIN_VISUAL_STUDIO_URL set in Make.config, cannot provision"
-		return
-	fi
-
-	mkdir -p $PROVISION_DOWNLOAD_DIR
-	log "Downloading Visual Studio $MIN_VISUAL_STUDIO_VERSION from $VS_URL to $PROVISION_DOWNLOAD_DIR..."
-	local VS_NAME=`basename $VS_URL`
-	local VS_DMG=$PROVISION_DOWNLOAD_DIR/$VS_NAME
-	curl -L $VS_URL > $VS_DMG
-
-	local VS_MOUNTPOINT=$PROVISION_DOWNLOAD_DIR/$VS_NAME-mount
-	log "Mounting $VS_DMG into $VS_MOUNTPOINT..."
-	hdiutil attach $VS_DMG -mountpoint $VS_MOUNTPOINT -quiet -nobrowse
-	log "Removing previous Visual Studio from $VS"
-	$SUDO rm -Rf "$VS"
-	log "Installing Visual Studio $MIN_VISUAL_STUDIO_VERSION to $VS..."
-	$SUDO cp -R "$VS_MOUNTPOINT/Visual Studio.app" /Applications
-	log "Unmounting $VS_DMG..."
-	hdiutil detach $VS_MOUNTPOINT -quiet
-
-	VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
-	ok "Visual Studio $VS_ACTUAL_VERSION provisioned"
-
-	rm -f $VS_DMG
-}
-
 function run_xcode_first_launch ()
 {
 	local XCODE_VERSION="$1"
@@ -552,10 +520,10 @@ function check_xcode () {
 
 	local IOS_SDK_VERSION MACOS_SDK_VERSION WATCH_SDK_VERSION TVOS_SDK_VERSION
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
-	IOS_SDK_VERSION=$(grep ^IOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
-	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
-	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
-	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
+	IOS_SDK_VERSION=$(grep ^IOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
+	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
+	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
+	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator${IOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
@@ -724,51 +692,6 @@ IFS='
 	fi
 
 IFS=$IFS_tmp
-}
-function check_visual_studio () {
-	if ! test -z $IGNORE_VISUAL_STUDIO; then return; fi
-
-	VS="/Applications/Visual Studio.app"
-	local VS_URL=`grep MIN_VISUAL_STUDIO_URL= Make.config | sed 's/.*=//'`
-	if ! test -d "$VS"; then
-		if ! test -z $PROVISION_VS; then
-			install_visual_studio
-		else
-			fail "You must install Visual Studio, from http://www.monodevelop.com/download/"
-		fi
-		return
-	fi
-
-	MIN_VISUAL_STUDIO_VERSION=`grep MIN_VISUAL_STUDIO_VERSION= Make.config | sed 's/.*=//'`
-	MAX_VISUAL_STUDIO_VERSION=`grep MAX_VISUAL_STUDIO_VERSION= Make.config | sed 's/.*=//'`
-	VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
-	if ! is_at_least_version $VS_ACTUAL_VERSION $MIN_VISUAL_STUDIO_VERSION; then
-		if ! test -z $PROVISION_VS; then
-			install_visual_studio
-			VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
-		else
-			fail "You must have at least Visual Studio $MIN_VISUAL_STUDIO_VERSION (found $VS_ACTUAL_VERSION). Download URL: $VS_URL"
-		fi
-		return
-	elif [[ "$VS_ACTUAL_VERSION" == "$MAX_VISUAL_STUDIO_VERSION" ]]; then
-		: # this is ok
-	elif is_at_least_version $VS_ACTUAL_VERSION $MAX_VISUAL_STUDIO_VERSION; then
-		if ! test -z $PROVISION_VS; then
-			install_visual_studio
-			VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
-		else
-			fail "Your Visual Studio version is too new, max version is $MAX_VISUAL_STUDIO_VERSION, found $VS_ACTUAL_VERSION."
-			fail "You may edit Make.config and change MAX_VISUAL_STUDIO_VERSION to your actual version to continue the"
-			fail "build (unless you're on a release branch). Once the build completes successfully, please"
-			fail "commit the new MAX_VISUAL_STUDIO_VERSION value."
-			fail "Alternatively you can download an older version from:"
-			fail "    $VS_URL,"
-			fail "or you can ${COLOR_MAGENTA}export IGNORE_VISUAL_STUDIO=1${COLOR_RED} to skip this check."
-		fi
-		return
-	fi
-
-	ok "Found Visual Studio $VS_ACTUAL_VERSION (at least $MIN_VISUAL_STUDIO_VERSION and not more than $MAX_VISUAL_STUDIO_VERSION is required)"
 }
 
 function check_osx_version () {
@@ -1068,7 +991,6 @@ check_homebrew
 check_autotools
 check_python3
 check_mono
-check_visual_studio
 check_cmake
 check_7z
 check_objective_sharpie
