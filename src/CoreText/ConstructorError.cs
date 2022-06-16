@@ -24,6 +24,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -35,12 +37,6 @@ using CoreGraphics;
 namespace CoreText {
 
 	static class ConstructorError {
-
-		public static Exception ArgumentNull (object self, string argument)
-		{
-			GC.SuppressFinalize (self);
-			return new ArgumentNullException (argument);
-		}
 
 		public static Exception Unknown (object self)
 		{
