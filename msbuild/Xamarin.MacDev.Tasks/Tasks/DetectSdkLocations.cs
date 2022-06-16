@@ -1,16 +1,16 @@
 using System;
+
 using Microsoft.Build.Framework;
+
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
-{
-	public class DetectSdkLocations : DetectSdkLocationsTaskBase, ICancelableTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class DetectSdkLocations : DetectSdkLocationsCoreTaskBase, ICancelableTask {
 		const string SdkVersionDefaultValue = "default";
 
 		public override bool Execute ()
 		{
-			if (!ShouldExecuteRemotely())
+			if (!ShouldExecuteRemotely ())
 				return base.Execute ();
 
 			// The new targets do not support the "default" value for the MtouchSdkVersion
