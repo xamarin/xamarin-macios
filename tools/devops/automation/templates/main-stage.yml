@@ -91,6 +91,8 @@ stages:
             vmImage: windows-latest
           steps:
           - template: loc-translations.yml
+            parameters:
+              isPR: ${{ parameters.isPR }}
 
 
 - ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
