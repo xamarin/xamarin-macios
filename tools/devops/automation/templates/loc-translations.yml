@@ -1,3 +1,8 @@
+parameters:
+
+- name: isPR
+  type: boolean
+
 steps:
 
 - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
@@ -5,7 +10,7 @@ steps:
   submodules: recursive
   path: s/xamarin-macios
 
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+- ${{ if parameters.isPR }}:
   - pwsh: |
       git config remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
       git fetch origin
