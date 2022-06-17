@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+using Xamarin.Utils;
+
 namespace Xamarin.Linker {
 
 	public class ExtractBindingLibrariesStep : ConfigurationAwareStep {
@@ -71,6 +73,15 @@ namespace Xamarin.Linker {
 						continue;
 
 					var executable = Path.Combine (fwk, Path.GetFileNameWithoutExtension (fwk));
+
+					// Store a relative path if possible, it makes things easier with XVS.
+					if (Path.IsPathRooted (executable)) {
+						var resolvedExecutable = PathUtils.ResolveSymbolicLinks (executable);
+						if (resolvedExecutable.StartsWith (Environment.CurrentDirectory, StringComparison.Ordinal)) {
+							resolvedExecutable = resolvedExecutable.Substring (Environment.CurrentDirectory.Length).TrimStart ('/').TrimStart ('\\');
+							executable = resolvedExecutable;
+						}
+					}
 
 					var item = new MSBuildItem {
 						Include = executable,

@@ -7,6 +7,7 @@ using System.Linq;
 using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	// This task takes an itemgroup of frameworks, and filters out frameworks that aren't dynamic libraries.
@@ -20,10 +21,15 @@ namespace Xamarin.MacDev.Tasks {
 				var list = FrameworkToPublish.ToList ();
 				for (var i = list.Count - 1; i >= 0; i--) {
 					var item = list [i];
-					var frameworkExecutablePath = item.ItemSpec;
+					var frameworkExecutablePath = PathUtils.ConvertToMacPath (item.ItemSpec);
 					try {
 						if (frameworkExecutablePath.EndsWith (".framework", StringComparison.OrdinalIgnoreCase) && Directory.Exists (frameworkExecutablePath)) {
 							frameworkExecutablePath = Path.Combine (frameworkExecutablePath, Path.GetFileNameWithoutExtension (frameworkExecutablePath));
+						}
+
+						if (!File.Exists (frameworkExecutablePath)) {
+							Log.LogError (158, frameworkExecutablePath, MSBStrings.E0158 /* The file '{0}' does not exist. */, frameworkExecutablePath);
+							continue;
 						}
 
 						if (MachO.IsDynamicFramework (frameworkExecutablePath))
