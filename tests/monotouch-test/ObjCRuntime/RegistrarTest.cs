@@ -78,6 +78,36 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+		public void NSRangeOutParameter ()
+		{
+			using var obj = new NSRangeOutParameterClass ();
+			var a = new _LongNSRange (-1, -2);
+			var c = new _LongNSRange (-5, -6);
+			Messaging.void_objc_msgSend_NSRange_out_NSRange_ref_NSRange (obj.Handle, Selector.GetHandle ("passRange:getRange:refRange:"), a, out var b, ref c);
+			Assert.AreEqual (a.Location, (long) (-1), "post a Location");
+			Assert.AreEqual (a.Length, (long) (-2), "post a Length");
+			Assert.AreEqual (b.Location, (long) 3, "post b Location");
+			Assert.AreEqual (b.Length, (long) 4, "post b Length");
+			Assert.AreEqual (c.Location, (long) 5, "post c Location");
+			Assert.AreEqual (c.Length, (long) 6, "post c Length");
+		}
+
+		class NSRangeOutParameterClass : NSObject {
+			[Export ("passRange:getRange:refRange:")]
+			public void DoIt (_LongNSRange a, out _LongNSRange b, ref _LongNSRange c)
+			{
+				Assert.AreEqual (a.Location, (long) (-1), "a Location");
+				Assert.AreEqual (a.Length, (long) (-2), "a Length");
+				Assert.AreEqual (c.Location, (long) (-5), "c Location");
+				Assert.AreEqual (c.Length, (long) (-6), "c Length");
+
+				a = new _LongNSRange (1, 2);
+				b = new _LongNSRange (3, 4);
+				c = new _LongNSRange (5, 6);
+			}
+		}
+
+		[Test]
 		public void RegistrarRemoval ()
 		{
 			// define set by xharness when creating test variations.
@@ -5426,7 +5456,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 #endif // !__WATCHOS__ && !__TVOS__
-
 	}
 
 #if !__WATCHOS__

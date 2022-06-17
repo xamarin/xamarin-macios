@@ -177,6 +177,8 @@ namespace Introspection {
 				break;
 #endif
 			case "UIAccessibilityElement":
+				if (protocolName == "UIResponderStandardEditActions" && !TestRuntime.CheckXcodeVersion (11, 0))
+					return true;
 				if (protocolName == "UIUserActivityRestoring")
 					return true;
 				break;
@@ -205,6 +207,7 @@ namespace Introspection {
 			case "UIStepper":
 			case "UISwitch":
 			case "ASAuthorizationAppleIdButton":
+			case "INUIAddVoiceShortcutButton":
 				if (protocolName == "UIContextMenuInteractionDelegate")
 					return !TestRuntime.CheckXcodeVersion (12, 0);
 				break;

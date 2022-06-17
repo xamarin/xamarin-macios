@@ -5,8 +5,11 @@ parameters:
   type: string
   default: 'Real'
 
+- name: isPR
+  type: boolean
+
 - name: condition
-  default: and(succeeded(), eq(variables['IsPRBuild'], 'False'))
+  default: succeeded()
 
 steps:
 
@@ -27,28 +30,30 @@ steps:
   clean: true
 
 # the ddsign plugin needs this version or it will crash and will make the sign step fail
-- task: UseDotNet@2
-  inputs:
-    packageType: sdk
-    version: 3.x
-  displayName: 'Install .NET Core SDK 3.x needed for ESRP'
 
-- task: MicroBuildSigningPlugin@3
-  displayName: 'Install Signing Plugin'
-  inputs:
-    signType: '${{ parameters.signatureType }}'
-    azureSubscription: 'MicroBuild Signing Task (DevDiv)'
-    zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
-  env:
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  condition: ${{ parameters.condition }}
+- ${{ if eq(parameters.isPR, false) }}:
+  - task: UseDotNet@2
+    inputs:
+      packageType: sdk
+      version: 3.x
+    displayName: 'Install .NET Core SDK 3.x needed for ESRP'
 
-- task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3
-  displayName: 'Install Notarizing Plugin'
-  inputs:
-    signType: 'Real'  # test is not present for mac..
-    azureSubscription: 'MicroBuild Signing Task (DevDiv)'
-    zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
-  env:
+  - task: MicroBuildSigningPlugin@3
+    displayName: 'Install Signing Plugin'
+    inputs:
+      signType: '${{ parameters.signatureType }}'
+      azureSubscription: $(MicrobuildConnector)
+      zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
+    env:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  condition: ${{ parameters.condition }}
+    condition: ${{ parameters.condition }}
+
+  - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3
+    displayName: 'Install Notarizing Plugin'
+    inputs:
+      signType: 'Real'  # test is not present for mac..
+      azureSubscription: $(MicrobuildConnector)
+      zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
+    env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+    condition: ${{ parameters.condition }}

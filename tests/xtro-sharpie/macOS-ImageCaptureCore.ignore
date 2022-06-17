@@ -1,15 +1,3 @@
-
-# Initial result from new rule extra-null-allowed
-!extra-null-allowed! 'System.Void ImageCaptureCore.ICCameraDevice::RequestDownloadFile(ImageCaptureCore.ICCameraFile,Foundation.NSDictionary`2<Foundation.NSString,Foundation.NSObject>,ImageCaptureCore.IICCameraDeviceDownloadDelegate,ObjCRuntime.Selector,System.IntPtr)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void ImageCaptureCore.ICCameraDevice::RequestUploadFile(Foundation.NSUrl,Foundation.NSDictionary`2<Foundation.NSString,Foundation.NSObject>,Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' has a extraneous [NullAllowed] on parameter #1
-!extra-null-allowed! 'System.Void ImageCaptureCore.ICCameraDeviceDownloadDelegate::DidDownloadFile(ImageCaptureCore.ICCameraFile,Foundation.NSError,Foundation.NSDictionary`2<Foundation.NSString,Foundation.NSObject>,System.IntPtr)' has a extraneous [NullAllowed] on parameter #2
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'ImageCaptureCore.ICCameraDevice ImageCaptureCore.ICCameraItem::get_Device()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ImageCaptureCore.ICCameraFolder ImageCaptureCore.ICCameraItem::get_ParentFolder()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ImageCaptureCore.ICCameraItem[] ImageCaptureCore.ICCameraFile::get_SidecarFiles()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'ImageCaptureCore.ICCameraItem[] ImageCaptureCore.ICCameraFolder::get_Contents()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String ImageCaptureCore.ICCameraItem::get_Name()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String ImageCaptureCore.ICCameraItem::get_Uti()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String ImageCaptureCore.ICDevice::get_ModuleVersion()' is missing an [NullAllowed] on return type
+# Xcode headers say `NSData* _Nullable` the but the web docs say `outData:(NSData *)data`
+# since this is an "out" variable that is NOT `NSData **`, let's leave this one here for now.
 !missing-null-allowed! 'System.Void ImageCaptureCore.ICCameraDevice::RequestSendPtpCommand(Foundation.NSData,Foundation.NSData,Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' is missing an [NullAllowed] on parameter #1

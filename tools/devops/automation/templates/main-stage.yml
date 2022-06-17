@@ -1,0 +1,263 @@
+parameters:
+
+- name: provisionatorChannel
+  type: string
+  default: 'latest'
+
+- name: pool
+  type: string
+  default: automatic
+  values:
+  - pr
+  - ci
+  - automatic
+
+- name: runTests
+  type: boolean
+  default: true
+
+- name: runDeviceTests
+  type: boolean
+  default: false
+
+- name: runOldMacOSTests
+  type: boolean
+  default: true
+
+- name: runWindowsIntegration
+  type: boolean
+  default: true
+
+- name: runGovernanceTests
+  type: boolean
+  default: true
+
+- name: runSamples
+  type: boolean
+  default: false
+  
+- name: enableDotnet
+  type: boolean
+  default: true
+
+- name: enableAPIDiff
+  type: boolean
+  default: true
+
+- name: forceInsertion
+  type: boolean
+  default: false 
+
+- name: skipESRP
+  type: boolean
+  default: false # only to be used when testing the CI and we do not need a signed pkg
+
+- name: isPR
+  type: boolean
+
+- name: simTestsConfigurations
+  type: object
+
+- name: deviceTestsConfigurations
+  type: object
+
+- name: macTestsConfigurations
+  type: object
+
+- name: signingSetupSteps
+  type: stepList
+  default: []
+
+stages:
+
+- ${{ if eq(parameters.runGovernanceTests, true) }}:
+  - stage: governance_checks
+    displayName: 'Governance Checks'
+    dependsOn: []
+    jobs:
+      - job: governance
+        displayName: 'Governance Checks'
+        pool:
+          vmImage: windows-latest
+        steps:
+        - template: governance-checks.yml
+
+      - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+        - job: translations
+          displayName: 'Loc translations'
+          pool:
+            vmImage: windows-latest
+          steps:
+          - template: loc-translations.yml
+            parameters:
+              isPR: ${{ parameters.isPR }}
+
+
+- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+  - stage: clean
+    displayName: 'Clean up'
+    dependsOn: []
+    jobs:
+      - job:
+        displayName: 'Clean comments'
+        pool:
+          vmImage: windows-latest
+        steps:
+          - template: ./common/clean.yml
+
+
+- stage: build_packages
+  displayName: 'Build'
+  dependsOn: []
+  jobs:
+    - template: ./build/build-stage.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+        runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
+        runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        gitHubToken: ${{ variables['GitHub.Token'] }}
+        xqaCertPass: $(xqa--certificates--password)
+        enableDotnet: ${{ parameters.enableDotnet }}
+        skipESRP: ${{ parameters.skipESRP }}
+        pool: ${{ parameters.pool }}
+
+- stage: prepare_packages
+  displayName: 'Prepare packages'
+  dependsOn:
+  - build_packages
+  jobs:
+    - template: ./sign-and-notarized/prepare-pkg-stage.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        signingSetupSteps: ${{ parameters.signingSetupSteps }}
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        enableDotnet: ${{ parameters.enableDotnet }}
+        skipESRP: ${{ parameters.skipESRP }}
+
+- ${{ if eq(parameters.enableAPIDiff, true) }}:
+  - stage: generate_api_diff
+    displayName: 'API diff'
+    dependsOn: []
+    jobs:
+      - template: ./build/api-diff-stage.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+          keyringPass: $(pass--lab--mac--builder--keychain)
+          gitHubToken: ${{ variables['GitHub.Token'] }}
+          xqaCertPass: $(xqa--certificates--password)
+          enableDotnet: ${{ parameters.enableDotnet }}
+          pool: ${{ parameters.pool }}
+
+# .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
+- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(parameters.forceInsertion, true))) }}:
+  - template: ./release/vs-insertion-prep.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
+
+# Test stages
+
+# always run simulator tests
+- ${{ each config in parameters.simTestsConfigurations }}:
+  - template: ./tests/stage.yml
+    parameters:
+      testPrefix: ${{ config.testPrefix }} 
+      stageName: ${{ config.stageName }} 
+      displayName: ${{ config.displayName }} 
+      testPool: '' # use the default
+      useXamarinStorage: ${{ config.useXamarinStorage }} 
+      testsLabels: ${{ config.testsLabels }}
+      statusContext: ${{ config.statusContext }} 
+      ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+        makeTarget: 'wrench-jenkins' # override when we are running on CI or manually to run all tests
+      ${{ else }}:
+        makeTarget: ${{ config.makeTarget }} 
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      gitHubToken: ${{ variables['GitHub.Token'] }}
+      xqaCertPass: $(xqa--certificates--password)
+      enableDotnet: ${{ parameters.enableDotnet }}
+      condition: ${{ parameters.runTests }}
+
+# devices are optional and will only be ran when we set them OR in CI
+- ${{ if eq(parameters.runDeviceTests, true) }}:
+  - ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.Reason'], 'IndividualCI'), eq(variables['Build.Reason'], 'Manual'))) }}:
+    - ${{ each config in parameters.deviceTestsConfigurations }}:
+      - template: ./tests/stage.yml
+        parameters:
+          testPrefix: ${{ config.testPrefix }} 
+          stageName: ${{ config.stageName }} 
+          displayName: ${{ config.displayName }} 
+          testPool: ${{ config.testPool }} 
+          useXamarinStorage: ${{ config.useXamarinStorage }} 
+          testsLabels: ${{ config.testsLabels }} 
+          statusContext: ${{ config.statusContext }} 
+          extraBotDemands: ${{ config.extraBotDemands }} 
+          makeTarget: ${{ config.makeTarget }} 
+          vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+          keyringPass: $(pass-XamarinQA-bot-login) 
+          gitHubToken: ${{ variables['GitHub.Token'] }}
+          xqaCertPass: $(xqa--certificates--password)
+          enableDotnet: ${{ parameters.enableDotnet }}
+          condition: ${{ parameters.runDeviceTests }}
+          parseLabels: false
+
+- ${{ if eq(parameters.runOldMacOSTests, true) }}:
+  - ${{ each config in parameters.macTestsConfigurations }}:
+    - template: ./mac/stage.yml
+      parameters:
+        stageName: ${{ config.stageName }}
+        displayName: ${{ config.displayName }}
+        macPool: ${{ config.macPool }}
+        useImage: ${{ config.useImage }}
+        statusContext: ${{ config.statusContext }}
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        enableDotnet: ${{ parameters.enableDotnet }}
+        demands: ${{ config.demands }}
+
+- ${{ if eq(parameters.runWindowsIntegration, true) }}:
+  - template: ./windows/stage.yml
+    parameters:
+      stageName: windows_integration
+      displayName: 'Windows Integration Tests'
+      pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
+      statusContext: 'Windows Integration Tests'
+
+# iOS 32b tests are slow and do not have many machines, for that reason we are going just to run them in the Schedule builds.
+# This means we are going to get the translations AND the iOS 32b on those builds.
+#
+- ${{ if eq(variables['Build.Reason'], 'Schedule') }}: 
+  - template: ./tests/stage.yml
+    parameters:
+      testPrefix: 'iOS32b'
+      stageName: 'ios32b_device'
+      displayName: 'iOS32b Device Tests'
+      testPool: 'VSEng-Xamarin-QA'
+      useXamarinStorage: False
+      testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
+      statusContext: 'VSTS: device tests iOS32b'
+      extraBotDemands: ['xismoke-32']
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      gitHubToken: ${{ variables['GitHub.Token'] }}
+      xqaCertPass: $(xqa--certificates--password)
+      enableDotnet: ${{ parameters.enableDotnet }}
+
+- ${{ if eq(parameters.runSamples, true) }}:
+  # TODO: Not the real step
+  - stage: sample_testing
+    displayName: 'Sample testing'
+    dependsOn:
+    - build_packages
+    condition: and(succeeded(), contains (stageDependencies.build_packages.build.outputs['configuration.RunSampleTests'], 'True'))
+    jobs:
+    - job: sample_testing
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+        # TODO: do parse labels
+        - bash: |
+            echo "Samples!"
+          displayName: 'Sample testing'

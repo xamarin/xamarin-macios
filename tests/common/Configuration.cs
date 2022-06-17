@@ -18,8 +18,6 @@ namespace Xamarin.Tests
 		public const string XI_ProductName = "MonoTouch";
 		public const string XM_ProductName = "Xamarin.Mac";
 
-		const string XS_PATH = "/Applications/Visual Studio.app/Contents/Resources";
-
 		static string mt_root;
 		static string ios_destdir;
 		static string mac_destdir;
@@ -613,12 +611,6 @@ namespace Xamarin.Tests
 			}
 		}
 
-		static string XSIphoneDir {
-			get {
-				return Path.Combine (XS_PATH, "lib", "monodevelop", "AddIns", "MonoDevelop.IPhone");
-			}
-		}
-
 		public static string BtouchPath {
 			get {
 				return Path.Combine (SdkBinDir, "btouch-native");
@@ -990,25 +982,6 @@ namespace Xamarin.Tests
 				File.WriteAllText (tgt, contents);
 				File.Delete (file);
 			}
-		}
-
-		public static string [] CopyDotNetSupportingFiles (params string[] targetDirectories)
-		{
-			var srcDirectory = Path.Combine (SourceRoot, "tests", "dotnet");
-			var files = new string [] { "global.json", "NuGet.config" };
-			var targets = new List<string> ();
-			for (var i = 0; i < files.Length; i++) {
-				var fn = files [i];
-				var src = Path.Combine (srcDirectory, fn);
-				if (!File.Exists (src))
-					ExecutionHelper.Execute ("make", new [] { "-C", srcDirectory, fn });
-				foreach (var targetDirectory in targetDirectories) {
-					var target = Path.Combine (targetDirectory, fn);
-					File.Copy (src, target, true);
-					targets.Add (target);
-				}
-			}
-			return targets.ToArray ();
 		}
 
 		public static Dictionary<string, string> GetBuildEnvironment (ApplePlatform platform)

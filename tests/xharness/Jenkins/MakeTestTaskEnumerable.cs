@@ -25,7 +25,7 @@ namespace Xharness.Jenkins {
 				TestName = "MMP Regression Tests",
 				Target = "all", // -j" + Environment.ProcessorCount,
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "mmp-regression"),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Mmp) || !jenkins.TestSelection.IsEnabled (TestLabel.Mac),
+				Ignored = !jenkins.IncludeMmpTest || !jenkins.IncludeMac,
 				Timeout = TimeSpan.FromMinutes (30),
 				SupportsParallelExecution = false, // Already doing parallel execution by running "make -jX"
 			};
@@ -41,7 +41,7 @@ namespace Xharness.Jenkins {
 				TestName = "Mac Binding Projects",
 				Target = "all",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "mac-binding-project"),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.MacBindingProject) || !jenkins.TestSelection.IsEnabled (TestLabel.Mac),
+				Ignored = !jenkins.IncludeMacBindingProject || !jenkins.IncludeMac,
 				Timeout = TimeSpan.FromMinutes (15),
 			};
 			yield return runMacBindingProject;

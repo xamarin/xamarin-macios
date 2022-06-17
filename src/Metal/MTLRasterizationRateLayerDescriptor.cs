@@ -55,9 +55,9 @@ namespace Metal {
 #endif
 		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
 		{
-			if (horizontal == null)
+			if (horizontal is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (horizontal));
-			if (vertical == null)
+			if (vertical is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (vertical));
 			if (sampleCount.Width != horizontal.Length)
 				throw new ArgumentOutOfRangeException ("Horizontal length should be equal to the sampleCount.Width.");

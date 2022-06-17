@@ -18,7 +18,7 @@ public class Foo {
 	public nint Ident (nint e) => e;
 }
 ";
-			var output = await TestRunning.BuildLibrary (code, "NoName", dir);
+			await TestRunning.BuildLibrary (code, "NoName", dir);
 			var expectedOutputFile = Path.Combine (dir, "NoName.dll");
 
 			var module = ModuleDefinition.ReadModule (expectedOutputFile);
@@ -36,7 +36,7 @@ public class Foo {
 	public char Ident (char e) => e;
 }
 ";
-			var output = await TestRunning.BuildLibrary (code, "NoName", dir);
+			await TestRunning.BuildLibrary (code, "NoName", dir);
 			var expectedOutputFile = Path.Combine (dir, "NoName.dll");
 
 			var module = ModuleDefinition.ReadModule (expectedOutputFile);
