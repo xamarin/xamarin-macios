@@ -549,7 +549,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			// This is because the call to get_ClassHandle gets
 			// redirected by TryGetMappedMember
 			if (changes.Count > 0)
-				PatchClassHandleReference (body);
+				PatchHandleReferences (body);
 		}
 
 		Instruction ChangeTypeInstruction (Instruction instruction, TypeReference typeReference)
@@ -608,7 +608,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			return false;
 		}
 
-		void PatchClassHandleReference (MethodBody body)
+		void PatchHandleReferences (MethodBody body)
 		{
 			ILProcessor processor = body.GetILProcessor ();
 			for (int i = body.Instructions.Count - 1; i >= 0; i--) {
@@ -616,13 +616,19 @@ namespace Microsoft.MaciOS.Nnyeah {
 				if (!IsCallInstruction (instr))
 					continue;
 				var operandStr = instr.Operand.ToString ()!;
-				if (operandStr == "ObjCRuntime.NativeHandle Foundation.NSObject::get_ClassHandle()") {
+				if (IsHandleReference (operandStr)) {
 					var reference = ModuleToEdit.ImportReference (NativeHandleGetHandleReference);
 					processor.InsertAfter (instr, Instruction.Create (OpCodes.Call, reference));
 					Transformed?.Invoke (this, new TransformEventArgs (body.Method.DeclaringType.FullName,
 						body.Method.Name, operandStr, 1, 0));
 				}
 			}
+		}
+
+		bool IsHandleReference (string operandStr)
+		{
+			return operandStr == "ObjCRuntime.NativeHandle Foundation.NSObject::get_ClassHandle()" ||
+				operandStr == "ObjCRuntime.NativeHandle Foundation.NSObject::get_Handle()";
 		}
 
 		bool TryGetFieldTransform (Instruction instr, [NotNullWhen (returnValue: true)] out Transformation? result)

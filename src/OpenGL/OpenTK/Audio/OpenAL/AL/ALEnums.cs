@@ -7,6 +7,8 @@
  * http://www.OpenTK.net */
 #endregion
 
+#nullable enable
+
 #if OPENTK_DLL
 
 using System;

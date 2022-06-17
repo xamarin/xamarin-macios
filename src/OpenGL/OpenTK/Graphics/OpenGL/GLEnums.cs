@@ -23,6 +23,8 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if OPENTK_DLL
 
 using System;
