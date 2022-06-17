@@ -196,7 +196,7 @@ class ParallelTestsResults {
     [object] GetSuccessfulTests() {
         $successfulTests = [System.Collections.ArrayList]@()
         foreach ($result in $this.Results) {
-            if (-not $result.IsSuccess()) {
+            if ($result.IsSuccess()) {
                 $successfulTests.Add($result)
             }
         }
@@ -268,27 +268,42 @@ class ParallelTestsResults {
             # loop over all results and add the content
             foreach ($r in $failingTests)
             {
+                $stringBuilder.AppendLine("### :x: $($r.Label) tests")
+                $stringBuilder.AppendLine("")
                 # print diff messages if the tests crash or if the tests did indeed fail
                 # get the result, if -1, we had a crash, else we print the result
                 $result = $r.GetPassedTests()
-                if ($result.Passed -eq -1 -or $result.Failed -eq -1) {
+                if ($result.Passed -eq -2 -or $result.Failed -eq -2) {
                     $stringBuilder.AppendLine("* :fire: **$($r.Label)** tests failed catastrophically on $($r.Context) (no summary found).")
                 } else {
                     # create a detail per test result with the name of the test and will contain the exact summary
-                    $stringBuilder.AppendLine("* :x: <details><summary>$($r.Label) failed tests</summary>")
+                    stringBuilder.AppendLine("<summary>$($result.Failed) tests failed, $($result.Passed) tests passed.</summary>")
                     if (Test-Path -Path $r.ResultsPath -PathType Leaf) {
+                        stringBuilder.AppendLine("<details>")
+                        stringBuilder.AppendLine("")
+                        $foundTests = $false
                         foreach ($line in Get-Content -Path $r.ResultsPath)
                         {
-                            $stringBuilder.AppendLine(" $line") # the extra space is needed for the multiline list item
+                            if (-not $foundTests) {
+                                $foundTests = $line.Contains("## Failed tests")
+                            } ese {
+                                if (-not [string]::IsNullOrEmpty($line)) {
+                                    $stringBuilder.AppendLine("$line") # the extra space is needed for the multiline list item
+                                }
+                            }
                         }
+                        stringBuilder.AppendLine("</details>")
                     } else {
+                        stringBuilder.AppendLine("<details>")
                         $stringBuilder.AppendLine(" Test has no summaty file.")
+                        stringBuilder.AppendLine("</details>")
                     }
                     $stringBuilder.AppendLine(" </details>") # the extra space is needed for the multiline list item
                 }
             }
             $successfulTests = $this.GetSuccessfulTests()
             $stringBuilder.AppendLine("## Successes")
+            $stringBuilder.AppendLine("")
             foreach ($r in $successfulTests) {
                 $this.PrintSuccessMessage($r, $stringBuilder)
             }
