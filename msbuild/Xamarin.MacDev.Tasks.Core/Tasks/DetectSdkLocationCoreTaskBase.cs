@@ -73,8 +73,36 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		protected abstract string GetDefaultXamarinSdkRoot ();
-		protected abstract IAppleSdkVersion GetDefaultSdkVersion ();
+		string GetDefaultXamarinSdkRoot ()
+		{
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+			case ApplePlatform.MacCatalyst:
+				return Sdks.XamIOS.SdkDir;
+			case ApplePlatform.MacOSX:
+				return Sdks.XamMac.FrameworkDirectory;
+			default:
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+			}
+		}
+
+		IAppleSdkVersion GetDefaultSdkVersion ()
+		{
+			switch (Platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+			case ApplePlatform.MacCatalyst:
+				return AppleSdkVersion.UseDefault;
+			case ApplePlatform.MacOSX:
+				var v = CurrentSdk.GetInstalledSdkVersions (false);
+				return v.Count > 0 ? v [v.Count - 1] : AppleSdkVersion.UseDefault;
+			default:
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+			}
+		}
 
 		protected string GetEnvironmentVariableOverride ()
 		{
@@ -147,6 +175,10 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
+			AppleSdkSettings.Init ();
+
+			SetIsSimulator ();
+
 			// If XamarinSdkRoot is set, then make that override any other value, and in order to do so,
 			// set the corresponding environment variable accordingly.
 			if (!string.IsNullOrEmpty (XamarinSdkRoot))
@@ -157,6 +189,25 @@ namespace Xamarin.MacDev.Tasks {
 			EnsureXamarinSdkRoot ();
 
 			return !Log.HasLoggedErrors;
+		}
+
+		void SetIsSimulator ()
+		{
+			switch (Platform) {
+			case ApplePlatform.MacCatalyst:
+			case ApplePlatform.MacOSX:
+				return;
+			}
+
+			TargetArchitecture architectures;
+			if (string.IsNullOrEmpty (TargetArchitectures) || !Enum.TryParse (TargetArchitectures, out architectures))
+				architectures = TargetArchitecture.Default;
+
+			if (!string.IsNullOrEmpty (IsDotNetSimulatorBuild)) {
+				SdkIsSimulator = string.Equals (IsDotNetSimulatorBuild, "true", StringComparison.OrdinalIgnoreCase);
+			} else {
+				SdkIsSimulator = (architectures & (TargetArchitecture.i386 | TargetArchitecture.x86_64)) != 0;
+			}
 		}
 
 		protected bool EnsureAppleSdkRoot ()
