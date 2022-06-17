@@ -475,6 +475,36 @@ namespace Foundation {
 			if (!Runtime.DynamicRegistrationSupported)
 				return false;
 
+			// the linker/trimmer will remove the following code if the dynamic registrar is removed from the app
+			var classHandle = ClassHandle;
+			bool new_map = false;
+			lock (protocol_cache) {
+#if NET
+				ref var map = ref CollectionsMarshal.GetValueRefOrAddDefault (protocol_cache, classHandle, out var exists);
+				if (!exists)
+					map = new ();
+				ref var result = ref CollectionsMarshal.GetValueRefOrAddDefault (map, protocol, out exists);
+				if (!exists)
+					result = DynamicConformsToProtocol (protocol);
+#else
+				if (!protocol_cache.TryGetValue (classHandle, out var map)) {
+					map = new ();
+					new_map = true;
+					protocol_cache.Add (classHandle, map);
+				}
+				if (new_map || !map.TryGetValue (protocol, out var result)) {
+					result = DynamicConformsToProtocol (protocol);
+					map.Add (protocol, result);
+				}
+#endif
+				return result;
+			}
+		}
+
+		static Dictionary<NativeHandle, Dictionary<NativeHandle, bool>> protocol_cache = new ();
+
+		bool DynamicConformsToProtocol (NativeHandle protocol)
+		{
 			object [] adoptedProtocols = GetType ().GetCustomAttributes (typeof (AdoptsAttribute), true);
 			foreach (AdoptsAttribute adopts in adoptedProtocols){
 				if (adopts.ProtocolHandle == protocol)
