@@ -114,6 +114,12 @@ namespace Introspection {
 				if (Mac.CheckSystemVersion (10, 15))
 					return true;
 				break;
+#if !NET
+			case "Chip":
+				// The Chip framework is not stable, it's been added and removed and added and removed a few times already, so just skip verifying the entire framework.
+				// This is legacy Xamarin only, because we removed the framework for .NET.
+				return true;
+#endif
 			}
 
 			return base.Skip (type);
