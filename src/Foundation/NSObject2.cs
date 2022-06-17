@@ -477,7 +477,6 @@ namespace Foundation {
 
 			// the linker/trimmer will remove the following code if the dynamic registrar is removed from the app
 			var classHandle = ClassHandle;
-			bool new_map = false;
 			lock (protocol_cache) {
 #if NET
 				ref var map = ref CollectionsMarshal.GetValueRefOrAddDefault (protocol_cache, classHandle, out var exists);
@@ -487,6 +486,7 @@ namespace Foundation {
 				if (!exists)
 					result = DynamicConformsToProtocol (protocol);
 #else
+				bool new_map = false;
 				if (!protocol_cache.TryGetValue (classHandle, out var map)) {
 					map = new ();
 					new_map = true;
