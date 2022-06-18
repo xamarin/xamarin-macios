@@ -235,7 +235,7 @@ class ParallelTestsResults {
     [void] PrintSuccessMessage($testResult, $stringBuilder) {
         $result = $testResult.GetPassedTests()
         if ($result.Passed -eq 0) {
-            $stringBuilder.Append("* :warning: $($testResult.Label): No tests selected.")
+            $stringBuilder.Append(":warning: $($testResult.Label): No tests selected.")
         } else {
             $stringBuilder.AppendLine(":white_check_mark: $($testResult.Label): All $($result.Passed) tests passed</summary>")
         }
@@ -274,7 +274,7 @@ class ParallelTestsResults {
                 # get the result, if -1, we had a crash, else we print the result
                 $result = $r.GetPassedTests()
                 if ($result.Passed -eq -2 -or $result.Failed -eq -2) {
-                    $stringBuilder.AppendLine("* :fire: **$($r.Label)** tests failed catastrophically on $($r.Context) (no summary found).")
+                    $stringBuilder.AppendLine(":fire: Failed catastrophically on $($r.Context) (no summary found).")
                 } else {
                     # create a detail per test result with the name of the test and will contain the exact summary
                     stringBuilder.AppendLine("<summary>$($result.Failed) tests failed, $($result.Passed) tests passed.</summary>")

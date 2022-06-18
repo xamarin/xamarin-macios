@@ -46,6 +46,7 @@ steps:
 - pwsh: |
     $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/$Env:DEVICE_PREFIX/;/tests/vsdrops_index.html"
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+    $DebugPreference = "Continue" # enable debug messages
 
     $labels = "$Env:LABELS".Split(";")
     $testResults = [System.Collections.ArrayList]@()
@@ -56,6 +57,9 @@ steps:
 
       Write-Host "Test results for $label $($status.Value)"
       Write-Host "Test summary path for $label $($testSummaryPath)"
+      if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
+        Write-Host "WARNING: Path is not present."
+      }
 
       $result = New-TestResults -Path $testSummaryPath -Status $status.Value -Label $label -Context "$Env:CONTEXT - $label"
       $testResults.Add($result)
