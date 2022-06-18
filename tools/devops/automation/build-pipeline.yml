@@ -76,9 +76,7 @@ parameters:
   type: object
   default: [
     'bcl',
-    'bgen',
     'cecil',
-    'docs',
     'dotnettests',
     'fsharp',
     'framework',
@@ -87,7 +85,6 @@ parameters:
     'install-source',
     'introspection',
     'linker',
-    'library-projects',
     'mac-binding-project',
     'mmp',
     'mononative',
