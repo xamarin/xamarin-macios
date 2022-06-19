@@ -25,14 +25,14 @@ class TestResults {
     }
 
     [bool] IsSuccess() {
-        Write-Debug "\tIsSuccess()"
+        Write-Debug "\t$($this.Label) - IsSuccess()"
         if ($this.NotTestSummaryLabels.Contains($this.Label)) {
-            Write-Debug "\t\tFound special label $($this.Label), checking only status."
+            Write-Debug "\t\t$($this.Label) - Found special label $($this.Label), checking only status."
             return $this.TestsJobStatus -eq "Succeeded"
         } else {
             $hasResultsPath = Test-Path $this.ResultsPath -PathType Leaf
-            Write-Debug "\t\tPath $($this.ResultsPath) exits? $hasResultsPath"
-            Write-Debug "\t\tTest status: $($this.TestsJobStatus)"
+            Write-Debug "\t\t$($this.Label) - Path $($this.ResultsPath) exits? $hasResultsPath"
+            Write-Debug "\t\t$($this.Label) - Test status: $($this.TestsJobStatus)"
             return $hasResultsPath -and ($this.TestsJobStatus -eq "Succeeded")
         }
     }
@@ -79,15 +79,15 @@ class TestResults {
     }
 
     [object] GetPassedTests() {
-        Write-Debug "GetPassedTests()"
+        Write-Debug "$($this.Label) - GetPassedTests()"
         if ($this.Passed -eq -1 -or $this.Failed -eq -1) {
-            Write-Debug "\tCalcualte results."
+            Write-Debug "\t$($this.Label) - Calcualte results."
             # the result file is diff if the result was a success or not
             if ($this.IsSuccess()) {
-                Write-Debug "IsSuccess() => TRUE"
+                Write-Debug "$($this.Label) - IsSuccess() => TRUE"
                 $this.Failed = 0
                 if ($this.NotTestSummaryLabels.Contains($this.Label)) {
-                    Write-Debug "\t\tFound special label $($this.Label), adding a single pass."
+                    Write-Debug "\t\t$($this.Label) - Found special label $($this.Label), adding a single pass."
                     $this.Passed = 1
                 } else {
                     # in this case, the file contains a single line with the number and the following
@@ -109,7 +109,7 @@ class TestResults {
             } else {
                 Write-Debug "IsSuccess() => FALSE"
                 $fileIsPresent = Test-Path $this.ResultsPath -PathType Leaf
-                if ($this.TestsJobStatus -eq "" -or (Test-Path $this.ResultsPath -PathType Leaf)) {
+                if ($this.TestsJobStatus -eq "" -or -not (Test-Path $this.ResultsPath -PathType Leaf)) {
                     Write-Debug "\t\tTests job status: $($this.TestsJobStatus)"
                     Write-Debug "\t\tNot Found results path: $fileIsPresent"
                     $this.Passed = -2
