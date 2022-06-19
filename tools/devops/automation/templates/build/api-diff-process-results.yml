@@ -2,9 +2,16 @@
 # * Uploads the results to VSDrops
 # * Publishes results (as a comment) to GitHub
 
+parameters:
+
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 # Download the change detection artifact
 - task: DownloadPipelineArtifact@2

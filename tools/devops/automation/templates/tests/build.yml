@@ -47,9 +47,14 @@ parameters:
   type: string
   default: 'vsts-device-tests' # target to be used to run the tests
 
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - template: ../common/setup.yml
   parameters:
