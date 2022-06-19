@@ -95,7 +95,7 @@ stages:
               isPR: ${{ parameters.isPR }}
 
 
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+- ${{ if parameters.isPR }}:
   - stage: clean
     displayName: 'Clean up'
     dependsOn: []
