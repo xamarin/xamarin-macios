@@ -28,9 +28,14 @@ parameters:
   type: string 
   default: 'False'
 
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - template: download-artifacts.yml 
   parameters:
