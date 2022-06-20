@@ -278,7 +278,10 @@ class GitHubComments {
             $hashUrl= "https://github.com/$($this.Org)/$($this.Repo)/commit/$($this.Hash)"
             $hashSource = " [CI build]"
         }
+        $ciComment = "[comment]: <> (This is a comment added by Azure DevOps)"
         $stringBuilder.AppendLine("Hash: [$($this.Hash)]($hashUrl) $hashSource")
+        $stringBuilder.AppendLine("")
+        $stringBuilder.AppendLine($ciComment)
     }
 
     [string] GetCommentUrl() {
