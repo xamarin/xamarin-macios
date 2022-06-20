@@ -60,7 +60,7 @@ steps:
       $converted = $inputContents + "`n`nUnable to convert markdown: $_`n`n"
     }
     $githubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH
-    $result = $githubComments.NewCommentFromMessage("", "", $converted)
+    $result = $githubComments.NewCommentFromMessage("API Diff", "", $converted)
   displayName: 'Publish GitHub comment for change detection'
   timeoutInMinutes: 10
   continueOnError: true # don't let any failures here stop us
