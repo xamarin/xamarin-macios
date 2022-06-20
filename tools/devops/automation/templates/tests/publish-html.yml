@@ -31,9 +31,14 @@ parameters:
 - name: simTestsConfigurations
   type: object
 
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - template: download-artifacts.yml
   parameters:

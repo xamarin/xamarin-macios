@@ -73,6 +73,9 @@ parameters:
 - name: simTestsConfigurations
   type: object
 
+- name: isPR
+  type: boolean
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -129,6 +132,7 @@ stages:
       steps:
       - template: build.yml
         parameters:
+          isPR: ${{ parameters.isPR }} 
           label: ${{ label }}
           testsLabels: '${{ parameters.testsLabels }},run-${{ label }}-tests'
           statusContext: '${{ parameters.statusContext }} - ${{ label }}'
@@ -160,6 +164,7 @@ stages:
     steps:
     - template: publish-html.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

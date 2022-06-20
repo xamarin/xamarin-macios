@@ -24,6 +24,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -140,7 +143,7 @@ namespace CoreText {
 		static void Deallocate (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return;
 
 			self.Dispose ();
@@ -150,7 +153,7 @@ namespace CoreText {
 			self.handle = new GCHandle ();
 		}
 
-		internal static CTRunDelegateOperations GetOperations (IntPtr refCon)
+		internal static CTRunDelegateOperations? GetOperations (IntPtr refCon)
 		{
 			GCHandle c = GCHandle.FromIntPtr (refCon);
 
@@ -161,7 +164,7 @@ namespace CoreText {
 		static nfloat GetAscent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return 0;
 			return (nfloat) self.GetAscent ();
 		}
@@ -170,7 +173,7 @@ namespace CoreText {
 		static nfloat GetDescent (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return 0;
 			return (nfloat) self.GetDescent ();
 		}
@@ -179,7 +182,7 @@ namespace CoreText {
 		static nfloat GetWidth (IntPtr refCon)
 		{
 			var self = GetOperations (refCon);
-			if (self == null)
+			if (self is null)
 				return 0;
 			return (nfloat) self.GetWidth ();
 		}
@@ -204,8 +207,8 @@ namespace CoreText {
 
 		static IntPtr Create (CTRunDelegateOperations operations)
 		{
-			if (operations == null)
-				throw new ArgumentNullException (nameof (operations));
+			if (operations is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (operations));
 
 			CTRunDelegateCallbacks callbacks = operations.GetCallbacks ();
 			return CTRunDelegateCreate (ref callbacks, operations.Handle);
@@ -221,7 +224,7 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTRunDelegateGetRefCon (IntPtr runDelegate);
 
-		public CTRunDelegateOperations Operations {
+		public CTRunDelegateOperations? Operations {
 			get {
 				return CTRunDelegateOperations.GetOperations (CTRunDelegateGetRefCon (Handle));
 			}

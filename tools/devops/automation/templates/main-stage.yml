@@ -81,6 +81,8 @@ stages:
           vmImage: windows-latest
         steps:
         - template: governance-checks.yml
+          parameters:
+            isPR: ${{ parameters.isPR }}
 
       - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
         - job: translations
@@ -89,9 +91,11 @@ stages:
             vmImage: windows-latest
           steps:
           - template: loc-translations.yml
+            parameters:
+              isPR: ${{ parameters.isPR }}
 
 
-- ${{ if eq(variables['Build.Reason'], 'PullRequest') }}:
+- ${{ if parameters.isPR }}:
   - stage: clean
     displayName: 'Clean up'
     dependsOn: []
@@ -160,6 +164,7 @@ stages:
 # always run simulator tests
 - template: ./tests/stage.yml
   parameters:
+    isPR: ${{ parameters.isPR }}
     simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     testPrefix: 'simulator_'
     stageName: 'simulator_tests'
@@ -182,6 +187,7 @@ stages:
     - ${{ each config in parameters.deviceTestsConfigurations }}:
       - template: ./tests/stage.yml
         parameters:
+          isPR: ${{ parameters.isPR }}
           testPrefix: ${{ config.testPrefix }} 
           stageName: ${{ config.stageName }} 
           displayName: ${{ config.displayName }} 
@@ -203,6 +209,7 @@ stages:
   - ${{ each config in parameters.macTestsConfigurations }}:
     - template: ./mac/stage.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         stageName: ${{ config.stageName }}
         displayName: ${{ config.displayName }}
         macPool: ${{ config.macPool }}
@@ -215,6 +222,7 @@ stages:
 - ${{ if eq(parameters.runWindowsIntegration, true) }}:
   - template: ./windows/stage.yml
     parameters:
+      isPR: ${{ parameters.isPR }}
       stageName: windows_integration
       displayName: 'Windows Integration Tests'
       pool: 'VSEng-Xamarin-Mac-Devices' # currently ignored until the VS team provides a real one
@@ -226,6 +234,7 @@ stages:
 - ${{ if eq(variables['Build.Reason'], 'Schedule') }}: 
   - template: ./tests/stage.yml
     parameters:
+      isPR: ${{ parameters.isPR }}
       testPrefix: 'iOS32b'
       stageName: 'ios32b_device'
       displayName: 'iOS32b Device Tests'

@@ -20,6 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -33,24 +36,24 @@ namespace WebKit {
 		
 		public static void DecideUse (NSObject decisionToken)
 		{
-			if (decisionToken == null)
-				throw new ArgumentNullException ("token");
+			if (decisionToken is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (decisionToken));
 			
 			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selUse);
 		}
 		
 		public static void DecideDownload (NSObject decisionToken)
 		{
-			if (decisionToken == null)
-				throw new ArgumentNullException ("decisionToken");
+			if (decisionToken is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (decisionToken));
 			
 			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selDownload);
 		}
 		
 		public static void DecideIgnore (NSObject decisionToken)
 		{
-			if (decisionToken == null)
-				throw new ArgumentNullException ("decisionToken");
+			if (decisionToken is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (decisionToken));
 			
 			ObjCRuntime.Messaging.void_objc_msgSend (decisionToken.Handle, selIgnore);
 		}

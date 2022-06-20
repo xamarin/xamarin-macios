@@ -110,3 +110,5 @@ jobs:
     GIT_HASH: $[ dependencies.api_diff.outputs['fix_commit.GIT_HASH'] ]
   steps:
   - template: api-diff-process-results.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
