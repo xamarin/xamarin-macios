@@ -30,6 +30,8 @@ parameters:
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - template: ../common/setup.yml
   parameters:

@@ -3,6 +3,8 @@
 steps:
 
 - template: checkout.yml
+  parameters:
+    isPR: false # always use the latests version of the script
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1

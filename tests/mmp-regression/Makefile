@@ -4,8 +4,6 @@ include $(TOP)/Make.config
 
 MMP=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin/mmp
 
-export MD_APPLE_SDK_ROOT:=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
-
 ifdef TESTS_USE_SYSTEM
 export TargetFrameworkFallbackSearchPaths=/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPathFallbackPathsOverride=/Library/Frameworks/Mono.framework/External/xbuild
