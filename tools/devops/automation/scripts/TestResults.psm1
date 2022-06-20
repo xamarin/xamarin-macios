@@ -287,7 +287,7 @@ class ParallelTestsResults {
                         {
                             if (-not $foundTests) {
                                 $foundTests = $line.Contains("## Failed tests")
-                            } ese {
+                            } else {
                                 if (-not [string]::IsNullOrEmpty($line)) {
                                     $stringBuilder.AppendLine("$line") # the extra space is needed for the multiline list item
                                 }
