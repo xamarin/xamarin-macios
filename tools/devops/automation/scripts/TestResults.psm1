@@ -173,14 +173,20 @@ class TestResults {
 
 class ParallelTestsResults {
     [string] $Context
+    [string] $TestPrefix
+    [string] $VSDropsIndex
     [TestResults[]] $Results
 
     ParallelTestsResults (
         [TestResults[]] $results,
-        [string] $context
+        [string] $context,
+        [string] $testPrefix,
+        [string] $vsDropsIndex
     ) {
         $this.Results = $results
         $this.Context = $context
+        $this.TestPrefix = $testPrefix
+        $this.VSDropsIndex = $vsDropsIndex
     }
 
     [object] GetFailingTests() {
@@ -268,14 +274,17 @@ class ParallelTestsResults {
             # loop over all results and add the content
             foreach ($r in $failingTests)
             {
-                $stringBuilder.AppendLine("### :x: $($r.Label) tests")
+                $dropsIndex = "$($this.VSDropsIndex)/$($this.TestPrefix)$($r.Label)/;/tests/vsdrops_index.html"
+                $artifactUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($this.TestPrefix)$($r.Label)&api-version=6.0&`$format=zip"
+
+                $stringBuilder.AppendLine("### :x: $($r.Label) tests [Html Report (VSDrops)]($dropsIndex) [Download]($artifactUrl)")
                 $stringBuilder.AppendLine("")
-                $stringBuilder.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($r.Label)&api-version=6.0&`$format=zip)")
                 # print diff messages if the tests crash or if the tests did indeed fail
                 # get the result, if -1, we had a crash, else we print the result
                 $result = $r.GetPassedTests()
                 if ($result.Passed -eq -2 -or $result.Failed -eq -2) {
                     $stringBuilder.AppendLine(":fire: Failed catastrophically on $($r.Context) (no summary found).")
+                    $stringBuilder.AppendLine("")
                 } else {
                     # create a detail per test result with the name of the test and will contain the exact summary
                     $stringBuilder.AppendLine("<summary>$($result.Failed) tests failed, $($result.Passed) tests passed.</summary>")
@@ -294,12 +303,14 @@ class ParallelTestsResults {
                             }
                         }
                         $stringBuilder.AppendLine("</details>")
+                        $stringBuilder.AppendLine("")
                     } else {
                         $stringBuilder.AppendLine("<details>")
                         $stringBuilder.AppendLine(" Test has no summaty file.")
                         $stringBuilder.AppendLine("</details>")
                     }
-                    $stringBuilder.AppendLine(" </details>") # the extra space is needed for the multiline list item
+                    $stringBuilder.AppendLine("</details>") # the extra space is needed for the multiline list item
+                    $stringBuilder.AppendLine("")
                 }
             }
             $successfulTests = $this.GetSuccessfulTests()
@@ -339,9 +350,13 @@ function New-ParallelTestsResults {
         [object[]]
         $Results,
         [string]
-        $Context
+        $Context,
+        [string]
+        $TestPrefix,
+        [string]
+        $VSDropsIndex
     )
-    return [ParallelTestsResults]::new($Results, $Context)
+    return [ParallelTestsResults]::new($Results, $Context, $TestPrefix, $VSDropsIndex)
 }
 
 Export-ModuleMember -Function New-TestResults

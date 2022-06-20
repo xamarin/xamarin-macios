@@ -49,7 +49,7 @@ steps:
 # build a message with all the content of all tests, to do so, we get the labels and to pass them to pwsh we do a join with ;
 # as the separator
 - pwsh: |
-    $env:VSDROPS_INDEX="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/$Env:DEVICE_PREFIX/;/tests/vsdrops_index.html"
+    $vsdropsIndex="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID/"
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
     $DebugPreference = "Continue" # enable debug messages
 
@@ -70,7 +70,7 @@ steps:
       $testResults.Add($result)
     }
 
-    $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT"
+    $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT" -TestPrefix "${{ parameters.testPrefix }}" -VSDropsIndex $vsdropsIndex
     $success = $parallelResults.IsSuccess()
     $emoji = ":rocket:"
     if (-not $success) {
