@@ -270,6 +270,7 @@ class ParallelTestsResults {
             {
                 $stringBuilder.AppendLine("### :x: $($r.Label) tests")
                 $stringBuilder.AppendLine("")
+                $stringBuilder.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($r.Label)&api-version=6.0&`$format=zip)")
                 # print diff messages if the tests crash or if the tests did indeed fail
                 # get the result, if -1, we had a crash, else we print the result
                 $result = $r.GetPassedTests()
@@ -277,10 +278,10 @@ class ParallelTestsResults {
                     $stringBuilder.AppendLine(":fire: Failed catastrophically on $($r.Context) (no summary found).")
                 } else {
                     # create a detail per test result with the name of the test and will contain the exact summary
-                    stringBuilder.AppendLine("<summary>$($result.Failed) tests failed, $($result.Passed) tests passed.</summary>")
+                    $stringBuilder.AppendLine("<summary>$($result.Failed) tests failed, $($result.Passed) tests passed.</summary>")
                     if (Test-Path -Path $r.ResultsPath -PathType Leaf) {
-                        stringBuilder.AppendLine("<details>")
-                        stringBuilder.AppendLine("")
+                        $stringBuilder.AppendLine("<details>")
+                        $stringBuilder.AppendLine("")
                         $foundTests = $false
                         foreach ($line in Get-Content -Path $r.ResultsPath)
                         {
@@ -292,11 +293,11 @@ class ParallelTestsResults {
                                 }
                             }
                         }
-                        stringBuilder.AppendLine("</details>")
+                        $stringBuilder.AppendLine("</details>")
                     } else {
-                        stringBuilder.AppendLine("<details>")
+                        $stringBuilder.AppendLine("<details>")
                         $stringBuilder.AppendLine(" Test has no summaty file.")
-                        stringBuilder.AppendLine("</details>")
+                        $stringBuilder.AppendLine("</details>")
                     }
                     $stringBuilder.AppendLine(" </details>") # the extra space is needed for the multiline list item
                 }
