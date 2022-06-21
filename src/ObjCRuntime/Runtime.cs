@@ -277,13 +277,14 @@ namespace ObjCRuntime {
 			usertype_cache = new Dictionary <IntPtr, bool> (IntPtrEqualityComparer);
 			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
-			protocol_cache = new Dictionary<IntPtr, Dictionary<IntPtr, bool>> (IntPtrEqualityComparer);
 			lock_obj = new object ();
 
 			NSObjectClass = NSObject.Initialize ();
 
-			if (DynamicRegistrationSupported)
+			if (DynamicRegistrationSupported) {
 				Registrar = new DynamicRegistrar ();
+				protocol_cache = new Dictionary<IntPtr, Dictionary<IntPtr, bool>> (IntPtrEqualityComparer);
+			}
 			RegisterDelegates (options);
 			Class.Initialize (options);
 #if !NET
