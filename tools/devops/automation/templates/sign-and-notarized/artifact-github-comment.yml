@@ -1,7 +1,14 @@
 # Job that will download the other artifact from the build and will add a comment with the contents.
+parameters:
+
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - template: ../build/download-artifacts.yml 
   parameters:

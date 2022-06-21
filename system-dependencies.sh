@@ -409,8 +409,6 @@ function install_specific_xcode () {
 		done
 	fi
 
-	log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
-	$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
 	log "Clearing xcrun cache..."
 	xcrun -k
 
@@ -522,20 +520,6 @@ function check_specific_xcode () {
 	if [[ ! "x$XCODE_ACTUAL_VERSION" =~ "x$XCODE_VERSION" ]]; then
 		fail "You must install Xcode $XCODE_VERSION in $XCODE_ROOT (found $XCODE_ACTUAL_VERSION).  You can download Xcode $XCODE_VERSION here: https://developer.apple.com/downloads/index.action?name=Xcode";
 		return
-	fi
-
-	if test -z "$1"; then
-		local XCODE_SELECT=$(xcode-select -p)
-		if [[ "x$XCODE_SELECT" != "x$XCODE_DEVELOPER_ROOT" ]]; then
-			if ! test -z $PROVISION_XCODE; then
-				log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
-				$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
-				log "Clearing xcrun cache..."
-				xcrun -k
-			else
-				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute 'make fix-xcode-select' to fix."
-			fi
-		fi
 	fi
 
 	ok "Found Xcode $XCODE_ACTUAL_VERSION in $XCODE_ROOT"

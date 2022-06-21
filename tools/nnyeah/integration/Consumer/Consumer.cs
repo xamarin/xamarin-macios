@@ -92,6 +92,9 @@ namespace ConsumerTests
 			if (n.PlusOne (7) != (nint)8) {
 				output.AppendLine ("nint ++ failure");
 			}
+			if (n.NumberZero () != (nint)0) {
+				output.AppendLine ("nested usage failure");
+			}
 		}
 
 		static void NUIntTest (StringBuilder output)

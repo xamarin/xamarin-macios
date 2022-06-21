@@ -19,6 +19,10 @@ parameters:
   type: boolean
   default: false
 
+- name: isPR
+  type: boolean
+  default: false
+
 - name: buildSteps 
   type: stepList 
   default: []
@@ -26,6 +30,8 @@ parameters:
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - template: ../common/setup.yml
   parameters:
@@ -64,12 +70,6 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
 
-- bash: |
-    set -x
-    set -e
-    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
-  displayName: 'Provision simulators'
-
 # Use the env variables that were set by the label parsing in the configure step
 # print some useful logging to allow to know what is going on AND allow make some
 # choices, there are labels that contradict each other (skip-package vs build-packages)
@@ -100,8 +100,6 @@ steps:
     # a branch in origin
 
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual" -or $buildReason -eq "IndividualCI") -and ($buildSourceBranchName -eq "merge")) ) {
-      $configVars.Add("IsPR", "True")
-
       $configVars.Add("BuildPkgs", "True")
 
       # interesting case, we have build-pkg and skip-pkg... if that is the case, we build it, but we set a warning
@@ -145,8 +143,6 @@ steps:
 
     } else {
       # set the defaults, all the things! o/
-      $configVars.Add("IsPR", "False")
-
       # build pkg, nugets and sign them
       $configVars.Add("BuildPkgs", "True")
       $configVars.Add("BuildNugets", "True")
@@ -214,7 +210,10 @@ steps:
     ./configure $CONFIGURE_FLAGS
     echo $(cat $(Build.SourcesDirectory)/xamarin-macios/configure.inc)
   env:
-    IsPR: $(configuration.IsPR)
+    ${{ if eq(parameters.isPR, true) }}:
+      IsPR: 'True'
+    ${{ else }}:
+      IsPR: 'False'
     ${{ if eq(parameters.enableDotnet, true) }}:
       EnableDotNet: 'True'
   displayName: "Configure build"

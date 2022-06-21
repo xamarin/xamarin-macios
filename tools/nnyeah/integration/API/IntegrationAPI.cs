@@ -25,8 +25,23 @@ namespace IntegrationAPI
     public delegate void EventWithNUInt(object sender, NUIntArgs e);
     public delegate void EventWithNFloat(object sender, NFloatArgs e);
 
+	
+    public interface INum
+    {
+        NSNumber Zero ();
+    }
+
     public class NIntAPI
     {
+	class MyNum : INum
+	{
+		public MyNum () { }
+		public NSNumber Zero () {
+			nint x = 0;
+			return new NSNumber (x);
+		}
+	}
+	
         public NIntAPI ()
         {
         }
@@ -53,6 +68,7 @@ namespace IntegrationAPI
 	public nint ToNint (char a) => a;
 	public nint ToNint (int a) => a;
 	public nint PlusOne (nint a) => a++;
+	public nint NumberZero () => new MyNum ().Zero ().NIntValue;
     }
 
     public class NUIntAPI
