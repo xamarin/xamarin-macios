@@ -732,7 +732,7 @@ function New-GitHubCommentFromFile {
         [Parameter(Mandatory)]
         [String]
         $Header,
-        
+
         [String]
         $Description,
 
@@ -753,6 +753,8 @@ function New-GitHubCommentFromFile {
     {
         $msg.AppendLine($line)
     }
+    $msg.AppendLine("")
+    $msg.AppendLine("[comment]: <> (This is a comment added by Azure DevOps)")
     return New-GithubComment -Header $Header -Description $Description -Message $msg.ToString() -Emoji $Emoji
 }
 
