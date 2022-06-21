@@ -35,6 +35,7 @@ namespace ObjCRuntime {
 		static Dictionary<IntPtrTypeValueTuple,Delegate> block_to_delegate_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_ctor_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_bool_ctor_cache;
+		internal static Dictionary<IntPtr, Dictionary<IntPtr, bool>> protocol_cache;
 
 		static List <object> delegates;
 		static List <Assembly> assemblies;
@@ -276,6 +277,7 @@ namespace ObjCRuntime {
 			usertype_cache = new Dictionary <IntPtr, bool> (IntPtrEqualityComparer);
 			intptr_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
 			intptr_bool_ctor_cache = new Dictionary<Type, ConstructorInfo> (TypeEqualityComparer);
+			protocol_cache = new Dictionary<IntPtr, Dictionary<IntPtr, bool>> (IntPtrEqualityComparer);
 			lock_obj = new object ();
 
 			NSObjectClass = NSObject.Initialize ();
