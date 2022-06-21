@@ -33,15 +33,6 @@ steps:
   displayName: 'Show Environment'
 
 - powershell: |
-    Write-Host "Python version"
-    python --version
-
-    Write-Host "Python location"
-    which python
-
-    Write-Host "Python2 location"
-    which python2
-
     Write-Host "Python3 location"
     which python3
 
