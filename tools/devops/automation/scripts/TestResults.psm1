@@ -238,12 +238,20 @@ class ParallelTestsResults {
         }
     }
 
+    [string] GetDownloadLinks($testResult) {
+        $dropsIndex = "$($this.VSDropsIndex)/$($this.TestPrefix)$($testResult.Label)/;/tests/vsdrops_index.html"
+        $artifactUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($this.TestPrefix)$($testResult.Label)&api-version=6.0&`$format=zip"
+        $downloadInfo = "[Html Report (VSDrops)]($dropsIndex) [Download]($artifactUrl)"
+        reutrn $downloadInfo
+    }
+
     [void] PrintSuccessMessage($testResult, $stringBuilder) {
+        $downloadInfo = $this.GetDownloadLinks($testResult)
         $result = $testResult.GetPassedTests()
         if ($result.Passed -eq 0) {
-            $stringBuilder.Append(":warning: $($testResult.Label): No tests selected.")
+            $stringBuilder.AppendLine(":warning: $($testResult.Label): No tests selected. $downloadInfo")
         } else {
-            $stringBuilder.AppendLine(":white_check_mark: $($testResult.Label): All $($result.Passed) tests passed</summary>")
+            $stringBuilder.AppendLine(":white_check_mark: $($testResult.Label): All $($result.Passed) tests passed. $downloadInfo")
         }
     }
 
@@ -274,16 +282,15 @@ class ParallelTestsResults {
             # loop over all results and add the content
             foreach ($r in $failingTests)
             {
-                $dropsIndex = "$($this.VSDropsIndex)/$($this.TestPrefix)$($r.Label)/;/tests/vsdrops_index.html"
-                $artifactUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($this.TestPrefix)$($r.Label)&api-version=6.0&`$format=zip"
-
-                $stringBuilder.AppendLine("### :x: $($r.Label) tests [Html Report (VSDrops)]($dropsIndex) [Download]($artifactUrl)")
+                $stringBuilder.AppendLine("### :x: $($r.Label) tests")
                 $stringBuilder.AppendLine("")
                 # print diff messages if the tests crash or if the tests did indeed fail
                 # get the result, if -1, we had a crash, else we print the result
                 $result = $r.GetPassedTests()
                 if ($result.Passed -eq -2 -or $result.Failed -eq -2) {
                     $stringBuilder.AppendLine(":fire: Failed catastrophically on $($r.Context) (no summary found).")
+                    $stringBuilder.AppendLine("")
+                    $stringBuilder.AppendLine($this.GetDownloadLinks($r))
                     $stringBuilder.AppendLine("")
                 } else {
                     # create a detail per test result with the name of the test and will contain the exact summary
@@ -309,7 +316,9 @@ class ParallelTestsResults {
                         $stringBuilder.AppendLine(" Test has no summaty file.")
                         $stringBuilder.AppendLine("</details>")
                     }
-                    $stringBuilder.AppendLine("</details>") # the extra space is needed for the multiline list item
+                    $stringBuilder.AppendLine("</details>")
+                    $stringBuilder.AppendLine("")
+                    $stringBuilder.AppendLine($this.GetDownloadLinks($r))
                     $stringBuilder.AppendLine("")
                 }
             }
