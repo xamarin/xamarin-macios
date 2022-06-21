@@ -242,7 +242,7 @@ class ParallelTestsResults {
         $dropsIndex = "$($this.VSDropsIndex)/$($this.TestPrefix)$($testResult.Label)/;/tests/vsdrops_index.html"
         $artifactUrl = "$Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-$($this.TestPrefix)$($testResult.Label)&api-version=6.0&`$format=zip"
         $downloadInfo = "[Html Report (VSDrops)]($dropsIndex) [Download]($artifactUrl)"
-        reutrn $downloadInfo
+        return $downloadInfo
     }
 
     [void] PrintSuccessMessage($testResult, $stringBuilder) {
