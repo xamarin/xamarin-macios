@@ -70,55 +70,6 @@ namespace GameKit {
 	interface UINavigationController {}
 	interface UIWindow {}
 #endif
-	
-
-	[NoMac]
-	[NoWatch]
-	[NoTV]
-	[MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject))]
-	[Model]
-	[Protocol]
-	interface GKPeerPickerControllerDelegate {
-		[Export ("peerPickerController:didSelectConnectionType:")]
-		void ConnectionTypeSelected (GKPeerPickerController picker, GKPeerPickerConnectionType type);
-
-		[Export ("peerPickerController:sessionForConnectionType:")]
-		GKSession GetSession (GKPeerPickerController picker, GKPeerPickerConnectionType forType);
-
-		[Export ("peerPickerController:didConnectPeer:toSession:")]
-		void PeerConnected (GKPeerPickerController picker, string peerId, GKSession toSession);
-
-		[Export ("peerPickerControllerDidCancel:")]
-		void ControllerCancelled (GKPeerPickerController picker);
-	}
-
-	[NoMac]
-	[NoWatch]
-	[NoTV]
-	[MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject))]
-	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MCBrowserViewController' from the 'MultipeerConnectivity' framework instead.")]
-	interface GKPeerPickerController {
-		[Export ("connectionTypesMask", ArgumentSemantic.Assign)]
-		GKPeerPickerConnectionType ConnectionTypesMask { get; set; }
-
-		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
-		NSObject WeakDelegate { get; set; }
-
-		[Wrap ("WeakDelegate")]
-		[Protocolize]
-		GKPeerPickerControllerDelegate Delegate { get; set; }
-
-		[Export ("show")]
-		void Show ();
-
-		[Export ("dismiss")]
-		void Dismiss ();
-
-		[Export ("visible")]
-		bool Visible { [Bind ("isVisible")] get; }
-	}
 
 	[NoMac]
 	[NoWatch] // only exposed thru GKVoiceChatService (not in 3.0)
