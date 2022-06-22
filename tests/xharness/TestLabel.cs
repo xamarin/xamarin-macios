@@ -113,7 +113,7 @@ namespace Xharness {
 	static class TestLabelExtensions {
 		static string GetLabel<T> (this T self) where T : Enum
 		{
-			var name = Enum.GetName (typeof(T), self);
+			var name = Enum.GetName (typeof (T), self);
 			var attr = typeof (T).GetField (name).GetCustomAttribute<LabelAttribute> ();
 			return attr.Label;
 		}
