@@ -9,6 +9,8 @@ using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class CompileAppManifestTaskBase : XamarinTask
@@ -16,39 +18,39 @@ namespace Xamarin.MacDev.Tasks
 		#region Inputs
 
 		// Single-project property that maps to CFBundleIdentifier for Apple platforms
-		public string ApplicationId { get; set; }
+		public string ApplicationId { get; set; } = String.Empty;
 
 		// Single-project property that maps to CFBundleShortVersionString for Apple platforms
-		public string ApplicationDisplayVersion { get; set; }
+		public string ApplicationDisplayVersion { get; set; } = String.Empty;
 
 		// Single-project property that maps to CFBundleDisplayName for Apple platforms
-		public string ApplicationTitle { get; set; }
+		public string ApplicationTitle { get; set; } = String.Empty;
 
 		// Single-project property that maps to CFBundleVersion for Apple platforms
-		public string ApplicationVersion { get; set; }
+		public string ApplicationVersion { get; set; } = String.Empty;
 
 		[Required]
-		public string AppBundleName { get; set; }
+		public string AppBundleName { get; set; } = String.Empty;
 
 		// This must be an ITaskItem to copy the file to Windows for remote builds.
-		public ITaskItem AppManifest { get; set; }
+		public ITaskItem? AppManifest { get; set; }
 
 		[Required]
-		public string AssemblyName { get; set; }
+		public string AssemblyName { get; set; } = String.Empty;
 
 		[Required]
 		[Output] // This is required to create an empty file on Windows for the Input/Outputs check.
-		public ITaskItem CompiledAppManifest { get; set; }
+		public ITaskItem? CompiledAppManifest { get; set; }
 
 		[Required]
 		public bool Debug { get; set; }
 
-		public string DebugIPAddresses { get; set; }
+		public string DebugIPAddresses { get; set; } = String.Empty;
 
 		[Required]
-		public string DefaultSdkVersion { get; set; }
+		public string DefaultSdkVersion { get; set; } = String.Empty;
 
-		public ITaskItem [] FontFilesToRegister { get; set; }
+		public ITaskItem [] FontFilesToRegister { get; set; } = Array.Empty<ITaskItem> ();
 
 		// Single-project property that determines whether other single-project properties should have any effect
 		public bool GenerateApplicationManifest { get; set; }
@@ -62,28 +64,28 @@ namespace Xamarin.MacDev.Tasks
 
 		public bool IsWatchExtension { get; set; }
 
-		public ITaskItem[] PartialAppManifests { get; set; }
+		public ITaskItem [] PartialAppManifests { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Required]
-		public string ProjectDir { get; set; }
+		public string ProjectDir { get; set; } = String.Empty;
 
 		[Required]
-		public string ResourcePrefix { get; set; }
+		public string ResourcePrefix { get; set; } = String.Empty;
 
-		public string ResourceRules { get; set; }
+		public string ResourceRules { get; set; } = String.Empty;
 
 		[Required]
-		public string SdkPlatform { get; set; }
+		public string SdkPlatform { get; set; } = String.Empty;
 
 		[Required]
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
-		public string SdkVersion { get; set; }
+		public string SdkVersion { get; set; } = String.Empty;
 
-		public string SupportedOSPlatformVersion { get; set; }
+		public string SupportedOSPlatformVersion { get; set; } = String.Empty;
 
-		public string TargetArchitectures { get; set; }
+		public string TargetArchitectures { get; set; } = String.Empty;
 
 		public bool Validate { get; set; }
 		#endregion
@@ -92,10 +94,10 @@ namespace Xamarin.MacDev.Tasks
 
 		public override bool Execute ()
 		{
-			PDictionary plist = null;
+			PDictionary plist;
 
 			var appManifest = AppManifest?.ItemSpec;
-			if (File.Exists (appManifest)) {
+			if (appManifest is not null && File.Exists (appManifest)) {
 				try {
 					plist = PDictionary.FromFile (appManifest);
 				} catch (Exception ex) {
@@ -127,7 +129,7 @@ namespace Xamarin.MacDev.Tasks
 				defaultBundleVersion = ApplicationVersion;
 			plist.SetIfNotPresent (ManifestKeys.CFBundleVersion, defaultBundleVersion);
 
-			string defaultBundleShortVersion = null;
+			string? defaultBundleShortVersion = null;
 			if (GenerateApplicationManifest) {
 				if (!string.IsNullOrEmpty (ApplicationDisplayVersion))
 					defaultBundleShortVersion = ApplicationDisplayVersion;
@@ -151,8 +153,10 @@ namespace Xamarin.MacDev.Tasks
 			// Merge with any partial plists...
 			MergePartialPlistTemplates (plist);
 
+			Validation (plist);
+
 			// write the resulting app manifest
-			if (FileUtils.UpdateFile (CompiledAppManifest.ItemSpec, (tmpfile) => plist.Save (tmpfile, true, true)))
+			if (FileUtils.UpdateFile (CompiledAppManifest!.ItemSpec, (tmpfile) => plist.Save (tmpfile, true, true)))
 				Log.LogMessage (MessageImportance.Low, "The file {0} is up-to-date.", CompiledAppManifest.ItemSpec);
 
 			return !Log.HasLoggedErrors;
@@ -187,7 +191,7 @@ namespace Xamarin.MacDev.Tasks
 
 		void RegisterFonts (PDictionary plist)
 		{
-			if (FontFilesToRegister == null || FontFilesToRegister.Length == 0)
+			if (FontFilesToRegister is null || FontFilesToRegister.Length == 0)
 				return;
 
 			// https://developer.apple.com/documentation/swiftui/applying-custom-fonts-to-text
@@ -207,7 +211,7 @@ namespace Xamarin.MacDev.Tasks
 			case ApplePlatform.MacCatalyst:
 				// Fonts are listed in the Info.plist in a UIAppFonts entry for iOS, tvOS, watchOS and Mac Catalyst.
 				var uiAppFonts = plist.GetArray ("UIAppFonts");
-				if (uiAppFonts == null) {
+				if (uiAppFonts is null) {
 					uiAppFonts = new PArray ();
 					plist ["UIAppFonts"] = uiAppFonts;
 				}
@@ -221,7 +225,7 @@ namespace Xamarin.MacDev.Tasks
 				var allSubdirectories = FontFilesToRegister.Select (v => Path.GetDirectoryName (v.GetMetadata (logicalNameKey)));
 				var distinctSubdirectories = allSubdirectories.Distinct ().ToArray ();
 				if (distinctSubdirectories.Length > 1) {
-					Log.LogError (MSBStrings.E7083 /* "All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:" */, CompiledAppManifest.ItemSpec);
+					Log.LogError (MSBStrings.E7083 /* "All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:" */, CompiledAppManifest!.ItemSpec);
 					foreach (var fonts in FontFilesToRegister)
 						Log.LogError (null, null, null, fonts.ItemSpec, 0, 0, 0, 0, MSBStrings.E7084 /* "The target directory is {0}" */, fonts.GetMetadata (logicalNameKey));
 				} else {
@@ -236,7 +240,7 @@ namespace Xamarin.MacDev.Tasks
 		bool SetMinimumOSVersion (PDictionary plist)
 		{
 			var minimumVersionKey = PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform);
-			var minimumOSVersionInManifest = plist?.Get<PString> (minimumVersionKey)?.Value;
+			var minimumOSVersionInManifest = plist.Get<PString> (minimumVersionKey)?.Value;
 			string convertedSupportedOSPlatformVersion;
 			string minimumOSVersion;
 
@@ -252,10 +256,10 @@ namespace Xamarin.MacDev.Tasks
 
 			if (Platform == ApplePlatform.MacCatalyst && string.IsNullOrEmpty (minimumOSVersionInManifest)) {
 				// If there was no value for the macOS min version key, then check the iOS min version key.
-				var minimumiOSVersionInManifest = plist?.Get<PString> (ManifestKeys.MinimumOSVersion)?.Value;
+				var minimumiOSVersionInManifest = plist.Get<PString> (ManifestKeys.MinimumOSVersion)?.Value;
 				if (!string.IsNullOrEmpty (minimumiOSVersionInManifest)) {
 					// Convert to the macOS version
-					if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumiOSVersionInManifest, out var convertedVersion, out var knowniOSVersions))
+					if (!MacCatalystSupport.TryGetMacOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumiOSVersionInManifest!, out var convertedVersion, out var knowniOSVersions))
 						Log.LogError (MSBStrings.E0188, minimumiOSVersionInManifest, string.Join (", ", knowniOSVersions));
 					minimumOSVersionInManifest = convertedVersion;
 				}
@@ -269,14 +273,14 @@ namespace Xamarin.MacDev.Tasks
 					minimumOSVersion = SdkVersion;
 				}
 			} else if (!IAppleSdkVersion_Extensions.TryParse (minimumOSVersionInManifest, out var _)) {
-				LogAppManifestError (MSBStrings.E0011, minimumOSVersionInManifest);
+				LogAppManifestError (MSBStrings.E0011, minimumOSVersionInManifest!);
 				return false;
 			} else if (!string.IsNullOrEmpty (convertedSupportedOSPlatformVersion) && convertedSupportedOSPlatformVersion != minimumOSVersionInManifest) {
 				// SupportedOSPlatformVersion and the value in the Info.plist are not the same. This is an error.
-				LogAppManifestError (MSBStrings.E7082, minimumVersionKey, minimumOSVersionInManifest, SupportedOSPlatformVersion);
+				LogAppManifestError (MSBStrings.E7082, minimumVersionKey, minimumOSVersionInManifest!, SupportedOSPlatformVersion);
 				return false;
 			} else {
-				minimumOSVersion = minimumOSVersionInManifest;
+				minimumOSVersion = minimumOSVersionInManifest!;
 			}
 
 			// Write out our value
@@ -285,12 +289,19 @@ namespace Xamarin.MacDev.Tasks
 			return true;
 		}
 
+		protected string? GetMinimumOSVersion (PDictionary plist, out Version version)
+		{
+			var rv = plist.Get<PString> (PlatformFrameworkHelper.GetMinimumOSVersionKey (Platform))?.Value;
+			Version.TryParse (rv, out version);
+			return rv;
+		}
+
 		protected abstract bool Compile (PDictionary plist);
 
 		protected void LogAppManifestError (string format, params object[] args)
 		{
 			// Log an error linking to the Info.plist file
-			if (AppManifest != null) {
+			if (AppManifest is not null) {
 				Log.LogError (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, format, args);
 			} else {
 				Log.LogError (format, args);
@@ -301,7 +312,7 @@ namespace Xamarin.MacDev.Tasks
 		protected void LogAppManifestWarning (string format, params object[] args)
 		{
 			// Log a warning linking to the Info.plist file
-			if (AppManifest != null) {
+			if (AppManifest is not null) {
 				Log.LogWarning (null, null, null, AppManifest.ItemSpec, 0, 0, 0, 0, format, args);
 			} else {
 				Log.LogWarning (format, args);
@@ -338,7 +349,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public static void MergePartialPLists (Task task, PDictionary plist, IEnumerable<ITaskItem> partialLists)
 		{
-			if (partialLists == null)
+			if (partialLists is null)
 				return;
 
 			foreach (var template in partialLists) {
@@ -358,6 +369,59 @@ namespace Xamarin.MacDev.Tasks
 		protected void MergePartialPlistTemplates (PDictionary plist)
 		{
 			MergePartialPLists (this, plist, PartialAppManifests);
+		}
+
+		void Validation (PDictionary plist)
+		{
+			if (!Validate)
+				return;
+
+			var supportedDevices = plist.GetUIDeviceFamily ();
+			var macCatalystOptimizedForMac = (supportedDevices & IPhoneDeviceType.MacCatalystOptimizedForMac) == IPhoneDeviceType.MacCatalystOptimizedForMac;
+			if (macCatalystOptimizedForMac) {
+				if (Platform != ApplePlatform.MacCatalyst) {
+					LogAppManifestError (MSBStrings.E7098 /* The UIDeviceFamily value '6' is not valid for this platform. It's only valid for Mac Catalyst. */);
+					return; // no need to look for more errors, they will probably not make much sense.
+				}
+
+				GetMinimumOSVersion (plist, out var minimumOSVersion);
+				if (minimumOSVersion < new Version (11, 0)) {
+					string miniOSVersion = "?";
+					if (MacCatalystSupport.TryGetiOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumOSVersion, out var iOSVersion, out var _))
+						miniOSVersion = iOSVersion?.ToString () ?? "?";
+					LogAppManifestError (MSBStrings.E7099 /* The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}). */,  miniOSVersion, minimumOSVersion);
+				}
+			}
+
+			switch (Platform) {
+			case ApplePlatform.iOS:
+				var supportsIPhone = (supportedDevices & IPhoneDeviceType.IPhone) != 0
+				                     || supportedDevices == IPhoneDeviceType.NotSet;
+				var supportsIPad = (supportedDevices & IPhoneDeviceType.IPad) != 0;
+
+				if (!IsAppExtension) {
+					IPhoneOrientation orientation;
+
+					if (supportsIPhone) {
+						orientation = plist.GetUISupportedInterfaceOrientations (false);
+						if (orientation == IPhoneOrientation.None) {
+							LogAppManifestWarning (MSBStrings.W0019);
+						} else if (!orientation.IsValidPair ()) {
+							LogAppManifestWarning (MSBStrings.W0020);
+						}
+					}
+
+					if (supportsIPad) {
+						orientation = plist.GetUISupportedInterfaceOrientations (true);
+						if (orientation == IPhoneOrientation.None) {
+							LogAppManifestWarning (MSBStrings.W0021);
+						} else if (!orientation.IsValidPair ()) {
+							LogAppManifestWarning (MSBStrings.W0022);
+						}
+					}
+				}
+				break;
+			}
 		}
 	}
 }

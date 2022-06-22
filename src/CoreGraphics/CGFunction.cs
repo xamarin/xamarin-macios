@@ -30,6 +30,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -41,6 +42,13 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGFunction.h
 	public class CGFunction : NativeObject {
 		CGFunctionEvaluate? evaluate;
@@ -82,12 +90,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGFunctionRef */ IntPtr CGFunctionRetain (/* CGFunctionRef */ IntPtr function);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGFunctionRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGFunctionRelease (GetCheckedHandle ());
 		}
@@ -120,12 +128,12 @@ namespace CoreGraphics {
 					throw new ArgumentException ("The range array must consist of pairs of values", nameof (range));
 			}
 			if (callback is null)
-				throw new ArgumentNullException (nameof (callback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			this.evaluate = callback;
 
 			var gch = GCHandle.Alloc (this);
-			var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain != null ? domain.Length / 2 : 0, domain, range != null ? range.Length / 2 : 0, range, ref cbacks);
+			var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain is not null ? domain.Length / 2 : 0, domain, range is not null ? range.Length / 2 : 0, range, ref cbacks);
 			InitializeHandle (handle);
 		}
 

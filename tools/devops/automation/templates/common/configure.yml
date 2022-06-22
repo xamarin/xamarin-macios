@@ -7,15 +7,17 @@ parameters:
   type: boolean
   default: false
 
+- name: uploadArtifacts
+  type: boolean
+  default: false
+
 steps:
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: false
-  persistCredentials: true
-  path: s/xamarin-macios
+- template: checkout.yml
+  parameters:
+    isPR: false # always use the latests set of scripts merged with main
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
 
     # we are going to use a custom object to store all the configuration of the build, this later
     # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines
@@ -81,19 +83,6 @@ steps:
       $ref = $prInfo.base.ref
       $tags.Add("$ref")
 
-      # decide if we add the run-dotnet-tests label (if not present) this is done only for main
-      # we can use $ref for that :)
-      $xharnessLabels = $tags -join ","
-      if ($Env:ENABLE_DOTNET -eq "True" -and -not ("run-dotnet-tests" -in $xharnessLabels)) {
-        Write-Host "Adding label run-dotnet-tests to xharness."
-        $tags.Add("run-dotnet-tests")
-        if ($xharnessLabels -eq "") {
-          $xharnessLabels = "run-dotnet-tests"
-        } else {
-          $xharnessLabels = @($xharnessLabels, "run-dotnet-tests") -join ","
-        }
-      }
-
       Write-Host "##vso[task.setvariable variable=xharness-labels;isOutput=true]$xharnessLabels"
 
       # set output variables based on the git labels
@@ -107,7 +96,6 @@ steps:
         "trigger-device-tests",
         "run-sample-tests",
         "skip-packaged-xamarin-mac-tests",
-        "skip-public-jenkins",
         "skip-api-comparison"
       )
 
@@ -147,60 +135,10 @@ steps:
   displayName: 'Configure build'
 
 # upload config to be consumed later
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: configuration.json'
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
-    artifactName: build-configuration
-  continueOnError: true
-
-- bash: |
-    echo "current directory: $PWD"
-    make LocProject.json
-  displayName: 'Generate LocProject.json'
-  continueOnError: true
-  workingDirectory: $(Build.SourcesDirectory)\tools\devops 
-
-- task: PowerShell@2
-  displayName: "Update LocProject.json"
-  inputs:
-    targetType: 'filePath'
-    filePath: $(Build.SourcesDirectory)\tools\devops\automation\scripts\update-locproject.ps1
-    arguments: -SourcesDirectory "$(Build.SourcesDirectory)" -LocProjectPath "$(Build.SourcesDirectory)\Localize\LocProject.json"
-
-- powershell: |
-    git config user.email "valco@microsoft.com"
-    git config user.name "vs-mobiletools-engineering-service2"
-    git branch -d Localization
-    git push origin --delete Localization
-    git checkout -b Localization
-    git push origin Localization
-  displayName: "Create a new Localization branch from main"
-  condition: and(succeeded(), in(variables['build.reason'], 'Schedule'), eq(variables.isMain, 'True'))
-
-- task: OneLocBuild@2
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
-  continueOnError: true
-  env:
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  inputs:
-    locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
-    outDir: '$(Build.ArtifactStagingDirectory)'
-    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
-      isCreatePrSelected: true
-    ${{ if ne(variables['Build.Reason'], 'Schedule') }}:
-      isCreatePrSelected: false
-    packageSourceAuth: patAuth
-    patVariable: '$(OneLocBuild--PAT)'
-    isAutoCompletePrSelected: false
-    prSourceBranchPrefix: 'locfiles'
-    repoType: gitHub
-    gitHubPatVariable: '$(GitHub.Token)'
-
-- task: PublishBuildArtifacts@1
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
-  continueOnError: true
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'localizationDrop'
-    publishLocation: 'Container'
+- ${{ if eq(parameters.uploadArtifacts, true) }}:
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: configuration.json'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
+      artifactName: build-configuration
+    continueOnError: true

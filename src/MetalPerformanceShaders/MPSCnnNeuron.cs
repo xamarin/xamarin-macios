@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using Metal;
 using Foundation;
@@ -9,6 +11,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos12.0")]
 		[UnsupportedOSPlatform ("macos10.14")]
 		[UnsupportedOSPlatform ("ios12.0")]

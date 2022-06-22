@@ -29,6 +29,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -53,6 +54,12 @@ namespace CoreText {
 	}
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTTextTabOptions {
 
 		public CTTextTabOptions ()
@@ -63,7 +70,7 @@ namespace CoreText {
 		public CTTextTabOptions (NSDictionary dictionary)
 		{
 			if (dictionary is null)
-				throw new ArgumentNullException (nameof (dictionary));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
@@ -85,6 +92,12 @@ namespace CoreText {
 	}
 #endregion
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTTextTab : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTTextTab (NativeHandle handle, bool owns)

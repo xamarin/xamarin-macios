@@ -30,6 +30,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -57,25 +58,31 @@ namespace CoreText {
 #if !NET
 	public static class CTFrameAttributeKey {
 
-		public static readonly NSString Progression;
+		public static readonly NSString? Progression;
 
-		public static readonly NSString PathFillRule;
-		public static readonly NSString PathWidth;
-		public static readonly NSString ClippingPaths;
-		public static readonly NSString PathClippingPath;
+		public static readonly NSString? PathFillRule;
+		public static readonly NSString? PathWidth;
+		public static readonly NSString? ClippingPaths;
+		public static readonly NSString? PathClippingPath;
 		
 		static CTFrameAttributeKey ()
 		{
 			var handle = Libraries.CoreText.Handle;
-			Progression = Dlfcn.GetStringConstant (handle, "kCTFrameProgressionAttributeName")!;
-			PathFillRule = Dlfcn.GetStringConstant (handle, "kCTFramePathFillRuleAttributeName")!;
-			PathWidth = Dlfcn.GetStringConstant (handle, "kCTFramePathWidthAttributeName")!;
-			ClippingPaths = Dlfcn.GetStringConstant (handle, "kCTFrameClippingPathsAttributeName")!;
-			PathClippingPath = Dlfcn.GetStringConstant (handle, "kCTFramePathClippingPathAttributeName")!;
+			Progression = Dlfcn.GetStringConstant (handle, "kCTFrameProgressionAttributeName");
+			PathFillRule = Dlfcn.GetStringConstant (handle, "kCTFramePathFillRuleAttributeName");
+			PathWidth = Dlfcn.GetStringConstant (handle, "kCTFramePathWidthAttributeName");
+			ClippingPaths = Dlfcn.GetStringConstant (handle, "kCTFrameClippingPathsAttributeName");
+			PathClippingPath = Dlfcn.GetStringConstant (handle, "kCTFramePathClippingPathAttributeName");
 		}
 	}
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFrameAttributes {
 
 		public CTFrameAttributes ()
@@ -86,7 +93,7 @@ namespace CoreText {
 		public CTFrameAttributes (NSDictionary dictionary)
 		{
 			if (dictionary is null)
-				throw new ArgumentNullException (nameof (dictionary));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
@@ -98,7 +105,7 @@ namespace CoreText {
 				return !value.HasValue ? null : (CTFrameProgression?) value.Value;
 			}
 			set {
-				Adapter.SetValue (Dictionary, CTFrameAttributeKey.Progression,
+				Adapter.SetValue (Dictionary, CTFrameAttributeKey.Progression!,
 						value.HasValue ? (uint?) value.Value : null);
 			}
 		}
@@ -113,6 +120,12 @@ namespace CoreText {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFrame : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTFrame (NativeHandle handle, bool owns)
@@ -173,7 +186,7 @@ namespace CoreText {
 		public void GetLineOrigins (NSRange range, CGPoint[] origins)
 		{
 			if (origins is null)
-				throw new ArgumentNullException (nameof (origins));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (origins));
 			if (range.Length != 0 && origins.Length < range.Length)
 				throw new ArgumentException ("origins must contain at least range.Length elements.", nameof (origins));
 			else if (origins.Length < CFArray.GetCount (CTFrameGetLines (Handle)))
@@ -187,7 +200,7 @@ namespace CoreText {
 		public void Draw (CGContext ctx)
 		{
 			if (ctx is null)
-				throw new ArgumentNullException (nameof (ctx));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ctx));
 
 			CTFrameDraw (Handle, ctx.Handle);
 		}

@@ -6,6 +6,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -27,6 +30,7 @@ namespace Security {
 	[SupportedOSPlatform ("tvos12.0")]
 	[SupportedOSPlatform ("macos10.14")]
 	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (12,0)]
 	[Mac (10,14)]
@@ -45,59 +49,26 @@ namespace Security {
 
 		public void SetLocalIdentity (SecIdentity2 identity)
 		{
-			if (identity == null)
-				throw new ArgumentNullException (nameof (identity));
+			if (identity is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			sec_protocol_options_set_local_identity (GetCheckedHandle (), identity.GetCheckedHandle ());
 		}
 
 #if !NET
-#if NET
-		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
-		[SupportedOSPlatform ("ios12.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-#else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
-#endif
 		[DllImport (Constants.SecurityLibrary)]
 		static extern void sec_protocol_options_add_tls_ciphersuite (sec_protocol_options_t handle, SslCipherSuite cipherSuite);
 #endif
 
 #if !NET
-#if NET
-		[SupportedOSPlatform ("tvos12.0")]
-		[SupportedOSPlatform ("macos10.14")]
-		[SupportedOSPlatform ("ios12.0")]
-		[UnsupportedOSPlatform ("macos10.15")]
-		[UnsupportedOSPlatform ("tvos13.0")]
-		[UnsupportedOSPlatform ("ios13.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0 use 'AddTlsCipherSuite (TlsCipherSuite)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
-		[UnsupportedOSPlatform ("maccatalyst")]
-#else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AddTlsCipherSuite (TlsCipherSuite)' instead.")]
 		[Unavailable (PlatformName.MacCatalyst)]
-#endif
 		public void AddTlsCipherSuite (SslCipherSuite cipherSuite) => sec_protocol_options_add_tls_ciphersuite (GetCheckedHandle (), cipherSuite);
 #endif
 
@@ -105,6 +76,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -118,6 +90,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -130,6 +103,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -153,6 +127,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -175,6 +150,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -188,6 +164,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -200,6 +177,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -247,6 +225,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -260,6 +239,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -272,6 +252,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -319,6 +300,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -332,6 +314,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -345,6 +328,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -358,6 +342,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -370,6 +355,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -383,6 +369,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -395,6 +382,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -408,6 +396,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -420,6 +409,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -433,6 +423,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -446,8 +437,8 @@ namespace Security {
 
 		public void AddTlsApplicationProtocol (string applicationProtocol)
 		{
-			if (applicationProtocol == null)
-				throw new ArgumentNullException (nameof (applicationProtocol));
+			if (applicationProtocol is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationProtocol));
 			sec_protocol_options_add_tls_application_protocol (GetCheckedHandle (), applicationProtocol);
 		}
 
@@ -456,8 +447,8 @@ namespace Security {
 
 		public void SetTlsServerName (string serverName)
 		{
-			if (serverName == null)
-				throw new ArgumentNullException (nameof (serverName));
+			if (serverName is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (serverName));
 			sec_protocol_options_set_tls_server_name (GetCheckedHandle (), serverName);
 		}
 
@@ -465,6 +456,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -488,6 +480,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
@@ -506,8 +499,8 @@ namespace Security {
 #endif
 		public void SetTlsDiffieHellmanParameters (DispatchData parameters)
 		{
-			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+			if (parameters is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			sec_protocol_options_set_tls_diffie_hellman_parameters (GetCheckedHandle (), parameters.Handle);
 		}
 
@@ -516,8 +509,8 @@ namespace Security {
 
 		public void AddPreSharedKey (DispatchData parameters)
 		{
-			if (parameters == null)
-				throw new ArgumentNullException (nameof (parameters));
+			if (parameters is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
 			sec_protocol_options_set_tls_diffie_hellman_parameters (GetCheckedHandle (), parameters.Handle);
 		}
 
@@ -567,10 +560,10 @@ namespace Security {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetKeyUpdateCallback (SecProtocolKeyUpdate keyUpdate, DispatchQueue keyUpdateQueue)
 		{
-			if (keyUpdate == null)
-				throw new ArgumentNullException (nameof (keyUpdate));
-			if (keyUpdateQueue == null)
-				throw new ArgumentNullException (nameof (keyUpdateQueue));
+			if (keyUpdate is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyUpdate));
+			if (keyUpdateQueue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (keyUpdateQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (Trampolines.SDSecProtocolKeyUpdate.Handler, keyUpdate);
@@ -583,6 +576,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -598,6 +592,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -606,7 +601,7 @@ namespace Security {
 #endif
 		public bool IsEqual (SecProtocolOptions other)
 		{
-			if (other == null)
+			if (other is null)
 				return false;
 			return sec_protocol_options_are_equal (GetCheckedHandle (), other.Handle);
 		}
@@ -615,6 +610,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -623,9 +619,9 @@ namespace Security {
 #endif
 		static public bool IsEqual (SecProtocolOptions optionsA, SecProtocolOptions optionsB)
 		{
-			if (optionsA == null)
-				return (optionsB == null);
-			else if (optionsB == null)
+			if (optionsA is null)
+				return (optionsB is null);
+			else if (optionsB is null)
 				return false;
 			return sec_protocol_options_are_equal (optionsA.Handle, optionsB.Handle);
 		}
@@ -634,6 +630,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -647,6 +644,7 @@ namespace Security {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (6,0)]
 		[TV (13,0)]
@@ -655,8 +653,8 @@ namespace Security {
 #endif
 		public void SetTlsPreSharedKeyIdentityHint (DispatchData pskIdentityHint)
 		{
-			if (pskIdentityHint == null)
-				throw new ArgumentNullException (nameof (pskIdentityHint));
+			if (pskIdentityHint is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pskIdentityHint));
 			sec_protocol_options_set_tls_pre_shared_key_identity_hint (GetCheckedHandle (), pskIdentityHint.Handle);
 		}
 #endif

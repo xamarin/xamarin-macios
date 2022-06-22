@@ -516,6 +516,13 @@ namespace Xamarin.Bundler
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out LinkContext, out assemblies);
 
+			var state = MarshalNativeExceptionsState;
+			if (state?.Started == true) {
+				// The generator is 'started' by the linker, which means it may not
+				// be started if the linker was not executed due to re-using cached results.
+				state.End ();
+			}
+
 			ErrorHelper.Show (LinkContext.Exceptions);
 
 			Driver.Watch ("Link Assemblies", 1);
@@ -881,12 +888,6 @@ namespace Xamarin.Bundler
 
 			// Write P/Invokes
 			var state = MarshalNativeExceptionsState;
-			if (state.Started) {
-				// The generator is 'started' by the linker, which means it may not
-				// be started if the linker was not executed due to re-using cached results.
-				state.End ();
-			}
-
 			var ifile = state.SourcePath;
 			var mode = App.LibPInvokesLinkMode;
 			foreach (var abi in GetArchitectures (mode)) {
@@ -1092,7 +1093,7 @@ namespace Xamarin.Bundler
 								link_dependencies.AddRange (tasks);
 								break;
 							case SymbolMode.Linker:
-								compiler_flags.ReferenceSymbols (symbols);
+								compiler_flags.ReferenceSymbols (symbols, abi);
 								break;
 							default:
 								throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");
@@ -1470,7 +1471,7 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (GenerateReferencingSource (Path.Combine (App.Cache.Location, "reference.m"), GetRequiredSymbols ()));
 				break;
 			case SymbolMode.Linker:
-				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
+				linker_flags.ReferenceSymbols (GetRequiredSymbols (), abi);
 				break;
 			default:
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");

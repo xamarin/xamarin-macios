@@ -41,6 +41,12 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CGContext : NativeObject
 	{
 #if !COREBUILD
@@ -63,12 +69,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGContextRef */ IntPtr CGContextRetain (/* CGContextRef */ IntPtr c);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGContextRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGContextRelease (GetCheckedHandle ());
 		}
@@ -270,7 +276,7 @@ namespace CoreGraphics {
 		public void AddRects (CGRect [] rects)
 		{
 			if (rects is null)
-				throw new ArgumentNullException (nameof (rects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rects));
 			CGContextAddRects (Handle, rects, rects.Length);
 		}
 		
@@ -279,7 +285,7 @@ namespace CoreGraphics {
 		public void AddLines (CGPoint [] points)
 		{
 			if (points is null)
-				throw new ArgumentNullException (nameof (points));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			CGContextAddLines (Handle, points, points.Length);
 		}
 			
@@ -313,7 +319,7 @@ namespace CoreGraphics {
 		public void AddPath (CGPath path)
 		{
 			if (path is null)
-				throw new ArgumentNullException (nameof (path));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			CGContextAddPath (Handle, path.Handle);
 		}
 
@@ -406,7 +412,7 @@ namespace CoreGraphics {
 		public void ContextFillRects (CGRect [] rects)
 		{
 			if (rects is null)
-				throw new ArgumentNullException (nameof (rects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rects));
 			CGContextFillRects (Handle, rects, rects.Length);
 		}
 			
@@ -480,6 +486,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 		[Mac (10,13)]
@@ -493,6 +500,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (11,0)]
 		[Mac (10,13)]
@@ -535,7 +543,7 @@ namespace CoreGraphics {
 		public void ClipToRects (CGRect [] rects)
 		{
 			if (rects is null)
-				throw new ArgumentNullException (nameof (rects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rects));
 			CGContextClipToRects (Handle, rects, rects.Length);
 		}
 		
@@ -817,6 +825,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -833,6 +845,10 @@ namespace CoreGraphics {
 			/* const char* __nullable */ string? name, /* CGFloat */ nfloat size, CGTextEncoding textEncoding);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -864,6 +880,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -879,6 +899,10 @@ namespace CoreGraphics {
 		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ string? s, /* size_t */ nint length);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -900,6 +924,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -917,6 +945,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -932,6 +964,10 @@ namespace CoreGraphics {
 		extern static void CGContextShowText (/* CGContextRef */ IntPtr c, /* const char* __nullable */ byte[]? bytes, /* size_t */ nint length);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -953,6 +989,10 @@ namespace CoreGraphics {
 		}
 		
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -970,6 +1010,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -986,6 +1030,10 @@ namespace CoreGraphics {
 			/* CGFloat */ nfloat y, /* const char* __nullable */ string? str, /* size_t */ nint length);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1003,6 +1051,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1020,6 +1072,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1045,6 +1101,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1061,6 +1121,10 @@ namespace CoreGraphics {
 			/* const CGGlyph * __nullable */ ushort []? glyphs, /* size_t */ nint count);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1078,6 +1142,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1099,6 +1167,10 @@ namespace CoreGraphics {
 		}
 		
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1115,6 +1187,10 @@ namespace CoreGraphics {
 			/* CGFloat */ nfloat y, /* const CGGlyph * __nullable */ ushort []? glyphs, /* size_t */ nint count);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1136,6 +1212,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1153,6 +1233,10 @@ namespace CoreGraphics {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1170,6 +1254,10 @@ namespace CoreGraphics {
 			/* const CGSize * __nullable */ CGSize []? advances, /* size_t */ nint count);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
 #if MONOMAC
@@ -1323,7 +1411,7 @@ namespace CoreGraphics {
 		public void DrawLayer (CGLayer layer, CGRect rect)
 		{
 			if (layer is null)
-				throw new ArgumentNullException (nameof (layer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (layer));
 			CGContextDrawLayerInRect (Handle, rect, layer.Handle);
 		}
 
@@ -1333,7 +1421,7 @@ namespace CoreGraphics {
 		public void DrawLayer (CGLayer layer, CGPoint point)
 		{
 			if (layer is null)
-				throw new ArgumentNullException (nameof (layer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (layer));
 			CGContextDrawLayerAtPoint (Handle, point, layer.Handle);
 		}
 

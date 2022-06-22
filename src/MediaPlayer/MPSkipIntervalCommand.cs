@@ -18,7 +18,7 @@ namespace MediaPlayer {
 		public double[]? PreferredIntervals {
 			get {
 				NSArray a = _PreferredIntervals;
-				if ((a == null) || (a.Count == 0))
+				if ((a is null) || (a.Count == 0))
 					return null;
 
                 return NSArray.ArrayFromHandle<double> (a.Handle, input => {
@@ -26,7 +26,7 @@ namespace MediaPlayer {
 				});
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					_PreferredIntervals = new NSArray ();
 				else {
 					NSObject [] nsoa = new NSObject [value.Length];

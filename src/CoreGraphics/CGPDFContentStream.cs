@@ -10,6 +10,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 using CoreFoundation;
@@ -20,6 +21,13 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGPDFContentStream.h
 	public class CGPDFContentStream : NativeObject {
 
@@ -57,7 +65,7 @@ namespace CoreGraphics {
 		static IntPtr Create (CGPDFStream stream, NSDictionary? streamResources = null, CGPDFContentStream? parent = null)
 		{
 			if (stream is null)
-				throw new ArgumentNullException (nameof (stream));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stream));
 
 			return CGPDFContentStreamCreateWithStream (stream.Handle, streamResources.GetHandle (), parent.GetHandle ());
 		}
@@ -67,12 +75,12 @@ namespace CoreGraphics {
 		{
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGPDFContentStreamRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGPDFContentStreamRelease (GetCheckedHandle ());
 		}
@@ -92,9 +100,9 @@ namespace CoreGraphics {
 		public CGPDFObject? GetResource (string category, string name)
 		{
 			if (category is null)
-				throw new ArgumentNullException (nameof (category));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (category));
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			var h = CGPDFContentStreamGetResource (Handle, category, name);
 			return (h == IntPtr.Zero) ? null : new CGPDFObject (h);

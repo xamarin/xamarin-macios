@@ -14,8 +14,16 @@ using Vector3 = global::OpenTK.Vector3;
 using CoreGraphics;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVAudio3DVectorOrientation {
 #if !COREBUILD
@@ -41,7 +49,7 @@ namespace AVFoundation {
 			return !left.Equals (right);
 		}
 		
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is AVAudio3DVectorOrientation))
 				return false;
@@ -61,6 +69,12 @@ namespace AVFoundation {
 #endif
 	}
 	
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVAudio3DAngularOrientation {
 
@@ -84,8 +98,8 @@ namespace AVFoundation {
 				left.Roll != right.Roll);
 			
 		}
-		
-		public override bool Equals(object obj)
+
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is AVAudio3DAngularOrientation))
 				return false;
@@ -104,6 +118,12 @@ namespace AVFoundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptureWhiteBalanceGains {
 		public float RedGain, GreenGain, BlueGain;
@@ -134,7 +154,7 @@ namespace AVFoundation {
 				left.BlueGain != right.BlueGain);
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is AVCaptureWhiteBalanceGains))
 				return false;
@@ -153,6 +173,12 @@ namespace AVFoundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptureWhiteBalanceChromaticityValues {
 		public float X, Y;
@@ -178,7 +204,7 @@ namespace AVFoundation {
 			return left.X != right.X || left.Y != right.Y;
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is AVCaptureWhiteBalanceChromaticityValues))
 				return false;
@@ -197,6 +223,12 @@ namespace AVFoundation {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVCaptureWhiteBalanceTemperatureAndTintValues {
 		public float Temperature, Tint;
@@ -222,7 +254,7 @@ namespace AVFoundation {
 			
 		}
 
-		public override bool Equals(object obj)
+		public override bool Equals(object? obj)
 		{
 			if (!(obj is AVCaptureWhiteBalanceTemperatureAndTintValues))
 				return false;
@@ -246,6 +278,12 @@ namespace AVFoundation {
 	}
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 #if !WATCH
 	public static class AVUtilities {
 
@@ -263,6 +301,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
@@ -288,6 +327,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
@@ -322,6 +362,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
@@ -341,6 +382,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
 	[UnsupportedOSPlatform ("ios")]
 	[UnsupportedOSPlatform ("tvos")]
 #else
@@ -371,6 +413,7 @@ namespace AVFoundation {
 
 #if NET
 	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("maccatalyst15.0")]
 #else
 	[Mac (10,15)]
 #endif

@@ -26,6 +26,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -48,6 +49,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
 	[SupportedOSPlatform ("macos10.12")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[iOS (10,0)]
 	[TV (10,0)]
@@ -102,7 +104,7 @@ namespace CoreGraphics {
 			// the API won't return a valid instance if no triple is given, i.e. at least one is needed. 
 			// `null` is accepted to mark the end of the list, not to make it optional
 			if ((triples is null) || (triples.Length == 0))
-				throw new ArgumentNullException (nameof (triples));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (triples));
 			if (triples.Length > 3)
 				throw new ArgumentException ("A maximum of 3 triples are supported");
 			
@@ -148,9 +150,9 @@ namespace CoreGraphics {
 		{
 			// API accept null arguments but returns null, which we can't use
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (destination is null)
-				throw new ArgumentNullException (nameof (destination));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destination));
 			return CGColorConversionInfoCreate (source.Handle, destination.Handle);
 		}
 
@@ -163,6 +165,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.14.6")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,14,6)]
 		[iOS (13,0)]
@@ -175,9 +178,9 @@ namespace CoreGraphics {
 		static IntPtr Create (CGColorSpace source, CGColorSpace destination, NSDictionary? options)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (destination is null)
-				throw new ArgumentNullException (nameof (destination));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (destination));
 
 			return CGColorConversionInfoCreateWithOptions (source.Handle, destination.Handle, options.GetHandle ());
 		}
@@ -186,6 +189,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.14.6")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,14,6)]
 		[iOS (13,0)]
@@ -201,6 +205,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]

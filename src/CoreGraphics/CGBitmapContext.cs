@@ -30,6 +30,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -40,6 +41,12 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CGBitmapContext : CGContext {
 #if !COREBUILD
 		// If allocated, this points to the byte array buffer that is passed.
@@ -74,7 +81,7 @@ namespace CoreGraphics {
 		static IntPtr Create (byte []? data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGImageAlphaInfo bitmapInfo, out GCHandle buffer)
 		{
 			buffer = default (GCHandle);
-			if (data != null)
+			if (data is not null)
 				buffer = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
 			return CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, colorSpace.GetHandle (), (uint) bitmapInfo);
 		}
@@ -88,7 +95,7 @@ namespace CoreGraphics {
 		static IntPtr Create (byte []? data, nint width, nint height, nint bitsPerComponent, nint bytesPerRow, CGColorSpace? colorSpace, CGBitmapFlags bitmapInfo, out GCHandle buffer)
 		{
 			buffer = default (GCHandle);
-			if (data != null)
+			if (data is not null)
 				buffer = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, because unsafe code is scoped to the current block, and the address of the byte array will be used after this function returns.
 			return CGBitmapContextCreate (data, width, height, bitsPerComponent, bytesPerRow, colorSpace.GetHandle (), (uint) bitmapInfo);
 		}

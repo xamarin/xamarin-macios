@@ -368,13 +368,29 @@ namespace Introspection {
 
 		void CheckUnavailable (Type t, bool typeUnavailable, Version? typeUnavailableVersion, MemberInfo m)
 		{
+			// Turns out Version (13, 1, 0) > Version (13, 1) since undefined fields are -1
+			// However, we consider them equal, so force a 0 Build if set to -1
+			if (typeUnavailableVersion is not null && typeUnavailableVersion.Build == -1) {
+				typeUnavailableVersion = new Version (typeUnavailableVersion.Major, typeUnavailableVersion.Minor, 0);
+			}
+
 			var ma = GetAvailable (m, out var availableVersion);
 			if (typeUnavailable && (ma != null)) {
 				if (typeUnavailableVersion is not null && availableVersion is not null) {
+#if NET
+					// Introduced and Deprecated in same version happens a lot in catalyst
+					if (availableVersion > typeUnavailableVersion)
+#else
 					if (availableVersion >= typeUnavailableVersion)
+#endif
 						AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} in {availableVersion} but the type {t.FullName} is [Unavailable ({Platform})] in {typeUnavailableVersion}");
-				} else {
-					AddErrorLine ($"[FAIL] {m} is marked with {ma} but the type {t.FullName} is [Unavailable ({Platform})]");
+				} 
+#if NET
+				// Availabile with no version and unavailable is a common valid pattern in NET-land
+				else if (typeUnavailableVersion is not null && availableVersion is null) { }
+#endif
+				 else {
+					AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked with {ma} but the type {t.FullName} is [Unavailable ({Platform})]");
 				}
 			}
 
@@ -384,6 +400,8 @@ namespace Introspection {
 					// Apple is introducing and deprecating numerous APIs in the same Mac Catalyst version,
 					// so specifically for Mac Catalyst, we do a simple 'greater than' version check,
 					// instead of a 'greater than or equal' version like we do for the other platforms.
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/14802
+
 					if (Platform == ApplePlatform.MacCatalyst) {
 						if (availableVersion > unavailableVersion)
 							AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is > than the unavailable version {unavailableVersion}");
@@ -391,8 +409,18 @@ namespace Introspection {
 						if (availableVersion >= unavailableVersion)
 							AddErrorLine ($"[FAIL] {m} is marked both [Unavailable ({Platform})] and {ma}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
 					}
+#endif
 				} else {
+					// As documented in https://docs.microsoft.com/en-us/dotnet/standard/analyzers/platform-compat-analyzer#advanced-scenarios-for-attribute-combinations
+					// it is valid, and required in places to declare a type both availabile and unavailable on a given platform.
+					// Example:
+					// 		[SupportedOSPlatform ("macos")]
+					// 		[UnsupportedOSPlatform ("macos10.13")]
+					// This API was introduced on macOS but became unavailable on 10.13
+					// The legacy attributes described this with Deprecated, and did not need to double declare
+#if !NET
 					AddErrorLine ($"[FAIL] {m} in {m.DeclaringType.FullName} is marked both [Unavailable ({Platform})] and {ma}.");
+#endif
 				}
 			}
 		}
@@ -414,6 +442,7 @@ namespace Introspection {
 						// Apple is introducing and deprecating numerous APIs in the same Mac Catalyst version,
 						// so specifically for Mac Catalyst, we do a simple 'greater than' version check,
 						// instead of a 'greater than or equal' version like we do for the other platforms.
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/14802
 						if (Platform == ApplePlatform.MacCatalyst) {
 							if (availableVersion > unavailableVersion)
 								AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is > than the unavailable version {unavailableVersion}");
@@ -422,8 +451,18 @@ namespace Introspection {
 							if (availableVersion >= unavailableVersion)
 								AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}, and it's available in version {availableVersion} which is >= than the unavailable version {unavailableVersion}");
 						}
+#endif
 					} else {
+					// As documented in https://docs.microsoft.com/en-us/dotnet/standard/analyzers/platform-compat-analyzer#advanced-scenarios-for-attribute-combinations
+					// it is valid, and required in places to declare a type both availabile and unavailable on a given platform.
+					// Example:
+					// 		[SupportedOSPlatform ("macos")]
+					// 		[UnsupportedOSPlatform ("macos10.13")]
+					// This API was introduced on macOS but became unavailable on 10.13
+					// The legacy attributes described this with Deprecated, and did not need to double declare
+#if !NET
 						AddErrorLine ($"[FAIL] {t.FullName} is marked both [Unavailable ({Platform})] and {ta}. Available: {availableVersion} Unavailable: {unavailableVersion}");
+#endif
 					}
 				}
 
@@ -504,6 +543,17 @@ namespace Introspection {
 						return true;
 					}
 					break;
+				// Apple itself is inconsistent in the availability of the type compared to these selectors
+				case "AVFoundation.AVCaptureStillImageOutput":
+					switch (memberName) {
+						case "AutomaticallyEnablesStillImageStabilizationWhenAvailable":
+						case "CapturingStillImage":
+						case "HighResolutionStillImageOutputEnabled":
+						case "IsStillImageStabilizationActive":
+						case "IsStillImageStabilizationSupported":
+							return true;
+					}
+					break;
 #endif
 				case "CarPlay.CPApplicationDelegate":
 					switch (memberName) {
@@ -517,6 +567,15 @@ namespace Introspection {
 						return true;
 					}
 					break;
+				case "CoreMedia.CMTimebase": {
+					switch (memberName) {
+						case "SetMasterTimebase":
+						case "SetMasterClock":
+							// These APIs were introduced and deprecated in the same version
+							return true;
+					}
+					break;
+				}
 				case "GameKit.GKScore": {
 					switch (memberName) {
 					case "ReportLeaderboardScores":
@@ -582,10 +641,12 @@ namespace Introspection {
 					if (type_level.Contains (s))
 						AddErrorLine ($"[FAIL] Both '{t}' and '{m}' are marked with `{s}`.");
 #endif
+#if !NET // https://github.com/xamarin/xamarin-macios/issues/14802
 					if (member_level.Contains (s))
 						AddErrorLine ($"[FAIL] '{m}' is decorated more than once with `{s}`.");
 					else
 						member_level.Add (s);
+#endif
 				}
 			}
 		}

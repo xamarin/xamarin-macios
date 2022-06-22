@@ -21,19 +21,25 @@
       </Item>
       <Item ItemId=";description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[A project for creating a .NET 6 iOS binding library]]></Val>
+          <Val><![CDATA[A project for creating a .NET iOS binding library]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Projekt pro vytvoření knihovny vazeb .NET 6 pro iOS]]></Val>
+            <Val><![CDATA[Projekt pro vytvoření knihovny vazeb .NET pro iOS]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[A project for creating a .NET 6 iOS binding library]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";name" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[iOS Binding Library (Preview)]]></Val>
+          <Val><![CDATA[iOS Binding Library]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Knihovna vazeb pro iOS (Preview)]]></Val>
+            <Val><![CDATA[Knihovna vazeb iOS]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[iOS Binding Library (Preview)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

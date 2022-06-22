@@ -54,6 +54,10 @@ parameters:
 - name: xqaCertPass
   type: string
 
+- name: enableDotnet
+  type: boolean
+  default: false
+
 - name: makeTarget
   type: string
   default: 'vsts-device-tests' # target to be used to run the tests
@@ -65,6 +69,9 @@ parameters:
 - name: parseLabels
   type: boolean
   default: true
+
+- name: isPR
+  type: boolean
 
 stages:
 - stage: ${{ parameters.stageName }}
@@ -87,6 +94,9 @@ stages:
 
       steps:
       - template: ../common/configure.yml
+        parameters: 
+          uploadArtifacts: false
+          enableDotnet: ${{ parameters.enableDotnet }}
 
   - job: tests
     dependsOn:
@@ -118,6 +128,7 @@ stages:
     steps:
     - template: build.yml
       parameters:
+        isPR: ${{ parameters.isPR }} 
         testsLabels: ${{ parameters.testsLabels }}
         statusContext: ${{ parameters.statusContext }}
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
@@ -140,6 +151,7 @@ stages:
     steps:
     - template: ../common/upload-vsdrops.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         testPrefix: ${{ parameters.testPrefix }}
         provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
@@ -155,6 +167,7 @@ stages:
     steps:
     - template: ../common/upload-vsts-tests.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         testPrefix: ${{ parameters.testPrefix }}
         provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
@@ -178,6 +191,7 @@ stages:
     steps:
     - template: ../common/publish-html.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         testPrefix: ${{ parameters.testPrefix }}

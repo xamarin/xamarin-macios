@@ -20,6 +20,7 @@ namespace Xharness {
 		bool generate_variations = true;
 
 		public TestPlatform TestPlatform;
+		public string Label;
 		public string Path;
 		public string? SolutionPath;
 		public string? Name;
@@ -39,8 +40,9 @@ namespace Xharness {
 		// Optional
 		public MonoNativeInfo? MonoNativeInfo { get; set; }
 
-		public TestProject (string path, bool isExecutableProject = true)
+		public TestProject (string label, string path, bool isExecutableProject = true)
 		{
+			Label = label;
 			Path = path;
 			IsExecutableProject = isExecutableProject;
 		}
@@ -59,7 +61,7 @@ namespace Xharness {
 
 		public virtual TestProject Clone ()
 		{
-			return CompleteClone (new TestProject (Path, IsExecutableProject));
+			return CompleteClone (new TestProject (Label, Path, IsExecutableProject));
 		}
 
 		protected virtual TestProject CompleteClone (TestProject rv)
@@ -194,21 +196,13 @@ namespace Xharness {
 						}
 					}
 				}
-
-				// The global.json and NuGet.config files make sure we use the locally built packages.
-				var dotnet_test_dir = System.IO.Path.Combine (test.RootDirectory, "dotnet");
-				var global_json = System.IO.Path.Combine (dotnet_test_dir, "global.json");
-				var nuget_config = System.IO.Path.Combine (dotnet_test_dir, "NuGet.config");
-				var target_directory = directory;
-				File.Copy (global_json, System.IO.Path.Combine (target_directory, System.IO.Path.GetFileName (global_json)), true);
-				File.Copy (nuget_config, System.IO.Path.Combine (target_directory, System.IO.Path.GetFileName (nuget_config)), true);
 			}
 
 			var projectReferences = new List<TestProject> ();
 			foreach (var pr in doc.GetProjectReferences ()) {
 				var prPath = pr.Replace ('\\', '/');
 				if (!allProjectReferences.TryGetValue (prPath, out var tp)) {
-					tp = new TestProject (pr.Replace ('\\', '/'));
+					tp = new TestProject (Label, pr.Replace ('\\', '/'));
 					tp.TestPlatform = TestPlatform;
 					await tp.CreateCopyAsync (log, processManager, test, rootDirectory, allProjectReferences);
 					allProjectReferences.Add (prPath, tp);

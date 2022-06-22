@@ -7,14 +7,14 @@ $jsonTemplateFiles | ForEach-Object {
     
     $destinationFile = "$($_.Directory.FullName)\$($Matches.1).json"
     $jsonFiles += Copy-Item "$($_.FullName)" -Destination $destinationFile -PassThru
-    Write-Host "Template loc file generated: $destinationFile"
+    Write-Debug "Template loc file generated: $destinationFile"
 }
 
 Push-Location "$SourcesDirectory"
 $projectObject = Get-Content $LocProjectPath | ConvertFrom-Json
 $jsonFiles | ForEach-Object {
-    $sourceFile = ($_.FullName | Resolve-Path -Relative)
-    $outputPath = "$(($_.DirectoryName | Resolve-Path -Relative) + "\")"
+    $sourceFile = $_.FullName
+    $outputPath = "$($_.DirectoryName + "\")"
     $projectObject.Projects[0].LocItems += (@{
         SourceFile = $sourceFile
         CopyOption = "LangIDOnName"

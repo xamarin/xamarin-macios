@@ -69,6 +69,12 @@ namespace CoreFoundation {
 	}
 
 	// NSStream.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CFStreamClientContext {
 		public nint Version; // CFIndex
@@ -159,6 +165,12 @@ namespace CoreFoundation {
 		Error
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public abstract class CFStream : CFType {
 		GCHandle gch;
 		CFRunLoop? loop;
@@ -168,6 +180,10 @@ namespace CoreFoundation {
 		#region Stream Constructors
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos12.0")]
@@ -193,6 +209,10 @@ namespace CoreFoundation {
 			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos12.0")]
@@ -217,7 +237,7 @@ namespace CoreFoundation {
 		                                         out CFWriteStream writeStream)
 		{
 			if (socket is null)
-				throw new ArgumentNullException (nameof (socket));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (socket));
 
 			IntPtr read, write;
 			CFStreamCreatePairWithSocket (IntPtr.Zero, socket.GetNative (), out read, out write);
@@ -226,6 +246,10 @@ namespace CoreFoundation {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos12.0")]
@@ -252,6 +276,10 @@ namespace CoreFoundation {
 			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos12.0")]
@@ -289,6 +317,10 @@ namespace CoreFoundation {
 #if !WATCH
 		// CFSocketStream.h in CFNetwork.framework (not CoreFoundation)
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos12.0")]
@@ -317,6 +349,10 @@ namespace CoreFoundation {
 			/* CFWriteStreamRef __nullable * __nullable */ out IntPtr writeStream);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos12.0")]
@@ -352,6 +388,10 @@ namespace CoreFoundation {
 #endif
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos12.0")]
@@ -378,6 +418,10 @@ namespace CoreFoundation {
 			/* CFReadStreamRef* */ out IntPtr readStream, /* CFWriteStreamRef* */ out IntPtr writeStream);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("macos12.0")]
@@ -414,6 +458,10 @@ namespace CoreFoundation {
 #if !WATCH
 		// CFHTTPStream.h in CFNetwork.framework (not CoreFoundation)
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("ios9.0")]
 #if MONOMAC
@@ -430,6 +478,10 @@ namespace CoreFoundation {
 			/* CFAllocatorRef __nullable */ IntPtr alloc, /* CFHTTPMessageRef __nonnull */ IntPtr request);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("ios9.0")]
 #if MONOMAC
@@ -444,7 +496,7 @@ namespace CoreFoundation {
 		public static CFHTTPStream CreateForHTTPRequest (CFHTTPMessage request)
 		{
 			if (request is null)
-				throw new ArgumentNullException (nameof (request));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (request));
 
 			var handle = CFReadStreamCreateForHTTPRequest (IntPtr.Zero, request.Handle);
 			return new CFHTTPStream (handle, true);
@@ -452,6 +504,10 @@ namespace CoreFoundation {
 
 		// CFHTTPStream.h in CFNetwork.framework (not CoreFoundation)
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("ios9.0")]
 #if MONOMAC
@@ -469,6 +525,10 @@ namespace CoreFoundation {
 			/* CFReadStreamRef __nonnull */ IntPtr requestBody);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("ios9.0")]
 #if MONOMAC
@@ -483,9 +543,9 @@ namespace CoreFoundation {
 		public static CFHTTPStream CreateForStreamedHTTPRequest (CFHTTPMessage request, CFReadStream body)
 		{
 			if (request is null)
-				throw new ArgumentNullException (nameof (request));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (request));
 			if (body is null)
-				throw new ArgumentNullException (nameof (body));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (body));
 
 			var handle = CFReadStreamCreateForStreamedHTTPRequest (IntPtr.Zero, request.Handle, body.Handle);
 			return new CFHTTPStream (handle, true);
@@ -494,9 +554,9 @@ namespace CoreFoundation {
 		public static CFHTTPStream CreateForStreamedHTTPRequest (CFHTTPMessage request, NSInputStream body)
 		{
 			if (request is null)
-				throw new ArgumentNullException (nameof (request));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (request));
 			if (body is null)
-				throw new ArgumentNullException (nameof (body));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (body));
 
 			var handle = CFReadStreamCreateForStreamedHTTPRequest (IntPtr.Zero, request.Handle, body.Handle);
 			return new CFHTTPStream (handle, true);
@@ -525,7 +585,7 @@ namespace CoreFoundation {
 		protected void CheckError ()
 		{
 			var exc = GetError ();
-			if (exc != null)
+			if (exc is not null)
 				throw exc;
 		}
 
@@ -596,6 +656,12 @@ namespace CoreFoundation {
 
 		#region Events
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#endif
 		public class StreamEventArgs : EventArgs {
 			public CFStreamEventType EventType {
 				get;
@@ -622,35 +688,35 @@ namespace CoreFoundation {
 		protected virtual void OnOpenCompleted (StreamEventArgs args)
 		{
 			var e = OpenCompletedEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnHasBytesAvailableEvent (StreamEventArgs args)
 		{
 			var e = HasBytesAvailableEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnCanAcceptBytesEvent (StreamEventArgs args)
 		{
 			var e = CanAcceptBytesEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnErrorEvent (StreamEventArgs args)
 		{
 			var e = ErrorEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnClosedEvent (StreamEventArgs args)
 		{
 			var e = ClosedEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
@@ -755,6 +821,8 @@ namespace CoreFoundation {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -765,6 +833,8 @@ namespace CoreFoundation {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -775,6 +845,8 @@ namespace CoreFoundation {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -785,6 +857,8 @@ namespace CoreFoundation {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -795,6 +869,8 @@ namespace CoreFoundation {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]
@@ -811,6 +887,8 @@ namespace CoreFoundation {
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,0)]
 		[Mac (10,9)]

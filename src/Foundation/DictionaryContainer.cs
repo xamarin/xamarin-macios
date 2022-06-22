@@ -29,6 +29,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 #if !COREBUILD
 using CoreFoundation;
@@ -48,6 +49,12 @@ using NativeHandle = System.IntPtr;
 
 namespace Foundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public abstract class DictionaryContainer
 	{
 #if !COREBUILD
@@ -310,6 +317,8 @@ namespace Foundation {
 		protected CMTime? GetCMTimeValue (NSString key)
 		{
 			var dictValue = GetNSDictionary (key);
+			if (dictValue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictValue));
 			var value = CMTime.FromDictionary (dictValue);
 			if (value.IsInvalid)
 				return null;

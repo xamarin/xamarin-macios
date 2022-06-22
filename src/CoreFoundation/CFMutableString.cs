@@ -1,9 +1,12 @@
 // Copyright 2019 Microsoft Corporation
 
+#nullable enable
+
 #if !COREBUILD
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -13,7 +16,13 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace CoreFoundation {
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFMutableString : CFString {
 
 #if !NET
@@ -39,13 +48,13 @@ namespace CoreFoundation {
 		public CFMutableString (string @string = "", nint maxLength = default (nint))
 		{
 			// not really needed - but it's consistant with other .ctor
-			if (@string == null)
-				throw new ArgumentNullException (nameof (@string));
+			if (@string is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@string));
 			// NSMallocException Out of memory. We suggest restarting the application. If you have an unsaved document, create a backup copy in Finder, then try to save.
 			if (maxLength < 0)
 				throw new ArgumentException (nameof (maxLength));
 			Handle = CFStringCreateMutable (IntPtr.Zero, maxLength);
-			if (@string != null)
+			if (@string is not null)
 				CFStringAppendCharacters (Handle, @string, @string.Length);
 		}
 
@@ -54,8 +63,8 @@ namespace CoreFoundation {
 
 		public CFMutableString (CFString theString, nint maxLength = default (nint))
 		{
-			if (theString == null)
-				throw new ArgumentNullException (nameof (theString));
+			if (theString is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (theString));
 			// NSMallocException Out of memory. We suggest restarting the application. If you have an unsaved document, create a backup copy in Finder, then try to save.
 			if (maxLength < 0)
 				throw new ArgumentException (nameof (maxLength));
@@ -67,8 +76,8 @@ namespace CoreFoundation {
 
 		public void Append (string @string)
 		{
-			if (@string == null)
-				throw new ArgumentNullException (nameof (@string));
+			if (@string is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (@string));
 			str = null; // destroy any cached value
 			CFStringAppendCharacters (Handle, @string, @string.Length);
 		}
@@ -95,7 +104,7 @@ namespace CoreFoundation {
 
 		public bool Transform (ref CFRange range, string transform, bool reverse)
 		{
-			var t = NSString.CreateNative (transform);
+			var t = CreateNative (transform);
 			try {
 				return Transform (ref range, t, reverse);
 			} finally {
@@ -106,7 +115,7 @@ namespace CoreFoundation {
 		bool Transform (ref CFRange range, IntPtr transform, bool reverse)
 		{
 			if (transform == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (transform));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (transform));
 			str = null; // destroy any cached value
 			return CFStringTransform (Handle, ref range, transform, reverse);
 		}
@@ -133,7 +142,7 @@ namespace CoreFoundation {
 
 		public bool Transform (string transform, bool reverse)
 		{
-			var t = NSString.CreateNative (transform);
+			var t = CreateNative (transform);
 			try {
 				return Transform (t, reverse);
 			} finally {
@@ -144,7 +153,7 @@ namespace CoreFoundation {
 		bool Transform (IntPtr transform, bool reverse)
 		{
 			if (transform == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (transform));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (transform));
 			str = null; // destroy any cached value
 			return CFStringTransform (Handle, IntPtr.Zero, transform, reverse);
 		}

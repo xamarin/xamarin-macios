@@ -24,6 +24,8 @@ namespace SpriteKit
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (8,0)]
 		[Mac (10,10)]
@@ -46,7 +48,7 @@ namespace SpriteKit
 
 		public void AddNodes (params SKNode []? nodes)
 		{
-			if (nodes == null)
+			if (nodes is null)
 				return;
 			foreach (var n in nodes)
 				AddChild (n);
@@ -67,6 +69,7 @@ namespace SpriteKit
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5,0)]
 		[TV (12,0)]
@@ -76,9 +79,9 @@ namespace SpriteKit
 		public static SKNode? Create (string filename, Type [] types, out NSError error)
 		{
 			// Let's fail early.
-			if (filename == null)
+			if (filename is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (filename));
-			if (types == null)
+			if (types is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (types));
 			if (types.Length == 0)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (types), "Length must be greater than zero.");
@@ -94,6 +97,7 @@ namespace SpriteKit
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Watch (5,0)]
 		[TV (12,0)]
@@ -103,7 +107,7 @@ namespace SpriteKit
 		public static SKNode? Create (string filename, NSSet<Class> classes, out NSError error)
 		{
 			// `filename` will be checked by `Create` later
-			if (classes == null)
+			if (classes is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (classes));
 			if (classes.Count == 0)
 				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (classes), "Length must be greater than zero.");

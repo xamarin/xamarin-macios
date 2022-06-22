@@ -34,6 +34,9 @@ namespace SystemConfiguration {
 		IsDirect = 1<<17,
 #if NET
 		[UnsupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Unavailable (PlatformName.MacOSX)]
 #endif
@@ -67,7 +70,9 @@ namespace SystemConfiguration {
 				switch (address.AddressFamily) {
 				case AddressFamily.InterNetwork:
 					sin_family = 2;  // Address for IPv4
+#pragma warning disable CS0618 // Type or member is obsolete
 					sin_addr = (int) address.Address;
+#pragma warning restore CS0618 // Type or member is obsolete
 					break;
 				case AddressFamily.InterNetworkV6:
 					sin_family = 30; // Address for IPv6
@@ -135,7 +140,7 @@ namespace SystemConfiguration {
 		static IntPtr Create (IPAddress ip)
 		{
 			if (ip is null)
-				throw new ArgumentNullException (nameof (ip));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ip));
 
 			var s = new sockaddr_in (ip);
 			return CheckFailure (SCNetworkReachabilityCreateWithAddress (IntPtr.Zero, ref s));
@@ -149,7 +154,7 @@ namespace SystemConfiguration {
 		static IntPtr Create (string address)
 		{
 			if (address is null)
-				throw new ArgumentNullException (nameof (address));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (address));
 
 			return CheckFailure (SCNetworkReachabilityCreateWithName (IntPtr.Zero, address));
 		}
@@ -262,7 +267,7 @@ namespace SystemConfiguration {
 
 #if !NET
 				lock (typeof (NetworkReachability)){
-					if (callouth == null)
+					if (callouth is null)
 						callouth = Callback;
 				}
 #endif
@@ -304,10 +309,10 @@ namespace SystemConfiguration {
 		public bool Schedule (CFRunLoop runLoop, string mode)
 		{
 			if (runLoop is null)
-				throw new ArgumentNullException (nameof (runLoop));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (runLoop));
 
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			var modeHandle = CFString.CreateNative (mode);
 			try {
@@ -328,10 +333,10 @@ namespace SystemConfiguration {
 		public bool Unschedule (CFRunLoop runLoop, string mode)
 		{
 			if (runLoop is null)
-				throw new ArgumentNullException (nameof (runLoop));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (runLoop));
 
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			var modeHandle = CFString.CreateNative (mode);
 			try {

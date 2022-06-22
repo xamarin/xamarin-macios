@@ -46,6 +46,12 @@ namespace CoreLocation {
 	// CLLocationDegrees -> double -> CLLocation.h
 
 	// CLLocation.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CLLocationCoordinate2D {
 		public /* CLLocationDegrees */ double Latitude;
@@ -76,7 +82,9 @@ namespace CoreLocation {
 	public partial class CLPlacemark {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
-		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
 #else
 		[iOS (10, 0)]
 		[Mac (11,0)]

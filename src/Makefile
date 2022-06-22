@@ -27,6 +27,8 @@ MACCATALYST_DOTNET_BUILD_DIR=$(DOTNET_BUILD_DIR)/maccatalyst
 
 GENERATOR_FLAGS=-process-enums -core -nologo -nostdlib -noconfig -native-exception-marshalling --ns:ObjCRuntime
 
+GENERATOR_TF_VERSION=$(subst net,,$(DOTNET_TFM))
+
 DOTNET_REFERENCES = \
 	/r:$(DOTNET_BCL_DIR)/System.Buffers.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Collections.Concurrent.dll \
@@ -241,7 +243,7 @@ $(IOS_DOTNET_BUILD_DIR)/ios.rsp: Makefile Makefile.generator frameworks.sources 
 		-sourceonly=$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources \
 		-tmpdir=$(IOS_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib=$(IOS_DOTNET_BUILD_DIR)/core-ios.dll \
-		--target-framework=.NETCoreApp,Version=6.0,Profile=ios \
+		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=ios \
 		$(IOS_APIS) \
 		@$(DOTNET_BUILD_DIR)/ios-defines-dotnet.rsp \
 		> $@
@@ -261,7 +263,7 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 		@$(BUILD_DIR)/ios-defines.rsp \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
 
-$(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%pdb $(2): $$(IOS_DOTNET_SOURCES) $$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources $$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml $(PRODUCT_KEY_PATH) | $(IOS_DOTNET_BUILD_DIR)/$(1) $(IOS_DOTNET_BUILD_DIR)/ref
+$(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%pdb $(2): $$(IOS_DOTNET_SOURCES) $$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources $$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $$(TOP)/src/ILLink.Descriptors.xml $$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml $(PRODUCT_KEY_PATH) | $(IOS_DOTNET_BUILD_DIR)/$(1) $(IOS_DOTNET_BUILD_DIR)/ref
 	$$(call Q_PROF_CSC,dotnet/$(1)-bit) $(DOTNET_CSC) $(DOTNET_FLAGS) -out:$(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS.dll -unsafe -optimize \
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
@@ -271,6 +273,7 @@ $(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Micr
 		$$(IOS_CSC_FLAGS_XI) \
 		@$(DOTNET_BUILD_DIR)/ios-defines-dotnet.rsp \
 		-res:$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
+		-res:$(TOP)/src/ILLink.Descriptors.xml \
 		-res:$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		$$(IOS_DOTNET_SOURCES) @$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources
 
@@ -663,7 +666,7 @@ $(MACOS_DOTNET_BUILD_DIR)/macos.rsp: Makefile Makefile.generator frameworks.sour
 		-sourceonly:$(MACOS_DOTNET_BUILD_DIR)/macos-generated-sources \
 		-tmpdir:$(MACOS_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib:$(MACOS_DOTNET_BUILD_DIR)/core-macos.dll \
-		--target-framework=.NETCoreApp,Version=6.0,Profile=macos \
+		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=macos \
 		$(MACOS_DOTNET_APIS) \
 		@$(DOTNET_BUILD_DIR)/macos-defines-dotnet.rsp \
 		> $@
@@ -917,7 +920,7 @@ $(WATCHOS_DOTNET_BUILD_DIR)/watchos.rsp: Makefile Makefile.generator frameworks.
 		-sourceonly=$(WATCHOS_DOTNET_BUILD_DIR)/watchos-generated-sources \
 		-tmpdir=$(WATCHOS_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib=$(WATCHOS_DOTNET_BUILD_DIR)/core-watchos.dll \
-		--target-framework=.NETCoreApp,Version=6.0,Profile=watchos \
+		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=watchos \
 		$(WATCHOS_APIS) \
 		@$(DOTNET_BUILD_DIR)/watchos-defines-dotnet.rsp \
 		> $@
@@ -1226,12 +1229,12 @@ $(TVOS_DOTNET_BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.source
 		-sourceonly=$(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources \
 		-tmpdir=$(TVOS_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib=$(TVOS_DOTNET_BUILD_DIR)/core-tvos.dll \
-		--target-framework=.NETCoreApp,Version=6.0,Profile=tvos \
+		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=tvos \
 		$(TVOS_DOTNET_APIS) \
 		@$(DOTNET_BUILD_DIR)/tvos-defines-dotnet.rsp \
 		> $@
 
-$(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%pdb $(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS%dll: $(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources $(TVOS_DOTNET_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(TVOS_DOTNET_BUILD_DIR)/64 $(TVOS_DOTNET_BUILD_DIR)/ref
+$(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%pdb $(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS%dll: $(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources $(TVOS_DOTNET_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(TOP)/src/ILLink.Descriptors.xml $(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(TVOS_DOTNET_BUILD_DIR)/64 $(TVOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
 		$(DOTNET_CSC) $(DOTNET_FLAGS) -out:$(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
@@ -1244,6 +1247,7 @@ $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Micro
 		$(TVOS_DOTNET_SOURCES) \
 		@$(DOTNET_BUILD_DIR)/tvos-defines-dotnet.rsp \
 		-res:$(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
+		-res:$(TOP)/src/ILLink.Descriptors.xml \
 		-res:$(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		@$<
 
@@ -1411,12 +1415,12 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst.rsp: Makefile Makefile.generator fra
 		-sourceonly=$(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources \
 		-tmpdir=$(MACCATALYST_DOTNET_BUILD_DIR)/generated-sources \
 		-baselib=$(MACCATALYST_DOTNET_BUILD_DIR)/core-maccatalyst.dll \
-		--target-framework=.NETCoreApp,Version=6.0,Profile=maccatalyst \
+		--target-framework=.NETCoreApp,Version=$(GENERATOR_TF_VERSION),Profile=maccatalyst \
 		$(MACCATALYST_DOTNET_APIS) \
 		@$(DOTNET_BUILD_DIR)/maccatalyst-defines-dotnet.rsp \
 		> $@
 
-$(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Microsoft.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_DOTNET_SOURCES) $(PRODUCT_KEY_PATH) $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
+$(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Microsoft.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_DOTNET_SOURCES) $(PRODUCT_KEY_PATH) $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(TOP)/src/ILLink.Descriptors.xml $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
 		$(DOTNET_CSC) $(DOTNET_FLAGS) -out:$(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
@@ -1429,6 +1433,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%dll $(MACCATALYST_DOTNE
 		$(MACCATALYST_DOTNET_SOURCES) \
 		@$(DOTNET_BUILD_DIR)/maccatalyst-defines-dotnet.rsp \
 		-res:$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
+		-res:$(TOP)/src/ILLink.Descriptors.xml \
 		-res:$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		@$<
 
@@ -1540,7 +1545,7 @@ $(SHARED_PATH)/Delegates.generated.cs: $(SHARED_PATH)/Delegates.cs.t4 $(SHARED_P
 	$(Q) $(MAKE) -C $(SHARED_PATH) Delegates.generated.cs
 
 $(BUILD_DIR)/common/NativeTypes/%.cs: $(TOP)/src/NativeTypes/%.tt | $(BUILD_DIR)/common/NativeTypes
-	$(Q_GEN) $(TT) $< -o $@ 1>/dev/null
+	$(Q_GEN) $(TT) $(abspath $<) -o $(abspath $@) 1>/dev/null
 
 $(COMMON_TARGET_DIRS):
 	$(Q) mkdir -p $@
@@ -1570,10 +1575,6 @@ $(BUILD_DIR)/Constants.%.generated.cs: Makefile $(GENERATE_FRAMEWORKS_CONSTANTS)
 $(DOTNET_BUILD_DIR)/Constants.%.generated.cs: Makefile $(DOTNET_GENERATE_FRAMEWORKS_CONSTANTS) | $(DOTNET_BUILD_DIR)
 	$(Q) mono --debug $(DOTNET_GENERATE_FRAMEWORKS_CONSTANTS) "$*" "$@.tmp"
 	$(Q) mv "$@.tmp" "$@"
-
-# This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global.json: $(TOP)/global6.json
-	$(Q) $(CP) $< $@
 
 install-local:: $(INSTALL_TARGETS)
 all-local:: $(ALL_TARGETS)

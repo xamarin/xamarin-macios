@@ -27,6 +27,8 @@ namespace VideoToolbox {
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("tvos10.2")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[iOS (8,0)]
 	[TV (10,2)]
@@ -66,7 +68,7 @@ namespace VideoToolbox {
 		// Here for legacy code, which would only work under duress (user had to manually ref the CMSampleBuffer on the callback)
 		//
 		static CompressionOutputCallback? _static_CompressionOutputCallback;
-		static CompressionOutputCallback static_CompressionOutputCallback {
+		static CompressionOutputCallback? static_CompressionOutputCallback {
 			get {
 				if (_static_CompressionOutputCallback is null)
 					_static_CompressionOutputCallback = new CompressionOutputCallback (CompressionCallback);
@@ -115,7 +117,7 @@ namespace VideoToolbox {
 		// End region of legacy code
 
 		static CompressionOutputCallback? _static_newCompressionOutputCallback;
-		static CompressionOutputCallback static_newCompressionOutputCallback {
+		static CompressionOutputCallback? static_newCompressionOutputCallback {
 			get {
 				if (_static_newCompressionOutputCallback is null)
 					_static_newCompressionOutputCallback = new CompressionOutputCallback (NewCompressionCallback);
@@ -171,7 +173,7 @@ namespace VideoToolbox {
 #if NET
 			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes?.Dictionary);
 #else
-			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes == null ? null : sourceImageBufferAttributes.Dictionary, static_CompressionOutputCallback);
+			return Create (width, height, codecType, compressionOutputCallback, encoderSpecification, sourceImageBufferAttributes?.Dictionary, static_CompressionOutputCallback);
 #endif
 		}
 
@@ -182,7 +184,7 @@ namespace VideoToolbox {
 #if NET
 		        delegate* unmanaged</* void* CM_NULLABLE */ IntPtr, /* void* CM_NULLABLE */ IntPtr, /* OSStatus */ VTStatus, VTEncodeInfoFlags, /* CMSampleBufferRef CM_NULLABLE */ IntPtr, void> staticCback)
 #else
-		        CompressionOutputCallback staticCback)
+		        CompressionOutputCallback? staticCback)
 #endif
 		{
 			var callbackHandle = default (GCHandle);
@@ -228,6 +230,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,9)]
 #endif
@@ -238,6 +241,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,9)]
 #endif
@@ -260,7 +264,7 @@ namespace VideoToolbox {
 			NSDictionary frameProperties, CVImageBuffer sourceFrame, out VTEncodeInfoFlags infoFlags)
 		{
 			if (sourceFrame is null)
-				throw new ArgumentNullException (nameof (sourceFrame));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceFrame));
 
 			return EncodeFrame (imageBuffer, presentationTimestamp, duration, frameProperties, sourceFrame.GetCheckedHandle (), out infoFlags);
 		}
@@ -269,7 +273,7 @@ namespace VideoToolbox {
 			NSDictionary frameProperties, IntPtr sourceFrame, out VTEncodeInfoFlags infoFlags)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException (nameof (imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			
 			return VTCompressionSessionEncodeFrame (GetCheckedHandle (), imageBuffer.Handle, presentationTimestamp, duration,
 				frameProperties.GetHandle (),
@@ -310,7 +314,7 @@ namespace VideoToolbox {
 			VTCompressionOutputHandler outputHandler)
 		{
 			if (sourceFrame is null)
-				throw new ArgumentNullException (nameof (sourceFrame));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sourceFrame));
 
 			return EncodeFrame (imageBuffer, presentationTimestamp, duration, frameProperties, sourceFrame.GetCheckedHandle (), out infoFlags, outputHandler);
 		}
@@ -321,9 +325,9 @@ namespace VideoToolbox {
 			VTCompressionOutputHandler outputHandler)
 		{
 			if (imageBuffer is null)
-				throw new ArgumentNullException ((imageBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (imageBuffer));
 			if (outputHandler is null)
-				throw new ArgumentNullException (nameof (outputHandler));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputHandler));
 
 			var block = new BlockLiteral ();
 			block.SetupBlockUnsafe (compressionOutputHandlerTrampoline, outputHandler);
@@ -350,6 +354,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -360,6 +365,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -372,6 +378,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -382,6 +389,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -392,6 +400,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -412,6 +421,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -425,6 +435,7 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("macos10.10")]
 		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("tvos10.2")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,10)]
 #endif
@@ -447,7 +458,7 @@ namespace VideoToolbox {
 		public VTStatus SetCompressionProperties (VTCompressionProperties options)
 		{
 			if (options is null)
-				throw new ArgumentNullException (nameof (options));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
 
 			return VTSessionSetProperties (GetCheckedHandle (), options.Dictionary.Handle);
 		}

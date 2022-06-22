@@ -14,6 +14,7 @@
     <LangVersion>latest</LangVersion>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <RootTestsDirectory>..</RootTestsDirectory>
+    <CompilerResponseFile>$(RootTestsDirectory)\..\src\build\macos-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -310,7 +311,7 @@
   </Target>
   <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting"
       Condition="!Exists('$(TestLibrariesDirectory)/.libs/macos/custom-type-assembly.dll') Or !Exists('$(TestLibrariesDirectory)/.libs/dotnet/macos/custom-type-assembly.dll')" >
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" />
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath="/>
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath="/>
   </Target>
 </Project>

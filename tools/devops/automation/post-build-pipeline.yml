@@ -7,11 +7,12 @@ pr: none
 resources:
   pipelines:
   - pipeline: macios
-    source: xamarin-macios
+    source: xamarin-macios-ci
     trigger:
       branches:
       - main
       - release/*
+      - net7.0
       stages:
       - prepare_release
 

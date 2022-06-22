@@ -50,6 +50,13 @@ namespace CoreGraphics {
 		CloseSubpath
 	}
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGPath.h
 	public struct CGPathElement {
 		public CGPathElementType Type;
@@ -69,7 +76,13 @@ namespace CoreGraphics {
 		// Set for AddCurveToPoint
 		public CGPoint Point3;
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CGPath : NativeObject {
 #if !COREBUILD
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -115,12 +128,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGPathRef */ IntPtr CGPathRetain (/* CGPathRef */ IntPtr path);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGPathRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGPathRelease (GetCheckedHandle ());
 		}
@@ -269,14 +282,14 @@ namespace CoreGraphics {
 		public unsafe void AddRects (CGAffineTransform m, CGRect [] rects)
 		{
 			if (rects is null)
-				throw new ArgumentNullException (nameof (rects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rects));
 			CGPathAddRects (Handle, &m, rects, rects.Length);
 		}
 
 		public unsafe void AddRects (CGAffineTransform m, CGRect [] rects, int count)
 		{
 			if (rects is null)
-				throw new ArgumentNullException (nameof (rects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rects));
 			if (count > rects.Length)
 				throw new ArgumentException (nameof (count));
 			CGPathAddRects (Handle, &m, rects, count);
@@ -285,14 +298,14 @@ namespace CoreGraphics {
 		public unsafe void AddRects (CGRect [] rects)
 		{
 			if (rects is null)
-				throw new ArgumentNullException (nameof (rects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rects));
 			CGPathAddRects (Handle, null, rects, rects.Length);
 		}
 
 		public unsafe void AddRects (CGRect [] rects, int count)
 		{
 			if (rects is null)
-				throw new ArgumentNullException (nameof (rects));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rects));
 			if (count > rects.Length)
 				throw new ArgumentException (nameof (count));
 			CGPathAddRects (Handle, null, rects, count);
@@ -304,14 +317,14 @@ namespace CoreGraphics {
 		public unsafe void AddLines (CGAffineTransform m, CGPoint [] points)
 		{
 			if (points is null)
-				throw new ArgumentNullException (nameof (points));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			CGPathAddLines (Handle, &m, points, points.Length);
 		}
 
 		public unsafe void AddLines (CGAffineTransform m, CGPoint [] points, int count)
 		{
 			if (points is null)
-				throw new ArgumentNullException (nameof (points));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			if (count > points.Length)
 				throw new ArgumentException (nameof (count));
 			CGPathAddLines (Handle, &m, points, count);
@@ -320,14 +333,14 @@ namespace CoreGraphics {
 		public unsafe void AddLines (CGPoint [] points)
 		{
 			if (points is null)
-				throw new ArgumentNullException (nameof (points));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			CGPathAddLines (Handle, null, points, points.Length);
 		}
 
 		public unsafe void AddLines (CGPoint [] points, int count)
 		{
 			if (points is null)
-				throw new ArgumentNullException (nameof (points));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			if (count > points.Length)
 				throw new ArgumentException (nameof (count));
 			CGPathAddLines (Handle, null, points, count);
@@ -391,14 +404,14 @@ namespace CoreGraphics {
 		public unsafe void AddPath (CGAffineTransform t, CGPath path2)
 		{
 			if (path2 is null)
-				throw new ArgumentNullException (nameof (path2));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path2));
 			CGPathAddPath (Handle, &t, path2.Handle);
 		}
 		
 		public unsafe void AddPath (CGPath path2)
 		{
 			if (path2 is null)
-				throw new ArgumentNullException (nameof (path2));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path2));
 			CGPathAddPath (Handle, null, path2.Handle);
 		}
 
@@ -620,6 +633,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]
@@ -632,6 +647,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]
@@ -647,6 +664,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]
@@ -659,6 +678,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 		[iOS (7,0)]

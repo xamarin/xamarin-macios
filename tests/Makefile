@@ -12,7 +12,6 @@ endif
 
 MTOUCH=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/bin/mtouch
 
-export MD_APPLE_SDK_ROOT=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 export MSBUILD_EXE_PATH=$(MONO_PREFIX)/lib/mono/msbuild/15.0/bin/MSBuild.dll
 export TargetFrameworkFallbackSearchPaths=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
@@ -68,7 +67,6 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
 	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
 	@echo "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
-	@echo "SYSTEM_DOTNET=$(SYSTEM_DOTNET)" >> $@
 	@echo "DOTNET=$(DOTNET)" >> $@
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
@@ -77,6 +75,7 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "DOTNET_BCL_DIR=$(DOTNET_BCL_DIR)" >> $@
 	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_$(platform)_RUNTIME_IDENTIFIERS='$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS)'\\n)" | sed 's/^ //' >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),DOTNET_$(rid)_ARCHITECTURES='$(DOTNET_$(rid)_ARCHITECTURES)'\\n))" | sed 's/^ //' >> $@
 	@echo "DOTNET_CSC_COMMAND='$(DOTNET_CSC)'" >> $@
 	@echo "DOTNET_TFM=$(DOTNET_TFM)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_VERSION_NO_METADATA=$($(platform)_NUGET_VERSION_NO_METADATA)\\n)" | sed 's/^ //' >> $@
@@ -90,7 +89,6 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "INCLUDE_DEVICE=$(INCLUDE_DEVICE)" >> $@
 	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
 	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
-	@echo "SYSTEM_DOTNET=$(SYSTEM_DOTNET)" >> $@
 	@echo "DOTNET=$(DOTNET)" >> $@
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
@@ -100,6 +98,7 @@ test-system.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Ver
 	@echo "DOTNET_BCL_DIR=$(DOTNET_BCL_DIR)" >> $@
 	@echo "ENABLE_DOTNET=$(ENABLE_DOTNET)" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),DOTNET_$(platform)_RUNTIME_IDENTIFIERS='$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS)'\\n)" | sed 's/^ //' >> $@
+	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),DOTNET_$(rid)_ARCHITECTURES='$(DOTNET_$(rid)_ARCHITECTURES)'\\n))" | sed 's/^ //' >> $@
 	@echo "DOTNET_CSC_COMMAND='$(DOTNET_CSC)'" >> $@
 	@printf "$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),$(platform)_NUGET_VERSION_NO_METADATA=$($(platform)_NUGET_VERSION_NO_METADATA)\\n)" | sed 's/^ //' >> $@
 

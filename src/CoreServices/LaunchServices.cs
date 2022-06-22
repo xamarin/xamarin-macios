@@ -19,6 +19,8 @@
 //
 // NOTE: KEEP IN SYNC WITH TESTS!
 
+#nullable enable
+
 #if MONOMAC
 
 using System;
@@ -78,6 +80,9 @@ namespace CoreServices
 		MultipleSessionsNotSupported = -10829
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public static class LaunchServices
 	{
 		#region Locating an Application
@@ -95,10 +100,10 @@ namespace CoreServices
 #else
 		[Mac (10, 10)]
 #endif
-		public static NSUrl GetDefaultApplicationUrlForUrl (NSUrl url, LSRoles roles = LSRoles.All)
+		public static NSUrl? GetDefaultApplicationUrlForUrl (NSUrl url, LSRoles roles = LSRoles.All)
 		{
-			if (url == null)
-				throw new ArgumentNullException (nameof (url));
+			if (url is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return Runtime.GetNSObject<NSUrl> (
 				LSCopyDefaultApplicationURLForURL (url.Handle, roles, IntPtr.Zero)
@@ -118,10 +123,10 @@ namespace CoreServices
 #else
 		[Mac (10, 10)]
 #endif
-		public static NSUrl GetDefaultApplicationUrlForContentType (string contentType, LSRoles roles = LSRoles.All)
+		public static NSUrl? GetDefaultApplicationUrlForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
-			if (contentType == null)
-				throw new ArgumentNullException (nameof (contentType));
+			if (contentType is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contentType));
 
 			return Runtime.GetNSObject<NSUrl> (
 				LSCopyDefaultApplicationURLForContentType (new NSString (contentType).Handle, roles, IntPtr.Zero)
@@ -133,8 +138,8 @@ namespace CoreServices
 
 		public static NSUrl [] GetApplicationUrlsForUrl (NSUrl url, LSRoles roles = LSRoles.All)
 		{
-			if (url == null)
-				throw new ArgumentNullException (nameof (url));
+			if (url is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return NSArray.ArrayFromHandle<NSUrl> (
 				LSCopyApplicationURLsForURL (url.Handle, roles)
@@ -150,10 +155,10 @@ namespace CoreServices
 		public static bool CanUrlAcceptUrl (NSUrl itemUrl, NSUrl targetUrl,
 			LSRoles roles, LSAcceptanceFlags acceptanceFlags, out LSResult result)
 		{
-			if (itemUrl == null)
-				throw new ArgumentNullException (nameof (itemUrl));
-			if (targetUrl == null)
-				throw new ArgumentNullException (nameof (targetUrl));
+			if (itemUrl is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (itemUrl));
+			if (targetUrl is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (targetUrl));
 
 			byte acceptsItem;
 			result = LSCanURLAcceptURL (itemUrl.Handle, targetUrl.Handle, roles, acceptanceFlags, out acceptsItem);
@@ -182,8 +187,8 @@ namespace CoreServices
 #endif
 		public static NSUrl [] GetApplicationUrlsForBundleIdentifier (string bundleIdentifier)
 		{
-			if (bundleIdentifier == null)
-				throw new ArgumentNullException (nameof (bundleIdentifier));
+			if (bundleIdentifier is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bundleIdentifier));
 
 			return NSArray.ArrayFromHandle<NSUrl> (
 				LSCopyApplicationURLsForBundleIdentifier (new NSString (bundleIdentifier).Handle, IntPtr.Zero)
@@ -199,16 +204,16 @@ namespace CoreServices
 
 		public unsafe static LSResult Open (NSUrl url)
 		{
-			if (url == null)
-				throw new ArgumentNullException (nameof (url));
+			if (url is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return LSOpenCFURLRef (url.Handle, (void **)0);
 		}
 
-		public unsafe static LSResult Open (NSUrl url, out NSUrl launchedUrl)
+		public unsafe static LSResult Open (NSUrl url, out NSUrl? launchedUrl)
 		{
-			if (url == null)
-				throw new ArgumentNullException (nameof (url));
+			if (url is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			void *launchedUrlHandle;
 			var result = LSOpenCFURLRef (url.Handle, &launchedUrlHandle);
@@ -225,8 +230,8 @@ namespace CoreServices
 
 		public static LSResult Register (NSUrl url, bool update)
 		{
-			if (url == null)
-				throw new ArgumentNullException (nameof (url));
+			if (url is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 
 			return LSRegisterURL (url.Handle, (byte)(update ? 1 : 0));
 		}
@@ -238,10 +243,10 @@ namespace CoreServices
 		[DllImport (Constants.CoreServicesLibrary)]
 		static extern IntPtr LSCopyAllRoleHandlersForContentType (IntPtr inContentType, LSRoles inRole);
 
-		public static string [] GetAllRoleHandlersForContentType (string contentType, LSRoles roles = LSRoles.All)
+		public static string?[]? GetAllRoleHandlersForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
-			if (contentType == null)
-				throw new ArgumentNullException (nameof (contentType));
+			if (contentType is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contentType));
 
 			return CFArray.StringArrayFromHandle (
 				LSCopyAllRoleHandlersForContentType (new NSString (contentType).Handle, roles)
@@ -253,8 +258,8 @@ namespace CoreServices
 
 		public static string GetDefaultRoleHandlerForContentType (string contentType, LSRoles roles = LSRoles.All)
 		{
-			if (contentType == null)
-				throw new ArgumentNullException (nameof (contentType));
+			if (contentType is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contentType));
 
 			return (string)Runtime.GetNSObject<NSString> (
 				LSCopyDefaultRoleHandlerForContentType (new NSString (contentType).Handle, roles)
@@ -269,10 +274,10 @@ namespace CoreServices
 		public static LSResult SetDefaultRoleHandlerForContentType (string contentType, string handlerBundleId,
 			LSRoles roles = LSRoles.All)
 		{
-			if (contentType == null)
-				throw new ArgumentNullException (nameof (contentType));
-			if (handlerBundleId == null)
-				throw new ArgumentNullException (nameof (handlerBundleId));
+			if (contentType is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contentType));
+			if (handlerBundleId is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handlerBundleId));
 
 			return LSSetDefaultRoleHandlerForContentType (
 				new NSString (contentType).Handle,
@@ -282,6 +287,7 @@ namespace CoreServices
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -293,6 +299,7 @@ namespace CoreServices
 		static extern IntPtr LSCopyAllHandlersForURLScheme (IntPtr inUrlScheme);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.15 use 'GetApplicationUrlsForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -300,10 +307,10 @@ namespace CoreServices
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'GetApplicationUrlsForUrl' instead.")]
 #endif
-		public static string [] GetAllHandlersForUrlScheme (string urlScheme)
+		public static string?[]? GetAllHandlersForUrlScheme (string urlScheme)
 		{
-			if (urlScheme == null)
-				throw new ArgumentNullException (nameof (urlScheme));
+			if (urlScheme is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (urlScheme));
 
 			return CFArray.StringArrayFromHandle (
 				LSCopyAllHandlersForURLScheme (new NSString (urlScheme).Handle)
@@ -311,6 +318,7 @@ namespace CoreServices
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -322,6 +330,7 @@ namespace CoreServices
 		static extern IntPtr LSCopyDefaultHandlerForURLScheme (IntPtr inUrlScheme);
 
 #if NET
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.15")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.15 use 'GetDefaultApplicationUrlForUrl' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -331,8 +340,8 @@ namespace CoreServices
 #endif
 		public static string GetDefaultHandlerForUrlScheme (string urlScheme)
 		{
-			if (urlScheme == null)
-				throw new ArgumentNullException (nameof (urlScheme));
+			if (urlScheme is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (urlScheme));
 
 			return (string)Runtime.GetNSObject<NSString> (
 				LSCopyDefaultHandlerForURLScheme (new NSString (urlScheme).Handle)
@@ -344,10 +353,10 @@ namespace CoreServices
 
 		public static LSResult SetDefaultHandlerForUrlScheme (string urlScheme, string handlerBundleId)
 		{
-			if (urlScheme == null)
-				throw new ArgumentNullException (nameof (urlScheme));
-			if (handlerBundleId == null)
-				throw new ArgumentNullException (nameof (handlerBundleId));
+			if (urlScheme is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (urlScheme));
+			if (handlerBundleId is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handlerBundleId));
 
 			return LSSetDefaultHandlerForURLScheme (
 				new NSString (urlScheme).Handle,

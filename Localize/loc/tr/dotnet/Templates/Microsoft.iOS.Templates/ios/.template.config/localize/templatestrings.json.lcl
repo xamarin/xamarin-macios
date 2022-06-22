@@ -21,19 +21,25 @@
       </Item>
       <Item ItemId=";description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[A project for creating a .NET 6 iOS application]]></Val>
+          <Val><![CDATA[A project for creating a .NET iOS application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Bir .NET 6 iOS uygulaması oluşturmaya yönelik proje]]></Val>
+            <Val><![CDATA[Bir .NET iOS uygulaması oluşturmaya yönelik proje]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[A project for creating a .NET 6 iOS application]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";name" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[iOS Application (Preview)]]></Val>
+          <Val><![CDATA[iOS Application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[iOS Uygulaması (Önizleme)]]></Val>
+            <Val><![CDATA[iOS Uygulaması]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[iOS Application (Preview)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

@@ -22,7 +22,7 @@ namespace SceneKit {
 		[Obsolete ("Use 'TimingFunction2' property.")]
 		public virtual Action<float>? TimingFunction {
 			get {
-				if (TimingFunction2 == null)
+				if (TimingFunction2 is null)
 					return null;
 				else
 					return (f) => {
@@ -30,7 +30,7 @@ namespace SceneKit {
 					};
 			}
 			set {
-				if (value == null)
+				if (value is null)
 					TimingFunction2 = null;
 				else
 					TimingFunction2 = (f) => {
@@ -76,7 +76,7 @@ namespace SceneKit {
 		[Mac (10, 9)]
 		public virtual bool WriteToUrl (NSUrl url, SCNSceneLoadingOptions options, SCNSceneExportDelegate handler, SCNSceneExportProgressHandler exportProgressHandler)
 		{
-			return WriteToUrl (url: url, options: options == null ? null : options.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler);
+			return WriteToUrl (url: url, options: options?.Dictionary, aDelegate: handler, exportProgressHandler: exportProgressHandler);
 		}
 
 		[Obsolete ("Use the 'ISCNSceneExportDelegate' overload instead.")]
@@ -134,7 +134,7 @@ namespace SceneKit {
 		static public void AddAnimation (this ISCNAnimatable self, SCNAnimation animation, string key)
 		{
 			using (var ca = CAAnimation.FromSCNAnimation (animation))
-			using (var st = key != null ? new NSString (key) : null)
+			using (var st = key is not null ? new NSString (key) : null)
 				self.AddAnimation (ca, st);
 		}
 	}

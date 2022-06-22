@@ -7,6 +7,8 @@
 // Copyright 2018-2019 Microsoft Corporation
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -17,6 +19,7 @@ namespace CoreGraphics {
 	[SupportedOSPlatform ("macos10.15")]
 	[SupportedOSPlatform ("ios13.0")]
 	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Mac (10,15)]
 	[iOS (13,0)]
@@ -28,7 +31,7 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		static extern /* const char * _Nullable */ IntPtr CGPDFTagTypeGetName (CGPdfTagType tagType);
 
-		public static string GetName (this CGPdfTagType self)
+		public static string? GetName (this CGPdfTagType self)
 		{
 			return Marshal.PtrToStringAnsi (CGPDFTagTypeGetName (self));
 		}

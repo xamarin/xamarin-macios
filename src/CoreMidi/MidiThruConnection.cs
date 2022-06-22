@@ -16,9 +16,15 @@ using CoreFoundation;
 using Foundation;
 
 using MidiThruConnectionRef = System.UInt32;
+using System.Runtime.Versioning;
 
 namespace CoreMidi {
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiThruConnection : IDisposable {
 		MidiThruConnectionRef handle;
 		const MidiThruConnectionRef InvalidRef = 0;
@@ -125,7 +131,7 @@ namespace CoreMidi {
 			if (Handle == InvalidRef)
 				throw new ObjectDisposedException ("MidiThruConnection");
 			if (connectionParams is null)
-				throw new ArgumentNullException (nameof (connectionParams));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (connectionParams));
 
 			using (var data = connectionParams.WriteStruct ()) {
 				var error = MIDIThruConnectionSetParams (Handle, data.Handle);
@@ -141,7 +147,7 @@ namespace CoreMidi {
 		public static MidiThruConnection[]? Find (string persistentOwnerID, out MidiError error)
 		{
 			if (persistentOwnerID is null)
-				throw new ArgumentNullException (nameof (persistentOwnerID));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (persistentOwnerID));
 
 			IntPtr ret;
 			var persistentOwnerIDHandle = CFString.CreateNative (persistentOwnerID);

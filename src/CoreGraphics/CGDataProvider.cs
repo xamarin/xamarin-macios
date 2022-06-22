@@ -30,6 +30,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -41,6 +42,13 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGDataProvider.h
 	public partial class CGDataProvider : NativeObject {
 #if !NET
@@ -62,12 +70,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGDataProviderRef */ IntPtr CGDataProviderRetain (/* CGDataProviderRef */ IntPtr provider);
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGDataProviderRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGDataProviderRelease (GetCheckedHandle ());
 		}
@@ -79,7 +87,7 @@ namespace CoreGraphics {
 		static public CGDataProvider? FromFile (string file)
 		{
 			if (file is null)
-				throw new ArgumentNullException (nameof (file));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (file));
 
 			var handle = CGDataProviderCreateWithFilename (file);
 			if (handle == IntPtr.Zero)
@@ -91,7 +99,7 @@ namespace CoreGraphics {
 		static IntPtr Create (string file)
 		{
 			if (file is null)
-				throw new ArgumentNullException (nameof (file));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (file));
 
 			var handle = CGDataProviderCreateWithFilename (file);
 			if (handle == IntPtr.Zero)
@@ -111,7 +119,7 @@ namespace CoreGraphics {
 		{
 			// not it's a __nullable parameter but it would return nil (see unit tests) and create an invalid instance
 			if (url is null)
-				throw new ArgumentNullException (nameof (url));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
 			return CGDataProviderCreateWithURL (url.Handle);
 		}
 
@@ -127,7 +135,7 @@ namespace CoreGraphics {
 		{
 			// not it's a __nullable parameter but it would return nil (see unit tests) and create an invalid instance
 			if (data is null)
-				throw new ArgumentNullException (nameof (data));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			return CGDataProviderCreateWithCFData (data.Handle);
 		}
 
@@ -191,7 +199,7 @@ namespace CoreGraphics {
 		static IntPtr Create (IntPtr memoryBlock, int size, Action<IntPtr> releaseMemoryBlockCallback)
 		{
 			if (releaseMemoryBlockCallback is null)
-				throw new ArgumentNullException (nameof (releaseMemoryBlockCallback));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (releaseMemoryBlockCallback));
 
 			var gch = GCHandle.Alloc (releaseMemoryBlockCallback);
 			return CGDataProviderCreateWithData (GCHandle.ToIntPtr (gch), memoryBlock, size, release_func_callback);
@@ -205,7 +213,7 @@ namespace CoreGraphics {
 		static IntPtr Create (byte [] buffer, int offset, int count)
 		{
 			if (buffer is null)
-				throw new ArgumentNullException (nameof (buffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffer));
 			if (offset < 0 || offset > buffer.Length)
 				throw new ArgumentException (nameof (offset));
 			if (offset + count > buffer.Length)

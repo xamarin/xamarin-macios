@@ -36,6 +36,7 @@ namespace Xamarin.Linker {
 		public Version SdkVersion { get; private set; }
 		public string SdkRootDirectory { get; private set; }
 		public int Verbosity => Driver.Verbosity;
+		public string XamarinNativeLibraryDirectory { get; private set; }
 
 		static ConditionalWeakTable<LinkContext, LinkerConfiguration> configurations = new ConditionalWeakTable<LinkContext, LinkerConfiguration> ();
 
@@ -55,6 +56,8 @@ namespace Xamarin.Linker {
 		string user_optimize_flags;
 
 		Dictionary<string, List<MSBuildItem>> msbuild_items = new Dictionary<string, List<MSBuildItem>> ();
+
+		internal PInvokeWrapperGenerator PInvokeWrapperGenerationState;
 
 		public static LinkerConfiguration GetInstance (LinkContext context, bool createIfNotFound = true)
 		{
@@ -111,6 +114,10 @@ namespace Xamarin.Linker {
 				case "AssemblyName":
 					// This is the AssemblyName MSBuild property for the main project (which is also the root/entry assembly)
 					Application.RootAssemblies.Add (value);
+					break;
+				case "AOTArgument":
+					if (!string.IsNullOrEmpty (value))
+						Application.AotArguments.Add (value);
 					break;
 				case "AOTCompiler":
 					AOTCompiler = value;
@@ -230,6 +237,11 @@ namespace Xamarin.Linker {
 				case "Registrar":
 					Application.ParseRegistrar (value);
 					break;
+				case "RequirePInvokeWrappers":
+					if (!TryParseOptionalBoolean (value, out var require_pinvoke_wrappers))
+						throw new InvalidOperationException ($"Unable to parse the {key} value: {value} in {linker_file}");
+					Application.RequiresPInvokeWrappers = require_pinvoke_wrappers.Value;
+					break;
 				case "RuntimeConfigurationFile":
 					Application.RuntimeConfigurationFile = value;
 					break;
@@ -279,6 +291,9 @@ namespace Xamarin.Linker {
 					break;
 				case "InvariantGlobalization":
 					InvariantGlobalization = string.Equals ("true", value, StringComparison.OrdinalIgnoreCase);
+					break;
+				case "XamarinNativeLibraryDirectory":
+					XamarinNativeLibraryDirectory = value;
 					break;
 				default:
 					throw new InvalidOperationException ($"Unknown key '{key}' in {linker_file}");
@@ -369,6 +384,7 @@ namespace Xamarin.Linker {
 			if (Verbosity > 0) {
 				Console.WriteLine ($"LinkerConfiguration:");
 				Console.WriteLine ($"    ABIs: {string.Join (", ", Abis.Select (v => v.AsArchString ()))}");
+				Console.WriteLine ($"    AOTArguments: {string.Join (", ", Application.AotArguments)}");
 				Console.WriteLine ($"    AOTOutputDirectory: {AOTOutputDirectory}");
 				Console.WriteLine ($"    AppBundleManifestPath: {Application.InfoPListPath}");
 				Console.WriteLine ($"    AreAnyAssembliesTrimmed: {Application.AreAnyAssembliesTrimmed}");
@@ -397,12 +413,14 @@ namespace Xamarin.Linker {
 				Console.WriteLine ($"    RelativeAppBundlePath: {RelativeAppBundlePath}");
 				Console.WriteLine ($"    Registrar: {Application.Registrar} (Options: {Application.RegistrarOptions})");
 				Console.WriteLine ($"    RuntimeConfigurationFile: {Application.RuntimeConfigurationFile}");
+				Console.WriteLine ($"    RequirePInvokeWrappers: {Application.RequiresPInvokeWrappers}");
 				Console.WriteLine ($"    SdkDevPath: {Driver.SdkRoot}");
 				Console.WriteLine ($"    SdkRootDirectory: {SdkRootDirectory}");
 				Console.WriteLine ($"    SdkVersion: {SdkVersion}");
 				Console.WriteLine ($"    UseInterpreter: {Application.UseInterpreter}");
 				Console.WriteLine ($"    UseLlvm: {Application.IsLLVM}");
 				Console.WriteLine ($"    Verbosity: {Verbosity}");
+				Console.WriteLine ($"    XamarinNativeLibraryDirectory: {XamarinNativeLibraryDirectory}");
 				Console.WriteLine ($"    XamarinRuntime: {Application.XamarinRuntime}");
 			}
 		}

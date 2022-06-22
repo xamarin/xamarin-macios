@@ -251,6 +251,7 @@ namespace AppKit {
 		NSString TriggerOrderOut { get; }
 	}
 	
+	[NoiOS]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -4895,23 +4896,18 @@ namespace AppKit {
 		void Add (NSObject object1);
 
 		[Export ("addItemsWithObjectValues:")]
-		[PostGet ("Values")]
 		void Add (NSObject [] items);
 
 		[Export ("insertItemWithObjectValue:atIndex:")]
-		[PostGet ("Values")]
 		void Insert (NSObject object1, nint index);
 
 		[Export ("removeItemWithObjectValue:")]
-		[PostGet ("Values")]
 		void Remove (NSObject object1);
 
 		[Export ("removeItemAtIndex:")]
-		[PostGet ("Values")]
 		void RemoveAt (nint index);
 
 		[Export ("removeAllItems")]
-		[PostGet ("Values")]
 		void RemoveAll ();
 
 		[Export ("selectItemWithObjectValue:")]
@@ -5019,23 +5015,18 @@ namespace AppKit {
 		void Add (NSObject object1);
 
 		[Export ("addItemsWithObjectValues:")]
-		[PostGet ("Values")]
 		void Add (NSObject [] items);
 
 		[Export ("insertItemWithObjectValue:atIndex:")]
-		[PostGet ("Values")]
 		void Insert (NSObject object1, nint index);
 
 		[Export ("removeItemWithObjectValue:")]
-		[PostGet ("Values")]
 		void Remove (NSObject object1);
 
 		[Export ("removeItemAtIndex:")]
-		[PostGet ("Values")]
 		void RemoveAt (nint index);
 
 		[Export ("removeAllItems")]
-		[PostGet ("Values")]
 		void RemoveAll ();
 
 		[Export ("selectItemWithObjectValue:")]
@@ -5919,11 +5910,9 @@ namespace AppKit {
 		void SetWindow ([NullAllowed] NSWindow window);
 
 		[Export ("addWindowController:")]
-		[PostGet ("WindowControllers")]
 		void AddWindowController (NSWindowController windowController);
 
 		[Export ("removeWindowController:")]
-		[PostGet ("WindowControllers")]
 		void RemoveWindowController (NSWindowController windowController);
 
 		[Export ("showWindows")]
@@ -6154,11 +6143,9 @@ namespace AppKit {
 		NSDocument DocumentForWindow (NSWindow window);
 
 		[Export ("addDocument:")]
-		[PostGet ("Documents")]
 		void AddDocument (NSDocument document);
 
 		[Export ("removeDocument:")]
-		[PostGet ("Documents")]
 		void RemoveDocument (NSDocument document);
 
 		[Export ("newDocument:")]
@@ -8615,6 +8602,7 @@ namespace AppKit {
 
 	interface INSMenuDelegate { }
 
+	[NoiOS]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[Model]
@@ -9079,8 +9067,7 @@ namespace AppKit {
 	}
 
 	[ThreadSafe]
-	[Deprecated (PlatformName.MacOSX, 10, 7)]
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")] 
+	[Deprecated (PlatformName.MacOSX, 10, 7, message : "Use 'Metal' Framework instead.")]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	interface NSOpenGLPixelBuffer {
@@ -11587,7 +11574,7 @@ namespace AppKit {
 		nint PrepareForNewContents (NSPasteboardContentsOptions options);
 	}
 	
-	[NoMacCatalyst]
+	[NoiOS][NoTV][NoMacCatalyst]
 #if !NET
 	// A class that implements only NSPasteboardWriting does not make sense, it's
 	// used to add pasteboard support to existing classes.
@@ -11662,7 +11649,7 @@ namespace AppKit {
 	interface INSPasteboardReading {}
 	interface INSPasteboardWriting {}
 
-	[NoMacCatalyst]
+	[NoMacCatalyst][NoTV][NoiOS]
 #if !NET
 	[BaseType (typeof (NSObject))]
 	// A class that implements only NSPasteboardReading does not make sense, it's
@@ -13212,11 +13199,9 @@ namespace AppKit {
 		nfloat RequiredThickness { get; }
 
 		[Export ("addMarker:")]
-		[PostGet ("Markers")]
 		void AddMarker (NSRulerMarker marker);
 
 		[Export ("removeMarker:")]
-		[PostGet ("Markers")]
 		void RemoveMarker (NSRulerMarker marker);
 
 		[Export ("trackMarker:withMouseEvent:")]
@@ -14943,16 +14928,16 @@ namespace AppKit {
 		[Export ("splitViewItems", ArgumentSemantic.Copy)]
 		NSSplitViewItem [] SplitViewItems { get; set; }
 
-		[Export ("addSplitViewItem:")][PostGet ("SplitViewItems")]
+		[Export ("addSplitViewItem:")]
 		void AddSplitViewItem (NSSplitViewItem splitViewItem);
 
-		[Export ("insertSplitViewItem:atIndex:")][PostGet ("SplitViewItems")]
+		[Export ("insertSplitViewItem:atIndex:")]
 		void InsertSplitViewItem (NSSplitViewItem splitViewItem, nint index);
 
-		[Export ("removeSplitViewItem:")][PostGet ("SplitViewItems")]
+		[Export ("removeSplitViewItem:")]
 		void RemoveSplitViewItem (NSSplitViewItem splitViewItem);
 
-		[Export ("splitViewItemForViewController:")][PostGet ("SplitViewItems")]
+		[Export ("splitViewItemForViewController:")]
 		NSSplitViewItem GetSplitViewItem (NSViewController viewController);
 
 		[Mac (10,11)]
@@ -15192,19 +15177,19 @@ namespace AppKit {
 		[Static, Export ("stackViewWithViews:")]
 		NSStackView FromViews (NSView [] views);
 
-		[Export ("addView:inGravity:")][PostGet ("Views")]
+		[Export ("addView:inGravity:")]
 		void AddView (NSView aView, NSStackViewGravity gravity);
 
-		[Export ("insertView:atIndex:inGravity:")][PostGet ("Views")]
+		[Export ("insertView:atIndex:inGravity:")]
 		void InsertView (NSView aView, nuint index, NSStackViewGravity gravity);
 
-		[Export ("removeView:")][PostGet ("Views")]
+		[Export ("removeView:")]
 		void RemoveView (NSView aView);
 
 		[Export ("viewsInGravity:")]
 		NSView [] ViewsInGravity (NSStackViewGravity gravity);
 
-		[Export ("setViews:inGravity:")][PostGet ("Views")] 
+		[Export ("setViews:inGravity:")]
 		void SetViews (NSView [] views, NSStackViewGravity gravity);
 
 		[Export ("setVisibilityPriority:forView:")]
@@ -15903,10 +15888,10 @@ namespace AppKit {
 		[Export ("viewDidUnhide")]
 		void ViewDidUnhide ();
 
-		[Export ("addSubview:")][PostGet ("Subviews")]
+		[Export ("addSubview:")]
 		void AddSubview (NSView aView);
 
-		[Export ("addSubview:positioned:relativeTo:")][PostGet ("Subviews")]
+		[Export ("addSubview:positioned:relativeTo:")]
 		void AddSubview (NSView aView, NSWindowOrderingMode place, [NullAllowed] NSView otherView);
 
 		[Export ("viewWillMoveToWindow:")]
@@ -15928,16 +15913,12 @@ namespace AppKit {
 		void WillRemoveSubview ([NullAllowed] NSView subview);
 
 		[Export ("removeFromSuperview")]
-		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperview ();
 
-		[Export ("replaceSubview:with:")][PostGet ("Subviews")]
+		[Export ("replaceSubview:with:")]
 		void ReplaceSubviewWith (NSView oldView, NSView newView);
 
 		[Export ("removeFromSuperviewWithoutNeedingDisplay")]
-		[PreSnippet ("var mySuper = Superview;", Optimizable = true)]
-		[PostSnippet ("if (mySuper != null) {\n\t#pragma warning disable 168\n\tvar flush = mySuper.Subviews;\n#pragma warning restore 168\n\t}", Optimizable = true)]
 		void RemoveFromSuperviewWithoutNeedingDisplay ();
 
 		[Export ("resizeSubviewsWithOldSize:")]
@@ -16212,11 +16193,20 @@ namespace AppKit {
 #endif
 
 #if NET
+		[Sealed]
+		[Export ("addToolTipRect:owner:userData:")]
+		nint AddToolTip (CGRect rect, NSObject owner, IntPtr userData);
+#endif
+
+#if NET
 		[Wrap ("AddToolTip (rect, owner, IntPtr.Zero)")]
 #else
 		[Wrap ("AddToolTip (rect, (NSObject)owner, IntPtr.Zero)")]
 #endif
 		nint AddToolTip (CGRect rect, INSToolTipOwner owner);
+
+		[Wrap ("AddToolTip (rect, owner, IntPtr.Zero)")]
+		nint AddToolTip (CGRect rect, NSObject owner);
 
 		[Export ("removeToolTip:")]
 		void RemoveToolTip (nint tag);
@@ -16388,16 +16378,16 @@ namespace AppKit {
 		[Export ("constraints")]
 		NSLayoutConstraint [] Constraints { get; }
 		
-		[Export ("addConstraint:")][PostGet ("Constraints")]
+		[Export ("addConstraint:")]
 		void AddConstraint (NSLayoutConstraint constraint);
 
-		[Export ("addConstraints:")][PostGet ("Constraints")]
+		[Export ("addConstraints:")]
 		void AddConstraints (NSLayoutConstraint [] constraints);
 
-		[Export ("removeConstraint:")][PostGet ("Constraints")]
+		[Export ("removeConstraint:")]
 		void RemoveConstraint (NSLayoutConstraint constraint);
 
-		[Export ("removeConstraints:")][PostGet ("Constraints")]
+		[Export ("removeConstraints:")]
 		void RemoveConstraints (NSLayoutConstraint [] constraints);
 
 		[Export ("layoutSubtreeIfNeeded")]
@@ -16629,11 +16619,11 @@ namespace AppKit {
 		NSGestureRecognizer [] GestureRecognizers { get; set; }
 
 		[Mac (10,10)]
-		[Export ("addGestureRecognizer:")][PostGet("GestureRecognizers")]
+		[Export ("addGestureRecognizer:")]
 		void AddGestureRecognizer (NSGestureRecognizer gestureRecognizer);
 
 		[Mac (10,10)]
-		[Export ("removeGestureRecognizer:")][PostGet("GestureRecognizers")]
+		[Export ("removeGestureRecognizer:")]
 		void RemoveGestureRecognizer (NSGestureRecognizer gestureRecognizer);
 
 		[Export ("prepareForReuse")]
@@ -16956,7 +16946,7 @@ namespace AppKit {
 		NSViewController [] ChildViewControllers { get; set; }
 
 		[Mac (10,10)]
-		[Export ("addChildViewController:")][PostGet("ChildViewControllers")]
+		[Export ("addChildViewController:")]
 		void AddChildViewController (NSViewController childViewController);
 
 		[Mac (10,10)]
@@ -16964,11 +16954,11 @@ namespace AppKit {
 		void RemoveFromParentViewController ();
 
 		[Mac (10,10)]
-		[Export ("insertChildViewController:atIndex:")][PostGet("ChildViewControllers")]
+		[Export ("insertChildViewController:atIndex:")]
 		void InsertChildViewController (NSViewController childViewController, nint index);
 
 		[Mac (10,10)]
-		[Export ("removeChildViewControllerAtIndex:")][PostGet("ChildViewControllers")]
+		[Export ("removeChildViewControllerAtIndex:")]
 		void RemoveChildViewController (nint index);
 
 		[Mac (10,10)]
@@ -18085,13 +18075,13 @@ namespace AppKit {
 		[Export ("controlSize")]
 		NSControlSize ControlSize { get; set; }
 
-		[Export ("addTabViewItem:")][PostGet ("Items")]
+		[Export ("addTabViewItem:")]
 		void Add (NSTabViewItem tabViewItem);
 
-		[Export ("insertTabViewItem:atIndex:")][PostGet ("Items")]
+		[Export ("insertTabViewItem:atIndex:")]
 		void Insert (NSTabViewItem tabViewItem, nint index);
 
-		[Export ("removeTabViewItem:")][PostGet ("Items")]
+		[Export ("removeTabViewItem:")]
 		void Remove (NSTabViewItem tabViewItem);
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
@@ -18160,13 +18150,13 @@ namespace AppKit {
 		[Export ("selectedTabViewItemIndex")]
 		nint SelectedTabViewItemIndex { get; set; }
 
-		[Export ("addTabViewItem:")][PostGet("TabViewItems")]
+		[Export ("addTabViewItem:")]
 		void AddTabViewItem (NSTabViewItem tabViewItem);
 
-		[Export ("insertTabViewItem:atIndex:")][PostGet("TabViewItems")]
+		[Export ("insertTabViewItem:atIndex:")]
 		void InsertTabViewItem (NSTabViewItem tabViewItem, nint index);
 
-		[Export ("removeTabViewItem:")][PostGet("TabViewItems")]
+		[Export ("removeTabViewItem:")]
 		void RemoveTabViewItem (NSTabViewItem tabViewItem);
 
 		[Export ("tabViewItemForViewController:")]
@@ -19847,6 +19837,7 @@ namespace AppKit {
 		bool DrawsVertically (nuint charIndex);
 	}
 
+	[NoiOS]
 	[NoMacCatalyst]
 	[BaseType (typeof (NSTextDelegate))]
 	[Model]
@@ -20235,7 +20226,24 @@ namespace AppKit {
 		bool Enabled { [Bind ("isEnabled")]get; set; }
 
 		[Export ("image", ArgumentSemantic.Retain), NullAllowed]
+#if XAMCORE_5_0 && __MACCATALYST__
+		UIImage Image { get; set; }
+#else
 		NSImage Image { get; set; }
+#endif
+
+		// We incorrectly bound 'Image' as NSImage in Mac Catalyst.
+		// Provide this alternative until we can make 'Image' correct in XAMCORE_5_0
+		// Obsolete this member in XAMCORE_5_0
+		// and remove it in XAMCORE_6_0
+#if __MACCATALYST__ && !XAMCORE_6_0
+#if XAMCORE_5_0
+		[Obsolete ("Use 'Image' instead.")]
+#endif
+		[Sealed]
+		[Export ("image", ArgumentSemantic.Retain), NullAllowed]
+		UIImage UIImage { get; set; }
+#endif
 
 		[NoMacCatalyst]
 		[Export ("view", ArgumentSemantic.Retain)]
@@ -20445,6 +20453,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,12,2)]
+	[MacCatalyst (13,1)]
 	public enum NSTouchBarItemIdentifier
 	{
 		[MacCatalyst (13, 0)]
@@ -21274,10 +21283,10 @@ namespace AppKit {
 		[Export ("standardWindowButton:")]
 		NSButton StandardWindowButton (NSWindowButton b);
 	
-		[Export ("addChildWindow:ordered:")][PostGet ("ChildWindows")]
+		[Export ("addChildWindow:ordered:")]
 		void AddChildWindow (NSWindow  childWin, NSWindowOrderingMode place);
 	
-		[Export ("removeChildWindow:")][PostGet ("ChildWindows")]
+		[Export ("removeChildWindow:")]
 		void RemoveChildWindow (NSWindow  childWin);
 	
 		[Export ("childWindows")]
@@ -23004,7 +23013,6 @@ namespace AppKit {
 		NSATSTypesetter SharedTypesetter { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSTypesetter {
 		[Export ("substituteFontForFont:")]
 		NSFont GetSubstituteFont (NSFont originalFont);
@@ -23194,7 +23202,6 @@ namespace AppKit {
 		void SetBidiLevels (IntPtr levels, NSRange glyphRange);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSCollectionViewDelegate {
 		[Export ("collectionView:pasteboardWriterForItemAtIndex:")]
 		INSPasteboardWriting PasteboardWriterForItem (NSCollectionView collectionView, nuint index);
@@ -23215,7 +23222,6 @@ namespace AppKit {
 			CGPoint screenPoint, NSDragOperation dragOperation);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSColor {
 		[Static, Export ("colorWithGenericGamma22White:alpha:")]
 		NSColor FromGamma22White (nfloat white, nfloat alpha);
@@ -23227,7 +23233,6 @@ namespace AppKit {
 		NSString SystemColorsChanged { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSDocumentController {
 		[Export ("duplicateDocumentWithContentsOfURL:copying:displayName:error:")]
 		NSDocument DuplicateDocumentWithContentsOfUrl (NSUrl url, bool duplicateByCopying,
@@ -23259,7 +23264,6 @@ namespace AppKit {
 		NSObject Item { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSOutlineView : NSAccessibilityOutline {
 
 		[Notification, Field ("NSOutlineViewSelectionDidChangeNotification")]
@@ -23313,7 +23317,6 @@ namespace AppKit {
 		void MoveRow (nint oldIndex, nint newIndex);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSOutlineViewDataSource {
 		// - (id <NSPasteboardWriting>)outlineView:(NSOutlineView *)outlineView pasteboardWriterForItem:(id)item NS_AVAILABLE_MAC(10_7);
 		[Export ("outlineView:pasteboardWriterForItem:")]
@@ -23349,7 +23352,6 @@ namespace AppKit {
 		NSColorSpace OldColorSpace { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSWindow {
 		[Mac (10, 12)]
 		[Static]
@@ -23414,7 +23416,6 @@ namespace AppKit {
 		NSWindowTabGroup TabGroup { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSPrintOperation {
 		[Export ("preferredRenderingQuality")]
 		NSPrintRenderingQuality PreferredRenderingQuality { get; }
@@ -23431,7 +23432,6 @@ namespace AppKit {
  	}
 #endif
 
-	[NoMacCatalyst]
 	partial interface NSResponder {
 		[Export ("wantsScrollEventsForSwipeTrackingOnAxis:")]
 		bool WantsScrollEventsForSwipeTrackingOnAxis (NSEventGestureAxis axis);
@@ -23479,7 +23479,6 @@ namespace AppKit {
 		void PerformTextFinderAction ([NullAllowed] NSObject sender);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSRunningApplication {
 		[Static, Export ("terminateAutomaticallyTerminableApplications")]
 		void TerminateAutomaticallyTerminableApplications ();
@@ -23487,7 +23486,6 @@ namespace AppKit {
 
 	delegate void NSSpellCheckerShowCorrectionIndicatorOfTypeHandler (string acceptedString);
 
-	[NoMacCatalyst]
 	partial interface NSSpellChecker {
 		[Export ("correctionForWordRange:inString:language:inSpellDocumentWithTag:")]
 		string GetCorrection (NSRange forWordRange, string inString, string language, nint inSpellDocumentWithTag);
@@ -23578,7 +23576,6 @@ namespace AppKit {
 		NSTextView NewView { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSTextView : NSTextLayoutOrientationProvider {
 		[Export ("setLayoutOrientation:")]
 		void SetLayoutOrientation (NSTextLayoutOrientation theOrientation);
@@ -23625,7 +23622,6 @@ namespace AppKit {
 		bool UsesAdaptiveColorMappingForDarkAppearance { get; set; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSView {
 
 		[Export ("wantsUpdateLayer")]
@@ -23654,7 +23650,6 @@ namespace AppKit {
 		NSTextView FieldEditor { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSControl {
 
 		[Notification (typeof (NSControlTextEditingEventArgs))]
@@ -23683,28 +23678,24 @@ namespace AppKit {
 		string GetStringForToolTip (NSView view, nint tag, CGPoint point, IntPtr data);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSMatrix : NSUserInterfaceValidations, NSViewToolTipOwner {
 
 		[Export ("autorecalculatesCellSize")]
 		bool AutoRecalculatesCellSize { get; set; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSForm {
 
 		[Export ("preferredTextFieldWidth")]
 		nfloat PreferredTextFieldWidth { get; set; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSFormCell {
 
 		[Export ("preferredTextFieldWidth")]
 		nfloat PreferredTextFieldWidth { get; set; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSColor {
 
 #if !NET
@@ -23722,7 +23713,6 @@ namespace AppKit {
 
 	delegate bool NSCustomImageRepDrawingHandler (CGRect dstRect);
 
-	[NoMacCatalyst]
 	partial interface NSCustomImageRep {
 
 		[Export ("initWithSize:flipped:drawingHandler:")]
@@ -23739,7 +23729,6 @@ namespace AppKit {
 	delegate void NSDocumentLockCompletionHandler (NSError error);
 	delegate void NSDocumentUnlockCompletionHandler (NSError error);
 
-	[NoMacCatalyst]
 	partial interface NSDocument : NSEditorRegistration, NSFilePresenter, NSMenuItemValidation
 #if NET
 	, NSUserInterfaceValidations // ValidateUserInterfaceItem was bound with NSObject and fix would break API compat  
@@ -23807,7 +23796,6 @@ namespace AppKit {
 	delegate void NSDocumentControllerOpenPanelWithCompletionHandler (NSArray urlsToOpen);
 	delegate void NSDocumentControllerOpenPanelResultHandler (nint result);
 
-	[NoMacCatalyst]
 	partial interface NSDocumentController : NSMenuItemValidation 
 #if NET
 	, NSUserInterfaceValidations // ValidateUserInterfaceItem was bound with NSObject and fix would break API compat  
@@ -23975,26 +23963,22 @@ namespace AppKit {
 		string BaseString { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSTableViewDelegate {
 
 		[Export ("tableView:toolTipForCell:rect:tableColumn:row:mouseLocation:"), DelegateName ("NSTableViewToolTip"), DefaultValue ("null")]
 		NSString GetToolTip (NSTableView tableView, NSCell cell, ref CGRect rect, [NullAllowed] NSTableColumn tableColumn, nint row, CGPoint mouseLocation);
 	}
 
-	[NoMacCatalyst]
 	partial interface NSBrowser {
 		[Notification, Field ("NSBrowserColumnConfigurationDidChangeNotification")]
 		NSString ColumnConfigurationChangedNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSColorPanel {
 		[Notification, Field ("NSColorPanelColorDidChangeNotification")]
 		NSString ColorChangedNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSFont {
 		[Notification, Field ("NSAntialiasThresholdChangedNotification")]
 		NSString AntialiasThresholdChangedNotification { get; }
@@ -24003,7 +23987,6 @@ namespace AppKit {
 		NSString FontSetChangedNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSHelpManager {
 		[Notification, Field ("NSContextHelpModeDidActivateNotification")]
 		NSString ContextHelpModeDidActivateNotification { get; }
@@ -24012,7 +23995,6 @@ namespace AppKit {
 		NSString ContextHelpModeDidDeactivateNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSDrawer {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use 'NSSplitViewController' instead.")]
 		[Notification, Field ("NSDrawerWillOpenNotification")]
@@ -24041,7 +24023,6 @@ namespace AppKit {
 		NSMenu MenuItem { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSMenu {
 		[Notification (typeof (NSMenuItemEventArgs))]
 		[Field ("NSMenuWillSendActionNotification")]
@@ -24070,31 +24051,26 @@ namespace AppKit {
 		NSString DidEndTrackingNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSPopUpButtonCell : NSMenuItemValidation {
 		[Notification, Field ("NSPopUpButtonCellWillPopUpNotification")]
 		NSString WillPopUpNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSPopUpButton {
 		[Notification, Field ("NSPopUpButtonWillPopUpNotification")]
 		NSString WillPopUpNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSRuleEditor {
 		[Notification, Field ("NSRuleEditorRowsDidChangeNotification")]
 		NSString RowsDidChangeNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSScreen {
 		[Notification, Field ("NSScreenColorSpaceDidChangeNotification")]
 		NSString ColorSpaceDidChangeNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSTableView : NSUserInterfaceValidations {
 		[Notification, Field ("NSTableViewSelectionDidChangeNotification")]
 		NSString SelectionDidChangeNotification { get; }
@@ -24120,7 +24096,6 @@ namespace AppKit {
 		nint Movement { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSText {
 		[Notification, Field ("NSTextDidBeginEditingNotification")]
 		NSString DidBeginEditingNotification { get; }
@@ -24137,7 +24112,6 @@ namespace AppKit {
 		NSString MovementUserInfoKey { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSTextInputContext {
 		[Notification, Field ("NSTextInputContextKeyboardSelectionDidChangeNotification")]
 		NSString KeyboardSelectionDidChangeNotification { get; }
@@ -24148,7 +24122,6 @@ namespace AppKit {
 		NSToolbarItem Item { get; }
 	}
 
-	[MacCatalyst (13,0)]
 	partial interface NSToolbar {
 		[Notification (typeof (NSToolbarItemEventArgs))]
 		[Field ("NSToolbarWillAddItemNotification")]
@@ -24159,7 +24132,6 @@ namespace AppKit {
 		NSString NSToolbarDidRemoveItemNotification { get; }
 	}
 
-	[NoMacCatalyst]
 	partial interface NSImageRep {
 		[Notification, Field ("NSImageRepRegistryDidChangeNotification")]
 		NSString RegistryDidChangeNotification { get; }
@@ -24227,7 +24199,7 @@ namespace AppKit {
 
 	// 10.9 for fields/notification but 10.10 for protocol
 	// attributes added to both cases in NSAccessibility.cs
-	[NoMacCatalyst]
+	[NoMacCatalyst][NoiOS][NoTV]
 	[Protocol]
 	interface NSAccessibility
 	{
@@ -26137,7 +26109,7 @@ namespace AppKit {
 	}
 
 	[Mac (10,10)]
-	[NoMacCatalyst]
+	[NoMacCatalyst][NoiOS][NoTV]
 	[Protocol (Name = "NSAccessibilityElement")] // exists both as a type and a protocol in ObjC, Swift uses NSAccessibilityElementProtocol
 	interface NSAccessibilityElementProtocol {
 		[Abstract]
@@ -26163,6 +26135,8 @@ namespace AppKit {
 
 	[Mac (10,10)]
 	[NoMacCatalyst]
+	[NoiOS]
+	[NoTV]
 	[Protocol]
 	interface NSAccessibilityButton : NSAccessibilityElementProtocol {
 		[Abstract]
@@ -26642,6 +26616,7 @@ namespace AppKit {
 	[Protocol]
 	[Mac (10,11)]
 	[NoMacCatalyst]
+	[NoiOS]
 	interface NSUserInterfaceValidations
 	{
 		[Abstract]
@@ -27853,8 +27828,15 @@ namespace AppKit {
 	[Mac (10,15)]
 	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
+#if XAMCORE_5_0
+	[DisableDefaultCtor]
+#endif
 	interface NSMenuToolbarItem
 	{
+		[DesignatedInitializer]
+		[Export ("initWithItemIdentifier:")]
+		NativeHandle Constructor (string itemIdentifier);
+
 		[NoMacCatalyst]
 		[Export ("menu", ArgumentSemantic.Strong)]
 		NSMenu Menu { get; set; }
@@ -28229,8 +28211,15 @@ namespace AppKit {
 	[Mac (10,15)]
 	[MacCatalyst (13, 0)]
 	[BaseType (typeof (NSToolbarItem))]
+#if XAMCORE_5_0
+	[DisableDefaultCtor]
+#endif
 	interface NSSharingServicePickerToolbarItem
 	{
+		[DesignatedInitializer]
+		[Export ("initWithItemIdentifier:")]
+		NativeHandle Constructor (string itemIdentifier);
+
 		[NoMacCatalyst]
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]

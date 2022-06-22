@@ -51,15 +51,21 @@ namespace CoreText {
 
 #if !NET
 	public static class CTFontCollectionOptionKey {
-		public static readonly NSString RemoveDuplicates;
+		public static readonly NSString? RemoveDuplicates;
 
 		static CTFontCollectionOptionKey ()
 		{
-			RemoveDuplicates = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTFontCollectionRemoveDuplicatesOption")!;
+			RemoveDuplicates = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTFontCollectionRemoveDuplicatesOption");
 		}
 	}
 #endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFontCollectionOptions {
 
 		public CTFontCollectionOptions ()
@@ -70,7 +76,7 @@ namespace CoreText {
 		public CTFontCollectionOptions (NSDictionary dictionary)
 		{
 			if (dictionary is null)
-				throw new ArgumentNullException (nameof (dictionary));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
@@ -80,12 +86,16 @@ namespace CoreText {
 		// No mention of the expected type (int? NSNumber?)
 		public bool RemoveDuplicates {
 			get {
+				if (CTFontCollectionOptionKey.RemoveDuplicates is null)
+					return false;
 				var v = Adapter.GetInt32Value (Dictionary, CTFontCollectionOptionKey.RemoveDuplicates);
 				return v.HasValue ? v.Value != 0 : false;
 			}
 			set {
+				if (CTFontCollectionOptionKey.RemoveDuplicates is null)
+					throw new ArgumentOutOfRangeException (nameof (CTFontCollectionOptionKey.RemoveDuplicates));
 				var v = value ? (int?) 1 : null;
-				Adapter.SetValue (Dictionary, CTFontCollectionOptionKey.RemoveDuplicates, v);
+				Adapter.SetValue (Dictionary, CTFontCollectionOptionKey.RemoveDuplicates!, v);
 			}
 		}
 	}
@@ -99,6 +109,12 @@ namespace CoreText {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFontCollection : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTFontCollection (NativeHandle handle, bool owns)
@@ -152,6 +168,8 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (12,0)]
 		[TV (12,0)]
@@ -163,6 +181,8 @@ namespace CoreText {
 #if NET
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (12,0)]
 		[TV (12,0)]

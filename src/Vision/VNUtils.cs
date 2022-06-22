@@ -7,6 +7,8 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreGraphics;
@@ -26,6 +28,7 @@ namespace Vision {
 	[SupportedOSPlatform ("tvos11.0")]
 	[SupportedOSPlatform ("macos10.13")]
 	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[TV (11,0)]
 	[Mac (10,13)]
@@ -150,6 +153,7 @@ namespace Vision {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -162,6 +166,7 @@ namespace Vision {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -172,10 +177,10 @@ namespace Vision {
 
 	public partial class VNGeometryUtils {
 
-		public static VNCircle CreateBoundingCircle (Vector2 [] points, out NSError error)
+		public static VNCircle? CreateBoundingCircle (Vector2 [] points, out NSError error)
 		{
-			if (points == null)
-				throw new ArgumentNullException (nameof (points));
+			if (points is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (points));
 			if (points.Length == 0)
 				throw new ArgumentException ($"'{nameof (points)}' array must have more than zero elements.");
 

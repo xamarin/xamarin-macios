@@ -423,6 +423,10 @@
         <value>{0} 已退出，代码为 {1}
 </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>即将跳过“{0}”，因为输出文件“{1}”较新。
 </value>
@@ -1074,6 +1078,9 @@
             {0}: the target directory (in the app bundle) for the font file
         </comment>
     </data>
+  <data name="E7085" xml:space="preserve">
+        <value>没有为“{0}”任务提供所需参数“{1}”的值，资源 {3} 上也没有“{2}”元数据</value>
+    </data>
   <data name="W7085" xml:space="preserve">
         <value>正在创建压缩绑定资源包，因为输入中存在符号链接。</value>
     </data>
@@ -1086,7 +1093,7 @@
         <comment>The following are literal names and should not be translated: manifest</comment>
     </data>
   <data name="E7088" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <value>无法识别项“{1}”上的 “PublishFolderType” 元数据值“{0}”。该文件将不会复制到应用捆绑包。</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1094,14 +1101,14 @@
         </comment>
     </data>
   <data name="E7089" xml:space="preserve">
-        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <value>文件“{0}”未指定 “PublishFolderType” 元数据，并且无法计算默认值。该文件不会复制到应用捆绑包。</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: path to a file
         </comment>
     </data>
   <data name="E7090" xml:space="preserve">
-        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <value>无法识别项“{1}”上的 “PublishFolderType” 元数据值“{0}”。该文件将不会复制到应用捆绑包。如果文件不应复制到应用捆绑包，请删除项上的“{2}”元数据。</value>
         <comment>
             PublishFolderType: do not translate (name of metadata)
             {0}: metadata value (read from a user file)
@@ -1117,9 +1124,30 @@
         <value>文件 "{0}" 是无效的框架: {1}</value>
     </data>
   <data name="W7093" xml:space="preserve">
-        <value>The binding resource package {0} does not exist.</value>
+        <value>绑定资源包 {0} 不存在。</value>
     </data>
   <data name="E7094" xml:space="preserve">
-        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+        <value>文件或目录“{0}”不是框架，也不是框架中的文件。</value>
+    </data>
+  <data name="W7095" xml:space="preserve">
+        <value>已使用不同的元数据多次为 {0} 请求代码签名。其中一个的元数据为“{1}”，而另一个的元数据为“{2}”</value>
+    </data>
+  <data name="W7096" xml:space="preserve">
+        <value>已使用不同的元数据多次为 {0} 请求代码签名。已为一个项设置元数据“{1}={2}”，但未设置另一项。</value>
+    </data>
+  <data name="W7097" xml:space="preserve">
+        <value>已使用不同的元数据多次为“{0}”请求代码签名。元数据“{1}”为每一项提供不同的值(一次为“{2}”，另一次为“{3}”)。</value>
+    </data>
+  <data name="E7098" xml:space="preserve">
+        <value>UIDeviceFamily 值 “6” 对此平台无效。它仅对 Mac Catalyst 有效。</value>
+    </data>
+  <data name="E7099" xml:space="preserve">
+        <value>UIDeviceFamily 值 “6” 需要 macOS 11.0。请将项目文件中的 “SupportedOSPlatformVersion” 设置为至少 14.0 (Mac Catalyst 版本等效于 macOS 11.0)。当前值为 {0} (等效于 macOS {1})。</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>找不到绑定资源包: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>值为“{1}”的未知属性“{0}”。</value>
     </data>
 </root>

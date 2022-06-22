@@ -9,54 +9,11 @@ parameters:
 
 steps:
 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
-
 # download the common artifacts + the api diff
 - template: ../common/download-artifacts.yml
   parameters:
     testPrefix: sim
     runTests: ${{ parameters.runTests }}
-
-- ${{ if and(eq(parameters.enableAPIDiff, true), eq(variables['APIDIFF_BUILT'], 'True')) }}:
-  # Download the Html Report that was added by the tests job.
-  - task: DownloadPipelineArtifact@2
-    displayName: 'Download API diff (from stable)'
-    inputs:
-      patterns: 'apidiff-stable/apidiff-stable.zip'
-      allowFailedBuilds: true
-      path: $(System.DefaultWorkingDirectory)/Reports
-
-  - task: ExtractFiles@1
-    displayName: 'Extract API diff (from stable)'
-    inputs:
-      archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/apidiff-stable/apidiff-stable.zip'
-      destinationFolder: '$(System.DefaultWorkingDirectory)/apidiff-stable'
-
-- ${{ if and(eq(parameters.enableAPIDiff, true), eq(variables['API_GENERATOR_BUILT'], 'True')) }}:
-  - task: DownloadPipelineArtifact@2
-    displayName: 'Download API & Generator comparison'
-    condition: and(succeeded(), contains(variables.API_GENERATOR_DIFF_BUILT, 'True'))
-    inputs:
-      patterns: 'apicomparison/apicomparison.zip'
-      allowFailedBuilds: true
-      path: $(System.DefaultWorkingDirectory)/Reports
-
-  - task: ExtractFiles@1
-    displayName: 'Extract API & Generator comparison'
-    condition: and(succeeded(), contains(variables.API_GENERATOR_DIFF_BUILT, 'True'))
-    inputs:
-      archiveFilePatterns: '$(System.DefaultWorkingDirectory)/Reports/apicomparison/apicomparison.zip'
-      destinationFolder: '$(System.DefaultWorkingDirectory)/apicomparison'
-
-  - powershell: |
-      Write-Host "##vso[task.setvariable variable=STABLE_APIDIFF_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\apidiff-stable"
-      if ($Env:API_GENERATOR_DIFF_BUILT -eq "True") {
-        Write-Host "##vso[task.setvariable variable=STABLE_APID_GENERATOR_DIFF_PATH]$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\\apicomparison"
-      }
-    displayName: Publish apidiff paths
-    name: apidiff # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
 
 # download the artifacts.json, which will use to find the URI of the built pkg to later be given to the user
 - task: DownloadPipelineArtifact@2

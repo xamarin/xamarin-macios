@@ -1,0 +1,114 @@
+# template that contains all the different steps to create a pkgs, publish the results and provide feedback to the
+# developers in github.
+parameters:
+- name: vsdropsPrefix
+  type: string
+
+- name: keyringPass
+  type: string
+
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
+- name: enableDotnet
+  type: boolean
+  default: false
+
+- name: pool
+  type: string
+  default: automatic
+
+- name: isPR
+  type: boolean
+
+jobs:
+- job: configure
+  displayName: 'Configure build'
+  pool:
+    vmImage: windows-latest
+
+  variables:
+    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+
+  steps:
+  - template: ../common/configure.yml
+    parameters: 
+      uploadArtifacts: false
+      enableDotnet: ${{ parameters.enableDotnet }}
+
+- ${{ if eq(parameters.pool, 'automatic') }}:
+  - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+    pool:                        # Consider using an agentless (server) job here, but would need to host selection logic as an Azure function: https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#server
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: none             # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+
+    # Selects appropriate agent pool based on trigger type (PR or CI); manually triggered builds target the PR pool
+    - template: azure-devops-pools/agent-pool-selector.yml@templates
+      parameters:
+        agentPoolPR: $(PRBuildPool)
+        agentPoolPRUrl: $(PRBuildPoolUrl)
+        agentPoolCI: $(CIBuildPool)
+        agentPoolCIUrl: $(CIBuildPoolUrl)
+
+# Detect changes
+- job: api_diff
+  dependsOn:
+  - ${{ if eq(parameters.pool, 'automatic') }}:
+    - AgentPoolSelector
+  - configure
+  displayName: 'Detect API changes'
+  timeoutInMinutes: 1000
+  variables:
+    ${{ if eq(parameters.pool, 'automatic') }}:
+      AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
+    ${{ if eq(parameters.pool, 'ci') }}:
+      AgentPoolComputed: $(CIBuildPool)
+    ${{ if eq(parameters.pool, 'pr') }}:
+      AgentPoolComputed: $(PRBuildPool)
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
+    BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+    XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
+  pool:
+    name: $(AgentPoolComputed)
+    demands:
+    - Agent.OS -equals Darwin
+    - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+  workspace:
+    clean: all
+
+  # build the source code and compute the api diffs
+  steps:
+  - template: api-diff-build-and-detect.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
+      vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+      keyringPass: ${{ parameters.keyringPass }}
+      gitHubToken: ${{ parameters.gitHubToken }}
+      xqaCertPass: ${{ parameters.xqaCertPass }}
+      enableDotnet: ${{ parameters.enableDotnet }}
+      prID: variables['PrID']
+
+# Upload results to vsdrops & publish to github
+- job: publish_change_detection_results
+  displayName: 'Upload / Publish change detection results to VSDrops / GitHub'
+  timeoutInMinutes: 1000
+  dependsOn: # can start as soon as the api diff is done
+  - configure
+  - api_diff
+  condition: succeededOrFailed()
+  pool:
+    vmImage: 'windows-latest'
+    workspace:
+      clean: all
+  variables:
+    GIT_HASH: $[ dependencies.api_diff.outputs['fix_commit.GIT_HASH'] ]
+  steps:
+  - template: api-diff-process-results.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}

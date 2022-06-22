@@ -21,19 +21,25 @@
       </Item>
       <Item ItemId=";description" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[A project for creating a .NET 6 tvOS application]]></Val>
+          <Val><![CDATA[A project for creating a .NET tvOS application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
             <Val><![CDATA[Projekt służący do tworzenia aplikacji tvOS platformy .NET 6]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[A project for creating a .NET 6 tvOS application]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>
       <Item ItemId=";name" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[tvOS Application (Preview)]]></Val>
+          <Val><![CDATA[tvOS Application]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Aplikacja systemu tvOS (wersja zapoznawcza)]]></Val>
+            <Val><![CDATA[Aplikacja systemu tvOS]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[tvOS Application (Preview)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

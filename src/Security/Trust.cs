@@ -72,7 +72,7 @@ namespace Security {
 		public SecTrust (X509Certificate certificate, SecPolicy? policy)
 		{
 			if (certificate is null)
-				throw new ArgumentNullException (nameof (certificate));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 
 			using (SecCertificate cert = new SecCertificate (certificate)) {
 				Initialize (cert.Handle, policy);
@@ -82,7 +82,7 @@ namespace Security {
 		public SecTrust (X509Certificate2 certificate, SecPolicy? policy)
 		{
 			if (certificate is null)
-				throw new ArgumentNullException (nameof (certificate));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 
 			using (SecCertificate cert = new SecCertificate (certificate)) {
 				Initialize (cert.Handle, policy);
@@ -92,7 +92,7 @@ namespace Security {
 		public SecTrust (X509CertificateCollection certificates, SecPolicy? policy)
 		{
 			if (certificates is null)
-				throw new ArgumentNullException (nameof (certificates));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificates));
 
 			SecCertificate[] array = new SecCertificate [certificates.Count];
 			int i = 0;
@@ -104,7 +104,7 @@ namespace Security {
 		public SecTrust (X509Certificate2Collection certificates, SecPolicy? policy)
 		{
 			if (certificates is null)
-				throw new ArgumentNullException (nameof (certificates));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificates));
 
 			SecCertificate[] array = new SecCertificate [certificates.Count];
 			int i = 0;
@@ -129,6 +129,10 @@ namespace Security {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos12.1")]
 		[UnsupportedOSPlatform ("macos10.14.1")]
 		[UnsupportedOSPlatform ("ios12.1")]
@@ -149,6 +153,10 @@ namespace Security {
 		extern static SecStatusCode /* OSStatus */ SecTrustEvaluate (IntPtr /* SecTrustRef */ trust, out /* SecTrustResultType */ SecTrustResult result);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("tvos12.1")]
 		[UnsupportedOSPlatform ("macos10.14.1")]
 		[UnsupportedOSPlatform ("ios12.1")]
@@ -186,6 +194,10 @@ namespace Security {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos12.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("tvos15.0")]
@@ -270,6 +282,10 @@ namespace Security {
 			=> NSArray.ArrayFromHandle<SecCertificate> (SecTrustCopyCertificateChain (Handle));
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
@@ -290,6 +306,10 @@ namespace Security {
 		extern static IntPtr /* SecKeyRef */ SecTrustCopyPublicKey (IntPtr /* SecTrustRef */ trust);
 
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos11.0")]
 		[UnsupportedOSPlatform ("tvos14.0")]
 		[UnsupportedOSPlatform ("ios14.0")]
@@ -345,6 +365,9 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 #endif
@@ -353,6 +376,9 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 #endif
@@ -363,6 +389,9 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 #endif
@@ -372,6 +401,9 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,9)]
 #endif

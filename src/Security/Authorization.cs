@@ -42,6 +42,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -66,6 +67,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -87,6 +89,7 @@ namespace Security {
 	//
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -98,6 +101,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -109,6 +113,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -122,6 +127,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -132,6 +138,7 @@ namespace Security {
 
 #if NET
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos")]
 #else
 	[MacCatalyst (15,0)]
 #endif
@@ -141,6 +148,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.7")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -162,6 +170,7 @@ namespace Security {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.7")]
 #if MONOMAC
 		[Obsolete ("Starting with macos10.7 use the Service Management framework or the launchd-launched helper tool instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -226,27 +235,27 @@ namespace Security {
 
 			try {
 				unsafe {
-					if (parameters != null){
+					if (parameters is not null){
 						ppars = &pars;
 						pars.ptrToAuthorization = (AuthorizationItem *) Marshal.AllocHGlobal (sizeof (AuthorizationItem) * 2);
-						if (parameters.PathToSystemPrivilegeTool != null)
+						if (parameters.PathToSystemPrivilegeTool is not null)
 							EncodeString (ref pars.ptrToAuthorization [pars.count++], "system.privilege.admin", parameters.PathToSystemPrivilegeTool);
-						if (parameters.IconPath != null)
+						if (parameters.IconPath is not null)
 							EncodeString (ref pars.ptrToAuthorization [pars.count++], "icon", parameters.IconPath);
 					}
-					if (environment != null || (parameters != null && parameters.Prompt != null)){
+					if (environment is not null || (parameters is not null && parameters.Prompt is not null)){
 						penv = &env;
 						env.ptrToAuthorization = (AuthorizationItem *) Marshal.AllocHGlobal (sizeof (AuthorizationItem) * 4);
-						if (environment != null){
-							if (environment.Username != null)
+						if (environment is not null){
+							if (environment.Username is not null)
 								EncodeString (ref env.ptrToAuthorization [env.count++], "username", environment.Username);
-							if (environment.Password != null)
+							if (environment.Password is not null)
 								EncodeString (ref env.ptrToAuthorization [env.count++], "password", environment.Password);
 							if (environment.AddToSharedCredentialPool)
 								EncodeString (ref env.ptrToAuthorization [env.count++], "shared", null);
 						}
-						if (parameters != null){
-							if (parameters.Prompt != null)
+						if (parameters is not null){
+							if (parameters.Prompt is not null)
 								EncodeString (ref env.ptrToAuthorization [env.count++], "prompt", parameters.Prompt);
 						}
 					}
@@ -256,14 +265,14 @@ namespace Security {
 					return new Authorization (auth, true);
 				}
 			} finally {
-				if (ppars != null){
+				if (ppars is not null){
 					for (int i = 0; i < pars.count; i++){
 						Marshal.FreeHGlobal (pars.ptrToAuthorization [i].name);
 						Marshal.FreeHGlobal (pars.ptrToAuthorization [i].value);
 					}
 					Marshal.FreeHGlobal ((IntPtr)pars.ptrToAuthorization);
 				}
-				if (penv != null){
+				if (penv is not null){
 					for (int i = 0; i < env.count; i++){
 						Marshal.FreeHGlobal (env.ptrToAuthorization [i].name);
 						if (env.ptrToAuthorization [i].value != IntPtr.Zero)

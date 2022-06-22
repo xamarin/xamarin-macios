@@ -41,6 +41,13 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGColor.h
 	public class CGColor : NativeObject
 	{
@@ -58,12 +65,12 @@ namespace CoreGraphics {
 		{
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGColorRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGColorRelease (GetCheckedHandle ());
 		}
@@ -112,7 +119,7 @@ namespace CoreGraphics {
 		static IntPtr Create (string name)
 		{
 			if (name is null)
-				throw new ArgumentNullException (nameof (name));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (name));
 
 			var nameHandle = CFString.CreateNative (name);
 			try {
@@ -136,7 +143,7 @@ namespace CoreGraphics {
 		{
 			var constant = color.GetConstant ();
 			if (constant is null)
-				throw new ArgumentNullException (nameof (color));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (color));
 			var handle = CGColorGetConstantColor (constant.Handle);
 			if (handle == IntPtr.Zero)
 				throw new ArgumentException (nameof (color));
@@ -148,6 +155,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
 		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (14,0)]
 		[TV (14,0)]
@@ -186,7 +194,7 @@ namespace CoreGraphics {
 		static IntPtr Create (CGColor source, nfloat alpha)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			return CGColorCreateCopyWithAlpha (source.GetCheckedHandle (), alpha);
 		}
 
@@ -295,6 +303,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
@@ -307,6 +317,8 @@ namespace CoreGraphics {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
@@ -322,6 +334,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -335,6 +348,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -351,6 +365,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]
@@ -364,6 +379,7 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,15)]
 		[iOS (13,0)]

@@ -3,13 +3,16 @@ TOP=../../..
 include $(TOP)/Make.config
 
 .libs/macos/custom-type-assembly.dll: custom-type-assembly.cs Makefile | .libs/macos
-	$(Q_CSC) $(MAC_mobile_CSC) $< -out:$@ -r:$(TOP)/_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/Xamarin.Mac.dll -target:library
+	$(Q_CSC) $(MAC_mobile_CSC) $< -out:$@ -r:$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/Xamarin.Mac.dll -target:library /nologo
 
-.libs/dotnet/macos/custom-type-assembly.dll: custom-type-assembly.cs Makefile | .libs/dotnet/macos
-	$(Q_CSC) $(DOTNET_CSC) $< -out:$@ -r:$(TOP)/_build/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.dll -target:library -r:$(DOTNET_BCL_DIR)/System.Runtime.dll /nologo
+.libs/dotnet/macos/custom-type-assembly.dll: bin/Debug/$(DOTNET_TFM)-macos/custom-type-assembly.dll | .libs/dotnet/macos
+	$(Q) $(CP) $< $@
 
 .libs/macos .libs/dotnet/macos:
 	$(Q) mkdir -p $@
+
+bin/Debug/$(DOTNET_TFM)-macos/custom-type-assembly.dll: custom-type-assembly.csproj custom-type-assembly.cs
+	$(Q) $(DOTNET) build $< "/bl:$@.binlog" $(MSBUILD_VERBOSITY)
 
 ifdef INCLUDE_XAMARIN_LEGACY
 TARGETS += \

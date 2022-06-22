@@ -10,6 +10,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using Foundation;
 using ObjCRuntime;
@@ -21,6 +22,12 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CGPDFScanner : NativeObject {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -39,9 +46,9 @@ namespace CoreGraphics {
 		public CGPDFScanner (CGPDFContentStream cs, CGPDFOperatorTable table, object userInfo)
 		{
 			if (cs is null)
-				throw new ArgumentNullException (nameof (cs));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (cs));
 			if (table is null)
-				throw new ArgumentNullException (nameof (table));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (table));
 
 			info = userInfo;
 			gch = GCHandle.Alloc (this);
@@ -65,12 +72,12 @@ namespace CoreGraphics {
 			get { return info; }
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGPDFScannerRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGPDFScannerRelease (GetCheckedHandle ());
 		}

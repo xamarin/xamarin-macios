@@ -29,6 +29,8 @@ namespace Metal {
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[iOS (8,0)]
 	[Mac (10,11)]
@@ -43,7 +45,7 @@ namespace Metal {
 			get {
 				// Metal could be unavailable on the hardware (and we don't want to return an invalid instance)
 				// also the instance could be disposed (by mistake) which would make the app unusable
-				if ((system_default == null) || (system_default.Handle == IntPtr.Zero)) {
+				if ((system_default is null) || (system_default.Handle == IntPtr.Zero)) {
 					try {
 						var h = MTLCreateSystemDefaultDevice ();
 						if (h != IntPtr.Zero)
@@ -62,8 +64,9 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[MacCatalyst (15,0)]
 #endif
@@ -72,8 +75,9 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("maccatalyst15.0")]
-		[SupportedOSPlatform ("ios8.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[MacCatalyst (15,0)]
 #endif
@@ -91,7 +95,9 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 13)]
 #endif
@@ -100,7 +106,9 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 13)]
 #endif
@@ -141,13 +149,15 @@ namespace Metal {
 		{
 			var descriptor = (BlockLiteral*) block;
 			var del = (MTLDeviceNotificationHandler) (descriptor->Target);
-			if (del != null)
+			if (del is not null)
 				del ((IMTLDevice) Runtime.GetNSObject (device)!, (Foundation.NSString) Runtime.GetNSObject (notifyName)!);
 		}
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
-		[SupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 13)]
 #endif
@@ -158,6 +168,7 @@ namespace Metal {
 		[SupportedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("ios")]
 		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10, 13)]
 		[NoiOS]
@@ -166,7 +177,7 @@ namespace Metal {
 #endif
 		public static void RemoveObserver (NSObject observer)
 		{
-			if (observer == null)
+			if (observer is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (observer));
 
 			MTLRemoveDeviceObserver (observer.Handle);
@@ -174,10 +185,16 @@ namespace Metal {
 #endif
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static partial class MTLDevice_Extensions {
 		public static IMTLBuffer? CreateBuffer<T> (this IMTLDevice This, T [] data, MTLResourceOptions options) where T : struct
 		{
-			if (data == null)
+			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
@@ -193,7 +210,7 @@ namespace Metal {
 		[Obsolete ("Use the overload that takes an IntPtr instead. The 'data' parameter must be page-aligned and allocated using vm_allocate or mmap, which won't be the case for managed arrays, so this method will always fail.")]
 		public static IMTLBuffer? CreateBufferNoCopy<T> (this IMTLDevice This, T [] data, MTLResourceOptions options, MTLDeallocator deallocator) where T : struct
 		{
-			if (data == null)
+			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 
 			var handle = GCHandle.Alloc (data, GCHandleType.Pinned); // This requires a pinned GCHandle, since it's not possible to use unsafe code to get the address of a generic object.
@@ -207,7 +224,7 @@ namespace Metal {
 
 		public unsafe static void GetDefaultSamplePositions (this IMTLDevice This, MTLSamplePosition [] positions, nuint count)
 		{
-			if (positions == null)
+			if (positions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (positions));
 
 			if (positions.Length < (nint)count)
@@ -223,6 +240,7 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
@@ -232,9 +250,9 @@ namespace Metal {
 #endif
 		public static void ConvertSparseTileRegions (this IMTLDevice This, MTLRegion [] tileRegions, MTLRegion [] pixelRegions, MTLSize tileSize, nuint numRegions)
 		{
-			if (tileRegions == null)
+			if (tileRegions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tileRegions));
-			if (pixelRegions == null)
+			if (pixelRegions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pixelRegions));
 
 			var tileRegionsHandle = GCHandle.Alloc (tileRegions, GCHandleType.Pinned);
@@ -251,6 +269,7 @@ namespace Metal {
 
 #if NET
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
@@ -260,9 +279,9 @@ namespace Metal {
 #endif
 		public static void ConvertSparsePixelRegions (this IMTLDevice This, MTLRegion [] pixelRegions, MTLRegion [] tileRegions, MTLSize tileSize, MTLSparseTextureRegionAlignmentMode mode, nuint numRegions)
 		{
-			if (tileRegions == null)
+			if (tileRegions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (tileRegions));
-			if (pixelRegions == null)
+			if (pixelRegions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (pixelRegions));
 
 			var tileRegionsHandle = GCHandle.Alloc (tileRegions, GCHandleType.Pinned);

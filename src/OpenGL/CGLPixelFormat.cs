@@ -41,6 +41,7 @@ using NativeHandle = System.IntPtr;
 
 namespace OpenGL {
 #if NET
+	[SupportedOSPlatform ("macos")]
 	[UnsupportedOSPlatform ("macos10.14")]
 #if MONOMAC
 	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
@@ -56,12 +57,12 @@ namespace OpenGL {
 		}
 #endif
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGLRetainPixelFormat (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGLReleasePixelFormat (GetCheckedHandle ());
 		}
@@ -88,7 +89,7 @@ namespace OpenGL {
 		static IntPtr Create (CGLPixelFormatAttribute[] attributes, out int npix)
 		{
 			if (attributes is null)
-				throw new ArgumentNullException (nameof (attributes));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (attributes));
 			IntPtr pixelFormatOut;
 			var marshalAttribs = new CGLPixelFormatAttribute [attributes.Length + 1];
 

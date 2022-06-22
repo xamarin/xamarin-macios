@@ -15,7 +15,9 @@ rm -Rf "$DIR"
 mkdir -p "$DIR"
 
 make test.config
-source test.config
+cat test.config
+XCODE_DEVELOPER_ROOT=$(grep ^XCODE_DEVELOPER_ROOT= test.config | sed 's/.*=//')
+MAC_DESTDIR=$(grep ^MAC_DESTDIR= test.config | sed 's/.*=//')
 export MD_APPLE_SDK_ROOT="$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")"
 export XAMMAC_FRAMEWORK_PATH=$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
 export XamarinMacFrameworkRoot=$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/Current

@@ -7,6 +7,8 @@
 // Copyright 2014 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Net.Sockets;
@@ -23,6 +25,10 @@ namespace Security {
 #endif
 
 #if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("macos10.15")]
 	[UnsupportedOSPlatform ("tvos13.0")]
 	[UnsupportedOSPlatform ("ios13.0")]
@@ -93,7 +99,7 @@ namespace Security {
 #endif
 		unsafe static SslStatus Read (IntPtr connection, IntPtr data, nint* dataLength)
 		{
-			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target;
+			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target!;
 			return c.Read (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
 		}
 
@@ -104,11 +110,18 @@ namespace Security {
 #endif
 		unsafe static SslStatus Write (IntPtr connection, IntPtr data, nint* dataLength)
 		{
-			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target;
+			var c = (SslConnection) GCHandle.FromIntPtr (connection).Target!;
 			return c.Write (data, ref System.Runtime.CompilerServices.Unsafe.AsRef<nint> (dataLength));
 		}
 	}
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// a concrete connection based on a managed Stream
 	public class SslStreamConnection : SslConnection {
 
@@ -116,8 +129,8 @@ namespace Security {
 
 		public SslStreamConnection (Stream stream)
 		{
-			if (stream == null)
-				throw new ArgumentNullException ("stream");
+			if (stream is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (stream));
 			InnerStream = stream;
 			// a bit higher than the default maximum fragment size
 			buffer = new byte [16384];

@@ -1228,7 +1228,6 @@ namespace SceneKit {
 
 	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Please use Metal instead of OpenGL API.")]
-	[NoMacCatalyst]
 	[BaseType (typeof (CAOpenGLLayer))]
 	interface SCNLayer : SCNSceneRenderer, SCNTechniqueSupport {
 //		We already pull in the Scene property from the SCNSceneRenderer protocol, no need to redefine it here.
@@ -3011,6 +3010,9 @@ namespace SceneKit {
 
 	[Watch (3,0)]
 	[iOS (8,0)]
+	[MacCatalyst (13, 0)]
+	[TV (9, 0)]
+	[Mac (10, 8)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface SCNSceneRenderer {

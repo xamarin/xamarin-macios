@@ -26,6 +26,10 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]		
 		public ITaskItem[] NativeReferences { get; set; }
 		
+		// This is a list of files to copy back to Windows
+		[Output]
+		public ITaskItem[] PackagedFiles { get; set; }
+
 		public override bool Execute ()
 		{
 			// LinkWith must be migrated for NoBindingEmbedding styled binding projects
@@ -51,6 +55,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			var manifestDirectory = compress ? IntermediateOutputPath : BindingResourcePath;
 			var manifestPath = CreateManifest (manifestDirectory);
+			var packagedFiles = new List<string> ();
 
 			if (compress) {
 				var zipFile = Path.GetFullPath (BindingResourcePath + ".zip");
@@ -73,14 +78,28 @@ namespace Xamarin.MacDev.Tasks {
 					var workingDirectory = Path.GetDirectoryName (fullPath);
 					zipArguments.Add (Path.GetFileName (fullPath));
 					ExecuteAsync ("zip", zipArguments, workingDirectory: workingDirectory).Wait ();
+
+					packagedFiles.Add (zipFile);
 				}
 			} else {
 				var bindingResourcePath = BindingResourcePath;
 				Log.LogMessage (MSBStrings.M0121, bindingResourcePath);
 				Directory.CreateDirectory (bindingResourcePath);
-				foreach (var nativeRef in NativeReferences)
+				foreach (var nativeRef in NativeReferences) {
 					Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef.ItemSpec, bindingResourcePath, FileCopierReportErrorCallback, FileCopierLogCallback);
+
+					var bindingOutputPath = Path.Combine (bindingResourcePath, Path.GetFileName (nativeRef.ItemSpec));
+					if (Directory.Exists (bindingOutputPath)) {
+						packagedFiles.AddRange (Directory.GetFiles (bindingOutputPath, "*", SearchOption.AllDirectories));
+					} else if (File.Exists (bindingOutputPath)) {
+						packagedFiles.Add (bindingOutputPath);
+					} else {
+						Log.LogWarning (MSBStrings.W7100, bindingOutputPath);
+					}
+				}
 			}
+
+			PackagedFiles = packagedFiles.Select (v => new TaskItem (v)).ToArray ();
 
 			return !Log.HasLoggedErrors;
 		}

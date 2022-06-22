@@ -6,7 +6,6 @@ include $(TOP)/Make.config
 
 export TargetFrameworkFallbackSearchPaths:=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPathFallbackPathsOverride:=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
-export MD_APPLE_SDK_ROOT=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 
 ifeq ($(shell uname -a),"arm64")
 IS_ARM64=1
@@ -122,12 +121,9 @@ exec-mac-modern-linksdk:
 # on eachother. So here we build those library projects first, serialized,
 # so that when the test projects need them, they're already built.
 
-.stamp-copy-dotnet-config:
-	$(Q) $(MAKE) -C dotnet copy-dotnet-config
-	$(Q) touch $@
 
 define DotNetDependentProject
-.stamp-dotnet-dependency-$(2)-$(1): Makefile .stamp-copy-dotnet-config
+.stamp-dotnet-dependency-$(2)-$(1): Makefile
 	$$(Q) $$(MAKE) -C "$(1)/dotnet/$(2)" build
 	$$(Q) touch $$@
 

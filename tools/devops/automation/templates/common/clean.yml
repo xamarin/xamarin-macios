@@ -1,0 +1,26 @@
+# Perform gihub cleaning steps
+
+steps:
+
+- template: checkout.yml
+  parameters:
+    isPR: false # always use the latests version of the script
+
+- pwsh: |
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
+    $comments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    $ciComment = "[comment]: <> (This is a comment added by Azure DevOps)"
+
+    $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
+    $prComments = $comments.GetCommentsForPR($prId)
+
+    $botComments = [System.Collections.ArrayList]@()
+    foreach ($c in $prComments) {
+      if ($c.Author -eq "vs-mobiletools-engineering-service2") {
+        if ($c.Body.Contains($ciComment)) {
+          $botComments.Add($c)
+        }
+      }
+    }
+    $comments.MinimizeComments($botComments)
+  displayName: Clear past comments

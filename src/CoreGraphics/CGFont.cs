@@ -30,6 +30,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
@@ -43,6 +44,13 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGFont.h
 	public class CGFont : NativeObject
 		{
@@ -56,7 +64,7 @@ namespace CoreGraphics {
 		static CGFont Create (IntPtr handle)
 		{
 			if (handle == IntPtr.Zero)
-				throw new ArgumentNullException (nameof (handle));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handle));
 			return new CGFont (handle, true);
 		}
 
@@ -66,12 +74,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static void CGFontRelease (/* CGFontRef */ IntPtr font);
 		
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGFontRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGFontRelease (GetCheckedHandle ());
 		}
@@ -240,7 +248,7 @@ namespace CoreGraphics {
 		{
 			// note: the API is marked to accept a null CFStringRef but it currently (iOS9 beta 4) crash when provided one
 			if (s is null)
-				throw new ArgumentNullException (nameof (s));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (s));
 			var sHandle = CFString.CreateNative (s);
 			try {
 				return CGFontGetGlyphWithGlyphName (Handle, sHandle);

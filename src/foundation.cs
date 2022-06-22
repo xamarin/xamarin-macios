@@ -5644,7 +5644,11 @@ namespace Foundation
 		NSDictionary ToDictionary ();
 	
 		[Export ("volatileDomainNames")]
+#if XAMCORE_5_0
+		string [] VolatileDomainNames { get; }
+#else
 		string [] VolatileDomainNames ();
+#endif
 	
 		[Export ("volatileDomainForName:")]
 		NSDictionary GetVolatileDomain (string domainName);
@@ -6810,6 +6814,7 @@ namespace Foundation
 #if HAS_NEWSSTANDKIT
 		// Extension from iOS5, NewsstandKit
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use Background Remote Notifications instead.")]
+		[NoTV][NoMac][NoMacCatalyst]
 		[NullAllowed]
 		[Export ("newsstandAssetDownload", ArgumentSemantic.Weak)]
 		NewsstandKit.NKAssetDownload NewsstandAssetDownload { get; }
@@ -10255,6 +10260,7 @@ namespace Foundation
 		CGSize PreferredPresentationSize {
 			get;
 #if !MONOMAC
+			[NoMac]
 			set;
 #endif
 		}
@@ -13882,7 +13888,6 @@ namespace Foundation
 	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	[NoMacCatalyst]
 	partial interface NSHost {
 
 		[Static, Internal, Export ("currentHost")]

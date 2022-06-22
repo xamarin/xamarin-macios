@@ -6,6 +6,9 @@
 // 
 // Copyright 2015 Xamarin Inc.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -15,7 +18,12 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	public class CMCustomBlockAllocator : IDisposable {
@@ -54,7 +62,9 @@ namespace CoreMedia {
 		static IntPtr AllocateCallback (IntPtr refCon, nuint sizeInBytes)
 		{
 			var gch = GCHandle.FromIntPtr (refCon);
-			return ((CMCustomBlockAllocator) gch.Target).Allocate (sizeInBytes);
+			if (gch.Target is CMCustomBlockAllocator target)
+				return target.Allocate (sizeInBytes);
+			return IntPtr.Zero;
 		}
 
 		public virtual IntPtr Allocate (nuint sizeInBytes) 
@@ -68,7 +78,8 @@ namespace CoreMedia {
 		static void FreeCallback (IntPtr refCon, IntPtr doomedMemoryBlock, nuint sizeInBytes)
 		{
 			var gch = GCHandle.FromIntPtr (refCon);
-			((CMCustomBlockAllocator) gch.Target).Free (doomedMemoryBlock, sizeInBytes);
+			if (gch.Target is CMCustomBlockAllocator allocator)
+				allocator.Free (doomedMemoryBlock, sizeInBytes);
 		}
 
 		public virtual void Free (IntPtr doomedMemoryBlock, nuint sizeInBytes)

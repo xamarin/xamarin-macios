@@ -281,38 +281,6 @@ function install_mono () {
 	rm -f $MONO_PKG
 }
 
-function install_visual_studio () {
-	local VS="/Applications/Visual Studio.app"
-	local VS_URL=`grep MIN_VISUAL_STUDIO_URL= Make.config | sed 's/.*=//'`
-	local MIN_VISUAL_STUDIO_VERSION=`grep MIN_VISUAL_STUDIO_VERSION= Make.config | sed 's/.*=//'`
-
-	if test -z $VS_URL; then
-		fail "No MIN_VISUAL_STUDIO_URL set in Make.config, cannot provision"
-		return
-	fi
-
-	mkdir -p $PROVISION_DOWNLOAD_DIR
-	log "Downloading Visual Studio $MIN_VISUAL_STUDIO_VERSION from $VS_URL to $PROVISION_DOWNLOAD_DIR..."
-	local VS_NAME=`basename $VS_URL`
-	local VS_DMG=$PROVISION_DOWNLOAD_DIR/$VS_NAME
-	curl -L $VS_URL > $VS_DMG
-
-	local VS_MOUNTPOINT=$PROVISION_DOWNLOAD_DIR/$VS_NAME-mount
-	log "Mounting $VS_DMG into $VS_MOUNTPOINT..."
-	hdiutil attach $VS_DMG -mountpoint $VS_MOUNTPOINT -quiet -nobrowse
-	log "Removing previous Visual Studio from $VS"
-	$SUDO rm -Rf "$VS"
-	log "Installing Visual Studio $MIN_VISUAL_STUDIO_VERSION to $VS..."
-	$SUDO cp -R "$VS_MOUNTPOINT/Visual Studio.app" /Applications
-	log "Unmounting $VS_DMG..."
-	hdiutil detach $VS_MOUNTPOINT -quiet
-
-	VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
-	ok "Visual Studio $VS_ACTUAL_VERSION provisioned"
-
-	rm -f $VS_DMG
-}
-
 function run_xcode_first_launch ()
 {
 	local XCODE_VERSION="$1"
@@ -411,8 +379,6 @@ function install_specific_xcode () {
 		done
 	fi
 
-	log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
-	$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
 	log "Clearing xcrun cache..."
 	xcrun -k
 
@@ -526,20 +492,6 @@ function check_specific_xcode () {
 		return
 	fi
 
-	if test -z "$1"; then
-		local XCODE_SELECT=$(xcode-select -p)
-		if [[ "x$XCODE_SELECT" != "x$XCODE_DEVELOPER_ROOT" ]]; then
-			if ! test -z $PROVISION_XCODE; then
-				log "Executing '$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT'"
-				$SUDO xcode-select -s $XCODE_DEVELOPER_ROOT
-				log "Clearing xcrun cache..."
-				xcrun -k
-			else
-				fail "'xcode-select -p' does not point to $XCODE_DEVELOPER_ROOT, it points to $XCODE_SELECT. Execute 'make fix-xcode-select' to fix."
-			fi
-		fi
-	fi
-
 	ok "Found Xcode $XCODE_ACTUAL_VERSION in $XCODE_ROOT"
 }
 
@@ -552,10 +504,10 @@ function check_xcode () {
 
 	local IOS_SDK_VERSION MACOS_SDK_VERSION WATCH_SDK_VERSION TVOS_SDK_VERSION
 	local XCODE_DEVELOPER_ROOT=`grep ^XCODE_DEVELOPER_ROOT= Make.config | sed 's/.*=//'`
-	IOS_SDK_VERSION=$(grep ^IOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
-	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
-	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
-	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_VERSION= Make.versions | sed -e 's/.*=//' -e 's/.[0-9]*$//')
+	IOS_SDK_VERSION=$(grep ^IOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
+	MACOS_SDK_VERSION=$(grep ^MACOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
+	WATCH_SDK_VERSION=$(grep ^WATCHOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
+	TVOS_SDK_VERSION=$(grep ^TVOS_NUGET_OS_VERSION= Make.versions | sed -e 's/.*=//')
 
 	local D=$XCODE_DEVELOPER_ROOT/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator${IOS_SDK_VERSION}.sdk
 	if test ! -d $D -a -z "$FAIL"; then
@@ -724,51 +676,6 @@ IFS='
 	fi
 
 IFS=$IFS_tmp
-}
-function check_visual_studio () {
-	if ! test -z $IGNORE_VISUAL_STUDIO; then return; fi
-
-	VS="/Applications/Visual Studio.app"
-	local VS_URL=`grep MIN_VISUAL_STUDIO_URL= Make.config | sed 's/.*=//'`
-	if ! test -d "$VS"; then
-		if ! test -z $PROVISION_VS; then
-			install_visual_studio
-		else
-			fail "You must install Visual Studio, from http://www.monodevelop.com/download/"
-		fi
-		return
-	fi
-
-	MIN_VISUAL_STUDIO_VERSION=`grep MIN_VISUAL_STUDIO_VERSION= Make.config | sed 's/.*=//'`
-	MAX_VISUAL_STUDIO_VERSION=`grep MAX_VISUAL_STUDIO_VERSION= Make.config | sed 's/.*=//'`
-	VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
-	if ! is_at_least_version $VS_ACTUAL_VERSION $MIN_VISUAL_STUDIO_VERSION; then
-		if ! test -z $PROVISION_VS; then
-			install_visual_studio
-			VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
-		else
-			fail "You must have at least Visual Studio $MIN_VISUAL_STUDIO_VERSION (found $VS_ACTUAL_VERSION). Download URL: $VS_URL"
-		fi
-		return
-	elif [[ "$VS_ACTUAL_VERSION" == "$MAX_VISUAL_STUDIO_VERSION" ]]; then
-		: # this is ok
-	elif is_at_least_version $VS_ACTUAL_VERSION $MAX_VISUAL_STUDIO_VERSION; then
-		if ! test -z $PROVISION_VS; then
-			install_visual_studio
-			VS_ACTUAL_VERSION=`/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$VS/Contents/Info.plist"`
-		else
-			fail "Your Visual Studio version is too new, max version is $MAX_VISUAL_STUDIO_VERSION, found $VS_ACTUAL_VERSION."
-			fail "You may edit Make.config and change MAX_VISUAL_STUDIO_VERSION to your actual version to continue the"
-			fail "build (unless you're on a release branch). Once the build completes successfully, please"
-			fail "commit the new MAX_VISUAL_STUDIO_VERSION value."
-			fail "Alternatively you can download an older version from:"
-			fail "    $VS_URL,"
-			fail "or you can ${COLOR_MAGENTA}export IGNORE_VISUAL_STUDIO=1${COLOR_RED} to skip this check."
-		fi
-		return
-	fi
-
-	ok "Found Visual Studio $VS_ACTUAL_VERSION (at least $MIN_VISUAL_STUDIO_VERSION and not more than $MAX_VISUAL_STUDIO_VERSION is required)"
 }
 
 function check_osx_version () {
@@ -1010,55 +917,6 @@ function check_simulators ()
 	fi
 }
 
-function check_dotnet ()
-{
-	if test -n "$IGNORE_DOTNET"; then return; fi
-
-	local DOTNET_VERSION
-	local DOTNET_FILENAME
-	local URL
-	local INSTALL_DIR
-	local CACHED_FILE
-	local DOWNLOADED_FILE
-
-	DOTNET_VERSION=$(grep "^SYSTEM_DOTNET_VERSION=" dotnet.config | sed 's/.*=//')
-	ARCH=$(arch)
-	if [[ "$ARCH" =~ "arm64" ]]; then
-		URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-arm64.pkg
-	else
-		URL=https://dotnetcli.azureedge.net/dotnet/Sdk/"$DOTNET_VERSION"/dotnet-sdk-"$DOTNET_VERSION"-osx-x64.pkg
-	fi
-	INSTALL_DIR=/usr/local/share/dotnet/sdk/"$DOTNET_VERSION"
-
-	if test -d "$INSTALL_DIR"; then
-		ok "Found dotnet $DOTNET_VERSION in $INSTALL_DIR (exactly $DOTNET_VERSION is required)."
-		return
-	fi
-	if test -z "$PROVISION_DOTNET"; then
-		fail "You must install dotnet $DOTNET_VERSION. You can download it from ${COLOR_BLUE}$URL${COLOR_RESET}."
-		fail "Alternatively you can ${COLOR_MAGENTA}export IGNORE_DOTNET=1${COLOR_RED} to skip this check."
-		return
-	fi
-
-	DOTNET_FILENAME=$(basename "$URL")
-
-	CACHED_FILE=$HOME/Library/Caches/xamarin-macios/$DOTNET_FILENAME
-	if test -f "$CACHED_FILE"; then
-		log "Found cached version in $CACHED_FILE, will install from cache."
-		DOWNLOADED_FILE="$HOME/Library/Caches/xamarin-macios/$DOTNET_FILENAME"
-	else
-		log "Downloading dotnet $DOTNET_VERSION from $URL..."
-		mkdir -p "$PROVISION_DOWNLOAD_DIR"
-		DOWNLOADED_FILE="$PROVISION_DOWNLOAD_DIR/$DOTNET_FILENAME"
-		curl -f -L "$URL" -o "$DOWNLOADED_FILE"
-	fi
-
-	log "Installing dotnet $DOTNET_VERSION into $INSTALL_DIR..."
-	$SUDO installer -pkg "$DOWNLOADED_FILE" -target /
-
-	ok "Installed dotnet $DOTNET_VERSION into $INSTALL_DIR."
-}
-
 echo "Checking system..."
 
 check_osx_version
@@ -1068,12 +926,10 @@ check_homebrew
 check_autotools
 check_python3
 check_mono
-check_visual_studio
 check_cmake
 check_7z
 check_objective_sharpie
 check_simulators
-check_dotnet ""
 if test -z "$IGNORE_DOTNET"; then
 	ok "Installed .NET SDKs:"
 	(IFS=$'\n'; for i in $(/usr/local/share/dotnet/dotnet --list-sdks); do log "$i"; done)

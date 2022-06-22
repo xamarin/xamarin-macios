@@ -35,7 +35,12 @@ using ObjCRuntime;
 
 namespace CoreVideo {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public class CVPixelBufferPoolSettings : DictionaryContainer
@@ -71,7 +76,12 @@ namespace CoreVideo {
 #endif
 	}
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
 #endif
 	public partial class CVPixelBufferPoolAllocationSettings : DictionaryContainer {

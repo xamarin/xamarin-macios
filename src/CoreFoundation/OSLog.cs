@@ -20,6 +20,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#nullable enable
+
 using System;
 
 using Foundation;
@@ -37,6 +39,7 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("macos10.12")]
 	[SupportedOSPlatform ("ios10.0")]
 	[SupportedOSPlatform ("tvos10.0")]
+	[SupportedOSPlatform ("maccatalyst")]
 #else
 	[Mac (10,12)]
 	[iOS (10,0)]
@@ -45,11 +48,11 @@ namespace CoreFoundation {
 #endif
 	public sealed class OSLog : NativeObject {
 
-		static OSLog _default;
+		static OSLog? _default;
 
 		public static OSLog Default {
 			get {
-				if (_default == null) {
+				if (_default is null) {
 					var h = Dlfcn.dlsym (Libraries.System.Handle, "_os_log_default");
 					if (h == IntPtr.Zero)
 						throw new NotSupportedException ("Feature not available on this OS version");
@@ -59,13 +62,13 @@ namespace CoreFoundation {
 			}
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			if (Handle != IntPtr.Zero)
 				os_retain (Handle);
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			if (Handle != IntPtr.Zero)
 				os_release (Handle);
@@ -91,10 +94,10 @@ namespace CoreFoundation {
 
 		public OSLog (string subsystem, string category)
 		{
-			if (subsystem == null)
-				throw new ArgumentNullException (nameof (subsystem));
-			if (category == null)
-				throw new ArgumentNullException (nameof (category));
+			if (subsystem is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (subsystem));
+			if (category is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (category));
 
 			Handle = os_log_create (subsystem, category);
 		}
@@ -106,8 +109,8 @@ namespace CoreFoundation {
 
 		public void Log (OSLogLevel level, string message)
 		{
-			if (message == null)
-				throw new ArgumentNullException (nameof (message));
+			if (message is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (message));
 
 			xamarin_os_log (Handle, level, message);
 		}

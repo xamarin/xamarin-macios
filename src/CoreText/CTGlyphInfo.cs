@@ -54,6 +54,12 @@ namespace CoreText {
 	}
 #endregion
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTGlyphInfo : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTGlyphInfo (NativeHandle handle, bool owns)
@@ -68,11 +74,11 @@ namespace CoreText {
 		static IntPtr Create (string glyphName, CTFont font, string baseString)
 		{
 			if (glyphName is null)
-				throw new ArgumentNullException (nameof (glyphName));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (glyphName));
 			if (font is null)
-				throw new ArgumentNullException (nameof (font));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			if (baseString is null)
-				throw new ArgumentNullException (nameof (baseString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (baseString));
 
 			var gnHandle = CFString.CreateNative (glyphName);
 			var bsHandle = CFString.CreateNative (baseString);
@@ -95,9 +101,9 @@ namespace CoreText {
 		static IntPtr Create (CGGlyph glyph, CTFont font, string baseString)
 		{
 			if (font is null)
-				throw new ArgumentNullException (nameof (font));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (font));
 			if (baseString is null)
-				throw new ArgumentNullException (nameof (baseString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (baseString));
 
 			var bsHandle = CFString.CreateNative (baseString);
 			try {
@@ -118,7 +124,7 @@ namespace CoreText {
 		static IntPtr Create (CGFontIndex cid, CTCharacterCollection collection, string baseString)
 		{
 			if (baseString is null)
-				throw new ArgumentNullException (nameof (baseString));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (baseString));
 
 			var bsHandle = CFString.CreateNative (baseString);
 			try {
@@ -160,6 +166,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13,0)]
 		[Mac (10,15)]
@@ -173,6 +180,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13,0)]
 		[Mac (10,15)]

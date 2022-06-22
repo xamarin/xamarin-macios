@@ -5,7 +5,7 @@ VSTS interaction unit tests.
 Import-Module ./VSTS -Force
 
 Describe 'Stop-Pipeline' {
-    Context 'with all the env vars present' {
+    Context 'with all the env vars present' -Skip {
 
         BeforeAll {
             $Script:envVariables = @{
@@ -65,7 +65,7 @@ Describe 'Stop-Pipeline' {
         }
     }
 
-    Context 'without an env var' {
+    Context 'without an env var' -Skip {
         BeforeAll {
             $Script:envVariables = @{
                 "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI";
@@ -93,7 +93,7 @@ Describe 'Stop-Pipeline' {
 }
 
 Describe 'Set-PipelineResult' {
-    Context 'with all the env vars present' {
+    Context 'with all the env vars present' -Skip {
 
         BeforeAll {
             $Script:envVariables = @{
@@ -153,7 +153,7 @@ Describe 'Set-PipelineResult' {
         }
     }
 
-    Context 'without an env var' {
+    Context 'without an env var' -Skip {
         BeforeAll {
             $Script:envVariables = @{
                 "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI";

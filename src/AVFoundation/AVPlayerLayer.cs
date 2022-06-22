@@ -12,25 +12,29 @@
 using ObjCRuntime;
 using CoreVideo;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVPlayerLayer {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 		[Mac (10,11)]
 #endif
-		public CVPixelBufferAttributes PixelBufferAttributes { 
+		public CVPixelBufferAttributes? PixelBufferAttributes {
 			get {
-				if (WeakPixelBufferAttributes != null) {
+				if (WeakPixelBufferAttributes is not null) {
 					var strongDict = new CVPixelBufferAttributes (WeakPixelBufferAttributes);
 					return strongDict;
 				}
 				return null;
 			}
 			set {
-				WeakPixelBufferAttributes = value != null ? value.Dictionary : null;
+				WeakPixelBufferAttributes = value?.Dictionary;
 			}
 		}
 	}

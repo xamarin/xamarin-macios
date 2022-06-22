@@ -1,5 +1,7 @@
 // Copyright 2015-2016 Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreGraphics;
@@ -17,13 +19,14 @@ namespace MetalPerformanceShaders {
 
 		public static bool Supports (IMTLDevice device)
 		{
-			return MPSSupportsMTLDevice (device == null ? IntPtr.Zero : device.Handle);
+			return MPSSupportsMTLDevice (device.GetHandle ());
 		}
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
@@ -36,21 +39,22 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos13.0")]
 		[SupportedOSPlatform ("macos10.15")]
 		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (13,0)]
 		[Mac (10,15)]
 		[iOS (13,0)]
 #endif
-		public static IMTLDevice GetPreferredDevice (MPSDeviceOptions options)
+		public static IMTLDevice? GetPreferredDevice (MPSDeviceOptions options)
 		{
 			var h = MPSGetPreferredDevice ((nuint)(ulong) options);
 			return Runtime.GetINativeObject<IMTLDevice> (h, false);
 		}
 
-		internal unsafe static float [] GetTransform (IntPtr transform)
+		internal unsafe static float []? GetTransform (IntPtr transform)
 		{
 			var t = (float*) transform;
-			if (t == null)
+			if (t is null)
 				return null;
 			return new float [3] { t [0], t [1], t [2] };
 		}
@@ -72,6 +76,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -84,17 +89,19 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
 		[iOS (12,0)]
 #endif
-		public static void HintTemporaryMemoryHighWaterMark (IMTLCommandBuffer commandBuffer, nuint sizeInBytes) => MPSHintTemporaryMemoryHighWaterMark (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, sizeInBytes);
+		public static void HintTemporaryMemoryHighWaterMark (IMTLCommandBuffer commandBuffer, nuint sizeInBytes) => MPSHintTemporaryMemoryHighWaterMark (commandBuffer.GetHandle (), sizeInBytes);
 
 #if NET
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -107,12 +114,13 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
 		[iOS (12,0)]
 #endif
-		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer == null ? IntPtr.Zero : commandBuffer.Handle, seconds);
+		public static void SetHeapCacheDuration (IMTLCommandBuffer commandBuffer, double seconds) => MPSSetHeapCacheDuration (commandBuffer.GetHandle (), seconds);
 #endif
 	}
 
@@ -123,6 +131,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13,0)]
 		[TV (12,0)]
@@ -135,6 +144,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("ios13.0")]
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (13,0)]
 		[TV (12,0)]
@@ -149,8 +159,8 @@ namespace MetalPerformanceShaders {
 		public MPSImageDilate (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] values)
 			: base (NSObjectFlag.Empty)
 		{
-			if (values == null)
-				throw new ArgumentNullException (nameof (values));
+			if (values is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (values));
 
 			unsafe {
 				fixed (float* ptr = values)
@@ -180,7 +190,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] Transform {
+		public float[]? Transform {
 			get { return MPSKernel.GetTransform (_Transform); }
 		}
 	}
@@ -197,7 +207,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] Transform {
+		public float[]? Transform {
 			get { return MPSKernel.GetTransform (_Transform); }
 		}
 	}
@@ -214,7 +224,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] Transform {
+		public float[]? Transform {
 			get { return MPSKernel.GetTransform (_Transform); }
 		}
 	}
@@ -231,7 +241,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] Transform {
+		public float[]? Transform {
 			get { return MPSKernel.GetTransform (_Transform); }
 		}
 	}
@@ -248,7 +258,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] Transform {
+		public float[]? Transform {
 			get { return MPSKernel.GetTransform (_Transform); }
 		}
 	}
@@ -259,8 +269,8 @@ namespace MetalPerformanceShaders {
 		public MPSImageSobel (IMTLDevice device, float[] transform)
 			: base (NSObjectFlag.Empty)
 		{
-			if (transform == null)
-				throw new ArgumentNullException (nameof (transform));
+			if (transform is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (transform));
 
 			unsafe {
 				fixed (float* ptr = transform)
@@ -268,7 +278,7 @@ namespace MetalPerformanceShaders {
 			}
 		}
 
-		public float[] ColorTransform {
+		public float[]? ColorTransform {
 			get { return MPSKernel.GetTransform (_ColorTransform); }
 		}
 	}
@@ -279,8 +289,8 @@ namespace MetalPerformanceShaders {
 		public MPSCnnConvolution (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+			if (kernelWeights is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
 				fixed (float* kernelWeightsptr = kernelWeights)
@@ -296,6 +306,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("tvos10.0")]
 		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos11.0")]
 		[UnsupportedOSPlatform ("ios11.0")]
 #if TVOS
@@ -310,8 +321,8 @@ namespace MetalPerformanceShaders {
 		public MPSCnnFullyConnected (IMTLDevice device, MPSCnnConvolutionDescriptor convolutionDescriptor, float[] kernelWeights, float[] biasTerms, MPSCnnConvolutionFlags flags)
 			: base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+			if (kernelWeights is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
 				fixed (float* kernelWeightsptr = kernelWeights)
@@ -338,8 +349,8 @@ namespace MetalPerformanceShaders {
 		public MPSImagePyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
 			: base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+			if (kernelWeights is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
 				fixed (float* ptr = kernelWeights)
@@ -354,8 +365,8 @@ namespace MetalPerformanceShaders {
 		public MPSImageGaussianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights)
 			: base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+			if (kernelWeights is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 
 			unsafe {
 				fixed (float* ptr = kernelWeights)
@@ -368,8 +379,8 @@ namespace MetalPerformanceShaders {
 		[DesignatedInitializer]
 		public MPSImageLaplacianPyramid (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+			if (kernelWeights is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
 
@@ -384,8 +395,8 @@ namespace MetalPerformanceShaders {
 		[DesignatedInitializer]
 		public MPSImageLaplacianPyramidSubtract (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+			if (kernelWeights is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
 
@@ -400,8 +411,8 @@ namespace MetalPerformanceShaders {
 		[DesignatedInitializer]
 		public MPSImageLaplacianPyramidAdd (IMTLDevice device, nuint kernelWidth, nuint kernelHeight, float[] kernelWeights) : base (NSObjectFlag.Empty)
 		{
-			if (kernelWeights == null)
-				throw new ArgumentNullException (nameof (kernelWeights));
+			if (kernelWeights is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernelWeights));
 			if ((nuint) kernelWeights.Length < kernelWidth * kernelHeight)
 				throw new ArgumentException ($"'{nameof (kernelWeights)}' size must be at least '{nameof (kernelWidth)}' * '{nameof (kernelHeight)}'.");
 
@@ -417,6 +428,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos11.3")]
 		[SupportedOSPlatform ("macos10.13.4")]
 		[SupportedOSPlatform ("ios11.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11,3)]
 		[Mac (10,13,4)]
@@ -437,6 +449,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos11.3")]
 		[SupportedOSPlatform ("macos10.13.4")]
 		[SupportedOSPlatform ("ios11.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11,3)]
 		[Mac (10,13,4)]
@@ -459,12 +472,13 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos11.3")]
 		[SupportedOSPlatform ("macos10.13.4")]
 		[SupportedOSPlatform ("ios11.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11,3)]
 		[Mac (10,13,4)]
 		[iOS (11,3)]
 #endif
-		public static MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
+		public new static MPSCnnBinaryFullyConnectedNode Create (MPSNNImageNode sourceNode, IMPSCnnConvolutionDataSource weights, float [] outputBiasTerms, float [] outputScaleTerms, float [] inputBiasTerms, float [] inputScaleTerms, MPSCnnBinaryConvolutionType type, MPSCnnBinaryConvolutionFlags flags)
 		{
 			unsafe {
 				fixed (void* outputBiasTermsHandle = outputBiasTerms)
@@ -479,6 +493,7 @@ namespace MetalPerformanceShaders {
 		[SupportedOSPlatform ("tvos11.3")]
 		[SupportedOSPlatform ("macos10.13.4")]
 		[SupportedOSPlatform ("ios11.3")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (11,3)]
 		[Mac (10,13,4)]

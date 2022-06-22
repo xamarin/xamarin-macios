@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,18 +8,11 @@ using Foundation;
 
 namespace HomeKit {
 
-#if NET
-	[SupportedOSPlatform ("ios8.0")]
-	[SupportedOSPlatform ("tvos10.0")]
-#else
-	[iOS (8,0)]
-	[TV (10,0)]
-#endif
 	public partial class HMHome
 	{
-		public HMService [] GetServices (HMServiceType serviceTypes) 
+		public HMService []? GetServices (HMServiceType serviceTypes)
 		{
-			var arr = new List<NSString> ();
+			var arr = new ServiceTypeList<NSString> ();
 
 			if ((serviceTypes & HMServiceType.LightBulb) == HMServiceType.LightBulb)			
 				arr.Add (HMServiceType.LightBulb.GetConstant ());
@@ -85,6 +80,14 @@ namespace HomeKit {
 				arr.Add (HMServiceType.Slats.GetConstant ());
 
 			return GetServices (arr.ToArray ());
+		}
+
+		class ServiceTypeList<T> : List<T> {
+			public new void Add (T? item)
+			{
+				if (item is not null)
+					base.Add (item);
+			}
 		}
 
 #if !NET

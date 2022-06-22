@@ -7,6 +7,9 @@
 // Copyright 2019 Microsoft Corp.
 //
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -23,6 +26,8 @@ namespace CoreFoundation {
 #if NET
 	[SupportedOSPlatform ("ios8.0")]
 	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
 #else
 	[iOS (8, 0)]
 	[Mac (10, 10)]
@@ -51,22 +56,22 @@ namespace CoreFoundation {
 
 		public static DispatchBlock Create (Action action, DispatchBlockFlags flags = DispatchBlockFlags.None)
 		{
-			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			return new DispatchBlock (action, flags);
 		}
 
 		public static DispatchBlock Create (Action action, DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority)
 		{
-			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			return new DispatchBlock (action, flags, qosClass, relative_priority);
 		}
 
 		public static DispatchBlock Create (DispatchBlock block, DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority)
 		{
-			if (block == null)
-				throw new ArgumentNullException (nameof (block));
+			if (block is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 			return block.Create (flags, qosClass, relative_priority);
 		}
 
@@ -75,12 +80,12 @@ namespace CoreFoundation {
 			return new DispatchBlock (dispatch_block_create_with_qos_class ((nuint) (ulong) flags, qosClass, relative_priority, GetCheckedHandle ()), true);
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			Handle = BlockLiteral._Block_copy (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			BlockLiteral._Block_release (GetCheckedHandle ());
 		}
@@ -92,8 +97,8 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		static IntPtr create (Action action, DispatchBlockFlags flags)
 		{
-			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
@@ -114,8 +119,8 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		static IntPtr create (DispatchBlockFlags flags, DispatchQualityOfService qosClass, int relative_priority, Action action)
 		{
-			if (action == null)
-				throw new ArgumentNullException (nameof (action));
+			if (action is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {
@@ -139,18 +144,18 @@ namespace CoreFoundation {
 
 		public void Notify (DispatchQueue queue, Action notification)
 		{
-			if (notification == null)
-				throw new ArgumentNullException (nameof (notification));
+			if (notification is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (notification));
 			using (var block = new DispatchBlock (notification))
 				Notify (queue, block);
 		}
 
 		public void Notify (DispatchQueue queue, DispatchBlock notification)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
-			if (notification == null)
-				throw new ArgumentNullException (nameof (notification));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
+			if (notification is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (notification));
 			dispatch_block_notify (GetCheckedHandle (), queue.GetCheckedHandle (), notification.GetCheckedHandle ());
 		}
 
@@ -182,9 +187,9 @@ namespace CoreFoundation {
 		[UnmanagedFunctionPointer (CallingConvention.Cdecl)]
 		delegate void DispatchBlockCallback (IntPtr block);
 
-		public static explicit operator Action (DispatchBlock block)
+		public static explicit operator Action? (DispatchBlock block)
 		{
-			if (block == null)
+			if (block is null)
 				return null;
 
 			unsafe {
@@ -196,7 +201,7 @@ namespace CoreFoundation {
 
 		public void Invoke ()
 		{
-			((Action) this) ();
+			((Action) this!) ();
 		}
 
 		//

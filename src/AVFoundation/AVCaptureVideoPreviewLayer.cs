@@ -7,6 +7,8 @@ using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVCaptureVideoPreviewLayer {
 
@@ -14,6 +16,8 @@ namespace AVFoundation {
 			WithConnection,
 #if NET
 			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("macos")]
+			[SupportedOSPlatform ("maccatalyst")]
 #else
 			[iOS (8,0)]
 #endif

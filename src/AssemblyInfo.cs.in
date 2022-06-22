@@ -29,5 +29,12 @@ using System.Runtime.CompilerServices;
 #endif
 
 #if NET
-[assembly: AssemblyVersion ("@NUGET_VERSION_MAJOR@.@NUGET_VERSION_MINOR@.@NUGET_VERSION_REV@.@NUGET_VERSION_BUILD@")]
+// Use a two-part version, because there shouldn't be any API changes when the third or fourth digit changes (according to Semver 2.0 rules).
+// In other words: the following scenario is safe:
+// - Assembly A builds against Microsoft.*.dll v1.0.1
+// - Assembly B builds against Assembly A and Microsoft.*.dll v1.0.0
+// - Assembly B should build just fine, because those two versions of Microsoft.*.dll have the exact same API.
+// To avoid scenarios where everybody would have to update to the latest patch version of Microsoft.*.dll
+// in order to compile stuff, we erase the third and fourth number and only use 0 for both.
+[assembly: AssemblyVersion ("@NUGET_VERSION_MAJOR@.@NUGET_VERSION_MINOR@.0.0")]
 #endif

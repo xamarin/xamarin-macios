@@ -45,6 +45,9 @@ using CoreLocation;
 #if !__TVOS__
 using Contacts;
 #endif
+#if HAS_COREMIDI
+using CoreMidi;
+#endif
 #if !(__TVOS__ && NET)
 using WebKit;
 #endif
@@ -71,6 +74,36 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public static Registrars CurrentRegistrar {
 			get {
 				return RegistrarSharedTest.CurrentRegistrar;
+			}
+		}
+
+		[Test]
+		public void NSRangeOutParameter ()
+		{
+			using var obj = new NSRangeOutParameterClass ();
+			var a = new _LongNSRange (-1, -2);
+			var c = new _LongNSRange (-5, -6);
+			Messaging.void_objc_msgSend_NSRange_out_NSRange_ref_NSRange (obj.Handle, Selector.GetHandle ("passRange:getRange:refRange:"), a, out var b, ref c);
+			Assert.AreEqual (a.Location, (long) (-1), "post a Location");
+			Assert.AreEqual (a.Length, (long) (-2), "post a Length");
+			Assert.AreEqual (b.Location, (long) 3, "post b Location");
+			Assert.AreEqual (b.Length, (long) 4, "post b Length");
+			Assert.AreEqual (c.Location, (long) 5, "post c Location");
+			Assert.AreEqual (c.Length, (long) 6, "post c Length");
+		}
+
+		class NSRangeOutParameterClass : NSObject {
+			[Export ("passRange:getRange:refRange:")]
+			public void DoIt (_LongNSRange a, out _LongNSRange b, ref _LongNSRange c)
+			{
+				Assert.AreEqual (a.Location, (long) (-1), "a Location");
+				Assert.AreEqual (a.Length, (long) (-2), "a Length");
+				Assert.AreEqual (c.Location, (long) (-5), "c Location");
+				Assert.AreEqual (c.Length, (long) (-6), "c Length");
+
+				a = new _LongNSRange (1, 2);
+				b = new _LongNSRange (3, 4);
+				c = new _LongNSRange (5, 6);
 			}
 		}
 
@@ -190,7 +223,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.True (Messaging.bool_objc_msgSend_IntPtr (receiver, new Selector ("INativeObject1:").Handle, new CGPath ().Handle), "#a2");
 			
 			Assert.That ((NativeHandle) Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, false), Is.EqualTo (NativeHandle.Zero), "#b1");
-			Assert.That ((NativeHandle) Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, true), Is.Not.EqualTo (NativeHandle.Zero), "#b2");
+			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, true);
+			Assert.That ((NativeHandle) ptr, Is.Not.EqualTo (NativeHandle.Zero), "#b2");
+			CGPathRelease (ptr);
 			
 			void_objc_msgSend_out_IntPtr_bool (receiver, new Selector ("INativeObject3:create:").Handle, out ptr, true);
 			Assert.That (ptr, Is.Not.EqualTo (NativeHandle.Zero), "#c1");
@@ -212,6 +247,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (ptr, Is.Not.EqualTo (NativeHandle.Zero), "#e2");
 			path = Runtime.GetINativeObject<CGPath> (ptr, false);
 			path.AddArc (1, 2, 3, 4, 5, false); // this should crash if we get back a bogus ptr
+			CGPathRelease (ptr);
 		}
 
 		[Test]
@@ -437,6 +473,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal static extern IntPtr object_getClass (IntPtr obj);
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static void CGPathRelease (/* CGPathRef */ IntPtr path);
 
 		[Test]
 		public void TestNonVirtualProperty ()
@@ -871,6 +910,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 			
 			[Export ("INativeObject2:")]
+			[return: ReleaseAttribute] // can't return an INativeObject without retaining it (we can autorelease NSObjects, but that doesn't work for INativeObjects)
 			static CGPath INativeObject2 (bool create)
 			{
 				return create ? new CGPath () : null;
@@ -889,6 +929,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 			
 			[Export ("INativeObject5:")]
+			[return: ReleaseAttribute] // can't return an INativeObject without retaining it (we can autorelease NSObjects, but that doesn't work for INativeObjects)
 			static CGPath INativeObject5 (bool create)
 			{
 				return create ? new CGPath () : null;
@@ -5415,7 +5456,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 #endif // !__WATCHOS__ && !__TVOS__
-
 	}
 
 #if !__WATCHOS__
@@ -5638,4 +5678,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	}
 #endif // !__TVOS__
 #endif // !__WATCHOS__
+
+#if HAS_COREMIDI
+	// This type exports methods with 'MidiCIDeviceIdentification' parameters, which is a struct with different casing in Objective-C ("MIDI...")
+	class ExportedMethodWithStructWithManagedCasing : NSObject {
+		[Export ("doSomething:")]
+		public void DoSomething (MidiCIDeviceIdentification arg) { }
+
+		[Export ("doSomething2:")]
+		public void DoSomething2 (ref MidiCIDeviceIdentification arg) { }
+
+		[Export ("doSomething3")]
+		public MidiCIDeviceIdentification DoSomething3 () { return default (MidiCIDeviceIdentification); }
+
+		[Export ("doSomething4:")]
+		public void DoSomething4 (out MidiCIDeviceIdentification arg) { arg = default (MidiCIDeviceIdentification); }
+	}
+#endif
 }

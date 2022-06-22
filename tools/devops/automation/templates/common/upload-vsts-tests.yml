@@ -10,11 +10,14 @@ parameters:
   type: string 
   default: 'False'
 
+- name: isPR
+  type: boolean
+
 steps:
 
-- checkout: self
-  persistCredentials: true
-  path: s/xamarin-macios
+- template: checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - ${{ if eq(parameters.provisioningFailed, 'False') }}:
   - template: download-artifacts.yml 

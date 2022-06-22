@@ -41,6 +41,12 @@ using NativeHandle = System.IntPtr;
 
 namespace CoreText {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFramesetter : NativeObject {
 		[Preserve (Conditional = true)]
 		internal CTFramesetter (NativeHandle handle, bool owns)
@@ -63,7 +69,7 @@ namespace CoreText {
 		public CTFrame? GetFrame (NSRange stringRange, CGPath path, CTFrameAttributes? frameAttributes)
 		{
 			if (path is null)
-				throw new ArgumentNullException (nameof (path));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (path));
 			var frame = CTFramesetterCreateFrame (Handle, stringRange, path.Handle, frameAttributes.GetHandle ());
 			if (frame == IntPtr.Zero)
 				return null;
@@ -98,6 +104,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,14)]
 		[iOS (12,0)]
@@ -111,6 +118,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
 		[SupportedOSPlatform ("tvos12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[Mac (10,14)]
 		[iOS (12,0)]
@@ -120,7 +128,7 @@ namespace CoreText {
 		public static CTFramesetter? Create (CTTypesetter typesetter)
 		{
 			if (typesetter is null)
-				throw new ArgumentNullException (nameof (typesetter));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (typesetter));
 
 			var ret = CTFramesetterCreateWithTypesetter (typesetter.Handle);
 			if (ret == IntPtr.Zero)

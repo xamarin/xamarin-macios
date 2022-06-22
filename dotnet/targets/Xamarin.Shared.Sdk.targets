@@ -267,6 +267,11 @@
 			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_MustTrim)' == 'true'">true</PublishTrimmed>
 		</PropertyGroup>
 		<Error Condition="'$(_MustTrim)' == 'true' And '$(PublishTrimmed)' != 'true'" Text="$(_PlatformName) projects must build with PublishTrimmed=true. Current value: $(PublishTrimmed)." />
+		<PropertyGroup Condition="'$(PublishTrimmed)' != '' And '$(IsMacEnabled)' != 'true'">
+			<_PreviousPublishTrimmedValue>$(PublishTrimmed)</_PreviousPublishTrimmedValue>
+			<PublishTrimmed />
+		</PropertyGroup>
+		<Warning Condition="'$(_PreviousPublishTrimmedValue)' != ''" Text="The linker has been disabled because there's no connection to a Mac." />
 	</Target>
 
 	<Target Name="_WarnRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashMessage)' != ''">
@@ -463,6 +468,7 @@
 			<_CustomLinkerOptions>
 				AreAnyAssembliesTrimmed=$(_AreAnyAssembliesTrimmed)
 				AssemblyName=$(AssemblyName).dll
+				@(_AotArguments -> 'AOTArgument=%(Identity)')
 				AOTCompiler=$(_AOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
 				AppBundleManifestPath=$(_AppBundleManifestPath)
@@ -493,6 +499,7 @@
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				RelativeAppBundlePath=$(_RelativeAppBundlePath)
 				Registrar=$(_BundlerRegistrar)
+				RequirePInvokeWrappers=$(_RequirePInvokeWrappers)
 				RuntimeConfigurationFile=$(_RuntimeConfigurationFile)
 				SdkDevPath=$(_SdkDevPath)
 				SdkRootDirectory=$(_XamarinSdkRootDirectory)
@@ -501,6 +508,7 @@
 				TargetFramework=$(_ComputedTargetFrameworkMoniker)
 				UseLlvm=$(MtouchUseLlvm)
 				Verbosity=$(_BundlerVerbosity)
+				XamarinNativeLibraryDirectory=$(_XamarinNativeLibraryDirectory)
 				XamarinRuntime=$(_XamarinRuntime)
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
@@ -670,6 +678,12 @@
 		Inputs="@(_DirectoriesToPublish)"
 		Outputs="@(_DirectoriesToPublish -> '%(TargetDirectory)/%(Filename)')"
 		>
+
+		<!-- Ask ditto to not copy architectures we don't care about. This can be overridden by passing 'SkipLibraryThinning=true' -->
+		<PropertyGroup Condition="'$(TargetArchitectures)' != '' And '$(SkipLibraryThinning)' != 'true'">
+			<_DittoArchitectures>--arch $([System.String]::Join('--arch ',$(TargetArchitectures.ToLowerInvariant().Split(','))))</_DittoArchitectures>
+		</PropertyGroup>
+
 		<!-- We specifically do *not* use the publishing logic in .NET to (ResolvedFileToPublish) copy whole directories to the app bundle, because symlinks aren't handled correctly.
 			 In particular, MSBuild can't handle symlinks to directories: https://github.com/dotnet/msbuild/issues/6821.
 			 So we have a custom item group (_DirectoriesToPublish), which we copy ourselves.
@@ -677,6 +691,7 @@
 		<Ditto
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
+			AdditionalArguments="$(_DittoArchitectures)"
 			CopyFromWindows="true"
 			ToolExe="$(DittoExe)"
 			ToolPath="$(DittoPath)"
@@ -746,7 +761,7 @@
 	</Target>
 
 
-	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish">
+	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish" Condition="'$(IsMacEnabled)' == 'true'">
 		<!-- Load _MainFile -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
@@ -803,7 +818,7 @@
 
 	<!-- Native code -->
 
-	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets">
+	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets;ResolveFrameworkReferences">
 		<PropertyGroup>
 			<_PackageIdInfix Condition="'$(UseMonoRuntime)' == 'true'">Mono.</_PackageIdInfix>
 
@@ -863,7 +878,7 @@
 			<!-- We need it for device builds for mobile platforms -->
 			<_RunAotCompiler Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">true</_RunAotCompiler>
 			<!-- We need it if the interpreter is enabled, no matter where -->
-			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != ''">true</_RunAotCompiler>
+			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != '' And '$(_PlatformName)' != 'macOS'">true</_RunAotCompiler>
 			<!-- We need it for Mac Catalyst on arm64 -->
 			<_RunAotCompiler Condition="'$(RuntimeIdentifier)' == 'maccatalyst-arm64'">true</_RunAotCompiler>
 			<!-- We need it for iOS/tvOS simulator on arm64 -->
@@ -1036,15 +1051,9 @@
 			<BTouchToolExe>bgen.dll</BTouchToolExe>
 			<BTouchToolPath>$(_XamarinSdkRootDirectory)\tools\lib\bgen</BTouchToolPath>
 			<BaseLibDllPath>$(_XamarinRefAssemblyPath)</BaseLibDllPath>
-			<BTouchCompiler>$(RoslynTargetsPath)/bincore/csc.dll</BTouchCompiler>
 			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
-			<_DotNetCscCompiler>$(RoslynTargetsPath)/bincore/csc.dll</_DotNetCscCompiler>
+			<_DotNetCscCompiler>$(RoslynTargetsPath)\bincore\csc.dll</_DotNetCscCompiler>
 		</PropertyGroup>
-
-		<ItemGroup>
-			<_BTouchCompileCommand Include="$(DOTNET_HOST_PATH)" />
-			<_BTouchCompileCommand Include="$(RoslynTargetsPath)/bincore/csc.dll" />
-		</ItemGroup>
 	</Target>
 
 	<Target Name="_ComputeNativeExecutableInputs" DependsOnTargets="_ComputeVariables">

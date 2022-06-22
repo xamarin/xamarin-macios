@@ -25,8 +25,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -56,6 +60,13 @@ namespace CoreGraphics {
 		internal ReleaseInfoCallback release;
 	}
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGPattern.h
 	public class CGPattern : NativeObject
 	{
@@ -73,8 +84,8 @@ namespace CoreGraphics {
 		{
 		}
 
-		protected override void Retain () => CGPatternRetain (Handle);
-		protected override void Release () => CGPatternRelease (Handle);
+		protected internal override void Retain () => CGPatternRetain (Handle);
+		protected internal override void Release () => CGPatternRelease (Handle);
 		
 		// This is what we expose on the API
 		public delegate void DrawPattern (CGContext ctx);
@@ -93,8 +104,8 @@ namespace CoreGraphics {
 		
 		public CGPattern (CGRect bounds, CGAffineTransform matrix, nfloat xStep, nfloat yStep, CGPatternTiling tiling, bool isColored, DrawPattern drawPattern)
 		{
-			if (drawPattern == null)
-				throw new ArgumentNullException (nameof (drawPattern));
+			if (drawPattern is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (drawPattern));
 
 			gch = GCHandle.Alloc (drawPattern);
 			Handle = CGPatternCreate (GCHandle.ToIntPtr (gch), bounds, matrix, xStep, yStep, tiling, isColored, ref callbacks);
@@ -106,9 +117,10 @@ namespace CoreGraphics {
 		static void DrawCallback (IntPtr voidptr, IntPtr cgcontextptr)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (voidptr);
-			DrawPattern draw_pattern = (DrawPattern) gch.Target;
-			using (var ctx = new CGContext (cgcontextptr, false))
-				draw_pattern (ctx);
+			if (gch.Target is DrawPattern draw_pattern) {
+				using (var ctx = new CGContext (cgcontextptr, false))
+					draw_pattern (ctx);
+			}
 		}
 
 #if !MONOMAC

@@ -1232,6 +1232,9 @@
 		<value>Обнаружен недопустимый BindAsAttribute в "{0}": не удалось найти базовый тип перечисления {1}. Отправьте отчет об ошибках по следующему адресу: https://github.com/xamarin/xamarin-macios/issues/new
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>Регистратор обнаружил недопустимый тип "{0}" в сигнатуре для метода "{1}": такой интерфейс должен иметь атрибут Protocol, указывающий тип его оболочки.
 		</value>
@@ -1516,6 +1519,9 @@
 		<value>Регистратор не может вычислить подпись блока для делегата типа {0} в методе {1}, так как не удалось найти метод Invoke для типа делегата.
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>Регистратор обнаружил неоптимальный тип "{0}": тип не содержит конструктор, который принимает два аргумента (ObjCRuntime.NativeHandle, логический). Однако найден конструктор, принимающий два аргумента (System.IntPtr, логический), который и будет использоваться. Настоятельно рекомендуется изменить подпись конструктора (System.IntPtr, логический) на (ObjCRuntime.NativeHandle, логический).</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>Отсутствует компилятор "{0}". Установите компонент программ командной строки для Xcode.
 		</value>
@@ -1699,6 +1705,11 @@
 		<value>Средству xcrun не удалось найти результат при поиске инструмента "{0}" (файл "{1}" не существует). Дополнительные сведения см. в журнале сборки.
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>Произошла ошибка при выполнении шагов настраиваемого компоновщика. Дополнительные сведения см. в журнале сборки.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>Внутренняя ошибка несогласованности. Отправьте отчет об ошибках по следующему адресу: https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>
@@ -1731,5 +1742,12 @@
 	</data>
   <data name="MX8041" xml:space="preserve">
 		<value>Невозможно создать экземпляр типа {0}.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

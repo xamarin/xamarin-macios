@@ -1,5 +1,5 @@
 {
   "author": "Microsoft",
-  "name": "MacCatalyst Binding Library (Preview)",
-  "description": "A project for creating a .NET MacCatalyst binding library"
+  "name": "MacCatalyst Binding Library",
+  "description": "Projekt służący do tworzenia biblioteki powiązań MacCatalyst platformy .NET 6"
 }

@@ -6,6 +6,9 @@
 // Copyright 2010-2011 Novell Inc
 // Copyright 2012-2014 Xamarin Inc. All rights reserved.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -14,7 +17,12 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	[StructLayout(LayoutKind.Sequential)]
@@ -179,7 +187,7 @@ namespace CoreMedia {
 			return comp >= 0;
 		}
 		
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
 			if (obj is CMTime time)
 				return CMTimeCompare (this, time) == 0;
@@ -230,6 +238,8 @@ namespace CoreMedia {
 #if NET
 		[SupportedOSPlatform ("ios7.1")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,1)]
 		[Mac (10,10)]
@@ -240,6 +250,8 @@ namespace CoreMedia {
 #if NET
 		[SupportedOSPlatform ("ios7.1")]
 		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (7,1)]
 		[Mac (10, 10)]
@@ -314,6 +326,7 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -326,6 +339,7 @@ namespace CoreMedia {
 		[SupportedOSPlatform ("tvos12.0")]
 		[SupportedOSPlatform ("macos10.14")]
 		[SupportedOSPlatform ("ios12.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[TV (12,0)]
 		[Mac (10,14)]
@@ -337,10 +351,10 @@ namespace CoreMedia {
 		}
 
 		// FIXME: generated will need some changes to emit [Field] in partial struct (not class)
-		public readonly static NSString ValueKey;
-		public readonly static NSString ScaleKey;
-		public readonly static NSString EpochKey;
-		public readonly static NSString FlagsKey;
+		public readonly static NSString? ValueKey;
+		public readonly static NSString? ScaleKey;
+		public readonly static NSString? EpochKey;
+		public readonly static NSString? FlagsKey;
 		
 		static CMTime ()
 		{
@@ -362,13 +376,13 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFStringRef */ IntPtr CMTimeCopyDescription (/* CFAllocatorRef */ IntPtr allocator, CMTime time);
 
-		public string Description {
+		public string? Description {
 			get {
 				return CFString.FromHandle (CMTimeCopyDescription (IntPtr.Zero, this));
 			}
 		}
 		
-		public override string ToString ()
+		public override string? ToString ()
 		{
 			return Description;
 		}

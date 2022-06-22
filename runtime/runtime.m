@@ -917,22 +917,27 @@ xamarin_file_exists (const char *path)
 	return stat (path, &buffer) == 0;
 }
 
+static MonoAssembly *
+xamarin_open_assembly_or_assert (const char *name)
+{
+	MonoImageOpenStatus status = MONO_IMAGE_OK;
+	MonoAssembly *assembly = mono_assembly_open (name, &status);
+	if (assembly == NULL)
+		xamarin_assertion_message ("Failed to open the assembly '%s' from the app: %i (errno: %i). This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name, (int) status, errno);
+	return assembly;
+}
+
 // Returns a retained MonoObject. Caller must release.
 MonoAssembly *
 xamarin_open_assembly (const char *name)
 {
 	// COOP: this is a function executed only at startup, I believe the mode here doesn't matter.
 	char path [1024];
-	MonoAssembly *assembly;
 	bool exists = false;
 
 #if MONOMAC
-	if (xamarin_get_is_mkbundle ()) {
-		assembly = mono_assembly_open (name, NULL);
-		if (assembly == NULL)
-			xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
-		return assembly;
-	}
+	if (xamarin_get_is_mkbundle ())
+		return xamarin_open_assembly_or_assert (name);
 #endif
 
 	exists = xamarin_locate_assembly_resource (name, NULL, name, path, sizeof (path));
@@ -942,7 +947,7 @@ xamarin_open_assembly (const char *name)
 		// Check if we already have the assembly in memory
 		xamarin_get_assembly_name_without_extension (name, path, sizeof (path));
 		MonoAssemblyName *aname = mono_assembly_name_new (path);
-		assembly = mono_assembly_loaded (aname);
+		MonoAssembly *assembly = mono_assembly_loaded (aname);
 		mono_assembly_name_free (aname);
 		if (assembly)
 			return assembly;
@@ -954,11 +959,7 @@ xamarin_open_assembly (const char *name)
 	if (!exists)
 		xamarin_assertion_message ("Could not find the assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
 
-	assembly = mono_assembly_open (path, NULL);
-	if (assembly == NULL)
-		xamarin_assertion_message ("Could not find the required assembly '%s' in the app. This is usually fixed by cleaning and rebuilding your project; if that doesn't work, please file a bug report: https://github.com/xamarin/xamarin-macios/issues/new", name);
-
-	return assembly;
+	return xamarin_open_assembly_or_assert (path);
 }
 
 bool
@@ -1087,6 +1088,17 @@ xamarin_ftnptr_exception_handler (GCHandle gchandle)
 	xamarin_process_managed_exception_gchandle (gchandle);
 }
 
+void
+xamarin_process_fatal_exception_gchandle (GCHandle gchandle, const char *message)
+{
+	if (gchandle == INVALID_GCHANDLE)
+		return;
+
+	NSString *fatal_message = [NSString stringWithFormat:@"%s\n%@", message, xamarin_print_all_exceptions (gchandle)];
+	NSLog (@PRODUCT ": %@", fatal_message);
+	xamarin_assertion_message ([fatal_message UTF8String]);
+}
+
 // Because this function won't always return, it will take ownership of the GCHandle and free it.
 void
 xamarin_process_managed_exception_gchandle (GCHandle gchandle)
@@ -1136,7 +1148,7 @@ pump_gc (void *context)
 	while (xamarin_gc_pump) {
 		GCHandle exception_gchandle = INVALID_GCHANDLE;
 		xamarin_gc_collect (&exception_gchandle);
-		xamarin_process_managed_exception_gchandle (exception_gchandle);
+		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while running the GC in a loop");
 		MONO_ENTER_GC_SAFE;
 		usleep (1000000);
 		MONO_EXIT_GC_SAFE;
@@ -1300,14 +1312,10 @@ xamarin_initialize ()
 #endif // defined(CORECLR_RUNTIME)
 
 	xamarin_bridge_call_runtime_initialize (&options, &exception_gchandle);
-	if (exception_gchandle != INVALID_GCHANDLE) {
-		NSLog (@PRODUCT ": An exception occurred when calling Runtime.Initialize:\n%@", xamarin_print_all_exceptions (exception_gchandle));
-		xamarin_process_managed_exception_gchandle (exception_gchandle);
-		xamarin_assertion_message ("Can't continue if Runtime.Initialize fails.");
-	}
+	xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while calling Runtime.Initialize");
 
 	xamarin_bridge_register_product_assembly (&exception_gchandle);
-	xamarin_process_managed_exception_gchandle (exception_gchandle);
+	xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while registering the product assembly");
 
 #if !defined (CORECLR_RUNTIME)
 	xamarin_install_mono_profiler (); // must be called before xamarin_install_nsautoreleasepool_hooks or xamarin_enable_new_refcount
@@ -2541,12 +2549,17 @@ xamarin_vm_initialize ()
 {
 	char *pinvokeOverride = xamarin_strdup_printf ("%p", &xamarin_pinvoke_override);
 	char *icu_dat_file_path = NULL;
+	int subtractPropertyCount = 0;
 
-	char path [1024];
-	if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
-		LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
+	if (xamarin_icu_dat_file_name != NULL && *xamarin_icu_dat_file_name != 0) {
+		char path [1024];
+		if (!xamarin_locate_app_resource (xamarin_icu_dat_file_name, path, sizeof (path))) {
+			LOG (PRODUCT ": Could not locate the ICU data file '%s' in the app bundle.\n", xamarin_icu_dat_file_name);
+		} else {
+			icu_dat_file_path = strdup (path);
+		}
 	} else {
-		icu_dat_file_path = path;
+		subtractPropertyCount++;
 	}
 
 	char *trusted_platform_assemblies = xamarin_compute_trusted_platform_assemblies ();
@@ -2558,28 +2571,31 @@ xamarin_vm_initialize ()
 		"APP_CONTEXT_BASE_DIRECTORY", // path to where the managed assemblies are (usually at least - RID-specific assemblies will be in subfolders)
 		"APP_PATHS",
 		"PINVOKE_OVERRIDE",
-		"ICU_DAT_FILE_PATH",
 		"TRUSTED_PLATFORM_ASSEMBLIES",
 		"NATIVE_DLL_SEARCH_DIRECTORIES",
 		"RUNTIME_IDENTIFIER",
+		"ICU_DAT_FILE_PATH", // Must be last.
 	};
 	const char *propertyValues[] = {
 		xamarin_get_bundle_path (),
 		xamarin_get_bundle_path (),
 		pinvokeOverride,
-		icu_dat_file_path,
 		trusted_platform_assemblies,
 		native_dll_search_directories,
 		RUNTIMEIDENTIFIER,
+		icu_dat_file_path, // might be NULL, if so we say we're passing one property less that what we really are (to skip this last one). This also means that this property must be the last one
 	};
 	static_assert (sizeof (propertyKeys) == sizeof (propertyValues), "The number of keys and values must be the same.");
 
-	int propertyCount = sizeof (propertyValues) / sizeof (propertyValues [0]);
+	int propertyCount = (int) (sizeof (propertyValues) / sizeof (propertyValues [0])) - subtractPropertyCount;
 	bool rv = xamarin_bridge_vm_initialize (propertyCount, propertyKeys, propertyValues);
 	xamarin_free (pinvokeOverride);
 
 	xamarin_free (trusted_platform_assemblies);
 	xamarin_free (native_dll_search_directories);
+
+	if (icu_dat_file_path != NULL)
+		free (icu_dat_file_path);
 
 	if (!rv)
 		xamarin_assertion_message ("Failed to initialize the VM");

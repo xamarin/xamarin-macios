@@ -253,6 +253,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AppTrackingTransparency", "AppTrackingTransparency", 11,0 },
 					{ "CallKit", "CallKit", 11,0 },
 					{ "ClassKit", "ClassKit", 11,0 },
+					{ "MetalPerformanceShadersGraph", "MetalPerformanceShadersGraph", 11, 0 },
 					{ "MLCompute", "MLCompute", 11,0 },
 					{ "NearbyInteraction", "NearbyInteraction", 11,0 },
 					{ "OSLog", "OSLog", 11,0 },
@@ -272,6 +273,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "MetricKit", 12, 0 },
 					{ "Phase", "PHASE", 12, 0 },
 					{ "ShazamKit", "ShazamKit", 12,0 },
+
+					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
 				};
 			}
 			return mac_frameworks;
@@ -423,6 +426,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AppClip", "AppClip", 14,0 },
 				{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
 				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 3 */ },
+				{ "MetalPerformanceShadersGraph", "MetalPerformanceShadersGraph", 14,0 },
 				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
 				{ "ScreenTime", "ScreenTime", 14,0 },
@@ -599,6 +603,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
 					{ "CoreHaptics", "CoreHaptics", 14, 0 },
 					{ "LinkPresentation", "LinkPresentation", 14,0 },
+					{ "MetalPerformanceShadersGraph", "MetalPerformanceShadersGraph", new Version (14, 0), NotAvailableInSimulator /* not available in the simulator */ },
 					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 					{ "Intents", "Intents", 14,0 },
@@ -675,6 +680,9 @@ public class Frameworks : Dictionary <string, Framework>
 
 			// Add frameworks that are not in iOS
 			catalyst_frameworks.Add ("AppKit", 13, 0);
+			// Due to a linking problem, ScreenCpatureKit doesn't work on Mac Catalyst (we can't pass -framework ScreenCaptureKit to the native linker,
+			// because there's no Mac Catalyst tbd file for ScreenCaptureKit).
+			// catalyst_frameworks.Add ("ScreenCaptureKit", 15, 4);
 		}
 		return catalyst_frameworks;
 	}

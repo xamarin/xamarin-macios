@@ -23,6 +23,7 @@ namespace MapKit {
 #if NET
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
 		[iOS (10,0)]
@@ -32,7 +33,12 @@ namespace MapKit {
 #endif
 		Default
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MKLaunchOptions
 	{
 		public MKDirectionsMode? DirectionsMode { get; set; }
@@ -49,6 +55,8 @@ namespace MapKit {
 
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
 #else
 		[iOS (7,0)]
 #endif
@@ -66,7 +74,7 @@ namespace MapKit {
 			if (MapSpan.HasValue) n++;
 #if !WATCH
 			if (ShowTraffic.HasValue) n++;
-			if (Camera != null) n++;
+			if (Camera is not null) n++;
 #endif
 			if (n == 0)
 				return null;
@@ -117,7 +125,7 @@ namespace MapKit {
 			}
 #endif
 #if !WATCH // MKLaunchOptionsCameraKey is allowed in WatchOS, but there's no MKMapCamera type.
-			if (Camera != null) {
+			if (Camera is not null) {
 				keys [i] = MKMapItem.MKLaunchOptionsCameraKey;
 				values [i++] = Camera;
 			}
@@ -125,7 +133,7 @@ namespace MapKit {
 			return NSDictionary.FromObjectsAndKeys (values, keys);
 		}
 	}
-	
+
 	public partial class MKMapItem {
 		public void OpenInMaps (MKLaunchOptions? launchOptions = null)
 		{

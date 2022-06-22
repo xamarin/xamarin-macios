@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -7,7 +9,12 @@ using ObjCRuntime;
 
 namespace CoreMedia {
 
-#if !NET
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (6,0)]
 #endif
 	public static class CMAttachmentBearer {
@@ -16,7 +23,7 @@ namespace CoreMedia {
 		extern static /* CFDictionaryRef */ IntPtr CMCopyDictionaryOfAttachments (/* CFAllocatorRef */ IntPtr allocator, /* CMAttachmentBearerRef */ IntPtr target,
 			/* CMAttachmentMode */ CMAttachmentMode attachmentMode);
 
-		public static NSDictionary GetAttachments (this ICMAttachmentBearer target, CMAttachmentMode attachmentMode)
+		public static NSDictionary? GetAttachments (this ICMAttachmentBearer target, CMAttachmentMode attachmentMode)
 		{
 			if (target is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (target));
@@ -28,7 +35,7 @@ namespace CoreMedia {
 
 		// There is some API that needs a more strongly typed version of a NSDictionary
 		// and there is no easy way to downcast from NSDictionary to NSDictionary<TKey, TValue>
-		public static NSDictionary<TKey, TValue> GetAttachments<TKey, TValue> (this ICMAttachmentBearer target, CMAttachmentMode attachmentMode)
+		public static NSDictionary<TKey, TValue>? GetAttachments<TKey, TValue> (this ICMAttachmentBearer target, CMAttachmentMode attachmentMode)
 			where TKey : class, INativeObject
 			where TValue : class, INativeObject
 		{
@@ -44,7 +51,7 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		extern static /* CFTypeRef */ IntPtr CMGetAttachment (/* CMAttachmentBearerRef */ IntPtr target, /* CFStringRef */ IntPtr key,
 			/* CMAttachmentMode */ out CMAttachmentMode attachmentModeOut);
-		public static T GetAttachment<T> (this ICMAttachmentBearer target, string key, out CMAttachmentMode attachmentModeOut) where T: class, INativeObject
+		public static T? GetAttachment<T> (this ICMAttachmentBearer target, string key, out CMAttachmentMode attachmentModeOut) where T: class, INativeObject
 		{
 			if (target is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (target));
@@ -58,7 +65,7 @@ namespace CoreMedia {
 			return default (T);
 		}
 #if !WATCH
-		public static T GetAttachment<T> (this ICMAttachmentBearer target, CMSampleBufferAttachmentKey key, out CMAttachmentMode attachmentModeOut) where T: class, INativeObject
+		public static T? GetAttachment<T> (this ICMAttachmentBearer target, CMSampleBufferAttachmentKey key, out CMAttachmentMode attachmentModeOut) where T: class, INativeObject
 		{
 			return GetAttachment<T> (target, key.GetConstant (), out attachmentModeOut);
 		}

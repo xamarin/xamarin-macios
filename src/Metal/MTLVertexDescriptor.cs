@@ -14,6 +14,8 @@ namespace Metal {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif
@@ -23,12 +25,14 @@ namespace Metal {
 #if NET
 		[SupportedOSPlatform ("ios9.0")]
 		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
 #else
 		[iOS (9,0)]
 #endif
 		public static MTLVertexDescriptor? FromModelIO (MDLVertexDescriptor descriptor)
 		{
-			if (descriptor == null)
+			if (descriptor is null)
 				throw new ArgumentException ("descriptor");
 			return Runtime.GetNSObject<MTLVertexDescriptor> (MTKMetalVertexDescriptorFromModelIO (descriptor.Handle));
 		}
@@ -37,6 +41,7 @@ namespace Metal {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[Mac (10,12)]
@@ -49,6 +54,7 @@ namespace Metal {
 		[SupportedOSPlatform ("ios10.0")]
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("tvos10.0")]
+		[SupportedOSPlatform ("maccatalyst")]
 #else
 		[iOS (10,0)]
 		[Mac (10,12)]
@@ -56,7 +62,7 @@ namespace Metal {
 #endif
 		public static MTLVertexDescriptor? FromModelIO (MDLVertexDescriptor descriptor, out NSError? error)
 		{
-			if (descriptor == null)
+			if (descriptor is null)
 				throw new ArgumentException ("descriptor");
 			IntPtr err;
 			var vd = Runtime.GetNSObject<MTLVertexDescriptor> (MTKMetalVertexDescriptorFromModelIOWithError (descriptor.Handle, out err));
