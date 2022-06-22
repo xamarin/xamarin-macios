@@ -55,7 +55,9 @@ XWATCHOS_ARCH = armv7
 XWATCHOS_PCH = watchos$(WATCH_SDK_VERSION)-$(XWATCHOS_ARCH).pch
 
 $(XWATCHOS_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH) -exclude RealityKit
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s watchos$(WATCH_SDK_VERSION) -a $(XWATCHOS_ARCH) \
+		-exclude RealityKit \
+		-exclude SharedWithYou \
 
 XTVOS ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/64bits/tvOS/Xamarin.TVOS.dll
 XTVOS_GL ?= $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll
@@ -64,7 +66,9 @@ XTVOS_PCH = appletvos$(TVOS_SDK_VERSION)-$(XTVOS_ARCH).pch
 XTVOS_RID = tvos-arm64
 
 $(XTVOS_PCH): .stamp-check-sharpie
-	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH) -exclude RealityKit
+	$(SHARPIE) sdk-db --xcode $(XCODE) -s appletvos$(TVOS_SDK_VERSION) -a $(XTVOS_ARCH) \
+		-exclude RealityKit \
+		-exclude SharedWithYou \
 
 XMACOS ?= $(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/mobile/Xamarin.Mac.dll
 XMACOS_ARCH = x86_64
@@ -76,6 +80,7 @@ $(XMACOS_PCH): .stamp-check-sharpie
 		-exclude NearbyInteraction \
 		-exclude RealityKit \
 		-exclude JavaNativeFoundation \
+		-exclude SharedWithYou \
 		$(CORETELEPHONY_HEADERS) \
 
 XMACCATALYST_ARCH = x86_64
@@ -103,6 +108,7 @@ $(XMACCATALYST_PCH): .stamp-check-sharpie
 	-exclude QuickLookUI \
 	-exclude RealityKit \
 	-exclude SecurityInterface \
+	-exclude SharedWithYou \
 	-exclude Virtualization \
 	-i HomeKit/HomeKit.h \
 	$(CORETELEPHONY_HEADERS) \
