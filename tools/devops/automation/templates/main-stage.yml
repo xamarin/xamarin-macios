@@ -57,6 +57,27 @@ parameters:
 
 - name: simTestsConfigurations
   type: object
+  default: [
+    'bcl',
+    'cecil',
+    'dotnettests',
+    'fsharp',
+    'framework',
+    'generator',
+    'interdependent-binding-projects',
+    'install-source',
+    'introspection',
+    'linker',
+    'mac-binding-project',
+    'mmp',
+    'mononative',
+    'monotouch',
+    'msbuild',
+    'mtouch',
+    'xammac',
+    'xcframework',
+    'xtro'
+  ]
 
 - name: deviceTestsConfigurations
   type: object
