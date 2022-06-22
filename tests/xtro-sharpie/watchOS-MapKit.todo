@@ -1,5 +1,3 @@
 !missing-enum! MKDirectionsRoutePreference not bound
 !missing-enum! MKMapElevationStyle not bound
-!missing-enum! MKMapLandscape not bound
-!missing-enum! MKStandardMapConfigurationMapMode not bound
 !missing-enum! MKStandardMapEmphasisStyle not bound

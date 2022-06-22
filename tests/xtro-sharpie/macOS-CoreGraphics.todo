@@ -9,5 +9,4 @@
 !missing-pinvoke! CGPathCreateCopyOfLineByIntersectingPath is not bound
 !missing-pinvoke! CGPathCreateCopyOfLineBySubtractingPath is not bound
 !missing-pinvoke! CGPathCreateSeparateComponents is not bound
-!missing-pinvoke! CGPathIntersectsPathUsingEvenOdd is not bound
 !missing-pinvoke! CGPDFScannerStop is not bound

@@ -57,7 +57,6 @@
 !missing-selector! PKAutomaticReloadPaymentSummaryItem::thresholdAmount not bound
 !missing-selector! PKIdentityAuthorizationController::cancelRequest not bound
 !missing-selector! PKIdentityAuthorizationController::checkCanRequestDocument:completion: not bound
-!missing-selector! PKIdentityAuthorizationController::init not bound
 !missing-selector! PKIdentityAuthorizationController::requestDocument:completion: not bound
 !missing-selector! PKIdentityButton::cornerRadius not bound
 !missing-selector! PKIdentityButton::initWithLabel:style: not bound

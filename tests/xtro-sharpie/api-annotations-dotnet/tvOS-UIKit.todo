@@ -63,7 +63,6 @@
 !missing-enum! UIMenuElementSize not bound
 !missing-enum! UINSToolbarItemPresentationSize not bound
 !missing-enum! UIPageControlDirection not bound
-!missing-enum! UIPasteControlCornerStyle not bound
 !missing-enum! UIPasteControlDisplayMode not bound
 !missing-enum! UIScreenReferenceDisplayModeStatus not bound
 !missing-enum! UITableViewSelfSizingInvalidation not bound

@@ -1,5 +1,3 @@
 !missing-selector! AUGenericViewController::auAudioUnit not bound
 !missing-selector! AUGenericViewController::setAuAudioUnit: not bound
-!missing-selector! AUGenericViewController::setTintColor: not bound
-!missing-selector! AUGenericViewController::tintColor not bound
 !missing-type! AUGenericViewController not bound
