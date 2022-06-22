@@ -265,7 +265,7 @@ steps:
   displayName: 'Publish Artifact: Simulator diagnostic info'
   inputs:
     targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
-    artifactName: diagnostic-simulator-info-$(Build.BuildId)
+    artifactName: diagnostic-simulator-info-$(Build.BuildId)-${{ parameters.label }}
   continueOnError: true
   condition: succeededOrFailed()
 
