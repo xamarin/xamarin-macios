@@ -15,7 +15,7 @@ class TestResults {
         [string] $label,
         [string] $context
     ) {
-        Write-Debug "TestsResuts::new($path, $status, $label, $context)"
+        Write-Debug "TestsResults::new($path, $status, $label, $context)"
         $this.ResultsPath = $path
         $this.TestsJobStatus = $status
         $this.Label = $label
@@ -81,7 +81,7 @@ class TestResults {
     [object] GetPassedTests() {
         Write-Debug "$($this.Label) - GetPassedTests()"
         if ($this.Passed -eq -1 -or $this.Failed -eq -1) {
-            Write-Debug "\t$($this.Label) - Calcualte results."
+            Write-Debug "\t$($this.Label) - Calculate results."
             # the result file is diff if the result was a success or not
             if ($this.IsSuccess()) {
                 Write-Debug "$($this.Label) - IsSuccess() => TRUE"
@@ -313,7 +313,7 @@ class ParallelTestsResults {
                         $stringBuilder.AppendLine("")
                     } else {
                         $stringBuilder.AppendLine("<details>")
-                        $stringBuilder.AppendLine(" Test has no summaty file.")
+                        $stringBuilder.AppendLine(" Test has no summary file.")
                         $stringBuilder.AppendLine("</details>")
                     }
                     $stringBuilder.AppendLine("</details>")

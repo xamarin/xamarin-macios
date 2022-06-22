@@ -113,15 +113,14 @@ namespace Xharness {
 	static class TestLabelExtensions {
 		static string GetLabel<T> (this T self) where T : Enum
 		{
-			var enumType = self.GetType ();
-			var name = Enum.GetName(typeof(T), self);
-			var attr = enumType.GetField (name).GetCustomAttribute<LabelAttribute> ();
+			var name = Enum.GetName (typeof(T), self);
+			var attr = typeof (T).GetField (name).GetCustomAttribute<LabelAttribute> ();
 			return attr.Label;
 		}
 
 		public static bool TryGetLabel<T> (this string self, out T? label) where T : Enum
 		{
-			foreach (var obj in Enum.GetValues (typeof(T))) {
+			foreach (var obj in Enum.GetValues (typeof (T))) {
 				if (obj is T value && value.GetLabel () == self) {
 					label = value;
 					return true;
