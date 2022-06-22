@@ -20,12 +20,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 		// System.Bool
 		TypeReference BoolTypeDefinition;
 
-		// Foundation.NSObject::.ctor(IntPtr)
-		MethodDefinition IntPtrCtor;
-
-		// Foundation.NSObject::.ctor(IntPtr, bool)
-		MethodDefinition IntPtrCtorWithBool;
-
 		// NativeHandle::op_Implicit(IntPtr)
 		MethodReference NativeHandleOpImplicit;
 
@@ -34,34 +28,17 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		Dictionary<string, MethodDefinition> TransformedConstructors = new Dictionary<string, MethodDefinition> ();
 
-		public ConstructorTransforms (TypeReference newNativeHandleTypeDefinition, MethodDefinition intPtrCtor, MethodDefinition intPtrCtorWithBool,
+		public ConstructorTransforms (TypeReference newNativeHandleTypeDefinition, TypeReference boolTypeReference,
 			MethodReference nativeHandleOpImplicit, EventHandler<WarningEventArgs>? warningIssued, EventHandler<TransformEventArgs>? transformed)
 		{
 			NewNativeHandleTypeDefinition = newNativeHandleTypeDefinition;
-			IntPtrCtor = intPtrCtor;
-			IntPtrCtorWithBool = intPtrCtorWithBool;
 			WarningIssued = warningIssued;
 			Transformed = transformed;
 
 			// Get the definition of System.Bool from the ctor we already have
-			BoolTypeDefinition = intPtrCtorWithBool.Parameters[1].ParameterType;
+			BoolTypeDefinition = boolTypeReference; // intPtrCtorWithBool.Parameters[1].ParameterType;
 
 			NativeHandleOpImplicit = nativeHandleOpImplicit;
-		}
-
-		public void AddTransforms (TypeAndMemberMap moduleMap)
-		{
-			// Remove "NSObject (IntPtr)" from missing list and add "NSObject (NativeHandle)"
-			const string IntPtrCtorSignature = "System.Void Foundation.NSObject::.ctor(System.IntPtr)";
-			moduleMap.MethodsNotPresent.Remove (IntPtrCtorSignature);
-			IntPtrCtor.Parameters [0].ParameterType = NewNativeHandleTypeDefinition;
-			moduleMap.MethodMap.Add (IntPtrCtorSignature, IntPtrCtor);
-
-			// Remove "NSObject (IntPtr, bool)" from missing list and add "NSObject (NativeHandle,System.Boolean)"
-			const string IntPtrBoolCtorSignature = "System.Void Foundation.NSObject::.ctor(System.IntPtr,System.Boolean)";
-			moduleMap.MethodsNotPresent.Remove (IntPtrBoolCtorSignature);
-			IntPtrCtorWithBool.Parameters [0].ParameterType = NewNativeHandleTypeDefinition;
-			moduleMap.MethodMap.Add (IntPtrBoolCtorSignature, IntPtrCtorWithBool);
 		}
 
 		public static bool IsIntPtrCtor (MethodDefinition d)
