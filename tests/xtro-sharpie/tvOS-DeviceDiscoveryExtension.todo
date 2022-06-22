@@ -41,3 +41,5 @@
 !missing-type! DDDiscoverySession not bound
 !missing-type! DDEvent not bound
 !missing-type! DDEventDevicesPresent not bound
+!missing-selector! DDDeviceEvent::device not bound
+!missing-selector! DDDeviceEvent::initWithEventType:device: not bound

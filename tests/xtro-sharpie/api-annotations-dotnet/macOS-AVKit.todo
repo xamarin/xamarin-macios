@@ -11,3 +11,7 @@
 !missing-selector! AVPlayerView::setMagnification: not bound
 !missing-selector! AVPlayerView::setMagnification:centeredAtPoint: not bound
 !missing-type! AVPlaybackSpeed not bound
+!missing-selector! AVPlayerView::selectedSpeed not bound
+!missing-selector! AVPlayerView::selectSpeed: not bound
+!missing-selector! AVPlayerView::setSpeeds: not bound
+!missing-selector! AVPlayerView::speeds not bound

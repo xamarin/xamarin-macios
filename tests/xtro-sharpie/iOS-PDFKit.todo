@@ -6,3 +6,6 @@
 !missing-selector! PDFView::setFindInteractionEnabled: not bound
 !missing-selector! PDFView::setInMarkupMode: not bound
 !missing-selector! PDFView::setPageOverlayViewProvider: not bound
+!missing-field! PDFDocumentBurnInAnnotationsOption not bound
+!missing-field! PDFDocumentSaveTextFromOCROption not bound
+!missing-protocol! PDFPageOverlayViewProvider not bound

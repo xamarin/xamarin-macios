@@ -1,2 +1,9 @@
 !missing-selector! CPAlertAction::color not bound
 !missing-selector! CPAlertAction::initWithTitle:color:handler: not bound
+!extra-designated-initializer! CPPointOfInterest::initWithLocation:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage: is incorrectly decorated with an [DesignatedInitializer] attribute
+!missing-protocol-conformance! CPPointOfInterestTemplate should conform to CPBarButtonProviding
+!missing-selector! +CPPointOfInterest::pinImageSize not bound
+!missing-selector! +CPPointOfInterest::selectedPinImageSize not bound
+!missing-selector! CPPointOfInterest::initWithLocation:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage:selectedPinImage: not bound
+!missing-selector! CPPointOfInterest::selectedPinImage not bound
+!missing-selector! CPPointOfInterest::setSelectedPinImage: not bound

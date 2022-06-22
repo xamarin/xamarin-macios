@@ -286,3 +286,5 @@
 !missing-type! AVSpeechSynthesisProviderAudioUnit not bound
 !missing-type! AVSpeechSynthesisProviderRequest not bound
 !missing-type! AVSpeechSynthesisProviderVoice not bound
+!missing-enum-value! AVSpeechSynthesisVoiceQuality native value AVSpeechSynthesisVoiceQualityPremium = 3 not bound
+!missing-selector! AVPlayerLayer::copyDisplayedPixelBuffer not bound

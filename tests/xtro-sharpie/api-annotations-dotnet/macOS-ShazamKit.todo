@@ -8,3 +8,6 @@
 !missing-selector! SHRange::lowerBound not bound
 !missing-selector! SHRange::upperBound not bound
 !missing-type! SHRange not bound
+!missing-field! SHMediaItemFrequencySkewRanges not bound
+!missing-selector! +UTType::SHCustomCatalogContentType not bound
+!missing-selector! +UTType::SHSignatureContentType not bound

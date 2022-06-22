@@ -156,3 +156,4 @@
 !missing-type! AVSpeechSynthesisProviderRequest not bound
 !missing-type! AVSpeechSynthesisProviderVoice not bound
 !unknown-field! AVCaptureLensPositionCurrent bound
+!missing-enum-value! AVSpeechSynthesisVoiceQuality native value AVSpeechSynthesisVoiceQualityPremium = 3 not bound

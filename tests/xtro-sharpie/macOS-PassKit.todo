@@ -100,3 +100,5 @@
 !missing-type! PKRecurringPaymentRequest not bound
 !missing-type! PKShareablePassMetadataPreview not bound
 !missing-type! PKVehicleConnectionSession not bound
+!missing-field! PKPaymentNetworkBancomat not bound
+!missing-field! PKPaymentNetworkBancontact not bound

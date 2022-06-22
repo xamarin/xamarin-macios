@@ -13,3 +13,5 @@
 !missing-selector! PKVehicleConnectionSession::invalidate not bound
 !missing-selector! PKVehicleConnectionSession::sendData:error: not bound
 !missing-type! PKVehicleConnectionSession not bound
+!missing-field! PKPaymentNetworkBancomat not bound
+!missing-field! PKPaymentNetworkBancontact not bound

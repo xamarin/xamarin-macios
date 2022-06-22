@@ -10,3 +10,5 @@
 !missing-selector! LAContext::isCredentialSet: not bound
 !missing-selector! LAContext::setCredential:type: not bound
 !missing-type! LAContext not bound
+!missing-selector! LAContext::interactionNotAllowed not bound
+!missing-selector! LAContext::setInteractionNotAllowed: not bound
