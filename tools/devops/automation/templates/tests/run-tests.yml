@@ -244,6 +244,27 @@ steps:
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 840
 
+# Collect simulator diagnostic logs
+- bash: |
+    set -x
+    set -e
+
+    mkdir -p $(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
+    printf "\n" | xcrun simctl diagnose -b -X --output=$(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
+
+  displayName: 'Collect diagnostic info from simulators'
+  name: collectSimulatorInfo
+  timeoutInMinutes: 30
+
+# Publish the simulator diagnostic logs
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Simulator diagnostic info'
+  inputs:
+    targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
+    artifactName: diagnostic-simulator-info-$(Build.BuildId)
+  continueOnError: true
+  condition: succeededOrFailed()
+
 # set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the commnet, this way
 # we report the result as soon as we have it and ensure that we set the status from pending to the appropiate value.
 
