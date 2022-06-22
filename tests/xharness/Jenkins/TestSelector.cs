@@ -55,10 +55,10 @@ namespace Xharness.Jenkins {
 
 		public void SetEnabled (string label, bool value)
 		{
-			// there are two possible cases, either we are setting a test label OR a 
+			// there are two possible cases, either we are setting a test label OR a platform
 			if (label.TryGetLabel (out TestLabel tLabel)) {
 				SetEnabled (tLabel, value);
-				// some labels overlap, not idea, but is just a few
+				// some labels overlap, not ideal, but is just a few
 				switch (tLabel) {
 				case TestLabel.All:
 					SetEnabled (PlatformLabel.All, value);
@@ -186,7 +186,7 @@ namespace Xharness.Jenkins {
 			// the second examples means that we have all tests disable because the skip-all-tests is last
 			// In order to make this work we need to get the first label, decide if it is skip or run, then set it
 			var labelSelectedTests = new Dictionary<string, bool> ();
-			var regexp = new Regex("(skip-|run-)(.*)(-tests)");
+			var regexp = new Regex ("(skip-|run-)(.*)(-tests)");
 			foreach (var label in labels) {
 				// use a regexp to parse the label, the possibilities are
 				// skip-*-tests
