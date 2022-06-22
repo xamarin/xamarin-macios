@@ -7,7 +7,7 @@ $jsonTemplateFiles | ForEach-Object {
     
     $destinationFile = "$($_.Directory.FullName)\$($Matches.1).json"
     $jsonFiles += Copy-Item "$($_.FullName)" -Destination $destinationFile -PassThru
-    Write-Host "Template loc file generated: $destinationFile"
+    Write-Debug "Template loc file generated: $destinationFile"
 }
 
 Push-Location "$SourcesDirectory"

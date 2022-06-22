@@ -6,12 +6,12 @@ try {
     # Verify that the notarized output is valid
     $notarizedRoot = Join-Path $Env:BUILD_SOURCESDIRECTORY package notarized
     Get-ChildItem -Path $notarizedRoot -Filter *.pkg -Recurse -File | ForEach-Object {
-        Write-Host "pkgutil --check-signature $($_.FullName)"
+        Write-Debug "pkgutil --check-signature $($_.FullName)"
         pkgutil --check-signature "$($_.FullName)"
         if ($LastExitCode -eq 0) {
-            Write-Host "Signature check of $($_.FullName) succeeded."
+            Write-Debug "Signature check of $($_.FullName) succeeded."
         } else {
-            Write-Host "Signature check of $($_.FullName) failed (exit code: $LastExitCode)."
+            Write-Debug "Signature check of $($_.FullName) failed (exit code: $LastExitCode)."
             throw "Signature check of $($_.FullName) failed (exit code: $LastExitCode)."
         }
     }
