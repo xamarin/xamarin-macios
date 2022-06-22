@@ -56,33 +56,29 @@ parameters:
   type: boolean
   default: true
 
-# We are doing some black magic. We have several templates that 
-# are executed with different parameters. 
-#
-# The problem with that is that templates cannot be used with the 
-# matrix strategy, so we are doing a little trick based on the following:
-#
-# 1. We can create a template that expands.
-# 2. We can use the each keyword, which allow a loop
-# 3. yaml is a super set of json, therefore, it was json dictionaries
-#
-# the following parameters, define an array of dictionaries with the
-# data required by the templates. Do you want a new stage with 
-# device tests, no more copy paste, just add the new config.
-#
 - name: simTestsConfigurations
   displayName: Simulator test configurations to run
   type: object
   default: [
-    {
-      testPrefix: 'simulator',
-      stageName: 'simulator',
-      displayName: 'Simulator Tests',
-      useXamarinStorage: False,
-      testsLabels: '--label=run-all-tests,skip-device-tests', # TODO same as calling jenkins, we need to use diff one in ci an
-      statusContext: 'VSTS: simulator tests iOS',
-      makeTarget: 'jenkins',
-    }
+    'bcl',
+    'cecil',
+    'dotnettests',
+    'fsharp',
+    'framework',
+    'generator',
+    'interdependent-binding-projects',
+    'install-source',
+    'introspection',
+    'linker',
+    'mac-binding-project',
+    'mmp',
+    'mononative',
+    'monotouch',
+    'msbuild',
+    'mtouch',
+    'xammac',
+    'xcframework',
+    'xtro'
   ]
 
 - name: deviceTestsConfigurations

@@ -53,7 +53,7 @@ namespace Xharness.Jenkins {
 
 			var exec = new MacExecuteTask (jenkins, build, processManager, crashReportSnapshotFactory) {
 				Ignored = ignored,
-				BCLTest = project.IsBclTest (),
+				BCLTest = project.Label == TestLabel.Bcl,
 				TestName = project.Name,
 				IsUnitTest = true,
 			};
@@ -65,11 +65,11 @@ namespace Xharness.Jenkins {
 		{
 
 			foreach (var project in jenkins.Harness.MacTestProjects) {
-				bool ignored = !jenkins.IncludeMac;
+				bool ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac);
 				if (project.Ignore == true)
 					ignored = true;
 
-				if (!jenkins.IncludeMmpTest && project.Path.Contains ("mmptest"))
+				if (!jenkins.TestSelection.IsEnabled (TestLabel.Mmp) && project.Path.Contains ("mmptest"))
 					ignored = true;
 
 				if (!jenkins.IsIncluded (project))
