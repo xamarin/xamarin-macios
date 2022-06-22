@@ -70,6 +70,9 @@ parameters:
   type: boolean
   default: true
 
+- name: isPR
+  type: boolean
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -125,6 +128,7 @@ stages:
     steps:
     - template: build.yml
       parameters:
+        isPR: ${{ parameters.isPR }} 
         testsLabels: ${{ parameters.testsLabels }}
         statusContext: ${{ parameters.statusContext }}
         useXamarinStorage: ${{ parameters.useXamarinStorage }}
@@ -147,6 +151,7 @@ stages:
     steps:
     - template: ../common/upload-vsdrops.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         testPrefix: ${{ parameters.testPrefix }}
         provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
@@ -162,6 +167,7 @@ stages:
     steps:
     - template: ../common/upload-vsts-tests.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         testPrefix: ${{ parameters.testPrefix }}
         provisioningFailed: $[ dependencies.tests.outputs['runTests.PROVISIONING_FAILED']
 
@@ -185,6 +191,7 @@ stages:
     steps:
     - template: ../common/publish-html.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         testPrefix: ${{ parameters.testPrefix }}

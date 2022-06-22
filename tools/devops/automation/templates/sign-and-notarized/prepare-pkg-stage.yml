@@ -166,3 +166,5 @@ jobs:
       clean: all
   steps:
   - template: artifact-github-comment.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
