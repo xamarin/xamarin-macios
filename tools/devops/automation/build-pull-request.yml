@@ -193,7 +193,7 @@ stages:
     enableAPIDiff: ${{ parameters.enableAPIDiff }}
     forceInsertion: false
     skipESRP: true
-    ${{ if ne(length(parameters.simTestsConfigurations), 0)}}
+    ${{ if ne(length(parameters.simTestsConfigurations), 0)}}:
       simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
