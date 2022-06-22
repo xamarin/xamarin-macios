@@ -59,6 +59,7 @@ parameters:
 - name: simTestsConfigurations
   displayName: Simulator test configurations to run
   type: object
+  default: []
 
 - name: deviceTestsConfigurations
   displayName: Device test configurations to run
