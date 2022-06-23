@@ -29,7 +29,7 @@ function Invoke-Request {
             } else {
                 $count = $count + 1
                 $seconds = 5 * $count
-                Write-Host "Error performing request trying in $seconds seconds"
+                Write-Host "Error performing request to $($_.Exception.Response.RequestMessage.RequestUri) trying in $seconds seconds"
                 Write-Host "Exception was:"
                 Write-Host "$($_.Exception)"
                 Write-Host "Response was:"
