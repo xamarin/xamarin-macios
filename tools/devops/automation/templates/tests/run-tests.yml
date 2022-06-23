@@ -253,10 +253,12 @@ steps:
     set -x
     set -e
 
+    rm -Rf $(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
     mkdir -p $(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
     printf "\n" | xcrun simctl diagnose -b -X --output=$(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
 
   displayName: 'Collect diagnostic info from simulators'
+  continueOnError: true
   name: collectSimulatorInfo
   timeoutInMinutes: 30
 
