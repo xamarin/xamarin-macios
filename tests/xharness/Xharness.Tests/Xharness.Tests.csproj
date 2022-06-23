@@ -54,6 +54,8 @@
     <Compile Include="Jenkins\JenkinsDeviceLoadterTests.cs" />
     <Compile Include="Jenkins\ResourceManagerTests.cs" />
     <Compile Include="Jenkins\PeriodicCommandTests.cs" />
+    <Compile Include="Jenkins\TestSelectionTests.cs" />
+    <Compile Include="Jenkins\TestSelectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
