@@ -69,7 +69,7 @@ class Agents {
             throw [System.ArgumentNullException]::new("agent")
         }
         $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents/$($agent.GetID())?api-version=6.0"
-        Write-Host "Url is $url"
+        Write-Debug "Url is $url"
         $headers = Get-AuthHeader($this.Token)
         $payload = @{
             id = $agent.GetID() ;
@@ -430,7 +430,7 @@ function Set-BuildTags {
 
     foreach ($t in $Tags) {
         $url = Get-TagsRestAPIUrl -Tag $t
-        Write-Host "Uri is $url"
+        Write-Debug "Uri is $url"
 
         Invoke-RestMethod -Uri $url -Headers $headers -Method "PUT"  -ContentType 'application/json'
     }

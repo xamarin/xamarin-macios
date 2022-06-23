@@ -3,8 +3,13 @@ on:
   pull_request:
     types: [opened, reopened, labeled, unlabeled, synchronize]
 
+permissions:
+  contents: read
+
 jobs:
   labels-check:
+    permissions:
+      contents: none
     runs-on: ubuntu-latest
     name: Labels verification
 

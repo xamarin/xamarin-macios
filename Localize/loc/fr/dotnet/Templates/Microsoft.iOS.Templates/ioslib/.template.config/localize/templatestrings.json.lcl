@@ -33,10 +33,13 @@
       </Item>
       <Item ItemId=";name" ItemType="0" PsrId="306" Leaf="true">
         <Str Cat="Text">
-          <Val><![CDATA[iOS Class Library (Preview)]]></Val>
+          <Val><![CDATA[iOS Class Library]]></Val>
           <Tgt Cat="Text" Stat="Loc" Orig="New">
-            <Val><![CDATA[Bibliothèque de classes iOS (préversion)]]></Val>
+            <Val><![CDATA[Bibliothèque de classes iOS]]></Val>
           </Tgt>
+          <Prev Cat="Text">
+            <Val><![CDATA[iOS Class Library (Preview)]]></Val>
+          </Prev>
         </Str>
         <Disp Icon="Str" />
       </Item>

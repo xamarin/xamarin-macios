@@ -32,7 +32,7 @@ namespace Xharness {
 
 		public string Platform = "x86";
 
-		public MacTestProject (string label, string path, bool isExecutableProject = true, MacFlavors targetFrameworkFlavor = MacFlavors.Full | MacFlavors.Modern) : base (label, path, isExecutableProject)
+		public MacTestProject (TestLabel label, string path, bool isExecutableProject = true, MacFlavors targetFrameworkFlavor = MacFlavors.Full | MacFlavors.Modern) : base (label, path, isExecutableProject)
 		{
 			TargetFrameworkFlavors = targetFrameworkFlavor;
 		}

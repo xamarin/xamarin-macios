@@ -29,7 +29,7 @@ function Invoke-Request {
             } else {
                 $count = $count + 1
                 $seconds = 5 * $count
-                Write-Host "Error performing request trying in $seconds seconds"
+                Write-Host "Error performing request to $($_.Exception.Response.RequestMessage.RequestUri) trying in $seconds seconds"
                 Write-Host "Exception was:"
                 Write-Host "$($_.Exception)"
                 Write-Host "Response was:"
@@ -135,7 +135,7 @@ class GitHubStatuses {
         foreach ($s in $presentStatuses) {
             # we found a status from a previous build that was a success, we do not want to step on it
             if (($s.context -eq $context) -and ($s.state -eq "success")) {
-                Write-Host "WARNING: Found status for $Context because it was already set as a success, overriding result."
+                Write-Debug "WARNING: Found status for $Context because it was already set as a success, overriding result."
             }
         }
 
@@ -278,7 +278,10 @@ class GitHubComments {
             $hashUrl= "https://github.com/$($this.Org)/$($this.Repo)/commit/$($this.Hash)"
             $hashSource = " [CI build]"
         }
+        $ciComment = "[comment]: <> (This is a comment added by Azure DevOps)"
         $stringBuilder.AppendLine("Hash: [$($this.Hash)]($hashUrl) $hashSource")
+        $stringBuilder.AppendLine("")
+        $stringBuilder.AppendLine($ciComment)
     }
 
     [string] GetCommentUrl() {
@@ -693,7 +696,7 @@ function New-GitHubComment {
     }
 
     $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' }
-    Write-Host $request
+    Write-Debug $request
     return $request
 }
 
@@ -732,7 +735,7 @@ function New-GitHubCommentFromFile {
         [Parameter(Mandatory)]
         [String]
         $Header,
-        
+
         [String]
         $Description,
 
@@ -753,6 +756,8 @@ function New-GitHubCommentFromFile {
     {
         $msg.AppendLine($line)
     }
+    $msg.AppendLine("")
+    $msg.AppendLine("[comment]: <> (This is a comment added by Azure DevOps)")
     return New-GithubComment -Header $Header -Description $Description -Message $msg.ToString() -Emoji $Emoji
 }
 
@@ -870,7 +875,7 @@ function New-GitHubSummaryComment {
     }
 
     if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
-        Write-Host "No test summary found"
+        Write-Debug "No test summary found"
         $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
     } else {
         if ($Env:TESTS_JOBSTATUS -eq "") {
@@ -916,7 +921,7 @@ function Get-GitHubPRInfo {
     }
 
     $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' -Headers $headers }
-    Write-Host $request
+    Write-Debug $request
     return $request
 }
 
@@ -1018,8 +1023,8 @@ function New-GistWithContent {
 
     $url = "https://api.github.com/gists"
     $payloadJson = $payload | ConvertTo-Json
-    Write-Host "Url is $url"
-    Write-Host "Payload is $payloadJson"
+    Write-Debug "Url is $url"
+    Write-Debug "Payload is $payloadJson"
 
     $headers = @{
         Accept = "application/vnd.github.v3+json";
@@ -1027,7 +1032,7 @@ function New-GistWithContent {
     } 
 
     $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json'
-    Write-Host $request
+    Write-Debug $request
     return $request.html_url
 }
 
@@ -1104,8 +1109,8 @@ function New-GistWithFiles {
 
     $url = "https://api.github.com/gists"
     $payloadJson = $payload | ConvertTo-Json
-    Write-Host "Url is $url"
-    Write-Host "Payload is $payloadJson"
+    Write-Debug "Url is $url"
+    Write-Debug "Payload is $payloadJson"
 
     $headers = @{
         Accept = "application/vnd.github.v3+json";
@@ -1113,7 +1118,7 @@ function New-GistWithFiles {
     } 
 
     $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
-    Write-Host $request
+    Write-Debug $request
     return $request.html_url
 }
 
@@ -1152,7 +1157,7 @@ function Push-RepositoryDispatch {
     }
 
     $url = "https://api.github.com/repos/$Org/$Repository/dispatches"
-    Write-Host $url
+    Write-Debug $url
     $payloadJson = $payload | ConvertTo-Json
 
     $headers = @{
@@ -1161,8 +1166,8 @@ function Push-RepositoryDispatch {
     } 
 
     $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
-    Write-Host $request
-    Write-Host $request.Content
+    Write-Debug $request
+    Write-Debug $request.Content
 }
 
 # This function processes markdown, and replaces:
@@ -1202,7 +1207,7 @@ function Convert-Markdown {
                         $gistUrl = New-GistWithFiles $fileToGist $filesToGist
                         $gistText = "[gist](" + $gistUrl + ")"
                     } catch {
-                        Write-Host "Unable to create gist: $_"
+                        Write-Debug "Unable to create gist: $_"
                         $gistText = "Unable to create gist: $($_.Exception.Message)"
                     }
                 }
