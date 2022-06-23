@@ -123,12 +123,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 			NewNativeHandleTypeDefinition = modules.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
 
-			// These must be called last as they depend on Module and NativeIntegerAttributeTypeRef to be setup
-			var intPtrCtor = modules.XamarinModule.Types.First (t => t.FullName == "Foundation.NSObject").Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr)");
-			var intPtrCtorWithBool = modules.XamarinModule.Types.First (t => t.FullName == "Foundation.NSObject").Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr,System.Boolean)");
 			var nativeHandleOpImplicit = NewNativeHandleTypeDefinition.Resolve ().GetMethods ().First (m => m.FullName == "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
-			ConstructorTransforms = new ConstructorTransforms (ModuleToEdit.ImportReference (NewNativeHandleTypeDefinition), intPtrCtor, intPtrCtorWithBool, ModuleToEdit.ImportReference (nativeHandleOpImplicit), WarningIssued, Transformed);
-			ConstructorTransforms.AddTransforms (ModuleMap);
+			ConstructorTransforms = new ConstructorTransforms (ModuleToEdit.ImportReference (NewNativeHandleTypeDefinition), ModuleToEdit.TypeSystem.Boolean, ModuleToEdit.ImportReference (nativeHandleOpImplicit), WarningIssued, Transformed);
 			NativeHandleGetHandleReference = NewNativeHandleTypeDefinition.Methods.First (m => m.Name == "get_Handle");
 
 			MethodSubs = LoadMethodSubs ();
