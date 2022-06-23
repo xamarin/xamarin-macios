@@ -4,24 +4,26 @@ Describe "TestResults tests" {
     BeforeAll {
         $dataPath = Join-Path -Path $PSScriptRoot -ChildPath "test_data" 
         $dataPath = Join-Path -Path $dataPath -ChildPath "TestSummary.md"
-        $context = "tests"
+        $label = "pwsh"
+        $resultContext = "tests"
         $jobStatus = "Succeeded"
     }
 
     It "is correctly created" {
-        $testResult = [TestResults]::new($dataPath, $jobStatus, $context)
+        $testResult = [TestResults]::new($dataPath, $jobStatus, $label, $resultContext)
         $testResult.ResultsPath | Should -Be $dataPath
         $testResult.TestsJobStatus | Should -Be $jobStatus
-        $testResult.Context | Should -Be $context
+        $testResult.Label | Should -Be $label
+        $testResult.Context | Should -Be $resultContext
     }
 
     It "is successfull" {
-        $testResult = [TestResults]::new($dataPath, "Succeeded", $context)
+        $testResult = [TestResults]::new($dataPath, "Succeeded", $label, $resultContext)
         $testResult.IsSuccess() | Should -Be $true
     }
 
     It "is failure" {
-        $testResult = [TestResults]::new($dataPath, "Failure", $context)
+        $testResult = [TestResults]::new($dataPath, "Failure", $label, $resultContext)
         $testResult.IsSuccess() | Should -Be $false
     }
 
@@ -29,7 +31,7 @@ Describe "TestResults tests" {
         BeforeAll {
             $dataPath = Join-Path -Path $PSScriptRoot -ChildPath "test_data" 
             $dataPath = Join-Path -Path $dataPath -ChildPath "MissingFile.md"
-            $testResult = [TestResults]::new($dataPath, $jobStatus, $context)
+            $testResult = [TestResults]::new($dataPath, $jobStatus, $label, $resultContext)
         }
 
         It "writes the correct comment." {
@@ -51,7 +53,7 @@ Describe "TestResults tests" {
         BeforeAll {
             $dataPath = Join-Path -Path $PSScriptRoot -ChildPath "test_data" 
             $dataPath = Join-Path -Path $dataPath -ChildPath "TestSummary.md"
-            $testResult = [TestResults]::new($dataPath, "", $context)
+            $testResult = [TestResults]::new($dataPath, "", $label, $resultContext)
         }
 
         It "writes the correct comment." {
@@ -73,7 +75,7 @@ Describe "TestResults tests" {
         BeforeAll {
             $dataPath = Join-Path -Path $PSScriptRoot -ChildPath "test_data" 
             $dataPath = Join-Path -Path $dataPath -ChildPath "TestSummary.md"
-            $testResult = [TestResults]::new($dataPath, $jobStatus, $context)
+            $testResult = [TestResults]::new($dataPath, $jobStatus, $label, $resultContext)
         }
 
         It "writes the correct comment." {
@@ -99,7 +101,7 @@ Describe "TestResults tests" {
 
     Context "error job status" {
         BeforeAll {
-            $testResult = [TestResults]::new($dataPath, "Failure", $context)
+            $testResult = [TestResults]::new($dataPath, "Failure", $label, $resultContext)
         }
 
         It "writes the correct comment." {
