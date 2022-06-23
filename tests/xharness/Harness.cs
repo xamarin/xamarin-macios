@@ -263,17 +263,17 @@ namespace Xharness {
 			var debugAndRelease = new string [] { "Debug", "Release" };
 
 			var projects = new [] {
-				new { ProjectPath = "introspection", IsFSharp = false, Configurations = noConfigurations, },
-				new { ProjectPath = "monotouch-test", IsFSharp = false, Configurations = noConfigurations, },
-				new { ProjectPath = Path.Combine ("linker", "ios", "dont link"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { ProjectPath = Path.Combine ("linker", "ios", "link sdk"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { ProjectPath = Path.Combine ("linker", "ios", "link all"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { ProjectPath = Path.Combine ("linker", "ios", "trimmode copy"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { ProjectPath = Path.Combine ("linker", "ios", "trimmode link"), IsFSharp = false, Configurations = debugAndRelease, },
-				new { ProjectPath = "fsharp", IsFSharp = true, Configurations = noConfigurations, },
-				new { ProjectPath = "framework-test", IsFSharp = false, Configurations = noConfigurations, },
-				new { ProjectPath = "interdependent-binding-projects", IsFSharp = false, Configurations = noConfigurations, },
-				new { ProjectPath = "xcframework-test", IsFSharp = false, Configurations = noConfigurations, },
+				new { Label = TestLabel.Introspection ,ProjectPath = "introspection", IsFSharp = false, Configurations = noConfigurations, },
+				new { Label = TestLabel.Monotouch, ProjectPath = "monotouch-test", IsFSharp = false, Configurations = noConfigurations, },
+				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "dont link"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "link sdk"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "link all"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { Label = TestLabel.Linker,ProjectPath = Path.Combine ("linker", "ios", "trimmode copy"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { Label = TestLabel.Linker, ProjectPath = Path.Combine ("linker", "ios", "trimmode link"), IsFSharp = false, Configurations = debugAndRelease, },
+				new { Label = TestLabel.Fsharp, ProjectPath = "fsharp", IsFSharp = true, Configurations = noConfigurations, },
+				new { Label = TestLabel.Framework, ProjectPath = "framework-test", IsFSharp = false, Configurations = noConfigurations, },
+				new { Label = TestLabel.InterdependentBindingProjects, ProjectPath = "interdependent-binding-projects", IsFSharp = false, Configurations = noConfigurations, },
+				new { Label = TestLabel.Xcframework, ProjectPath = "xcframework-test", IsFSharp = false, Configurations = noConfigurations, },
 			};
 
 			// If .NET is not enabled, then ignore, otherwise leave undecided for other code to determine.
@@ -283,7 +283,7 @@ namespace Xharness {
 				var projectName = Path.GetFileName (projectPath);
 				var projExtension = projectInfo.IsFSharp ? ".fsproj" : ".csproj";
 
-				IOSTestProjects.Add (new iOSTestProject ("dotnet", Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "iOS", projectName + projExtension))) {
+				IOSTestProjects.Add (new iOSTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "iOS", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					SkipiOSVariation = false,
@@ -296,7 +296,7 @@ namespace Xharness {
 					Configurations = projectInfo.Configurations,
 				});
 
-				IOSTestProjects.Add (new iOSTestProject ("dotnet", Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "tvOS", projectName + projExtension))) {
+				IOSTestProjects.Add (new iOSTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "tvOS", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					SkipiOSVariation = true,
@@ -310,7 +310,7 @@ namespace Xharness {
 					Configurations = projectInfo.Configurations,
 				});
 
-				MacTestProjects.Add (new MacTestProject ("dotnet", Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "macOS", projectName + projExtension))) {
+				MacTestProjects.Add (new MacTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "macOS", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					TargetFrameworkFlavors = MacFlavors.DotNet,
@@ -320,7 +320,7 @@ namespace Xharness {
 					Configurations = projectInfo.Configurations,
 				});
 
-				MacTestProjects.Add (new MacTestProject ("dotnet", Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "MacCatalyst", projectName + projExtension))) {
+				MacTestProjects.Add (new MacTestProject (projectInfo.Label, Path.GetFullPath (Path.Combine (RootDirectory, projectPath, "dotnet", "MacCatalyst", projectName + projExtension))) {
 					Name = projectName,
 					IsDotNetProject = true,
 					TargetFrameworkFlavors = MacFlavors.MacCatalyst,
@@ -337,7 +337,7 @@ namespace Xharness {
 			int rv = 0;
 
 			var test_suites = new [] {
-				new { Label = "linker", Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", Flavors = MacFlavors.Modern | MacFlavors.Full | MacFlavors.System },
+				new { Label = TestLabel.Linker, Directory = "linker/mac/dont link", ProjectFile = "dont link-mac", Name = "dont link", Flavors = MacFlavors.Modern | MacFlavors.Full | MacFlavors.System },
 			};
 			foreach (var p in test_suites) {
 				MacTestProjects.Add (new MacTestProject (p.Label, Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj"))) {
@@ -346,15 +346,15 @@ namespace Xharness {
 				});
 			}
 
-			MacTestProjects.Add (new MacTestProject ("introspection", Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
-			MacTestProjects.Add (new MacTestProject ("framework-test", Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "macOS", "framework-test-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "framework-test" });
-			MacTestProjects.Add (new MacTestProject ("xcframework-test", Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "macOS", "xcframework-test-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "xcframework-test" });
+			MacTestProjects.Add (new MacTestProject (TestLabel.Introspection, Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "Mac", "introspection-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "introspection" });
+			MacTestProjects.Add (new MacTestProject (TestLabel.Framework, Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "macOS", "framework-test-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "framework-test" });
+			MacTestProjects.Add (new MacTestProject (TestLabel.Xcframework, Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "macOS", "xcframework-test-mac.csproj")), targetFrameworkFlavor: MacFlavors.Modern) { Name = "xcframework-test" });
 
 			var hard_coded_test_suites = new [] {
-				new { Label = "mmptest", Directory = "mmptest", ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", Flavors = MacFlavors.Console, },
-				new { Label = "xammac-tests", Directory = "xammac_tests", ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "AnyCPU", Flavors = MacFlavors.Modern, },
-				new { Label = "linker", Directory = "linker/mac/link all", ProjectFile = "link all-mac", Name = "link all", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
-				new { Label = "linker", Directory = "linker/mac/link sdk", ProjectFile = "link sdk-mac", Name = "link sdk", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
+				new { Label = TestLabel.Mmp, Directory = "mmptest", ProjectFile = "mmptest", Name = "mmptest", IsNUnit = true, Configurations = (string[]) null, Platform = "x86", Flavors = MacFlavors.Console, },
+				new { Label = TestLabel.Xammac, Directory = "xammac_tests", ProjectFile = "xammac_tests", Name = "xammac tests", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "AnyCPU", Flavors = MacFlavors.Modern, },
+				new { Label = TestLabel.Linker, Directory = "linker/mac/link all", ProjectFile = "link all-mac", Name = "link all", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
+				new { Label = TestLabel.Linker, Directory = "linker/mac/link sdk", ProjectFile = "link sdk-mac", Name = "link sdk", IsNUnit = false, Configurations = new string [] { "Debug", "Release" }, Platform = "x86", Flavors = MacFlavors.Modern, },
 			};
 			foreach (var p in hard_coded_test_suites) {
 				MacTestProjects.Add (new MacTestProject (p.Label, Path.GetFullPath (Path.Combine (RootDirectory, p.Directory, p.ProjectFile + ".csproj")), targetFrameworkFlavor: p.Flavors) {
@@ -368,7 +368,7 @@ namespace Xharness {
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.macOS, flavor, RootDirectory, Log);
-				var macTestProject = new MacTestProject ("mononative", monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
+				var macTestProject = new MacTestProject (TestLabel.Mononative, monoNativeInfo.ProjectPath, targetFrameworkFlavor: MacFlavors.Modern | MacFlavors.Full) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
 					Platform = "AnyCPU",
@@ -451,47 +451,47 @@ namespace Xharness {
 			var fsharp_test_suites = new string [] { "fsharp" };
 			var fsharp_library_projects = new string [] { "fsharplibrary" };
 
-			IOSTestProjects.Add (new iOSTestProject ("monotouch-test", Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "monotouch-test.csproj"))) {
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.Monotouch, Path.GetFullPath (Path.Combine (RootDirectory, "monotouch-test", "monotouch-test.csproj"))) {
 				Name = "monotouch-test",
 			});
 
 			foreach (var p in fsharp_test_suites)
-				IOSTestProjects.Add (new iOSTestProject ("fsharp", Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (TestLabel.Fsharp, Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj"))) { Name = p });
 			foreach (var p in library_projects)
-				IOSTestProjects.Add (new iOSTestProject ("library-projects", Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (TestLabel.LibraryProjects, Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".csproj")), false) { Name = p });
 			foreach (var p in fsharp_library_projects)
-				IOSTestProjects.Add (new iOSTestProject ("fsharp", Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
+				IOSTestProjects.Add (new iOSTestProject (TestLabel.Fsharp, Path.GetFullPath (Path.Combine (RootDirectory, p + "/" + p + ".fsproj")), false) { Name = p });
 
-			IOSTestProjects.Add (new iOSTestProject ("bindings-framework-test", Path.GetFullPath (Path.Combine (RootDirectory, "bindings-framework-test", "iOS", "bindings-framework-test.csproj")), false) {
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.BindingFramework, Path.GetFullPath (Path.Combine (RootDirectory, "bindings-framework-test", "iOS", "bindings-framework-test.csproj")), false) {
 				Name = "bindings-framework-test",
 			});
-			IOSTestProjects.Add (new iOSTestProject ("bindings-xcframework-test", Path.GetFullPath (Path.Combine (RootDirectory, "bindings-xcframework-test", "iOS", "bindings-xcframework-test.csproj")), false) {
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.BindingsXcframework, Path.GetFullPath (Path.Combine (RootDirectory, "bindings-xcframework-test", "iOS", "bindings-xcframework-test.csproj")), false) {
 				Name = "bindings-xcframework-test",
 			});
-			IOSTestProjects.Add (new iOSTestProject ("framework-test", Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "iOS", "framework-test-ios.csproj"))) {
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.Framework, Path.GetFullPath (Path.Combine (RootDirectory, "framework-test", "iOS", "framework-test-ios.csproj"))) {
 				Name = "framework-test",
 			});
-			IOSTestProjects.Add (new iOSTestProject ("xcframework-test", Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "iOS", "xcframework-test-ios.csproj"))) {
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.Xcframework, Path.GetFullPath (Path.Combine (RootDirectory, "xcframework-test", "iOS", "xcframework-test-ios.csproj"))) {
 				Name = "xcframework-test",
 			});
 
-			IOSTestProjects.Add (new iOSTestProject ("bindings-test", Path.GetFullPath (Path.Combine (RootDirectory, "bindings-test", "iOS", "bindings-test.csproj")), false) { Name = "bindings-test" });
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.Binding, Path.GetFullPath (Path.Combine (RootDirectory, "bindings-test", "iOS", "bindings-test.csproj")), false) { Name = "bindings-test" });
 
-			IOSTestProjects.Add (new iOSTestProject ("interdependent-binding-projects", Path.GetFullPath (Path.Combine (RootDirectory, "interdependent-binding-projects", "interdependent-binding-projects.csproj"))) { Name = "interdependent-binding-projects" });
-			IOSTestProjects.Add (new iOSTestProject ("introspection", Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
-			IOSTestProjects.Add (new iOSTestProject ("linker", Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) {
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.InterdependentBindingProjects, Path.GetFullPath (Path.Combine (RootDirectory, "interdependent-binding-projects", "interdependent-binding-projects.csproj"))) { Name = "interdependent-binding-projects" });
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.Introspection, Path.GetFullPath (Path.Combine (RootDirectory, "introspection", "iOS", "introspection-ios.csproj"))) { Name = "introspection" });
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.Linker, Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "dont link", "dont link.csproj"))) {
 				Configurations = new string [] { "Debug", "Release" },
 			});
-			IOSTestProjects.Add (new iOSTestProject ("linker", Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) {
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.Linker, Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link all", "link all.csproj"))) {
 				Configurations = new string [] { "Debug", "Release" },
 			});
-			IOSTestProjects.Add (new iOSTestProject ("linker", Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) {
+			IOSTestProjects.Add (new iOSTestProject (TestLabel.Linker, Path.GetFullPath (Path.Combine (RootDirectory, "linker", "ios", "link sdk", "link sdk.csproj"))) {
 				Configurations = new string [] { "Debug", "Release" },
 			});
 
 			foreach (var flavor in new MonoNativeFlavor [] { MonoNativeFlavor.Compat, MonoNativeFlavor.Unified }) {
 				var monoNativeInfo = new MonoNativeInfo (DevicePlatform.iOS, flavor, RootDirectory, Log);
-				var iosTestProject = new iOSTestProject ("mono-native", monoNativeInfo.ProjectPath) {
+				var iosTestProject = new iOSTestProject (TestLabel.Mononative, monoNativeInfo.ProjectPath) {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
 					SkipwatchOSARM64_32Variation = monoNativeInfo.ProjectName.Contains ("compat"),
