@@ -20,7 +20,7 @@ namespace Xharness {
 		bool generate_variations = true;
 
 		public TestPlatform TestPlatform;
-		public string Label;
+		public TestLabel Label;
 		public string Path;
 		public string? SolutionPath;
 		public string? Name;
@@ -40,7 +40,7 @@ namespace Xharness {
 		// Optional
 		public MonoNativeInfo? MonoNativeInfo { get; set; }
 
-		public TestProject (string label, string path, bool isExecutableProject = true)
+		public TestProject (TestLabel label, string path, bool isExecutableProject = true)
 		{
 			Label = label;
 			Path = path;
@@ -66,6 +66,7 @@ namespace Xharness {
 
 		protected virtual TestProject CompleteClone (TestProject rv)
 		{
+			rv.Label = Label;
 			rv.Path = Path;
 			rv.IsExecutableProject = IsExecutableProject;
 			rv.IsDotNetProject = IsDotNetProject;

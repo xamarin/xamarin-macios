@@ -29,7 +29,7 @@ function Invoke-Request {
             } else {
                 $count = $count + 1
                 $seconds = 5 * $count
-                Write-Host "Error performing request trying in $seconds seconds"
+                Write-Host "Error performing request to $($_.Exception.Response.RequestMessage.RequestUri) trying in $seconds seconds"
                 Write-Host "Exception was:"
                 Write-Host "$($_.Exception)"
                 Write-Host "Response was:"
@@ -290,7 +290,11 @@ class GitHubComments {
             $changeId = [GitHubComments]::GetPRID()
             $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/issues/$changeId/comments"
         } else {
-            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/commits/$Env:BUILD_REVISION/comments"
+            if ($this.Hash) {
+                $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/commits/$($this.Hash)/comments"
+            } else {
+                $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/commits/$Env:BUILD_SOURCEVERSION/comments"
+            }
         }
         return $url
     }
@@ -553,6 +557,7 @@ function New-GitHubCommentsObject {
         $Hash
 
     )
+    Write-Debug "New-GitHubCommentsObject ('$Org', '$Repo', '$Token', '$Hash')"
     if ($Hash) {
         return [GitHubComments]::new($Org, $Repo, $Token, $Hash)
     } else {
