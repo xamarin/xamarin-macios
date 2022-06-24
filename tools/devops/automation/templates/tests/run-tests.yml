@@ -258,7 +258,7 @@ steps:
     printf "\n" | xcrun simctl diagnose -b -X --output=$(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
 
   displayName: 'Collect diagnostic info from simulators'
-  condition:  $[eq(variables['system.debug'], true)]
+  condition:  eq(variables['system.debug'], true)
   continueOnError: true
   name: collectSimulatorInfo
   timeoutInMinutes: 30
@@ -269,7 +269,7 @@ steps:
   inputs:
     targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
     artifactName: diagnostic-simulator-info-$(Build.BuildId)-${{ parameters.label }}
-  condition:  $[and(eq(variables['system.debug'], true), succeededOrFailed())]
+  condition:  and(eq(variables['system.debug'], true), succeededOrFailed())
   continueOnError: true
 
 # set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the commnet, this way
