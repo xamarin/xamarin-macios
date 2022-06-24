@@ -196,7 +196,7 @@ steps:
   continueOnError: true
   condition: and(${{ parameters.condition }}, eq(variables['System.debug'], 'true'))
 
-- ${{ if or(eq(parameters.skipESRP, true), eq(variables['IsPR'], 'True')) }}:
+- ${{ if and(eq(parameters.skipESRP, false), eq(variables['IsPR'], 'False')) }}:
   - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3
     displayName: 'Install Notarizing Plugin'
     inputs:
