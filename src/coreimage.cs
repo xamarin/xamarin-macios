@@ -9677,5 +9677,56 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputImage")]
 		CIImage InputImage { get; set; }
 	}
+
+	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[Protocol (Name="CIAreaLogarithmicHistogram")]
+	interface CIAreaLogarithmicHistogramProtocol : CIAreaReductionFilterProtocol
+	{
+		[Abstract]
+		[Export ("scale")]
+		float Scale { get; set; }
+
+		[Abstract]
+		[Export ("count")]
+		nint Count { get; set; }
+
+		[Abstract]
+		[Export ("minimumStop")]
+		float MinimumStop { get; set; }
+
+		[Abstract]
+		[Export ("maximumStop")]
+		float MaximumStop { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIAreaLogarithmicHistogram : CIAreaLogarithmicHistogramProtocol {
+
+		[CoreImageFilterProperty ("inputExtent")]
+		CIVector Extent { get; set; }
+
+	}
+
+	[CoreImageFilter]
+	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvertLabToRGB {
+
+		[CoreImageFilterProperty ("inputNormalize")]
+		bool Normalize { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvertRGBtoLab {
+
+		[CoreImageFilterProperty ("inputNormalize")]
+		bool Normalize { get; set; }
+	}
+
 #endregion
+
 }
