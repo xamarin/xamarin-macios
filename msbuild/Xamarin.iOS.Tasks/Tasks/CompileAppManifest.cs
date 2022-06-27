@@ -20,9 +20,12 @@ namespace Xamarin.iOS.Tasks
 
 		public bool ShouldCopyToBuildServer (ITaskItem item)
 		{
-			// We don't want to copy partial generated manifest files unless they exist
-			if (PartialAppManifests is not null && PartialAppManifests.Contains (item) && !File.Exists (item.ItemSpec))
-				return false;
+			// We don't want to copy partial generated manifest files unless they exist and have a non-zero length
+			if (PartialAppManifests is not null && PartialAppManifests.Contains (item)) {
+				var finfo = new FileInfo (item.ItemSpec);
+				if (!finfo.Exists || finfo.Length == 0)
+					return false;
+			}
 
 			return true;
 		}
