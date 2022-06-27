@@ -4,9 +4,14 @@ parameters:
   type: string 
   default: 'Windows Integration Tests'
 
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - pwsh : |
     gci env: | format-table -autosize -wrap

@@ -83,19 +83,24 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 
 		public MethodDefinition ReworkMethod (MethodDefinition method)
 		{
-			var nativeTypes = new List<bool> ();
-			foreach (var parameter in method.Parameters) {
-				nativeTypes.Clear ();
-				if (TryReworkTypeReference (parameter.ParameterType, nativeTypes, out var newType)) {
-					parameter.ParameterType = newType;
+			if (ConstructorTransforms.IsNSObjectDerived (method.DeclaringType) &&
+				ConstructorTransforms.IsIntPtrCtor (method)) {
+				method.Parameters [0].ParameterType = newNHandleTypeReference;
+			} else {
+				var nativeTypes = new List<bool> ();
+				foreach (var parameter in method.Parameters) {
+					nativeTypes.Clear ();
+					if (TryReworkTypeReference (parameter.ParameterType, nativeTypes, out var newType)) {
+						parameter.ParameterType = newType;
+					}
 				}
-			}
 
-			nativeTypes.Clear ();
-			if (TryReworkTypeReference (method.ReturnType, nativeTypes, out var newReturnType)) {
-				method.ReturnType = newReturnType;
-			} else if (IsHandleMethod (method)) {
-				method.ReturnType = newNHandleTypeReference;
+				nativeTypes.Clear ();
+				if (TryReworkTypeReference (method.ReturnType, nativeTypes, out var newReturnType)) {
+					method.ReturnType = newReturnType;
+				} else if (IsHandleMethod (method)) {
+					method.ReturnType = newNHandleTypeReference;
+				}
 			}
 
 			return method;
@@ -103,7 +108,7 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 
 		static bool IsHandleMethod (MethodDefinition method)
 		{
-			return method.DeclaringType.Name == "NSObject" &&
+			return ConstructorTransforms.IsNSObjectDerived (method.DeclaringType) &&
 				(method.Name == "get_ClassHandle" || method.Name == "get_Handle") &&
 				method.ReturnType.ToString () == "System.IntPtr";
 		}

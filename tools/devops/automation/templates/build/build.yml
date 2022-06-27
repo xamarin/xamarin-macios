@@ -30,6 +30,8 @@ parameters:
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - template: ../common/setup.yml
   parameters:
@@ -248,7 +250,7 @@ steps:
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8
   name: build
   displayName: 'Build'
-  timeoutInMinutes: 180
+  timeoutInMinutes: 300
 
 - ${{ each step in parameters.buildSteps }}:
   - ${{ each pair in step }}:

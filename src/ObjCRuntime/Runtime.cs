@@ -35,6 +35,7 @@ namespace ObjCRuntime {
 		static Dictionary<IntPtrTypeValueTuple,Delegate> block_to_delegate_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_ctor_cache;
 		static Dictionary<Type, ConstructorInfo> intptr_bool_ctor_cache;
+		internal static Dictionary<IntPtr, Dictionary<IntPtr, bool>> protocol_cache;
 
 		static List <object> delegates;
 		static List <Assembly> assemblies;
@@ -280,8 +281,10 @@ namespace ObjCRuntime {
 
 			NSObjectClass = NSObject.Initialize ();
 
-			if (DynamicRegistrationSupported)
+			if (DynamicRegistrationSupported) {
 				Registrar = new DynamicRegistrar ();
+				protocol_cache = new Dictionary<IntPtr, Dictionary<IntPtr, bool>> (IntPtrEqualityComparer);
+			}
 			RegisterDelegates (options);
 			Class.Initialize (options);
 #if !NET

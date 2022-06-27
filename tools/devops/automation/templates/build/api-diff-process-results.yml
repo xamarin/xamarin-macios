@@ -2,9 +2,30 @@
 # * Uploads the results to VSDrops
 # * Publishes results (as a comment) to GitHub
 
+parameters:
+
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
+
+- powershell: |
+    Write-Host "IsMacOS: ${IsMacOS}"
+    Write-Host "IsWindows: ${IsWindows}"
+    Write-Host "IsLinux: ${IsLinux}"
+
+    if ($IsMacOS -or $IsLinux) {
+        Write-Host "HOSTNAME: $(hostname)"
+    } else {
+        Write-Host "COMPUTERNAME: ${env:COMPUTERNAME}"
+    }
+
+    gci env: | format-table -autosize -wrap
+  displayName: 'Show Environment'
 
 # Download the change detection artifact
 - task: DownloadPipelineArtifact@2
