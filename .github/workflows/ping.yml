@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@master
 
       - name: 'Ping remote repository'
-        uses: peter-evans/repository-dispatch@v1
+        uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ secrets.SERVICEACCOUNT_PAT }}
           event-type: ping-mirror
