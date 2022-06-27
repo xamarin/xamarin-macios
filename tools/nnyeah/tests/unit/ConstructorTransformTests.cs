@@ -24,8 +24,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 			var nativeHandle = netAssembly.GetType ("ObjCRuntime.NativeHandle");
 			return new ConstructorTransforms (
 				nativeHandle,
-				legacyNSObject.Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr)"),
-				legacyNSObject.Methods.First (m => m.FullName == "System.Void Foundation.NSObject::.ctor(System.IntPtr,System.Boolean)"),
+				netAssembly.TypeSystem.Boolean,
 				nativeHandle.Resolve ().GetMethods ().First (m => m.FullName == "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)"),
 				warningIssued: null, transformed: null
 			);
