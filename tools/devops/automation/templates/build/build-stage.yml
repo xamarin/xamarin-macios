@@ -80,6 +80,9 @@ jobs:
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
+    # try to workaround https://github.com/dotnet/msbuild/issues/6753
+    MSBUILDENSURESTDOUTFORTASKPROCESSES: 1
+    MSBUILDNOINPROCNODE: 1
     ${{ if eq(parameters.pool, 'automatic') }}:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:
