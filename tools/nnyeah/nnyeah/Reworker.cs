@@ -58,7 +58,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 					tr.FullName == "System.nint" ||
 					tr.FullName == "System.nuint" ||
 					tr.FullName == "System.nfloat" ||
-					tr.FullName == "Foundation.NSObject"
+					tr.FullName == "Foundation.NSObject" ||
+					tr.FullName == "ObjCRuntime.DisposableObject"
 				);
 		}
 
@@ -623,7 +624,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		bool IsHandleReference (string operandStr)
 		{
-			return operandStr == "ObjCRuntime.NativeHandle Foundation.NSObject::get_ClassHandle()" ||
+			return operandStr == "ObjCRuntime.NativeHandle ObjCRuntime.DisposableObject::get_Handle()" ||
+				operandStr == "ObjCRuntime.NativeHandle Foundation.NSObject::get_ClassHandle()" ||
 				operandStr == "ObjCRuntime.NativeHandle Foundation.NSObject::get_Handle()";
 		}
 

@@ -64,7 +64,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				if (typeReference is null) {
 					return false;
 				}
-				if (typeReference.FullName == "Foundation.NSObject") {
+				if (typeReference.FullName == "Foundation.NSObject" || typeReference.FullName == "ObjCRuntime.DisposableObject") {
 					if (reworkNeededOnTheWayUp && firstIssuedTypeReference is not null) {
 						if (self is not null) {
 							self.WarningIssued?.Invoke (self, new WarningEventArgs (initialTypeReference.DeclaringType.FullName,
