@@ -19,7 +19,10 @@ namespace Introspection {
 		protected virtual bool Skip (Type type)
 		{
 			switch (type.Name) {
-				case "LinkWithAttribute": // LinkWithAttribute.WeakFrameworks
+			case "LinkWithAttribute": // LinkWithAttribute.WeakFrameworks
+				return true;
+			// Xcode 14, this properties have been added as a compat layer
+			case "GKPeerPickerController":
 				return true;
 			}
 			return SkipDueToRejectedTypes (type);

@@ -144,6 +144,10 @@ namespace Introspection {
 				// Xcode 13.3
 				case "HMAccessorySetupPayload": // Conformance not in headers
 					return true;
+				// Xcode 14
+				case "HKElectrocardiogramVoltageMeasurement":
+				case "AVPlayerInterstitialEvent":
+					return true;
 				}
 				break;
 			case "NSMutableCopying":
@@ -283,6 +287,13 @@ namespace Introspection {
 				case "HMAccessorySetupRequest": // Conformance not in headers
 				case "HMAccessorySetupResult": // Conformance not in headers
 					return true;
+				// Xcode 14 beta 2
+				case "PHPickerConfiguration":
+				case "PHAssetChangeRequest":
+				case "PHAssetCreationRequest":
+				case "NSUserActivity":
+				case "UIDictationPhrase":
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -417,6 +428,13 @@ namespace Introspection {
 				case "HMAccessorySetupPayload": // Conformance not in headers
 				case "HMAccessorySetupRequest": // Conformance not in headers
 				case "HMAccessorySetupResult": // Conformance not in headers
+					return true;
+				// Xcode 14
+				case "PHPickerConfiguration":
+				case "PHAssetChangeRequest":
+				case "PHAssetCreationRequest":
+				case "NSUserActivity":
+				case "UIDictationPhrase":
 					return true;
 				}
 				break;
