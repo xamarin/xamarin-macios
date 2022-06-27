@@ -481,6 +481,22 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
+		[TestCase (ApplePlatform.iOS, "win10-x86")]
+		[TestCase (ApplePlatform.TVOS, "win10-x64")]
+		[TestCase (ApplePlatform.MacOSX, "win10-arm")]
+		[TestCase (ApplePlatform.MacCatalyst, "win10-arm64")]
+		public void InvalidRuntimeIdentifier_Restore (ApplePlatform platform, string runtimeIdentifier)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			DotNet.AssertRestore (project_path, properties);
+		}
+
+		[Test]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 		public void FilesInAppBundle (ApplePlatform platform, string runtimeIdentifiers)
 		{
