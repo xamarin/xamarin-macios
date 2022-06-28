@@ -55,7 +55,7 @@ namespace Foundation {
 			if (Uri.TryCreate (url.AbsoluteString, UriKind.Absolute, out var uri))
 				return uri;
 			else
-				return new Uri (url.AbsoluteString, UriKind.Relative);
+				return url.AbsoluteString == null ? null : new Uri (url.AbsoluteString, UriKind.Relative);
 		}
 
 		public static implicit operator NSUrl? (Uri? uri)

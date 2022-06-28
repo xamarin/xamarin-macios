@@ -713,6 +713,8 @@ namespace Foundation {
 
 			void UpdateManagedCookieContainer (NSUrl url, NSHttpCookie[] cookies)
 			{
+				if (url.AbsoluteString is null)
+					return;
 				var uri = new Uri (url.AbsoluteString);
 				if (sessionHandler.cookieContainer is not null && cookies.Length > 0)
 					lock (sessionHandler.inflightRequestsLock) { // ensure we lock when writing to the collection
@@ -751,7 +753,7 @@ namespace Foundation {
 						Content = content,
 						RequestMessage = inflight.Request
 					};
-					httpResponse.RequestMessage.RequestUri = new Uri (urlResponse.Url.AbsoluteString);
+					httpResponse.RequestMessage.RequestUri = new Uri (urlResponse.Url.AbsoluteString!);
 
 					foreach (var v in urlResponse.AllHeaderFields) {
 						// NB: Cocoa trolling us so hard by giving us back dummy dictionary entries
