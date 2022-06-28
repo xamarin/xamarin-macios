@@ -72,16 +72,12 @@ namespace Xamarin.Linker {
 					if (!Configuration.Application.VerifyDynamicFramework (fwk))
 						continue;
 
-					var executable = Path.Combine (fwk, Path.GetFileNameWithoutExtension (fwk));
-
 					// Store a relative path if possible, it makes things easier with XVS.
-					if (Path.IsPathRooted (executable)) {
-						var resolvedExecutable = PathUtils.ResolveSymbolicLinks (executable);
-						if (resolvedExecutable.StartsWith (Environment.CurrentDirectory, StringComparison.Ordinal)) {
-							resolvedExecutable = resolvedExecutable.Substring (Environment.CurrentDirectory.Length).TrimStart ('/').TrimStart ('\\');
-							executable = resolvedExecutable;
-						}
-					}
+					var fwkDirectory = fwk;
+					if (Path.IsPathRooted (fwkDirectory))
+						fwkDirectory = Path.GetRelativePath (Environment.CurrentDirectory, PathUtils.ResolveSymbolicLinks (fwkDirectory));
+
+					var executable = Path.Combine (fwkDirectory, Path.GetFileNameWithoutExtension (fwkDirectory));
 
 					var item = new MSBuildItem {
 						Include = executable,
