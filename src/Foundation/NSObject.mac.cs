@@ -26,17 +26,11 @@
 
 using System;
 using System.Reflection;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
 namespace Foundation {
-	public partial class NSObject : INativeObject
-#if !COREBUILD
-		, IDisposable
-#endif
-		{
+	public partial class NSObject {
 #if !COREBUILD
 
 		// note: the linker will remove the unrequired `dlopen` calls
