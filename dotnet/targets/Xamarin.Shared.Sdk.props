@@ -16,6 +16,8 @@
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' != 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\iOS\Xamarin.iOS.Tasks.dll</_XamarinTaskAssembly>
 		<_XamarinTaskAssembly Condition="'$(_PlatformName)' == 'macOS'">$(_XamarinSdkRootDirectory)\tools\msbuild\macOS\Xamarin.Mac.Tasks.dll</_XamarinTaskAssembly>
 		<SuppressTrimAnalysisWarnings Condition=" '$(SuppressTrimAnalysisWarnings)' == '' ">true</SuppressTrimAnalysisWarnings>
+		<!-- For compat with user code not marked trimmable, only trim opt-in by default. -->
+		<TrimMode Condition="'$(TrimMode)' == ''">partial</TrimMode>
 		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(MSBuildThisFileDirectory)Microsoft.$(_PlatformName).Sdk.targets</AfterMicrosoftNETSdkTargets>
 
 		<!-- _XamarinSdkRoot is used by the existing MSBuild targets files -->
