@@ -253,6 +253,12 @@ namespace Xamarin.Bundler {
 							}
 							break;
 #endif
+						case "GameKit":
+							if (Driver.XcodeVersion.Major >= 14 && Is32Build) {
+								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+ and building for a 32-bit simulator architecture.", framework.Name);
+								continue;
+							}
+							break;
 						default:
 							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
 								if (App.AreAnyAssembliesTrimmed) {

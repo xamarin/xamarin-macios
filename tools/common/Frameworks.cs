@@ -747,6 +747,15 @@ public class Frameworks : Dictionary <string, Framework>
 	{
 		switch (app.Platform) {
 		case ApplePlatform.iOS:
+			switch (framework.Name) {
+			case "GameKit":
+				if (Driver.XcodeVersion.Major >= 14 && app.Is32Build) {
+					Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+ and building for a 32-bit simulator architecture.", framework.Name);
+					return false;
+				}
+				break;
+			}
+			break;
 		case ApplePlatform.TVOS:
 		case ApplePlatform.WatchOS:
 		case ApplePlatform.MacCatalyst:
