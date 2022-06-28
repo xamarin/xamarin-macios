@@ -20,7 +20,7 @@ namespace Xharness.Jenkins {
 				if (!project.IsExecutableProject)
 					continue;
 
-				bool ignored = project.Ignore ?? !jenkins.IncludeSimulator;
+				bool ignored = project.Ignore ?? !jenkins.TestSelection.IsEnabled (PlatformLabel.iOSSimulator);
 				if (!jenkins.IsIncluded (project))
 					ignored = true;
 
@@ -48,20 +48,20 @@ namespace Xharness.Jenkins {
 						switch (testPlatform) {
 						case TestPlatform.iOS_Unified:
 						case TestPlatform.iOS_TodayExtension64:
-							configIgnored |= !jenkins.IncludeiOS64;
+							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS64);
 							break;
 						case TestPlatform.tvOS:
-							configIgnored |= !jenkins.IncludetvOS;
+							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.tvOS);
 							break;
 						case TestPlatform.watchOS:
-							configIgnored |= !jenkins.IncludewatchOS;
+							configIgnored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.watchOS);
 							break;
 						default:
 							Console.WriteLine ("Unknown test platform for ignore check: {0}", testPlatform);
 							break;
 						}
 
-						configIgnored |= project.IsDotNetProject && !jenkins.IncludeDotNet;
+						configIgnored |= project.IsDotNetProject && !jenkins.TestSelection.IsEnabled (PlatformLabel.Dotnet);
 
 						var derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 						derived.ProjectConfiguration = config;

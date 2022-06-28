@@ -77,9 +77,10 @@ namespace Foundation {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public partial class NSObject 
+	public partial class NSObject : INativeObject
 #if !COREBUILD
-		: IEquatable<NSObject> 
+		, IEquatable<NSObject>
+		, IDisposable
 #endif
 	{
 #if !COREBUILD
@@ -1072,6 +1073,34 @@ namespace Foundation {
 			var o = new Observer (this, key, observer);
 			AddObserver (o, key, options, o.Handle);
 			return o;
+		}
+
+		public static NSObject Alloc (Class kls)
+		{
+			var h = Messaging.IntPtr_objc_msgSend (kls.Handle, Selector.GetHandle (Selector.Alloc));
+			return new NSObject (h, true);
+		}
+
+		public void Init ()
+		{
+			if (handle == IntPtr.Zero)
+				throw new Exception ("you have not allocated the native object");
+
+			handle = Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
+		}
+
+		public static void InvokeInBackground (Action action)
+		{
+			// using the parameterized Thread.Start to avoid capturing
+			// the 'action' parameter (it'll needlessly create an extra
+			// object).
+			new System.Threading.Thread ((v) =>
+			{
+				((Action) v) ();
+			})
+			{
+				IsBackground = true,
+			}.Start (action);
 		}
 #endif // !COREBUILD
 	}
