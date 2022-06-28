@@ -20,8 +20,8 @@ $(DOWNLOAD_STAMP_FILE):
 	$(Q) touch $@
 
 $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch: $(DOWNLOAD_STAMP_FILE)
-	$(Q) rm -Rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/
-	$(Q) rm -Rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/
+	$(Q) rm -Rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch
+	$(Q) rm -Rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mlaunch
 	$(Q) mkdir -p $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/
 	$(Q) mkdir -p $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/
 	$(Q) $(CP) -R $(TOP)/packages/microsoft.tools.mlaunch/$(MLAUNCH_NUGET_VERSION)/mlaunch/bin/mlaunch $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/
@@ -42,13 +42,13 @@ $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(eval $(call DotNetInstall,$(plat
 clean-local::
 ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_IOS
-	$(Q) rm -rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/
-	$(Q) rm -rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/
+	$(Q) rm -rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch
+	$(Q) rm -rf $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mlaunch
 endif
 endif
 	$(Q) for platform in $(DOTNET_PLATFORMS_MOBILE); do \
 		rm -rf $(DOTNET_DESTDIR)/Microsoft.$$platform.Sdk/tools/bin/mlaunch; \
-		rm -rf $(DOTNET_DESTDIR)/Microsoft.$$platform.Sdk/tools/lib; \
+		rm -rf $(DOTNET_DESTDIR)/Microsoft.$$platform.Sdk/tools/lib/mlaunch; \
 	done
 	$(Q) rm -rf .*.stamp obj .*.binlog
 
