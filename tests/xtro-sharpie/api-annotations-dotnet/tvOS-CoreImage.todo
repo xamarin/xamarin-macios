@@ -1,5 +1,4 @@
 !deprecated-attribute-missing! CIImage::initWithTexture:size:flipped:colorSpace: missing a [Deprecated] attribute
-!missing-protocol! CIAreaLogarithmicHistogram not bound
 !missing-protocol! CIConvertLab not bound
 !missing-protocol-member! CIColorCubeWithColorSpace::extrapolate not found
 !missing-protocol-member! CIColorCubeWithColorSpace::setExtrapolate: not found

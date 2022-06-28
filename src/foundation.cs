@@ -5730,6 +5730,9 @@ namespace Foundation
 	, NSPasteboardReading, NSPasteboardWriting
 #endif
 	, NSItemProviderWriting, NSItemProviderReading
+#if IOS || MONOMAC
+	, QLPreviewItem
+#endif
 	{
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlComponents' instead.")]
 		[Deprecated (PlatformName.WatchOS, 2, 0, message : "Use 'NSUrlComponents' instead.")]

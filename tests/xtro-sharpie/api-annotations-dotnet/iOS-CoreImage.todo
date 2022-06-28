@@ -1,4 +1,3 @@
-!missing-protocol! CIAreaLogarithmicHistogram not bound
 !missing-protocol! CIConvertLab not bound
 !missing-protocol-member! CIColorCubeWithColorSpace::extrapolate not found
 !missing-protocol-member! CIColorCubeWithColorSpace::setExtrapolate: not found

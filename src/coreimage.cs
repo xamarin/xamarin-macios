@@ -9709,24 +9709,6 @@ namespace CoreImage {
 
 	}
 
-	[CoreImageFilter]
-	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIConvertLabToRGB {
-
-		[CoreImageFilterProperty ("inputNormalize")]
-		bool Normalize { get; set; }
-	}
-
-	[CoreImageFilter]
-	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CIConvertRGBtoLab {
-
-		[CoreImageFilterProperty ("inputNormalize")]
-		bool Normalize { get; set; }
-	}
-
 #endregion
 
 }
