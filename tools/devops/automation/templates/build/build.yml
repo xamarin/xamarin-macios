@@ -246,15 +246,21 @@ steps:
     set -e
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8 V=1 -w
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8 V=1 -w
+    MAKE_FLAGS=""
+
+    if [[ "$SYSTEM_DEBUG" == "true" ]]; then
+      MAKE_FLAGS="V=1 -w"
+    fi
+
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8 $MAKE_FLAGS
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8 $MAKE_FLAGS
   name: build
   displayName: 'Build'
   timeoutInMinutes: 300
 
 - ${{ each step in parameters.buildSteps }}:
   - ${{ each pair in step }}:
-      ${{ pair.key }}: ${{ pair.value }}       
+      ${{ pair.key }}: ${{ pair.value }}
 
 # clean the bot after we use it
 - template: ../common/teardown.yml
