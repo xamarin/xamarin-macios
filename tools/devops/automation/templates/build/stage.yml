@@ -105,6 +105,7 @@ jobs:
     PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
+    BUILD_REVISION: $[ variables['Build.SourceVersion'] ]
     XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
   pool:
     name: $(AgentPoolComputed)
