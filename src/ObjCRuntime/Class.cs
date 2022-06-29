@@ -10,6 +10,7 @@
 #nullable enable
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -17,6 +18,10 @@ using System.Runtime.InteropServices;
 using Foundation;
 #if !COREBUILD
 using Registrar;
+#endif
+
+#if !COREBUILD
+using Xamarin.Bundler;
 #endif
 
 #if !NET
@@ -56,8 +61,8 @@ namespace ObjCRuntime {
 
 			
 			for (int i = 0; i < map->assembly_count; i++) {
-				var ptr = Marshal.ReadIntPtr (map->assembly, i * IntPtr.Size);
-				Runtime.Registrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (ptr));
+				var assembly = map->assemblies [i];
+				Runtime.Registrar.SetAssemblyRegistered (Marshal.PtrToStringAuto (assembly.name));
 			}
 		}
 
@@ -292,27 +297,27 @@ namespace ObjCRuntime {
 			if ((token_reference & 0x1) == 0x1) {
 				// full token reference
 				var idx = (int) (token_reference >> 1);
-				var entry = map->full_token_references + (IntPtr.Size + 8) * idx;
+				var entry = map->full_token_references [idx];
 				// first compare what's most likely to fail (the type's metadata token)
-				var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
+				var token = entry.token;
 				type_token |= 0x02000000 /* TypeDef - the token type is explicit in the full token reference, but not present in the type_token argument, so we have to add it before comparing */;
 				if (type_token != token)
 					return false;
 
 				// then the module token
-				var module_token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size);
+				var module_token = entry.module_token;
 				if (mod_token != module_token)
 					return false;
 
 				// leave the assembly name for the end, since it's the most expensive comparison (string comparison)
-				assembly_name = Marshal.ReadIntPtr (entry);
+				assembly_name = map->assemblies [entry.assembly_index].name;
 			} else {
 				// packed token reference
 				if (token_reference >> 8 != type_token)
 					return false;
 
 				var assembly_index = (token_reference >> 1) & 0x7F;
-				assembly_name = Marshal.ReadIntPtr (map->assembly, (int) assembly_index * IntPtr.Size);
+				assembly_name = map->assemblies [(int) assembly_index].name;
 			}
 
 			return Runtime.StringEquals (assembly_name, asm_name);
@@ -380,10 +385,11 @@ namespace ObjCRuntime {
 		internal unsafe static MemberInfo? ResolveFullTokenReference (uint token_reference)
 		{
 			// sizeof (MTFullTokenReference) = IntPtr.Size + 4 + 4
-			var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * (int) (token_reference >> 1);
-			var assembly_name = Marshal.ReadIntPtr (entry);
-			var module_token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size);
-			var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
+			var idx = (int) (token_reference >> 1);
+			var entry = Runtime.options->RegistrationMap->full_token_references [idx];
+			var assembly_name = Runtime.options->RegistrationMap->assemblies [entry.assembly_index].name;
+			var module_token = entry.module_token;
+			var token = entry.token;
 
 #if LOG_TYPELOAD
 			Console.WriteLine ($"ResolveFullTokenReference (0x{token_reference:X}) assembly name: {assembly_name} module token: 0x{module_token:X} token: 0x{token:X}.");
@@ -430,7 +436,7 @@ namespace ObjCRuntime {
 			Console.WriteLine ($"ResolveTokenReference (0x{token_reference:X}) assembly index: {assembly_index} token: 0x{token:X}.");
 #endif
 
-			var assembly_name = Marshal.ReadIntPtr (map->assembly, (int) assembly_index * IntPtr.Size);
+			var assembly_name = map->assemblies [(int) assembly_index].name;
 			var assembly = ResolveAssembly (assembly_name);
 			var module = ResolveModule (assembly, 0x1);
 
@@ -474,7 +480,62 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8020, $"Could not find the module with MetadataToken 0x{token:X} in the assembly {assembly}.");
 		}
 
+// Restrict this code to desktop for now, which is where most of the problems with outdated generated static registrar code occur.
+#if __MACOS__ || __MACCATALYST__
+		static bool verified_static_registrar_code;
+		unsafe static void VerifyStaticRegistrarCode ()
+		{
+			if (verified_static_registrar_code)
+				return;
+			verified_static_registrar_code = true;
+
+			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XAMARIN_SKIP_STATIC_REGISTRAR_CODE_VALIDATION")))
+				return;
+
+			var map = Runtime.options->RegistrationMap;
+			List<Exception>? exceptions = null;
+
+			if (map is null)
+				return;
+
+			for (var i = 0; i < map->assembly_count; i++) {
+				var entry = map->assemblies [i];
+				var name = Marshal.PtrToStringAuto (entry.name)!;
+				try {
+					if (!TryResolveAssembly (entry.name, out var assembly))
+						continue;
+					var mvid = Marshal.PtrToStringAuto (entry.mvid)!;
+					var runtime_mvid = assembly.ManifestModule.ModuleVersionId;
+					var registered_mvid = Guid.Parse (mvid);
+					if (registered_mvid == runtime_mvid)
+						continue;
+					if (exceptions is null)
+						exceptions = new List<Exception> ();
+					exceptions.Add (ErrorHelper.CreateError (8044, Errors.MX8044 /* The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}. */, name, runtime_mvid, registered_mvid));
+				} catch (Exception e) {
+					if (exceptions is null)
+						exceptions = new List<Exception> ();
+					exceptions.Add (ErrorHelper.CreateError (8043, e, Errors.MX8043 /* An exception occurred while validating the static registrar code for {0}: {1} */, name, e.Message));
+				}
+			}
+
+			if (exceptions is not null)
+				throw new AggregateException (exceptions);
+		}
+#endif // __MACOS__ || __MACCATALYST__
+
 		static Assembly ResolveAssembly (IntPtr assembly_name)
+		{
+#if __MACOS__ || __MACCATALYST__
+			VerifyStaticRegistrarCode ();
+#endif
+			if (TryResolveAssembly (assembly_name, out var asm))
+				return asm;
+
+			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {Marshal.PtrToStringAuto (assembly_name)} in the loaded assemblies.");
+		}
+
+		static bool TryResolveAssembly (IntPtr assembly_name, [NotNullWhen (true)] out Assembly? assembly)
 		{
 			// Find the assembly. We've already loaded all the assemblies that contain registered types, so just look at those assemblies.
 			foreach (var asm in AppDomain.CurrentDomain.GetAssemblies ()) {
@@ -482,12 +543,14 @@ namespace ObjCRuntime {
 					continue;
 
 #if LOG_TYPELOAD
-				Console.WriteLine ($"ResolveAssembly (0x{assembly_name:X}): {asm.FullName}.");
+				Console.WriteLine ($"TryResolveAssembly (0x{assembly_name:X}): {asm.FullName}.");
 #endif
-				return asm;
+				assembly = asm;
+				return true;
 			}
 
-			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {Marshal.PtrToStringAuto (assembly_name)} in the loaded assemblies.");
+			assembly = null;
+			return false;
 		}
 
 		internal unsafe static uint GetTokenReference (Type type, bool throw_exception = true)
@@ -514,7 +577,7 @@ namespace ObjCRuntime {
 			// Find the assembly index in our list of registered assemblies.
 			int assembly_index = -1;
 			for (int i = 0; i < map->assembly_count; i++) {
-				var name_ptr = Marshal.ReadIntPtr (map->assembly, (int) i * IntPtr.Size);
+				var name_ptr = map->assemblies [(int) i].name;
 				if (Runtime.StringEquals (name_ptr, asm_name)) {
 					assembly_index = i;
 					break;
@@ -542,15 +605,16 @@ namespace ObjCRuntime {
 		{
 			var map = Runtime.options->RegistrationMap;
 			for (int i = 0; i < map->full_token_reference_count; i++) {
-				var ptr = map->full_token_references + (i * (IntPtr.Size + 8));
-				var asm_ptr = Marshal.ReadIntPtr (ptr);
-				var token = Marshal.ReadInt32 (ptr + IntPtr.Size + 4);
+				var ftr = map->full_token_references [i];
+				var token = ftr.token;
 				if (token != metadata_token)
 					continue;
-				var mod_token = Marshal.ReadInt32 (ptr + IntPtr.Size);
+				var mod_token = ftr.module_token;
 				if (mod_token != module_token)
 					continue;
-				if (!Runtime.StringEquals (asm_ptr, assembly_name))
+				var assembly_index = ftr.assembly_index;
+				var assembly = map->assemblies [assembly_index];
+				if (!Runtime.StringEquals (assembly.name, assembly_name))
 					continue;
 
 				return ((uint) i << 1) + 1;

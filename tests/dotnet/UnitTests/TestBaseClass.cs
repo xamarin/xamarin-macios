@@ -44,8 +44,23 @@ namespace Xamarin.Tests {
 
 		protected string GetAppPath (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
 		{
+			return Path.Combine (GetBinDir (projectPath, platform, runtimeIdentifiers, configuration), Path.GetFileNameWithoutExtension (projectPath) + ".app");
+		}
+
+		protected string GetBinDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		{
+			return GetBinOrObjDir ("bin", projectPath, platform, runtimeIdentifiers, configuration);
+		}
+
+		protected string GetObjDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		{
+			return GetBinOrObjDir ("obj", projectPath, platform, runtimeIdentifiers, configuration);
+		}
+
+		protected string GetBinOrObjDir (string binOrObj, string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		{
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
-			return Path.Combine (Path.GetDirectoryName (projectPath)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, Path.GetFileNameWithoutExtension (projectPath) + ".app");
+			return Path.Combine (Path.GetDirectoryName (projectPath)!, binOrObj, configuration, platform.ToFramework (), appPathRuntimeIdentifier);
 		}
 
 		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform)
@@ -270,19 +285,24 @@ namespace Xamarin.Tests {
 
 		protected void ExecuteWithMagicWordAndAssert (string executable)
 		{
+			var rv = Execute (executable, out var output, out string magicWord);
+			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
+			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+		}
+
+		protected Execution Execute (string executable, out StringBuilder output, out string magicWord)
+		{
 			if (!File.Exists (executable))
 				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
 
-			var magicWord = Guid.NewGuid ().ToString ();
+			magicWord = Guid.NewGuid ().ToString ();
 			var env = new Dictionary<string, string?> {
 				{ "MAGIC_WORD", magicWord },
 				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
 			};
 
-			var output = new StringBuilder ();
-			var rv = Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
-			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
-			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+			output = new StringBuilder ();
+			return Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
 		}
 
 		public static StringBuilder AssertExecute (string executable, params string[] arguments)

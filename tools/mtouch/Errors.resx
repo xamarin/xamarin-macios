@@ -2171,4 +2171,16 @@
 			1: exception info
 		</comment>
 	</data>
+
+	<data name="MX8043" xml:space="preserve">
+		<value>An exception occurred while validating the static registrar code for {0}: {1}</value>
+		<comment>
+			0: name of an assembly
+			1: exception info
+		</comment>
+	</data>
+
+	<data name="MX8044" xml:space="preserve">
+		<value>The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}.</value>
+	</data>
 </root>

@@ -2118,7 +2118,7 @@ namespace Registrar {
 
 		AutoIndentStringBuilder full_token_references = new AutoIndentStringBuilder ();
 		uint full_token_reference_count;
-		List<string> registered_assemblies = new List<string> ();
+		List<(AssemblyDefinition Assembly, string Name)> registered_assemblies = new List<(AssemblyDefinition Assembly, string Name)> ();
 
 		bool IsPlatformType (TypeReference type)
 		{
@@ -2837,9 +2837,9 @@ namespace Registrar {
 
 			if (string.IsNullOrEmpty (single_assembly)) {
 				foreach (var assembly in GetAssemblies ())
-					registered_assemblies.Add (GetAssemblyName (assembly));
+					registered_assemblies.Add (new (assembly, GetAssemblyName (assembly)));
 			} else {
-				registered_assemblies.Add (single_assembly);
+				registered_assemblies.Add (new (GetAssemblies ().Single (v => GetAssemblyName (v) == single_assembly), single_assembly));
 			}
 
 			foreach (var @class in allTypes) {
@@ -3138,22 +3138,24 @@ namespace Registrar {
 				map.AppendLine ();
 			}
 
-			map.AppendLine ("static const char *__xamarin_registration_assemblies []= {");
+			map.AppendLine ("static const MTAssembly __xamarin_registration_assemblies [] = {");
 			int count = 0;
 			foreach (var assembly in registered_assemblies) {
 				count++;
 				if (count > 1)
 					map.AppendLine (", ");
-				map.Append ("\"");
-				map.Append (assembly);
-				map.Append ("\"");
+				map.Append ("{ \"");
+				map.Append (assembly.Name);
+				map.Append ("\", \"");
+				map.Append (assembly.Assembly.MainModule.Mvid.ToString ());
+				map.Append ("\" }");
 			}
 			map.AppendLine ();
 			map.AppendLine ("};");
 			map.AppendLine ();
 
 			if (full_token_reference_count > 0) {
-				map.AppendLine ("static const struct MTFullTokenReference __xamarin_token_references [] = {");
+				map.AppendLine ("static const MTFullTokenReference __xamarin_token_references [] = {");
 				map.AppendLine (full_token_references);
 				map.AppendLine ("};");
 				map.AppendLine ();
@@ -4841,7 +4843,13 @@ namespace Registrar {
 			default:
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"unsupported tokentype ({member.MetadataToken.TokenType}) for {member.FullName}");
 			}
-			full_token_references.AppendFormat ("\t\t{{ /* #{3} = 0x{4:X} */ \"{0}\", 0x{1:X}, 0x{2:X} }},\n", GetAssemblyName (member.Module.Assembly), member.Module.MetadataToken.ToUInt32 (), member.MetadataToken.ToUInt32 (), full_token_reference_count, rv);
+			var assemblyIndex = registered_assemblies.FindIndex (v => v.Assembly == member.Module.Assembly);
+			var assemblyName = registered_assemblies [assemblyIndex].Name;
+			var moduleToken = member.Module.MetadataToken.ToUInt32 ();
+			var moduleName = member.Module.Name;
+			var memberToken = member.MetadataToken.ToUInt32 ();
+			var memberName = member.FullName;
+			full_token_references.Append ($"\t\t{{ /* #{full_token_reference_count} = 0x{rv:X} */ {assemblyIndex} /* {assemblyName} */, 0x{moduleToken:X} /* {moduleName} */, 0x{memberToken:X} /* {memberName} */ }},\n");
 			return rv;
 		}
 
@@ -4873,7 +4881,7 @@ namespace Registrar {
 
 			/* The assembly must be a registered one, and only within the first 128 assemblies */
 			var assembly_name = GetAssemblyName (member.Module.Assembly);
-			var index = registered_assemblies.IndexOf (assembly_name);
+			var index = registered_assemblies.FindIndex (v => v.Name == assembly_name);
 			if (index < 0 || index > 127)
 				return CreateFullTokenReference (member);
 

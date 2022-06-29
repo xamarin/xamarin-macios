@@ -56,8 +56,8 @@ typedef struct {
 } MTProperty;
 
 // This structure completely describes everything required to resolve a metadata token
-typedef struct MTFullTokenReference {
-	const char *assembly_name; /* the name of the assembly */
+typedef struct __attribute__((packed)) {
+	uint32_t assembly_index; /* index into the 'assemblies' array in the registration map */
 	uint32_t module_token;
 	uint32_t token;
 } MTFullTokenReference;
@@ -99,10 +99,15 @@ typedef struct __attribute__((packed)) {
 	const __unsafe_unretained Protocol * const * protocols; // the corresponding native protocols
 } MTProtocolMap;
 
+typedef struct __attribute__((packed)) {
+	const char *name;
+	const char *mvid;
+} MTAssembly;
+
 struct MTRegistrationMap;
 
 struct MTRegistrationMap {
-	const char **assembly;
+	const MTAssembly *assemblies;
 	MTClassMap *map;
 	const MTFullTokenReference *full_token_references;
 	// There are some managed types that are not registered because their ObjC

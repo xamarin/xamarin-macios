@@ -55,9 +55,9 @@ namespace ObjCRuntime {
 
 #pragma warning disable 649 // Field 'X' is never assigned to, and will always have its default value
 		internal unsafe struct MTRegistrationMap {
-			public IntPtr assembly;
+			public MTAssembly *assemblies;
 			public MTClassMap *map;
-			public IntPtr full_token_references; /* array of MTFullTokenReference */
+			public MTFullTokenReference *full_token_references;
 			public MTManagedClassMap* skipped_map;
 			public MTProtocolWrapperMap* protocol_wrapper_map;
 			public MTProtocolMap protocol_map;
@@ -76,6 +76,13 @@ namespace ObjCRuntime {
 			None = 0,
 			CustomType = 1,
 			UserType = 2,
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal unsafe struct MTFullTokenReference {
+			public uint assembly_index;
+			public uint module_token;
+			public uint token;
 		}
 
 		[StructLayout (LayoutKind.Sequential, Pack = 1)]
@@ -102,6 +109,12 @@ namespace ObjCRuntime {
 		internal unsafe struct MTProtocolMap {
 			public uint* protocol_tokens;
 			public IntPtr* protocols;
+		}
+
+		[StructLayout (LayoutKind.Sequential, Pack = 1)]
+		internal unsafe struct MTAssembly {
+			public IntPtr name;
+			public IntPtr mvid;
 		}
 
 		/* Keep Delegates, Trampolines and InitializationOptions in sync with monotouch-glue.m */
