@@ -136,7 +136,7 @@ namespace Xharness.Jenkins {
 							Variation = $"Debug ({test.Platform.GetSimulatorMinVersion ()})",
 							Debug = true,
 							Candidates = jenkins.Simulators.SelectDevices (target.GetTargetOs (true), jenkins.SimulatorLoadLog, true),
-							Ignored = ignore ?? !jenkins.TestSelection.IsEnabled (PlatformLabel.OldiOSSimulator), 
+							Ignored = ignore ?? !jenkins.TestSelection.IsEnabled (PlatformLabel.OldiOSSimulator) || !jenkins.TestSelection.IsEnabled (TestLabel.Introspection),
 						};
 					break;
 				}
