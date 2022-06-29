@@ -38,7 +38,7 @@ class Agents {
         if (-not $name) {
             throw [System.ArgumentNullException]::new("name")
         }
-        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?agentName=$name&api-version=6.0"
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?agentName=$name&includeCapabilities=true&api-version=6.0"
         $headers = Get-AuthHeader($this.Token)
         $agents = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
         if ($agents.count -ne 1) {
@@ -51,7 +51,7 @@ class Agents {
         if (-not $pool) {
             throw [System.ArgumentNullException]::new("pool")
         }
-        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?api-version=6.0"
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?includeCapabilities=true&api-version=6.0"
         $headers = Get-AuthHeader($this.Token)
         $agents = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
         $result = [System.Collections.ArrayList]@()
