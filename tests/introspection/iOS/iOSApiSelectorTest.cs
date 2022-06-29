@@ -34,6 +34,12 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.Namespace) {
+#if __WATCHOS__
+			case "GameKit":
+				if (IntPtr.Size == 4)
+					return true;
+				break;
+#endif
 			// they don't answer on the simulator (Apple implementation does not work) but fine on devices
 			case "GameController":
 			case "MonoTouch.GameController":
