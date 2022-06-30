@@ -1867,6 +1867,20 @@ global using nfloat = global::System.Runtime.InteropServices.NFloat%3B
 		</ItemGroup>
 	</Target>
 
+	<!--
+		The .NET 6 sdk pack will add a global using directive by adding to the
+	    'Using' item group, but we don't want that anymore in .NET 7 (we
+	    manually generate the global using to avoid a C# warning), so remove
+	    any global using that may have been added by the .NET sdk pack. The
+	    .NET 6 sdk pack will one day condition the inclusion on the current
+	    target framework version, and at that point we can remove this
+	    workaround (https://github.com/xamarin/xamarin-macios/pull/15385).
+	-->
+	<Target Name="RemoveGlobalnfloatUsingItemGroup" BeforeTargets="PrepareForBuild">
+		<ItemGroup>
+			<Using Remove="System.Runtime.InteropServices.NFloat" />
+		</ItemGroup>
+	</Target>
 
 	<!-- Import existing targets -->
 
