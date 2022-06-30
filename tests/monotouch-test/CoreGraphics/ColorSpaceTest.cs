@@ -451,7 +451,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb)) {
 				var csl = cs.CreateLinearized ();
 				Assert.NotNull (csl, "not null");
-				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
+				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1).Or.EqualTo ((nint) 2));
 			}
 		}
 
@@ -462,7 +462,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb)) {
 				var csl = cs.CreateExtended ();
 				Assert.NotNull (csl, "not null");
-				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
+				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1).Or.EqualTo ((nint) 2));
 			}
 		}
 
@@ -473,7 +473,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 			using (var cs = CGColorSpace.CreateWithName (CGColorSpaceNames.GenericRgb)) {
 				var csl = cs.CreateExtendedLinearized ();
 				Assert.NotNull (csl, "not null");
-				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1));
+				Assert.That ((nint) TestRuntime.CFGetRetainCount (csl.Handle), Is.EqualTo ((nint) 1).Or.EqualTo ((nint) 2));
 			}
 		}
 		

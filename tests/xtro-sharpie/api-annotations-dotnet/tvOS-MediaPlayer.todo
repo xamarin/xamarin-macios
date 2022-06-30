@@ -9,3 +9,13 @@
 !deprecated-attribute-missing! MPVolumeView::showsRouteButton missing a [Deprecated] attribute
 !missing-protocol! MPMediaPlayback not bound
 !missing-protocol-conformance! MPMusicPlayerController should conform to MPMediaPlayback
+!missing-field! MPNowPlayingInfoPropertyAdTimeRanges not bound
+!missing-field! MPNowPlayingInfoPropertyCreditsStartTime not bound
+!missing-selector! AVPlayerItem::nowPlayingInfo not bound
+!missing-selector! AVPlayerItem::setNowPlayingInfo: not bound
+!missing-selector! MPAdTimeRange::initWithTimeRange: not bound
+!missing-selector! MPAdTimeRange::setTimeRange: not bound
+!missing-selector! MPAdTimeRange::timeRange not bound
+!missing-selector! MPNowPlayingSession::automaticallyPublishNowPlayingInfo not bound
+!missing-selector! MPNowPlayingSession::setAutomaticallyPublishNowPlayingInfo: not bound
+!missing-type! MPAdTimeRange not bound

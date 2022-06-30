@@ -1,0 +1,5 @@
+!missing-protocol! NSTextAttachmentContainer not bound
+!missing-protocol! NSTextAttachmentLayout not bound
+!missing-selector! +UIImage::imageNamed:inBundle:variableValue:withConfiguration: not bound
+!missing-selector! +UIImage::systemImageNamed:variableValue:withConfiguration: not bound
+!missing-selector! +UIImageSymbolConfiguration::configurationPreferringMonochrome not bound

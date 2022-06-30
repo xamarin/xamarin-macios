@@ -3,3 +3,9 @@
 !extra-enum-value! Managed value 5 for INPlayMediaIntentResponseCode.HandleInApp is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 7 for INStartWorkoutIntentResponseCode.HandleInApp is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 8 for INStartWorkoutIntentResponseCode.Success is available for the current platform while the value in the native header is not
+!deprecated-attribute-missing! INSendMessageIntentResponse::sentMessage missing a [Deprecated] attribute
+!deprecated-attribute-missing! INSendMessageIntentResponse::setSentMessage: missing a [Deprecated] attribute
+!missing-selector! INMessage::audioMessageFile not bound
+!missing-selector! INMessage::initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:serviceName:audioMessageFile: not bound
+!missing-selector! INSendMessageIntentResponse::sentMessages not bound
+!missing-selector! INSendMessageIntentResponse::setSentMessages: not bound

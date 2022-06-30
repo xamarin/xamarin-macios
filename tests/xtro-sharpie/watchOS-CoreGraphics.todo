@@ -1,0 +1,15 @@
+!missing-field! kCGColorSpaceITUR_709_HLG not bound
+!missing-pinvoke! CGColorSpaceCreateCopyWithStandardRange is not bound
+!missing-pinvoke! CGPathCreateCopyByFlattening is not bound
+!missing-pinvoke! CGPathCreateCopyByIntersectingPath is not bound
+!missing-pinvoke! CGPathCreateCopyByNormalizing is not bound
+!missing-pinvoke! CGPathCreateCopyBySubtractingPath is not bound
+!missing-pinvoke! CGPathCreateCopyBySymmetricDifferenceOfPath is not bound
+!missing-pinvoke! CGPathCreateCopyByUnioningPath is not bound
+!missing-pinvoke! CGPathCreateCopyOfLineByIntersectingPath is not bound
+!missing-pinvoke! CGPathCreateCopyOfLineBySubtractingPath is not bound
+!missing-pinvoke! CGPathCreateSeparateComponents is not bound
+!missing-pinvoke! CGPDFScannerStop is not bound
+!missing-pinvoke! CGAffineTransformDecompose is not bound
+!missing-pinvoke! CGAffineTransformMakeWithComponents is not bound
+!missing-pinvoke! CGPathIntersectsPath is not bound

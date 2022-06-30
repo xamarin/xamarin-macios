@@ -1,0 +1,4 @@
+!missing-enum! ASAuthorizationControllerRequestOptions not bound
+!missing-selector! ASAuthorizationController::cancel not bound
+!missing-selector! ASAuthorizationController::performAutoFillAssistedRequests not bound
+!missing-selector! ASAuthorizationController::performRequestsWithOptions: not bound

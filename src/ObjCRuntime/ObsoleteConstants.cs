@@ -27,5 +27,6 @@ namespace ObjCRuntime {
 
 		internal const string RemovedFromChip = "This API has been removed from the 'CHIP' framework.";
 
+		internal const string TypeUnavailable = "This type has been removed from the current platform.";
 	}
 }

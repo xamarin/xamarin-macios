@@ -6,3 +6,62 @@
 !extra-enum-value! Managed value 4 for MTLFeatureSet.iOS_GPUFamily3_v1 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 5 for MTLSamplerAddressMode.ClampToBorderColor is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 8 for MTLTextureType.k2DMultisampleArray is available for the current platform while the value in the native header is not
+!deprecated-attribute-missing! MTLArgument missing a [Deprecated] attribute
+!deprecated-attribute-missing! MTLComputePipelineReflection::arguments missing a [Deprecated] attribute
+!deprecated-attribute-missing! MTLRenderPipelineDescriptor::sampleCount missing a [Deprecated] attribute
+!deprecated-attribute-missing! MTLRenderPipelineDescriptor::setSampleCount: missing a [Deprecated] attribute
+!deprecated-attribute-missing! MTLRenderPipelineReflection::fragmentArguments missing a [Deprecated] attribute
+!deprecated-attribute-missing! MTLRenderPipelineReflection::vertexArguments missing a [Deprecated] attribute
+!missing-enum! MTLBindingType not bound
+!missing-enum! MTLIOCommandQueueType not bound
+!missing-enum! MTLIOCompressionMethod not bound
+!missing-enum! MTLIOCompressionStatus not bound
+!missing-enum! MTLIOError not bound
+!missing-enum! MTLIOPriority not bound
+!missing-enum! MTLIOStatus not bound
+!missing-enum! MTLLibraryOptimizationLevel not bound
+!missing-enum-value! MTLBinaryArchiveError native value MTLBinaryArchiveErrorInternalError = 4 not bound
+!missing-enum-value! MTLGpuFamily native value MTLGPUFamilyMetal3 = 5001 not bound
+!missing-enum-value! MTLLanguageVersion native value MTLLanguageVersion3_0 = 196608 not bound
+!missing-field! kMTLIOCompressionContextDefaultChunkSize not bound
+!missing-field! MTLIOErrorDomain not bound
+!missing-pinvoke! MTLIOCompressionContextAppendData is not bound
+!missing-pinvoke! MTLIOCreateCompressionContext is not bound
+!missing-pinvoke! MTLIOFlushAndDestroyCompressionContext is not bound
+!missing-protocol! MTLBinding not bound
+!missing-protocol! MTLBufferBinding not bound
+!missing-protocol! MTLIOCommandBuffer not bound
+!missing-protocol! MTLIOCommandQueue not bound
+!missing-protocol! MTLIOFileHandle not bound
+!missing-protocol! MTLIOScratchBuffer not bound
+!missing-protocol! MTLIOScratchBufferAllocator not bound
+!missing-protocol! MTLObjectPayloadBinding not bound
+!missing-protocol! MTLTextureBinding not bound
+!missing-protocol! MTLThreadgroupBinding not bound
+!missing-protocol-member! MTLBuffer::gpuAddress not found
+!missing-protocol-member! MTLComputePipelineState::gpuResourceID not found
+!missing-protocol-member! MTLDevice::newArgumentEncoderWithBufferBinding: not found
+!missing-protocol-member! MTLDevice::newIOCommandQueueWithDescriptor:error: not found
+!missing-protocol-member! MTLDevice::newIOHandleWithURL:compressionMethod:error: not found
+!missing-protocol-member! MTLDevice::newIOHandleWithURL:error: not found
+!missing-protocol-member! MTLIndirectCommandBuffer::gpuResourceID not found
+!missing-protocol-member! MTLRenderPipelineState::gpuResourceID not found
+!missing-protocol-member! MTLSamplerState::gpuResourceID not found
+!missing-protocol-member! MTLTexture::gpuResourceID not found
+!missing-selector! MTLCompileOptions::optimizationLevel not bound
+!missing-selector! MTLCompileOptions::setOptimizationLevel: not bound
+!missing-selector! MTLComputePipelineReflection::bindings not bound
+!missing-selector! MTLIOCommandQueueDescriptor::maxCommandBufferCount not bound
+!missing-selector! MTLIOCommandQueueDescriptor::maxCommandsInFlight not bound
+!missing-selector! MTLIOCommandQueueDescriptor::priority not bound
+!missing-selector! MTLIOCommandQueueDescriptor::scratchBufferAllocator not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setMaxCommandBufferCount: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setMaxCommandsInFlight: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setPriority: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setScratchBufferAllocator: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::setType: not bound
+!missing-selector! MTLIOCommandQueueDescriptor::type not bound
+!missing-selector! MTLRenderPipelineReflection::fragmentBindings not bound
+!missing-selector! MTLRenderPipelineReflection::tileBindings not bound
+!missing-selector! MTLRenderPipelineReflection::vertexBindings not bound
+!missing-type! MTLIOCommandQueueDescriptor not bound

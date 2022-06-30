@@ -2452,8 +2452,24 @@ xamarin_insert_dllmap ()
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSend_stret",      lib, "xamarin_dyn_objc_msgSend_stret");
 	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", "objc_msgSendSuper_stret", lib, "xamarin_dyn_objc_msgSendSuper_stret");
 #endif
+
+	// Xcode 14 beta 1: dlopen is broken, see below.
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.A.dylib", "objc_msgSend",            lib, "xamarin_dyn_objc_msgSend");
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.A.dylib", "objc_msgSendSuper",       lib, "xamarin_dyn_objc_msgSendSuper");
+#if !defined (__arm64__)
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.A.dylib", "objc_msgSend_stret",      lib, "xamarin_dyn_objc_msgSend_stret");
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.A.dylib", "objc_msgSendSuper_stret", lib, "xamarin_dyn_objc_msgSendSuper_stret");
+#endif
+
 	LOG (PRODUCT ": Added dllmap for objc_msgSend");
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
+
+	// Xcode 14 beta 1: dlopen is broken, it loads a library that's already loaded if given a symlink.
+	// Work around this for libobjc.dylib by redirecting to the actual filename.
+	// Restricted to simulator for now since I don't know if device has the same problem.
+	// https://github.com/xamarin/maccore/issues/2585
+	mono_dllmap_insert (NULL, "/usr/lib/libobjc.dylib", NULL, "/usr/lib/libobjc.A.dylib", NULL);
+	mono_dllmap_insert (NULL, "/usr/lib/libSystem.dylib", NULL, "/usr/lib/libSystem.B.dylib", NULL);
 }
 #endif // !DOTNET
 
@@ -2632,14 +2648,15 @@ xamarin_is_native_library (const char *libraryName)
 void*
 xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 {
-
+	// LOG (PRODUCT ": P/Invoke override! library: '%s' entry point: '%s'", libraryName, entrypointName);
 	void* symbol = NULL;
+	bool symbolLookupAttempted = true;
 
 	if (!strcmp (libraryName, "__Internal")) {
 		symbol = dlsym (RTLD_DEFAULT, entrypointName);
 #if !defined (CORECLR_RUNTIME) // we're intercepting objc_msgSend calls using the managed System.Runtime.InteropServices.ObjectiveC.Bridge.SetMessageSendCallback instead.
 #if defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
-	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
+	} else if (!strcmp (libraryName, "/usr/lib/libobjc.dylib") || !strcmp (libraryName, "/usr/lib/libobjc.A.dylib")) {
 		if (xamarin_marshal_objectivec_exception_mode != MarshalObjectiveCExceptionModeDisable) {
 			if (!strcmp (entrypointName, "objc_msgSend")) {
 				symbol = (void *) &xamarin_dyn_objc_msgSend;
@@ -2652,10 +2669,10 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 				symbol = (void *) &xamarin_dyn_objc_msgSendSuper_stret;
 #endif // !defined (__arm64__)
 			} else {
-				return NULL;
+				symbolLookupAttempted = false;
 			}
 		} else {
-			return NULL;
+			symbolLookupAttempted = false;
 		}
 #endif // defined (__i386__) || defined (__x86_64__) || defined (__arm64__)
 #endif // !defined (CORECLR_RUNTIME)
@@ -2667,19 +2684,67 @@ xamarin_pinvoke_override (const char *libraryName, const char *entrypointName)
 			break;
 		case XamarinNativeLinkModeDynamicLibrary:
 			// if we're not linking statically, then don't do anything at all, let mono handle whatever needs to be done
-			return NULL;
+			symbolLookupAttempted = false;
+			break;
 		case XamarinNativeLinkModeFramework:
 		default:
 			// handle this as "DynamicLibrary" for now - do nothing.
 			LOG (PRODUCT ": Unhandled libmono link mode: %i when looking up %s in %s", xamarin_libmono_native_link_mode, entrypointName, libraryName);
-			return NULL;
+			symbolLookupAttempted = false;
+			break;
 		}
 	} else {
-		return NULL;
+		symbolLookupAttempted = false;
 	}
 
-	if (symbol == NULL) {
+	if (symbol == NULL && symbolLookupAttempted) {
 		LOG (PRODUCT ": Unable to resolve P/Invoke '%s' in the library '%s'", entrypointName, libraryName);
+	}
+
+	if (symbol == NULL && !symbolLookupAttempted) {
+		const char *redirectedLibraryName = NULL;
+		if (!strcmp (libraryName, "/usr/lib/libobjc.dylib")) {
+
+#if defined (CORECLR_RUNTIME) // we're intercepting objc_msgSend calls using the managed System.Runtime.InteropServices.ObjectiveC.Bridge.SetMessageSendCallback instead.
+			if (!strcmp (entrypointName, "objc_msgSend")) {
+				return NULL;
+			} else if (!strcmp (entrypointName, "objc_msgSendSuper")) {
+				return NULL;
+			} else if (!strcmp (entrypointName, "objc_msgSend_stret")) {
+				return NULL;
+			} else if (!strcmp (entrypointName, "objc_msgSendSuper_stret")) {
+				return NULL;
+			}
+#endif // !defined (CORECLR_RUNTIME)
+
+			redirectedLibraryName = "/usr/lib/libobjc.A.dylib";
+		} else if (!strcmp (libraryName, "/usr/lib/libSystem.dylib")) {
+			redirectedLibraryName = "/usr/lib/libSystem.B.dylib";
+		}
+
+		if (redirectedLibraryName != NULL) {
+			// Xcode 14 beta 1: dlopen is broken, it loads a library that's already loaded if given a symlink.
+			// Work around this for libobjc.dylib by redirecting to the actual filename.
+			// Restricted to simulator for now since I don't know if device has the same problem.
+			// https://github.com/xamarin/maccore/issues/2585
+			void *lib = dlopen (redirectedLibraryName, RTLD_LAZY);
+			symbol = dlsym (lib, entrypointName);
+			dlclose (lib);
+
+			if (symbol == NULL) {
+				LOG (PRODUCT ": Unable to resolve P/Invoke '%s' in the redirected library '%s' from '%s'", entrypointName, redirectedLibraryName, libraryName);
+
+				symbol = dlsym (RTLD_DEFAULT, entrypointName);
+				if (symbol == NULL) {
+					LOG (PRODUCT ": Unable to resolve P/Invoke '%s' in the global namespace", entrypointName);
+				} else {
+					// LOG (PRODUCT ": Resolved the P/Invoke '%s' in the global namespace");
+				}
+
+			} else {
+				// LOG (PRODUCT ": Resolved the P/Invoke '%s' in the redirected library '%s'", entrypointName, redirectedLibraryName);
+			}
+		}
 	}
 
 	return symbol;

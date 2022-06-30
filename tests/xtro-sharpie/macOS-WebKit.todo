@@ -1,0 +1,6 @@
+!missing-enum-value! WKErrorCode native value WKErrorCredentialNotFound = 17 not bound
+!missing-enum-value! WKErrorCode native value WKErrorDuplicateCredential = 15 not bound
+!missing-enum-value! WKErrorCode native value WKErrorMalformedCredential = 16 not bound
+!missing-selector! WKWebView::maximumViewportInset not bound
+!missing-selector! WKWebView::minimumViewportInset not bound
+!missing-selector! WKWebView::setMinimumViewportInset:maximumViewportInset: not bound

@@ -1,1 +1,9 @@
 !deprecated-attribute-missing! CIImage::initWithTexture:size:flipped:colorSpace: missing a [Deprecated] attribute
+!missing-protocol! CIConvertLab not bound
+!missing-protocol-member! CIColorCubeWithColorSpace::extrapolate not found
+!missing-protocol-member! CIColorCubeWithColorSpace::setExtrapolate: not found
+!missing-selector! +CIFilter::areaLogarithmicHistogramFilter not bound
+!missing-selector! +CIFilter::convertLabToRGBFilter not bound
+!missing-selector! +CIFilter::convertRGBtoLabFilter not bound
+!missing-selector! CIImage::imageByConvertingLabToWorkingSpace not bound
+!missing-selector! CIImage::imageByConvertingWorkingSpaceToLab not bound

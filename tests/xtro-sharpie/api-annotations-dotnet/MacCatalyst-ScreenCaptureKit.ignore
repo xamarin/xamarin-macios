@@ -42,7 +42,6 @@
 !missing-selector! SCStreamConfiguration::colorSpaceName not bound
 !missing-selector! SCStreamConfiguration::destinationRect not bound
 !missing-selector! SCStreamConfiguration::height not bound
-!missing-selector! SCStreamConfiguration::init not bound
 !missing-selector! SCStreamConfiguration::minimumFrameInterval not bound
 !missing-selector! SCStreamConfiguration::pixelFormat not bound
 !missing-selector! SCStreamConfiguration::queueDepth not bound

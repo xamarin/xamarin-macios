@@ -26,6 +26,12 @@ namespace Introspection {
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
+#if __WATCHOS__
+			case "GameKit":
+				if (IntPtr.Size == 4)
+					return true;
+				break;
+#endif
 			}
 
 			// While the following types are categories and contains a class_ptr

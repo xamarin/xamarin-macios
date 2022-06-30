@@ -1,1 +1,5 @@
 !missing-selector! MPMediaEntity::persistentID not bound
+!missing-field! MPNowPlayingInfoPropertyAdTimeRanges not bound
+!missing-field! MPNowPlayingInfoPropertyCreditsStartTime not bound
+!missing-selector! AVPlayerItem::nowPlayingInfo not bound
+!missing-selector! AVPlayerItem::setNowPlayingInfo: not bound

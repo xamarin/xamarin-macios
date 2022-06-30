@@ -54,17 +54,14 @@
 !missing-pinvoke! CMIODeviceStopStream is not bound
 !missing-pinvoke! CMIOObjectAddPropertyListener is not bound
 !missing-pinvoke! CMIOObjectAddPropertyListenerBlock is not bound
-!missing-pinvoke! CMIOObjectCreate is not bound
 !missing-pinvoke! CMIOObjectGetPropertyData is not bound
 !missing-pinvoke! CMIOObjectGetPropertyDataSize is not bound
 !missing-pinvoke! CMIOObjectHasProperty is not bound
 !missing-pinvoke! CMIOObjectIsPropertySettable is not bound
-!missing-pinvoke! CMIOObjectPropertiesChanged is not bound
 !missing-pinvoke! CMIOObjectRemovePropertyListener is not bound
 !missing-pinvoke! CMIOObjectRemovePropertyListenerBlock is not bound
 !missing-pinvoke! CMIOObjectSetPropertyData is not bound
 !missing-pinvoke! CMIOObjectShow is not bound
-!missing-pinvoke! CMIOObjectsPublishedAndDied is not bound
 !missing-pinvoke! CMIOSampleBufferCopyNonRequiredAttachments is not bound
 !missing-pinvoke! CMIOSampleBufferCopySampleAttachments is not bound
 !missing-pinvoke! CMIOSampleBufferCreate is not bound

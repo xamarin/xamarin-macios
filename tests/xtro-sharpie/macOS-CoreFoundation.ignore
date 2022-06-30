@@ -1,9 +1,3 @@
-## /usr/include/dispatch/queue.h
-!unknown-pinvoke! dispatch_main bound
-
-## dlfcn.h
-!unknown-pinvoke! dladdr bound
-
 ## unsorted
 
 !missing-enum! CFXMLEntityTypeCode not bound
@@ -43,6 +37,5 @@
 !missing-pinvoke! CFUserNotificationUpdate is not bound
 !missing-pinvoke! CFXMLCreateStringByEscapingEntities is not bound
 !missing-pinvoke! CFXMLCreateStringByUnescapingEntities is not bound
-!unknown-pinvoke! _NSGetExecutablePath bound
 !missing-field! kCFUserNotificationAlertTopMostKey not bound
 !missing-field! kCFUserNotificationKeyboardTypesKey not bound

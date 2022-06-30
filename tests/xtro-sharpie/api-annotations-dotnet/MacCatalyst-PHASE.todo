@@ -1,0 +1,3 @@
+!missing-enum-value! PhaseCurveType native value PHASECurveTypeHoldStartValue = 1668434003 not bound
+!missing-enum-value! PhaseCurveType native value PHASECurveTypeJumpToEndValue = 1668434501 not bound
+!missing-enum-value! PhaseError native value PHASEErrorInvalidObject = 1346913634 not bound

@@ -13,3 +13,5 @@
 !missing-enum! MIDITransformType not bound
 !missing-enum! MIDIUtilityStatus not bound
 !missing-pinvoke! MIDIEventListForEachEvent is not bound
+!missing-pinvoke! MIDIBluetoothDriverActivateAllConnections is not bound
+!missing-pinvoke! MIDIBluetoothDriverDisconnect is not bound

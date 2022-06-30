@@ -1,0 +1,3 @@
+!missing-selector! AUGenericViewController::auAudioUnit not bound
+!missing-selector! AUGenericViewController::setAuAudioUnit: not bound
+!missing-type! AUGenericViewController not bound

@@ -7,7 +7,6 @@
 !missing-enum! CWErr not bound
 
 # removed in Xcode 12 - marked as deprecated in bindings
-!extra-enum-value! Managed value 9 for CWEventType.VirtualInterfaceStateChanged not found in native headers
 !extra-enum-value! Managed value 10 for CWEventType.RangingReportEvent not found in native headers
 
 !missing-pinvoke! CWMergeNetworks is not bound
