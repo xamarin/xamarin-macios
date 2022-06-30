@@ -1,5 +1,8 @@
 <Project>
-	<Import Project="Sdk.props" Sdk="Microsoft.tvOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'tvOS'" />
+	<ImportGroup Condition=" '$(TargetPlatformIdentifier)' == 'tvOS' ">
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) " />
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.NET6" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) " />
+	</ImportGroup>
 
 	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
 		<SdkSupportedTargetPlatformIdentifier Include="tvos" DisplayName="tvOS" />

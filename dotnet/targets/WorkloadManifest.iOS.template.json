@@ -5,7 +5,9 @@
 			"description": ".NET SDK Workload for building @PLATFORM@ applications.",
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
+				"Microsoft.@PLATFORM@.Sdk.NET6",
 				"Microsoft.@PLATFORM@.Windows.Sdk.Aliased",
+				"Microsoft.@PLATFORM@.Windows.Sdk.Aliased.NET6",
 				"Microsoft.@PLATFORM@.Ref",
 				"Microsoft.@PLATFORM@.Runtime.ios-arm",
 				"Microsoft.@PLATFORM@.Runtime.ios-arm64",
@@ -24,6 +26,13 @@
 			"kind": "sdk",
 			"version": "@VERSION@"
 		},
+		"Microsoft.@PLATFORM@.Sdk.NET6": {
+			"kind": "sdk",
+			"version": "@NET6_VERSION@",
+			"alias-to": {
+				"any": "Microsoft.@PLATFORM@.Sdk"
+			}
+		},
 		"Microsoft.@PLATFORM@.Windows.Sdk.Aliased": {
 			"kind": "sdk",
 			"version": "@VERSION@",
@@ -33,33 +42,45 @@
 				"win-arm64": "Microsoft.@PLATFORM@.Windows.Sdk",
 			}
 		},
+		"Microsoft.@PLATFORM@.Windows.Sdk.Aliased.NET6": {
+			"kind": "sdk",
+			"version": "@NET6_VERSION@",
+			"alias-to": {
+				"win-x64": "Microsoft.@PLATFORM@.Windows.Sdk",
+				"win-x86": "Microsoft.@PLATFORM@.Windows.Sdk",
+				"win-arm64": "Microsoft.@PLATFORM@.Windows.Sdk",
+			}
+		},
+		// The ref and runtime packs use the .NET6 version, because when we load the .NET6 SDK pack, it says to use the ref and runtime pack versions from the workload (**FromWorkload**).
+		// This could be solvable with aliases as well, except that aliases doesn't work in this scenario (https://github.com/dotnet/sdk/issues/26384).
+		// For the .NET7 packs, we're stating the exact version to use in the KnownFrameworkReference item, so whatever we specify here is ignored.
 		"Microsoft.@PLATFORM@.Ref": {
 			"kind": "framework",
-			"version": "@VERSION@"
+			"version": "@NET6_VERSION@"
 		},
 		"Microsoft.@PLATFORM@.Runtime.ios-arm": {
 			"kind": "framework",
-			"version": "@VERSION@"
+			"version": "@NET6_VERSION@"
 		},
 		"Microsoft.@PLATFORM@.Runtime.ios-arm64": {
 			"kind": "framework",
-			"version": "@VERSION@"
+			"version": "@NET6_VERSION@"
 		},
 		"Microsoft.@PLATFORM@.Runtime.iossimulator-x86": {
 			"kind": "framework",
-			"version": "@VERSION@"
+			"version": "@NET6_VERSION@"
 		},
 		"Microsoft.@PLATFORM@.Runtime.iossimulator-x64": {
 			"kind": "framework",
-			"version": "@VERSION@"
+			"version": "@NET6_VERSION@"
 		},
 		"Microsoft.@PLATFORM@.Runtime.iossimulator-arm64": {
 			"kind": "framework",
-			"version": "@VERSION@"
+			"version": "@NET6_VERSION@"
 		},
 		"Microsoft.@PLATFORM@.Templates": {
 			"kind": "template",
-			"version": "@VERSION@"
+			"version": "@NET6_VERSION@"
 		}
 	}
 }

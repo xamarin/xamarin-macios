@@ -1,5 +1,8 @@
 <Project>
-	<Import Project="Sdk.props" Sdk="Microsoft.MacCatalyst.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'MacCatalyst'" />
+	<ImportGroup Condition=" '$(TargetPlatformIdentifier)' == 'MacCatalyst' ">
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) " />
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.NET6" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) " />
+	</ImportGroup>
 
 	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
 		<SdkSupportedTargetPlatformIdentifier Include="maccatalyst" DisplayName="Mac Catalyst" />
