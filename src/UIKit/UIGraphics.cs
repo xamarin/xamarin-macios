@@ -12,8 +12,13 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using System;
+using System.ComponentModel;
 
 namespace UIKit {
+
+#if XAMCORE_5_0
+#error All PDF public name instances in this file need to be turned into Pdf. e.g. EndPDFContext into EndPdfContext.
+#endif
 
 	public static class UIGraphics {
 		[DllImport (Constants.UIKitLibrary)]
@@ -125,9 +130,15 @@ namespace UIKit {
 		[DllImport (Constants.UIKitLibrary)]
 		extern static void UIGraphicsEndPDFContext ();
 
-		public static void EndPDFContent () {
+		public static void EndPDFContext () {
 			UIGraphicsEndPDFContext ();
 		}
+
+#if !XAMCORE_5_0
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Obsolete ("Use 'EndPDFContext' instead.")]
+		public static void EndPDFContent () => EndPDFContext ();
+#endif
 
 		public static UIImage GetImageFromCurrentImageContext ()
 		{
