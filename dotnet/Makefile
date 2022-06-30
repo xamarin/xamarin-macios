@@ -42,8 +42,12 @@ $(1)_WINDOWS_NUGET_TARGETS = \
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTargets,$(platform))))
 
+ifdef INCLUDE_HOTRESTART
+
 iOS_WINDOWS_NUGET_TARGETS += \
 	$(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip \
+
+endif
 
 DIRECTORIES += \
 	$(DOTNET_NUPKG_DIR) \

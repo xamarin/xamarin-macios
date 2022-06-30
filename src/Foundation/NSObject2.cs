@@ -77,9 +77,10 @@ namespace Foundation {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public partial class NSObject 
+	public partial class NSObject : INativeObject
 #if !COREBUILD
-		: IEquatable<NSObject> 
+		, IEquatable<NSObject>
+		, IDisposable
 #endif
 	{
 #if !COREBUILD
@@ -475,6 +476,34 @@ namespace Foundation {
 			if (!Runtime.DynamicRegistrationSupported)
 				return false;
 
+			// the linker/trimmer will remove the following code if the dynamic registrar is removed from the app
+			var classHandle = ClassHandle;
+			lock (Runtime.protocol_cache) {
+#if NET
+				ref var map = ref CollectionsMarshal.GetValueRefOrAddDefault (Runtime.protocol_cache, classHandle, out var exists);
+				if (!exists)
+					map = new ();
+				ref var result = ref CollectionsMarshal.GetValueRefOrAddDefault (map, protocol, out exists);
+				if (!exists)
+					result = DynamicConformsToProtocol (protocol);
+#else
+				bool new_map = false;
+				if (!Runtime.protocol_cache.TryGetValue (classHandle, out var map)) {
+					map = new ();
+					new_map = true;
+					Runtime.protocol_cache.Add (classHandle, map);
+				}
+				if (new_map || !map.TryGetValue (protocol, out var result)) {
+					result = DynamicConformsToProtocol (protocol);
+					map.Add (protocol, result);
+				}
+#endif
+				return result;
+			}
+		}
+
+		bool DynamicConformsToProtocol (NativeHandle protocol)
+		{
 			object [] adoptedProtocols = GetType ().GetCustomAttributes (typeof (AdoptsAttribute), true);
 			foreach (AdoptsAttribute adopts in adoptedProtocols){
 				if (adopts.ProtocolHandle == protocol)
@@ -1044,6 +1073,34 @@ namespace Foundation {
 			var o = new Observer (this, key, observer);
 			AddObserver (o, key, options, o.Handle);
 			return o;
+		}
+
+		public static NSObject Alloc (Class kls)
+		{
+			var h = Messaging.IntPtr_objc_msgSend (kls.Handle, Selector.GetHandle (Selector.Alloc));
+			return new NSObject (h, true);
+		}
+
+		public void Init ()
+		{
+			if (handle == IntPtr.Zero)
+				throw new Exception ("you have not allocated the native object");
+
+			handle = Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
+		}
+
+		public static void InvokeInBackground (Action action)
+		{
+			// using the parameterized Thread.Start to avoid capturing
+			// the 'action' parameter (it'll needlessly create an extra
+			// object).
+			new System.Threading.Thread ((v) =>
+			{
+				((Action) v) ();
+			})
+			{
+				IsBackground = true,
+			}.Start (action);
 		}
 #endif // !COREBUILD
 	}

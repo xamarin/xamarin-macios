@@ -8,7 +8,7 @@ namespace Xamarin.MMP.Tests
 	[TestFixture]
 	public class PackageReferenceTests
 	{
-		const string PackageReference = @"<ItemGroup><PackageReference Include = ""Newtonsoft.Json"" Version = ""10.0.3"" /></ItemGroup>";
+		const string PackageReference = @"<ItemGroup><PackageReference Include = ""Newtonsoft.Json"" Version = ""13.0.1"" /></ItemGroup>";
 		const string TestCode = @"var output = Newtonsoft.Json.JsonConvert.SerializeObject (new int[] { 1, 2, 3 });";
 
 		[TestCase (true)]
