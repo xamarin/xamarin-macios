@@ -101,6 +101,16 @@ Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.Versions.props: targets/Microsoft.$1.S
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS))))
 
+define AutoImports
+Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makefile
+	$(Q) rm -f $$@.tmp
+	$$(Q_GEN) sed \
+		-e "s/@PLATFORM@/$(1)/g" \
+		$$< > $$@.tmp
+	$(Q) mv $$@.tmp $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call AutoImports,$(platform))))
+
 define DefaultItems
 Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.DefaultItems.props: targets/Microsoft.Sdk.DefaultItems.template.props Makefile
 	$$(Q_GEN) sed \
