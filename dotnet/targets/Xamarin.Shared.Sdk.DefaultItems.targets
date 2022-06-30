@@ -76,34 +76,10 @@
     <ComputedPlatform Condition="'$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
   </PropertyGroup>
 
-  <!-- Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
-  <PropertyGroup>
-    <!-- Runtime pack identifiers -->
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">iossimulator-x64;ios-arm64;ios-arm;iossimulator-x86;iossimulator-arm64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvossimulator-x64;tvos-arm64;tvossimulator-arm64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-x64;watchos-arm</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx-x64;osx-arm64</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'MacCatalyst' ">maccatalyst-x64;maccatalyst-arm64</_RuntimePackRuntimeIdentifiers>
-  </PropertyGroup>
-
   <PropertyGroup>
     <_RuntimeFrameworkVersion>$(BundledNETCorePlatformsPackageVersion)</_RuntimeFrameworkVersion>
     <_RuntimeFrameworkVersion Condition="'$(CUSTOM_DOTNET_VERSION)' != ''">$(CUSTOM_DOTNET_VERSION)</_RuntimeFrameworkVersion>
   </PropertyGroup>
-
-  <ItemGroup>
-    <KnownFrameworkReference Include="Microsoft.$(_PlatformName)"
-                            TargetFramework="net7.0"
-                            RuntimeFrameworkName="Microsoft.$(_PlatformName)"
-                            DefaultRuntimeFrameworkVersion="**FromWorkload**"
-                            LatestRuntimeFrameworkVersion="**FromWorkload**"
-                            TargetingPackName="Microsoft.$(_PlatformName).Ref"
-                            TargetingPackVersion="**FromWorkload**"
-                            RuntimePackNamePatterns="Microsoft.$(_PlatformName).Runtime.**RID**"
-                            RuntimePackRuntimeIdentifiers="$(_RuntimePackRuntimeIdentifiers)"
-                            Profile="$(_PlatformName)"
-                            />
-  </ItemGroup>
 
   <ItemGroup Condition="'$(DisableImplicitFrameworkReferences)' != 'true'">
     <FrameworkReference Include="Microsoft.$(_PlatformName)" IsImplicitlyDefined="true" Pack="false" PrivateAssets="All" />

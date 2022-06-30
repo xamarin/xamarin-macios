@@ -12,6 +12,7 @@ DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
 
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval NET6_$(platform)_NUGET_VERSION_NO_METADATA:=$(NET6_$(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 
 DOTNET_iOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
 DOTNET_tvOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
@@ -104,13 +105,15 @@ targets/Microsoft.$(1).Sdk.Versions.props: targets/Microsoft.Sdk.Versions.templa
 		-e "s/@CURRENT_BRANCH@/$$(CURRENT_BRANCH_SED_ESCAPED)/g" \
 		-e "s/@CURRENT_HASH_LONG@/$$(CURRENT_HASH_LONG)/g" \
 		-e 's*@VALID_RUNTIME_IDENTIFIERS@*$(foreach rid,$(3),\n\t\t<_XamarinValidRuntimeIdentifier Include="$(rid)" Platform="$(1)" />)*' \
+		-e 's/@DOTNET_TFM@/$(DOTNET_TFM)/g' \
+		-e 's/@RUNTIME_PACK_RUNTIME_IDENTIFIERS@/$(4)/g' \
 		$$< > $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.Versions.props: targets/Microsoft.$1.Sdk.Versions.props
 	$$(Q) $$(CP) $$< $$@
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS),$(shell echo $(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS) | tr ' ' ';'))))
 
 define AutoImports
 Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makefile
@@ -154,6 +157,7 @@ Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json: targets/WorkloadManifest
 	$$(Q) rm -f $$@.tmp
 	$$(Q_GEN) sed \
 		-e "s/@VERSION@/$3/g" \
+		-e "s/@NET6_VERSION@/$(4)/g" \
 		-e "s/@BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION@/$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)/g" \
 		-e "s/@PLATFORM_LOWERCASE@/$2/g" \
 		-e "s/@PLATFORM@/$1/g" \
@@ -169,7 +173,7 @@ WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/WorkloadManifest.json
 LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA),$(NET6_$(platform)_NUGET_VERSION_NO_METADATA))))
 
 $(DOTNET_NUPKG_DIR)/vs-workload.props: Workloads/vs-workload.template.props
 	$(Q) rm -f $@.tmp
