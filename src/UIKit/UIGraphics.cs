@@ -135,7 +135,7 @@ namespace UIKit {
 		}
 
 #if !XAMCORE_5_0
-		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		[Obsolete ("Use 'EndPDFContext' instead.")]
 		public static void EndPDFContent () => EndPDFContext ();
 #endif
