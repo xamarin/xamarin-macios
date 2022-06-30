@@ -36,18 +36,18 @@ namespace Xamarin.Tests {
 			properties [multiRid] = runtimeIdentifiers;
 		}
 
-		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string? subdir = null, string configuration = "Debug")
+		protected string GetProjectPath (string project, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string? subdir = null, string configuration = "Debug", string? netVersion = null)
 		{
-			return GetProjectPath (project, null, runtimeIdentifiers, platform, out appPath, configuration);
+			return GetProjectPath (project, null, runtimeIdentifiers, platform, out appPath, configuration, netVersion);
 		}
 
-		protected string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug")
+		protected string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug", string? netVersion = null)
 		{
 			var rv = GetProjectPath (project, subdir, platform);
 			if (string.IsNullOrEmpty (runtimeIdentifiers))
 				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
-			appPath = Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
+			appPath = Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (netVersion), appPathRuntimeIdentifier, project + ".app");
 			return rv;
 		}
 
