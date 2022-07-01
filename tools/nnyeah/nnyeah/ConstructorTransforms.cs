@@ -20,12 +20,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 		// System.Bool
 		TypeReference BoolTypeDefinition;
 
-		// Foundation.NSObject::.ctor(IntPtr)
-		MethodDefinition IntPtrCtor;
-
-		// Foundation.NSObject::.ctor(IntPtr, bool)
-		MethodDefinition IntPtrCtorWithBool;
-
 		// NativeHandle::op_Implicit(IntPtr)
 		MethodReference NativeHandleOpImplicit;
 
@@ -34,37 +28,20 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		Dictionary<string, MethodDefinition> TransformedConstructors = new Dictionary<string, MethodDefinition> ();
 
-		public ConstructorTransforms (TypeReference newNativeHandleTypeDefinition, MethodDefinition intPtrCtor, MethodDefinition intPtrCtorWithBool,
+		public ConstructorTransforms (TypeReference newNativeHandleTypeDefinition, TypeReference boolTypeReference,
 			MethodReference nativeHandleOpImplicit, EventHandler<WarningEventArgs>? warningIssued, EventHandler<TransformEventArgs>? transformed)
 		{
 			NewNativeHandleTypeDefinition = newNativeHandleTypeDefinition;
-			IntPtrCtor = intPtrCtor;
-			IntPtrCtorWithBool = intPtrCtorWithBool;
 			WarningIssued = warningIssued;
 			Transformed = transformed;
 
 			// Get the definition of System.Bool from the ctor we already have
-			BoolTypeDefinition = intPtrCtorWithBool.Parameters[1].ParameterType;
+			BoolTypeDefinition = boolTypeReference; // intPtrCtorWithBool.Parameters[1].ParameterType;
 
 			NativeHandleOpImplicit = nativeHandleOpImplicit;
 		}
 
-		public void AddTransforms (TypeAndMemberMap moduleMap)
-		{
-			// Remove "NSObject (IntPtr)" from missing list and add "NSObject (NativeHandle)"
-			const string IntPtrCtorSignature = "System.Void Foundation.NSObject::.ctor(System.IntPtr)";
-			moduleMap.MethodsNotPresent.Remove (IntPtrCtorSignature);
-			IntPtrCtor.Parameters [0].ParameterType = NewNativeHandleTypeDefinition;
-			moduleMap.MethodMap.Add (IntPtrCtorSignature, IntPtrCtor);
-
-			// Remove "NSObject (IntPtr, bool)" from missing list and add "NSObject (NativeHandle,System.Boolean)"
-			const string IntPtrBoolCtorSignature = "System.Void Foundation.NSObject::.ctor(System.IntPtr,System.Boolean)";
-			moduleMap.MethodsNotPresent.Remove (IntPtrBoolCtorSignature);
-			IntPtrCtorWithBool.Parameters [0].ParameterType = NewNativeHandleTypeDefinition;
-			moduleMap.MethodMap.Add (IntPtrBoolCtorSignature, IntPtrCtorWithBool);
-		}
-
-		static bool IsIntPtrCtor (MethodDefinition d)
+		public static bool IsIntPtrCtor (MethodDefinition d)
 		{
 			if (d.Name != ".ctor")
 				return false;
@@ -76,7 +53,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			return isSingle || isDouble;
 		}
 
-		bool IsNSObjectDerived (TypeReference? typeReference)
+		public static bool IsNSObjectDerived (TypeReference? typeReference, ConstructorTransforms? self = null)
 		{
 			if (typeReference is null)
 				return false;
@@ -87,11 +64,13 @@ namespace Microsoft.MaciOS.Nnyeah {
 				if (typeReference is null) {
 					return false;
 				}
-				if (typeReference.FullName == "Foundation.NSObject") {
+				if (typeReference.FullName == "Foundation.NSObject" || typeReference.FullName == "ObjCRuntime.DisposableObject") {
 					if (reworkNeededOnTheWayUp && firstIssuedTypeReference is not null) {
-						WarningIssued?.Invoke (this, new WarningEventArgs (initialTypeReference.DeclaringType.FullName,
-							initialTypeReference.Name, "IntPtr", String.Format (Errors.N0009, initialTypeReference.FullName,
-							firstIssuedTypeReference.FullName)));
+						if (self is not null) {
+							self.WarningIssued?.Invoke (self, new WarningEventArgs (initialTypeReference.DeclaringType.FullName,
+								initialTypeReference.Name, "IntPtr", String.Format (Errors.N0009, initialTypeReference.FullName,
+								firstIssuedTypeReference.FullName)));
+						}
 					}
 					return true;
 				}
@@ -118,7 +97,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			ReworkCodeBlockAsNeeded (definition.Methods);
 			ReworkCodeBlockAsNeeded (definition.Events.SelectMany (e => Reworker.EventMethods (e)));
 
-			if (IsNSObjectDerived (definition.BaseType)) {
+			if (IsNSObjectDerived (definition.BaseType, this)) {
 				if (definition.GetConstructors ().FirstOrDefault (IsIntPtrCtor) is MethodDefinition ctor) {
 					// How many instructions it takes to invoke a 1 or 2 param base ctor
 					// We can not safely process things that might store off the IntPtr
@@ -133,7 +112,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 					TransformedConstructors.Add (ctor.ToString (), ctor);
 				}
 			}
-
 		}
 
 		// TODO - There is non-trivial overlap between this and the TryGetConstructorCallTransformation
@@ -152,7 +130,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			for (int i = 0 ; i < instructions.Count ; i++) {
 				Instruction instruction = instructions[i];
 				if (instruction.OpCode.Code == Code.Newobj && instruction.Operand is MethodDefinition invokedMethod) {
-					if (invokedMethod.IsConstructor && IsNSObjectDerived (invokedMethod.DeclaringType)) {
+					if (invokedMethod.IsConstructor && IsNSObjectDerived (invokedMethod.DeclaringType, this)) {
 						switch (invokedMethod.Parameters.Count) {
 						case 1: {
 							if (invokedMethod.Parameters[0].ParameterType.ToString () == "System.IntPtr") {

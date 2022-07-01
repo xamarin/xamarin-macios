@@ -7,6 +7,9 @@ parameters:
   type: string
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
+- name: label
+  type: string
+
 - name: useXamarinStorage
   type: boolean
   default: false  # xamarin-storage will disappear, so by default do not use it
@@ -234,6 +237,7 @@ steps:
       echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
     fi
   env:
+    TEST_PREFIX: ${{ upper(parameters.testPrefix) }}
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
     USE_XAMARIN_STORAGE: ${{ parameters.useXamarinStorage }}
     USE_TCP_TUNNEL: 'true'
@@ -243,6 +247,30 @@ steps:
   displayName: 'Run tests'
   name: runTests # not to be confused with the displayName, this is used to later use the name of the step to access the output variables from an other job
   timeoutInMinutes: 840
+
+# Collect simulator diagnostic logs
+- bash: |
+    set -x
+    set -e
+
+    rm -Rf $(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
+    mkdir -p $(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
+    printf "\n" | xcrun simctl diagnose -b -X --output=$(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
+
+  displayName: 'Collect diagnostic info from simulators'
+  condition:  eq(variables['system.debug'], true)
+  continueOnError: true
+  name: collectSimulatorInfo
+  timeoutInMinutes: 30
+
+# Publish the simulator diagnostic logs
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Artifact: Simulator diagnostic info'
+  inputs:
+    targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
+    artifactName: diagnostic-simulator-info-$(Build.BuildId)-${{ parameters.label }}
+  condition:  and(eq(variables['system.debug'], true), succeededOrFailed())
+  continueOnError: true
 
 # set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the commnet, this way
 # we report the result as soon as we have it and ensure that we set the status from pending to the appropiate value.
@@ -274,6 +302,26 @@ steps:
       Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
     }
   displayName: Set TestSummary
+
+- task: artifactDropTask@1
+  displayName: 'Publish to Artifact Services Drop'
+  inputs:
+    dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
+    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}'
+    sourcePath: 'xamarin-macios/jenkins-results'
+    detailedLog: true
+    usePat: true
+
+# Upload test results to vsts.
+- task: PublishTestResults@2
+  displayName: 'Publish NUnit Device Test Results'
+  inputs:
+    testResultsFormat: NUnit
+    testResultsFiles: '**/vsts-*.xml'
+    failTaskOnFailedTests: true
+  continueOnError: true
+  condition: succeededOrFailed()
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
@@ -311,7 +359,7 @@ steps:
   displayName: 'Publish Artifact: All binlogs'
   inputs:
     targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
-    artifactName: all-binlogs-test-$(Build.BuildId)
+    artifactName: all-binlogs-test-${{ parameters.testPrefix }}-$(Build.BuildId)
   continueOnError: true
   condition: succeededOrFailed()
 
