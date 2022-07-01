@@ -18,9 +18,6 @@
 
     <!-- download the reference assemblies -->
     <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(ActualPackageVersion)]" />
-
-    <!-- download the nfloat reference assembly for .NET 6 (but only for .NET 6, once we switch to .NET 7 this can be removed) -->
-    <PackageDownload Include="System.Runtime.InteropServices.NFloat.Internal" Version="[6.0.1]" Condition="'$(ActualPackageVersion.Substring(0,1))' == '6'" />
   </ItemGroup>
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->
