@@ -76,6 +76,9 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: XcodeChannel
+  type: string
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -124,9 +127,10 @@ stages:
 
       pool:
         name: $(AgentPoolComputed)
-        demands: 
+        demands:
         - Agent.OS -equals Darwin
         - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+        - XcodeChannel -equals ${{ parameters.XcodeChannel }}
         - ${{ each demand in parameters.extraBotDemands }}:
           - demand
         workspace:
