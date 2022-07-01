@@ -24,9 +24,6 @@
 
     <!-- and get the mono workload as well -->
     <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
-
-    <!-- and get the emscripten workload as well -->
-    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptenManifest70100PackageVersion)]" />
   </ItemGroup>
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->
