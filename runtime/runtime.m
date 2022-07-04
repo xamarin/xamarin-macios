@@ -2240,32 +2240,33 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 		break;
 	case MarshalObjectiveCExceptionModeThrowManagedException:
 		exc_handle = [[ns_exception userInfo] objectForKey: @"XamarinManagedExceptionHandle"];
+		GCHandle handle;
 		if (exc_handle != NULL) {
-			GCHandle handle = [exc_handle getHandle];
+			GCHandle e_handle = [exc_handle getHandle];
 			MONO_ENTER_GC_UNSAFE;
-			MonoObject *exc = xamarin_gchandle_get_target (handle);
-			mono_runtime_set_pending_exception ((MonoException *) exc, false);
+			MonoObject *exc = xamarin_gchandle_get_target (e_handle);
+			handle = xamarin_gchandle_new (exc, false);
 			xamarin_mono_object_release (&exc);
 			MONO_EXIT_GC_UNSAFE;
 		} else {
-			GCHandle handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
+			handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
 			if (exception_gchandle != INVALID_GCHANDLE) {
 				PRINT (PRODUCT ": Got an exception while creating a managed NSException wrapper (will throw this exception instead):");
 				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
 				handle = exception_gchandle;
 				exception_gchandle = INVALID_GCHANDLE;
 			}
+		}
 
-			if (output_exception == NULL) {
-				MONO_ENTER_GC_UNSAFE;
-				MonoObject *exc = xamarin_gchandle_get_target (handle);
-				mono_runtime_set_pending_exception ((MonoException *) exc, false);
-				xamarin_mono_object_release (&exc);
-				xamarin_gchandle_free (handle);
-				MONO_EXIT_GC_UNSAFE;
-			} else {
-				*output_exception = handle;
-			}
+		if (output_exception == NULL) {
+			MONO_ENTER_GC_UNSAFE;
+			MonoObject *exc = xamarin_gchandle_get_target (handle);
+			mono_runtime_set_pending_exception ((MonoException *) exc, false);
+			xamarin_mono_object_release (&exc);
+			xamarin_gchandle_free (handle);
+			MONO_EXIT_GC_UNSAFE;
+		} else {
+			*output_exception = handle;
 		}
 		break;
 	case MarshalObjectiveCExceptionModeAbort:
