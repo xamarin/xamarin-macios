@@ -74,6 +74,8 @@ namespace ARKit {
 		CameraUnauthorized = 103,
 		MicrophoneUnauthorized = 104,
 		LocationUnauthorized = 105,
+		HighResolutionFrameCaptureInProgress = 106,
+		HighResolutionFrameCaptureFailed = 107,
 		WorldTrackingFailed = 200,
 		GeoTrackingNotAvailableAtLocation = 201,
 		GeoTrackingFailed = 202,
@@ -508,6 +510,10 @@ namespace ARKit {
 		[NullAllowed]
 		[Export ("smoothedSceneDepth", ArgumentSemantic.Strong)]
 		ARDepthData SmoothedSceneDepth { get; }
+
+		[iOS (16,0)]
+		[Export ("exifData", ArgumentSemantic.Strong)]
+		NSDictionary<NSString, NSObject> ExifData { get; }
 	}
 
 	[iOS (11,0)]
@@ -578,6 +584,7 @@ namespace ARKit {
 			get;
 		}
 
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'PlaneExtent' instead.")]
 		[Export ("extent")]
 		Vector3 Extent {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
@@ -595,6 +602,10 @@ namespace ARKit {
 		[iOS (12,0)]
 		[Export ("classification", ArgumentSemantic.Assign)]
 		ARPlaneClassification Classification { get; }
+
+		[iOS (16,0)]
+		[Export ("planeExtent")]
+		ARPlaneExtent PlaneExtent { get; }
 	}
 
 	[iOS (11,3)]
@@ -714,6 +725,14 @@ namespace ARKit {
 		[BindAs (typeof (AVCaptureDeviceType))]
 #endif
 		NSString CaptureDeviceType { get; }
+
+		[iOS (16,0)]
+		[Export ("isRecommendedForHighResolutionFrameCapturing")]
+		bool IsRecommendedForHighResolutionFrameCapturing { get; }
+
+		[iOS (16,0)]
+		[Export ("videoHDRSupported")]
+		bool IsVideoHDRSupported { [Bind ("isVideoHDRSupported")] get; }
 	}
 
 	[iOS (11,0)]
@@ -913,6 +932,11 @@ namespace ARKit {
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		[Export ("getGeoLocationForPoint:completionHandler:")]
 		void GetGeoLocation (Vector3 position, GetGeolocationCallback completionHandler);
+
+		[iOS (16,0)]
+		[Async]
+		[Export ("captureHighResolutionFrameWithCompletion:")]
+		void CaptureHighResolutionFrame (Action<ARFrame, NSError> handler);
 	}
 
 	[iOS (11,0)]
@@ -1013,6 +1037,25 @@ namespace ARKit {
 		[Static]
 		[Export ("supportsFrameSemantics:")]
 		bool SupportsFrameSemantics (ARFrameSemantics frameSemantics);
+
+		[iOS (16,0)]
+		[Static]
+		[NullAllowed, Export ("configurableCaptureDeviceForPrimaryCamera")]
+		AVCaptureDevice ConfigurableCaptureDeviceForPrimaryCamera { get; }
+
+		[iOS (16,0)]
+		[Static]
+		[NullAllowed, Export ("recommendedVideoFormatFor4KResolution")]
+		ARVideoFormat RecommendedVideoFormatFor4KResolution { get; }
+
+		[iOS (16,0)]
+		[Static]
+		[NullAllowed, Export ("recommendedVideoFormatForHighResolutionFrameCapturing")]
+		ARVideoFormat RecommendedVideoFormatForHighResolutionFrameCapturing { get; }
+
+		[iOS (16,0)]
+		[NullAllowed, Export ("videoHDRAllowed")]
+		bool VideoHDRAllowed { get; set; }
 	}
 
 	[iOS (11,0)]
@@ -2401,5 +2444,20 @@ namespace ARKit {
 		[Export ("radius")]
 		float Radius { get; }
 	}
+
+	[iOS (16,0)]
+	[BaseType (typeof (NSObject))]
+	interface ARPlaneExtent : NSSecureCoding
+	{
+		[Export ("rotationOnYAxis")]
+		float RotationOnYAxis { get; }
+
+		[Export ("width")]
+		float Width { get; }
+
+		[Export ("height")]
+		float Height { get; }
+	}
+
 
 }
