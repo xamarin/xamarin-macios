@@ -246,7 +246,7 @@ namespace ObjCRuntime {
 				type = type.GetGenericTypeDefinition ();
 
 			// Look for the type in the type map.
-			var asm_name = type.Assembly.GetName ().Name;
+			var asm_name = type.Assembly.GetName ().Name!;
 			var mod_token = type.Module.MetadataToken;
 			var type_token = type.MetadataToken & ~0x02000000;
 			for (int i = 0; i < map->map_count; i++) {
@@ -284,7 +284,7 @@ namespace ObjCRuntime {
 			return IntPtr.Zero;
 		}
 
-		unsafe static bool CompareTokenReference (string? asm_name, int mod_token, int type_token, uint token_reference)
+		unsafe static bool CompareTokenReference (string asm_name, int mod_token, int type_token, uint token_reference)
 		{
 			var map = Runtime.options->RegistrationMap;
 			IntPtr assembly_name;
@@ -369,7 +369,7 @@ namespace ObjCRuntime {
 			type = ResolveTypeTokenReference (type_reference);
 
 #if LOG_TYPELOAD
-			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
+			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type?.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
 #endif
 
 			class_to_type [mapIndex] = type;
@@ -451,7 +451,7 @@ namespace ObjCRuntime {
 			case 0x06000000: // Method
 				var method = module.ResolveMethod ((int) token);
 #if LOG_TYPELOAD
-				Console.WriteLine ($"ResolveToken (0x{token:X}) => Method: {method.DeclaringType.FullName}.{method.Name}");
+				Console.WriteLine ($"ResolveToken (0x{token:X}) => Method: {method?.DeclaringType?.FullName}.{method.Name}");
 #endif
 				return method;
 			default:
@@ -495,7 +495,7 @@ namespace ObjCRuntime {
 			if (type.IsGenericType)
 				type = type.GetGenericTypeDefinition ();
 
-			var asm_name = type.Module.Assembly.GetName ().Name;
+			var asm_name = type.Module.Assembly.GetName ().Name!;
 
 			// First check if there's a full token reference to this type
 			var token = GetFullTokenReference (asm_name, type.Module.MetadataToken, type.MetadataToken);
@@ -538,7 +538,7 @@ namespace ObjCRuntime {
 		}
 
 		// Look for the specified metadata token in the table of full token references.
-		static unsafe uint GetFullTokenReference (string? assembly_name, int module_token, int metadata_token)
+		static unsafe uint GetFullTokenReference (string assembly_name, int module_token, int metadata_token)
 		{
 			var map = Runtime.options->RegistrationMap;
 			for (int i = 0; i < map->full_token_reference_count; i++) {
