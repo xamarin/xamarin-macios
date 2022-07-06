@@ -137,7 +137,7 @@ struct Trampolines {
 enum InitializationFlags : int {
 	InitializationFlagsIsPartialStaticRegistrar = 0x01,
 	/* unused									= 0x02,*/
-	InitializationFlagsDynamicRegistrar			= 0x04,
+	/* unused									= 0x04,*/
 	/* unused									= 0x08,*/
 	InitializationFlagsIsSimulator				= 0x10,
 	InitializationFlagsIsCoreCLR                = 0x20,
