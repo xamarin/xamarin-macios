@@ -732,7 +732,7 @@ namespace ARKit {
 
 		[iOS (16,0)]
 		[Export ("videoHDRSupported")]
-		bool IsVideoHDRSupported { [Bind ("isVideoHDRSupported")] get; }
+		bool IsVideoHdrSupported { [Bind ("isVideoHDRSupported")] get; }
 	}
 
 	[iOS (11,0)]
@@ -1055,7 +1055,7 @@ namespace ARKit {
 
 		[iOS (16,0)]
 		[NullAllowed, Export ("videoHDRAllowed")]
-		bool VideoHDRAllowed { get; set; }
+		bool VideoHdrAllowed { get; set; }
 	}
 
 	[iOS (11,0)]
