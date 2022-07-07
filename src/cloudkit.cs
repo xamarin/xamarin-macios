@@ -2039,4 +2039,55 @@ namespace CloudKit {
 		[NullAllowed, Export ("recordZoneWithIDWasDeletedDueToUserEncryptedDataResetBlock", ArgumentSemantic.Copy)]
 		Action<CKRecordZoneID> RecordZoneWithIdWasDeletedDueToUserEncryptedDataReset { get; set; }
 	}
+
+	[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	interface CKAllowedSharingOptions : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithAllowedParticipantPermissionOptions:allowedParticipantAccessOptions:")]
+		NativeHandle Constructor (CKSharingParticipantPermissionOption allowedParticipantPermissionOptions, CKSharingParticipantAccessOption allowedParticipantAccessOptions);
+
+		[Export ("allowedParticipantPermissionOptions", ArgumentSemantic.Assign)]
+		CKSharingParticipantPermissionOption AllowedParticipantPermissionOptions { get; set; }
+
+		[Export ("allowedParticipantAccessOptions", ArgumentSemantic.Assign)]
+		CKSharingParticipantAccessOption AllowedParticipantAccessOptions { get; set; }
+
+		[Static]
+		[Export ("standardOptions", ArgumentSemantic.Strong)]
+		CKAllowedSharingOptions StandardOptions { get; }
+	}
+
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CKSystemSharingUIObserver
+	{
+		[Export ("initWithContainer:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (CKContainer container);
+
+		[NullAllowed, Export ("systemSharingUIDidSaveShareBlock", ArgumentSemantic.Copy)]
+		Action<CKRecordID, CKShare, NSError> SystemSharingUIDidSaveShareBlock { get; set; }
+
+		[NullAllowed, Export ("systemSharingUIDidStopSharingBlock", ArgumentSemantic.Copy)]
+		Action<CKRecordID, NSError> SystemSharingUIDidStopSharingBlock { get; set; }
+	}
+
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	delegate void CKSharePreparationHandler ();
+
+	[Category]
+	[BaseType (typeof (NSItemProvider))]
+	interface NSItemProvider_CKSharingSupport
+	{
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Async]
+		[Export ("registerCKShareWithContainer:allowedSharingOptions:preparationHandler:")]
+		void RegisterCKShare (CKContainer container, CKAllowedSharingOptions allowedOptions, CKSharePreparationHandler preparationHandler);
+
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("registerCKShare:container:allowedSharingOptions:")]
+		void RegisterCKShare (CKShare share, CKContainer container, CKAllowedSharingOptions allowedOptions);
+	}
 }
