@@ -9,6 +9,7 @@
 
 using System;
 using Foundation;
+using Intents;
 using ObjCRuntime;
 using UIKit;
 
@@ -28,6 +29,7 @@ namespace ClockKit {
 		FaceNotAvailable = 4,
 	}
 	
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (NSObject))]
 	interface CLKComplication : NSCopying {
 
@@ -66,19 +68,24 @@ namespace ClockKit {
 		[Export ("getTimelineStartDateForComplication:withHandler:")]
 		void GetTimelineStartDate (CLKComplication complication, Action<NSDate> handler);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Export ("getTimelineEndDateForComplication:withHandler:")]
 		void GetTimelineEndDate (CLKComplication complication, Action<NSDate> handler);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Export ("getPrivacyBehaviorForComplication:withHandler:")]
 		void GetPrivacyBehavior (CLKComplication complication, Action<CLKComplicationPrivacyBehavior> handler);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Export ("getTimelineAnimationBehaviorForComplication:withHandler:")]
 		void GetTimelineAnimationBehavior (CLKComplication complication, Action<CLKComplicationTimelineAnimationBehavior> handler);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Watch (6,0)]
 		[Export ("getAlwaysOnTemplateForComplication:withHandler:")]
 		void GetAlwaysOnTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Abstract]
 		[Export ("getCurrentTimelineEntryForComplication:withHandler:")]
 		void GetCurrentTimelineEntry (CLKComplication complication, Action<CLKComplicationTimelineEntry> handler);
@@ -87,6 +94,7 @@ namespace ClockKit {
 		[Export ("getTimelineEntriesForComplication:beforeDate:limit:withHandler:")]
 		void GetTimelineEntriesBeforeDate (CLKComplication complication, NSDate beforeDate, nuint limit, Action<CLKComplicationTimelineEntry []> handler);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Export ("getTimelineEntriesForComplication:afterDate:limit:withHandler:")]
 		void GetTimelineEntriesAfterDate (CLKComplication complication, NSDate afterDate, nuint limit, Action<CLKComplicationTimelineEntry []> handler);
 	
@@ -107,19 +115,27 @@ namespace ClockKit {
 		[Export ("getPlaceholderTemplateForComplication:withHandler:")]
 		void GetPlaceholderTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Watch (3,0)]
 		[Export ("getLocalizableSampleTemplateForComplication:withHandler:")]
 		void GetLocalizableSampleTemplate (CLKComplication complication, Action<CLKComplicationTemplate> handler);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Watch (7, 0)]
 		[Export ("getComplicationDescriptorsWithHandler:")]
 		void GetComplicationDescriptors (Action<CLKComplicationDescriptor[]> handler);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Watch (7, 0)]
 		[Export ("handleSharedComplicationDescriptors:")]
 		void HandleSharedComplicationDescriptors (CLKComplicationDescriptor[] complicationDescriptors);
+
+		[Watch (9, 0), NoiOS]
+		[Export ("widgetMigrator")]
+		CLKComplicationWidgetMigrator WidgetMigrator { get; }
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // Default constructor not allowed for ClockKit.CLKComplicationServer : Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: You cannot alloc/init new instances of CLKComplicationServer. Use +sharedInstance.
 	interface CLKComplicationServer {
@@ -154,6 +170,7 @@ namespace ClockKit {
 		void ReloadComplicationDescriptors ();
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLKComplicationTemplate : NSCopying {
@@ -166,6 +183,7 @@ namespace ClockKit {
 		NativeHandle Constructor ();
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularSmallSimpleText {
 
@@ -182,6 +200,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularSmallSimpleText Create (CLKTextProvider textProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularSmallSimpleImage {
 
@@ -198,6 +217,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularSmallSimpleImage Create (CLKImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularSmallRingText {
 
@@ -220,6 +240,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularSmallRingText Create (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularSmallRingImage {
 
@@ -242,6 +263,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularSmallRingImage Create (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularSmallStackText {
 
@@ -264,6 +286,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularSmallStackText Create (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularSmallStackImage {
 
@@ -286,6 +309,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularSmallStackImage Create (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularSmallColumnsText {
 
@@ -317,6 +341,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularSmallColumnsText Create (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularLargeStandardBody {
 
@@ -371,6 +396,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularLargeStandardBody Create ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularLargeTallBody {
 
@@ -390,6 +416,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularLargeTallBody Create (CLKTextProvider headerTextProvider, CLKTextProvider bodyTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularLargeTable {
 
@@ -434,6 +461,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularLargeTable Create ([NullAllowed] CLKImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateModularLargeColumns {
 
@@ -489,6 +517,7 @@ namespace ClockKit {
 		CLKComplicationTemplateModularLargeColumns Create ([NullAllowed] CLKImageProvider row1ImageProvider, CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, [NullAllowed] CLKImageProvider row2ImageProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider, [NullAllowed] CLKImageProvider row3ImageProvider, CLKTextProvider row3Column1TextProvider, CLKTextProvider row3Column2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateUtilitarianSmallFlat {
 
@@ -518,6 +547,7 @@ namespace ClockKit {
 		CLKComplicationTemplateUtilitarianSmallFlat Create (CLKTextProvider textProvider, [NullAllowed] CLKImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateUtilitarianSmallSquare {
 
@@ -534,6 +564,7 @@ namespace ClockKit {
 		CLKComplicationTemplateUtilitarianSmallSquare Create (CLKImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateUtilitarianSmallRingText {
 
@@ -556,6 +587,7 @@ namespace ClockKit {
 		CLKComplicationTemplateUtilitarianSmallRingText Create (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateUtilitarianSmallRingImage {
 
@@ -578,6 +610,7 @@ namespace ClockKit {
 		CLKComplicationTemplateUtilitarianSmallRingImage Create (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateUtilitarianLargeFlat {
 
@@ -607,6 +640,7 @@ namespace ClockKit {
 		CLKComplicationTemplateUtilitarianLargeFlat Create (CLKTextProvider textProvider, [NullAllowed] CLKImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateCircularSmallSimpleText {
 
@@ -623,6 +657,7 @@ namespace ClockKit {
 		CLKComplicationTemplateCircularSmallSimpleText Create (CLKTextProvider textProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateCircularSmallSimpleImage {
 
@@ -639,6 +674,7 @@ namespace ClockKit {
 		CLKComplicationTemplateCircularSmallSimpleImage Create (CLKImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateCircularSmallRingText {
 
@@ -661,6 +697,7 @@ namespace ClockKit {
 		CLKComplicationTemplateCircularSmallRingText Create (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateCircularSmallRingImage {
 
@@ -683,6 +720,7 @@ namespace ClockKit {
 		CLKComplicationTemplateCircularSmallRingImage Create (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateCircularSmallStackText {
 
@@ -702,6 +740,7 @@ namespace ClockKit {
 		CLKComplicationTemplateCircularSmallStackText Create (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateCircularSmallStackImage {
 
@@ -721,6 +760,7 @@ namespace ClockKit {
 		CLKComplicationTemplateCircularSmallStackImage Create (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (3,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeSimpleText {
@@ -738,6 +778,7 @@ namespace ClockKit {
 		CLKComplicationTemplateExtraLargeSimpleText Create (CLKTextProvider textProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (3,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeSimpleImage {
@@ -755,6 +796,7 @@ namespace ClockKit {
 		CLKComplicationTemplateExtraLargeSimpleImage Create (CLKImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (3,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeRingText {
@@ -778,6 +820,7 @@ namespace ClockKit {
 		CLKComplicationTemplateExtraLargeRingText Create (CLKTextProvider textProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (3,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeRingImage {
@@ -801,6 +844,7 @@ namespace ClockKit {
 		CLKComplicationTemplateExtraLargeRingImage Create (CLKImageProvider imageProvider, float fillFraction, CLKComplicationRingStyle ringStyle);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (3,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeStackText {
@@ -824,6 +868,7 @@ namespace ClockKit {
 		CLKComplicationTemplateExtraLargeStackText Create (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (3,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeStackImage {
@@ -847,6 +892,7 @@ namespace ClockKit {
 		CLKComplicationTemplateExtraLargeStackImage Create (CLKImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (3,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateExtraLargeColumnsText {
@@ -879,6 +925,7 @@ namespace ClockKit {
 		CLKComplicationTemplateExtraLargeColumnsText Create (CLKTextProvider row1Column1TextProvider, CLKTextProvider row1Column2TextProvider, CLKTextProvider row2Column1TextProvider, CLKTextProvider row2Column2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (NSObject))]
 	interface CLKComplicationTimelineEntry {
 
@@ -900,6 +947,7 @@ namespace ClockKit {
 		string TimelineAnimationGroup { get; set; }
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLKImageProvider : NSCopying {
@@ -941,6 +989,7 @@ namespace ClockKit {
 		NativeHandle Constructor (UIImage onePieceImage, [NullAllowed] UIImage twoPieceImageBackground, [NullAllowed] UIImage twoPieceImageForeground);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CLKTextProvider : NSCopying {
@@ -981,6 +1030,7 @@ namespace ClockKit {
 		string AccessibilityLabel { get; set; }
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKTextProvider))]
 	interface CLKSimpleTextProvider {
 
@@ -1016,6 +1066,7 @@ namespace ClockKit {
 		NativeHandle Constructor (string text, [NullAllowed] string shortText, [NullAllowed] string accessibilityLabel);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKTextProvider))]
 	interface CLKDateTextProvider {
 
@@ -1050,6 +1101,7 @@ namespace ClockKit {
 		NativeHandle Constructor (NSDate date, NSCalendarUnit calendarUnits, [NullAllowed] NSTimeZone timeZone);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKTextProvider))]
 	interface CLKTimeTextProvider {
 
@@ -1077,6 +1129,7 @@ namespace ClockKit {
 		NativeHandle Constructor (NSDate date, [NullAllowed] NSTimeZone timeZone);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKTextProvider))]
 	interface CLKTimeIntervalTextProvider {
 
@@ -1107,6 +1160,7 @@ namespace ClockKit {
 		NativeHandle Constructor (NSDate startDate, NSDate endDate, [NullAllowed] NSTimeZone timeZone);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[BaseType (typeof (CLKTextProvider))]
 	interface CLKRelativeDateTextProvider {
 
@@ -1152,6 +1206,7 @@ namespace ClockKit {
 		NSString LaunchedComplicationIdentifierKey { get; }
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicBezelCircularText {
@@ -1180,6 +1235,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicBezelCircularText Create (CLKComplicationTemplateGraphicCircular circularTemplate, [NullAllowed] CLKTextProvider textProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[Abstract] // <quote>An abstract superclass for all the circular graphic templates.</quote>
 	[DisableDefaultCtor]
@@ -1187,6 +1243,7 @@ namespace ClockKit {
 	interface CLKComplicationTemplateGraphicCircular {
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
 	interface CLKComplicationTemplateGraphicCircularClosedGaugeImage {
@@ -1206,6 +1263,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCircularClosedGaugeImage Create (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
 	interface CLKComplicationTemplateGraphicCircularClosedGaugeText {
@@ -1225,6 +1283,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCircularClosedGaugeText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider centerTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
 	interface CLKComplicationTemplateGraphicCircularImage {
@@ -1241,6 +1300,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCircularImage Create (CLKFullColorImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
 	interface CLKComplicationTemplateGraphicCircularOpenGaugeImage {
@@ -1263,6 +1323,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCircularOpenGaugeImage Create (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider bottomImageProvider, CLKTextProvider centerTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
 	interface CLKComplicationTemplateGraphicCircularOpenGaugeRangeText {
@@ -1288,6 +1349,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCircularOpenGaugeRangeText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider leadingTextProvider, CLKTextProvider trailingTextProvider, CLKTextProvider centerTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
 	interface CLKComplicationTemplateGraphicCircularOpenGaugeSimpleText {
@@ -1310,6 +1372,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCircularOpenGaugeSimpleText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider bottomTextProvider, CLKTextProvider centerTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicCornerCircularImage {
@@ -1326,6 +1389,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCornerCircularImage Create (CLKFullColorImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicCornerGaugeImage {
@@ -1360,6 +1424,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCornerGaugeImage Create (CLKGaugeProvider gaugeProvider, [NullAllowed] CLKTextProvider leadingTextProvider, [NullAllowed] CLKTextProvider trailingTextProvider, CLKFullColorImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicCornerGaugeText {
@@ -1394,6 +1459,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCornerGaugeText Create (CLKGaugeProvider gaugeProvider, [NullAllowed] CLKTextProvider leadingTextProvider, [NullAllowed] CLKTextProvider trailingTextProvider, CLKTextProvider outerTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicCornerStackText {
@@ -1413,6 +1479,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCornerStackText Create (CLKTextProvider innerTextProvider, CLKTextProvider outerTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicCornerTextImage {
@@ -1432,6 +1499,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCornerTextImage Create (CLKTextProvider textProvider, CLKFullColorImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicRectangularLargeImage {
@@ -1451,6 +1519,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicRectangularLargeImage Create (CLKTextProvider textProvider, CLKFullColorImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicRectangularStandardBody {
@@ -1503,6 +1572,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicRectangularStandardBody Create ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, [NullAllowed] CLKTextProvider body2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicRectangularTextGauge {
@@ -1537,6 +1607,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicRectangularTextGauge Create ([NullAllowed] CLKFullColorImageProvider headerImageProvider, CLKTextProvider headerTextProvider, CLKTextProvider body1TextProvider, CLKGaugeProvider gaugeProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1573,6 +1644,7 @@ namespace ClockKit {
 		NativeHandle Constructor (UIImage fullColorImage, [NullAllowed] CLKImageProvider tintedImageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // <quote>An abstract superclass that...</quote>
@@ -1593,6 +1665,7 @@ namespace ClockKit {
 		string AccessibilityLabel { get; set; }
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKGaugeProvider))]
 	[DisableDefaultCtor]
@@ -1612,6 +1685,7 @@ namespace ClockKit {
 		float FillFractionEmpty { get; }
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (5,0)]
 	[BaseType (typeof (CLKGaugeProvider))]
 	[DisableDefaultCtor]
@@ -1637,6 +1711,7 @@ namespace ClockKit {
 		float EndFillFraction { get; }
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (6,0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
 	interface CLKComplicationTemplateGraphicCircularStackText {
@@ -1657,6 +1732,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicCircularStackText Create (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (6,0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicCircular))]
 	interface CLKComplicationTemplateGraphicCircularStackImage {
@@ -1685,6 +1761,7 @@ namespace ClockKit {
 		void AddWatchFace (NSUrl fileUrl, Action<NSError> handler);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplate))]
 	interface CLKComplicationTemplateGraphicRectangularFullImage : NSSecureCoding {
@@ -1705,6 +1782,7 @@ namespace ClockKit {
 	interface CLKComplicationTemplateGraphicExtraLargeCircular : NSSecureCoding {
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularStackText {
@@ -1722,6 +1800,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularStackText Create (CLKTextProvider line1TextProvider, CLKTextProvider line2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularStackImage {
@@ -1739,6 +1818,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularStackImage Create (CLKFullColorImageProvider line1ImageProvider, CLKTextProvider line2TextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeSimpleText {
@@ -1759,6 +1839,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeSimpleText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider bottomTextProvider, CLKTextProvider centerTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeRangeText {
@@ -1782,6 +1863,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeRangeText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider leadingTextProvider, CLKTextProvider trailingTextProvider, CLKTextProvider centerTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (7, 0)]
 	[BaseType (typeof (CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeImage {
@@ -1802,6 +1884,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularOpenGaugeImage Create (CLKGaugeProvider gaugeProvider, CLKFullColorImageProvider bottomImageProvider, CLKTextProvider centerTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (7, 0)]
 	[BaseType (typeof(CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularImage {
@@ -1816,6 +1899,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularImage Create (CLKFullColorImageProvider imageProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (7, 0)]
 	[BaseType (typeof(CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularClosedGaugeText {
@@ -1833,6 +1917,7 @@ namespace ClockKit {
 		CLKComplicationTemplateGraphicExtraLargeCircularClosedGaugeText Create (CLKGaugeProvider gaugeProvider, CLKTextProvider centerTextProvider);
 	}
 
+	[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 	[Watch (7, 0)]
 	[BaseType (typeof(CLKComplicationTemplateGraphicExtraLargeCircular))]
 	interface CLKComplicationTemplateGraphicExtraLargeCircularClosedGaugeImage {
@@ -1870,14 +1955,76 @@ namespace ClockKit {
 		[NullAllowed, Export ("userActivity")]
 		NSUserActivity UserActivity { get; }
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Export ("initWithIdentifier:displayName:supportedFamilies:")]
 		NativeHandle Constructor (string identifier, string displayName, [BindAs (typeof (CLKComplicationFamily []))] NSNumber[] supportedFamilies);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Export ("initWithIdentifier:displayName:supportedFamilies:userInfo:")]
 		NativeHandle Constructor (string identifier, string displayName, [BindAs (typeof (CLKComplicationFamily []))] NSNumber[] supportedFamilies, NSDictionary userInfo);
 
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use WidgetKit instead.")]
 		[Export ("initWithIdentifier:displayName:supportedFamilies:userActivity:")]
 		NativeHandle Constructor (string identifier, string displayName, [BindAs (typeof (CLKComplicationFamily []))] NSNumber[] supportedFamilies, NSUserActivity userActivity);
+	}
+
+	[Watch (9,0), NoiOS]
+	[BaseType (typeof (NSObject))]
+	interface CLKComplicationWidgetMigrationConfiguration {}
+
+	[Watch (9,0), NoiOS]
+	[Protocol]
+	[BaseType (typeof(NSObject))]
+	interface CLKComplicationWidgetMigrator
+	{
+		[Async]
+		[Export ("getWidgetConfigurationFrom:completionHandler:")]
+		void GetWidgetConfiguration (CLKComplicationDescriptor complicationDescriptor, Action<CLKComplicationWidgetMigrationConfiguration> completionHandler);
+	}
+
+	[Watch (9,0), NoiOS]
+	[BaseType (typeof (CLKComplicationWidgetMigrationConfiguration))]
+	[DisableDefaultCtor]
+	interface CLKComplicationIntentWidgetMigrationConfiguration
+	{
+		[Export ("kind")]
+		string Kind { get; }
+
+		[Export ("extensionBundleIdentifier")]
+		string ExtensionBundleIdentifier { get; }
+
+		[Export ("intent", ArgumentSemantic.Copy)]
+		INIntent Intent { get; }
+
+		[Export ("localizedDisplayName")]
+		string LocalizedDisplayName { get; }
+
+		[Export ("initWithKind:extensionBundleIdentifier:intent:localizedDisplayName:")]
+		NativeHandle Constructor (string kind, string extensionBundleIdentifier, INIntent intent, string localizedDisplayName);
+
+		[Static]
+		[Export ("intentWidgetMigrationConfigurationWithKind:extensionBundleIdentifier:intent:localizedDisplayName:")]
+		CLKComplicationIntentWidgetMigrationConfiguration Create (string kind, string extensionBundleIdentifier, INIntent intent, string localizedDisplayName);
+	}
+
+
+	[Watch (9,0), NoiOS]
+	[BaseType (typeof(CLKComplicationWidgetMigrationConfiguration))]
+	[DisableDefaultCtor]
+	interface CLKComplicationStaticWidgetMigrationConfiguration
+	{
+		[Export ("kind")]
+		string Kind { get; }
+
+		[Export ("extensionBundleIdentifier")]
+		string ExtensionBundleIdentifier { get; }
+
+		[Export ("initWithKind:extensionBundleIdentifier:")]
+		NativeHandle Constructor (string kind, string extensionBundleIdentifier);
+
+		[Static]
+		[Export ("staticWidgetMigrationConfigurationWithKind:extensionBundleIdentifier:")]
+		CLKComplicationStaticWidgetMigrationConfiguration StaticWidgetMigrationConfigurationWithKind (string kind, string extensionBundleIdentifier);
 	}
 
 

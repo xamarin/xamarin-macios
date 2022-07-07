@@ -53,6 +53,9 @@ namespace Introspection {
 				// Unfortunately I couldn't find any documentation related to determining exactly which
 				// hardware capability these need (or how to detect them), so just ignore them.
 				return true;
+			case "CLKComplicationWidgetMigrator":
+				// Not present in the simulator, is a migration class
+				return true;
 			default:
 				return SkipDueToAttribute (type);
 			}
@@ -145,6 +148,9 @@ namespace Introspection {
 				case "HMAccessorySetupPayload": // Conformance not in headers
 					return true;
 				// Xcode 14
+				case "CLKComplicationIntentWidgetMigrationConfiguration":
+				case "CLKComplicationStaticWidgetMigrationConfiguration":
+				case "CLKComplicationWidgetMigrationConfiguration":
 				case "HKElectrocardiogramVoltageMeasurement":
 				case "AVPlayerInterstitialEvent":
 					return true;
@@ -288,6 +294,9 @@ namespace Introspection {
 				case "HMAccessorySetupResult": // Conformance not in headers
 					return true;
 				// Xcode 14 beta 2
+				case "CLKComplicationIntentWidgetMigrationConfiguration":
+				case "CLKComplicationStaticWidgetMigrationConfiguration":
+				case "CLKComplicationWidgetMigrationConfiguration":
 				case "PHPickerConfiguration":
 				case "PHAssetChangeRequest":
 				case "PHAssetCreationRequest":
@@ -430,6 +439,9 @@ namespace Introspection {
 				case "HMAccessorySetupResult": // Conformance not in headers
 					return true;
 				// Xcode 14
+				case "CLKComplicationIntentWidgetMigrationConfiguration":
+				case "CLKComplicationStaticWidgetMigrationConfiguration":
+				case "CLKComplicationWidgetMigrationConfiguration":
 				case "PHPickerConfiguration":
 				case "PHAssetChangeRequest":
 				case "PHAssetCreationRequest":
