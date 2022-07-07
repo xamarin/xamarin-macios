@@ -1535,12 +1535,12 @@ namespace AuthenticationServices {
 		[Export ("saveLoginConfiguration:error:")]
 		bool SaveLoginConfiguration (ASAuthorizationProviderExtensionLoginConfiguration loginConfiguration, [NullAllowed] out NSError error);
 
-		// [Export ("saveCertificate:keyType:")]
-		// unsafe void SaveCertificate (SecCertificateRef* certificate, ASAuthorizationProviderExtensionKeyType keyType);
+		[Export ("saveCertificate:keyType:")]
+		void SaveCertificate (SecCertificate certificate, ASAuthorizationProviderExtensionKeyType keyType);
 
-		// [Export ("copyKeyForKeyType:")]
-		// [return: NullAllowed]
-		// unsafe SecKeyRef* CopyKey (ASAuthorizationProviderExtensionKeyType keyType);
+		[Export ("copyKeyForKeyType:")]
+		[return: NullAllowed]
+		SecKey CopyKey (ASAuthorizationProviderExtensionKeyType keyType);
 
 		[Export ("copyIdentityForKeyType:")]
 		[return: NullAllowed]
