@@ -19,6 +19,7 @@ using CoreGraphics;
 #if MONOMAC
 using AppKit;
 using AUViewControllerBase = AppKit.NSViewController;
+using UIViewController = AppKit.NSViewController;
 #else
 using UIKit;
 using AUViewControllerBase = UIKit.UIViewController;
@@ -240,4 +241,18 @@ namespace CoreAudioKit {
 		void SetOutputAudioUnit (AudioUnit.AudioUnit audioUnit);
 	}
 #endif
+
+	[Mac (13,0), iOS (16,0)]
+	[BaseType (typeof(UIViewController))]
+	interface AUGenericViewController
+	{
+
+		[DesignatedInitializer]
+		[Export ("initWithNibName:bundle:")]
+		[PostGet ("NibBundle")]
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+
+		[NullAllowed, Export ("auAudioUnit", ArgumentSemantic.Strong)]
+		AUAudioUnit AuAudioUnit { get; set; }
+	}
 }
