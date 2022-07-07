@@ -107,7 +107,7 @@ stages:
   - ${{ each label in parameters.simTestsConfigurations }}:
     - job: "tests_${{ replace(label, '-', '_') }}"
       ${{ if eq(parameters.parseLabels, true) }}:
-        condition: eq(dependencies.configure.outputs['labels.skip-all-tests'], 'False')
+        condition: ne(dependencies.configure.outputs['labels.skip-all-tests'], 'True')
       dependsOn:
       - ${{ if eq(parameters.parseLabels, true) }}:
         - configure
@@ -152,7 +152,7 @@ stages:
 
   - job: publish_test_results
     ${{ if eq(parameters.parseLabels, true) }}:
-      condition: and(eq(dependencies.configure.outputs['labels.skip-all-tests'], 'False'),  succeededOrFailed())
+      condition: and(ne(dependencies.configure.outputs['labels.skip-all-tests'], 'True'),  succeededOrFailed())
     ${{ else }}:
       condition: succeededOrFailed()
     displayName: 'GitHub comment - Publish results'
@@ -183,7 +183,7 @@ stages:
 
   - job: publish_skipped_tests
     ${{ if eq(parameters.parseLabels, true) }}:
-      condition: ne(dependencies.configure.outputs['labels.skip-all-tests'], 'False')
+      condition: eq(dependencies.configure.outputs['labels.skip-all-tests'], 'True')
     ${{ else }}:
       condition: false
     displayName: 'GitHub comment - Skipped tests'
