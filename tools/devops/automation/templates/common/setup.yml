@@ -32,6 +32,8 @@ steps:
     }
 
     gci env: | format-table -autosize -wrap
+
+    system_profiler SPSoftwareDataType SPHardwareDataType SPDeveloperToolsDataType
   displayName: 'Show Environment'
 
 - powershell: |

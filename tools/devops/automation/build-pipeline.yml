@@ -198,6 +198,7 @@ trigger:
 stages:
 - template: templates/main-stage.yml
   parameters:
+    xcodeChannel: Stable
     isPR: false
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
