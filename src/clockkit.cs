@@ -2024,7 +2024,7 @@ namespace ClockKit {
 
 		[Static]
 		[Export ("staticWidgetMigrationConfigurationWithKind:extensionBundleIdentifier:")]
-		CLKComplicationStaticWidgetMigrationConfiguration StaticWidgetMigrationConfigurationWithKind (string kind, string extensionBundleIdentifier);
+		CLKComplicationStaticWidgetMigrationConfiguration Create (string kind, string extensionBundleIdentifier);
 	}
 
 
