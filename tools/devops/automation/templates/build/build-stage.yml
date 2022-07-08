@@ -36,6 +36,9 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: xcodeChannel
+  type: string
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -118,6 +121,7 @@ jobs:
     demands:
     - Agent.OS -equals Darwin
     - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+    - XcodeChannel -equals ${{ parameters.xcodeChannel }}
   workspace:
     clean: all
 
