@@ -64,8 +64,8 @@ all-local:: global.json
 global.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
-		printf "\t\"sdk\": { \"version\": \"$(DOTNET_VERSION)\" }\n" >> $@; \
-		printf "\n}\n" >> $@
+		printf "  \"sdk\": {\n    \"version\": \"$(DOTNET_VERSION)\"\n  }\n" >> $@; \
+		printf "}\n" >> $@
 
 install-hook::
 	@$(MAKE) check-permissions
