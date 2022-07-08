@@ -2,6 +2,7 @@
 !missing-protocol! NSFastEnumeration not bound
 !missing-protocol-conformance! NSArray should conform to NSFastEnumeration
 !missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration
+!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeration' category)
 !missing-protocol-conformance! NSEnumerator should conform to NSFastEnumeration
 !missing-protocol-conformance! NSOrderedSet should conform to NSFastEnumeration
 !missing-protocol-conformance! NSSet should conform to NSFastEnumeration
