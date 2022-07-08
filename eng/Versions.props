@@ -1,11 +1,11 @@
 <Project>
   <!--Package versions-->
   <PropertyGroup>
-    <MicrosoftDotnetSdkInternalPackageVersion>7.0.100-preview.6.22306.4</MicrosoftDotnetSdkInternalPackageVersion>
-    <MicrosoftNETILLinkTasksPackageVersion>7.0.100-1.22273.1</MicrosoftNETILLinkTasksPackageVersion>
+    <MicrosoftDotnetSdkInternalPackageVersion>7.0.100-preview.7.22357.5</MicrosoftDotnetSdkInternalPackageVersion>
+    <MicrosoftNETILLinkTasksPackageVersion>7.0.100-1.22354.1</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>6.0.0-beta.21212.6</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftNETILStripTasksPackageVersion>6.0.0-rc.2.21468.3</MicrosoftNETILStripTasksPackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>7.0.0-preview.6.22304.5</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>7.0.0-preview.6.22356.1</MicrosoftNETCoreAppRefPackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
   </PropertyGroup>
 </Project>
