@@ -168,3 +168,4 @@
 !missing-selector! NSXPCConnection::activate not bound
 !missing-selector! NSXPCListener::activate not bound
 !missing-type! NSAttributedStringMarkdownSourcePosition not bound
+!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeration' category)

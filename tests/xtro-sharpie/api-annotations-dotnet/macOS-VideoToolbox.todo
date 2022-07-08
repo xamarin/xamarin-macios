@@ -12,3 +12,5 @@
 !missing-pinvoke! VTPixelRotationSessionGetTypeID is not bound
 !missing-pinvoke! VTPixelRotationSessionInvalidate is not bound
 !missing-pinvoke! VTPixelRotationSessionRotateImage is not bound
+!missing-field! kVTCompressionPropertyKey_EstimatedAverageBytesPerFrame not bound
+!missing-field! kVTCompressionPropertyKey_PreserveAlphaChannel not bound

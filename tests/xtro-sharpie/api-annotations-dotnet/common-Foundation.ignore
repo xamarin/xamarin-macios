@@ -790,7 +790,6 @@
 !unknown-type! NSObject bound
 
 ## Used 'INSFastEnumeration' placeholer (just so we can start flagging things)
-!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeraiton' category)
 
 ## never bound (or requested) for macOS, added to iOS/tvOS/watchOS in xcode10
 !missing-field! NSNonOwnedPointerHashCallBacks not bound

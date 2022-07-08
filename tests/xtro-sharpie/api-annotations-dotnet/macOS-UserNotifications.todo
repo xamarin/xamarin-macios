@@ -2,3 +2,5 @@
 !missing-selector! UNMutableNotificationContent::filterCriteria not bound
 !missing-selector! UNMutableNotificationContent::setFilterCriteria: not bound
 !missing-selector! UNNotificationContent::filterCriteria not bound
+!missing-enum-value! UNErrorCode native value UNErrorCodeBadgeInputInvalid = 1600 not bound
+!missing-selector! UNUserNotificationCenter::setBadgeCount:withCompletionHandler: not bound

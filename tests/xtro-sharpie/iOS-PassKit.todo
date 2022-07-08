@@ -176,3 +176,5 @@
 !missing-type! PKIdentityDocumentAgeThreshold not bound
 !missing-type! PKIdentityDocumentIssuingAuthority not bound
 !missing-type! PKIdentityDocumentRawElements not bound
+!missing-selector! +PKIdentityElement::documentIssueDateElement not bound
+!missing-selector! PKIdentityDocumentRawElements::documentIssueDate not bound

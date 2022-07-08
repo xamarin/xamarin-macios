@@ -15,3 +15,4 @@
 !missing-pinvoke! AUParameterValueFromLinear is not bound
 !missing-pinvoke! AUParameterValueToLinear is not bound
 !missing-selector! AUAudioUnitV2Bridge::audioUnit not bound
+!missing-enum! AUSpatialMixerPersonalizedHRTFMode not bound

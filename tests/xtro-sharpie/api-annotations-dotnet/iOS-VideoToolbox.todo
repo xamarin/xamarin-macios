@@ -16,3 +16,5 @@
 !missing-pinvoke! VTPixelTransferSessionGetTypeID is not bound
 !missing-pinvoke! VTPixelTransferSessionInvalidate is not bound
 !missing-pinvoke! VTPixelTransferSessionTransferImage is not bound
+!missing-field! kVTCompressionPropertyKey_EstimatedAverageBytesPerFrame not bound
+!missing-field! kVTCompressionPropertyKey_PreserveAlphaChannel not bound
