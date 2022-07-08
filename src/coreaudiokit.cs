@@ -249,7 +249,6 @@ namespace CoreAudioKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
-		[PostGet ("NibBundle")]
 		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[NullAllowed, Export ("auAudioUnit", ArgumentSemantic.Strong)]
