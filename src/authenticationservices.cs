@@ -444,11 +444,11 @@ namespace AuthenticationServices {
 		[Export ("performAutoFillAssistedRequests")]
 		void PerformAutoFillAssistedRequests ();
 
-		[NoWatch, NoTV, Mac (13,0), iOS (16,0)]
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("performRequestsWithOptions:")]
 		void PerformRequests (ASAuthorizationControllerRequestOptions options);
 
-		[NoWatch, NoTV, Mac (13,0), iOS (16,0)]
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("cancel")]
 		void Cancel ();
 	}
@@ -1353,7 +1353,7 @@ namespace AuthenticationServices {
 	[Flags, Native]
 	public enum ASAuthorizationControllerRequestOptions : ulong
 	{
-		PreferImmediatelyAvailableCredentials = 1uL << 0
+		PreferImmediatelyAvailableCredentials = 1uL << 0,
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
@@ -1361,7 +1361,7 @@ namespace AuthenticationServices {
 	public enum ASAuthorizationProviderExtensionAuthenticationMethod : long
 	{
 		Password = 1,
-		UserSecureEnclaveKey = 2
+		UserSecureEnclaveKey = 2,
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
@@ -1370,7 +1370,7 @@ namespace AuthenticationServices {
 	{
 		DeviceSigning = 1,
 		DeviceEncryption = 2,
-		SecureEnclaveKey = 3
+		SecureEnclaveKey = 3,
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
@@ -1380,17 +1380,17 @@ namespace AuthenticationServices {
 		Success = 0,
 		Failed = 1,
 		UserInterfaceRequired = 2,
-		FailedNoRetry = 3
+		FailedNoRetry = 3,
 	}
 
-	// TODO Add attributes
+	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
 	[Flags]
 	[Native]
 	public enum ASAuthorizationProviderExtensionRequestOptions : ulong
 	{
 		None = 0x0,
 		UserInteractionEnabled = 1uL << 0,
-		RegistrationRepair = 1uL << 1
+		RegistrationRepair = 1uL << 1,
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
@@ -1411,16 +1411,16 @@ namespace AuthenticationServices {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASAuthorizationProviderExtensionLoginConfiguration
 	{
 		[Export ("initWithClientID:issuer:tokenEndpointURL:jwksEndpointURL:audience:")]
-		NativeHandle Constructor (string clientID, string issuer, NSUrl tokenEndpointURL, NSUrl jwksEndpointURL, [NullAllowed] string audience);
+		NativeHandle Constructor (string clientID, string issuer, NSUrl tokenEndpointUrl, NSUrl jwksEndpointUrl, [NullAllowed] string audience);
 
 		[Static]
 		[Export ("configurationWithOpenIDConfigurationURL:clientID:issuer:completion:")]
-		void CreateConfiguration (NSUrl openIDConfigurationURL, string clientID, [NullAllowed] string issuer, Action<ASAuthorizationProviderExtensionLoginConfiguration, NSError> completion);
+		void CreateConfiguration (NSUrl openIDConfigurationUrl, string clientID, [NullAllowed] string issuer, Action<ASAuthorizationProviderExtensionLoginConfiguration, NSError> completion);
 
 		[NullAllowed, Export ("invalidCredentialPredicate")]
 		string InvalidCredentialPredicate { get; set; }
@@ -1438,13 +1438,13 @@ namespace AuthenticationServices {
 		string Audience { get; set; }
 
 		[Export ("tokenEndpointURL", ArgumentSemantic.Copy)]
-		NSUrl TokenEndpointURL { get; set; }
+		NSUrl TokenEndpointUrl { get; set; }
 
 		[Export ("jwksEndpointURL", ArgumentSemantic.Copy)]
-		NSUrl JwksEndpointURL { get; set; }
+		NSUrl JwksEndpointUrl { get; set; }
 
 		[Export ("nonceEndpointURL", ArgumentSemantic.Copy)]
-		NSUrl NonceEndpointURL { get; set; }
+		NSUrl NonceEndpointUrl { get; set; }
 
 		[Export ("nonceResponseKeypath")]
 		string NonceResponseKeypath { get; set; }
@@ -1484,7 +1484,7 @@ namespace AuthenticationServices {
 	}
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface ASAuthorizationProviderExtensionKerberosMapping
 	{
 		[NullAllowed, Export ("ticketKeyPath")]
@@ -1510,7 +1510,7 @@ namespace AuthenticationServices {
 	}
 
 	[NoWatch, NoTV, NoiOS, Mac (13,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASAuthorizationProviderExtensionLoginManager
 	{
