@@ -410,3 +410,19 @@ clean-local::
 $(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
 	$(Q) $(MAKE) -C $(TOP)/msbuild/Xamarin.HotRestart.PreBuilt all
 	$(Q) touch $@
+
+# We need to shut down the builder server, because:
+#   We're using parallel make, and parallel make will start a jobserver, managed by file descriptors, where these file descriptors must be closed in all subprocesses for make to realize it's done.
+#   'dotnet pack' might have started a build server
+#   The build server does not close any file descriptors it may have inherited when daemonizing itself.
+#   Thus the build server (which will still be alive after we're done building here) might have a file descriptor open which make is waiting for.
+#   The proper fix is to fix the build server to close its file descriptors.
+#   The intermediate working is to shut down the build server instead. An alternative solution would be to pass /p:UseSharedCompilation=false to 'dotnet pack' to disable the usage of the build server.
+#
+# The 'shutdown-build-server' is executed in a sub-make (and not as a dependency to the all-hook target),
+# to make sure it's executed after everything else is built in this file.
+all-hook::
+	$(Q) $(MAKE) shutdown-build-server
+
+shutdown-build-server:
+	$(Q) $(DOTNET) build-server shutdown
