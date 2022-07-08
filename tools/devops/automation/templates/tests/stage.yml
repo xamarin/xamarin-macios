@@ -76,6 +76,9 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: XcodeChannel
+  type: string
+
 stages:
 - stage: ${{ parameters.stageName }}
   displayName: ${{ parameters.displayName }}
@@ -103,6 +106,8 @@ stages:
 
   - ${{ each label in parameters.simTestsConfigurations }}:
     - job: "tests_${{ replace(label, '-', '_') }}"
+      ${{ if eq(parameters.parseLabels, true) }}:
+        condition: ne(dependencies.configure.outputs['labels.skip-all-tests'], 'True')
       dependsOn:
       - ${{ if eq(parameters.parseLabels, true) }}:
         - configure
@@ -122,9 +127,10 @@ stages:
 
       pool:
         name: $(AgentPoolComputed)
-        demands: 
+        demands:
         - Agent.OS -equals Darwin
         - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+        - XcodeChannel -equals ${{ parameters.XcodeChannel }}
         - ${{ each demand in parameters.extraBotDemands }}:
           - demand
         workspace:
@@ -144,13 +150,18 @@ stages:
           gitHubToken: ${{ parameters.gitHubToken }}
           xqaCertPass: ${{ parameters.xqaCertPass }}
 
-  - job: publish_html
-    displayName: 'Publish Html report in VSDrops'
+  - job: publish_test_results
+    ${{ if eq(parameters.parseLabels, true) }}:
+      condition: and(ne(dependencies.configure.outputs['labels.skip-all-tests'], 'True'),  succeededOrFailed())
+    ${{ else }}:
+      condition: succeededOrFailed()
+    displayName: 'GitHub comment - Publish results'
     timeoutInMinutes: 1000
     dependsOn: # has to wait for the tests to be done AND the data to be uploaded
+    - ${{ if eq(parameters.parseLabels, true) }}:
+      - configure
     - ${{ each label in parameters.simTestsConfigurations }}:
       - tests_${{ replace(label, '-', '_') }}
-    condition: succeededOrFailed()
     variables:
       ${{ each label in parameters.simTestsConfigurations }}:
         # Define the variable FOO from the previous job
@@ -169,3 +180,38 @@ stages:
         statusContext: ${{ parameters.statusContext }}
         vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
         testPrefix: ${{ parameters.testPrefix }}
+
+  - job: publish_skipped_tests
+    ${{ if eq(parameters.parseLabels, true) }}:
+      condition: eq(dependencies.configure.outputs['labels.skip-all-tests'], 'True')
+    ${{ else }}:
+      condition: false
+    displayName: 'GitHub comment - Skipped tests'
+    timeoutInMinutes: 1000
+    dependsOn: # has to wait for the tests to be done AND the data to be uploaded
+    -  configure
+
+    pool:
+      vmImage: 'windows-latest'
+      workspace:
+        clean: all
+
+    steps:
+
+    - template: ../common/checkout.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+
+    - pwsh: |
+        Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+
+        $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH -Debug
+        $sb = [System.Text.StringBuilder]::new()
+        $sb.AppendLine("All tests have been skipped because the label 'skip-all-tests' was set.")
+        $result = $gihubComments.NewCommentFromMessage("Test results", ":seedling:", $sb.ToString())
+      displayName: 'Set comment'
+      env:
+        CONTEXT: ${{ parameters.statusContext }}
+        DEVICE_PREFIX: ${{ parameters.testPrefix }}
+        GITHUB_TOKEN: $(GitHub.Token)
+        ACCESSTOKEN: $(System.AccessToken)
