@@ -55,6 +55,9 @@ parameters:
 - name: isPR
   type: boolean
 
+- name: xcodeChannel
+  type: string
+
 - name: simTestsConfigurations
   type: object
   default: [
@@ -135,6 +138,7 @@ stages:
   jobs:
     - template: ./build/build-stage.yml
       parameters:
+        xcodeChannel: ${{ parameters.xcodeChannel }}
         isPR: ${{ parameters.isPR }}
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
@@ -166,6 +170,7 @@ stages:
     jobs:
       - template: ./build/api-diff-stage.yml
         parameters:
+          xcodeChannel: ${{ parameters.xcodeChannel }}
           isPR: ${{ parameters.isPR }}
           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
           keyringPass: $(pass--lab--mac--builder--keychain)
@@ -185,6 +190,7 @@ stages:
 # always run simulator tests
 - template: ./tests/stage.yml
   parameters:
+    xcodeChannel: ${{ parameters.xcodeChannel }}
     isPR: ${{ parameters.isPR }}
     simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     testPrefix: 'simulator_'
@@ -208,6 +214,7 @@ stages:
     - ${{ each config in parameters.deviceTestsConfigurations }}:
       - template: ./tests/stage.yml
         parameters:
+          xcodeChannel: ${{ parameters.xcodeChannel }}
           isPR: ${{ parameters.isPR }}
           testPrefix: ${{ config.testPrefix }} 
           stageName: ${{ config.stageName }} 

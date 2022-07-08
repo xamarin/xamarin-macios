@@ -96,7 +96,8 @@ steps:
         "trigger-device-tests",
         "run-sample-tests",
         "skip-packaged-xamarin-mac-tests",
-        "skip-api-comparison"
+        "skip-api-comparison",
+        "skip-all-tests"
       )
 
       foreach ($l in $labelsOfInterest) {
