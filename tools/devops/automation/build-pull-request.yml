@@ -181,6 +181,7 @@ pr:
 stages:
 - template: templates/main-stage.yml
   parameters:
+    xcodeChannel: Stable
     isPR: true
     provisionatorChannel: ${{ parameters.provisionatorChannel }}
     pool: ${{ parameters.pool }}
