@@ -2,7 +2,6 @@
 !missing-protocol! NSFastEnumeration not bound
 !missing-protocol-conformance! NSArray should conform to NSFastEnumeration
 !missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration
-!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeration' category)
 !missing-protocol-conformance! NSEnumerator should conform to NSFastEnumeration
 !missing-protocol-conformance! NSOrderedSet should conform to NSFastEnumeration
 !missing-protocol-conformance! NSSet should conform to NSFastEnumeration
@@ -803,6 +802,7 @@
 !unknown-type! NSObject bound
 
 ## Used 'INSFastEnumeration' placeholer (just so we can start flagging things)
+!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeration' category)
 
 ## never bound (or requested) for macOS, added to iOS/tvOS/watchOS in xcode10
 !missing-field! NSNonOwnedPointerHashCallBacks not bound
