@@ -2189,6 +2189,7 @@ IOS_FRAMEWORKS =         \
 
 WATCHOS_FRAMEWORKS =        \
 	$(COMMON_FRAMEWORKS)    \
+	CallKit                 \
 	Chip                    \
 	ClockKit                \
 	CloudKit                \
