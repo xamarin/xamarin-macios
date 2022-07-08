@@ -19,7 +19,7 @@ using NativeHandle = System.IntPtr;
 
 namespace CallKit {
 
-	[iOS (10, 0), NoMac]
+	[iOS (10, 0), NoMac, NoWatch]
 	[Native]
 	public enum CXCallDirectoryEnabledStatus : long {
 		Unknown = 0,
@@ -255,7 +255,7 @@ namespace CallKit {
 		void RequestTransaction (CXAction action, Action<NSError> completion);
 	}
 
-	[iOS (10, 0), NoMac]
+	[iOS (10, 0), NoMac, NoWatch]
 	[BaseType (typeof (NSExtensionContext))]
 	interface CXCallDirectoryExtensionContext {
 
@@ -305,7 +305,7 @@ namespace CallKit {
 		void RequestFailed (CXCallDirectoryExtensionContext extensionContext, NSError error);
 	}
 
-	[iOS (10, 0), NoMac]
+	[iOS (10, 0), NoMac, NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface CXCallDirectoryManager {
 
@@ -327,7 +327,7 @@ namespace CallKit {
 		void OpenSettings ([NullAllowed] Action<NSError> completion);
 	}
 
-	[iOS (10, 0), NoMac]
+	[iOS (10, 0), NoMac, NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface CXCallDirectoryProvider : NSExtensionRequestHandling {
 
