@@ -518,6 +518,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
 				{ "OSLog", "OSLog", 8,0 },
 				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
+
+				{ "CallKit", "CallKit", 9,0 },
 			};
 		}
 		return watch_frameworks;
