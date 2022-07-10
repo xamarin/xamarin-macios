@@ -716,7 +716,7 @@ namespace Foundation {
 				if (sessionHandler.cookieContainer is not null && cookies.Length > 0)
 					lock (sessionHandler.inflightRequestsLock) { // ensure we lock when writing to the collection
 						var cookiesContents = Array.ConvertAll(cookies, static cookie => cookie.GetHeaderValue());
-						sessionHandler.cookieContainer.SetCookies (uri, string.Join (',', cookiesContents)); //  as per docs: The contents of an HTTP set-cookie header as returned by a HTTP server, with Cookie instances delimited by commas.
+						sessionHandler.cookieContainer.SetCookies (absoluteUri, string.Join (',', cookiesContents)); //  as per docs: The contents of an HTTP set-cookie header as returned by a HTTP server, with Cookie instances delimited by commas.
 					}
 			}
 
