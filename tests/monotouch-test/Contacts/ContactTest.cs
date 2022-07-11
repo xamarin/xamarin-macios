@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CNContact
 //
 // Authors:
@@ -12,7 +12,6 @@
 using System;
 using Contacts;
 using Foundation;
-using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Contacts {

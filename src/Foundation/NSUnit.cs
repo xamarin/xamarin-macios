@@ -1,4 +1,4 @@
-﻿﻿// 
+// 
 // NSUnit.cs
 //
 // Authors:
@@ -12,7 +12,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace Foundation {
-#if !XAMCORE_4_0
+#if !NET
 	public partial class NSUnit {
 		[Obsolete ("Use .ctor(string)")]
 		public NSUnit () { }

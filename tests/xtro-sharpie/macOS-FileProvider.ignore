@@ -7,6 +7,3 @@
 
 ## when deprecated (xcode12 beta 3) this member was marked as not available on macOS (but it was before)
 !extra-protocol-member! unexpected selector NSFileProviderItem::typeIdentifier found
-
-## XAMCORE_4_0 -> not constant - iOS/tvOS/watchOS are different (and future updates might change the current value too)
-!missing-enum-value! NSFileProviderItemCapabilities native value NSFileProviderItemCapabilitiesAllowsAll = 63 not bound

@@ -19,12 +19,27 @@ using OS_nw_browse_result=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 using OS_nw_txt_record=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
+#endif
 	public class NWBrowseResult : NativeObject {
 
-		internal NWBrowseResult (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWBrowseResult (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_endpoint nw_browse_result_copy_endpoint (OS_nw_browse_result result);
@@ -57,7 +72,7 @@ namespace Network {
 		static void TrampolineEnumerateInterfacesHandler (IntPtr block, IntPtr inter)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWInterface>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwInterface = new NWInterface (inter, owns: false);
 				del (nwInterface);
 			}
@@ -66,8 +81,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateInterfaces (Action<NWInterface> handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateInterfacesHandler, handler);

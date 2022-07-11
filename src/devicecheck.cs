@@ -1,4 +1,4 @@
-﻿//
+//
 // DeviceCheck C# bindings
 //
 // Authors:
@@ -48,9 +48,10 @@ namespace DeviceCheck {
 		void GenerateToken (DCDeviceGenerateTokenCompletionHandler completion);
 	}
 
-	[NoWatch, NoTV]
+	[NoWatch]
 	[iOS (14,0)]
 	[Mac (11,3)]
+	[TV (15,0)]
 	[MacCatalyst (14,5)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]

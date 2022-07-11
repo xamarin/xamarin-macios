@@ -8,7 +8,6 @@
 //
 
 using System;
-using System.IO;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
@@ -25,7 +24,7 @@ namespace MonoTouchFixtures.Foundation {
 			var range = new NSRange (0, text.Length);
 			var detector = NSDataDetector.Create (NSTextCheckingType.Link, out NSError error);
 
-#if XAMCORE_4_0
+#if NET
 			var matches = detector.GetMatches (new NSString (text), 0, range);
 #else
 			var matches = detector.GetMatches2 (new NSString (text), 0, range);

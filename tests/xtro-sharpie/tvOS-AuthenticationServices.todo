@@ -1,7 +1,0 @@
-!missing-enum-value! ASAuthorizationError native value ASAuthorizationErrorNotInteractive = 1005 not bound
-!missing-field! ASAuthorizationCustomMethodOther not bound
-!missing-field! ASAuthorizationCustomMethodRestorePurchase not bound
-!missing-field! ASAuthorizationCustomMethodVideoSubscriberAccount not bound
-!missing-protocol-member! ASAuthorizationControllerDelegate::authorizationController:didCompleteWithCustomMethod: not found
-!missing-selector! ASAuthorizationController::customAuthorizationMethods not bound
-!missing-selector! ASAuthorizationController::setCustomAuthorizationMethods: not bound

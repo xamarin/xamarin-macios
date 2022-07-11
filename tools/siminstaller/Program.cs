@@ -78,10 +78,12 @@ namespace xsiminstaller {
 		public static int Main (string [] args)
 		{
 			var exit_code = 0;
-			string xcode_app = null;
+			string? xcode_app = null;
 			var install = new List<string> ();
 			var only_check = false;
 			var force = false;
+			var printHelp = false;
+			
 			var os = new OptionSet {
 				{ "xcode=", "The Xcode.app to use", (v) => xcode_app = v },
 				{ "install=", "ID of simulator to install. Can be repeated multiple times.", (v) => install.Add (v) },
@@ -90,14 +92,22 @@ namespace xsiminstaller {
 				{ "f|force", "Install again even if already installed.", (v) => force = true },
 				{ "v|verbose", "Increase verbosity", (v) => verbose++ },
 				{ "q|quiet", "Decrease verbosity", (v) => verbose-- },
+				{ "h|help", "Print this help message", (v) => printHelp = true },
 			};
 
 			var others = os.Parse (args);
-			if (others.Count () > 0) {
+			if (others.Any ()) {
 				Console.WriteLine ("Unexpected arguments:");
 				foreach (var arg in others)
 					Console.WriteLine ("\t{0}", arg);
+				Console.WriteLine ("Expected arguments are:");
+				os.WriteOptionDescriptions (Console.Out);
 				return 1;
+			}
+
+			if (printHelp) {
+				os.WriteOptionDescriptions (Console.Out);
+				return 0;
 			}
 
 			if (string.IsNullOrEmpty (xcode_app)) {
@@ -125,11 +135,6 @@ namespace xsiminstaller {
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 2, ".");
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 1, ".");
 			var url = $"https://devimages-cdn.apple.com/downloads/xcode/simulators/index-{xcodeVersion}-{xcodeUuid}.dvtdownloadableindex";
-			if (xcodeVersion == "13.0.0") {
-				// force the url to be the xcode12.5 since simulators are not yet present with the beta1
-				// issue: https://github.com/xamarin/xamarin-macios/issues/11881
-				url = "https://devimages-cdn.apple.com/downloads/xcode/simulators/index-12.5.0-F56A1938-53DE-493D-9D64-87EE6C415E4D.dvtdownloadableindex";
-			} 
 			var uri = new Uri (url);
 			var tmpfile = Path.Combine (TempDirectory, Path.GetFileName (uri.LocalPath));
 			if (!File.Exists (tmpfile)) {
@@ -273,7 +278,7 @@ namespace xsiminstaller {
 			return exit_code;
 		}
 
-		static bool IsInstalled (string identifier, out Version installedVersion)
+		static bool IsInstalled (string identifier, out Version? installedVersion)
 		{
 			if (TryExecuteAndCapture ($"pkgutil", $"--pkg-info {identifier}", out var pkgInfo, out _)) {
 				var lines = pkgInfo.Split ('\n');

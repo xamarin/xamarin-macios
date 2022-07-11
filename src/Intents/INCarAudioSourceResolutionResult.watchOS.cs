@@ -1,4 +1,4 @@
-#if __WATCHOS__ && !XAMCORE_4_0
+#if __WATCHOS__ && !NET
 
 using System;
 using System.Drawing;
@@ -53,4 +53,4 @@ namespace Intents {
 		}
 	} /* class INCarAudioSourceResolutionResult */
 }
-#endif // __WATCHOS__ && !XAMCORE_4_0
+#endif // __WATCHOS__ && !NET

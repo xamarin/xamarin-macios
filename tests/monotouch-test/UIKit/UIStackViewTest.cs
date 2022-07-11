@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for UIStackViewTest
 //
 // Authors:
@@ -17,6 +17,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 	[TestFixture]
@@ -26,7 +27,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithFrameTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 9, 0, throwIfOtherPlatform: false);
 
 			UIStackView stack = new UIStackView (new CGRect (0, 0, 10, 10));
 			Assert.NotNull (stack, "UIStackView ctor(CGRect)");

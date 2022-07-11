@@ -1,15 +1,15 @@
-# Default complication includes in iOS, tvOS, watchOS and macOS projects
+# Default complication includes in iOS, tvOS, macOS and Mac Catalyst projects
 
 Default compilation includes for .NET Core projects is explained here:
 [Default compilation includes in .NET Core projects][1]
 
 This document explains how default compilation includes is implemented for
-iOS, tvOS, watchOS and macOS projects.
+iOS, tvOS, macOS, and Mac Catalyst projects.
 
 Default inclusion can be completely disabled by setting
 `EnableDefaultItems=false`. It can also be disabled per-platform by setting
 the platform-specific variables `EnableDefaultiOSItems=false`,
-`EnableDefaulttvOSItems=false`, `EnableDefaultwatchOSItems=false`, or
+`EnableDefaulttvOSItems=false`, `EnableDefaultMacCatalystItems=false`, or
 `EnableDefaultmacOSItems=false`.
 
 ## Property lists
@@ -48,16 +48,12 @@ included by default (as `CoreMLModel` items).
 All \*.metal files anywhere in the project directory or any subdirectory are
 included by default (as `Metal` items).
 
-## SceneKit Assets
+## All other files in the Resources/ subdirectory
 
-All \*.scnassets directories anywhere in the project directory or any
-subdirectory are included by default (as `SceneKitAsset` items).
-
-## Binding projects
-
-Default compilation includes is turned off for binding projects, because
-typically there are C# source files (ApiDefinition.cs, StructsAndEnums.cs,
-etc.) in the binding project directory which should be compiled as binding
-source code, and not as normal C# source code.
+All files in the Resources/ subdirectory, except any items in the `Compile` or
+`EmbeddedResource` item groups, and except the ones mentioned above
+(\*.scnassets, \*.storyboard, \*.xib, \*.xcassets, \*.atlas, \*.mlmodel,
+\*.metal) are included by default (as `BundleResource` items).
 
 [1]: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#default-compilation-includes-in-net-core-projects
+

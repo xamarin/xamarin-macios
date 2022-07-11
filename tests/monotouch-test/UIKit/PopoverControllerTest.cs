@@ -9,6 +9,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
@@ -25,7 +26,7 @@ namespace MonoTouchFixtures.UIKit {
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
 				return;
 
-			bool ios8 = TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			bool ios8 = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 			
 			using (var vc = new UIViewController ())
 			using (var pc = new UIPopoverController (vc)) {
@@ -45,8 +46,7 @@ namespace MonoTouchFixtures.UIKit {
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
 				Assert.Inconclusive ("Requires iPad");
 			
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("ObjectiveC exception crash on devices - bug #3980");
+			TestRuntime.AssertNotDevice ("ObjectiveC exception crash on devices - bug #3980");
 			
 			using (var vc = new UIViewController ())
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
@@ -55,7 +55,11 @@ namespace MonoTouchFixtures.UIKit {
 				pc.PresentFromBarButtonItem (bbi, UIPopoverArrowDirection.Down, true);
 #else
 				// UIBarButtonItem is itself 'ok' but it's not assigned to a view
+#if NET
+				Assert.Throws<ObjCException> (() => pc.PresentFromBarButtonItem (bbi, UIPopoverArrowDirection.Down, true));
+#else
 				Assert.Throws<MonoTouchException> (() => pc.PresentFromBarButtonItem (bbi, UIPopoverArrowDirection.Down, true));
+#endif
 #endif
 				// fails with:
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[UIPopoverController presentPopoverFromBarButtonItem:permittedArrowDirections:animated:]: Popovers cannot be presented from a view which does not have a window.
@@ -84,14 +88,17 @@ namespace MonoTouchFixtures.UIKit {
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Pad)
 				Assert.Inconclusive ("Requires iPad");
 
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("ObjectiveC exception crash on devices - bug #3980");
+			TestRuntime.AssertNotDevice ("ObjectiveC exception crash on devices - bug #3980");
 			
 			using (var vc = new UIViewController ())
 			using (var bbi = new UIBarButtonItem (UIBarButtonSystemItem.Action))
 			using (var pc = new UIPopoverController (vc)) {
 				// 'vc' has never been shown
+#if NET
+				Assert.Throws<ObjCException> (() => pc.PresentFromRect (new CGRect (10, 10, 100, 100), vc.View, UIPopoverArrowDirection.Down, true));
+#else
 				Assert.Throws<MonoTouchException> (() => pc.PresentFromRect (new CGRect (10, 10, 100, 100), vc.View, UIPopoverArrowDirection.Down, true));
+#endif
 				// fails with:
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: -[UIPopoverController presentPopoverFromRect:inView:permittedArrowDirections:animated:]: Popovers cannot be presented from a view which does not have a window.
 			}

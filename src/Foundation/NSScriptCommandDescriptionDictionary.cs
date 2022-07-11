@@ -5,7 +5,7 @@ using ObjCRuntime;
 
 namespace Foundation {
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 
 	public static class NSScriptCommandDescriptionDictionaryKeys {
 		private static NSString cmdClass = new NSString ("CommandClass");

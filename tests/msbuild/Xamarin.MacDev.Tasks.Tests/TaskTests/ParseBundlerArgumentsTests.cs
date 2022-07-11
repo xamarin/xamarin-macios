@@ -31,14 +31,19 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void NoSymbolStrip ()
 		{
-			var true_variations = new string [] { "--nosymbolstrip", "-nosymbolstrip", "/nosymbolstrip" };
+			var true_variations = new string [] {
+				"--nosymbolstrip",
+				"-nosymbolstrip",
+				"/nosymbolstrip",
+				"/nosymbolstrip symbol1", // the argument to nosymbolstrip is optional, which means that any subsequent arguments are considered separate options.
+			};
 			var false_variations = new string [] {
 				"--nosymbolstrip:symbol1",
 				"-nosymbolstrip:symbol2",
 				"/nosymbolstrip:symbol3",
 				"--nosymbolstrip=symbol1",
 				"-nosymbolstrip=symbol2",
-				"/nosymbolstrip=symbol3"
+				"/nosymbolstrip=symbol3",
 			};
 
 			foreach (var variation in false_variations) {
@@ -61,7 +66,12 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void NoDSymUtil ()
 		{
-			var true_variations = new string [] { "--dsym:false", "-dsym:0", "/dsym:no", "--dsym=disable" };
+			var true_variations = new string [] {
+				"--dsym:false",
+				"-dsym:0",
+				"/dsym:no",
+				"--dsym=disable",
+			};
 			var false_variations = new string [] {
 				"--dsym:yes",
 				"-dsym:1",
@@ -69,7 +79,9 @@ namespace Xamarin.iOS.Tasks
 				"--dsym=enable",
 				"-dsym",
 				"/dsym",
-				"--dsym"
+				"--dsym",
+				"--dsym true",
+				"--dsym false", // the argument to dsym is optional, which means that any subsequent arguments are considered separate options.
 			};
 
 			foreach (var variation in false_variations) {
@@ -93,6 +105,7 @@ namespace Xamarin.iOS.Tasks
 		[TestCase ("--marshal-managed-exceptions", "")]
 		[TestCase ("--marshal-managed-exceptions:", "")]
 		[TestCase ("--marshal-managed-exceptions:default", "default")]
+		[TestCase ("--marshal-managed-exceptions default", "default")]
 		[TestCase ("--marshal-managed-exceptions:dummy", "dummy")]
 		[TestCase ("-marshal-managed-exceptions:dummy", "dummy")]
 		[TestCase ("/marshal-managed-exceptions:dummy", "dummy")]
@@ -108,6 +121,7 @@ namespace Xamarin.iOS.Tasks
 		[TestCase ("--marshal-objectivec-exceptions", "")]
 		[TestCase ("--marshal-objectivec-exceptions:", "")]
 		[TestCase ("--marshal-objectivec-exceptions:default", "default")]
+		[TestCase ("--marshal-objectivec-exceptions default", "default")]
 		[TestCase ("--marshal-objectivec-exceptions:dummy", "dummy")]
 		[TestCase ("-marshal-objectivec-exceptions:dummy", "dummy")]
 		[TestCase ("/marshal-objectivec-exceptions:dummy", "dummy")]
@@ -123,6 +137,7 @@ namespace Xamarin.iOS.Tasks
 		[TestCase ("--optimize", "")]
 		[TestCase ("--optimize:", "")]
 		[TestCase ("--optimize:default", "default")]
+		[TestCase ("--optimize default", "")] // // the argument to optimize is optional, which means that any subsequent arguments are considered separate options.
 		[TestCase ("--optimize:dummy", "dummy")]
 		[TestCase ("-optimize:dummy", "dummy")]
 		[TestCase ("/optimize:dummy", "dummy")]
@@ -138,6 +153,7 @@ namespace Xamarin.iOS.Tasks
 
 		[TestCase ("--registrar", "")]
 		[TestCase ("--registrar:static", "static")]
+		[TestCase ("--registrar static", "static")]
 		[TestCase ("--registrar:default", "default")]
 		[TestCase ("--registrar=dynamic,trace", "dynamic,trace")]
 		[TestCase ("-registrar:dummy", "dummy")]
@@ -154,6 +170,7 @@ namespace Xamarin.iOS.Tasks
 		[TestCase ("--xml", null, "")]
 		[TestCase ("--xml", "", "")]
 		[TestCase ("--xml:abc", null, "abc")]
+		[TestCase ("--xml abc", null, "abc")]
 		[TestCase ("--xml:abc --xml:def", null, "abc;def")]
 		[TestCase ("--xml:abc --xml:def", "123", "123;abc;def")]
 		[TestCase ("--xml:abc --xml:def", "123;456", "123;456;abc;def")]
@@ -174,6 +191,7 @@ namespace Xamarin.iOS.Tasks
 		[TestCase ("--custom_bundle_name:", "")]
 		[TestCase ("--custom_bundle_name=", "")]
 		[TestCase ("--custom_bundle_name=abc", "abc")]
+		[TestCase ("--custom_bundle_name abc", "abc")]
 		public void CustomBundleName (string input, string output)
 		{
 			var task = CreateTask<CustomParseBundlerArguments> ();
@@ -183,4 +201,3 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 }
-

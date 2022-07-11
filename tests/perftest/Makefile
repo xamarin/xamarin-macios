@@ -2,15 +2,7 @@ TOP=../..
 
 include $(TOP)/Make.config
 
-dotnet/global.json: $(TOP)/NuGet.config Makefile
-	$(Q) $(MAKE) -C ../dotnet $(notdir $@)
-	$(Q) $(CP) ../dotnet/$(notdir $@) $@
-
-dotnet/NuGet.config: $(TOP)/NuGet.config Makefile
-	$(Q) $(MAKE) -C ../dotnet $(notdir $@)
-	$(Q) $(CP) ../dotnet/$(notdir $@) $@
-
-TARGETS=dotnet/NuGet.config dotnet/global.json
+TARGETS=
 
 ifeq ("$(BENCHMARK_OUTPUT_PATH)","")
 BENCHMARK_OUTPUT_PATH:=$(abspath $(CURDIR)/output/$(shell date +%Y-%m-%d--%H:%M:%S))
@@ -46,8 +38,8 @@ RUNTIME_IDENTIFIER?=osx-x64
 build-perf-test: $(TARGETS)
 	$(Q) test -n "$(XAMARIN_RUNTIME)" || ( echo "❌ XAMARIN_RUNTIME must be set! ❌"; exit 1)
 	$(Q) rm -Rf bin/$(XAMARIN_RUNTIME) obj/$(XAMARIN_RUNTIME)
-	$(Q) if ! (cd dotnet && $(DOTNET6) build $(abspath dotnet/perftest.csproj) "/bl:$(abspath $@-$(XAMARIN_RUNTIME)-$(BINLOG_TIMESTAMP).binlog)" $(BUILD_PARAMETERS) /p:Configuration=$(XAMARIN_RUNTIME) /p:_XamarinRuntime=$(XAMARIN_RUNTIME) /p:RuntimeIdentifier=$(RUNTIME_IDENTIFIER) $(DOTNET_BUILD_VERBOSITY)); then \
-		$(DOTNET6) build /v:diag "$(abspath $@-$(XAMARIN_RUNTIME)-$(BINLOG_TIMESTAMP).binlog)"; \
+	$(Q) if ! (cd dotnet && $(DOTNET) build $(abspath dotnet/perftest.csproj) "/bl:$(abspath $@-$(XAMARIN_RUNTIME)-$(BINLOG_TIMESTAMP).binlog)" $(BUILD_PARAMETERS) /p:Configuration=$(XAMARIN_RUNTIME) /p:_XamarinRuntime=$(XAMARIN_RUNTIME) /p:RuntimeIdentifier=$(RUNTIME_IDENTIFIER) $(DOTNET_BUILD_VERBOSITY)); then \
+		$(DOTNET) build /v:diag "$(abspath $@-$(XAMARIN_RUNTIME)-$(BINLOG_TIMESTAMP).binlog)"; \
 		echo "Performance test build failed" & \
 		exit 1; \
 	fi
@@ -92,4 +84,4 @@ run-perftest-with-runtime: $(TARGETS)
 	@echo "Running perftest ($(XAMARIN_RUNTIME)) and writing output to $(PERFLOGFILENAME)..."
 	$(Q) mkdir -p $(BENCHMARK_OUTPUT_PATH)
 	$(Q) echo "VM: $(XAMARIN_RUNTIME)" > $(PERFLOGFILENAME)
-	$(Q) set -o pipefail; (time $(abspath dotnet/bin/$(XAMARIN_RUNTIME)/net6.0-macos/$(RUNTIME_IDENTIFIER)/perftest.app/Contents/MacOS/perftest) $(ARGUMENTS) 2>&1) 2>&1 | tee -a $(PERFLOGFILENAME)
+	$(Q) set -o pipefail; (time $(abspath dotnet/bin/$(XAMARIN_RUNTIME)/$(DOTNET_TFM)-macos/$(RUNTIME_IDENTIFIER)/perftest.app/Contents/MacOS/perftest) $(ARGUMENTS) 2>&1) 2>&1 | tee -a $(PERFLOGFILENAME)

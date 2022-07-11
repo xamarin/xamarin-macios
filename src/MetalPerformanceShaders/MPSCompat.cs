@@ -1,9 +1,11 @@
-#if !XAMCORE_4_0
+#if !NET
 
 using System;
 using Metal;
 
 using ObjCRuntime;
+
+using NativeHandle = System.IntPtr;
 
 namespace MetalPerformanceShaders {
 
@@ -50,7 +52,7 @@ namespace MetalPerformanceShaders {
 			=> throw new NotSupportedException ();
 
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
-		protected MPSCnnConvolutionState (IntPtr handle) : base (handle)
+		protected MPSCnnConvolutionState (NativeHandle handle) : base (handle)
 			=> throw new NotSupportedException ();
 
 		[Obsolete ("Empty stub (not a public API).")]
@@ -70,9 +72,9 @@ namespace MetalPerformanceShaders {
 
 #pragma warning disable CS0809
 		[Obsolete ("Empty stub (not a public API).")]
-		public override IntPtr ClassHandle { get; }
+		public override NativeHandle ClassHandle { get; }
 #pragma warning restore CS0809
 	}
 }
 
-#endif
+#endif // !NET

@@ -1,4 +1,4 @@
-﻿//
+//
 // GKStateMachine.cs: Implements some nicer methods for GKStateMachine
 //
 // Authors:
@@ -7,6 +7,8 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -14,12 +16,12 @@ using ObjCRuntime;
 namespace GameplayKit {
 	public partial class GKStateMachine : NSObject {
 		
-		public GKState GetState (Type stateType)
+		public GKState? GetState (Type stateType)
 		{
 			return GetState (GKState.GetClass (stateType, "stateType"));
 		}
 
-		public GKState GetState (GKState state)
+		public GKState? GetState (GKState state)
 		{
 			return GetState (GKState.GetClass (state, "state"));
 		}

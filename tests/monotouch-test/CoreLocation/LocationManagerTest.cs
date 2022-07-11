@@ -1,11 +1,8 @@
-﻿// Copyright 2019 Microsoft Corporation
+// Copyright 2019 Microsoft Corporation
 
 #if __IOS__
 
-using System;
-
 using Foundation;
-using UIKit;
 using CoreLocation;
 using ObjCRuntime;
 

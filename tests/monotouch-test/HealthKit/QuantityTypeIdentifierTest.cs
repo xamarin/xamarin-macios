@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for HKQuantityTypeIdentifier
 //
 // Authors:
@@ -10,6 +10,7 @@
 #if HAS_HEALTHKIT
 
 using System;
+using System.Collections.Generic;
 
 using Foundation;
 using HealthKit;
@@ -26,6 +27,8 @@ namespace MonoTouchFixtures.HealthKit {
 		public void EnumValues_22351 ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
+
+			var failures = new List<string> ();
 
 			foreach (HKQuantityTypeIdentifier value in Enum.GetValues (typeof (HKQuantityTypeIdentifier))) {
 
@@ -81,6 +84,11 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (12, 5))
 						continue;
 					break;
+				case HKQuantityTypeIdentifier.AppleWalkingSteadiness:
+				case HKQuantityTypeIdentifier.NumberOfAlcoholicBeverages:
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						continue;
+					break;
 				}
 
 				try {
@@ -89,9 +97,11 @@ namespace MonoTouchFixtures.HealthKit {
 					}
 				}
 				catch (Exception e) {
-					Assert.Fail ("{0} could not be created: {1}", value, e);
+					failures.Add ($"{value} could not be created: {e}");
 				}
 			}
+
+			Assert.That (failures, Is.Empty, "No failures");
 		}
 	}
 }

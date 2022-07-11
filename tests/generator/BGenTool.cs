@@ -27,6 +27,9 @@ namespace Xamarin.Tests
 		public List<string> ApiDefinitions = new List<string> ();
 		public List<string> Sources = new List<string> ();
 		public List<string> References = new List<string> ();
+#if NET
+		public List<string> CompileCommand = null;
+#endif
 
 		// If BaseLibrary and AttributeLibrary are null, we calculate a default value
 #if NET
@@ -80,16 +83,16 @@ namespace Xamarin.Tests
 			case Profile.None:
 				break;
 			case Profile.iOS:
-				targetFramework = TargetFramework.DotNet_6_0_iOS_String;
+				targetFramework = TargetFramework.DotNet_iOS_String;
 				break;
 			case Profile.tvOS:
-				targetFramework = TargetFramework.DotNet_6_0_tvOS_String;
+				targetFramework = TargetFramework.DotNet_tvOS_String;
 				break;
 			case Profile.watchOS:
-				targetFramework = TargetFramework.DotNet_6_0_watchOS_String;
+				targetFramework = TargetFramework.DotNet_watchOS_String;
 				break;
 			case Profile.macOSMobile:
-				targetFramework = TargetFramework.DotNet_6_0_macOS_String;
+				targetFramework = TargetFramework.DotNet_macOS_String;
 				break;
 			case Profile.macOSFull:
 			case Profile.macOSSystem:
@@ -127,6 +130,20 @@ namespace Xamarin.Tests
 			}
 #endif
 
+#if NET
+			if (CompileCommand is null) {
+				if (!StringUtils.TryParseArguments (Configuration.DotNetCscCommand, out var args, out var ex))
+					throw new InvalidOperationException ($"Unable to parse the .NET csc command '{Configuration.DotNetCscCommand}': {ex.Message}");
+
+				CompileCommand = new List<string> (args);
+			}
+
+			if (CompileCommand.Count > 0) {
+				sb.Add ($"--compile-command");
+				sb.Add (string.Join (" ", StringUtils.QuoteForProcess (CompileCommand.ToArray ())));
+			}
+#endif
+
 			TargetFramework? tf = null;
 			if (targetFramework != null)
 				tf = TargetFramework.Parse (targetFramework);
@@ -158,7 +175,7 @@ namespace Xamarin.Tests
 				if (tf == null) {
 					// do nothing
 				} else if (tf.Value.IsDotNet == true) {
-					References.AddRange (Directory.GetFiles (Configuration.DotNet6BclDir, "*.dll"));
+					References.AddRange (Directory.GetFiles (Configuration.DotNetBclDir, "*.dll"));
 				} else {
 					throw new NotImplementedException ("ReferenceBclByDefault");
 				}
@@ -440,9 +457,11 @@ namespace Xamarin.Tests
 
 		public TextWriter CurrentWriter {
 			get {
-				if (current_writer == null)
-					return original_stdout;
-				return current_writer;
+				lock (lock_obj) {
+					if (current_writer == null)
+						return original_stdout;
+					return current_writer;
+				}
 			}
 		}
 

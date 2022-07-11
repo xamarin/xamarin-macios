@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-maccatalyst</TargetFramework>
-    <NativeLibName>maccatalyst-fat</NativeLibName>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-maccatalyst</TargetFramework>
   </PropertyGroup>
-  <Import Project="..\shared.targets" />
+
+  <!-- Imports of the form '../shared.fsproj' will be processed by xharness -->
+  <Import Project="../shared.csproj" />
+
+  <ItemGroup>
+    <!-- this empty item group is here for xharness -->
+  </ItemGroup>
 </Project>

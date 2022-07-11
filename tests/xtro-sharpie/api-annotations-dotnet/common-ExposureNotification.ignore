@@ -1,0 +1,4 @@
+## enum are not decorated so they _seem_ available to tvOS
+!missing-enum! ENAuthorizationStatus not bound
+!missing-enum! ENErrorCode not bound
+!missing-enum! ENStatus not bound

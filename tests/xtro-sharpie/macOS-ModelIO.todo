@@ -1,5 +1,0 @@
-!missing-enum-value! MDLMaterialPropertyType native value MDLMaterialPropertyTypeBuffer = 10 not bound
-!missing-enum-value! MDLMeshBufferType native value MDLMeshBufferTypeCustom = 3 not bound
-!missing-field! kUTTypeUniversalSceneDescriptionMobile not bound
-!missing-selector! MDLAsset::originals not bound
-!missing-selector! MDLAsset::setOriginals: not bound

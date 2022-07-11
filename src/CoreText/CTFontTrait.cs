@@ -26,20 +26,25 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace CoreText {
 
+#if !NET
 	public static class CTFontTraitKey {
-		public static readonly NSString Symbolic;
-		public static readonly NSString Weight;
-		public static readonly NSString Width;
-		public static readonly NSString Slant;
+		public static readonly NSString? Symbolic;
+		public static readonly NSString? Weight;
+		public static readonly NSString? Width;
+		public static readonly NSString? Slant;
 
 		static CTFontTraitKey ()
 		{
@@ -50,6 +55,7 @@ namespace CoreText {
 			Slant     = Dlfcn.GetStringConstant (handle, "kCTFontSlantTrait");
 		}
 	}
+#endif
 
 	[Flags]
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFontTraits.h
@@ -84,6 +90,12 @@ namespace CoreText {
 		Symbolic            = ((uint) 12 << CTFontTraits.ClassMaskShift),
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTFontTraits {
 
 		public CTFontTraits ()
@@ -93,8 +105,8 @@ namespace CoreText {
 
 		public CTFontTraits (NSDictionary dictionary)
 		{
-			if (dictionary == null)
-				throw new ArgumentNullException ("dictionary");
+			if (dictionary is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
@@ -103,7 +115,7 @@ namespace CoreText {
 		// CFNumber
 		public uint? Symbolic {
 			get {return Adapter.GetUInt32Value (Dictionary, CTFontTraitKey.Symbolic);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Symbolic, value);}
+			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Symbolic!, value);}
 		}
 
 		public CTFontSymbolicTraits? SymbolicTraits {
@@ -135,23 +147,22 @@ namespace CoreText {
 		// CFNumber representing a float value 
 		public float? Weight {
 			get {return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Weight);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Weight, value);}
+			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Weight!, value);}
 		}
 
 		// CFNumber representing a float value 
 		public float? Width {
 			get {return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Width);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Width, value);}
+			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Width!, value);}
 		}
 
 		// CFNumber representing a float value 
 		public float? Slant {
 			get {return Adapter.GetSingleValue (Dictionary, CTFontTraitKey.Slant);}
-			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Slant, value);}
+			set {Adapter.SetValue (Dictionary, CTFontTraitKey.Slant!, value);}
 		}
 
 		internal const int  ClassMaskShift      = 28;
 		internal const uint StylisticClassMask  = ((uint) 15 << ClassMaskShift);
 	}
 }
-

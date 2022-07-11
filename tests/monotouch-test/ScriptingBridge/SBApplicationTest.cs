@@ -7,6 +7,10 @@ using ObjCRuntime;
 using Foundation;
 using ScriptingBridge;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Xamarin.Mac.Tests {
 
 	public class MySBApp : SBApplication {
@@ -22,7 +26,7 @@ namespace Xamarin.Mac.Tests {
 
 		protected MySBApp (NSObjectFlag t) : base (t) { }
 
-		protected internal MySBApp (IntPtr handle) : base (handle) { }
+		protected internal MySBApp (NativeHandle handle) : base (handle) { }
 	}
 
 	[TestFixture]
@@ -34,16 +38,16 @@ namespace Xamarin.Mac.Tests {
 		{
 			const string knownBundle = "com.apple.finder";
 			const string unknownBundle = "com.unknown.bundle";
-#if !XAMCORE_4_0
+#if !NET
 			using (var app1 = SBApplication.FromBundleIdentifier (knownBundle))
 			using (var app2 = SBApplication.FromBundleIdentifier<MySBApp> (knownBundle))
 			using (var app3 = SBApplication.FromBundleIdentifier (unknownBundle))
 			using (var app4 = SBApplication.FromBundleIdentifier<MySBApp> (unknownBundle))
 #else
-			var (app1 = SBApplication.GetApplication (knownBundle))
-			var (app2 = SBApplication.GetApplication<MySbApp> (knownBundle))
-			var (app3 = SBApplication.GetApplication (unknownBundle))
-			var (app4 = SBApplication.GetApplication<MySbApp> (unknownBundle))
+			using (var app1 = SBApplication.GetApplication (knownBundle))
+			using (var app2 = SBApplication.GetApplication<MySBApp> (knownBundle))
+			using (var app3 = SBApplication.GetApplication (unknownBundle))
+			using (var app4 = SBApplication.GetApplication<MySBApp> (unknownBundle))
 #endif
 			{
 				Assert.IsNotNull (app1, "SBApplication from known bundle is null");
@@ -57,12 +61,12 @@ namespace Xamarin.Mac.Tests {
 		public void TestGetApplicationFromUrl ()
 		{
 			using (NSUrl knownUrl = new NSUrl ("http://www.xamarin.com"))
-#if !XAMCORE_4_0
+#if !NET
 			using (var app1 = SBApplication.FromURL (knownUrl))
 			using (var app2 = SBApplication.FromURL<MySBApp> (knownUrl))
 #else
 			using (var app1 = SBApplication.GetApplication (knownUrl))
-			using (var app2 = SBApplication.GetApplication<MySbApp> (knownUrl))
+			using (var app2 = SBApplication.GetApplication<MySBApp> (knownUrl))
 #endif
 			{
 				Assert.IsNotNull (app1, "SBApplication from known URL is null");
@@ -75,16 +79,16 @@ namespace Xamarin.Mac.Tests {
 		{
 			int knownPid = System.Diagnostics.Process.GetCurrentProcess ().Id;
 			int unknownPid = -1; // valid pid is > 0
-#if !XAMCORE_4_0
+#if !NET
 			using (var app1 = SBApplication.FromProcessIdentifier (knownPid))
 			using (var app2 = SBApplication.FromProcessIdentifier<MySBApp> (knownPid))
 			using (var app3 = SBApplication.FromProcessIdentifier (unknownPid))
 			using (var app4 = SBApplication.FromProcessIdentifier<MySBApp> (unknownPid))
 #else
 			using (var app1 = SBApplication.GetApplication (knownPid))
-			using (var app2 = SBApplication.GetApplication<MySbApp> (knownPid))
+			using (var app2 = SBApplication.GetApplication<MySBApp> (knownPid))
 			using (var app3 = SBApplication.GetApplication (unknownPid))
-			using (var app4 = SBApplication.GetApplication<MySbApp> (unknownPid)
+			using (var app4 = SBApplication.GetApplication<MySBApp> (unknownPid))
 #endif
 			{
 				Assert.IsNotNull (app1, "SBApplication from known pid is null");

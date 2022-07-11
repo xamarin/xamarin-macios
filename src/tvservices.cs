@@ -6,6 +6,10 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace TVServices {
 
 	[TV (9,0)]
@@ -21,7 +25,7 @@ namespace TVServices {
 
 		[Export ("initWithIdentifier:container:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier, [NullAllowed] TVContentIdentifier container);
+		NativeHandle Constructor (string identifier, [NullAllowed] TVContentIdentifier container);
 	}
 
 	[TV (9,0)]
@@ -74,7 +78,7 @@ namespace TVServices {
 
 		[Export ("initWithContentIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (TVContentIdentifier ident);
+		NativeHandle Constructor (TVContentIdentifier ident);
 
 		[TV (11,0)]
 		[Export ("imageURLForTraits:")]
@@ -112,7 +116,7 @@ namespace TVServices {
 	interface TVAppProfileDescriptor : NSCopying, NSSecureCoding {
 
 		[Export("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export("name")]
 		string Name { get; set; }
@@ -127,7 +131,7 @@ namespace TVServices {
 
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 	}
 
 	[TV (13,0)]
@@ -155,7 +159,7 @@ namespace TVServices {
 
 		[Export ("initWithStyle:items:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (TVTopShelfCarouselContentStyle style, TVTopShelfCarouselItem[] items);
+		NativeHandle Constructor (TVTopShelfCarouselContentStyle style, TVTopShelfCarouselItem[] items);
 	}
 
 	[TV (13,0)]
@@ -180,7 +184,7 @@ namespace TVServices {
 		// inlined from base class
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[NullAllowed, Export ("contextTitle")]
 		string ContextTitle { get; set; }
@@ -234,7 +238,7 @@ namespace TVServices {
 		CGSize ImageSize { get; }
 
 		[Export ("initWithItems:")]
-		IntPtr Constructor (TVTopShelfItem[] items);
+		NativeHandle Constructor (TVTopShelfItem[] items);
 	}
 
 	[TV (13,0)]
@@ -263,7 +267,7 @@ namespace TVServices {
 
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 	}
 
 	[TV (13,0)]
@@ -279,7 +283,7 @@ namespace TVServices {
 
 		[Export ("initWithName:values:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string name, string[] values);
+		NativeHandle Constructor (string name, string[] values);
 	}
 
 	[TV (13,0)]
@@ -331,7 +335,7 @@ namespace TVServices {
 		TVTopShelfItem[] Items { get; }
 
 		[Export ("initWithItems:")]
-		IntPtr Constructor (TVTopShelfItem[] items);
+		NativeHandle Constructor (TVTopShelfItem[] items);
 	}
 
 	[TV (13,0)]
@@ -344,7 +348,7 @@ namespace TVServices {
 
 		[Export("initWithSections:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (TVTopShelfItemCollection[] sections);
+		NativeHandle Constructor (TVTopShelfItemCollection[] sections);
 
 		[Static]
 		[Export("imageSizeForImageShape:")]
@@ -367,7 +371,7 @@ namespace TVServices {
 		// inlined from base type
 		[Export ("initWithIdentifier:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier);
+		NativeHandle Constructor (string identifier);
 
 		[Export ("imageShape", ArgumentSemantic.Assign)]
 		TVTopShelfSectionedItemImageShape ImageShape { get; set; }

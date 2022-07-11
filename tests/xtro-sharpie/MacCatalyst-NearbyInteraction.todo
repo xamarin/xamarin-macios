@@ -1,4 +1,0 @@
-!missing-protocol-member! NISessionDelegate::session:didGenerateShareableConfigurationData:forObject: not found
-!missing-selector! NINearbyAccessoryConfiguration::accessoryDiscoveryToken not bound
-!missing-selector! NINearbyAccessoryConfiguration::initWithData:error: not bound
-!missing-type! NINearbyAccessoryConfiguration not bound

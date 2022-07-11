@@ -3,28 +3,28 @@ on:
   pull_request:
     types: [opened, reopened, labeled, unlabeled, synchronize]
 
+permissions:
+  contents: read
+
 jobs:
   labels-check:
+    permissions:
+      contents: none
     runs-on: ubuntu-latest
     name: Labels verification
 
     steps:
-    - run: echo "$GITHUB_CONTEXT"
-      name: 'Debug context'
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-
     - run: exit 0
       name: 'Monojenkins PR'
       # always happy if monojenkins
-      if: github.actor == 'vs-mobiletools-engineering-service2'
+      if: github.actor == 'vs-mobiletools-engineering-service2' || github.actor == 'github-actions[bot]' || github.actor == 'dotnet-maestro[bot]'
 
     - run: exit 1
       name: 'User PR with no labels'
-      # failure if not monojenkins and no labels
-      if: github.actor != 'vs-mobiletools-engineering-service2' && join(github.event.pull_request.labels, ',') == ''
+      # failure if not monojenkins and not dotnet-maestro and no labels
+      if: github.actor != 'vs-mobiletools-engineering-service2' && github.actor != 'dotnet-maestro[bot]' && join(github.event.pull_request.labels, ',') == ''
 
     - run: exit 0
       name: 'User PR with labels'
       # success if not monojenkins but labels
-      if: github.actor != 'vs-mobiletools-engineering-service2' && join(github.event.pull_request.labels, ',') != ''
+      if: github.actor != 'vs-mobiletools-engineering-service2' && github.actor != 'dotnet-maestro[bot]' && join(github.event.pull_request.labels, ',') != ''

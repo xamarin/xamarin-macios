@@ -1,15 +1,6 @@
 # Added but deprecated, so there is not point to add them
 !missing-protocol-member! CLLocationManagerDelegate::locationManager:didRangeBeacons:inRegion: not found
 !missing-protocol-member! CLLocationManagerDelegate::locationManager:rangingBeaconsDidFailForRegion:withError: not found
-!missing-selector! CLBeacon::proximityUUID not bound
-!missing-selector! CLBeaconRegion::initWithProximityUUID:identifier: not bound
-!missing-selector! CLBeaconRegion::initWithProximityUUID:major:identifier: not bound
-!missing-selector! CLBeaconRegion::initWithProximityUUID:major:minor:identifier: not bound
 !missing-selector! CLBeaconRegion::initWithUUID:identifier: not bound
-!missing-selector! CLBeaconRegion::proximityUUID not bound
-!missing-selector! CLLocationManager::rangedRegions not bound
-!missing-selector! CLLocationManager::startRangingBeaconsInRegion: not bound
-!missing-selector! CLLocationManager::stopRangingBeaconsInRegion: not bound
-!missing-selector! CLLocationManager::startMonitoringForRegion:desiredAccuracy: not bound
-!missing-selector! CLLocationManager::allowDeferredLocationUpdatesUntilTraveled:timeout: not bound
-!missing-selector! CLLocationManager::disallowDeferredLocationUpdates not bound
+
+# Fixed in .NET

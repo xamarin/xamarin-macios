@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for 4cc-based enums
 //
 // Authors:

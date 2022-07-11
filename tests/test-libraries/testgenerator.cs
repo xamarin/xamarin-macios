@@ -98,7 +98,7 @@ static class C {
 		new BindAsData { Managed = "CMTimeRange", Native = "CMTimeRange", ManagedCondition = "HAVE_COREMEDIA", ManagedNewExpression = "new CMTimeRange { Duration = new CMTime (37, 38), Start = new CMTime (39, 40) }", Map = ".CMTimeRangeValue", MapFrom = "FromCMTimeRange"  },
 		new BindAsData { Managed = "CMTime", Native = "CMTime", ManagedCondition = "HAVE_COREMEDIA",  ManagedNewExpression = "new CMTime (35, 36)", Map = ".CMTimeValue", MapFrom = "FromCMTime"  },
 		new BindAsData { Managed = "CMTimeMapping", Native = "CMTimeMapping", ManagedCondition = "HAVE_COREMEDIA", ManagedNewExpression = "new CMTimeMapping { Source = new CMTimeRange { Duration = new CMTime (42, 43), Start = new CMTime (44, 45) } }", Map = ".CMTimeMappingValue", MapFrom = "FromCMTimeMapping"  },
-		new BindAsData { Managed = "CATransform3D", Native = "CATransform3D", ManagedCondition = "HAVE_COREANIMATION", ManagedNewExpression = "new CATransform3D { m11 = 41 }", Map = ".CATransform3DValue", MapFrom = "FromCATransform3D"  },
+		new BindAsData { Managed = "CATransform3D", Native = "CATransform3D", ManagedCondition = "HAVE_COREANIMATION", ManagedNewExpression = "new CATransform3D { M11 = 41 }", Map = ".CATransform3DValue", MapFrom = "FromCATransform3D"  },
 		new BindAsData { Managed = "NSDirectionalEdgeInsets", Native = "NSDirectionalEdgeInsets", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new NSDirectionalEdgeInsets (42, 43, 44, 45)", Map = ".DirectionalEdgeInsetsValue", MapFrom = "FromDirectionalEdgeInsets", MinXcodeVersion = new Version (9, 0) },
 	};
 
@@ -759,7 +759,7 @@ namespace Bindings.Test
 			w.AppendLine ();
 		}
 		if (v.MinMacOSVersion != null) {
-			w.AppendLine ($"\t\t\tTestRuntime.AssertSystemVersion (PlatformName.MacOSX, {v.MinMacOSVersion.Major}, {v.MinMacOSVersion.Minor}, throwIfOtherPlatform: false);");
+			w.AppendLine ($"\t\t\tTestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, {v.MinMacOSVersion.Major}, {v.MinMacOSVersion.Minor}, throwIfOtherPlatform: false);");
 			w.AppendLine ();
 		}
 	}
@@ -791,7 +791,9 @@ using Security;
 using UIKit;
 #endif
 using MonoTouchException=ObjCRuntime.RuntimeException;
-#if __MACOS__
+#if NET
+using NativeException=ObjCRuntime.ObjCException;
+#elif __MACOS__
 using NativeException=Foundation.ObjCException;
 #else
 using NativeException=Foundation.MonoTouchException;
@@ -800,6 +802,7 @@ using NUnit.Framework;
 using Bindings.Test;
 
 using XamarinTests.ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -1428,6 +1431,7 @@ using NUnit.Framework;
 using Bindings.Test;
 
 using XamarinTests.ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 

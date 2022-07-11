@@ -11,11 +11,16 @@
     <EnableDefaultmacOSItems Condition=" '$(_PlatformName)' == 'macOS' And '$(EnableDefaultmacOSItems)' == '' ">$(EnableDefaultItems)</EnableDefaultmacOSItems>
     <EnableDefaultMacCatalystItems Condition=" '$(_PlatformName)' == 'MacCatalyst' And '$(EnableDefaultMacCatalystItems)' == '' ">$(EnableDefaultItems)</EnableDefaultMacCatalystItems>
 
-    <!-- Don't include default Compile items for binding projects, because that would pick up ApiDefinition.cs and StructsAndEnums.cs -->
-    <EnableDefaultCompileItems Condition=" '$(IsBindingProject)' == 'true' ">false</EnableDefaultCompileItems>
-
-    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == ''">true</UseMonoRuntime>
+    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' != 'macOS'">true</UseMonoRuntime>
+    <UseMonoRuntime Condition=" '$(UseMonoRuntime)' == '' And '$(_PlatformName)' == 'macOS'">false</UseMonoRuntime>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Exclude api definitions from files included by default -->
+    <Compile Remove="@(ObjcBindingApiDefinition)" />
+    <!-- Exclude core sources as well, we re-add them later (this way we make sure they only show up once in the Compile item group) -->
+    <Compile Remove="@(ObjcBindingCoreSource)" />
+  </ItemGroup>
 
   <!-- Architecture -->
   <!-- If the old-style variables are set, use those -->
@@ -61,16 +66,21 @@
     </PropertyGroup>
   </Target>
 
+  <PropertyGroup Condition="('$(RuntimeIdentifier)' != '' Or '$(RuntimeIdentifiers)' != '') And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS')">
+    <_IsDotNetSimulatorBuild Condition="$(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">true</_IsDotNetSimulatorBuild>
+    <_IsDotNetSimulatorBuild Condition="'$(_IsDotNetSimulatorBuild)' == ''">false</_IsDotNetSimulatorBuild>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(ComputedPlatform)' == '' And ('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS') ">
-    <ComputedPlatform Condition="$(RuntimeIdentifier.Contains('simulator')) Or $(RuntimeIdentifiers.Contains('simulator'))">iPhoneSimulator</ComputedPlatform>
+    <ComputedPlatform Condition="'$(_IsDotNetSimulatorBuild)' == 'true'">iPhoneSimulator</ComputedPlatform>
     <ComputedPlatform Condition="'$(ComputedPlatform)' == ''">iPhone</ComputedPlatform>
   </PropertyGroup>
 
   <!-- Declare the XI/XM framework bundled with this version of the SDK. See Microsoft.NETCoreSdk.BundledVersions.props -->
   <PropertyGroup>
     <!-- Runtime pack identifiers -->
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">iossimulator-x64;ios-arm64;ios-arm;iossimulator-x86</_RuntimePackRuntimeIdentifiers>
-    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvossimulator-x64;tvos-arm64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'iOS' ">iossimulator-x64;ios-arm64;ios-arm;iossimulator-x86;iossimulator-arm64</_RuntimePackRuntimeIdentifiers>
+    <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'tvOS' ">tvossimulator-x64;tvos-arm64;tvossimulator-arm64</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'watchOS' ">watchos-x86;watchos-x64;watchos-arm</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'macOS' ">osx-x64;osx-arm64</_RuntimePackRuntimeIdentifiers>
     <_RuntimePackRuntimeIdentifiers Condition=" '$(_PlatformName)' == 'MacCatalyst' ">maccatalyst-x64;maccatalyst-arm64</_RuntimePackRuntimeIdentifiers>
@@ -85,10 +95,10 @@
     <KnownFrameworkReference Include="Microsoft.$(_PlatformName)"
                             TargetFramework="net6.0"
                             RuntimeFrameworkName="Microsoft.$(_PlatformName)"
-                            DefaultRuntimeFrameworkVersion="$(_ShortPackageVersion)"
-                            LatestRuntimeFrameworkVersion="$(_ShortPackageVersion)"
+                            DefaultRuntimeFrameworkVersion="**FromWorkload**"
+                            LatestRuntimeFrameworkVersion="**FromWorkload**"
                             TargetingPackName="Microsoft.$(_PlatformName).Ref"
-                            TargetingPackVersion="$(_ShortPackageVersion)"
+                            TargetingPackVersion="**FromWorkload**"
                             RuntimePackNamePatterns="Microsoft.$(_PlatformName).Runtime.**RID**"
                             RuntimePackRuntimeIdentifiers="$(_RuntimePackRuntimeIdentifiers)"
                             Profile="$(_PlatformName)"
@@ -99,4 +109,36 @@
     <FrameworkReference Include="Microsoft.$(_PlatformName)" IsImplicitlyDefined="true" Pack="false" PrivateAssets="All" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Add a reference to our custom nfloat reference assembly for .NET 6 (but only for .NET 6, once we switch to .NET 7 this can be removed) -->
+    <PackageReference Include="System.Runtime.InteropServices.NFloat.Internal" Condition="$([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0'))" Version="[6.0.1, )" IsImplicitlyDefined="true" />
+  </ItemGroup>
+
+  <!--
+
+    This a workaround for an issue with the Microsoft.NETCore.App runtime pack
+    selection. The Microsoft.NETCore.App known framework reference sets
+    LatestRuntimeFrameworkVersion=6.0.1, which means that when a project is
+    restored, the 6.0.1 packages (from NuGet) will be selected instead of the
+    bundled packages (which has version 6.0.3). The problem with this is that
+    the 6.0.1 packages don't have the new nfloat API. So we try to override
+    the LatestRuntimeFrameworkVersion=6.0.1 value on the
+    KnownFrameworkReference by explicitly setting the RuntimeFrameworkVersion
+    value on the FrameworkReference when LatestRuntimeFrameworkVersion<6.0.3.
+
+    Ref: https://github.com/dotnet/sdk/blob/31d4db7dc94bb2f1f4d0ef84ebf158d61f2a7c4f/src/Tasks/Microsoft.NET.Build.Tasks/ProcessFrameworkReferences.cs#L587-L594
+  -->
+  <ItemGroup Condition="'$(_PlatformName)' == 'macOS'">
+    <FrameworkReference
+        Update="Microsoft.NETCore.App"
+        Condition="
+        (
+          @(KnownFrameworkReference->AnyHaveMetadataValue('LatestRuntimeFrameworkVersion', '6.0.1')) Or
+          @(KnownFrameworkReference->AnyHaveMetadataValue('LatestRuntimeFrameworkVersion', '6.0.2'))
+        )
+        "
+        >
+      <RuntimeFrameworkVersion>6.0.3</RuntimeFrameworkVersion>
+    </FrameworkReference>
+  </ItemGroup>
 </Project>

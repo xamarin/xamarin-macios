@@ -72,8 +72,8 @@ namespace WebKit {
 		Capturing = 1, AtTarget, Bubbling
 	}
 
-	[Flags]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
+	[Flags]
 	public enum WebDragSourceAction : ulong {
 		None = 0,
 		DHTML = 1,
@@ -83,8 +83,8 @@ namespace WebKit {
 		Any = UInt64.MaxValue
 	}
 
-	[Flags]
 	[Deprecated (PlatformName.MacOSX, 10, 14, message: "No longer supported.")]
+	[Flags]
 	public enum WebDragDestinationAction : ulong {
 		None = 0,
 		DHTML = 1,
@@ -95,7 +95,7 @@ namespace WebKit {
 		Any = UInt64.MaxValue
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	public enum WebNavigationType : uint {
 #else
 	[Native]

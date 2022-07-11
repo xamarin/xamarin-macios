@@ -30,8 +30,8 @@ namespace CoreAnimation {
 				NSString result;
 				if (value == CAAnimation.AnimationLinear)
 					result = CAAnimation.AnimationLinear;
-				else if (value == CAAnimation.AnimationDescrete)
-					result = CAAnimation.AnimationDescrete;
+				else if (value == CAAnimation.AnimationDiscrete)
+					result = CAAnimation.AnimationDiscrete;
 				else if (value == CAAnimation.AnimationPaced)
 					result = CAAnimation.AnimationPaced;
 				else if (value == CAAnimation.AnimationCubic)
@@ -46,5 +46,3 @@ namespace CoreAnimation {
 		}
 	}
 }
-
-

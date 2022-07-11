@@ -88,6 +88,14 @@ namespace Registrar {
 		public Application App { get; protected set; }
 #endif
 
+#if MMP || MTOUCH || BUNDLER
+		static string NFloatTypeName { get => Driver.IsDotNet ? "System.Runtime.InteropServices.NFloat" : "System.nfloat"; }
+#elif NET
+		const string NFloatTypeName = "System.Runtime.InteropServices.NFloat";
+#else
+		const string NFloatTypeName = "System.nfloat";
+#endif
+
 		Dictionary<TAssembly, object> assemblies = new Dictionary<TAssembly, object> (); // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
 		// locking: all accesses must lock 'types'.
 		Dictionary<TType, ObjCType> types = new Dictionary<TType, ObjCType> ();
@@ -174,6 +182,24 @@ namespace Registrar {
 					}
 
 					return all_protocols;
+				}
+			}
+
+			HashSet<ObjCType> all_protocols_in_hierarchy;
+			public IEnumerable<ObjCType> AllProtocolsInHierarchy {
+				get {
+					if (all_protocols_in_hierarchy is null) {
+						all_protocols_in_hierarchy = new HashSet<ObjCType> ();
+						var type = this;
+						while (type is not null && (object) type != (object) type.BaseType) {
+							var allProtocols = type.AllProtocols;
+							if (allProtocols is not null)
+								all_protocols_in_hierarchy.UnionWith (allProtocols);
+							type = type.BaseType;
+						}
+					}
+
+					return all_protocols_in_hierarchy;
 				}
 			}
 #endif
@@ -711,14 +737,17 @@ namespace Registrar {
 					case "System.UInt32":
 					case "System.Int64":
 					case "System.UInt64":
+					case "System.IntPtr":
+					case "System.UIntPtr":
 					case "System.nint":
 					case "System.nuint":
 					case "System.Single":
 					case "System.Double":
-					case "System.nfloat":
 					case "System.Boolean":
 						return true;
 					default:
+						if (outputTypeName == NFloatTypeName)
+							return true;
 						return Registrar.IsEnum (underlyingOutputType);
 					}
 				} else if (Registrar.Is (underlyingInputType, Foundation, "NSValue")) {
@@ -845,7 +874,7 @@ namespace Registrar {
 					} else {
 						is_stret = IntPtr.Size == 4 ? Stret.X86NeedStret (NativeReturnType, null) : Stret.X86_64NeedStret (NativeReturnType, null);
 					}
-#elif MONOMAC
+#elif MONOMAC || __MACCATALYST__
 					if (Runtime.IsARM64CallingConvention) {
 						is_stret = false;
 					} else {
@@ -1080,7 +1109,7 @@ namespace Registrar {
 		protected abstract ConnectAttribute GetConnectAttribute (TProperty property); // Return null if no attribute is found. Do not consider inherited properties.
 		public abstract ProtocolAttribute GetProtocolAttribute (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract IEnumerable<ProtocolMemberAttribute> GetProtocolMemberAttributes (TType type); // Return null if no attributes found. Do not consider base types.
-		protected abstract List<AvailabilityBaseAttribute> GetAvailabilityAttributes (TType obj); // must only return attributes for the current platform.
+		protected virtual Version GetSdkIntroducedVersion (TType obj, out string message) { message = null; return null; } // returns the sdk version when the type was introduced for the current platform (null if all supported versions)
 		protected abstract Version GetSDKVersion ();
 		protected abstract TType GetProtocolAttributeWrapperType (TType type); // Return null if no attribute is found. Do not consider base types.
 		protected abstract BindAsAttribute GetBindAsAttribute (TMethod method, int parameter_index); // If parameter_index = -1 then get the attribute for the return type. Return null if no attribute is found. Must consider base method.
@@ -1273,30 +1302,50 @@ namespace Registrar {
 			get {
 				switch (App.Platform) {
 				case ApplePlatform.iOS:
-					return "Xamarin.iOS";
+					return Driver.IsDotNet ? "Microsoft.iOS" : "Xamarin.iOS";
 				case ApplePlatform.WatchOS:
-					return "Xamarin.WatchOS";
+					return Driver.IsDotNet ? "Microsoft.watchOS" : "Xamarin.WatchOS";
 				case ApplePlatform.TVOS:
-					return "Xamarin.TVOS";
+					return Driver.IsDotNet ? "Microsoft.tvOS" : "Xamarin.TVOS";
 				case ApplePlatform.MacOSX:
-					return "Xamarin.Mac";
+					return Driver.IsDotNet ? "Microsoft.macOS" : "Xamarin.Mac";
 				case ApplePlatform.MacCatalyst:
-					return "Xamarin.MacCatalyst";
+					return Driver.IsDotNet ? "Microsoft.MacCatalyst" : "Xamarin.MacCatalyst";
 				default:
 					throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 				}
 			}
 		}
 #elif MONOMAC
+#if NET
+		internal const string AssemblyName = "Microsoft.macOS";
+#else
 		internal const string AssemblyName = "Xamarin.Mac";
+#endif
 #elif WATCH
+#if NET
+		internal const string AssemblyName = "Microsoft.watchOS";
+#else
 		internal const string AssemblyName = "Xamarin.WatchOS";
+#endif
 #elif TVOS
+#if NET
+		internal const string AssemblyName = "Microsoft.tvOS";
+#else
 		internal const string AssemblyName = "Xamarin.TVOS";
+#endif
 #elif __MACCATALYST__
+#if NET
+		internal const string AssemblyName = "Microsoft.MacCatalyst";
+#else
 		internal const string AssemblyName = "Xamarin.MacCatalyst";
+#endif
 #elif IOS
+#if NET
+		internal const string AssemblyName = "Microsoft.iOS";
+#else
 		internal const string AssemblyName = "Xamarin.iOS";
+#endif
 #else
 #error Unknown platform
 #endif
@@ -1529,62 +1578,54 @@ namespace Registrar {
 
 		void VerifyTypeInSDK (ref List<Exception> exceptions, TType type, ObjCMethod parameterIn = null, ObjCMethod returnTypeOf = null, ObjCProperty propertyTypeOf = null, TType baseTypeOf = null)
 		{
-			var attribs = GetAvailabilityAttributes (type);
-			if (attribs == null || attribs.Count == 0)
+			var sdkVersion = GetSdkIntroducedVersion (type, out var message);
+			if (sdkVersion is null)
 				return;
 
 			Version sdk = GetSDKVersion ();
-			foreach (var attrib in attribs) {
-				// The attributes are already filtered to the current platform.
-				switch (attrib.AvailabilityKind) {
-				case AvailabilityKind.Introduced:
-					if (attrib.Version <= sdk)
-						break;
+			if (sdkVersion <= sdk)
+				return;
 
-					string msg;
-					string zero = GetTypeFullName (type);
-					string one = string.Empty;
-					string two = PlatformName;
-					string three = sdk.ToString ();
-					string four = attrib.Version.ToString ();
-					string five = string.IsNullOrEmpty (attrib.Message) ? "." : ": '" + attrib.Message + "'.";
-					if (baseTypeOf != null) {
-						msg = Errors.MT4162_BaseType;
-						one = GetTypeFullName (baseTypeOf);
-					} else if (parameterIn != null) {
-						msg = Errors.MT4162_Parameter;
-						one = parameterIn.DescriptiveMethodName;
-					} else if (returnTypeOf != null) {
-						msg = Errors.MT4162_ReturnType;
-						one = returnTypeOf.DescriptiveMethodName;
-					} else if (propertyTypeOf != null) {
-						msg = Errors.MT4162_PropertyType;
-						one = propertyTypeOf.FullName;
-					} else {
-						msg = Errors.MT4162_A;
-					}
-
-					msg = string.Format (msg, zero, one, two, three, four, five);
-
-					Exception ex;
-
-					if (baseTypeOf != null) {
-						ex = CreateException (4162, baseTypeOf, msg);
-					} else if (parameterIn != null) {
-						ex = CreateException (4162, parameterIn, msg);
-					} else if (returnTypeOf != null) {
-						ex = CreateException (4162, returnTypeOf, msg);
-					} else if (propertyTypeOf != null) {
-						ex = CreateException (4162, propertyTypeOf, msg);
-					} else {
-						ex = CreateException (4162, msg);
-					}
-
-					AddException (ref exceptions, ex);
-
-					break;
-				}
+			string msg;
+			string zero = GetTypeFullName (type);
+			string one = string.Empty;
+			string two = PlatformName;
+			string three = sdk.ToString ();
+			string four = sdkVersion.ToString ();
+			string five = string.IsNullOrEmpty (message) ? "." : ": '" + message + "'.";
+			if (baseTypeOf != null) {
+				msg = Errors.MT4162_BaseType;
+				one = GetTypeFullName (baseTypeOf);
+			} else if (parameterIn != null) {
+				msg = Errors.MT4162_Parameter;
+				one = parameterIn.DescriptiveMethodName;
+			} else if (returnTypeOf != null) {
+				msg = Errors.MT4162_ReturnType;
+				one = returnTypeOf.DescriptiveMethodName;
+			} else if (propertyTypeOf != null) {
+				msg = Errors.MT4162_PropertyType;
+				one = propertyTypeOf.FullName;
+			} else {
+				msg = Errors.MT4162_A;
 			}
+
+			msg = string.Format (msg, zero, one, two, three, four, five);
+
+			Exception ex;
+
+			if (baseTypeOf != null) {
+				ex = CreateException (4162, baseTypeOf, msg);
+			} else if (parameterIn != null) {
+				ex = CreateException (4162, parameterIn, msg);
+			} else if (returnTypeOf != null) {
+				ex = CreateException (4162, returnTypeOf, msg);
+			} else if (propertyTypeOf != null) {
+				ex = CreateException (4162, propertyTypeOf, msg);
+			} else {
+				ex = CreateException (4162, msg);
+			}
+
+			AddException (ref exceptions, ex);
 		}
 
 		protected static void AddException (ref List<Exception> exceptions, Exception mex)
@@ -1897,18 +1938,6 @@ namespace Registrar {
 			return objcType;
 		}
 			
-		protected bool SupportsModernObjectiveC {
-			get {
-#if MTOUCH || MONOTOUCH || BUNDLER
-				return true;
-#elif MMP
-				return App.Is64Build;
-#elif MONOMAC
-				return IntPtr.Size == 8;
-#endif
-			}
-		}
-
 		// This method is not thread-safe wrt 'types', and must be called with
 		// a lock held on 'types'.
 		ObjCType RegisterTypeUnsafe (TType type, ref List<Exception> exceptions)
@@ -2101,7 +2130,7 @@ namespace Registrar {
 							DeclaringType = objcType,
 							FieldType = "XamarinObject",// "^v", // void*
 							Name = "__monoObjectGCHandle",
-							IsPrivate = SupportsModernObjectiveC,
+							IsPrivate = true,
 							IsStatic = false,
 						}, ref exceptions);
 					}
@@ -2615,6 +2644,7 @@ namespace Registrar {
 			var typeFullName = GetTypeFullName (type);
 
 			switch (typeFullName) {
+			case "System.UIntPtr":
 			case "System.IntPtr": return "^v";
 			case "System.SByte": return "c";
 			case "System.Byte": return "C";
@@ -2641,11 +2671,12 @@ namespace Registrar {
 				return Is64Bits ? "q" : "i";
 			case "System.nuint":
 				return Is64Bits ? "Q" : "I";
-			case "System.nfloat":
-				return Is64Bits ? "d" : "f";
 			case "System.DateTime":
 				throw CreateException (4102, member, Errors.MT4102, "System.DateTime", "Foundation.NSDate", member.FullName);
 			}
+
+			if (typeFullName == NFloatTypeName)
+				return Is64Bits ? "d" : "f";
 
 			if (Is (type, ObjCRuntime, "Selector"))
 				return ":";
@@ -2738,7 +2769,7 @@ namespace Registrar {
 			// we'll end up crashing/infinite recursion since Console.WriteLine is redirected
 			// to NSLog and is using NSString (and we haven't necessarily finished registering
 			// everything yet).
-			R.NSLog (message, args);
+			R.NSLog (String.Format (message, args));
 		}
 
 		protected virtual void ReportWarning (int code, string message, params object[] args)
@@ -2800,4 +2831,3 @@ namespace Registrar {
 		SetFlags,
 	}
 }
-

@@ -39,12 +39,6 @@
 !incorrect-protocol-member! MTLTexture::newSharedTextureHandle is REQUIRED and should be abstract
 
 # Selectors missing reported by introspection: https://github.com/xamarin/maccore/issues/1978
-!missing-selector! MTLHeapDescriptor::hazardTrackingMode not bound
-!missing-selector! MTLHeapDescriptor::resourceOptions not bound
-!missing-selector! MTLHeapDescriptor::setHazardTrackingMode: not bound
-!missing-selector! MTLHeapDescriptor::setResourceOptions: not bound
-!missing-selector! MTLHeapDescriptor::setType: not bound
-!missing-selector! MTLHeapDescriptor::type not bound
 
 # new methods added to a protocol, they will be abstract in XAMCORE_4
 !incorrect-protocol-member! MTLDevice::newBinaryArchiveWithDescriptor:error: is REQUIRED and should be abstract

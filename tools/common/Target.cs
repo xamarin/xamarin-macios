@@ -157,7 +157,7 @@ namespace Xamarin.Bundler {
 
 		public void ValidateAssembliesBeforeLink ()
 		{
-			if (App.LinkMode != LinkMode.None) {
+			if (App.AreAnyAssembliesTrimmed) {
 				foreach (Assembly assembly in Assemblies) {
 					if ((assembly.AssemblyDefinition.MainModule.Attributes & ModuleAttributes.ILOnly) == 0)
 						throw ErrorHelper.CreateError (2014, Errors.MT2014, assembly.AssemblyDefinition.MainModule.FileName);
@@ -207,7 +207,7 @@ namespace Xamarin.Bundler {
 					if (Driver.GetFrameworks (App).TryGetValue (nspace, out framework)) {
 						// framework specific processing
 						switch (framework.Name) {
-#if MONOMAC
+#if MONOMAC && !NET
 						case "QTKit":
 							// we already warn in Frameworks.cs Gather method
 							if (!Driver.LinkProhibitedFrameworks)
@@ -222,7 +222,11 @@ namespace Xamarin.Bundler {
 						case "Metal":
 						case "MetalKit":
 						case "MetalPerformanceShaders":
+#if !NET
 						case "CHIP":
+#endif
+						case "PHASE":
+						case "ThreadNetwork":
 							// some frameworks do not exists on simulators and will result in linker errors if we include them
 							if (App.IsSimulatorBuild)
 								continue;
@@ -240,6 +244,7 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+#if !NET
 						case "WatchKit":
 							// Xcode 11 doesn't ship WatchKit for iOS
 							if (Driver.XcodeVersion.Major == 11 && App.Platform == ApplePlatform.iOS) {
@@ -247,9 +252,10 @@ namespace Xamarin.Bundler {
 								continue;
 							}
 							break;
+#endif
 						default:
 							if (App.IsSimulatorBuild && !App.IsFrameworkAvailableInSimulator (framework.Name)) {
-								if (App.LinkMode != LinkMode.None) {
+								if (App.AreAnyAssembliesTrimmed) {
 									ErrorHelper.Warning (5223, Errors.MX5223, framework.Name, App.PlatformName);
 								} else {
 									Driver.Log (3, Errors.MX5223, framework.Name, App.PlatformName);
@@ -338,7 +344,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
-					has_dyn_msgSend = App.IsSimulatorBuild;
+					has_dyn_msgSend = App.IsSimulatorBuild || App.MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.UnwindManagedCode;
 					break;
 				case ApplePlatform.MacCatalyst:
 				case ApplePlatform.MacOSX:
@@ -668,12 +674,12 @@ namespace Xamarin.Bundler {
 			foreach (var s in assemblies) {
 				if (!s.IsAOTCompiled)
 					continue;
-				if ((abi & Abi.SimulatorArchMask) == 0) {
-					var info = s.AssemblyDefinition.Name.Name;
-					info = EncodeAotSymbol (info);
-					assembly_externs.Append ("extern void *mono_aot_module_").Append (info).AppendLine ("_info;");
-					assembly_aot_modules.Append ("\tmono_aot_register_module (mono_aot_module_").Append (info).AppendLine ("_info);");
-				}
+
+				var info = s.AssemblyDefinition.Name.Name;
+				info = EncodeAotSymbol (info);
+				assembly_externs.Append ("extern void *mono_aot_module_").Append (info).AppendLine ("_info;");
+				assembly_aot_modules.Append ("\tmono_aot_register_module (mono_aot_module_").Append (info).AppendLine ("_info);");
+
 				string sname = s.FileName;
 				if (assembly_name != sname && IsBoundAssembly (s)) {
 					register_assemblies.Append ("\txamarin_open_and_register (\"").Append (sname).Append ("\", &exception_gchandle);").AppendLine ();
@@ -681,22 +687,20 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			if ((abi & Abi.SimulatorArchMask) == 0 || app.Embeddinator) {
-				var frameworks = assemblies.Where ((a) => a.BuildTarget == AssemblyBuildTarget.Framework)
-										   .OrderBy ((a) => a.Identity, StringComparer.Ordinal);
-				foreach (var asm_fw in frameworks) {
-					var asm_name = asm_fw.Identity;
-					if (asm_fw.BuildTargetName == asm_name)
-						continue; // this is deduceable
-					var prefix = string.Empty;
-					if (!app.HasFrameworksDirectory && asm_fw.IsCodeShared)
-						prefix = "../../";
-					var suffix = string.Empty;
-					if (app.IsSimulatorBuild)
-						suffix = "/simulator";
-					assembly_location.AppendFormat ("\t{{ \"{0}\", \"{2}Frameworks/{1}.framework/MonoBundle{3}\" }},\n", asm_name, asm_fw.BuildTargetName, prefix, suffix);
-					assembly_location_count++;
-				}
+			var frameworks = assemblies.Where ((a) => a.BuildTarget == AssemblyBuildTarget.Framework)
+										.OrderBy ((a) => a.Identity, StringComparer.Ordinal);
+			foreach (var asm_fw in frameworks) {
+				var asm_name = asm_fw.Identity;
+				if (asm_fw.BuildTargetName == asm_name)
+					continue; // this is deduceable
+				var prefix = string.Empty;
+				if (!app.HasFrameworksDirectory && asm_fw.IsCodeShared)
+					prefix = "../../";
+				var suffix = string.Empty;
+				if (app.IsSimulatorBuild)
+					suffix = "/simulator";
+				assembly_location.AppendFormat ("\t{{ \"{0}\", \"{2}Frameworks/{1}.framework/MonoBundle{3}\" }},\n", asm_name, asm_fw.BuildTargetName, prefix, suffix);
+				assembly_location_count++;
 			}
 
 			sw.WriteLine ("#include \"xamarin/xamarin.h\"");
@@ -745,6 +749,16 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("extern \"C\" { void mono_sgen_mono_ilgen_init (void); }");
 			}
 
+#if NET
+			if (app.MonoNativeMode != MonoNativeMode.None) {
+				sw.WriteLine ("static const char *xamarin_runtime_libraries_array[] = {");
+				foreach (var lib in app.MonoLibraries)
+					sw.WriteLine ($"\t\"{Path.GetFileNameWithoutExtension (lib)}\",");
+				sw.WriteLine ($"\tNULL");
+				sw.WriteLine ("};");
+			}
+#endif
+
 			sw.WriteLine ("void xamarin_setup_impl ()");
 			sw.WriteLine ("{");
 
@@ -762,8 +776,13 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\tmono_ee_interp_init (NULL);");
 #endif
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
-			} else if (app.IsDeviceBuild)
+			} else if (app.IsDeviceBuild) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
+			} else if (app.Platform == ApplePlatform.MacCatalyst && ((abi & Abi.ARM64) == Abi.ARM64)) {
+				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
+			} else if (app.IsSimulatorBuild && ((abi & Abi.ARM64) == Abi.ARM64)) {
+				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
+			}
 
 			if (assembly_location.Length > 0)
 				sw.WriteLine ("\txamarin_set_assembly_directories (&assembly_locations);");
@@ -772,31 +791,26 @@ namespace Xamarin.Bundler {
 
 			if (app.MonoNativeMode != MonoNativeMode.None) {
 #if NET
-				// Mono doesn't support dllmaps for Mac Catalyst / macOS in .NET for now:
-				// macOS: https://github.com/dotnet/runtime/issues/43204
-				// Mac Catalyst: https://github.com/dotnet/runtime/issues/48110
-				var addDllMap = App.Platform != ApplePlatform.MacCatalyst && app.Platform != ApplePlatform.MacOSX;
+				// Mono doesn't support dllmaps for Mac Catalyst / macOS in .NET, so we're using an alternative:
+				// the PINVOKE_OVERRIDE runtime option. Since we have to use it for Mac Catalyst + macOS, let's
+				// just use it everywhere to simplify code. This means that at runtime we need to know how we
+				// linked to mono, so store that in the xamarin_libmono_native_link_mode variable.
+				// Ref: https://github.com/dotnet/runtime/issues/43204 (macOS) https://github.com/dotnet/runtime/issues/48110 (Mac Catalyst)
+				sw.WriteLine ($"\txamarin_libmono_native_link_mode = XamarinNativeLinkMode{app.LibMonoNativeLinkMode};");
+				sw.WriteLine ($"\txamarin_runtime_libraries = xamarin_runtime_libraries_array;");
 #else
-				var addDllMap = true;
-#endif
-				if (addDllMap) {
-					string mono_native_lib;
-					if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject)
-						mono_native_lib = "__Internal";
-					else
-						mono_native_lib = app.GetLibNativeName () + ".dylib";
-					sw.WriteLine ();
-#if NET
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Native\", NULL, \"{mono_native_lib}\", NULL);");
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"libSystem.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
-#else
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
-					sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
-#endif
-					sw.WriteLine ();
+				string mono_native_lib;
+				if (app.LibMonoNativeLinkMode == AssemblyBuildTarget.StaticObject) {
+					mono_native_lib = "__Internal";
+				} else {
+					mono_native_lib = app.GetLibNativeName () + ".dylib";
 				}
+				sw.WriteLine ();
+				sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Native\", NULL, \"{mono_native_lib}\", NULL);");
+				sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Security.Cryptography.Native.Apple\", NULL, \"{mono_native_lib}\", NULL);");
+				sw.WriteLine ($"\tmono_dllmap_insert (NULL, \"System.Net.Security.Native\", NULL, \"{mono_native_lib}\", NULL);");
+				sw.WriteLine ();
+#endif
 			}
 
 			if (app.EnableDebug)
@@ -814,6 +828,7 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\txamarin_debug_mode = TRUE;");
 			if (!string.IsNullOrEmpty (app.MonoGCParams))
 				sw.WriteLine ("\tsetenv (\"MONO_GC_PARAMS\", \"{0}\", 1);", app.MonoGCParams);
+			// Do this last, so that the app developer can override any other environment variable we set.
 			foreach (var kvp in app.EnvironmentVariables)
 				sw.WriteLine ("\tsetenv (\"{0}\", \"{1}\", 1);", kvp.Key.Replace ("\"", "\\\""), kvp.Value.Replace ("\"", "\\\""));
 			sw.WriteLine ("\txamarin_supports_dynamic_registration = {0};", app.DynamicRegistrationSupported ? "TRUE" : "FALSE");

@@ -33,15 +33,27 @@
 //
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 #nullable enable
 
 namespace CoreFoundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CFRange {
 		nint loc; // defined as 'long' in native code
@@ -87,20 +99,26 @@ namespace CoreFoundation {
 		}
 	}
 
-#if XAMCORE_4_0
+#if NET
 	// nothing is exposed publicly
-	internal
+	internal static class CFObject {
 #else
-	public
+	public static class CFObject {
 #endif
-	static class CFObject {
+	
 		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static void CFRelease (IntPtr obj);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		internal extern static IntPtr CFRetain (IntPtr obj);
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CFString
 #if !COREBUILD
 		: NativeObject
@@ -118,22 +136,22 @@ namespace CoreFoundation {
 		extern static nint CFStringGetLength (IntPtr handle);
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
-		extern static IntPtr CFStringGetCharactersPtr (IntPtr handle);
+		extern static unsafe char* CFStringGetCharactersPtr (IntPtr handle);
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
-		extern static IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, IntPtr buffer);
+		extern static unsafe IntPtr CFStringGetCharacters (IntPtr handle, CFRange range, char* buffer);
 
-		public static IntPtr CreateNative (string? value)
+		public static NativeHandle CreateNative (string? value)
 		{
 			if (value is null)
-				return IntPtr.Zero;
+				return NativeHandle.Zero;
 			
 			return CFStringCreateWithCharacters (IntPtr.Zero, value, value.Length);
 		}
 
-		public static void ReleaseNative (IntPtr handle)
+		public static void ReleaseNative (NativeHandle handle)
 		{
-			if (handle != IntPtr.Zero)
+			if (handle != NativeHandle.Zero)
 				CFObject.CFRelease (handle);
 		}
 
@@ -149,46 +167,62 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary, EntryPoint="CFStringGetTypeID")]
 		public extern static nint GetTypeID ();
 		
-		public CFString (IntPtr handle)
+#if !NET
+		public CFString (NativeHandle handle)
 			: this (handle, false)
 		{
 		}
+#endif
 		
 		[Preserve (Conditional = true)]
-		protected internal CFString (IntPtr handle, bool owns)
+#if NET
+		internal CFString (NativeHandle handle, bool owns)
+#else
+		protected internal CFString (NativeHandle handle, bool owns)
+#endif
 			: base (handle, owns)
 		{
 		}
 
 		// to be used when an API like CF*Get* returns a CFString
-		public static string? FromHandle (IntPtr handle)
+		public static string? FromHandle (NativeHandle handle)
 		{
 			if (handle == IntPtr.Zero)
 				return null;
-			
-			string str;
-			
-			int l = (int)CFStringGetLength (handle);
-			IntPtr u = CFStringGetCharactersPtr (handle);
-			IntPtr buffer = IntPtr.Zero;
-			if (u == IntPtr.Zero){
-				CFRange r = new CFRange (0, l);
-				buffer = Marshal.AllocCoTaskMem (l * 2);
-				CFStringGetCharacters (handle, r, buffer);
-				u = buffer;
-			}
-			unsafe {
-				str = new string ((char *) u, 0, l);
-			}
-			
-			if (buffer != IntPtr.Zero)
-				Marshal.FreeCoTaskMem (buffer);
 
+			int l = (int)CFStringGetLength (handle);
+			if (l == 0)
+				return String.Empty;
+
+			string str;
+			bool allocate_memory = false;
+			CFRange r = new CFRange (0, l);
+			unsafe {
+				// this returns non-null only if the string can be represented as unicode
+				char* u = CFStringGetCharactersPtr (handle);
+				if (u is null) {
+					// alloc short string on the stack, otherwise use the heap
+					allocate_memory = l > 128;
+					// var m = allocate_memory ? (char*) Marshal.AllocHGlobal (l * 2) : stackalloc char [l];
+					// this ^ won't compile so...
+					if (allocate_memory) {
+						u = (char*) Marshal.AllocHGlobal (l * 2);
+					} else {
+						// `u = stackalloc char [l];` won't compile either, even with cast
+						char* u2 = stackalloc char [l];
+						u = u2;
+					}
+					CFStringGetCharacters (handle, r, u);
+				}
+				str = new string (u, 0, l);
+				if (allocate_memory)
+					Marshal.FreeHGlobal ((IntPtr) u);
+			}
 			return str;
 		}
 
 		// to be used when an API like CF*Copy* returns a CFString
-		public static string? FromHandle (IntPtr handle, bool releaseHandle)
+		public static string? FromHandle (NativeHandle handle, bool releaseHandle)
 		{
 			var s = FromHandle (handle);
 			if (releaseHandle && (handle != IntPtr.Zero))
@@ -196,22 +230,29 @@ namespace CoreFoundation {
 			return s;
 		}
 
-		public static implicit operator string? (CFString x)
+		public static implicit operator string? (CFString? x)
 		{
-			if (x.str == null)
+			if (x is null)
+				return null;
+
+			if (x.str is null)
 				x.str = FromHandle (x.Handle);
 			
 			return x.str;
 		}
 
-		public static implicit operator CFString (string s)
+		[return: NotNullIfNotNull ("s")]
+		public static implicit operator CFString? (string? s)
 		{
+			if (s is null)
+				return null;
+
 			return new CFString (s);
 		}
 
 		public int Length {
 			get {
-				if (str != null)
+				if (str is not null)
 					return str.Length;
 				else
 					return (int)CFStringGetLength (Handle);
@@ -219,11 +260,12 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary, CharSet=CharSet.Unicode)]
+		[return: MarshalAs (UnmanagedType.U2)]
 		extern static char CFStringGetCharacterAtIndex (IntPtr handle, nint p);
 		
 		public char this [nint p] {
 			get {
-				if (str != null)
+				if (str is not null)
 					return str [(int) p];
 				else
 					return CFStringGetCharacterAtIndex (Handle, p);

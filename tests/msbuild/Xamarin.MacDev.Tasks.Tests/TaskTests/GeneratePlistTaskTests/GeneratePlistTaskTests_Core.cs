@@ -1,6 +1,8 @@
-﻿using System.IO;
+using System.IO;
 
 using NUnit.Framework;
+
+using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 using System.Linq;
@@ -32,18 +34,18 @@ namespace Xamarin.iOS.Tasks
 		{
 			Task = CreateTask<CompileAppManifest> ();
 
+			Task.ApplicationId = identifier;
 			Task.AppBundleName = appBundleName;
-			Task.AppManifestBundleDirectory = Path.Combine (Cache.CreateTemporaryDirectory (), "AppBundlePath");
+			Task.CompiledAppManifest = new TaskItem (Path.Combine (Cache.CreateTemporaryDirectory (), "AppBundlePath", "Info.plist"));
 			Task.AssemblyName = assemblyName;
-			Task.AppManifest = CreateTempFile ("foo.plist");
-			Task.BundleIdentifier = bundleIdentifier;
-			Task.MinimumOSVersion = string.Empty;
+			Task.AppManifest = new TaskItem (CreateTempFile ("foo.plist"));
 			Task.SdkPlatform = "iPhoneSimulator";
+			Task.SdkVersion = "10.0";
 
 			Plist = new PDictionary ();
 			Plist ["CFBundleDisplayName"] = displayName;
-			Plist ["CFBundleIdentifier"] = identifier;
-			Plist.Save (Task.AppManifest);
+			Plist ["CFBundleIdentifier"] = bundleIdentifier;
+			Plist.Save (Task.AppManifest.ItemSpec);
 		}
 
 		public override void Setup ()
@@ -60,15 +62,16 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void PlistMissing ()
 		{
-			File.Delete (Task.AppManifest);
-			Assert.IsFalse (Task.Execute (), "#1");
+			File.Delete (Task.AppManifest.ItemSpec);
+			Assert.IsTrue (Task.Execute (), "#1");
+			Assert.That (Task.CompiledAppManifest.ItemSpec, Does.Exist, "#2");
 		}
 
 		[Test]
 		public void NormalPlist ()
 		{
 			Assert.IsTrue (Task.Execute (), "#1");
-			Assert.IsNotNull (Task.CompiledAppManifest, "#2");
+			Assert.IsNotNull (Task.CompiledAppManifest?.ItemSpec, "#2");
 			Assert.IsTrue (File.Exists (Task.CompiledAppManifest.ItemSpec), "#3");
 		}
 
@@ -76,7 +79,7 @@ namespace Xamarin.iOS.Tasks
 		public void MissingBundleIdentifier ()
 		{
 			Plist.Remove ("CFBundleIdentifier");
-			Plist.Save (Task.AppManifest);
+			Plist.Save (Task.AppManifest.ItemSpec);
 			Assert.IsTrue (Task.Execute (), "#1");
 		}
 
@@ -84,7 +87,7 @@ namespace Xamarin.iOS.Tasks
 		public void MissingDisplayName ()
 		{
 			Plist.Remove ("CFBundleDisplayName");
-			Plist.Save (Task.AppManifest);
+			Plist.Save (Task.AppManifest.ItemSpec);
 			Assert.IsTrue (Task.Execute (), "#1");
 		}
 
@@ -211,4 +214,3 @@ namespace Xamarin.iOS.Tasks
 		#endregion
 	}
 }
-

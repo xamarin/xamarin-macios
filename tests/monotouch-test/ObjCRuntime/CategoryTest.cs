@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,7 +8,11 @@ using System.Threading;
 using Foundation;
 #if !MONOMAC
 using UIKit;
+#if NET
+using NativeException = ObjCRuntime.ObjCException;
+#else
 using NativeException = Foundation.MonoTouchException;
+#endif
 #endif
 using Bindings.Test;
 using ObjCRuntime;
@@ -21,7 +25,6 @@ using CoreAnimation;
 using CoreGraphics;
 using CoreLocation;
 using PlatformException = ObjCRuntime.RuntimeException;
-using OpenTK;
 using NUnit.Framework;
 
 using RectangleF=CoreGraphics.CGRect;
@@ -134,4 +137,3 @@ namespace MonoTouchFixtures {
 	}
 #endif // !__WATCHOS__
 }
-

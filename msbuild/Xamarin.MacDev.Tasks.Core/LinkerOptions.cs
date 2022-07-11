@@ -26,6 +26,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (NativeReferences == null)
 				return;
 
+			var libraryPaths = new HashSet<string> ();
 			foreach (var item in NativeReferences) {
 				var value = item.GetMetadata ("Kind");
 				NativeReferenceKind kind;
@@ -55,6 +56,20 @@ namespace Xamarin.MacDev.Tasks {
 					if (Path.GetExtension (path) != ".framework")
 						path = Path.GetDirectoryName (path);
 					Frameworks.Add (path);
+				} else if (kind == NativeReferenceKind.Dynamic) {
+					var path = item.ItemSpec;
+					var directory = Path.GetDirectoryName (path);
+					if (!string.IsNullOrEmpty (directory) && !libraryPaths.Contains (directory)) {
+						Arguments.AddQuoted ("-L" + directory);
+						libraryPaths.Add (directory);
+					}
+					// remove extension + "lib" prefix
+					var lib = Path.GetFileName (path);
+					if (lib.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase))
+						lib = Path.GetFileNameWithoutExtension (lib);
+					if (lib.StartsWith ("lib", StringComparison.OrdinalIgnoreCase))
+						lib = lib.Substring (3);
+					Arguments.AddQuoted ("-l" + lib);
 				} else {
 					Log.LogWarning (MSBStrings.W0052, item.ItemSpec);
 					continue;
@@ -90,4 +105,3 @@ namespace Xamarin.MacDev.Tasks {
 		}
 	}
 }
-

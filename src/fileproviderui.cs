@@ -1,4 +1,4 @@
-﻿//
+//
 // FileProvider C# bindings
 //
 // Authors:
@@ -16,6 +16,10 @@ using UIKit;
 using AppKit;
 #endif
 using FileProvider;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace FileProviderUI {
 
@@ -55,7 +59,7 @@ namespace FileProviderUI {
 
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("extensionContext", ArgumentSemantic.Strong)]
 		FPUIActionExtensionContext ExtensionContext { get; }

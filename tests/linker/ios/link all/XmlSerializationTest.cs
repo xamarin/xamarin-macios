@@ -75,4 +75,3 @@ namespace LinkAll.Serialization.Xml {
 		}
 	}
 }
-

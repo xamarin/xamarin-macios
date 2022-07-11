@@ -924,11 +924,11 @@
 	</data>
     
     <data name="MX0183" xml:space="preserve">
-        <value>Could not map the iOS version {0} to a macOS version for Mac Catalyst</value>
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
     </data>
     
     <data name="MX0184" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
     </data>
 
 	<data name="MX0185" xml:space="preserve">
@@ -1013,6 +1013,10 @@
 	<data name="MT1305" xml:space="preserve">
 		<value>The binding library '{0}' contains a user framework ({0}), but embedded user frameworks require iOS 8.0 (the deployment target is {1}). Please set the deployment target in the Info.plist file to at least 8.0.
 		</value>
+	</data>
+
+	<data name="MX1306" xml:space="preserve">
+		<value>Could not decompress the file '{0}'. Please review the build log for more information from the native 'unzip' command.</value>
 	</data>
 
 	<data name="MM1401" xml:space="preserve">
@@ -1530,6 +1534,10 @@
 		</value>
 	</data>		
 	
+	<data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
+
 	<data name="MT4125" xml:space="preserve">
 		<value>The registrar found an invalid type '{0}' in signature for method '{1}': The interface must have a Protocol attribute specifying its wrapper type.
 		</value>
@@ -1878,6 +1886,10 @@
 		</value>
 	</data>
 
+	<data name="MT4186" xml:space="preserve">
+		<value>The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).</value>
+	</data>
+
 	<data name="MT5101" xml:space="preserve">
 		<value>Missing '{0}' compiler. Please install Xcode 'Command-Line Tools' component
 		</value>
@@ -2106,6 +2118,13 @@
 		</value>
 	</data>
 
+	<!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+	<data name="MX7000" xml:space="preserve">
+		<value>An error occured while executing the custom linker steps. Please review the build log for more information.</value>
+	</data>
+
+	<!-- 8XXX are for errors that occur at runtime -->
+
 	<data name="MT8018" xml:space="preserve">
 		<value>Internal consistency error. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
 		</value>
@@ -2141,4 +2160,15 @@
 		<value>Invalid type encoding for parameter.</value>
 	</data>
 
+	<data name="MX8041" xml:space="preserve">
+		<value>Unable to create an instance of the type {0}.</value>
+	</data>
+
+	<data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
+	</data>
 </root>

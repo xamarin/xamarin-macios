@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015 Xamarin Inc. All rights reserved.
 
 using System;
 
@@ -57,4 +57,3 @@ namespace Xamarin.Linker.Steps {
 		}
 	}
 }
-

@@ -4,12 +4,22 @@
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <MergeSystemAssemblies>false</MergeSystemAssemblies>
+    <IncludeMSBuildAssets Condition="'$(IncludeMSBuildAssets)' == ''">compile</IncludeMSBuildAssets>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../product.snk</AssemblyOriginatorKeyFile>
+    <NoWarn>$(NoWarn);8002</NoWarn> <!-- Referenced projects aren't signed: this doesn't matter, because we use ILMerge to merge into a single assembly which we sign -->
+    <RuntimeIdentifier>win</RuntimeIdentifier>
+    <LangVersion>latest</LangVersion>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
+  <Import Project="..\..\eng\Versions.props" />
   <ItemGroup>
-    <PackageReference Include="DotNetZip" Version="1.14.0" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
     <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
     <PackageReference Include="Xamarin.Messaging.Server" Version="$(MessagingVersion)" IncludeAssets="contentFiles" />
+    <PackageReference Include="Xamarin.iOS.HotRestart.Client" Version="$(HotRestartVersion)" GeneratePathProperty="true" />
+    <PackageReference Include="System.Diagnostics.Tracer" Version="2.0.8" GeneratePathProperty="true" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messaging\Xamarin.Messaging.Build\Xamarin.Messaging.Build.csproj">
@@ -17,6 +27,7 @@
       <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
       <IsAgent>True</IsAgent>
     </ProjectReference>
+    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="*.props">
@@ -25,6 +36,10 @@
     <None Include="*.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\iSign.Core.pdb" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(PkgXamarin_iOS_HotRestart_Client)\lib\netstandard2.0\Xamarin.iOS.Windows.Client.pdb" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="$(PkgSystem_Diagnostics_Tracer)\lib\netstandard1.3\System.Diagnostics.Tracer.pdb" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Include="../Versions.ios.g.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Tasks\" />
@@ -43,22 +58,17 @@
 
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
 
+  <Target Name="BuildGeneratedVersionsFile" Inputs="../../Make.config.inc;../Makefile" Outputs="../Versions.ios.g.cs" BeforeTargets="BeforeBuild">
+    <Exec Command="make -C .. Versions.ios.g.cs" />
+  </Target>
+
   <!-- Replaces the reference assemblies by the runtime implementation -->
   <Target Name="CopyRuntimeAssemblies" BeforeTargets="ILRepack">
     <ItemGroup>
-      <ReferenceCopyLocalToRemove Include="@(ReferenceCopyLocalPaths)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
-      
-      <ReferenceCopyLocalPaths Remove="@(ReferenceCopyLocalToRemove)" />
-
-      <ReferencePathToRemove Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Text.Encoding.CodePages'" />
-
-      <ReferencePath Remove="@(ReferencePathToRemove)" />
-
-      <ReferencePathToAdd Include="@(RuntimeTargetsCopyLocalItems)" Condition="'%(RuntimeIdentifier)' == 'win' And '%(FileName)' == 'System.Text.Encoding.CodePages'" />
-
-      <ReferencePath Include="@(ReferencePathToAdd)">
-        <DestinationSubDirectory />
-      </ReferencePath>
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Diagnostics.Tracer'" />
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.ProtectedData'" />
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Security.Cryptography.Pkcs'" />
+      <ReferenceToPreserve Include="@(ReferencePath)" Condition="'%(FileName)' == 'System.Formats.Asn1'" />
     </ItemGroup>
   </Target>
 </Project>

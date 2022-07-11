@@ -218,3 +218,8 @@ dotnet_naming_style.camelcase.required_prefix =
 dotnet_naming_style.camelcase.required_suffix = 
 dotnet_naming_style.camelcase.word_separator = 
 dotnet_naming_style.camelcase.capitalization = camel_case
+
+# generated code from the project
+[*.g.cs]
+generated_code = true
+dotnet_diagnostic.BI1234.severity = silent

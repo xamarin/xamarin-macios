@@ -32,8 +32,17 @@ using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
 
+#nullable enable
+
 namespace AVFoundation {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// Should be called AVAudioSetting but AVAudioSetting has been already used by keys class
 	public class AudioSettings : DictionaryContainer
 	{
@@ -162,10 +171,17 @@ namespace AVFoundation {
 			}			
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		public AVAudioBitRateStrategy? BitRateStrategy {
 			set {
-				NSString v = null;
+				NSString? v = null;
 				switch (value){
 				case AVAudioBitRateStrategy.Constant:
 					v = AVAudioSettings._Constant;
@@ -200,7 +216,14 @@ namespace AVFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		public AVSampleRateConverterAlgorithm? SampleRateConverterAlgorithm {
 			get {
 				var k = GetNSStringValue (AVAudioSettings.AVSampleRateConverterAlgorithmKey);
@@ -211,7 +234,7 @@ namespace AVFoundation {
 				return null;
 			}
 			set {
-				NSString v = null;
+				NSString? v = null;
 				switch (value){
 				case AVSampleRateConverterAlgorithm.Mastering:
 					v = AVAudioSettings.AVSampleRateConverterAlgorithm_Mastering;
@@ -228,7 +251,14 @@ namespace AVFoundation {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		public AVAudioQuality? EncoderAudioQualityForVBR {
 			get {
 				return (AVAudioQuality?) (long?) GetNIntValue (AVAudioSettings.AVEncoderAudioQualityForVBRKey);
@@ -240,11 +270,10 @@ namespace AVFoundation {
 		
 		public AudioChannelLayout ChannelLayout {
 			set {
-				SetNativeValue (AVAudioSettings.AVChannelLayoutKey, value == null ? null : value.AsData ());
+				SetNativeValue (AVAudioSettings.AVChannelLayoutKey, value is null ? null : value.AsData ());
 			}
 		}
 
 #endif
 	}
 }
-

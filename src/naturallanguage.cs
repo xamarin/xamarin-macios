@@ -26,6 +26,10 @@ using Foundation;
 using CoreML;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace NaturalLanguage {
 
 	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]
@@ -35,7 +39,7 @@ namespace NaturalLanguage {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Static]
 		[Internal]
@@ -150,7 +154,7 @@ namespace NaturalLanguage {
 	{
 		[Export ("initWithUnit:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NLTokenUnit unit);
+		NativeHandle Constructor (NLTokenUnit unit);
 
 		[Export ("unit")]
 		NLTokenUnit Unit { get; }
@@ -190,10 +194,10 @@ namespace NaturalLanguage {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithTagSchemes:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([Params] NSString[] tagSchemes);
+		NativeHandle Constructor ([Params] NSString[] tagSchemes);
 
 		[Wrap ("this (Array.ConvertAll (tagSchemes, e => e.GetConstant ()!))")]
-		IntPtr Constructor ([Params] NLTagScheme[] tagSchemes);
+		NativeHandle Constructor ([Params] NLTagScheme[] tagSchemes);
 
 		[Internal]
 		[Export ("tagSchemes", ArgumentSemantic.Copy)]
@@ -466,11 +470,7 @@ namespace NaturalLanguage {
 
 		[Export ("vectorForString:")]
 		[return: NullAllowed]
-#if XAMCORE_4_0
-		[return: BindAs (typeof (float[]?))]
-#else
 		[return: BindAs (typeof (float[]))]
-#endif
 		// doc says "array of double" but other API uses float ?!?
 		NSNumber[] GetVector (string @string);
 
@@ -599,21 +599,21 @@ namespace NaturalLanguage {
 
 		[Export ("initWithContentsOfURL:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] out NSError error);
 
 		[Export ("initWithData:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData data, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSData data, [NullAllowed] out NSError error);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithDictionary:language:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSDictionary dictionary, [NullAllowed] NSString language, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NSDictionary dictionary, [NullAllowed] NSString language, [NullAllowed] out NSError error);
 
 		// sadly `language?.GetConstant ()` does not cut it :(
 		// error CS1929: 'NLLanguage?' does not contain a definition for 'GetConstant' and the best extension method overload 'NLLanguageExtensions.GetConstant(NLLanguage)' requires a receiver of type 'NLLanguage'
 		[Wrap ("this (dictionary.GetDictionary ()!, language.HasValue ? language.Value.GetConstant () : null, out error)")]
-		IntPtr Constructor (NLStrongDictionary dictionary, NLLanguage? language, [NullAllowed] out NSError error);
+		NativeHandle Constructor (NLStrongDictionary dictionary, NLLanguage? language, [NullAllowed] out NSError error);
 
 		[Export ("labelForString:")]
 		[return: NullAllowed]

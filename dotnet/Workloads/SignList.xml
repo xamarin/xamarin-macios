@@ -1,0 +1,85 @@
+<Project>
+  <!-- Do not sign files that already have a signature -->
+  <ItemGroup>
+    <Skip Include="System.Reflection.MetadataLoadContext.dll" />
+    <!-- Microsoft.iOS.Windows.Sdk content -->
+    <Skip Include="tools\msbuild\iOS\Microsoft.Win32.Registry.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Buffers.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Formats.Asn1.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Memory.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Numerics.Vectors.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Runtime.CompilerServices.Unsafe.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Security.AccessControl.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Security.Cryptography.Pkcs.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Security.Cryptography.ProtectedData.dll" />
+    <Skip Include="tools\msbuild\iOS\System.Security.Principal.Windows.dll" />
+    <Skip Include="tools\msbuild\iOS\ws2_32.dll" />
+    <!-- Broker.zip -->
+    <Skip Include="Broker\Newtonsoft.Json.dll" />
+    <Skip Include="Broker\System.Net.Mqtt.dll" />
+    <Skip Include="Broker\System.Net.Mqtt.Server.dll" />
+    <Skip Include="Broker\System.Reactive.dll" />
+    <Skip Include="Broker\System.Runtime.CompilerServices.Unsafe.dll" />
+    <Skip Include="Broker\System.Security.Cryptography.ProtectedData.dll" />
+    <Skip Include="Broker\System.Threading.Tasks.Extensions.dll" />
+    <Skip Include="Broker\System.ValueTuple.dll" />
+    <!-- Build.zip -->
+    <Skip Include="Build\Microsoft.Bcl.AsyncInterfaces.dll" />
+    <Skip Include="Build\System.Buffers.dll" />
+    <Skip Include="Build\System.Collections.Immutable.dll" />
+    <Skip Include="Build\System.Memory.dll" />
+    <Skip Include="Build\System.Numerics.Vectors.dll" />
+    <Skip Include="Build\System.Reflection.Metadata.dll" />
+    <Skip Include="Build\System.Resources.Extensions.dll" />
+    <Skip Include="Build\System.Runtime.CompilerServices.Unsafe.dll" />
+    <Skip Include="Build\System.Text.Encodings.Web.dll" />
+    <Skip Include="Build\System.Text.Json.dll" />
+    <Skip Include="Build\System.Threading.Tasks.Dataflow.dll" />
+    <Skip Include="Build\System.Threading.Tasks.Extensions.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ThirdParty Include="BouncyCastle.Crypto.dll" />
+    <ThirdParty Include="imobiledevice-*\*.dll" />
+    <ThirdParty Include="imobiledevice-*\*.exe" />
+    <!-- Build.zip -->
+    <ThirdParty Include="Mono.Cecil*.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FirstParty Include="bgen.dll" />
+    <FirstParty Include="dotnet-linker.dll" />
+    <FirstParty Include="Mono.Options.dll" />
+    <FirstParty Include="Xamarin.*.dll" />
+    <!-- mlaunch.app MonoBundle content-->
+    <FirstParty Include="mlaunch.exe" />
+    <FirstParty Include="Mono.Security.dll" />
+    <FirstParty Include="mscorlib.dll" />
+    <FirstParty Include="System.Core.dll" />
+    <FirstParty Include="System.dll" />
+    <FirstParty Include="System.Numerics.dll" />
+    <FirstParty Include="System.Xml.dll" />
+    <!-- Microsoft.iOS.Windows.Sdk content -->
+    <FirstParty Include="iSign.Core.dll" />
+    <FirstParty Include="System.Diagnostics.Tracer.dll" />
+    <!-- Broker.zip -->
+    <FirstParty Include="Broker.exe" />
+    <FirstParty Include="Broker.resources.dll" />
+    <FirstParty Include="Merq.dll" />
+    <!-- Build.zip -->
+    <FirstParty Include="Build.exe" />
+    <FirstParty Include="Microsoft.Build*.dll" />
+    <FirstParty Include="Microsoft.NET.StringTools.dll" />
+    <FirstParty Include="System.IO.Abstractions.dll" />
+    <!-- Xamarin.PreBuilt.iOS.app.zip -->
+    <FirstParty Include="Xamarin.PreBuilt.iOS.app\*.dll" />
+    <!-- Our new Microsoft.* product dlls -->
+    <FirstParty Include="Microsoft.iOS.dll" />
+    <FirstParty Include="Microsoft.MacCatalyst.dll" />
+    <FirstParty Include="Microsoft.macOS.dll" />
+    <FirstParty Include="Microsoft.tvOS.dll" />
+  </ItemGroup>
+
+  <Import Project="$(MSBuildThisFileDirectory)SignList.targets" />
+
+</Project>

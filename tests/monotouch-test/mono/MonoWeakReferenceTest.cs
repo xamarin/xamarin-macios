@@ -1,4 +1,4 @@
-﻿//
+//
 // Port of mono's unit tests for WeakAttribute from:
 // https://github.com/mono/mono/blob/5bdaef7e5f6479cc4336bb809b419e85ad706dd7/mono/tests/weak-fields.cs
 //

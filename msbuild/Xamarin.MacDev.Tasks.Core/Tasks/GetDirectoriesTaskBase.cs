@@ -70,4 +70,3 @@ namespace Xamarin.MacDev.Tasks
 		}
 	}
 }
-

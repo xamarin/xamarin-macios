@@ -1,4 +1,6 @@
-#if !XAMCORE_4_0
+#nullable enable
+
+#if !NET
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -19,7 +21,9 @@ namespace UIKit {
 
 #if !COREBUILD
 
+#if !NET
 	[iOS (7,0)]
+#endif
 	public partial class NSLayoutManager {
 		[Obsolete ("Always throws 'NotSupportedException' (not a public API).")]
 		public virtual void ReplaceTextStorage (NSTextStorage newTextStorage)
@@ -37,4 +41,4 @@ namespace UIKit {
 #endif // WATCH
 
 }
-#endif
+#endif // NET

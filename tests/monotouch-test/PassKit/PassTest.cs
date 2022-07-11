@@ -95,10 +95,13 @@ namespace MonoTouchFixtures.PassKit {
 		{
 			TestRuntime.AssertXcodeVersion (4, 5);
 
+#if NET
+			Assert.That (PKPassKitErrorCode.None.GetDomain ().ToString (), Is.EqualTo ("PKPassKitErrorDomain"), "ErrorDomain");
+#else
 			Assert.That (PKPass.ErrorDomain.ToString (), Is.EqualTo ("PKPassKitErrorDomain"), "ErrorDomain");
+#endif
 		}
 	}
 }
 
 #endif // !__TVOS__
-

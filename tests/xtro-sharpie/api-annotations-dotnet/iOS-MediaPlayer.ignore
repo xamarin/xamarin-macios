@@ -1,0 +1,7 @@
+## incorrect macro/parsing - decorated with `MP_API(macos(10.12.2))`
+!missing-selector! MPNowPlayingInfoCenter::playbackState not bound
+!missing-selector! MPNowPlayingInfoCenter::setPlaybackState: not bound
+
+# added in iOS7 but there was another way to get this ending up with the same name
+# so current code works better (before 7.0) but can't be overridden (likely a good thing)
+!missing-selector! MPMediaEntity::persistentID not bound

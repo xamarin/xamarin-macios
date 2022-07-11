@@ -1,4 +1,4 @@
-﻿//
+//
 // INSaveProfileInCarIntent Extensions
 //
 // Authors:
@@ -20,7 +20,7 @@ namespace Intents {
 		public INSaveProfileInCarIntent (NSNumber profileNumber, string profileLabel)
 		{
 			// Apple created this change in 10,2
-			if (UIDevice.CurrentDevice.CheckSystemVersion (10, 2))
+			if (SystemVersion.CheckiOS (10, 2))
 				InitializeHandle (InitWithProfileNumberName (profileNumber, profileLabel));
 			else
 				InitializeHandle (InitWithProfileNumberLabel (profileNumber, profileLabel));

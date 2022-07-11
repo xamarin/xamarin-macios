@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSUrlSessionTask
 //
 // Authors:
@@ -17,6 +17,7 @@ using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -28,7 +29,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Properties ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 			
 			using (var ur = new NSUrlRequest ())
 			using (var task = NSUrlSession.SharedSession.CreateDownloadTask (ur)) {

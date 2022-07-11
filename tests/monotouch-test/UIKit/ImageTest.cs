@@ -57,7 +57,7 @@ namespace MonoTouchFixtures.UIKit {
 				using (var resized = original.Scale (half)) {
 					Assert.That (resized.CGImage.Height, Is.EqualTo (resized.CGImage.Width), "Width-Height-identical");
 					// caching of the backing CGImage occurs on devices (but not always)
-					if (Runtime.Arch == Arch.SIMULATOR) {
+					if (TestRuntime.IsSimulatorOrDesktop) {
 						Assert.That ((nint) 16, Is.EqualTo (resized.CGImage.Width), "half");
 					} else {
 						var h = resized.CGImage.Height;

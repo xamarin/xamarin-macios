@@ -20,6 +20,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !__MACCATALYST__
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -28,6 +31,9 @@ using Foundation;
 using CoreGraphics;
 
 namespace AppKit {
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	public static class NSGraphics {
 		public static readonly float White = 1;
 		public static readonly float Black = 0;
@@ -202,13 +208,30 @@ namespace AppKit {
 		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDrawWindowBackground")]
 		public extern static void DrawWindowBackground (CGRect aRect);
 		
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDisableScreenUpdates")]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11 not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
+#endif
+		[DllImport (Constants.AppKitLibrary, EntryPoint="NSDisableScreenUpdates")]
 		public extern static void DisableScreenUpdates ();
 		
-		[DllImport (Constants.AppKitLibrary, EntryPoint="NSEnableScreenUpdates")]
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11 not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Not usually necessary, 'NSAnimationContext.RunAnimation' can be used instead and not suffer from performance issues.")]
+#endif
+		[DllImport (Constants.AppKitLibrary, EntryPoint="NSEnableScreenUpdates")]
 		public extern static void EnableScreenUpdates ();
 		
 	}
 }
+#endif // !__MACCATALYST__

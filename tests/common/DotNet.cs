@@ -1,3 +1,5 @@
+//#define VERBOSE_COMPARISON
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,13 +10,15 @@ using Xamarin.Utils;
 
 using NUnit.Framework;
 
+#nullable disable
+
 namespace Xamarin.Tests {
 	public static class DotNet {
 		static string dotnet_executable;
 		public static string Executable {
 			get {
 				if (dotnet_executable == null) {
-					dotnet_executable = Configuration.GetVariable ("DOTNET6", null);
+					dotnet_executable = Configuration.GetVariable ("DOTNET", null);
 					if (string.IsNullOrEmpty (dotnet_executable))
 						throw new Exception ($"Could not find the dotnet executable.");
 					if (!File.Exists (dotnet_executable))
@@ -22,6 +26,30 @@ namespace Xamarin.Tests {
 				}
 				return dotnet_executable;
 			}
+		}
+
+		public static ExecutionResult AssertPack (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("pack", project, properties, true);
+		}
+
+		public static ExecutionResult AssertPackFailure (string project, Dictionary<string, string> properties = null)
+		{
+			var rv = Execute ("pack", project, properties, false);
+			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
+			return rv;
+		}
+
+		public static ExecutionResult AssertPublish (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("publish", project, properties, true);
+		}
+
+		public static ExecutionResult AssertPublishFailure (string project, Dictionary<string, string> properties = null)
+		{
+			var rv = Execute ("publish", project, properties, false);
+			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
+			return rv;
 		}
 
 		public static ExecutionResult AssertBuild (string project, Dictionary<string, string> properties = null)
@@ -36,7 +64,37 @@ namespace Xamarin.Tests {
 			return rv;
 		}
 
-		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, bool assert_success = true)
+		public static ExecutionResult Build (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("build", project, properties, false);
+		}
+
+		public static ExecutionResult AssertNew (string outputDirectory, string template)
+		{
+			Directory.CreateDirectory (outputDirectory);
+
+			var args = new List<string> ();
+			args.Add ("new");
+			args.Add (template);
+
+			var env = new Dictionary<string, string> ();
+			env ["MSBuildSDKsPath"] = null;
+			env ["MSBUILD_EXE_PATH"] = null;
+			var output = new StringBuilder ();
+			var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: outputDirectory, timeout: TimeSpan.FromMinutes (10)).Result;
+			if (rv.ExitCode != 0) {
+				Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
+				Console.WriteLine (output);
+				Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
+			}
+			return new ExecutionResult {
+				StandardOutput = output,
+				StandardError = output,
+				ExitCode = rv.ExitCode,
+			};
+		}
+
+		public static ExecutionResult Execute (string verb, string project, Dictionary<string, string> properties, bool assert_success = true, string target = null)
 		{
 			if (!File.Exists (project))
 				throw new FileNotFoundException ($"The project file '{project}' does not exist.");
@@ -45,6 +103,8 @@ namespace Xamarin.Tests {
 			switch (verb) {
 			case "clean":
 			case "build":
+			case "pack":
+			case "publish":
 				var args = new List<string> ();
 				args.Add (verb);
 				args.Add (project);
@@ -63,16 +123,20 @@ namespace Xamarin.Tests {
 						}
 					}
 				}
+				if (!string.IsNullOrEmpty (target))
+					args.Add ("/t:" + target);
 				var binlogPath = Path.Combine (Path.GetDirectoryName (project), $"log-{verb}-{DateTime.Now:yyyyMMdd_HHmmss}.binlog");
 				args.Add ($"/bl:{binlogPath}");
+				Console.WriteLine ($"Binlog: {binlogPath}");
 				var env = new Dictionary<string, string> ();
 				env ["MSBuildSDKsPath"] = null;
 				env ["MSBUILD_EXE_PATH"] = null;
 				var output = new StringBuilder ();
 				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10)).Result;
 				if (assert_success && rv.ExitCode != 0) {
+					var outputStr = output.ToString ();
 					Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
-					Console.WriteLine (output);
+					Console.WriteLine (outputStr);
 					Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
 				}
 				return new ExecutionResult {
@@ -88,9 +152,11 @@ namespace Xamarin.Tests {
 
 		public static void CompareApps (string old_app, string new_app)
 		{
+#if VERBOSE_COMPARISON
 			Console.WriteLine ($"Comparing:");
 			Console.WriteLine ($"    {old_app}");
 			Console.WriteLine ($"    {new_app}");
+#endif
 
 			var all_old_files = Directory.GetFiles (old_app, "*.*", SearchOption.AllDirectories).Select ((v) => v.Substring (old_app.Length + 1));
 			var all_new_files = Directory.GetFiles (new_app, "*.*", SearchOption.AllDirectories).Select ((v) => v.Substring (new_app.Length + 1));
@@ -127,6 +193,13 @@ namespace Xamarin.Tests {
 				});
 			});
 
+			var old_files = filter (all_old_files);
+			var new_files = filter (all_new_files);
+
+			var extra_old_files = old_files.Except (new_files);
+			var extra_new_files = new_files.Except (old_files);
+
+#if VERBOSE_COMPARISON
 			Console.WriteLine ("Files in old app:");
 			foreach (var f in all_old_files.OrderBy (v => v))
 				Console.WriteLine ($"\t{f}");
@@ -134,18 +207,12 @@ namespace Xamarin.Tests {
 			foreach (var f in all_new_files.OrderBy (v => v))
 				Console.WriteLine ($"\t{f}");
 
-			var old_files = filter (all_old_files);
-			var new_files = filter (all_new_files);
-
 			Console.WriteLine ("Files in old app (filtered):");
 			foreach (var f in old_files.OrderBy (v => v))
 				Console.WriteLine ($"\t{f}");
 			Console.WriteLine ("Files in new app (filtered):");
 			foreach (var f in new_files.OrderBy (v => v))
 				Console.WriteLine ($"\t{f}");
-
-			var extra_old_files = old_files.Except (new_files);
-			var extra_new_files = new_files.Except (old_files);
 
 			if (extra_new_files.Any ()) {
 				Console.WriteLine ("Extra dotnet files:");
@@ -175,6 +242,7 @@ namespace Xamarin.Tests {
 			Console.WriteLine ($"\tOld app size: {total_old} bytes = {total_old / 1024.0:0.0} KB = {total_old / (1024.0 * 1024.0):0.0} MB");
 			Console.WriteLine ($"\tNew app size: {total_new} bytes = {total_new / 1024.0:0.0} KB = {total_new / (1024.0 * 1024.0):0.0} MB");
 			Console.WriteLine ($"\tSize comparison complete, total size change: {total_diff} bytes = {total_diff / 1024.0:0.0} KB = {total_diff / (1024.0 * 1024.0):0.0} MB");
+#endif
 
 			Assert.That (extra_new_files, Is.Empty, "Extra dotnet files");
 			Assert.That (extra_old_files, Is.Empty, "Missing dotnet files");

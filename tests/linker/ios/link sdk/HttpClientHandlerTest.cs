@@ -1,4 +1,4 @@
-﻿// Tests to ensure consistency of our handlers across updates
+// Tests to ensure consistency of our handlers across updates
 //
 // Copyright 2016 Xamarin Inc.
 

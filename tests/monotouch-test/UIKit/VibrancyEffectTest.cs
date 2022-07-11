@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for UIVibrancyEffect
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if HAS_NOTIFICATIONCENTER
+#if HAS_NOTIFICATIONCENTER && HAS_UIKIT
 
 using System;
 using Foundation;
@@ -17,6 +17,7 @@ using ObjCRuntime;
 using NotificationCenter;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -26,7 +27,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void NotificationCenterVibrancyEffect_New ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			UIVibrancyEffect.CreateForNotificationCenter ();
 		}

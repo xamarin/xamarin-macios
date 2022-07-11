@@ -18,7 +18,11 @@ namespace Xamarin.Mac.Tests
 		{
 			AudioComponentDescription desc = new AudioComponentDescription ();
 			desc.ComponentType = AudioComponentType.Output;
+#if NET
+			desc.ComponentSubType = AudioUnitSubType.HALOutput; // 'ahal'
+#else
 			desc.ComponentSubType = 1634230636; // 'ahal'
+#endif
 			desc.ComponentFlags = 0;
 			desc.ComponentFlagsMask = 0;
 			desc.ComponentManufacturer = AudioComponentManufacturerType.Apple;

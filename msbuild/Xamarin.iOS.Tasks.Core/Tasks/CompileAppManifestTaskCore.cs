@@ -10,6 +10,8 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
+#nullable enable
+
 namespace Xamarin.iOS.Tasks
 {
 	public abstract class CompileAppManifestTaskCore : CompileAppManifestTaskBase
@@ -30,16 +32,6 @@ namespace Xamarin.iOS.Tasks
 			}
 
 			supportedDevices = plist.GetUIDeviceFamily ();
-
-			if (!IsWatchApp) {
-				var version = Sdks.XamIOS.ExtendedVersion;
-				// This key is our supported way of determining if an app
-				// was built with Xamarin, so it needs to be present in all apps.
-
-				var dict = new PDictionary ();
-				dict.Add ("Version", new PString (string.Format ("{0} ({1}: {2})", version.Version, version.Branch, version.Hash)));
-				plist.Add ("com.xamarin.ios", dict);
-			}
 
 			var sdkSettings = currentSDK.GetSdkSettings (sdkVersion, SdkIsSimulator);
 			var dtSettings = currentSDK.GetAppleDTSettings ();
@@ -66,13 +58,13 @@ namespace Xamarin.iOS.Tasks
 			if (!plist.ContainsKey (ManifestKeys.CFBundleSupportedPlatforms))
 				plist[ManifestKeys.CFBundleSupportedPlatforms] = new PArray { SdkPlatform };
 
-			string dtCompiler = null;
-			string dtPlatformBuild = null;
-			string dtSDKBuild = null;
-			string dtPlatformName = null;
-			string dtPlatformVersion = null;
-			string dtXcode = null;
-			string dtXcodeBuild = null;
+			string? dtCompiler = null;
+			string? dtPlatformBuild = null;
+			string? dtSDKBuild = null;
+			string? dtPlatformName;
+			string? dtPlatformVersion = null;
+			string? dtXcode = null;
+			string? dtXcodeBuild = null;
 
 			if (!SdkIsSimulator) {
 				dtCompiler = sdkSettings.DTCompiler;
@@ -143,21 +135,14 @@ namespace Xamarin.iOS.Tasks
 					SetAppTransportSecurity (plist);
 			}
 
-			// Remove any Xamarin Studio specific keys
-			plist.Remove (ManifestKeys.XSLaunchImageAssets);
-			plist.Remove (ManifestKeys.XSAppIconAssets);
-
 			SetRequiredArchitectures (plist);
-
-			if (IsIOS)
-				Validation (plist);
 
 			return !Log.HasLoggedErrors;
 		}
 
-		void SetValueIfNotNull (PDictionary dict, string key, string value)
+		void SetValueIfNotNull (PDictionary dict, string key, string? value)
 		{
-			if (value == null)
+			if (value is null)
 				return;
 			SetValue (dict, key, value);
 		}
@@ -175,7 +160,7 @@ namespace Xamarin.iOS.Tasks
 					for (int i = 0; i < array.Count; i++) {
 						var value = array[i] as PString;
 
-						if (value == null || !architectureValues.Contains (value.Value))
+						if (value is null || !architectureValues.Contains (value.Value))
 							continue;
 
 						array.RemoveAt (i);
@@ -231,34 +216,25 @@ namespace Xamarin.iOS.Tasks
 
 		void SetDeviceFamily (PDictionary plist)
 		{
+			var uiDeviceFamily = IPhoneDeviceType.NotSet;
 			switch (Platform) {
 			case ApplePlatform.iOS:
-				SetIOSDeviceFamily (plist);
-				break;
-			case ApplePlatform.WatchOS:
-				plist.SetUIDeviceFamily (IPhoneDeviceType.Watch);
-				break;
-			case ApplePlatform.TVOS:
-				plist.SetUIDeviceFamily (IPhoneDeviceType.TV);
-				break;
-			}
-		}
-
-		void SetIOSDeviceFamily (PDictionary plist)
-		{
-			if (IsWatchApp) {
-				if (SdkIsSimulator) {
-					plist.SetUIDeviceFamily (IPhoneDeviceType.IPhone | IPhoneDeviceType.Watch);
-				} else {
-					plist.SetUIDeviceFamily (IPhoneDeviceType.Watch);
-				}
-			} else {
 				if (!IsAppExtension)
 					plist.SetIfNotPresent (ManifestKeys.LSRequiresIPhoneOS, true);
 
-				if (supportedDevices == IPhoneDeviceType.NotSet)
-					plist.SetUIDeviceFamily (IPhoneDeviceType.IPhone);
+				uiDeviceFamily = IPhoneDeviceType.IPhone;
+				break;
+			case ApplePlatform.WatchOS:
+				uiDeviceFamily = IPhoneDeviceType.Watch;
+				break;
+			case ApplePlatform.TVOS:
+				uiDeviceFamily = IPhoneDeviceType.TV;
+				break;
 			}
+
+			// Don't set UIDeviceFamily if the plist already contains it
+			if (uiDeviceFamily != IPhoneDeviceType.NotSet && supportedDevices == IPhoneDeviceType.NotSet)
+				plist.SetUIDeviceFamily (uiDeviceFamily);
 		}
 
 		void SetAppTransportSecurity (PDictionary plist)
@@ -285,36 +261,6 @@ namespace Xamarin.iOS.Tasks
 			} else {
 				Log.LogMessage (MessageImportance.Low, MSBStrings.M0018);
 				ats.SetBooleanOrRemove (ManifestKeys.NSAllowsArbitraryLoads, true);
-			}
-		}
-
-		void Validation (PDictionary plist)
-		{
-			var supportsIPhone = (supportedDevices & IPhoneDeviceType.IPhone) != 0
-			                     || supportedDevices == IPhoneDeviceType.NotSet;
-			var supportsIPad = (supportedDevices & IPhoneDeviceType.IPad) != 0;
-
-			// Validation...
-			if (!IsAppExtension && sdkVersion >= AppleSdkVersion.V3_2) {
-				IPhoneOrientation orientation;
-
-				if (supportsIPhone) {
-					orientation = plist.GetUISupportedInterfaceOrientations (false);
-					if (orientation == IPhoneOrientation.None) {
-						LogAppManifestWarning (MSBStrings.W0019);
-					} else if (!orientation.IsValidPair ()) {
-						LogAppManifestWarning (MSBStrings.W0020);
-					}
-				}
-
-				if (supportsIPad) {
-					orientation = plist.GetUISupportedInterfaceOrientations (true);
-					if (orientation == IPhoneOrientation.None) {
-						LogAppManifestWarning (MSBStrings.W0021);
-					} else if (!orientation.IsValidPair ()) {
-						LogAppManifestWarning (MSBStrings.W0022);
-					}
-				}
 			}
 		}
 	}

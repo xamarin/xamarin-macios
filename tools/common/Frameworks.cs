@@ -158,7 +158,9 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "QuartzComposer", "Quartz", 10, 5, "QuartzComposer" },
 					{ "ImageCaptureCore", "ImageCaptureCore", 10,5 },
 
+#if !NET
 					{ "QTKit", 10, 6 },
+#endif
 					{ "QuickLookUI", "Quartz", 10, 6, "QuickLookUI" },
 
 					{ "MediaToolbox", 10, 9 },
@@ -208,6 +210,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ModelIO", 10, 11 },
 
 					{ "Intents", 10, 12 },
+					{ "IntentsUI", 12, 0 },
 					{ "IOSurface", "IOSurface", 10, 12 },
 					{ "Photos", "Photos", 10,12 },
 					{ "PhotosUI", "PhotosUI", 10,12 },
@@ -250,6 +253,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AppTrackingTransparency", "AppTrackingTransparency", 11,0 },
 					{ "CallKit", "CallKit", 11,0 },
 					{ "ClassKit", "ClassKit", 11,0 },
+					{ "MetalPerformanceShadersGraph", "MetalPerformanceShadersGraph", 11, 0 },
 					{ "MLCompute", "MLCompute", 11,0 },
 					{ "NearbyInteraction", "NearbyInteraction", 11,0 },
 					{ "OSLog", "OSLog", 11,0 },
@@ -261,7 +265,16 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "AdServices", "AdServices", 11,1 },
 
+#if !NET
 					{ "Chip", "CHIP", 12, 0 },
+#endif
+					{ "LocalAuthenticationEmbeddedUI", "LocalAuthenticationEmbeddedUI", 12, 0 },
+					{ "MailKit", "MailKit", 12, 0 },
+					{ "MetricKit", 12, 0 },
+					{ "Phase", "PHASE", 12, 0 },
+					{ "ShazamKit", "ShazamKit", 12,0 },
+
+					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
 				};
 			}
 			return mac_frameworks;
@@ -311,7 +324,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "CoreMedia", "CoreMedia", 4 },
 				{ "CoreVideo", "CoreVideo", 4 },
 				{ "CoreTelephony", "CoreTelephony", 4 },
+#if !NET
 				{ "iAd", "iAd", 4 },
+#endif
 				{ "QuickLook", "QuickLook", 4 },
 				{ "ImageIO", "ImageIO", 4 },
 				{ "AssetsLibrary", "AssetsLibrary", 4 },
@@ -353,7 +368,6 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "WebKit", "WebKit", 8 },
 				{ "NetworkExtension", "NetworkExtension", 8 },
 				{ "VideoToolbox", "VideoToolbox", 8 },
-				// { "WatchKit", "WatchKit", 8,2 }, // Removed in Xcode 11
 
 				{ "ReplayKit", "ReplayKit", 9 },
 				{ "Contacts", "Contacts", 9 },
@@ -412,6 +426,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AppClip", "AppClip", 14,0 },
 				{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
 				{ "MediaSetup", "MediaSetup", new Version (14, 0), NotAvailableInSimulator /* no headers in beta 3 */ },
+				{ "MetalPerformanceShadersGraph", "MetalPerformanceShadersGraph", 14,0 },
 				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
 				{ "ScreenTime", "ScreenTime", 14,0 },
@@ -422,7 +437,13 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "CoreLocationUI", "CoreLocationUI", 15,0 },
 
-				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ }
+#if !NET
+				{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+#endif
+				{ "Phase", "PHASE", new Version (15,0), NotAvailableInSimulator /* no headers in beta 2 */ },
+				{ "OSLog", "OSLog", 15,0 },
+				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
+				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -491,8 +512,12 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "Accessibility", "Accessibility", 7,0 },
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 7,0 },
 
+#if !NET
 				{ "Chip", "CHIP", new Version (8, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
-
+#endif
+				{ "NearbyInteraction", "NearbyInteraction", 8,0 },
+				{ "OSLog", "OSLog", 8,0 },
+				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
 			};
 		}
 		return watch_frameworks;
@@ -578,11 +603,16 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "AppTrackingTransparency", "AppTrackingTransparency", 14,0 },
 					{ "CoreHaptics", "CoreHaptics", 14, 0 },
 					{ "LinkPresentation", "LinkPresentation", 14,0 },
+					{ "MetalPerformanceShadersGraph", "MetalPerformanceShadersGraph", new Version (14, 0), NotAvailableInSimulator /* not available in the simulator */ },
 					{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 					{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 					{ "Intents", "Intents", 14,0 },
 
+#if !NET
 					{ "Chip", "CHIP", new Version (15, 0), NotAvailableInSimulator /* no headers in beta 2 */ },
+#endif
+					{ "OSLog", "OSLog", 15,0 },
+					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
 				};
 			}
 			return tvos_frameworks;
@@ -594,12 +624,21 @@ public class Frameworks : Dictionary <string, Framework>
 	{
 		if (catalyst_frameworks == null) {
 			catalyst_frameworks = CreateiOSFrameworks (false);
+			// not present in iOS but present in catalyst
+			catalyst_frameworks.Add ("CoreWlan", "CoreWLAN", 15, 0);
 
 			var min = new Version (13, 0);
+			var v14_0 = new Version (14, 0);
 			var v14_2 = new Version (14, 2);
 			foreach (var f in catalyst_frameworks.Values) {
 				switch (f.Name) {
 				// These frameworks were added to Catalyst after they were added to iOS, so we have to adjust the Versions fields
+				case "CoreTelephony":
+				case "HomeKit":
+				case "Messages":
+					f.Version = v14_0;
+					f.VersionAvailableInSimulator = v14_0;
+					break;
 				case "AddressBook":
 				case "ClassKit":
 				case "UserNotificationsUI":
@@ -619,20 +658,13 @@ public class Frameworks : Dictionary <string, Framework>
 				case "Twitter":
 				// headers-based xtro reporting those are *all* unknown API for Catalyst
 				case "AddressBookUI":
-				case "AppClip":
 				case "ARKit":
 				case "AssetsLibrary":
 				case "CarPlay":
-				case "CoreTelephony":
-				case "EventKitUI":
-				case "HealthKit":
-				case "HealthKitUI":
+#if !NET
 				case "iAd":
-				case "IdentityLookupUI":
-				case "HomeKit":
-				case "Messages":
-				case "MessageUI":
-				case "VisionKit":
+				case "CHIP":
+#endif
 				case "WatchConnectivity":
 					f.Unavailable = true;
 					break;
@@ -645,6 +677,12 @@ public class Frameworks : Dictionary <string, Framework>
 					break;
 				}
 			}
+
+			// Add frameworks that are not in iOS
+			catalyst_frameworks.Add ("AppKit", 13, 0);
+			// Due to a linking problem, ScreenCpatureKit doesn't work on Mac Catalyst (we can't pass -framework ScreenCaptureKit to the native linker,
+			// because there's no Mac Catalyst tbd file for ScreenCaptureKit).
+			// catalyst_frameworks.Add ("ScreenCaptureKit", 15, 4);
 		}
 		return catalyst_frameworks;
 	}
@@ -714,6 +752,7 @@ public class Frameworks : Dictionary <string, Framework>
 		case ApplePlatform.MacCatalyst:
 			break; // Include all frameworks by default
 		case ApplePlatform.MacOSX:
+#if !NET
 			switch (framework.Name) {
 			case "QTKit":
 #if MMP
@@ -726,6 +765,7 @@ public class Frameworks : Dictionary <string, Framework>
 #endif
 				return true;
 			}
+#endif // !NET
 			return true;
 		default:
 			throw ErrorHelper.CreateError (71, Errors.MX0071 /* "Unknown platform: {0}. This usually indicates a bug in {1}; please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new with a test case." */, app.Platform, app.GetProductName ());

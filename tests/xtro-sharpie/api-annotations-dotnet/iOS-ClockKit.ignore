@@ -1,0 +1,5 @@
+# was added in iOS but it should have not, issue: https://github.com/xamarin/maccore/issues/2300
+!missing-enum! CLKWatchFaceLibraryErrorCode not bound
+!missing-field! CLKWatchFaceLibraryErrorDomain not bound
+!missing-selector! CLKWatchFaceLibrary::addWatchFaceAtURL:completionHandler: not bound
+!missing-type! CLKWatchFaceLibrary not bound

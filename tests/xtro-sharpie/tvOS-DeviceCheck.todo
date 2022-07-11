@@ -1,6 +1,0 @@
-!missing-selector! +DCAppAttestService::sharedService not bound
-!missing-selector! DCAppAttestService::attestKey:clientDataHash:completionHandler: not bound
-!missing-selector! DCAppAttestService::generateAssertion:clientDataHash:completionHandler: not bound
-!missing-selector! DCAppAttestService::generateKeyWithCompletionHandler: not bound
-!missing-selector! DCAppAttestService::isSupported not bound
-!missing-type! DCAppAttestService not bound

@@ -13,6 +13,10 @@ using ObjCRuntime;
 using CoreGraphics;
 using System.Reflection;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ClassKit {
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -67,6 +71,7 @@ namespace ClassKit {
 		InvalidCreate,
 		InvalidUpdate,
 		PartialFailure,
+		InvalidAccountCredentials,
 	}
 
 
@@ -89,6 +94,9 @@ namespace ClassKit {
 		ArtsAndMusic,
 		[Field ("CLSContextTopicHealthAndFitness")]
 		HealthAndFitness,
+		// CLSContext.Topic should be nullable, thus we should add a null option
+		[Field (null)]
+		None = 1000,
 	}
 
 
@@ -224,7 +232,7 @@ namespace ClassKit {
 
 		[Export ("initWithIdentifier:title:type:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier, string title, CLSBinaryValueType valueType);
+		NativeHandle Constructor (string identifier, string title, CLSBinaryValueType valueType);
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -270,7 +278,7 @@ namespace ClassKit {
 
 		[Export ("initWithType:identifier:title:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CLSContextType type, string identifier, string title);
+		NativeHandle Constructor (CLSContextType type, string identifier, string title);
 
 		[Export ("active")]
 		bool Active { [Bind ("isActive")] get; }
@@ -427,7 +435,7 @@ namespace ClassKit {
 
 		[Export ("initWithIdentifier:title:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier, string title);
+		NativeHandle Constructor (string identifier, string title);
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -444,7 +452,7 @@ namespace ClassKit {
 
 		[Export ("initWithIdentifier:title:score:maxScore:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string identifier, string title, double score, double maxScore);
+		NativeHandle Constructor (string identifier, string title, double score, double maxScore);
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -469,7 +477,7 @@ namespace ClassKit {
 		string Details { get; }
 
 		[Export ("initWithKind:details:")]
-		IntPtr Constructor (CLSProgressReportingCapabilityKind kind, [NullAllowed] string details);
+		NativeHandle Constructor (CLSProgressReportingCapabilityKind kind, [NullAllowed] string details);
 	}
 
 }

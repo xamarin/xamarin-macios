@@ -1,4 +1,4 @@
-﻿// Authors:
+// Authors:
 //	Sebastien Pouliot <sebastien@xamarin.com>
 //
 // Copyright 2013, 2016 Xamarin Inc. All rights reserved.

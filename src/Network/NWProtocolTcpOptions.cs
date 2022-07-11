@@ -17,14 +17,30 @@ using Foundation;
 using CoreFoundation;
 using Security;
 using OS_nw_protocol_definition=System.IntPtr;
+using OS_nw_protocol_options=System.IntPtr;
 using IntPtr=System.IntPtr;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (6,0)]
+#endif
 	public class NWProtocolTcpOptions : NWProtocolOptions {
 		
-		internal NWProtocolTcpOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWProtocolTcpOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		public NWProtocolTcpOptions () : this (nw_tcp_create_options (), owns: true) {}
 
@@ -64,5 +80,35 @@ namespace Network {
 		public void SetEnableFastOpen (bool enableFastOpen) => nw_tcp_options_set_enable_fast_open (GetCheckedHandle (), enableFastOpen);
 
 		public void SetDisableEcn (bool disableEcn) => nw_tcp_options_set_disable_ecn (GetCheckedHandle (), disableEcn);
+		
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_tcp_options_set_multipath_force_version (OS_nw_protocol_options options, NWMultipathVersion multipath_force_version);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		public void ForceMultipathVersion (NWMultipathVersion version)
+			=> nw_tcp_options_set_multipath_force_version (GetCheckedHandle (), version);
 	}
 }

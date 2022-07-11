@@ -28,6 +28,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 #if !MONOMAC
 using UIKit;
@@ -42,7 +45,7 @@ namespace CoreLocation {
 #if IOS
 		public static bool IsMonitoringAvailable (Type t)
 		{
-			if (UIDevice.CurrentDevice.CheckSystemVersion(7,0))
+			if (SystemVersion.CheckiOS (7,0))
 				return IsMonitoringAvailable (new Class (t));
 			return false;
 		}

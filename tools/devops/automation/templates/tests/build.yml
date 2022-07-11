@@ -1,0 +1,212 @@
+# Xamarin
+#
+# Template that contains the different steps required to run device
+# tests. The template takes a number of parameters so that it can
+# be configured for the different type of devices.
+#
+parameters:
+
+- name: statusContext
+  type: string
+  default: 'iOS Device Tests' # default context, since we started dealing with iOS devices.
+
+- name: testsLabels
+  type: string
+  default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
+
+- name: label
+  type: string
+
+- name: disableProvisionatorCache
+  type: boolean
+  default: false
+
+- name: clearProvisionatorCache
+  type: boolean
+  default: false
+
+- name: useXamarinStorage
+  type: boolean
+  default: false  # xamarin-storage will disappear, so by default do not use it
+
+- name: vsdropsPrefix
+  type: string
+
+# can depend on the pool, which is annoying, but we should keep it in mind
+- name: keyringPass
+  type: string
+
+- name: testPrefix
+  type: string
+  default: 'ios' # default context, since we started dealing with iOS devices.
+
+- name: gitHubToken
+  type: string
+
+- name: xqaCertPass
+  type: string
+
+- name: makeTarget
+  type: string
+  default: 'vsts-device-tests' # target to be used to run the tests
+
+- name: isPR
+  type: boolean
+
+steps:
+
+- template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
+
+- template: ../common/setup.yml
+  parameters:
+    keyringPass: ${{ parameters.keyringPass }}
+
+# Use a cmdlet to check if the space available in the devices root system is larger than 50 gb. If there is not
+# enough space available it:
+# 1. Set the status of the build to error. It is not a failure since no tests have been ran.
+# 2. Set a comment stating the same as what was sent to the status.
+# 3. Cancel the pipeline and do not execute any of the following steps.
+- pwsh: | 
+    Import-Module ./MaciosCI.psd1
+    $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+
+    if ( -not (Test-HDFreeSpace -Size 20)) {
+      $statuses.SetStatus("error", "Not enough free space in the host.", "${{ parameters.statusContext }}")
+      New-GitHubComment -Header "Tests failed catastrophically on $Env:CONTEXT" -Emoji ":fire:" -Description "Not enough free space in the host."
+      Stop-Pipeline
+    } else {
+      $statuses.SetStatus("pending", "Device tests on VSTS have been started.", "${{ parameters.statusContext }}")
+    }
+  env:
+    BUILD_REVISION: $(Build.SourceVersion)
+    CONTEXT: ${{ parameters.statusContext }}
+    GITHUB_TOKEN: $(GitHub.Token)
+    ACCESSTOKEN: $(System.AccessToken)
+  displayName: 'Check HD Free Space'
+  timeoutInMinutes: 5
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/
+  condition: succeededOrFailed() # we do not care about the previous step
+
+# if we got to this point, it means that we do have at least 50 Gb to run the test, should
+# be more than enough, else the above script would have stopped the pipeline
+- bash: |
+    set -x
+    set -e
+    cd xamarin-macios
+    ./configure --enable-xamarin
+  displayName: 'Enable Xamarin'
+  timeoutInMinutes: 1
+
+# Add the required provisioning profiles to be able to execute the tests.
+- bash: |
+    set -x
+    set -e
+    rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*p12
+    rm -f ~/Library/Caches/com.xamarin.provisionator/Provisions/*mobileprovision
+    ./maccore/tools/install-qa-provisioning-profiles.sh -v
+  displayName: 'Add provisioning profiles'
+  timeoutInMinutes: 30
+  env:
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
+    AUTH_TOKEN_LA_DEV_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_DISTR_APPLE_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_LA_MAC_INSTALLER_DISTR_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
+    AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
+
+# download the not notarized pkgs since we do not need them to be signed
+- task: DownloadPipelineArtifact@2
+  displayName: Download not notaraized build
+  inputs:
+    artifact: 'not-signed-package'
+    allowFailedBuilds: true
+    path: $(Build.SourcesDirectory)/package
+
+- pwsh: |
+    $dir = "$(Build.SourcesDirectory)/package"
+    Dir $dir
+    $items = Get-ChildItem $dir -Recurse
+    foreach ($i in $items) {
+      if ($i.Name -like "xamarin.ios-*.pkg") {
+        $path = $i.FullName
+        Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$path"
+      }
+      if ($i.Name -like "xamarin.mac-*.pkg") {
+        $path = $i.FullName
+        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$path"
+      }
+    }
+  displayName: 'Set iOS pkgs url'
+  timeoutInMinutes: 5
+
+- bash: |
+    echo "Pkg uri is $XI_PACKAGE"
+    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ device-tests-provisioning.csx
+  displayName: 'Generate Provisionator csx file for iOS'
+
+# Executed ONLY if we want to clear the provisionator cache.
+- bash: rm -rf "$TOOLS_DIR/provisionator"
+  env:
+    TOOLS_DIR: $(Agent.ToolsDirectory)
+  displayName: 'Nuke Provisionator Tool Cache'
+  condition: ${{ parameters.clearProvisionatorCache }}
+
+# Use the provisionator to install the test dependencies. Those have been generated in the 'Generate Provisionator csx file' step.
+- task: xamops.azdevex.provisionator-task.provisionator@1
+  displayName: 'Provision Xamarin.iOS'
+  inputs:
+    provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
+    provisioning_extra_args: '-vvvv'
+  timeoutInMinutes: 250
+
+- bash: |
+    echo "Pkg uri is $XM_PACKAGE"
+    make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ mac-tests-provisioning.csx
+  displayName: 'Generate Provisionator csx file for Mac'
+
+- task: xamops.azdevex.provisionator-task.provisionator@1
+  displayName: 'Provision Xamarin.Mac'
+  inputs:
+    provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
+    provisioning_extra_args: '-vvvv'
+  timeoutInMinutes: 250
+
+- bash: |
+    set -e
+    set -x
+    mac_var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR MAC_DESTDIR=)
+    ios_var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR IOS_DESTDIR=)
+    MAC_DESTDIR=${mac_var#*=}
+    IOS_DESTDIR=${ios_var#*=}
+    XM_DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/"
+    XI_DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
+    mkdir -p "$XM_DEST_DIR"
+    mkdir -p "$XI_DEST_DIR"
+    ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$XM_DEST_DIR/git"
+    ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$XI_DEST_DIR/git"
+    ls -laR "$XM_DEST_DIR"
+    ls -laR "$XI_DEST_DIR"
+  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
+  displayName: Create legacy iOS/Mac SDK symlinks
+
+- bash: |
+    set -x
+    set -e
+    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
+  displayName: 'Provision simulators'
+
+- template: ./run-tests.yml
+  parameters:
+    label: ${{ parameters.label }}
+    statusContext: ${{ parameters.statusContext }}
+    testsLabels: ${{ parameters.testsLabels }}
+    vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
+    testPrefix: ${{ parameters.testPrefix }}
+    makeTarget: ${{ parameters.makeTarget }}
+
+# clean the bot after we use it
+- template: ../common/teardown.yml
+  parameters:
+    keyringPass: ${{ parameters.keyringPass }}

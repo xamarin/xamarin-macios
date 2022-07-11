@@ -63,7 +63,7 @@ namespace Introspection {
 				case "SKTerminateForInvalidReceipt": // Only there for API compat
 					return !IsUnified;
 			}
-			return false;
+			return base.Skip (symbolName);
 		}
 
 		protected override bool SkipAssembly (Assembly a)

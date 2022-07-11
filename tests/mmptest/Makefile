@@ -29,7 +29,7 @@ endif
 
 run: build
 	rm -f .failed-stamp
-	$(TOP)/tools/nunit3-console-3.11.1 $(abspath $(TOP)/tests/mmptest/bin/Debug/mmptest.dll) "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=All || touch $(CURDIR)/.failed-stamp
+	$(TOP)/tools/nunit3-console-3.11.1 $(abspath $(TOP)/tests/mmptest/bin/Debug/mmptest.dll) "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=After || touch $(CURDIR)/.failed-stamp
 	@# Create an html file and tell MonkeyWrench to upload it (if we're running there)
 	@[[ -z "$$BUILD_REPOSITORY" ]] || \
 		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \

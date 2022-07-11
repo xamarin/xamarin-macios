@@ -26,15 +26,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
 
 	<PropertyGroup>
-		<_CanOutputAppBundle>False</_CanOutputAppBundle>
-		<_CanOutputAppBundle Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true'">true</_CanOutputAppBundle>
-
-		<_CanArchive>False</_CanArchive>
-		<_CanArchive Condition="'$(OutputType)' == 'Exe'">true</_CanArchive>
-
-		<_RequireProvisioningProfile>False</_RequireProvisioningProfile>
-		<_RequireProvisioningProfile Condition="'$(CodesignProvision)' != ''">True</_RequireProvisioningProfile>
-
 		<_PreparedResourceRules></_PreparedResourceRules>
 		<_AppBundleName>$(AssemblyName)</_AppBundleName>
 	</PropertyGroup>
@@ -56,124 +47,30 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<PropertyGroup>
 		<CreateAppBundleDependsOn Condition="'$(UsingAppleNETSdk)' != 'true'">
+			$(CreateAppBundleDependsOn);
 			_DetectSigningIdentity;
 			_CopyResourcesToBundle;
 			_SmeltMetal;
-			_ForgeMetal;
 			_TemperMetal;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_WriteAppManifest;
 			_ParseBundlerArguments;
 			_CompileToNative;
 			_CreatePkgInfo;
 			_CopyAppExtensionsToBundle;
-			_ReadAppExtensionDebugSymbolProperties;
-			_GenerateAppExtensionDebugSymbols;
-			_PrepareDebugSymbolGeneration;
-			_GenerateDebugSymbols;
+			_PostProcessAppBundle;
 		</CreateAppBundleDependsOn>
 	</PropertyGroup>
-
-	<PropertyGroup>
-		<_CodesignAppBundleDependsOn>
-			_CreateAppBundle;
-			_EmbedProvisionProfile;
-			_CodesignNativeLibraries;
-			_CollectFrameworks;
-			_CodesignFrameworks;
-		</_CodesignAppBundleDependsOn>
-	</PropertyGroup>
-
-	<Target Name="_CodesignAppBundle" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="$(_CodesignAppBundleDependsOn)">
-		<Codesign
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			Keychain="$(CodesignKeychain)"
-			Entitlements="$(IntermediateOutputPath)Entitlements.xcent"
-			Resources="$(AppBundleDir)"
-			SigningKey="$(_CodeSigningKey)"
-			ExtraArgs="$(CodesignExtraArgs)"
-			IsAppExtension="$(IsAppExtension)"
-			UseHardenedRuntime="$(UseHardenedRuntime)"
-			UseSecureTimestamp="$(UseHardenedRuntime)"
-			>
-		</Codesign>
-	</Target>
-
-	<Target Name="_CodesignVerify" Condition="'$(_RequireCodeSigning)'" DependsOnTargets="_CodesignAppBundle">
-		<CodesignVerify
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(CodesignExe)"
-			ToolPath="$(CodesignPath)"
-			CodesignAllocate="$(_CodesignAllocate)"
-			Resource="$(AppBundleDir)"
-		>
-		</CodesignVerify>
-	</Target>
-
-	<Target Name="_CompileTextureAtlases" DependsOnTargets="_DetectAppManifest;_DetectSdkLocations;_CoreCompileTextureAtlases" />
-
-	<Target Name="_CoreCompileTextureAtlases">
-		<TextureAtlas
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ToolExe="$(TextureAtlasExe)"
-			ToolPath="$(TextureAtlasPath)"
-			AtlasTextures="@(AtlasTexture)"
-			IntermediateOutputPath="$(IntermediateOutputPath)"
-			ProjectDir="$(MSBuildProjectDirectory)"
-			ResourcePrefix="$(_ResourcePrefix)"
-			SdkDevPath="$(_SdkDevPath)"
-			SdkBinPath="$(_SdkBinPath)"
-			SdkUsrPath="$(_SdkUsrPath)">
-			<Output TaskParameter="BundleResources" ItemName="FileWrites" />
-			<Output TaskParameter="BundleResources" ItemName="_BundleResourceWithLogicalName" />
-		</TextureAtlas>
-	</Target>
-
-	<Target Name="_CompileProductDefinition" Condition="$(CreatePackage)" DependsOnTargets="_DetectAppManifest;_ComputeTargetArchitectures">
-		<CompileProductDefinition
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			ProductDefinition="$(ProductDefinition)"
-			OutputDirectory = "$(IntermediateOutputPath)"
-			TargetArchitectures = "$(TargetArchitectures)"
-			AppManifest = "$(_AppManifest)">
-			<Output TaskParameter="CompiledProductDefinition" PropertyName="_CompiledProductDefinition" />
-		</CompileProductDefinition>
-	</Target>
-
-	<Target Name="_CreateInstaller" Condition="$(CreatePackage)" DependsOnTargets="Codesign;_CompileProductDefinition">
-		<CreateInstallerPackage
-			Condition="'$(IsMacEnabled)' == 'true'"
-			SessionId="$(BuildSessionId)"
-			OutputDirectory = "$(TargetDir)"
-			Name = "$(AssemblyName)"
-			AppManifest="$(_AppManifest)"
-			ProjectPath= "$(MSBuildProjectFullPath)"
-			AppBundleDir= "$(AppBundleDir)"
-			MainAssembly= "$(TargetPath)"
-			EnablePackageSigning = "$(EnablePackageSigning)"
-			ProductDefinition = "$(_CompiledProductDefinition)"
-			PackageSigningKey = "$(PackageSigningKey)"
-			PackagingExtraArgs = "$(PackagingExtraArgs)">
-		</CreateInstallerPackage>
-	</Target>
 
 	<PropertyGroup>
 		<CompileToNativeDependsOn>
 			_ComputeLinkMode;
 			_ComputeTargetFrameworkMoniker;
-			_DetectAppManifest;
 			_DetectSdkLocations;
 			_GenerateBundleName;
 			ResolveReferences;
 			_CompileEntitlements;
-			_CompileAppManifest;
+			_WriteAppManifest;
 			_GetNativeExecutableName;
 			_GetCompileToNativeInputs;
 			_ExpandNativeReferences;
@@ -183,7 +80,7 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 
 	<Target Name="_CompileToNative" DependsOnTargets="$(CompileToNativeDependsOn)"
 		Condition = "'$(UsingAppleNETSdk)' != 'true'"
-		Inputs="@(_CompileToNativeInput);@(_FileNativeReference);@(BundleDependentFiles)"
+		Inputs="@(_CompileToNativeInput);@(_FileNativeReference)"
 		Outputs="$(_AppBundlePath)Contents\MacOS\$(_AppBundleName);$(DeviceSpecificOutputPath)bundler.stamp">
 
 		<Mmp
@@ -232,33 +129,6 @@ Copyright (C) 2014 Xamarin. All rights reserved.
 	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.msbuild.targets" />
-
-	<PropertyGroup>
-		<ArchiveDependsOn>
-			_CoreArchive
-		</ArchiveDependsOn>
-	</PropertyGroup>
-	
-	<Target Name="Archive" Condition="'$(_CanArchive)' == 'true'" DependsOnTargets="$(ArchiveDependsOn)" />
-	
-	<Target Name="_CoreArchive" Condition="'$(ArchiveOnBuild)' == 'true'" DependsOnTargets="$(Codesign)">
-		<Error Text="Code signing must be enabled to create an Xcode archive." Condition="'$(_CodeSigningKey)' == ''" />
-
-		<Archive
-			SessionId="$(BuildSessionId)"
-			AppBundleDir="$(AppBundleDir)"
-			InsightsApiKey="$(XamarinInsightsApiKey)"
-			SigningKey="$(_CodeSigningKey)"
-			ProjectName="$(MSBuildProjectName)"
-			ProjectGuid="$(ProjectGuid)"
-			ProjectTypeGuids="$(ProjectTypeGuids)"
-			OutputPath="$(OutputPath)"
-			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
-			CustomBundleName="$(_CustomBundleName)"
-			>
-			<Output TaskParameter="ArchiveDir" PropertyName="ArchiveDir" />
-		</Archive>
-	</Target>
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.targets')"/>

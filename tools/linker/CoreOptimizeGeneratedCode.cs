@@ -10,9 +10,6 @@ using Mono.Tuner;
 using Xamarin.Bundler;
 
 using MonoTouch.Tuner;
-#if MONOMAC
-using MonoMac.Tuner;
-#endif
 #if NET
 using Mono.Linker.Steps;
 #endif
@@ -171,7 +168,7 @@ namespace Xamarin.Linker {
 					break;
 				}
 
-				if (!Driver.IsXAMCORE_4_0 && tr.Is ("System.Runtime.CompilerServices", "CompilerGeneratedAttribute")) {
+				if (tr.Is ("System.Runtime.CompilerServices", "CompilerGeneratedAttribute")) {
 #if DEBUG
 					Console.WriteLine ("Assembly {0} : processing", assembly);
 #endif
@@ -218,7 +215,7 @@ namespace Xamarin.Linker {
 			ins.Operand = null;
 		}
 
-		protected static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, Code expected)
+		internal static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, Code expected)
 		{
 			if (ins.OpCode.Code != expected) {
 				Driver.Log (1, "Could not {0} in {1} at offset {2}, expected {3} got {4}", operation, caller, ins.Offset, expected, ins);
@@ -228,7 +225,7 @@ namespace Xamarin.Linker {
 			return true;
 		}
 
-		protected static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, params Code [] expected)
+		internal static bool ValidateInstruction (MethodDefinition caller, Instruction ins, string operation, params Code [] expected)
 		{
 			foreach (var code in expected) {
 				if (ins.OpCode.Code == code)
@@ -728,7 +725,7 @@ namespace Xamarin.Linker {
 
 			if (method.IsBindingImplOptimizableCode (LinkContext)) {
 				// We optimize all methods that have the [BindingImpl (BindingImplAttributes.Optimizable)] attribute.
-			} else if (!Driver.IsXAMCORE_4_0 && (method.IsGeneratedCode (LinkContext) && (
+			} else if ((method.IsGeneratedCode (LinkContext) && (
 #if NET
 				GetIsExtensionType (method.DeclaringType)
 #else
@@ -811,26 +808,18 @@ namespace Xamarin.Linker {
 
 		void ProcessEnsureUIThread (MethodDefinition caller, Instruction ins)
 		{
-#if MONOMAC
-			const string operation = "remove calls to NSApplication::EnsureUIThread";
-#else
-			const string operation = "remove calls to UIApplication::EnsureUIThread";
-#endif
-
 			if (Optimizations.RemoveUIThreadChecks != true)
 				return;
 
 			// Verify we're checking the right get_EnsureUIThread call
+			var declaringTypeNamespace = LinkContext.App.Platform == Utils.ApplePlatform.MacOSX ? Namespaces.AppKit : Namespaces.UIKit;
+			var declaringTypeName = LinkContext.App.Platform == Utils.ApplePlatform.MacOSX ? "NSApplication" : "UIApplication";
 			var mr = ins.Operand as MethodReference;
-#if MONOMAC
-			if (!mr.DeclaringType.Is (Namespaces.AppKit, "NSApplication"))
+			if (!mr.DeclaringType.Is (declaringTypeNamespace, declaringTypeName))
 				return;
-#else
-			if (!mr.DeclaringType.Is (Namespaces.UIKit, "UIApplication"))
-				return;
-#endif
 
 			// Verify a few assumptions before doing anything
+			const string operation = "remove calls to [NS|UI]Application::EnsureUIThread";
 			if (!ValidateInstruction (caller, ins, operation, Code.Call))
 				return;
 

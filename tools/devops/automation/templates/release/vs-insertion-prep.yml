@@ -1,0 +1,113 @@
+parameters:
+- name: enableDotnet
+  type: boolean
+  default: true
+
+- name: dependsOn
+  type: string
+  default: prepare_packages
+
+- name: isPR
+  type: boolean
+
+stages:
+- stage: prepare_release
+  displayName: Prepare Release
+  dependsOn: ${{ parameters.dependsOn }}
+  condition: and(or(eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'), eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')), eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
+
+  jobs:
+  # Check - "xamarin-macios (Prepare Release Sign NuGets)"
+  - template: sign-artifacts/jobs/v2.yml@templates
+    parameters:
+      artifactName: package
+      signType: Real
+      usePipelineArtifactTasks: true
+
+  # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
+  - template: nuget-msi-convert/job/v2.yml@templates
+    parameters:
+      yamlResourceName: templates
+      dependsOn: signing
+      artifactName: nuget-signed
+      propsArtifactName: package
+      signType: Real
+      useDateTimeVersion: true
+
+  # Check - "xamarin-macios (Prepare Release Push NuGets)"
+  - job: push_signed_nugets
+    displayName: Push NuGets
+    dependsOn: nuget_convert
+    variables:
+      skipNugetSecurityAnalysis: true
+    pool:
+      vmImage: windows-latest
+    steps:
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: nuget-signed
+        downloadPath: $(Build.SourcesDirectory)/package
+        patterns: |
+          *.nupkg
+
+    - task: NuGetCommand@2
+      displayName: Publish Nugets to dotnet6
+      inputs:
+        command: push
+        packagesToPush: $(Build.SourcesDirectory)/package/*.nupkg
+        nuGetFeedType: external
+        publishFeedCredentials: dnceng-dotnet6
+
+    - task: DownloadPipelineArtifact@2
+      inputs:
+        artifactName: vs-msi-nugets
+        downloadPath: $(Build.SourcesDirectory)/vs-msi-nugets
+        patterns: |
+          *.nupkg
+
+    - task: NuGetCommand@2
+      displayName: Publish Nugets to dotnet6
+      inputs:
+        command: push
+        packagesToPush: $(Build.SourcesDirectory)/vs-msi-nugets/*.nupkg
+        nuGetFeedType: external
+        publishFeedCredentials: dnceng-dotnet6
+
+    - pwsh: |
+        mkdir $(Build.SourcesDirectory)/nugets-blob
+        cp $(Build.SourcesDirectory)/package/* $(Build.SourcesDirectory)/nugets-blob
+        cp $(Build.SourcesDirectory)/vs-msi-nugets/* $(Build.SourcesDirectory)/nugets-blob
+      displayName: "Copy content for the nugets blob."
+
+    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+      parameters:
+        githubToken: $(GitHub.Token)
+        githubContext: $(NupkgCommitStatusName)
+        blobName: $(NupkgCommitStatusName)
+        packagePrefix: xamarin-macios
+        artifactsPath: $(Build.SourcesDirectory)/nugets-blob
+
+    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+      parameters:
+        githubToken: $(GitHub.Token)
+        githubContext: $(VSDropCommitStatusName)
+        blobName: $(VSDropCommitStatusName)
+        packagePrefix: xamarin-macios
+        artifactsPath: $(Build.SourcesDirectory)/vs-insertion
+        downloadSteps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: vsdrop-signed
+              downloadPath: $(Build.SourcesDirectory)/vs-insertion
+
+# Check - "xamarin-macios (VS Insertion Wait For Approval)"
+# Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"
+- template: vs-insertion/stage/v1.yml@templates
+  parameters:
+    dependsOn: prepare_release
+    symbolArtifactName: nuget-signed
+    symbolConversionFilters: '*mlaunch.app*'
+    pushToShippingFeed: true
+    nupkgArtifactName: nuget-signed
+    msiNupkgArtifactName: vs-msi-nugets
+    condition: eq(${{ parameters.isPR }}, false)

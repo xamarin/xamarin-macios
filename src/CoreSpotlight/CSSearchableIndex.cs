@@ -1,4 +1,4 @@
-﻿//
+//
 // CSSearchableIndex.cs: Implements some nicer methods for CSSearchableIndex
 //
 // Authors:
@@ -6,6 +6,8 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
+
+#nullable enable
 
 #if IOS
 
@@ -21,7 +23,7 @@ namespace CoreSpotlight {
 		public CSSearchableIndex (string name, CSFileProtection protectionOption = CSFileProtection.None) : this (name, Translate (protectionOption))
 			{}
 
-		static NSString Translate (CSFileProtection protectionOption)
+		static NSString? Translate (CSFileProtection protectionOption)
 		{
 			switch (protectionOption) {
 			case CSFileProtection.None:

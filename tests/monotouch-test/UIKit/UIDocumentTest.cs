@@ -18,6 +18,7 @@ using UIKit;
 using ObjCRuntime;
 using MonoTouchException=ObjCRuntime.RuntimeException;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -98,6 +99,10 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Save ()
 		{
+			// This test may fail in the simulator, if the architecture of the simulator isn't the native one (say running x86_64 on an M1 machine),
+			// so just skip this test for the simulator.
+			TestRuntime.AssertIfSimulatorThenARM64 ();
+
 			using (NSUrl url = NSUrl.FromFilename (GetFileName ())) {
 				doc = new MyDocument (url);
 				doc.Save (url, UIDocumentSaveOperation.ForCreating, OperationHandler);
@@ -143,9 +148,6 @@ namespace MonoTouchFixtures.UIKit {
 		[Ignore ("crash on the bots, run fines locally on sim")]
 		public void NSUrl_Subclass ()
 		{
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Inconclusive ("will crash runner application after test execution");
-			
 			string file = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.MyDocuments), "uidocument.txt");
 			if (File.Exists (file))
 				File.Delete (file);
@@ -153,7 +155,11 @@ namespace MonoTouchFixtures.UIKit {
 			// interesting limitation
 			using (MyUrl url2 = new MyUrl (file, "my document")) {
 				// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: must pass a valid file URL to -[UIDocument initWithFileURL:]
+#if NET
+				Assert.Throws<ObjCException> (delegate { 
+#else
 				Assert.Throws<MonoTouchException> (delegate { 
+#endif
 					new DocumentPoker (url2);
 				});
 			}
@@ -163,7 +169,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Fields ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 			// just to confirm it's not an NSUrl but an NSString
 			Assert.That (UIDocument.UserActivityDocumentUrlKey.ToString (), Is.EqualTo ("NSUserActivityDocumentURL"), "NSUserActivityDocumentURLKey");
 		}

@@ -14,7 +14,9 @@ namespace Xamarin.Linker {
 		public const string AppKit = nameof (AppKit);
 		public const string AVFoundation = nameof (AVFoundation);
 		public const string AVKit = nameof (AVKit);
+#if !NET
 		public const string Chip = nameof (Chip);
+#endif
 		public const string CloudKit = nameof (CloudKit);
 		public const string Contacts = nameof (Contacts);
 		public const string ContactsUI = nameof (ContactsUI);
@@ -52,6 +54,7 @@ namespace Xamarin.Linker {
 		public const string MediaPlayer = nameof (MediaPlayer);
 		public const string MetalKit = nameof (MetalKit);
 		public const string MetalPerformanceShaders = nameof (MetalPerformanceShaders);
+		public const string MetalPerformanceShadersGraph = nameof (MetalPerformanceShadersGraph);
 		public const string ModelIO = nameof (ModelIO);
 		public const string MultipeerConnectivity = nameof (MultipeerConnectivity);
 		public const string NaturalLanguage = nameof (NaturalLanguage);
@@ -64,7 +67,9 @@ namespace Xamarin.Linker {
 		public const string Photos = nameof (Photos);
 		public const string PhotosUI = nameof (PhotosUI);
 		public const string PrintCore = nameof (PrintCore);
+#if !NET
 		public const string QTKit = nameof (QTKit);
+#endif
 		public const string QuartzComposer = nameof (QuartzComposer);
 		public const string Registrar = nameof (Registrar);
 		public const string SceneKit = nameof (SceneKit);
@@ -73,6 +78,7 @@ namespace Xamarin.Linker {
 		public const string Social = nameof (Social);
 		public const string SpriteKit = nameof (SpriteKit);
 		public const string StoreKit = nameof (StoreKit);
+		public const string ThreadNetwork = nameof (ThreadNetwork);
 		public const string UIKit = nameof (UIKit);
 		public const string VideoSubscriberAccount = nameof (VideoSubscriberAccount);
 		public const string VideoToolbox = nameof (VideoToolbox);

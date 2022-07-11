@@ -12,6 +12,9 @@ using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Contacts {
 
@@ -295,7 +298,7 @@ namespace Contacts {
 		[DesignatedInitializer]
 		[Export ("initWithKeysToFetch:")]
 		[Protected] // we cannot use ICNKeyDescriptor as Apple (and others) can adopt it from categories
-		IntPtr Constructor (NSArray keysToFetch);
+		NativeHandle Constructor (NSArray keysToFetch);
 
 		[NullAllowed]
 		[Export ("predicate", ArgumentSemantic.Copy)]
@@ -400,7 +403,7 @@ namespace Contacts {
 		CNContactRelation FromName (string name);
 
 		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export ("name")]
 		string Name { get; }
@@ -1271,7 +1274,7 @@ namespace Contacts {
 	}
 
 	delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
-#if !XAMCORE_4_0
+#if !NET
 	delegate void CNContactStoreEnumerateContactsHandler (CNContact contact, bool stop);
 #endif
 	delegate void CNContactStoreListContactsHandler (CNContact contact, ref bool stop);
@@ -1509,12 +1512,12 @@ namespace Contacts {
 		CNFetchResult<NSEnumerator<CNChangeHistoryEvent>> GetEnumeratorForChangeHistory (CNChangeHistoryFetchRequest request, [NullAllowed] out NSError error);
 
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 		[Obsolete ("Use the overload that takes 'CNContactStoreListContactsHandler' instead.")]
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreEnumerateContactsHandler handler);
 
-		[Sealed] // We will introduce breaking changes anyways if XAMCORE_4_0 happens
+		[Sealed]
 #endif
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, [NullAllowed] out NSError error, CNContactStoreListContactsHandler handler);
@@ -1581,7 +1584,7 @@ namespace Contacts {
 		CNContact [] GetContactsFromData (NSData data, out NSError error);
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (9,0), Mac (10,11)]
 	[Category (allowStaticMembers: true)]
 	[BaseType (typeof (CNContainer))]
@@ -1619,7 +1622,7 @@ namespace Contacts {
 
 #region comes from CNContainer (Predicates) Category
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForContainersWithIdentifiers:")]
 #else
 		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainers (null!, identifiers)")]
@@ -1627,7 +1630,7 @@ namespace Contacts {
 		NSPredicate CreatePredicateForContainers (string [] identifiers);
 
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForContainerOfContactWithIdentifier:")]
 #else
 		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainerOfContact (null!, contactIdentifier)")]
@@ -1635,7 +1638,7 @@ namespace Contacts {
 		NSPredicate CreatePredicateForContainerOfContact (string contactIdentifier);
 
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForContainerOfGroupWithIdentifier:")]
 #else
 		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainerOfGroup (null!, groupIdentifier)")]
@@ -1677,7 +1680,7 @@ namespace Contacts {
 		NSString KeyPaths { get; }
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (9,0), Mac (10,11)]
 	[Category (allowStaticMembers: true)]
 	[BaseType (typeof (CNGroup))]
@@ -1713,7 +1716,7 @@ namespace Contacts {
 
 #region comes from CNGroup (Predicates) Category
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForGroupsWithIdentifiers:")]
 #else
 		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForGroups (null!, identifiers)")]
@@ -1722,7 +1725,7 @@ namespace Contacts {
 
 		[NoiOS][NoWatch]
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForSubgroupsInGroupWithIdentifier:")]
 #else
 		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForSubgroupsInGroup (null!, parentGroupIdentifier)")]
@@ -1730,7 +1733,7 @@ namespace Contacts {
 		NSPredicate CreatePredicateForSubgroupsInGroup (string parentGroupIdentifier);
 
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForGroupsInContainerWithIdentifier:")]
 #else
 		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForGroupsInContainer (null!, containerIdentifier)")]
@@ -1756,7 +1759,7 @@ namespace Contacts {
 	interface CNInstantMessageAddress : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
 
 		[Export ("initWithUsername:service:")]
-		IntPtr Constructor (string username, string service);
+		NativeHandle Constructor (string username, string service);
 
 		[Export ("username")]
 		string Username { get; }
@@ -1842,7 +1845,7 @@ namespace Contacts {
 		ValueType FromLabel ([NullAllowed] string label, ValueType value);
 
 		[Export ("initWithLabel:value:")]
-		IntPtr Constructor ([NullAllowed] string label, ValueType value);
+		NativeHandle Constructor ([NullAllowed] string label, ValueType value);
 
 		[Export ("labeledValueBySettingLabel:")]
 		ValueType GetLabeledValue ([NullAllowed] string label);
@@ -2065,7 +2068,7 @@ namespace Contacts {
 		CNPhoneNumber PhoneNumberWithStringValue (string stringValue);
 
 		[Export ("initWithStringValue:")]
-		IntPtr Constructor (string stringValue);
+		NativeHandle Constructor (string stringValue);
 
 		[Export ("stringValue")]
 		string StringValue { get; }
@@ -2144,7 +2147,7 @@ namespace Contacts {
 		string LocalizeProperty (CNPostalAddressKeyOption option);
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (9,0), Mac (10,11)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -2274,6 +2277,10 @@ namespace Contacts {
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("transactionAuthor")]
 		string TransactionAuthor { get; set; }
+
+		[Mac (12, 3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("shouldRefetchContacts")]
+		bool ShouldRefetchContacts { get; set; }
 	}
 #endif // !WATCH
 
@@ -2294,7 +2301,7 @@ namespace Contacts {
 		string Service { get; }
 
 		[Export ("initWithUrlString:username:userIdentifier:service:")]
-		IntPtr Constructor ([NullAllowed] string url, [NullAllowed] string username, [NullAllowed] string userIdentifier, [NullAllowed] string service);
+		NativeHandle Constructor ([NullAllowed] string url, [NullAllowed] string username, [NullAllowed] string userIdentifier, [NullAllowed] string service);
 
 		[Static]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]

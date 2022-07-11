@@ -10,11 +10,16 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Threading;
 using ObjCRuntime;
 using System.Runtime.InteropServices;
 using CoreFoundation;
 using Foundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 #nullable enable
 
@@ -61,6 +66,7 @@ namespace UIKit {
 		
 #if !WATCH
 		[Obsolete ("Use the overload with 'Type' instead of 'String' parameters for type safety.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public static void Main (string []? args, string? principalClassName, string? delegateClassName)
 		{
 			var p = CFString.CreateNative (principalClassName);
@@ -73,8 +79,8 @@ namespace UIKit {
 		
 		public static void Main (string []? args, Type? principalClass, Type? delegateClass)
 		{
-			var p = principalClass == null ? IntPtr.Zero : CFString.CreateNative (new Class (principalClass).Name);
-			var d = delegateClass == null ? IntPtr.Zero : CFString.CreateNative (new Class (delegateClass).Name);
+			var p = principalClass is null ? NativeHandle.Zero : CFString.CreateNative (new Class (principalClass).Name);
+			var d = delegateClass is null ? NativeHandle.Zero : CFString.CreateNative (new Class (delegateClass).Name);
 			Initialize ();
 			UIApplicationMain (args?.Length ?? 0, args, p, d);
 			CFString.ReleaseNative (d);

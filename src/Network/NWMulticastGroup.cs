@@ -6,22 +6,37 @@ using CoreFoundation;
 using OS_nw_group_descriptor=System.IntPtr;
 using OS_nw_endpoint=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 #nullable enable
 
 namespace Network {
 
-	[TV (14,0), Mac (11,0), iOS (14,0), Watch (7,0)]
+#if NET
+	[SupportedOSPlatform ("tvos14.0")]
+	[SupportedOSPlatform ("macos11.0")]
+	[SupportedOSPlatform ("ios14.0")]
+	[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+	[TV (14,0)]
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[Watch (7,0)]
 	[MacCatalyst (14,0)]
+#endif
 	public class NWMulticastGroup : NativeObject {
-		internal NWMulticastGroup (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWMulticastGroup (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern OS_nw_group_descriptor nw_group_descriptor_create_multicast (OS_nw_endpoint multicast_group);
 
 		public NWMulticastGroup (NWEndpoint endpoint)
 		{
-			if (endpoint == null)
-				throw new ArgumentNullException (nameof (endpoint));
+			if (endpoint is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 
 			InitializeHandle (nw_group_descriptor_create_multicast (endpoint.GetCheckedHandle ()));
 		}
@@ -32,8 +47,8 @@ namespace Network {
 
 		public void AddEndpoint (NWEndpoint endpoint)
 		{
-			if (endpoint == null)
-				throw new ArgumentNullException (nameof (endpoint));
+			if (endpoint is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			nw_group_descriptor_add_endpoint (GetCheckedHandle (), endpoint.GetCheckedHandle ());
 		}
 
@@ -54,8 +69,8 @@ namespace Network {
 
 		public void SetSpecificSource (NWEndpoint endpoint)
 		{
-			if (endpoint == null)
-				throw new ArgumentNullException (nameof (endpoint));
+			if (endpoint is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			nw_multicast_group_descriptor_set_specific_source (GetCheckedHandle (), endpoint.GetCheckedHandle ());
 		}
 
@@ -69,7 +84,7 @@ namespace Network {
 		static bool TrampolineEnumerateEndpointsHandler (IntPtr block, OS_nw_endpoint endpoint)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWEndpoint, bool>> (block);
-			if (del != null) {
+			if (del is not null) {
 				using var nsEndpoint = new NWEndpoint (endpoint, owns: false); 
 				return del (nsEndpoint);
 			}
@@ -79,8 +94,8 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void EnumerateEndpoints (Func<NWEndpoint, bool> handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_EnumerateEndpointsHandler, handler);

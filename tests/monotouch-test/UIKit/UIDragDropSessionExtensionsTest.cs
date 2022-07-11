@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for UIDragDropSessionExtensionsTest
 //
 // Authors:
@@ -66,6 +66,10 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			throw new NotImplementedException ();
 		}
+
+#if NET
+		public NSProgress Progress { get { throw new NotImplementedException (); } }
+#endif
 	}
 }
 

@@ -1,4 +1,4 @@
-﻿//
+//
 // DetectSigningIdentityTask.cs
 //
 // Author:

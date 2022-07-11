@@ -1,4 +1,4 @@
-﻿//
+//
 // CNSocialProfile.cs: Implements some nicer methods for CNSocialProfile
 //
 // Authors:
@@ -6,6 +6,8 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
+
+#nullable enable
 
 using System;
 using Foundation;
@@ -85,4 +87,3 @@ namespace Contacts {
 		}
 	}
 }
-

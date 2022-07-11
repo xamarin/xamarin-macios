@@ -7,6 +7,8 @@
 // Copyright 2018-2019 Microsoft Corporation
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;
@@ -182,7 +184,9 @@ namespace CoreGraphics {
 		AllowsFormFieldEntry        = (1 << 7),
 	}
 
+#if !NET
 	// uint32_t enum -> CGColorConverter.h
+	// this enum does not exist in the headers anymore
 	[TV (9,2)][Obsoleted (PlatformName.TvOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
 	[iOS (9,3)][Obsoleted (PlatformName.iOS, 10,0, message: "Replaced by 'CGColorConversionInfoTransformType'.")]
 	[NoWatch][NoMac]
@@ -191,6 +195,7 @@ namespace CoreGraphics {
 		ToSpace,
 		ApplySpace,
 	}
+#endif
 
 	// uint32_t enum -> CGColorConversionInfo.h
 	[iOS (10,0)][TV (10,0)][Watch (3,0)][Mac (10,12)]

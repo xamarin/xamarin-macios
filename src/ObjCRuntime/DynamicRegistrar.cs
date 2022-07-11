@@ -130,7 +130,7 @@ namespace Registrar {
 
 		protected override bool IsSimulatorOrDesktop {
 			get {
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 				return true;
 #else
 				return Runtime.Arch == Arch.SIMULATOR;
@@ -306,12 +306,6 @@ namespace Registrar {
 				if (pmAttrib != null)
 					yield return pmAttrib;
 			}
-		}
-
-		protected override List<AvailabilityBaseAttribute> GetAvailabilityAttributes (Type obj)
-		{
-			// No need to implement this until GetSDKVersion is implemented.
-			return null;
 		}
 
 		protected override Version GetSDKVersion ()
@@ -1145,4 +1139,3 @@ namespace Registrar {
 		}
 	}
 }
-

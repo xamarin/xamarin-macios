@@ -1,10 +1,8 @@
-﻿using System;
 using System.IO;
 using System.IO.Compression;
 
 using Foundation;
 using Compression;
-using ObjCRuntime;
 
 using NUnit.Framework;
 

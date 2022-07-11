@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 using Foundation;
@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		{
 			TestRuntime.AssertXcodeVersion (9,0);
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Inconclusive ("Metal Performance Shaders is not supported in the simulator");
 #endif

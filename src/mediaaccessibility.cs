@@ -5,7 +5,7 @@ using Foundation;
 
 namespace MediaAccessibility {
 
-#if XAMCORE_4_0
+#if NET
 	[Static]
 	interface MACaptionAppearance {
 		[iOS (7,0)][Mac (10,9)]

@@ -1,4 +1,4 @@
-﻿// Copyright 2013 Xamarin Inc. All rights reserved.
+// Copyright 2013 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -53,8 +53,6 @@ namespace Xamarin.Bundler {
 		public bool LinkerDumpDependencies { get; set; }
 		
 		public bool? BuildDSym;
-
-		public List<string> UserGccFlags;
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
 		bool cached_executable {
@@ -508,8 +506,10 @@ namespace Xamarin.Bundler {
 				}
 
 				// All arguments to the AOT compiler must be identical
-				if (AotArguments != appex.AotArguments) {
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_d, AotArguments, appex.AotArguments));
+				var allAotArguments = string.Join (",", AotArguments);
+				var allAppexAotArguments = string.Join (",", appex.AotArguments);
+				if (allAotArguments != allAppexAotArguments) {
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_d, allAotArguments, allAppexAotArguments));
 					continue;
 				}
 
@@ -796,13 +796,32 @@ namespace Xamarin.Bundler {
 			if (!enable_msym.HasValue)
 				enable_msym = !EnableDebug && IsDeviceBuild;
 
-			if (!UseMonoFramework.HasValue && DeploymentTarget >= new Version (8, 0)) {
-				if (IsExtension) {
-					UseMonoFramework = true;
-					Driver.Log (2, $"The extension {Name} will automatically link with Mono.framework.");
-				} else if (Extensions.Count > 0) {
-					UseMonoFramework = true;
-					Driver.Log (2, "Automatically linking with Mono.framework because this is an app with extensions");
+			if (!UseMonoFramework.HasValue) {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.MacCatalyst:
+					if (DeploymentTarget >= new Version (8, 0)) {
+						if (IsExtension) {
+							UseMonoFramework = true;
+							Driver.Log (2, $"The extension {Name} will automatically link with Mono.framework.");
+						} else if (Extensions.Count > 0) {
+							UseMonoFramework = true;
+							Driver.Log (2, "Automatically linking with Mono.framework because this is an app with extensions");
+						}
+					}
+					break;
+				case ApplePlatform.WatchOS:
+					if (IsWatchExtension && Extensions.Count > 0) {
+						UseMonoFramework = true;
+						Driver.Log (2, "Automatically linking with Mono.framework because this is a watch app with extensions");
+					} else if (!IsWatchExtension) {
+						UseMonoFramework = true;
+						Driver.Log (2, $"The extension {Name} will automatically link with Mono.framework.");
+					}
+					break;
+				default:
+					throw ErrorHelper.CreateError (71, Errors.MX0071, Platform, ProductName);
 				}
 			}
 
@@ -1151,16 +1170,7 @@ namespace Xamarin.Bundler {
 					if (info.DylibToFramework)
 						throw ErrorHelper.CreateError (99, Errors.MX0099, $"'can't convert frameworks to frameworks: {files.First()}'");
 					var framework_src = files.First ();
-					var framework_filename = Path.Combine (framework_src, Path.GetFileNameWithoutExtension (framework_src));
-					var dynamic = false;
-					try {
-						dynamic = MachO.IsDynamicFramework (framework_filename);
-					} catch (Exception e) {
-						throw ErrorHelper.CreateError (140, e, Errors.MT0140, framework_filename);
-					}
-					if (!dynamic) {
-						Driver.Log (1, "The framework {0} is a framework of static libraries, and will not be copied to the app.", framework_src);
-					} else {
+					if (VerifyDynamicFramework (framework_src)) {
 						var macho_file = Path.Combine (targetPath, Path.GetFileNameWithoutExtension (framework_src));
 						var macho_info = new FileInfo (macho_file);
 						var macho_last_write_time = macho_info.LastWriteTimeUtc; // this returns a date in the 17th century if the file doesn't exist.
@@ -1336,6 +1346,9 @@ namespace Xamarin.Bundler {
 				} else if (line.Contains ("clang: error: linker command failed with exit code 1")) {
 					continue;
 				} else if (line.Contains ("was built for newer iOS version (5.1.1) than being linked (5.1)")) {
+					continue;
+				} else if (line.Contains ("was built with class_ro_t pointer signing enabled, but previous .o files were not")) {
+					// https://github.com/xamarin/xamarin-macios/issues/14601
 					continue;
 				} else if (line.Contains ("was built for newer iOS version (7.0) than being linked (6.0)") && 
 					line.Contains (Driver.GetProductSdkDirectory (target.App))) {

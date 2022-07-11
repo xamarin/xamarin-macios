@@ -2,11 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+
 using CoreFoundation;
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
 
 using NUnit.Framework;
 
@@ -29,17 +28,30 @@ namespace MonoTouchFixtures.Network {
 			// we want to use a single connection, since it is expensive
 			connectedEvent = new AutoResetEvent(false);
 			host = "www.google.com";
+			Exception exception = null;
 			using (var parameters = NWParameters.CreateTcp ())
 			using (var endpoint = NWEndpoint.Create (host, "80")) {
 				connection = new NWConnection (endpoint, parameters);
 				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
-				connection.SetStateChangeHandler (ConnectionStateHandler);
+				connection.SetStateChangeHandler ((NWConnectionState state, NWError error) =>
+					{
+						try {
+							ConnectionStateHandler (state, error);
+						} catch (Exception e) {
+							exception = e;
+						}
+					});
 				connection.Start (); 
 				Assert.True (connectedEvent.WaitOne (20000), "Connection timed out.");
+				Assert.IsNull (exception, "Exception");
 				stack = parameters.ProtocolStack;
 				using (var ipOptions = stack.InternetProtocol) {
 					if (ipOptions != null) {
+#if NET
+						ipOptions.SetVersion (NWIPVersion.Version4);
+#else
 						ipOptions.IPSetVersion (NWIPVersion.Version4);
+#endif
 						stack.PrependApplicationProtocol (ipOptions);
 					}
 				}

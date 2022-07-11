@@ -5,8 +5,12 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using System;
+#if NET
+#endif
 
 namespace CoreWlan {
+
+	[NoMacCatalyst]
 	[Native]
 	[ErrorDomain ("CWErrorDomain")] // enum named `CWErr` in headers
 	public enum CWStatus : long {
@@ -46,6 +50,7 @@ namespace CoreWlan {
 		Status = -3931,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWPhyMode : ulong {
 		None = 0,
@@ -54,8 +59,10 @@ namespace CoreWlan {
 		G = 3,
 		N = 4,
 		AC = 5,
+		AX = 6,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWInterfaceMode : ulong {
 		None = 0,
@@ -64,6 +71,7 @@ namespace CoreWlan {
 		HostAP = 3,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWSecurity : ulong {
 		None = 0,
@@ -86,6 +94,7 @@ namespace CoreWlan {
 		Unknown = long.MaxValue,
 	}
 
+	[NoMacCatalyst]
 	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[Native]
 	public enum CWIbssModeSecurity : ulong {
@@ -94,6 +103,7 @@ namespace CoreWlan {
 		WEP104 = 2,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWChannelWidth : ulong {
 		Unknown = 0,
@@ -103,6 +113,7 @@ namespace CoreWlan {
 		OneHundredSixtyMHz = 4,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWChannelBand : ulong {
 		Unknown = 0,
@@ -110,6 +121,7 @@ namespace CoreWlan {
 		FiveGHz = 2,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWCipherKeyFlags : ulong {
 		None = 0,
@@ -119,6 +131,7 @@ namespace CoreWlan {
 		Rx = 1 << 4,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWKeychainDomain : ulong {
 		None = 0,
@@ -126,6 +139,7 @@ namespace CoreWlan {
 		System = 2,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWEventType : long {
 		None = 0,

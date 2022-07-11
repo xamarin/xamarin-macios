@@ -20,70 +20,130 @@ namespace UIKit {
 			return String.Format ("{0} {1}", Name, PointSize);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		public static UIFont PreferredHeadline {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Headline);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		public static UIFont PreferredBody {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Body);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		public static UIFont PreferredSubheadline {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Subheadline);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		public static UIFont PreferredFootnote {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Footnote);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		public static UIFont PreferredCaption1 {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Caption1);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		public static UIFont PreferredCaption2 {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Caption2);
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (9,0)]
+#endif
 		public static UIFont PreferredTitle1 {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Title1);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (9,0)]
+#endif
 		public static UIFont PreferredTitle2 {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Title2);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (9,0)]
+#endif
 		public static UIFont PreferredTitle3 {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Title3);
 			}
 		}
 		
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (9,0)]
+#endif
 		public static UIFont PreferredCallout {
 			get {
 				return GetPreferredFontForTextStyle (UIFontTextStyle.Callout);
@@ -116,68 +176,130 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios8.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (8,2)]
+#endif
 		public static UIFont SystemFontOfSize (nfloat size, UIFontWeight weight)
 		{
 			return SystemFontOfSize (size, GetFontWeight (weight));
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (9,0)]
+#endif
 		public static UIFont MonospacedDigitSystemFontOfSize (nfloat size, nfloat weight)
 		{
 			var ptr = _MonospacedDigitSystemFontOfSize (size, weight);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (9,0)]
+#endif
 		public static UIFont MonospacedDigitSystemFontOfSize (nfloat fontSize, UIFontWeight weight)
 		{
 			return MonospacedDigitSystemFontOfSize (fontSize, GetFontWeight (weight));
 		}
 
-		[iOS (13,0), TV (13,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
+#endif
 		public static UIFont GetMonospacedSystemFont (nfloat size, nfloat weight)
 		{
 			var ptr = _MonospacedSystemFontOfSize (size, weight);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
-		[iOS(13,0), TV(13,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
+#endif
 		public static UIFont GetMonospacedSystemFont (nfloat size, UIFontWeight weight) => GetMonospacedSystemFont (size, GetFontWeight (weight));
 
 		// In this case we want to _always_ return a different managed instance
 		// so one can be disposed without affecting others
 		// ref: https://bugzilla.xamarin.com/show_bug.cgi?id=25511
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7, 0)]
+#endif
 		public static UIFont GetPreferredFontForTextStyle (NSString uiFontTextStyle)
 		{
 			var ptr = _GetPreferredFontForTextStyle (uiFontTextStyle);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7, 0)]
+#endif
 		public static UIFont GetPreferredFontForTextStyle (UIFontTextStyle uiFontTextStyle)
 		{
 			return GetPreferredFontForTextStyle (uiFontTextStyle.GetConstant ());
 		}
 
 #if !WATCH
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7, 0)]
+#endif
 		public static UIFont GetPreferredFontForTextStyle (NSString uiFontTextStyle, UITraitCollection traitCollection)
 		{
 			var ptr = _GetPreferredFontForTextStyle (uiFontTextStyle, traitCollection);
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7, 0)]
+#endif
 		public static UIFont GetPreferredFontForTextStyle (UIFontTextStyle uiFontTextStyle, UITraitCollection traitCollection)
 		{
 			return GetPreferredFontForTextStyle (uiFontTextStyle.GetConstant (), traitCollection);
 		}
 #endif
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7, 0)]
+#endif
 		public static UIFont FromDescriptor (UIFontDescriptor descriptor, nfloat pointSize)
 		{
 			var ptr = _FromDescriptor (descriptor, pointSize);
@@ -196,7 +318,13 @@ namespace UIKit {
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios8.2")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (8,2)]
+#endif
 		public static UIFont SystemFontOfSize (nfloat size, nfloat weight)
 		{
 			var ptr = _SystemFontOfSize (size, weight);

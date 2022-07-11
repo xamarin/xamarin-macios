@@ -1,4 +1,4 @@
-﻿//
+//
 // MonoNativeInfo.cs
 //
 // Author:

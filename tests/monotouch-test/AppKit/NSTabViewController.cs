@@ -6,6 +6,7 @@ using System.Linq;
 using AppKit;
 using ObjCRuntime;
 using Foundation;
+using Xamarin.Utils;
 
 namespace Xamarin.Mac.Tests
 {
@@ -40,11 +41,12 @@ namespace Xamarin.Mac.Tests
 //			Assert.IsFalse (controller.TabView == tabView, "NSTabViewControllerShouldChangeTabView - Failed to set the TabView property");
 //		}
 
+#if !NET
 		[Test]
 		public void NSTabViewControllerShouldChangeSegmentedControl ()
 		{
 			// This API was removed in 10.11
-			if (PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) >= Platform.Mac_10_11)
+			if (TestRuntime.CheckXcodeVersion (7, 0))
 				return;
 
 			var segmentedControl = controller.SegmentedControl;
@@ -52,6 +54,7 @@ namespace Xamarin.Mac.Tests
 
 			Assert.IsFalse (controller.SegmentedControl == segmentedControl, "NSTabViewControllerShouldChangeSegmentedControl - Failed to set the SegmentedControl property");
 		}
+#endif
 
 		[Test]
 		public void NSTabViewControllerShouldChangeTransitionOptions ()

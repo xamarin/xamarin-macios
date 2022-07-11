@@ -28,13 +28,24 @@
 //
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 using Foundation;
+using System.Runtime.Versioning;
 
+#if NET
+using CFIndex = System.IntPtr;
+#else
 using CFIndex = System.nint;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreFoundation {
 
@@ -61,30 +72,28 @@ namespace CoreFoundation {
 		public IntPtr Perform;
 	}
 
-	public class CFRunLoopSource : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		public CFRunLoopSource (IntPtr handle)
-			: this (handle, false)
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CFRunLoopSource : NativeObject {
+#if !NET
+		public CFRunLoopSource (NativeHandle handle)
+			: base (handle, false)
 		{
 		}
+#endif
 
-		public CFRunLoopSource (IntPtr handle, bool ownsHandle)
+		[Preserve (Conditional = true)]
+#if NET
+		internal CFRunLoopSource (NativeHandle handle, bool owns)
+#else
+		public CFRunLoopSource (NativeHandle handle, bool owns)
+#endif
+			: base (handle, owns)
 		{
-			if (!ownsHandle)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
-		}
-
-		~CFRunLoopSource ()
-		{
-			Dispose (false);
-		}
-
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -92,7 +101,7 @@ namespace CoreFoundation {
 
 		public nint Order {
 			get {
-				return CFRunLoopSourceGetOrder (handle);
+				return CFRunLoopSourceGetOrder (Handle);
 			}
 		}
 
@@ -101,7 +110,7 @@ namespace CoreFoundation {
 
 		public void Invalidate ()
 		{
-			CFRunLoopSourceInvalidate (handle);
+			CFRunLoopSourceInvalidate (Handle);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -110,7 +119,7 @@ namespace CoreFoundation {
 
 		public bool IsValid {
 			get {
-				return CFRunLoopSourceIsValid (handle);
+				return CFRunLoopSourceIsValid (Handle);
 			}
 		}
 
@@ -119,35 +128,27 @@ namespace CoreFoundation {
 
 		public void Signal ()
 		{
-			CFRunLoopSourceSignal (handle);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			CFRunLoopSourceSignal (Handle);
 		}
 	}
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public abstract class CFRunLoopSourceCustom : CFRunLoopSource {
 		GCHandle gch;
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static /* CFRunLoopSourceRef */ IntPtr CFRunLoopSourceCreate (/* CFAllocatorRef */ IntPtr allocator, /* CFIndex */ nint order, /* CFRunLoopSourceContext* */ IntPtr context);
+		extern static /* CFRunLoopSourceRef */ IntPtr CFRunLoopSourceCreate (/* CFAllocatorRef */ IntPtr allocator, /* CFIndex */ nint order, /* CFRunLoopSourceContext* */ ref CFRunLoopSourceContext context);
 
 		static ScheduleCallback ScheduleDelegate = (ScheduleCallback) Schedule;
 		static CancelCallback CancelDelegate = (CancelCallback) Cancel;
 		static PerformCallback PerformDelegate = (PerformCallback) Perform;
-		
+
 		protected CFRunLoopSourceCustom ()
 			: base (IntPtr.Zero, true)
 		{
@@ -158,16 +159,8 @@ namespace CoreFoundation {
 			ctx.Cancel = Marshal.GetFunctionPointerForDelegate (CancelDelegate);
 			ctx.Perform = Marshal.GetFunctionPointerForDelegate (PerformDelegate);
 
-			var ptr = Marshal.AllocHGlobal (Marshal.SizeOf (typeof(CFRunLoopSourceContext)));
-			try {
-				Marshal.StructureToPtr (ctx, ptr, false);
-				handle = CFRunLoopSourceCreate (IntPtr.Zero, 0, ptr);
-			} finally {
-				Marshal.FreeHGlobal (ptr);
-			}
-
-			if (handle == IntPtr.Zero)
-				throw new NotSupportedException ();
+			var handle = CFRunLoopSourceCreate (IntPtr.Zero, 0, ref ctx);
+			InitializeHandle (handle);
 		}
 
 		delegate void ScheduleCallback (IntPtr info, IntPtr runLoop, IntPtr mode);
@@ -176,8 +169,10 @@ namespace CoreFoundation {
 		static void Schedule (IntPtr info, IntPtr runLoop, IntPtr mode)
 		{
 			var source = GCHandle.FromIntPtr (info).Target as CFRunLoopSourceCustom;
+			if (source is null)
+				return;
 
-			using (var loop = new CFRunLoop (runLoop))
+			using (var loop = new CFRunLoop (runLoop, false))
 			using (var mstring = new NSString (mode)) {
 				source.OnSchedule (loop, mstring);
 			}
@@ -191,8 +186,10 @@ namespace CoreFoundation {
 		static void Cancel (IntPtr info, IntPtr runLoop, IntPtr mode)
 		{
 			var source = GCHandle.FromIntPtr (info).Target as CFRunLoopSourceCustom;
+			if (source is null)
+				return;
 
-			using (var loop = new CFRunLoop (runLoop))
+			using (var loop = new CFRunLoop (runLoop, false))
 			using (var mstring = new NSString (mode)) {
 				source.OnCancel (loop, mstring);
 			}
@@ -206,6 +203,9 @@ namespace CoreFoundation {
 		static void Perform (IntPtr info)
 		{
 			var source = GCHandle.FromIntPtr (info).Target as CFRunLoopSourceCustom;
+			if (source is null)
+				return;
+
 			source.OnPerform ();
 		}
 
@@ -222,20 +222,15 @@ namespace CoreFoundation {
 	}
 #endif
 
-	public partial class CFRunLoop
-#if !COREBUILD
-		: INativeObject, IDisposable
-#endif
+	public partial class CFRunLoop : NativeObject
 	{
 #if !COREBUILD
-		internal IntPtr handle;
-
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFRunLoopRef */ IntPtr CFRunLoopGetCurrent ();
 
 		static public CFRunLoop Current {
 			get {
-				return new CFRunLoop (CFRunLoopGetCurrent ());
+				return new CFRunLoop (CFRunLoopGetCurrent (), false);
 			}
 		}
 
@@ -244,7 +239,7 @@ namespace CoreFoundation {
 		
 		static public CFRunLoop Main {
 			get {
-				return new CFRunLoop (CFRunLoopGetMain ());
+				return new CFRunLoop (CFRunLoopGetMain (), false);
 			}
 		}
 
@@ -261,7 +256,7 @@ namespace CoreFoundation {
 
 		public void Stop ()
 		{
-			CFRunLoopStop (handle);
+			CFRunLoopStop (Handle);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -269,7 +264,7 @@ namespace CoreFoundation {
 
 		public void WakeUp ()
 		{
-			CFRunLoopWakeUp (handle);
+			CFRunLoopWakeUp (Handle);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -278,21 +273,21 @@ namespace CoreFoundation {
 
 		public bool IsWaiting {
 			get {
-				return CFRunLoopIsWaiting (handle);
+				return CFRunLoopIsWaiting (Handle);
 			}
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static int /* SInt32 */ CFRunLoopRunInMode (/* CFStringRef */ IntPtr mode, 
+		extern static CFRunLoopExitReason /* SInt32 */ CFRunLoopRunInMode (/* CFStringRef */ IntPtr mode, 
 			/* CFTimeInterval */ double seconds, 
 			/* Boolean */ [MarshalAs (UnmanagedType.I1)] bool returnAfterSourceHandled);
 
 		public CFRunLoopExitReason RunInMode (NSString mode, double seconds, bool returnAfterSourceHandled)
 		{
-			if (mode == null)
-				throw new ArgumentNullException ("mode");
+			if (mode is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
-			return (CFRunLoopExitReason) CFRunLoopRunInMode (mode.Handle, seconds, returnAfterSourceHandled);
+			return CFRunLoopRunInMode (mode.Handle, seconds, returnAfterSourceHandled);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -300,12 +295,12 @@ namespace CoreFoundation {
 
 		public void AddSource (CFRunLoopSource source, NSString mode)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
-			if (mode == null)
-				throw new ArgumentNullException ("mode");
+			if (source is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
+			if (mode is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
-			CFRunLoopAddSource (handle, source.Handle, mode.Handle);
+			CFRunLoopAddSource (Handle, source.Handle, mode.Handle);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -314,12 +309,12 @@ namespace CoreFoundation {
 
 		public bool ContainsSource (CFRunLoopSource source, NSString mode)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
-			if (mode == null)
-				throw new ArgumentNullException ("mode");
+			if (source is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
+			if (mode is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
-			return CFRunLoopContainsSource (handle, source.Handle, mode.Handle);
+			return CFRunLoopContainsSource (Handle, source.Handle, mode.Handle);
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
@@ -327,75 +322,56 @@ namespace CoreFoundation {
 
 		public void RemoveSource (CFRunLoopSource source, NSString mode)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
-			if (mode == null)
-				throw new ArgumentNullException ("mode");
+			if (source is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
+			if (mode is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
-			CFRunLoopRemoveSource (handle, source.Handle, mode.Handle);
-		}
-
-		internal CFRunLoop (IntPtr handle)
-			: this (handle, false)
-		{
+			CFRunLoopRemoveSource (Handle, source.Handle, mode.Handle);
 		}
 
 		[Preserve (Conditional = true)]
-		internal CFRunLoop (IntPtr handle, bool owns)
+		internal CFRunLoop (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CFObject.CFRetain (handle);
-			this.handle = handle;
 		}
 
-		~CFRunLoop ()
-		{
-			Dispose (false);
-		}
-
-		public IntPtr Handle {
-			get {
-				return handle;
-			}
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
+#if !NET
 		public static bool operator == (CFRunLoop a, CFRunLoop b)
 		{
-			return Object.Equals (a, b);
+			if (a is null)
+				return b is null;
+			else if (b is null)
+				return false;
+
+			return a.Handle == b.Handle;
 		}
 
 		public static bool operator != (CFRunLoop a, CFRunLoop b)
 		{
-			return !Object.Equals (a, b);
+			if (a is null)
+				return b is not null;
+			else if (b is null)
+				return true;
+			return a.Handle != b.Handle;
 		}
 
+		// For the .net profile `DisposableObject` implements both
+		// `Equals` and `GetHashCode` based on the Handle property.
 		public override int GetHashCode ()
 		{
-			return handle.GetHashCode ();
+			return Handle.GetHashCode ();
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
-			CFRunLoop cfother = other as CFRunLoop;
-			if (cfother == null)
+			var cfother = other as CFRunLoop;
+			if (cfother is null)
 				return false;
 
-			return cfother.Handle == handle;
+			return cfother.Handle == Handle;
 		}
+#endif
 #endif // !COREBUILD
 	}
 }

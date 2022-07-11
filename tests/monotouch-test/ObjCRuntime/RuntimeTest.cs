@@ -18,6 +18,7 @@ using UIKit;
 using NUnit.Framework;
 
 using MonoTests.System.Net.Http;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -106,7 +107,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void GetNSObject_Different_Class ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			IntPtr class_ptr = Class.GetHandle ("SKPhysicsBody");
 			var size = new CGSize (3, 2);
@@ -125,7 +126,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void GetNSObject_Posing_Class ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			NSUrlSession session = NSUrlSession.SharedSession;
 			using (var request = new NSUrlRequest (new NSUrl (NetworkResources.MicrosoftUrl))) {
@@ -456,9 +457,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if NET
-		[Ignore ("https://github.com/dotnet/runtime/issues/32543")]
-#endif
 		public void NSAutoreleasePoolInThreadPool ()
 		{
 			var count = 100;
@@ -529,7 +527,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if !MONOMAC // Failing with 10 broken
+#if !MONOMAC || NET // Failing with 10 broken in legacy Xamarin.Mac
 		[TestCase (typeof (NSObject))]
 #endif
 		[TestCase (typeof (ResurrectedObjectsDisposedTestClass))]
@@ -847,5 +845,87 @@ Additional information:
 				handles [i].Free ();
 			}
 		}
+
+		[Test]
+		public void CurrentDirectory ()
+		{
+			var expectedDirectory = (string) ((NSString) Environment.CurrentDirectory).ResolveSymlinksInPath ();
+
+#if NET || !MONOMAC
+			var actualDirectory = (string) ((NSString) NSBundle.MainBundle.BundlePath).ResolveSymlinksInPath ();
+#else
+			var actualDirectory = (string) ((NSString) NSBundle.MainBundle.ResourcePath).ResolveSymlinksInPath ();
+#endif
+			Assert.AreEqual (expectedDirectory, actualDirectory, "Current directory at launch");
+		}
+
+		[Test]
+		public void CurrentDomain_BaseDirectory_Test ()
+		{
+			Assert.That (AppDomain.CurrentDomain.BaseDirectory, Is.Not.Null.And.Not.Empty, "AppDomain.CurrentDomain.BaseDirectory");
+		}
+
+		[Test]
+		public void OriginalWorkingDirectoryTest ()
+		{
+			Assert.That (Runtime.OriginalWorkingDirectory, Is.Not.Null.And.Not.Empty, "OriginalWorkingDirectory");
+		}
+
+#if NET
+		[Test]
+		public void IntPtrCtor_1 ()
+		{
+			using var obj = Runtime.GetNSObject (IntPtrConstructor.New ());
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		[Test]
+		public void IntPtrCtor_2 ()
+		{
+			using var obj = Runtime.GetNSObject<IntPtrConstructor> (IntPtrConstructor.New ());
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		[Test]
+		public void IntPtrCtor_3 ()
+		{
+			using var obj = Runtime.GetINativeObject<IntPtrConstructor> (IntPtrConstructor.New (), false);
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		class IntPtrConstructor : NSObject {
+			IntPtrConstructor (IntPtr handle) : base (handle) {}
+
+			internal static IntPtr New ()
+			{
+				var class_handle = Class.GetHandle (typeof (IntPtrConstructor));
+				var handle = Messaging.IntPtr_objc_msgSend (Messaging.IntPtr_objc_msgSend (class_handle, Selector.GetHandle ("alloc")), Selector.GetHandle ("init"));
+				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("autorelease"));
+				return handle;
+			}
+		}
+
+		[Test]
+		public void IntPtrBoolCtor_1 ()
+		{
+			using var obj = Runtime.GetINativeObject<IntPtrBoolConstructor> ((IntPtr) 1234, false);
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrBoolConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		class IntPtrBoolConstructor : DisposableObject {
+			IntPtrBoolConstructor (IntPtr handle, bool owns)
+				: base (handle, owns)
+			{
+			}
+		}
+#endif
 	}
 }

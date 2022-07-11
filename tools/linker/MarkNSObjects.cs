@@ -126,7 +126,11 @@ namespace Xamarin.Linker.Steps {
 				if (!constructor.HasParameters)
 					continue;
 
+#if NET
+				if (constructor.Parameters.Count != 1 || !constructor.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle"))
+#else
 				if (constructor.Parameters.Count != 1 || !constructor.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+#endif
 					continue;
 
 				Annotations.AddPreservedMethod (type, constructor);

@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Foundation;
 using CloudKit;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CloudKit
 {
@@ -19,7 +20,7 @@ namespace MonoTouchFixtures.CloudKit
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 			zoneID = new CKRecordZoneID ("foo", "xamarin");
 			op = new CKFetchRecordChangesOperation (zoneID, null);
 		}

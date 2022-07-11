@@ -335,6 +335,9 @@
     <Compile Include="..\common\TargetFramework.cs">
       <Link>tools\common\TargetFramework.cs</Link>
     </Compile>
+    <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
+      <Link>tools\common\OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
       <Link>tools\common\StaticRegistrar.cs</Link>
     </Compile>
@@ -391,6 +394,9 @@
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\LinkWithAttribute.cs">
       <Link>src\ObjCRuntime\LinkWithAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\NativeNameAttribute.cs">
+      <Link>src\ObjCRuntime\NativeNameAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
       <Link>external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs</Link>
@@ -461,9 +467,6 @@
     </Compile>
     <Compile Include="..\linker\CustomSymbolWriter.cs">
       <Link>tools\linker\CustomSymbolWriter.cs</Link>
-    </Compile>
-    <Compile Include="Errors.Designer.cs">
-      <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
     <Compile Include="..\linker\ScanTypeReferenceStep.cs">
       <Link>tools\linker\ScanTypeReferenceStep.cs</Link>

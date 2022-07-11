@@ -21,6 +21,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !NET
+
 using System;
 using System.Reflection;
 using System.Collections;
@@ -28,11 +31,17 @@ using System.Runtime.InteropServices;
 
 using ObjCRuntime;
 
-#if XAMCORE_4_0
-#error Turn this entire file into generated code.
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSAutoreleasePool", true)]
 	public class NSAutoreleasePool : NSObject
 #if !COREBUILD
@@ -40,34 +49,24 @@ namespace Foundation {
 #endif
 	{
 #if !COREBUILD
-		public override IntPtr ClassHandle { get { return Class.GetHandle ("NSAutoreleasePool"); } }
+		public override NativeHandle ClassHandle { get { return Class.GetHandle ("NSAutoreleasePool"); } }
 
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		[Export ("init")]
 		public NSAutoreleasePool () : base (NSObjectFlag.Empty)
 		{
-			IsDirectBinding = GetType () == typeof (NSAutoreleasePool);
 			if (IsDirectBinding) {
 				Handle = Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("init"));
 			} else {
 				Handle = Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("init"));
 			}
-
 		}
 
-#if XAMCORE_4_0
-		protected
-#else
-		public
-#endif
-		NSAutoreleasePool (NSObjectFlag t) : base (t) {}
-
-#if XAMCORE_4_0
-		protected
-#else
-		public
-#endif
-		NSAutoreleasePool (IntPtr handle) : base (handle) {}
+		public NSAutoreleasePool (NSObjectFlag t) : base (t) {}
+		public NSAutoreleasePool (IntPtr handle) : base (handle) {}
 
 #endif
 	}
 }
+
+#endif // !NET

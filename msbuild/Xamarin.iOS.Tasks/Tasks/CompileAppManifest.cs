@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
+
+#nullable enable
 
 namespace Xamarin.iOS.Tasks
 {
@@ -18,7 +20,7 @@ namespace Xamarin.iOS.Tasks
 		public bool ShouldCopyToBuildServer (ITaskItem item)
 		{
 			// We don't want to copy partial generated manifest files
-			if (PartialAppManifests != null && PartialAppManifests.Contains (item))
+			if (PartialAppManifests is not null && PartialAppManifests.Contains (item))
 				return false;
 
 			return true;

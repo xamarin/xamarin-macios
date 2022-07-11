@@ -7,6 +7,8 @@
 
 // #define LOG_TYPELOAD
 
+#nullable enable
+
 using System;
 using System.Reflection;
 using System.Collections.Generic;
@@ -17,6 +19,10 @@ using Foundation;
 using Registrar;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ObjCRuntime {
 	public partial class Class : INativeObject
 #if !COREBUILD
@@ -24,13 +30,15 @@ namespace ObjCRuntime {
 #endif
 	{
 #if !COREBUILD
+		NativeHandle handle;
+
 		public static bool ThrowOnInitFailure = true;
 
 		// We use the last significant bit of the IntPtr to store if this is a custom class or not.
+#pragma warning disable CS8618 // "Non-nullable field must contain a non-null value when exiting constructor." - we ensure these fields are non-null in other ways
 		static Dictionary<Type, IntPtr> type_to_class; // accessed from multiple threads, locking required.
-		static Type[] class_to_type;
-
-		internal IntPtr handle;
+		static Type?[] class_to_type;
+#pragma warning restore CS8618
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		internal unsafe static void Initialize (Runtime.InitializationOptions* options)
@@ -38,10 +46,10 @@ namespace ObjCRuntime {
 			type_to_class = new Dictionary<Type, IntPtr> (Runtime.TypeEqualityComparer);
 
 			var map = options->RegistrationMap;
-			if (map == null)
+			if (map is null)
 				return;
 
-			class_to_type = new Type [map->map_count];
+			class_to_type = new Type? [map->map_count];
 
 			if (!Runtime.DynamicRegistrationSupported)
 				return; // Only the dynamic registrar needs the list of registered assemblies.
@@ -57,68 +65,67 @@ namespace ObjCRuntime {
 		{
 			this.handle = objc_getClass (name);
 
-			if (this.handle == IntPtr.Zero)
-				throw new ArgumentException (String.Format ("'{0}' is an unknown class", name));
+			if (handle == NativeHandle.Zero)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (name), $"Unknown class {name}");
 		}
 
 		public Class (Type type)
 		{
-			this.handle = GetClassHandle (type);
+			this.handle = GetHandle (type);
 		}
 
-		public Class (IntPtr handle)
+		public Class (NativeHandle handle)
 		{
 			this.handle = handle;
 		}
 
 		[Preserve (Conditional = true)]
-		public Class (IntPtr handle, bool owns)
+#if NET
+		internal Class (NativeHandle handle, bool owns)
+#else
+		public Class (NativeHandle handle, bool owns)
+#endif
 		{
 			// Class(es) can't be freed, so we ignore the 'owns' parameter.
 			this.handle = handle;
 		}
 
-		internal static Class Construct (IntPtr handle) 
-		{
-			return new Class (handle);
-		}
-
-		public IntPtr Handle {
+		public NativeHandle Handle {
 			get { return this.handle; }
 		}
 
-		public IntPtr SuperClass {
-			get { return class_getSuperclass (handle); }
+		public NativeHandle SuperClass {
+			get { return class_getSuperclass (Handle); }
 		}
 
-		public unsafe string Name {
+		public string? Name {
 			get {
-				IntPtr ptr = class_getName (this.handle);
+				var ptr = class_getName (Handle);
 				return Marshal.PtrToStringAuto (ptr);
 			}
 		}
 
-		public static IntPtr GetHandle (string name)
+		public static NativeHandle GetHandle (string name)
 		{
 			return objc_getClass (name);
 		}
 
-		public override bool Equals (object right)
+		public override bool Equals (object? right)
 		{
 			return Equals (right as Class);
 		}
 
-		public bool Equals (Class right)
+		public bool Equals (Class? right)
 		{
-			if (right == null)
+			if (right is null)
 				return false;
 
-			return handle == right.handle;
+			return Handle == right.Handle;
 		}
 
 		public override int GetHashCode ()
 		{
-			return handle.GetHashCode ();
+			return Handle.GetHashCode ();
 		}
 
 		// This method is treated as an intrinsic operation by
@@ -126,12 +133,12 @@ namespace ObjCRuntime {
 		// class (it will be faster than GetHandle, but it will
 		// not compile unless the class in question actually exists
 		// as an ObjectiveC class in the binary).
-		public static IntPtr GetHandleIntrinsic (string name) {
+		public static NativeHandle GetHandleIntrinsic (string name) {
 			return objc_getClass (name);
 		}
 
-		public static IntPtr GetHandle (Type type) {
-			return GetClassHandle (type);
+		public static NativeHandle GetHandle (Type type) {
+			return GetClassHandle (type, true, out _);
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
@@ -176,45 +183,32 @@ namespace ObjCRuntime {
 			return @class;
 		}
 
-		static IntPtr GetClassHandle (Type type)
-		{
-			return GetClassHandle (type, true, out var is_custom_type);
-		}
-
 		internal static IntPtr GetClassForObject (IntPtr obj)
 		{
 			return Messaging.IntPtr_objc_msgSend (obj, Selector.GetHandle (Selector.Class));
 		}
 
-		internal static string LookupFullName (IntPtr klass)
+		public static Type? Lookup (Class? @class)
 		{
-			Type type = Lookup (klass);
-			return type == null ? null : type.FullName;
-		}
+			if (@class is null)
+				return null;
 
-		public static Type Lookup (Class @class)
-		{
-			return Lookup (@class.Handle, true);
+			return Lookup (@class.Handle, true)!;
 		}
 
 		internal static Type Lookup (IntPtr klass)
 		{
-			return LookupClass (klass, true);
-		}
-
-		internal static Type Lookup (IntPtr klass, bool throw_on_error)
-		{
-			return LookupClass (klass, throw_on_error);
+			return Lookup (klass, true)!;
 		}
 
 		[BindingImpl (BindingImplOptions.Optimizable)] // To inline the Runtime.DynamicRegistrationSupported code if possible.
-		static Type LookupClass (IntPtr klass, bool throw_on_error)
+		internal static Type? Lookup (IntPtr klass, bool throw_on_error)
 		{
 			bool is_custom_type;
 			var find_class = klass;
 			do {
 				var tp = FindType (find_class, out is_custom_type);
-				if (tp != null)
+				if (tp is not null)
 					return tp;
 				if (Runtime.DynamicRegistrationSupported)
 					break; // We can't continue looking up the hierarchy if we have the dynamic registrar, because we might be supposed to register this class.
@@ -243,7 +237,7 @@ namespace ObjCRuntime {
 
 			is_custom_type = false;
 
-			if (map == null) {
+			if (map is null) {
 				// Using only the dynamic registrar
 				return IntPtr.Zero;
 			}
@@ -290,7 +284,7 @@ namespace ObjCRuntime {
 			return IntPtr.Zero;
 		}
 
-		unsafe static bool CompareTokenReference (string asm_name, int mod_token, int type_token, uint token_reference)
+		unsafe static bool CompareTokenReference (string? asm_name, int mod_token, int type_token, uint token_reference)
 		{
 			var map = Runtime.options->RegistrationMap;
 			IntPtr assembly_name;
@@ -301,6 +295,7 @@ namespace ObjCRuntime {
 				var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * idx;
 				// first compare what's most likely to fail (the type's metadata token)
 				var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
+				type_token |= 0x02000000 /* TypeDef - the token type is explicit in the full token reference, but not present in the type_token argument, so we have to add it before comparing */;
 				if (type_token != token)
 					return false;
 
@@ -341,13 +336,13 @@ namespace ObjCRuntime {
 			return -1;
 		}
 
-		internal unsafe static Type FindType (IntPtr @class, out bool is_custom_type)
+		internal unsafe static Type? FindType (NativeHandle @class, out bool is_custom_type)
 		{
 			var map = Runtime.options->RegistrationMap;
 
 			is_custom_type = false;
 
-			if (map == null) {
+			if (map is null) {
 #if LOG_TYPELOAD
 				Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => found no map.");
 #endif
@@ -365,8 +360,8 @@ namespace ObjCRuntime {
 
 			is_custom_type = (map->map [mapIndex].flags & Runtime.MTTypeFlags.CustomType) == Runtime.MTTypeFlags.CustomType;
 
-			Type type = class_to_type [mapIndex];
-			if (type != null)
+			var type = class_to_type [mapIndex];
+			if (type is not null)
 				return type;
 
 			// Resolve the map entry we found to a managed type
@@ -382,7 +377,7 @@ namespace ObjCRuntime {
 			return type;
 		}
 
-		internal unsafe static MemberInfo ResolveFullTokenReference (uint token_reference)
+		internal unsafe static MemberInfo? ResolveFullTokenReference (uint token_reference)
 		{
 			// sizeof (MTFullTokenReference) = IntPtr.Size + 4 + 4
 			var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * (int) (token_reference >> 1);
@@ -399,29 +394,29 @@ namespace ObjCRuntime {
 			return ResolveToken (module, token);
 		}
 
-		internal static Type ResolveTypeTokenReference (uint token_reference)
+		internal static Type? ResolveTypeTokenReference (uint token_reference)
 		{
 			var member = ResolveTokenReference (token_reference, 0x02000000 /* TypeDef */);
-			if (member == null)
+			if (member is null)
 				return null;
 			if (member is Type type)
 				return type;
 
-			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a type, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a type, but it's a {member.GetType ().Name}. {Constants.PleaseFileBugReport}");
 		}
 
-		internal static MethodBase ResolveMethodTokenReference (uint token_reference)
+		internal static MethodBase? ResolveMethodTokenReference (uint token_reference)
 		{
 			var member = ResolveTokenReference (token_reference, 0x06000000 /* Method */);
-			if (member == null)
+			if (member is null)
 				return null;
 			if (member is MethodBase method)
 				return method;
 
-			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a method, but it's a {member.GetType ().Name}. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.");
+			throw ErrorHelper.CreateError (8022, $"Expected the token reference 0x{token_reference:X} to be a method, but it's a {member.GetType ().Name}. {Constants.PleaseFileBugReport}");
 		}
 
-		unsafe static MemberInfo ResolveTokenReference (uint token_reference, uint implicit_token_type)
+		unsafe static MemberInfo? ResolveTokenReference (uint token_reference, uint implicit_token_type)
 		{
 			var map = Runtime.options->RegistrationMap;
 
@@ -442,7 +437,7 @@ namespace ObjCRuntime {
 			return ResolveToken (module, token | implicit_token_type);
 		}
 
-		static MemberInfo ResolveToken (Module module, uint token)
+		static MemberInfo? ResolveToken (Module module, uint token)
 		{
 			// Finally resolve the token.
 			var token_type = token & 0xFF000000;
@@ -543,7 +538,7 @@ namespace ObjCRuntime {
 		}
 
 		// Look for the specified metadata token in the table of full token references.
-		static unsafe uint GetFullTokenReference (string assembly_name, int module_token, int metadata_token)
+		static unsafe uint GetFullTokenReference (string? assembly_name, int module_token, int metadata_token)
 		{
 			var map = Runtime.options->RegistrationMap;
 			for (int i = 0; i < map->full_token_reference_count; i++) {

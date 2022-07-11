@@ -21,20 +21,20 @@ namespace SceneKit {
 
 		static SCNMatrix4 []? FromNSArray (NSArray? nsa)
 		{
-			if (nsa == null)
+			if (nsa is null)
 				return null;
 
 			var count = nsa.Count;
 			var ret = new SCNMatrix4 [count];
 			for (nuint i = 0; i < count; i++)
-				ret [i] = Runtime.GetNSObject<NSValue> (nsa.ValueAt (i)).SCNMatrix4Value;
+				ret [i] = Runtime.GetNSObject<NSValue> (nsa.ValueAt (i))!.SCNMatrix4Value;
 
 			return ret;
 		}
 
 		static NSArray ToNSArray (SCNMatrix4 []? items)
 		{
-			if (items == null)
+			if (items is null)
 				return new NSArray ();
 
 			var count = items.Length;
@@ -42,7 +42,7 @@ namespace SceneKit {
 
 			for (nint i = 0; i < count; i++) {
 				var item = NSValue.FromSCNMatrix4 (items [i]);
-				var h = item == null ? NSNull.Null.Handle : item.Handle;
+				var h = item?.Handle ??  NSNull.Null.Handle;
 				Marshal.WriteIntPtr (buf, (int)(i * IntPtr.Size), h);
 			}
 
@@ -52,12 +52,26 @@ namespace SceneKit {
 			return nsa;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[Mac (10, 10)]
+#endif
 		public SCNMatrix4 []? BoneInverseBindTransforms {
 			get { return FromNSArray (_BoneInverseBindTransforms); }
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[Mac (10, 10)]
+#endif
 		public static SCNSkinner Create (SCNGeometry baseGeometry,
 			SCNNode [] bones, SCNMatrix4 [] boneInverseBindTransforms,
 			SCNGeometrySource boneWeights, SCNGeometrySource boneIndices)

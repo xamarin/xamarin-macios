@@ -1,5 +1,0 @@
-## static selectors in cateogies, exposed manually (since we can't use static in extension methods)
-!missing-selector! +UIVibrancyEffect::notificationCenterVibrancyEffect not bound
-!missing-selector! +UIVibrancyEffect::widgetPrimaryVibrancyEffect not bound
-!missing-selector! +UIVibrancyEffect::widgetSecondaryVibrancyEffect not bound
-!missing-selector! +UIVibrancyEffect::widgetEffectForVibrancyStyle: not bound

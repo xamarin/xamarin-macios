@@ -1,64 +1,67 @@
-﻿using System;
+using System;
 using System.IO;
+using System.Collections.Generic;
+
+using Parallel = System.Threading.Tasks.Parallel;
+using ParallelOptions = System.Threading.Tasks.ParallelOptions;
 
 using Microsoft.Build.Framework;
-using Microsoft.Build.Utilities;
+
+#nullable enable
 
 namespace Xamarin.MacDev.Tasks
 {
-	public abstract class SymbolStripTaskBase : XamarinToolTask
+	public abstract class SymbolStripTaskBase : XamarinTask
 	{
 		#region Inputs
 
 		[Required]
-		public string Executable { get; set; }
+		public ITaskItem[] Executable { get; set; } = Array.Empty<ITaskItem> ();
 
-		public string SymbolFile { get; set; }
+		// This can also be specified as metadata on the Executable item (as 'SymbolFile')
+		public string SymbolFile { get; set; } = string.Empty;
 
-		[Required]
-		public bool IsFramework { get; set; }
-
+		// This can also be specified as metadata on the Executable item (as 'Kind')
+		public string Kind { get; set; } = string.Empty;
 		#endregion
 
-		protected override string ToolName {
-			get { return "strip"; }
+		bool GetIsFramework (ITaskItem item)
+		{
+			var value = GetNonEmptyStringOrFallback (item, "Kind", Kind);
+			return string.Equals (value, "Framework", StringComparison.OrdinalIgnoreCase);
 		}
 
-		protected override string GenerateFullPathToTool ()
+		void ExecuteStrip (ITaskItem item)
 		{
-			if (!string.IsNullOrEmpty (ToolPath))
-				return Path.Combine (ToolPath, ToolExe);
+			var args = new List<string> ();
 
-			var path = Path.Combine (AppleSdkSettings.DeveloperRoot, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin", ToolExe);
+			args.Add ("strip");
 
-			return File.Exists (path) ? path : ToolExe;
-		}
-
-		protected override string GenerateCommandLineCommands ()
-		{
-			var args = new CommandLineBuilder ();
-
-			if (!string.IsNullOrEmpty (SymbolFile)) {
-				args.AppendSwitch ("-i");
-				args.AppendSwitch ("-s");
-				args.AppendFileNameIfNotNull (SymbolFile);
+			var symbolFile = GetNonEmptyStringOrFallback (item, "SymbolFile", SymbolFile);
+			if (!string.IsNullOrEmpty (symbolFile)) {
+				args.Add ("-i");
+				args.Add ("-s");
+				args.Add (symbolFile);
 			}
 
-			if (IsFramework) {
+			if (GetIsFramework (item)) {
 				// Only remove debug symbols from frameworks.
-				args.AppendSwitch ("-S");
-				args.AppendSwitch ("-x");
+				args.Add ("-S");
+				args.Add ("-x");
 			}
 
-			args.AppendFileNameIfNotNull (Executable);
+			args.Add (Path.GetFullPath (item.ItemSpec));
 
-			return args.ToString ();
+			ExecuteAsync ("xcrun", args).Wait ();
 		}
 
-		protected override void LogEventsFromTextOutput (string singleLine, MessageImportance messageImportance)
+		public override bool Execute ()
 		{
-			// TODO: do proper parsing of error messages and such
-			Log.LogMessage (messageImportance, "{0}", singleLine);
+			Parallel.ForEach (Executable, new ParallelOptions { MaxDegreeOfParallelism = Math.Max (Environment.ProcessorCount / 2, 1) }, (item) => {
+				ExecuteStrip (item);
+			});
+
+			return !Log.HasLoggedErrors;
 		}
 	}
 }

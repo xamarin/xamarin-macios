@@ -19,6 +19,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -42,12 +45,12 @@ namespace Foundation {
 		// this is a less common pattern so it's not automatically generated
 		public static NSString[] GetConstants (this NSRunLoopMode[] self)
 		{
-			if (self == null)
-				throw new ArgumentNullException (nameof (self));
+			if (self is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (self));
 			
 			var array = new NSString [self.Length];
 			for (int n = 0; n < self.Length; n++)
-				array [n] = self [n].GetConstant ();
+				array [n] = self [n].GetConstant ()!;
 			return array;
 		}
 	}

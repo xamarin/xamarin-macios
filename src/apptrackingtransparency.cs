@@ -1,4 +1,4 @@
-﻿//
+//
 // AppTrackingTransparency.cs
 //
 // Authors:

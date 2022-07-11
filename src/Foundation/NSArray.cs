@@ -25,10 +25,15 @@ using System;
 using System.Reflection;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
 using ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Foundation {
 
@@ -192,14 +197,16 @@ namespace Foundation {
 			return arr;
 		}
 
-		static public NSArray FromStrings (params string [] items)
+		static public NSArray FromStrings (params string [] items) => FromStrings ((IReadOnlyList<string>)items);
+
+		static public NSArray FromStrings (IReadOnlyList<string> items)
 		{
 			if (items == null)
 				throw new ArgumentNullException (nameof (items));
 			
-			IntPtr buf = Marshal.AllocHGlobal (items.Length * IntPtr.Size);
+			IntPtr buf = Marshal.AllocHGlobal (items.Count * IntPtr.Size);
 			try {
-				for (int i = 0; i < items.Length; i++){
+				for (int i = 0; i < items.Count; i++){
 					IntPtr val;
 					
 					if (items [i] == null)
@@ -210,14 +217,14 @@ namespace Foundation {
 	
 					Marshal.WriteIntPtr (buf, i * IntPtr.Size, val);
 				}
-				NSArray arr = Runtime.GetNSObject<NSArray> (NSArray.FromObjects (buf, items.Length));
+				NSArray arr = Runtime.GetNSObject<NSArray> (NSArray.FromObjects (buf, items.Count));
 				return arr;
 			} finally {
 				Marshal.FreeHGlobal (buf);
 			}
 		}
 
-		static public NSArray FromIntPtrs (IntPtr [] vals)
+		static public NSArray FromIntPtrs (NativeHandle [] vals)
 		{
 			if (vals == null)
 				throw new ArgumentNullException ("vals");
@@ -235,24 +242,30 @@ namespace Foundation {
 		internal static nuint GetCount (IntPtr handle)
 		{
 	#if MONOMAC
-			return Messaging.nuint_objc_msgSend (handle, selCountHandle);
+			return (nuint) Messaging.UIntPtr_objc_msgSend (handle, selCountHandle);
 	#else
-			return Messaging.nuint_objc_msgSend (handle, Selector.GetHandle ("count"));
+			return (nuint) Messaging.UIntPtr_objc_msgSend (handle, Selector.GetHandle ("count"));
 	#endif
 		}
 
-		internal static IntPtr GetAtIndex (IntPtr handle, nuint i)
+		internal static NativeHandle GetAtIndex (NativeHandle handle, nuint i)
 		{
+#if NET
+			return Messaging.NativeHandle_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
+#else
 	#if MONOMAC
-			return Messaging.IntPtr_objc_msgSend_nuint (handle, selObjectAtIndex_Handle, i);
+			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, selObjectAtIndex_Handle, (UIntPtr) i);
 	#else
-			return Messaging.IntPtr_objc_msgSend_nuint (handle, Selector.GetHandle ("objectAtIndex:"), i);
+			return Messaging.IntPtr_objc_msgSend_UIntPtr (handle, Selector.GetHandle ("objectAtIndex:"), (UIntPtr) i);
 	#endif
+#endif
 		}
 			
-		static public string [] StringArrayFromHandle (IntPtr handle)
+		[Obsolete ("Use of 'CFArray.StringArrayFromHandle' offers better performance.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		static public string [] StringArrayFromHandle (NativeHandle handle)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			var c = GetCount (handle);
@@ -263,9 +276,9 @@ namespace Foundation {
 			return ret;
 		}
 
-		static public T [] ArrayFromHandle<T> (IntPtr handle) where T : class, INativeObject
+		static public T [] ArrayFromHandle<T> (NativeHandle handle) where T : class, INativeObject
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			var c = GetCount (handle);
@@ -277,9 +290,9 @@ namespace Foundation {
 			return ret;
 		}
 
-		static public T [] EnumsFromHandle<T> (IntPtr handle) where T : struct, IConvertible
+		static public T [] EnumsFromHandle<T> (NativeHandle handle) where T : struct, IConvertible
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 			if (!typeof (T).IsEnum)
 				throw new ArgumentException ("T must be an enum");
@@ -295,7 +308,7 @@ namespace Foundation {
 
 		static public T [] FromArray<T> (NSArray weakArray) where T : NSObject
 		{
-			if (weakArray == null || weakArray.Handle == IntPtr.Zero)
+			if (weakArray is null || weakArray.Handle == NativeHandle.Zero)
 				return null;
 			try {
 				nuint n = weakArray.Count;
@@ -311,7 +324,7 @@ namespace Foundation {
 
 		static public T [] FromArrayNative<T> (NSArray weakArray) where T : class, INativeObject
 		{
-			if (weakArray == null || weakArray.Handle == IntPtr.Zero)
+			if (weakArray is null || weakArray.Handle == NativeHandle.Zero)
 				return null;
 			try {
 				nuint n = weakArray.Count;
@@ -326,9 +339,9 @@ namespace Foundation {
 		}
 		
 		// Used when we need to provide our constructor
-		static public T [] ArrayFromHandleFunc<T> (IntPtr handle, Func<IntPtr,T> createObject) 
+		static public T [] ArrayFromHandleFunc<T> (NativeHandle handle, Func<NativeHandle,T> createObject) 
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			var c = GetCount (handle);
@@ -340,9 +353,9 @@ namespace Foundation {
 			return ret;
 		}
 		
-		static public T [] ArrayFromHandle<T> (IntPtr handle, Converter<IntPtr, T> creator) 
+		static public T [] ArrayFromHandle<T> (NativeHandle handle, Converter<NativeHandle, T> creator)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			var c = GetCount (handle);
@@ -354,10 +367,18 @@ namespace Foundation {
 			return ret;
 		}
 
+		static public T [] ArrayFromHandle<T> (NativeHandle handle, Converter<NativeHandle, T> creator, bool releaseHandle)
+		{
+			var rv = ArrayFromHandle<T> (handle, creator);
+			if (releaseHandle && handle == NativeHandle.Zero)
+				NSObject.DangerousRelease (handle);
+			return rv;
+		}
+
 		// FIXME: before proving a real `this` indexer we need to clean the issues between
 		// NSObject and INativeObject coexistance across all the API (it can not return T)
 
-		static T UnsafeGetItem<T> (IntPtr handle, nuint index) where T : class, INativeObject
+		static T UnsafeGetItem<T> (NativeHandle handle, nuint index) where T : class, INativeObject
 		{
 			var val = GetAtIndex (handle, index);
 			// A native code could return NSArray with NSNull.Null elements

@@ -1,0 +1,5 @@
+### API not marked with unavailable (but without availability for tvOS/iOS/Catalyst)
+!missing-field! kVTVideoDecoderSpecification_PreferredDecoderGPURegistryID not bound
+!missing-field! kVTVideoDecoderSpecification_RequiredDecoderGPURegistryID not bound
+
+## marked not available on iOS/tvOS/watchOS - no mention of newComputePipelineStateWithAdditionalBinaryFunctions

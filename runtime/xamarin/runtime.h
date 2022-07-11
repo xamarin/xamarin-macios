@@ -154,14 +154,18 @@ void xamarin_initialize ();
 void xamarin_initialize_embedded (); /* Public API, must not change - this is used by the embeddinator */
 
 void			xamarin_assertion_message (const char *msg, ...) __attribute__((__noreturn__));
+// Gets the bundle path (where the managed executable is). This is *not* the path of the app bundle (.app/.appex).
 const char *	xamarin_get_bundle_path (); /* Public API */
 // Sets the bundle path (where the managed executable is). By default APP/Contents/MonoBundle.
 void			xamarin_set_bundle_path (const char *path); /* Public API */
+// Gets the app bundle path (.app/.appex).
+const char *	xamarin_get_app_bundle_path ();
 MonoObject *	xamarin_get_managed_object_for_ptr_fast (id self, GCHandle *exception_gchandle);
 void			xamarin_check_for_gced_object (MonoObject *obj, SEL sel, id self, MonoMethod *method, GCHandle *exception_gchandle);
 unsigned long 	xamarin_objc_type_size (const char *type);
 bool			xamarin_is_class_nsobject (MonoClass *cls);
 bool			xamarin_is_class_inativeobject (MonoClass *cls);
+bool			xamarin_is_class_nativehandle (MonoClass *cls);
 bool			xamarin_is_class_array (MonoClass *cls);
 bool			xamarin_is_class_nsnumber (MonoClass *cls);
 bool			xamarin_is_class_nsvalue (MonoClass *cls);
@@ -187,9 +191,8 @@ void *			xamarin_calloc (size_t size);
 void			xamarin_free (void *ptr);
 MonoMethod *	xamarin_get_reflection_method_method (MonoReflectionMethod *method);
 MonoMethod *	xamarin_get_managed_method_for_token (guint32 token_ref, GCHandle *exception_gchandle);
-void			xamarin_framework_peer_lock ();
-void			xamarin_framework_peer_lock_safe ();
-void			xamarin_framework_peer_unlock ();
+void			xamarin_framework_peer_waypoint ();
+void			xamarin_framework_peer_waypoint_safe ();
 bool			xamarin_file_exists (const char *path);
 MonoAssembly *	xamarin_open_and_register (const char *path, GCHandle *exception_gchandle);
 void			xamarin_unhandled_exception_handler (MonoObject *exc, gpointer user_data);
@@ -216,6 +219,8 @@ void			xamarin_bridge_free_mono_signature (MonoMethodSignature **signature);
 bool			xamarin_register_monoassembly (MonoAssembly *assembly, GCHandle *exception_gchandle);
 void			xamarin_install_nsautoreleasepool_hooks ();
 void			xamarin_enable_new_refcount ();
+const char * const	xamarin_get_original_working_directory_path ();
+int				xamarin_get_runtime_arch ();
 
 MonoObject *	xamarin_new_nsobject (id self, MonoClass *klass, GCHandle *exception_gchandle);
 bool			xamarin_has_managed_ref (id self);
@@ -248,6 +253,7 @@ void			xamarin_process_nsexception (NSException *exc);
 void			xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwManagedAsDefault, GCHandle *output_exception);
 void			xamarin_process_managed_exception (MonoObject *exc);
 void			xamarin_process_managed_exception_gchandle (GCHandle gchandle);
+void			xamarin_process_fatal_exception_gchandle (GCHandle gchandle, const char *message);
 void			xamarin_throw_product_exception (int code, const char *message);
 GCHandle		xamarin_create_product_exception (int code, const char *message);
 GCHandle		xamarin_create_product_exception_with_inner_exception (int code, GCHandle inner_exception_gchandle /* will be freed */, const char *message);
@@ -255,11 +261,15 @@ MonoException *	xamarin_create_system_exception (const char *message);
 MonoException *	xamarin_create_system_invalid_cast_exception (const char *message);
 MonoException *	xamarin_create_system_entry_point_not_found_exception (const char *entrypoint);
 NSString *		xamarin_print_all_exceptions (GCHandle handle);
+bool			xamarin_log_marshalled_exceptions ();
+void			xamarin_log_managed_exception (MonoObject *exception, MarshalManagedExceptionMode mode);
+void			xamarin_log_objectivec_exception (NSException *exception, MarshalObjectiveCExceptionMode mode);
 
 id				xamarin_invoke_objc_method_implementation (id self, SEL sel, IMP xamarin_impl);
 MonoType *		xamarin_get_nsnumber_type ();
 MonoType *		xamarin_get_nsvalue_type ();
 MonoClass *		xamarin_get_inativeobject_class ();
+MonoClass *		xamarin_get_nativehandle_class ();
 MonoClass *		xamarin_get_nsobject_class ();
 MonoClass *		xamarin_get_nsstring_class ();
 MonoClass *		xamarin_get_runtime_class ();
@@ -325,9 +335,7 @@ void			xamarin_mono_object_release_at_process_exit (MonoObject *mobj);
  */
 MonoAssembly * xamarin_open_assembly (const char *name);
 
-#if defined(__arm__) || defined(__aarch64__)
 void mono_aot_register_module (void *aot_info);
-#endif
 
 typedef void (*xamarin_register_module_callback) ();
 typedef void (*xamarin_register_assemblies_callback) ();

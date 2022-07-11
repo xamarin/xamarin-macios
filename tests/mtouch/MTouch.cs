@@ -905,7 +905,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.GccFlags = "-a'-b"; // 1 single quote
 				mtouch.AssertExecuteFailure (MTouchAction.BuildDev, "build");
-				mtouch.AssertError (26, "Could not parse the command line argument '--gcc-flags=-a'-b': No matching quote found.");
+				mtouch.AssertError (26, "Could not parse the command line argument '--gcc_flags=-a'-b': No matching quote found.");
 			}
 		}
 
@@ -919,7 +919,7 @@ public class B : A {}
 				mtouch.CreateTemporaryApp ();
 				mtouch.GccFlags = gcc_flags;
 				mtouch.AssertExecuteFailure (MTouchAction.BuildSim, "build");
-				mtouch.AssertError (26, $"Could not parse the command line argument '--gcc-flags={gcc_flags}': {error}.");
+				mtouch.AssertError (26, $"Could not parse the command line argument '--gcc_flags={gcc_flags}': {error}.");
 			}
 		}
 
@@ -1386,7 +1386,7 @@ public class B : A {}
 					app.WarnAsError = new int [] { 113 };
 					app.AotArguments = "dwarfdebug"; // doesn't matter exactly what, just that it's different from the extension.
 					app.AssertExecuteFailure (MTouchAction.BuildDev, "build app");
-					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the arguments to the AOT compiler are different between the container app (dwarfdebug,static,asmonly,direct-icalls,) and the extension (static,asmonly,direct-icalls,).");
+					app.AssertError (113, "Native code sharing has been disabled for the extension 'testServiceExtension' because the arguments to the AOT compiler are different between the container app (dwarfdebug) and the extension ().");
 				}
 			}
 		}
@@ -2027,11 +2027,11 @@ public class TestApp {
 
 		static string GetFrameworksBindingLibrary (Profile profile)
 		{
-			// Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
-			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bin", "Any CPU", GetConfiguration (profile), "bindings-framework-test.dll");
+			// Path.Combine (Configuration.SourceRoot, "tests/bindings-framework-test/iOS/bin/Any CPU/Debug-unified/bindings-framework-test.dll"),
+			var fn = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bin", "Any CPU", GetConfiguration (profile), "bindings-framework-test.dll");
 
 			if (!File.Exists (fn)) {
-				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", "bindings-framework-test" + GetProjectSuffix (profile) + ".csproj");
+				var csproj = Path.Combine (Configuration.SourceRoot, "tests", "bindings-framework-test", GetPlatformSimpleName (profile), "bindings-framework-test.csproj");
 				XBuild.BuildXI (csproj, platform: "AnyCPU");
 			}
 
@@ -4246,6 +4246,23 @@ class C {
 			Tool.AssertWarningPattern (messages, "MT", 178, "Debugging symbol file for '.*/nunitlite.dll' is not valid and was ignored.*");
 			Tool.AssertWarningPattern (messages, "MT", 178, "Debugging symbol file for '.*/nunit.framework.dll' is not valid and was ignored.*");
 			Tool.AssertWarningCount (messages, 2);
+		}
+
+		[Test]
+		[Ignore ("We're not copying dSYMs for user frameworks to the app bundle anymore: https://github.com/xamarin/xamarin-macios/issues/14598")]
+		public void BindingLibraryDSymCreated ()
+		{
+			// framework-test for macOS has binding library that should have dSYMs
+			var testDir = Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "macOS");
+			var csproj = Path.Combine (testDir, "framework-test-mac.csproj");
+			var arguments = new string [] {
+				"/p:ArchiveOnBuild=true",
+				"/p:EnableCodeSigning=false",
+				"/p:EnablePackageSigning=false",
+				"/p:_CodeSigningKey=-",
+			};
+			XBuild.BuildXM (csproj, "Release", "x86", arguments: arguments, timeout: TimeSpan.FromMinutes (15));
+			DirectoryAssert.Exists(Path.Combine (Configuration.SourceRoot, "tests", "framework-test", "macOS", "bin", "x86", "Release", "XTest.framework.dSYM"));
 		}
 
 		public void XamarinSdkAdjustLibs ()

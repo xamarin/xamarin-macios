@@ -1,4 +1,4 @@
-﻿// Copyright 2014 Xamarin Inc. All rights reserved
+// Copyright 2014 Xamarin Inc. All rights reserved
 
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
@@ -24,11 +24,16 @@ namespace MonoTouchFixtures.MediaPlayer {
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			using (var img = UIImage.FromFile (file))
 			using (var mia = new MPMediaItemArtwork (img)) {
-				Assert.That (img.Size.ToString (), Is.EqualTo ("{Width=32, Height=32}"), "original");
+#if NET
+				const string expected = "{32, 32}";
+#else
+				const string expected = "{Width=32, Height=32}";
+#endif
+				Assert.That (img.Size.ToString (), Is.EqualTo (expected), "original");
 				var upscale = mia.ImageWithSize (new CGSize (100, 100));
-				Assert.That (upscale.Size.ToString (), Is.EqualTo ("{Width=32, Height=32}"), "upscale");
+				Assert.That (upscale.Size.ToString (), Is.EqualTo (expected), "upscale");
 				var downscale = mia.ImageWithSize (new CGSize (16, 16));
-				Assert.That (downscale.Size.ToString (), Is.EqualTo ("{Width=32, Height=32}"), "downscale");
+				Assert.That (downscale.Size.ToString (), Is.EqualTo (expected), "downscale");
 			}
 		}
 	}

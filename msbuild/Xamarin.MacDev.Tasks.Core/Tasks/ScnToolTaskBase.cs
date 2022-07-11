@@ -1,8 +1,10 @@
-﻿using System;
+using System;
 using System.IO;
 
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
+
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -18,8 +20,13 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string InputScene { get; set; }
 
+		public bool IsWatchApp { get; set; }
+
 		[Required]
 		public string OutputScene { get; set; }
+
+		[Required]
+		public string SdkPlatform { get; set; }
 
 		[Required]
 		public string SdkRoot { get; set; }
@@ -99,8 +106,14 @@ namespace Xamarin.MacDev.Tasks
 			args.Add ("-o");
 			args.AddQuoted (OutputScene);
 			args.AddQuotedFormat ("--sdk-root={0}", SdkRoot);
-			args.AddQuotedFormat ("--target-version-{0}={1}", OperatingSystem, SdkVersion);
 			args.AddQuotedFormat ("--target-build-dir={0}", IntermediateOutputPath);
+			if (AppleSdkSettings.XcodeVersion.Major >= 13) {
+				// I'm not sure which Xcode version these options are available in, but it's at least Xcode 13+
+				args.AddQuotedFormat ("--target-version={0}", SdkVersion);
+				args.AddQuotedFormat ("--target-platform={0}", PlatformUtils.GetTargetPlatform (SdkPlatform, IsWatchApp));
+			} else {
+				args.AddQuotedFormat ("--target-version-{0}={1}", OperatingSystem, SdkVersion);
+			}
 
 			return args.ToString ();
 		}

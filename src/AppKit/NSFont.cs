@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -19,7 +20,12 @@ namespace AppKit {
 			return new NSFont (font.Handle);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,13)]
+#endif
 		public unsafe CGRect [] GetBoundingRects (CGGlyph [] glyphs)
 		{
 			if (glyphs == null)
@@ -36,7 +42,12 @@ namespace AppKit {
 			return bounds;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,13)]
+#endif
 		public unsafe CGSize [] GetAdvancements (CGGlyph [] glyphs)
 		{
 			if (glyphs == null)
@@ -142,24 +153,51 @@ namespace AppKit {
 			var ptr = _ControlContentFontOfSize (fontSize);
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
- 
- 		[Deprecated (PlatformName.MacOSX, 10, 13)]
+
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos10.13")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+#endif
 		public virtual NSFont PrinterFont { 
 			get {
 				var ptr = _PrinterFont;
 				return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 			}
 		}
- 
- 		[Deprecated (PlatformName.MacOSX, 10, 13)]
+
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos10.13")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+#endif
 		public virtual NSFont ScreenFont {
 			get {
 				var ptr = _ScreenFont;
 				return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 			}
 		}
- 
- 		[Deprecated (PlatformName.MacOSX, 10, 13)]
+
+#if NET
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos10.13")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.13.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Deprecated (PlatformName.MacOSX, 10, 13)]
+#endif
 		public virtual NSFont ScreenFontWithRenderingMode (NSFontRenderingMode renderingMode)
 		{
 			var ptr = _ScreenFontWithRenderingMode (renderingMode);
@@ -171,22 +209,37 @@ namespace AppKit {
 			var ptr = _GetVerticalFont ();
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
- 
- 		[Mac (10,11)]
+
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (10,11)]
+#endif
 		public static NSFont SystemFontOfSize (nfloat fontSize, nfloat weight)
 		{
 			var ptr = _SystemFontOfSize (fontSize, weight);
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
- 
- 		[Mac (10,11)]
+
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (10,11)]
+#endif
 		public static NSFont MonospacedDigitSystemFontOfSize (nfloat fontSize, nfloat weight)
 		{
 			var ptr = _MonospacedDigitSystemFontOfSize (fontSize, weight);
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,15)]
+#endif
 		public static NSFont MonospacedSystemFont (nfloat fontSize, nfloat weight)
 		{
 			var ptr = _MonospacedSystemFont (fontSize, weight);
@@ -194,3 +247,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

@@ -1,4 +1,4 @@
 xharness.csproj.inc
-tmp-test-dir
+tmp-test-dir*
 
 /xharness.exe.config

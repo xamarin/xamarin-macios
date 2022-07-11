@@ -13,6 +13,8 @@ using ImageIO;
 using ObjCRuntime;
 using NUnit.Framework;
 
+using CGImageProperties = ImageIO.CGImageProperties;
+
 namespace MonoTouchFixtures.ImageIO {
 
 	[TestFixture]

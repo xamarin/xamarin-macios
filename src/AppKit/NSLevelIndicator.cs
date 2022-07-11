@@ -5,6 +5,8 @@
 //   Pavel Sich (pavel.sich@me.com)
 //
 
+#if !__MACCATALYST__
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -18,3 +20,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

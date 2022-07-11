@@ -160,10 +160,10 @@ namespace ObjCRuntime {
 		// trampoline must be static, but it's not necessary to keep a ref to it
 		public void SetupBlock (Delegate trampoline, Delegate userDelegate)
 		{
-			if (trampoline == null)
-				throw new ArgumentNullException (nameof (trampoline));
+			if (trampoline is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (trampoline));
 
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			// Check that:
 			// * The trampoline is static
 			// * The trampoline's method has a [MonoPInvokeCallback] attribute
@@ -176,24 +176,24 @@ namespace ObjCRuntime {
 				// It should be enough to run this check in the simulator
 				var method = trampoline.Method;
 				if (!method.IsStatic)
-					throw new ArgumentException ($"The method {method.DeclaringType.FullName}.{method.Name} is not static.", nameof (trampoline));
+					ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (trampoline), $"The method {method.DeclaringType.FullName}.{method.Name} is not static.");
 				var attrib = method.GetCustomAttribute<MonoPInvokeCallbackAttribute> (false);
-				if (attrib == null)
-					throw new ArgumentException ($"The method {method.DeclaringType.FullName}.{method.Name} does not have a [MonoPInvokeCallback] attribute.", nameof (trampoline));
+				if (attrib is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (trampoline), $"The method {method.DeclaringType.FullName}.{method.Name} does not have a [MonoPInvokeCallback] attribute.");
 
 				Type delegateType = attrib.DelegateType;
 				var signatureMethod = delegateType.GetMethod ("Invoke");
 				if (method.ReturnType != signatureMethod.ReturnType)
-					throw new ArgumentException ($"The method {method.DeclaringType.FullName}.{method.Name}'s return type ({method.ReturnType.FullName}) does not match the return type of the delegate in its [MonoPInvokeCallback] attribute ({signatureMethod.ReturnType.FullName}).", nameof (trampoline));
+					ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (trampoline), $"The method {method.DeclaringType.FullName}.{method.Name}'s return type ({method.ReturnType.FullName}) does not match the return type of the delegate in its [MonoPInvokeCallback] attribute ({signatureMethod.ReturnType.FullName}).");
 
 				var parameters = method.GetParameters ();
 				var signatureParameters = signatureMethod.GetParameters ();
 				if (parameters.Length != signatureParameters.Length)
-					throw new ArgumentException ($"The method {method.DeclaringType.FullName}.{method.Name}'s parameter count ({parameters.Length}) does not match the parameter count of the delegate in its [MonoPInvokeCallback] attribute ({signatureParameters.Length}).", nameof (trampoline));
+					ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (trampoline), $"The method {method.DeclaringType.FullName}.{method.Name}'s parameter count ({parameters.Length}) does not match the parameter count of the delegate in its [MonoPInvokeCallback] attribute ({signatureParameters.Length}).");
 
 				for (int i = 0; i < parameters.Length; i++) {
 					if (parameters [i].ParameterType != signatureParameters [i].ParameterType)
-						throw new ArgumentException ($"The method {method.DeclaringType.FullName}.{method.Name}'s parameter #{i + 1}'s type ({parameters [i].ParameterType.FullName}) does not match the corresponding parameter type of the delegate in its [MonoPInvokeCallback] attribute ({signatureParameters [i].ParameterType.FullName}).", nameof (trampoline));
+						ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (trampoline), $"The method {method.DeclaringType.FullName}.{method.Name}'s parameter #{i + 1}'s type ({parameters [i].ParameterType.FullName}) does not match the corresponding parameter type of the delegate in its [MonoPInvokeCallback] attribute ({signatureParameters [i].ParameterType.FullName}).");
 				}
 			}
 #endif
@@ -226,12 +226,20 @@ namespace ObjCRuntime {
 			}
 		}
 
+#if NET
+		public T GetDelegateForBlock<T> () where T: System.MulticastDelegate
+#else
 		public T GetDelegateForBlock<T> () where T: class
+#endif
 		{
 			return (T) (object) Runtime.GetDelegateForBlock (invoke, typeof (T));
 		}
 
+#if NET
+		public unsafe static T GetTarget<T> (IntPtr block) where T: System.MulticastDelegate
+#else
 		public unsafe static T GetTarget<T> (IntPtr block) where T: class /* /* requires C# 7.3+: System.MulticastDelegate */
+#endif
 		{
 			return (T) ((BlockLiteral *) block)->Target;
 		}
@@ -240,7 +248,7 @@ namespace ObjCRuntime {
 		public static bool IsManagedBlock (IntPtr block)
 		{
 			if (block == IntPtr.Zero)
-				throw new ArgumentNullException ("block");
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (block));
 
 			BlockLiteral* literal = (BlockLiteral *) block;
 			BlockDescriptor* descriptor = (BlockDescriptor *) xamarin_get_block_descriptor ();
@@ -277,7 +285,7 @@ namespace ObjCRuntime {
 				}
 
 				// It might be an optional method/property, in which case we need to check any ProtocolMember attributes
-				if (selector == null)
+				if (selector is null)
 					selector = Runtime.GetExportAttribute (minfo)?.Selector ?? string.Empty;
 				if (!string.IsNullOrEmpty (selector)) {
 					var attrib = Runtime.GetProtocolMemberAttribute (iface, selector, minfo);
@@ -286,34 +294,34 @@ namespace ObjCRuntime {
 				}
 			}
 
-			throw ErrorHelper.CreateError (8011, "Unable to locate the delegate to block conversion attribute ([DelegateProxy]) for the return value for the method {0}.{1}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name);
+			throw ErrorHelper.CreateError (8011, $"Unable to locate the delegate to block conversion attribute ([DelegateProxy]) for the return value for the method {baseMethod.DeclaringType.FullName}.{baseMethod.Name}. {Constants.PleaseFileBugReport}");
 		}
 
 		[BindingImpl(BindingImplOptions.Optimizable)]
 		internal static IntPtr GetBlockForDelegate (MethodInfo minfo, object @delegate, uint token_ref, string signature)
 		{
-			if (@delegate == null)
+			if (@delegate is null)
 				return IntPtr.Zero;
 
 			if (!(@delegate is Delegate))
-				throw ErrorHelper.CreateError (8016, "Unable to convert delegate to block for the return value for the method {0}.{1}, because the input isn't a delegate, it's a {1}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", minfo.DeclaringType.FullName, minfo.Name, @delegate.GetType ().FullName);
+				throw ErrorHelper.CreateError (8016, $"Unable to convert delegate to block for the return value for the method {minfo.DeclaringType.FullName}.{minfo.Name}, because the input isn't a delegate, it's a {@delegate.GetType ().FullName}. {Constants.PleaseFileBugReport}");
 				
 			Type delegateProxyType = GetDelegateProxyType (minfo, token_ref, out var baseMethod);
-			if (baseMethod == null)
+			if (baseMethod is null)
 				baseMethod = minfo; // 'baseMethod' is only used in error messages, and if it's null, we just use the closest alternative we have (minfo).
 			if (delegateProxyType == null)
-				throw ErrorHelper.CreateError (8012, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: DelegateType is null. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name);
+				throw ErrorHelper.CreateError (8012, $"Invalid DelegateProxyAttribute for the return value for the method {baseMethod.DeclaringType.FullName}.{baseMethod.Name}: DelegateType is null. {Constants.PleaseFileBugReport}");
 
 			var delegateProxyField = delegateProxyType.GetField ("Handler", BindingFlags.NonPublic | BindingFlags.Static);
-			if (delegateProxyField == null)
-				throw ErrorHelper.CreateError (8013, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: DelegateType ({2}) specifies a type without a 'Handler' field. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName);
+			if (delegateProxyField is null)
+				throw ErrorHelper.CreateError (8013, $"Invalid DelegateProxyAttribute for the return value for the method {baseMethod.DeclaringType.FullName}.{baseMethod.Name}: DelegateType ({delegateProxyType.FullName}) specifies a type without a 'Handler' field. {Constants.PleaseFileBugReport}");
 
 			var handlerDelegate = delegateProxyField.GetValue (null);
-			if (handlerDelegate == null)
-				throw ErrorHelper.CreateError (8014, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is null. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName);
+			if (handlerDelegate is null)
+				throw ErrorHelper.CreateError (8014, $"Invalid DelegateProxyAttribute for the return value for the method {baseMethod.DeclaringType.FullName}.{baseMethod.Name}: The DelegateType's ({delegateProxyType.FullName}) 'Handler' field is null. {Constants.PleaseFileBugReport}");
 
 			if (!(handlerDelegate is Delegate))
-				throw ErrorHelper.CreateError (8015, "Invalid DelegateProxyAttribute for the return value for the method {0}.{1}: The DelegateType's ({2}) 'Handler' field is not a delegate, it's a {3}. Please file a bug at https://github.com/xamarin/xamarin-macios/issues/new.", baseMethod.DeclaringType.FullName, baseMethod.Name, delegateProxyType.FullName, handlerDelegate.GetType ().FullName);
+				throw ErrorHelper.CreateError (8015, $"Invalid DelegateProxyAttribute for the return value for the method {baseMethod.DeclaringType.FullName}.{baseMethod.Name}: The DelegateType's ({delegateProxyType.FullName}) 'Handler' field is not a delegate, it's a {handlerDelegate.GetType ().FullName}. {Constants.PleaseFileBugReport}");
 			
 			// We now have the information we need to create the block.
 			// Note that we must create a heap-allocated block, so we 
@@ -321,7 +329,7 @@ namespace ObjCRuntime {
 			// call _Block_copy, which will create a heap-allocated block
 			// with the proper reference count.
 			BlockLiteral block = new BlockLiteral ();
-			if (signature == null) {
+			if (signature is null) {
 				if (Runtime.DynamicRegistrationSupported) {
 					block.SetupBlock ((Delegate) handlerDelegate, (Delegate) @delegate);
 				} else {

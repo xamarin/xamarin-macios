@@ -13,6 +13,10 @@ using ObjCRuntime;
 using Security;
 using NUnit.Framework;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MonoTouchFixtures.Foundation {
 	
 	[TestFixture]
@@ -46,7 +50,11 @@ namespace MonoTouchFixtures.Foundation {
 		NSComparisonResult Comparator (NSObject obj1, NSObject obj2)
 		{
 			comparator_count++;
+#if NET
+			return (NSComparisonResult) (((long) (IntPtr) obj2.Handle - (long) (IntPtr) obj1.Handle));
+#else
 			return (NSComparisonResult) (long) ((nint) obj2.Handle - (nint) obj1.Handle);
+#endif
 		}
 		
 		[Test]
@@ -60,8 +68,8 @@ namespace MonoTouchFixtures.Foundation {
 				a.Add (a);
 				a.Add (obj2);
 				using (var s = a.Sort (Comparator)) {
-					Assert.That ((nuint) s.ValueAt (0), Is.GreaterThan ((nuint) s.ValueAt (1)), "0");
-					Assert.That ((nuint) s.ValueAt (1), Is.GreaterThan ((nuint) s.ValueAt (2)), "1");
+					Assert.That ((long) (IntPtr) s.ValueAt (0), Is.GreaterThan ((long) (IntPtr) s.ValueAt (1)), "0");
+					Assert.That ((long) (IntPtr) s.ValueAt (1), Is.GreaterThan ((long) (IntPtr) s.ValueAt (2)), "1");
 				}
 			}
 			Assert.That (comparator_count, Is.GreaterThanOrEqualTo (2), "2+");

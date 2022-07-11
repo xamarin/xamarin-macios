@@ -1,0 +1,40 @@
+# In header as old style, unnamed enums
+!unknown-native-enum! IKCellsStyle bound
+!unknown-native-enum! IKGroupStyle bound
+
+# Deprecated, macOS version lower than the supported by Xamarin.Mac.
+!missing-field! IKPictureTakerShowAddressBookPicture not bound
+!missing-field! IKPictureTakerShowEmptyPicture not bound
+
+# Informal protocols
+## Inside IKImageBrowserDelegate informal protocol
+!missing-selector! NSObject::imageBrowserSelectionDidChange: not bound
+!missing-selector! NSObject::imageBrowser:cellWasDoubleClickedAtIndex: not bound
+!missing-selector! NSObject::imageBrowser:cellWasRightClickedAtIndex:withEvent: not bound
+!missing-selector! NSObject::imageBrowser:backgroundWasRightClickedWithEvent: not bound
+
+## Inside IKImageBrowserDataSource informal protocol
+!missing-selector! NSObject::imageBrowser:groupAtIndex: not bound
+!missing-selector! NSObject::imageBrowser:itemAtIndex: not bound
+!missing-selector! NSObject::imageBrowser:moveItemsAtIndexes:toIndex: not bound
+!missing-selector! NSObject::imageBrowser:removeItemsAtIndexes: not bound
+!missing-selector! NSObject::imageBrowser:writeItemsAtIndexes:toPasteboard: not bound
+!missing-selector! NSObject::numberOfGroupsInImageBrowser: not bound
+!missing-selector! NSObject::numberOfItemsInImageBrowser: not bound
+
+## Inside IKImageBrowserItem informal protocol
+!missing-selector! NSObject::isSelectable not bound
+
+## Inside IKSaveOptionsDelegate informal protocol
+!missing-selector! NSObject::saveOptions:shouldShowUTType: not bound
+
+## Bound inside IKImageBrowserItem informal protocol.
+!missing-selector! NSObject::imageRepresentation not bound
+!missing-selector! NSObject::imageRepresentationType not bound
+!missing-selector! NSObject::imageSubtitle not bound
+!missing-selector! NSObject::imageTitle not bound
+!missing-selector! NSObject::imageUID not bound
+!missing-selector! NSObject::imageVersion not bound
+
+# Initial result from new rule missing-release-attribute-on-return-value
+!missing-release-attribute-on-return-value! ImageKit.IKImageBrowserCell ImageKit.IKImageBrowserView::NewCell(ImageKit.IIKImageBrowserItem)'s selector's ('newCellForRepresentedItem:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

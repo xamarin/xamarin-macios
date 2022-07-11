@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using Foundation;
 using CoreGraphics;
@@ -5,11 +6,13 @@ using CoreGraphics;
 namespace AppKit {
 
 	public partial class NSComboBox {
+#if !NET
 		[Obsolete ("Use GetItemObject instead.")]
 		public virtual NSComboBox GetItem (nint index)
 		{
 			return (NSComboBox) GetItemObject (index);
 		}
+#endif
 
 		public NSObject this [nint index] { 
 			get {
@@ -18,3 +21,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

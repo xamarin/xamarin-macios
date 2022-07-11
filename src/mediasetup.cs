@@ -3,6 +3,10 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MediaSetup {
 
 	[NoTV][NoWatch][NoMac]
@@ -13,7 +17,7 @@ namespace MediaSetup {
 
 		[Export ("initWithServiceName:accountName:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string serviceName, string accountName);
+		NativeHandle Constructor (string serviceName, string accountName);
 
 		[Export ("serviceName")]
 		string ServiceName { get; }
@@ -56,7 +60,7 @@ namespace MediaSetup {
 	interface MSSetupSession {
 
 		[Export ("initWithServiceAccount:")]
-		IntPtr Constructor (MSServiceAccount serviceAccount);
+		NativeHandle Constructor (MSServiceAccount serviceAccount);
 
 		[Export ("startWithError:")]
 		bool Start ([NullAllowed] out NSError error);

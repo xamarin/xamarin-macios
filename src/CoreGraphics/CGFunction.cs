@@ -25,18 +25,33 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
+using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreGraphics {
 
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	// CGFunction.h
-	public class CGFunction : INativeObject, IDisposable {
-		IntPtr handle;
-		CGFunctionEvaluate evaluate;
+	public class CGFunction : NativeObject {
+		CGFunctionEvaluate? evaluate;
 
 		static CGFunctionCallbacks cbacks;
 
@@ -47,36 +62,20 @@ namespace CoreGraphics {
 			cbacks.release = new CGFunctionReleaseCallback (ReleaseCallback);
 		}
 
-		// invoked by marshallers
-		internal CGFunction (IntPtr handle)
-			: this (handle, false)
+#if !NET
+		internal CGFunction (NativeHandle handle)
+			: base (handle, false)
 		{
 		}
+#endif
 
 		[Preserve (Conditional=true)]
-		internal CGFunction (IntPtr handle, bool owns)
+		internal CGFunction (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			this.handle = handle;
-			if (!owns)
-				CGFunctionRetain (handle);
-		}
-		
-		~CGFunction ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
 		}
 
-		public IntPtr Handle {
-			get { return handle; }
-		}
-	
-		public CGFunctionEvaluate EvaluateFunction {
+		public CGFunctionEvaluate? EvaluateFunction {
 			get {
 				return evaluate;
 			}
@@ -90,13 +89,15 @@ namespace CoreGraphics {
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGFunctionRef */ IntPtr CGFunctionRetain (/* CGFunctionRef */ IntPtr function);
-		
-		protected virtual void Dispose (bool disposing)
+
+		protected internal override void Retain ()
 		{
-			if (handle != IntPtr.Zero){
-				CGFunctionRelease (handle);
-				handle = IntPtr.Zero;
-			}
+			CGFunctionRetain (GetCheckedHandle ());
+		}
+
+		protected internal override void Release ()
+		{
+			CGFunctionRelease (GetCheckedHandle ());
 		}
 
 		// Apple's documentation says 'float', the header files say 'CGFloat'
@@ -106,32 +107,34 @@ namespace CoreGraphics {
 		[StructLayout (LayoutKind.Sequential)]
 		struct CGFunctionCallbacks {
 			public /* unsigned int */ uint version;
-			public CGFunctionEvaluateCallback evaluate;
-			public CGFunctionReleaseCallback release;
+			public CGFunctionEvaluateCallback? evaluate;
+			public CGFunctionReleaseCallback? release;
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		extern static IntPtr CGFunctionCreate (/* void* */ IntPtr data, /* size_t */ nint domainDimension, /* CGFloat* */ nfloat [] domain, nint rangeDimension, /* CGFloat* */ nfloat [] range, ref CGFunctionCallbacks callbacks);
+		extern static IntPtr CGFunctionCreate (/* void* */ IntPtr data, /* size_t */ nint domainDimension, /* CGFloat* */ nfloat []? domain, nint rangeDimension, /* CGFloat* */ nfloat []? range, ref CGFunctionCallbacks callbacks);
 		
 		unsafe public delegate void CGFunctionEvaluate (nfloat *data, nfloat *outData);
 
-		public unsafe CGFunction (nfloat [] domain, nfloat [] range, CGFunctionEvaluate callback)
+
+		public unsafe CGFunction (nfloat []? domain, nfloat []? range, CGFunctionEvaluate callback)
 		{
-			if (domain != null){
+			if (domain is not null) {
 				if ((domain.Length % 2) != 0)
-					throw new ArgumentException ("The domain array must consist of pairs of values", "domain");
+					throw new ArgumentException ("The domain array must consist of pairs of values", nameof (domain));
 			}
-			if (range != null) {
+			if (range is not null) {
 				if ((range.Length % 2) != 0)
-					throw new ArgumentException ("The range array must consist of pairs of values", "range");
+					throw new ArgumentException ("The range array must consist of pairs of values", nameof (range));
 			}
-			if (callback == null)
-				throw new ArgumentNullException ("callback");
+			if (callback is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			this.evaluate = callback;
 
 			var gch = GCHandle.Alloc (this);
-			handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain != null ? domain.Length/2 : 0, domain, range != null ? range.Length/2 : 0, range, ref cbacks);
+			var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain is not null ? domain.Length / 2 : 0, domain, range is not null ? range.Length / 2 : 0, range, ref cbacks);
+			InitializeHandle (handle);
 		}
 
 #if !MONOMAC
@@ -148,9 +151,9 @@ namespace CoreGraphics {
 		unsafe static void EvaluateCallback (IntPtr info, nfloat *input, nfloat *output)
 		{
 			GCHandle lgc = GCHandle.FromIntPtr (info);
-			CGFunction container = (CGFunction) lgc.Target;
+			var container = lgc.Target as CGFunction;
 
-			container.evaluate?.Invoke (input, output);
+			container?.evaluate?.Invoke (input, output);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Collections.Generic;
@@ -134,21 +134,29 @@ namespace Xamarin.MMP.Tests
 				Assert.True (logs.BindingBuildResult.BuildOutput.Contains ("csc"), "Bindings project must use csc:\n" + logs.Item1); 
 
 				var bgenInvocation = logs.BindingBuildResult.BuildOutputLines.First (x => x.Contains ("bin/bgen"));
-				var bgenParts = bgenInvocation.Split (new char[] { ' ' });
+				Assert.IsTrue (StringUtils.TryParseArguments (bgenInvocation, out var bgenArguments, out var _), "Parse bgen arguments");
+				// unfurl any response files
+				var bgenParts = bgenArguments.ToList ();
+				var responseFiles = bgenParts.Where (v => v [0] == '@').ToArray ();
+				bgenParts.RemoveAll (v => v [0] == '@');
+				foreach (var rsp in responseFiles) {
+					Assert.IsTrue (StringUtils.TryParseArguments (File.ReadAllText (rsp.Substring (1)).Replace ('\n', ' '), out var args, out var _), "Parse response file");
+					bgenParts.AddRange (args);
+				}
 				var mscorlib = bgenParts.First (x => x.Contains ("mscorlib.dll"));
 				var system = bgenParts.First (x => x.Contains ("System.dll"));
 
 				switch (type) {
 				case BindingProjectType.Modern:
 				case BindingProjectType.ModernNoTag:
-					Assert.True (mscorlib.EndsWith ("lib/mono/Xamarin.Mac/mscorlib.dll", StringComparison.Ordinal), "mscorlib not found in expected Modern location: " + mscorlib);
-					Assert.True (system.EndsWith ("lib/mono/Xamarin.Mac/System.dll", StringComparison.Ordinal), "system not found in expected Modern location: " + system);
+					Assert.That (mscorlib, Does.EndWith ("lib/mono/Xamarin.Mac/mscorlib.dll"), "mscorlib not found in expected Modern location: " + mscorlib);
+					Assert.That (system, Does.EndWith ("lib/mono/Xamarin.Mac/System.dll"), "system not found in expected Modern location: " + system);
 					break;
 				case BindingProjectType.Full:
 				case BindingProjectType.FullTVF:
 				case BindingProjectType.FullXamMacTag:
-					Assert.True (mscorlib.EndsWith ("lib/mono/4.5/mscorlib.dll", StringComparison.Ordinal), "mscorlib not found in expected Full location: " + mscorlib);
-					Assert.True (system.EndsWith ("lib/mono/4.5/System.dll", StringComparison.Ordinal), "system not found in expected Full location: " + system);
+					Assert.That (mscorlib, Does.EndWith ("lib/mono/4.5/mscorlib.dll"), "mscorlib not found in expected Full location: " + mscorlib);
+					Assert.That (system, Does.EndWith ("lib/mono/4.5/System.dll"), "system not found in expected Full location: " + system);
 					break;
 				default:
 					throw new NotImplementedException ();

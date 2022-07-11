@@ -6,5 +6,3 @@
 !missing-selector! SCNProgram::setTessellationEvaluationShader: not bound
 !missing-selector! SCNProgram::tessellationControlShader not bound
 !missing-selector! SCNProgram::tessellationEvaluationShader not bound
-!missing-selector! SCNText::chamferSegmentCount not bound
-!missing-selector! SCNText::setChamferSegmentCount: not bound

@@ -40,3 +40,7 @@
 
 # by-ref argument, cannot be null
 !extra-null-allowed! 'System.Boolean CoreData.NSManagedObject::ValidateValue(Foundation.NSObject&,System.String,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #0
+
+# waiting for changes in foundation which are not trivial
+!missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithDifference: not found
+!missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithSnapshot: not found

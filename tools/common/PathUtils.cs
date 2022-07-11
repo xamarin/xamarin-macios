@@ -17,6 +17,20 @@ namespace Xamarin.Utils
 			return (((uint) c - 'a') <= ((uint) 'z' - 'a')) ? (char) (c - 0x20) : c;
 		}
 
+		public static string EnsureTrailingSlash (this string path)
+		{
+			if (path is null)
+				return null;
+
+			if (path.Length == 0)
+				return Path.DirectorySeparatorChar.ToString ();
+
+			if (path [path.Length - 1] != Path.DirectorySeparatorChar)
+				path += Path.DirectorySeparatorChar;
+
+			return path;
+		}
+
 		[DllImport ("/usr/lib/libc.dylib")]
 		static extern IntPtr realpath (string path, IntPtr buffer);
 
@@ -187,8 +201,20 @@ namespace Xamarin.Utils
 			public ulong st_qspare_2;
 		}
 
-		[DllImport ("/usr/lib/libSystem.dylib", EntryPoint = "lstat$INODE64", SetLastError = true)]
-		static extern int lstat (string path, out stat buf);
+		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "lstat$INODE64", SetLastError = true)]
+		static extern int lstat_x64 (string file_name, out stat buf);
+
+		[DllImport ("/usr/lib/libc.dylib", EntryPoint = "lstat", SetLastError = true)]
+		static extern int lstat_arm64 (string file_name, out stat buf);
+
+		static int lstat (string path, out stat buf)
+		{
+			if (RuntimeInformation.ProcessArchitecture == Architecture.Arm64) {
+				return lstat_arm64 (path, out buf);
+			} else {
+				return lstat_x64 (path, out buf);
+			}
+		}
 
 		public static bool IsSymlink (string file)
 		{
@@ -199,6 +225,30 @@ namespace Xamarin.Utils
 			const int S_IFLNK = 40960;
 			return (buf.st_mode & S_IFLNK) == S_IFLNK;
 		}
+
+		public static bool IsSymlinkOrContainsSymlinks (string directoryOrFile)
+		{
+			if (IsSymlink (directoryOrFile))
+				return true;
+
+			if (!Directory.Exists (directoryOrFile))
+				return false;
+
+			foreach (var entry in Directory.EnumerateFileSystemEntries (directoryOrFile)) {
+				if (IsSymlinkOrContainsSymlinks (entry))
+					return true;
+			}
+
+			return false;
+		}
+
+		// Replace any windows-style slashes with mac-style slashes.
+		public static string ConvertToMacPath (string path)
+		{
+			if (string.IsNullOrEmpty (path))
+				return path;
+
+			return path.Replace ('\\', '/');
+		}
 	}
 }
-

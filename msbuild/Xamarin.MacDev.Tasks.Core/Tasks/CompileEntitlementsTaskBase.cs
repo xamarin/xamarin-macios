@@ -457,7 +457,9 @@ namespace Xamarin.MacDev.Tasks
 
 			SaveArchivedExpandedEntitlements (archived);
 
-			if (SdkIsSimulator) {
+			if (Platform == Utils.ApplePlatform.MacCatalyst) {
+				EntitlementsInSignature = CompiledEntitlements;
+			} else if (SdkIsSimulator) {
 				if (compiled.Count > 0) {
 					EntitlementsInExecutable = CompiledEntitlements;
 				}

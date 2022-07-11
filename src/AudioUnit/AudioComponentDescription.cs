@@ -29,6 +29,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -48,17 +50,48 @@ namespace AudioUnit
 		Panner=0x6175706e, // 'aupn'
 		OfflineEffect=0x61756f6c, // 'auol'
 		Generator=0x6175676e, // 'augn'
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		MIDIProcessor		= 0x61756d69, // 'aumi'
 
 #if !MONOMAC
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		RemoteEffect		= 0x61757278, // 'aurx',
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		RemoteGenerator		= 0x61757267, // 'aurg',
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		RemoteInstrument	= 0x61757269, // 'auri',
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		RemoteMusicEffect	= 0x6174726d, // 'aurm'
 #endif
 	}
@@ -70,7 +103,14 @@ namespace AudioUnit
 		Default=0x64656620, // 'def'
 		System=0x73797320, // 'sys'
 #endif
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[Mac (10, 15)]
+#endif
 		Remote=0x72696f63, // 'rioc'
 		VoiceProcessingIO = 0x7670696f // 'vpio'
 	}
@@ -81,7 +121,14 @@ namespace AudioUnit
 #endif
 		Sampler		= 0x73616d70, // 'samp'
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (8,0)]
+#endif
 		MidiSynth	= 0x6d73796e, // 'msyn'
 	}
 
@@ -98,9 +145,23 @@ namespace AudioUnit
 #if MONOMAC
 		TimePitch=0x746d7074, // 'tmpt'
 #else
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioTypeConverter.NewTimePitch' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioTypeConverter.NewTimePitch' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
+#endif
 		AUiPodTime=0x6970746d, // 'iptm'
 #endif
 	}
@@ -112,12 +173,29 @@ namespace AudioUnit
 		HighPassFilter=0x68706173, // 'hpas'
 		HighShelfFilter=0x68736866, // 'hshf'
 		LowShelfFilter=0x6c736866, // 'lshf'
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#if IOS
+		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Obsoleted (PlatformName.iOS, 7, 0)]
+#endif
 		DCFilter=0x6463666c, // 'dcfl'
 		ParametricEQ=0x706d6571, // 'pmeq'
 		Delay=0x64656c79, // 'dely'
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (8, 0)]
+#endif
 		SampleDelay=0x73646c79, // 'sdly'
 		Distortion=0x64697374, // 'dist'
 		BandPassFilter=0x62706173, // 'bpas'
@@ -130,15 +208,35 @@ namespace AudioUnit
 		NetSend=0x6e736e64, // 'nsnd'
 		RogerBeep=0x726f6772, // 'rogr'
 #else
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("macos")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioTypeEffect.GraphicEQ' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioTypeEffect.GraphicEQ' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Unavailable (PlatformName.MacCatalyst)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
+#endif
 		AUiPodEQ=0x69706571, // 'ipeq'
 #endif
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,15)]
 		[Unavailable (PlatformName.MacCatalyst)]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+#endif
 		Reverb2=0x72766232, // 'rvb2'
 		NBandEq=0x6e626571, // 'nbeq'
 	}
@@ -149,10 +247,30 @@ namespace AudioUnit
 		Spacial=0x3364656d, // Same as Embedded3D
 #if MONOMAC
 		Stereo=0x736d7872, // 'smxr'
+#if NET
+		[UnsupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos10.10")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.10 use 'Spacial' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 10, message : "Use 'Spacial' instead.")]
+#endif
 		ThreeD=0x33646d78, // '3dmx'
 #else
-		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'Spacial' instead.")]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[UnsupportedOSPlatform ("ios8.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#if IOS
+		[Obsolete ("Starting with ios8.0 use 'Spacial' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#endif
 		Embedded3D=0x3364656d, // '3dem'
 #endif
 	}
@@ -189,16 +307,26 @@ namespace AudioUnit
 		CanLoadInProcess			= 0x10
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct AudioComponentDescription
 	{
-		[MarshalAs(UnmanagedType.U4)] 
+		[MarshalAs (UnmanagedType.U4)]
 		public AudioComponentType ComponentType;
 		
 		[MarshalAs(UnmanagedType.U4)]
+#if NET && !COREBUILD
+		public AudioUnitSubType ComponentSubType;
+#else
 		public int ComponentSubType;
+#endif
         
-		[MarshalAs(UnmanagedType.U4)] 
+		[MarshalAs (UnmanagedType.U4)]
 		public AudioComponentManufacturerType ComponentManufacturer;
 
 		public AudioComponentFlag ComponentFlags;
@@ -207,7 +335,11 @@ namespace AudioUnit
 		internal AudioComponentDescription (AudioComponentType type, int subType)
 		{
 			ComponentType = type;
+#if NET && !COREBUILD
+			ComponentSubType = (AudioUnitSubType) subType;
+#else
 			ComponentSubType = subType;
+#endif
 			ComponentManufacturer = AudioComponentManufacturerType.Apple;
 			ComponentFlags = (AudioComponentFlag) 0;
 			ComponentFlagsMask = 0;

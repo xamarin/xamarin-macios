@@ -15,7 +15,7 @@ namespace UIKit {
 #if !WATCH
 	public partial class UITraitCollection {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Please use the static 'Create' method instead.")]
 		public UITraitCollection FromPreferredContentSizeCategory (UIContentSizeCategory category)
 			=> Create (category);

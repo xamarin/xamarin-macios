@@ -1,6 +1,7 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
-using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -10,12 +11,15 @@ namespace NaturalLanguage {
 	public partial class NLModel {
 
 #if NET
-		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
 #else
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
+		[iOS (14,0)]
 		[MacCatalyst (14,0)]
 #endif
 		public Dictionary<NLLanguage, double> GetPredictedLabelHypotheses (string @string, nuint maximumCount)
@@ -25,12 +29,15 @@ namespace NaturalLanguage {
 		}
 
 #if NET
-		[SupportedOSPlatform ("ios14.0")]
 		[SupportedOSPlatform ("tvos14.0")]
-		[SupportedOSPlatform ("maccatalyst14.0")]
 		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
 #else
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Watch (7,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
+		[iOS (14,0)]
 		[MacCatalyst (14,0)]
 #endif
 		public Dictionary<NLLanguage, double>[] GetPredictedLabelHypotheses (string[] tokens, nuint maximumCount)

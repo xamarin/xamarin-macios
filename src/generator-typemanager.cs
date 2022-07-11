@@ -24,6 +24,7 @@ public class TypeManager {
 	public Type System_UInt16;
 	public Type System_UInt32;
 	public Type System_UInt64;
+	public Type System_UIntPtr;
 	public Type System_Void;
 
 	public Type System_nint;
@@ -187,11 +188,19 @@ public class TypeManager {
 		System_UInt16 = Lookup (corlib_assembly, "System", "UInt16");
 		System_UInt32 = Lookup (corlib_assembly, "System", "UInt32");
 		System_UInt64 = Lookup (corlib_assembly, "System", "UInt64");
+		System_UIntPtr = Lookup (corlib_assembly, "System", "UIntPtr");
 		System_Void = Lookup (corlib_assembly, "System", "Void");
 
+#if NET
+		System_nint = Lookup (corlib_assembly, "System", "IntPtr");
+		System_nuint = Lookup (corlib_assembly, "System", "UIntPtr");
+		var interop_assembly = binding_touch.universe.LoadFromAssemblyName ("System.Runtime.InteropServices");
+		System_nfloat = Lookup (interop_assembly, "System.Runtime.InteropServices", "NFloat");
+#else
 		System_nint = Lookup (platform_assembly, "System", "nint");
 		System_nuint = Lookup (platform_assembly, "System", "nuint");
 		System_nfloat = Lookup (platform_assembly, "System", "nfloat");
+#endif
 
 		/* fundamental */
 		NSObject = Lookup (platform_assembly, "Foundation", "NSObject");

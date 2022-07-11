@@ -61,20 +61,6 @@ namespace Introspection {
 
 		protected override bool Skip (PropertyInfo p)
 		{
-			switch (p.DeclaringType.Name) {
-			case "NSUrlSessionDownloadDelegate":
-				switch (p.Name) {
-				case "TaskResumeDataKey":
-					// This field was introduced as 64-bit only in Mavericks, and 32+64bits in Yosemite. We can't
-					// express that with our AvailabilityAttribute, we set it as available (for all architectures, since
-					// we can't distinguish them) starting with Mavericks.
-					if (Mac.Is32BitMavericks)
-						return true;
-					break;
-				}
-				break;
-			}
-
 			switch (p.Name) {
 			case "CharacteristicValidRangeString":
 				return Mac.CheckSystemVersion (10, 13); // radar 32858911 
@@ -178,11 +164,6 @@ namespace Introspection {
 			// kCLErrorUserInfoAlternateRegionKey also returns null on iOS
 			case "kCLErrorUserInfoAlternateRegionKey":
 				return true;
-			case "NSURLSessionTransferSizeUnknown":
-			case "NSURLSessionDownloadTaskResumeData":
-				if (Mac.Is32BitMavericks)
-					return true;
-				goto default;
 			case "QCCompositionInputRSSArticleDurationKey":
 			case "QCCompositionInputRSSFeedURLKey":
 			case "QCCompositionProtocolRSSVisualizer":
@@ -197,7 +178,7 @@ namespace Introspection {
 		protected override bool SkipNotification (Type declaredType, string notificationName)
 		{
 			switch (declaredType.Name){
-#if !XAMCORE_4_0
+#if !NET
 			case "NSWorkspaceAccessibilityNotifications":
 			case "NSAccessibilityNotifications":
 				return true;

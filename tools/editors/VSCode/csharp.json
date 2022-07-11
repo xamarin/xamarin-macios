@@ -1,0 +1,109 @@
+{
+	// Useful snippets for xamarin.ios bindings
+
+	"Write all the deprecation attributes for a manual binding.": {
+		"prefix": "manual_deprecation",
+		"body": [
+		  "#if !NET",
+		  "\t\t[Deprecated (PlatformName.iOS, $1, $2, message: \"$11\")]",
+		  "\t\t[Deprecated (PlatformName.TvOS, $3, $4, message: \"$11\")] ",
+		  "\t\t[Deprecated (PlatformName.MacCatalyst, $5, $6, message: \"$11\")]",
+		  "\t\t[Deprecated (PlatformName.MacOSX, $7, $8, message: \"$11\")]",
+		  "\t\t[Deprecated (PlatformName.WatchOS, $9, $10, message:  \"$11\")]",
+		  "#else",
+		  "\t\t[UnsupportedOSPlatform (\"ios$1.$2\")]",
+		  "\t\t[UnsupportedOSPlatform (\"tvos$3.$4\")]",
+		  "\t\t[UnsupportedOSPlatform (\"maccatalyst$5.$6\")]",
+		  "\t\t[UnsupportedOSPlatform (\"macos$7.$8\")]",
+		  "#if __MACCATALYST__",
+		  "\t\t[Obsolete (\"Starting with maccatalyst$5.$6 $11\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]",
+		  "#elif IOS",
+		  "\t\t[Obsolete (\"Starting with ios$1.$2 $11\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]",
+		  "#elif TVOS",
+		  "\t\t[Obsolete (\"Starting with tvos$3.$4 $11' instead.\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]",
+		  "#elif MONOMAC",
+		  "\t\t[Obsolete (\"Starting with macos$7.$8 $11\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]",
+		  "#endif",
+		  "#endif"
+		],
+		"description": "Write all the deprecation attributes for a manual binding."
+	},
+
+	"Write all the availability attributes for a manual binding.": {
+		"prefix": "manual_avaliability",
+		"body": [
+		  "#if !NET",
+		  "\t\t[iOS ($1,$2), TV ($3,$4), MacCatalyst ($5,$6), Mac ($7,$8), Watch ($9,$10)]",
+		  "#else",
+		  "\t\t[SupportedOSPlatform (\"ios$1.$2\")]",
+		  "\t\t[SupportedOSPlatform (\"tvos$3.$4\")]",
+		  "\t\t[SupportedOSPlatform (\"maccatalyst$5.$6\")]",
+		  "\t\t[SupportedOSPlatform (\"macos$7.$8\")]",
+		  "#endif"
+		],
+		"description": "Write all the availability attributes for a manual binding."
+	},
+
+	"Add a native ref type declaration": {
+		"prefix": "native_reference",
+		"body": [
+		  "using $1Ref = System.IntPtr;"
+		],
+		"description": "Add a native ref type declaration"
+	},
+
+	"Import needed dlls for versioning.": {
+		"prefix": "netcore_versioning",
+		"body": [
+		  "using System.Runtime.Versioning;"
+		],
+		"description": "Import needed dlls for versioning."
+	},
+
+	"Availability attribute for bindings.": {
+		"prefix": "availability_attr",
+		"body": [
+			"${1|Mac,iOS,TV,Watch,MacCatalyst|} ($2,$3)"
+		],
+		"description": "Availability attribute for manual bindings."
+	},
+
+	"All availability attributes.": {
+		"prefix": "all_attr",
+		"body": [
+		  "[iOS ($1,$2), TV ($3,$4), MacCatalyst ($5,$6), Mac ($7,$8), Watch ($9,$10)"
+		],
+		"description": "All availability attributes."
+	},
+	
+	"All mobile availability attributes.": {
+		"prefix": "mobile_attr",
+		"body": [
+		  "[iOS ($1,$2), TV ($3,$4), MacCatalyst ($5,$6), Watch ($9,$10)]"
+		],
+		"description": "All mobile availability attributes."
+	},
+
+	"Write BindAs attr.": {
+		"prefix": "bindas_attr",
+		"body": [
+			"[BindAs (typeof ($1))]"
+		],
+		"description": "Write BindAs attr."
+	},
+	"Write a deprecated attribute with NO message.": {
+		"prefix": "deprecated_attr",
+		"body": [
+			"[Deprecated (PlatformName.${1|MacOSX,iOS,TvOS,WatchOS,MacCatalyst|}, $2, $3)]"
+		],
+		"description": "Write a deprecated attribute with NO message."
+	},
+
+	"Write a deprecated attribute with a message.": {
+		"prefix": "deprecated_attr_msg",
+		"body": [
+			"[Deprecated (PlatformName.${1|MacOSX,iOS,TvOS,WatchOS,MacCatalyst|}, $2, $3, message: \"$4\")]"
+		],
+		"description": "Write a deprecated attribute with a message."
+	}
+}

@@ -1,4 +1,4 @@
-## new Apple abstract member (breaking change) fixed in XAMCORE_4_0
+## new Apple abstract member (breaking change) fixed in .NET
 !incorrect-protocol-member! MTLRenderCommandEncoder::setDepthClipMode: is REQUIRED and should be abstract
 
 # fixed in XAMCORE_3_0 - API break
@@ -11,7 +11,7 @@
 !incorrect-protocol-member! MTLRenderCommandEncoder::setStencilFrontReferenceValue:backReferenceValue: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLTexture::newTextureViewWithPixelFormat:textureType:levels:slices: is REQUIRED and should be abstract
 
-# fixed in XAMCORE_4_0 - API Break
+# fixed in .NET - API Break
 !incorrect-protocol-member! MTLBlitCommandEncoder::updateFence: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLBlitCommandEncoder::waitForFence: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLCommandBuffer::GPUEndTime is REQUIRED and should be abstract
@@ -167,3 +167,34 @@
 !incorrect-protocol-member! MTLDevice::supports32BitFloatFiltering is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supports32BitMSAA is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLDevice::supportsQueryTextureLOD is REQUIRED and should be abstract
+
+!incorrect-protocol-member! MTLRenderCommandEncoder::setFragmentAccelerationStructure:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setFragmentIntersectionFunctionTable:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setFragmentIntersectionFunctionTables:withBufferRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setFragmentVisibleFunctionTable:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setFragmentVisibleFunctionTables:withBufferRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileAccelerationStructure:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileIntersectionFunctionTable:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileIntersectionFunctionTables:withBufferRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexAccelerationStructure:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexIntersectionFunctionTable:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexIntersectionFunctionTables:withBufferRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexVisibleFunctionTable:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setVertexVisibleFunctionTables:withBufferRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::functionHandleWithFunction:stage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::newIntersectionFunctionTableWithDescriptor:stage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::newRenderPipelineStateWithAdditionalBinaryFunctions:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderPipelineState::newVisibleFunctionTableWithDescriptor:stage: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLAccelerationStructureCommandEncoder::writeCompactedAccelerationStructureSize:toBuffer:offset:sizeDataType: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBinaryArchive::addFunctionWithDescriptor:library:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newLibraryWithStitchedDescriptor:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newLibraryWithStitchedDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsFunctionPointersFromRender is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsPrimitiveMotionBlur is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsRaytracingFromRender is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsRenderDynamicLibraries is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileVisibleFunctionTable:atBufferIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::setTileVisibleFunctionTables:withBufferRange: is REQUIRED and should be abstract
+
+# MTLFunctionStitchingAttributeAlwaysInline is not documented and has no exposure
+!missing-type! MTLFunctionStitchingAttributeAlwaysInline not bound

@@ -73,6 +73,7 @@ enum XamarinLookupTypes : int {
 	XamarinLookupTypes_Foundation_NSString,
 	XamarinLookupTypes_Foundation_NSValue,
 	XamarinLookupTypes_ObjCRuntime_INativeObject,
+	XamarinLookupTypes_ObjCRuntime_NativeHandle,
 };
 
 // Keep in sync with Runtime.ExceptionType in Runtime.CoreCLR.cs
@@ -81,6 +82,19 @@ enum XamarinExceptionTypes : int {
 	XamarinExceptionTypes_System_InvalidCastException,
 	XamarinExceptionTypes_System_EntryPointNotFoundException,
 	XamarinExceptionTypes_System_OutOfMemoryException,
+};
+
+// Keep in sync with AssemblyBuildTarget in AssemblyBuildTarget.cs
+enum XamarinNativeLinkMode : int {
+	XamarinNativeLinkModeStaticObject,
+	XamarinNativeLinkModeDynamicLibrary,
+	XamarinNativeLinkModeFramework,
+};
+
+enum XamarinTriState : int {
+	XamarinTriStateNone,
+	XamarinTriStateEnabled,
+	XamarinTriStateDisabled,
 };
 
 extern bool mono_use_llvm; // this is defined inside mono
@@ -109,6 +123,8 @@ extern enum MarshalManagedExceptionMode xamarin_marshal_managed_exception_mode;
 extern enum XamarinLaunchMode xamarin_launch_mode;
 extern bool xamarin_supports_dynamic_registration;
 extern const char *xamarin_runtime_configuration_name;
+extern enum XamarinNativeLinkMode xamarin_libmono_native_link_mode;
+extern const char** xamarin_runtime_libraries;
 
 typedef void (*xamarin_setup_callback) ();
 typedef int (*xamarin_extension_main_callback) (int argc, char** argv);

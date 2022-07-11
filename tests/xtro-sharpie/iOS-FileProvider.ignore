@@ -1,5 +1,2 @@
 ## this was _demoted_ to `@optional` when the property was deprecated in iOS 14 SDK
 !incorrect-protocol-member! NSFileProviderItem::typeIdentifier is OPTIONAL and should NOT be abstract
-
-## XAMCORE_4_0 -> not constant - macOS is different (and future updates might change the current value too)
-!missing-enum-value! NSFileProviderItemCapabilities native value NSFileProviderItemCapabilitiesAllowsAll = 63 not bound

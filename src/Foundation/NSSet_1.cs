@@ -27,10 +27,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSSet", SkipRegistration = true)]
 	public sealed class NSSet<TKey> : NSSet, IEnumerable<TKey>
 		where TKey : class, INativeObject
@@ -44,7 +55,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSSet (IntPtr handle)
+		internal NSSet (NativeHandle handle)
 			: base (handle)
 		{
 		}

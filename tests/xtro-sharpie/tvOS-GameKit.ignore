@@ -1,11 +1,5 @@
-## XAMCORE_4_0 - not exposed in any API (and now excluded in Xcode11)
+## .NET - not exposed in any API (and now excluded in Xcode11)
 !unknown-native-enum! GKPeerPickerConnectionType bound
-
-# NS_DEPRECATED_IOS(7_0, 8_0, "This is never invoked and its implementation does nothing, pass GKPlayers to challengeComposeControllerWithMessage:players: instead") /*rb= GameKit.unavailableForTVOS*/;
-# as a sideeffect these macros include tvOS, however by the time tvOS 9.0 was released this
-# API was already deprecated
-!missing-selector! GKAchievement::challengeComposeControllerWithPlayers:message:completionHandler: not bound
-!missing-selector! GKScore::challengeComposeControllerWithPlayers:message:completionHandler: not bound
 
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound

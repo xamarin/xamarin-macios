@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -44,6 +44,9 @@ namespace Xamarin.MacDev.Tasks
 
 		public string PackagingExtraArgs { get ; set; }
 
+		// both input and output
+		[Output]
+		public string PkgPackagePath { get; set; }
 		#endregion
 
 		string GetProjectVersion ()
@@ -92,7 +95,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			args.Add ("--component");
-			args.AddQuoted (Path.Combine (OutputDirectory, Path.GetFileName (AppBundleDir)));
+			args.AddQuoted (Path.GetFullPath (AppBundleDir));
 			args.Add ("/Applications");
 
 			if (EnablePackageSigning) {
@@ -109,9 +112,16 @@ namespace Xamarin.MacDev.Tasks
 				}
 			}
 
-			string projectVersion = GetProjectVersion ();
-			string target = string.Format ("{0}{1}.pkg", Name, String.IsNullOrEmpty (projectVersion) ? "" : "-" + projectVersion);
-			args.AddQuoted (Path.Combine (OutputDirectory, target));
+			if (string.IsNullOrEmpty (PkgPackagePath)) {
+				string projectVersion = GetProjectVersion ();
+				string target = string.Format ("{0}{1}.pkg", Name, String.IsNullOrEmpty (projectVersion) ? "" : "-" + projectVersion);
+				PkgPackagePath = Path.Combine (OutputDirectory, target);
+			}
+			PkgPackagePath = Path.GetFullPath (PkgPackagePath);
+			args.AddQuoted (PkgPackagePath);
+
+			Directory.CreateDirectory (Path.GetDirectoryName (PkgPackagePath));
+
 			return args.ToString ();
 		}
 
@@ -174,4 +184,3 @@ namespace Xamarin.MacDev.Tasks
 		}
 	}
 }
-

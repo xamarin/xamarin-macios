@@ -16,6 +16,9 @@ namespace GeneratorTests
 	[Parallelizable (ParallelScope.All)]
 	public class BGenTests
 	{
+		// Removing the following variable might make running the unit tests in VSMac fail.
+		static Type variable_to_keep_reference_to_system_runtime_compilerservices_unsafe_assembly = typeof (System.Runtime.CompilerServices.Unsafe);
+
 		[Test]
 #if !NET
 		[TestCase (Profile.macOSFull)]
@@ -204,8 +207,13 @@ namespace GeneratorTests
 			bgen.AssertExecute ("build");
 			bgen.AssertNoWarnings ();
 
+#if NET
+			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_NativeHandle_objc_msgSend_exception", "MarshalInProperty.Shared getter");
+			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_NativeHandle_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
+#else
 			bgen.AssertApiCallsMethod ("Test", "MarshalInProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalInProperty.Shared getter");
 			bgen.AssertApiCallsMethod ("Test", "MarshalOnProperty", "get_Shared", "xamarin_IntPtr_objc_msgSend_exception", "MarshalOnProperty.Shared getter");
+#endif
 		}
 
 		[Test]
@@ -230,7 +238,13 @@ namespace GeneratorTests
 			const string attrib = "IntroducedAttribute";
 #endif
 			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == attrib));
-			Assert.AreEqual (10, preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
+			Assert.AreEqual (
+#if NET
+				36, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
+#else
+				10,
+#endif
+				 preserves, "Introduced attribute count"); // If you modified code that generates IntroducedAttributes please update the attribute count
 		}
 
 		[Test]
@@ -571,7 +585,11 @@ namespace GeneratorTests
 		public void GHIssue3869 () => BuildFile (Profile.iOS, "ghissue3869.cs");
 
 		[Test]
+#if NET
+		[TestCase ("issue3875.cs", "api0__Issue3875_AProtocol")]
+#else
 		[TestCase ("issue3875.cs", "AProtocol")]
+#endif
 		[TestCase ("issue3875B.cs", "BProtocol")]
 		[TestCase ("issue3875C.cs", "api0__Issue3875_AProtocol")]
 		public void Issue3875 (string file, string modelName)
@@ -631,6 +649,17 @@ namespace GeneratorTests
 		public void StrongDictsNativeEnums () => BuildFile (Profile.iOS, "strong-dict-native-enum.cs");
 
 		[Test]
+		public void IgnoreUnavailableProtocol ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/ignore-unavailable-protocol.cs");
+			var myClass = bgen.ApiAssembly.MainModule.GetType ("NS", "MyClass");
+			var myProtocol = bgen.ApiAssembly.MainModule.GetType ("NS", "IMyProtocol");
+			var myClassInterfaces = myClass.Interfaces.Select (v => v.InterfaceType.Name).ToArray ();
+			Assert.That (myClassInterfaces, Does.Not.Contain ("IMyProtocol"), "IMyProtocol");
+			Assert.IsNull (myProtocol, "MyProtocol null");
+		}
+
+		[Test]
 		public void VSTS970507 ()
 		{
 			BuildFile (Profile.iOS, "tests/vsts-970507.cs");
@@ -644,6 +673,236 @@ namespace GeneratorTests
 
 		[Test]
 		public void GHIssue9065_Sealed () => BuildFile (Profile.iOS, nowarnings: true, "ghissue9065.cs");
+
+		// looking for [BindingImpl (BindingImplOptions.Optimizable)]
+		bool IsOptimizable (MethodDefinition method)
+		{
+			const int Optimizable = 0x2; // BindingImplOptions flag
+
+			if (!method.HasCustomAttributes)
+				return false;
+
+			foreach (var ca in method.CustomAttributes) {
+				if (ca.AttributeType.Name != "BindingImplAttribute")
+					continue;
+				foreach (var a in ca.ConstructorArguments)
+					return (((int) a.Value & Optimizable) == Optimizable);
+			}
+			return false;
+		}
+
+		[Test]
+		public void DisposeAttributeOptimizable ()
+		{
+			var profile = Profile.iOS;
+			var bgen = BuildFile (profile, "tests/dispose-attribute.cs");
+
+			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
+			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+#if NET
+			resolver.AddSearchDirectory (Configuration.GetRefDirectory (profile.AsPlatform ()));
+#else
+			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+#endif
+
+			// [Dispose] is, by default, not optimizable
+			var with_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDispose").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (with_dispose, "WithDispose");
+			Assert.That (IsOptimizable (with_dispose), Is.False, "WithDispose/Optimizable");
+
+			// [Dispose] can opt-in being optimizable
+			var with_dispose_optin = bgen.ApiAssembly.MainModule.GetType ("NS", "WithDisposeOptInOptimizable").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (with_dispose_optin, "WithDisposeOptInOptimizable");
+			Assert.That (IsOptimizable (with_dispose_optin), Is.True, "WithDisposeOptInOptimizable/Optimizable");
+
+			// Without a [Dispose] attribute the generated method is optimizable
+			var without_dispose = bgen.ApiAssembly.MainModule.GetType ("NS", "WithoutDispose").Methods.First ((v) => v.Name == "Dispose");
+			Assert.NotNull (without_dispose, "WitoutDispose");
+			Assert.That (IsOptimizable (without_dispose), Is.True, "WitoutDispose/Optimizable");
+		}
+
+		[Test]
+		public void SnippetAttributesOptimizable ()
+		{
+			var profile = Profile.iOS;
+			var bgen = BuildFile (profile, "tests/snippet-attributes.cs");
+
+			// processing custom attributes (like its properties) will call Resolve so we must be able to find the platform assembly to run this test
+			var resolver = bgen.ApiAssembly.MainModule.AssemblyResolver as BaseAssemblyResolver;
+#if NET
+			resolver.AddSearchDirectory (Configuration.GetRefDirectory (profile.AsPlatform ()));
+#else
+			resolver.AddSearchDirectory (Path.Combine (Configuration.SdkRootXI, "lib/mono/Xamarin.iOS/"));
+#endif
+
+			// [SnippetAttribute] subclasses are, by default, not optimizable
+			var not_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "NotOptimizable");
+			Assert.NotNull (not_opt, "NotOptimizable");
+			var pre_not_opt = not_opt.Methods.First ((v) => v.Name == "Pre");
+			Assert.That (IsOptimizable (pre_not_opt), Is.False, "NotOptimizable/Pre");
+			var prologue_not_opt = not_opt.Methods.First ((v) => v.Name == "Prologue");
+			Assert.That (IsOptimizable (prologue_not_opt), Is.False, "NotOptimizable/Prologue");
+			var post_not_opt = not_opt.Methods.First ((v) => v.Name == "Post");
+			Assert.That (IsOptimizable (post_not_opt), Is.False, "NotOptimizable/Post");
+
+			// [SnippetAttribute] subclasses can opt-in being optimizable
+			var optin_opt = bgen.ApiAssembly.MainModule.GetType ("NS", "OptInOptimizable");
+			Assert.NotNull (optin_opt, "OptInOptimizable");
+			var pre_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Pre");
+			Assert.That (IsOptimizable (pre_optin_opt), Is.True, "OptInOptimizable/Pre");
+			var prologue_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Prologue");
+			Assert.That (IsOptimizable (prologue_optin_opt), Is.True, "OptInOptimizable/Prologue");
+			var post_optin_opt = optin_opt.Methods.First ((v) => v.Name == "Post");
+			Assert.That (IsOptimizable (post_optin_opt), Is.True, "OptInOptimizable/Post");
+
+			// Without a [SnippetAttribute] subclass attribute the generated method is optimizable
+			var nothing = bgen.ApiAssembly.MainModule.GetType ("NS", "NoSnippet").Methods.First ((v) => v.Name == "Nothing");
+			Assert.NotNull (nothing, "NoSnippet");
+			Assert.That (IsOptimizable (nothing), Is.True, "Nothing/Optimizable");
+		}
+
+		[Test]
+		public void NativeEnum ()
+		{
+			var bgen = new BGenTool ();
+			bgen.Profile = Profile.iOS;
+			bgen.ProcessEnums = true;
+			bgen.Defines = BGenTool.GetDefaultDefines (bgen.Profile);
+			bgen.Sources = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum-extensions.cs") }.ToList ();
+			bgen.ApiDefinitions = new string [] { Path.Combine (Configuration.SourceRoot, "tests", "generator", "tests", "nativeenum.cs") }.ToList ();
+			bgen.CreateTemporaryBinding ();
+			bgen.AssertExecute ("build");
+		}
+
+		[Test]
+		public void DelegateWithINativeObjectReturnType ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/delegate-with-inativeobject-return-type.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("ObjCRuntime", "Trampolines").NestedTypes.First (v => v.Name == "DMyHandler");
+			Assert.NotNull (type, "DMyHandler");
+			var method = type.Methods.First (v => v.Name == "Invoke");
+#if NET
+			Assert.AreEqual ("ObjCRuntime.NativeHandle", method.ReturnType.FullName, "Return type");
+#else
+			Assert.AreEqual ("System.IntPtr", method.ReturnType.FullName, "Return type");
+#endif
+		}
+
+		[Test]
+		public void ProtocolBindProperty ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/protocol-bind-property.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyProtocol_Extensions");
+			Assert.NotNull (type, "MyProtocol_Extensions");
+
+			var method = type.Methods.First (v => v.Name == "GetOptionalProperty");
+			var ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("isOptionalProperty", (string) ldstr.Operand, "isOptionalProperty");
+
+
+			method = type.Methods.First (v => v.Name == "SetOptionalProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("setOptionalProperty:", (string) ldstr.Operand, "setOptionalProperty");
+
+			type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyProtocolWrapper");
+			Assert.NotNull (type, "MyProtocolWrapper");
+
+			method = type.Methods.First (v => v.Name == "get_AbstractProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("isAbstractProperty", (string) ldstr.Operand, "isAbstractProperty");
+
+			method = type.Methods.First (v => v.Name == "set_AbstractProperty");
+			ldstr = method.Body.Instructions.Single (v => v.OpCode == OpCodes.Ldstr);
+			Assert.AreEqual ("setAbstractProperty:", (string) ldstr.Operand, "setAbstractProperty");
+		}
+
+		[Test]
+		public void AbstractTypeTest ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/abstract-type.cs");
+			bgen.AssertExecute ("build");
+
+			// Assert that the return type from the delegate is IntPtr
+			var type = bgen.ApiAssembly.MainModule.GetType ("NS", "MyObject");
+			Assert.NotNull (type, "MyObject");
+#if NET
+			Assert.IsFalse (type.IsAbstract, "IsAbstract");
+#else
+			Assert.IsTrue (type.IsAbstract, "IsAbstract");
+#endif
+
+			var method = type.Methods.First (v => v.Name == ".ctor" && !v.HasParameters && !v.IsStatic);
+#if NET
+			Assert.IsTrue (method.IsFamily, "IsProtected ctor");
+#else
+			Assert.IsFalse (method.IsPublic, "IsPublic ctor");
+#endif
+
+			method = type.Methods.First (v => v.Name == "AbstractMember" && !v.HasParameters && !v.IsStatic);
+			var throwInstruction = method.Body?.Instructions?.FirstOrDefault (v => v.OpCode == OpCodes.Throw);
+			Assert.IsTrue (method.IsPublic, "IsPublic ctor");
+			Assert.IsTrue (method.IsVirtual, "IsVirtual");
+#if NET
+			Assert.IsFalse (method.IsAbstract, "IsAbstract");
+			Assert.IsNotNull (throwInstruction, "Throw");
+#else
+			Assert.IsTrue (method.IsAbstract, "IsAbstract");
+			Assert.IsNull (throwInstruction, "Throw");
+#endif
+		}
+
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void NativeIntDelegates ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/nint-delegates.cs");
+
+			Func<string, bool> verifyDelegate = (typename) => {
+				// Assert that the return type from the delegate is IntPtr
+				var type = bgen.ApiAssembly.MainModule.GetType ("NS", typename);
+				Assert.NotNull (type, typename);
+				var method = type.Methods.First (m => m.Name == "Invoke");
+				Assert.IsNotNull (method.MethodReturnType.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Name == "NativeIntegerAttribute"), "Return type for delegate " + typename);
+				foreach (var p in method.Parameters) {
+					Assert.IsNotNull (p.CustomAttributes.FirstOrDefault (attr => attr.AttributeType.Name == "NativeIntegerAttribute"), $"Parameter {p.Name}'s type for delegate " + typename);
+				}
+
+				return false;
+			};
+
+			verifyDelegate ("D1");
+			verifyDelegate ("D2");
+			verifyDelegate ("D3");
+			verifyDelegate ("NSTableViewColumnRowPredicate");
+		}
+
+		[Test]
+#if !NET
+		[Ignore ("This only applies to .NET")]
+#endif
+		public void CSharp10Syntax ()
+		{
+			BuildFile (Profile.iOS, "tests/csharp10syntax.cs");
+		}
+
+		[Test]
+		public void NFloatType ()
+		{
+			var bgen = BuildFile (Profile.iOS, "tests/nfloat.cs");
+
+			var messaging = bgen.ApiAssembly.MainModule.Types.FirstOrDefault (v => v.Name == "Messaging");
+			Assert.IsNotNull (messaging, "Messaging");
+			var pinvoke = messaging.Methods.FirstOrDefault (v => v.Name == "xamarin_nfloat_objc_msgSend_exception");
+			Assert.IsNotNull (pinvoke, "PInvoke");
+		}
 
 		BGenTool BuildFile (Profile profile, params string [] filenames)
 		{

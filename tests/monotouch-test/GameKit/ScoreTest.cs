@@ -21,6 +21,7 @@ using UIKit;
 #endif
 using GameKit;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GameKit {
 
@@ -44,11 +45,11 @@ namespace MonoTouchFixtures.GameKit {
 
 				// this is a new API in iOS8 (it was private before that) and returned an empty instance like:
 				// "<<GKPlayer: 0x81254e60>(playerID:(null) alias:(null) name:(null) status:(null))>"
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false)) {
 					Assert.Null (s.Player, "Player");
 				}
 
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false)) {
 					Assert.That (s.LeaderboardIdentifier, Is.EqualTo ("category-or-identifier"), "LeaderboardIdentifier");
 				}
 

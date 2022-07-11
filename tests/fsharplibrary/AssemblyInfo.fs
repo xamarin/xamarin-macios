@@ -1,4 +1,4 @@
-﻿namespace fsharplibrary
+namespace fsharplibrary
 open System.Reflection
 open System.Runtime.CompilerServices
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Threading;
 
 using CoreFoundation;
@@ -18,11 +19,19 @@ using Foundation;
 using AppKit;
 using UIColor = AppKit.NSColor;
 using PlatformException = ObjCRuntime.RuntimeException;
+#if NET
+using NativeException = ObjCRuntime.ObjCException;
+#else
 using NativeException = Foundation.ObjCException;
+#endif
 #else
 using UIKit;
 using PlatformException = ObjCRuntime.RuntimeException;
+#if NET
+using NativeException = ObjCRuntime.ObjCException;
+#else
 using NativeException = Foundation.MonoTouchException;
+#endif
 #endif
 using ObjCRuntime;
 #if !__TVOS__
@@ -36,8 +45,12 @@ using CoreLocation;
 #if !__TVOS__
 using Contacts;
 #endif
+#if HAS_COREMIDI
+using CoreMidi;
+#endif
+#if !(__TVOS__ && NET)
 using WebKit;
-using OpenTK;
+#endif
 using NUnit.Framework;
 using Bindings.Test;
 
@@ -47,6 +60,11 @@ using PointF = CoreGraphics.CGPoint;
 using CategoryAttribute = ObjCRuntime.CategoryAttribute;
 
 using XamarinTests.ObjCRuntime;
+using Xamarin.Utils;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -56,6 +74,36 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public static Registrars CurrentRegistrar {
 			get {
 				return RegistrarSharedTest.CurrentRegistrar;
+			}
+		}
+
+		[Test]
+		public void NSRangeOutParameter ()
+		{
+			using var obj = new NSRangeOutParameterClass ();
+			var a = new _LongNSRange (-1, -2);
+			var c = new _LongNSRange (-5, -6);
+			Messaging.void_objc_msgSend_NSRange_out_NSRange_ref_NSRange (obj.Handle, Selector.GetHandle ("passRange:getRange:refRange:"), a, out var b, ref c);
+			Assert.AreEqual (a.Location, (long) (-1), "post a Location");
+			Assert.AreEqual (a.Length, (long) (-2), "post a Length");
+			Assert.AreEqual (b.Location, (long) 3, "post b Location");
+			Assert.AreEqual (b.Length, (long) 4, "post b Length");
+			Assert.AreEqual (c.Location, (long) 5, "post c Location");
+			Assert.AreEqual (c.Length, (long) 6, "post c Length");
+		}
+
+		class NSRangeOutParameterClass : NSObject {
+			[Export ("passRange:getRange:refRange:")]
+			public void DoIt (_LongNSRange a, out _LongNSRange b, ref _LongNSRange c)
+			{
+				Assert.AreEqual (a.Location, (long) (-1), "a Location");
+				Assert.AreEqual (a.Length, (long) (-2), "a Length");
+				Assert.AreEqual (c.Location, (long) (-5), "c Location");
+				Assert.AreEqual (c.Length, (long) (-6), "c Length");
+
+				a = new _LongNSRange (1, 2);
+				b = new _LongNSRange (3, 4);
+				c = new _LongNSRange (5, 6);
 			}
 		}
 
@@ -145,7 +193,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		void CallProperty (IntPtr receiver, string selector, ref int called_var, string id, bool expectFailure = false)
 		{
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			if (Runtime.Arch == Arch.DEVICE && expectFailure) {
 				Console.WriteLine ("Skipping '{0}', it's expected to throw a 'Selector not found exception', but on device it seems to crash instead", selector);
 				return;
@@ -164,39 +212,42 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestINativeObject ()
 		{
-			IntPtr receiver = Class.GetHandle ("RegistrarTestClass");
-			IntPtr ptr;
+			var receiver = Class.GetHandle ("RegistrarTestClass");
+			NativeHandle ptr;
 			CGPath path;
 			
 			if ((CurrentRegistrar & Registrars.AllStatic) == 0)
 				Assert.Ignore ("This test only passes with the static registrars.");
 			
-			Assert.False (Messaging.bool_objc_msgSend_IntPtr (receiver, new Selector ("INativeObject1:").Handle, IntPtr.Zero), "#a1");
+			Assert.False (Messaging.bool_objc_msgSend_IntPtr (receiver, new Selector ("INativeObject1:").Handle, NativeHandle.Zero), "#a1");
 			Assert.True (Messaging.bool_objc_msgSend_IntPtr (receiver, new Selector ("INativeObject1:").Handle, new CGPath ().Handle), "#a2");
 			
-			Assert.That (Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, false), Is.EqualTo (IntPtr.Zero), "#b1");
-			Assert.That (Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, true), Is.Not.EqualTo (IntPtr.Zero), "#b2");
+			Assert.That ((NativeHandle) Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, false), Is.EqualTo (NativeHandle.Zero), "#b1");
+			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, true);
+			Assert.That ((NativeHandle) ptr, Is.Not.EqualTo (NativeHandle.Zero), "#b2");
+			CGPathRelease (ptr);
 			
 			void_objc_msgSend_out_IntPtr_bool (receiver, new Selector ("INativeObject3:create:").Handle, out ptr, true);
-			Assert.That (ptr, Is.Not.EqualTo (IntPtr.Zero), "#c1");
+			Assert.That (ptr, Is.Not.EqualTo (NativeHandle.Zero), "#c1");
 			void_objc_msgSend_out_IntPtr_bool (receiver, new Selector ("INativeObject3:create:").Handle, out ptr, false);
-			Assert.That (ptr, Is.EqualTo (IntPtr.Zero), "#c2");
+			Assert.That (ptr, Is.EqualTo (NativeHandle.Zero), "#c2");
 			
 			path = null;
-			ptr = IntPtr.Zero;
+			ptr = NativeHandle.Zero;
 			Assert.False (bool_objc_msgSend_ref_intptr (receiver, new Selector ("INativeObject4:").Handle, ref ptr), "#d1");
-			Assert.That (ptr, Is.EqualTo (IntPtr.Zero), "#d2");
+			Assert.That (ptr, Is.EqualTo (NativeHandle.Zero), "#d2");
 			path = new CGPath ();
 			ptr = path.Handle;
 			Assert.True (bool_objc_msgSend_ref_intptr (receiver, new Selector ("INativeObject4:").Handle, ref ptr), "#d3");
 			Assert.That (ptr, Is.EqualTo (path.Handle), "#d4");
 			
 			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject5:").Handle, false);
-			Assert.That (ptr, Is.EqualTo (IntPtr.Zero), "#e1");
+			Assert.That (ptr, Is.EqualTo (NativeHandle.Zero), "#e1");
 			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject5:").Handle, true);
-			Assert.That (ptr, Is.Not.EqualTo (IntPtr.Zero), "#e2");
-			path = new CGPath (ptr);
+			Assert.That (ptr, Is.Not.EqualTo (NativeHandle.Zero), "#e2");
+			path = Runtime.GetINativeObject<CGPath> (ptr, false);
 			path.AddArc (1, 2, 3, 4, 5, false); // this should crash if we get back a bogus ptr
+			CGPathRelease (ptr);
 		}
 
 		[Test]
@@ -219,9 +270,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			var obj = new RegistrarTestClass ();
 			var sel = new Selector ("testOutNSString:");
-			IntPtr ptr;
 
-			void_objc_msgSend_out_IntPtr (obj.Handle, sel.Handle, out ptr);
+			void_objc_msgSend_out_IntPtr (obj.Handle, sel.Handle, out var ptr);
 
 			Assert.AreEqual ("Santa is coming", NSString.FromHandle (ptr), "#santa");
 		}
@@ -244,7 +294,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			var obj = new RegistrarTestClass ();
 			var sel = new Selector ("testOutParametersWithStructs:in:out:");
 			NSError value = new NSError ();
-			IntPtr ptr;
+			NativeHandle ptr;
 			SizeF size = new CGSize (1, 2);
 
 			void_objc_msgSend_SizeF_IntPtr_out_IntPtr (obj.Handle, sel.Handle, size, value.Handle, out ptr);
@@ -423,6 +473,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal static extern IntPtr object_getClass (IntPtr obj);
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static void CGPathRelease (/* CGPathRef */ IntPtr path);
 
 		[Test]
 		public void TestNonVirtualProperty ()
@@ -608,18 +661,23 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestNativeEnum ()
 		{
+#if NET
+			var nativeEnumValue = NSWritingDirection.RightToLeft;
+#else
+			var nativeEnumValue = UITextWritingDirection.RightToLeft;
+#endif
 			//public virtual void TestNativeEnum1 (UITextWritingDirection twd)
 			using (var obj = new RegistrarTestClass ()) {
 				if (IntPtr.Size == 4) {
-					Messaging.void_objc_msgSend_int (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (int) UITextWritingDirection.RightToLeft);
+					Messaging.void_objc_msgSend_int (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (int) nativeEnumValue);
 				} else {
-					Messaging.void_objc_msgSend_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (long)UITextWritingDirection.RightToLeft);
+					Messaging.void_objc_msgSend_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (long) nativeEnumValue);
 				}
 
 				if (IntPtr.Size == 4) {
-					Messaging.void_objc_msgSend_int_int_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (int) UITextWritingDirection.RightToLeft, 31415, 3141592);
+					Messaging.void_objc_msgSend_int_int_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (int) nativeEnumValue, 31415, 3141592);
 				} else {
-					Messaging.void_objc_msgSend_long_int_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (long) UITextWritingDirection.RightToLeft, 31415, 3141592);
+					Messaging.void_objc_msgSend_long_int_long (obj.Handle, Selector.GetHandle ("testNativeEnum1:"), (long) nativeEnumValue, 31415, 3141592);
 				}
 
 				if (IntPtr.Size == 4) {
@@ -690,19 +748,19 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		const string LIBOBJC_DYLIB = "/usr/lib/libobjc.dylib";
 		
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static void void_objc_msgSend_out_IntPtr (IntPtr receiver, IntPtr selector, out IntPtr value);
+		extern static void void_objc_msgSend_out_IntPtr (IntPtr receiver, IntPtr selector, out NativeHandle value);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static void void_objc_msgSend_ref_IntPtr (IntPtr receiver, IntPtr selector, ref IntPtr value);
+		extern static void void_objc_msgSend_ref_IntPtr (IntPtr receiver, IntPtr selector, ref NativeHandle value);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static void void_objc_msgSend_out_IntPtr_bool (IntPtr receiver, IntPtr selector, out IntPtr path, bool create);
+		extern static void void_objc_msgSend_out_IntPtr_bool (IntPtr receiver, IntPtr selector, out NativeHandle path, bool create);
 		
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static bool bool_objc_msgSend_ref_intptr (IntPtr receiver, IntPtr selector, ref IntPtr path);
+		extern static bool bool_objc_msgSend_ref_intptr (IntPtr receiver, IntPtr selector, ref NativeHandle path);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
-		extern static void void_objc_msgSend_SizeF_IntPtr_out_IntPtr (IntPtr receiver, IntPtr selector, SizeF size, IntPtr input, out IntPtr value);
+		extern static void void_objc_msgSend_SizeF_IntPtr_out_IntPtr (IntPtr receiver, IntPtr selector, SizeF size, IntPtr input, out NativeHandle value);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		extern static void void_objc_msgSend_ref_BlockLiteral (IntPtr receiver, IntPtr selector, ref BlockLiteral block);
@@ -852,6 +910,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 			
 			[Export ("INativeObject2:")]
+			[return: ReleaseAttribute] // can't return an INativeObject without retaining it (we can autorelease NSObjects, but that doesn't work for INativeObjects)
 			static CGPath INativeObject2 (bool create)
 			{
 				return create ? new CGPath () : null;
@@ -870,6 +929,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 			
 			[Export ("INativeObject5:")]
+			[return: ReleaseAttribute] // can't return an INativeObject without retaining it (we can autorelease NSObjects, but that doesn't work for INativeObjects)
 			static CGPath INativeObject5 (bool create)
 			{
 				return create ? new CGPath () : null;
@@ -950,10 +1010,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 #if !__WATCHOS__ && !MONOMAC
 			[Export ("testNativeEnum1:")]
+#if NET
+			public virtual void TestNativeEnum1 (NSWritingDirection twd)
+			{
+				Assert.That (Enum.GetValues (typeof (NSWritingDirection)), Contains.Item (twd), "TestNativeEnum1");
+			}
+#else
 			public virtual void TestNativeEnum1 (UITextWritingDirection twd)
 			{
 				Assert.That (Enum.GetValues (typeof (UITextWritingDirection)), Contains.Item (twd), "TestNativeEnum1");
 			}
+#endif // NET
 
 			public virtual UIPopoverArrowDirection TestNativeEnum2 {
 				[Export ("testNativeEnum2")]
@@ -967,6 +1034,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 
 
+#if NET
+			[Export ("testNativeEnum3:a:b:")]
+			public virtual void TestNativeEnum1 (NSWritingDirection twd, int a, long b)
+			{
+				Assert.That (Enum.GetValues (typeof (NSWritingDirection)), Contains.Item (twd), "TestNativeEnum3");
+				Assert.AreEqual (31415, a, "TestNativeEnum3 a");
+				Assert.AreEqual (3141592, b, "TestNativeEnum3 b");
+			}
+#else
 			[Export ("testNativeEnum3:a:b:")]
 			public virtual void TestNativeEnum1 (UITextWritingDirection twd, int a, long b)
 			{
@@ -974,6 +1050,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.AreEqual (31415, a, "TestNativeEnum3 a");
 				Assert.AreEqual (3141592, b, "TestNativeEnum3 b");
 			}
+#endif // NET
 #endif // !__WATCHOS__
 
 			[Export ("testCGPoint:out:")]
@@ -1267,33 +1344,33 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestConstrainedGenericType ()
 		{
-			IntPtr value;
+			NativeHandle value;
 
 			using (var obj = new ConstrainedGenericType<NSSet> ()) {
 				using (var view = new NSSet ()) {
 					using (var nsobj = new NSObject ()) {
 						// m1
-						Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("m1:"), IntPtr.Zero);
+						Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("m1:"), NativeHandle.Zero);
 						Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("m1:"), view.Handle);
 						ThrowsICEIfDebug (() => Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("m1:"), nsobj.Handle), "m1: ICE");
 
 						// m2
-						value = IntPtr.Zero;
+						value = NativeHandle.Zero;
 						void_objc_msgSend_out_IntPtr (obj.Handle, Selector.GetHandle ("m2:"), out value);
-						Assert.AreEqual (IntPtr.Zero, value);
+						Assert.AreEqual (NativeHandle.Zero, value);
 
 						value = view.Handle;
 						void_objc_msgSend_out_IntPtr (obj.Handle, Selector.GetHandle ("m2:"), out value);
-						Assert.AreEqual (IntPtr.Zero, value);
+						Assert.AreEqual (NativeHandle.Zero, value);
 
-						value = new IntPtr (0xdeadbeef);
+						value = (NativeHandle) new IntPtr ((unchecked ((int) 0xdeadbeef)));
 						void_objc_msgSend_out_IntPtr (obj.Handle, Selector.GetHandle ("m2:"), out value);
-						Assert.AreEqual (IntPtr.Zero, value);
+						Assert.AreEqual (NativeHandle.Zero, value);
 
 						// m3
-						value = IntPtr.Zero;
+						value = NativeHandle.Zero;
 						void_objc_msgSend_ref_IntPtr (obj.Handle, Selector.GetHandle ("m3:"), ref value);
-						Assert.AreEqual (IntPtr.Zero, value);
+						Assert.AreEqual (NativeHandle.Zero, value);
 
 						value = view.Handle;
 						void_objc_msgSend_ref_IntPtr (obj.Handle, Selector.GetHandle ("m3:"), ref value);
@@ -1303,7 +1380,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						ThrowsICEIfDebug (() => void_objc_msgSend_ref_IntPtr (obj.Handle, Selector.GetHandle ("m3:"), ref value), "m3 ICE");
 
 						// m4
-						Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("m4:"), IntPtr.Zero);
+						Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("m4:"), NativeHandle.Zero);
 						ThrowsICEIfDebug (() => Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("m4:"), nsobj.Handle), "m4 ICE", false);
 						using (var arr = NSArray.FromNSObjects (nsobj)) {
 							ThrowsICEIfDebug (() => Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("m4:"), arr.Handle), "m4 ICE 2");
@@ -1314,20 +1391,20 @@ namespace MonoTouchFixtures.ObjCRuntime {
 						}
 
 						// r1
-						Assert.AreEqual (IntPtr.Zero, Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("r1")));
+						Assert.AreEqual (NativeHandle.Zero, (NativeHandle) Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("r1")));
 
 						// r2
-						Assert.AreEqual (IntPtr.Zero, Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("r2")));
+						Assert.AreEqual (NativeHandle.Zero, (NativeHandle) Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("r2")));
 
 						// p1
-						Assert.AreEqual (IntPtr.Zero, Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("p1")));
-						Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setP1:"), IntPtr.Zero);
+						Assert.AreEqual (NativeHandle.Zero, (NativeHandle) Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("p1")));
+						Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setP1:"), NativeHandle.Zero);
 						Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setP1:"), view.Handle);
 						ThrowsICEIfDebug (() => Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setP1:"), nsobj.Handle), "setP1: ICE");
 
 						// p2
-						Assert.AreEqual (IntPtr.Zero, Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("p2")));
-						Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setP2:"), IntPtr.Zero);
+						Assert.AreEqual (NativeHandle.Zero, (NativeHandle) Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("p2")));
+						Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setP2:"), NativeHandle.Zero);
 						ThrowsICEIfDebug (() => Messaging.void_objc_msgSend_IntPtr (obj.Handle, Selector.GetHandle ("setP2:"), nsobj.Handle), "setP2: ICE", false);
 
 						using (var arr = NSArray.FromNSObjects (nsobj)) {
@@ -1348,7 +1425,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void TestCopyWithZone ()
 		{
 			using (var cc = new CopyClass ()) {
-				Assert.AreEqual (cc.Handle, Messaging.IntPtr_objc_msgSend_IntPtr (cc.Handle, Selector.GetHandle ("copyWithZone:"), IntPtr.Zero), "a");
+				Assert.AreEqual (cc.Handle, (NativeHandle) Messaging.IntPtr_objc_msgSend_IntPtr (cc.Handle, Selector.GetHandle ("copyWithZone:"), NativeHandle.Zero), "a");
 				Assert.IsFalse (cc.had_zone.Value, "had_zone");
 			}
 		}
@@ -1374,9 +1451,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.AreNotEqual (IntPtr.Zero, Runtime.GetProtocol (iProtocol), "IProtocol");
 			Assert.IsTrue (Messaging.bool_objc_msgSend_IntPtr (Class.GetHandle (typeof (MyProtocolImplementation)), Selector.GetHandle ("conformsToProtocol:"), Runtime.GetProtocol (iProtocol)), "Interface/IProtocol");
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
-	#if !NET // https://github.com/xamarin/xamarin-macios/issues/11540
 			Assert.IsTrue (Messaging.bool_objc_msgSend_IntPtr (Class.GetHandle (typeof (Test24970)), Selector.GetHandle ("conformsToProtocol:"), Protocol.GetHandle ("UIApplicationDelegate")), "UIApplicationDelegate/17669");
-	#endif
 #endif
 			// We don't support [Adopts] (yet at least).
 //			Assert.IsTrue (Messaging.bool_objc_msgSend_IntPtr (Class.GetHandle (typeof (ConformsToProtocolTestClass)), Selector.GetHandle ("conformsToProtocol:"), Runtime.GetProtocol ("NSCoding")), "Adopts/ConformsToProtocolTestClass");
@@ -1420,7 +1495,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void TestNativeObjectArray ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var i1 = new MKPointAnnotation ()) {
 				using (var i2 = new MKPointAnnotation ()) {
@@ -1708,7 +1783,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		[Register ("FakeType1")]
 		class FakeType1 : NSObject {
-			public FakeType1 (IntPtr ptr)
+			public FakeType1 (NativeHandle ptr)
 				: base (ptr)
 			{
 			}
@@ -1931,11 +2006,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			// Yet we've created these in btouch, so we need to define what they
 			// actually do (nothing at all).
 
-			Assert.AreEqual (IntPtr.Zero, Class.GetHandle ("TestProtocolRegister"));
+			Assert.AreEqual (NativeHandle.Zero, Class.GetHandle ("TestProtocolRegister"));
 
 			// However deriving from those nonsensical classes must do something
 			// (at the very least because anything else would be a breaking change).
-			Assert.AreNotEqual (IntPtr.Zero, Class.GetHandle ("DerivedTestProtocolRegister"));
+			Assert.AreNotEqual (NativeHandle.Zero, Class.GetHandle ("DerivedTestProtocolRegister"));
 		}
 
 		[Protocol]
@@ -1973,7 +2048,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		class E1 : NSObject {
-			protected E1 (IntPtr ptr) : base (ptr)
+			protected E1 (NativeHandle ptr) : base (ptr)
 			{
 			}
 
@@ -1991,7 +2066,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		class E2 : E1 {
 			public readonly int Value = 3;
 
-			protected E2 (IntPtr ptr) : base (ptr)
+			protected E2 (NativeHandle ptr) : base (ptr)
 			{
 			}
 
@@ -2008,7 +2083,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		class G1<T> : NSObject {
-			protected G1 (IntPtr ptr) : base (ptr)
+			protected G1 (NativeHandle ptr) : base (ptr)
 			{
 			}
 
@@ -2022,7 +2097,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		class G2 : G1<int> {
 			public readonly int Value = 3;
 
-			protected G2 (IntPtr ptr) : base (ptr)
+			protected G2 (NativeHandle ptr) : base (ptr)
 			{
 			}
 
@@ -2263,7 +2338,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				var targetContentOffset = new CGPoint (3, 4);
 				Messaging.void_objc_msgSend_IntPtr_CGPoint_ref_CGPoint (obj.Handle, Selector.GetHandle ("scrollViewWillEndDragging:withVelocity:targetContentOffset:"), IntPtr.Zero, velocity, ref targetContentOffset);
 				Console.WriteLine (targetContentOffset);
+#if NET
+				Assert.AreEqual ("{123, 345}", targetContentOffset.ToString (), "ref output");
+#else
 				Assert.AreEqual ("{X=123, Y=345}", targetContentOffset.ToString (), "ref output");
+#endif
 			}
 		}
 #endif // !__WATCHOS
@@ -2274,8 +2353,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			[Export ("scrollViewWillEndDragging:withVelocity:targetContentOffset:")]
 			public void WillEndDragging (UIScrollView scrollView, PointF velocity, ref PointF targetContentOffset)
 			{
+#if NET
+				Assert.AreEqual ("{1, 2}", velocity.ToString (), "velocity");
+				Assert.AreEqual ("{3, 4}", targetContentOffset.ToString (), "targetContentOffset");
+#else
 				Assert.AreEqual ("{X=1, Y=2}", velocity.ToString (), "velocity");
 				Assert.AreEqual ("{X=3, Y=4}", targetContentOffset.ToString (), "targetContentOffset");
+#endif
 				targetContentOffset = new CGPoint (123, 345);
 			}
 		}
@@ -2286,7 +2370,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void VoidPtrToINativeObjectArgument ()
 		{
 			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
-			TestRuntime.AssertSystemVersion (PlatformName.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 
 			using (var obj = new ABPeoplePickerNavigationControllerDelegateImpl ()) {
 				using (var person = new ABPerson ()) {
@@ -2298,7 +2382,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		class ABPeoplePickerNavigationControllerDelegateImpl : ABPeoplePickerNavigationControllerDelegate
 		{
-			public IntPtr personHandle;
+			public NativeHandle personHandle;
 			public override void DidSelectPerson (ABPeoplePickerNavigationController peoplePicker, ABPerson selectedPerson)
 			{
 				personHandle = selectedPerson.Handle;
@@ -2399,10 +2483,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void SelectorReturnValue ()
 		{
 			using (var obj = new Bug34440Class ()) {
-				var ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("bug34440"));
+				var ptr = (IntPtr) Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("bug34440"));
 				Assert.AreEqual (Selector.GetHandle ("bug34440"), ptr, "selector");
 				ptr = Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle ("classReturn"));
-				Assert.AreEqual (Class.GetHandle (typeof (Bug34440Class)), ptr, "class");
+				Assert.AreEqual ((IntPtr) Class.GetHandle (typeof (Bug34440Class)), (IntPtr) ptr, "class");
 			}
 		}
 
@@ -2812,8 +2896,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void RefOutTest_CFBundle ()
 		{
-			IntPtr refValue = IntPtr.Zero;
-			IntPtr outValue = IntPtr.Zero;
+			var refValue = NativeHandle.Zero;
+			var outValue = NativeHandle.Zero;
 
 			using (var obj = new RefOutParametersSubclass ()) {
 				var sel = Selector.GetHandle ("testCFBundle:a:b:");
@@ -2843,15 +2927,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "CFBundle-1DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "CFBundle-1DA-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "CFBundle-1DA-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "CFBundle-1DA-out");
 
 				// direct managed
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "CFBundle-1DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "CFBundle-1DM-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "CFBundle-1DM-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "CFBundle-1DM-out");
 
 				/// 2: verify that refValue points to something
 				action = 2;
@@ -2877,14 +2961,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj.Handle, refValue, "CFBundle-2DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "CFBundle-2DA-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "CFBundle-2DA-out");
 
 				// direct managed
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj.Handle, refValue, "CFBundle-2DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "CFBundle-2DM-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "CFBundle-2DM-out");
 
 
 				/// 3 set both parameteres to the same pointer of a CFBundle
@@ -2930,32 +3014,32 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refObj = null; // set to null
 				outObj = null; // set to null
 				obj.TestCFBundle (action << 0, ref refObj, out outObj);
-				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "CFBundle-4A-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "CFBundle-4A-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refObj.Handle, "CFBundle-4A-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outObj.Handle, "CFBundle-4A-out");
 				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "CBundle-4A-ref-distinct");
 
 				// managed
 				refObj = null; // set to null
 				outObj = null; // set to null
 				obj.TestCFBundle (action << 8, ref refObj, out outObj);
-				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "CFBundle-4M-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "CFBundle-4M-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refObj.Handle, "CFBundle-4M-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outObj.Handle, "CFBundle-4M-out");
 				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "CBundle-4M-ref-distinct");
 
 				// direct native
-				refValue = IntPtr.Zero; // set to null
-				outValue = IntPtr.Zero; // set to null
+				refValue = NativeHandle.Zero; // set to null
+				outValue = NativeHandle.Zero; // set to null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreNotEqual (IntPtr.Zero, refValue, "CFBundle-4DA-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outValue, "CFBundle-4DA-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refValue, "CFBundle-4DA-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outValue, "CFBundle-4DA-out");
 				Assert.AreNotEqual (refValue, outValue, "CBundle-4DA-ref-distinct");
 
 				// direct managed
-				refValue = IntPtr.Zero; // set to null
-				outValue = IntPtr.Zero; // set to null
+				refValue = NativeHandle.Zero; // set to null
+				outValue = NativeHandle.Zero; // set to null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreNotEqual (IntPtr.Zero, refValue, "CFBundle-4DM-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outValue, "CFBundle-4DM-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refValue, "CFBundle-4DM-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outValue, "CFBundle-4DM-out");
 				Assert.AreNotEqual (refValue, outValue, "CBundle-4DM-ref-distinct");
 			}
 		}
@@ -2963,8 +3047,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void RefOutTest_INSCoding ()
 		{
-			IntPtr refValue = IntPtr.Zero;
-			IntPtr outValue = IntPtr.Zero;
+			var refValue = NativeHandle.Zero;
+			var outValue = NativeHandle.Zero;
 
 			using (var obj = new RefOutParametersSubclass ()) {
 				var sel = Selector.GetHandle ("testINSCoding:a:b:");
@@ -2994,15 +3078,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "NSCoding-1DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSCoding-1DA-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "NSCoding-1DA-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSCoding-1DA-out");
 
 				// direct managed
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "NSCoding-1DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSCoding-1DM-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "NSCoding-1DM-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSCoding-1DM-out");
 
 				/// 2: verify that refValue points to something
 				action = 2;
@@ -3028,14 +3112,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj.Handle, refValue, "NSCoding-2DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSCoding-2DA-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSCoding-2DA-out");
 
 				// direct managed
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj.Handle, refValue, "NSCoding-2DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSCoding-2DM-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSCoding-2DM-out");
 
 
 				/// 3 set both parameteres to the same pointer of a NSCoding
@@ -3095,8 +3179,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refObj = null; // set to null
 				outObj = null; // set to null
 				obj.TestINSCoding (action << 0, ref refObj, out outObj);
-				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSCoding-4A-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSCoding-4A-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refObj.Handle, "NSCoding-4A-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outObj.Handle, "NSCoding-4A-out");
 				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSCoding-4A-ref-distinct");
 				Assert.That (refObj.GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
 				Assert.That (outObj.GetType ().FullName, Does.Contain ("CodingWrapper"), "NSCoding-4A-ref-wrapper-type");
@@ -3105,28 +3189,28 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refObj = null; // set to null
 				outObj = null; // set to null
 				obj.TestINSCoding (action << 8, ref refObj, out outObj);
-				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSCoding-4M-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSCoding-4M-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refObj.Handle, "NSCoding-4M-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outObj.Handle, "NSCoding-4M-out");
 				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSCoding-4M-ref-distinct");
 				Assert.That (refObj, Is.TypeOf<NSString> (), "NSCoding-4M-ref-wrapper-type");
 				Assert.That (outObj, Is.TypeOf<NSString> (), "NSCoding-4M-ref-wrapper-type");
 
 				// direct native
-				refValue = IntPtr.Zero; // set to null
-				outValue = IntPtr.Zero; // set to null
+				refValue = NativeHandle.Zero; // set to null
+				outValue = NativeHandle.Zero; // set to null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSCoding-4DA-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSCoding-4DA-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refValue, "NSCoding-4DA-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outValue, "NSCoding-4DA-out");
 				Assert.AreNotEqual (refValue, outValue, "NSCoding-4DA-ref-distinct");
 				Assert.That (refObj, Is.TypeOf<NSString> (), "NSCoding-4DA-ref-wrapper-type");
 				Assert.That (outObj, Is.TypeOf<NSString> (), "NSCoding-4DA-ref-wrapper-type");
 
 				// direct managed
-				refValue = IntPtr.Zero; // set to null
-				outValue = IntPtr.Zero; // set to null
+				refValue = NativeHandle.Zero; // set to null
+				outValue = NativeHandle.Zero; // set to null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSCoding-4DM-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSCoding-4DM-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refValue, "NSCoding-4DM-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outValue, "NSCoding-4DM-out");
 				Assert.AreNotEqual (refValue, outValue, "NSCoding-4DM-ref-distinct");
 				Assert.That (refObj, Is.TypeOf<NSString> (), "NSCoding-4DM-ref-wrapper-type");
 				Assert.That (outObj, Is.TypeOf<NSString> (), "NSCoding-4DM-ref-wrapper-type");
@@ -3136,8 +3220,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void RefOutTest_NSObject ()
 		{
-			IntPtr refValue = IntPtr.Zero;
-			IntPtr outValue = IntPtr.Zero;
+			var refValue = NativeHandle.Zero;
+			var outValue = NativeHandle.Zero;
 
 			using (var obj = new RefOutParametersSubclass ()) {
 				var sel = Selector.GetHandle ("testNSObject:a:b:");
@@ -3167,15 +3251,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "NSObject-1DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSObject-1DA-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "NSObject-1DA-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSObject-1DA-out");
 
 				// direct managed
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "NSObject-1DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSObject-1DM-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "NSObject-1DM-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSObject-1DM-out");
 
 				/// 2: verify that refValue points to something
 				action = 2;
@@ -3201,14 +3285,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj.Handle, refValue, "NSObject-2DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSObject-2DA-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSObject-2DA-out");
 
 				// direct managed
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj.Handle, refValue, "NSObject-2DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSObject-2DM-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSObject-2DM-out");
 
 
 				/// 3 set both parameteres to the same pointer of a NSObject
@@ -3262,8 +3346,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refObj = null; // set to null
 				outObj = null; // set to null
 				obj.TestNSObject (action << 0, ref refObj, out outObj);
-				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSObject-4A-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSObject-4A-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refObj.Handle, "NSObject-4A-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outObj.Handle, "NSObject-4A-out");
 				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSObject-4A-ref-distinct");
 				Assert.That (refObj, Is.TypeOf<NSObject> (), "NSObject-4A-ref-wrapper-type");
 				Assert.That (outObj, Is.TypeOf<NSObject> (), "NSObject-4A-ref-wrapper-type");
@@ -3272,28 +3356,28 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refObj = null; // set to null
 				outObj = null; // set to null
 				obj.TestNSObject (action << 8, ref refObj, out outObj);
-				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSObject-4M-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSObject-4M-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refObj.Handle, "NSObject-4M-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outObj.Handle, "NSObject-4M-out");
 				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSObject-4M-ref-distinct");
 				Assert.That (refObj, Is.TypeOf<NSObject> (), "NSObject-4M-ref-wrapper-type");
 				Assert.That (outObj, Is.TypeOf<NSObject> (), "NSObject-4M-ref-wrapper-type");
 
 				// direct native
-				refValue = IntPtr.Zero; // set to null
-				outValue = IntPtr.Zero; // set to null
+				refValue = NativeHandle.Zero; // set to null
+				outValue = NativeHandle.Zero; // set to null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSObject-4DA-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSObject-4DA-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refValue, "NSObject-4DA-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outValue, "NSObject-4DA-out");
 				Assert.AreNotEqual (refValue, outValue, "NSObject-4DA-ref-distinct");
 				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSObject> (), "NSObject-4DA-ref-wrapper-type");
 				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSObject> (), "NSObject-4DA-ref-wrapper-type");
 
 				// direct managed
-				refValue = IntPtr.Zero; // set to null
-				outValue = IntPtr.Zero; // set to null
+				refValue = NativeHandle.Zero; // set to null
+				outValue = NativeHandle.Zero; // set to null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSObject-4DM-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSObject-4DM-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refValue, "NSObject-4DM-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outValue, "NSObject-4DM-out");
 				Assert.AreNotEqual (refValue, outValue, "NSObject-4DM-ref-distinct");
 				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSObject> (), "NSObject-4DM-ref-wrapper-type");
 				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSObject> (), "NSObject-4DM-ref-wrapper-type");
@@ -3303,8 +3387,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void RefOutTest_NSValue ()
 		{
-			IntPtr refValue = IntPtr.Zero;
-			IntPtr outValue = IntPtr.Zero;
+			var refValue = NativeHandle.Zero;
+			var outValue = NativeHandle.Zero;
 
 			using (var obj = new RefOutParametersSubclass ()) {
 				var sel = Selector.GetHandle ("testNSValue:a:b:");
@@ -3334,15 +3418,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "NSValue-1DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSValue-1DA-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "NSValue-1DA-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSValue-1DA-out");
 
 				// direct managed
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "NSValue-1DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSValue-1DM-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "NSValue-1DM-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSValue-1DM-out");
 
 				/// 2: verify that refValue points to something
 				action = 2;
@@ -3368,14 +3452,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj.Handle, refValue, "NSValue-2DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSValue-2DA-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSValue-2DA-out");
 
 				// direct managed
 				refValue = dummyObj.Handle; // set to non-null
 				outValue = dummyObj.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj.Handle, refValue, "NSValue-2DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSValue-2DM-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSValue-2DM-out");
 
 
 				/// 3 set both parameteres to the same pointer of a NSValue
@@ -3429,8 +3513,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refObj = null; // set to null
 				outObj = null; // set to null
 				obj.TestValue (action << 0, ref refObj, out outObj);
-				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSValue-4A-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSValue-4A-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refObj.Handle, "NSValue-4A-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outObj.Handle, "NSValue-4A-out");
 				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSValue-4A-ref-distinct");
 				Assert.That (refObj, Is.TypeOf<NSValue> (), "NSValue-4A-ref-wrapper-type");
 				Assert.That (outObj, Is.TypeOf<NSValue> (), "NSValue-4A-ref-wrapper-type");
@@ -3439,28 +3523,28 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refObj = null; // set to null
 				outObj = null; // set to null
 				obj.TestValue (action << 8, ref refObj, out outObj);
-				Assert.AreNotEqual (IntPtr.Zero, refObj.Handle, "NSValue-4M-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outObj.Handle, "NSValue-4M-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refObj.Handle, "NSValue-4M-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outObj.Handle, "NSValue-4M-out");
 				Assert.AreNotEqual (refObj.Handle, outObj.Handle, "NSValue-4M-ref-distinct");
 				Assert.That (refObj, Is.TypeOf<NSValue> (), "NSValue-4M-ref-wrapper-type");
 				Assert.That (outObj, Is.TypeOf<NSValue> (), "NSValue-4M-ref-wrapper-type");
 
 				// direct native
-				refValue = IntPtr.Zero; // set to null
-				outValue = IntPtr.Zero; // set to null
+				refValue = NativeHandle.Zero; // set to null
+				outValue = NativeHandle.Zero; // set to null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSValue-4DA-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSValue-4DA-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refValue, "NSValue-4DA-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outValue, "NSValue-4DA-out");
 				Assert.AreNotEqual (refValue, outValue, "NSValue-4DA-ref-distinct");
 				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSValue> (), "NSValue-4DA-ref-wrapper-type");
 				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSValue> (), "NSValue-4DA-ref-wrapper-type");
 
 				// direct managed
-				refValue = IntPtr.Zero; // set to null
-				outValue = IntPtr.Zero; // set to null
+				refValue = NativeHandle.Zero; // set to null
+				outValue = NativeHandle.Zero; // set to null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreNotEqual (IntPtr.Zero, refValue, "NSValue-4DM-ref");
-				Assert.AreNotEqual (IntPtr.Zero, outValue, "NSValue-4DM-out");
+				Assert.AreNotEqual (NativeHandle.Zero, refValue, "NSValue-4DM-ref");
+				Assert.AreNotEqual (NativeHandle.Zero, outValue, "NSValue-4DM-out");
 				Assert.AreNotEqual (refValue, outValue, "NSValue-4DM-ref-distinct");
 				Assert.That (Runtime.GetNSObject (refValue), Is.TypeOf<NSValue> (), "NSValue-4DM-ref-wrapper-type");
 				Assert.That (Runtime.GetNSObject (outValue), Is.TypeOf<NSValue> (), "NSValue-4DM-ref-wrapper-type");
@@ -3470,8 +3554,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void RefOutTest_String ()
 		{
-			IntPtr refValue = IntPtr.Zero;
-			IntPtr outValue = IntPtr.Zero;
+			var refValue = NativeHandle.Zero;
+			var outValue = NativeHandle.Zero;
 
 			using (var obj = new RefOutParametersSubclass ()) {
 				var sel = Selector.GetHandle ("testString:a:b:");
@@ -3502,15 +3586,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refValue = dummyObjHandle; // set to non-null
 				outValue = dummyObjHandle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "String-1DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "String-1DA-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "String-1DA-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "String-1DA-out");
 
 				// direct managed
 				refValue = dummyObjHandle; // set to non-null
 				outValue = dummyObjHandle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "String-1DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "String-1DM-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "String-1DM-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "String-1DM-out");
 
 				/// 2: verify that refValue points to something
 				action = 2;
@@ -3534,14 +3618,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				outValue = dummyObjHandle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj, NSString.FromHandle (refValue), "String-2DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "String-2DA-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "String-2DA-out");
 
 				// direct managed
 				refValue = dummyObjHandle; // set to non-null
 				outValue = dummyObjHandle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj, NSString.FromHandle (refValue), "String-2DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "String-2DM-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "String-2DM-out");
 
 
 				/// 3 set both parameteres to the same pointer of a String
@@ -3734,8 +3818,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void RefOutTest_Sel ()
 		{
-			IntPtr refValue = IntPtr.Zero;
-			IntPtr outValue = IntPtr.Zero;
+			var refValue = IntPtr.Zero;
+			var outValue = IntPtr.Zero;
 
 			using (var obj = new RefOutParametersSubclass ()) {
 				var sel = Selector.GetHandle ("testSelector:a:b:");
@@ -3802,14 +3886,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refValue = dummyObjHandle; // set to non-null
 				outValue = dummyObjHandle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreEqual (dummyObj.Handle, refValue, "Selector-2DA-ref");
+				Assert.AreEqual ((IntPtr) dummyObj.Handle, refValue, "Selector-2DA-ref");
 				Assert.AreEqual (IntPtr.Zero, outValue, "Selector-2DA-out");
 
 				// direct managed
 				refValue = dummyObjHandle; // set to non-null
 				outValue = dummyObjHandle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreEqual (dummyObj.Handle, refValue, "Selector-2DM-ref");
+				Assert.AreEqual ((IntPtr) dummyObj.Handle, refValue, "Selector-2DM-ref");
 				Assert.AreEqual (IntPtr.Zero, outValue, "Selector-2DM-out");
 
 
@@ -3820,15 +3904,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refObj = dummyObj; // set to non-null
 				outObj = dummyObj; // set to non-null
 				test (action << 0, ref refObj, out outObj);
-				Assert.AreEqual (Selector.GetHandle ("testSelector"), refObj.Handle, "Selector-3A-ref");
-				Assert.AreEqual (Selector.GetHandle ("testSelector"), outObj.Handle, "Selector-3A-out");
+				Assert.AreEqual (Selector.GetHandle ("testSelector"), (IntPtr) refObj.Handle, "Selector-3A-ref");
+				Assert.AreEqual (Selector.GetHandle ("testSelector"), (IntPtr) outObj.Handle, "Selector-3A-out");
 
 				// managed
 				refObj = dummyObj; // set to non-null
 				outObj = dummyObj; // set to non-null
 				test (action << 8, ref refObj, out outObj);
-				Assert.AreEqual (Selector.GetHandle ("testManagedSelector"), refObj.Handle, "Selector-3M-ref");
-				Assert.AreEqual (Selector.GetHandle ("testManagedSelector"), outObj.Handle, "Selector-3M-out");
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelector"), (IntPtr) refObj.Handle, "Selector-3M-ref");
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelector"), (IntPtr) outObj.Handle, "Selector-3M-out");
 
 				// direct native
 				refValue = dummyObjHandle; // set to non-null
@@ -3854,15 +3938,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refObj = null; // set to null
 				outObj = null; // set to null
 				test (action << 0, ref refObj, out outObj);
-				Assert.AreEqual (Selector.GetHandle ("testSelector:a:"), refObj.Handle, "Selector-4A-ref-value");
-				Assert.AreEqual (Selector.GetHandle ("testSelector:b:"), outObj.Handle, "Selector-4A-out-value");
+				Assert.AreEqual (Selector.GetHandle ("testSelector:a:"), (IntPtr) refObj.Handle, "Selector-4A-ref-value");
+				Assert.AreEqual (Selector.GetHandle ("testSelector:b:"), (IntPtr) outObj.Handle, "Selector-4A-out-value");
 
 				// managed
 				refObj = null; // set to null
 				outObj = null; // set to null
 				test (action << 8, ref refObj, out outObj);
-				Assert.AreEqual (Selector.GetHandle ("testManagedSelectorA"), refObj.Handle, "Selector-4M-ref-value");
-				Assert.AreEqual (Selector.GetHandle ("testManagedSelectorB"), outObj.Handle, "Selector-4M-out-value");
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelectorA"), (IntPtr) refObj.Handle, "Selector-4M-ref-value");
+				Assert.AreEqual (Selector.GetHandle ("testManagedSelectorB"), (IntPtr) outObj.Handle, "Selector-4M-out-value");
 
 				// direct native
 				refValue = IntPtr.Zero; // set to null
@@ -3883,8 +3967,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void RefOutTest_Class ()
 		{
-			IntPtr refValue = IntPtr.Zero;
-			IntPtr outValue = IntPtr.Zero;
+			var refValue = NativeHandle.Zero;
+			var outValue = NativeHandle.Zero;
 
 			using (var obj = new RefOutParametersSubclass ()) {
 				var sel = Selector.GetHandle ("testClass:a:b:");
@@ -3916,15 +4000,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refValue = dummyObjHandle; // set to non-null
 				outValue = dummyObjHandle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "Class-1DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "Class-1DA-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "Class-1DA-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "Class-1DA-out");
 
 				// direct managed
 				refValue = dummyObjHandle; // set to non-null
 				outValue = dummyObjHandle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "Class-1DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "Class-1DM-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "Class-1DM-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "Class-1DM-out");
 
 				/// 2: verify that refValue points to something
 				action = 2;
@@ -3948,14 +4032,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				outValue = dummyObjHandle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj.Handle, refValue, "Class-2DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "Class-2DA-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "Class-2DA-out");
 
 				// direct managed
 				refValue = dummyObjHandle; // set to non-null
 				outValue = dummyObjHandle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
 				Assert.AreEqual (dummyObj.Handle, refValue, "Class-2DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "Class-2DM-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "Class-2DM-out");
 
 
 				/// 3 set both parameteres to the same Class
@@ -4544,8 +4628,8 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public unsafe void RefOutTest_StringArray ()
 		{
-			IntPtr refValue = IntPtr.Zero;
-			IntPtr outValue = IntPtr.Zero;
+			var refValue = NativeHandle.Zero;
+			var outValue = NativeHandle.Zero;
 
 			using (var obj = new RefOutParametersSubclass ()) {
 				var sel = Selector.GetHandle ("testStringArray:a:b:");
@@ -4577,15 +4661,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refValue = dummyArray.Handle; // set to non-null
 				outValue = dummyArray.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "NSStringArray-1DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSStringArray-1DA-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "NSStringArray-1DA-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSStringArray-1DA-out");
 
 				// direct managed
 				refValue = dummyArray.Handle; // set to non-null
 				outValue = dummyArray.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "NSStringArray-1DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSStringArray-1DM-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "NSStringArray-1DM-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSStringArray-1DM-out");
 
 				/// 2: verify that refValue points to something
 				action = 2;
@@ -4612,7 +4696,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
 				Assert.That (dummyObj, Is.EquivalentTo (NSArray.StringArrayFromHandle (refValue)), "NSStringArray-2DA-ref");
 				Assert.AreEqual (dummyArray.Handle, refValue, "NSStringArray-2DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSStringArray-2DA-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSStringArray-2DA-out");
 
 				// direct managed
 				refValue = dummyArray.Handle; // set to non-null
@@ -4620,7 +4704,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
 				Assert.That (dummyObj, Is.EquivalentTo (NSArray.StringArrayFromHandle (refValue)), "NSStringArray-2DM-ref");
 				Assert.AreEqual (dummyArray.Handle, refValue, "NSStringArray-2DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSStringArray-2DM-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSStringArray-2DM-out");
 
 
 				/// 3 set both parameters to the same pointer of an NSStringArray array
@@ -4729,13 +4813,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public unsafe void RefOutTest_ClassArray ()
 		{
-			IntPtr refValue = IntPtr.Zero;
-			IntPtr outValue = IntPtr.Zero;
+			var refValue = NativeHandle.Zero;
+			var outValue = NativeHandle.Zero;
 
 			using (var obj = new RefOutParametersSubclass ()) {
 				var sel = Selector.GetHandle ("testClassArray:a:b:");
 				var dummyObj = new Class [] { new Class (typeof (NSObject)) };
-				var dummyArray = NSArray.FromIntPtrs (new IntPtr [] { Class.GetHandle (typeof (NSObject)) });
+				var dummyArray = NSArray.FromIntPtrs (new NativeHandle [] { Class.GetHandle (typeof (NSObject)) });
 				Class [] refObj = null;
 				Class [] outObj = null;
 				TestMethod<Class []> test = obj.TestClassArray;
@@ -4762,15 +4846,15 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				refValue = dummyArray.Handle; // set to non-null
 				outValue = dummyArray.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "NSClassArray-1DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSClassArray-1DA-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "NSClassArray-1DA-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSClassArray-1DA-out");
 
 				// direct managed
 				refValue = dummyArray.Handle; // set to non-null
 				outValue = dummyArray.Handle; // set to non-null
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
-				Assert.AreEqual (IntPtr.Zero, refValue, "NSClassArray-1DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSClassArray-1DM-out");
+				Assert.AreEqual (NativeHandle.Zero, refValue, "NSClassArray-1DM-ref");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSClassArray-1DM-out");
 
 				/// 2: verify that refValue points to something
 				action = 2;
@@ -4797,7 +4881,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 0, ref refValue, out outValue);
 				Assert.That (dummyObj, Is.EquivalentTo (NSArray.ArrayFromHandle<Class> (refValue)), "NSClassArray-2DA-ref");
 				Assert.AreEqual (dummyArray.Handle, refValue, "NSClassArray-2DA-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSClassArray-2DA-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSClassArray-2DA-out");
 
 				// direct managed
 				refValue = dummyArray.Handle; // set to non-null
@@ -4805,7 +4889,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Messaging.void_objc_msgSend_int_IntPtr_IntPtr (obj.Handle, sel, action << 8, ref refValue, out outValue);
 				Assert.That (dummyObj, Is.EquivalentTo (NSArray.ArrayFromHandle<Class> (refValue)), "NSClassArray-2DM-ref");
 				Assert.AreEqual (dummyArray.Handle, refValue, "NSClassArray-2DM-ref");
-				Assert.AreEqual (IntPtr.Zero, outValue, "NSClassArray-2DM-out");
+				Assert.AreEqual (NativeHandle.Zero, outValue, "NSClassArray-2DM-out");
 
 
 				/// 3 set both parameters to the same pointer of an Class array
@@ -5372,7 +5456,6 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 #endif // !__WATCHOS__ && !__TVOS__
-
 	}
 
 #if !__WATCHOS__
@@ -5498,10 +5581,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	public interface ISomeDelegate : INativeObject, IDisposable
 	{
 	}
+#if NET
+	[SupportedOSPlatform ("macos100.0")]
+	[SupportedOSPlatform ("ios100.0")]
+	[SupportedOSPlatform ("tvos100.0")]
+	[SupportedOSPlatform ("maccatalyst100.0")]
+#else
 	[Introduced (PlatformName.MacOSX, 100, 0)]
 	[Introduced (PlatformName.iOS, 100, 0)]
 	[Introduced (PlatformName.TvOS, 100, 0)]
 	[Introduced (PlatformName.WatchOS, 100, 0)]
+#endif
 	public class FutureClass : NSObject
 	{
 	}
@@ -5557,6 +5647,22 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			throw new NotImplementedException ();
 		}
+
+#if NET
+		public void PresentAfter (double presentationTime)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public void AddPresentedHandler (Action<global::Metal.IMTLDrawable> block)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public double PresentedTime { get => throw new NotImplementedException (); }
+
+		public nuint DrawableId { get => throw new NotImplementedException (); }
+#endif
 	}
 #if !__TVOS__ // MetalPerformanceShaders isn't available in the tvOS simulator either
 	class MetalPerformanceShadersTypesInTheSimulator : NSObject, global::MetalPerformanceShaders.IMPSDeviceProvider {
@@ -5572,4 +5678,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	}
 #endif // !__TVOS__
 #endif // !__WATCHOS__
+
+#if HAS_COREMIDI
+	// This type exports methods with 'MidiCIDeviceIdentification' parameters, which is a struct with different casing in Objective-C ("MIDI...")
+	class ExportedMethodWithStructWithManagedCasing : NSObject {
+		[Export ("doSomething:")]
+		public void DoSomething (MidiCIDeviceIdentification arg) { }
+
+		[Export ("doSomething2:")]
+		public void DoSomething2 (ref MidiCIDeviceIdentification arg) { }
+
+		[Export ("doSomething3")]
+		public MidiCIDeviceIdentification DoSomething3 () { return default (MidiCIDeviceIdentification); }
+
+		[Export ("doSomething4:")]
+		public void DoSomething4 (out MidiCIDeviceIdentification arg) { arg = default (MidiCIDeviceIdentification); }
+	}
+#endif
 }

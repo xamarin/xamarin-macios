@@ -22,9 +22,12 @@ SOFTWARE.
  */
 #endregion
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
+#if !NET
 namespace OpenTK
 {
     // Todo: Remove this warning when the code goes public.
@@ -274,7 +277,8 @@ namespace OpenTK
         /// <param name="doubleArray">The array of doubles for the components of the matrix.</param>
         public Matrix3d(double[] doubleArray)
         {
-            if (doubleArray == null || doubleArray.GetLength(0) < 9) throw new MissingFieldException();
+            if (doubleArray is null || doubleArray.GetLength (0) < 9)
+                throw new MissingFieldException ();
 
             this.R0C0 = doubleArray[0];
             this.R0C1 = doubleArray[1];
@@ -827,3 +831,4 @@ namespace OpenTK
     }
     #pragma warning restore 3019
 }
+#endif // !NET

@@ -1,4 +1,0 @@
-## macOS only (deprecated in 10.13) without any catalyst annotations (headers or web docs)
-!missing-field! ACAccountTypeIdentifierLinkedIn not bound
-!missing-field! ACLinkedInAppIdKey not bound
-!missing-field! ACLinkedInPermissionsKey not bound

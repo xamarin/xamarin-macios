@@ -13,6 +13,7 @@ using System.Drawing;
 using CoreGraphics;
 using Foundation;
 using UIKit;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {

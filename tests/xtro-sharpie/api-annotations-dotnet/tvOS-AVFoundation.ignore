@@ -1,0 +1,8 @@
+## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
+!missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
+
+# as per the header comments, the following enum has to be ignored on tvOS
+!missing-enum! AVAudioSessionIOType not bound
+
+# not used on tvOS
+!missing-enum! AVAudioSessionInterruptionReason not bound

@@ -1,6 +1,0 @@
-!missing-enum! NSFileProviderDomainTestingModes not bound
-!missing-enum! NSFileProviderFileSystemFlags not bound
-!missing-enum-value! NSFileProviderError native value NSFileProviderErrorNonEvictable = -2008 not bound
-!missing-enum-value! NSFileProviderError native value NSFileProviderErrorNonEvictableChildren = -2006 not bound
-!missing-enum-value! NSFileProviderError native value NSFileProviderErrorUnsyncedEdits = -2007 not bound
-!missing-field! NSFileProviderErrorItemKey not bound

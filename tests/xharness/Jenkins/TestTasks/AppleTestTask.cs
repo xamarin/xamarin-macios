@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.DotNet.XHarness.Common.Logging;
+#nullable enable
 
 namespace Xharness.Jenkins.TestTasks {
-	abstract class AppleTestTask : TestTasks, ITestTask
+	abstract class AppleTestTask : TestTasks
 	{
 		public Jenkins Jenkins { get; private set; }
 		public IHarness Harness { get { return Jenkins.Harness; } }
@@ -21,7 +22,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public AppleTestTask (Jenkins jenkins) : base ()
+		public AppleTestTask (Jenkins jenkins)
 		{
 			Jenkins = jenkins ?? throw new ArgumentNullException (nameof (jenkins));
 		}

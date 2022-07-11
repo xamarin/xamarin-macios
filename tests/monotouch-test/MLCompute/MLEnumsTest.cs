@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
 
@@ -17,10 +17,7 @@ namespace MonoTouchFixtures.MLCompute {
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch);
-#if !MONOMAC
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Ignore ("https://github.com/xamarin/maccore/issues/2271");
-#endif
+			TestRuntime.AssertNotSimulator ("https://github.com/xamarin/maccore/issues/2271");
 		}
 
 		[Test]

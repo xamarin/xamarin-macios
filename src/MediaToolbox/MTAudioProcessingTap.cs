@@ -32,6 +32,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -43,10 +45,7 @@ using CoreMedia;
 
 namespace MediaToolbox
 {
-	public class MTAudioProcessingTap : INativeObject
-#if !COREBUILD
-, IDisposable
-#endif
+	public class MTAudioProcessingTap : NativeObject
 	{
 #if !COREBUILD
 		delegate void Action_IntPtr (IntPtr arg);
@@ -77,15 +76,12 @@ namespace MediaToolbox
 
 		static readonly Dictionary<IntPtr, MTAudioProcessingTap> handles = new Dictionary<IntPtr, MTAudioProcessingTap> (Runtime.IntPtrEqualityComparer);
 
-		IntPtr handle;
 		MTAudioProcessingTapCallbacks callbacks;
-		GCHandle gch;
 		
-		internal static MTAudioProcessingTap FromHandle (IntPtr handle)
+		internal static MTAudioProcessingTap? FromHandle (IntPtr handle)
 		{
 			lock (handles){
-				MTAudioProcessingTap ret;
-				if (handles.TryGetValue (handle, out ret))
+				if (handles.TryGetValue (handle, out var ret))
 					return ret;
 				return null;
 			}
@@ -100,8 +96,8 @@ namespace MediaToolbox
 
 		public MTAudioProcessingTap (MTAudioProcessingTapCallbacks callbacks, MTAudioProcessingTapCreationFlags flags)
 		{
-			if (callbacks == null)
-				throw new ArgumentNullException ("callbacks");
+			if (callbacks is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callbacks));
 
 			const MTAudioProcessingTapCreationFlags all_flags = MTAudioProcessingTapCreationFlags.PreEffects | MTAudioProcessingTapCreationFlags.PostEffects;
 			if ((flags & all_flags) == all_flags)
@@ -111,13 +107,13 @@ namespace MediaToolbox
 
 			var c = new Callbacks ();
 			unsafe {
-				if (callbacks.Initialize != null)
+				if (callbacks.Initialize is not null)
 					c.init = InitializeProxy;
-				if (callbacks.Finalize != null)
+				if (callbacks.Finalize is not null)
 					c.finalize = FinalizeProxy;
-				if (callbacks.Prepare != null)
+				if (callbacks.Prepare is not null)
 					c.prepare = PrepareProxy;
-				if (callbacks.Unprepare != null)
+				if (callbacks.Unprepare is not null)
 					c.unprepare = UnprepareProxy;
 
 				c.process = ProcessProxy;
@@ -126,10 +122,10 @@ namespace MediaToolbox
 			// a GCHandle is needed because we do not have an handle before calling MTAudioProcessingTapCreate
 			// and that will call the InitializeProxy. So using this (short-lived) GCHandle allow us to find back the
 			// original managed instance
-			gch = GCHandle.Alloc (this);
+			var gch = GCHandle.Alloc (this);
 			c.clientInfo = (IntPtr)gch;
 
-			var res = MTAudioProcessingTapCreate (IntPtr.Zero, ref c, flags, out handle);
+			var res = MTAudioProcessingTapCreate (IntPtr.Zero, ref c, flags, out var handle);
 
 			// we won't need the GCHandle after the Create call
 			gch.Free ();
@@ -137,34 +133,19 @@ namespace MediaToolbox
 			if (res != 0)
 				throw new ArgumentException (res.ToString ());
 
+			InitializeHandle (handle);
+
 			lock (handles)
 				handles [handle] = this;
 		}
 
-		~MTAudioProcessingTap ()
+		protected override void Dispose (bool disposing)
 		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero) {
+			if (Handle != IntPtr.Zero) {
 				lock (handles)
-					handles.Remove (handle);
-				
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
+					handles.Remove (Handle);
 			}
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
+			base.Dispose (disposing);
 		}
 
 		[DllImport (Constants.MediaToolboxLibrary)]
@@ -172,7 +153,7 @@ namespace MediaToolbox
 
 		public unsafe void* GetStorage ()
 		{
-			return MTAudioProcessingTapGetStorage (handle);
+			return MTAudioProcessingTapGetStorage (Handle);
 		}
 
 		[DllImport (Constants.MediaToolboxLibrary)]
@@ -183,11 +164,11 @@ namespace MediaToolbox
 
 		public MTAudioProcessingTapError GetSourceAudio (nint frames, AudioBuffers bufferList, out MTAudioProcessingTapFlags flags, out CMTimeRange timeRange, out nint framesProvided)
 		{
-			if (bufferList == null)
-				throw new ArgumentNullException ("bufferList");
+			if (bufferList is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bufferList));
 
 			IntPtr result;
-			var r = MTAudioProcessingTapGetSourceAudio (handle, (IntPtr) frames, (IntPtr) bufferList, out flags, out timeRange, out result);
+			var r = MTAudioProcessingTapGetSourceAudio (Handle, (IntPtr) frames, (IntPtr) bufferList, out flags, out timeRange, out result);
 			framesProvided = (nint) result;
 			return r;
 		}
@@ -199,10 +180,12 @@ namespace MediaToolbox
 		[MonoPInvokeCallback (typeof (MTAudioProcessingTapInitCallbackProxy))]
 		unsafe static void InitializeProxy (IntPtr tap, IntPtr /*void**/ clientInfo, out void* tapStorage)
 		{
+			tapStorage = null;
 			// at this stage the handle is not yet known (or part of the `handles` dictionary
 			// so we track back the managed MTAudioProcessingTap instance from the GCHandle
-			var apt = (MTAudioProcessingTap) GCHandle.FromIntPtr (clientInfo).Target;
-			apt.callbacks.Initialize (apt, out tapStorage);
+			var apt = (MTAudioProcessingTap?) GCHandle.FromIntPtr (clientInfo).Target;
+			if (apt?.callbacks.Initialize is not null)
+				apt?.callbacks.Initialize (apt, out tapStorage);
 		}	
 
 		[MonoPInvokeCallback (typeof (MTAudioProcessingTapProcessCallbackProxy))]
@@ -215,8 +198,12 @@ namespace MediaToolbox
 			MTAudioProcessingTap apt;
 			lock (handles)
 				apt = handles [tap];
-			apt.callbacks.Processing (apt, (nint) numberFrames, flags, new AudioBuffers (bufferList), out numberOut, out flagsOut);
-			numberFramesOut = (IntPtr) numberOut;
+			flagsOut = default (MTAudioProcessingTapFlags);
+			numberFramesOut = IntPtr.Zero;
+			if (apt.callbacks.Processing is not null) {
+				apt.callbacks.Processing (apt, (nint) numberFrames, flags, new AudioBuffers (bufferList), out numberOut, out flagsOut);
+				numberFramesOut = (IntPtr) numberOut;
+			}
 		}
 
 		[MonoPInvokeCallback (typeof (Action_IntPtr))]
@@ -225,7 +212,8 @@ namespace MediaToolbox
 			MTAudioProcessingTap apt;
 			lock (handles)
 				apt = handles [tap];
-			apt.callbacks.Finalize (apt);
+			if (apt.callbacks.Finalize is not null)
+				apt.callbacks.Finalize (apt);
 		}
 
 		[MonoPInvokeCallback (typeof (MTAudioProcessingTapPrepareCallbackProxy))]
@@ -234,7 +222,8 @@ namespace MediaToolbox
 			MTAudioProcessingTap apt;
 			lock (handles)
 				apt = handles [tap];
-			apt.callbacks.Prepare (apt, (nint) maxFrames, ref processingFormat);
+			if (apt.callbacks.Prepare is not null)
+				apt.callbacks.Prepare (apt, (nint) maxFrames, ref processingFormat);
 		}
 
 		[MonoPInvokeCallback (typeof (Action_IntPtr))]
@@ -243,7 +232,8 @@ namespace MediaToolbox
 			MTAudioProcessingTap apt;
 			lock (handles)
 				apt = handles [tap];
-			apt.callbacks.Unprepare (apt);
+			if (apt.callbacks.Unprepare is not null)
+				apt.callbacks.Unprepare (apt);
 		}
 #endif // !COREBUILD
 	}
@@ -276,17 +266,17 @@ namespace MediaToolbox
 	{
 		public MTAudioProcessingTapCallbacks (MTAudioProcessingTapProcessDelegate process)
 		{
-			if (process == null)
-				throw new ArgumentNullException ("process");
+			if (process is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (process));
 
 			Processing = process;
 		}
 
-		public MTAudioProcessingTapInitCallback Initialize { get; set; }
-		public Action<MTAudioProcessingTap> Finalize { get; set; }
-		public MTAudioProcessingTapPrepareCallback Prepare { get; set; }
-		public Action<MTAudioProcessingTap> Unprepare { get; set; }
-		public MTAudioProcessingTapProcessDelegate Processing { get; private set; }
+		public MTAudioProcessingTapInitCallback? Initialize { get; set; }
+		public Action<MTAudioProcessingTap>? Finalize { get; set; }
+		public MTAudioProcessingTapPrepareCallback? Prepare { get; set; }
+		public Action<MTAudioProcessingTap>? Unprepare { get; set; }
+		public MTAudioProcessingTapProcessDelegate? Processing { get; private set; }
 	}
 
 	public unsafe delegate void MTAudioProcessingTapInitCallback (MTAudioProcessingTap tap, out void* tapStorage);

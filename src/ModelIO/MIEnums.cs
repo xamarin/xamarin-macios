@@ -14,16 +14,6 @@ using CoreFoundation;
 using CoreGraphics;
 using Metal;
 using ObjCRuntime;
-using Vector2 = global::OpenTK.Vector2;
-using Vector3 = global::OpenTK.Vector3;
-using Vector4 = global::OpenTK.Vector4;
-using Vector4i = global::OpenTK.Vector4i;
-using VectorInt4 = global::OpenTK.Vector4i;
-using Matrix2 = global::OpenTK.Matrix2;
-using Matrix3 = global::OpenTK.Matrix3;
-using Matrix4 = global::OpenTK.Matrix4;
-using Quaternion = global::OpenTK.Quaternion;
-using MathHelper = global::OpenTK.MathHelper;
 
 #nullable enable
 
@@ -114,7 +104,9 @@ namespace ModelIO {
 	public enum MDLMeshBufferType : ulong
 	{
 		Vertex = 1,
-		Index = 2
+		Index = 2,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		Custom = 3,
 	}
 
 	[Native]
@@ -177,7 +169,9 @@ namespace ModelIO {
 		Float2,
 		Float3,
 		Float4,
-		Matrix44
+		Matrix44,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		Buffer,
 	}
 
 	[Native]

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NLEmbedding
 //
 // Copyright 2019 Microsoft Corp. All rights reserved.

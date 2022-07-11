@@ -19,9 +19,19 @@ using Metal;
 using ObjCRuntime;
 using ImageIO;
 
-using Matrix3 = global::OpenTK.NMatrix3;
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using Matrix3 = global::CoreGraphics.NMatrix3;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
+using Matrix3 = global::OpenTK.NMatrix3;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Vision {
 
@@ -48,6 +58,7 @@ namespace Vision {
 		UnsupportedRevision,
 		DataUnavailable,
 		TimeStampNotFound,
+		UnsupportedRequest,
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -117,6 +128,39 @@ namespace Vision {
 
 		[Field ("VNBarcodeSymbologyUPCE")]
 		Upce,
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("VNBarcodeSymbologyCodabar")]
+		Codabar,
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("VNBarcodeSymbologyGS1DataBar")]
+		GS1DataBar,
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("VNBarcodeSymbologyGS1DataBarExpanded")]
+		GS1DataBarExpanded,
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("VNBarcodeSymbologyGS1DataBarLimited")]
+		GS1DataBarLimited,
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("VNBarcodeSymbologyMicroPDF417")]
+		MicroPdf417,
+
+		[iOS (15,0), Mac (12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("VNBarcodeSymbologyMicroQR")]
+		MicroQR,
+	}
+
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum VNChirality : long
+	{
+		Unknown = 0,
+		Left = -1,
+		Right = 1,
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -134,11 +178,13 @@ namespace Vision {
 		One = 1,
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0), MacCatalyst (15,0)]
 	[Native]
 	enum VNDetectBarcodesRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		Two = 2,
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -151,12 +197,14 @@ namespace Vision {
 		Three = 3,
 	}
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+	[TV (12,0), Mac (10,14), iOS (12,0), MacCatalyst (15,0)]
 	[Native]
 	enum VNDetectFaceRectanglesRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
 		Two = 2,
+		[TV (15,0), Mac (12,0), iOS (15,0)]
+		Three = 3,
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -265,6 +313,12 @@ namespace Vision {
 		One = 1,
 	}
 
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	enum VNDetectDocumentSegmentationRequestRevision : ulong {
+		One = 1,
+	}
+
 	[TV (13,0), Mac (10,15), iOS (13,0)]
 	[Native]
 	enum VNDetectFaceCaptureQualityRequestRevision : ulong {
@@ -287,6 +341,8 @@ namespace Vision {
 	enum VNDetectHumanRectanglesRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		Two = 2,
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0)]
@@ -315,6 +371,8 @@ namespace Vision {
 	enum VNRecognizeAnimalsRequestRevision : ulong {
 		Unspecified = 0,
 		One = 1,
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		Two = 2,
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0)]
@@ -388,6 +446,12 @@ namespace Vision {
 	[Native]
 	enum VNGenerateOpticalFlowRequestRevision : ulong {
 		Unspecified = 0,
+		One = 1,
+	}
+
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	enum VNGeneratePersonSegmentationRequestRevision : ulong {
 		One = 1,
 	}
 
@@ -590,6 +654,25 @@ namespace Vision {
 		All,
 	}
 
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[Native]
+	public enum VNGeneratePersonSegmentationRequestQualityLevel : ulong
+	{
+		Accurate = 0,
+		Balanced,
+		Fast,
+	}
+
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(VNDetectedObjectObservation))]
+	[DisableDefaultCtor]
+	interface VNHumanObservation
+	{
+		[NullAllowed]
+		[Export ("upperBodyOnly")]
+		bool UpperBodyOnly { get; }
+	}
+
 	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -624,15 +707,15 @@ namespace Vision {
 		VNImageCropAndScaleOption ImageCropAndScaleOption { get; set; }
 
 		[Export ("initWithModel:")]
-		IntPtr Constructor (VNCoreMLModel model);
+		NativeHandle Constructor (VNCoreMLModel model);
 
 		[Export ("initWithModel:completionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (VNCoreMLModel model, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (VNCoreMLModel model, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -670,8 +753,11 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedSymbologies' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedSymbologies' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedSymbologies' instead.")]
 		[Static]
 		[Protected]
 		[Export ("supportedSymbologies", ArgumentSemantic.Copy)]
@@ -682,8 +768,22 @@ namespace Vision {
 		VNBarcodeSymbology [] SupportedSymbologies { get; }
 
 		[Protected]
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("supportedSymbologiesAndReturnError:")]
+		[return: NullAllowed]
+		NSString [] GetWeakSupportedSymbologies ([NullAllowed] out NSError error);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Wrap ("VNBarcodeSymbologyExtensions.GetValues (GetWeakSupportedSymbologies (out error))")]
+		VNBarcodeSymbology [] GetSupportedSymbologies ([NullAllowed] out NSError error);
+
+		[Protected]
 		[Export ("symbologies", ArgumentSemantic.Copy)]
 		NSString [] WeakSymbologies { get; set; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNBarcodeObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -721,7 +821,7 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
@@ -731,6 +831,10 @@ namespace Vision {
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("constellation", ArgumentSemantic.Assign)]
 		VNRequestFaceLandmarksConstellation Constellation { get; set; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNFaceObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -768,7 +872,11 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNFaceObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -806,7 +914,11 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNHorizonObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -844,7 +956,7 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Export ("minimumAspectRatio")]
 		float MinimumAspectRatio { get; set; }
@@ -863,6 +975,10 @@ namespace Vision {
 
 		[Export ("maximumObservations")]
 		nuint MaximumObservations { get; set; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNRectangleObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -900,10 +1016,14 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Export ("reportCharacterBoxes")]
 		bool ReportCharacterBoxes { get; set; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNTextObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -1037,124 +1157,124 @@ namespace Vision {
 
 		// Inlined from parent class
 		[Export ("initWithTargetedCVPixelBuffer:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, options.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
 
 		[Export ("initWithTargetedCVPixelBuffer:options:completionHandler:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (pixelBuffer, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCVPixelBuffer:orientation:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCVPixelBuffer:orientation:options:completionHandler:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCGImage:options:")]
-		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict);
+		NativeHandle Constructor (CGImage cgImage, NSDictionary optionsDict);
 
 		[Wrap ("this (cgImage, options.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage cgImage, VNImageOptions options);
+		NativeHandle Constructor (CGImage cgImage, VNImageOptions options);
 
 		[Export ("initWithTargetedCGImage:options:completionHandler:")]
-		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (cgImage, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCGImage:orientation:options:")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCGImage:orientation:options:completionHandler:")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCIImage:options:")]
-		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict);
+		NativeHandle Constructor (CIImage ciImage, NSDictionary optionsDict);
 
 		[Wrap ("this (ciImage, options.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage ciImage, VNImageOptions options);
+		NativeHandle Constructor (CIImage ciImage, VNImageOptions options);
 
 		[Export ("initWithTargetedCIImage:options:completionHandler:")]
-		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (ciImage, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCIImage:orientation:options:")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCIImage:orientation:options:completionHandler:")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageURL:options:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary optionsDict);
 
 		[Wrap ("this (imageUrl, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions options);
 
 		[Export ("initWithTargetedImageURL:options:completionHandler:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageUrl, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageURL:orientation:options:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedImageURL:orientation:options:completionHandler:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageData:options:")]
-		IntPtr Constructor (NSData imageData, NSDictionary optionsDict);
+		NativeHandle Constructor (NSData imageData, NSDictionary optionsDict);
 
 		[Wrap ("this (imageData, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions options);
+		NativeHandle Constructor (NSData imageData, VNImageOptions options);
 
 		[Export ("initWithTargetedImageData:options:completionHandler:")]
-		IntPtr Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageData, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageData:orientation:options:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedImageData:orientation:options:completionHandler:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1162,126 +1282,130 @@ namespace Vision {
 	[BaseType (typeof (VNImageRegistrationRequest))]
 	interface VNTranslationalImageRegistrationRequest {
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNImageTranslationAlignmentObservation[] Results { get; }
+
 		// Inlined from parent class
 		[Export ("initWithTargetedCVPixelBuffer:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, options.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
 
 		[Export ("initWithTargetedCVPixelBuffer:options:completionHandler:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (pixelBuffer, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCVPixelBuffer:orientation:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCVPixelBuffer:orientation:options:completionHandler:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCGImage:options:")]
-		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict);
+		NativeHandle Constructor (CGImage cgImage, NSDictionary optionsDict);
 
 		[Wrap ("this (cgImage, options.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage cgImage, VNImageOptions options);
+		NativeHandle Constructor (CGImage cgImage, VNImageOptions options);
 
 		[Export ("initWithTargetedCGImage:options:completionHandler:")]
-		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (cgImage, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCGImage:orientation:options:")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCGImage:orientation:options:completionHandler:")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCIImage:options:")]
-		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict);
+		NativeHandle Constructor (CIImage ciImage, NSDictionary optionsDict);
 
 		[Wrap ("this (ciImage, options.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage ciImage, VNImageOptions options);
+		NativeHandle Constructor (CIImage ciImage, VNImageOptions options);
 
 		[Export ("initWithTargetedCIImage:options:completionHandler:")]
-		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (ciImage, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCIImage:orientation:options:")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCIImage:orientation:options:completionHandler:")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageURL:options:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary optionsDict);
 
 		[Wrap ("this (imageUrl, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions options);
 
 		[Export ("initWithTargetedImageURL:options:completionHandler:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageUrl, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageURL:orientation:options:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedImageURL:orientation:options:completionHandler:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageData:options:")]
-		IntPtr Constructor (NSData imageData, NSDictionary optionsDict);
+		NativeHandle Constructor (NSData imageData, NSDictionary optionsDict);
 
 		[Wrap ("this (imageData, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions options);
+		NativeHandle Constructor (NSData imageData, VNImageOptions options);
 
 		[Export ("initWithTargetedImageData:options:completionHandler:")]
-		IntPtr Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageData, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageData:orientation:options:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedImageData:orientation:options:completionHandler:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		// into subclasses so the correct class_ptr is used.
 		[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -1310,126 +1434,130 @@ namespace Vision {
 	[BaseType (typeof (VNImageRegistrationRequest))]
 	interface VNHomographicImageRegistrationRequest {
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNImageHomographicAlignmentObservation[] Results { get; }
+
 		// Inlined from parent class
 		[Export ("initWithTargetedCVPixelBuffer:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, options.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
 
 		[Export ("initWithTargetedCVPixelBuffer:options:completionHandler:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (pixelBuffer, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCVPixelBuffer:orientation:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCVPixelBuffer:orientation:options:completionHandler:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCGImage:options:")]
-		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict);
+		NativeHandle Constructor (CGImage cgImage, NSDictionary optionsDict);
 
 		[Wrap ("this (cgImage, options.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage cgImage, VNImageOptions options);
+		NativeHandle Constructor (CGImage cgImage, VNImageOptions options);
 
 		[Export ("initWithTargetedCGImage:options:completionHandler:")]
-		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (cgImage, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCGImage:orientation:options:")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCGImage:orientation:options:completionHandler:")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCIImage:options:")]
-		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict);
+		NativeHandle Constructor (CIImage ciImage, NSDictionary optionsDict);
 
 		[Wrap ("this (ciImage, options.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage ciImage, VNImageOptions options);
+		NativeHandle Constructor (CIImage ciImage, VNImageOptions options);
 
 		[Export ("initWithTargetedCIImage:options:completionHandler:")]
-		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (ciImage, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCIImage:orientation:options:")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCIImage:orientation:options:completionHandler:")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageURL:options:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary optionsDict);
 
 		[Wrap ("this (imageUrl, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions options);
 
 		[Export ("initWithTargetedImageURL:options:completionHandler:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageUrl, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageURL:orientation:options:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedImageURL:orientation:options:completionHandler:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageData:options:")]
-		IntPtr Constructor (NSData imageData, NSDictionary optionsDict);
+		NativeHandle Constructor (NSData imageData, NSDictionary optionsDict);
 
 		[Wrap ("this (imageData, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions options);
+		NativeHandle Constructor (NSData imageData, VNImageOptions options);
 
 		[Export ("initWithTargetedImageData:options:completionHandler:")]
-		IntPtr Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageData, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageData:orientation:options:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedImageData:orientation:options:completionHandler:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -1494,6 +1622,10 @@ namespace Vision {
 
 		[Export ("boundingBox", ArgumentSemantic.Assign)]
 		CGRect BoundingBox { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("globalSegmentationMask")]
+		VNPixelBufferObservation GlobalSegmentationMask { get; }
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1514,10 +1646,18 @@ namespace Vision {
 		[Export ("observationWithRequestRevision:boundingBox:")]
 		VNFaceObservation FromBoundingBox (VNFaceObservationRequestRevision requestRevision, CGRect boundingBox);
 
+		[Deprecated (PlatformName.MacOSX, 12, 0)]
+		[Deprecated (PlatformName.iOS, 15, 0)]
+		[Deprecated (PlatformName.TvOS, 15, 0)]
 		[TV (12,0), Mac (10,14), iOS (12,0)]
 		[Static]
 		[Export ("faceObservationWithRequestRevision:boundingBox:roll:yaw:")]
 		VNFaceObservation FromBoundingBox (VNFaceObservationRequestRevision requestRevision, CGRect boundingBox, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber roll, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber yaw);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("faceObservationWithRequestRevision:boundingBox:roll:yaw:pitch:")]
+		VNFaceObservation FromBoundingBox (VNFaceObservationRequestRevision requestRevision, CGRect boundingBox, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber roll, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber yaw, [NullAllowed] [BindAs (typeof (nfloat?))] NSNumber pitch);
 
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[BindAs (typeof (float?))]
@@ -1533,6 +1673,11 @@ namespace Vision {
 		[BindAs (typeof (nfloat?))]
 		[NullAllowed, Export ("yaw", ArgumentSemantic.Strong)]
 		NSNumber Yaw { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[BindAs (typeof (nfloat?))]
+		[NullAllowed, Export ("pitch", ArgumentSemantic.Strong)]
+		NSNumber Pitch { get; }
 	}
 
 	[TV (12,0), Mac (10,14), iOS (12,0)]
@@ -1709,7 +1854,7 @@ namespace Vision {
 		[Export ("alignmentTransform", ArgumentSemantic.Assign)]
 		CGAffineTransform AlignmentTransform {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set;
 #endif
@@ -1725,7 +1870,7 @@ namespace Vision {
 		Matrix3 WarpTransform {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set;
 #endif
@@ -1740,7 +1885,7 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Export ("preferBackgroundProcessing")]
 		bool PreferBackgroundProcessing { get; set; }
@@ -1799,7 +1944,7 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Export ("regionOfInterest", ArgumentSemantic.Assign)]
 		CGRect RegionOfInterest { get; set; }
@@ -1838,84 +1983,84 @@ namespace Vision {
 	interface VNImageRequestHandler {
 
 		[Export ("initWithCVPixelBuffer:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary options);
 
 		[Wrap ("this (pixelBuffer, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions imageOptions);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions imageOptions);
 
 		[Export ("initWithCVPixelBuffer:orientation:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary options);
 
 		[Wrap ("this (pixelBuffer, orientation, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[Export ("initWithCGImage:options:")]
-		IntPtr Constructor (CGImage image, NSDictionary options);
+		NativeHandle Constructor (CGImage image, NSDictionary options);
 
 		[Wrap ("this (image, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage image, VNImageOptions imageOptions);
+		NativeHandle Constructor (CGImage image, VNImageOptions imageOptions);
 
 		[Export ("initWithCGImage:orientation:options:")]
-		IntPtr Constructor (CGImage image, CGImagePropertyOrientation orientation, NSDictionary options);
+		NativeHandle Constructor (CGImage image, CGImagePropertyOrientation orientation, NSDictionary options);
 
 		[Wrap ("this (image, orientation, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage image, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
+		NativeHandle Constructor (CGImage image, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[Export ("initWithCIImage:options:")]
-		IntPtr Constructor (CIImage image, NSDictionary options);
+		NativeHandle Constructor (CIImage image, NSDictionary options);
 
 		[Wrap ("this (image, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage image, VNImageOptions imageOptions);
+		NativeHandle Constructor (CIImage image, VNImageOptions imageOptions);
 
 		[Export ("initWithCIImage:orientation:options:")]
-		IntPtr Constructor (CIImage image, CGImagePropertyOrientation orientation, NSDictionary options);
+		NativeHandle Constructor (CIImage image, CGImagePropertyOrientation orientation, NSDictionary options);
 
 		[Wrap ("this (image, orientation, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage image, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
+		NativeHandle Constructor (CIImage image, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[Export ("initWithURL:options:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary options);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary options);
 
 		[Wrap ("this (imageUrl, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions imageOptions);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions imageOptions);
 
 		[Export ("initWithURL:orientation:options:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary options);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary options);
 
 		[Wrap ("this (imageUrl, orientation, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[Export ("initWithData:options:")]
-		IntPtr Constructor (NSData imageData, NSDictionary options);
+		NativeHandle Constructor (NSData imageData, NSDictionary options);
 
 		[Wrap ("this (imageData, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions imageOptions);
+		NativeHandle Constructor (NSData imageData, VNImageOptions imageOptions);
 
 		[Export ("initWithData:orientation:options:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary options);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary options);
 
 		[Wrap ("this (imageData, orientation, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithCMSampleBuffer:options:")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, NSDictionary options);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, NSDictionary options);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, VNImageOptions imageOptions);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, VNImageOptions imageOptions);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithCMSampleBuffer:orientation:options:")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary options);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary options);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, orientation, imageOptions.GetDictionary ()!)")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions imageOptions);
 
 		[Export ("performRequests:error:")]
 		bool Perform (VNRequest [] requests, out NSError error);
@@ -1928,7 +2073,7 @@ namespace Vision {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("performRequests:onCVPixelBuffer:error:")]
 		bool Perform (VNRequest [] requests, CVPixelBuffer pixelBuffer, out NSError error);
@@ -1978,164 +2123,164 @@ namespace Vision {
 	interface VNTargetedImageRequest {
 
 		[Export ("initWithTargetedCVPixelBuffer:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, options.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
 
 		[Export ("initWithTargetedCVPixelBuffer:options:completionHandler:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (pixelBuffer, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCVPixelBuffer:orientation:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCVPixelBuffer:orientation:options:completionHandler:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCGImage:options:")]
-		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict);
+		NativeHandle Constructor (CGImage cgImage, NSDictionary optionsDict);
 
 		[Wrap ("this (cgImage, options.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage cgImage, VNImageOptions options);
+		NativeHandle Constructor (CGImage cgImage, VNImageOptions options);
 
 		[Export ("initWithTargetedCGImage:options:completionHandler:")]
-		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (cgImage, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCGImage:orientation:options:")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCGImage:orientation:options:completionHandler:")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCIImage:options:")]
-		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict);
+		NativeHandle Constructor (CIImage ciImage, NSDictionary optionsDict);
 
 		[Wrap ("this (ciImage, options.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage ciImage, VNImageOptions options);
+		NativeHandle Constructor (CIImage ciImage, VNImageOptions options);
 
 		[Export ("initWithTargetedCIImage:options:completionHandler:")]
-		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (ciImage, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCIImage:orientation:options:")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCIImage:orientation:options:completionHandler:")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageURL:options:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary optionsDict);
 
 		[Wrap ("this (imageUrl, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions options);
 
 		[Export ("initWithTargetedImageURL:options:completionHandler:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageUrl, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageURL:orientation:options:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedImageURL:orientation:options:completionHandler:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageData:options:")]
-		IntPtr Constructor (NSData imageData, NSDictionary optionsDict);
+		NativeHandle Constructor (NSData imageData, NSDictionary optionsDict);
 
 		[Wrap ("this (imageData, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions options);
+		NativeHandle Constructor (NSData imageData, VNImageOptions options);
 
 		[Export ("initWithTargetedImageData:options:completionHandler:")]
-		IntPtr Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageData, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageData:orientation:options:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedImageData:orientation:options:completionHandler:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithTargetedCMSampleBuffer:options:")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, NSDictionary optionsDict);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, NSDictionary optionsDict);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, options.GetDictionary ()!)")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, VNImageOptions options);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, VNImageOptions options);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithTargetedCMSampleBuffer:options:completionHandler:")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithTargetedCMSampleBuffer:orientation:options:")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithTargetedCMSampleBuffer:orientation:options:completionHandler:")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[TV (14,0), Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Wrap ("this (sampleBuffer, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CMSampleBuffer sampleBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -2145,13 +2290,13 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithDetectedObjectObservation:")]
-		IntPtr Constructor (VNDetectedObjectObservation observation);
+		NativeHandle Constructor (VNDetectedObjectObservation observation);
 
 		[Export ("initWithDetectedObjectObservation:completionHandler:")]
-		IntPtr Constructor (VNDetectedObjectObservation observation, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (VNDetectedObjectObservation observation, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2189,14 +2334,14 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithRectangleObservation:")]
-		IntPtr Constructor (VNRectangleObservation observation);
+		NativeHandle Constructor (VNRectangleObservation observation);
 
 		[Export ("initWithRectangleObservation:completionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (VNRectangleObservation observation, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (VNRectangleObservation observation, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2235,7 +2380,7 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Export ("inputObservation", ArgumentSemantic.Strong)]
 		VNDetectedObjectObservation InputObservation { get; set; }
@@ -2263,12 +2408,24 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
 		[Static]
 		[Export ("knownClassificationsForRevision:error:")]
 		[return: NullAllowed]
 		VNClassificationObservation [] GetKnownClassifications (VNClassifyImageRequestRevision revision, [NullAllowed] out NSError error);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("supportedIdentifiersAndReturnError:")]
+		[return: NullAllowed]
+		NSString[] GetSupportedIdentifiers ([NullAllowed] out NSError error);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNClassificationObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2301,7 +2458,11 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNFaceObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2334,7 +2495,15 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("upperBodyOnly")]
+		bool UpperBodyOnly { get; set; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNHumanObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2367,7 +2536,11 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNRecognizedTextObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2403,7 +2576,11 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNFeaturePrintObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2436,7 +2613,11 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNSaliencyImageObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2465,7 +2646,7 @@ namespace Vision {
 	[TV (13,0), Mac (10,15), iOS (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface VNRecognizedText : NSCopying, NSSecureCoding {
+	interface VNRecognizedText : NSCopying, NSSecureCoding, VNRequestRevisionProviding {
 
 		[Export ("string")]
 		string String { get; }
@@ -2538,15 +2719,28 @@ namespace Vision {
 	[DisableDefaultCtor]
 	interface VNRecognizeAnimalsRequest {
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedIdentifiers' instead.")]
 		[Static]
 		[Export ("knownAnimalIdentifiersForRevision:error:")]
 		[return: NullAllowed]
 		[return: BindAs (typeof (VNAnimalIdentifier []))]
 		NSString [] GetKnownAnimalIdentifiers (VNRecognizeAnimalsRequestRevision revision, [NullAllowed] out NSError error);
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("supportedIdentifiersAndReturnError:")]
+		[return: NullAllowed]
+		[return: BindAs (typeof (VNAnimalIdentifier []))]
+		NSString [] GetSupportedIdentifiers ([NullAllowed] out NSError error);
+
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNRecognizedObjectObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2577,10 +2771,18 @@ namespace Vision {
 	[DisableDefaultCtor]
 	interface VNRecognizeTextRequest : VNRequestProgressProviding {
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'GetSupportedRecognitionLanguages' instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetSupportedRecognitionLanguages' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetSupportedRecognitionLanguages' instead.")]
 		[Static]
 		[Export ("supportedRecognitionLanguagesForTextRecognitionLevel:revision:error:")]
 		[return: NullAllowed]
 		string [] GetSupportedRecognitionLanguages (VNRequestTextRecognitionLevel textRecognitionLevel, VNRecognizeTextRequestRevision revision, [NullAllowed] out NSError error);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("supportedRecognitionLanguagesAndReturnError:")]
+		[return: NullAllowed]
+		NSString[] GetSupportedRecognitionLanguages ([NullAllowed] out NSError error);
 
 		[Export ("recognitionLanguages", ArgumentSemantic.Copy)]
 		string [] RecognitionLanguages { get; set; }
@@ -2599,7 +2801,11 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNRecognizedTextObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2651,6 +2857,10 @@ namespace Vision {
 		[Export ("contrastAdjustment")]
 		float ContrastAdjustment { get; set; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("contrastPivot", ArgumentSemantic.Assign)]
+		NSNumber ContrastPivot { get; set; }
+
 		[Export ("detectsDarkOnLight")]
 		bool DetectsDarkOnLight { get; set; }
 
@@ -2659,7 +2869,11 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNContoursObservation[] Results { get; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2731,7 +2945,7 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2778,6 +2992,10 @@ namespace Vision {
 		[Export ("recognizedPointsForJointsGroupName:error:")]
 		[return: NullAllowed]
 		NSDictionary<NSString, VNRecognizedPoint> GetRecognizedPoints ([BindAs (typeof (VNHumanHandPoseObservationJointsGroupName))] NSString jointsGroupName, [NullAllowed] out NSError error);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("chirality")]
+		VNChirality Chirality { get; }
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
@@ -2806,7 +3024,7 @@ namespace Vision {
 
 		[Export ("initWithCompletionHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2839,7 +3057,7 @@ namespace Vision {
 	interface VNDetectTrajectoriesRequest {
 
 		[Export ("initWithFrameAnalysisSpacing:trajectoryLength:completionHandler:")]
-		IntPtr Constructor (CMTime frameAnalysisSpacing, nint trajectoryLength, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CMTime frameAnalysisSpacing, nint trajectoryLength, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Export ("trajectoryLength")]
 		nint TrajectoryLength { get; }
@@ -2852,6 +3070,10 @@ namespace Vision {
 
 		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
 		VNTrajectoryObservation [] Results { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("targetFrameTime", ArgumentSemantic.Assign)]
+		CMTime TargetFrameTime { get; set; }
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -2896,10 +3118,10 @@ namespace Vision {
 
 		[Export ("initWithX:y:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double x, double y);
+		NativeHandle Constructor (double x, double y);
 
 		[Export ("initWithLocation:")]
-		IntPtr Constructor (CGPoint location);
+		NativeHandle Constructor (CGPoint location);
 
 		[Export ("location")]
 		CGPoint Location { get; }
@@ -2943,14 +3165,14 @@ namespace Vision {
 
 		[Export ("initWithXComponent:yComponent:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double x, double y);
+		NativeHandle Constructor (double x, double y);
 
 		[Internal]
 		[Export ("initWithR:theta:")]
 		IntPtr InitWithRTheta (double r, double theta);
 
 		[Export ("initWithVectorHead:tail:")]
-		IntPtr Constructor (VNPoint head, VNPoint tail);
+		NativeHandle Constructor (VNPoint head, VNPoint tail);
 
 		[Export ("x")]
 		double X { get; }
@@ -3108,126 +3330,130 @@ namespace Vision {
 		[Export ("outputPixelFormat")]
 		CVPixelFormatType OutputPixelFormat { get; set; }
 
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNPixelBufferObservation[] Results { get; }
+
 		// Inlined from parent class
 		[Export ("initWithTargetedCVPixelBuffer:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, options.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options);
 
 		[Export ("initWithTargetedCVPixelBuffer:options:completionHandler:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (pixelBuffer, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCVPixelBuffer:orientation:options:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCVPixelBuffer:orientation:options:completionHandler:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (pixelBuffer, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCGImage:options:")]
-		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict);
+		NativeHandle Constructor (CGImage cgImage, NSDictionary optionsDict);
 
 		[Wrap ("this (cgImage, options.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage cgImage, VNImageOptions options);
+		NativeHandle Constructor (CGImage cgImage, VNImageOptions options);
 
 		[Export ("initWithTargetedCGImage:options:completionHandler:")]
-		IntPtr Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (cgImage, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCGImage:orientation:options:")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCGImage:orientation:options:completionHandler:")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (cgImage, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CGImage cgImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCIImage:options:")]
-		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict);
+		NativeHandle Constructor (CIImage ciImage, NSDictionary optionsDict);
 
 		[Wrap ("this (ciImage, options.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage ciImage, VNImageOptions options);
+		NativeHandle Constructor (CIImage ciImage, VNImageOptions options);
 
 		[Export ("initWithTargetedCIImage:options:completionHandler:")]
-		IntPtr Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (ciImage, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedCIImage:orientation:options:")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedCIImage:orientation:options:completionHandler:")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (ciImage, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CIImage ciImage, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageURL:options:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary optionsDict);
 
 		[Wrap ("this (imageUrl, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions options);
 
 		[Export ("initWithTargetedImageURL:options:completionHandler:")]
-		IntPtr Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageUrl, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageURL:orientation:options:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedImageURL:orientation:options:completionHandler:")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageUrl, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl imageUrl, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageData:options:")]
-		IntPtr Constructor (NSData imageData, NSDictionary optionsDict);
+		NativeHandle Constructor (NSData imageData, NSDictionary optionsDict);
 
 		[Wrap ("this (imageData, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions options);
+		NativeHandle Constructor (NSData imageData, VNImageOptions options);
 
 		[Export ("initWithTargetedImageData:options:completionHandler:")]
-		IntPtr Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageData, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		[Export ("initWithTargetedImageData:orientation:options:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict);
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options);
 
 		[Export ("initWithTargetedImageData:orientation:options:completionHandler:")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, NSDictionary optionsDict, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Wrap ("this (imageData, orientation, options.GetDictionary ()!, completionHandler)")]
-		IntPtr Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (NSData imageData, CGImagePropertyOrientation orientation, VNImageOptions options, VNRequestCompletionHandler completionHandler);
 
 		// We must inline the following 5 properties
 		// ('Revision', 'WeakSupportedRevisions', 'SupportedRevisions', 'DefaultRevision' and 'CurrentRevision')
@@ -3253,6 +3479,31 @@ namespace Vision {
 		VNGenerateOpticalFlowRequestRevision CurrentRevision { get; }
 	}
 
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(VNStatefulRequest))]
+	interface VNGeneratePersonSegmentationRequest
+	{
+		[Static]
+		[Export ("new")]
+		[return: Release]
+		VNGeneratePersonSegmentationRequest Create ();
+
+		[Export ("initWithCompletionHandler:")]
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Export ("initWithFrameAnalysisSpacing:completionHandler:")]
+		NativeHandle Constructor (CMTime frameAnalysisSpacing, [NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[Export ("qualityLevel", ArgumentSemantic.Assign)]
+		VNGeneratePersonSegmentationRequestQualityLevel QualityLevel { get; set; }
+
+		[Export ("outputPixelFormat")]
+		uint OutputPixelFormat { get; set; }
+
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNPixelBufferObservation[] Results { get; }
+	}
+
 	[TV (14,0), Mac (11,0), iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (VNObservation))]
@@ -3270,6 +3521,10 @@ namespace Vision {
 			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 			get;
 		}
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("movingAverageRadius")]
+		nfloat MovingAverageRadius { get; }
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
@@ -3352,7 +3607,7 @@ namespace Vision {
 	interface VNStatefulRequest {
 
 		[Export ("initWithFrameAnalysisSpacing:completionHandler:")]
-		IntPtr Constructor (CMTime frameAnalysisSpacing, [NullAllowed] VNRequestCompletionHandler completionHandler);
+		NativeHandle Constructor (CMTime frameAnalysisSpacing, [NullAllowed] VNRequestCompletionHandler completionHandler);
 
 		[Export ("minimumLatencyFrameCount")]
 		nint MinimumLatencyFrameCount { get; }
@@ -3391,7 +3646,7 @@ namespace Vision {
 	interface VNVideoProcessor {
 
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl videoUrl);
+		NativeHandle Constructor (NSUrl videoUrl);
 
 		[Export ("addRequest:processingOptions:error:")]
 		bool AddRequest (VNRequest request, VNVideoProcessorRequestProcessingOptions processingOptions, [NullAllowed] out NSError error);
@@ -3422,7 +3677,7 @@ namespace Vision {
 
 		[Export ("initWithFrameRate:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (nint frameRate);
+		NativeHandle Constructor (nint frameRate);
 
 		[Export ("frameRate")]
 		nint FrameRate { get; }
@@ -3436,7 +3691,7 @@ namespace Vision {
 
 		[Export ("initWithTimeInterval:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double timeInterval);
+		NativeHandle Constructor (double timeInterval);
 
 		[Export ("timeInterval")]
 		double TimeInterval { get; }
@@ -3449,5 +3704,17 @@ namespace Vision {
 
 		[NullAllowed, Export ("cadence", ArgumentSemantic.Copy)]
 		VNVideoProcessorCadence Cadence { get; set; }
+	}
+
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(VNImageBasedRequest))]
+	interface VNDetectDocumentSegmentationRequest
+	{
+		[Export ("initWithCompletionHandler:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] VNRequestCompletionHandler completionHandler);
+
+		[NullAllowed, Export ("results", ArgumentSemantic.Copy)]
+		VNRectangleObservation[] Results { get; }
 	}
 }

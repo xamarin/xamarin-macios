@@ -157,7 +157,7 @@
     <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">$(RootTestsDirectory)\..\src\build\tvos-defines.rsp</CompilerResponseFile>
     <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">$(RootTestsDirectory)\..\src\build\watchos-defines.rsp</CompilerResponseFile>
     <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">$(RootTestsDirectory)\..\src\build\maccatalyst-defines.rsp</CompilerResponseFile>
-    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(RootTestsDirectory)\..\src\build\mac-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(RootTestsDirectory)\..\src\build\macos-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -220,6 +220,11 @@
     <Compile Include="..\common\Extensions.cs">
       <Link>Extensions.cs</Link>
     </Compile>
+    <Compile Include="..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="SceneKit\SCNVector3Test.cs" />
+    <Compile Include="SceneKit\SCNVector4Test.cs" />
   </ItemGroup>
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

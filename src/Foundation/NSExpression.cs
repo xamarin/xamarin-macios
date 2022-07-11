@@ -92,7 +92,15 @@ namespace Foundation {
 			}
 		}
 		
-		[Mac(10,11),iOS(9,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,11)]
+		[iOS (9,0)]
+#endif
 		[Export ("trueExpression")]
 		public virtual NSExpression TrueExpression {
 			get {
@@ -105,7 +113,15 @@ namespace Foundation {
 			}
 		}
 
-		[Mac(10,11),iOS(9,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[Mac (10,11)]
+		[iOS (9,0)]
+#endif
 		[Export ("falseExpression")]
 		public virtual NSExpression FalseExpression {
 			get {
@@ -165,7 +181,7 @@ namespace Foundation {
 			}
 		}
 		
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 		[Obsolete("Use 'EvaluateWith' instead.")]
 		public virtual NSExpression ExpressionValueWithObject (NSObject obj, NSMutableDictionary context) {
 			var result = EvaluateWith (obj, context);

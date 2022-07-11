@@ -5,4 +5,3 @@ public enum TestPlatform {
 	watchOS,
 	tvOS,
 }
-

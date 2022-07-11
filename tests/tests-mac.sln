@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Touch.Client-macOS-mobile",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Touch.Client-macOS-full", "..\external\Touch.Unit\Touch.Client\macOS\full\Touch.Client-macOS-full.csproj", "{A1209F3A-3876-4EAC-ADA7-99F660002AB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-framework-test-mac", "bindings-framework-test\bindings-framework-test-mac.csproj", "{E40B0B77-3467-4891-9117-7AF8F248E306}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "bindings-framework-test-mac", "bindings-framework-test\macOS\bindings-framework-test.csproj", "{E40B0B77-3467-4891-9117-7AF8F248E306}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

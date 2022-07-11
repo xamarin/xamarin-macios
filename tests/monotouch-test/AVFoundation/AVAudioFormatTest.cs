@@ -1,13 +1,13 @@
-﻿// Unit test for AVAudioFormat
+// Unit test for AVAudioFormat
 // Authors: 
 // 		Whitney Schmidt (whschm@microsoft.com)
 // Copyright 2020 Microsoft Corp.
 
-using System;
 using Foundation;
 using AVFoundation;
 using NUnit.Framework;
 using ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVFoundation {
 
@@ -18,8 +18,8 @@ namespace MonoTouchFixtures.AVFoundation {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 		}
 
 		[Test]

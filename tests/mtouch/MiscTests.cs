@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.IO;
@@ -136,6 +136,9 @@ namespace Xamarin.Tests
 				"___destroy_helper_block_",
 				// compiler-generated helper methods
 				"___os_log_helper_",
+				// Brotli compression symbols
+				"_kBrotli",
+				"__kBrotli",
 			};
 
 			paths.RemoveWhere ((v) => {
@@ -203,4 +206,3 @@ namespace Xamarin.Tests
 		}
 	}
 }
-

@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.Runtime.InteropServices;
 
@@ -6,6 +7,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace AppKit {
+#if !NET
 	public partial class NSSharingServiceDelegate {
 		CGRect SourceFrameOnScreenForShareItem (NSSharingService sharingService, NSPasteboardWriting item)
 		{
@@ -17,4 +19,6 @@ namespace AppKit {
 			return TransitionImageForShareItem (sharingService, (INSPasteboardWriting)item, contentRect);
 		}
 	}
+#endif
 }
+#endif // !__MACCATALYST__

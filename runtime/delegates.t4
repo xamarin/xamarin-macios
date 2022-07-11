@@ -383,6 +383,13 @@
 			OnlyCoreCLR = true,
 		},
 
+		new XDelegate ("char *", "IntPtr", "xamarin_bridge_get_assembly_location",
+			"GCHandle", "IntPtr", "gchandle"
+		) {
+			WrappedManagedFunction = "GetAssemblyLocation",
+			OnlyCoreCLR = true,
+		},
+
 		new XDelegate ("MonoObject *", "MonoObject *", "xamarin_bridge_create_exception",
 			"enum XamarinExceptionTypes", "Runtime.ExceptionType", "type",
 			"const char *", "IntPtr", "arg0"
@@ -657,6 +664,20 @@
 			OnlyDynamicUsage = false,
 			OnlyCoreCLR = true,
 		},
+
+		new XDelegate ("void", "void", "xamarin_retain_nativeobject",
+			"GCHandle->MonoObject *", "IntPtr", "obj"
+		) {
+			WrappedManagedFunction = "RetainNativeObject",
+			OnlyDynamicUsage = false,
+		},
+
+		new XDelegate ("bool", "bool", "xamarin_attempt_retain_nsobject",
+			"GCHandle->MonoObject *", "IntPtr", "obj"
+		) {
+			WrappedManagedFunction = "AttemptRetainNSObject",
+			OnlyDynamicUsage = false,
+		},
 	};
 	delegates.CalculateLengths ();
 #><#+
@@ -779,7 +800,7 @@
 					if (i > 0)
 						invoke_args.Append (", ");
 					if (arg.IsGCHandleConversion) {
-						// Convert to GCHandle before calling the managed functino
+						// Convert to GCHandle before calling the managed function
 						var argname = $"{arg.Name}__handle";
 						sb.AppendLine ($"\tGCHandle {argname} = xamarin_gchandle_new ((MonoObject *) {arg.Name}, false);");
 						invoke_args.Append (argname);

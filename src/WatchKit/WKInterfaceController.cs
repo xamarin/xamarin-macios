@@ -1,5 +1,7 @@
 // Copyright 2014-2015 Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 #if WATCH
 
 using System;
@@ -15,23 +17,23 @@ namespace WatchKit {
 
 		public void PushController (string name, string context)
 		{
-			using (var ns = context == null ? null : new NSString (context)) {
-				PushController (name, (NSObject) ns);
+			using (var ns = context is null ? null : new NSString (context)) {
+				PushController (name, (NSObject?) ns);
 			}
 		}
 
 		public void PresentController (string name, string context)
 		{
-			using (var ns = context == null ? null : new NSString (context)) {
-				PresentController (name, (NSObject) ns);
+			using (var ns = context is null ? null : new NSString (context)) {
+				PresentController (name, (NSObject?) ns);
 			}
 		}
 
 		public void PresentController (string [] names, string [] contexts)
 		{
-			NSObject[] array = null;
+			NSObject[]? array = null;
 			try {
-				if (contexts != null) {
+				if (contexts is not null) {
 					array = new NSObject [contexts.Length];
 					for (int i = 0; i < array.Length; i++)
 						array [i] = new NSString (contexts [i]);
@@ -39,7 +41,7 @@ namespace WatchKit {
 				PresentController (names, array);
 			}
 			finally {
-				if (array != null) {
+				if (array is not null) {
 					foreach (var ns in array)
 						ns.Dispose ();
 				}
@@ -56,8 +58,8 @@ namespace WatchKit {
 		MethodInfo GetMethodInfo (Action action)
 		{
 			var del = action as Delegate;
-			if (del == null)
-				throw new ArgumentNullException ("action");
+			if (del is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (action));
 			var met = del.Method;
 			// <quote>The method must be defined on the current interface controller object.</quote>
 			if (met.DeclaringType != GetType ())

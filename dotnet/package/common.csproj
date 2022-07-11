@@ -25,15 +25,15 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <_RepositoryPath>$(MSBuildThisFileDirectory)/../..</_RepositoryPath>
+    <_RepositoryPath>$(MSBuildThisFileDirectory)../..</_RepositoryPath>
     <_buildPath>$(_RepositoryPath)/_build</_buildPath>
     <_packagePath Condition="'$(_packagePath)' == ''">$(_buildPath)\$(PackageId)\</_packagePath>
     <NupkgPath Condition=" '$(NupkgPath)' == '' ">$([MSBuild]::NormalizeDirectory ('$(_buildPath)\nupkgs\'))</NupkgPath>
     <BarManifestOutputPath Condition=" '$(BarManifestOutputPath)' == '' ">$(NupkgPath)\bar-manifests</BarManifestOutputPath>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'iOS'">iOS</_AssemblyInfix>
-    <_AssemblyInfix Condition="'$(_PlatformName)' == 'tvOS'">TVOS</_AssemblyInfix>
-    <_AssemblyInfix Condition="'$(_PlatformName)' == 'watchOS'">WatchOS</_AssemblyInfix>
-    <_AssemblyInfix Condition="'$(_PlatformName)' == 'macOS'">Mac</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'tvOS'">tvOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'watchOS'">watchOS</_AssemblyInfix>
+    <_AssemblyInfix Condition="'$(_PlatformName)' == 'macOS'">macOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'MacCatalyst'">MacCatalyst</_AssemblyInfix>
   </PropertyGroup>
 
@@ -49,20 +49,22 @@
     <PackageReference Include="Microsoft.DotNet.Arcade.Sdk" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" PrivateAssets="all" GeneratePathProperty="true" />
   </ItemGroup>
 
-  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.SharedFramework.Sdk" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" />
-  <UsingTask TaskName="CreateFrameworkListFile" AssemblyFile="$(DotNetSharedFrameworkTaskFile)"/>
+  <!-- do not load this Sdk for template packages -->
+  <!-- it overwrites packageType -->
+  <Import Project="Sdk.props" Sdk="Microsoft.DotNet.SharedFramework.Sdk" Version="$(MicrosoftDotNetBuildTasksFeedPackageVersion)" Condition="'$(PackageType)' != 'Template'" />
+  <UsingTask TaskName="CreateFrameworkListFile" AssemblyFile="$(DotNetSharedFrameworkTaskFile)" Condition="'$(PackageType)' != 'Template'" />
   <UsingTask TaskName="GenerateBuildManifest" AssemblyFile="$(_MicrosoftDotNetBuildTasksFeedTaskDir)Microsoft.DotNet.Build.Tasks.Feed.dll" />
 
   <Target Name="_GenerateFrameworkListFile" Condition=" '$(_CreateFrameworkList)' == 'true' Or '$(_CreateRuntimeList)' == 'true' ">
     <!-- https://github.com/dotnet/runtime/blob/0647ec314948904319da5eb15e9931f7c85ed1e2/src/installer/pkg/projects/Directory.Build.targets#L281 -->
     <PropertyGroup Condition="'$(_CreateFrameworkList)' == 'true'">
       <_FrameworkListFile>$(_packagePath)data/FrameworkList.xml</_FrameworkListFile>
-      <_PackTargetPath>ref/net6.0</_PackTargetPath>
+      <_PackTargetPath>ref/net$(BundledNETCoreAppTargetFrameworkVersion)</_PackTargetPath>
       <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(_CreateRuntimeList)' == 'true'">
       <_FrameworkListFile>$(_packagePath)data/RuntimeList.xml</_FrameworkListFile>
-      <_PackTargetPath>runtimes/$(_RuntimeIdentifier)/lib/net6.0</_PackTargetPath>
+      <_PackTargetPath>runtimes/$(_RuntimeIdentifier)/lib/net$(BundledNETCoreAppTargetFrameworkVersion)</_PackTargetPath>
       <_PackNativePath>runtimes/$(_RuntimeIdentifier)/native</_PackNativePath>
     </PropertyGroup>
     <ItemGroup>
@@ -74,9 +76,9 @@
 
     <ItemGroup>
       <!-- Hardcode framework attributes -->
-      <_FrameworkListRootAttributes Include="Name" Value="Microsoft $(_PlatformName) - NET 6.0" />
+      <_FrameworkListRootAttributes Include="Name" Value="Microsoft $(_PlatformName) - NET $(BundledNETCoreAppTargetFrameworkVersion)" />
       <_FrameworkListRootAttributes Include="TargetFrameworkIdentifier" Value=".NETCoreApp" />
-      <_FrameworkListRootAttributes Include="TargetFrameworkVersion" Value="6.0" />
+      <_FrameworkListRootAttributes Include="TargetFrameworkVersion" Value="$(BundledNETCoreAppTargetFrameworkVersion)" />
       <_FrameworkListRootAttributes Include="FrameworkName" Value="Microsoft.$(_PlatformName)" />
       <_PackageFiles Include="$(_FrameworkListFile)" PackagePath="data" />
 
@@ -119,7 +121,7 @@
     <Error Condition="'@(BuildArtifacts)' == ''" Text="No packages to create manifest from." />
 
     <ItemGroup>
-      <ManifestBuildData Include="InitialAssetsLocation=https://pkgs.dev.azure.com/azure-public/vside/_packaging/xamarin-impl/nuget/v3/index.json" />
+      <ManifestBuildData Include="InitialAssetsLocation=https://pkgs.dev.azure.com/dnceng/public/_packaging/dotnet6/nuget/v3/index.json" />
       <ManifestBuildData Include="AzureDevOpsBuildId=$(BUILD_BUILDID)" />
       <ManifestBuildData Include="AzureDevOpsBuildDefinitionId=$(SYSTEM_DEFINITIONID)" />
       <ManifestBuildData Include="AzureDevOpsProject=$(SYSTEM_TEAMPROJECT)" />
@@ -149,12 +151,12 @@
     <MSBuild
         Targets="Restore"
         Projects="$(PkgMicrosoft_DotNet_Arcade_Sdk)\tools\SdkTasks\PublishBuildAssets.proj"
-        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(VersionPrefix)"
+        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(VersionPrefix);NuGetPackageRoot=$(_RepositoryPath)\packages\"
     />
 
     <MSBuild
         Projects="$(PkgMicrosoft_DotNet_Arcade_Sdk)\tools\SdkTasks\PublishBuildAssets.proj"
-        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(VersionPrefix);ManifestsPath=$(BarManifestOutputPath);MaestroApiEndpoint=https://maestro-prod.westus2.cloudapp.azure.com"
+        Properties="Configuration=$(Configuration);RepoRoot=$(_RepositoryPath);VersionPrefix=$(VersionPrefix);ManifestsPath=$(BarManifestOutputPath);MaestroApiEndpoint=https://maestro-prod.westus2.cloudapp.azure.com;NuGetPackageRoot=$(_RepositoryPath)\packages\"
     />
   </Target>
 

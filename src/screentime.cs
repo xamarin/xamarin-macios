@@ -10,6 +10,10 @@ using AppKit;
 using UIViewController = AppKit.NSViewController;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ScreenTime {
 
 	[Mac (11, 0), iOS (14, 0)]
@@ -28,7 +32,7 @@ namespace ScreenTime {
 	interface STScreenTimeConfigurationObserver {
 		[Export ("initWithUpdateQueue:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (DispatchQueue updateQueue);
+		NativeHandle Constructor (DispatchQueue updateQueue);
 
 		[Export ("startObserving")]
 		void StartObserving ();
@@ -47,7 +51,7 @@ namespace ScreenTime {
 	interface STWebHistory {
 
 		[Export ("initWithBundleIdentifier:error:")]
-		IntPtr Constructor (string bundleIdentifier, [NullAllowed] out NSError error);
+		NativeHandle Constructor (string bundleIdentifier, [NullAllowed] out NSError error);
 
 		[Export ("deleteHistoryForURL:")]
 		void DeleteHistory (NSUrl url);
@@ -67,7 +71,7 @@ namespace ScreenTime {
 	{
 		[DesignatedInitializer]
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[Export ("suppressUsageRecording")]
 		bool SuppressUsageRecording { get; set; }

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <TargetName>Microsoft.NET.Sdk.MaciOS.Workload</TargetName>
+    <ManifestBuildVersion>@IOS_WORKLOAD_VERSION@</ManifestBuildVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Shorten package names to avoid long path caching issues in Visual Studio -->
+    <ShortNames Include="@PACK_VERSION_LONG@">
+      <Replacement>@PACK_VERSION_SHORT@</Replacement>
+    </ShortNames>
+    <ShortNames Include="@MACOS_PACK_VERSION_LONG@">
+      <Replacement>@MACOS_PACK_VERSION_SHORT@</Replacement>
+    </ShortNames>
+    <ShortNames Include="Microsoft.MacCatalyst.Runtime.maccatalyst">
+      <Replacement>Microsoft.MacCatalyst.Runtime</Replacement>
+    </ShortNames>
+    <ShortNames Include="Microsoft.NET.Sdk.MacCatalyst.Manifest">
+      <Replacement>Microsoft.MacCatalyst.Manifest</Replacement>
+    </ShortNames>
+    <ShortNames Include="Microsoft.tvOS.Runtime.tvossimulator">
+      <Replacement>Microsoft.tvOS.Runtime</Replacement>
+    </ShortNames>
+    <ComponentResources Include="ios" Version="@IOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for iOS" Description=".NET SDK Workload for building iOS applications."/>
+    <ComponentResources Include="maccatalyst" Version="@MACCATALYST_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for Mac Catalyst" Description=".NET SDK Workload for building macOS applications with Mac Catalyst."/>
+    <ComponentResources Include="macos" Version="@MACOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for macOS" Description=".NET SDK Workload for building macOS applications."/>
+    <ComponentResources Include="tvos" Version="@TVOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for tvOS" Description=".NET SDK Workload for building tvOS applications."/>
+    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.iOS.Manifest*.nupkg" Version="@IOS_WORKLOAD_VERSION@" />
+    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.MacCatalyst.Manifest*.nupkg" Version="@MACCATALYST_WORKLOAD_VERSION@" />
+    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.macOS.Manifest*.nupkg" Version="@MACOS_WORKLOAD_VERSION@" />
+    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.tvOS.Manifest*.nupkg" Version="@TVOS_WORKLOAD_VERSION@" />
+  </ItemGroup>
+</Project>

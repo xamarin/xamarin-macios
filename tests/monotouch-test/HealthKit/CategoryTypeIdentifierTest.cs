@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for HKCategoryTypeIdentifier
 //
 // Authors:
@@ -10,6 +10,7 @@
 #if HAS_HEALTHKIT
 
 using System;
+using System.Collections.Generic;
 
 using Foundation;
 using HealthKit;
@@ -26,6 +27,8 @@ namespace MonoTouchFixtures.HealthKit {
 		public void EnumValues_22351 ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
+
+			var failures = new List<string> ();
 
 			foreach (HKCategoryTypeIdentifier value in Enum.GetValues (typeof (HKCategoryTypeIdentifier))) {
 
@@ -105,6 +108,12 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (12, 3))
 						continue;
 					break;
+				case HKCategoryTypeIdentifier.AppleWalkingSteadinessEvent:
+				case HKCategoryTypeIdentifier.PregnancyTestResult:
+				case HKCategoryTypeIdentifier.ProgesteroneTestResult:
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;
@@ -117,9 +126,11 @@ namespace MonoTouchFixtures.HealthKit {
 					}
 				}
 				catch (Exception e) {
-					Assert.Fail ("{0} could not be created: {1}", value, e);
+					failures.Add ($"{value} could not be created: {e}");
 				}
 			}
+
+			Assert.That (failures, Is.Empty, "No failures");
 		}
 	}
 }

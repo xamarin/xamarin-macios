@@ -1,5 +1,0 @@
-## macOS-only API (not available on iOS) and without any documentation specific to Catalyst
-!missing-selector! +CNGroup::predicateForSubgroupsInGroupWithIdentifier: not bound
-!missing-selector! CNContactStore::unifiedMeContactWithKeysToFetch:error: not bound
-!missing-selector! CNSaveRequest::addSubgroup:toGroup: not bound
-!missing-selector! CNSaveRequest::removeSubgroup:fromGroup: not bound

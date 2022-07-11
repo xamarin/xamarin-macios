@@ -1,4 +1,4 @@
-﻿//
+//
 // INCallRecordTypeResolutionResult.cs
 //
 // Authors:
@@ -18,11 +18,11 @@ namespace Intents {
 		public static INCallRecordTypeResolutionResult GetSuccess (INCallRecordType resolvedValue)
 		{
 #if IOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (SystemVersion.CheckwatchOS (4, 0))
 #elif MONOMAC
-			if (PlatformHelper.CheckSystemVersion (10, 13))
+			if (SystemVersion.CheckmacOS (10, 13))
 #endif
 				return SuccessWithResolvedCallRecordType (resolvedValue);
 			else
@@ -32,11 +32,11 @@ namespace Intents {
 		public static INCallRecordTypeResolutionResult GetConfirmationRequired (INCallRecordType valueToConfirm)
 		{
 #if IOS
-			if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (11, 0))
+			if (SystemVersion.CheckiOS (11, 0))
 #elif WATCH
-			if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (4, 0))
+			if (SystemVersion.CheckwatchOS (4, 0))
 #elif MONOMAC
-			if (PlatformHelper.CheckSystemVersion (10, 13))
+			if (SystemVersion.CheckmacOS (10, 13))
 #endif
 				return ConfirmationRequiredWithCallRecordTypeToConfirm (valueToConfirm);
 			else

@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Runtime.CompilerServices;
 using CoreFoundation;
 using Foundation;
 using NUnit.Framework;
@@ -24,6 +25,16 @@ namespace MonoTouchFixtures.CoreFoundation {
 		}
 
 		public int RetainCount => rc;
+
+		public override bool Equals (object obj)
+		{
+			return (obj is null);
+		}
+
+		public override int GetHashCode ()
+		{
+			return 0;
+		}
 	}
 
 	class NativeObjectPoker : NativeObject {
@@ -102,6 +113,39 @@ namespace MonoTouchFixtures.CoreFoundation {
 			x.Dispose ();
 			x.CallNative = true; // handle is null
 			Assert.Throws<ObjectDisposedException> (() => x._Release ());
+		}
+
+		[Test]
+		public void Equals ()
+		{
+			// overriden Equals with weird behavior to confirm it can't be anything else
+			using (var x = new FakeNativeObject ((IntPtr) 42, true)) {
+				Assert.False (x.Equals (x), "self");
+				Assert.True (x.Equals (null), "null");
+			}
+#if NET
+			// check that equality is based on handle only (and not System.Object.Equals)
+			using (var n1 = new NativeObjectPoker ((IntPtr) 42))
+			using (var n2 = new NativeObjectPoker ((IntPtr) 42))
+				Assert.True (n1.Equals (n2), "1");
+#endif
+		}
+
+		[Test]
+		public void GetHashCodeValue ()
+		{
+			// check that overriding GetHashCode is fine
+			using (var n = new FakeNativeObject ((IntPtr) 42, true)) {
+				Assert.That (n.GetHashCode, Is.EqualTo (0), "GetHashCode");
+			}
+#if NET
+			// check that only the handle is used to compute the hash code of the selector
+			// which means DisposableObject base implementation (not System.Object) is used
+			using (var n = new NativeObjectPoker ((IntPtr) 42)) {
+				Assert.AreNotEqual (n.GetHashCode (), RuntimeHelpers.GetHashCode (n), "GetHashCode-old");
+				Assert.AreEqual (n.GetHashCode (), n.Handle.GetHashCode (), "GetHashCode-net");
+			}
+#endif
 		}
 	}
 }

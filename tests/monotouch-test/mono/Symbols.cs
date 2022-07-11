@@ -16,8 +16,7 @@ namespace MonoTouchFixtures {
 		[Test]
 		public void FunctionNames ()
 		{
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Ignore ("This is a device-only test.");
+			TestRuntime.AssertDevice ();
 			
 			Collect ();
 			bool aot = symbols [1].Contains ("MonoTouchFixtures_Symbols_Collect");

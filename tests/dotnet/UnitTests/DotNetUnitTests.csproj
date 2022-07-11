@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)</TargetFramework>
     <IsPackable>false</IsPackable>
-    <DefineConstants>$(DefineConstants);NET</DefineConstants>
+    <DefineConstants>$(DefineConstants);NET;TESTS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="nunit" Version="3.12.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-    <PackageReference Include="Mono.Cecil" Version="0.11.2" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="MSBuild.StructuredLogger" Version="2.1.500" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,8 +48,29 @@
     <Compile Include="..\..\..\external\Xamarin.MacDev\Xamarin.MacDev\PListObject.cs">
       <Link>external\PListObject.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\tools\common\SdkVersions.cs">
+      <Link>external\SdkVersions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\MachO.cs">
+      <Link>external\MachO.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\mtouch\Errors.designer.cs">
+      <Link>external\Errors.designer.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\src\ObjCRuntime\ErrorHelper.cs">
+      <Link>external\ErrorHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\common\ErrorHelper.tests.cs">
+      <Link>external\ErrorHelper.tests.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\tools\common\error.cs">
+      <Link>external\error.cs</Link>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="external\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="System.Text.Json" />
   </ItemGroup>
 </Project>

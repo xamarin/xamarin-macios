@@ -34,6 +34,9 @@ static MonoClass* nsvalue_class = NULL;
 static MonoClass* nsnumber_class = NULL;
 static MonoClass* nsstring_class = NULL;
 static MonoClass* runtime_class = NULL;
+#if DOTNET
+static MonoClass* nativehandle_class = NULL;
+#endif
 
 #if !LEGACY_XAMARIN_MAC
 void
@@ -57,9 +60,8 @@ xamarin_bridge_setup ()
 void
 xamarin_bridge_initialize ()
 {
-#if defined (__arm__) || defined(__aarch64__)
-	xamarin_register_modules ();
-#endif
+	if (xamarin_register_modules != NULL)
+		xamarin_register_modules ();
 	DEBUG_LAUNCH_TIME_PRINT ("\tAOT register time");
 
 #ifdef DEBUG
@@ -127,6 +129,9 @@ xamarin_bridge_call_runtime_initialize (struct InitializationOptions* options, G
 
 	runtime_class = get_class_from_name (platform_image, objcruntime, "Runtime");
 	inativeobject_class = get_class_from_name (platform_image, objcruntime, "INativeObject");
+#if DOTNET
+	nativehandle_class = get_class_from_name (platform_image, objcruntime, "NativeHandle");
+#endif
 	nsobject_class = get_class_from_name (platform_image, foundation, "NSObject");
 	nsnumber_class = get_class_from_name (platform_image, foundation, "NSNumber", true);
 	nsvalue_class = get_class_from_name (platform_image, foundation, "NSValue", true);
@@ -170,6 +175,16 @@ xamarin_get_inativeobject_class ()
 		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "INativeObject");
 	return inativeobject_class;
 }
+
+#if DOTNET
+MonoClass *
+xamarin_get_nativehandle_class ()
+{
+	if (nativehandle_class == NULL)
+		xamarin_assertion_message ("Internal consistency error, please file a bug (https://github.com/xamarin/xamarin-macios/issues/new). Additional data: can't get the %s class because it's been linked away.\n", "NativeHandle");
+	return nativehandle_class;
+}
+#endif
 
 MonoClass *
 xamarin_get_nsobject_class ()
@@ -315,6 +330,14 @@ xamarin_is_class_inativeobject (MonoClass *cls)
 
 	return mono_class_is_subclass_of (cls, xamarin_get_inativeobject_class (), true);
 }
+
+#if DOTNET
+bool
+xamarin_is_class_nativehandle (MonoClass *cls)
+{
+	return cls == xamarin_get_nativehandle_class ();
+}
+#endif
 
 bool
 xamarin_is_class_array (MonoClass *cls)

@@ -163,14 +163,13 @@
     <None Include="Entitlements.plist" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <Compile Include="FrameworkTests.cs" />
   </ItemGroup>
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\..\tests\bindings-framework-test\bindings-framework-test.csproj">
+    <ProjectReference Include="..\..\..\tests\bindings-framework-test\iOS\bindings-framework-test.csproj">
       <Project>{E40B0B77-3467-4891-9117-7AF8F248E306}</Project>
       <Name>bindings-framework-test</Name>
     </ProjectReference>

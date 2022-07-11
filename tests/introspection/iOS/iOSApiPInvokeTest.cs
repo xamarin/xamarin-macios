@@ -1,4 +1,4 @@
-﻿//
+//
 // Test the existing of p/invoked symbols
 //
 // Authors:
@@ -15,6 +15,7 @@ using Foundation;
 using ObjCRuntime;
 using UIKit;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace Introspection {
 
@@ -25,7 +26,7 @@ namespace Introspection {
 
 		protected override bool Skip (string symbolName)
 		{
-			bool simulator = Runtime.Arch == Arch.SIMULATOR;
+			var simulator = TestRuntime.IsSimulatorOrDesktop;
 			switch (symbolName) {
 			// Metal support inside simulator is only available in recent iOS9 SDK
 #if !__WATCHOS__
@@ -59,10 +60,6 @@ namespace Introspection {
 			case "CVPixelBufferGetIOSurface":
 			case "CVPixelBufferCreateWithIOSurface":
 				return simulator && !TestRuntime.CheckXcodeVersion (11, 0);
-			// it's not needed for ARM64/ARM64_32 and Apple does not have stubs for them in libobjc.dylib
-			case "objc_msgSend_stret":
-			case "objc_msgSendSuper_stret":
-				return !simulator;
 
 			default:
 				// MLCompute not available in simulator as of Xcode 12 beta 3
@@ -78,7 +75,7 @@ namespace Introspection {
 			// 1. is the current SDK target (or a newer one)
 			var sdk = new Version (Constants.SdkVersion);
 #if __WATCHOS__
-			if (!TestRuntime.CheckSystemVersion (PlatformName.WatchOS, sdk.Major, sdk.Minor))
+			if (!TestRuntime.CheckSystemVersion (ApplePlatform.WatchOS, sdk.Major, sdk.Minor))
 				return true;
 #elif __IOS__ || __TVOS__
 			if (!UIDevice.CurrentDevice.CheckSystemVersion (sdk.Major, sdk.Minor))
@@ -89,7 +86,7 @@ namespace Introspection {
 			// 2. on the real target for Xamarin.iOS.dll/monotouch.dll
 			//    as the simulator miss some libraries and symbols
 			//    but the rest of the BCL is fine to test
-			return (a == typeof (NSObject).Assembly && (Runtime.Arch == Arch.SIMULATOR));
+			return (a == typeof (NSObject).Assembly && TestRuntime.IsSimulatorOrDesktop);
 		}
 
 		[Test]

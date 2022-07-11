@@ -1,6 +1,8 @@
-#if !XAMCORE_4_0
+#if !NET
 using System;
+
 using Foundation;
+using ObjCRuntime;
 
 #nullable enable
 

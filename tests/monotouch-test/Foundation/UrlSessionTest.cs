@@ -19,6 +19,7 @@ using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -143,7 +144,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void SharedSession ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 			
 			// in iOS9 those selectors do not respond - but they do work (forwarded to __NSURLSessionLocal type ?)
 			// * delegateQueue, sessionDescription, setSessionDescription:, delegate

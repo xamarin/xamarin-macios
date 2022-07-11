@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AVAssetImageGenerator
 //
 // Authors:
@@ -16,7 +16,6 @@ using ObjCRuntime;
 using Foundation;
 using AVFoundation;
 using NUnit.Framework;
-using MonoTests.System.Net.Http;
 
 namespace monotouchtest {
 	[TestFixture]
@@ -40,8 +39,7 @@ namespace monotouchtest {
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Ignoring AVAssetDownloadUrlSession tests: Requires iOS9+");
 
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Ignoring CreateSessionTest tests: Requires com.apple.developer.media-asset-download entitlement");
+			TestRuntime.AssertNotDevice ("Ignoring CreateSessionTest tests: Requires com.apple.developer.media-asset-download entitlement");
 
 			using (var backgroundConfiguration = NSUrlSessionConfiguration.CreateBackgroundSessionConfiguration ("HLS-Identifier")) {
 				Assert.DoesNotThrow (() => AVAssetDownloadUrlSession.CreateSession (backgroundConfiguration, null, NSOperationQueue.MainQueue), "Should not throw InvalidCastException");

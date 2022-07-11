@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MPSImageNormalizedHistogram
 //
 // Authors:
@@ -18,6 +18,7 @@ using MetalPerformanceShaders;
 using ObjCRuntime;
 
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
@@ -30,6 +31,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		{
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (10, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
@@ -51,7 +53,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 			catch (Exception ex) {
 				// This test fails on 10.13 bots but not on a local computer with 10.13. Must work on 10.14+.
 				// there is no a good way to tell if MPSImageNormalizedHistogram will work or not...
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14))
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 14))
 					Assert.Fail (ex.Message);
 				Assert.Inconclusive ("In 10.13 this can fail in some hardware.");
 			}

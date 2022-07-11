@@ -48,6 +48,11 @@ namespace Xamarin.MacDev.Tasks
 
 			if (BundleResources != null) {
 				foreach (var item in BundleResources) {
+					// Skip anything with the PublishFolderType metadata, these are copied directly to the ResolvedFileToPublish item group instead.
+					var publishFolderType = item.GetMetadata ("PublishFolderType");
+					if (!string.IsNullOrEmpty (publishFolderType))
+						continue;
+
 					var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty(SessionId));
 					// We need a physical path here, ignore the Link element
 					var path = item.GetMetadata ("FullPath");

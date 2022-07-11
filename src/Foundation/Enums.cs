@@ -1,16 +1,28 @@
+using System;
 using ObjCRuntime;
 
 namespace Foundation {
 
 	// Utility enum, ObjC uses NSString
-	[NoMac]
 	[iOS (7,0)]
 	public enum NSDocumentType {
 		Unknown = -1,
 		PlainText,
 		RTF,
 		RTFD,
-		HTML
+		HTML,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		MacSimpleText,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		DocFormat,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		WordML,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		OfficeOpenXml,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		WebArchive,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		OpenDocument,
 	}
 
 	// Utility enum, ObjC uses NSString
@@ -149,7 +161,7 @@ namespace Foundation {
 		Script,
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	public enum NSLinguisticTagUnit {
 #else
 	public enum NSLinguisticTag {
@@ -247,4 +259,21 @@ namespace Foundation {
 		[Field ("NSLinguisticTagPlaceName")]
 		PlaceName,
 	}
+
+	[Flags]
+	[Native]
+	public enum NSStringEnumerationOptions : ulong
+	{
+		ByLines = 0x0,
+		ByParagraphs = 0x1,
+		ByComposedCharacterSequences = 0x2,
+		ByWords = 0x3,
+		BySentences = 0x4,
+		ByCaretPositions = 0x5,
+		ByDeletionClusters = 0x6,
+		Reverse = 1uL << 8,
+		SubstringNotRequired = 1uL << 9,
+		Localized = 1uL << 10,
+	}
+
 }

@@ -1,0 +1,86 @@
+# This template will gather all the logs of a mac agent from a given starting poing in time
+# to a given end point. The template also takes the path for the file where the logs will be written.
+#
+
+parameters:
+
+- name: workingDirectory
+  type: string
+  default: ''
+
+- name: outputPath 
+  type: string 
+  default: 'agent-logs.log'
+
+- name: predicate
+  type: string
+  default: ''
+
+- name: style
+  type: string
+  default: 'compact'
+  values:
+    - default
+    - compact
+    - json
+    - syslog
+
+- name: uploadLogs
+  type: boolean
+  default: true
+
+steps:
+
+- pwsh: |
+    $style=$Env:STYLE
+    $output=$Env:OUTPUT
+
+    Write-Host "output path: $output"
+
+    # there is no var that gives us the start time, but we can use the rest api to get the time when
+    # the build started
+
+    # User name can be anything. It is the personal access token (PAT) token that matters.
+    $user= "AnyUser"
+    $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $user, $Env:ACCESSTOKEN)))
+    $headers = @{Authorization = "Basic {0}" -f $base64AuthInfo}
+
+    # get the url of the build
+    $url= $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "?api-version=5.1"
+    $buildPipeline= Invoke-RestMethod -Uri $url -Headers $headers -Method Get
+
+    $start=[DateTime]::Parse($buildPipeline.startTime).ToString("yyyy-MM-dd HH:mm:ss")
+
+    $end=Get-Date -Format "yyyy-MM-dd HH:mm:ss"
+    Write-Host "end time: $end"
+
+    $predicate=$Env:PREDICATE
+    if (-not $predicate) {
+      log show --style $style --start "$start" --end "$end" > $output
+    } else {
+      log show --predicate $predicate --style $style --start "$start" --end "$end" > $output
+    }
+
+  displayName: 'Gathering agent logs'
+  condition: always()
+  env:
+    ACCESSTOKEN: $(System.AccessToken)
+    OUTPUT: ${{ parameters.outputPath }}
+    PREDICATE: ${{ parameters.predicate }}
+    STYLE: ${{ parameters.style }}
+  ${{ if ne(parameters.workingDirectory, '') }}:
+    workingDirectory: ${{ parameters.workingDirectory }}
+
+# only upload when told so
+- ${{ if eq(parameters.uploadLogs, true) }}:
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: Agent logs'
+    condition: always()
+    inputs:
+      # add or not the working dir to the upload
+      ${{ if eq(parameters.workingDirectory, '') }}:
+        targetPath: ${{ parameters.outputPath }}
+      ${{ else }}:
+        targetPath: ${{ parameters.workingDirectory }}/${{ parameters.outputPath }} 
+      artifactName: $(Agent.Name)-$(System.JobName)-$(System.JobId)-${{ parameters.outputPath }} 
+    continueOnError: true

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for GKEntity
 //
 // Authors:
@@ -11,7 +11,6 @@
 #if !__WATCHOS__
 
 using System;
-using OpenTK;
 
 using Foundation;
 using GameplayKit;

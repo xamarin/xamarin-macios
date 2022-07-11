@@ -4,6 +4,6 @@
 
   <PropertyGroup>
     <RunCommand>open</RunCommand>
-    <RunArguments>$(TargetDir)/$(AssemblyName).app --args</RunArguments>
+    <RunArguments>"$(TargetDir)/$(AssemblyName).app" --args</RunArguments>
   </PropertyGroup>
 </Project>

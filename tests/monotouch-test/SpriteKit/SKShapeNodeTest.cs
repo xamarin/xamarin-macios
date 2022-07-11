@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for SKShapeNodeTest
 //
 // Authors:
@@ -16,6 +16,7 @@ using Foundation;
 using SpriteKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.SpriteKit {
 	[TestFixture]
@@ -25,8 +26,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromPointsTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var pts = new[] {
 				new CGPoint (0, 0),
@@ -40,8 +41,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromPointsOffsetTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var pts = new [] {
 				new CGPoint (0, 0),
@@ -57,8 +58,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromSplinePointsTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var pts = new[] {
 				new CGPoint (0, 0),
@@ -72,8 +73,8 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void FromSplinePointsOffsetTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			var pts = new [] {
 				new CGPoint (0, 0),
@@ -89,4 +90,3 @@ namespace MonoTouchFixtures.SpriteKit {
 }
 
 #endif // !__WATCHOS__
-

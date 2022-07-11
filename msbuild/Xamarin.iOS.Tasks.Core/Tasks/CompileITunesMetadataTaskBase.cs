@@ -15,7 +15,11 @@ namespace Xamarin.iOS.Tasks
 		#region Inputs
 
 		[Required]
-		public string AppBundleDir { get; set; }
+		public string BundleIdentifier { get; set; }
+
+		public string BundleDisplayName { get; set; }
+
+		public string BundleVersion { get; set; }
 
 		public ITaskItem[] ITunesMetadata { get; set; }
 
@@ -44,31 +48,21 @@ namespace Xamarin.iOS.Tasks
 					return false;
 				}
 			} else {
-				var manifest = Path.Combine (AppBundleDir, "Info.plist");
-				PDictionary plist;
-
-				try {
-					plist = PDictionary.FromFile (manifest);
-				} catch (Exception ex) {
-					Log.LogError (null, null, null, manifest, 0, 0, 0, 0, MSBStrings.E0010, manifest, ex.Message);
-					return false;
-				}
-
-				var displayName = plist.GetCFBundleDisplayName ();
-				var bundleVersion = plist.GetCFBundleVersion ();
+				var displayName = BundleDisplayName;
+				var bundleVersion = BundleVersion;
 
 				metadata = new PDictionary ();
 
 				metadata.Add ("genre", new PString ("Application"));
-				if (bundleVersion != null)
+				if (!string.IsNullOrEmpty (bundleVersion))
 					metadata.Add ("bundleVersion", (PString) bundleVersion);
-				if (displayName != null)
+				if (!string.IsNullOrEmpty (displayName))
 					metadata.Add ("itemName", (PString) displayName);
 				metadata.Add ("kind", (PString) "software");
 				if (displayName != null)
 					metadata.Add ("playlistName", (PString) displayName);
 				metadata.Add ("softwareIconNeedsShine", (PBoolean) true);
-				metadata.Add ("softwareVersionBundleId", (PString) plist.GetCFBundleIdentifier ());
+				metadata.Add ("softwareVersionBundleId", (PString) BundleIdentifier);
 			}
 
 			Directory.CreateDirectory (Path.GetDirectoryName (OutputPath.ItemSpec));

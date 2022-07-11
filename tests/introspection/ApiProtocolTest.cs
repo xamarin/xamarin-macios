@@ -39,12 +39,20 @@ namespace Introspection {
 			// *** NSForwarding: warning: object 0x5cbd078 of class 'JSExport' does not implement doesNotRecognizeSelector: -- abort
 			case "JSExport":
 				return true;
-#if !XAMCORE_4_0
+#if !NET
 			case "MTLCounter":
 			case "MTLCounterSampleBuffer":
 			case "MTLCounterSet":
-				return true; // Incorrectly bound, will be fixed for XAMCORE_4_0.
+				return true; // Incorrectly bound, will be fixed for .NET.
 #endif
+			case "MPSImageLaplacianPyramid":
+			case "MPSImageLaplacianPyramidSubtract":
+			case "MPSImageLaplacianPyramidAdd":
+			case "MPSCnnYoloLossNode":
+				// The presence of these seem to depend on hardware capabilities, and not only OS version.
+				// Unfortunately I couldn't find any documentation related to determining exactly which
+				// hardware capability these need (or how to detect them), so just ignore them.
+				return true;
 			default:
 				return SkipDueToAttribute (type);
 			}
@@ -126,6 +134,15 @@ namespace Introspection {
 				// Xcode 12.5
 				case "HMCharacteristicMetadata":
 				case "HMAccessoryCategory":
+					return true;
+				// Xcode 13
+				case "HKVerifiableClinicalRecord":
+				case "PKDeferredPaymentSummaryItem":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassProperties":
+				case "SNTimeDurationConstraint": // Conformance not in headers
+				// Xcode 13.3
+				case "HMAccessorySetupPayload": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -247,6 +264,24 @@ namespace Introspection {
 					return true;
 				// Xcode 12.5
 				case "GCDualSenseGamepad":
+				// Xcode 13
+				case "AVAssetDownloadConfiguration":
+				case "AVAssetDownloadContentConfiguration":
+				case "AVAssetVariant":
+				case "AVAssetVariantQualifier":
+				case "PKDeferredPaymentSummaryItem":
+				case "PKPaymentRequestCouponCodeUpdate":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassBalance":
+				case "PKStoredValuePassProperties":
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
+				case "SNTimeDurationConstraint": // Conformance not in headers
+				// Xcode 13.3
+				case "SRWristDetection": // Conformance not in headers
+				case "HMAccessorySetupPayload": // Conformance not in headers
+				case "HMAccessorySetupRequest": // Conformance not in headers
+				case "HMAccessorySetupResult": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -364,6 +399,24 @@ namespace Introspection {
 					return true;
 				// Xcode 12.5
 				case "GCDualSenseGamepad":
+				// xcode 13
+				case "AVAssetDownloadConfiguration":
+				case "AVAssetDownloadContentConfiguration":
+				case "AVAssetVariant":
+				case "AVAssetVariantQualifier":
+				case "PKDeferredPaymentSummaryItem":
+				case "PKPaymentRequestCouponCodeUpdate":
+				case "PKRecurringPaymentSummaryItem":
+				case "PKStoredValuePassBalance":
+				case "PKStoredValuePassProperties":
+				case "QLPreviewReply": // conformance not in headers
+				case "QLPreviewReplyAttachment": // conformance not in headers
+				case "SNTimeDurationConstraint": // Conformance not in headers
+				// Xcode 13.3
+				case "SRWristDetection": // Conformance not in headers
+				case "HMAccessorySetupPayload": // Conformance not in headers
+				case "HMAccessorySetupRequest": // Conformance not in headers
+				case "HMAccessorySetupResult": // Conformance not in headers
 					return true;
 				}
 				break;
@@ -432,7 +485,25 @@ namespace Introspection {
 					if (!TestRuntime.CheckXcodeVersion (11,0))
 						return true;
 					break;
+				case "VNRecognizedText":
+					// Conformance added in Xcode 13
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
 				}
+				break;
+			case "NSUserActivityRestoring":
+				return true;
+#if __MACCATALYST__
+			case "UIScrollViewDelegate":
+				// The headers say PKCanvasViewDelegate implements UIScrollViewDelegate
+				if (type.Name == "PKCanvasViewDelegate")
+					return true;
+				break;
+#endif
+			case "NSExtensionRequestHandling":
+				if (type.Name == "HMChipServiceRequestHandler") // Apple removed this class
+					return true;
 				break;
 			}
 			return false;
@@ -515,7 +586,7 @@ namespace Introspection {
 					if (!supports) {
 #if __IOS__
 						// broken in xcode 12 beta 1 simulator (only)
-						if ((Runtime.Arch == Arch.SIMULATOR) && TestRuntime.CheckXcodeVersion (12,0)) {
+						if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12,0)) {
 							switch (type.Name) {
 							case "ARFaceGeometry":
 							case "ARPlaneGeometry":
@@ -617,7 +688,7 @@ namespace Introspection {
 					case "SKRenderer":
 						// was not possible in iOS 11.4 (current minimum) simulator
 						if (!TestRuntime.CheckXcodeVersion (12,0)) {
-							if (Runtime.Arch == Arch.SIMULATOR)
+							if (TestRuntime.IsSimulatorOrDesktop)
 								continue;
 						}
 						break;
@@ -661,7 +732,9 @@ namespace Introspection {
 
 					if (t.IsPublic && !ConformTo (klass.Handle, protocol)) {
 						// note: some internal types, e.g. like UIAppearance subclasses, return false (and there's not much value in changing this)
-						list.Add ($"Type {t.FullName} (native: {klass.Name}) does not conform {protocolName}");
+						var msg = $"Type {t.FullName} (native: {klass.Name}) does not conform {protocolName}";
+						list.Add (msg);
+						ReportError (msg);
 					}
 				}
 			}

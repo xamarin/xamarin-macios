@@ -33,29 +33,45 @@
     <Externalconsole>true</Externalconsole>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
+  <Import Project="pch-info.proj" />
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'watchOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>watchos6.2-armv7.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/watchOS/Xamarin.WatchOS.dll</StartArguments>
+    <StartArguments>$(WATCHOS_PCH) ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/32bits/watchOS/Xamarin.WatchOS.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>iphoneos15.0-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/iOS/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>$(iOS_PCH) ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/iOS/Xamarin.iOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>appletvos13.4-arm64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
+    <StartArguments>$(tvOS_PCH) ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/Xamarin.TVOS.dll ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/mono/Xamarin.TVOS/OpenTK-1.0.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS' ">
     <StartAction>Project</StartAction>
-    <StartArguments>macosx10.15-x86_64.pch ../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll</StartArguments>
+    <StartArguments>$(macOS_PCH) ../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/git/lib/64bits/mobile/Xamarin.Mac.dll</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'MacCatalyst' ">
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'iOS (.NET)' ">
     <StartAction>Project</StartAction>
-    <StartArguments>ios14.2-macabi-x86_64.pch ../../_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git/lib/64bits/MacCatalyst/Xamarin.MacCatalyst.dll</StartArguments>
+    <StartArguments>$(iOS_PCH) --output-directory api-annotations-dotnet $(iOS_DLL)</StartArguments>
+    <StartWorkingDirectory>.</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'tvOS (.NET)' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>$(tvOS_PCH) --output-directory api-annotations-dotnet $(tvOS_DLL)</StartArguments>
+    <StartWorkingDirectory>.</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'macOS (.NET)' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>$(macOS_PCH) --output-directory api-annotations-dotnet $(macOS_DLL)</StartArguments>
+    <StartWorkingDirectory>.</StartWorkingDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'MacCatalyst (.NET)' ">
+    <StartAction>Project</StartAction>
+    <StartArguments>$(MacCatalyst_PCH) --output-directory api-annotations-dotnet $(MacCatalyst_DLL)</StartArguments>
     <StartWorkingDirectory>.</StartWorkingDirectory>
   </PropertyGroup>
   <ItemGroup>
@@ -63,9 +79,9 @@
     <Reference Include="Clang">
       <HintPath>\Library\Frameworks\ObjectiveSharpie.framework\Versions\Current\Clang.dll</HintPath>
     </Reference>
-    <PackageReference Include="Mono.Cecil" Version="0.11.1" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
-    <Reference Include="mscorlib" />
+    <PackageReference Include="Mono.Options" Version="6.12.0.148" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -88,6 +104,7 @@
     <Compile Include="ReleaseAttributeCheck.cs" />
     <Compile Include="NullabilityCheck.cs" />
     <Compile Include="UIAppearanceCheck.cs" />
+    <Compile Include="MapNamesCheck.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">

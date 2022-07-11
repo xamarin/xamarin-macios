@@ -16,6 +16,7 @@ using SafariServices;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.SafariServices {
 
@@ -26,9 +27,10 @@ namespace MonoTouchFixtures.SafariServices {
 		string local_file = Path.Combine (NSBundle.MainBundle.ResourcePath, "Hand.wav");
 
 		[Test]
+		[Ignore ("This test adds two entries every time it's executed to the global reading list in Safari. For people who use their reading lists this becomes slightly annoying.")]
 		public void DefaultReadingList ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			NSError error;
 			using (var http = new NSUrl ("http://www.xamarin.com"))
@@ -41,7 +43,11 @@ namespace MonoTouchFixtures.SafariServices {
 				Assert.Null (error, "error-2");
 
 				Assert.False (rl.Add (local, null, null, out error), "Add-3");
+#if NET
+				Assert.That (error.Domain, Is.EqualTo ((string) SSReadingListError.UrlSchemeNotAllowed.GetDomain ()), "Domain");
+#else
 				Assert.That (error.Domain, Is.EqualTo ((string) SSReadingList.ErrorDomain), "Domain");
+#endif
 				Assert.That (error.Code, Is.EqualTo ((nint) (int) SSReadingListError.UrlSchemeNotAllowed), "Code");
 
 				try {
@@ -61,7 +67,7 @@ namespace MonoTouchFixtures.SafariServices {
 		[Test]
 		public void SupportsUrl ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			Assert.False (SSReadingList.SupportsUrl (null), "null");
 

@@ -1,11 +1,14 @@
 // Compatibility stubs
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
-using OpenTK;
 
-#if !XAMCORE_4_0 && !MONOMAC && !__MACCATALYST__
+#if !NET && !MONOMAC && !__MACCATALYST__
+
+using Vector2 = global::OpenTK.Vector2;
 
 namespace GameplayKit {
 
@@ -26,7 +29,6 @@ namespace GameplayKit {
 	}
 
 	public partial class GKQuadTreeNode {
-
 		[Obsolete ("A valid instance of this type cannot be directly created.")]
 		public GKQuadTreeNode ()
 		{

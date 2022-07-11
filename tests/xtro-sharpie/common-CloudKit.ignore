@@ -11,9 +11,6 @@
 !missing-protocol-conformance! CKRecord should conform to CKRecordKeyValueSetting (defined in 'CKRecordKeyValueSettingConformance' category)
 !missing-selector! CKRecord::encryptedValues not bound
 
-## NSInvalidArgumentException Reason: You must call -[CKMarkNotificationsReadOperation initWithNotificationIDsToMarkRead:]
-!missing-selector! CKMarkNotificationsReadOperation::init not bound
-
 # all of them deprecated and marked with the [Obsoleted] attr.
 !unknown-native-enum! CKSubscriptionOptions bound
 !unknown-type! CKDiscoverAllContactsOperation bound

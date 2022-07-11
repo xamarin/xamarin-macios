@@ -1,0 +1,10 @@
+# framework not available on watchOS
+
+!missing-enum! SCNetworkConnectionPPPStatus not bound
+!missing-enum! SCNetworkConnectionStatus not bound
+!missing-enum! SCNetworkReachabilityFlags not bound
+!missing-enum! SCPreferencesNotification not bound
+!missing-pinvoke! SCCopyLastError is not bound
+
+## *GetTypeID are generally not bound
+!missing-pinvoke! SCNetworkReachabilityGetTypeID is not bound

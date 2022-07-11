@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Mono.Options;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared.XmlResults;
@@ -10,7 +10,7 @@ namespace Xharness {
 		{
 			Microsoft.DotNet.XHarness.iOS.Shared.SdkVersions.OverrideVersions (
 				xcode: Xamarin.SdkVersions.Xcode,
-				oSX: Xamarin.SdkVersions.OSX,
+				osx: Xamarin.SdkVersions.OSX,
 				iOS: Xamarin.SdkVersions.iOS,
 				watchOS: Xamarin.SdkVersions.WatchOS,
 				tVOS: Xamarin.SdkVersions.TVOS,
@@ -40,30 +40,29 @@ namespace Xharness {
 				{ "v|verbose", "Show verbose output", (v) => configuration.Verbosity++ },
 				{ "use-system:", "Use the system version of Xamarin.iOS/Xamarin.Mac or the locally build version. Default: the locally build version.", (v) => configuration.UseSystemXamarinIOSMac = v == "1" || v == "true" || string.IsNullOrEmpty (v) },
 				// Configure
-				{ "mac", "Configure for Xamarin.Mac instead of iOS.", (v) => configuration.Mac = true },
 				{ "configure", "Creates project files and makefiles.", (v) => action = HarnessAction.Configure },
 				{ "autoconf", "Automatically decide what to configure.", (v) => configuration.AutoConf = true },
 				{ "rootdir=", "The root directory for the tests.", (v) => HarnessConfiguration.RootDirectory = v },
-				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => configuration.IOSTestProjects.Add (new iOSTestProject (v)) },
+				{ "project=", "Add a project file to process. This can be specified multiple times.", (v) => configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v)) },
 				{ "watchos-container-template=", "The directory to use as a template for a watchos container app.", (v) => configuration.WatchOSContainerTemplate = v },
 				{ "watchos-app-template=", "The directory to use as a template for a watchos app.", (v) => configuration.WatchOSAppTemplate = v },
 				// Run
 				{ "run=", "Executes a project.", (v) =>
 					{
 						action = HarnessAction.Run;
-						configuration.IOSTestProjects.Add (new iOSTestProject (v));
+						configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v));
 					}
 				},
 				{ "install=", "Installs a project.", (v) =>
 					{
 						action = HarnessAction.Install;
-						configuration.IOSTestProjects.Add (new iOSTestProject (v));
+						configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v));
 					}
 				},
 				{ "uninstall=", "Uninstalls a project.", (v) =>
 					{
 						action = HarnessAction.Uninstall;
-						configuration.IOSTestProjects.Add (new iOSTestProject (v));
+						configuration.IOSTestProjects.Add (new iOSTestProject (TestLabel.None, v));
 					}
 				},
 				{ "sdkroot=", "Where Xcode is", (v) => configuration.SdkRoot = v },

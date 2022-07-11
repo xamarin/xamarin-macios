@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using Foundation;
@@ -24,13 +25,6 @@ namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSFileManagerTest {
-		
-		static bool RunningOnSnowLeopard {
-			get {
-				return !File.Exists ("/usr/lib/system/libsystem_kernel.dylib");
-			}
-		}
-
 		// we might believe that Envioment.UserName os the same as NSFileManager.UserName, but it is not. On the simulator for
 		// example, NSFileManager.UserName is an empty string while mono returns 'somebody'
 		[Test]
@@ -51,11 +45,6 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void GetUrlForUbiquityContainer ()
 		{
-#if !MONOMAC
-			if ((Runtime.Arch == Arch.SIMULATOR) && RunningOnSnowLeopard)
-				Assert.Inconclusive ("sometimes crash under the iOS simulator (generally on the SL/iOS5 bots)");
-#endif
-
 			NSFileManager fm = new NSFileManager ();
 			if (TestRuntime.CheckXcodeVersion (4, 5) && fm.UbiquityIdentityToken == null) {
 				// UbiquityIdentityToken is a fast way to check if iCloud is enabled
@@ -104,12 +93,9 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void GetSkipBackupAttribute ()
 		{
-			if ((Runtime.Arch == Arch.SIMULATOR) && RunningOnSnowLeopard)
-				Assert.Inconclusive ("iOS simulator did not get libsystem_kernel.dylib before Lion");
-			
 			Assert.False (NSFileManager.GetSkipBackupAttribute (NSBundle.MainBundle.ExecutableUrl.ToString ()), "MainBundle");
 
-			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "DoNotBackupMe-NSFileManager");
+			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), $"DoNotBackupMe-NSFileManager-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
 				

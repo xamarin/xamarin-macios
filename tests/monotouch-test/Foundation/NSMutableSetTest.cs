@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSMutableSet
 //
 // Authors:
@@ -71,4 +71,3 @@ namespace MonoTouchFixtures.Foundation {
 		}
 	}
 }
-

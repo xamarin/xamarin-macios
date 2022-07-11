@@ -77,17 +77,21 @@ namespace Foundation  {
 
 #if MONOMAC || !XAMCORE_3_0
 
-#if !XAMCORE_4_0
+#if !NET
 	[Native]
 	public enum NSBundleExecutableArchitecture : long {
 #else
+	[NoiOS][NoTV][NoMacCatalyst]
 	public enum NSBundleExecutableArchitecture {
 #endif
 		I386   = 0x00000007,
 		PPC    = 0x00000012,
 		X86_64 = 0x01000007,
 		PPC64  = 0x01000012,
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Mac (11,0)]
+#if !XAMCORE_3_0
+		[Watch (7,0), TV (14,0), iOS (14,0)]
+#endif
 		ARM64  = 0x0100000c,
 	}
 #endif
@@ -242,7 +246,7 @@ namespace Foundation  {
 	public enum NSDataReadingOptions : ulong {
 		Mapped =   1 << 0,
 		Uncached = 1 << 1,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("This option is unavailable.")]
 		Coordinated = 1 << 2,
 #endif
@@ -498,23 +502,6 @@ namespace Foundation  {
 		Reverse = 2
 	}
 	
-#if MONOMAC
-	[Native]
-	public enum NSNotificationSuspensionBehavior : ulong {
-		Drop = 1,
-		Coalesce = 2,
-		Hold = 3,
-		DeliverImmediately = 4,
-	}
-    
-	[Flags]
-	[Native]
-	public enum NSNotificationFlags : ulong {
-		DeliverImmediately = (1 << 0),
-		PostToAllSessions = (1 << 1),
-	}
-#endif
-
 	[Flags]
 	[Native]
 	public enum NSStreamEvent : ulong {
@@ -579,7 +566,7 @@ namespace Foundation  {
 	[Flags]
 	[Native]
 	public enum NSDirectoryEnumerationOptions : ulong {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'None' instead.")]
 		SkipsNone                    = 0,
 #endif
@@ -762,7 +749,7 @@ namespace Foundation  {
 		MutableContainers = 1,
 		MutableLeaves = 2,
 		FragmentsAllowed = 4,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'FragmentsAllowed. instead.")]
 		AllowFragments = FragmentsAllowed,
 #endif
@@ -830,16 +817,16 @@ namespace Foundation  {
 	}
 
 	[Flags]
-	[Native]
+	[Native ("NSAttributedStringEnumerationOptions")]
 	public enum NSAttributedStringEnumeration : ulong {
 		None = 0,
 		Reverse = 1 << 1,
 		LongestEffectiveRangeNotRequired = 1 << 20
 	}
 
-#if !MONOMAC
-	// MonoMac AppKit redefines this
-	// NSInteger -> NSAttributedString.h
+#if NET || !MONOMAC
+	// macOS has defined this in AppKit as well, but starting with .NET we're going
+	// to use this one only.
 	[Native]
 	public enum NSUnderlineStyle : long {
 		None	= 0x00,
@@ -857,15 +844,14 @@ namespace Foundation  {
 	}
 #endif
 
-#if !MONOMAC || !XAMCORE_3_0
+	// There's an AppKit.NSWritingDirection, which is deprecated.
+	// There's also an UIKit.UITextWritingDirection, which is deprecated too.
+	// This is the enum we should be using.
+	// See https://github.com/xamarin/xamarin-macios/issues/6573
 	[Native]
-#if MONOMAC
-	[Obsolete ("Use NSWritingDirection in AppKit instead.")]
-#endif
 	public enum NSWritingDirection : long {
 		Natural = -1, LeftToRight = 0, RightToLeft = 1,
 	}
-#endif // !MONOMAC || !XAMCORE_3_0
 
 	[Flags]
 	[Native]
@@ -911,7 +897,7 @@ namespace Foundation  {
 		None, Default, All 
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[Flags]
 	[Native]
 	public enum NSDateComponentsWrappingBehavior : ulong {
@@ -1267,17 +1253,6 @@ namespace Foundation  {
 		Long,
 		Abbreviated
 	}
-
-#if MONOMAC
-	[Mac (10,11)][NoWatch][NoTV][NoiOS]
-	[Native]
-	[Flags]
-	public enum NSFileManagerUnmountOptions : ulong
-	{
-		AllPartitionsAndEjectDisk = 1 << 0,
-		WithoutUI = 1 << 1
-	}
-#endif
 
 	[iOS (9,0)][Mac (10,11)]
 	[Native]

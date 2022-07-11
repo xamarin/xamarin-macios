@@ -13,6 +13,6 @@ Xcode ("@XCODE_XIP_NAME@").XcodeSelect (allowUntrusted: true);
 Item ("@MONO_PACKAGE@");
 Item ("@VS_PACKAGE@");
 Item ("@XI_PACKAGE@");
-DotNetCoreSdk ("@DOTNET_VERSION@");
+Item ("@MIN_SHARPIE_URL@");
 
 BrewPackages ("p7zip");

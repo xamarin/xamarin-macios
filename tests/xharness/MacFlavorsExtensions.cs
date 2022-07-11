@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness {
@@ -14,6 +14,7 @@ namespace Xharness {
 				MacFlavors.System => TestPlatform.Mac_System,
 				MacFlavors.DotNet => TestPlatform.Mac,
 				MacFlavors.MacCatalyst => TestPlatform.MacCatalyst,
+				(MacFlavors.Full | MacFlavors.Modern) => (TestPlatform.Mac | TestPlatform.Mac_Modern),
 				_ => throw new NotImplementedException (flavor.ToString ()),
 			};
 		}

@@ -419,24 +419,24 @@ namespace CoreVideo {
 		[Field ("kCVPixelBufferPlaneAlignmentKey")]
 		NSString PlaneAlignmentKey { get; }
 
-#if !MONOMAC
+		[NoMac]
 		[NoWatch]
 		[NoMacCatalyst]
 		[Field ("kCVPixelBufferOpenGLESCompatibilityKey")]
 		NSString OpenGLESCompatibilityKey { get; }
 
+		[NoMac]
 		[NoWatch]
 		[NoMacCatalyst]
 		[iOS (9,0)]
 		[Field ("kCVPixelBufferOpenGLESTextureCacheCompatibilityKey")]
 		NSString OpenGLESTextureCacheCompatibilityKey { get; }
-#endif
 
 		[iOS (8,0)][Mac (10,11)]
 		[Field ("kCVPixelBufferMetalCompatibilityKey")]
 		NSString MetalCompatibilityKey { get; }
 
-		[NoiOS, NoTV, NoWatch, Mac (10,11), MacCatalyst (15,0)]
+		[NoiOS, NoTV, NoWatch, Mac (10,11), NoMacCatalyst]
 		[Field ("kCVPixelBufferOpenGLTextureCacheCompatibilityKey")]
 		NSString OpenGLTextureCacheCompatibilityKey { get; }
 
@@ -479,6 +479,10 @@ namespace CoreVideo {
 		[NoWatch, NoTV, Mac (12,0), iOS (14, 0), MacCatalyst (15,0)]
 		[Field ("kCVPixelBufferVersatileBayerKey_BayerPattern")]
 		NSString VersatileBayerKey_BayerPattern { get; }
+
+		[NoWatch, NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kCVPixelBufferProResRAWKey_MetadataExtension")]
+		NSString MetadataExtension { get; }
 	}
 
 	[Partial]
@@ -497,12 +501,12 @@ namespace CoreVideo {
 	[NoWatch]
 	[Partial]
 	interface CVMetalTextureCache {
-		[NoMac]
+		[Mac (12,0)]
 		[Internal]
 		[Field ("kCVMetalTextureCacheMaximumTextureAgeKey")]
 		IntPtr MaxTextureAge { get; }
 
-		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
+		[TV (13,0), NoWatch, iOS (13,0)]
 		[Field ("kCVMetalTextureStorageMode")]
 		NSString StorageMode { get; }
 	}

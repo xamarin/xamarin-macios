@@ -128,6 +128,8 @@ namespace AudioUnit
 		Milliseconds		= 24,
 		Ratio				= 25,
 		CustomUnit			= 26,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		MIDI2Controller	 	= 27,
 	}
 
 	[Flags]
@@ -169,7 +171,7 @@ namespace AudioUnit
 		System = 0,
 	}
 
-#if !XAMCORE_3_0 || MONOMAC
+#if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
 	public enum AudioObjectPropertySelector : uint
 	{
 		PropertyDevices = 1684370979, // 'dev#'
@@ -187,7 +189,21 @@ namespace AudioUnit
 		TranslateUIDToBox = 1969841250, // 'uidb'
 		ClockDeviceList = 1668049699, //'clk#'
 		TranslateUidToClockDevice = 1969841251, // 'uidc',
+#if XAMCORE_3_0
+		[NoiOS][NoTV]
+#endif
+		[Deprecated (PlatformName.iOS, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
+		[Deprecated (PlatformName.MacOSX, 12,0, message : "Use the 'ProcessIsMain' element instead.")]
+		[Obsolete ("Use the 'ProcessIsMain' element instead.")]
 		ProcessIsMaster = 1835103092, // 'mast'
+#if !XAMCORE_3_0
+		[iOS (15,0)]
+#else
+		[NoiOS]
+#endif
+		[MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
+		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
 		ProcessIsAudible = 1886221684, // 'pmut'
@@ -200,6 +216,13 @@ namespace AudioUnit
 		ActualSampleRate = 1634955892,// 'asrt',
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
+#if !XAMCORE_3_0
+		[iOS (15,0)]
+#else
+		[NoiOS]
+#endif
+		[MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
+		ProcessMute = 1634758765, // 'appm'
 	}
 
 	public enum AudioObjectPropertyScope : uint
@@ -212,7 +235,11 @@ namespace AudioUnit
 
 	public enum AudioObjectPropertyElement : uint
 	{
+#if !NET
+		[Obsolete ("Use the 'Main' element instead.")]
 		Master = 0, // 0
+#endif
+		Main = 0, // 0
 	}
 #endif // !XAMCORE_3_0 || MONOMAC
 
@@ -268,8 +295,16 @@ namespace AudioUnit
 		ParametersForOverview = 57,
 		[iOS (10,0), Mac (10,12)]
 		SupportsMpe = 58,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		LastRenderSampleTime = 61,
 		[iOS (14,5), TV (14,5), Mac (11,3)]
 		LoadedOutOfProcess = 62,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		MIDIOutputEventListCallback = 63,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		AudioUnitMIDIProtocol = 64,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		HostMIDIProtocol = 65,
 
 #if MONOMAC
 		FastDispatch = 5,
@@ -342,6 +377,8 @@ namespace AudioUnit
 		BypassVoiceProcessing = 2100,
 		VoiceProcessingEnableAGC = 2101,
 		MuteOutput = 2104,
+		[iOS (15, 0), MacCatalyst (15, 0), NoMac, NoWatch, NoTV]
+		MutedSpeechActivityEventListener = 2106,
 
 		// AUNBandEQ unit
 		NumberOfBands = 2200,
@@ -549,7 +586,13 @@ namespace AudioUnit
 		DynamicsProcessorExpansionThreshold	= 3,
 		DynamicsProcessorAttackTime			= 4,
 		DynamicsProcessorReleaseTime 		= 5,
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		DynamicsProcessorMasterGain			= 6,
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		DynamicsProcessorOverallGain		= 6,
 		DynamicsProcessorCompressionAmount 	= 1000,
 		DynamicsProcessorInputAmplitude		= 2000,
 		DynamicsProcessorOutputAmplitude 	= 3000,
@@ -713,8 +756,9 @@ namespace AudioUnit
 	[iOS (9,0), Mac (10,11)]
 	public enum AudioComponentInstantiationOptions : uint {
 		OutOfProcess = 1,
+		[NoiOS, NoTV, NoMacCatalyst]
 		InProcess = 2,
-		[iOS (14,5), TV (14,5), Mac (11,3)]
+		[iOS (14,5), TV (14,5), NoMac]
 		LoadedRemotely = 1u << 31,
 	}
 
@@ -839,6 +883,13 @@ namespace AudioUnit
 		Value = 0,
 		Touch = 1,
 		Release = 2,
+	}
+
+	[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+	public enum AUVoiceIOSpeechActivityEvent : uint
+	{
+		Started = 0,
+		Ended = 1,
 	}
 
 	public enum AudioUnitSubType : uint

@@ -1,5 +1,7 @@
 // Copyright 2014, Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 #if !COREBUILD
 
 using System;
@@ -7,36 +9,33 @@ using System.Runtime.InteropServices;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ObjCRuntime {
 
-	public abstract class BaseWrapper : INativeObject, IDisposable {
+	public abstract class BaseWrapper : NativeObject {
 
-		public BaseWrapper (IntPtr handle, bool owns)
+#if NET
+		protected BaseWrapper (NativeHandle handle, bool owns)
+#else
+		public BaseWrapper (NativeHandle handle, bool owns)
+#endif
+			: base (handle, owns)
 		{
-			Handle = handle;
-			if (!owns)
+		}
+
+		protected internal override void Retain ()
+		{
+			if (Handle != IntPtr.Zero)
 				Messaging.void_objc_msgSend (Handle, Selector.GetHandle ("retain"));
 		}
 
-		~BaseWrapper ()
+		protected internal override void Release ()
 		{
-			Dispose (false);
-		}
-
-		public IntPtr Handle { get; protected set; }
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (Handle != IntPtr.Zero) {
+			if (Handle != IntPtr.Zero)
 				Messaging.void_objc_msgSend (Handle, Selector.GetHandle ("release"));
-				Handle = IntPtr.Zero;
-			}
 		}
 	}
 }

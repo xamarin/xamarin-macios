@@ -6,13 +6,17 @@ using Xamarin.Messaging.Client;
 
 namespace Xamarin.Messaging.Build {
 	public class BuildAgent : Agent {
+		readonly AgentInfo buildAgentInfo;
+
 		public BuildAgent (ITopicGenerator topicGenerator, string version = null, string versionInfo = null) : base (topicGenerator)
 		{
+			buildAgentInfo = new BuildAgentInfo ();
+
 			Version = string.IsNullOrEmpty (version) ? GetVersion () : version;
 			VersionInfo = string.IsNullOrEmpty (versionInfo) ? GetInformationalVersion () : versionInfo;
 		}
 
-		public override string Name => BuildAgentInfo.Instance.Name;
+		public override string Name => buildAgentInfo.Name;
 
 		public override string Version { get; }
 

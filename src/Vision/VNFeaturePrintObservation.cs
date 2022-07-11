@@ -7,6 +7,8 @@
 // Copyright 2019 Microsoft Corporation. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -14,7 +16,7 @@ using ObjCRuntime;
 namespace Vision {
 	public partial class VNFeaturePrintObservation {
 
-		public bool ComputeDistance (out float [] distance, VNFeaturePrintObservation featurePrint, out NSError error)
+		public bool ComputeDistance (out float [] distance, VNFeaturePrintObservation featurePrint, out NSError? error)
 		{
 			distance = new float [ElementCount];
 			unsafe {

@@ -250,6 +250,13 @@ namespace Xamarin.Bundler {
 				app.XamarinRuntime = rv;
 			}, true /* hidden - this is only for build-time --runregistrar support */);
 
+			options.Add ("rid=", "The runtime identifier we're building for", v => {
+				app.RuntimeIdentifier = v;
+			}, true /* hidden - this is only for build-time --runregistrar support */);
+			options.Add ("require-pinvoke-wrappers:", v => {
+				app.RequiresPInvokeWrappers = ParseBool (v, "--require-pinvoke-wrappers");
+			});
+
 
 			// Keep the ResponseFileSource option at the end.
 			options.Add (new Mono.Options.ResponseFileSource ());
@@ -351,8 +358,6 @@ namespace Xamarin.Bundler {
 			else
 				Console.WriteLine (format);
 		}
-
-		public const bool IsXAMCORE_4_0 = false;
 
 		public static bool IsDotNet {
 			get { return TargetFramework.IsDotNet; }
@@ -914,15 +919,15 @@ namespace Xamarin.Bundler {
 		{
 			switch (app.Platform) {
 			case ApplePlatform.iOS:
-				return "Xamarin.iOS";
+				return IsDotNet ? "Microsoft.iOS" : "Xamarin.iOS";
 			case ApplePlatform.WatchOS:
-				return "Xamarin.WatchOS";
+				return IsDotNet ? "Microsoft.watchOS" : "Xamarin.WatchOS";
 			case ApplePlatform.TVOS:
-				return "Xamarin.TVOS";
+				return IsDotNet ? "Microsoft.tvOS" : "Xamarin.TVOS";
 			case ApplePlatform.MacOSX:
-				return "Xamarin.Mac";
+				return IsDotNet ? "Microsoft.macOS" : "Xamarin.Mac";
 			case ApplePlatform.MacCatalyst:
-				return "Xamarin.MacCatalyst";
+				return IsDotNet ? "Microsoft.MacCatalyst" : "Xamarin.MacCatalyst";
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, app.Platform, app.ProductName);
 			}

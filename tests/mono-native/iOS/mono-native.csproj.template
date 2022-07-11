@@ -178,7 +178,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Main.cs" />
     <Compile Include="..\AppDelegate.cs" />
     <Compile Include="..\NativePlatformConfig.cs" />
     <Compile Include="..\Introspection.cs" />

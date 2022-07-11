@@ -23,15 +23,15 @@ namespace UIKit {
 		// The following construct emulates the support for:
 		// id<UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 		//
-		// That is, the type can contain either one, btu we still want it strongly typed
+		// That is, the type can contain either one, but we still want it strongly typed
 		//
-#if XAMCORE_4_0
+#if NET
 		public IUIImagePickerControllerDelegate ImagePickerControllerDelegate {
 			get {
 				return Delegate as IUIImagePickerControllerDelegate;
 			}
 			set {
-				Delegate = value;
+				Delegate = (NSObject) value;
 			}
 		}
 
@@ -40,7 +40,7 @@ namespace UIKit {
 				return Delegate as IUINavigationControllerDelegate;
 			}
 			set {
-				Delegate = value;
+				Delegate = (NSObject) value;
 			}
 		}
 #else
@@ -100,7 +100,12 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios9.1")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
 		[iOS (9,1)]
+#endif
 		public PHLivePhoto LivePhoto {
 			get {
 				return (PHLivePhoto) Info [UIImagePickerController.LivePhoto];
@@ -119,14 +124,24 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
 		[iOS (11,0)]
+#endif
 		public PHAsset PHAsset {
 			get {
 				return (PHAsset) Info [UIImagePickerController.PHAsset];
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
 		[iOS (11,0)]
+#endif
 		public NSUrl ImageUrl {
 			get {
 				return (NSUrl) Info [UIImagePickerController.ImageUrl];

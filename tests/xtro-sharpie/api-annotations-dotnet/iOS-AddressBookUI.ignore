@@ -1,0 +1,3 @@
+
+# This method has an '__attribute__((objc_method_family(none)))' attribute, so its objc family is not 'new' as the selector suggests.
+!missing-release-attribute-on-return-value! Foundation.NSObject AddressBookUI.ABNewPersonViewController::get_WeakDelegate()'s selector's ('newPersonViewDelegate') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

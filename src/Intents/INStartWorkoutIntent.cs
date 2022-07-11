@@ -1,4 +1,5 @@
 #if IOS
+#if !(NET && __MACOS__)
 
 using Foundation;
 using Intents;
@@ -22,4 +23,5 @@ namespace Intents {
 	}
 }
 
+#endif // !(NET && __MACOS__)
 #endif

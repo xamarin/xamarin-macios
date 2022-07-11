@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -44,16 +46,30 @@ using UIImage=AppKit.NSImage;
 #endif
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AudioUnit
 {
 
 #if !COREBUILD
 
-#if (!WATCH && !TVOS) || ((WATCH || TVOS) && !XAMCORE_4_0)
+#if (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-#if ((WATCH || TVOS) && !XAMCORE_4_0)
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
+#if ((WATCH || TVOS) && !NET)
 	[Obsolete ("This API is not available on this platform.")]
 #endif
 	public partial class ResourceUsageInfo : DictionaryContainer {
@@ -66,30 +82,24 @@ namespace AudioUnit
 
 		public ResourceUsageInfo (NSDictionary dic) : base (dic) {}
 
-		public string[] IOKitUserClient { 
+		public string[]? IOKitUserClient {
 			get {
-				var array = GetNativeValue<NSArray> (userClientK);
-				if (array == null )
-					return null;
-				return NSArray.StringArrayFromHandle (array.Handle);
+				return GetStringArrayValue (userClientK);
 			} 
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (userClientK);
 				else
 					SetArrayValue (userClientK, value);
 			}
 		}
 
-		public string[] MachLookUpGlobalName { 
+		public string[]? MachLookUpGlobalName {
 			get {
-				var array = GetNativeValue<NSArray> (globalNameK);
-				if (array == null)
-					return null;
-				return NSArray.StringArrayFromHandle (array.Handle);
+				return GetStringArrayValue (globalNameK);
 			} 
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (globalNameK);	
 				else
 					SetArrayValue (globalNameK, value);
@@ -116,8 +126,18 @@ namespace AudioUnit
 	}
 
 	// keys are not constants and had to be found in AudioToolbox.framework/Headers/AudioComponent.h
-	[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-#if ((WATCH || TVOS) && !XAMCORE_4_0)
+#if NET
+	[SupportedOSPlatform ("macos10.13")]
+	[SupportedOSPlatform ("ios11.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("tvos")]
+#else
+	[NoWatch]
+	[NoTV]
+	[Mac (10,13)]
+	[iOS (11,0)]
+#endif
+#if ((WATCH || TVOS) && !NET)
 	[Obsolete ("This API is not available on this platform.")]
 #endif
 	public partial class AudioComponentInfo : DictionaryContainer {
@@ -135,7 +155,7 @@ namespace AudioUnit
 
 		public AudioComponentInfo (NSDictionary dic) : base (dic) {}
 
-		public string Type { 
+		public string? Type {
 			get {
 				return GetStringValue (typeK);
 			} 
@@ -144,7 +164,7 @@ namespace AudioUnit
 			}
 		}
 
-		public string Subtype { 
+		public string? Subtype {
 			get {
 				return GetStringValue (subtypeK);
 			} 
@@ -153,7 +173,7 @@ namespace AudioUnit
 			}
 		}
 
-		public string Manufacturer { 
+		public string? Manufacturer {
 			get {
 				return GetStringValue (manufacturerK);
 			} 
@@ -162,7 +182,7 @@ namespace AudioUnit
 			}
 		}
 
-		public string Name { 
+		public string? Name {
 			get {
 				return GetStringValue (nameK);
 			} 
@@ -180,7 +200,7 @@ namespace AudioUnit
 			}
 		}
 
-		public string FactoryFunction { 
+		public string? FactoryFunction {
 			get {
 				return GetStringValue (factoryFunctionK);
 			} 
@@ -198,7 +218,7 @@ namespace AudioUnit
 			}
 		}
 
-		public ResourceUsageInfo ResourceUsage { 
+		public ResourceUsageInfo? ResourceUsage {
 			get {
 				return GetStrongDictionary<ResourceUsageInfo> (resourceUsageK);
 			} 
@@ -207,35 +227,35 @@ namespace AudioUnit
 			}
 		}
 
-		public string[] Tags { 
+		public string[]? Tags {
 			get {
-				var array = GetNativeValue<NSArray> (tagsK);
-				if (array == null)
-					return null;
-				return NSArray.StringArrayFromHandle (array.Handle);
+				return GetStringArrayValue (tagsK);
 			} 
 			set {
-				if (value == null)
+				if (value is null)
 					RemoveValue (tagsK);	
 				else
 					SetArrayValue (tagsK, value);
 			}
 		}
 	}
-#endif
+#endif // (!WATCH && !TVOS) || ((WATCH || TVOS) && !NET)
 
 #endif // !COREBUILD
 
 
-	public class AudioComponent : INativeObject {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class AudioComponent : DisposableObject {
 #if !COREBUILD
-		internal IntPtr handle;
-
-		public IntPtr Handle { get { return handle; } }
-
-		internal AudioComponent(IntPtr handle)
+		[Preserve (Conditional = true)]
+		internal AudioComponent (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{ 
-			this.handle = handle;
 		}
 			
 		public AudioUnit CreateAudioUnit ()
@@ -243,70 +263,69 @@ namespace AudioUnit
 			return new AudioUnit (this);
 		}
 
-		public static AudioComponent FindNextComponent (AudioComponent cmp, ref AudioComponentDescription cd)
+		public static AudioComponent? FindNextComponent (AudioComponent? cmp, ref AudioComponentDescription cd)
 		{
-			var handle = cmp == null ? IntPtr.Zero : cmp.Handle;
+			var handle = cmp.GetHandle ();
 			handle = AudioComponentFindNext (handle, ref cd);
-			return  (handle != IntPtr.Zero) ? new AudioComponent (handle) : null;
+			return  (handle != IntPtr.Zero) ? new AudioComponent (handle, false) : null;
 		}
 
-		public static AudioComponent FindComponent (ref AudioComponentDescription cd)
+		public static AudioComponent? FindComponent (ref AudioComponentDescription cd)
 		{
 			return FindNextComponent (null, ref cd);
 		}
 
-		public static AudioComponent FindComponent (AudioTypeOutput output)
+		public static AudioComponent? FindComponent (AudioTypeOutput output)
 		{
 			var cd = AudioComponentDescription.CreateOutput (output);
 			return FindComponent (ref cd);
 		}
 
-		public static AudioComponent FindComponent (AudioTypeMusicDevice musicDevice)
+		public static AudioComponent? FindComponent (AudioTypeMusicDevice musicDevice)
 		{
 			var cd = AudioComponentDescription.CreateMusicDevice (musicDevice);
 			return FindComponent (ref cd);
 		}
 		
-		public static AudioComponent FindComponent (AudioTypeConverter conveter)
+		public static AudioComponent? FindComponent (AudioTypeConverter conveter)
 		{
 			var cd = AudioComponentDescription.CreateConverter (conveter);
 			return FindComponent (ref cd);
 		}
 		
-		public static AudioComponent FindComponent (AudioTypeEffect effect)
+		public static AudioComponent? FindComponent (AudioTypeEffect effect)
 		{
 			var cd = AudioComponentDescription.CreateEffect (effect);
 			return FindComponent (ref cd);
 		}
 		
-		public static AudioComponent FindComponent (AudioTypeMixer mixer)
+		public static AudioComponent? FindComponent (AudioTypeMixer mixer)
 		{
 			var cd = AudioComponentDescription.CreateMixer (mixer);
 			return FindComponent (ref cd);
 		}
 		
-		public static AudioComponent FindComponent (AudioTypePanner panner)
+		public static AudioComponent? FindComponent (AudioTypePanner panner)
 		{
 			var cd = AudioComponentDescription.CreatePanner (panner);
 			return FindComponent (ref cd);
 		}
 		
-		public static AudioComponent FindComponent (AudioTypeGenerator generator)
+		public static AudioComponent? FindComponent (AudioTypeGenerator generator)
 		{
 			var cd = AudioComponentDescription.CreateGenerator (generator);
 			return FindComponent (ref cd);
 		}
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentFindNext (IntPtr inComponent, ref AudioComponentDescription inDesc);
 		
-		[DllImport(Constants.AudioUnitLibrary, EntryPoint = "AudioComponentCopyName")]
+		[DllImport (Constants.AudioUnitLibrary, EntryPoint = "AudioComponentCopyName")]
 		static extern int /* OSStatus */ AudioComponentCopyName (IntPtr component, out IntPtr cfstr);
 		
-		public string Name {
+		public string? Name {
 			get {
-				IntPtr r;
-				if (AudioComponentCopyName (handle, out r) == 0)
+				if (AudioComponentCopyName (Handle, out var r) == 0)
 					return CFString.FromHandle (r);
 				return null;
 			}
@@ -317,101 +336,241 @@ namespace AudioUnit
 
 		public AudioComponentDescription? Description {
 			get {
-				AudioComponentDescription desc;
-
-				if (AudioComponentGetDescription (handle, out desc) == 0)
+				if (AudioComponentGetDescription (Handle, out var desc) == 0)
 					return desc;
 
 				return null;
 			}
 		}
 
-		[DllImport(Constants.AudioUnitLibrary)]
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioComponentGetVersion (IntPtr component, out int /* UInt32* */ version);
 
-		public Version Version {
+		public Version? Version {
 			get {
-				int ret;
-				if (AudioComponentGetVersion (handle, out ret) == 0)
+				if (AudioComponentGetVersion (Handle, out var ret) == 0)
 					return new Version (ret >> 16, (ret >> 8) & 0xff, ret & 0xff);
 
 				return null;
 			}
 		}
 
-		[NoWatch, TV (14,0), Mac (11,0), iOS (14,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[NoWatch]
+		[TV (14,0)]
+		[Mac (11,0)]
+		[iOS (14,0)]
 		[MacCatalyst (14,0)]
+#endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern unsafe IntPtr AudioComponentCopyIcon (IntPtr comp);
 
-		[NoWatch, TV (14,0), iOS (14,0), Mac (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+#else
+		[NoWatch]
+		[TV (14,0)]
+		[iOS (14,0)]
+		[Mac (11,0)]
 		[MacCatalyst (14,0)]
-		public UIImage CopyIcon ()
+#endif
+		public UIImage? CopyIcon ()
 		{
-			var ptr = AudioComponentCopyIcon (handle);
+			var ptr = AudioComponentCopyIcon (Handle);
 			return Runtime.GetNSObject<UIImage> (ptr, owns: true);
 		}
 
 #if !MONOMAC
 #if !__MACCATALYST__
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos14.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 14,0)]
-		[DllImport(Constants.AudioUnitLibrary)]
+		[Deprecated (PlatformName.TvOS, 14,0)]
+#endif
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentGetIcon (IntPtr comp, float /* float */ desiredPointSize);
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos14.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos14.0 use 'CopyIcon' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0 use 'CopyIcon' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'CopyIcon' instead.")]
-		public UIKit.UIImage GetIcon (float desiredPointSize)
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'CopyIcon' instead.")]
+#endif
+		public UIKit.UIImage? GetIcon (float desiredPointSize)
 		{
-			return new UIKit.UIImage (AudioComponentGetIcon (handle, desiredPointSize));
+			return Runtime.GetNSObject<UIKit.UIImage> (AudioComponentGetIcon (Handle, desiredPointSize));
 		}
 #endif // !__MACCATALYST__
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("macos")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0)]
+		[Deprecated (PlatformName.TvOS, 13,0)]
 		[MacCatalyst (14,0)]
-		[DllImport(Constants.AudioUnitLibrary)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0)]
+#endif
+		[DllImport (Constants.AudioUnitLibrary)]
 		static extern double AudioComponentGetLastActiveTime (IntPtr comp);
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("macos")]
+#if TVOS
+		[Obsolete ("Starting with tvos13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios13.0 use 'AudioUnit' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
-		[MacCatalyst (14,0)][Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
+		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioUnit' instead.")]
+		[MacCatalyst (14,0)]
+		[Deprecated (PlatformName.MacCatalyst, 14,0, message: "Use 'AudioUnit' instead.")]
+#endif
 		public double LastActiveTime {
 			get {
-				return AudioComponentGetLastActiveTime (handle);
+				return AudioComponentGetLastActiveTime (Handle);
 			}
 		}
 #else
 		// extern NSImage * __nullable AudioComponentGetIcon (AudioComponent __nonnull comp) __attribute__((availability(macosx, introduced=10.11)));
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Mac (10,11)]
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
+#endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern IntPtr AudioComponentGetIcon (IntPtr comp);
 
+#if NET
+		[SupportedOSPlatform ("macos10.11")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Mac (10,11)]
-		public AppKit.NSImage GetIcon ()
+		[Deprecated (PlatformName.MacOSX, 11, 0)]
+#endif
+		public AppKit.NSImage? GetIcon ()
 		{
-			return new AppKit.NSImage (AudioComponentGetIcon (handle));
+			return Runtime.GetNSObject<AppKit.NSImage> (AudioComponentGetIcon (Handle));
 		}
 #endif
 
 #if IOS || MONOMAC
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern int /* OSStatus */ AudioUnitExtensionSetComponentList (IntPtr /* CFString */ extensionIdentifier, /* CFArrayRef */ IntPtr audioComponentInfo);
 
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		[DllImport (Constants.AudioUnitLibrary)]
 		static extern /* CFArrayRef */ IntPtr AudioUnitExtensionCopyComponentList (IntPtr /* CFString */ extensionIdentifier);
 
-		[NoWatch, NoTV, Mac (10,13), iOS (11,0)]
-		public AudioComponentInfo[] ComponentList {
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
+		public AudioComponentInfo[]? ComponentList {
 			get {
-				using (var cfString = new CFString (Name)) {
-					var cHandle = AudioUnitExtensionCopyComponentList (cfString.Handle);
+				var nameHandle = CFString.CreateNative (Name);
+				try {
+					var cHandle = AudioUnitExtensionCopyComponentList (nameHandle);
 					if (cHandle == IntPtr.Zero)
 						return null;
 					using (var nsArray = Runtime.GetNSObject<NSArray> (cHandle, owns: true)) {
-						if (nsArray == null)
+						if (nsArray is null)
 							return null;
 						// make things easier for developers since we do not know how to have an implicit conversion from NSObject to AudioComponentInfo
 						var dics = NSArray.FromArray <NSDictionary> (nsArray);
@@ -421,18 +580,21 @@ namespace AudioUnit
 						}
 						return result;
 					}
+				} finally {
+					CFString.ReleaseNative (nameHandle);
 				}
 			}
 			set {
-				if (value == null)
-					throw new ArgumentNullException	(nameof	(value));
-				using (var cfString = new CFString (Name)) {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
+				var nameHandle = CFString.CreateNative (Name);
+				try {
 					var dics = new NSDictionary [value.Length];
 					for (var i = 0; i < value.Length; i++) {
 						dics [i] = value [i].Dictionary;
 					}
 					using (var array = NSArray.FromNSObjects (dics)) {
-						var result = (AudioConverterError) AudioUnitExtensionSetComponentList (cfString.Handle, array.Handle);
+						var result = (AudioConverterError) AudioUnitExtensionSetComponentList (nameHandle, array.Handle);
 						switch (result) {
 						case AudioConverterError.None:
 							return;
@@ -441,6 +603,8 @@ namespace AudioUnit
 
 						}
 					}
+				} finally {
+					CFString.ReleaseNative (nameHandle);
 				}
 			}
 		}
@@ -450,18 +614,39 @@ namespace AudioUnit
     }
 
 #if !COREBUILD
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class AudioComponentValidationParameter {
 //		#define kAudioComponentValidationParameter_ForceValidation		 "ForceValidation"
 		public static NSString ForceValidation = new NSString ("ForceValidation");
 
 //		#define kAudioComponentValidationParameter_LoadOutOfProcess		 "LoadOutOfProcess"
-		[iOS (14,5), TV (14,5), Mac (11,3)]
+#if NET
+		[SupportedOSPlatform ("ios14.5")]
+		[SupportedOSPlatform ("tvos14.5")]
+		[SupportedOSPlatform ("macos11.3")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (14,5)]
+		[TV (14,5)]
+		[Mac (11,3)]
+#endif
 		public static NSString LoadOutOfProcess = new NSString ("LoadOutOfProcess");
 
 //		#define kAudioComponentValidationParameter_TimeOut				"TimeOut"
 		public static NSString TimeOut = new NSString ("TimeOut");
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public static class AudioComponentConfigurationInfo {
 //		#define kAudioComponentConfigurationInfo_ValidationResult	"ValidationResult"
 		public static NSString ValidationResult = new NSString ("ValidationResult");

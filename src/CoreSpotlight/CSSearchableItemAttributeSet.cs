@@ -1,5 +1,7 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 
+#nullable enable
+
 #if IOS || MONOMAC
 
 using System;
@@ -10,7 +12,7 @@ namespace CoreSpotlight {
 
 	public partial class CSSearchableItemAttributeSet {
 
-		public INSSecureCoding this [CSCustomAttributeKey key] {
+		public INSSecureCoding? this [CSCustomAttributeKey key] {
 			get {
 				return ValueForCustomKey (key);
 			}
@@ -20,7 +22,14 @@ namespace CoreSpotlight {
 		}
 
 		// Manually deal with these properties until we get BindAs working
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[iOS (11,0)]
+#endif
 		public bool? IsUserCreated { 
 			get {
 				return _IsUserCreated?.BoolValue;
@@ -29,7 +38,14 @@ namespace CoreSpotlight {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[iOS (11,0)]
+#endif
 		public bool? IsUserOwned {
 			get {
 				return _IsUserOwned?.BoolValue;
@@ -38,7 +54,14 @@ namespace CoreSpotlight {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
 		[iOS (11,0)]
+#endif
 		public bool? IsUserCurated { 
 			get {
 				return _IsUserCurated?.BoolValue;

@@ -1,0 +1,4 @@
+# not processed and part of the .pch file
+!unknown-pinvoke! compression_stream_destroy bound
+!unknown-pinvoke! compression_stream_init bound
+!unknown-pinvoke! compression_stream_process bound

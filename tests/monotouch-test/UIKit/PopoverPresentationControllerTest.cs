@@ -1,4 +1,4 @@
-﻿// Copyright 2014 Xamarin Inc. All rights reserved
+// Copyright 2014 Xamarin Inc. All rights reserved
 
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
@@ -7,6 +7,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -20,7 +21,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void PopoverBackgroundViewType ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var vc = new UIViewController ())
 			using (var pc = new UIPopoverPresentationController (vc, null)) {

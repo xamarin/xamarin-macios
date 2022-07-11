@@ -24,6 +24,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.IO;
 using System.Linq;
@@ -39,38 +42,43 @@ using Foundation;
 using Xamarin.Bundler;
 using Xamarin.Utils;
 
-public class BindingTouch {
+public class BindingTouch : IDisposable {
 	TargetFramework? target_framework;
 	public PlatformName CurrentPlatform;
 	public bool BindThirdPartyLibrary = true;
 	public bool skipSystemDrawing;
-	public string outfile;
+	public string? outfile;
 
-	string baselibdll;
-	string attributedll;
+#if !NET
+	const string DefaultCompiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+#endif
+	string compiler = string.Empty;
+	string []? compile_command = null;
+	string? baselibdll;
+	string? attributedll;
 
 	List<string> libs = new List<string> ();
 	List<string> references = new List<string> ();
 
-	public MetadataLoadContext universe;
+	public MetadataLoadContext? universe;
 	public TypeManager TypeManager = new TypeManager ();
-	public Frameworks Frameworks;
-	public AttributeManager AttributeManager;
-
+	public Frameworks? Frameworks;
+	public AttributeManager? AttributeManager;
+	bool disposedValue;
 	readonly Dictionary<System.Type, Type> ikvm_type_lookup = new Dictionary<System.Type, Type> ();
 	internal Dictionary<System.Type, Type> IKVMTypeLookup {
 		get { return ikvm_type_lookup;  }
 	}
 
 	public TargetFramework TargetFramework {
-		get { return target_framework.Value; }
+		get { return target_framework!.Value; }
 	}
 
 	public static string ToolName {
 		get { return "bgen"; }
 	}
 
-	bool IsDotNet {
+	internal bool IsDotNet {
 		get { return TargetFramework.IsDotNet; }
 	}
 
@@ -95,7 +103,10 @@ public class BindingTouch {
 	string GetAttributeLibraryPath ()
 	{
 		if (!string.IsNullOrEmpty (attributedll))
-			return attributedll;
+			return attributedll!;
+
+		if (IsDotNet)
+			return Path.Combine (GetSDKRoot (), "lib", "Xamarin.Apple.BindingAttributes.dll");
 
 		switch (CurrentPlatform) {
 		case PlatformName.iOS:
@@ -192,7 +203,7 @@ public class BindingTouch {
 
 	static int Main2 (string [] args)
 	{
-		var touch = new BindingTouch ();
+		using var touch = new BindingTouch ();
 		return touch.Main3 (args);
 	}
 
@@ -200,9 +211,9 @@ public class BindingTouch {
 	{
 		bool show_help = false;
 		bool zero_copy = false;
-		string basedir = null;
-		string tmpdir = null;
-		string ns = null;
+		string? basedir = null;
+		string? tmpdir = null;
+		string? ns = null;
 		bool delete_temp = true, debug = false;
 		bool unsafef = true;
 		bool external = false;
@@ -216,9 +227,9 @@ public class BindingTouch {
 		var core_sources = new List<string> ();
 		var extra_sources = new List<string> ();
 		var defines = new List<string> ();
-		string generate_file_list = null;
+		string? generate_file_list = null;
 		bool process_enums = false;
-		string compiler = "/Library/Frameworks/Mono.framework/Versions/Current/bin/csc";
+		bool noNFloatUsing = false;
 
 		ErrorHelper.ClearWarningLevels ();
 
@@ -236,6 +247,12 @@ public class BindingTouch {
 			{ "r|reference=", "Adds a reference", v => references.Add (v) },
 			{ "lib=", "Adds the directory to the search path for the compiler", v => libs.Add (v) },
 			{ "compiler=", "Sets the compiler to use (Obsolete) ", v => compiler = v, true },
+			{ "compile-command=", "Sets the command to execute the C# compiler (this be an executable + arguments).", v =>
+				{
+					if (!StringUtils.TryParseArguments (v, out compile_command, out var ex))
+						throw ErrorHelper.CreateError (27, "--compile-command", ex);
+				}
+			},
 			{ "sdk=", "Sets the .NET SDK to use (Obsolete)", v => {}, true },
 			{ "new-style", "Build for Unified (Obsolete).", v => { Console.WriteLine ("The --new-style option is obsolete and ignored."); }, true},
 			{ "d=", "Defines a symbol", v => defines.Add (v) },
@@ -298,6 +315,10 @@ public class BindingTouch {
 					} catch (Exception ex) {
 						throw ErrorHelper.CreateError (26, ex.Message);
 					}
+				}
+			},
+			{ "no-nfloat-using:", "If a global using alias directive for 'nfloat = System.Runtime.InteropServices.NFloat' should automatically be created.", (v) => {
+					noNFloatUsing = string.Equals ("true", v, StringComparison.OrdinalIgnoreCase) || string.IsNullOrEmpty (v);
 				}
 			},
 			new Mono.Options.ResponseFileSource (),
@@ -368,6 +389,8 @@ public class BindingTouch {
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "mobile", "Xamarin.Mac.dll");
 				else if (target_framework == TargetFramework.Xamarin_Mac_4_5_Full || target_framework == TargetFramework.Xamarin_Mac_4_5_System)
 					baselibdll = Path.Combine (GetSDKRoot (), "lib", "reference", "full", "Xamarin.Mac.dll");
+				else if (target_framework == TargetFramework.DotNet_macOS)
+					baselibdll = Path.Combine (GetSDKRoot (), "lib", "mono", "Xamarin.Mac", "Xamarin.Mac.dll");
 				else
 					throw ErrorHelper.CreateError (1053, target_framework); 
 			}
@@ -382,7 +405,7 @@ public class BindingTouch {
 			} else if (target_framework == TargetFramework.Xamarin_Mac_4_5_System) {
 				skipSystemDrawing = false;
 				ReferenceFixer.FixSDKReferences ("/Library/Frameworks/Mono.framework/Versions/Current/lib/mono/4.5", references, forceSystemDrawing : true);
-			} else if (target_framework == TargetFramework.DotNet_5_0_macOS) {
+			} else if (target_framework == TargetFramework.DotNet_macOS) {
 				skipSystemDrawing = false;
 			} else {
 				throw ErrorHelper.CreateError (1053, target_framework); 
@@ -435,6 +458,9 @@ public class BindingTouch {
 			cargs.Add ("-r:" + baselibdll);
 			foreach (var def in defines)
 				cargs.Add ("-define:" + def);
+#if NET
+			cargs.Add ("-define:NET");
+#endif
 			cargs.AddRange (paths);
 			if (nostdlib) {
 				cargs.Add ("-nostdlib");
@@ -445,8 +471,15 @@ public class BindingTouch {
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			if (Driver.RunCommand (compiler, cargs, null, out var compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (2, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{compile_output}".Replace ("\n", "\n\t"));
+#if NET
+			var tmpusing = Path.Combine (tmpdir, "GlobalUsings.g.cs");
+			if (!noNFloatUsing) {
+				File.WriteAllText (tmpusing, "global using nfloat = global::System.Runtime.InteropServices.NFloat;\n");
+				cargs.Add (tmpusing);
+			}
+#endif
+
+			Compile (cargs, 2);
 
 			universe = new MetadataLoadContext (
 				new SearchPathsAssemblyResolver (
@@ -556,6 +589,9 @@ public class BindingTouch {
 			cargs.Add ("-out:" + outfile);
 			foreach (var def in defines)
 				cargs.Add ("-define:" + def);
+#if NET
+			cargs.Add ("-define:NET");
+#endif
 			cargs.AddRange (g.GeneratedFiles);
 			cargs.AddRange (core_sources);
 			cargs.AddRange (extra_sources);
@@ -569,8 +605,12 @@ public class BindingTouch {
 			if (!string.IsNullOrEmpty (Path.GetDirectoryName (baselibdll)))
 				cargs.Add ("-lib:" + Path.GetDirectoryName (baselibdll));
 
-			if (Driver.RunCommand (compiler, cargs, null, out var generated_compile_output, true, Driver.Verbosity) != 0)
-				throw ErrorHelper.CreateError (1000, $"{compiler} {StringUtils.FormatArguments (cargs)}\n{generated_compile_output}".Replace ("\n", "\n\t"));
+#if NET
+			if (!noNFloatUsing)
+				cargs.Add (tmpusing);
+#endif
+
+			Compile (cargs, 1000);
 		} finally {
 			if (delete_temp)
 				Directory.Delete (tmpdir, true);
@@ -578,6 +618,25 @@ public class BindingTouch {
 		return 0;
 	}
 	
+	void Compile (List<string> arguments, int errorCode)
+	{
+		if (compile_command is null || compile_command.Length == 0) {
+#if !NET
+			if (string.IsNullOrEmpty (compiler))
+				compiler = DefaultCompiler;
+#endif
+			if (string.IsNullOrEmpty (compiler))
+				throw ErrorHelper.CreateError (28);
+			compile_command = new string [] { compiler };
+		}
+
+		for (var i = 1; i < compile_command.Length; i++) {
+			arguments.Insert (i - 1, compile_command [i]);
+		}
+
+		if (Driver.RunCommand (compile_command [0], arguments, null, out var compile_output, true, Driver.Verbosity) != 0)
+			throw ErrorHelper.CreateError (errorCode, $"{compiler} {StringUtils.FormatArguments (arguments)}\n{compile_output}".Replace ("\n", "\n\t"));
+	}
 
 	static string GetWorkDir ()
 	{
@@ -589,6 +648,24 @@ public class BindingTouch {
 			var di = Directory.CreateDirectory (p);
 			return di.FullName;
 		}
+	}
+
+	protected virtual void Dispose (bool disposing)
+	{
+		if (!disposedValue) {
+			if (disposing) {
+				universe?.Dispose ();
+				universe = null;
+			}
+
+			disposedValue = true;
+		}
+	}
+
+	public void Dispose ()
+	{
+		Dispose (disposing: true);
+		GC.SuppressFinalize (this);
 	}
 }
 

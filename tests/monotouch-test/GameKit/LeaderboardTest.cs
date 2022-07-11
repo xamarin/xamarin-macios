@@ -19,6 +19,7 @@ using UIKit;
 #endif
 using GameKit;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GameKit {
 
@@ -28,19 +29,19 @@ namespace MonoTouchFixtures.GameKit {
 
 		void Check (GKLeaderboard lb)
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 #if !__TVOS__
 			Assert.Null (lb.Category, "Category");
 #endif
 #if __MACOS__
-			var hasGroupIdentifier = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9);
-			var hasIdentifier = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10);
-			var hasRange = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10);
+			var hasGroupIdentifier = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9);
+			var hasIdentifier = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10);
+			var hasRange = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10);
 #elif __IOS__
-			var hasGroupIdentifier = TestRuntime.CheckSystemVersion (PlatformName.iOS, 6, 0);
-			var hasIdentifier = TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0);
-			var hasRange = TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0);
+			var hasGroupIdentifier = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 6, 0);
+			var hasIdentifier = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0);
+			var hasRange = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0);
 #elif __TVOS__
 			var hasGroupIdentifier = true;
 			var hasIdentifier = true;
@@ -48,7 +49,7 @@ namespace MonoTouchFixtures.GameKit {
 #elif __WATCHOS__
 			var hasGroupIdentifier = true;
 			var hasIdentifier = true;
-			var hasRange = TestRuntime.CheckSystemVersion (PlatformName.WatchOS, 3, 0);
+			var hasRange = TestRuntime.CheckSystemVersion (ApplePlatform.WatchOS, 3, 0);
 #endif
 			if (hasGroupIdentifier) {
 				Assert.Null (lb.GroupIdentifier, "GroupIdentifier");
@@ -71,7 +72,7 @@ namespace MonoTouchFixtures.GameKit {
 		[Test]
 		public void DefaultCtor ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var lb = new GKLeaderboard ()) {
 				Check (lb);
@@ -81,7 +82,7 @@ namespace MonoTouchFixtures.GameKit {
 		[Test]
 		public void PlayersCtor ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			// note: Mavericks does not like (respond to) this selector - but it did work with ML and is documented
 			using (var lb = new GKLeaderboard (new string [0])) {

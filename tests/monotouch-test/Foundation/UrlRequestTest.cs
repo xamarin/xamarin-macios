@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSUrlRequest
 //
 // Authors:
@@ -42,7 +42,7 @@ namespace MonoTouchFixtures.Foundation {
 					// In older OSes, the Headers is an instance of a class that's somehow immutable,
 					// even though it's an NSMutableDictionary subclass (specifically __NSCFDictionary).
 					// This feels like a bug that Apple fixed at some point.
-#if __MACOS__
+#if __MACOS__ || NET
 					Assert.Throws<ObjCException> (() => mur.Headers.SetValueForKey (s3, s1));
 #else
 					Assert.Throws<MonoTouchException> (() => mur.Headers.SetValueForKey (s3, s1));

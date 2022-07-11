@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -10,15 +10,16 @@ using Microsoft.DotNet.XHarness.Common.Utilities;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+#nullable enable
 
 namespace Xharness.Jenkins.TestTasks {
 	public class BuildProject : BuildTool {
 		public IResourceManager ResourceManager { get; set; }
 		public IEnvManager EnvironmentManager { get; set; }
 		public IEventLogger EventLogger { get; set; }
-		Func<string> msbuildPath;
+		readonly Func<string> msbuildPath;
 
-		public string SolutionPath { get; set; }
+		public string? SolutionPath { get; set; }
 
 		public BuildProject (Func<string> msbuildPath, IProcessManager processManager, IResourceManager resourceManager, IEventLogger eventLogger, IEnvManager envManager) : base (processManager)
 		{
@@ -46,42 +47,41 @@ namespace Xharness.Jenkins.TestTasks {
 
 		async Task<TestExecutingResult> RestoreNugetsAsync (string projectPath, ILog log)
 		{
-			using (var resource = await ResourceManager.NugetResource.AcquireExclusiveAsync ()) {
-				// we do not want to use xibuild on solutions, we will have some failures with Mac Full
-				var isSolution = projectPath.EndsWith (".sln", StringComparison.Ordinal);
-				if (!File.Exists (projectPath))
-					throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
+			using var _ = await ResourceManager.NugetResource.AcquireExclusiveAsync ();
+			if (!File.Exists (projectPath))
+				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", projectPath);
 
-				using (var nuget = new Process ()) {
-					nuget.StartInfo.FileName = msbuildPath ();
-					var args = new List<string> ();
-					args.Add ("-t");
-					args.Add ("--");
-					args.Add ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget");
-					args.Add ("restore");
-					args.Add (projectPath);
-					args.Add ("-Verbosity");
-					args.Add ("detailed");
-					nuget.StartInfo.Arguments = StringUtils.FormatArguments (args);
-					EnvironmentManager.SetEnvironmentVariables (nuget);
-					EventLogger.LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
+			using (var nuget = new Process ()) {
+				nuget.StartInfo.FileName = msbuildPath ();
+				var args = new List<string> ();
+				args.Add ("-t");
+				args.Add ("--");
+				args.Add ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget");
+				args.Add ("restore");
+				args.Add (projectPath);
+				args.Add ("-Verbosity");
+				args.Add ("detailed");
+				nuget.StartInfo.Arguments = StringUtils.FormatArguments (args);
+				EnvironmentManager.SetEnvironmentVariables (nuget);
+				EventLogger.LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
 
-					var timeout = TimeSpan.FromMinutes (15);
-					var result = await ProcessManager.RunAsync (nuget, log, timeout);
-					if (result.TimedOut) {
-						log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
-						return TestExecutingResult.TimedOut;
-					} else if (!result.Succeeded) {
-						return TestExecutingResult.Failed;
-					}
+				var timeout = TimeSpan.FromMinutes (15);
+				var result = await ProcessManager.RunAsync (nuget, log, timeout);
+				if (result.TimedOut) {
+					log.WriteLine ("Nuget restore timed out after {0} seconds.", timeout.TotalSeconds);
+					return TestExecutingResult.TimedOut;
 				}
 
-				EventLogger.LogEvent (log, "Restoring nugets completed for {0} ({1}) on path {2}", TestName, Mode, projectPath);
-				return TestExecutingResult.Succeeded;
+				if (!result.Succeeded) {
+					return TestExecutingResult.Failed;
+				}
 			}
+
+			EventLogger.LogEvent (log, "Restoring nugets completed for {0} ({1}) on path {2}", TestName, Mode, projectPath);
+			return TestExecutingResult.Succeeded;
 		}
 
-		List<string> GetNestedReferenceProjects (string csproj)
+		static IEnumerable<string> GetNestedReferenceProjects (string csproj)
 		{
 			if (!File.Exists (csproj))
 				throw new FileNotFoundException ("Could not find the project whose reference projects needed to be found.", csproj);
@@ -110,12 +110,12 @@ namespace Xharness.Jenkins.TestTasks {
 				throw new FileNotFoundException ("Could not find the solution whose nugets to restore.", SolutionPath ?? TestProject.Path);
 
 			// might happen that the project does contain reference projects with nugets, grab the reference projects and ensure
-			// thast they have the nugets restored (usually, watch os test projects
-			if (SolutionPath == null) {
+			// that they have the nugets restored (usually, watch os test projects
+			if (SolutionPath is null) {
 				var references = GetNestedReferenceProjects (TestProject.Path);
 				foreach (var referenceProject in references) {
 					var execResult = await RestoreNugetsAsync (referenceProject, log); // do the replace in case we use win paths
-					if (execResult == TestExecutingResult.TimedOut) {
+					if ((execResult & TestExecutingResult.TimedOut) == TestExecutingResult.TimedOut) {
 						return execResult;
 					}
 				}

@@ -1,0 +1,11 @@
+## EPDeveloperTool and EPExecutionPolicy are both macOS only and no consumers are accessible
+!missing-enum! EPDeveloperToolStatus not bound
+!missing-enum! EPError not bound
+!missing-field! EPErrorDomain not bound
+!missing-selector! EPDeveloperTool::authorizationStatus not bound
+!missing-selector! EPDeveloperTool::init not bound
+!missing-selector! EPDeveloperTool::requestDeveloperToolAccessWithCompletionHandler: not bound
+!missing-selector! EPExecutionPolicy::addPolicyExceptionForURL:error: not bound
+!missing-selector! EPExecutionPolicy::init not bound
+!missing-type! EPDeveloperTool not bound
+!missing-type! EPExecutionPolicy not bound

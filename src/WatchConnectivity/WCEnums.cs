@@ -1,4 +1,4 @@
-﻿//
+//
 // WatchConnectivity enums
 //
 // Authors:

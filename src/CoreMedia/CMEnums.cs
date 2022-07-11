@@ -126,6 +126,8 @@ namespace CoreMedia {
 		Hevc             = 0x68766331,
 		[iOS (14,5)][TV (14,5)][Watch (7,4)][Mac (11,3)]
 		DolbyVisionHevc  = 0x64766831,
+		DisparityHevc    = 0x64697368,
+		DepthHevc        = 0x64657068,
 	}
 
 	// UInt32 enum => CMFormatDescription.h

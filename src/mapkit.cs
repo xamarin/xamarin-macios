@@ -33,6 +33,10 @@ using UIView=AppKit.NSView;
 using UIEdgeInsets=AppKit.NSEdgeInsets;
 using UIColor=AppKit.NSColor;
 using UIScene=AppKit.NSColor;
+using UIControl = AppKit.NSControl;
+using UIBarButtonItem = Foundation.NSObject;
+#else
+using NSAppearance = Foundation.NSObject;
 #endif
 #if WATCH
 // helper for [NoWatch]
@@ -43,6 +47,20 @@ using MKOverlay = Foundation.NSObjectProtocol;
 using MKPolygon = Foundation.NSObject;
 using MKPolyline = Foundation.NSObject;
 using MKOverlayPathRenderer = Foundation.NSObject;
+using IMKOverlay = Foundation.NSObject;
+using MKDirectionsRequest = Foundation.NSObject;
+using UITraitCollection = Foundation.NSObject;
+using UIControl = Foundation.NSObject;
+using MKTileOverlayPath = Foundation.NSObject;
+using UIBarButtonItem = Foundation.NSObject;
+using MKCircle = Foundation.NSObject;
+#endif
+#if TVOS
+using CNPostalAddress = Foundation.NSObject;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace MapKit {
@@ -100,10 +118,10 @@ namespace MapKit {
 		[DesignatedInitializer]
 		[Export ("initWithAnnotation:reuseIdentifier:")]
 		[PostGet ("Annotation")]
-		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
+		NativeHandle Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
 	
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("reuseIdentifier")]
 		[NullAllowed]
@@ -167,13 +185,14 @@ namespace MapKit {
 		[NullAllowed]
 		UIView DetailCalloutAccessoryView { get; set; }
 
-#if MONOMAC
+		[NoiOS][NoWatch][NoTV][MacCatalyst (13,0)]
 		[Export ("leftCalloutOffset")]
 		CGPoint LeftCalloutOffset { get; set; }
 
+		[NoiOS][NoWatch][NoTV][MacCatalyst (13,0)]
 		[Export ("rightCalloutOffset")]
 		CGPoint RightCallpoutOffset { get; set; }
-#endif
+
 		[TV (11,0)][iOS (11,0)][Mac (10,13)]
 		[NullAllowed, Export ("clusteringIdentifier")]
 		string ClusteringIdentifier { get; set; }
@@ -230,21 +249,20 @@ namespace MapKit {
 		#endregion
 	}
 
-#if !MONOMAC && !TVOS
+	[NoMac][NoTV]
 	[BaseType (typeof (MKOverlayPathView))]
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKCircleRenderer' instead.")]
+	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKCircleRenderer' instead.")]
 	interface MKCircleView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("circle")]
 		MKCircle Circle { get;  }
 
 		[Export ("initWithCircle:")]
 		[PostGet ("Circle")]
-		IntPtr Constructor (MKCircle circle);
+		NativeHandle Constructor (MKCircle circle);
 	}
-#endif
 	
 	[TV (9,2)]
 	[Mac (10,9)]
@@ -259,7 +277,7 @@ namespace MapKit {
 		MKMapItem Source { get; [iOS (7,0)] set; }
 
 		[Export ("initWithContentsOfURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Static]
 		[Export ("isDirectionsRequestURL:")]
@@ -312,7 +330,7 @@ namespace MapKit {
 		MKMapItem MapItemForCurrentLocation ();
 
 		[Export ("initWithPlacemark:")]
-		IntPtr Constructor (MKPlacemark placemark);
+		NativeHandle Constructor (MKPlacemark placemark);
 
 		[NoTV]
 		[Export ("openInMapsWithLaunchOptions:"), Internal]
@@ -396,13 +414,13 @@ namespace MapKit {
 		string PointOfInterestCategory { get; set; }
 	}
 
-#if !WATCH
+	[NoWatch]
 	[TV (9,2)]
 	[BaseType (typeof (UIView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof (MKMapViewDelegate)})]
 	[Mac (10,9)]
 	interface MKMapView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -548,11 +566,10 @@ namespace MapKit {
 		[Export ("mapRectThatFits:edgePadding:")]
 		MKMapRect MapRectThatFits (MKMapRect mapRect, UIEdgeInsets edgePadding);
 
-#if !MONOMAC && !TVOS
+		[NoMac][NoTV]
 		[Export ("viewForOverlay:")]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
 		MKOverlayView ViewForOverlay (IMKOverlay overlay);
-#endif // !MONOMAC && !TVOS
 
 		[Export ("visibleMapRect")]
 		MKMapRect VisibleMapRect { get; set;  }
@@ -637,10 +654,9 @@ namespace MapKit {
 		[Mac (10,11), iOS(9,0)]
 		bool ShowsTraffic { get; set; }
 
-#if MONOMAC
+		[NoiOS][NoWatch][NoTV][MacCatalyst (13,0)]
 		[Export ("showsZoomControls")]
 		bool ShowsZoomControls { get; set; }
-#endif
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Export ("setCameraZoomRange:animated:")]
@@ -680,6 +696,7 @@ namespace MapKit {
 		NSString ClusterAnnotationViewReuseIdentifier { get; }
 	}
 
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -707,25 +724,24 @@ namespace MapKit {
 		[Export ("mapView:didAddAnnotationViews:"), EventArgs ("MKMapViewAnnotation")]
 		void DidAddAnnotationViews (MKMapView mapView, MKAnnotationView [] views);
 	
-#if !MONOMAC
+		[NoMac]
 		[NoTV]
 		[Export ("mapView:annotationView:calloutAccessoryControlTapped:"), EventArgs ("MKMapViewAccessoryTapped")]
 		void CalloutAccessoryControlTapped (MKMapView mapView, MKAnnotationView view, UIControl control);
-#endif // !MONOMAC
 
 		[NoTV]
 		[Export ("mapView:annotationView:didChangeDragState:fromOldState:"), EventArgs ("MKMapViewDragState")]
 		void ChangedDragState (MKMapView mapView, MKAnnotationView annotationView, MKAnnotationViewDragState newState, MKAnnotationViewDragState oldState);
 
-#if !MONOMAC && !TVOS
+		[NoMac][NoTV]
 		[Export ("mapView:viewForOverlay:"), DelegateName ("MKMapViewOverlay"), DefaultValue (null)]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKOverlayRenderer.RendererForOverlay' instead.")]
 		MKOverlayView GetViewForOverlay (MKMapView mapView, IMKOverlay overlay);
 
+		[NoMac][NoTV]
 		[Export ("mapView:didAddOverlayViews:"), EventArgs ("MKOverlayViews")]
-		[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'DidAddOverlayRenderers' instead.")]
+		[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'DidAddOverlayRenderers' instead.")]
 		void DidAddOverlayViews (MKMapView mapView, MKOverlayView overlayViews);
-#endif // !MONOMAC && !TVOS
 
 		[Export ("mapView:didSelectAnnotationView:"), EventArgs ("MKAnnotationView")]
 		void DidSelectAnnotationView (MKMapView mapView, MKAnnotationView view);
@@ -769,18 +785,22 @@ namespace MapKit {
 		[Export ("mapViewDidChangeVisibleRegion:")]
 		void DidChangeVisibleRegion (MKMapView mapView);
 	}
-		
+
 	[BaseType (typeof (MKAnnotationView))]
 	// crash on Dispose when created from 'init'
 	[DisableDefaultCtor]
 	[TV (9,2)]
 	[Mac (10,9)]
+	[NoWatch]
+	[Deprecated (PlatformName.MacOSX, 12, 0)]
+	[Deprecated (PlatformName.iOS, 15, 0)]
+	[Deprecated (PlatformName.TvOS, 15, 0)]	
 	interface MKPinAnnotationView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("initWithAnnotation:reuseIdentifier:")]
-		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
+		NativeHandle Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
 
 		[NoTV]
 		[Export ("pinColor")]
@@ -810,8 +830,8 @@ namespace MapKit {
 		UIColor PurplePinColor { get; }
 	}
 
-#if IOS
 	// This requires the AddressBook framework, which afaict isn't bound on Mac, tvOS and watchOS yet
+	[NoMac][NoWatch][NoTV]
 	[StrongDictionary ("global::AddressBook.ABPersonAddressKey")]
 	interface MKPlacemarkAddress {
 		[Export ("City")]
@@ -827,8 +847,6 @@ namespace MapKit {
 		[Export ("Zip")]
 		string Zip { get; set; }
 	}
-#endif // !MONOMAC
-#endif // !WATCH
 
 	[BaseType (typeof (CLPlacemark))]
 	// crash (at least) when calling 'description' when instance is created by 'init'
@@ -837,40 +855,37 @@ namespace MapKit {
 	[Mac (10,9)]
 	interface MKPlacemark : MKAnnotation, NSCopying {
 		[Export ("initWithCoordinate:addressDictionary:")]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate, [NullAllowed] NSDictionary addressDictionary);
+		NativeHandle Constructor (CLLocationCoordinate2D coordinate, [NullAllowed] NSDictionary addressDictionary);
 
-#if IOS
 		// This requires the AddressBook framework, which afaict isn't bound on Mac, tvOS and watchOS yet
+		[NoMac][NoWatch][NoTV]
 		[Wrap ("this (coordinate, addressDictionary.GetDictionary ())")]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate, MKPlacemarkAddress addressDictionary);
-#endif // !MONOMAC && !WATCH
+		NativeHandle Constructor (CLLocationCoordinate2D coordinate, MKPlacemarkAddress addressDictionary);
 
 		[Watch (3,0)][TV (10,0)][iOS (10,0)]
 		[Mac (10,12)]
 		[Export ("initWithCoordinate:")]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate);
+		NativeHandle Constructor (CLLocationCoordinate2D coordinate);
 
-#if !TVOS
 		[Watch (3,0)][iOS (10,0)]
 		[Mac (10,12)]
 		[NoTV]
 		[Export ("initWithCoordinate:postalAddress:")]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate, CNPostalAddress postalAddress);
-#endif
+		NativeHandle Constructor (CLLocationCoordinate2D coordinate, CNPostalAddress postalAddress);
 	
 		[Export ("countryCode")]
 		[NullAllowed]
 		string CountryCode { get; }
 	}
 		
-#if IOS
+	[NoMac][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
-	[Availability (Deprecated = Platform.iOS_5_0, Message = "Use 'CoreLocation.CLGeocoder' instead.")]
+	[Deprecated (PlatformName.iOS, 5, 0, message: "Use 'CoreLocation.CLGeocoder' instead.")]
 	// crash (at least) at Dispose time when instance is created by 'init'
 	[DisableDefaultCtor]
 	interface MKReverseGeocoder {
 		[Export ("initWithCoordinate:")]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate);
+		NativeHandle Constructor (CLLocationCoordinate2D coordinate);
 	
 		[Export ("delegate", ArgumentSemantic.Assign)][NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -896,6 +911,9 @@ namespace MapKit {
 	}
 
 #pragma warning disable 618
+	[NoMac][NoWatch][NoTV][MacCatalyst (13, 1)]
+	[Deprecated (PlatformName.iOS, 5, 0)]
+	[Deprecated (PlatformName.MacCatalyst, 13, 1)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -910,18 +928,19 @@ namespace MapKit {
 	}
 #pragma warning restore 618
 
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayRenderer' instead.")]
+	[NoMac][NoWatch][NoTV]
+	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKOverlayRenderer' instead.")]
 	[BaseType (typeof (UIView))]
 	interface MKOverlayView {
 		[Export ("overlay")]
 		IMKOverlay Overlay { get; }
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[DesignatedInitializer]
 		[Export ("initWithOverlay:")]
-		IntPtr Constructor (IMKOverlay overlay);
+		NativeHandle Constructor (IMKOverlay overlay);
 
 		[Export ("pointForMapPoint:")]
 		[ThreadSafe]
@@ -953,14 +972,15 @@ namespace MapKit {
 		void SetNeedsDisplay (MKMapRect mapRect, /* MKZoomScale */ nfloat zoomScale);
 	}
 
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKOverlayPathRenderer' instead.")]
+	[NoMac][NoWatch][NoTV]
+	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKOverlayPathRenderer' instead.")]
 	[BaseType (typeof (MKOverlayView))]
 	interface MKOverlayPathView {
 		[Export ("initWithOverlay:")]
-		IntPtr Constructor (IMKOverlay overlay);
+		NativeHandle Constructor (IMKOverlay overlay);
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[NullAllowed] // by default this property is null
 		[Export ("fillColor", ArgumentSemantic.Retain)]
@@ -1011,9 +1031,8 @@ namespace MapKit {
 		[Export ("fillPath:inContext:")]
 		void FillPath (CGPath path, CGContext context);
 	}
-#endif // IOS
 
-#if !WATCH
+	[NoWatch]
 	[TV (9,2)]
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
@@ -1028,6 +1047,7 @@ namespace MapKit {
 		new string Subtitle { get; set; } 
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[Mac (10,9)]
 	[DesignatedDefaultCtor]
@@ -1035,32 +1055,32 @@ namespace MapKit {
 	interface MKPointAnnotation : MKGeoJsonObject {
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Export ("initWithCoordinate:")]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate);
+		NativeHandle Constructor (CLLocationCoordinate2D coordinate);
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Export ("initWithCoordinate:title:subtitle:")]
-		IntPtr Constructor (CLLocationCoordinate2D coordinate, [NullAllowed] string title, [NullAllowed] string subtitle);
+		NativeHandle Constructor (CLLocationCoordinate2D coordinate, [NullAllowed] string title, [NullAllowed] string subtitle);
 
 		[Export ("coordinate")]
 		CLLocationCoordinate2D Coordinate { get; set; }
-}
+	}
 
-#if !MONOMAC && !TVOS
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKPolygonRenderer' instead.")]
+	[NoMac][NoTV][NoWatch]
+	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKPolygonRenderer' instead.")]
 	[BaseType (typeof (MKOverlayPathView))]
 	interface MKPolygonView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("initWithPolygon:")]
 		[PostGet ("Polygon")]
-		IntPtr Constructor (MKPolygon polygon);
+		NativeHandle Constructor (MKPolygon polygon);
 		
 		[Export ("polygon")]
 		MKPolygon Polygon { get;  }
 	}
-#endif // !MONOMAC && !TVOS
 
+	[NoWatch]
 	[ThreadSafe]
 	[TV (9,2)]
 	[Mac (10,9)]
@@ -1096,6 +1116,7 @@ namespace MapKit {
 		#endregion
 	}
 
+	[NoWatch]
 	[ThreadSafe]
 	[TV (9,2)]
 	[Mac (10,9)]
@@ -1118,22 +1139,22 @@ namespace MapKit {
 		#endregion
 	}
 
-#if !MONOMAC && !TVOS
-	[Availability (Deprecated = Platform.iOS_7_0, Message = "Use 'MKPolylineRenderer' instead.")]
+	[NoMac][NoTV][NoWatch]
+	[Deprecated (PlatformName.iOS, 7, 0, message: "Use 'MKPolylineRenderer' instead.")]
 	[BaseType (typeof (MKOverlayPathView))]
 	interface MKPolylineView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("initWithPolyline:")]
 		[PostGet ("Polyline")]
-		IntPtr Constructor (MKPolyline polyline);
+		NativeHandle Constructor (MKPolyline polyline);
 		
 		[Export ("polyline")]
 		MKPolyline Polyline { get;  }
 	}
-#endif // !MONOMAC && !TVOS
 
+	[NoWatch]
 	[BaseType (typeof (MKShape))]
 	[TV (9,2)]
 	[Mac (10,9)]
@@ -1159,6 +1180,7 @@ namespace MapKit {
 		NSNumber[] GetLocations (NSIndexSet indexes);
 	}
 
+	[NoWatch]
 	[BaseType (typeof (NSObject))]
 	[TV (9,2)]
 	[Mac (10,9)]
@@ -1187,7 +1209,8 @@ namespace MapKit {
 		CLHeading Heading { get; }
 	}
 
-#if !MONOMAC
+	[NoMac]
+	[NoWatch]
 	[NoTV]
 	[BaseType (typeof (UIBarButtonItem))]
 	[DisableDefaultCtor]
@@ -1199,12 +1222,12 @@ namespace MapKit {
 		[DesignatedInitializer]
 		[Export ("initWithMapView:")]
 		[PostGet ("MapView")]
-		IntPtr Constructor ([NullAllowed] MKMapView mapView);
+		NativeHandle Constructor ([NullAllowed] MKMapView mapView);
 	}
-#endif // !MONOMAC
 
 	delegate void MKLocalSearchCompletionHandler (MKLocalSearchResponse response, NSError error);
 
+	[NoWatch]
 	[TV (9,2)]
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
@@ -1214,13 +1237,13 @@ namespace MapKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithRequest:")]
-		IntPtr Constructor (MKLocalSearchRequest request);
+		NativeHandle Constructor (MKLocalSearchRequest request);
 
 		[TV (14,0), NoWatch, Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Export ("initWithPointsOfInterestRequest:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MKLocalPointsOfInterestRequest request);
+		NativeHandle Constructor (MKLocalPointsOfInterestRequest request);
 
 		[Export ("startWithCompletionHandler:")]
 		[Async]
@@ -1233,6 +1256,7 @@ namespace MapKit {
 		bool IsSearching { [Bind ("isSearching")] get; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
@@ -1243,15 +1267,15 @@ namespace MapKit {
 		[DesignatedInitializer]
 		[NoWatch][iOS (9,3)][Mac (10,11,4)]
 		[Export ("initWithCompletion:")]
-		IntPtr Constructor (MKLocalSearchCompletion completion);
+		NativeHandle Constructor (MKLocalSearchCompletion completion);
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Export ("initWithNaturalLanguageQuery:")]
-		IntPtr Constructor (string naturalLanguageQuery);
+		NativeHandle Constructor (string naturalLanguageQuery);
 
 		[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
 		[Export ("initWithNaturalLanguageQuery:region:")]
-		IntPtr Constructor (string naturalLanguageQuery, MKCoordinateRegion region);
+		NativeHandle Constructor (string naturalLanguageQuery, MKCoordinateRegion region);
 
 		[Export ("naturalLanguageQuery", ArgumentSemantic.Copy)]
 		[NullAllowed]
@@ -1269,6 +1293,7 @@ namespace MapKit {
 		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[Mac (10,9)]
 	[BaseType (typeof (NSObject))]
@@ -1284,13 +1309,14 @@ namespace MapKit {
 		MKMapItem[] MapItems { get; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKOverlayPathRenderer))]
 	[Mac (10,9)]
 	partial interface MKCircleRenderer {
 
 		[Export ("initWithCircle:")]
-		IntPtr Constructor (MKCircle circle);
+		NativeHandle Constructor (MKCircle circle);
 
 		[Export ("circle")]
 		MKCircle Circle { get; }
@@ -1306,6 +1332,7 @@ namespace MapKit {
 		nfloat StrokeEnd { get; set; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9)]
@@ -1314,7 +1341,7 @@ namespace MapKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithRequest:")]
-		IntPtr Constructor (MKDirectionsRequest request);
+		NativeHandle Constructor (MKDirectionsRequest request);
 
 		[Export ("calculateDirectionsWithCompletionHandler:")]
 		[Async]
@@ -1335,6 +1362,7 @@ namespace MapKit {
 
 	delegate void MKETAHandler (MKETAResponse response, NSError error);
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9)]
@@ -1365,6 +1393,7 @@ namespace MapKit {
 		NSDate ExpectedDepartureDate { get; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9)]
@@ -1380,6 +1409,7 @@ namespace MapKit {
 		MKRoute [] Routes { get; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9)]
@@ -1407,6 +1437,7 @@ namespace MapKit {
 		MKRouteStep [] Steps { get; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9)]
@@ -1428,7 +1459,6 @@ namespace MapKit {
 		[Export ("transportType")]
 		MKDirectionsTransportType TransportType { get; }
 	}
-#endif // !WATCH
 
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSFormatter))]
@@ -1452,7 +1482,7 @@ namespace MapKit {
 		MKDistanceFormatterUnitStyle UnitStyle { get; set; }
 	}
 
-#if !WATCH
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKPolyline))]
 	[Mac (10,9)]
@@ -1467,6 +1497,7 @@ namespace MapKit {
 		MKGeodesicPolyline PolylineWithCoordinates (IntPtr coords, nint count);
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9)]
@@ -1503,6 +1534,7 @@ namespace MapKit {
 		double CenterCoordinateDistance { get; set; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9)]
@@ -1514,18 +1546,17 @@ namespace MapKit {
 		[Export ("pointForCoordinate:")]
 		CGPoint PointForCoordinate (CLLocationCoordinate2D coordinate);
 
-#if MONOMAC
 		[NoWatch][NoTV][NoiOS]
 		[Mac (10,14)]
 		[Export ("appearance")]
 		NSAppearance Appearance { get; }
-#endif
 
 		[TV (13, 0), NoWatch, NoMac, iOS (13, 0)]
 		[Export ("traitCollection")]
 		UITraitCollection TraitCollection { get; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9)]
@@ -1546,12 +1577,11 @@ namespace MapKit {
 		[Export ("size", ArgumentSemantic.Assign)]
 		CGSize Size { get; set; }
 
-#if !MONOMAC
+		[NoMac]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'TraitCollection.DisplayScale' instead.")]
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'TraitCollection.DisplayScale' instead.")]
 		[Export ("scale", ArgumentSemantic.Assign)]
 		nfloat Scale { get; set; }
-#endif
 
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'PointOfInterestFilter' instead.")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'PointOfInterestFilter' instead.")]
@@ -1562,12 +1592,10 @@ namespace MapKit {
 		[Export ("showsBuildings")]
 		bool ShowsBuildings { get; set; }
 
-#if MONOMAC
-		[NoWatch][NoTV][NoiOS]
+		[NoWatch][NoTV][NoiOS][NoMacCatalyst]
 		[Mac (10,14)]
 		[NullAllowed, Export ("appearance", ArgumentSemantic.Strong)]
 		NSAppearance Appearance { get; set; }
-#endif
 
 		[TV (13, 0), NoWatch, Mac (10, 15), iOS (13, 0)]
 		[NullAllowed, Export ("pointOfInterestFilter", ArgumentSemantic.Copy)]
@@ -1578,6 +1606,7 @@ namespace MapKit {
 		UITraitCollection TraitCollection { get; set; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9)]
@@ -1585,7 +1614,7 @@ namespace MapKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithOptions:")]
-		IntPtr Constructor (MKMapSnapshotOptions options);
+		NativeHandle Constructor (MKMapSnapshotOptions options);
 
 		[Export ("startWithCompletionHandler:")]
 		[Async]
@@ -1604,6 +1633,7 @@ namespace MapKit {
 
 	delegate void MKMapSnapshotCompletionHandler (MKMapSnapshot snapshot, NSError error);
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKOverlayRenderer))]
 	[Mac (10,9)]
@@ -1611,7 +1641,7 @@ namespace MapKit {
 	partial interface MKOverlayPathRenderer {
 
 		[Export ("initWithOverlay:")]
-		IntPtr Constructor (IMKOverlay overlay);
+		NativeHandle Constructor (IMKOverlay overlay);
 
 		[NullAllowed] // by default this property is null
 		[Export ("fillColor", ArgumentSemantic.Retain)]
@@ -1667,6 +1697,7 @@ namespace MapKit {
 		bool ShouldRasterize { get; set; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (NSObject))]
 	[Mac (10,9)]
@@ -1674,7 +1705,7 @@ namespace MapKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithOverlay:")]
-		IntPtr Constructor (IMKOverlay overlay);
+		NativeHandle Constructor (IMKOverlay overlay);
 
 		[Export ("overlay")]
 		IMKOverlay Overlay { get; }
@@ -1718,13 +1749,14 @@ namespace MapKit {
 		nfloat ContentScaleFactor { get; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKOverlayPathRenderer))]
 	[Mac (10,9)]
 	partial interface MKPolygonRenderer {
 
 		[Export ("initWithPolygon:")]
-		IntPtr Constructor (MKPolygon polygon);
+		NativeHandle Constructor (MKPolygon polygon);
 
 		[Export ("polygon")]
 		MKPolygon Polygon { get; }
@@ -1740,13 +1772,14 @@ namespace MapKit {
 		nfloat StrokeEnd { get; set; }
 	}
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKOverlayPathRenderer))]
 	[Mac (10,9)]
 	partial interface MKPolylineRenderer {
 
 		[Export ("initWithPolyline:")]
-		IntPtr Constructor (MKPolyline polyline);
+		NativeHandle Constructor (MKPolyline polyline);
 
 		[Export ("polyline")]
 		MKPolyline Polyline { get; }
@@ -1762,6 +1795,7 @@ namespace MapKit {
 		nfloat StrokeEnd { get; set; }
 	}
 
+	[NoWatch]
 	[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (MKPolylineRenderer))]
@@ -1778,6 +1812,7 @@ namespace MapKit {
 		void SetColors (UIColor[] colors, [BindAs (typeof (nfloat[]))]NSNumber[] locations);
 	}
 
+	[NoWatch]
 	[ThreadSafe]
 	[TV (9,2)]
 	[Mac (10,9)]
@@ -1785,7 +1820,7 @@ namespace MapKit {
 	partial interface MKTileOverlay : MKOverlay {
 		[DesignatedInitializer]
 		[Export ("initWithURLTemplate:")]
-		IntPtr Constructor ([NullAllowed] string URLTemplate);
+		NativeHandle Constructor ([NullAllowed] string URLTemplate);
 
 		[Export ("tileSize")]
 		CGSize TileSize { get; set; }
@@ -1818,6 +1853,7 @@ namespace MapKit {
 
 	delegate void MKTileOverlayLoadTileCompletionHandler (NSData tileData, NSError error);
 
+	[NoWatch]
 	[TV (9,2)]
 	[iOS (7,0), BaseType (typeof (MKOverlayRenderer))]
 	// Objective-C exception thrown.  Name: NSInvalidArgumentException Reason: Expected a MKTileOverlay but got (null)
@@ -1826,15 +1862,16 @@ namespace MapKit {
 	partial interface MKTileOverlayRenderer {
 		// This ctor is not allowed: NSInvalidArgumentEception Expected a MKTileOverlay
 //		[Export ("initWithOverlay:")]
-//		IntPtr Constructor (IMKOverlay toverlay);
+//		NativeHandle Constructor (IMKOverlay toverlay);
 
 		[Export ("initWithTileOverlay:")]
-		IntPtr Constructor (MKTileOverlay overlay);
+		NativeHandle Constructor (MKTileOverlay overlay);
 
 		[Export ("reloadData")]
 		void ReloadData ();
 	}
 
+	[NoWatch]
 	[TV (9,2)][NoWatch][iOS (9,3)][Mac(10,11,4)]
 	[BaseType (typeof (NSObject))]
 	interface MKLocalSearchCompleter {
@@ -1876,6 +1913,7 @@ namespace MapKit {
 		MKPointOfInterestFilter PointOfInterestFilter { get; set; }
 	}
 
+	[NoWatch]
 	[TV (9,2)][NoWatch][iOS (9,3)]
 	[Protocol]
 	[Model]
@@ -1888,6 +1926,7 @@ namespace MapKit {
 		void DidFail (MKLocalSearchCompleter completer, NSError error);
 	}
 
+	[NoWatch]
 	[TV (9,2)][NoWatch][iOS (9,3)]
 	[BaseType (typeof(NSObject))]
 #if MONOMAC || XAMCORE_3_0 // "You do not create instances of this class directly"
@@ -1908,8 +1947,6 @@ namespace MapKit {
 		[Export ("subtitleHighlightRanges", ArgumentSemantic.Strong)]
 		NSValue[] SubtitleHighlightRanges { get; }
 	}
-
-#endif // !WATCH
 
 	[Category]
 	[BaseType (typeof (NSUserActivity))]
@@ -1938,7 +1975,7 @@ namespace MapKit {
 
 		[Export ("initWithMemberAnnotations:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (IMKAnnotation[] memberAnnotations);
+		NativeHandle Constructor (IMKAnnotation[] memberAnnotations);
 	}
 
 	[NoTV][iOS (11,0)][Mac (11, 0)][NoWatch]
@@ -1963,7 +2000,7 @@ namespace MapKit {
 		// inlined from base type
 		[Export ("initWithAnnotation:reuseIdentifier:")]
 		[PostGet ("Annotation")]
-		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
+		NativeHandle Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
 
 		[Export ("titleVisibility", ArgumentSemantic.Assign)]
 		MKFeatureVisibility TitleVisibility { get; set; }
@@ -2092,7 +2129,7 @@ namespace MapKit {
 	{
 		[Export ("initWithMinCenterCoordinateDistance:maxCenterCoordinateDistance:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double minDistance, double maxDistance);
+		NativeHandle Constructor (double minDistance, double maxDistance);
 
 		[Internal]
 		[Export ("initWithMinCenterCoordinateDistance:")]
@@ -2118,11 +2155,11 @@ namespace MapKit {
 	{
 		[Export ("initWithMapRect:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MKMapRect mapRect);
+		NativeHandle Constructor (MKMapRect mapRect);
 
 		[Export ("initWithCoordinateRegion:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MKCoordinateRegion region);
+		NativeHandle Constructor (MKCoordinateRegion region);
 
 		[Export ("mapRect")]
 		MKMapRect MapRect { get; }
@@ -2137,7 +2174,7 @@ namespace MapKit {
 	{
 		[Export ("initWithPolygons:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MKPolygon[] polygons);
+		NativeHandle Constructor (MKPolygon[] polygons);
 
 		[Export ("polygons", ArgumentSemantic.Copy)]
 		MKPolygon[] Polygons { get; }
@@ -2148,7 +2185,7 @@ namespace MapKit {
 	interface MKMultiPolygonRenderer
 	{
 		[Export ("initWithMultiPolygon:")]
-		IntPtr Constructor (MKMultiPolygon multiPolygon);
+		NativeHandle Constructor (MKMultiPolygon multiPolygon);
 
 		[Export ("multiPolygon")]
 		MKMultiPolygon MultiPolygon { get; }
@@ -2160,7 +2197,7 @@ namespace MapKit {
 	{
 		[Export ("initWithPolylines:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MKPolyline[] polylines);
+		NativeHandle Constructor (MKPolyline[] polylines);
 
 		[Export ("polylines", ArgumentSemantic.Copy)]
 		MKPolyline[] Polylines { get; }
@@ -2171,7 +2208,7 @@ namespace MapKit {
 	interface MKMultiPolylineRenderer
 	{
 		[Export ("initWithMultiPolyline:")]
-		IntPtr Constructor (MKMultiPolyline multiPolyline);
+		NativeHandle Constructor (MKMultiPolyline multiPolyline);
 
 		[Export ("multiPolyline")]
 		MKMultiPolyline MultiPolyline { get; }
@@ -2182,10 +2219,10 @@ namespace MapKit {
 	interface MKUserLocationView { 
 		[DesignatedInitializer]
 		[Export ("initWithAnnotation:reuseIdentifier:")]
-		IntPtr Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
+		NativeHandle Constructor ([NullAllowed] IMKAnnotation annotation, [NullAllowed] string reuseIdentifier);
 	
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 	}
 
 	[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
@@ -2199,11 +2236,11 @@ namespace MapKit {
 
 		[Export ("initWithCenterCoordinate:radius:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CLLocationCoordinate2D centerCoordinate, double radius);
+		NativeHandle Constructor (CLLocationCoordinate2D centerCoordinate, double radius);
 
 		[Export ("initWithCoordinateRegion:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MKCoordinateRegion region);
+		NativeHandle Constructor (MKCoordinateRegion region);
 
 		[Export ("coordinate")]
 		CLLocationCoordinate2D Coordinate { get; }
@@ -2226,7 +2263,7 @@ namespace MapKit {
 	{
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Static]
 		[Export ("pitchControlWithMapView:")]
@@ -2245,7 +2282,7 @@ namespace MapKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Static]
 		[Export ("zoomControlWithMapView:")]

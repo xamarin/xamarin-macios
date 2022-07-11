@@ -1,12 +1,16 @@
-﻿
+
 using System;
 using System.Diagnostics;
 
 using Foundation;
 using ObjCRuntime;
 
+#if NET
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
+#else
 using OpenTK;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
+#endif
 
 using NUnit.Framework;
 
@@ -26,9 +30,12 @@ namespace MonoTouchFixtures.Simd
 				M44 = 1f,
 			};
 			Asserts.AreEqual (identity, MatrixFloat4x4.Identity, "identity");
+#if !NET
 			Asserts.AreEqual (Matrix4.Identity, MatrixFloat4x4.Identity, "opentk identity");
+#endif
 		}
 
+#if !NET
 		[Test]
 		public void RowConstructor ()
 		{
@@ -344,5 +351,6 @@ namespace MonoTouchFixtures.Simd
 				counter = 0;
 			return test_matrices [counter];
 		}
+#endif // !NET
 	}
 }

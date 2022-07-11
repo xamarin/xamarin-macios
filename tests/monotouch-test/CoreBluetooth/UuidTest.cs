@@ -21,6 +21,7 @@ using UIKit;
 #endif
 
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreBluetooth {
 	
@@ -124,7 +125,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 				Assert.That (u1.GetHashCode (), Is.EqualTo (u2.GetHashCode ()), "GetHashCode-3");
 			}
 #if MONOMAC
-			if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10)) {
+			if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10)) {
 				guid = new byte [] { 0xaa, 0xbb, 0xcc, 0xdd };
 				Assert.That (CBUUID.FromBytes (guid),
 					Is.EqualTo (CBUUID.FromBytes (guid)));
@@ -162,7 +163,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 				Assert.That (u1.GetHashCode (), Is.EqualTo (u2.GetHashCode ()), "GetHashCode-3");
 			}
 #if MONOMAC
-			if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10)) {
+			if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10)) {
 				Assert.That (CBUUID.FromBytes (new byte [] { 0xab, 0xcd, 0xef, 0x12 }),
 					Is.EqualTo (MakeFull (0xab, 0xcd, 0xef, 0x12)));
 
@@ -175,7 +176,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 		[Test]
 		public void Equality_PartialsOfDifferentSizeNotEqual ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 #if MONOMAC
 			Assert.That (CBUUID.FromPartial (0x1234), Is.Not.EqualTo (
 				CBUUID.FromBytes (new byte [] { 0x12, 0x34, 0x56, 0x78 })));

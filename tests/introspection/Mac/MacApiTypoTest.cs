@@ -15,9 +15,7 @@ namespace Introspection
 
 		public override void TypoTest ()
 		{
-			var sdk = new Version (Constants.SdkVersion);
-			if (!PlatformHelper.CheckSystemVersion (sdk.Major, sdk.Minor))
-				Assert.Ignore ("Typos only verified using the latest SDK");
+			AssertMatchingOSVersionAndSdkVersion ();
 			checker = new NSSpellChecker ();
 
 			base.TypoTest ();
@@ -33,6 +31,7 @@ namespace Introspection
 			return txt.Substring ((int)typoRange.Location, (int)typoRange.Length);
 		}
 
+#if !NET
 		public override bool Skip (Type baseType, string typo)
 		{
 			if (baseType == typeof (NSSpellCheckerCanidates))
@@ -40,5 +39,6 @@ namespace Introspection
 
 			return base.Skip (baseType, typo);
 		}
+#endif
 	}
 }

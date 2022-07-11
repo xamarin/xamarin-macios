@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AVAssetDownloadTask.cs: AVAssetDownloadTask class
 //
 // Authors:
@@ -9,6 +9,8 @@
 
 using System;
 using Foundation;
+
+#nullable enable
 
 namespace AVFoundation {
 #if !MONOMAC && !WATCH && !TVOS
@@ -35,4 +37,3 @@ namespace AVFoundation {
 	}
 #endif
 }
-

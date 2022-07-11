@@ -1,10 +1,6 @@
 #if !__WATCHOS__
-using System;
-using System.Threading;
 using Foundation;
 using Network;
-using ObjCRuntime;
-using CoreFoundation;
 
 using NUnit.Framework;
 

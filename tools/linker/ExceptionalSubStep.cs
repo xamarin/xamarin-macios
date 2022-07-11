@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Xamarin Inc.
+// Copyright 2016 Xamarin Inc.
 
 using System;
 using Mono.Cecil;

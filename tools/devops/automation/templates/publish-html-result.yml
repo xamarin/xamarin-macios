@@ -5,14 +5,15 @@ parameters:
   type: string 
   default: 'pr' # default reason is a pr build 
 
-- name: devicePrefix
+- name: testPrefix
   type: string 
   default: 'sim' # always sim, but use a param to move in the future if needed
 
 steps:
 
-- checkout: self
-  persistCredentials: true
+- template: ./common/checkout.yml
+  parameters:
+    isPR: ${{ eq(parameters.reason, "pr") }}
 
 - checkout: macios.ci 
   clean: true
@@ -105,7 +106,7 @@ steps:
     }
 
     # clean logs, xml, etc print those rm calls for debugging
-    $extensionsToDelete = @("*.log", "*.tmp", "*.txt", "*.xml", "*.crash", "*.css", "*.js", "*.cs", "*.binlog")
+    $extensionsToDelete = @("*.log", "*.tmp", "*.txt", "*.xml", "*.crash", "*.css", "*.js", "*.cs", "*.binlog", "*.todo.html")
     foreach ($extension in $extensionsToDelete) {
       Get-ChildItem -Path $destinationRoot -Filter $extension -Recurse -File | ForEach-Object {
         Write-Host "rm $($_.FullName)"
@@ -114,10 +115,17 @@ steps:
     }
 
     # remove empty dirs
-    Get-ChildItem $destinationRoot -Recurse -Force -Directory |
+    $empty = Get-ChildItem $destinationRoot -Recurse -Force -Directory |
       Sort-Object -Property FullName -Descending |
-      Where-Object { $($_ | Get-ChildItem -Force | Select-Object -First 1).Count -eq 0 } |
-      Remove-Item -Verbose
+      Where-Object { $($_ | Get-ChildItem -Force | Select-Object -First 1).Count -eq 0 } 
+    foreach ($d in $empty) {
+      try {
+        Write-Host "Removing $d"
+        Remove-Item -Verbose -Force $d
+      } catch {
+        $null  # do nothing
+      }
+    }
 
     if ($Env:SYSTEM_DEBUG) {
       Get-ChildItem $destinationRoot -Recurse
@@ -127,7 +135,7 @@ steps:
     git config user.name "vs-mobiletools-engineering-service2"
 
     git add $Env:PublishingPath
-    git commit -m"[CI] Add test results for build $Env:OriginalBuildId"
+    git commit -m"[CI] Add test results for branch $Env:BuildSourceBranch build $Env:OriginalBuildId"
     git push origin $Env:PublishingBranchName -f
   displayName: 'Add files and clean logs'
   timeoutInMinutes: 30

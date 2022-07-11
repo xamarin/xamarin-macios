@@ -56,11 +56,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #endregion --- License ---
 
+#nullable enable
+
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
+#if !NET
 namespace OpenTK
 {
 
@@ -586,3 +589,4 @@ namespace OpenTK
         #endregion BitConverter
     }
 }
+#endif // !NET

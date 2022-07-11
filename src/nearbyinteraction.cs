@@ -11,114 +11,143 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using System;
+#if NET
+using Vector3 = global::System.Numerics.Vector3;
+#else
 using Vector3 = global::OpenTK.Vector3;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace NearbyInteraction {
 
-    [NoWatch, NoTV, NoMac, iOS (14,0)]
-    [MacCatalyst (14,0)]
-    [BaseType (typeof (NSObject))]
-    [DisableDefaultCtor]
-    interface NIConfiguration : NSCopying, NSSecureCoding {}
+	[Watch (8,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NIConfiguration : NSCopying, NSSecureCoding {}
 
-    [NoWatch, NoTV, NoMac, iOS (14,0)]
-    [MacCatalyst (14,0)]
-    [BaseType (typeof (NSObject))]
-    [DisableDefaultCtor]
-    interface NIDiscoveryToken : NSCopying, NSSecureCoding {}
+	[Watch (8,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NIDiscoveryToken : NSCopying, NSSecureCoding {}
 
-    [NoWatch, NoTV, NoMac, iOS (14,0)]
-    [MacCatalyst (14,0)]
-    [BaseType (typeof (NIConfiguration))]
-    [DisableDefaultCtor]
-    interface NINearbyPeerConfiguration
-    {
-        [Export ("peerDiscoveryToken", ArgumentSemantic.Copy)]
-        NIDiscoveryToken PeerDiscoveryToken { get; }
+	[Watch (8,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
+	[BaseType (typeof (NIConfiguration))]
+	[DisableDefaultCtor]
+	interface NINearbyPeerConfiguration
+	{
+		[Export ("peerDiscoveryToken", ArgumentSemantic.Copy)]
+		NIDiscoveryToken PeerDiscoveryToken { get; }
 
-        [Export ("initWithPeerToken:")]
-        IntPtr Constructor (NIDiscoveryToken peerToken);
-    }
+		[Export ("initWithPeerToken:")]
+		NativeHandle Constructor (NIDiscoveryToken peerToken);
+	}
 
-    [NoWatch, NoTV, NoMac, iOS (14,0)]
-    [MacCatalyst (14,0)]
-    [BaseType (typeof (NSObject))]
-    [DisableDefaultCtor]
-    partial interface NINearbyObject : NSCopying, NSSecureCoding
-    {
-        [Export ("discoveryToken", ArgumentSemantic.Copy)]
-        NIDiscoveryToken DiscoveryToken { get; }
+	[Watch (8,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	partial interface NINearbyObject : NSCopying, NSSecureCoding
+	{
+		[Export ("discoveryToken", ArgumentSemantic.Copy)]
+		NIDiscoveryToken DiscoveryToken { get; }
 
-        [Export ("distance")]
-        float Distance { get; }
+		[Export ("distance")]
+		float Distance { get; }
 
-        [Export ("direction")]
-        Vector3 Direction {
-            [MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
-            get;
-        }
+		[Export ("direction")]
+		Vector3 Direction {
+			[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
+			get;
+		}
 
-        [Field ("NINearbyObjectDistanceNotAvailable")]
-        float DistanceNotAvailable { get; }
-    }
+		[Field ("NINearbyObjectDistanceNotAvailable")]
+		float DistanceNotAvailable { get; }
+	}
 
-    [NoWatch, NoTV, NoMac, iOS (14,0)]
-    [MacCatalyst (14,0)]
-    [BaseType (typeof (NSObject))]
-    interface NISession
-    {
-        [Static]
-        [Export ("supported")]
-        bool IsSupported { [Bind ("isSupported")] get; }
+	[Watch (8,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
+	[BaseType (typeof (NSObject))]
+	interface NISession
+	{
+		[Static]
+		[Export ("supported")]
+		bool IsSupported { [Bind ("isSupported")] get; }
 
-        [Wrap ("WeakDelegate")]
-        [NullAllowed]
-        INISessionDelegate Delegate { get; set; }
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		INISessionDelegate Delegate { get; set; }
 
-        [NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
-        NSObject WeakDelegate { get; set; }
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
 
-        [NullAllowed, Export ("delegateQueue", ArgumentSemantic.Strong)]
-        DispatchQueue DelegateQueue { get; set; }
+		[NullAllowed, Export ("delegateQueue", ArgumentSemantic.Strong)]
+		DispatchQueue DelegateQueue { get; set; }
 
-        [NullAllowed, Export ("discoveryToken", ArgumentSemantic.Copy)]
-        NIDiscoveryToken DiscoveryToken { get; }
+		[NullAllowed, Export ("discoveryToken", ArgumentSemantic.Copy)]
+		NIDiscoveryToken DiscoveryToken { get; }
 
-        [NullAllowed, Export ("configuration", ArgumentSemantic.Copy)]
-        NIConfiguration Configuration { get; }
+		[NullAllowed, Export ("configuration", ArgumentSemantic.Copy)]
+		NIConfiguration Configuration { get; }
 
-        [Export ("runWithConfiguration:")]
-        void Run (NIConfiguration configuration);
+		[Export ("runWithConfiguration:")]
+		void Run (NIConfiguration configuration);
 
-        [Export ("pause")]
-        void Pause ();
+		[Export ("pause")]
+		void Pause ();
 
-        [Export ("invalidate")]
-        void Invalidate ();
-    }
+		[Export ("invalidate")]
+		void Invalidate ();
+	}
 
-    interface INISessionDelegate {}
+	interface INISessionDelegate {}
 
-    [NoWatch, NoTV, NoMac, iOS (14,0)]
-    [MacCatalyst (14,0)]
-    [Protocol]
-    [Model (AutoGeneratedName = true)]
-    [BaseType (typeof (NSObject))]
-    interface NISessionDelegate
-    {
-        [Export ("session:didUpdateNearbyObjects:")]
-        void DidSessionUpdateNearbyObjects (NISession session, NINearbyObject[] nearbyObjects);
+	[Watch (8,0), NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
+#if NET
+	[Protocol, Model]
+#else
+	[Protocol]
+	[Model (AutoGeneratedName = true)]
+#endif
+	[BaseType (typeof (NSObject))]
+	interface NISessionDelegate
+	{
+		[Export ("session:didUpdateNearbyObjects:")]
+		void DidSessionUpdateNearbyObjects (NISession session, NINearbyObject[] nearbyObjects);
 
-        [Export ("session:didRemoveNearbyObjects:withReason:")]
-        void DidSessionRemoveNearbyObjects (NISession session, NINearbyObject[] nearbyObjects, NINearbyObjectRemovalReason reason);
+		[Export ("session:didRemoveNearbyObjects:withReason:")]
+		void DidSessionRemoveNearbyObjects (NISession session, NINearbyObject[] nearbyObjects, NINearbyObjectRemovalReason reason);
 
-        [Export ("sessionWasSuspended:")]
-        void SessionWasSuspended (NISession session);
+		[Export ("sessionWasSuspended:")]
+		void SessionWasSuspended (NISession session);
 
-        [Export ("sessionSuspensionEnded:")]
-        void SessionSuspensionEnded (NISession session);
+		[Export ("sessionSuspensionEnded:")]
+		void SessionSuspensionEnded (NISession session);
 
-        [Export ("session:didInvalidateWithError:")]
-        void DidSessionInvalidate (NISession session, NSError error);
-    }
+		[Export ("session:didInvalidateWithError:")]
+		void DidSessionInvalidate (NISession session, NSError error);
+
+		[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+		[Export ("session:didGenerateShareableConfigurationData:forObject:")]
+		void DidGenerateShareableConfigurationData (NISession session, NSData shareableConfigurationData, NINearbyObject @object);
+	}
+
+	[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NIConfiguration))]
+	[DisableDefaultCtor]
+	interface NINearbyAccessoryConfiguration
+	{
+		[Export ("accessoryDiscoveryToken", ArgumentSemantic.Copy)]
+		NIDiscoveryToken AccessoryDiscoveryToken { get; }
+
+		[Export ("initWithData:error:")]
+		NativeHandle Constructor (NSData data, [NullAllowed] out NSError error);
+	}
+
 }

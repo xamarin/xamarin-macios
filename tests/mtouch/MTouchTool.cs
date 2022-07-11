@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
@@ -69,6 +69,9 @@ namespace Xamarin
 		public string AotOtherArguments;
 		public string SymbolList;
 
+		public bool IsDotNet;
+		public string ProjectFile;
+
 #pragma warning restore 649
 
 		public MTouchTool ()
@@ -124,6 +127,12 @@ namespace Xamarin
 		{
 			if (!Action.HasValue)
 				Action = MTouchAction.BuildSim;
+			if (IsDotNet) {
+				var rv = DotNet.Execute ("build", ProjectFile, properties: null, assert_success: false);
+				Output = rv.StandardOutput;
+				ParseMessages ();
+				return rv.ExitCode;
+			}
 			return base.Execute ();
 		}
 
@@ -512,11 +521,53 @@ namespace Xamarin
 			}
 			var app = AppPath ?? Path.Combine (testDir, appName + ".app");
 			Directory.CreateDirectory (app);
-			AppPath = app;
-			RootAssembly = CompileTestAppExecutable (testDir, code, extraArgs, Profile, appName, extraCode, usings);
+			if (IsDotNet) {
+				// This code to create a .NET project from the options in this class is very rudimentary; most options are not honored.
+				// To be fixed when support for more options is needed.
+				var mtouchExtraArgs = new List<string> ();
+				if (Registrar != RegistrarOption.Unspecified)
+					mtouchExtraArgs.Add ($"--registrar:" + Registrar.ToString ().ToLower ());
 
-			if (hasPlist)
-				File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
+				string linkMode = string.Empty;
+				if (Linker != LinkerOption.Unspecified) {
+					switch (Linker) {
+					case LinkerOption.DontLink:
+						linkMode = "None";
+						break;
+					case LinkerOption.LinkAll:
+						linkMode = "Full";
+						break;
+					case LinkerOption.LinkSdk:
+						linkMode = "SdkOnly";
+						break;
+					case LinkerOption.LinkPlatform:
+					default:
+						throw new NotImplementedException (Linker.ToString ());
+					}
+					linkMode = "<MtouchLink>" + linkMode + "</MtouchLink>";
+				}
+
+				var csproj = $@"<Project Sdk=""Microsoft.NET.Sdk"">
+	<PropertyGroup>
+		<TargetFramework>{Profile.AsPlatform ().ToFramework ()}</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<MtouchExtraArgs>{string.Join (" ", mtouchExtraArgs)}</MtouchExtraArgs>
+		<ApplicationId>{appName}</ApplicationId>
+		{linkMode}
+	</PropertyGroup>
+</Project>";
+				ProjectFile = Path.Combine (testDir, appName + ".csproj");
+				File.WriteAllText (ProjectFile, csproj);
+				File.WriteAllText (Path.Combine (testDir, appName + ".cs"), CreateCode (code, usings, extraCode));
+				if (hasPlist)
+					File.WriteAllText (Path.Combine (testDir, "Info.plist"), CreatePlist (Profile, appName));
+			} else { 
+				AppPath = app;
+				RootAssembly = CompileTestAppExecutable (testDir, code, extraArgs, Profile, appName, extraCode, usings);
+
+				if (hasPlist)
+					File.WriteAllText (Path.Combine (app, "Info.plist"), CreatePlist (Profile, appName));
+			}
 		}
 
 		public void CreateTemporaryServiceExtension (string code = null, string extraCode = null, IList<string> extraArgs = null, string appName = "testServiceExtension")

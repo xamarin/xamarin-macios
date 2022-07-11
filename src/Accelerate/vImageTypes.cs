@@ -28,6 +28,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -38,11 +39,23 @@ using Pixel16S = System.Int16;
 using ResamplingFilter = System.IntPtr;
 using GammaFunction = System.IntPtr;
 
+#if NET
+using vImagePixelCount = System.IntPtr;
+#else
 using vImagePixelCount = System.nint;
+#endif
+
+#nullable enable
 
 namespace Accelerate {
 	// vImage_Buffer - vImage_Types.h
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct vImageBuffer {
 		public IntPtr Data { get; set; }
 
@@ -61,17 +74,23 @@ namespace Accelerate {
 
 		public int Width {
 			get { return (int) WidthIntPtr; }
-			set { WidthIntPtr = value; }
+			set { WidthIntPtr = (vImagePixelCount) value; }
 		}
 
 		public int Height {
 			get { return (int) HeightIntPtr; }
-			set { HeightIntPtr = value; }
+			set { HeightIntPtr = (vImagePixelCount) value; }
 		}
 	}
 
 	// vImage_AffineTransform - vImage_Types.h
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct vImageAffineTransformFloat {
 		// all defined as 'float'
 		public float a, b, c, d;
@@ -81,7 +100,13 @@ namespace Accelerate {
 	}
 
 	// vImage_AffineTransform_Double - vImage_Types.h
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct vImageAffineTransformDouble {
 		public double a, b, c, d;
 		public double tx, ty;
@@ -155,31 +180,61 @@ namespace Accelerate {
 		NoAllocate = 512
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct PixelFFFF {
 		// all defined as 'float'
 		public float A, R, G, B;
 		public readonly static PixelFFFF Zero;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct Pixel8888 {
 		public byte A, R, G, B;
 		public readonly static Pixel8888 Zero;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct PixelARGB16U {
 		public Pixel16U A, R, G, B;
 		public readonly static PixelARGB16U Zero;
 	}
 
-	[StructLayout(LayoutKind.Sequential)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct PixelARGB16S {
 		public Pixel16S A, R, G, B;
 		public readonly static PixelARGB16S Zero;
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	unsafe public static class vImage {
 
 #region Convolve
@@ -267,12 +322,12 @@ namespace Accelerate {
 									Pixel8888 backgroundColor, 
 									vImageFlags flags)
 		{
-			if (kernels == null)
-				throw new ArgumentNullException ("kernels");
-			if (divisors == null)
-				throw new ArgumentNullException ("divisors");
-			if (biases == null)
-				throw new ArgumentNullException ("biases");
+			if (kernels is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernels));
+			if (divisors is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (divisors));
+			if (biases is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (biases));
 			if (kernels.Length < 4)
 				throw new ArgumentException ("Must contain at least four elements", "kernels");
 			if (divisors.Length < 4)
@@ -323,10 +378,10 @@ namespace Accelerate {
 								       PixelFFFF backgroundColor,
 								       vImageFlags flags)
 		{
-			if (kernels == null)
-				throw new ArgumentNullException ("kernels");
-			if (biases == null)
-				throw new ArgumentNullException ("biases");
+			if (kernels is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (kernels));
+			if (biases is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (biases));
 			if (kernels.Length < 4)
 				throw new ArgumentException ("Must contain at least four elements", "kernels");
 			if (biases.Length < 4)
@@ -421,8 +476,8 @@ namespace Accelerate {
 									ref vImageBuffer dest,
 									short [] matrix, // matrix is [4*4],
 									int divisor,
-									short [] pre_bias,      //Must be an array of 4 int16_t's. NULL is okay. 
-									int [] post_bias,     //Must be an array of 4 int32_t's. NULL is okay. 
+									short []? pre_bias,      //Must be an array of 4 int16_t's. NULL is okay.
+									int []? post_bias,     //Must be an array of 4 int32_t's. NULL is okay.
 									vImageFlags flags );
 
 		public static vImageError MatrixMultiplyARGB8888 (ref vImageBuffer src,
@@ -433,12 +488,12 @@ namespace Accelerate {
 								   int [] post_bias,     //Must be an array of 4 int32_t's. NULL is okay. 
 								   vImageFlags flags)
 		{
-			if (matrix == null)
-				throw new ArgumentNullException ("matrix");
-			if (pre_bias != null && pre_bias.Length != 4)
-				throw new ArgumentException ("Must have four elements", "pre_bias");
-			if (post_bias != null && post_bias.Length != 4)
-				throw new ArgumentException ("Must have four elements", "post_bias");
+			if (matrix is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (matrix));
+			if (pre_bias is not null && pre_bias.Length != 4)
+				throw new ArgumentException ("Must have four elements", nameof (pre_bias));
+			if (post_bias is not null && post_bias.Length != 4)
+				throw new ArgumentException ("Must have four elements", nameof (post_bias));
 			return (vImageError) (long) vImageMatrixMultiply_ARGB8888 (ref src, ref dest, matrix, divisor, pre_bias, post_bias, flags);
 		}
 

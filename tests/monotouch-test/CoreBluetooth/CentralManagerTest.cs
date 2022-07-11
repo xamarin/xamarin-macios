@@ -19,6 +19,7 @@ using ObjCRuntime;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreBluetooth {
 	
@@ -32,11 +33,15 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			#region implemented abstract members of MonoTouch.CoreBluetooth.CBCentralManagerDelegate
 			public override void UpdatedState (CBCentralManager central)
 			{
+#if NET
+				if (central.State == CBManagerState.PoweredOn)
+#else
 				if (central.State == CBCentralManagerState.PoweredOn)
+#endif
 					PoweredOnEvent.Set ();
 			}
 
-#if !XAMCORE_3_0
+#if !XAMCORE_3_0 && !NET
 			public override void RetrievedPeripherals (CBCentralManager central, CBPeripheral[] peripherals)
 			{
 			}
@@ -44,7 +49,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			public override void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral[] peripherals)
 			{
 			}
-#endif // !XAMCORE_3_0
+#endif // !XAMCORE_3_0 && !NET
 
 			public override void DiscoveredPeripheral (CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI)
 			{
@@ -77,7 +82,7 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			//known UUID for a heart monitor, more common, we want to find something and make sure we do not crash
 			heartRateMonitorUUID = CBUUID.FromPartial (0x180D);
 			// Required API is available in macOS 10.8, but it doesn't work (hangs in 10.8-10.9, randomly crashes in 10.10) on the bots.
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 11, throwIfOtherPlatform: false);
 			mgrDelegate = new ManagerDelegate ();
 			mgr = new CBCentralManager (mgrDelegate, new DispatchQueue ("com.xamarin.tests." + TestContext.CurrentContext.Test.Name));
 			if (!mgrDelegate.PoweredOnEvent.WaitOne (TimeSpan.FromSeconds (5)))
@@ -105,7 +110,6 @@ namespace MonoTouchFixtures.CoreBluetooth {
 			mgr.ScanForPeripherals ((CBUUID[])null, (NSDictionary)null);
 		}
 
-#if !XAMCORE_3_0
 		[Test]
 		public void RetrievePeripherals ()
 		{
@@ -114,11 +118,12 @@ namespace MonoTouchFixtures.CoreBluetooth {
 				using (var uuid = new NSUuid (heartRateMonitorUUID.ToString (true)))
 					mgr.RetrievePeripheralsWithIdentifiers (uuid);
 			} else {
+#if !XAMCORE_3_0 && !NET
 				// that API was deprecated in 7.0 and removed from 9.0
 				mgr.RetrievePeripherals (heartRateMonitorUUID);
+#endif // !XAMCORE_3_0 && !NET
 			}
 		}
-#endif // !XAMCORE_3_0
 	}
 }
 

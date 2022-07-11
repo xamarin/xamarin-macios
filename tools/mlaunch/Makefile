@@ -19,8 +19,8 @@ DOTNET_PLATFORMS_MOBILE=$(filter-out macOS MacCatalyst,$(DOTNET_PLATFORMS))
 
 ifdef ENABLE_MLAUNCH
 build-and-install:
-	$(MAKE) -C $(MACCORE_PATH)/tools/mlaunch all -j8
-	$(MAKE) -C $(MACCORE_PATH)/tools/mlaunch install -j8
+	$(MAKE) -C $(MACCORE_PATH)/tools/mlaunch all
+	$(MAKE) -C $(MACCORE_PATH)/tools/mlaunch install
 else
 build-and-install:
 	$(Q) $(CP) -R $(MACIOS_BINARIES_PATH)/mlaunch/bin/mlaunch $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin

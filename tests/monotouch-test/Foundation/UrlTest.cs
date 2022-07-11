@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using Foundation;
 #if MONOMAC
@@ -17,6 +18,7 @@ using UIKit;
 #endif
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
 	
@@ -27,16 +29,16 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void Fields ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 			Assert.That (NSUrl.IsExcludedFromBackupKey.ToString (), Is.EqualTo ("NSURLIsExcludedFromBackupKey"), "IsExcludedFromBackupKey");
 		}
 		
 		[Test]
 		public void IsExcludedFromBackupKey ()
 		{
-			//TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false); // 10.8 fails DoNotBackupMe-1
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false); // 10.10 fails DoNotBackupMe-1
+			//TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false); // 10.8 fails DoNotBackupMe-1
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false); // 10.10 fails DoNotBackupMe-1
 
 			// NOTE: this test was failing with either NullReferenceException or InvalidCastException
 			// when we used CFBoolean as a NSObject (i.e. CFBoolean.TrueObject). The test order execution
@@ -47,7 +49,7 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.That (value, Is.TypeOf (typeof (NSNumber)), "NSNumber");
 			Assert.That ((int) (value as NSNumber), Is.EqualTo (0), "0");
 			
-			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "DoNotBackupMe-NSUrl");
+			string filename = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), $"DoNotBackupMe-NSUrl-{Process.GetCurrentProcess ().Id}");
 			try {
 				File.WriteAllText (filename, "not worth a bit");
 				using (NSUrl url = NSUrl.FromFilename (filename)) {
@@ -334,6 +336,11 @@ namespace MonoTouchFixtures.Foundation {
 
 			var url = new Uri (value, kind);
 			Assert.AreEqual (url.ToString (), ((Uri) (NSUrl) url).ToString (), "RoundTrip Uri");
+		}
+
+		[Test]
+		public void FromNullString () {
+			Assert.IsNull (NSUrl.FromString (null));
 		}
 	}
 }

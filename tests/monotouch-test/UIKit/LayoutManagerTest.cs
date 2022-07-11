@@ -14,6 +14,7 @@ using Foundation;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -24,7 +25,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Defaults ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var lm = new NSLayoutManager ()) {
 				Assert.False (lm.AllowsNonContiguousLayout, "AllowsNonContiguousLayout");
@@ -50,7 +51,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void GetGlyphsTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			using (var txt = new NSTextStorage ()) {
 				var str = "hello world\n\t";

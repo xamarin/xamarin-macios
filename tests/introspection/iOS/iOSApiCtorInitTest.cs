@@ -50,7 +50,7 @@ namespace Introspection {
 			case "Metal":
 			case "MonoTouch.Metal":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
+				if (TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 #if !__WATCHOS__
@@ -58,20 +58,26 @@ namespace Introspection {
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				// some devices don't support metal and that crash some API that does not check that, e.g. #33153
 				if (!TestRuntime.CheckXcodeVersion (7, 0) || (MTLDevice.SystemDefault == null))
 					return true;
 				break;
 #endif // !__WATCHOS__
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
 			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
 			case "DeviceCheck": // Only available on device
 			case "MLCompute": // Only available on device
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			}
@@ -155,7 +161,7 @@ namespace Introspection {
 
 			// Metal is not available on the (iOS8) simulator
 			case "CAMetalLayer":
-				return (Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (11, 0);
+				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (11, 0);
 
 			// in 8.2 beta 1 this crash the app (simulator) without giving any details in the logs
 			case "WKUserNotificationInterfaceController":
@@ -175,7 +181,7 @@ namespace Introspection {
 			// these work only on devices, so we skip the simulator
 			case "MTLHeapDescriptor":
 			case "MTLSharedEventListener":
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
 #if __WATCHOS__
 			// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
 			case "INRequestPaymentIntent":
@@ -206,7 +212,7 @@ namespace Introspection {
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
 			case "NEHotspotConfigurationManager":
 			case "NEHotspotHS20Settings":
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
 			// iOS 12
 			case "INGetAvailableRestaurantReservationBookingDefaultsIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetAvailableRestaurantReservationBookingDefaultsIntentResponse'. Please make sure that your intent definition file is valid.
 			case "INGetAvailableRestaurantReservationBookingsIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetAvailableRestaurantReservationBookingsIntentResponse'. Please make sure that your intent definition file is valid.
@@ -217,22 +223,24 @@ namespace Introspection {
 				// Doesn't exist in the simulator; aborts on device if the required entitlement isn't available.
 				return true;
 #endif
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
 			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
 			case "ICNotificationManagerConfiguration": // This works on device but not on simulator, and docs explicitly says it is user creatable
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
 			case "VNDocumentCameraViewController": // Name: NSGenericException Reason: Document camera is not available on simulator
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
 			case "AVAudioRecorder": // Stopped working with Xcode 11.2 beta 2
 				return TestRuntime.CheckXcodeVersion (11, 2);
 			case "UIMenuController": // Stopped working with Xcode 11.3 beta 1
 				return TestRuntime.CheckXcodeVersion (11, 3);
+			case "THClient":
+				return TestRuntime.IsSimulatorOrDesktop;
 #if __TVOS__
 			case "MPSPredicate":
 				// the device .ctor ends up calling `initWithBuffer:offset:` and crash on older (non 4k AppleTV devices)
 				// MPSPredicate.mm:102: failed assertion `[MPSPredicate initWithBuffer:offset:] device: Apple A8 GPU does not support predication.'
-				return ((Runtime.Arch == Arch.DEVICE) && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
+				return (TestRuntime.IsDevice && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
 #endif
 #if __TVOS__ || __WATCHOS__
 			case "NSMetadataQuery":

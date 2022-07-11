@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 
 namespace HealthKit
@@ -7,4 +9,3 @@ namespace HealthKit
 		public const double MolarMassBloodGlucose = 180.15588000005408;
 	}
 }
-

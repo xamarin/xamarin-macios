@@ -1,7 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <ActualPackageVersion Condition="'$(CustomDotNetVersion)' != ''">$(CustomDotNetVersion)</ActualPackageVersion>
+    <ActualPackageVersion Condition="'$(ActualPackageVersion)' == ''">$(BundledNETCorePlatformsPackageVersion)</ActualPackageVersion>
   </PropertyGroup>
+
+  <Import Project="../../eng/Versions.props" />
 
   <ItemGroup>
     <!-- Download any runtime packs as specified using the PackageRuntimeIdentifiers property -->
@@ -9,16 +13,24 @@
     <PackageRuntimeIdentifiersCoreCLR Include="$(PackageRuntimeIdentifiersCoreCLR.Split(' '))" />
 
     <!-- download the runtime packs -->
-    <PackageDownload Include="@(PackageRuntimeIdentifiers -> 'Microsoft.NETCore.App.Runtime.Mono.%(Identity)')" Version="[$(BundledNETCorePlatformsPackageVersion)]" />
-    <PackageDownload Include="@(PackageRuntimeIdentifiersCoreCLR -> 'Microsoft.NETCore.App.Runtime.%(Identity)')" Version="[$(BundledNETCorePlatformsPackageVersion)]" />
+    <PackageDownload Include="@(PackageRuntimeIdentifiers -> 'Microsoft.NETCore.App.Runtime.Mono.%(Identity)')" Version="[$(ActualPackageVersion)]" />
+    <PackageDownload Include="@(PackageRuntimeIdentifiersCoreCLR -> 'Microsoft.NETCore.App.Runtime.%(Identity)')" Version="[$(ActualPackageVersion)]" />
 
     <!-- download the reference assemblies -->
-    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(BundledNETCorePlatformsPackageVersion)]" Condition="'$(CustomDotNetVersion)' == ''" />
-    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(CustomDotNetVersion)]" Condition="'$(CustomDotNetVersion)' != ''" />
+    <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(ActualPackageVersion)]" />
+
+    <!-- download the nfloat reference assembly for .NET 6 (but only for .NET 6, once we switch to .NET 7 this can be removed) -->
+    <PackageDownload Include="System.Runtime.InteropServices.NFloat.Internal" Version="[6.0.1]" Condition="'$(ActualPackageVersion.Substring(0,1))' == '6'" />
+
+    <!-- and get the mono workload as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
+
+    <!-- and get the emscripten workload as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptenManifest60100PackageVersion)]" />
   </ItemGroup>
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->
   <Target Name="WriteBundledNETCorePlatformsPackageVersion" Condition="'$(WriteFilePath)' != ''">
-    <WriteLinesToFile File="$(WriteFilePath)" Lines="$(BundledNETCorePlatformsPackageVersion)" Overwrite="true" />
+    <WriteLinesToFile File="$(WriteFilePath)" Lines="$(ActualPackageVersion)" Overwrite="true" />
   </Target>
 </Project>

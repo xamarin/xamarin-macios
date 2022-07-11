@@ -1,2 +1,0 @@
-# It's in the documentation and headers, but throws a "+[EKCalendar calendarWithEventStore:]: unrecognized selector" exception at runtime
-!missing-selector! +EKCalendar::calendarWithEventStore: not bound

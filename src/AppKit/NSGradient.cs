@@ -5,6 +5,8 @@
 //   Regan Sarwas (find me on gmail as rsarwas)
 //
 
+#if !__MACCATALYST__
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -71,12 +73,21 @@ namespace AppKit {
 			var nsa_colorArray = NSArray.FromNSObjects (colors);
 			
 			IntPtr locations = new IntPtr (locationPtr);
+#if NET
+			if (IsDirectBinding) {
+				Handle = ObjCRuntime.Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle (this.Handle, selInitWithColorsAtLocationsColorSpace, nsa_colorArray.Handle, locations, colorSpace.Handle);
+			} else {
+				Handle = ObjCRuntime.Messaging.NativeHandle_objc_msgSendSuper_NativeHandle_NativeHandle_NativeHandle (this.SuperHandle, selInitWithColorsAtLocationsColorSpace, nsa_colorArray.Handle, locations, colorSpace.Handle);
+			}
+#else
 			if (IsDirectBinding) {
 				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (this.Handle, selInitWithColorsAtLocationsColorSpace, nsa_colorArray.Handle, locations, colorSpace.Handle);
 			} else {
 				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper_IntPtr_IntPtr_IntPtr (this.SuperHandle, selInitWithColorsAtLocationsColorSpace, nsa_colorArray.Handle, locations, colorSpace.Handle);
 			}
+#endif
 			nsa_colorArray.Dispose ();
 		}
 	}
 }
+#endif // !__MACCATALYST__

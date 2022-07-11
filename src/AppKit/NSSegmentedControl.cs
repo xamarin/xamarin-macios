@@ -5,6 +5,8 @@
 //   Pavel Sich (pavel.sich@me.com)
 //
 
+#if !__MACCATALYST__
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -19,7 +21,12 @@ namespace AppKit {
 			set { base.Cell = value; }
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,12)]
+#endif
 		public static NSSegmentedControl FromLabels (string[] labels, NSSegmentSwitchTracking trackingMode, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -28,7 +35,12 @@ namespace AppKit {
 			return control;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,12)]
+#endif
 		public static NSSegmentedControl FromImages (NSImage[] images, NSSegmentSwitchTracking trackingMode, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -50,3 +62,4 @@ namespace AppKit {
 
 	}
 }
+#endif // !__MACCATALYST__

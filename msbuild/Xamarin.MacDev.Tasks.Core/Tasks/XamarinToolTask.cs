@@ -23,6 +23,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string Product {
 			get {
+				if (IsDotNet)
+					return "Microsoft." + PlatformName;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
@@ -56,6 +59,10 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
+		public bool IsDotNet {
+			get { return TargetFramework.IsDotNet; }
+		}
+
 		public string PlatformName {
 			get {
 				switch (Platform) {
@@ -76,4 +83,3 @@ namespace Xamarin.MacDev.Tasks {
 		public bool ShouldExecuteRemotely () => this.ShouldExecuteRemotely (SessionId);
 	}
 }
-

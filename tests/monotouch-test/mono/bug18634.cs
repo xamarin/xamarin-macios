@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -19,7 +19,6 @@ using CoreAnimation;
 using CoreGraphics;
 using CoreLocation;
 #if !__WATCHOS__
-using OpenTK;
 #endif
 using NUnit.Framework;
 

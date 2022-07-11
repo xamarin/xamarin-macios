@@ -1,5 +1,5 @@
 # YAML pipeline for post build operations. 
-# This pipeline will trigger automatically after successful completion of the `build_packages` stage against the specified branches.
+# This pipeline will trigger automatically after successful completion of the `prepare_release` stage against the specified branches.
 
 trigger: none
 pr: none
@@ -7,13 +7,14 @@ pr: none
 resources:
   pipelines:
   - pipeline: macios
-    source: xamarin-macios
+    source: xamarin-macios-ci
     trigger:
       branches:
       - main
       - release/*
+      - net7.0
       stages:
-      - build_packages
+      - prepare_release
 
 jobs:
 - job: post_build
@@ -26,11 +27,12 @@ jobs:
   - group: Publish-Build-Assets
   steps:
   - checkout: self
+    path: s/xamarin-macios
     clean: true
 
   - task: UseDotNet@2
     inputs:
-      version: 5.0.200
+      version: 6.0.201
 
   - download: macios
     artifact: AssetManifests

@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !NET
+
 using System;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -396,3 +398,4 @@ namespace CFNetwork {
 		}
 	}
 }
+#endif // !NET

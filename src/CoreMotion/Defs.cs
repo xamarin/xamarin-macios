@@ -2,8 +2,11 @@
 // CoreMotion's struct and enum definitions used by the API file
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -11,6 +14,11 @@ using ObjCRuntime;
 namespace CoreMotion {
 
 	// CMAccelerometer.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMAcceleration {
 		public double X, Y, Z;
@@ -29,6 +37,11 @@ namespace CoreMotion {
 	}
 
 	// CMAttitude.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct  CMRotationMatrix {
 		public double m11, m12, m13;
@@ -37,6 +50,11 @@ namespace CoreMotion {
 	}
 
 	// CMAttitude.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct  CMQuaternion {
 		public double x, y, z, w;
@@ -56,6 +74,11 @@ namespace CoreMotion {
 	}
 
 	// CMGyro.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct CMRotationRate {
 		public double x;

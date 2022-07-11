@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using Microsoft.DotNet.XHarness.iOS.Shared;
@@ -9,15 +9,6 @@ using Xharness.Targets;
 namespace Xharness {
 	// particular methods used within xamarin-macios
 	public static class TestProjectExtensions {
-
-		public static bool IsBclTest (this TestProject self) => self.Path.Contains ("bcl-test");
-
-		public static bool IsMonotouch (this TestProject self) => self.Name.Contains ("monotouch");
-
-		public static bool IsBclxUnit (this TestProject self) 
-			=> self.IsBclTest () && (self.Name.Contains ("xUnit") || self.IsMscorlib ());
-
-		public static bool IsMscorlib (this TestProject self) => self.Name.Contains ("mscorlib");
 
 		public static TestProject AsTvOSProject (this TestProject self)
 		{
@@ -44,16 +35,6 @@ namespace Xharness {
 			return clone;
 		}
 
-		public static TestProject AsMacCatalystProject (this TestProject self)
-		{
-			var clone = self.Clone ();
-			var suffix = string.Empty;
-			if (self.IsDotNetProject)
-				suffix = "-dotnet";
-			clone.Path = Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "maccatalyst" + suffix, Path.GetFileNameWithoutExtension (self.Path) + "-maccatalyst" + Path.GetExtension (self.Path));
-			return clone;
-		}
-
 		// Get the referenced today extension project (if any)
 		public static TestProject GetTodayExtension (this TestProject self)
 		{
@@ -62,10 +43,7 @@ namespace Xharness {
 				return null;
 			if (extensions.Count () != 1)
 				throw new NotImplementedException ();
-			return new TestProject
-			{
-				Path = Path.GetFullPath (Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "today-extension", extensions.First ().Replace ('\\', '/'))),
-			};
+			return new TestProject (self.Label, Path.GetFullPath (Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "today-extension", extensions.First ().Replace ('\\', '/'))));
 		}
 	}
 }

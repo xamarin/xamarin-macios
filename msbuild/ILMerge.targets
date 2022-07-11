@@ -13,7 +13,7 @@
   </ItemGroup>
   <PropertyGroup>
     <!-- Unfortunately the ILRepack.MSBuild.Task package doesn't define any variables that help us find its ilrepack.exe executable, so manually create this variable (which the IRepack package defines, so remove this workaround can be removed once we switch back to ILRepack) -->
-    <ILRepack>$(HOME)/.nuget/packages/ilrepack.msbuild.task/2.0.13/tools/ilrepack.exe</ILRepack>
+    <ILRepack>$(MSBuildThisFileDirectory)/../packages/ilrepack.msbuild.task/2.0.13/tools/ilrepack.exe</ILRepack>
   </PropertyGroup>
 
   <Target Name="ILRepack" BeforeTargets="CopyFilesToOutputDirectory" Inputs="@(IntermediateAssembly -&gt; '%(FullPath)')" Outputs="$(IntermediateOutputPath)ilrepack.txt" Returns="@(MergedAssemblies)" Condition="Exists(@(IntermediateAssembly -&gt; '%(FullPath)')) And '$(ILRepack)' != 'false'">
@@ -32,6 +32,7 @@
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'DotNetZip'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'ILLink.Tasks'" />
+      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'ILStrip'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Newtonsoft.Json'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Renci.SshNet'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'SshNet.Security.Cryptography'" />
@@ -69,7 +70,8 @@
       <LibDir Include="@(ReferenceCopyLocalDirs -&gt; Distinct())" />
     </ItemGroup>
     <PropertyGroup>
-      <ILRepackArgs Condition="'$(AssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AssemblyOriginatorKeyFile)"</ILRepackArgs>
+      <AbsoluteAssemblyOriginatorKeyFile Condition="'$(AssemblyOriginatorKeyFile)' != ''">$([System.IO.Path]::GetFullPath($([System.IO.Path]::Combine('$(MSBuildProjectDirectory)','$(AssemblyOriginatorKeyFile)'))))</AbsoluteAssemblyOriginatorKeyFile>
+      <ILRepackArgs Condition="'$(AbsoluteAssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AbsoluteAssemblyOriginatorKeyFile)" /delaysign</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) @(LibDir -&gt; '/lib:"%(Identity)."', ' ')</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) /out:"@(IntermediateAssembly -&gt; '%(FullPath)')"</ILRepackArgs>
       <ILRepackArgs>$(ILRepackArgs) "@(IntermediateAssembly -&gt; '%(FullPath)')"</ILRepackArgs>
@@ -80,10 +82,16 @@
       <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />
       <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
     </Exec>
+    <!-- ILRepack.MSBuild.Task fails when trying to sign the assembly, so instead just delay-sign and use 'sn' to sign after ILRepack.MSBuild.Task is done (ILRepack works fine, but we can't use it for other reasons, mentioned above) -->
+    <Exec Command="sn -R &quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot; ../../product.snk" Condition="'$(AbsoluteAssemblyOriginatorKeyFile)' != '' And '$(ExitCode)' == '0'" />
     <Message Importance="high" Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0'" />
     <Delete Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' != '0'" />
     <Touch AlwaysCreate="true" Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' == '0'" />
     <Error Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0' And '$(ContinueOnError)' != 'true'" />
-    <Delete Files="@(MergedAssemblies -&gt; '$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" Condition="Exists('$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" />
+    <ItemGroup>
+      <MergedAssembliesToRemove Include="@(MergedAssemblies)" />
+      <MergedAssembliesToRemove Remove="@(ReferenceToPreserve)" />
+    </ItemGroup>
+    <Delete Files="@(MergedAssembliesToRemove -&gt; '$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" Condition="Exists('$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" />
   </Target>
 </Project>

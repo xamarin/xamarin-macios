@@ -1,4 +1,4 @@
-﻿using Foundation;
+using Foundation;
 using UIKit;
 
 namespace Container
@@ -55,5 +55,3 @@ namespace Container
 		}
 	}
 }
-
-

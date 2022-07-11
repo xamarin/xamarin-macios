@@ -11,6 +11,7 @@ using Foundation;
 using Security;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
 	
@@ -107,7 +108,7 @@ namespace MonoTouchFixtures.Security {
 				SecStatusCode code = SecItemAdd (data.Handle, IntPtr.Zero);
 				var expected = Is.EqualTo (SecStatusCode.DuplicateItem).Or.EqualTo (SecStatusCode.Success);
 #if __MACOS__
-				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9))
 					expected = Is.EqualTo (SecStatusCode.Param);
 #endif
 				Assert.That (code, expected);

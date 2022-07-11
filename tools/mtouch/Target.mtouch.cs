@@ -1,4 +1,4 @@
-﻿// Copyright 2013--2014 Xamarin Inc. All rights reserved.
+// Copyright 2013--2014 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -516,6 +516,13 @@ namespace Xamarin.Bundler
 
 			MonoTouch.Tuner.Linker.Process (LinkerOptions, out LinkContext, out assemblies);
 
+			var state = MarshalNativeExceptionsState;
+			if (state?.Started == true) {
+				// The generator is 'started' by the linker, which means it may not
+				// be started if the linker was not executed due to re-using cached results.
+				state.End ();
+			}
+
 			ErrorHelper.Show (LinkContext.Exceptions);
 
 			Driver.Watch ("Link Assemblies", 1);
@@ -881,12 +888,6 @@ namespace Xamarin.Bundler
 
 			// Write P/Invokes
 			var state = MarshalNativeExceptionsState;
-			if (state.Started) {
-				// The generator is 'started' by the linker, which means it may not
-				// be started if the linker was not executed due to re-using cached results.
-				state.End ();
-			}
-
 			var ifile = state.SourcePath;
 			var mode = App.LibPInvokesLinkMode;
 			foreach (var abi in GetArchitectures (mode)) {
@@ -1039,7 +1040,7 @@ namespace Xamarin.Bundler
 								OutputFile = bc + ".o",
 								Abi = abi,
 							};
-							compile_task.CompilerFlags.AddOtherFlag (App.UserGccFlags);
+							compile_task.CompilerFlags.AddOtherFlag (App.CustomLinkFlags);
 							compile_task.AddDependency (info.Task);
 							link_dependencies.Add (compile_task);
 						}
@@ -1092,7 +1093,7 @@ namespace Xamarin.Bundler
 								link_dependencies.AddRange (tasks);
 								break;
 							case SymbolMode.Linker:
-								compiler_flags.ReferenceSymbols (symbols);
+								compiler_flags.ReferenceSymbols (symbols, abi);
 								break;
 							default:
 								throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");
@@ -1100,7 +1101,7 @@ namespace Xamarin.Bundler
 						}
 					}
 					if (App.Embeddinator)
-						compiler_flags.AddOtherFlag (App.UserGccFlags);
+						compiler_flags.AddOtherFlag (App.CustomLinkFlags);
 					compiler_flags.LinkWithMono ();
 					compiler_flags.LinkWithXamarin ();
 					if (GetAllSymbols ().Contains ("UIApplicationMain"))
@@ -1392,7 +1393,7 @@ namespace Xamarin.Bundler
 
 		public NativeLinkTask NativeLink (BuildTasks build_tasks, Abi abi, string output_file)
 		{
-			if (App.UserGccFlags?.Count > 0)
+			if (App.CustomLinkFlags?.Count > 0)
 				App.DeadStrip = false;
 			if (App.EnableLLVMOnlyBitCode)
 				App.DeadStrip = false;
@@ -1470,7 +1471,7 @@ namespace Xamarin.Bundler
 				LinkWithTaskOutput (GenerateReferencingSource (Path.Combine (App.Cache.Location, "reference.m"), GetRequiredSymbols ()));
 				break;
 			case SymbolMode.Linker:
-				linker_flags.ReferenceSymbols (GetRequiredSymbols ());
+				linker_flags.ReferenceSymbols (GetRequiredSymbols (), abi);
 				break;
 			default:
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid symbol mode: {App.SymbolMode}");
@@ -1530,7 +1531,7 @@ namespace Xamarin.Bundler
 				linker_flags.AddLinkWith (libilgen);
 			}
 
-			linker_flags.AddOtherFlag (App.UserGccFlags);
+			linker_flags.AddOtherFlag (App.CustomLinkFlags);
 
 			if (App.DeadStrip)
 				linker_flags.AddOtherFlag ("-dead_strip");

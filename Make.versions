@@ -48,8 +48,8 @@
 #   line changed in git).
 #
 
-IOS_PACKAGE_VERSION=14.99.0.$(IOS_COMMIT_DISTANCE)
-MAC_PACKAGE_VERSION=7.99.0.$(MAC_COMMIT_DISTANCE)
+IOS_PACKAGE_VERSION=15.11.0.$(IOS_COMMIT_DISTANCE)
+MAC_PACKAGE_VERSION=8.11.0.$(MAC_COMMIT_DISTANCE)
 
 #
 # ** NuGet package version numbers **
@@ -58,19 +58,19 @@ MAC_PACKAGE_VERSION=7.99.0.$(MAC_COMMIT_DISTANCE)
 #
 # Rules:
 # * The first two numbers represent the major and minor version of the corresponding OS.
-# * Reset patch version (third number) to 100 every time either major or minor version is bumped.
-# * Bump last two digits of the patch version for service releases.
-# * Bump first digit of the patch version for feature releases (and reset the first two digits to 0)
+# * A third number will be added later (the commit distance).
 #
+# IMPORTANT: There must be *no* managed API differences unless the two first
+# numbers (major.minor) changes.
 
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
 # When bumping the major macOS version in MACOS_NUGET_VERSION also update the macOS version where we execute on bots in jenkins/Jenkinsfile (in the 'node' element)
 
-IOS_NUGET_VERSION=15.0.100
-TVOS_NUGET_VERSION=15.0.100
-WATCHOS_NUGET_VERSION=8.0.100
-MACOS_NUGET_VERSION=12.0.100
-MACCATALYST_NUGET_VERSION=15.0.100
+IOS_NUGET_OS_VERSION=15.4
+TVOS_NUGET_OS_VERSION=15.4
+WATCHOS_NUGET_OS_VERSION=8.5
+MACOS_NUGET_OS_VERSION=12.3
+MACCATALYST_NUGET_OS_VERSION=15.4
 
 
 # Defines the default platform version if it's not specified in the TFM. The default should not change for a given .NET version:
@@ -80,8 +80,8 @@ MACCATALYST_NUGET_VERSION=15.0.100
 # Basically: this should be the last OS version of the platform in question when the current major .NET version is first released to stable.
 # Ref: https://github.com/dotnet/designs/blob/8e6394406d44f75f30ea2259a425cb9e38d75b69/accepted/2020/net5/net5.md#os-versions
 
-DEFAULT_TARGET_PLATFORM_VERSION_IOS=13.6
-DEFAULT_TARGET_PLATFORM_VERSION_TVOS=13.4
-DEFAULT_TARGET_PLATFORM_VERSION_WATCHOS=6.2
-DEFAULT_TARGET_PLATFORM_VERSION_MACOS=10.15
-DEFAULT_TARGET_PLATFORM_VERSION_MACCATALYST=13.5
+DEFAULT_TARGET_PLATFORM_VERSION_IOS=15.4
+DEFAULT_TARGET_PLATFORM_VERSION_TVOS=15.4
+DEFAULT_TARGET_PLATFORM_VERSION_WATCHOS=8.5
+DEFAULT_TARGET_PLATFORM_VERSION_MACOS=12.3
+DEFAULT_TARGET_PLATFORM_VERSION_MACCATALYST=15.4

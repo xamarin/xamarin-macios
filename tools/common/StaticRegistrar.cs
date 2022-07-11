@@ -213,6 +213,8 @@ namespace Registrar {
 
 	class StaticRegistrar : Registrar
 	{
+		static string NFloatTypeName { get => Driver.IsDotNet ? "System.Runtime.InteropServices.NFloat" : "System.nfloat"; }
+
 		Dictionary<ICustomAttribute, MethodDefinition> protocol_member_method_map;
 
 		public Dictionary<ICustomAttribute, MethodDefinition> ProtocolMemberMethodMap {
@@ -730,10 +732,11 @@ namespace Registrar {
 				case "System.Int64": 
 				case "System.UInt64": return 8;
 				case "System.IntPtr":
-				case "System.nfloat":
 				case "System.nuint":
 				case "System.nint": return is_64_bits ? 8 : 4;
 				default:
+					if (type.FullName == NFloatTypeName)
+						return is_64_bits ? 8 : 4;
 					int size = 0;
 					foreach (FieldDefinition field in type.Fields) {
 						if (field.IsStatic)
@@ -1559,211 +1562,257 @@ namespace Registrar {
 			}
 		}
 
-		void CollectAvailabilityAttributes (IEnumerable<ICustomAttribute> attributes, ref List<AvailabilityBaseAttribute> list)
+#if !NET
+		PlatformName AsPlatformName (ApplePlatform platform)
 		{
-			PlatformName currentPlatform;
+			switch (platform) {
+			case ApplePlatform.iOS:
+				return global::ObjCRuntime.PlatformName.iOS;
+			case ApplePlatform.TVOS:
+				return global::ObjCRuntime.PlatformName.TvOS;
+			case ApplePlatform.WatchOS:
+				return global::ObjCRuntime.PlatformName.WatchOS;
+			case ApplePlatform.MacOSX:
+				return global::ObjCRuntime.PlatformName.MacOSX;
+			case ApplePlatform.MacCatalyst:
+				return global::ObjCRuntime.PlatformName.MacCatalyst;
+			default:
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"unknown platform: {platform}");
+			}
+		}
+
+		bool GetLegacyAvailabilityAttribute (ICustomAttribute ca, ApplePlatform platform, out Version sdkVersion, out string message)
+		{
+			var caType = ca.AttributeType;
+			var currentPlatform = AsPlatformName (platform);
+			AvailabilityKind kind;
+			PlatformName platformName = global::ObjCRuntime.PlatformName.None;
+			PlatformArchitecture architecture = PlatformArchitecture.All;
+			int majorVersion = 0, minorVersion = 0, subminorVersion = 0;
+			bool shorthand = false;
+
+			sdkVersion = null;
+			message = null;
+
+			switch (caType.Name) {
+			case "MacAttribute":
+				shorthand = true;
+				platformName = global::ObjCRuntime.PlatformName.MacOSX;
+				goto case "IntroducedAttribute";
+			case "iOSAttribute":
+				shorthand = true;
+				platformName = global::ObjCRuntime.PlatformName.iOS;
+				goto case "IntroducedAttribute";
+			case "IntroducedAttribute":
+				kind = AvailabilityKind.Introduced;
+				break;
+			default:
+				return false;
+			}
+
+			switch (ca.ConstructorArguments.Count) {
+			case 2:
+				if (!shorthand)
+					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+				majorVersion = (byte) ca.ConstructorArguments [0].Value;
+				minorVersion = (byte) ca.ConstructorArguments [1].Value;
+				break;
+			case 3:
+				if (!shorthand) {
+					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+					architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
+					message = (string) ca.ConstructorArguments [2].Value;
+				} else {
+					majorVersion = (byte) ca.ConstructorArguments [0].Value;
+					minorVersion = (byte) ca.ConstructorArguments [1].Value;
+					if (ca.ConstructorArguments [2].Type.Name == "Boolean") {
+						var onlyOn64 = (bool) ca.ConstructorArguments [2].Value;
+						architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+					} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
+						minorVersion = (byte) ca.ConstructorArguments [2].Value;
+					} else {
+						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+					}
+				}
+				break;
+			case 4:
+				if (!shorthand)
+					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+
+				majorVersion = (byte) ca.ConstructorArguments [0].Value;
+				minorVersion = (byte) ca.ConstructorArguments [1].Value;
+				minorVersion = (byte) ca.ConstructorArguments [2].Value;
+				if (ca.ConstructorArguments [3].Type.Name == "Boolean") {
+					var onlyOn64 = (bool) ca.ConstructorArguments [3].Value;
+					architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
+				} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
+					architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
+				} else {
+					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+				}
+				break;
+			case 5:
+				platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+				majorVersion = (int) ca.ConstructorArguments [1].Value;
+				minorVersion = (int) ca.ConstructorArguments [2].Value;
+				architecture = (PlatformArchitecture) ca.ConstructorArguments [3].Value;
+				message = (string) ca.ConstructorArguments [4].Value;
+				break;
+			case 6:
+				platformName = (PlatformName) ca.ConstructorArguments [0].Value;
+				majorVersion = (int) ca.ConstructorArguments [1].Value;
+				minorVersion = (int) ca.ConstructorArguments [2].Value;
+				subminorVersion = (int) ca.ConstructorArguments [3].Value;
+				architecture = (PlatformArchitecture) ca.ConstructorArguments [4].Value;
+				message = (string) ca.ConstructorArguments [5].Value;
+				break;
+			default:
+				throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+			}
+
+			if (platformName != currentPlatform)
+				return false;
+
+			sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+			switch (kind) {
+			case AvailabilityKind.Introduced:
+				if (shorthand) {
+					sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+				} else {
+					switch (ca.ConstructorArguments.Count) {
+					case 5:
+						sdkVersion = new Version (majorVersion, minorVersion);
+						break;
+					case 6:
+						sdkVersion = new Version (majorVersion, minorVersion, subminorVersion);
+						break;
+					default:
+						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+					}
+				}
+				break;
+			default:
+				throw ErrorHelper.CreateError (4163, Errors.MT4163_A, kind);
+			}
+
+			return true;
+		}
+#endif // !NET
+
+#if NET
+		bool GetDotNetAvailabilityAttribute (ICustomAttribute ca, ApplePlatform currentPlatform, out Version sdkVersion, out string message)
+		{
+			var caType = ca.AttributeType;
+
+			sdkVersion = null;
+			message = null;
+
+			string supportedPlatformAndVersion;
+			switch (ca.ConstructorArguments.Count) {
+			case 1:
+				supportedPlatformAndVersion = (string) ca.ConstructorArguments [0].Value;
+				break;
+			default:
+				throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
+			}
+
+			if (!OSPlatformAttributeExtensions.TryParse (supportedPlatformAndVersion, out ApplePlatform? platformName, out sdkVersion))
+				return false;
+
+			if (platformName != currentPlatform)
+				return false;
+
+			return true;
+		}
+#endif // NET
+
+		bool CollectAvailabilityAttributes (IEnumerable<ICustomAttribute> attributes, out Version sdkVersion, out string message)
+		{
+			sdkVersion = null;
+			message = null;
+
+			ApplePlatform currentPlatform;
 			switch (App.Platform) {
 			case ApplePlatform.iOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.iOS;
+				currentPlatform = ApplePlatform.iOS;
 				break;
 			case ApplePlatform.TVOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.TvOS;
+				currentPlatform = ApplePlatform.TVOS;
 				break;
 			case ApplePlatform.WatchOS:
-				currentPlatform = global::ObjCRuntime.PlatformName.WatchOS;
+				currentPlatform = ApplePlatform.WatchOS;
 				break;
 			case ApplePlatform.MacOSX:
-				currentPlatform = global::ObjCRuntime.PlatformName.MacOSX;
+				currentPlatform = ApplePlatform.MacOSX;
 				break;
 			case ApplePlatform.MacCatalyst:
-				currentPlatform = global::ObjCRuntime.PlatformName.MacCatalyst;
+				currentPlatform = ApplePlatform.MacCatalyst;
 				break;
 			default:
 				throw ErrorHelper.CreateError (71, Errors.MX0071, App.Platform, App.ProductName);
 			}
 
-			foreach (var ca in attributes) {
-				var caType = ca.AttributeType;
-				if (caType.Namespace != ObjCRuntime && !string.IsNullOrEmpty (caType.Namespace))
-					continue;
-				
-				AvailabilityKind kind;
-				PlatformName platformName = global::ObjCRuntime.PlatformName.None;
-				PlatformArchitecture architecture = PlatformArchitecture.All;
-				string message = null;
-				int majorVersion = 0, minorVersion = 0, subminorVersion = 0;
-				bool shorthand = false;
+			ApplePlatform [] platforms;
 
-				switch (caType.Name) {
-				case "MacAttribute":
-					shorthand = true;
-					platformName = global::ObjCRuntime.PlatformName.MacOSX;
-					goto case "IntroducedAttribute";
-				case "iOSAttribute":
-					shorthand = true;
-					platformName = global::ObjCRuntime.PlatformName.iOS;
-					goto case "IntroducedAttribute";
-				case "IntroducedAttribute":
-					kind = AvailabilityKind.Introduced;
-					break;
-				case "DeprecatedAttribute":
-					kind = AvailabilityKind.Deprecated;
-					break;
-				case "ObsoletedAttribute":
-					kind = AvailabilityKind.Obsoleted;
-					break;
-				case "UnavailableAttribute":
-					kind = AvailabilityKind.Unavailable;
-					break;
-				default:
-					continue;
-				}
+#if !NET
+			if (currentPlatform == ApplePlatform.MacCatalyst) {
+				// Fall back to any iOS attributes if we can't find something for Mac Catalyst
+				platforms = new ApplePlatform [] {
+					currentPlatform,
+					ApplePlatform.iOS,
+				};
 
-				switch (ca.ConstructorArguments.Count) {
-				case 2:
-					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					majorVersion = (byte) ca.ConstructorArguments [0].Value;
-					minorVersion = (byte) ca.ConstructorArguments [1].Value;
-					break;
-				case 3:
-					if (!shorthand) {
-						platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-						architecture = (PlatformArchitecture) ca.ConstructorArguments [1].Value;
-						message = (string) ca.ConstructorArguments [2].Value;
-					} else {
-						majorVersion = (byte) ca.ConstructorArguments [0].Value;
-						minorVersion = (byte) ca.ConstructorArguments [1].Value;
-						if (ca.ConstructorArguments [2].Type.Name == "Boolean") {
-							var onlyOn64 = (bool) ca.ConstructorArguments [2].Value;
-							architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
-						} else if (ca.ConstructorArguments [2].Type.Name == "Byte") {
-							minorVersion = (byte) ca.ConstructorArguments [2].Value;
-						} else {
-							throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-						}
-					}
-					break;
-				case 4:
-					if (!shorthand)
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-
-					majorVersion = (byte) ca.ConstructorArguments [0].Value;
-					minorVersion = (byte) ca.ConstructorArguments [1].Value;
-					minorVersion = (byte) ca.ConstructorArguments [2].Value;
-					if (ca.ConstructorArguments [3].Type.Name == "Boolean") {
-						var onlyOn64 = (bool) ca.ConstructorArguments [3].Value;
-						architecture = onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All;
-					} else if (ca.ConstructorArguments [3].Type.Name == "PlatformArchitecture") {
-						architecture = (PlatformArchitecture) (byte) ca.ConstructorArguments [3].Value;
-					} else {
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					}
-					break;
-				case 5:
-					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-					majorVersion = (int) ca.ConstructorArguments [1].Value;
-					minorVersion = (int) ca.ConstructorArguments [2].Value;
-					architecture = (PlatformArchitecture) ca.ConstructorArguments [3].Value;
-					message = (string) ca.ConstructorArguments [4].Value;
-					break;
-				case 6:
-					platformName = (PlatformName) ca.ConstructorArguments [0].Value;
-					majorVersion = (int) ca.ConstructorArguments [1].Value;
-					minorVersion = (int) ca.ConstructorArguments [2].Value;
-					subminorVersion = (int) ca.ConstructorArguments [3].Value;
-					architecture = (PlatformArchitecture) ca.ConstructorArguments [4].Value;
-					message = (string) ca.ConstructorArguments [5].Value;
-					break;
-				default:
-					throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-				}
-
-				if (platformName != currentPlatform)
-					continue;
-
-				AvailabilityBaseAttribute rv;
-				switch (kind) {
-				case AvailabilityKind.Introduced:
-					if (shorthand) {
-						rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-					} else {
-						switch (ca.ConstructorArguments.Count) {
-						case 3:
-							rv = new IntroducedAttribute (platformName, architecture, message);
-							break;
-						case 5:
-							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-							break;
-						case 6:
-							rv = new IntroducedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-							break;
-						default:
-							throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-						}
-					}
-					break;
-				case AvailabilityKind.Deprecated:
-					switch (ca.ConstructorArguments.Count) {
-					case 3:
-						rv = new DeprecatedAttribute (platformName, architecture, message);
-						break;
-					case 5:
-						rv = new DeprecatedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-						break;
-					case 6:
-						rv = new DeprecatedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-						break;
-					default:
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					}
-					break;
-				case AvailabilityKind.Obsoleted:
-					switch (ca.ConstructorArguments.Count) {
-					case 3:
-						rv = new ObsoletedAttribute (platformName, architecture, message);
-						break;
-					case 5:
-						rv = new ObsoletedAttribute (platformName, majorVersion, minorVersion, architecture, message);
-						break;
-					case 6:
-						rv = new ObsoletedAttribute (platformName, majorVersion, minorVersion, subminorVersion, architecture, message);
-						break;
-					default:
-						throw ErrorHelper.CreateError (4163, Errors.MT4163, caType.Name, ca.ConstructorArguments.Count);
-					}
-					break;
-				case AvailabilityKind.Unavailable:
-					rv = new UnavailableAttribute (platformName, architecture, message);
-					break;
-				default:
-					throw ErrorHelper.CreateError (4163, Errors.MT4163_A, kind);
-				}
-
-				if (list == null)
-					list = new List<AvailabilityBaseAttribute> ();
-				list.Add (rv);
+			} else {
+				platforms = new ApplePlatform [] {
+					currentPlatform,
+				};
 			}
+#else
+			platforms = new ApplePlatform [] {
+				currentPlatform,
+			};
+#endif
+
+			foreach (var platform in platforms) {
+				foreach (var ca in attributes) {
+					var caType = ca.AttributeType;
+#if NET
+					if (!caType.Is ("System.Runtime.Versioning", "SupportedOSPlatformAttribute"))
+						continue;
+					if (GetDotNetAvailabilityAttribute (ca, platform, out sdkVersion, out message))
+						return true;
+#else
+					if (caType.Namespace != ObjCRuntime && !string.IsNullOrEmpty (caType.Namespace))
+						continue;
+					if (GetLegacyAvailabilityAttribute (ca, platform, out sdkVersion, out message))
+						return true;
+#endif
+				}
+			}
+
+			return false;
 		}
 
-		protected override List<AvailabilityBaseAttribute> GetAvailabilityAttributes (TypeReference obj)
+		protected override Version GetSdkIntroducedVersion (TypeReference obj, out string message)
 		{
 			TypeDefinition td = obj.Resolve ();
-			List<AvailabilityBaseAttribute> rv = null;
 
-			if (td == null)
+			message = null;
+
+			if (td is null)
 				return null;
-			
-			if (td.HasCustomAttributes)
-				CollectAvailabilityAttributes (td.CustomAttributes, ref rv);
-			
-			if (AvailabilityAnnotations != null) {
-				object attribObjects;
-				if (AvailabilityAnnotations.TryGetValue (td, out attribObjects))
-					CollectAvailabilityAttributes ((IEnumerable<ICustomAttribute>) attribObjects, ref rv);
+
+			if (td.HasCustomAttributes) {
+				if (CollectAvailabilityAttributes (td.CustomAttributes, out var sdkVersion, out message))
+					return sdkVersion;
 			}
 
-			return rv;
+			if (AvailabilityAnnotations is not null && AvailabilityAnnotations.TryGetValue (td, out var attribObjects)) {
+				if (CollectAvailabilityAttributes ((IEnumerable<ICustomAttribute>) attribObjects, out var sdkVersion, out message))
+					return sdkVersion;
+			}
+
+			return null;
 		}
 
 		protected override Version GetSDKVersion ()
@@ -1811,6 +1860,28 @@ namespace Registrar {
 			}
 
 			return rv;
+		}
+
+		NativeNameAttribute GetNativeNameAttribute (TypeReference type)
+		{
+			if (!TryGetAttribute ((ICustomAttributeProvider) type, ObjCRuntime, "NativeNameAttribute", out var attrib))
+				return null;
+
+			return CreateNativeNameAttribute (attrib, type);
+		}
+
+		static NativeNameAttribute CreateNativeNameAttribute (ICustomAttribute attrib, TypeReference type)
+		{
+			if (attrib.HasFields)
+				throw ErrorHelper.CreateError (4124, Errors.MT4124_I, "NativeNameAttribute", type.FullName);
+
+			switch (attrib.ConstructorArguments.Count) {
+			case 1:
+				var t1 = (string) attrib.ConstructorArguments [0].Value;
+				return new NativeNameAttribute (t1);
+			default:
+				throw ErrorHelper.CreateError (4124, Errors.MT4124_I, "NativeNameAttribute", type.FullName);
+			}
 		}
 
 		protected override BindAsAttribute GetBindAsAttribute (PropertyDefinition property)
@@ -2142,9 +2213,11 @@ namespace Registrar {
 					}
 				}
 				goto default;
+#if !NET
 			case "Chip":
 				h = "<CHIP/CHIP.h>";
 				break;
+#endif
 			case "GLKit":
 				// This prevents this warning:
 				//     /Applications/Xcode83.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.12.sdk/System/Library/Frameworks/OpenGL.framework/Headers/gl.h:5:2: warning: gl.h and gl3.h are both
@@ -2164,6 +2237,9 @@ namespace Registrar {
 			case "QuartzComposer":
 			case "QuickLookUI":
 				h = "<Quartz/Quartz.h>";
+				break;
+			case "Phase":
+				h = "<PHASE/PHASE.h>";
 				break;
 			case "PdfKit":
 				h = App.Platform == ApplePlatform.MacOSX ? "<Quartz/Quartz.h>" : "<PDFKit/PDFKit.h>";
@@ -2204,10 +2280,12 @@ namespace Registrar {
 					}
 				}
 				goto default;
+#if !NET
 			case "QTKit":
 				if (App.Platform == ApplePlatform.MacOSX && App.SdkVersion >= MacOSTenTwelveVersion)
 					return; // 10.12 removed the header files for QTKit
 				goto default;
+#endif
 			case "IOSurface": // There is no IOSurface.h
 				h = "<IOSurface/IOSurfaceObjC.h>";
 				break;
@@ -2215,6 +2293,7 @@ namespace Registrar {
 				header.WriteLine ("#import <CoreImage/CoreImage.h>");
 				header.WriteLine ("#import <CoreImage/CIFilterBuiltins.h>");
 				return;
+#if !NET
 			case "iAd":
 				if (App.SdkVersion.Major >= 13) {
 					// most of the framework has been obliterated from the headers
@@ -2227,6 +2306,10 @@ namespace Registrar {
 					return;
 				}
 				goto default;
+#endif
+			case "ThreadNetwork":
+				h = "<ThreadNetwork/THClient.h>";
+				break;
 			default:
 				h = string.Format ("<{0}/{0}.h>", ns);
 				break;
@@ -2246,6 +2329,7 @@ namespace Registrar {
 			n = "struct trampoline_struct_" + name.ToString ();
 			if (!structures.Contains (n)) {
 				structures.Add (n);
+				declarations.WriteLine ($"// {structure.FullName} (+other structs with same layout)");
 				declarations.WriteLine ("{0} {{\n{1}}};", n, body.ToString ());
 			}
 			
@@ -2300,9 +2384,10 @@ namespace Registrar {
 				size += 8;
 				break;
 			case "System.IntPtr":
+			case "System.UIntPtr":
 				name.Append ('p');
 				body.AppendLine ("void *v{0};", size);
-				size += 4; // for now at least...
+				size += Is64Bits ? 8 : 4;
 				break;
 			default:
 				bool found = false;
@@ -2422,6 +2507,7 @@ namespace Registrar {
 			case "System.Drawing.PointF": return App.Platform == ApplePlatform.MacOSX ? "NSPoint" : "CGPoint";
 			case "System.Drawing.SizeF": return App.Platform == ApplePlatform.MacOSX ? "NSSize" : "CGSize";
 			case "System.String": return "NSString *";
+			case "System.UIntPtr":
 			case "System.IntPtr": return "void *";
 			case "System.SByte": return "signed char";
 			case "System.Byte": return "unsigned char";
@@ -2442,14 +2528,16 @@ namespace Registrar {
 			case "System.nuint":
 				CheckNamespace ("Foundation", exceptions);
 				return "NSUInteger";
-			case "System.nfloat":
-				CheckNamespace ("CoreGraphics", exceptions);
-				return "CGFloat";
 			case "System.DateTime":
 				throw ErrorHelper.CreateError (4102, Errors.MT4102, "System.DateTime", "Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector": return "SEL";
 			case "ObjCRuntime.Class": return "Class";
+			case "ObjCRuntime.NativeHandle": return "void *";
 			default:
+				if (type.FullName == NFloatTypeName) {
+					CheckNamespace ("CoreGraphics", exceptions);
+					return "CGFloat";
+				}
 				TypeDefinition td = ResolveType (type);
 				if (IsNSObject (td)) {
 					if (!IsPlatformType (td))
@@ -2477,7 +2565,7 @@ namespace Registrar {
 				} else if (td.IsValueType) {
 					if (IsPlatformType (td)) {
 						CheckNamespace (td, exceptions);
-						return td.Name;
+						return GetNativeName (td);
 					}
 					return CheckStructure (td, descriptiveMethodName, inMethod);
 				} else {
@@ -2486,6 +2574,15 @@ namespace Registrar {
 			}
 		}
 		
+		string GetNativeName (TypeDefinition type)
+		{
+			var attrib = GetNativeNameAttribute (type);
+			if (attrib is null)
+				return type.Name;
+
+			return attrib.NativeName;
+		}
+
 		string GetPrintfFormatSpecifier (TypeDefinition type, out bool unknown)
 		{
 			unknown = false;
@@ -2503,10 +2600,11 @@ namespace Registrar {
 				case "System.UInt64": return "llu";
 				case "System.nint":	return "zd";
 				case "System.nuint": return "tu";
-				case "System.nfloat":
 				case "System.Single":
 				case "System.Double": return "f";
 				default:
+					if (type.FullName == NFloatTypeName)
+						return "f";
 					unknown = true;
 					return "p";
 				}
@@ -2641,7 +2739,9 @@ namespace Registrar {
 			return ns == nsToMatch;
 		}
 
+#if !NET
 		static bool IsQTKitType (ObjCType type) => IsTypeCore (type, "QTKit");
+#endif
 		static bool IsMapKitType (ObjCType type) => IsTypeCore (type, "MapKit");
 		static bool IsIntentsType (ObjCType type) => IsTypeCore (type, "Intents");
 		static bool IsExternalAccessoryType (ObjCType type) => IsTypeCore (type, "ExternalAccessory");
@@ -2715,15 +2815,19 @@ namespace Registrar {
 						continue; // Some types are not supported in the simulator.
 					}
 				} else {
+#if !NET
 					if (IsQTKitType (@class) && App.SdkVersion >= MacOSTenTwelveVersion)
 						continue; // QTKit header was removed in 10.12 SDK
+#endif
 				}
 				
+#if !NET
 				// Xcode 11 removed WatchKit for iOS!
 				if (IsTypeCore (@class, "WatchKit") && App.Platform == Xamarin.Utils.ApplePlatform.iOS) {
 					exceptions.Add (ErrorHelper.CreateWarning (4178, $"The class '{@class.Type.FullName}' will not be registered because the WatchKit framework has been removed from the iOS SDK."));
 					continue;
 				}
+#endif
 
 				if (@class.IsFakeProtocol)
 					continue;
@@ -3117,7 +3221,7 @@ namespace Registrar {
 			ErrorHelper.ThrowIfErrors (exceptions);
 		}
 
-		static bool HasIntPtrBoolCtor (TypeDefinition type)
+		bool HasIntPtrBoolCtor (TypeDefinition type, List<Exception> exceptions)
 		{
 			if (!type.HasMethods)
 				return false;
@@ -3126,10 +3230,21 @@ namespace Registrar {
 					continue;
 				if (method.Parameters.Count != 2)
 					continue;
-				if (!method.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+				if (!method.Parameters [1].ParameterType.Is ("System", "Boolean"))
 					continue;
-				if (method.Parameters [1].ParameterType.Is ("System", "Boolean"))
-					return true;
+				if (Driver.IsDotNet) {
+					if (method.Parameters [0].ParameterType.Is ("System", "IntPtr")) {
+						// The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It's highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool).
+						exceptions.Add (ErrorHelper.CreateWarning (App, 4186, method, Errors.MT4186, type.FullName));
+						return true;
+					}
+					if (!method.Parameters [0].ParameterType.Is ("ObjCRuntime", "NativeHandle"))
+						continue;
+				} else {
+					if (!method.Parameters [0].ParameterType.Is ("System", "IntPtr"))
+						continue;
+				}
+				return true;
 			}
 			return false;
 		}
@@ -3599,7 +3714,7 @@ namespace Registrar {
 							}
 
 							// verify that the type has a ctor with two parameters
-							if (!HasIntPtrBoolCtor (nativeObjType))
+							if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
 								throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
 							body_setup.AppendLine ("MonoType *paramtype{0} = NULL;", i);
@@ -3723,7 +3838,7 @@ namespace Registrar {
 						}
 
 						// verify that the type has a ctor with two parameters
-						if (!HasIntPtrBoolCtor (nativeObjType))
+						if (!HasIntPtrBoolCtor (nativeObjType, exceptions))
 							throw ErrorHelper.CreateError (4103, Errors.MT4103, nativeObjType.FullName, descriptiveMethodName);
 
 						if (!td.IsInterface) {
@@ -3886,9 +4001,8 @@ namespace Registrar {
 					if (retain)
 						setup_return.AppendLine ("[res retain];");
 					setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-					setup_return.AppendLine ("xamarin_framework_peer_lock ();");
+					setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
 					setup_return.AppendLine ("mt_dummy_use (retval);");
-					setup_return.AppendLine ("xamarin_framework_peer_unlock ();");
 				} else {
 					setup_return.AppendLine ("if (!retval) {");
 					setup_return.AppendLine ("res = NULL;");
@@ -3897,9 +4011,8 @@ namespace Registrar {
 					if (IsNSObject (type)) {
 						setup_return.AppendLine ("id retobj;");
 						setup_return.AppendLine ("retobj = xamarin_get_nsobject_handle (retval);");
-						setup_return.AppendLine ("xamarin_framework_peer_lock ();");
+						setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
 						setup_return.AppendLine ("[retobj retain];");
-						setup_return.AppendLine ("xamarin_framework_peer_unlock ();");
 						if (!retain)
 							setup_return.AppendLine ("[retobj autorelease];");
 						setup_return.AppendLine ("mt_dummy_use (retval);");
@@ -3914,13 +4027,26 @@ namespace Registrar {
 						setup_return.AppendLine ("{0} retobj;", rettype);
 						setup_return.AppendLine ("retobj = xamarin_get_handle_for_inativeobject ((MonoObject *) retval, &exception_gchandle);");
 						setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
-						setup_return.AppendLine ("xamarin_framework_peer_lock ();");
-						setup_return.AppendLine ("[retobj retain];");
-						setup_return.AppendLine ("xamarin_framework_peer_unlock ();");
-						if (!retain)
+						setup_return.AppendLine ("xamarin_framework_peer_waypoint ();");
+						setup_return.AppendLine ("if (retobj != NULL) {");
+						if (retain) {
+							setup_return.AppendLine ("xamarin_retain_nativeobject (retval, &exception_gchandle);");
+							setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+						} else {
+							// If xamarin_attempt_retain_nsobject returns true, the input is an NSObject, so it's safe to call the 'autorelease' selector on it.
+							// We don't retain retval if it's not an NSObject, because we'd have to immediately release it,
+							// and that serves no purpose.
+							setup_return.AppendLine ("bool retained = xamarin_attempt_retain_nsobject (retval, &exception_gchandle);");
+							setup_return.AppendLine ("if (exception_gchandle != INVALID_GCHANDLE) goto exception_handling;");
+							setup_return.AppendLine ("if (retained) {");
 							setup_return.AppendLine ("[retobj autorelease];");
+							setup_return.AppendLine ("}");
+						}
 						setup_return.AppendLine ("mt_dummy_use (retval);");
 						setup_return.AppendLine ("res = retobj;");
+						setup_return.AppendLine ("} else {");
+						setup_return.AppendLine ("res = NULL;");
+						setup_return.AppendLine ("}");
 					} else if (type.FullName == "System.String") {
 						// This should always be an NSString and never char*
 						setup_return.AppendLine ("res = xamarin_string_to_nsstring ((MonoString *) retval, {0});", retain ? "true" : "false");
@@ -4190,7 +4316,7 @@ namespace Registrar {
 			}
 
 			// Might be an implementation of an optional protocol member.
-			var allProtocols = obj_method.DeclaringType.AllProtocols;
+			var allProtocols = obj_method.DeclaringType.AllProtocolsInHierarchy;
 			if (allProtocols != null) {
 				string selector = null;
 
@@ -4237,7 +4363,7 @@ namespace Registrar {
 			}
 
 			// Might be an implementation of an optional protocol member.
-			var allProtocols = obj_method.DeclaringType.AllProtocols;
+			var allProtocols = obj_method.DeclaringType.AllProtocolsInHierarchy;
 			if (allProtocols != null) {
 				string selector = null;
 
@@ -4261,7 +4387,7 @@ namespace Registrar {
 								continue;
 							if (!TypeMatch (pMethod.ReturnType, method.ReturnType))
 								continue;
-							if (ParametersMatch (method.Parameters, pMethod.Parameters))
+							if (!ParametersMatch (method.Parameters, pMethod.Parameters))
 								continue;
 
 							MethodDefinition extensionMethod = pMethod.Method;
@@ -4310,8 +4436,21 @@ namespace Registrar {
 
 			if (!method.HasCustomAttributes)
 				return false;
-			
-			var t = method.DeclaringType;
+
+			var type = method.DeclaringType;
+			while (type is not null && (object) type != (object) type.BaseType) {
+				if (MapProtocolMember (type, method, out extensionMethod))
+					return true;
+
+				type = type.BaseType?.Resolve ();
+			}
+
+			return false;
+		}
+
+		public bool MapProtocolMember (TypeDefinition t, MethodDefinition method, out MethodDefinition extensionMethod)
+		{
+			extensionMethod = null;
 
 			if (!t.HasInterfaces)
 				return false;
@@ -4389,13 +4528,16 @@ namespace Registrar {
 			case "System.UInt32": return "xamarin_uint_to_nsnumber";
 			case "System.Int64": return "xamarin_long_to_nsnumber";
 			case "System.UInt64": return "xamarin_ulong_to_nsnumber";
+			case "System.IntPtr":
 			case "System.nint": return "xamarin_nint_to_nsnumber";
+			case "System.UIntPtr":
 			case "System.nuint": return "xamarin_nuint_to_nsnumber";
 			case "System.Single": return "xamarin_float_to_nsnumber";
 			case "System.Double": return "xamarin_double_to_nsnumber";
-			case "System.nfloat": return "xamarin_nfloat_to_nsnumber";
 			case "System.Boolean": return "xamarin_bool_to_nsnumber";
 			default:
+				if (typeName == NFloatTypeName)
+					return "xamarin_nfloat_to_nsnumber";
 				if (IsEnum (managedType))
 					return GetManagedToNSNumberFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName);
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}");
@@ -4414,13 +4556,18 @@ namespace Registrar {
 			case "System.UInt32": nativeType = "uint32_t"; return "xamarin_nsnumber_to_uint";
 			case "System.Int64": nativeType = "int64_t"; return "xamarin_nsnumber_to_long";
 			case "System.UInt64": nativeType = "uint64_t"; return "xamarin_nsnumber_to_ulong";
+			case "System.IntPtr":
 			case "System.nint": nativeType = "NSInteger"; return "xamarin_nsnumber_to_nint";
+			case "System.UIntPtr":
 			case "System.nuint": nativeType = "NSUInteger"; return "xamarin_nsnumber_to_nuint";
 			case "System.Single": nativeType = "float"; return "xamarin_nsnumber_to_float";
 			case "System.Double": nativeType = "double"; return "xamarin_nsnumber_to_double";
-			case "System.nfloat": nativeType = "CGFloat"; return "xamarin_nsnumber_to_nfloat";
 			case "System.Boolean": nativeType = "BOOL"; return "xamarin_nsnumber_to_bool";
 			default:
+				if (typeName == NFloatTypeName) {
+					nativeType = "CGFloat";
+					return "xamarin_nsnumber_to_nfloat";
+				}
 				if (IsEnum (managedType))
 					return GetNSNumberToManagedFunc (GetEnumUnderlyingType (managedType), inputType, outputType, descriptiveMethodName, out nativeType);
 				throw ErrorHelper.CreateError (99, Errors.MX0099, $"can't convert from '{inputType.FullName}' to '{outputType.FullName}' in {descriptiveMethodName}");
@@ -4838,7 +4985,7 @@ namespace Registrar {
 				sb.WriteLine ("{");
 				if (is_stret) {
 					sb.StringBuilder.AppendLine ("#if defined (__arm64__)");
-					sb.WriteLine ("xamarin_process_managed_exception (xamarin_create_system_entry_point_not_found_exception (\"{0}\"));", pinfo.EntryPoint);
+					sb.WriteLine ("xamarin_process_managed_exception ((MonoObject *) xamarin_create_system_entry_point_not_found_exception (\"{0}\"));", pinfo.EntryPoint);
 					sb.StringBuilder.AppendLine ("#else");
 				}
 				sb.WriteLine ("@try {");
@@ -4942,11 +5089,7 @@ namespace Registrar {
 			}
 
 			header.WriteLine ("#include <stdarg.h>");
-			if (SupportsModernObjectiveC) {
-				methods.WriteLine ("#include <xamarin/xamarin.h>");
-			} else {
-				header.WriteLine ("#include <xamarin/xamarin.h>");
-			}
+			methods.WriteLine ("#include <xamarin/xamarin.h>");
 			header.WriteLine ("#include <objc/objc.h>");
 			header.WriteLine ("#include <objc/runtime.h>");
 			header.WriteLine ("#include <objc/message.h>");

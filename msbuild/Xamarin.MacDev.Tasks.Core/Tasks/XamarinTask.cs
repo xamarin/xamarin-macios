@@ -25,6 +25,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string Product {
 			get {
+				if (IsDotNet)
+					return "Microsoft." + PlatformName;
+
 				switch (Platform) {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
@@ -61,6 +64,10 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
+		public bool IsDotNet {
+			get { return TargetFramework.IsDotNet; }
+		}
+
 		public string PlatformName {
 			get {
 				switch (Platform) {
@@ -80,25 +87,29 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		protected string GetSdkPlatform (bool isSimulator)
-		{
-			switch (Platform) {
-			case ApplePlatform.iOS:
-				return isSimulator ? "iPhoneSimulator" : "iPhoneOS";
-			case ApplePlatform.TVOS:
-				return isSimulator ? "AppleTVSimulator" : "AppleTVOS";
-			case ApplePlatform.WatchOS:
-				return isSimulator ? "WatchSimulator" : "WatchOS";
-			case ApplePlatform.MacOSX:
-				return "MacOSX";
-			case ApplePlatform.MacCatalyst:
-				return "MacCatalyst";
-			default:
-				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+		public string DotNetVersion {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+					return DotNetVersionConstants.Microsoft_iOS_Version;
+				case ApplePlatform.MacCatalyst:
+					return DotNetVersionConstants.Microsoft_MacCatalyst_Version;
+				case ApplePlatform.MacOSX:
+					return DotNetVersionConstants.Microsoft_macOS_Version;
+				case ApplePlatform.TVOS:
+					return DotNetVersionConstants.Microsoft_tvOS_Version;
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
 			}
 		}
 
-		protected async System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true)
+		protected string GetSdkPlatform (bool isSimulator)
+		{
+			return PlatformFrameworkHelper.GetSdkPlatform (Platform, isSimulator);
+		}
+
+		protected async System.Threading.Tasks.Task<Execution> ExecuteAsync (string fileName, IList<string> arguments, string sdkDevPath = null, Dictionary<string, string> environment = null, bool mergeOutput = true, bool showErrorIfFailure = true, string workingDirectory = null)
 		{
 			// Create a new dictionary if we're given one, to make sure we don't change the caller's dictionary.
 			var launchEnvironment = environment == null ? new Dictionary<string, string> () : new Dictionary<string, string> (environment);
@@ -106,7 +117,7 @@ namespace Xamarin.MacDev.Tasks {
 				launchEnvironment ["DEVELOPER_DIR"] = sdkDevPath;
 
 			Log.LogMessage (MessageImportance.Normal, MSBStrings.M0001, fileName, StringUtils.FormatArguments (arguments));
-			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput);
+			var rv = await Execution.RunAsync (fileName, arguments, environment: launchEnvironment, mergeOutput: mergeOutput, workingDirectory: workingDirectory);
 			Log.LogMessage (rv.ExitCode == 0 ? MessageImportance.Low : MessageImportance.High, MSBStrings.M0002, fileName, rv.ExitCode);
 
 			// Show the output
@@ -123,13 +134,56 @@ namespace Xamarin.MacDev.Tasks {
 				Log.LogMessage (importance, output);
 			}
 
-			if (showErrorIfFailure && rv.ExitCode != 0)
-				Log.LogError (MSBStrings.E0117, /* {0} exited with code {1} */ fileName == "xcrun" ? arguments [0] : fileName, rv.ExitCode);
+			if (showErrorIfFailure && rv.ExitCode != 0) {
+				var stderr = rv.StandardError.ToString ().Trim ();
+				if (stderr.Length > 1024)
+					stderr = stderr.Substring (0, 1024);
+				if (string.IsNullOrEmpty (stderr)) {
+					Log.LogError (MSBStrings.E0117, /* {0} exited with code {1} */ fileName == "xcrun" ? arguments [0] : fileName, rv.ExitCode);
+				} else {
+					Log.LogError (MSBStrings.E0118, /* {0} exited with code {1}:\n{2} */ fileName == "xcrun" ? arguments [0] : fileName, rv.ExitCode, stderr);
+				}
+			}
 
 			return rv;
 		}
 
 		public bool ShouldExecuteRemotely () => this.ShouldExecuteRemotely (SessionId);
+
+		protected void FileCopierReportErrorCallback (int code, string format, params object[] arguments)
+		{
+			Log.LogError (format, arguments);
+		}
+
+		protected void FileCopierLogCallback (int min_verbosity, string format, params object[] arguments)
+		{
+			MessageImportance importance;
+			if (min_verbosity <= 0) {
+				importance = MessageImportance.High;
+			} else if (min_verbosity <= 1) {
+				importance = MessageImportance.Normal;
+			} else {
+				importance = MessageImportance.Low;
+			}
+			Log.LogMessage (importance, format, arguments);
+		}
+
+		protected string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, string fallbackValue, string fallbackName = null, bool required = false)
+		{
+			return GetNonEmptyStringOrFallback (item, metadataName, out var _, fallbackValue, fallbackName, required);
+		}
+
+		protected string GetNonEmptyStringOrFallback (ITaskItem item, string metadataName, out bool foundInMetadata, string fallbackValue, string fallbackName = null, bool required = false)
+		{
+			var metadataValue = item.GetMetadata (metadataName);
+			if (!string.IsNullOrEmpty (metadataValue)) {
+				foundInMetadata = true;
+				return metadataValue;
+			}
+			if (required && string.IsNullOrEmpty (fallbackValue))
+				Log.LogError (MSBStrings.E7085 /* The "{0}" task was not given a value for the required parameter "{1}", nor was there a "{2}" metadata on the resource {3}. */, GetType ().Name, fallbackName ?? metadataName, metadataName, item.ItemSpec);
+			foundInMetadata = false;
+			return fallbackValue;
+		}
 	}
 }
-

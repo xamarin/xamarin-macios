@@ -7,7 +7,6 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-using System;
 using System.Security.Cryptography.X509Certificates;
 using Foundation;
 using ObjCRuntime;
@@ -20,6 +19,7 @@ using UIKit;
 using NUnit.Framework;
 
 using MonoTouchFixtures.Security;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -45,7 +45,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Null (creds.Password, "Password");
 				var expectedPersistence = NSUrlCredentialPersistence.ForSession;
 #if __MACOS__
-				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8))
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 8))
 					expectedPersistence = (NSUrlCredentialPersistence) uint.MaxValue;
 #endif
 				Assert.That (creds.Persistence, Is.EqualTo (expectedPersistence), "Persistence");
@@ -64,7 +64,7 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Null (creds.Password, "Password");
 				var expectedPersistence = NSUrlCredentialPersistence.ForSession;
 #if __MACOS__
-				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8))
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 8))
 					expectedPersistence = (NSUrlCredentialPersistence)uint.MaxValue;
 #endif
 				Assert.That (creds.Persistence, Is.EqualTo (expectedPersistence), "Persistence");

@@ -3,6 +3,10 @@ parameters:
 - name: macPool
   type: string
 
+- name: useImage
+  type: boolean
+  default: false
+
 - name: stageName
   type: string
 
@@ -16,12 +20,16 @@ parameters:
 - name: keyringPass
   type: string
 
-- name: osVersion
-  type: string
-
-- name: checkDemands
+- name: enableDotnet
   type: boolean
-  default: true
+  default: false
+
+- name: demands
+  type: object
+  default: []
+
+- name: isPR
+  type: boolean
 
 stages:
 - stage: ${{ parameters.stageName }}
@@ -29,24 +37,49 @@ stages:
   dependsOn:
   - build_packages
   # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
-  condition: and(succeeded(), eq(dependencies.build_packages.outputs['build.configuration.RunDeviceTests'], 'True'))
+  condition: succeeded()
+
+  variables:
+    GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
 
   jobs:
+  - job: configure
+    displayName: 'Configure build'
+    pool:
+      vmImage: windows-latest
+
+    variables:
+      isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+      isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
+
+    steps:
+    - template: ../common/configure.yml
+      parameters: 
+        uploadArtifacts: false
+        enableDotnet: ${{ parameters.enableDotnet }}
+
   - job: run_tests
+    dependsOn:
+    - configure
     displayName: 'macOS tests'
     timeoutInMinutes: 1000
     workspace:
       clean: all
 
     pool:
-      name: ${{ parameters.macPool }}
-      ${{ if eq(parameters.checkDemands, true) }}:
-        demands: 
-        - Agent.OS -equals Darwin
-        - Agent.OSVersion -equals ${{ parameters.osVersion }}
+      ${{ if eq(parameters.useImage, false) }}:
+        name: ${{ parameters.macPool }}
+        demands: ${{ parameters.demands }}
+      ${{ else }}:
+        vmImage: ${{ parameters.macPool }}
+
+    variables:
+      PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+      GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
 
     steps:
     - template: build.yml
       parameters:
+        isPR: ${{ parameters.isPR }}
         statusContext: ${{ parameters.statusContext }}
         keyringPass: ${{ parameters.keyringPass }} 

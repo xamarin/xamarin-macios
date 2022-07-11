@@ -59,6 +59,8 @@ namespace Introspection {
 		protected virtual bool Skip (string nativeName)
 		{
 			switch (nativeName) {
+			case "CIRawFilter":
+				return true;
 			// Both reported in radar #21548819
 			//  NSUnknownKeyException [<CIDepthOfField 0x158586970> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputPoint2.
 			case "CIDepthOfField":
@@ -186,17 +188,24 @@ namespace Introspection {
 				var key = k.ToString ();
 				if (key.StartsWith ("CIAttribute", StringComparison.Ordinal))
 					continue;
+#if !NET
 				// CIFilter defines it for all filters
 				if (key == "inputImage")
 					continue;
+#endif
 				
 				writer.WriteLine ();
 				var dict = attributes [k] as NSDictionary;
 				var type = dict [(NSString) "CIAttributeClass"];
 				writer.WriteLine ($"\t[CoreImageFilterProperty (\"{key}\")]");
 
+#if NET
+				// by default we drop the "input" prefix, but keep the "output" prefix to avoid confusion, except for 'inputImage'
+				if (key.StartsWith ("input", StringComparison.Ordinal) && key != "inputImage")
+#else
 				// by default we drop the "input" prefix, but keep the "output" prefix to avoid confusion
 				if (key.StartsWith ("input", StringComparison.Ordinal))
+#endif
 					key = Char.ToUpperInvariant (key [5]) + key.Substring (6);
 
 				writer.WriteLine ("\t/* REMOVE-ME");
@@ -462,6 +471,23 @@ namespace Introspection {
 							break;
 						case "inputUCR":
 							cap = "UnderColorRemoval";
+							break;
+						}
+						break;
+					case "CIAccordionFoldTransition":
+						switch (key) {
+						case "inputNumberOfFolds":
+							cap = "FoldCount";
+							break;
+						}
+						break;
+					case "CIBicubicScaleTransform":
+						switch (key) {
+						case "inputB":
+							cap = "ParameterB";
+							break;
+						case "inputC":
+							cap = "ParameterC";
 							break;
 						}
 						break;

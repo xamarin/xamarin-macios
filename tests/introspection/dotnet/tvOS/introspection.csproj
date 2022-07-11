@@ -1,132 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-tvos</TargetFramework>
-    <RuntimeIdentifier>tvossimulator-x64</RuntimeIdentifier>
-    <OutputType>Exe</OutputType>
-    <DefineConstants>NET</DefineConstants>
-    <LangVersion>latest</LangVersion>
-    <RootNamespace>Introspection</RootNamespace>
-    <AssemblyName>introspection</AssemblyName>
-    <MtouchLink>None</MtouchLink>
-    <AssetTargetFallback>xamarintvos10;$(AssetTargetFallback)</AssetTargetFallback>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-tvos</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NUnitLite" Version="3.12.0" />
-    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
-    <ProjectReference Include="..\..\..\..\external\Touch.Unit\Touch.Client\dotnet\tvOS\Touch.Client-tvOS.dotnet.csproj" />
-    <!-- MonoTouch.Dialog references System.Json, which isn't shipped with .NET5, so reference the NuGet instead -->
-    <PackageReference Include="System.Json" Version="4.7.1" />
-  </ItemGroup>
+  <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
+  <Import Project="../shared.csproj" />
 
   <ItemGroup>
-    <Compile Include="..\..\iOS\Main.cs" />
-    <Compile Include="..\..\iOS\AppDelegate.cs" />
-    <Compile Include="..\..\iOS\iOSApiCtorInitTest.cs" />
-    <Compile Include="..\..\iOS\iOSApiFieldTest.cs" />
-    <Compile Include="..\..\iOS\iOSApiSelectorTest.cs" />
-    <Compile Include="..\..\iOS\iOSApiSignatureTest.cs" />
-    <Compile Include="..\..\iOS\iOSApiProtocolTest.cs" />
-    <Compile Include="..\..\iOS\iOSApiWeakPropertyTest.cs" />
-    <Compile Include="..\..\iOS\iOSApiPInvokeTest.cs" />
-    <Compile Include="..\..\iOS\iOSApiClassPtrTest.cs" />
-    <Compile Include="..\..\iOS\iOSApiTypoTest.cs" />
-    <Compile Include="..\..\iOS\iOSCoreImageFiltersTest.cs" />
-    <Compile Include="..\..\ApiBaseTest.cs">
-      <Link>ApiBaseTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiClassPtrTest.cs">
-      <Link>ApiClassPtrTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiCMAttachmentTest.cs">
-      <Link>ApiCMAttachmentTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiCoreImageFiltersTest.cs">
-      <Link>ApiCoreImageFiltersTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiCtorInitTest.cs">
-      <Link>ApiCtorInitTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiFieldTest.cs">
-      <Link>ApiFieldTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiPInvokeTest.cs">
-      <Link>ApiPInvokeTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiProtocolTest.cs">
-      <Link>ApiProtocolTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiSelectorTest.cs">
-      <Link>ApiSelectorTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiSignatureTest.cs">
-      <Link>ApiSignatureTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiStructTest.cs">
-      <Link>ApiStructTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiTypoTest.cs">
-      <Link>ApiTypoTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiWeakPropertyTest.cs">
-      <Link>ApiWeakPropertyTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\CoreSelectorTest.cs">
-      <Link>CoreSelectorTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\EnvironmentVariable.cs">
-      <Link>EnvironmentVariable.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\common\MonoNativeConfig.cs">
-      <Link>MonoNativeConfig.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\common\PlatformInfo.cs">
-      <Link>PlatformInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\common\TestRuntime.cs">
-      <Link>TestRuntime.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiAvailabilityTest.cs">
-      <Link>ApiAvailabilityTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\tools\common\Frameworks.cs">
-      <Link>Frameworks.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\tools\common\ApplePlatform.cs">
-      <Link>ApplePlatform.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\..\tools\common\SdkVersions.cs">
-      <Link>SdkVersions.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiFrameworkTest.cs">
-      <Link>ApiFrameworkTest.cs</Link>
-    </Compile>
-    <Compile Include="..\..\ApiTypeTest.cs">
-      <Link>ApiTypeTest.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="..\..\iOS\LaunchScreen.storyboard" />
-  </ItemGroup>
-  <ItemGroup>
-    <ImageAsset Include="..\..\iOS\Assets.xcassets\AppIcons.appiconset\Contents.json" />
-    <ImageAsset Include="..\..\iOS\Assets.xcassets\AppIcons.appiconset\Icon-app-60%403x.png" />
-    <ImageAsset Include="..\..\iOS\Assets.xcassets\AppIcons.appiconset\icon-app-57.png" />
-    <ImageAsset Include="..\..\iOS\Assets.xcassets\AppIcons.appiconset\icon-app-57%402x.png" />
-    <ImageAsset Include="..\..\iOS\Assets.xcassets\AppIcons.appiconset\icon-app-60%402x.png" />
-    <ImageAsset Include="..\..\iOS\Assets.xcassets\AppIcons.appiconset\icon-app-72.png" />
-    <ImageAsset Include="..\..\iOS\Assets.xcassets\AppIcons.appiconset\icon-app-72%402x.png" />
-    <ImageAsset Include="..\..\iOS\Assets.xcassets\AppIcons.appiconset\icon-app-76.png" />
-    <ImageAsset Include="..\..\iOS\Assets.xcassets\AppIcons.appiconset\icon-app-76%402x.png" />
-    <ImageAsset Include="..\..\iOS\Assets.xcassets\AppIcons.appiconset\icon-app-83.5%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="..\..\xamarin1.png">
-      <Link>xamarin1.png</Link>
-    </BundleResource>
-    <BundleResource Include="..\..\..\..\tools\mtouch\simlauncher64-sgen.frameworks">
-      <Link>simlauncher64-sgen.frameworks</Link>
-    </BundleResource>
+    <!-- this empty item group is here for xharness -->
   </ItemGroup>
 </Project>

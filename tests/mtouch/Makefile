@@ -20,18 +20,18 @@ all-local::
 
 run-tests: bin/Debug/mtouchtests.dll test.config
 	rm -f .failed-stamp
-	$(TOP)/tools/nunit3-console-3.11.1 "$(abspath $<)" "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=All --inprocess || touch $(CURDIR)/.failed-stamp
+	$(TOP)/tools/nunit3-console-3.11.1 "$(abspath $<)" "--result=$(abspath $(CURDIR)/TestResult.xml);format=nunit2" $(TEST_FIXTURE) --labels=After --inprocess || touch $(CURDIR)/.failed-stamp
 	@# Create an html file and tell MonkeyWrench to upload it (if we're running there)
 	@[[ -z "$$BUILD_REPOSITORY" ]] || \
 		( xsltproc $(TOP)/tests/HtmlTransform.xslt TestResult.xml  > index.html && \
 		echo "@MonkeyWrench: AddFile: $$PWD/index.html")
 	@[[ ! -e .failed-stamp ]] 
 
-# mtouchtests.csproj.inc contains the mtouch_dependencies variable used to determine if mtouchtests.dll needs to be rebuilt or not.
+# mtouchtests.csproj.inc contains the mtouchtests_dependencies variable used to determine if mtouchtests.dll needs to be rebuilt or not.
 -include mtouchtests.csproj.inc
 
-bin/Debug/mtouchtests.dll: $(mtouch_dependencies)
-	$(SYSTEM_XIBUILD) -- mtouchtests.csproj /r $(XBUILD_VERBOSITY)
+bin/Debug/mtouchtests.dll: $(mtouchtests_dependencies)
+	$(SYSTEM_XIBUILD) -- mtouchtests.csproj /r $(XBUILD_VERBOSITY) /bl
 	$(Q) rm -f .failed-stamp
 
 build: bin/Debug/mtouchtests.dll

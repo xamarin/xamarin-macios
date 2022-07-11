@@ -1,12 +1,14 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 
 namespace MonoTouchFixtures.HttpClientTests
@@ -92,14 +94,23 @@ namespace MonoTouchFixtures.HttpClientTests
 		[TestCase (typeof (NSUrlSessionHandler), 9)]
 		public void EnsureModifiabilityPostSend (Type handlerType, int macOSMinVersion)
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, macOSMinVersion, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, macOSMinVersion, throwIfOtherPlatform: false);
 
 			var wrapper = HandlerWrapper.GetWrapper (handlerType);
 			using (var client = new HttpClient (wrapper.Handler))
 			using (var request = new HttpRequestMessage (HttpMethod.Get, "http://xamarin.com")) {
 				var token = new CancellationTokenSource ();
 				client.SendAsync (request, token.Token);
-				Assert.Throws<InvalidOperationException> (() => wrapper.AllowAutoRedirect = !wrapper.AllowAutoRedirect);
+				Exception e = null;
+				try {
+					wrapper.AllowAutoRedirect = !wrapper.AllowAutoRedirect;
+					Assert.Fail ("Unexpectedly able to change AllowAutoRedirect");
+				} catch (InvalidOperationException ioe) {
+					e = ioe;
+				} catch (TargetInvocationException tie) {
+					e = tie.InnerException;
+				}
+				Assert.That (e, Is.InstanceOf<InvalidOperationException> (), "AllowAutoRedirect");
 				// cancel to ensure that we do not have side effects
 				token.Cancel ();
 			}
@@ -107,4 +118,3 @@ namespace MonoTouchFixtures.HttpClientTests
 	}
 }
 #endif
-

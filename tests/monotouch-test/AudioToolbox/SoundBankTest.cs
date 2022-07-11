@@ -12,9 +12,9 @@
 using System;
 using Foundation;
 using AudioToolbox;
-using CoreFoundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AudioToolbox {
 
@@ -27,7 +27,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetName ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			Assert.Throws<ArgumentNullException> (delegate { SoundBank.GetName (null); }, "null");
 
@@ -40,9 +40,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetName_DLS_SimOnly ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Use local file system (need a smaller sample)");
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertNotDevice ("Use local file system (need a smaller sample)");
 
 			using (NSUrl url = new NSUrl (local_dls)) {
 				Assert.That (SoundBank.GetName (url), Is.EqualTo ("QuickTime Music Synthesizer  "), "Name");
@@ -53,8 +52,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetInstrumentInfo ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			Assert.Throws<ArgumentNullException> (delegate { SoundBank.GetInstrumentInfo (null); }, "null");
 
@@ -67,9 +66,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetInstrumentInfo_DLS_SimOnly ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Use local file system (need a smaller sample)");
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertNotDevice ("Use local file system (need a smaller sample)");
 
 			using (NSUrl url = new NSUrl (local_dls)) {
 				var info = SoundBank.GetInstrumentInfo (url);

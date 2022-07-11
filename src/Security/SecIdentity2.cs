@@ -11,6 +11,9 @@
 //
 // Copyrigh 2018 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -18,12 +21,32 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Security {
 
-	[TV (12,0), Mac (10,14), iOS (12,0), Watch (5,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
+	[Watch (5,0)]
+#endif
 	public class SecIdentity2 : NativeObject {
-		internal SecIdentity2 (IntPtr handle) : base (handle, false) {}
-		public SecIdentity2 (IntPtr handle, bool owns) : base (handle, owns) {}
+#if NET
+		[Preserve (Conditional = true)]
+		internal SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		internal SecIdentity2 (NativeHandle handle) : base (handle, false) {}
+		[Preserve (Conditional = true)]
+		public SecIdentity2 (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 #if !COREBUILD
 		[DllImport (Constants.SecurityLibrary)]
@@ -31,8 +54,8 @@ namespace Security {
 
 		public SecIdentity2 (SecIdentity identity)
 		{
-			if (identity == null)
-				throw new ArgumentNullException (nameof (identity));
+			if (identity is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 
 			InitializeHandle (sec_identity_create (identity.Handle));
 		}
@@ -42,10 +65,10 @@ namespace Security {
 
 		public SecIdentity2 (SecIdentity identity, params SecCertificate [] certificates)
 		{
-			if (identity == null)
-				throw new ArgumentNullException (nameof (identity));
-			if (certificates == null)
-				throw new ArgumentNullException (nameof (certificates));
+			if (identity is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
+			if (certificates is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificates));
 			using (var nsarray = NSArray.FromObjects (certificates))
 				InitializeHandle (sec_identity_create_with_certificates (identity.Handle, nsarray.Handle));
 		}
@@ -70,7 +93,17 @@ namespace Security {
 			}
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (6,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[DllImport (Constants.SecurityLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
  		static extern bool sec_identity_access_certificates (IntPtr identity, ref BlockLiteral block);
@@ -82,17 +115,27 @@ namespace Security {
 		static void TrampolineAccessCertificates (IntPtr block, IntPtr cert)
 		{
 			var del = BlockLiteral.GetTarget<Action<SecCertificate2>> (block);
-			if (del != null)
+			if (del is not null)
 				del (new SecCertificate2 (cert, false));
 		}
 
-		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (6,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		// no [Async] as it can be called multiple times
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public bool AccessCertificates (Action</* sec_identity_t */SecCertificate2> handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			try {

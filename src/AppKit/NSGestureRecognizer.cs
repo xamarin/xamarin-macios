@@ -1,4 +1,4 @@
-﻿// 
+// 
 // NSGestureRecognizer: Implements some helper methods for NSGestureRecognizer
 //
 // Authors:
@@ -6,10 +6,14 @@
 //     
 // Copyright 2014 Xamarin Inc. All rights reserved
 //
+
+#if !__MACCATALYST__
+
 using System;
 using System.Collections;
 using Foundation; 
 using ObjCRuntime;
+using System.Runtime.Versioning;
 
 namespace AppKit {
 	public partial class NSGestureRecognizer {
@@ -30,6 +34,10 @@ namespace AppKit {
 			MarkDirty ();
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		[Register ("__NSGestureRecognizerToken")]
 		[Preserve (Conditional = true)]
 		public class Token : NSObject {
@@ -39,6 +47,10 @@ namespace AppKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		[Register ("__NSGestureRecognizerParameterlessToken")]
 		[Preserve (Conditional = true)]
 		public class ParameterlessDispatch : Token {
@@ -57,6 +69,10 @@ namespace AppKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.10")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#endif
 		[Register ("__NSGestureRecognizerParametrizedToken")]
 		[Preserve (Conditional = true)]
 		public class ParametrizedDispatch : Token {
@@ -191,3 +207,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

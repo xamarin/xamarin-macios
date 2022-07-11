@@ -34,6 +34,8 @@ namespace UIKit {
 		// Called by the Dispose() method, because this can run from a finalizer, we need to
 		// (a) reference the handle, that we will release later, and (b) to remove the targets on the
 		// UI thread.
+		// Note: preserving this member allows us to re-enable the `Optimizable` binding flag
+		[Preserve (Conditional = true)]
 		void OnDispose ()
 		{
 			var copyOfRecognizers = recognizers;

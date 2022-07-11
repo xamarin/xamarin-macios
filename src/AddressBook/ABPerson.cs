@@ -28,6 +28,8 @@
 //
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -38,9 +40,21 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	static class ABPersonPropertyId {
 
 		public static int Address {get; private set;}
@@ -168,17 +182,28 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public static class ABPersonAddressKey {
 
-		public static NSString City {get; private set;}
-		public static NSString Country {get; private set;}
-		public static NSString CountryCode {get; private set;}
-		public static NSString State {get; private set;}
-		public static NSString Street {get; private set;}
-		public static NSString Zip {get; private set;}
+		public static NSString? City { get; private set; }
+		public static NSString? Country { get; private set; }
+		public static NSString? CountryCode { get; private set; }
+		public static NSString? State { get; private set; }
+		public static NSString? Street { get; private set; }
+		public static NSString? Zip { get; private set; }
 
 		static ABPersonAddressKey ()
 		{
@@ -197,11 +222,22 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public static class ABPersonDateLabel {
-		public static NSString Anniversary {get; private set;}
+		public static NSString? Anniversary {get; private set;}
 
 		static ABPersonDateLabel ()
 		{
@@ -214,10 +250,18 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[UnsupportedOSPlatform ("ios9.0")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+#if IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	static class ABPersonKindId {
-		public static NSNumber Organization {get; private set;}
-		public static NSNumber Person {get; private set;}
+		public static NSNumber? Organization { get; private set; }
+		public static NSNumber? Person { get; private set; }
 
 		static ABPersonKindId ()
 		{
@@ -240,7 +284,7 @@ namespace AddressBook {
 			return ABPersonKind.None;
 		}
 
-		public static NSNumber FromPersonKind (ABPersonKind value)
+		public static NSNumber? FromPersonKind (ABPersonKind value)
 		{
 			switch (value) {
 				case ABPersonKind.Organization: return Organization;
@@ -250,14 +294,25 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	static class ABPersonSocialProfile {
-		public static readonly NSString URLKey;
-		public static readonly NSString ServiceKey;
-		public static readonly NSString UsernameKey;
-		public static readonly NSString UserIdentifierKey;
+		public static readonly NSString? URLKey;
+		public static readonly NSString? ServiceKey;
+		public static readonly NSString? UsernameKey;
+		public static readonly NSString? UserIdentifierKey;
 
 		static ABPersonSocialProfile ()
 		{
@@ -269,19 +324,29 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public static class ABPersonSocialProfileService
 	{
-		public static readonly NSString Twitter;
-		public static readonly NSString GameCenter;
-		public static readonly NSString Facebook;
-		public static readonly NSString Myspace;
-		public static readonly NSString LinkedIn;
-		public static readonly NSString Flickr;
-		// Since 6.0
-		public static readonly NSString SinaWeibo;
+		public static readonly NSString? Twitter;
+		public static readonly NSString? GameCenter;
+		public static readonly NSString? Facebook;
+		public static readonly NSString? Myspace;
+		public static readonly NSString? LinkedIn;
+		public static readonly NSString? Flickr;
+		public static readonly NSString? SinaWeibo;
 
 		static ABPersonSocialProfileService ()
 		{
@@ -296,17 +361,28 @@ namespace AddressBook {
 		}		
 	}
 	
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public static class ABPersonPhoneLabel {
-		public static NSString HomeFax {get; private set;}
-		public static NSString iPhone {get; private set;}
-		public static NSString Main {get; private set;}
-		public static NSString Mobile {get; private set;}
-		public static NSString Pager {get; private set;}
-		public static NSString WorkFax {get; private set;}
-		public static NSString OtherFax { get; private set; }
+		public static NSString? HomeFax { get; private set; }
+		public static NSString? iPhone { get; private set; }
+		public static NSString? Main { get; private set; }
+		public static NSString? Mobile { get; private set; }
+		public static NSString? Pager { get; private set; }
+		public static NSString? WorkFax { get; private set; }
+		public static NSString? OtherFax { get; private set; }
 
 		static ABPersonPhoneLabel ()
 		{
@@ -322,27 +398,35 @@ namespace AddressBook {
 			Mobile  = Dlfcn.GetStringConstant (handle, "kABPersonPhoneMobileLabel");
 			Pager   = Dlfcn.GetStringConstant (handle, "kABPersonPhonePagerLabel");
 			WorkFax = Dlfcn.GetStringConstant (handle, "kABPersonPhoneWorkFAXLabel");
-
-			// Since 5.0
 			OtherFax = Dlfcn.GetStringConstant (handle, "kABPersonPhoneOtherFAXLabel");
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public static class ABPersonInstantMessageService {
-		public static NSString Aim {get; private set;}
-		public static NSString Icq {get; private set;}
-		public static NSString Jabber {get; private set;}
-		public static NSString Msn {get; private set;}
-		public static NSString Yahoo {get; private set;}
-		// Since 5.0
-		public static NSString QQ {get; private set;}
-		public static NSString GoogleTalk {get; private set;}
-		public static NSString Skype {get; private set;}
-		public static NSString Facebook {get; private set;}
-		public static NSString GaduGadu {get; private set;}
+		public static NSString? Aim { get; private set; }
+		public static NSString? Icq { get; private set; }
+		public static NSString? Jabber { get; private set; }
+		public static NSString? Msn { get; private set; }
+		public static NSString? Yahoo { get; private set; }
+		public static NSString? QQ { get; private set; }
+		public static NSString? GoogleTalk { get; private set; }
+		public static NSString? Skype { get; private set; }
+		public static NSString? Facebook { get; private set; }
+		public static NSString? GaduGadu { get; private set; }
 
 		static ABPersonInstantMessageService ()
 		{
@@ -365,12 +449,23 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public static class ABPersonInstantMessageKey {
-		public static NSString Service {get; private set;}
-		public static NSString Username {get; private set;}
+		public static NSString? Service { get; private set; }
+		public static NSString? Username { get; private set; }
 
 		static ABPersonInstantMessageKey ()
 		{
@@ -385,11 +480,22 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public static class ABPersonUrlLabel {
-		public static NSString HomePage {get; private set;}
+		public static NSString? HomePage { get; private set; }
 
 		static ABPersonUrlLabel ()
 		{
@@ -402,21 +508,32 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public static class ABPersonRelatedNamesLabel {
-		public static NSString Assistant {get; private set;}
-		public static NSString Brother {get; private set;}
-		public static NSString Child {get; private set;}
-		public static NSString Father {get; private set;}
-		public static NSString Friend {get; private set;}
-		public static NSString Manager {get; private set;}
-		public static NSString Mother {get; private set;}
-		public static NSString Parent {get; private set;}
-		public static NSString Partner {get; private set;}
-		public static NSString Sister {get; private set;}
-		public static NSString Spouse {get; private set;}
+		public static NSString? Assistant { get; private set; }
+		public static NSString? Brother { get; private set; }
+		public static NSString? Child { get; private set; }
+		public static NSString? Father { get; private set; }
+		public static NSString? Friend { get; private set; }
+		public static NSString? Manager { get; private set; }
+		public static NSString? Mother { get; private set; }
+		public static NSString? Parent { get; private set; }
+		public static NSString? Partner { get; private set; }
+		public static NSString? Sister { get; private set; }
+		public static NSString? Spouse { get; private set; }
 
 		static ABPersonRelatedNamesLabel ()
 		{
@@ -440,13 +557,24 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public static class ABLabel {
-		public static NSString Home {get; private set;}
-		public static NSString Other {get; private set;}
-		public static NSString Work {get; private set;}
+		public static NSString? Home { get; private set; }
+		public static NSString? Other { get; private set; }
+		public static NSString? Work { get; private set; }
 
 		static ABLabel ()
 		{
@@ -462,9 +590,20 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public class ABPerson : ABRecord, IComparable, IComparable<ABPerson> {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreate ();
@@ -479,44 +618,41 @@ namespace AddressBook {
 		extern static IntPtr ABPersonCreateInSource (IntPtr source);
 
 		public ABPerson (ABRecord source)
-			: base (IntPtr.Zero, true)
+			: base (ABPersonCreateInSource (ObjCRuntime.Runtime.ThrowOnNull (source, nameof (source)).Handle), true)
 		{
-			if (source == null)
-				throw new ArgumentNullException ("source");
-
-			Handle = ABPersonCreateInSource (source.Handle);
 		}
 
-		internal ABPerson (IntPtr handle, bool owns)
+		[Preserve (Conditional = true)]
+		internal ABPerson (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
 		}
 
-		internal ABPerson (IntPtr handle, ABAddressBook addressbook)
+		internal ABPerson (NativeHandle handle, ABAddressBook? addressbook)
 			: base (handle, false)
 		{
 			AddressBook = addressbook;
 		}
 
-		int IComparable.CompareTo (object o)
+		int IComparable.CompareTo (object? o)
 		{
 			var other = o as ABPerson;
-			if (other == null)
-				throw new ArgumentException ("Can only compare to other ABPerson instances.", "o");
+			if (other is null)
+				throw new ArgumentException ("Can only compare to other ABPerson instances.", nameof (o));
 			return CompareTo (other);
 		}
 
-		public int CompareTo (ABPerson other)
+		public int CompareTo (ABPerson? other)
 		{
-			return CompareTo (other, ABPersonSortBy.LastName);
+			return CompareTo (other!, ABPersonSortBy.LastName);
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static int ABPersonComparePeopleByName (IntPtr person1, IntPtr person2, ABPersonSortBy ordering);
 		public int CompareTo (ABPerson other, ABPersonSortBy ordering)
 		{
-			if (other == null)
-				throw new ArgumentNullException ("other");
+			if (other is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (other));
 			if (ordering != ABPersonSortBy.FirstName && ordering != ABPersonSortBy.LastName)
 				throw new ArgumentException ("Invalid ordering value: " + ordering, "ordering");
 			return ABPersonComparePeopleByName (Handle, other.Handle, ordering);
@@ -524,14 +660,14 @@ namespace AddressBook {
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyLocalizedPropertyName (int /* ABPropertyID = int32_t */ propertyId);
-		public static string LocalizedPropertyName (ABPersonProperty property)
+		public static string? LocalizedPropertyName (ABPersonProperty property)
 		{
-			return Runtime.GetNSObject (ABPersonCopyLocalizedPropertyName (ABPersonPropertyId.ToId (property))).ToString ();
+			return CFString.FromHandle (ABPersonCopyLocalizedPropertyName (ABPersonPropertyId.ToId (property)));
 		}
 
-		public static string LocalizedPropertyName (int propertyId)
+		public static string? LocalizedPropertyName (int propertyId)
 		{
-			return Runtime.GetNSObject (ABPersonCopyLocalizedPropertyName (propertyId)).ToString ();
+			return CFString.FromHandle (ABPersonCopyLocalizedPropertyName (propertyId));
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -552,11 +688,10 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyImageData (IntPtr person);
 
-		public NSData Image {
-			get {return (NSData) Runtime.GetNSObject (ABPersonCopyImageData (Handle));}
+		public NSData? Image {
+			get { return Runtime.GetNSObject<NSData> (ABPersonCopyImageData (Handle)); }
 			set {
-				IntPtr error;
-				if (!ABPersonSetImageData (Handle, value == null ? IntPtr.Zero : value.Handle, out error))
+				if (!ABPersonSetImageData (Handle, value.GetHandle (), out var error))
 					throw CFException.FromCFError (error);
 			}
 		}
@@ -573,40 +708,96 @@ namespace AddressBook {
 		extern static bool ABPersonRemoveImageData (IntPtr person, out IntPtr error);
 		public void RemoveImage ()
 		{
-			IntPtr error;
-			if (!ABPersonRemoveImageData (Handle, out error))
+			if (!ABPersonRemoveImageData (Handle, out var error))
 				throw CFException.FromCFError (error);
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static ABPersonCompositeNameFormat ABPersonGetCompositeNameFormat ();
 
+#if NET
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios7.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios7.0 use 'GetCompositeNameFormat (null)' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'GetCompositeNameFormat (null)' instead.")]
+#endif
 		public static ABPersonCompositeNameFormat CompositeNameFormat {
 			get {return ABPersonGetCompositeNameFormat ();}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
+#endif
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static ABPersonCompositeNameFormat ABPersonGetCompositeNameFormatForRecord (IntPtr record);
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
-		public static ABPersonCompositeNameFormat GetCompositeNameFormat (ABRecord record)
+#endif
+		public static ABPersonCompositeNameFormat GetCompositeNameFormat (ABRecord? record)
 		{
-			return ABPersonGetCompositeNameFormatForRecord (record == null ? IntPtr.Zero : record.Handle);
+			return ABPersonGetCompositeNameFormatForRecord (record.GetHandle ());
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
+#endif
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyCompositeNameDelimiterForRecord (IntPtr record);
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("maccatalyst14.0")]
+		[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+		[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[iOS (7,0)]
-		public static string GetCompositeNameDelimiter (ABRecord record)
+#endif
+		public static string? GetCompositeNameDelimiter (ABRecord? record)
 		{
-			var handle = ABPersonCopyCompositeNameDelimiterForRecord (record == null ? IntPtr.Zero : record.Handle);
-			if (handle == IntPtr.Zero)
-				return null;
-			return new CFString (handle, true);
+			var handle = ABPersonCopyCompositeNameDelimiterForRecord (record.GetHandle ());
+			return CFString.FromHandle (handle, true);
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
@@ -615,62 +806,62 @@ namespace AddressBook {
 			get {return ABPersonGetSortOrdering ();}
 		}
 
-		public string FirstName {
+		public string? FirstName {
 			get {return PropertyToString (ABPersonPropertyId.FirstName);}
 			set {SetValue (ABPersonPropertyId.FirstName, value);}
 		}
 
-		public string FirstNamePhonetic {
+		public string? FirstNamePhonetic {
 			get {return PropertyToString (ABPersonPropertyId.FirstNamePhonetic);}
 			set {SetValue (ABPersonPropertyId.FirstNamePhonetic, value);}
 		}
 
-		public string LastName {
+		public string? LastName {
 			get {return PropertyToString (ABPersonPropertyId.LastName);}
 			set {SetValue (ABPersonPropertyId.LastName, value);}
 		}
 
-		public string LastNamePhonetic {
+		public string? LastNamePhonetic {
 			get {return PropertyToString (ABPersonPropertyId.LastNamePhonetic);}
 			set {SetValue (ABPersonPropertyId.LastNamePhonetic, value);}
 		}
 
-		public string MiddleName {
+		public string? MiddleName {
 			get {return PropertyToString (ABPersonPropertyId.MiddleName);}
 			set {SetValue (ABPersonPropertyId.MiddleName, value);}
 		}
 
-		public string MiddleNamePhonetic {
+		public string? MiddleNamePhonetic {
 			get {return PropertyToString (ABPersonPropertyId.MiddleNamePhonetic);}
 			set {SetValue (ABPersonPropertyId.MiddleNamePhonetic, value);}
 		}
 
-		public string Prefix {
+		public string? Prefix {
 			get {return PropertyToString (ABPersonPropertyId.Prefix);}
 			set {SetValue (ABPersonPropertyId.Prefix, value);}
 		}
 
-		public string Suffix {
+		public string? Suffix {
 			get {return PropertyToString (ABPersonPropertyId.Suffix);}
 			set {SetValue (ABPersonPropertyId.Suffix, value);}
 		}
 
-		public string Nickname {
+		public string? Nickname {
 			get {return PropertyToString (ABPersonPropertyId.Nickname);}
 			set {SetValue (ABPersonPropertyId.Nickname, value);}
 		}
 
-		public string Organization {
+		public string? Organization {
 			get {return PropertyToString (ABPersonPropertyId.Organization);}
 			set {SetValue (ABPersonPropertyId.Organization, value);}
 		}
 
-		public string JobTitle {
+		public string? JobTitle {
 			get {return PropertyToString (ABPersonPropertyId.JobTitle);}
 			set {SetValue (ABPersonPropertyId.JobTitle, value);}
 		}
 
-		public string Department {
+		public string? Department {
 			get {return PropertyToString (ABPersonPropertyId.Department);}
 			set {SetValue (ABPersonPropertyId.Department, value);}
 		}
@@ -678,7 +869,7 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopySource (IntPtr group);
 
-		public ABRecord Source {
+		public ABRecord? Source {
 			get {
 				var h = ABPersonCopySource (Handle);
 				if (h == IntPtr.Zero)
@@ -688,188 +879,180 @@ namespace AddressBook {
 			}
 		}
 
-		internal static string ToString (IntPtr value)
+		internal static string ToString (NativeHandle value)
 		{
-			if (value == IntPtr.Zero)
-				return null;
-			return Runtime.GetNSObject (value).ToString ();
+			return CFString.FromHandle (value)!;
 		}
 
-		internal static IntPtr ToIntPtr (string value)
-		{
-			if (value == null)
-				return IntPtr.Zero;
-			return new NSString (value).Handle;
-		}
-
-		public ABMultiValue<string> GetEmails ()
+		public ABMultiValue<string>? GetEmails ()
 		{
 			return CreateStringMultiValue (CopyValue (ABPersonPropertyId.Email));
 		}
 
-		static ABMultiValue<string> CreateStringMultiValue (IntPtr handle)
+		static ABMultiValue<string>? CreateStringMultiValue (NativeHandle handle)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
-			return new ABMultiValue<string> (handle, ToString, ToIntPtr);
+			return new ABMultiValue<string> (handle, ABPerson.ToString, CFString.CreateNative, true);
 		}
 
-		public void SetEmails (ABMultiValue<string> value)
+		public void SetEmails (ABMultiValue<string>? value)
 		{
-			SetValue (ABPersonPropertyId.Email, value == null ? IntPtr.Zero : value.Handle);
+			SetValue (ABPersonPropertyId.Email, value.GetHandle ());
 		}
 
-		public NSDate Birthday {
+		public NSDate? Birthday {
 			get {return PropertyTo<NSDate> (ABPersonPropertyId.Birthday);}
 			set {SetValue (ABPersonPropertyId.Birthday, value);}
 		}
 
-		public string Note {
+		public string? Note {
 			get {return PropertyToString (ABPersonPropertyId.Note);}
 			set {SetValue (ABPersonPropertyId.Note, value);}
 		}
 
-		public NSDate CreationDate {
+		public NSDate? CreationDate {
 			get {return PropertyTo<NSDate> (ABPersonPropertyId.CreationDate);}
 			set {SetValue (ABPersonPropertyId.CreationDate, value);}
 		}
 
-		public NSDate ModificationDate {
+		public NSDate? ModificationDate {
 			get {return PropertyTo<NSDate> (ABPersonPropertyId.ModificationDate);}
 			set {SetValue (ABPersonPropertyId.ModificationDate, value);}
 		}
 
-		public ABMultiValue<PersonAddress> GetAllAddresses ()
+		public ABMultiValue<PersonAddress>? GetAllAddresses ()
 		{
 			return CreateDictionaryMultiValue<PersonAddress> (CopyValue (ABPersonPropertyId.Address), l => new PersonAddress (l));
 		}
 
 		// Obsolete
-		public void SetAddresses (ABMultiValue<NSDictionary> value)
+		public void SetAddresses (ABMultiValue<NSDictionary>? value)
 		{
-			SetValue (ABPersonPropertyId.Address, value == null ? IntPtr.Zero : value.Handle);
+			SetValue (ABPersonPropertyId.Address, value.GetHandle ());
 		}
 
-		public void SetAddresses (ABMultiValue<PersonAddress> addresses)
+		public void SetAddresses (ABMultiValue<PersonAddress>? addresses)
 		{
-			SetValue (ABPersonPropertyId.Address, addresses == null ? IntPtr.Zero : addresses.Handle);
+			SetValue (ABPersonPropertyId.Address, addresses.GetHandle ());
 		}
 
 		// Obsolete
-		static ABMultiValue<NSDictionary> CreateDictionaryMultiValue (IntPtr handle)
+		static ABMultiValue<NSDictionary>? CreateDictionaryMultiValue (NativeHandle handle)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
-			return new ABMultiValue<NSDictionary> (handle);
+			return new ABMultiValue<NSDictionary> (handle, true);
 		}
 
-		static ABMultiValue<T> CreateDictionaryMultiValue<T> (IntPtr handle, Func<NSDictionary, T> factory) where T : DictionaryContainer
+		static ABMultiValue<T>? CreateDictionaryMultiValue<T> (NativeHandle handle, Func<NSDictionary, T> factory) where T : DictionaryContainer
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
 
 			return new ABMultiValue<T> (handle,
-				l => factory ((NSDictionary) (object) Runtime.GetNSObject (l)),
-				l => l.Dictionary.Handle);
+				l => factory ((NSDictionary) (object) Runtime.GetNSObject (l)!),
+				l => l.Dictionary.Handle,
+				false);
 		}
 
-		public ABMultiValue<NSDate> GetDates ()
+		public ABMultiValue<NSDate>? GetDates ()
 		{
 			return CreateDateMultiValue (CopyValue (ABPersonPropertyId.Date));
 		}
 
-		static ABMultiValue<NSDate> CreateDateMultiValue (IntPtr handle)
+		static ABMultiValue<NSDate>? CreateDateMultiValue (NativeHandle handle)
 		{
-			if (handle == IntPtr.Zero)
+			if (handle == NativeHandle.Zero)
 				return null;
-			return new ABMultiValue<NSDate> (handle);
+			return new ABMultiValue<NSDate> (handle, true);
 		}
 
-		public void SetDates (ABMultiValue<NSDate> value)
+		public void SetDates (ABMultiValue<NSDate>? value)
 		{
-			SetValue (ABPersonPropertyId.Date, value == null ? IntPtr.Zero : value.Handle);
+			SetValue (ABPersonPropertyId.Date, value.GetHandle ());
 		}
 
 		public ABPersonKind PersonKind {
-			get {return ABPersonKindId.ToPersonKind (PropertyTo<NSNumber> (ABPersonPropertyId.Kind));}
-			set {SetValue (ABPersonPropertyId.Kind, ABPersonKindId.FromPersonKind (value));}
+			get { return ABPersonKindId.ToPersonKind (PropertyTo<NSNumber> (ABPersonPropertyId.Kind!)!); }
+			set { SetValue (ABPersonPropertyId.Kind!, ABPersonKindId.FromPersonKind (value)); }
 		}
 
-		public ABMultiValue<string> GetPhones ()
+		public ABMultiValue<string>? GetPhones ()
 		{
 			return CreateStringMultiValue (CopyValue (ABPersonPropertyId.Phone));
 		}
 
-		public void SetPhones (ABMultiValue<string> value)
+		public void SetPhones (ABMultiValue<string>? value)
 		{
-			SetValue (ABPersonPropertyId.Phone, value == null ? IntPtr.Zero : value.Handle);
+			SetValue (ABPersonPropertyId.Phone, value.GetHandle ());
 		}
 
 		[Advice ("Use GetInstantMessageServices")]
-		ABMultiValue<NSDictionary> GetInstantMessages ()
+		ABMultiValue<NSDictionary>? GetInstantMessages ()
 		{
 			return CreateDictionaryMultiValue (CopyValue (ABPersonPropertyId.InstantMessage));
 		}
 
-		public ABMultiValue<InstantMessageService> GetInstantMessageServices ()
+		public ABMultiValue<InstantMessageService>? GetInstantMessageServices ()
 		{
 			return CreateDictionaryMultiValue<InstantMessageService> (CopyValue (ABPersonPropertyId.InstantMessage), l => new InstantMessageService (l));
 		}
 
 		// Obsolete
-		public void SetInstantMessages (ABMultiValue<NSDictionary> value)
+		public void SetInstantMessages (ABMultiValue<NSDictionary>? value)
 		{
-			SetValue (ABPersonPropertyId.InstantMessage, value == null ? IntPtr.Zero : value.Handle);
+			SetValue (ABPersonPropertyId.InstantMessage, value.GetHandle ());
 		}
 
-		public void SetInstantMessages (ABMultiValue<InstantMessageService> services)
+		public void SetInstantMessages (ABMultiValue<InstantMessageService>? services)
 		{
-			SetValue (ABPersonPropertyId.InstantMessage, services == null ? IntPtr.Zero : services.Handle);
+			SetValue (ABPersonPropertyId.InstantMessage, services.GetHandle ());
 		}
 
 		[Advice ("Use GetSocialProfiles")]
-		ABMultiValue<NSDictionary> GetSocialProfile ()
+		ABMultiValue<NSDictionary>? GetSocialProfile ()
 		{
 			return CreateDictionaryMultiValue (CopyValue (ABPersonPropertyId.SocialProfile));
 		}
 
-		public ABMultiValue<SocialProfile> GetSocialProfiles ()
+		public ABMultiValue<SocialProfile>? GetSocialProfiles ()
 		{
 			return CreateDictionaryMultiValue<SocialProfile> (CopyValue (ABPersonPropertyId.SocialProfile), l => new SocialProfile (l));
 		}
 		
 		// Obsolete
-		public void SetSocialProfile (ABMultiValue<NSDictionary> value)
+		public void SetSocialProfile (ABMultiValue<NSDictionary>? value)
 		{
-			SetValue (ABPersonPropertyId.SocialProfile, value == null ? IntPtr.Zero : value.Handle);
+			SetValue (ABPersonPropertyId.SocialProfile, value.GetHandle ());
 		}
 
-		public void SetSocialProfile (ABMultiValue<SocialProfile> profiles)
+		public void SetSocialProfile (ABMultiValue<SocialProfile>? profiles)
 		{
-			SetValue (ABPersonPropertyId.SocialProfile, profiles == null ? IntPtr.Zero : profiles.Handle);
+			SetValue (ABPersonPropertyId.SocialProfile, profiles.GetHandle ());
 		}
 		
-		public ABMultiValue<string> GetUrls ()
+		public ABMultiValue<string>? GetUrls ()
 		{
 			return CreateStringMultiValue (CopyValue (ABPersonPropertyId.Url));
 		}
 
-		public void SetUrls (ABMultiValue<string> value)
+		public void SetUrls (ABMultiValue<string>? value)
 		{
-			SetValue (ABPersonPropertyId.Url, value == null ? IntPtr.Zero : value.Handle);
+			SetValue (ABPersonPropertyId.Url, value.GetHandle ());
 		}
 
-		public ABMultiValue<string> GetRelatedNames ()
+		public ABMultiValue<string>? GetRelatedNames ()
 		{
 			return CreateStringMultiValue (CopyValue (ABPersonPropertyId.RelatedNames));
 		}
 
-		public void SetRelatedNames (ABMultiValue<string> value)
+		public void SetRelatedNames (ABMultiValue<string>? value)
 		{
-			SetValue (ABPersonPropertyId.RelatedNames, value == null ? IntPtr.Zero : value.Handle);
+			SetValue (ABPersonPropertyId.RelatedNames, value.GetHandle ());
 		}
 
-		public object GetProperty (ABPersonProperty property)
+		public object? GetProperty (ABPersonProperty property)
 		{
 			switch (property) {
 				case ABPersonProperty.Address:             return GetAllAddresses ();
@@ -904,7 +1087,7 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyArrayOfAllLinkedPeople (IntPtr person);
 
-		public ABPerson[] GetLinkedPeople ()
+		public ABPerson?[]? GetLinkedPeople ()
 		{
 			var linked = ABPersonCopyArrayOfAllLinkedPeople (Handle);
 			return NSArray.ArrayFromHandle (linked, l => new ABPerson (l, null));
@@ -913,53 +1096,61 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCopyImageDataWithFormat (IntPtr handle, nint format);
 		
-		public NSData GetImage (ABPersonImageFormat format)
+		public NSData? GetImage (ABPersonImageFormat format)
 		{
 #if ARCH_32
-			return (NSData) Runtime.GetNSObject (ABPersonCopyImageDataWithFormat (Handle, (nint)(int)format));
+			return Runtime.GetNSObject<NSData> (ABPersonCopyImageDataWithFormat (Handle, (nint)(int)format));
 #else
-			return (NSData) Runtime.GetNSObject (ABPersonCopyImageDataWithFormat (Handle, (nint)(long)format));
+			return Runtime.GetNSObject<NSData> (ABPersonCopyImageDataWithFormat (Handle, (nint)(long)format));
 #endif
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreateVCardRepresentationWithPeople (IntPtr people);
 
-		public static NSData GetVCards (params ABPerson[] people)
+		public static NSData? GetVCards (params ABPerson[] people)
 		{
-			if (people == null)
-				throw new ArgumentNullException ("people");
+			if (people is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (people));
 
-			var ptrs = new IntPtr [people.Length];
+			var ptrs = new NativeHandle [people.Length];
 			for (int i = 0; i < people.Length; ++i) {
 				ptrs[i] = people[i].Handle;
 			}
 
 			var ptr = ABPersonCreateVCardRepresentationWithPeople (CFArray.Create (ptrs));
-			return new NSData (ptr, true);
+			return Runtime.GetNSObject<NSData> (ptr, true);
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABPersonCreatePeopleInSourceWithVCardRepresentation (IntPtr source, IntPtr vCardData);
 
-		public static ABPerson[] CreateFromVCard (ABRecord source, NSData vCardData)
+		public static ABPerson?[]? CreateFromVCard (ABRecord? source, NSData vCardData)
 		{
-			if (vCardData == null)
-				throw new ArgumentNullException ("vCardData");
+			if (vCardData is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (vCardData));
 
 			// TODO: SIGSEGV when source is not null
-			var res = ABPersonCreatePeopleInSourceWithVCardRepresentation (source == null ? IntPtr.Zero : source.Handle,
-				vCardData.Handle);
+			var res = ABPersonCreatePeopleInSourceWithVCardRepresentation (source.GetHandle (), vCardData.Handle);
 
 			return NSArray.ArrayFromHandle (res, l => new ABPerson (l, null));
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public class SocialProfile : DictionaryContainer
 	{
 		public SocialProfile ()
@@ -971,46 +1162,57 @@ namespace AddressBook {
 		{
 		}
 
-		public string ServiceName {
+		public string? ServiceName {
 			get {
-				return GetStringValue (ABPersonSocialProfile.ServiceKey);
+				return GetStringValue (ABPersonSocialProfile.ServiceKey!);
 			}
 			set {
-				SetStringValue (ABPersonSocialProfile.ServiceKey, value);
+				SetStringValue (ABPersonSocialProfile.ServiceKey!, value);
 			}			
 		}
 
-		public string Username {
+		public string? Username {
 			get {
-				return GetStringValue (ABPersonSocialProfile.UsernameKey);
+				return GetStringValue (ABPersonSocialProfile.UsernameKey!);
 			}
 			set {
-				SetStringValue (ABPersonSocialProfile.UsernameKey, value);
+				SetStringValue (ABPersonSocialProfile.UsernameKey!, value);
 			}
 		}
 
-		public string UserIdentifier {
+		public string? UserIdentifier {
 			get {
-				return GetStringValue (ABPersonSocialProfile.UserIdentifierKey);
+				return GetStringValue (ABPersonSocialProfile.UserIdentifierKey!);
 			}
 			set {
-				SetStringValue (ABPersonSocialProfile.UserIdentifierKey, value);
+				SetStringValue (ABPersonSocialProfile.UserIdentifierKey!, value);
 			}
 		}
 
-		public string Url {
+		public string? Url {
 			get {
-				return GetStringValue (ABPersonSocialProfile.URLKey);
+				return GetStringValue (ABPersonSocialProfile.URLKey!);
 			}
 			set {
-				SetStringValue (ABPersonSocialProfile.URLKey, value);
+				SetStringValue (ABPersonSocialProfile.URLKey!, value);
 			}
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public class InstantMessageService : DictionaryContainer
 	{
 		public InstantMessageService ()
@@ -1022,31 +1224,42 @@ namespace AddressBook {
 		{
 		}
 
-		public string ServiceName {
+		public string? ServiceName {
 			get {
 				// TODO: It does not return ABPersonInstantMessageService value. Underlying
 				// value is custom string, it coould be MT bug because this makes
 				// ABPersonInstantMessageService constants useless
-				return GetStringValue (ABPersonInstantMessageKey.Service);
+				return GetStringValue (ABPersonInstantMessageKey.Service!);
 			}
 			set {
-				SetStringValue (ABPersonInstantMessageKey.Service, value);
+				SetStringValue (ABPersonInstantMessageKey.Service!, value);
 			}
 		}
 
-		public string Username {
+		public string? Username {
 			get {
-				return GetStringValue (ABPersonInstantMessageKey.Username);
+				return GetStringValue (ABPersonInstantMessageKey.Username!);
 			}
 			set {
-				SetStringValue (ABPersonInstantMessageKey.Username, value);
+				SetStringValue (ABPersonInstantMessageKey.Username!, value);
 			}
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public class PersonAddress : DictionaryContainer
 	{
 		public PersonAddress ()
@@ -1058,57 +1271,57 @@ namespace AddressBook {
 		{
 		}
 
-		public string City {
+		public string? City {
 			get {
-				return GetStringValue (ABPersonAddressKey.City);
+				return GetStringValue (ABPersonAddressKey.City!);
 			}
 			set {
-				SetStringValue (ABPersonAddressKey.City, value);
+				SetStringValue (ABPersonAddressKey.City!, value);
 			}
 		}
 
-		public string Country {
+		public string? Country {
 			get {
-				return GetStringValue (ABPersonAddressKey.Country);
+				return GetStringValue (ABPersonAddressKey.Country!);
 			}
 			set {
-				SetStringValue (ABPersonAddressKey.Country, value);
+				SetStringValue (ABPersonAddressKey.Country!, value);
 			}
 		}
 
-		public string CountryCode {
+		public string? CountryCode {
 			get {
-				return GetStringValue (ABPersonAddressKey.CountryCode);
+				return GetStringValue (ABPersonAddressKey.CountryCode!);
 			}
 			set {
-				SetStringValue (ABPersonAddressKey.CountryCode, value);
+				SetStringValue (ABPersonAddressKey.CountryCode!, value);
 			}
 		}
 
-		public string State {
+		public string? State {
 			get {
-				return GetStringValue (ABPersonAddressKey.State);
+				return GetStringValue (ABPersonAddressKey.State!);
 			}
 			set {
-				SetStringValue (ABPersonAddressKey.State, value);
+				SetStringValue (ABPersonAddressKey.State!, value);
 			}
 		}
 
-		public string Street {
+		public string? Street {
 			get {
-				return GetStringValue (ABPersonAddressKey.Street);
+				return GetStringValue (ABPersonAddressKey.Street!);
 			}
 			set {
-				SetStringValue (ABPersonAddressKey.Street, value);
+				SetStringValue (ABPersonAddressKey.Street!, value);
 			}
 		}
 
-		public string Zip {
+		public string? Zip {
 			get {
-				return GetStringValue (ABPersonAddressKey.Zip);
+				return GetStringValue (ABPersonAddressKey.Zip!);
 			}
 			set {
-				SetStringValue (ABPersonAddressKey.Zip, value);
+				SetStringValue (ABPersonAddressKey.Zip!, value);
 			}
 		}
 	}

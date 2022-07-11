@@ -50,6 +50,16 @@ using ObjCRuntime;
 using Metal;
 using SceneKit; // For SCNAnimationEvent
 
+#if !MONOMAC
+using CGLPixelFormat = Foundation.NSObject;
+using CVTimeStamp = Foundation.NSObject;
+using CGLContext = System.IntPtr;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreAnimation {
 
 	[BaseType (typeof (NSObject))]
@@ -91,7 +101,7 @@ namespace CoreAnimation {
 
 	interface ICAMediaTiming {}
 
-#if MONOMAC
+	[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CAConstraintLayoutManager : NSCoding {
 		[Static]
@@ -99,6 +109,7 @@ namespace CoreAnimation {
 		CAConstraintLayoutManager LayoutManager { get; }
 	}
 	
+	[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 	[BaseType (typeof (NSObject))]
 	interface CAConstraint : NSSecureCoding {
 		[Export ("attribute")]
@@ -126,10 +137,10 @@ namespace CoreAnimation {
 		CAConstraint Create (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttribute);
 
 		[Export ("initWithAttribute:relativeTo:attribute:scale:offset:")]
-		IntPtr Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
+		NativeHandle Constructor (CAConstraintAttribute attribute, string relativeToSource, CAConstraintAttribute srcAttr, nfloat scale, nfloat offset);
 	}
-	
-#else
+
+	[NoMac]
 	[BaseType (typeof (NSObject))]
 	interface CADisplayLink {
 		[Export ("displayLinkWithTarget:selector:")][Static]
@@ -169,11 +180,17 @@ namespace CoreAnimation {
 		[Export ("targetTimestamp")]
 		double TargetTimestamp { get; }
 
+		[Deprecated (PlatformName.iOS, 15,0, message: "Use 'PreferredFrameRateRange' property.")]
+		[Deprecated (PlatformName.TvOS, 15,0, message: "Use 'PreferredFrameRateRange' property.")]
+		[Deprecated (PlatformName.WatchOS, 8,0, message: "Use 'PreferredFrameRateRange' property.")]
 		[Watch (3,0)][TV (10,0)][iOS (10,0)]
 		[Export ("preferredFramesPerSecond")]
 		nint PreferredFramesPerSecond { get; set; }
+
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
-#endif
 
 	[Watch (3,0)][TV (10,0)][Mac (10,12)][iOS (10,0)]
 	enum CAContentsFormat {
@@ -185,8 +202,9 @@ namespace CoreAnimation {
 		Rgba16Float,
 	}
 
+
 	[BaseType (typeof (NSObject))]
-	[Dispose ("OnDispose ();")]
+	[Dispose ("OnDispose ();", Optimizable = true)]
 	interface CALayer : CAMediaTiming, NSSecureCoding {
 		[Export ("layer")][Static]
 		CALayer Create ();
@@ -310,11 +328,10 @@ namespace CoreAnimation {
 		[Export ("contents", ArgumentSemantic.Strong)][Internal][Sealed]
 		IntPtr _Contents { get; set; }
 
-#if MONOMAC
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("layoutManager", ArgumentSemantic.Retain)]
 		[NullAllowed]
 		NSObject LayoutManager { get; set; }
-#endif
 
 		[Export ("contentsScale")]
 		nfloat ContentsScale { get; set; }
@@ -432,7 +449,7 @@ namespace CoreAnimation {
 		string Name { get; set; }
 
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
-		NSObject WeakDelegate { get; [PostSnippet (@"SetCALayerDelegate (value as CALayerDelegate);")] set; }
+		NSObject WeakDelegate { get; [PostSnippet (@"SetCALayerDelegate (value as CALayerDelegate);", Optimizable = true)] set; }
 
 		[Wrap ("WeakDelegate")]
 		[Protocolize]
@@ -533,23 +550,26 @@ namespace CoreAnimation {
 		[Export ("minificationFilterBias")]
 		float MinificationFilterBias { get; set; } /* float, not CGFloat */
 
-#if MONOMAC
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("autoresizingMask")]
 		CAAutoresizingMask AutoresizingMask { get; set; }
 
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("resizeSublayersWithOldSize:")]
 		void ResizeSublayers (CGSize oldSize);
 
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("resizeWithOldSuperlayerSize:")]
 		void Resize (CGSize oldSuperlayerSize);
 		
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("constraints")]
 		[NullAllowed]
 		CAConstraint[] Constraints { get; set;  }
 
+		[NoiOS][NoTV][NoWatch][MacCatalyst (13, 1)]
 		[Export ("addConstraint:")]
 		void AddConstraint (CAConstraint c);
-#endif
 
 		[Export ("shouldRasterize")]
 		bool ShouldRasterize { get; set; }
@@ -618,7 +638,7 @@ namespace CoreAnimation {
 		CAMetalLayer Layer { get; }
 	}
 
-	[iOS (8,0)][Mac (10,11)]
+	[iOS (8,0)][Mac (10,11)][MacCatalyst (13,0)]
 	[BaseType (typeof (CALayer))]
 	interface CAMetalLayer {
 		[NullAllowed] // by default this property is null
@@ -643,6 +663,7 @@ namespace CoreAnimation {
 
 		[NoWatch][NoTV][NoiOS]
 		[Mac (10,13)]
+		[MacCatalyst (13,0)]
 		[Export ("displaySyncEnabled")]
 		bool DisplaySyncEnabled { get; set; }
 
@@ -668,6 +689,7 @@ namespace CoreAnimation {
 
 		[NoWatch][NoiOS][NoTV]
 		[Mac (10,15)]
+		[MacCatalyst (13,0)]
 		[NullAllowed, Export ("EDRMetadata", ArgumentSemantic.Strong)]
 		CAEdrMetadata EdrMetadata { get; set; }
 	}
@@ -730,11 +752,21 @@ namespace CoreAnimation {
 		[Export ("layer"), New, Static]
 		CALayer Create ();
 
-#if XAMCORE_4_0
+#if NET
 		[Protected]
-#endif
+		[Export ("scrollMode", ArgumentSemantic.Copy)]
+		NSString WeakScrollMode { get; set; }
+
+		CAScroll ScrollMode {
+			[Wrap ("CAScrollExtensions.GetValue (WeakScrollMode)")]
+			get;
+			[Wrap ("WeakScrollMode = value.GetConstant ()!")]
+			set;
+		}
+#else
 		[Export ("scrollMode", ArgumentSemantic.Copy)]
 		NSString ScrollMode { get; set;  }
+#endif
 
 		[Export ("scrollToPoint:")]
 		void ScrollToPoint (CGPoint p);
@@ -899,7 +931,7 @@ namespace CoreAnimation {
 		[Export ("alignmentMode", ArgumentSemantic.Copy)]
 		NSString WeakAlignmentMode { get; set; }
 
-#if !XAMCORE_4_0 // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
+#if !NET // Use smart enums instead, CATruncationMode and CATextLayerAlignmentMode.
 		[Obsolete ("Use 'CATextLayerTruncationMode.None.GetConstant ()' instead.")]
 		[Static]
 		[Wrap ("CATextLayerTruncationMode.None.GetConstant ()")]
@@ -944,7 +976,7 @@ namespace CoreAnimation {
 		[Static]
 		[Wrap ("CATextLayerAlignmentMode.Justified.GetConstant ()")]
 		NSString AlignmentJustified { get; }
-#endif // !XAMCORE_4_0
+#endif // !NET
 
 		[iOS(9,0)]
 		[Export ("allowsFontSubpixelQuantization")]
@@ -982,6 +1014,7 @@ namespace CoreAnimation {
 	}
 	
 #if HAS_OPENGLES
+	[NoMac][NoMacCatalyst]
 	[Deprecated (PlatformName.TvOS, 12, 0, message: "Use 'CAMetalLayer' instead.")]
 	[Deprecated (PlatformName.WatchOS, 5, 0, message: "Use 'CAMetalLayer' instead.")]
 	[Deprecated (PlatformName.iOS, 12, 0, message: "Use 'CAMetalLayer' instead.")]
@@ -1007,7 +1040,7 @@ namespace CoreAnimation {
 	}
 	
 	[BaseType (typeof (NSObject)
-#if XAMCORE_4_0
+#if NET
 		, Delegates = new string [] {"WeakDelegate"}, Events = new Type [] { typeof (CAAnimationDelegate) }
 #endif
 	)]
@@ -1024,7 +1057,7 @@ namespace CoreAnimation {
 		[Export ("timingFunction", ArgumentSemantic.Strong)]
 		CAMediaTimingFunction TimingFunction { get; set; }
 	
-#if XAMCORE_4_0
+#if NET
 		// before that we need to be wrap this manually to avoid the BI1110 error
 		[Wrap ("WeakDelegate")]
 		ICAAnimationDelegate Delegate { get; set; }
@@ -1073,7 +1106,7 @@ namespace CoreAnimation {
 		[Field ("kCAAnimationLinear")]
 		NSString AnimationLinear { get; }
 				
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("kCAAnimationDiscrete")]
 		[Obsolete ("The name has been fixed, use 'AnimationDiscrete' instead.")]
 		NSString AnimationDescrete { get; }
@@ -1122,6 +1155,10 @@ namespace CoreAnimation {
 		SCNAnimationEvent [] AnimationEvents { get; set; }
 
 		#endregion
+
+		[Watch (8, 0), TV (15, 0), iOS (15, 0), MacCatalyst (15,0), Mac (12,0)]
+		[Export ("preferredFrameRateRange", ArgumentSemantic.Assign)]
+		CAFrameRateRange PreferredFrameRateRange { get; set; }
 	}
 
 	interface ICAAnimationDelegate {}
@@ -1381,11 +1418,11 @@ namespace CoreAnimation {
 		[Export ("endPoint")]
 		CGPoint EndPoint { get; set;  }
 
-#if XAMCORE_4_0
+#if NET
 		CAGradientLayerType LayerType {
 			[Wrap ("CAGradientLayerTypeExtensions.GetValue (WeakLayerType)")]
 			get;
-			[Wrap ("WeakLayerType = value.GetConstant ()")]
+			[Wrap ("WeakLayerType = value.GetConstant ()!")]
 			set;
 		}
 
@@ -1435,7 +1472,7 @@ namespace CoreAnimation {
 		CAMediaTimingFunction FromControlPoints (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
 	
 		[Export ("initWithControlPoints::::")]
-		IntPtr Constructor (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
+		NativeHandle Constructor (float c1x, float c1y, float c2x, float c2y); /* all float, not CGFloat */
 	
 		[Export ("getControlPointAtIndex:values:"), Internal]
 		void GetControlPointAtIndex (nint idx, IntPtr /* float[2] */ point);
@@ -1500,7 +1537,7 @@ namespace CoreAnimation {
 		
 	}
 
-#if MONOMAC
+	[NoiOS][NoTV][NoWatch]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'CAMetalLayer' instead.")]
 	[BaseType (typeof (CALayer))]
 	interface CAOpenGLLayer {
@@ -1527,9 +1564,7 @@ namespace CoreAnimation {
 
 		[Export ("releaseCGLContext:")]
 		void Release (CGLContext glContext);
-
 	}
-#endif
 
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterCell : CAMediaTiming, NSSecureCoding {
@@ -1766,13 +1801,13 @@ namespace CoreAnimation {
 // rdar #33590997 was filled - no news
 // 'initWithType:', 'behaviorWithType:' and 'behaviorTypes' API now cause rejection
 // https://trello.com/c/J8BDDUV9/86-33590997-coreanimation-quartzcore-api-removals
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (7,0), Mac (10, 9)]
 	[BaseType (typeof (NSObject))]
 	interface CAEmitterBehavior : NSSecureCoding {
 
 		// [Export ("initWithType:")]
-		// IntPtr Constructor (NSString type);
+		// NativeHandle Constructor (NSString type);
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -1814,7 +1849,6 @@ namespace CoreAnimation {
 	}
 #endif
 
-#if MONOMAC
 	[Internal]
 	[Static]
 	[NoiOS][NoTV][NoWatch]
@@ -1827,6 +1861,7 @@ namespace CoreAnimation {
 		NSString MetalCommandQueue { get; }
 	}
 
+	[NoiOS][NoTV][NoWatch]
 	[StrongDictionary ("CARendererOptionKeys")]
 	interface CARendererOptions {
 
@@ -1889,6 +1924,7 @@ namespace CoreAnimation {
 	}
 
 	[NoWatch][NoiOS][NoTV]
+	[MacCatalyst (13,1)]
 	[Mac (10,15)]
 	[BaseType (typeof (NSObject), Name = "CAEDRMetadata")]
 	[DisableDefaultCtor]
@@ -1906,5 +1942,4 @@ namespace CoreAnimation {
 		[Export ("HLGMetadata", ArgumentSemantic.Retain)]
 		CAEdrMetadata HlgMetadata { get; }
 	}
-#endif
 }

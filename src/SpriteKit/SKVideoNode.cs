@@ -1,4 +1,4 @@
-﻿//
+//
 // SKVideoNode.cs: extensions to SKVideoNode
 //
 // Authors:
@@ -20,9 +20,9 @@ namespace SpriteKit {
 		static bool CheckSystemVersion ()
 		{
 #if MONOMAC
-			return PlatformHelper.CheckSystemVersion (10, 10);
+			return SystemVersion.CheckmacOS (10, 10);
 #elif TVOS || IOS
-			return UIKit.UIDevice.CurrentDevice.CheckSystemVersion (8, 0);
+			return SystemVersion.CheckiOS (8, 0);
 #else
 			#error Unknown platform
 #endif

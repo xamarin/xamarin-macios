@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>latest</LangVersion>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
   </PropertyGroup>
 
   <Import Project="..\..\eng\Versions.props" />
@@ -14,6 +16,7 @@
     <PackageReference Include="Microsoft.Build.Tasks.Core" Version="16.8.0" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.8.0" IncludeAssets="compile" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="$(MicrosoftNETILLinkTasksPackageVersion)" />
+    <PackageReference Include="Microsoft.NET.Runtime.MonoTargets.Sdk" Version="$(MicrosoftNETILStripTasksPackageVersion)" GeneratePathProperty="true"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
@@ -23,6 +26,10 @@
     <Reference Include="ILLink.Tasks">
       <!-- We need the net472 impl, otherwise the Build agent needs to be a net5.0 app -->
       <HintPath>$(PkgMicrosoft_NET_ILLink_Tasks)\tools\net472\ILLink.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="ILStrip">
+      <!-- We need the net472 impl, otherwise the Build agent needs to be a net5.0 app -->
+      <HintPath>$(PkgMicrosoft_NET_Runtime_MonoTargets_Sdk)\tasks\net472\ILStrip.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

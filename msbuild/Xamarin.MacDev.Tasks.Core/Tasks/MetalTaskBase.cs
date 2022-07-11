@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Collections.Generic;
 
@@ -48,8 +48,24 @@ namespace Xamarin.MacDev.Tasks
 		[Output]
 		public ITaskItem OutputFile { get; set; }
 
-		protected abstract string DevicePlatformBinDir {
-			get;
+		string DevicePlatformBinDir {
+			get {
+				switch (Platform) {
+				case ApplePlatform.iOS:
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					return AppleSdkSettings.XcodeVersion.Major >= 11
+						? Path.Combine (SdkDevPath, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin")
+						: Path.Combine (SdkDevPath, "Platforms", "iPhoneOS.platform", "usr", "bin");
+				case ApplePlatform.MacOSX:
+				case ApplePlatform.MacCatalyst:
+					return AppleSdkSettings.XcodeVersion.Major >= 10
+						? Path.Combine (SdkDevPath, "Toolchains", "XcodeDefault.xctoolchain", "usr", "bin")
+						: Path.Combine (SdkDevPath, "Platforms", "MacOSX.platform", "usr", "bin");
+				default:
+					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
 		}
 
 		protected override string ToolName {

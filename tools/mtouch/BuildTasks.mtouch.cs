@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -290,8 +290,8 @@ namespace Xamarin.Bundler
 						}
 					}
 					// mtouch does not validate extra parameters given to GCC when linking (--gcc_flags)
-					if (Target.App.UserGccFlags?.Count > 0)
-						linker_errors.Add (new ProductException (5201, true, Errors.MT5201, StringUtils.FormatArguments (Target.App.UserGccFlags)));
+					if (Target.App.CustomLinkFlags?.Count > 0)
+						linker_errors.Add (new ProductException (5201, true, Errors.MT5201, StringUtils.FormatArguments (Target.App.CustomLinkFlags)));
 					else
 						linker_errors.Add (new ProductException (5202, true, Errors.MT5202));
 

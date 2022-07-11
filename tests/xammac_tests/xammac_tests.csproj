@@ -14,6 +14,7 @@
     <LangVersion>latest</LangVersion>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <RootTestsDirectory>..</RootTestsDirectory>
+    <CompilerResponseFile>$(RootTestsDirectory)\..\src\build\macos-defines.rsp</CompilerResponseFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -143,7 +144,7 @@
     <Compile Include="..\..\tools\common\StringUtils.cs">
       <Link>StringUtils.cs</Link>
     </Compile>
-    <Compile Include="..\monotouch-test\**\*.cs" Exclude="..\monotouch-test\obj\**">
+    <Compile Include="..\monotouch-test\**\*.cs" Exclude="..\monotouch-test\**\obj\**">
       <Link>%(RecursiveDir)%(Filename).cs</Link>
     </Compile>
     <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
@@ -308,8 +309,9 @@
     <Exec Command="xcrun -sdk macosx metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -mmacos-version-min=10.13" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)"/>
     <Exec Command="xcrun -sdk macosx metallib $(IntermediateOutputPath)\Contents\Resources\fragmentShader.air -o $(AppBundleDir)\Contents\Resources\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
   </Target>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting">
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
-    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" />
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting"
+      Condition="!Exists('$(TestLibrariesDirectory)/.libs/macos/custom-type-assembly.dll') Or !Exists('$(TestLibrariesDirectory)/.libs/dotnet/macos/custom-type-assembly.dll')" >
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath="/>
+    <Exec Command="make -j8 -C $(TestLibrariesDirectory)/custom-type-assembly build-assembly" EnvironmentVariables="MSBUILD_EXE_PATH=;MSBuildSDKsPath="/>
   </Target>
 </Project>

@@ -1,4 +1,4 @@
-﻿using Foundation;
+using Foundation;
 using System.CodeDom.Compiler;
 
 namespace MyMetalGame
@@ -11,4 +11,3 @@ namespace MyMetalGame
 		}
 	}
 }
-

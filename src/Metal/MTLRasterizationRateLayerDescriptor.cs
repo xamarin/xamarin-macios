@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 using Foundation;
 using ObjCRuntime;
@@ -12,8 +11,14 @@ using ObjCRuntime;
 namespace Metal {
 	public partial class MTLRasterizationRateLayerDescriptor
 	{
-/*  Selectors reported as not working by introspection: https://github.com/xamarin/maccore/issues/1976
-		[NoMac]
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[MacCatalyst (15,0)]
+#endif
 		public double[] HorizontalSampleStorage { 
 			get {
 				var width = (int)SampleCount.Width;
@@ -23,7 +28,14 @@ namespace Metal {
 			}
 		}
 
-		[NoMac]
+#if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[MacCatalyst (15,0)]
+#endif
 		public double[] VerticalSampleStorage {
 			get {
 				var height = (int)SampleCount.Height;
@@ -32,17 +44,20 @@ namespace Metal {
 				return floatArray;
 			}
 		}
-*/
+
 #if NET
+		[SupportedOSPlatform ("maccatalyst15.0")]
+		[SupportedOSPlatform ("ios13.0")]
+		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[NoMac]
+		[MacCatalyst (15,0)]
 #endif
 		static public MTLRasterizationRateLayerDescriptor Create (MTLSize sampleCount, float[] horizontal, float[] vertical)
 		{
-			if (horizontal == null)
+			if (horizontal is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (horizontal));
-			if (vertical == null)
+			if (vertical is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (vertical));
 			if (sampleCount.Width != horizontal.Length)
 				throw new ArgumentOutOfRangeException ("Horizontal length should be equal to the sampleCount.Width.");

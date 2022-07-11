@@ -25,6 +25,10 @@ using AppKit;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace MediaLibrary {
 	[Static]
 	[Mac (10,9)]
@@ -425,7 +429,7 @@ namespace MediaLibrary {
 	{
 		[Export ("initWithOptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSDictionary<NSString, NSObject> options);
+		NativeHandle Constructor (NSDictionary<NSString, NSObject> options);
 
 		[NullAllowed, Export ("mediaSources", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, MLMediaSource> MediaSources { get; }

@@ -18,7 +18,9 @@ using System.Security.Permissions;
 
 using MonoTouch;
 using Foundation;
+#if !__MACOS__
 using UIKit;
+#endif
 using ObjCRuntime;
 using NUnit.Framework;
 
@@ -69,6 +71,7 @@ namespace DontLink {
 			testAction.BeginInvoke ("Teszt", null, null);
 		}
 
+#if !__MACOS__
 		[Test]
 		public void Autorelease ()
 		{
@@ -83,6 +86,7 @@ namespace DontLink {
 				img.CreateResizableImage (new UIEdgeInsets (1, 2, 3, 4));
 			}
 		}
+#endif // !__MACOS__
 
 #if !NET
 		[Test]
@@ -166,7 +170,7 @@ namespace DontLink {
 #endif // __TVOS__ || __WATCHOS__
 
 
-#if __IOS__
+#if __IOS__ && !__MACCATALYST__
 		// Test that we allow P/Invokes to functions that don't exist
 		// for functions in platform libraries.
 		[DllImport ("/usr/lib/libsqlite3.dylib")]

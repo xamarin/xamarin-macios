@@ -21,19 +21,37 @@ namespace Xamarin.Mac.Tests
 #pragma warning restore 0219
 		}
 		
+#if NET
+		class MyPasteboard : NSObject, INSPasteboardWriting
+#else
 		class MyPasteboard : NSPasteboardWriting
+#endif
 		{
+#if NET
+			NSObject INSPasteboardWriting.GetPasteboardPropertyListForType (string type)
+#else
 			public override NSObject GetPasteboardPropertyListForType (string type)
+#endif
 			{
 				return new NSObject ();
 			}
 
+#if NET
+			string[] INSPasteboardWriting.GetWritableTypesForPasteboard (NSPasteboard pasteboard)
+#else
 			public override string[] GetWritableTypesForPasteboard (NSPasteboard pasteboard)
+#endif
 			{
 				return new string [] {};
 			}
 
+#if NET
+			[Export ("writingOptionsForType:pasteboard:")]
+			public NSPasteboardWritingOptions GetWritingOptionsForType (string type, NSPasteboard pasteboard)
+#else
+		
 			public override NSPasteboardWritingOptions GetWritingOptionsForType (string type, NSPasteboard pasteboard)
+#endif
 			{
 				return NSPasteboardWritingOptions.WritingPromised;
 			}

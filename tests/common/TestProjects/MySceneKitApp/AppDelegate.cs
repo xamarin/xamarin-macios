@@ -1,4 +1,4 @@
-﻿using Foundation;
+using Foundation;
 using UIKit;
 
 namespace MySceneKitApp {
@@ -27,4 +27,3 @@ namespace MySceneKitApp {
 		}
 	}
 }
-

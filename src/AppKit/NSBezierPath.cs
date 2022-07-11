@@ -26,6 +26,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -99,7 +101,7 @@ namespace AppKit {
 				_AppendPathWithPoints ((IntPtr)ptr, points.Length);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Append (CGPoint[])' instead.")]
 		public unsafe void AppendPathWithPoints (CGPoint[] points)
 		{
@@ -119,7 +121,12 @@ namespace AppKit {
 		}
 #endif
 
+#if NET
+		[SupportedOSPlatform ("macos10.13")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,13)]
+#endif
 		public unsafe void Append (uint[] glyphs, NSFont font)
 		{
 			if (glyphs == null)
@@ -132,3 +139,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

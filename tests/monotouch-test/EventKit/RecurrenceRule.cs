@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for EKRecurrenceRule
 //
 // Authors:
@@ -14,6 +14,7 @@ using EventKit;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.EventKit {
 
@@ -24,7 +25,7 @@ namespace MonoTouchFixtures.EventKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 		}
 
 		[Test]
@@ -35,7 +36,11 @@ namespace MonoTouchFixtures.EventKit {
 				Assert.IsNull (rule.RecurrenceEnd, "RecurrenceEnd");
 				Assert.AreEqual (EKRecurrenceFrequency.Weekly, rule.Frequency, "Frequency");
 				Assert.AreEqual ((nint) 1, rule.Interval, "Interval");
+#if NET
+				Assert.AreEqual (EKWeekday.Monday, rule.FirstDayOfTheWeek, "FirstDayOfTheWeek");
+#else
 				Assert.AreEqual (EKDay.Monday, rule.FirstDayOfTheWeek, "FirstDayOfTheWeek");
+#endif
 				Assert.IsNull (rule.DaysOfTheWeek, "DaysOfTheWeek");
 				Assert.IsNull (rule.DaysOfTheMonth, "DaysOfTheMonth");
 				Assert.IsNull (rule.DaysOfTheYear, "DaysOfTheYear");

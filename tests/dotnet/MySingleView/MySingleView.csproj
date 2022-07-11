@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-ios</TargetFramework>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
     <OutputType>Exe</OutputType>
 
     <ApplicationTitle>MySingleTitle</ApplicationTitle>
     <ApplicationId>com.xamarin.mysingletitle</ApplicationId>
     <ApplicationVersion>3.14</ApplicationVersion>
+    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
   </PropertyGroup>
 </Project>

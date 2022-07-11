@@ -12,13 +12,18 @@ using UIKit;
 using Twitter;
 using Accounts;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Twitter {
 
 	delegate void TWRequestHandler (NSData responseData, NSHttpUrlResponse urlResponse, NSError error);
 
-	[Availability (Deprecated = Platform.iOS_6_0, Message = "Use the 'Social' framework.")]
+	[Deprecated (PlatformName.iOS, 6, 0, message: "Use the 'Social' framework.")]
 	[BaseType (typeof (NSObject))]
 	interface TWRequest {
+		
 		[NullAllowed] // by default this property is null
 		[Export ("account")]
 		ACAccount Account { get; set;  }
@@ -33,7 +38,7 @@ namespace Twitter {
 		NSDictionary Parameters { get;  }
 
 		[Export ("initWithURL:parameters:requestMethod:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary parameters, TWRequestMethod requestMethod);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary parameters, TWRequestMethod requestMethod);
 
 		[Export ("addMultiPartData:withName:type:")]
 		void AddMultiPartData (NSData data, string name, string type);
@@ -46,12 +51,12 @@ namespace Twitter {
 		void PerformRequest (TWRequestHandler handler);
 	}
 
-	[Availability (Deprecated = Platform.iOS_6_0, Message = "Use the 'Social' framework.")]
+	[Deprecated (PlatformName.iOS, 6, 0, message: "Use the 'Social' framework.")]
 	[BaseType (typeof (UIViewController))]
 	interface TWTweetComposeViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("completionHandler")]
 		Action<TWTweetComposeViewControllerResult> CompletionHandler { get; set; }

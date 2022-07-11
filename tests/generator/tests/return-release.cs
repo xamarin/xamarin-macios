@@ -15,4 +15,3 @@ namespace NS
 		NSObject CreateOptionalObject ();
 	}
 }
-

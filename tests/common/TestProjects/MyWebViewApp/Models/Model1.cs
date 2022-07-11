@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace MyWebViewApp
 {
@@ -7,4 +7,3 @@ namespace MyWebViewApp
 		public string Text { get; set; }
 	}
 }
-

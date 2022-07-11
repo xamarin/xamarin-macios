@@ -12,20 +12,20 @@ using MonoTouch;
 namespace Xamarin {
 	static class SdkVersions {
 		public const string Xcode = "@XCODE_VERSION@";
-		public const string OSX = "@OSX_SDK_VERSION@";
+		public const string OSX = "@MACOS_SDK_VERSION@";
 		public const string iOS = "@IOS_SDK_VERSION@";
 		public const string WatchOS = "@WATCHOS_SDK_VERSION@";
 		public const string TVOS = "@TVOS_SDK_VERSION@";
 		public const string MacCatalyst = "@MACCATALYST_SDK_VERSION@";
 
 #if NET
-		public const string MinOSX = "@DOTNET_MIN_OSX_SDK_VERSION@";
+		public const string MinOSX = "@DOTNET_MIN_MACOS_SDK_VERSION@";
 		public const string MiniOS = "@DOTNET_MIN_IOS_SDK_VERSION@";
 		public const string MinWatchOS = "99.99"; // TODO not supported, many changes required to remove it
 		public const string MinTVOS = "@DOTNET_MIN_TVOS_SDK_VERSION@";
 		public const string MinMacCatalyst = "@DOTNET_MIN_MACCATALYST_SDK_VERSION@";
 #else
-		public const string MinOSX = "@MIN_OSX_SDK_VERSION@";
+		public const string MinOSX = "@MIN_MACOS_SDK_VERSION@";
 		public const string MiniOS = "@MIN_IOS_SDK_VERSION@";
 		public const string MinWatchOS = "@MIN_WATCHOS_SDK_VERSION@";
 		public const string MinTVOS = "@MIN_TVOS_SDK_VERSION@";

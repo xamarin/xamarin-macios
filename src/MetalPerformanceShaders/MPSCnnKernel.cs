@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using Metal;
 using Foundation;
@@ -27,4 +29,3 @@ namespace MetalPerformanceShaders {
 		}
 	}
 }
-

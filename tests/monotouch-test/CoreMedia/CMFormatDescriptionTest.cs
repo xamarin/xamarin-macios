@@ -18,6 +18,7 @@ using AppKit;
 using UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
 	
@@ -43,11 +44,11 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Video ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			CMFormatDescriptionError fde;
 
-			var auth = AVCaptureDevice.GetAuthorizationStatus (AVMediaType.Video);
+			var auth = AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ());
 			switch (auth) {
 			case AVAuthorizationStatus.Restricted:
 			case AVAuthorizationStatus.Denied:
@@ -62,7 +63,7 @@ namespace MonoTouchFixtures.CoreMedia {
 //				Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.InvalidParameter), "CMFormatDescriptionError (authorized)");
 
 				using (var captureSession = new AVCaptureSession ()) {
-					using (var videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaType.Video)) {
+					using (var videoDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Video.GetConstant ())) {
 						if (videoDevice == null)
 							Assert.Inconclusive ("Failed to create a video device for testing");
 						NSError error;
@@ -81,11 +82,11 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void RefcountTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 			
 			// Bug #27205
 
-			var auth = AVCaptureDevice.GetAuthorizationStatus (AVMediaType.Video);
+			var auth = AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ());
 			switch (auth) {
 			case AVAuthorizationStatus.Restricted:
 			case AVAuthorizationStatus.Denied:
@@ -95,7 +96,7 @@ namespace MonoTouchFixtures.CoreMedia {
 			}
 
 			using (var captureSession = new AVCaptureSession ()) {
-				using (var videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaType.Video)) {
+				using (var videoDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Video.GetConstant ())) {
 					if (videoDevice == null)
 						Assert.Inconclusive ("Failed to create a video device for testing");
 					foreach (var format in videoDevice.Formats) {
@@ -190,4 +191,3 @@ namespace MonoTouchFixtures.CoreMedia {
 		}
 	}
 }
-

@@ -14,6 +14,10 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreHaptics {
 
 // we are not binding the API on Mac OS X yet due to an issue on Apples side: https://github.com/xamarin/maccore/issues/1951
@@ -34,7 +38,7 @@ namespace CoreHaptics {
 
 		[Export ("initWithParameterID:value:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([BindAs (typeof (CHHapticEventParameterId))] NSString parameterId, float value);
+		NativeHandle Constructor ([BindAs (typeof (CHHapticEventParameterId))] NSString parameterId, float value);
 	}
 
 	[Mac (10,15), iOS (13,0), TV (14,0)]
@@ -53,7 +57,7 @@ namespace CoreHaptics {
 
 		[Export ("initWithParameterID:value:relativeTime:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([BindAs (typeof (CHHapticDynamicParameterId))] NSString parameterId, float value, double time);
+		NativeHandle Constructor ([BindAs (typeof (CHHapticDynamicParameterId))] NSString parameterId, float value, double time);
 	}
 
 	[Mac (10,15), iOS (13,0), TV (14,0)]
@@ -68,7 +72,7 @@ namespace CoreHaptics {
 
 		[Export ("initWithRelativeTime:value:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (double time, float value);
+		NativeHandle Constructor (double time, float value);
 	}
 
 	[Mac (10,15), iOS (13,0), TV (14,0)]
@@ -87,7 +91,7 @@ namespace CoreHaptics {
 
 		[Export ("initWithParameterID:controlPoints:relativeTime:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([BindAs (typeof (CHHapticDynamicParameterId))]NSString parameterId, CHHapticParameterCurveControlPoint[] controlPoints, double relativeTime);
+		NativeHandle Constructor ([BindAs (typeof (CHHapticDynamicParameterId))]NSString parameterId, CHHapticParameterCurveControlPoint[] controlPoints, double relativeTime);
 	}
 
 	[Mac (10,15), iOS (13,0),  TV (14,0)]
@@ -108,16 +112,16 @@ namespace CoreHaptics {
 		double Duration { get; set; }
 
 		[Export ("initWithEventType:parameters:relativeTime:")]
-		IntPtr Constructor ([BindAs (typeof (CHHapticEventType))] NSString type, CHHapticEventParameter[] eventParams, double time);
+		NativeHandle Constructor ([BindAs (typeof (CHHapticEventType))] NSString type, CHHapticEventParameter[] eventParams, double time);
 
 		[Export ("initWithEventType:parameters:relativeTime:duration:")]
-		IntPtr Constructor ([BindAs (typeof (CHHapticEventType))] NSString type, CHHapticEventParameter[] eventParams, double time, double duration);
+		NativeHandle Constructor ([BindAs (typeof (CHHapticEventType))] NSString type, CHHapticEventParameter[] eventParams, double time, double duration);
 
 		[Export ("initWithAudioResourceID:parameters:relativeTime:")]
-		IntPtr Constructor (nuint resourceId, CHHapticEventParameter[] eventParams, double time);
+		NativeHandle Constructor (nuint resourceId, CHHapticEventParameter[] eventParams, double time);
 
 		[Export ("initWithAudioResourceID:parameters:relativeTime:duration:")]
-		IntPtr Constructor (nuint resourceId, CHHapticEventParameter[] eventParams, double time, double duration);
+		NativeHandle Constructor (nuint resourceId, CHHapticEventParameter[] eventParams, double time, double duration);
 	}
 
 	interface ICHHapticParameterAttributes { }
@@ -264,12 +268,12 @@ namespace CoreHaptics {
 
 		[Export ("initAndReturnError:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] out NSError error);
+		NativeHandle Constructor ([NullAllowed] out NSError error);
 
 		[NoMac, NoTV]
 		[Export ("initWithAudioSession:error:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] AVAudioSession audioSession, [NullAllowed] out NSError error);
+		NativeHandle Constructor ([NullAllowed] AVAudioSession audioSession, [NullAllowed] out NSError error);
 
 		[Async]
 		[Export ("startWithCompletionHandler:")]
@@ -390,16 +394,16 @@ namespace CoreHaptics {
 		double Duration { get; }
 
 		[Export ("initWithEvents:parameters:error:")]
-		IntPtr Constructor (CHHapticEvent[] events, CHHapticDynamicParameter[] parameters, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (CHHapticEvent[] events, CHHapticDynamicParameter[] parameters, [NullAllowed] out NSError outError);
 
 		[Export ("initWithEvents:parameterCurves:error:")]
-		IntPtr Constructor (CHHapticEvent[] events, CHHapticParameterCurve[] parameterCurves, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (CHHapticEvent[] events, CHHapticParameterCurve[] parameterCurves, [NullAllowed] out NSError outError);
 
 		[Export ("initWithDictionary:error:")]
-		IntPtr Constructor (NSDictionary patternDict, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (NSDictionary patternDict, [NullAllowed] out NSError outError);
 
 		[Wrap ("this (patternDefinition.GetDictionary ()!, out outError)")]
-		IntPtr Constructor (CHHapticPatternDefinition patternDefinition, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (CHHapticPatternDefinition patternDefinition, [NullAllowed] out NSError outError);
 
 		[Internal]
 		[Export ("exportDictionaryAndReturnError:")]

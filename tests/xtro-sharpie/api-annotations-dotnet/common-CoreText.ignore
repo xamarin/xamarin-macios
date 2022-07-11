@@ -1,0 +1,58 @@
+!missing-enum! CTFontCollectionCopyOptions not bound
+!missing-enum! CTFontManagerAutoActivationSetting not bound
+!missing-enum! CTLineTruncationType not bound
+!missing-enum! CTRubyAlignment not bound
+!missing-enum! CTRubyOverhang not bound
+!missing-enum! CTRubyPosition not bound
+!missing-field! kCTFontDescriptorMatchingCurrentAssetSize not bound
+!missing-field! kCTFontDescriptorMatchingDescriptors not bound
+!missing-field! kCTFontDescriptorMatchingError not bound
+!missing-field! kCTFontDescriptorMatchingPercentage not bound
+!missing-field! kCTFontDescriptorMatchingResult not bound
+!missing-field! kCTFontDescriptorMatchingSourceDescriptor not bound
+!missing-field! kCTFontDescriptorMatchingTotalAssetSize not bound
+!missing-field! kCTFontDescriptorMatchingTotalDownloadedSize not bound
+!missing-field! kCTFontDownloadableAttribute not bound
+!missing-field! kCTFontDownloadedAttribute not bound
+!missing-field! kCTFontManagerRegisteredFontsChangedNotification not bound
+!missing-field! kCTFontOpenTypeFeatureTag not bound
+!missing-field! kCTFontOpenTypeFeatureValue not bound
+!missing-field! kCTLanguageAttributeName not bound
+!missing-field! kCTRubyAnnotationAttributeName not bound
+!missing-field! kCTRubyAnnotationScaleToFitAttributeName not bound
+!missing-field! kCTRubyAnnotationSizeFactorAttributeName not bound
+!missing-field! kCTFontOpticalSizeAttribute not bound
+!missing-field! kCTFontVariationAxesAttribute not bound
+!missing-pinvoke! CTFontCollectionGetTypeID is not bound
+!missing-pinvoke! CTFontDescriptorCreateCopyWithFamily is not bound
+!missing-pinvoke! CTFontDescriptorCreateCopyWithSymbolicTraits is not bound
+!missing-pinvoke! CTFontDescriptorGetTypeID is not bound
+!missing-pinvoke! CTFontManagerCopyAvailableFontFamilyNames is not bound
+!missing-pinvoke! CTFontManagerCopyAvailablePostScriptNames is not bound
+!missing-pinvoke! CTFrameGetTypeID is not bound
+!missing-pinvoke! CTFramesetterGetTypeID is not bound
+!missing-pinvoke! CTGlyphInfoGetTypeID is not bound
+!missing-pinvoke! CTLineGetTypeID is not bound
+!missing-pinvoke! CTParagraphStyleGetTypeID is not bound
+!missing-pinvoke! CTRubyAnnotationCreate is not bound
+!missing-pinvoke! CTRubyAnnotationCreateCopy is not bound
+!missing-pinvoke! CTRubyAnnotationCreateWithAttributes is not bound
+!missing-pinvoke! CTRubyAnnotationGetAlignment is not bound
+!missing-pinvoke! CTRubyAnnotationGetOverhang is not bound
+!missing-pinvoke! CTRubyAnnotationGetSizeFactor is not bound
+!missing-pinvoke! CTRubyAnnotationGetTextForPosition is not bound
+!missing-pinvoke! CTRubyAnnotationGetTypeID is not bound
+!missing-pinvoke! CTRunDelegateGetTypeID is not bound
+!missing-pinvoke! CTRunGetAdvancesPtr is not bound
+!missing-pinvoke! CTRunGetGlyphsPtr is not bound
+!missing-pinvoke! CTRunGetPositionsPtr is not bound
+!missing-pinvoke! CTRunGetStringIndicesPtr is not bound
+!missing-pinvoke! CTRunGetTypeID is not bound
+!missing-pinvoke! CTTextTabGetTypeID is not bound
+!missing-pinvoke! CTTypesetterGetTypeID is not bound
+
+## part of an unnamed enum inside CTStringAttributes.h
+!extra-enum-value! Managed value 2 for CTWritingDirection.Override not found in native headers
+
+!missing-pinvoke! CTFontCollectionCopyFontAttribute is not bound
+!missing-pinvoke! CTFontCollectionCopyFontAttributes is not bound

@@ -1,12 +1,10 @@
 #if !__WATCHOS__
 using System;
-using System.Collections.Generic;
 using System.Threading;
+
 using CoreFoundation;
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
 
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
@@ -51,7 +49,11 @@ namespace MonoTouchFixtures.Network {
 			{
 				using (var protocolStack = parameters.ProtocolStack) {
 					var ipOptions = protocolStack.InternetProtocol;
+#if NET
+					ipOptions.SetVersion (NWIPVersion.Version4);
+#else
 					ipOptions.IPSetVersion (NWIPVersion.Version4);
+#endif
 				}
 				connection = new NWConnection (endpoint, parameters);
 				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked

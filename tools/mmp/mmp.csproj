@@ -7,8 +7,8 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>mmp</AssemblyName>
     <RootNamespace>mmp</RootNamespace>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
-    <LangVersion>8.0</LangVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -354,6 +354,9 @@
     <Compile Include="..\common\Execution.cs">
       <Link>tools\common\Execution.cs</Link>
     </Compile>
+    <Compile Include="..\common\OSPlatformAttributeExtensions.cs">
+      <Link>tools\common\OSPlatformAttributeExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\common\StaticRegistrar.cs">
       <Link>tools\common\StaticRegistrar.cs</Link>
     </Compile>
@@ -401,6 +404,9 @@
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\LinkWithAttribute.cs">
       <Link>src\ObjCRuntime\LinkWithAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\NativeNameAttribute.cs">
+      <Link>src\ObjCRuntime\NativeNameAttribute.cs</Link>
     </Compile>
     <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
       <Link>src\ObjCRuntime\PlatformAvailability2.cs</Link>

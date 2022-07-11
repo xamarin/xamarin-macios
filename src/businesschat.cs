@@ -18,6 +18,10 @@ using UIControl = AppKit.NSControl;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace BusinessChat {
 
 	[Mac (10,13,4), iOS (11,3)]
@@ -26,7 +30,7 @@ namespace BusinessChat {
 	interface BCChatButton {
 		[Export ("initWithStyle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (BCChatButtonStyle style);
+		NativeHandle Constructor (BCChatButtonStyle style);
 	}
 
 

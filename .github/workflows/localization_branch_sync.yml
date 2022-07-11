@@ -1,3 +1,5 @@
+# Disabling this action since we do something similar already in the CI
+
 name: Sync Localization Branch
 on:
   pull_request:
@@ -13,22 +15,17 @@ jobs:
   replaceLocalizationBranch:
     name: 'Replace Localization Branch'
     runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.name, 'localization_bot') }}
     steps:
-    - name: 'Check for Fork'
-      run: echo "Action cannot be executed on forks" && exit 1
-      if: ${{ github.event.pull_request.head.repo.full_name != github.repository  }}
-
     - uses: dawidd6/action-delete-branch@v3
       name: 'delete'
-      if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branches: Localization
         soft_fail: true
 
-    - uses: peterjgrainger/action-create-branch@v2.0.1
+    - uses: peterjgrainger/action-create-branch@v2.2.0
       name: 'Create Localization Branch'
-      if: ${{ github.event.pull_request.merged == true && github.event.pull_request.user.login == 'github-actions[bot]' && contains(github.event.pull_request.labels.*.names, 'localization_bot') }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:

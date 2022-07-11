@@ -1,4 +1,4 @@
-﻿//
+//
 // This file contains a generic version of NSMutableOrderedSet
 //
 // Authors:
@@ -10,10 +10,21 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSMutableOrderedSet", SkipRegistration = true)]
 	public sealed partial class NSMutableOrderedSet<TKey> : NSMutableOrderedSet, IEnumerable<TKey>
 		where TKey : class, INativeObject {
@@ -26,7 +37,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSMutableOrderedSet (IntPtr handle) : base (handle)
+		internal NSMutableOrderedSet (NativeHandle handle) : base (handle)
 		{
 		}
 

@@ -1,4 +1,4 @@
-﻿//
+//
 // IdentityLookup C# bindings
 //
 // Authors:
@@ -12,6 +12,10 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace IdentityLookup {
 
 	[iOS (11,0)]
@@ -21,7 +25,7 @@ namespace IdentityLookup {
 		None = 0,
 		Allow = 1,
 		Junk = 2,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Junk' instead.")]
 		Filter = Junk,
 #endif
@@ -169,7 +173,7 @@ namespace IdentityLookup {
 
 		[Export ("initWithClassificationAction:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ILClassificationAction action);
+		NativeHandle Constructor (ILClassificationAction action);
 	}
 
 	[Abstract]

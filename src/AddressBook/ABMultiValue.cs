@@ -27,6 +27,8 @@
 //
 //
 
+#nullable enable
+
 #if !MONOMAC
 
 using System;
@@ -38,11 +40,26 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace AddressBook {
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9,0)]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	static class ABMultiValue {
 		public const uint Mask = (1 << 8);
 
@@ -95,16 +112,22 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary, EntryPoint="ABMultiValueRemoveValueAndLabelAtIndex")]
 		[return: MarshalAs (UnmanagedType.I1)]
 		public static extern bool RemoveValueAndLabelAtIndex (IntPtr multiValue, nint index);
-
-		public static IntPtr ToIntPtr (NSObject value)
-		{
-			return value == null ? IntPtr.Zero : value.Handle;
-		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public struct ABMultiValueEntry<T>
 	{
 		ABMultiValue<T> self;
@@ -118,7 +141,7 @@ namespace AddressBook {
 
 		internal void AssertValid ()
 		{
-			if (self == null)
+			if (self is null)
 				throw new InvalidOperationException ();
 		}
 
@@ -126,10 +149,10 @@ namespace AddressBook {
 			get {return self.IsReadOnly;}
 		}
 
-		IntPtr ToIntPtr (T value)
+		NativeHandle ToIntPtr (T value)
 		{
 			var mutable = self as ABMutableMultiValue<T>;
-			if (mutable == null)
+			if (mutable is null)
 				throw CreateNotSupportedException ();
 			return mutable.toNative (value);
 		}
@@ -155,16 +178,16 @@ namespace AddressBook {
 			}
 		}
 
-		public NSString Label {
+		public NSString? Label {
 			get {
 				AssertValid ();
-				return (NSString) Runtime.GetNSObject (ABMultiValue.CopyLabelAtIndex (self.Handle, index));
+				return Runtime.GetNSObject<NSString> (ABMultiValue.CopyLabelAtIndex (self.Handle, index));
 			}
 			set {
 				if (IsReadOnly)
 					throw CreateNotSupportedException ();
 				AssertValid ();
-				ABMultiValue.ReplaceLabelAtIndex (self.Handle, ABMultiValue.ToIntPtr (value), index);
+				ABMultiValue.ReplaceLabelAtIndex (self.Handle, value.GetHandle (), index);
 			}
 		}
 
@@ -176,72 +199,50 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
-	public class ABMultiValue<T> : INativeObject, IDisposable, IEnumerable<ABMultiValueEntry<T>>
+#endif
+	public class ABMultiValue<T> : NativeObject, IEnumerable<ABMultiValueEntry<T>>
 	{
-		IntPtr handle;
-		internal Converter<IntPtr, T> toManaged;
-		internal Converter<T, IntPtr> toNative;
+		internal Converter<NativeHandle, T> toManaged;
+		internal Converter<T, NativeHandle> toNative;
 
-		internal ABMultiValue (IntPtr handle)
+		[Preserve (Conditional = true)]
+		internal ABMultiValue (NativeHandle handle, bool owns)
 			: this (handle, 
-					v => (T) (object) Runtime.GetNSObject (v), 
-					v => v == null ? IntPtr.Zero : ((INativeObject) v).Handle)
+					v => (T) (object) Runtime.GetNSObject (v)!,
+					v => ((INativeObject?) v).GetHandle (), owns)
 		{
 			if (!typeof (NSObject).IsAssignableFrom (typeof (T)))
 				throw new InvalidOperationException ("T must be an NSObject!");
 		}
 
-		internal ABMultiValue (IntPtr handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative)
+		internal ABMultiValue (NativeHandle handle, Converter<NativeHandle, T> toManaged, Converter<T, NativeHandle> toNative, bool owns)
+			: base (handle, owns)
 		{
-			if (handle == IntPtr.Zero)
-				throw new ArgumentException ("Handle must not be null.", "handle");
-			if (toManaged == null)
-				throw new ArgumentNullException ("toManaged");
-			if (toNative == null)
-				throw new ArgumentNullException ("toNative");
+			if (toManaged is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (toManaged));
+			if (toNative is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (toNative));
 
-			this.handle = handle;
 			this.toManaged = toManaged;
 			this.toNative  = toNative;
 		}
 
-		~ABMultiValue ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero)
-				CFObject.CFRelease (handle);
-			handle = IntPtr.Zero;
-		}
-
-		internal void AssertValid ()
-		{
-			if (handle == IntPtr.Zero)
-				throw new ObjectDisposedException ("");
-		}
-
-		public IntPtr Handle {
-			get {
-				AssertValid ();
-				return handle;
-			}
-		}
-
 		public virtual bool IsReadOnly {
 			get {
-				AssertValid ();
+				GetCheckedHandle ();
 				return true;
 			}
 		}
@@ -253,7 +254,7 @@ namespace AddressBook {
 		public T[] GetValues ()
 		{
 			return NSArray.ArrayFromHandle (ABMultiValue.CopyArrayOfAllValues (Handle), toManaged)
-				?? new T [0];
+				?? Array.Empty<T> ();
 		}
 
 		public nint Count {
@@ -298,43 +299,53 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public class ABMutableMultiValue<T> : ABMultiValue<T>
 	{
-		internal ABMutableMultiValue (IntPtr handle)
-			: base (handle)
+		[Preserve (Conditional = true)]
+		internal ABMutableMultiValue (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
 		}
 
-		internal ABMutableMultiValue (IntPtr handle, Converter<IntPtr, T> toManaged, Converter<T, IntPtr> toNative)
-			: base (handle, toManaged, toNative)
+		internal ABMutableMultiValue (NativeHandle handle, Converter<NativeHandle, T> toManaged, Converter<T, NativeHandle> toNative)
+			: base (handle, toManaged, toNative, false)
 		{
 		}
 
 		public override bool IsReadOnly {
 			get {
-				AssertValid ();
+				GetCheckedHandle ();
 				return false;
 			}
 		}
 
-		public bool Add (T value, NSString label)
+		public bool Add (T value, NSString? label)
 		{
-			int _;
 			return ABMultiValue.AddValueAndLabel (Handle, 
 						toNative (value),
-						ABMultiValue.ToIntPtr (label),
+						label.GetHandle (),
 						out _);
 		}
 
-		public bool Insert (nint index, T value, NSString label)
+		public bool Insert (nint index, T value, NSString? label)
 		{
-			int _;
 			return ABMultiValue.InsertValueAndLabelAtIndex (Handle,
 					toNative (value),
-					ABMultiValue.ToIntPtr (label),
+					label.GetHandle (),
 					index,
 					out _);
 		}
@@ -345,33 +356,66 @@ namespace AddressBook {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public class ABMutableDateMultiValue : ABMutableMultiValue<NSDate> {
 		public ABMutableDateMultiValue ()
-			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDateTime))
+			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDateTime), true)
 		{
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public class ABMutableDictionaryMultiValue : ABMutableMultiValue<NSDictionary> {
 		public ABMutableDictionaryMultiValue ()
-			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDictionary))
+			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiDictionary), true)
 		{
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("maccatalyst14.0")]
+	[UnsupportedOSPlatform ("ios9.0")]
+#if __MACCATALYST__
+	[Obsolete ("Starting with maccatalyst14.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+#endif
 	public class ABMutableStringMultiValue : ABMutableMultiValue<string> {
 		public ABMutableStringMultiValue ()
 			: base (ABMultiValue.CreateMutable (ABPropertyType.MultiString), 
-					ABPerson.ToString, ABPerson.ToIntPtr)
+					ABPerson.ToString, CFString.CreateNative)
 		{
 		}
 	}

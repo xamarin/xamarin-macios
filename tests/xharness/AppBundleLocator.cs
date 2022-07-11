@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.DotNet.XHarness.Common.Execution;
@@ -16,20 +17,20 @@ namespace Xharness {
 		readonly IProcessManager processManager;
 		readonly Func<ILog> getLog;
 		readonly string msBuildPath;
+		readonly string systemDotnetPath;
 		readonly string dotnetPath;
-		readonly string dotnet6Path;
 
-		// Gets either the DOTNET or DOTNET6 variable, depending on any global.json
+		// Gets either the system .NET or DOTNET variable, depending on any global.json
 		// config file found in the specified directory or any containing directories.
 		readonly Dictionary<string, string> dotnet_executables = new Dictionary<string, string> ();
 
-		public AppBundleLocator (IProcessManager processManager, Func<ILog> getLog, string msBuildPath, string dotnetPath, string dotnet6Path)
+		public AppBundleLocator (IProcessManager processManager, Func<ILog> getLog, string msBuildPath, string systemDotnetPath, string dotnetPath)
 		{
 			this.processManager = processManager;
 			this.getLog = getLog;
 			this.msBuildPath = msBuildPath;
+			this.systemDotnetPath = systemDotnetPath;
 			this.dotnetPath = dotnetPath;
-			this.dotnet6Path = dotnet6Path;
 		}
 
 		public async Task<string> LocateAppBundle (XmlDocument projectFile, string projectFilePath, TestTarget target, string buildConfiguration)
@@ -104,9 +105,24 @@ namespace Xharness {
 					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					proc.StartInfo.WorkingDirectory = dir;
 
-					var rv = await processManager.RunAsync (proc, getLog() ?? new ConsoleLog(), environmentVariables: env, timeout: TimeSpan.FromSeconds (120));
-					if (!rv.Succeeded)
-						throw new Exception ($"Unable to evaluate the property {evaluateProperty}, build failed with exit code {rv.ExitCode}. Timed out: {rv.TimedOut}");
+					// Don't evaluate in parallel on multiple threads to avoid overloading the mac.
+					var acquired = await evaluate_semaphore.WaitAsync (TimeSpan.FromMinutes (5));
+					try {
+						var log = getLog () ?? new ConsoleLog ();
+						var memoryLog = new MemoryLog ();
+						var aggregated = Log.CreateAggregatedLog (memoryLog, log);
+						if (!acquired)
+							aggregated.WriteLine ("Unable to acquire lock to evaluate MSBuild property in 5 minutes; will try to evaluate anyway.");
+						var rv = await processManager.RunAsync (proc, aggregated, environmentVariables: env, timeout: TimeSpan.FromMinutes (5));
+						if (!rv.Succeeded) {
+							var msg = $"Unable to evaluate the property {evaluateProperty} in {projectPath}, build failed with exit code {rv.ExitCode}. Timed out: {rv.TimedOut}";
+							Console.WriteLine (msg + " Output: \n" + memoryLog.ToString ());
+							throw new Exception (msg);
+						}
+					} finally {
+						if (acquired)
+							evaluate_semaphore.Release ();
+					}
 					
 					return File.ReadAllText (output).Trim ();
 				}
@@ -115,6 +131,8 @@ namespace Xharness {
 				File.Delete (output);
 			}
 		}
+
+		SemaphoreSlim evaluate_semaphore = new SemaphoreSlim (1);
 
 		public string GetDotNetExecutable (string directory)
 		{
@@ -151,10 +169,10 @@ namespace Xharness {
 			switch (version [0]) {
 			case '3':
 			case '5':
-				executable = dotnetPath;
+				executable = systemDotnetPath;
 				break;
 			default:
-				executable = dotnet6Path;
+				executable = dotnetPath;
 				break;
 			}
 

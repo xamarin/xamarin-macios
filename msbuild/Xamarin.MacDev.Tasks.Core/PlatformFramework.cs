@@ -1,4 +1,4 @@
-﻿//
+//
 // PlatformFramework.cs
 //
 // Author: Jeffrey Stedfast <jeff@xamarin.com>
@@ -104,6 +104,24 @@ namespace Xamarin.MacDev.Tasks
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
 				return Path.Combine (appBundlePath, "Contents", "Info.plist");
+			default:
+				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, platform));
+			}
+		}
+
+		public static string GetSdkPlatform (ApplePlatform platform, bool isSimulator)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+				return isSimulator ? "iPhoneSimulator" : "iPhoneOS";
+			case ApplePlatform.TVOS:
+				return isSimulator ? "AppleTVSimulator" : "AppleTVOS";
+			case ApplePlatform.WatchOS:
+				return isSimulator ? "WatchSimulator" : "WatchOS";
+			case ApplePlatform.MacOSX:
+				return "MacOSX";
+			case ApplePlatform.MacCatalyst:
+				return "MacCatalyst";
 			default:
 				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, platform));
 			}

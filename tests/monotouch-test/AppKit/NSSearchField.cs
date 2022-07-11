@@ -5,6 +5,7 @@ using NUnit.Framework;
 using AppKit;
 using ObjCRuntime;
 using Foundation;
+using Xamarin.Utils;
 
 namespace Xamarin.Mac.Tests
 {
@@ -14,8 +15,7 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void NSSearchFieldShouldSetSearchMenuTemplate ()
 		{
-			if (PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) < Platform.Mac_10_10)
-				return;
+			TestRuntime.AssertXcodeVersion (6, 1);
 
 			var searchField = new NSSearchField ();
 			var searchMenuTemplate = searchField.SearchMenuTemplate;
@@ -27,8 +27,7 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void NSSearchFieldShouldSetSendsWholeSearchString ()
 		{
-			if (PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) < Platform.Mac_10_10)
-				return;
+			TestRuntime.AssertXcodeVersion (6, 1);
 
 			var searchField = new NSSearchField ();
 			var sendsWholeSearchString = searchField.SendsWholeSearchString;
@@ -40,8 +39,7 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void NSSearchFieldShouldSetMaximumRecents ()
 		{
-			if (PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) < Platform.Mac_10_10)
-				return;
+			TestRuntime.AssertXcodeVersion (6, 1);
 
 			var searchField = new NSSearchField ();
 			var maximumRecents = searchField.MaximumRecents;
@@ -53,8 +51,7 @@ namespace Xamarin.Mac.Tests
 		[Test]
 		public void NSSearchFieldShouldSetSendsSearchStringImmediately ()
 		{
-			if (PlatformHelper.ToMacVersion (PlatformHelper.GetHostApiPlatform ()) < Platform.Mac_10_10)
-				return;
+			TestRuntime.AssertXcodeVersion (6, 1);
 
 			var searchField = new NSSearchField ();
 			var sendsSearchStringImmediately = searchField.SendsSearchStringImmediately;

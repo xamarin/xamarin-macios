@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AUViewController
 //
 // Authors:
@@ -9,8 +9,6 @@
 
 #if !__WATCHOS__ && !__TVOS__
 
-using System;
-using System.Threading;
 using Foundation;
 using CoreAudioKit;
 using NUnit.Framework;

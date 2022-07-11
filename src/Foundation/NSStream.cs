@@ -29,12 +29,13 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 using System;
+using System.Runtime.Versioning;
 using CoreFoundation;
 using System.Net;
 using System.Net.Sockets;
 using ObjCRuntime;
 #if !WATCH
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 #else
 using CoreServices;
@@ -49,7 +50,13 @@ namespace Foundation {
 	public enum NSStreamServiceType {
 		Default, VoIP, Video, Background, Voice
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class NSStreamSocksOptions {
 		public string HostName;
 		public int HostPort;
@@ -57,7 +64,7 @@ namespace Foundation {
 		public string Username;
 		public string Password;
 	}
-	
+
 	public partial class NSStream {
 		public NSObject this [NSString key] {
 			get {

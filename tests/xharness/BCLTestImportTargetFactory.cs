@@ -343,7 +343,7 @@ namespace Xharness {
 				foreach (var tp in projects) {
 					var prefix = tp.XUnit ? "xUnit" : "NUnit";
 					var finalName = tp.Name.StartsWith ("mscorlib", StringComparison.Ordinal) ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
-					var proj = new iOSTestProject (tp.Path) {
+					var proj = new iOSTestProject (TestLabel.Bcl, tp.Path) {
 						Name = finalName,
 						FailureMessage = tp.Failure,
 						RestoreNugetsInProject = true,
@@ -373,7 +373,7 @@ namespace Xharness {
 			foreach (var tp in GenerateAllMacTestProjects (platform)) {
 				var prefix = tp.XUnit ? "xUnit" : "NUnit";
 				var finalName = tp.Name.StartsWith ("mscorlib", StringComparison.Ordinal) ? tp.Name : $"[{prefix}] Mono {tp.Name}"; // mscorlib is our special test
-				var proj = new MacTestProject (tp.Path, targetFrameworkFlavor: flavor) {
+				var proj = new MacTestProject (TestLabel.Bcl, tp.Path, targetFrameworkFlavor: flavor) {
 					Name = finalName,
 					Platform = "AnyCPU",
 					IsExecutableProject = true,

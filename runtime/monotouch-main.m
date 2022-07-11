@@ -31,6 +31,14 @@
 #include "../tools/mtouch/monotouch-fixes.c"
 #endif
 
+static char original_working_directory_path [MAXPATHLEN];
+
+const char * const
+xamarin_get_original_working_directory_path ()
+{
+	return original_working_directory_path;
+}
+
 #if !defined (CORECLR_RUNTIME)
 unsigned char *
 xamarin_load_aot_data (MonoAssembly *assembly, int size, gpointer user_data, void **out_handle)
@@ -270,8 +278,15 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 	MonoAssembly *assembly;
 	GCHandle exception_gchandle = NULL;
-	const char *c_bundle_path = xamarin_get_bundle_path ();
 
+	// Get the original working directory, and store it somewhere.
+	if (getcwd (original_working_directory_path, sizeof (original_working_directory_path)) == NULL)
+		original_working_directory_path [0] = '\0';
+
+	// For legacy Xamarin.Mac, we used to chdir to $appdir/Contents/Resources (I'm not sure where this comes from, earliest commit I could find was this: https://github.com/xamarin/maccore/commit/20045dd7f85cb038cea673a9281bb6131711069c)
+	// For mobile platforms, we chdir to $appdir
+	// In .NET, we always chdir to $appdir, so that we're consistent
+	const char *c_bundle_path = xamarin_get_app_bundle_path ();
 	chdir (c_bundle_path);
 
 	setenv ("DYLD_BIND_AT_LAUNCH", "1", 1);
@@ -423,16 +438,12 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	xamarin_initialize ();
 	DEBUG_LAUNCH_TIME_PRINT ("\tmonotouch init time");
 
-#if defined (__arm__) || defined(__aarch64__)
-	xamarin_register_assemblies ();
-	assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
-	if (exception_gchandle != NULL)
-		xamarin_process_managed_exception_gchandle (exception_gchandle);
-#else
+	if (xamarin_register_assemblies != NULL)
+		xamarin_register_assemblies ();
+
 	if (xamarin_executable_name) {
 		assembly = xamarin_open_and_register (xamarin_executable_name, &exception_gchandle);
-		if (exception_gchandle != NULL)
-			xamarin_process_managed_exception_gchandle (exception_gchandle);
+		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while opening the main executable");
 	} else {
 		const char *last_slash = strrchr (argv [0], '/');
 		const char *basename = last_slash ? last_slash + 1 : argv [0];
@@ -440,19 +451,15 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 
 		assembly = xamarin_open_and_register (aname, &exception_gchandle);
 		xamarin_free (aname);
-
-		if (exception_gchandle != NULL)
-			xamarin_process_managed_exception_gchandle (exception_gchandle);
+		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while opening an assembly");
 	}
 
 	if (xamarin_supports_dynamic_registration) {
 		MonoReflectionAssembly *rassembly = mono_assembly_get_object (mono_domain_get (), assembly);
 		xamarin_register_entry_assembly (rassembly, &exception_gchandle);
 		xamarin_mono_object_release (&rassembly);
-		if (exception_gchandle != NULL)
-			xamarin_process_managed_exception_gchandle (exception_gchandle);
+		xamarin_process_fatal_exception_gchandle (exception_gchandle, "An exception occurred while opening the entry assembly");
 	}
-#endif
 
 	DEBUG_LAUNCH_TIME_PRINT ("\tAssembly register time");
 
@@ -465,18 +472,15 @@ xamarin_main (int argc, char *argv[], enum XamarinLaunchMode launch_mode)
 	int rv = 0;
 	switch (launch_mode) {
 	case XamarinLaunchModeExtension:
+#if !DOTNET
+		// It doesn't look like calling mono_domain_set_config is needed in .NET,
+		// it's covered by the call to xamarin_bridge_vm_initialize.
 		char base_dir [1024];
 		char config_file_name [1024];
 
 		snprintf (base_dir, sizeof (base_dir), "%s/" ARCH_SUBDIR, xamarin_get_bundle_path ());
 		snprintf (config_file_name, sizeof (config_file_name), "%s/%s.config", base_dir, xamarin_executable_name); // xamarin_executable_name should never be NULL for extensions.
 
-#if defined (CORECLR_RUNTIME)
-		// Need to figure out how to implement the equivalent of mono_domain_set_config for CoreCLR.
-		// That will need a test case (app extension), which we haven't implemented for CoreCLR yet.
-		// It's likely to require a completely different implementation, probably a property passed to coreclr_initialize.
-		xamarin_assertion_message ("Not implemented for CoreCLR: mono_domain_set_config.");
-#else
 		mono_domain_set_config (mono_domain_get (), base_dir, config_file_name);
 #endif
 

@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLLight Unit Tests
 //
 // Authors:
@@ -16,8 +16,16 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-using OpenTK;
 using NUnit.Framework;
+using Xamarin.Utils;
+
+#if NET
+using System.Numerics;
+using Vector2i = global::CoreGraphics.NVector2i;
+using Vector3i = global::CoreGraphics.NVector3i;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.ModelIO {
 
@@ -29,54 +37,6 @@ namespace MonoTouchFixtures.ModelIO {
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
-
-#if !MONOMAC
-			if (Runtime.Arch == Arch.SIMULATOR && IntPtr.Size == 4) {
-				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
-				// when resizing the cache of method selectors for a type. So here we call all selectors we can
-				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).
-				object dummy;
-				using (var obj = MDLMesh.CreateBox (Vector3.Zero, Vector3i.Zero, MDLGeometryType.Triangles, true, null)) {
-					obj.AddAttribute ("foo", MDLVertexFormat.Char);
-//					obj.AddNormals (null, 0); // throws NSInvalidArgumentException, need to figure out valid arguments
-//					obj.AddTangentBasis ("foo", "bar", "zap"); // throws "Need float or half UV components Need float or half UV components"
-//					obj.AddTangentBasisWithNormals ("foo", "bar", "zap"); // throws "Need float or half UV components Reason: Need float or half UV components"
-					dummy = obj.BoundingBox;
-//					obj.GenerateAmbientOcclusionTexture (1, 1, new MDLObject [] { }, "name", "name");
-//					obj.GenerateAmbientOcclusionVertexColors (1, 1, new MDLObject[] {}, "name");
-//					obj.GenerateAmbientOcclusionVertexColors (1.1, 1, new MDLObject[] [] { }, "name");
-//					obj.GenerateLightMapTexture (Vector2i.Zero, new MDLLight[] {}, new MDLObject[] {}, "str", "str");
-//					obj.GenerateLightMapVertexColors (new MDLLight[] { }, new MDLObject[] { }, "v");
-					obj.MakeVerticesUnique ();
-					dummy = obj.Submeshes;
-					dummy = obj.VertexBuffers;
-					dummy = obj.VertexCount;
-					dummy = obj.VertexDescriptor;
-				}
-
-				using (var obj = MDLMesh.CreateCylindroid (1, Vector2.Zero, 3, 0, MDLGeometryType.Triangles, false, null)) {
-				}
-				using (var obj = MDLMesh.CreateEllipsoid (Vector3.Zero, 3, 2, MDLGeometryType.Triangles, false, false, null)) {
-				}
-				using (var obj = MDLMesh.CreateEllipticalCone (0, Vector2.Zero, 3, 1, MDLGeometryType.Triangles, false, null)) {
-				}
-				using (var obj = MDLMesh.CreateIcosahedron (0, false, null)) {
-				}
-				using (var obj = MDLMesh.CreatePlane (new Vector2 (1, 1), new Vector2i (1, 1), MDLGeometryType.Triangles, null)) {
-				}
-				using (var obj = MDLMesh.CreateSphere (new Vector3 (1, 2, 3), new Vector2i (4, 5), MDLGeometryType.Triangles, true, null)) {
-				}
-				using (var obj = MDLMesh.CreateHemisphere (new Vector3 (1, 2, 3), new Vector2i (4, 5), MDLGeometryType.Triangles, true, true, null)) {
-				}
-				using (var obj = MDLMesh.CreateCapsule (new Vector3 (1, 2, 3), new Vector2i (4, 5), MDLGeometryType.Triangles, true, 10, null)) {
-				}
-				using (var obj = MDLMesh.CreateCone (new Vector3 (1, 2, 3), new Vector2i (4, 5), MDLGeometryType.Triangles, true, true, null)) {
-				}
-//				using (var obj = MDLMesh.CreateSubdividedMesh (new MDLMesh (), 0, 0)) {
-//				}
-
-			}
-#endif
 		}
 
 		[Test]
@@ -156,7 +116,7 @@ namespace MonoTouchFixtures.ModelIO {
 			using (var obj = MDLMesh.CreateCylindroid (1, V2, 3, 1, MDLGeometryType.Triangles, true, null)) {
 				Assert.IsNotNull (obj, "obj");
 #if MONOMAC
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12)) {
 					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (0.866025448f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.5f) }, obj.BoundingBox, "BoundingBox");
 				} else {
 					Asserts.AreEqual (new MDLAxisAlignedBoundingBox { MaxBounds = new Vector3 (1f, 0.5f, 1f), MinBounds = new Vector3 (-0.866025388f, -0.5f, -0.866025388f) }, obj.BoundingBox, "BoundingBox");

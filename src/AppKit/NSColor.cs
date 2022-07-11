@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.Text;
 using Foundation;
@@ -187,30 +188,19 @@ namespace AppKit {
 			if (components == null)
 				throw new ArgumentNullException ("components");
 
-			var pNativeFloatArray = IntPtr.Zero;
-			
-			try {
-				pNativeFloatArray = Marshal.AllocHGlobal (components.Length * IntPtr.Size);
-				nfloat.CopyArray (components, 0, pNativeFloatArray, components.Length);
-				return _FromColorSpace (space, pNativeFloatArray, components.Length);
-			} finally {
-				Marshal.FreeHGlobal (pNativeFloatArray);
+			unsafe {
+				fixed (nfloat* componentsptr = &components [0]) {
+					return _FromColorSpace (space, (IntPtr) componentsptr, components.Length);
+				}
 			}
 		}
 
 		public void GetComponents (out nfloat [] components)
 		{
-			var pNativeFloatArray = IntPtr.Zero;
-
-			try {
-				var count = (int)ComponentCount;
-			 	components = new nfloat [count];
-				pNativeFloatArray = Marshal.AllocHGlobal (count * IntPtr.Size);
-				_GetComponents (pNativeFloatArray);
-
-				nfloat.CopyArray (pNativeFloatArray, components, 0, count);
-			} finally {
-				Marshal.FreeHGlobal (pNativeFloatArray);
+			components = new nfloat [(int) ComponentCount];
+			unsafe {
+				fixed (nfloat* componentsptr = &components [0])
+					_GetComponents ((IntPtr) componentsptr);
 			}
 		}
 
@@ -238,14 +228,6 @@ namespace AppKit {
 				return base.ToString ();
 			}
 		}
-
-		[Obsolete ("Use 'UnderPageBackgroundColor' instead.")]
-		public static NSColor UnderPageBackground {
-			get {
-				return UnderPageBackgroundColor;
-			}
-		}
-
 	}
 }
-
+#endif // !__MACCATALYST__

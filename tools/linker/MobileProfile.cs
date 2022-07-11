@@ -44,6 +44,8 @@ namespace Xamarin.Linker {
 			"Mono.Security",
 			"OpenTK",
 			"OpenTK-1.0",
+			"MonoTouch.Dialog-1",
+			"MonoTouch.NUnitLite",
 			// Facades assemblies (PCL)
 			"Microsoft.Win32.Primitives",
 			"Microsoft.Win32.Registry.AccessControl",

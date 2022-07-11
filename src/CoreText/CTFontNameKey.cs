@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -56,26 +59,26 @@ namespace CoreText {
 		PostscriptCid,
 	}
 
-	static class CTFontNameKeyId {
-		
-		public static readonly NSString Copyright;
-		public static readonly NSString Family;
-		public static readonly NSString SubFamily;
-		public static readonly NSString Style;
-		public static readonly NSString Unique;
-		public static readonly NSString Full;
-		public static readonly NSString Version;
-		public static readonly NSString PostScript;
-		public static readonly NSString Trademark;
-		public static readonly NSString Manufacturer;
-		public static readonly NSString Designer;
-		public static readonly NSString Description;
-		public static readonly NSString VendorUrl;
-		public static readonly NSString DesignerUrl;
-		public static readonly NSString License;
-		public static readonly NSString LicenseUrl;
-		public static readonly NSString SampleText;
-		public static readonly NSString PostscriptCid;
+	static partial class CTFontNameKeyId {
+#if !NET
+		public static readonly NSString? Copyright;
+		public static readonly NSString? Family;
+		public static readonly NSString? SubFamily;
+		public static readonly NSString? Style;
+		public static readonly NSString? Unique;
+		public static readonly NSString? Full;
+		public static readonly NSString? Version;
+		public static readonly NSString? PostScript;
+		public static readonly NSString? Trademark;
+		public static readonly NSString? Manufacturer;
+		public static readonly NSString? Designer;
+		public static readonly NSString? Description;
+		public static readonly NSString? VendorUrl;
+		public static readonly NSString? DesignerUrl;
+		public static readonly NSString? License;
+		public static readonly NSString? LicenseUrl;
+		public static readonly NSString? SampleText;
+		public static readonly NSString? PostscriptCid;
 
 		static CTFontNameKeyId ()
 		{
@@ -99,8 +102,9 @@ namespace CoreText {
 			SampleText    = Dlfcn.GetStringConstant (handle, "kCTFontSampleTextNameKey");
 			PostscriptCid = Dlfcn.GetStringConstant (handle, "kCTFontPostScriptCIDNameKey");
 		}
+#endif
 
-		public static NSString ToId (CTFontNameKey key)
+		public static NSString? ToId (CTFontNameKey key)
 		{
 			switch (key) {
 				case CTFontNameKey.Copyright:     return Copyright;
@@ -127,7 +131,10 @@ namespace CoreText {
 
 		public static CTFontNameKey ToFontNameKey (NSString key)
 		{
-			if (key == Copyright)    	return CTFontNameKey.Copyright;
+			if (key is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
+
+			if (key == Copyright)     return CTFontNameKey.Copyright;
 			if (key == Family)        return CTFontNameKey.Family;
 			if (key == SubFamily)     return CTFontNameKey.SubFamily;
 			if (key == Style)         return CTFontNameKey.Style;
@@ -149,4 +156,3 @@ namespace CoreText {
 		}
 	}
 }
-

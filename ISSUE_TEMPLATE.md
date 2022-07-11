@@ -19,25 +19,24 @@ For support requests use https://www.xamarin.com/support
 ### Environment
 
 <!--
-1.
-Visual Studio: Help > About Microsoft Visual Studio > Copy Info [button]
-Visual Studio for Mac: Visual Studio > About Visual Studio > Show Details > Copy Information [button]
+1. How to get version information: https://github.com/xamarin/xamarin-macios/wiki/Diagnosis#version-information
 2. Paste into the code block below (between ```)
 -->
 
+<details>
+<summary>Version information</summary>
+
 ```
 ```
+
+</details>
 
 ### Build Logs
 
 <!--
-1. Place cursor below this comment block.
-2. Attach build log or link to gist (https://gist.github.com/) of the log.
-3. Logs can be found in the Build Output tab of the Errors pad in Visual Studio
-To get full build logs, set the log verbosity to diagnostic at the following locations:
-- On Visual Studio for Mac: Preferences > Projects > Build
-- On Visual Studio for Windows: Tools > Options > Projects and Solutions > Build and Run
-On Visual Studio for Windows you also want to add `-v -v -v -v` to the mtouch additional arguments by right-clicking the project in the solution explorer and selecting `Properties`.
+1. How to get a build log: https://github.com/xamarin/xamarin-macios/wiki/Diagnosis#build-logs
+2. Place the cursor below this comment block.
+3. Drag and drop the build log.
 -->
 
 ### Example Project (If Possible)

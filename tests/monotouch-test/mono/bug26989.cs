@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
 using Foundation;
@@ -64,4 +64,3 @@ namespace MonoTouchFixtures {
 		}
 	}
 }
-

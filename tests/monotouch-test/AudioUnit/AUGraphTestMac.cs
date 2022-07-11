@@ -25,14 +25,22 @@ namespace Xamarin.Mac.Tests
 
 			AudioComponentDescription mixerDescription = new AudioComponentDescription ();
 			mixerDescription.ComponentType = AudioComponentType.Mixer;
+#if NET
+			mixerDescription.ComponentSubType = (AudioUnitSubType)AudioTypeMixer.MultiChannel;
+#else
 			mixerDescription.ComponentSubType = (int)AudioTypeMixer.MultiChannel;
+#endif
 			mixerDescription.ComponentFlags = 0;
 			mixerDescription.ComponentFlagsMask = 0;
 			mixerDescription.ComponentManufacturer = AudioComponentManufacturerType.Apple;
 
 			AudioComponentDescription outputDesciption = new AudioComponentDescription ();
 			outputDesciption.ComponentType = AudioComponentType.Output;
+#if NET
+			outputDesciption.ComponentSubType = (AudioUnitSubType)AudioTypeOutput.System;
+#else
 			outputDesciption.ComponentSubType = (int)AudioTypeOutput.System;
+#endif
 			outputDesciption.ComponentFlags = 0;
 			outputDesciption.ComponentFlagsMask = 0;
 			outputDesciption.ComponentManufacturer = AudioComponentManufacturerType.Apple;

@@ -95,89 +95,14 @@ namespace Xamarin.MMP.Tests
 
 	static class FrameworkBuilder
 	{
-		const string PListText = @"<?xml version=""1.0"" encoding=""UTF-8""?>
-<!DOCTYPE plist PUBLIC ""-//Apple//DTD PLIST 1.0//EN"" ""http://www.apple.com/DTDs/PropertyList-1.0.dtd"">
-<plist version=""1.0"">
-<dict>
-	<key>BuildMachineOSBuild</key>
-	<string>16B2657</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Foo</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.test.Foo</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleName</key>
-	<string>Foo</string>
-	<key>CFBundlePackageType</key>
-	<string>FMWK</string>
-	<key>CFBundleShortVersionString</key>
-	<string>6.9</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleSupportedPlatforms</key>
-	<array>
-		<string>MacOSX</string>
-	</array>
-	<key>CFBundleVersion</key>
-	<string>1561.40.100</string>
-	<key>DTCompiler</key>
-	<string>com.apple.compilers.llvm.clang.1_0</string>
-	<key>DTPlatformBuild</key>
-	<string>9Q85j</string>
-	<key>DTPlatformVersion</key>
-	<string>GM</string>
-	<key>DTSDKBuild</key>
-	<string>17E138</string>
-	<key>DTSDKName</key>
-	<string>macosx10.13internal</string>
-	<key>DTXcode</key>
-	<string>0930</string>
-	<key>DTXcodeBuild</key>
-	<string>9Q85j</string>
-</dict>
-</plist>";
-		
 		public static string CreateFatFramework (string tmpDir)
 		{
-			Func<string, string> f = x => Path.Combine (tmpDir, x);
-			File.WriteAllText (f ("foo.c"), "int Answer () { return 42; }");
-			File.WriteAllText (f ("Info.plist"), PListText);
-
-			TI.RunAndAssert ($"clang", "-arch", "arm64", "-c", "-o", $"{f ("foo_arm64.o")}", $"{f ("foo.c")}");
-			TI.RunAndAssert ($"clang", "-arch", "x86_64", "-c", "-o", $"{f ("foo_x86-64.o")}", $"{f ("foo.c")}");
-			TI.RunAndAssert ($"clang", "-arch", "arm64", "-dynamiclib", "-o", $"{f ("foo_arm64.dylib")}", $"{f ("foo_arm64.o")}");
-			TI.RunAndAssert ($"clang", "-arch", "x86_64", "-dynamiclib", "-o", $"{f ("foo_x86-64.dylib")}", $"{f ("foo_x86-64.o")}");
-			TI.RunAndAssert ($"lipo", "-create", $"{f ("foo_arm64.dylib")}", $"{f ("foo_x86-64.dylib")}", "-output", $"{f ("Foo")}");
-			TI.RunAndAssert ($"install_name_tool", "-id", "@rpath/Foo.framework/Foo", $"{f ("Foo")}");
-			TI.RunAndAssert ($"mkdir", "-p", $"{f ("Foo.framework/Versions/A/Resources")}");
-			TI.RunAndAssert ($"cp", $"{f ("Foo")}", $"{f ("Foo.framework/Versions/A/Foo")}");
-			TI.RunAndAssert ($"cp", $"{f ("Info.plist")}", $"{f ("Foo.framework/Versions/A/Resources/")}");
-			TI.RunAndAssert ($"ln", "-s", "Versions/A/Foo", $"{f ("Foo.framework/Foo")}");
-			TI.RunAndAssert ($"ln", "-s", "Versions/A/Resources", $"{f ("Foo.framework/Resources")}");
-			TI.RunAndAssert ($"ln", "-s", "Versions/A", $"{f ("Foo.framework/Current")}");
-			return f ("Foo.framework");
+			return Path.Combine (Configuration.RootPath, "tests", "test-libraries", "frameworks", ".libs", "MmpTestFramework.xcframework", "macos-arm64_x86_64", "MmpTestFramework.framework"); ;
 		}
 
 		public static string CreateThinFramework (string tmpDir, bool sixtyFourBits = true)
 		{
-			Func<string, string> f = x => Path.Combine (tmpDir, x);
-			File.WriteAllText (f ("foo.c"), "int Answer () { return 42; }");
-			File.WriteAllText (f ("Info.plist"), PListText);
-
-			string bitnessArg = sixtyFourBits ? "-m64" : "-m32";
-			TI.RunAndAssert ($"clang", bitnessArg, "-c", "-o", $"{f ("foo.o")}", $"{f ("foo.c")}");
-			TI.RunAndAssert ($"clang", bitnessArg, "-dynamiclib", "-o", $"{f ("Foo")}", $"{f ("foo.o")}");
-			TI.RunAndAssert ($"install_name_tool", "-id", "@rpath/Foo.framework/Foo", $"{f ("Foo")}");
-			TI.RunAndAssert ($"mkdir", "-p", $"{f ("Foo.framework/Versions/A/Resources")}");
-			TI.RunAndAssert ($"cp", $"{f ("Foo")}", $"{f ("Foo.framework/Versions/A/Foo")}");
-			TI.RunAndAssert ($"cp", $"{f ("Info.plist")}", $"{f ("Foo.framework/Versions/A/Resources/")}");
-			TI.RunAndAssert ($"ln", "-s", "Versions/A/Foo", $"{f ("Foo.framework/Foo")}");
-			TI.RunAndAssert ($"ln", "-s", "Versions/A/Resources", $"{f ("Foo.framework/Resources")}");
-			TI.RunAndAssert ($"ln", "-s", "Versions/A", $"{f ("Foo.framework/Current")}");
-			return f ("Foo.framework");
+			return Path.Combine (Configuration.RootPath, "tests", "test-libraries", "frameworks", ".libs", "osx-x64", "MmpTestFramework.framework");
 		}
 	}
 
@@ -232,17 +157,6 @@ namespace Xamarin.MMP.Tests
 			public UnifiedTestConfig (string tmpDir)
 			{
 				TmpDir = tmpDir;
-			}
-		}
-
-		public static string AssemblyDirectory
-		{
-			get
-			{
-				string codeBase = Assembly.GetExecutingAssembly ().CodeBase;
-				UriBuilder uri = new UriBuilder (codeBase);
-				string path = Uri.UnescapeDataString (uri.Path);
-				return Path.GetDirectoryName (path);
 			}
 		}
 
@@ -528,15 +442,11 @@ namespace Xamarin.MMP.Tests
 				});
 		}
 
-		public static string TestDirectory => Path.Combine (FindRootDirectory (), "..", "tests") + "/";
+		public static string TestDirectory => Path.Combine (Configuration.RootPath, "tests");
 
 		public static string FindSourceDirectory ()
 		{
-			string codeBase = System.Reflection.Assembly.GetExecutingAssembly ().CodeBase;
-			UriBuilder uri = new UriBuilder (codeBase);
-			string path = Uri.UnescapeDataString (uri.Path);
-			string assemblyDirectory = Path.GetDirectoryName (path);
-			return Path.Combine(assemblyDirectory, TestDirectory + "common/mac");
+			return Path.Combine (TestDirectory, "common", "mac");
 		}
 
 		public static void CopyDirectory (string src, string target)

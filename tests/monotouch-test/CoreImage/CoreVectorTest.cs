@@ -13,6 +13,7 @@ using System;
 
 using Foundation;
 using CoreImage;
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreImage {

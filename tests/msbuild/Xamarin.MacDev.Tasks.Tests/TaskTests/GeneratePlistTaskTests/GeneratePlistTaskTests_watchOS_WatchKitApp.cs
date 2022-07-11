@@ -1,4 +1,4 @@
-﻿using NUnit.Framework;
+using NUnit.Framework;
 
 namespace Xamarin.iOS.Tasks
 {
@@ -17,4 +17,3 @@ namespace Xamarin.iOS.Tasks
 		}
 	}
 }
-

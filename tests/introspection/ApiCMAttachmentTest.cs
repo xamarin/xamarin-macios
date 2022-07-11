@@ -15,7 +15,11 @@ using CoreMedia;
 using CoreFoundation;
 using CoreGraphics;
 using CoreText;
+#if NET
+using CFNetwork;
+#else
 using CoreServices;
+#endif
 using CoreVideo;
 using Foundation;
 using ImageIO;
@@ -26,6 +30,10 @@ using Security;
 using VideoToolbox;
 using UIKit;
 using Network;
+
+#if NET
+using GColorConversionInfoTriple = CoreGraphics.CGColorConversionInfoTriple;
+#endif
 
 namespace Introspection {
 
@@ -138,7 +146,11 @@ namespace Introspection {
 				nativeObj = obj;
 			}
 
+#if NET
+			public NativeHandle Handle
+#else
 			public IntPtr Handle
+#endif
 			{
 				get { return nativeObj.Handle; }
 			}
@@ -175,6 +187,7 @@ namespace Introspection {
 			case "AudioFile": // does crash the tests
 			case "CFHTTPAuthentication":
 			case "CFHTTPStream":
+			case "CFType":
 			case "SystemSound": // does crash the tests
 			case "MusicPlayer": // does crash the tests
 			case "MusicTrack": // does crash the tests
@@ -229,7 +242,18 @@ namespace Introspection {
 				return true;
 			case "SecIdentity": // hangs with xcode12.5 beta 2 while loading p12 file
 			case "SecIdentity2": // same (dupe logic)
+			case "Authorization":
 				return true;
+			case "VTCompressionSession":
+			case "VTSession":
+			case "VTFrameSilo":
+			case "VTMultiPassStorage":
+#if __TVOS__
+				// Causes a crash in a background thread.
+				if (Runtime.Arch == Arch.DEVICE)
+					return true;
+#endif
+				return false;
 			default:
  				return false;
 			}
@@ -246,6 +270,8 @@ namespace Introspection {
 			switch (t.Name) {
 			case "CFAllocator":
 				return CFAllocator.SystemDefault;
+			case "CFArray":
+				return Runtime.GetINativeObject<CFArray> (new NSArray ().Handle, false);
 			case "CFBundle":
 				var bundles = CFBundle.GetAll ();
 				if (bundles.Length > 0)
@@ -359,6 +385,12 @@ namespace Introspection {
 						ForegroundColorFromContext =  true,
 						Font = new CTFont ("ArialMT", 24)
 					}));
+#if __MACCATALYST__ || __MACOS__
+			case "CGEvent":
+				return new CGEvent ((CGEventSource) null);
+			case "CGEventSource":
+				return new CGEventSource (CGEventSourceStateID.CombinedSession);
+#endif
 			case "CGImageDestination":
 				var storage = new NSMutableData ();
 				return CGImageDestination.Create (new CGDataConsumer (storage), "public.png", 1);
@@ -381,7 +413,7 @@ namespace Introspection {
 					var result = SecImportExport.ImportPkcs12 (farscape_pfx, options, out array);
 					if (result != SecStatusCode.Success)
 						throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0} due to {1}.", t.Name, result));
-					return new SecIdentity (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle));
+					return Runtime.GetINativeObject<SecIdentity> (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle), false);
 				}
 			case "SecTrust":
 				X509Certificate x = new X509Certificate (mail_google_com);
@@ -448,7 +480,7 @@ namespace Introspection {
 					var result = SecImportExport.ImportPkcs12 (farscape_pfx, options, out array);
 					if (result != SecStatusCode.Success)
 						throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0} due to {1}.", t.Name, result));
-					return new SecIdentity2 (new SecIdentity (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle)));
+					return new SecIdentity2 (Runtime.GetINativeObject<SecIdentity> (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle), false));
 				}
 				
 			case "SecKey":
@@ -462,6 +494,10 @@ namespace Introspection {
 				}
 			case "SecAccessControl":
 				return new SecAccessControl (SecAccessible.WhenPasscodeSetThisDeviceOnly);
+#if __MACCATALYST__
+			case "Authorization":
+				return Security.Authorization.Create (AuthorizationFlags.Defaults);
+#endif
 			default:
 				throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0}.", t.Name));
 			}

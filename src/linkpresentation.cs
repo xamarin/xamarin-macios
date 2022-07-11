@@ -19,6 +19,10 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace LinkPresentation {
 
 	[ErrorDomain ("LPErrorDomain")]
@@ -66,13 +70,13 @@ namespace LinkPresentation {
 
 		[Export ("initWithFrame:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGRect rect);
+		NativeHandle Constructor (CGRect rect);
 
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("initWithMetadata:")]
-		IntPtr Constructor (LPLinkMetadata metadata);
+		NativeHandle Constructor (LPLinkMetadata metadata);
 
 		[Export ("metadata", ArgumentSemantic.Copy)]
 		LPLinkMetadata Metadata { get; set; }

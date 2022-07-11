@@ -25,7 +25,11 @@ namespace Xamarin.Mac.Tests
 
 			CIImage img = CIImage.FromCGImage (nsImg.CGImage);
 			var gloom = new CIGloom () {
+#if NET
+				InputImage = img,
+#else
 				Image = img,
+#endif
 				Intensity = 5,
 				Radius = 1
 			};

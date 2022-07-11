@@ -7,14 +7,22 @@ using ObjCRuntime;
 namespace CoreBluetooth {
 	public partial class CBManager {
 
-		[iOS (13,0), Watch (6,0)]
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (13,0)]
+		[Watch (6,0)]
+#endif
 		public static CBManagerAuthorization Authorization {
 			get {
 				// in iOS 13.1 / Watch 6.1 this is a static property, like other [tv|mac]OS
 #if IOS
-				if (UIKit.UIDevice.CurrentDevice.CheckSystemVersion (13, 1)) {
+				if (SystemVersion.CheckiOS (13, 1)) {
 #elif WATCH
-				if (WatchKit.WKInterfaceDevice.CurrentDevice.CheckSystemVersion (6, 1)) {
+				if (SystemVersion.CheckwatchOS (6, 1)) {
 #endif
 					return _SAuthorization;
 				} else {

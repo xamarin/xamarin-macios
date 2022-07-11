@@ -2,10 +2,12 @@
 	"version": "@VERSION@",
 	"workloads": {
 		"@PLATFORM_LOWERCASE@": {
-			"description": "Microsoft @PLATFORM@ SDK for .NET",
+			"description": ".NET SDK Workload for building @PLATFORM@ applications.",
 			"packs": [
 				"Microsoft.@PLATFORM@.Sdk",
 				"Microsoft.@PLATFORM@.Ref",
+				"Microsoft.@PLATFORM@.Runtime.osx-arm64",
+				"Microsoft.@PLATFORM@.Runtime.osx-x64",
 				"Microsoft.@PLATFORM@.Templates"
 			],
 			"extends": [ 
@@ -19,6 +21,14 @@
 			"version": "@VERSION@"
 		},
 		"Microsoft.@PLATFORM@.Ref": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.osx-arm64": {
+			"kind": "framework",
+			"version": "@VERSION@"
+		},
+		"Microsoft.@PLATFORM@.Runtime.osx-x64": {
 			"kind": "framework",
 			"version": "@VERSION@"
 		},

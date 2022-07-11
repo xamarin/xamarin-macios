@@ -1,5 +1,7 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 using Mono.Cecil;
 using Mono.Linker;
@@ -16,27 +18,68 @@ namespace Xamarin.Linker.Steps
 	public class ListExportedSymbols : BaseStep
 	{
 		PInvokeWrapperGenerator state;
+#if !NET
 		bool skip_sdk_assemblies;
+#endif
+
+		PInvokeWrapperGenerator State {
+			get {
+#if NET
+				if (state is null && DerivedLinkContext.App.RequiresPInvokeWrappers) {
+					Configuration.PInvokeWrapperGenerationState = new PInvokeWrapperGenerator () {
+						App = DerivedLinkContext.App,
+						SourcePath = Path.Combine (Configuration.CacheDirectory, "pinvokes.mm"),
+						HeaderPath = Path.Combine (Configuration.CacheDirectory, "pinvokes.h"),
+						Registrar = DerivedLinkContext.StaticRegistrar,
+					};
+					state = Configuration.PInvokeWrapperGenerationState;
+				}
+#endif
+				return state;
+			}
+		}
+
+#if NET
+		protected override void EndProcess ()
+		{
+			if (state?.Started == true) {
+				// The generator is 'started' by the linker, which means it may not
+				// be started if the linker was not executed due to re-using cached results.
+				state.End ();
+			}
+			base.EndProcess ();
+		}
+#endif
+
+#if NET
+		public LinkerConfiguration Configuration {
+			get {
+				return LinkerConfiguration.GetInstance (Context);
+			}
+		}
+#endif
 
 		public DerivedLinkContext DerivedLinkContext {
 			get {
 #if NET
-				return LinkerConfiguration.GetInstance (Context).DerivedLinkContext;
+				return Configuration.DerivedLinkContext;
 #else
 				return (DerivedLinkContext) Context;
 #endif
 			}
 		}
 
-		public ListExportedSymbols () : this (null)
+#if NET
+		public ListExportedSymbols ()
 		{
 		}
-
+#else
 		internal ListExportedSymbols (PInvokeWrapperGenerator state, bool skip_sdk_assemblies = false)
 		{
 			this.state = state;
 			this.skip_sdk_assemblies = skip_sdk_assemblies;
 		}
+#endif
 
 		protected override void ProcessAssembly (AssemblyDefinition assembly)
 		{
@@ -62,23 +105,34 @@ namespace Xamarin.Linker.Steps
 			if (!hasSymbols)
 				return;
 
+			var modified = false;
 			foreach (var type in assembly.MainModule.Types)
-				ProcessType (type);
+				modified |= ProcessType (type);
+
+			// Make sure the linker saves any changes in the assembly.
+			if (modified) {
+				var action = Context.Annotations.GetAction (assembly);
+				if (action == AssemblyAction.Copy)
+					Context.Annotations.SetAction (assembly, AssemblyAction.Save);
+			}
 		}
 
-		void ProcessType (TypeDefinition type)
+		bool ProcessType (TypeDefinition type)
 		{
+			var modified = false;
 			if (type.HasNestedTypes) {
 				foreach (var nested in type.NestedTypes)
-					ProcessType (nested);
+					modified |= ProcessType (nested);
 			}
 
 			if (type.HasMethods) {
 				foreach (var method in type.Methods)
-					ProcessMethod (method);
+					modified |= ProcessMethod (method);
 			}
 
 			AddRequiredObjectiveCType (type);
+
+			return modified;
 		}
 
 		void AddRequiredObjectiveCType (TypeDefinition type)
@@ -104,25 +158,45 @@ namespace Xamarin.Linker.Steps
 			}
 		}
 
-		void ProcessMethod (MethodDefinition method)
+		bool ProcessMethod (MethodDefinition method)
 		{
+			var modified = false;
+
 			if (method.IsPInvokeImpl && method.HasPInvokeInfo && method.PInvokeInfo != null) {
 				var pinfo = method.PInvokeInfo;
 				bool addPInvokeSymbol = false;
 
-				if (state != null) {
+				if (State != null) {
 					switch (pinfo.EntryPoint) {
 					case "objc_msgSend":
 					case "objc_msgSendSuper":
 					case "objc_msgSend_stret":
 					case "objc_msgSendSuper_stret":
 					case "objc_msgSend_fpret":
-						state.ProcessMethod (method);
+						State.ProcessMethod (method);
+						modified = true;
 						break;
 					default:
 						break;
 					}
 				}
+
+#if NET
+				// Create a list of all the libraries from Mono that we'll link with
+				// We add 4 different variations for each library:
+				// * with and without a "lib" prefix
+				// * with and without the ".dylib" extension
+				var app = LinkerConfiguration.GetInstance (Context).Application;
+				var monoLibraryVariations = app.MonoLibraries.
+					Where (v => v.EndsWith (".dylib", StringComparison.OrdinalIgnoreCase) || v.EndsWith (".a", StringComparison.OrdinalIgnoreCase)).
+					Select (v => Path.GetFileNameWithoutExtension (v)).
+					Select (v => v.StartsWith ("lib", StringComparison.OrdinalIgnoreCase) ? v.Substring (3) : v).ToHashSet ();
+				monoLibraryVariations.UnionWith (monoLibraryVariations.Select (v => "lib" + v).ToArray ());
+				monoLibraryVariations.UnionWith (monoLibraryVariations.Select (v => v + ".dylib").ToArray ());
+				// If the P/Invoke points to any of those libraries, then we add it as a P/Invoke symbol.
+				if (monoLibraryVariations.Contains (pinfo.Module.Name))
+					addPInvokeSymbol = true;
+#endif
 
 				switch (pinfo.Module.Name) {
 				case "__Internal":
@@ -130,56 +204,17 @@ namespace Xamarin.Linker.Steps
 					DerivedLinkContext.RequiredSymbols.AddFunction (pinfo.EntryPoint).AddMember (method);
 					break;
 
-				case "libSystem.Net.Security.Native":
+#if !NET
 				case "System.Net.Security.Native":
-#if NET
-					// tvOS does not ship with System.Net.Security.Native due to https://github.com/dotnet/runtime/issues/45535
-					if (DerivedLinkContext.App.Platform == ApplePlatform.TVOS) {
-						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break;
-					}
-#endif
-					addPInvokeSymbol = true;
-					break;
-
-				case "libSystem.Security.Cryptography.Native.Apple":
 				case "System.Security.Cryptography.Native.Apple":
-#if NET
-					// https://github.com/dotnet/runtime/issues/47533
-					if (DerivedLinkContext.App.Platform != ApplePlatform.MacOSX) {
-						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break;
-					}
-#endif
-					addPInvokeSymbol = true;
-					break;
-
-				case "libSystem.Native":
 				case "System.Native":
-#if NET
-					// https://github.com/dotnet/runtime/issues/47533
-					if (DerivedLinkContext.App.Platform != ApplePlatform.MacOSX && pinfo.EntryPoint == "SystemNative_ConfigureTerminalForChildProcess") {
-						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break;
-					}
-#endif
 					addPInvokeSymbol = true;
 					break;
-
-				case "libSystem.Globalization.Native":
-				case "System.Globalization.Native":
-#if NET
-					// https://github.com/xamarin/xamarin-macios/issues/11392
-					if (DerivedLinkContext.App.Platform == ApplePlatform.MacCatalyst) {
-						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
-						break;
-					}
 #endif
-					addPInvokeSymbol = true;
-					break;
 
 				default:
-					Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
+					if (!addPInvokeSymbol)
+						Driver.Log (4, "Did not add native reference to {0} in {1} referenced by {2} in {3}.", pinfo.EntryPoint, pinfo.Module.Name, method.FullName, method.Module.Name);
 					break;
 				}
 
@@ -201,6 +236,8 @@ namespace Xamarin.Linker.Steps
 					DerivedLinkContext.RequiredSymbols.AddField ((string) symbol).AddMember (property);
 				}
 			}
+
+			return modified;
 		}
 	}
 }

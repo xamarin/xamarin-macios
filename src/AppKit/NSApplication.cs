@@ -21,7 +21,11 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !__MACCATALYST__
+
 using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -33,7 +37,10 @@ namespace AppKit {
 	public partial class NSApplication : NSResponder {
 		public static bool CheckForIllegalCrossThreadCalls = true;
 		public static bool CheckForEventAndDelegateMismatches = true;
+
+#if !NET
 		public static bool IgnoreMissingAssembliesDuringRegistration = false;
+#endif
 
 		private static Thread mainThread;
 
@@ -134,10 +141,12 @@ namespace AppKit {
 			DiscardEvents ((nuint)(ulong) mask, lastEvent);
 		}
 
+#if !NET
 		[Obsolete ("This method does nothing.")]
 		public static void RestoreWindow (string identifier, Foundation.NSCoder state, NSWindowCompletionHandler onCompletion)
 		{
 		}
+#endif
 
 		// note: if needed override the protected Get|Set methods
 		public NSApplicationActivationPolicy ActivationPolicy { 
@@ -147,3 +156,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

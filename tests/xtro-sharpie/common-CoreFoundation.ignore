@@ -5,6 +5,8 @@
 !missing-field! kCFURLFileProtectionKey not bound
 !missing-field! kCFURLFileProtectionNone not bound
 !missing-field! kCFURLVolumeSupportsFileProtectionKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityForImportantUsageKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityForOpportunisticUsageKey not bound
 
 
 
@@ -39,7 +41,6 @@
 !missing-enum! CFURLComponentType not bound
 !missing-enum! CFURLEnumeratorOptions not bound
 !missing-enum! CFURLEnumeratorResult not bound
-!missing-enum! CFURLError not bound
 !missing-field! kCFAbsoluteTimeIntervalSince1904 not bound
 !missing-field! kCFAbsoluteTimeIntervalSince1970 not bound
 !missing-field! kCFAllocatorUseContext not bound
@@ -127,7 +128,6 @@
 !missing-field! kCFLocaleScriptCode not bound
 !missing-field! kCFLocaleUsesMetricSystem not bound
 !missing-field! kCFLocaleVariantCode not bound
-!missing-field! kCFNull not bound
 !missing-field! kCFNumberFormatterAlwaysShowDecimalSeparator not bound
 !missing-field! kCFNumberFormatterCurrencyCode not bound
 !missing-field! kCFNumberFormatterCurrencyDecimalSeparator not bound
@@ -213,16 +213,8 @@
 !missing-field! kCFURLContentAccessDateKey not bound
 !missing-field! kCFURLContentModificationDateKey not bound
 !missing-field! kCFURLCreationDateKey not bound
-!missing-field! kCFURLCustomIconKey not bound
 !missing-field! kCFURLDocumentIdentifierKey not bound
-!missing-field! kCFURLEffectiveIconKey not bound
 !missing-field! kCFURLFileAllocatedSizeKey not bound
-!missing-field! kCFURLFileDirectoryContents not bound
-!missing-field! kCFURLFileExists not bound
-!missing-field! kCFURLFileLastModificationTime not bound
-!missing-field! kCFURLFileLength not bound
-!missing-field! kCFURLFileOwnerID not bound
-!missing-field! kCFURLFilePOSIXMode not bound
 !missing-field! kCFURLFileResourceIdentifierKey not bound
 !missing-field! kCFURLFileResourceTypeBlockSpecial not bound
 !missing-field! kCFURLFileResourceTypeCharacterSpecial not bound
@@ -237,8 +229,6 @@
 !missing-field! kCFURLFileSizeKey not bound
 !missing-field! kCFURLGenerationIdentifierKey not bound
 !missing-field! kCFURLHasHiddenExtensionKey not bound
-!missing-field! kCFURLHTTPStatusCode not bound
-!missing-field! kCFURLHTTPStatusLine not bound
 !missing-field! kCFURLIsAliasFileKey not bound
 !missing-field! kCFURLIsApplicationKey not bound
 !missing-field! kCFURLIsDirectoryKey not bound
@@ -256,7 +246,6 @@
 !missing-field! kCFURLIsVolumeKey not bound
 !missing-field! kCFURLIsWritableKey not bound
 !missing-field! kCFURLKeysOfUnsetValuesKey not bound
-!missing-field! kCFURLLabelColorKey not bound
 !missing-field! kCFURLLabelNumberKey not bound
 !missing-field! kCFURLLinkCountKey not bound
 !missing-field! kCFURLLocalizedLabelKey not bound
@@ -268,20 +257,16 @@
 !missing-field! kCFURLPreferredIOBlockSizeKey not bound
 !missing-field! kCFURLTotalFileAllocatedSizeKey not bound
 !missing-field! kCFURLTotalFileSizeKey not bound
-!missing-field! kCFURLTypeIdentifierKey not bound
 !missing-field! kCFURLUbiquitousItemDownloadingErrorKey not bound
 !missing-field! kCFURLUbiquitousItemDownloadingStatusCurrent not bound
 !missing-field! kCFURLUbiquitousItemDownloadingStatusDownloaded not bound
 !missing-field! kCFURLUbiquitousItemDownloadingStatusKey not bound
 !missing-field! kCFURLUbiquitousItemDownloadingStatusNotDownloaded not bound
 !missing-field! kCFURLUbiquitousItemHasUnresolvedConflictsKey not bound
-!missing-field! kCFURLUbiquitousItemIsDownloadedKey not bound
 !missing-field! kCFURLUbiquitousItemIsDownloadingKey not bound
 !missing-field! kCFURLUbiquitousItemIsExcludedFromSyncKey not bound
 !missing-field! kCFURLUbiquitousItemIsUploadedKey not bound
 !missing-field! kCFURLUbiquitousItemIsUploadingKey not bound
-!missing-field! kCFURLUbiquitousItemPercentDownloadedKey not bound
-!missing-field! kCFURLUbiquitousItemPercentUploadedKey not bound
 !missing-field! kCFURLUbiquitousItemUploadingErrorKey not bound
 !missing-field! kCFURLVolumeAvailableCapacityKey not bound
 !missing-field! kCFURLVolumeCreationDateKey not bound
@@ -324,13 +309,7 @@
 !missing-field! kCFURLVolumeURLForRemountingKey not bound
 !missing-field! kCFURLVolumeURLKey not bound
 !missing-field! kCFURLVolumeUUIDStringKey not bound
-!missing-pinvoke! CFAbsoluteTimeAddGregorianUnits is not bound
 !missing-pinvoke! CFAbsoluteTimeGetCurrent is not bound
-!missing-pinvoke! CFAbsoluteTimeGetDayOfWeek is not bound
-!missing-pinvoke! CFAbsoluteTimeGetDayOfYear is not bound
-!missing-pinvoke! CFAbsoluteTimeGetDifferenceAsGregorianUnits is not bound
-!missing-pinvoke! CFAbsoluteTimeGetGregorianDate is not bound
-!missing-pinvoke! CFAbsoluteTimeGetWeekOfYear is not bound
 !missing-pinvoke! CFAllocatorCreate is not bound
 !missing-pinvoke! CFAllocatorGetContext is not bound
 !missing-pinvoke! CFAllocatorGetDefault is not bound
@@ -348,7 +327,6 @@
 !missing-pinvoke! CFArrayGetCountOfValue is not bound
 !missing-pinvoke! CFArrayGetFirstIndexOfValue is not bound
 !missing-pinvoke! CFArrayGetLastIndexOfValue is not bound
-!missing-pinvoke! CFArrayGetValues is not bound
 !missing-pinvoke! CFArrayInsertValueAtIndex is not bound
 !missing-pinvoke! CFArrayRemoveAllValues is not bound
 !missing-pinvoke! CFArrayRemoveValueAtIndex is not bound
@@ -552,8 +530,6 @@
 !missing-pinvoke! CFFileSecuritySetOwnerUUID is not bound
 !missing-pinvoke! CFGetAllocator is not bound
 !missing-pinvoke! CFGetRetainCount is not bound
-!missing-pinvoke! CFGregorianDateGetAbsoluteTime is not bound
-!missing-pinvoke! CFGregorianDateIsValid is not bound
 !missing-pinvoke! CFHash is not bound
 !missing-pinvoke! CFLocaleCopyAvailableLocaleIdentifiers is not bound
 !missing-pinvoke! CFLocaleCopyCommonISOCurrencyCodes is not bound
@@ -628,19 +604,14 @@
 !missing-pinvoke! CFPlugInSetLoadOnDemand is not bound
 !missing-pinvoke! CFPlugInUnregisterFactory is not bound
 !missing-pinvoke! CFPlugInUnregisterPlugInType is not bound
-!missing-pinvoke! CFPreferencesCopyApplicationList is not bound
 !missing-pinvoke! CFPreferencesCopyKeyList is not bound
 !missing-pinvoke! CFPreferencesCopyMultiple is not bound
 !missing-pinvoke! CFPreferencesCopyValue is not bound
 !missing-pinvoke! CFPreferencesSetMultiple is not bound
 !missing-pinvoke! CFPreferencesSetValue is not bound
 !missing-pinvoke! CFPreferencesSynchronize is not bound
-!missing-pinvoke! CFPropertyListCreateFromStream is not bound
-!missing-pinvoke! CFPropertyListCreateFromXMLData is not bound
 !missing-pinvoke! CFPropertyListCreateWithStream is not bound
-!missing-pinvoke! CFPropertyListCreateXMLData is not bound
 !missing-pinvoke! CFPropertyListWrite is not bound
-!missing-pinvoke! CFPropertyListWriteToStream is not bound
 !missing-pinvoke! CFReadStreamCreateWithBytesNoCopy is not bound
 !missing-pinvoke! CFReadStreamCreateWithFile is not bound
 !missing-pinvoke! CFReadStreamGetBuffer is not bound
@@ -843,7 +814,6 @@
 !missing-pinvoke! CFURLCopyHostName is not bound
 !missing-pinvoke! CFURLCopyLastPathComponent is not bound
 !missing-pinvoke! CFURLCopyNetLocation is not bound
-!missing-pinvoke! CFURLCopyParameterString is not bound
 !missing-pinvoke! CFURLCopyPassword is not bound
 !missing-pinvoke! CFURLCopyPath is not bound
 !missing-pinvoke! CFURLCopyPathExtension is not bound
@@ -863,33 +833,25 @@
 !missing-pinvoke! CFURLCreateCopyDeletingLastPathComponent is not bound
 !missing-pinvoke! CFURLCreateCopyDeletingPathExtension is not bound
 !missing-pinvoke! CFURLCreateData is not bound
-!missing-pinvoke! CFURLCreateDataAndPropertiesFromResource is not bound
 !missing-pinvoke! CFURLCreateFilePathURL is not bound
 !missing-pinvoke! CFURLCreateFileReferenceURL is not bound
 !missing-pinvoke! CFURLCreateFromFileSystemRepresentation is not bound
 !missing-pinvoke! CFURLCreateFromFileSystemRepresentationRelativeToBase is not bound
-!missing-pinvoke! CFURLCreateFromFSRef is not bound
-!missing-pinvoke! CFURLCreatePropertyFromResource is not bound
 !missing-pinvoke! CFURLCreateResourcePropertiesForKeysFromBookmarkData is not bound
 !missing-pinvoke! CFURLCreateResourcePropertyForKeyFromBookmarkData is not bound
-!missing-pinvoke! CFURLCreateStringByAddingPercentEscapes is not bound
 !missing-pinvoke! CFURLCreateStringByReplacingPercentEscapes is not bound
-!missing-pinvoke! CFURLCreateStringByReplacingPercentEscapesUsingEncoding is not bound
 !missing-pinvoke! CFURLCreateWithBytes is not bound
 !missing-pinvoke! CFURLCreateWithFileSystemPathRelativeToBase is not bound
-!missing-pinvoke! CFURLDestroyResource is not bound
 !missing-pinvoke! CFURLEnumeratorCreateForDirectoryURL is not bound
 !missing-pinvoke! CFURLEnumeratorCreateForMountedVolumes is not bound
 !missing-pinvoke! CFURLEnumeratorGetDescendentLevel is not bound
 !missing-pinvoke! CFURLEnumeratorGetNextURL is not bound
-!missing-pinvoke! CFURLEnumeratorGetSourceDidChange is not bound
 !missing-pinvoke! CFURLEnumeratorGetTypeID is not bound
 !missing-pinvoke! CFURLEnumeratorSkipDescendents is not bound
 !missing-pinvoke! CFURLGetBaseURL is not bound
 !missing-pinvoke! CFURLGetByteRangeForComponent is not bound
 !missing-pinvoke! CFURLGetBytes is not bound
 !missing-pinvoke! CFURLGetFileSystemRepresentation is not bound
-!missing-pinvoke! CFURLGetFSRef is not bound
 !missing-pinvoke! CFURLGetPortNumber is not bound
 !missing-pinvoke! CFURLHasDirectoryPath is not bound
 !missing-pinvoke! CFURLResourceIsReachable is not bound
@@ -899,7 +861,6 @@
 !missing-pinvoke! CFURLStartAccessingSecurityScopedResource is not bound
 !missing-pinvoke! CFURLStopAccessingSecurityScopedResource is not bound
 !missing-pinvoke! CFURLWriteBookmarkDataToFile is not bound
-!missing-pinvoke! CFURLWriteDataAndPropertiesToResource is not bound
 !missing-pinvoke! CFUUIDCreate is not bound
 !missing-pinvoke! CFUUIDCreateFromUUIDBytes is not bound
 !missing-pinvoke! CFUUIDCreateString is not bound
@@ -951,7 +912,7 @@
 !unknown-pinvoke! dispatch_queue_attr_make_with_autorelease_frequency bound
 !unknown-pinvoke! dispatch_queue_attr_make_with_qos_class bound
 !unknown-pinvoke! dispatch_queue_create bound
-!unknown-pinvoke! dispatch_queue_create_with_target bound
+!unknown-pinvoke! dispatch_queue_create_with_target$V2 bound
 !unknown-pinvoke! dispatch_queue_get_label bound
 !unknown-pinvoke! dispatch_queue_get_qos_class bound
 !unknown-pinvoke! dispatch_queue_get_specific bound
@@ -982,6 +943,7 @@
 !unknown-pinvoke! dispatch_write bound
 !unknown-pinvoke! open bound
 !unknown-pinvoke! write bound
+!unknown-pinvoke! uname bound
 !missing-field! kCFStreamErrorDomainSOCKS not bound
 !missing-field! kCFStreamErrorDomainSSL not bound
 !missing-field! kCFStreamPropertyShouldCloseNativeSocket not bound
@@ -994,8 +956,6 @@
 !missing-field! kCFStreamPropertySOCKSVersion not bound
 !missing-field! kCFStreamSocketSecurityLevelNegotiatedSSL not bound
 !missing-field! kCFStreamSocketSecurityLevelNone not bound
-!missing-field! kCFStreamSocketSecurityLevelSSLv2 not bound
-!missing-field! kCFStreamSocketSecurityLevelSSLv3 not bound
 !missing-field! kCFStreamSocketSecurityLevelTLSv1 not bound
 !missing-field! kCFStreamSocketSOCKSVersion4 not bound
 !missing-field! kCFStreamSocketSOCKSVersion5 not bound

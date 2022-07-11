@@ -8,10 +8,13 @@
  */
 #endregion
 
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 
+#if !NET
 namespace OpenTK
 {
     /// <summary>
@@ -295,3 +298,4 @@ namespace OpenTK
         #endregion
     }
 }
+#endif // !NET

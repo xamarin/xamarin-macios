@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -28,19 +30,19 @@ namespace TVMLKit {
 				var value = _UpdateType;
 				switch ((long) value) {
 				case 2:
-					if (UIDevice.CurrentDevice.CheckSystemVersion (12, 0)) {
+					if (SystemVersion.CheckiOS (12, 0)) {
 						return TVElementUpdateType.Styles;
 					} else {
 						return TVElementUpdateType.Children;
 					}
 				case 3:
-					if (UIDevice.CurrentDevice.CheckSystemVersion (12, 0)) {
+					if (SystemVersion.CheckiOS (12, 0)) {
 						return TVElementUpdateType.Children;
 					} else {
 						return TVElementUpdateType.Self;
 					}
 				case 4:
-					if (UIDevice.CurrentDevice.CheckSystemVersion (12, 0)) {
+					if (SystemVersion.CheckiOS (12, 0)) {
 						return TVElementUpdateType.Self;
 					} else {
 						return TVElementUpdateType.Styles;

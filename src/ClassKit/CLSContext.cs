@@ -1,4 +1,4 @@
-﻿//
+//
 // CLSContext.cs
 //
 // Authors:
@@ -6,6 +6,8 @@
 //
 // Copyright 2018 Xamarin Inc. All rights reserved.
 //
+
+#nullable enable
 
 using System;
 using Foundation;

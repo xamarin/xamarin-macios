@@ -35,7 +35,11 @@ namespace Xamarin.Mac.Tests {
 
 				Assert.That (mi.ContentType.ToString (), Is.EqualTo ("com.apple.application-bundle"), "ContentType");
 				Assert.That (mi.ContentTypeTree.Length, Is.GreaterThan (1), "ContentTypeTree");
+#if NET
+				Assert.That (mi.UbiquitousItemDownloadingStatus, Is.EqualTo (NSItemDownloadingStatus.Unknown), "UbiquitousItemDownloadingStatus");
+#else
 				Assert.That (mi.DownloadingStatus, Is.EqualTo (NSItemDownloadingStatus.Unknown), "DownloadingStatus");
+#endif
 				Assert.Null (mi.UbiquitousItemDownloadingError, "UbiquitousItemDownloadingError");
 				Assert.Null (mi.UbiquitousItemUploadingError, "UbiquitousItemUploadingError");
 				Assert.Null (mi.UbiquitousItemContainerDisplayName, "UbiquitousItemContainerDisplayName");

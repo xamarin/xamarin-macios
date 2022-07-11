@@ -38,7 +38,7 @@ namespace Xamarin.MacDev.Tasks {
 				arguments,
 				output: out var output,
 				working_directory: null,
-				timeout: TimeSpan.FromSeconds (30),
+				timeout: TimeSpan.FromSeconds (120),
 				environment_variables: environment);
 			if (rv != 0) {
 				var failure = $"'make {StringUtils.FormatArguments (StringUtils.QuoteForProcess (arguments))}' exited with exit code {rv}:";
@@ -114,7 +114,7 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void TestPEAssembly ()
 		{
-			var complexAssemblyPath = Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly", "bin", "Debug", "net6.0");
+			var complexAssemblyPath = Path.Combine (Configuration.RootPath, "tests", "common", "TestProjects", "ComplexAssembly", "bin", "Debug", Configuration.DotNetTfm);
 			var complexFiles = new string [] {
 				"ComplexAssembly.dll",
 				"ComplexAssembly.pdb",
@@ -275,5 +275,28 @@ namespace Xamarin.MacDev.Tasks {
 			Assert.That (new FileInfo (fileA).Length, Is.EqualTo (new FileInfo (nonFatBinary).Length), "File length");
 		}
 
+		[Test]
+		public void TestDirectoriesAsSymlinks ()
+		{
+			var bundleA = Path.Combine (Cache.CreateTemporaryDirectory (), "MergeMe.app");
+			var bundleB = Path.Combine (Cache.CreateTemporaryDirectory (), "MergeMe.app");
+			var fileA = Path.Combine (bundleA, "A", "A.txt");
+			var fileB = Path.Combine (bundleB, "A.txt");
+			Directory.CreateDirectory (Path.GetDirectoryName (fileA));
+			File.WriteAllText (fileA, "A");
+			Directory.CreateDirectory (Path.GetDirectoryName (fileB));
+			File.WriteAllText (fileB, "A");
+			var linkA = Path.Combine (bundleA, "B");
+			var linkB = Path.Combine (bundleB, "B");
+			Assert.IsTrue (PathUtils.Symlink ("A", linkA), "Link A");
+			Assert.IsTrue (PathUtils.Symlink ("A", linkB), "Link B");
+
+			var outputBundle = Path.Combine (Cache.CreateTemporaryDirectory (), "Merged.app");
+			var task = CreateTask (outputBundle, bundleA, bundleB);
+			Assert.IsTrue (task.Execute (), "Task execution");
+			Assert.IsTrue (PathUtils.IsSymlink (Path.Combine (outputBundle, "B")), "IsSymlink");
+			Assert.IsFalse (PathUtils.IsSymlink (Path.Combine (outputBundle, "A", "A.txt")), "IsSymlink");
+			Assert.IsFalse (PathUtils.IsSymlink (Path.Combine (outputBundle, "B", "A.txt")), "IsSymlink");
+		}
 	}
 }

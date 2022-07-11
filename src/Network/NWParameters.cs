@@ -11,19 +11,40 @@
 
 using System;
 using System.Runtime.InteropServices;
-using System.Runtime.CompilerServices;
-using ObjCRuntime;
+
 using Foundation;
+using ObjCRuntime;
 using CoreFoundation;
 
 using nw_parameters_t=System.IntPtr;
+using OS_nw_parameters=System.IntPtr;
+using nw_parameters_attribution_t=System.IntPtr;
+using OS_nw_privacy_context=System.IntPtr;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Network {
 
-	[TV (12,0), Mac (10,14), iOS (12,0)]
+#if NET
+	[SupportedOSPlatform ("tvos12.0")]
+	[SupportedOSPlatform ("macos10.14")]
+	[SupportedOSPlatform ("ios12.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (12,0)]
+	[Mac (10,14)]
+	[iOS (12,0)]
 	[Watch (6,0)]
+#endif
 	public class NWParameters : NativeObject {
-		public NWParameters (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+#if NET
+		internal NWParameters (NativeHandle handle, bool owns) : base (handle, owns) {}
+#else
+		public NWParameters (NativeHandle handle, bool owns) : base (handle, owns) {}
+#endif
 
 		static unsafe BlockLiteral *DEFAULT_CONFIGURATION () => (BlockLiteral *) NWParametersConstants._DefaultConfiguration;
 
@@ -32,24 +53,24 @@ namespace Network {
 		delegate void nw_parameters_configure_protocol_block_t (IntPtr block, IntPtr iface);
 		static nw_parameters_configure_protocol_block_t static_ConfigureHandler = TrampolineConfigureHandler;
 
-		[MonoPInvokeCallback(typeof (nw_parameters_configure_protocol_block_t))]
+		[MonoPInvokeCallback (typeof (nw_parameters_configure_protocol_block_t))]
 		static void TrampolineConfigureHandler (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWProtocolOptions>> (block);
-			if (del != null) {
+			if (del is not null) {
 				using (var tempOptions = new NWProtocolOptions (iface, owns: false)) 
 				using (var definition = tempOptions.ProtocolDefinition) {
 					NWProtocolOptions? castedOptions = null;
 
-					if (definition.Equals (NWProtocolDefinition.TcpDefinition)) {
+					if (definition.Equals (NWProtocolDefinition.CreateTcpDefinition ())) {
 						castedOptions = new NWProtocolTcpOptions (iface, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.UdpDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateUdpDefinition ())) {
 						castedOptions = new NWProtocolUdpOptions (iface, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.TlsDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateTlsDefinition ())) {
 						castedOptions = new NWProtocolTlsOptions (iface, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.IPDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateIPDefinition ())) {
 						castedOptions = new NWProtocolIPOptions (iface, owns: false);
-					} else if (definition.Equals (NWProtocolDefinition.WebSocketDefinition)) {
+					} else if (definition.Equals (NWProtocolDefinition.CreateWebSocketDefinition ())) {
 						castedOptions = new NWWebSocketOptions (iface, owns: false);
 					} 
 
@@ -76,22 +97,22 @@ namespace Network {
 
 			var tlsPtr = &tlsHandler;
 			var tcpPtr = &tcpHandler;
-			if (configureTls == null)
+			if (configureTls is null)
 				tlsPtr = DEFAULT_CONFIGURATION ();
 			else
 				tlsHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTls);
 
-			if (configureTcp == null)
+			if (configureTcp is null)
 				tcpPtr = DEFAULT_CONFIGURATION ();
 			else
 				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
 
 			var ptr = nw_parameters_create_secure_tcp (tlsPtr, tcpPtr);
 
-			if (configureTls != null)
+			if (configureTls is not null)
 				tlsPtr->CleanupBlock ();
 
-			if (configureTcp != null)
+			if (configureTcp is not null)
 				tcpPtr->CleanupBlock ();
 
 			return new NWParameters (ptr, owns: true);
@@ -105,14 +126,14 @@ namespace Network {
 
 			var tcpPtr = &tcpHandler;
 
-			if (configureTcp == null)
+			if (configureTcp is null)
 				tcpPtr = DEFAULT_CONFIGURATION ();
 			else
 				tcpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTcp);
 
 			var ptr = nw_parameters_create_secure_tcp (DISABLE_PROTOCOL (), tcpPtr);
 
-			if (configureTcp != null)
+			if (configureTcp is not null)
 				tcpPtr->CleanupBlock ();
 
 			return new NWParameters (ptr, owns: true);
@@ -134,22 +155,22 @@ namespace Network {
 			BlockLiteral *tlsPtr = &tlsHandler;
 			BlockLiteral *udpPtr = &udpHandler;
 
-			if (configureTls == null)
+			if (configureTls is null)
 				tlsPtr = DEFAULT_CONFIGURATION ();
 			else
 				tlsHandler.SetupBlockUnsafe (static_ConfigureHandler, configureTls);
 
-			if (configureUdp == null)
+			if (configureUdp is null)
 				udpPtr = DEFAULT_CONFIGURATION ();
 			else
 				udpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureUdp);
 
 			var ptr = nw_parameters_create_secure_udp (tlsPtr, udpPtr);
 
-			if (configureTls != null)
+			if (configureTls is not null)
 				tlsPtr->CleanupBlock ();
 
-			if (configureUdp != null)
+			if (configureUdp is not null)
 				udpPtr->CleanupBlock ();
 
 			return new NWParameters (ptr, owns: true);
@@ -162,39 +183,59 @@ namespace Network {
 			var udpHandler = new BlockLiteral ();
 
 			var udpPtr = &udpHandler;
-			if (configureUdp == null)
+			if (configureUdp is null)
 				udpPtr = DEFAULT_CONFIGURATION ();
 			else
 				udpHandler.SetupBlockUnsafe (static_ConfigureHandler, configureUdp);
 
 			var ptr = nw_parameters_create_secure_udp (DISABLE_PROTOCOL (), udpPtr);
 
-			if (configureUdp != null)
+			if (configureUdp is not null)
 				udpPtr->CleanupBlock ();
 
 			return new NWParameters (ptr, owns: true);
 		}
 
 #if MONOMAC
-		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10,15)]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		unsafe static extern IntPtr nw_parameters_create_custom_ip (byte custom_ip_protocol_number, BlockLiteral *configure_ip);
 
-		[NoWatch, NoTV, NoiOS, Mac (10,15)]
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (10,15)]
+#endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public unsafe static NWParameters CreateCustomIP (byte protocolNumber, Action<NWProtocolOptions>? configureCustomIP = null)
 		{
 			var ipHandler = new BlockLiteral ();
 
 			var ipPtr = &ipHandler;
-			if (configureCustomIP == null)
+			if (configureCustomIP is null)
 				ipPtr = DEFAULT_CONFIGURATION ();
 			else
 				ipHandler.SetupBlockUnsafe (static_ConfigureHandler, configureCustomIP);
 
 			var ptr = nw_parameters_create_custom_ip (protocolNumber, ipPtr);
 
-			if (configureCustomIP != null)
+			if (configureCustomIP is not null)
 				ipPtr->CleanupBlock ();
 
 			return new NWParameters (ptr, owns: true);
@@ -293,8 +334,8 @@ namespace Network {
 
 		public void ProhibitInterface (NWInterface iface)
 		{
-			if (iface == null)
-				throw new ArgumentNullException (nameof (iface));
+			if (iface is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (iface));
 
 			nw_parameters_prohibit_interface (GetCheckedHandle (), iface.Handle);
 		}
@@ -342,7 +383,7 @@ namespace Network {
 		static bool TrampolineIterateProhibitedHandler (IntPtr block, IntPtr iface)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterface,bool>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var x = new NWInterface (iface, owns: false);
 				var ret = del (x);
 				x.Dispose ();
@@ -375,7 +416,7 @@ namespace Network {
 		static bool TrampolineIterateProhibitedTypeHandler (IntPtr block, NWInterfaceType type)
 		{
 			var del = BlockLiteral.GetTarget<Func<NWInterfaceType,bool>> (block);
-			if (del != null)
+			if (del is not null)
 				return del (type);
 			return false;
 		}
@@ -476,19 +517,171 @@ namespace Network {
 			set => nw_parameters_set_include_peer_to_peer (GetCheckedHandle (), value);
 		}
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool nw_parameters_get_prohibit_constrained (IntPtr parameters);
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_parameters_set_prohibit_constrained (IntPtr parameters, [MarshalAs (UnmanagedType.I1)] bool prohibit_constrained);
 
-		[TV (13,0), Mac (10,15), iOS (13,0)]
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
 		public bool ProhibitConstrained {
 			get => nw_parameters_get_prohibit_constrained (GetCheckedHandle ());
 			set => nw_parameters_set_prohibit_constrained (GetCheckedHandle (), value);
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_attribution (OS_nw_parameters parameters, NWParametersAttribution attribution);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern NWParametersAttribution nw_parameters_get_attribution (OS_nw_parameters parameters);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		public NWParametersAttribution Attribution {
+			get => nw_parameters_get_attribution (GetCheckedHandle ());
+			set => nw_parameters_set_attribution (GetCheckedHandle (), value);
+		}
+		
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_privacy_context (OS_nw_parameters parameters, OS_nw_privacy_context privacy_context);
+
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		public void SetPrivacyContext (NWPrivacyContext privacyContext)
+			=> nw_parameters_set_privacy_context (GetCheckedHandle (), privacyContext.Handle);
+		
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static unsafe extern OS_nw_parameters nw_parameters_create_quic (void *configureQuic);
+		
+#if NET
+		[SupportedOSPlatform ("tvos15.0")]
+		[SupportedOSPlatform ("macos12.0")]
+		[SupportedOSPlatform ("ios15.0")]
+		[SupportedOSPlatform ("maccatalyst15.0")]
+#else
+		[Watch (8,0)]
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public static NWParameters CreateQuic (Action<NWProtocolOptions>? configureQuic = null)
+		{
+			var quicHandlers = new BlockLiteral ();
+
+			unsafe {
+				var quicPtr = &quicHandlers;
+
+				if (configureQuic is null)
+					quicPtr = DEFAULT_CONFIGURATION ();
+				else
+					quicHandlers.SetupBlockUnsafe (static_ConfigureHandler, configureQuic);
+
+				var ptr = nw_parameters_create_quic (quicPtr);
+
+				if (configureQuic is not null)
+					quicPtr->CleanupBlock ();
+				return new NWParameters (ptr, owns: true);
+			}
 		}
 	}
 }

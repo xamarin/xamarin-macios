@@ -2497,6 +2497,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid {0} found on &apos;{1}&apos;. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new.
+        /// </summary>
+        public static string MT4124_I {
+            get {
+                return ResourceManager.GetString("MT4124_I", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The registrar found an invalid type &apos;{0}&apos; in signature for method &apos;{1}&apos;: The interface must have a Protocol attribute specifying its wrapper type.
         ///		.
         /// </summary>
@@ -3103,6 +3112,15 @@ namespace Xamarin.Bundler {
         public static string MT4185 {
             get {
                 return ResourceManager.GetString("MT4185", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The registrar found a non-optimal type `{0}`: the type does not have a constructor that takes two (ObjCRuntime.NativeHandle, bool) arguments. However, a constructor that takes two (System.IntPtr, bool) arguments was found (and will be used instead). It&apos;s highly recommended to change the signature of the (System.IntPtr, bool) constructor to be (ObjCRuntime.NativeHandle, bool)..
+        /// </summary>
+        public static string MT4186 {
+            get {
+                return ResourceManager.GetString("MT4186", resourceCulture);
             }
         }
         
@@ -3749,7 +3767,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not map the iOS version {0} to a macOS version for Mac Catalyst.
+        ///   Looks up a localized string similar to Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}.
         /// </summary>
         public static string MX0183 {
             get {
@@ -3758,7 +3776,7 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could not map the macOS version {0} to a corresponding iOS version for Mac Catalyst.
+        ///   Looks up a localized string similar to Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}.
         /// </summary>
         public static string MX0184 {
             get {
@@ -3782,6 +3800,15 @@ namespace Xamarin.Bundler {
         public static string MX1009 {
             get {
                 return ResourceManager.GetString("MX1009", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not decompress the file &apos;{0}&apos;. Please review the build log for more information from the native &apos;unzip&apos; command..
+        /// </summary>
+        public static string MX1306 {
+            get {
+                return ResourceManager.GetString("MX1306", resourceCulture);
             }
         }
         
@@ -4025,6 +4052,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occured while executing the custom linker steps. Please review the build log for more information..
+        /// </summary>
+        public static string MX7000 {
+            get {
+                return ResourceManager.GetString("MX7000", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Don&apos;t know how to marshal the parameter of type {0} for parameter {1} in call to {2}.
         /// </summary>
         public static string MX8037 {
@@ -4057,6 +4093,24 @@ namespace Xamarin.Bundler {
         public static string MX8040 {
             get {
                 return ResourceManager.GetString("MX8040", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to create an instance of the type {0}..
+        /// </summary>
+        public static string MX8041 {
+            get {
+                return ResourceManager.GetString("MX8041", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception occurred while trying to invoke the function {0}: {1}..
+        /// </summary>
+        public static string MX8042 {
+            get {
+                return ResourceManager.GetString("MX8042", resourceCulture);
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 namespace Xharness {
 
 	[Flags]
@@ -32,21 +32,21 @@ namespace Xharness {
 
 		public string Platform = "x86";
 
-		public MacTestProject () : base ()
-		{
-		}
-
-		public MacTestProject (string path, bool isExecutableProject = true, MacFlavors targetFrameworkFlavor = MacFlavors.Full | MacFlavors.Modern) : base (path, isExecutableProject)
+		public MacTestProject (TestLabel label, string path, bool isExecutableProject = true, MacFlavors targetFrameworkFlavor = MacFlavors.Full | MacFlavors.Modern) : base (label, path, isExecutableProject)
 		{
 			TargetFrameworkFlavors = targetFrameworkFlavor;
 		}
 
 		public override TestProject Clone ()
 		{
-			var rv = (MacTestProject) base.Clone ();
-			rv.TargetFrameworkFlavors = TargetFrameworkFlavors;
+			return CompleteClone (new MacTestProject (Label, Path, IsExecutableProject, TargetFrameworkFlavors));
+		}
+
+		protected override TestProject CompleteClone (TestProject project)
+		{
+			var rv = (MacTestProject) project;
 			rv.Platform = Platform;
-			return rv;
+			return base.CompleteClone (rv);
 		}
 
 		public override string ToString ()

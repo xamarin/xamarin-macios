@@ -1,4 +1,4 @@
-﻿// Copyright 2016 Xamarin Inc. All rights reserved
+// Copyright 2016 Xamarin Inc. All rights reserved
 
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
@@ -10,6 +10,7 @@ using MediaPlayer;
 using ObjCRuntime;
 using UIKit;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MediaPlayer
 {
@@ -20,10 +21,10 @@ namespace MonoTouchFixtures.MediaPlayer
 	{
 		MPNowPlayingInfo NowPlayingInfo;
 
-		bool v8_0 = TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 0);
-		bool v9_0 = TestRuntime.CheckSystemVersion (PlatformName.iOS, 9, 0);
-		bool v10_0 = TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 0);
-		bool v10_3 = TestRuntime.CheckSystemVersion (PlatformName.iOS, 10, 3);
+		bool v8_0 = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 0);
+		bool v9_0 = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 9, 0);
+		bool v10_0 = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 10, 0);
+		bool v10_3 = TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 10, 3);
 
 		[SetUp]
 		public void SetUp ()

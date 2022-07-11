@@ -1,4 +1,4 @@
-﻿//
+//
 // UIAppearance Unit Tests
 //
 // Authors:
@@ -16,6 +16,7 @@ using UIKit;
 using ObjCRuntime;
 
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.UIKit {
 
@@ -48,7 +49,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Appearance ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -77,7 +78,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void AppearanceWhenContainedIn ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -106,7 +107,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void AppearanceWhenContainedIn_UITraitCollection ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;
@@ -156,7 +157,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void Appearance_UITraitCollection ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
 			using (var traits = new UITraitCollection ()) {
 				nfloat r, g, b, a;

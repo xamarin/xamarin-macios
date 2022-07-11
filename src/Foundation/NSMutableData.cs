@@ -6,9 +6,9 @@
 // Copyright 2010, Novell, Inc.
 // Copyright 2013-2014 Xamarin Inc (http://www.xamarin.com)
 
+#nullable enable
+
 using System;
-using ObjCRuntime;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,15 +19,15 @@ namespace Foundation {
 		public override byte this [nint idx] {
 			set {
 				if (idx < 0 || (ulong) idx > Length)
-					throw new ArgumentException ("idx");
-				Marshal.WriteByte (new IntPtr (Bytes.ToInt64 () + idx), value);
+					throw new ArgumentException (nameof (idx));
+				Marshal.WriteByte (new IntPtr (((long) Bytes) + idx), value);
 			}
 		}
 
 		public void AppendBytes (byte [] bytes)
 		{
-			if (bytes == null)
-				throw new ArgumentNullException ("bytes");
+			if (bytes is null)
+				throw new ArgumentNullException (nameof (bytes));
 			
 			unsafe {
 				fixed (byte *p = &bytes[0]){
@@ -38,13 +38,13 @@ namespace Foundation {
 
 		public void AppendBytes (byte [] bytes, nint start, nint len)
 		{
-			if (bytes == null)
-				throw new ArgumentNullException ("bytes");
+			if (bytes is null)
+				throw new ArgumentNullException (nameof (bytes));
 
 			if (start < 0 || start > bytes.Length)
-				throw new ArgumentException ("start");
+				throw new ArgumentException (nameof (start));
 			if (start+len > bytes.Length)
-				throw new ArgumentException ("len");
+				throw new ArgumentException (nameof (len));
 			
 			unsafe {
 				fixed (byte *p = &bytes[start]){

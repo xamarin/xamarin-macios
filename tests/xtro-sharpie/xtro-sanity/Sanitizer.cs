@@ -1,46 +1,12 @@
-﻿using System;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
 namespace Extrospection {
 	class Sanitizer {
 
-		static List<string> platforms;
-
-		static List<string> Platforms {
-			get {
-				if (platforms != null)
-					return platforms;
-
-				platforms = new List<string> (4);
-				foreach (var line in File.ReadAllLines ("../../Make.config")) {
-					var eq = line.IndexOf ('=');
-					if (eq == -1)
-						continue;
-					if (!line.StartsWith ("INCLUDE_", StringComparison.Ordinal))
-						continue;
-
-					switch (line.Substring (0, eq)) {
-					case "INCLUDE_IOS":
-						platforms.Add ("iOS");
-						break;
-					case "INCLUDE_TVOS":
-						platforms.Add ("tvOS");
-						break;
-					case "INCLUDE_WATCH":
-						platforms.Add ("watchOS");
-						break;
-					case "INCLUDE_MAC":
-						platforms.Add ("macOS");
-						break;
-					case "INCLUDE_MACCATALYST":
-						platforms.Add ("MacCatalyst");
-						break;
-					}
-				}
-				return platforms;
-			}
-		}
+		static List<string> Platforms;
 
 		static bool IsEntry (string line)
 		{
@@ -61,7 +27,7 @@ namespace Extrospection {
 					continue;
 				if (entry [0] != '#') {
 					Log ($"?bad-entry? '{entry}' in '{filename}'");
-				} else if (entry [1] == '!') {
+				} else if (entry.Length > 1 && entry [1] == '!') {
 					Log ($"?bad-comment? '{entry}' in '{filename}'");
 				}
 			}
@@ -150,21 +116,47 @@ namespace Extrospection {
 				var last = file.LastIndexOf ('-');
 				var fx = file.Substring (last + 1, file.Length - last - 6);
 				var raw = Path.ChangeExtension (file, ".raw");
+				var failures = new List<string> ();
+				var entries = File.ReadAllLines (file);
 				if (File.Exists (raw)) {
 					var specific = new List<string> (File.ReadAllLines (raw));
-					foreach (var entry in File.ReadAllLines (file)) {
+					foreach (var entry in entries) {
 						if (!IsEntry (entry))
 							continue;
-						if (!specific.Contains (entry))
+						if (!specific.Contains (entry)) {
 							Log ($"?fixed-todo? Entry '{entry}' in '{Path.GetFileName (file)}' is not found in corresponding '{Path.GetFileName (raw)}' file");
+							failures.Add (entry);
+						}
 					}
 				} else {
 					// no .raw then everything is fixed
-					foreach (var entry in File.ReadAllLines (file)) {
+					foreach (var entry in entries) {
 						if (!IsEntry (entry))
 							continue;
 						Log ($"?fixed-todo? Entry '{entry}' in '{Path.GetFileName (file)}' might be fixed since there's no corresponding '{Path.GetFileName (raw)}' file");
+						failures.Add (entry);
 					}
+				}
+				if (failures.Count > 0 && !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"))) {
+					var sanitized = new List<string> (entries);
+					foreach (var failure in failures)
+						sanitized.Remove (failure);
+					File.WriteAllLines (file, sanitized);
+					// since we are in AUTO_SANITIZE, if the file is empty, remove it.
+					if (sanitized.Count == 0) {
+						File.Delete (file);
+					}
+				}
+			}
+		}
+
+		static void NoEmptyTodo ()
+		{
+			foreach (var file in Directory.GetFiles (directory, "*.todo")) {
+				if (!IsIncluded (file))
+					continue;
+				if (!(File.ReadLines(file).Count() > 0)) {
+					Log ($"?empty-todo? File '{Path.GetFileName (file)}' is empty. Empty todo files should be removed.");
 				}
 			}
 		}
@@ -182,7 +174,7 @@ namespace Extrospection {
 		public static int Main (string [] args)
 		{
 			directory = args.Length == 0 ? "." : args [0];
-			Environment.CurrentDirectory = directory;
+			Platforms = args.Skip (1).ToList ();
 
 			// cache stuff
 			foreach (var file in Directory.GetFiles (directory, "common-*.ignore")) {
@@ -252,7 +244,7 @@ namespace Extrospection {
 							break;
 					}
 					if (!found) {
-						Log ($"?unknown-entry? {entry} in 'common-{fx}.ignore'");
+						Log ($"?unknown-entry? {entry} in '{Path.Combine (directory, $"common-{fx}.ignore")}'");
 						failures.Add (entry);
 					}
 				}
@@ -300,6 +292,9 @@ namespace Extrospection {
 
 			// entries in .todo should be found in .raw files - else it's likely fixed (and out of date)
 			NoFixedTodo ();
+
+			// empty files should be removed
+			NoEmptyTodo ();
 
 			if (count == 0)
 				Console.WriteLine ("Sanity check passed");

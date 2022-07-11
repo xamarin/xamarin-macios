@@ -3,9 +3,7 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC && !XAMCORE_3_0
 
 using System;
-using System.Drawing;
 using Foundation;
-using MediaPlayer;
 using AudioToolbox;
 using ObjCRuntime;
 using NUnit.Framework;
@@ -18,6 +16,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		
 		public AudioSessionTest ()
 		{
+			TestRuntime.RequestMicrophonePermission ();
 			AudioSession.Initialize ();
 		}
 		
@@ -27,10 +26,6 @@ namespace MonoTouchFixtures.AudioToolbox {
 			var input = AudioSession.InputRoute;
 			
 			Assert.That (Enum.IsDefined (typeof (AudioSessionInputRouteKind), input), "InputRoute");
-			if (Runtime.Arch == Arch.DEVICE) {
-				// Apparently my iPad2 doesn't have microphone ?!?
-				//Assert.That (input != AudioSessionInputRouteKind.None, "All known devices has microphones");
-			}
 			
 			var outputs = AudioSession.OutputRoutes;
 			if (outputs != null) {
@@ -38,7 +33,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 					Assert.That (Enum.IsDefined (typeof (AudioSessionOutputRouteKind), output), "Output: " + output.ToString ());
 			}
 			
-			if (Runtime.Arch == Arch.DEVICE) {
+			if (TestRuntime.IsDevice) {
 				Assert.That (outputs != null && outputs.Length > 0, "All known devices have at least speakers #1");
 				Assert.That (outputs [0] != AudioSessionOutputRouteKind.None, "All known devices have at least speakers #2");
 			}

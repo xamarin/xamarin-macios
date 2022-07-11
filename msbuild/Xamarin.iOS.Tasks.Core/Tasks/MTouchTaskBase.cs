@@ -64,9 +64,6 @@ namespace Xamarin.iOS.Tasks
 
 		#region Outputs
 
-		[Output]
-		public string CompiledArchitectures { get; set; }
-
 		// This property is required for VS to write the output native executable files
 		// and ensure the Inputs/Outputs of the msbuild target works correcly
 		[Output]
@@ -229,9 +226,6 @@ namespace Xamarin.iOS.Tasks
 					abi = "armv7" + llvm + thumb;
 			}
 
-			// Output the CompiledArchitectures
-			CompiledArchitectures = architectures.ToString ();
-
 			args.AddLine ($"--abi={abi}");
 
 			// output symbols to preserve when stripping
@@ -333,7 +327,7 @@ namespace Xamarin.iOS.Tasks
 			if (!string.IsNullOrWhiteSpace (License))
 				args.AddLine ($"--license={License}");
 
-			return CreateResponseFile (args, unescapedArgs);
+			return args.CreateResponseFile (this, ResponseFilePath, unescapedArgs);
 		}
 
 		static bool IsFrameworkItem (ITaskItem item)

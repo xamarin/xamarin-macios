@@ -12,7 +12,7 @@ namespace LocalAuthentication {
 		TouchId,
 		[Mac (10,15)]
 		FaceId,
-#if !XAMCORE_4_0
+#if !NET
 		[NoMac]
 		[Obsolete ("Use 'FaceId' instead.")]
 		TypeFaceId = FaceId,
@@ -29,7 +29,7 @@ namespace LocalAuthentication {
 		[Export ("localizedFallbackTitle")]
 		string LocalizedFallbackTitle { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[iOS (8,3)]
 		[Field ("LAErrorDomain")]
 		NSString ErrorDomain { get; }
@@ -78,12 +78,12 @@ namespace LocalAuthentication {
 		[Export ("touchIDAuthenticationAllowableReuseDuration")]
 		double /* NSTimeInterval */ TouchIdAuthenticationAllowableReuseDuration { get; set; }
 
-#if !MONOMAC
-		[Availability (Introduced = Platform.iOS_8_3, Deprecated = Platform.iOS_9_0)]
+		[iOS (8, 3), Deprecated (PlatformName.iOS, 9, 0)]
+		[Mac (10, 10, 3), Deprecated (PlatformName.MacOSX, 10, 11)]
 		[NullAllowed]
 		[Export ("maxBiometryFailures")]
 		NSNumber MaxBiometryFailures { get; set; }
-#endif
+
 		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
 		[Export ("localizedReason")]
 		string LocalizedReason { get; set; }

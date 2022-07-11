@@ -3,6 +3,7 @@
 COMMON_I:= -I.
 SIM32_I := $(COMMON_I)
 SIM64_I := $(COMMON_I)
+SIM_ARM64_I := $(COMMON_I)
 DEV7_I  := $(COMMON_I)
 DEV7s_I := $(COMMON_I)
 DEV64_I := $(COMMON_I)
@@ -13,11 +14,15 @@ DEVW_I  := $(COMMON_I)
 DEVW64_32_I := $(COMMON_I)
 
 SIM_TV_I:= $(COMMON_I)
+SIM_ARM64_TV_I := $(COMMON_I)
 DEV_TV_I:= $(COMMON_I)
 
 define NativeCompilationTemplate
 
 ## ios simulator
+
+### X86
+
 .libs/iphonesimulator/%$(1).x86.o: %.m $(EXTRA_DEPENDENCIES) | .libs/iphonesimulator
 	$$(call Q_2,OBJC,  [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR86_OBJC_CFLAGS) $$(EXTRA_DEFINES) $(SIM32_I) -g $(2) -c $$< -o $$@
 
@@ -33,6 +38,8 @@ define NativeCompilationTemplate
 .libs/iphonesimulator/%$(1).x86.framework: | .libs/iphonesimulator
 	$$(call Q_2,LD,    [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR86_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks -fapplication-extension
 
+### X64
+
 .libs/iphonesimulator/%$(1).x86_64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/iphonesimulator
 	$$(call Q_2,OBJC,  [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR64_OBJC_CFLAGS) $$(EXTRA_DEFINES) $(SIM64_I) -g $(2) -c $$< -o $$@
 
@@ -47,6 +54,24 @@ define NativeCompilationTemplate
 
 .libs/iphonesimulator/%$(1).x86_64.framework: | .libs/iphonesimulator
 	$$(call Q_2,LD,    [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks -fapplication-extension
+
+### ARM64
+
+.libs/iphonesimulator/%$(1).arm64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/iphonesimulator
+	$$(call Q_2,OBJC,  [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR_ARM64_OBJC_CFLAGS) $$(EXTRA_DEFINES) $(SIM_ARM64_I) -g $(2) -c $$< -o $$@
+
+.libs/iphonesimulator/%$(1).arm64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/iphonesimulator
+	$$(call Q_2,CC,    [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR_ARM64_CFLAGS)      $$(EXTRA_DEFINES) $(SIM_ARM64_I) -g $(2) -c $$< -o $$@
+
+.libs/iphonesimulator/%$(1).arm64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/iphonesimulator
+	$$(call Q_2,ASM,   [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR_ARM64_CFLAGS)      $(SIM64_I) -g $(2) -c $$< -o $$@
+
+.libs/iphonesimulator/%$(1).arm64.dylib: | .libs/iphonesimulator
+	$$(call Q_2,LD,    [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR_ARM64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/lib -fapplication-extension
+
+.libs/iphonesimulator/%$(1).arm64.framework: | .libs/iphonesimulator
+	$$(call Q_2,LD,    [iphonesimulator]) $(SIMULATOR_CC) $(SIMULATOR_ARM64_CFLAGS)      $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_IOSSIMULATOR_SDK)/Frameworks -fapplication-extension
+
 
 ## ios device
 
@@ -181,6 +206,8 @@ define NativeCompilationTemplate
 
 ## tv simulator
 
+### X64
+
 .libs/tvsimulator/%$(1).x86_64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/tvsimulator
 	$$(call Q_2,OBJC,  [tvsimulator]) $(SIMULATOR_CC) $(SIMULATORTV_OBJC_CFLAGS)    $$(EXTRA_DEFINES) $(SIM_TV_I) -g $(2) -c $$< -o $$@
 
@@ -195,6 +222,23 @@ define NativeCompilationTemplate
 
 .libs/tvsimulator/%$(1).x86_64.framework: | .libs/tvsimulator
 	$$(call Q_2,LD,    [tvsimulator]) $(SIMULATOR_CC) $(SIMULATORTV_CFLAGS)         $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks -fapplication-extension
+
+### ARM64
+
+.libs/tvsimulator/%$(1).arm64.o: %.m $(EXTRA_DEPENDENCIES) | .libs/tvsimulator
+	$$(call Q_2,OBJC,  [tvsimulator]) $(SIMULATOR_CC) $(SIMULATORTV_ARM64_OBJC_CFLAGS)    $$(EXTRA_DEFINES) $(SIM_ARM64_TV_I) -g $(2) -c $$< -o $$@
+
+.libs/tvsimulator/%$(1).arm64.o: %.c $(EXTRA_DEPENDENCIES) | .libs/tvsimulator
+	$$(call Q_2,CC,    [tvsimulator]) $(SIMULATOR_CC) $(SIMULATORTV_ARM64_CFLAGS)         $$(EXTRA_DEFINES) $(SIM_ARM64_TV_I) -g $(2) -c $$< -o $$@
+
+.libs/tvsimulator/%$(1).arm64.o: %.s $(EXTRA_DEPENDENCIES) | .libs/tvsimulator
+	$$(call Q_2,ASM,   [tvsimulator]) $(SIMULATOR_CC) $(SIMULATORTV_ARM64_CFLAGS)         $$(EXTRA_DEFINES) $(SIM_ARM64_TV_I) -g $(2) -c $$< -o $$@
+
+.libs/tvsimulator/%$(1).arm64.dylib: | .libs/tvsimulator
+	$$(call Q_2,LD,    [tvsimulator]) $(SIMULATOR_CC) $(SIMULATORTV_ARM64_CFLAGS)         $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -L$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/lib -fapplication-extension
+
+.libs/tvsimulator/%$(1).arm64.framework: | .libs/tvsimulator
+	$$(call Q_2,LD,    [tvsimulator]) $(SIMULATOR_CC) $(SIMULATORTV_ARM64_CFLAGS)         $$(EXTRA_FLAGS) -dynamiclib -o $$@ $$^ -F$(IOS_DESTDIR)$(XAMARIN_TVSIMULATOR_SDK)/Frameworks -fapplication-extension
 
 ## tv device
 

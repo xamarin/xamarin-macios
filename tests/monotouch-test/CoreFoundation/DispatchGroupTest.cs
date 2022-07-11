@@ -8,13 +8,12 @@
 //
 
 using System;
-using System.Net;
-using System.Threading;
 
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation {
 	
@@ -51,8 +50,8 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void NotifyWithDispatchBlock ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var dg = new DispatchGroup ()) {
 				var called = false;

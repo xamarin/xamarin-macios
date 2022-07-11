@@ -478,13 +478,13 @@ namespace MobileCoreServices {
 		[Field ("kUTTagClassMIMEType", "+CoreServices")]
 		NSString TagClassMIMEType { get; }
 		
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("kUTTagClassNSPboardType", "+CoreServices")]
 		NSString TagClassNSPboardType { get; }
 		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("kUTTagClassOSType", "+CoreServices")]
 		NSString TagClassOSType { get; }
-#endif
 
 		[Mac(10,11), iOS (9,0)]
 		[Field ("kUTTypeSwiftSource", "+CoreServices")]
@@ -515,6 +515,11 @@ namespace MobileCoreServices {
 		[TV (10,0)]
 		[Field ("kUTTypeUniversalSceneDescription", "ModelIO")]
 		NSString UniversalSceneDescription { get; }
+
+		[NoWatch]
+		[iOS (15,0), Mac(12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("kUTTypeUniversalSceneDescriptionMobile", "ModelIO")]
+		NSString UniversalSceneDescriptionMobile { get; }
 
 		[Watch (2,2)]
 		[iOS (9,1)][TV (9,0)]

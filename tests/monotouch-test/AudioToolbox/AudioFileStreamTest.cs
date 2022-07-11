@@ -9,11 +9,8 @@
 
 #if !__WATCHOS__
 
-using System;
-using System.IO;
 using Foundation;
 using AudioToolbox;
-using CoreFoundation;
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {

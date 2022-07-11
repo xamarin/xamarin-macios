@@ -6,8 +6,16 @@ using Foundation;
 
 #if !MONOMAC
 using UIKit;
+using NSViewController = UIKit.UIViewController;
 #else
 using AppKit;
+using UIEdgeInsets = AppKit.NSEdgeInsets;
+using UIVibrancyEffect = Foundation.NSObject;
+using UIVibrancyEffectStyle = Foundation.NSObject;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace NotificationCenter {
@@ -37,39 +45,42 @@ namespace NotificationCenter {
 		void WidgetPerformUpdate(Action<NCUpdateResult> completionHandler);
 
 		[Export ("widgetMarginInsetsForProposedMarginInsets:"), DelegateName ("NCWidgetProvidingMarginInsets"), DefaultValueFromArgument ("defaultMarginInsets")]
-#if !MONOMAC
 		[Deprecated (PlatformName.iOS, 10,0)]
 		UIEdgeInsets GetWidgetMarginInsets (UIEdgeInsets defaultMarginInsets);
-#else
-		NSEdgeInsets GetWidgetMarginInsets (NSEdgeInsets defaultMarginInsets);
-#endif
 
-#if MONOMAC
+		[NoiOS]
 		[Export ("widgetAllowsEditing")]
 		bool WidgetAllowsEditing {
 			get;
-#if !XAMCORE_4_0
+#if !NET
 			[NotImplemented]
 			set;
 #endif
 		}
 
+		[NoiOS]
 		[Export ("widgetDidBeginEditing")]
 		void WidgetDidBeginEditing ();
 
+		[NoiOS]
 		[Export ("widgetDidEndEditing")]
 		void WidgetDidEndEditing ();
-#else
+
+		[NoMac]
 		[iOS (10,0)]
 		[Export ("widgetActiveDisplayModeDidChange:withMaximumSize:")]
 		void WidgetActiveDisplayModeDidChange (NCWidgetDisplayMode activeDisplayMode, CGSize maxSize);
-#endif
 	}
 
-#if !MONOMAC
+	[NoMac]
 	[iOS (8,0)]
 	[BaseType (typeof (UIVibrancyEffect))]
+#if NET
+	[Internal]
+	[Category]
+#else
 	[Category (allowStaticMembers: true)] // Classic isn't internal so we need this
+#endif
 	interface UIVibrancyEffect_NotificationCenter {
 		[Internal]
 		[Deprecated (PlatformName.iOS, 10,0, message: "Use 'UIVibrancyEffect.GetWidgetEffect' instead.")]
@@ -77,6 +88,7 @@ namespace NotificationCenter {
 		UIVibrancyEffect NotificationCenterVibrancyEffect ();
 	}
 
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 14,0)]
 	[Category]
 	[BaseType (typeof (NSExtensionContext))]
@@ -98,6 +110,7 @@ namespace NotificationCenter {
 		CGSize GetWidgetMaximumSize (NCWidgetDisplayMode displayMode);
 	}
 
+	[NoMac]
 	[Category]
 	[Internal] // only static methods, which are not _nice_ to use as extension methods
 	[Deprecated (PlatformName.iOS, 14,0)]
@@ -120,16 +133,15 @@ namespace NotificationCenter {
 		[Export ("widgetEffectForVibrancyStyle:")]
 		UIVibrancyEffect GetWidgetEffect (UIVibrancyEffectStyle vibrancyStyle);
 	}
-#endif
 
-#if MONOMAC
+	[NoiOS]
 	[Mac (10,10)]
 	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[BaseType (typeof(NSViewController), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NCWidgetListViewDelegate)})]
 	interface NCWidgetListViewController
 	{
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 		
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INCWidgetListViewDelegate Delegate { get; set; }
@@ -156,8 +168,10 @@ namespace NotificationCenter {
 		nuint GetRow (NSViewController viewController);
 	}
 
+	[NoiOS]
 	interface INCWidgetListViewDelegate {}
 
+	[NoiOS]
 	[Mac (10, 10)]
 	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[Protocol, Model]
@@ -184,13 +198,14 @@ namespace NotificationCenter {
 		void DidRemoveRow (NCWidgetListViewController list, nuint row);
 	}
 
+	[NoiOS]
 	[Mac (10,10)]
 	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[BaseType (typeof(NSViewController), Delegates=new string [] { "Delegate" }, Events=new Type [] { typeof (NCWidgetSearchViewDelegate)})]
 	interface NCWidgetSearchViewController
 	{
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		INCWidgetSearchViewDelegate Delegate { get; set; }
@@ -212,15 +227,17 @@ namespace NotificationCenter {
 		string SearchResultKeyPath { get; set; }
 	}
 
+	[NoiOS]
 	interface INCWidgetSearchViewDelegate {}
 
+	[NoiOS]
 	[Mac (10,10)]
 	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[Protocol, Model]
 	[BaseType (typeof(NSObject))]
 	interface NCWidgetSearchViewDelegate
 	{
-#if !XAMCORE_4_0
+#if !NET
 		[Abstract]
 		[Export ("widgetSearch:searchForTerm:maxResults:"), EventArgs ("NSWidgetSearchForTerm"), DefaultValue (false)]
 		void SearchForTearm (NCWidgetSearchViewController controller, string searchTerm, nuint max);
@@ -238,5 +255,4 @@ namespace NotificationCenter {
 		[Export ("widgetSearch:resultSelected:"), EventArgs ("NSWidgetSearchResultSelected"), DefaultValue (false)]
 		void ResultSelected (NCWidgetSearchViewController controller, NSObject obj);
 	}
-#endif
 }

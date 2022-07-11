@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc.
+// Copyright 2015 Xamarin Inc.
 
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
@@ -9,6 +9,7 @@ using PushKit;
 using UIKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.PushKit {
 
@@ -19,9 +20,9 @@ namespace MonoTouchFixtures.PushKit {
 		[Test]
 		public void CtorDispatchQueue ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
 
-			if (!TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 2, throwIfOtherPlatform: false) && IntPtr.Size == 4)
+			if (!TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 2, throwIfOtherPlatform: false) && IntPtr.Size == 4)
 				Assert.Inconclusive ("Requires iOS 8.2 or later in 32-bit mode.");
 
 			using (var dq = new DispatchQueue ("pk-test-queue"))

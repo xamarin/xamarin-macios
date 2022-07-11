@@ -27,7 +27,11 @@ namespace Foundation {
 			IntPtr rhandle = (IntPtr) resp;
 			IntPtr ehandle = (IntPtr) errp;
 			
+#if NET
+			var res = Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle (
+#else
 			var res = Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr (
+#endif
 				class_ptr,
 				Selector.GetHandle (selSendSynchronousRequestReturningResponseError),
 				request.Handle,

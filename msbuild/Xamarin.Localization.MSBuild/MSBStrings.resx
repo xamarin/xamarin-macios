@@ -524,6 +524,11 @@
         <value>{0} exited with code {1}
         </value>
     </data>
+
+    <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
     
     <data name="M0119" xml:space="preserve">
         <value>Skipping `{0}' as the output file, `{1}', is newer.
@@ -881,7 +886,15 @@
     </data>
     
     <data name="E0187" xml:space="preserve">
-        <value>Could not map the macOS version {0} to a corresponding iOS version</value>
+        <value>Could not map the macOS version {0} to a corresponding Mac Catalyst version. Valid macOS versions are: {1}</value>
+    </data>
+
+    <data name="E0188" xml:space="preserve">
+        <value>Could not map the Mac Catalyst version {0} to a corresponding macOS version. Valid Mac Catalyst versions are: {1}</value>
+    </data>
+
+    <data name="E0189" xml:space="preserve">
+        <value>Could not parse the custom linker argument(s) '-{0}': {1}</value>
     </data>
 
     <data name="E7001" xml:space="preserve">
@@ -1295,5 +1308,124 @@
             {0}: a number indicating which input app bundle the file is from
             {1}: the full path to the file in question
         </comment>
+    </data>
+
+    <data name="E7081" xml:space="preserve">
+        <value>The AOT compiler '{0}' does not exist.</value>
+        <comment>
+            AOT: Ahead-Of-Time
+            {0}: the path to the compiler
+        </comment>
+    </data>
+
+    <data name="E7082" xml:space="preserve">
+        <value>The {0} value in the Info.plist ({1}) does not match the SupportedOSPlatformVersion value ({2}) in the project file (if there is no SupportedOSPlatformVersion value in the project file, then a default value has been assumed). Either change the value in the Info.plist to match the SupportedOSPlatformVersion value, or remove the value in the Info.plist (and add a SupportedOSPlatformVersion value to the project file if it doesn't already exist).</value>
+        <comment>
+            {0}: the name of a value from the Info.plist file the message talks about (either 'MinimumOSVersion' or 'LSMinimumSystemVersion').
+            {1}: the value from the Info.plist.
+            {2}: the value from the project file.
+        </comment>
+    </data>
+
+    <data name="E7083" xml:space="preserve">
+        <value>All font files must be located in the same directory in the app bundle. The following font files have different target directories in the app bundle:</value>
+        <comment>This error message will be followed by E7084 error messages listing the target directory for each font file</comment>
+    </data>
+
+    <data name="E7084" xml:space="preserve">
+        <value>The target directory is {0}</value>
+        <comment>See E7082 as well.
+            {0}: the target directory (in the app bundle) for the font file
+        </comment>
+    </data>
+
+    <data name="E7085" xml:space="preserve">
+        <value>The "{0}" task was not given a value for the required parameter "{1}", nor was there a "{2}" metadata on the resource {3}.</value>
+    </data>
+
+    <data name="W7085" xml:space="preserve">
+        <value>Creating a compressed binding resource package because there are symlinks in the input.</value>
+    </data>
+
+    <data name="E7086" xml:space="preserve">
+        <value>The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'.</value>
+        <comment>The following are literal names and should not be translated: Compress, true, false, auto.</comment>
+    </data>
+
+    <data name="W7087" xml:space="preserve">
+        <value>Expected a 'manifest' file in the directory {0}.</value>
+        <comment>The following are literal names and should not be translated: manifest</comment>
+    </data>
+
+    <data name="E7088" xml:space="preserve">
+        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+        </comment>
+    </data>
+
+    <data name="E7089" xml:space="preserve">
+        <value>The file '{0}' does not specify a 'PublishFolderType' metadata, and a default value could not be calculated. The file will not be copied to the app bundle.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: path to a file
+        </comment>
+    </data>
+
+    <data name="E7090" xml:space="preserve">
+        <value>The 'PublishFolderType' metadata value '{0}' on the item '{1}' is not recognized. The file will not be copied to the app bundle. If the file is not supposed to be copied to the app bundle, remove the '{2}' metadata on the item.</value>
+        <comment>
+            PublishFolderType: do not translate (name of metadata)
+            {0}: metadata value (read from a user file)
+            {1}: path to a file
+            {2}: name of metadata (either 'CopyToOutputDirectory' or 'CopyToPublishDirectory')
+        </comment>
+    </data>
+
+    <data name="W7091" xml:space="preserve">
+        <value>The framework {0} is a framework of static libraries, and will not be copied to the app.</value>
+    </data>
+
+    <!-- This is the same as MT0140 -->
+    <data name="E7092" xml:space="preserve">
+        <value>File '{0}' is not a valid framework: {1}</value>
+    </data>
+
+    <data name="W7093" xml:space="preserve">
+        <value>The binding resource package {0} does not exist.</value>
+    </data>
+
+    <data name="E7094" xml:space="preserve">
+        <value>The file or directory '{0}' is not a framework nor a file within a framework.</value>
+    </data>
+
+    <data name="W7095" xml:space="preserve">
+        <value>Code signing has been requested multiple times for '{0}', with different metadata. The metadata for one are: '{1}', while the metadata for the other are: '{2}'</value>
+    </data>
+
+    <data name="W7096" xml:space="preserve">
+        <value>Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}={2}' has been set for one item, but not the other.</value>
+    </data>
+
+    <data name="W7097" xml:space="preserve">
+        <value>Code signing has been requested multiple times for '{0}', with different metadata. The metadata '{1}' has different values for each item (once it's '{2}', another time it's '{3}').</value>
+    </data>
+
+    <data name="E7098" xml:space="preserve">
+        <value>The UIDeviceFamily value '6' is not valid for this platform. It's only valid for Mac Catalyst.</value>
+    </data>
+
+    <data name="E7099" xml:space="preserve">
+        <value>The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}).</value>
+    </data>
+
+    <data name="W7100" xml:space="preserve">
+        <value>Could not find the binding resource package: {0}</value>
+    </data>
+
+    <data name="E7101" xml:space="preserve">
+        <value>Unknown property '{0}' with value '{1}'.</value>
     </data>
 </root>

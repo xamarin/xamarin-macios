@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !__MACCATALYST__
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -39,7 +42,12 @@ namespace AppKit {
 			set { base.Cell = value; }
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,12)]
+#endif
 		public static NSButton CreateButton (string title, NSImage image, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -48,7 +56,12 @@ namespace AppKit {
 			return control;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,12)]
+#endif
 		public static NSButton CreateButton (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -57,7 +70,12 @@ namespace AppKit {
 			return control;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,12)]
+#endif
 		public static NSButton CreateButton (NSImage image, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -66,7 +84,12 @@ namespace AppKit {
 			return control;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,12)]
+#endif
 		public static NSButton CreateCheckbox (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -75,7 +98,12 @@ namespace AppKit {
 			return control;
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[Mac (10,12)]
+#endif
 		public static NSButton CreateRadioButton (string title, Action action)
 		{
 			var dispatcher = new NSActionDispatcher (action);
@@ -85,4 +113,4 @@ namespace AppKit {
 		}
 	}
 }
-
+#endif // !__MACCATALYST__

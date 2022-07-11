@@ -3,6 +3,8 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
@@ -20,6 +22,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public string BTouchToolExe { get; set; }
+
+		public string DotNetCscCompiler { get; set; }
 
 		public ITaskItem[] ObjectiveCLibraries { get; set; }
 
@@ -51,6 +55,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string Namespace { get; set; }
 
+		public bool NoNFloatUsing { get; set; }
+
 		public ITaskItem[] NativeLibraries { get; set; }
 
 		public string OutputAssembly { get; set; }
@@ -66,9 +72,8 @@ namespace Xamarin.MacDev.Tasks {
 
 		public ITaskItem[] Sources { get; set; }
 
-		bool IsDotNet {
-			get { return TargetFramework.IsDotNet; }
-		}
+		[Required]
+		public string ResponseFilePath { get; set; }
 
 		string DotNetPath {
 			get {
@@ -102,119 +107,113 @@ namespace Xamarin.MacDev.Tasks {
 			return Path.Combine (ToolPath, ToolExe);
 		}
 
-		protected virtual void HandleReferences (CommandLineBuilder cmd)
+		protected virtual void HandleReferences (CommandLineArgumentBuilder cmd)
 		{
 			if (References != null) {
 				foreach (var item in References)
-					cmd.AppendSwitchIfNotNull ("-r ", Path.GetFullPath (item.ItemSpec));
+					cmd.AddQuoted ("-r:" + Path.GetFullPath (item.ItemSpec));
 			}
 		}
 
 		protected override string GenerateCommandLineCommands ()
 		{
-			var cmd = new CommandLineBuilder ();
-
-			if (IsDotNet)
-				cmd.AppendFileNameIfNotNull (Path.Combine (BTouchToolPath, BTouchToolExe));
+			var cmd = new CommandLineArgumentBuilder ();
 
 			#if DEBUG
-			cmd.AppendSwitch ("/v");
+			cmd.Add ("/v");
 			#endif
 
-			cmd.AppendSwitch ("/nostdlib");
-			cmd.AppendSwitchIfNotNull ("/baselib:", BaseLibDll);
-			cmd.AppendSwitchIfNotNull ("/out:", OutputAssembly);
+			cmd.Add ("/nostdlib");
+			cmd.AddQuotedSwitchIfNotNull ("/baselib:", BaseLibDll);
+			cmd.AddQuotedSwitchIfNotNull ("/out:", OutputAssembly);
 
-			cmd.AppendSwitchIfNotNull ("/attributelib:", AttributeAssembly);
+			cmd.AddQuotedSwitchIfNotNull ("/attributelib:", AttributeAssembly);
 
 			string dir;
 			if (!string.IsNullOrEmpty (BaseLibDll)) {
 				dir = Path.GetDirectoryName (BaseLibDll);
-				cmd.AppendSwitchIfNotNull ("/lib:", dir);
+				cmd.AddQuotedSwitchIfNotNull ("/lib:", dir);
 			}
 
 			if (ProcessEnums)
-				cmd.AppendSwitch ("/process-enums");
+				cmd.Add ("/process-enums");
 
 			if (EmitDebugInformation)
-				cmd.AppendSwitch ("/debug");
+				cmd.Add ("/debug");
 
 			if (AllowUnsafeBlocks)
-				cmd.AppendSwitch ("/unsafe");
+				cmd.Add ("/unsafe");
 
-			cmd.AppendSwitchIfNotNull ("/ns:", Namespace);
+			if (!string.IsNullOrEmpty (DotNetCscCompiler)) {
+				var compileCommand = new string [] {
+					DotNetPath,
+					DotNetCscCompiler,
+				};
+				cmd.AddQuoted ("/compile-command:" + string.Join (" ", StringUtils.QuoteForProcess (compileCommand)));
+			}
+
+			cmd.AddQuotedSwitchIfNotNull ("/ns:", Namespace);
+
+			if (NoNFloatUsing)
+				cmd.Add ("/no-nfloat-using:true");
 
 			if (!string.IsNullOrEmpty (DefineConstants)) {
-				var strv = DefineConstants.Split (new [] { ';' });
-				var sanitized = new List<string> ();
-
-				foreach (var str in strv) {
-					if (str != string.Empty)
-						sanitized.Add (str);
-				}
-
-				if (sanitized.Count > 0)
-					cmd.AppendSwitchIfNotNull ("/d:", string.Join (";", sanitized.ToArray ()));
+				var strv = DefineConstants.Split (new [] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+				foreach (var str in strv)
+					cmd.AddQuoted ("/d:" + str);
 			}
 
 			//cmd.AppendSwitch ("/e");
 
 			foreach (var item in ApiDefinitions)
-				cmd.AppendFileNameIfNotNull (Path.GetFullPath (item.ItemSpec));
+				cmd.AddQuoted (Path.GetFullPath (item.ItemSpec));
 
 			if (CoreSources != null) {
 				foreach (var item in CoreSources)
-					cmd.AppendSwitchIfNotNull ("/s:", Path.GetFullPath (item.ItemSpec));
+					cmd.AddQuoted ("/s:" + Path.GetFullPath (item.ItemSpec));
 			}
 
 			if (Sources != null) {
 				foreach (var item in Sources)
-					cmd.AppendSwitchIfNotNull ("/x:", Path.GetFullPath (item.ItemSpec));
+					cmd.AddQuoted ("/x:" + Path.GetFullPath (item.ItemSpec));
 			}
 
 			if (AdditionalLibPaths != null) {
 				foreach (var item in AdditionalLibPaths)
-					cmd.AppendSwitchIfNotNull ("/lib:", Path.GetFullPath (item.ItemSpec));
+					cmd.AddQuoted ("/lib:" + Path.GetFullPath (item.ItemSpec));
 			}
 
 			HandleReferences (cmd);
 
 			if (Resources != null) {
 				foreach (var item in Resources) {
-					var args = new List<string> ();
-					string id;
-
-					args.Add (item.ToString ());
-					id = item.GetMetadata ("LogicalName");
+					var argument = item.ToString ();
+					var id = item.GetMetadata ("LogicalName");
 					if (!string.IsNullOrEmpty (id))
-						args.Add (id);
+						argument += "," + id;
 
-					cmd.AppendSwitchIfNotNull ("/res:", args.ToArray (), ",");
+					cmd.AddQuoted ("/res:" + argument);
 				}
 			}
 
 			if (NativeLibraries != null) {
 				foreach (var item in NativeLibraries) {
-					var args = new List<string> ();
-					string id;
-
-					args.Add (item.ToString ());
-					id = item.GetMetadata ("LogicalName");
+					var argument = item.ToString ();
+					var id = item.GetMetadata ("LogicalName");
 					if (string.IsNullOrEmpty (id))
-						id = Path.GetFileName (args[0]);
-					args.Add (id);
+						id = Path.GetFileName (argument);
 
-					cmd.AppendSwitchIfNotNull ("/link-with:", args.ToArray (), ",");
+					cmd.AddQuoted ("/res:" + argument + "," + id);
 				}
 			}
 
 			if (GeneratedSourcesDir != null)
-				cmd.AppendSwitchIfNotNull ("/tmpdir:", Path.GetFullPath (GeneratedSourcesDir));
+				cmd.AddQuoted ("/tmpdir:" + Path.GetFullPath (GeneratedSourcesDir));
 
 			if (GeneratedSourcesFileList != null)
-				cmd.AppendSwitchIfNotNull ("/sourceonly:", Path.GetFullPath (GeneratedSourcesFileList));
+				cmd.AddQuoted ("/sourceonly:" + Path.GetFullPath (GeneratedSourcesFileList));
 
-			cmd.AppendSwitch ($"/target-framework={TargetFrameworkMoniker}");
+			cmd.Add ($"/target-framework={TargetFrameworkMoniker}");
 
 			if (!string.IsNullOrEmpty (ExtraArgs)) {
 				var extraArgs = CommandLineArgumentBuilder.Parse (ExtraArgs);
@@ -248,24 +247,27 @@ namespace Xamarin.MacDev.Tasks {
 
 				for (int i = 0; i < extraArgs.Length; i++) {
 					var argument = extraArgs[i];
-					cmd.AppendTextUnquoted (" ");
-					cmd.AppendTextUnquoted (StringParserService.Parse (argument, customTags));
+					cmd.Add (StringParserService.Parse (argument, customTags));
 				}
 			}
 
-			var v = VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity);
-			if (v.Length > 0) {
-				foreach (var arg in v) {
-					cmd.AppendTextUnquoted (" ");
-					cmd.AppendTextUnquoted (arg);
-				}
-			}
+			cmd.Add (VerbosityUtils.Merge (ExtraArgs, (LoggerVerbosity) Verbosity));
 
-			return cmd.ToString ();
+			var commandLine = cmd.CreateResponseFile (this, ResponseFilePath, null);
+			if (IsDotNet)
+				commandLine = StringUtils.Quote (Path.Combine (BTouchToolPath, BTouchToolExe)) + " " + commandLine;
+
+			return commandLine.ToString ();
 		}
 
 		public override bool Execute ()
 		{
+			AttributeAssembly = PathUtils.ConvertToMacPath (AttributeAssembly);
+			BaseLibDll = PathUtils.ConvertToMacPath (BaseLibDll);
+			BTouchToolExe = PathUtils.ConvertToMacPath (BTouchToolExe);
+			BTouchToolPath = PathUtils.ConvertToMacPath (BTouchToolPath);
+			DotNetCscCompiler = PathUtils.ConvertToMacPath (DotNetCscCompiler);
+
 			if (!IsDotNet) {
 				ToolExe = BTouchToolExe;
 				ToolPath = BTouchToolPath;

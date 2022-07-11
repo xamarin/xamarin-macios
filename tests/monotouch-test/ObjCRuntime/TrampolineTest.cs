@@ -15,8 +15,13 @@ using CoreLocation;
 #if !__WATCHOS__
 using CoreMedia;
 #endif
-using OpenTK;
 using NUnit.Framework;
+
+#if NET
+using System.Numerics;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
 	
@@ -24,7 +29,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	[Preserve (AllMembers = true)]
 	public class TrampolineTest {
 		public static readonly nfloat pi = 3.14159f;
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 		public static bool IsX64 { get { return IntPtr.Size == 8 && !IsArm64CallingConvention; } }
 		public static bool IsX86 { get { return IntPtr.Size == 4; } }
 #else
@@ -34,7 +39,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public static bool IsArm64 { get { return IntPtr.Size == 8 && IsArm64CallingConvention; } }
 		public static bool IsArm32 {
 			get {
-#if __WATCHOS__ || __MACOS__
+#if __WATCHOS__ || __MACOS__ || __MACCATALYST__
 				return false;
 #else
 				return IntPtr.Size == 4 && Runtime.Arch == Arch.DEVICE;
@@ -126,13 +131,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		
 		const string LIBOBJC_DYLIB = "/usr/lib/libobjc.dylib";
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !NET
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend")]
 		extern static OpenTK.Matrix4 Matrix4_objc_msgSend (IntPtr receiver, IntPtr selector);
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
 		extern static void Matrix4_objc_msgSend_stret (out OpenTK.Matrix4 retval, IntPtr receiver, IntPtr selector);
-#endif // !__WATCHOS__
+#endif // !__WATCHOS__ && !NET
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint="objc_msgSend_stret")]
 		extern static void double_objc_msgSend_stret_out_double (out double retval, IntPtr receiver, IntPtr selector, out double arg1);
@@ -199,11 +204,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			FloatingPointStretTrampolines obj = new FloatingPointStretTrampolines ();
 			IntPtr class_ptr = Class.GetHandle ("FloatingPointStretTrampolines");
 			NSString tmp_obj = obj.StringObj;
-#if !__WATCHOS__
+#if !__WATCHOS__ && !NET
 			Matrix3 matrix3;
 			Matrix4 matrix4;
 			CATransform3D catransform3d;
-#endif // !__WATCHOS__
+#endif // !__WATCHOS__ && !NET
 			int i;
 
 			rect2 = new CGRect (1.2f, 2.3f, 3.4f, 4.5f);
@@ -305,14 +310,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 			Assert.That (rect == new CGRect (20, 30, 40, 50), "#testCGRect_CGRect_CGRect_CGRect:b:c:");
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !NET
 			if (IsArm64CallingConvention) {
 				matrix3 = Messaging.Matrix3_objc_msgSend (obj.Handle, new Selector ("testMatrix3").Handle);
 			} else {
 				Messaging.Matrix3_objc_msgSend_stret (out matrix3, obj.Handle, new Selector ("testMatrix3").Handle);
 			}
 			Assert.That (matrix3.Equals (new Matrix3 (1, 2, 3, 4, 5, 6, 7, 8, 9)), "#testMatrix3");
-
 			if (IsArm64CallingConvention) {
 				matrix4 = Matrix4_objc_msgSend (obj.Handle, new Selector ("testMatrix4").Handle);
 			} else {
@@ -326,10 +330,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Messaging.CATransform3D_objc_msgSend_stret (out catransform3d, obj.Handle, new Selector ("testCATransform3D").Handle);
 			}
 			CATransform3D res = new CATransform3D ();
-			res.m11 = 11.1f;
-			res.m22 = 22.2f;
-			res.m33 = 33.3f;
-			res.m44 = 44.4f;
+			res.M11 = 11.1f;
+			res.M22 = 22.2f;
+			res.M33 = 33.3f;
+			res.M44 = 44.4f;
 			Assert.That (catransform3d.Equals (res), "#testCATransform3D");
 #endif // !__WATCHOS__
 			
@@ -637,7 +641,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		
 		static float ParseString (string str)
 		{
-			return float.Parse (str, new CultureInfo ("en-US").NumberFormat);
+			return float.Parse (str, CultureInfo.InvariantCulture.NumberFormat);
 		}
 		
 		[Export ("testCGRect")]
@@ -727,6 +731,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 #if !__WATCHOS__
+#if !NET
 		[Export ("testMatrix3")]
 		public Matrix3 Test_Matrix3 ()
 		{
@@ -738,15 +743,16 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			return new Matrix4 (9, 8, 7, 6, 5, 4, 3, 2, 1, 9, 8, 7, 6, 5, 4, 3);
 		}
-		
+#endif // !NET
+
 		[Export ("testCATransform3D")]
 		public CATransform3D Test_CATransform3D ()
 		{
 			CATransform3D res = new CATransform3D ();
-			res.m11 = 11.1f;
-			res.m22 = 22.2f;
-			res.m33 = 33.3f;
-			res.m44 = 44.4f;
+			res.M11 = 11.1f;
+			res.M22 = 22.2f;
+			res.M33 = 33.3f;
+			res.M44 = 44.4f;
 			return res;
 		}
 #endif // !__WATCHOS__

@@ -24,27 +24,42 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
-using CoreGraphics;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreText {
 
 #region Text Tab Constants
+#if !NET
 	public static class CTTextTabOptionKey {
 
 		public static readonly NSString ColumnTerminators;
 
 		static CTTextTabOptionKey ()
 		{
-			ColumnTerminators = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTTabColumnTerminatorsAttributeName");
+			ColumnTerminators = Dlfcn.GetStringConstant (Libraries.CoreText.Handle, "kCTTabColumnTerminatorsAttributeName")!;
 		}
 	}
+#endif
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CTTextTabOptions {
 
 		public CTTextTabOptions ()
@@ -54,8 +69,8 @@ namespace CoreText {
 
 		public CTTextTabOptions (NSDictionary dictionary)
 		{
-			if (dictionary == null)
-				throw new ArgumentNullException ("dictionary");
+			if (dictionary is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dictionary));
 			Dictionary = dictionary;
 		}
 
@@ -66,42 +81,28 @@ namespace CoreText {
 			set {Adapter.SetValue (Dictionary, CTTextTabOptionKey.ColumnTerminators, value);}
 		}
 	}
+
+	static class CTTextTabOptionsExtensions {
+		public static IntPtr GetHandle (this CTTextTabOptions? self)
+		{
+			if (self is null)
+				return IntPtr.Zero;
+			return self.Dictionary.GetHandle ();
+		}
+	}
 #endregion
 
-	public class CTTextTab : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		internal CTTextTab (IntPtr handle, bool owns)
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
+	public class CTTextTab : NativeObject {
+		[Preserve (Conditional = true)]
+		internal CTTextTab (NativeHandle handle, bool owns)
+			: base (handle, owns, verify: true)
 		{
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.ArgumentNull (this, "handle");
-
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
-		}
-		
-		public IntPtr Handle {
-			get {return handle;}
-		}
-
-		~CTTextTab ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
 		}
 
 #region Text Tab Creation
@@ -112,13 +113,9 @@ namespace CoreText {
 		{
 		}
 
-		public CTTextTab (CTTextAlignment alignment, double location, CTTextTabOptions options)
+		public CTTextTab (CTTextAlignment alignment, double location, CTTextTabOptions? options)
+			: base (CTTextTabCreate (alignment, location, options.GetHandle ()), true, true)
 		{
-			handle = CTTextTabCreate (alignment, location, 
-					options == null ? IntPtr.Zero : options.Dictionary.Handle);
-
-			if (handle == IntPtr.Zero)
-				throw ConstructorError.Unknown (this);
 		}
 #endregion
 
@@ -126,26 +123,24 @@ namespace CoreText {
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern CTTextAlignment CTTextTabGetAlignment (IntPtr tab);
 		public CTTextAlignment TextAlignment {
-			get {return CTTextTabGetAlignment (handle);}
+			get { return CTTextTabGetAlignment (Handle); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern double CTTextTabGetLocation (IntPtr tab);
 		public double Location {
-			get {return CTTextTabGetLocation (handle);}
+			get { return CTTextTabGetLocation (Handle); }
 		}
 
 		[DllImport (Constants.CoreTextLibrary)]
 		static extern IntPtr CTTextTabGetOptions (IntPtr tab);
-		public CTTextTabOptions GetOptions ()
+		public CTTextTabOptions? GetOptions ()
 		{
-			var options = CTTextTabGetOptions (handle);
+			var options = CTTextTabGetOptions (Handle);
 			if (options == IntPtr.Zero)
 				return null;
-			return new CTTextTabOptions (
-					(NSDictionary) Runtime.GetNSObject (options));
+			return new CTTextTabOptions (Runtime.GetNSObject<NSDictionary> (options)!);
 		}
 #endregion
 	}
 }
-

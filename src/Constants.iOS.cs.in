@@ -12,7 +12,7 @@ namespace ObjCRuntime {
 		public const string QuartzLibrary = "/System/Library/Frameworks/QuartzCore.framework/QuartzCore";
 
 		// iOS 8.2
-#if !XAMCORE_4_0
+#if !NET
 		// Apple removed the WatchKit framework from iOS
 		public const string WatchKitLibrary = "/System/Library/Frameworks/WatchKit.framework/WatchKit";
 #endif

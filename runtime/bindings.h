@@ -16,15 +16,9 @@ extern "C" {
 void * xamarin_IntPtr_objc_msgSend_IntPtr (id self, SEL sel, void *a);
 void * xamarin_IntPtr_objc_msgSendSuper_IntPtr (struct objc_super *super, SEL sel, void *a);
 
-#if defined(__i386__)
-typedef float xm_nfloat_t;
-typedef int32_t xm_nint_t;
-typedef uint32_t xm_nuint_t;
-#else
-typedef double xm_nfloat_t;
-typedef int64_t xm_nint_t;
-typedef uint64_t xm_nuint_t;
-#endif
+typedef CGFloat xm_nfloat_t;
+typedef NSInteger xm_nint_t;
+typedef NSUInteger xm_nuint_t;
 
 typedef float (*float_send) (id self, SEL sel);
 typedef float (*float_sendsuper) (struct objc_super *super, SEL sel);

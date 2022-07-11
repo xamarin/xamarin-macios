@@ -143,6 +143,14 @@
 		<value>Could not parse the command line argument '--warnaserror': {0}</value>
 	</data>
 
+	<data name="BI0027" xml:space="preserve">
+		<value>Could not parse the command line argument '{0}': {1}</value>
+	</data>
+
+	<data name="BI0028" xml:space="preserve">
+		<value>No C# compiler has been specified (using --compiler or --compile-command).</value>
+	</data>
+
 	<data name="BI0068" xml:space="preserve">
 		<value>Invalid value for target framework: {0}.</value>
 	</data>

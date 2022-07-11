@@ -6,10 +6,12 @@ using Metal;
 using ModelIO;
 using ObjCRuntime;
 
-using OpenTK;
-
 #if MONOMAC
 using AppKit;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace MetalKit {
@@ -31,17 +33,15 @@ namespace MetalKit {
 	}
 
 	[iOS (9,0)][Mac (10,11)]
-	[DisableDefaultCtor]
 #if MONOMAC
 	[BaseType (typeof (AppKit.NSView))]
 #else
 	[BaseType (typeof (UIKit.UIView))]
 #endif
 	interface MTKView : NSCoding, CALayerDelegate {
-
 		[Export ("initWithFrame:device:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGRect frameRect, [NullAllowed] IMTLDevice device);
+		NativeHandle Constructor (CGRect frameRect, [NullAllowed] IMTLDevice device);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -237,7 +237,7 @@ namespace MetalKit {
 		IMTLDevice Device { get; }
 
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("newTextureWithContentsOfURL:options:completionHandler:"), Internal]
 		void FromUrl (NSUrl url, [NullAllowed] NSDictionary options, MTKTextureLoaderCallback completionHandler);
@@ -400,7 +400,7 @@ namespace MetalKit {
 	[DisableDefaultCtor] // init is NS_UNAVAILABLE
 	interface MTKMeshBufferAllocator : MDLMeshBufferAllocator {
 		[Export ("initWithDevice:")]
-		IntPtr Constructor (IMTLDevice device);
+		NativeHandle Constructor (IMTLDevice device);
 
 		[Export ("device")]
 		IMTLDevice Device { get; }
@@ -445,7 +445,7 @@ namespace MetalKit {
 	[DisableDefaultCtor] // init NS_UNAVAILABLE
 	interface MTKMesh {
 		[Export ("initWithMesh:device:error:")]
-		IntPtr Constructor (MDLMesh mesh, IMTLDevice device, out NSError error);
+		NativeHandle Constructor (MDLMesh mesh, IMTLDevice device, out NSError error);
 
 		// generator does not like `out []` -> https://trello.com/c/sZYNalbB/524-generator-support-out
 		[Internal] // there's another, manual, public API exposed

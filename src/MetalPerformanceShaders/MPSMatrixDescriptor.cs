@@ -1,4 +1,4 @@
-#if !MONOMAC && !XAMCORE_4_0 && !__MACCATALYST__
+#if !MONOMAC && !NET && !__MACCATALYST__
 using System;
 using Metal;
 using Foundation;
@@ -14,4 +14,3 @@ namespace MetalPerformanceShaders {
 	}
 }
 #endif
-

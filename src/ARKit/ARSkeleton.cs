@@ -10,16 +10,26 @@ using ObjCRuntime;
 namespace ARKit {
 	public partial class ARSkeleton {
 
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[iOS (14,0)]
+#endif
 		[DllImport (Constants.ARKitLibrary)]
 		static extern IntPtr /* NSString */ ARSkeletonJointNameForRecognizedPointKey (/* NSString */ IntPtr recognizedPointKey);
 		
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
 		[iOS (14,0)]
-		public static NSString CreateJointName (NSString recognizedPointKey)
+#endif
+		public static NSString? CreateJointName (NSString recognizedPointKey)
 		{
-			if (recognizedPointKey == null)
+			if (recognizedPointKey is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (recognizedPointKey));
-			return (NSString) Runtime.GetNSObject (ARSkeletonJointNameForRecognizedPointKey (recognizedPointKey.Handle));
+			return Runtime.GetNSObject<NSString> (ARSkeletonJointNameForRecognizedPointKey (recognizedPointKey.Handle));
 		}
 	}
 }

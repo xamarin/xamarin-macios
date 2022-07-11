@@ -13,6 +13,8 @@ using CoreFoundation;
 using ObjCRuntime;
 using AudioToolbox;
 
+#nullable enable
+
 #if !MONOMAC
 namespace AVFoundation {
 	public partial class AVAudioSessionPortDescription {
@@ -27,4 +29,3 @@ namespace AVFoundation {
 	}
 }
 #endif
-

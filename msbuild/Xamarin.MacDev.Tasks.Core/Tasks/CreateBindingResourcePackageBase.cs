@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,25 +8,28 @@ using System.Xml;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
+
 using Xamarin.Localization.MSBuild;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	public abstract class CreateBindingResourcePackageBase : XamarinTask {
 		[Required]
-		public string OutputPath { get; set; }
-		
+		public string Compress { get; set; }
+
+		[Required]
+		public string BindingResourcePath { get; set; }
+
+		[Required]
+		public string IntermediateOutputPath { get; set; }
+
 		[Required]		
 		public ITaskItem[] NativeReferences { get; set; }
 		
-		[Required]
-		public string ProjectDir { get; set; }
-		
-		[Required]
-		public string BindingAssembly { get; set; }
-		
+		// This is a list of files to copy back to Windows
 		[Output]
-		public ITaskItem Manifest { get; set; }
-		
+		public ITaskItem[] PackagedFiles { get; set; }
+
 		public override bool Execute ()
 		{
 			// LinkWith must be migrated for NoBindingEmbedding styled binding projects
@@ -34,18 +38,80 @@ namespace Xamarin.MacDev.Tasks {
 				return false;
 			}
 
-			string bindingResourcePath = Path.Combine (ProjectDir, OutputPath, Path.ChangeExtension (Path.GetFileName (BindingAssembly), ".resources"));
-			Log.LogMessage (MSBStrings.M0121, bindingResourcePath);
+			var compress = false;
+			if (string.Equals (Compress, "true", StringComparison.OrdinalIgnoreCase)) {
+				compress = true;
+			} else if (string.Equals (Compress, "false", StringComparison.OrdinalIgnoreCase)) {
+				compress = false;
+			} else if (string.Equals (Compress, "auto", StringComparison.OrdinalIgnoreCase)) {
+				compress = ContainsSymlinks (NativeReferences);
+				if (compress)
+					Log.LogMessage (MessageImportance.Low, MSBStrings.W7085 /* "Creating a compressed binding resource package because there are symlinks in the input." */);
+			} else {
+				Log.LogError (MSBStrings.E7086 /* "The value '{0}' is invalid for the Compress property. Valid values: 'true', 'false' or 'auto'." */, Compress);
+			}
 
-			Directory.CreateDirectory (bindingResourcePath);
-			foreach (var nativeRef in NativeReferences)
-				Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef.ItemSpec, bindingResourcePath);
+			Directory.CreateDirectory (compress ? IntermediateOutputPath : BindingResourcePath);
 
-			string manifestPath = CreateManifest (bindingResourcePath);
+			var manifestDirectory = compress ? IntermediateOutputPath : BindingResourcePath;
+			var manifestPath = CreateManifest (manifestDirectory);
+			var packagedFiles = new List<string> ();
 
-			Manifest = new TaskItem ("Manifest") { ItemSpec = manifestPath };
+			if (compress) {
+				var zipFile = Path.GetFullPath (BindingResourcePath + ".zip");
+				Log.LogMessage (MSBStrings.M0121, zipFile);
+				if (File.Exists (zipFile))
+					File.Delete (zipFile);
+				Directory.CreateDirectory (Path.GetDirectoryName (zipFile));
 
-			return true;
+				var filesToZip = NativeReferences.Select (v => v.ItemSpec).ToList ();
+				filesToZip.Add (manifestPath);
+
+				foreach (var nativeRef in filesToZip) {
+					var zipArguments = new List<string> ();
+					zipArguments.Add ("-9");
+					zipArguments.Add ("-r");
+					zipArguments.Add ("-y");
+					zipArguments.Add (zipFile);
+
+					var fullPath = Path.GetFullPath (nativeRef);
+					var workingDirectory = Path.GetDirectoryName (fullPath);
+					zipArguments.Add (Path.GetFileName (fullPath));
+					ExecuteAsync ("zip", zipArguments, workingDirectory: workingDirectory).Wait ();
+
+					packagedFiles.Add (zipFile);
+				}
+			} else {
+				var bindingResourcePath = BindingResourcePath;
+				Log.LogMessage (MSBStrings.M0121, bindingResourcePath);
+				Directory.CreateDirectory (bindingResourcePath);
+				foreach (var nativeRef in NativeReferences) {
+					Xamarin.Bundler.FileCopier.UpdateDirectory (nativeRef.ItemSpec, bindingResourcePath, FileCopierReportErrorCallback, FileCopierLogCallback);
+
+					var bindingOutputPath = Path.Combine (bindingResourcePath, Path.GetFileName (nativeRef.ItemSpec));
+					if (Directory.Exists (bindingOutputPath)) {
+						packagedFiles.AddRange (Directory.GetFiles (bindingOutputPath, "*", SearchOption.AllDirectories));
+					} else if (File.Exists (bindingOutputPath)) {
+						packagedFiles.Add (bindingOutputPath);
+					} else {
+						Log.LogWarning (MSBStrings.W7100, bindingOutputPath);
+					}
+				}
+			}
+
+			PackagedFiles = packagedFiles.Select (v => new TaskItem (v)).ToArray ();
+
+			return !Log.HasLoggedErrors;
+		}
+
+		static bool ContainsSymlinks (ITaskItem[] items)
+		{
+			foreach (var item in items) {
+				if (PathUtils.IsSymlinkOrContainsSymlinks (item.ItemSpec))
+					return true;
+			}
+
+			return false;
 		}
 
 		string [] NativeReferenceAttributeNames = new string [] { "Kind", "ForceLoad", "SmartLink", "Frameworks", "WeakFrameworks", "LinkerFlags", "NeedsGccExceptionHandling", "IsCxx"};
@@ -66,9 +132,15 @@ namespace Xamarin.MacDev.Tasks {
 					writer.WriteStartElement ("NativeReference");
 					writer.WriteAttributeString ("Name", Path.GetFileName (nativeRef.ItemSpec));
 
-					foreach (string attribute in NativeReferenceAttributeNames) {
-						writer.WriteStartElement (attribute);
-						writer.WriteString (nativeRef.GetMetadata (attribute));
+					var customMetadata = nativeRef.CloneCustomMetadataToDictionary ();
+					var allKeys = customMetadata.Keys.Union (NativeReferenceAttributeNames, StringComparer.OrdinalIgnoreCase);
+					foreach (var key in allKeys.OrderBy (v => v)) {
+						writer.WriteStartElement (key);
+						if (customMetadata.TryGetValue (key, out var value)) {
+							writer.WriteString (value);
+						} else {
+							writer.WriteString (string.Empty);
+						}
 						writer.WriteEndElement ();
 					}
 

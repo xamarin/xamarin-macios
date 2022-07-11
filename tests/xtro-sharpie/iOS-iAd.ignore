@@ -1,5 +1,0 @@
-## removed in Xcode 13 beta 1
-## enums kept for binary compatibility
-!unknown-native-enum! ADAdType bound
-!unknown-native-enum! ADError bound
-!unknown-native-enum! ADInterstitialPresentationPolicy bound

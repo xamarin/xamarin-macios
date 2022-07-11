@@ -34,8 +34,8 @@ namespace LinkAll.Mef {
 		public void MEF_Basic_Import_Test ()
 		{
 			var catalog = new AggregateCatalog ();
-			//Adds all the parts found in the same assembly as the Program class
-			catalog.Catalogs.Add (new AssemblyCatalog (typeof (Application).Assembly));
+			//Adds all the parts found in the same assembly
+			catalog.Catalogs.Add (new AssemblyCatalog (typeof (MEFTests).Assembly));
 
 			//Create the CompositionContainer with the parts in the catalog
 			_container = new CompositionContainer (catalog);
@@ -80,4 +80,3 @@ namespace LinkAll.Mef {
 	}
 }
 #endif // !NET
-

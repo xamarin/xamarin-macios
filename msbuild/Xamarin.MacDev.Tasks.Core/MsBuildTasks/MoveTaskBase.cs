@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Build.Tasks
+namespace Microsoft.Build.Tasks
 {
 	public abstract class MoveTaskBase : Move
 	{

@@ -6,8 +6,6 @@
 	<string>LinkSdkTest</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.xamarin.linksdk</string>
-	<key>MinimumOSVersion</key>
-	<string>10.0</string>
 	<key>UIDeviceFamily</key>
 	<array>
 		<integer>1</integer>

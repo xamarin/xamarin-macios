@@ -30,7 +30,7 @@ namespace CoreData {
 		}
 	}
 #endif
-#if !XAMCORE_4_0
+#if !NET
 	public partial class NSCoreDataCoreSpotlightDelegate {
 
 		[Obsolete ("Default constructor is not available")]

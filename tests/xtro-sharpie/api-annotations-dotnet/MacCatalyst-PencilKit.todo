@@ -1,0 +1,2 @@
+!missing-selector! PKCanvasView::delegate not bound
+!missing-selector! PKCanvasView::setDelegate: not bound

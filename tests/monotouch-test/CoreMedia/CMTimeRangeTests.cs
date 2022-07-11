@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CMTimeRange
 //
 // Authors:
@@ -58,4 +58,3 @@ namespace MonoTouchFixtures.CoreMedia
 		}
 	}
 }
-

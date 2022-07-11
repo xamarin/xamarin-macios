@@ -1,4 +1,4 @@
-﻿//
+//
 // AVDepthData.cs
 //
 // Authors:
@@ -14,18 +14,20 @@ using ObjCRuntime;
 using CoreVideo;
 using ImageIO;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVDepthData {
 
-		public static AVDepthData Create (CGImageAuxiliaryDataInfo dataInfo, out NSError error)
+		public static AVDepthData? Create (CGImageAuxiliaryDataInfo dataInfo, out NSError? error)
 		{
 			return Create (dataInfo.Dictionary, out error);
 		}
 
-		public CVPixelFormatType [] AvailableDepthDataTypes {
+		public CVPixelFormatType []? AvailableDepthDataTypes {
 			get {
 				var values = WeakAvailableDepthDataTypes;
-				if (values == null)
+				if (values is null)
 					return null;
 
 				var count = values.Length;

@@ -1,2 +1,0 @@
-# NSInternalInconsistencyException Reason: -init results in undefined behavior for NSBatchInsertRequest
-!missing-selector! NSBatchInsertRequest::init not bound

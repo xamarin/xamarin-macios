@@ -8,6 +8,7 @@
 
 #if defined (CORECLR_RUNTIME)
 
+#include <sys/stat.h>
 #include <inttypes.h>
 #include <pthread.h>
 
@@ -180,6 +181,10 @@ monoobject_dict_free_value (CFAllocatorRef allocator, const void *value)
  *       (NSObjectFlagsInFinalizerQueue), which we fetch in managed code in
  *       the Flags getter.
  *
+ *    Note: we call ObjectiveCMarshal.CreateReferenceTrackingHandle for all
+ *    NSObjects, not only toggled ones, because we need point 5) below to
+ *    happen for all NSObjects, not just toggled ones.
+ *
  * 4) The CoreCLR GC will invoke a callback we installed when calling
  *    ObjectiveCMarshal.Initialize to check if that toggled managed object can
  *    be collected or not. This callback is executed during the GC, which
@@ -193,7 +198,7 @@ monoobject_dict_free_value (CFAllocatorRef allocator, const void *value)
  *    to let us know, and we'll set the corresponding flag in the flags
  *
  * 6) Finally, the GCHandle we got in step 3) is freed when the managed peer
- *    is freed.
+ *    is freed and removed from our object map.
  *
  * Caveat: we don't support the server GC (because it uses multiple threads,
  * and thus may call xamarin_coreclr_reference_tracking_begin_end_callback
@@ -291,26 +296,32 @@ xamarin_coreclr_reference_tracking_is_referenced_callback (void* ptr)
 	int rv = 0;
 	struct TrackedObjectInfo *info = (struct TrackedObjectInfo *) ptr;
 	enum NSObjectFlags flags = info->flags;
+	bool isRegisteredToggleRef = (flags & NSObjectFlagsRegisteredToggleRef) == NSObjectFlagsRegisteredToggleRef;
 	id handle = info->handle;
-	MonoToggleRefStatus res;
+	MonoToggleRefStatus res = (MonoToggleRefStatus) 0;
 
-	res = xamarin_gc_toggleref_callback (flags, handle, NULL, NULL);
+	if (isRegisteredToggleRef) {
+		res = xamarin_gc_toggleref_callback (flags, handle, NULL, NULL);
 
-	switch (res) {
-	case MONO_TOGGLE_REF_DROP:
-		// There's no equivalent to DROP in CoreCLR, so just treat it as weak.
-	case MONO_TOGGLE_REF_WEAK:
+		switch (res) {
+		case MONO_TOGGLE_REF_DROP:
+			// There's no equivalent to DROP in CoreCLR, so just treat it as weak.
+		case MONO_TOGGLE_REF_WEAK:
+			rv = 0;
+			break;
+		case MONO_TOGGLE_REF_STRONG:
+			rv = 1;
+			break;
+		default:
+			LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i): INVALID toggle ref value: %i\n", __func__, ptr, handle, flags, res);
+			break;
+		}
+	} else {
+		// If this isn't a toggle ref, it's effectively a weak gchandle
 		rv = 0;
-		break;
-	case MONO_TOGGLE_REF_STRONG:
-		rv = 1;
-		break;
-	default:
-		LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i): INVALID toggle ref value: %i\n", __func__, ptr, handle, flags, res);
-		break;
 	}
 
-	LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i) => %i (res: %i)\n", __func__, ptr, handle, flags, rv, res);
+	LOG_CORECLR (stderr, "%s (%p -> handle: %p flags: %i) => %i (res: %i) isRegisteredToggleRef: %i\n", __func__, ptr, handle, flags, rv, res, isRegisteredToggleRef);
 
 	return rv;
 }
@@ -351,23 +362,151 @@ xamarin_enable_new_refcount ()
 	// Nothing to do here.
 }
 
+/**
+ * xamarin_bridge_decode_value:
+ * 
+ * This implementation is a slightly modified copy (to make it compile) of mono_metadata_decode_value
+ * https://github.com/dotnet/runtime/blob/08a7b2382799082eedb94d70fca6c66eb75f2872/src/mono/mono/metadata/metadata.c#L1525
+ */
+guint32
+xamarin_bridge_decode_value (const char *_ptr, const char **rptr)
+{
+	const unsigned char *ptr = (const unsigned char *) _ptr;
+	unsigned char b = *ptr;
+	guint32 len;
+	
+	if ((b & 0x80) == 0){
+		len = b;
+		++ptr;
+	} else if ((b & 0x40) == 0){
+		len = (guint32) ((b & 0x3f) << 8 | ptr [1]);
+		ptr += 2;
+	} else {
+		len = (guint32) (((b & 0x1f) << 24) |
+			(ptr [1] << 16) |
+			(ptr [2] << 8) |
+			ptr [3]);
+		ptr += 4;
+	}
+	if (rptr)
+		*rptr = (char*)ptr;
+	
+	return len;
+}
+
+static char *
+xamarin_read_config_string (const char **buf)
+{
+		guint32 configLength = xamarin_bridge_decode_value (*buf, buf);
+		char *value = strndup (*buf, configLength);
+		*buf = *buf + configLength;
+		return value;
+}
+
+static void *
+xamarin_mmap_runtime_config_file (size_t *length)
+{
+	if (xamarin_runtime_configuration_name == NULL) {
+		LOG (PRODUCT ": No runtime config file provided at build time.\n");
+		return NULL;
+	}
+
+	char path [1024];
+	if (!xamarin_locate_app_resource (xamarin_runtime_configuration_name, path, sizeof (path))) {
+		LOG (PRODUCT ": Could not locate the runtime config file '%s' in the app bundle.\n", xamarin_runtime_configuration_name);
+		return NULL;
+	}
+	
+	int fd = open (path, O_RDONLY);
+	if (fd == -1) {
+		LOG (PRODUCT ": Could not open the runtime config file '%s' in the app bundle: %s\n", path, strerror (errno));
+		return NULL;
+	}
+
+	struct stat stat_buf = { 0 };
+	if (fstat (fd, &stat_buf) == -1) {
+		LOG (PRODUCT ": Could not stat the runtime config file '%s' in the app bundle: %s\n", path, strerror (errno));
+		close (fd);
+		return NULL;
+	}
+
+	*length = (size_t) stat_buf.st_size;
+	void *buffer = mmap (NULL, *length, PROT_READ, MAP_PRIVATE, fd, 0);
+	close (fd);
+	return buffer;
+}
+
+// Input: the property keys + values passed to xamarin_bridge_vm_initialize
+// Output: newly allocated arrays of property keys + values that include those passed to xamarin_bridge_vm_initialize together with those in the runtimeconfig.bin file
+// Caller must free the allocated arrays + their elements
+void
+xamarin_bridge_compute_properties (int inputCount, const char **inputKeys, const char **inputValues, int* outputCount, const char ***outputKeys, const char ***outputValues)
+{
+	size_t fd_len = 0;
+	const char *buf = (const char *) xamarin_mmap_runtime_config_file (&fd_len);
+	int runtimeConfigCount = 0;
+
+	if (buf != NULL)
+		runtimeConfigCount = (int) xamarin_bridge_decode_value (buf, &buf);
+
+	// Allocate the output arrays
+	*outputCount = inputCount + runtimeConfigCount;
+	*outputKeys = (const char **) calloc ((size_t) *outputCount, sizeof (char *));
+	*outputValues = (const char **) calloc ((size_t) *outputCount, sizeof (char *));
+
+	// Read the runtimeconfig properties
+	// https://github.com/dotnet/runtime/blob/57bfe474518ab5b7cfe6bf7424a79ce3af9d6657/docs/design/mono/mobile-runtimeconfig-json.md#the-encoded-runtimeconfig-format
+	for (int i = 0; i < runtimeConfigCount; i++) {
+		char *key = xamarin_read_config_string (&buf);
+		char *value = xamarin_read_config_string (&buf);
+		(*outputKeys) [i] = key;
+		(*outputValues) [i] = value;
+	}
+
+	// Copy the input properties
+	for (int i = 0; i < inputCount; i++) {
+		if (inputKeys [i] != NULL && inputValues [i] != NULL) {
+			(*outputKeys) [i + runtimeConfigCount] = strdup (inputKeys [i]);
+			(*outputValues) [i + runtimeConfigCount] = strdup (inputValues [i]);
+		} else {
+			NSLog (@PRODUCT ": No name/value specified for runtime property %s=%s", inputKeys [i], inputValues [i]);
+		}
+	}
+
+	if (buf != NULL)
+		munmap ((void *) buf, fd_len);
+}
+
 bool
 xamarin_bridge_vm_initialize (int propertyCount, const char **propertyKeys, const char **propertyValues)
 {
 	int rv;
 
+	int combinedPropertyCount = 0;
+	const char **combinedPropertyKeys = NULL;
+	const char **combinedPropertyValues = NULL;
+
+	xamarin_bridge_compute_properties (propertyCount, propertyKeys, propertyValues, &combinedPropertyCount, &combinedPropertyKeys, &combinedPropertyValues);
+
 	const char *executablePath = [[[[NSBundle mainBundle] executableURL] path] UTF8String];
 	rv = coreclr_initialize (
 		executablePath,
 		xamarin_executable_name,
-		propertyCount,
-		propertyKeys,
-		propertyValues,
+		combinedPropertyCount,
+		combinedPropertyKeys,
+		combinedPropertyValues,
 		&coreclr_handle,
 		&coreclr_domainId
 		);
 
-	LOG_CORECLR (stderr, "xamarin_vm_initialize (%i, %p, %p): rv: %i domainId: %i handle: %p\n", propertyCount, propertyKeys, propertyValues, rv, coreclr_domainId, coreclr_handle);
+	for (int i = 0; i < combinedPropertyCount; i++) {
+		free ((void *) combinedPropertyKeys [i]);
+		free ((void *) combinedPropertyValues [i]);
+	}
+	free ((void *) combinedPropertyKeys);
+	free ((void *) combinedPropertyValues);
+
+	LOG_CORECLR (stderr, "xamarin_vm_initialize (%i, %p, %p): rv: %i domainId: %i handle: %p\n", combinedPropertyCount, combinedPropertyKeys, combinedPropertyValues, rv, coreclr_domainId, coreclr_handle);
 
 	return rv == 0;
 }
@@ -501,11 +640,12 @@ xamarin_mono_object_release_at_process_exit (MonoObject *mobj)
 MonoAssembly *
 mono_assembly_open (const char * filename, MonoImageOpenStatus * status)
 {
-	assert (status == NULL);
-
 	MonoAssembly *rv = xamarin_find_assembly (filename);
 
 	LOG_CORECLR (stderr, "mono_assembly_open (%s, %p) => MonoObject=%p GCHandle=%p\n", filename, status, rv, rv->gchandle);
+
+	if (status != NULL)
+		*status = rv == NULL ? MONO_IMAGE_ERROR_ERRNO : MONO_IMAGE_OK;
 
 	return rv;
 }
@@ -602,18 +742,24 @@ mono_jit_exec (MonoDomain * domain, MonoAssembly * assembly, int argc, const cha
 {
 	unsigned int exitCode = 0;
 
-	char *assemblyName = xamarin_bridge_get_assembly_name (assembly->gchandle);
+	char *assemblyPath = xamarin_bridge_get_assembly_location (assembly->gchandle);
 
-	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s\n", domain, assembly, argc, argv, assemblyName);
+	if (argc > 0) {
+		// The first argument is to the native executable, which we don't want to pass on to native code.
+		argc--;
+		argv = &argv [1];
+	}
+
+	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s\n", domain, assembly, argc, argv, assemblyPath);
 	for (int i = 0; i < argc; i++) {
 		LOG_CORECLR (stderr, "    Argument #%i: %s\n", i + 1, argv [i]);
 	}
 
-	int rv = coreclr_execute_assembly (coreclr_handle, coreclr_domainId, argc, argv, assemblyName, &exitCode);
+	int rv = coreclr_execute_assembly (coreclr_handle, coreclr_domainId, argc, argv, assemblyPath, &exitCode);
 
-	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s rv: %i exitCode: %i\n", domain, assembly, argc, argv, assemblyName, rv, exitCode);
+	LOG_CORECLR (stderr, "mono_jit_exec (%p, %p, %i, %p) => EXECUTING %s rv: %i exitCode: %i\n", domain, assembly, argc, argv, assemblyPath, rv, exitCode);
 
-	xamarin_free (assemblyName);
+	xamarin_free (assemblyPath);
 
 	if (rv != 0)
 		xamarin_assertion_message ("mono_jit_exec failed: %i\n", rv);
@@ -741,7 +887,7 @@ MonoException *
 mono_get_exception_out_of_memory ()
 {
 	MonoException *rv = xamarin_bridge_create_exception (XamarinExceptionTypes_System_OutOfMemoryException, NULL);
-	LOG_CORECLR (stderr, "%s (%p) => %p\n", __func__, entrypoint, rv);
+	LOG_CORECLR (stderr, "%s () => %p\n", __func__, rv);
 	return rv;
 }
 
@@ -959,6 +1105,12 @@ bool
 xamarin_is_class_inativeobject (MonoClass *cls)
 {
 	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_ObjCRuntime_INativeObject);
+}
+
+bool
+xamarin_is_class_nativehandle (MonoClass *cls)
+{
+	return xamarin_bridge_is_class_of_type (cls, XamarinLookupTypes_ObjCRuntime_NativeHandle);
 }
 
 bool

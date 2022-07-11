@@ -14,6 +14,10 @@ using UIKit;
 using CoreGraphics;
 using MapKit;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CarPlay {
 
 	// Just to please the generator that at this point does not know the hierarchy
@@ -164,7 +168,7 @@ namespace CarPlay {
 		Confirm,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (15,0)]
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum CPAssistantCellPosition : long
 	{
@@ -172,7 +176,7 @@ namespace CarPlay {
 		Bottom,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (15,0)]
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum CPAssistantCellVisibility : long
 	{
@@ -181,78 +185,21 @@ namespace CarPlay {
 		Always,
 	}
 
-
-	[NoWatch, NoTV, NoMac, iOS (15,0)]
-	public enum CPJunctionType : byte
+	[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
+	[Native]
+	public enum CPAssistantCellActionType : long
 	{
-		Intersection = 0,
-		Roundabout = 1,
+		PlayMedia = 0,
+		StartCall,
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (15,0)]
-	public enum CPTrafficSide : byte
-	{
-		Right = 0,
-		Left = 1,
-	}
-
-	[NoWatch, NoTV, NoMac, iOS (15,0)]
-	public enum CPManeuverType : byte
-	{
-		NoTurn = 0,
-		LeftTurn = 1,
-		RightTurn = 2,
-		StraightAhead = 3,
-		UTurn = 4,
-		FollowRoad = 5,
-		EnterRoundabout = 6,
-		ExitRoundabout = 7,
-		OffRamp = 8,
-		OnRamp = 9,
-		ArriveEndOfNavigation = 10,
-		StartRoute = 11,
-		ArriveAtDestination = 12,
-		KeepLeft = 13,
-		KeepRight = 14,
-		EnterFerry = 15,
-		ExitFerry = 16,
-		ChangeFerry = 17,
-		StartRouteWithUTurn = 18,
-		UTurnAtRoundabout = 19,
-		LeftTurnAtEnd = 20,
-		RightTurnAtEnd = 21,
-		HighwayOffRampLeft = 22,
-		HighwayOffRampRight = 23,
-		ArriveAtDestinationLeft = 24,
-		ArriveAtDestinationRight = 25,
-		UTurnWhenPossible = 26,
-		ArriveEndOfDirections = 27,
-		RoundaboutExit1 = 28,
-		RoundaboutExit2 = 29,
-		RoundaboutExit3 = 30,
-		RoundaboutExit4 = 31,
-		RoundaboutExit5 = 32,
-		RoundaboutExit6 = 33,
-		RoundaboutExit7 = 34,
-		RoundaboutExit8 = 35,
-		RoundaboutExit9 = 36,
-		RoundaboutExit10 = 37,
-		RoundaboutExit11 = 38,
-		RoundaboutExit12 = 39,
-		RoundaboutExit13 = 40,
-		RoundaboutExit14 = 41,
-		RoundaboutExit15 = 42,
-		RoundaboutExit16 = 43,
-		RoundaboutExit17 = 44,
-		RoundaboutExit18 = 45,
-		RoundaboutExit19 = 46,
-		SharpLeftTurn = 47,
-		SharpRightTurn = 48,
-		SlightLeftTurn = 49,
-		SlightRightTurn = 50,
-		ChangeHighway = 51,
-		ChangeHighwayLeft = 52,
-		ChangeHighwayRight = 53,
+	[NoWatch, NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
+	[Native]
+	public enum CPInstrumentClusterSetting : ulong {
+		Unspecified,
+		Enabled,
+		Disabled,
+		UserPreference,
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
@@ -261,7 +208,7 @@ namespace CarPlay {
 	interface CPAlertAction : NSSecureCoding {
 
 		[Export ("initWithTitle:style:handler:")]
-		IntPtr Constructor (string title, CPAlertActionStyle style, Action<CPAlertAction> handler);
+		NativeHandle Constructor (string title, CPAlertActionStyle style, Action<CPAlertAction> handler);
 
 		[Export ("title")]
 		string Title { get; }
@@ -282,7 +229,7 @@ namespace CarPlay {
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Export ("initWithType:handler:")]
-		IntPtr Constructor (CPBarButtonType type, [NullAllowed] Action<CPBarButton> handler);
+		NativeHandle Constructor (CPBarButtonType type, [NullAllowed] Action<CPBarButton> handler);
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -299,11 +246,11 @@ namespace CarPlay {
 
 		[iOS (14,0)]
 		[Export ("initWithImage:handler:")]
-		IntPtr Constructor (UIImage image, [NullAllowed] CPBarButtonHandler handler);
+		NativeHandle Constructor (UIImage image, [NullAllowed] CPBarButtonHandler handler);
 
 		[iOS (14,0)]
 		[Export ("initWithTitle:handler:")]
-		IntPtr Constructor (string title, [NullAllowed] CPBarButtonHandler handler);
+		NativeHandle Constructor (string title, [NullAllowed] CPBarButtonHandler handler);
 
 		[iOS (14, 0)]
 		[Export ("buttonStyle", ArgumentSemantic.Assign)]
@@ -324,7 +271,7 @@ namespace CarPlay {
 		[Export ("trailingNavigationBarButtons", ArgumentSemantic.Strong)]
 		CPBarButton [] TrailingNavigationBarButtons { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
 		[iOS (12,2)]
@@ -339,7 +286,7 @@ namespace CarPlay {
 
 		[Export ("initWithTitleVariants:image:handler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string [] titleVariants, UIImage image, [NullAllowed] Action<CPGridButton> handler);
+		NativeHandle Constructor (string [] titleVariants, UIImage image, [NullAllowed] Action<CPGridButton> handler);
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -357,7 +304,7 @@ namespace CarPlay {
 	interface CPGridTemplate : CPBarButtonProviding{
 
 		[Export ("initWithTitle:gridButtons:")]
-		IntPtr Constructor ([NullAllowed] string title, CPGridButton [] gridButtons);
+		NativeHandle Constructor ([NullAllowed] string title, CPGridButton [] gridButtons);
 
 		[Export ("gridButtons")]
 		CPGridButton [] GridButtons { get; }
@@ -365,15 +312,15 @@ namespace CarPlay {
 		[Export ("title")]
 		string Title { get; }
 
-		[iOS (15,0)]
+		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("updateGridButtons:")]
 		void UpdateGridButtons (CPGridButton[] gridButtons);
 
-		[iOS (15,0)]
+		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("updateTitle:")]
 		void UpdateTitle (string title);
 
-		[iOS (15,0)]
+		[iOS (15,0), MacCatalyst (15,0)]
 		[Field ("CPGridTemplateMaximumItems")]
 		nuint MaximumItems { get; }
 	}
@@ -478,7 +425,11 @@ namespace CarPlay {
 	interface ICPInterfaceControllerDelegate { }
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CPInterfaceControllerDelegate {
 
@@ -500,7 +451,11 @@ namespace CarPlay {
 	[Introduced (PlatformName.iOS, 12,0)]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'CPTemplateApplicationSceneDelegate' instead.")]
 	[NoWatch, NoTV, NoMac]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CPApplicationDelegate : UIApplicationDelegate {
 
@@ -530,17 +485,17 @@ namespace CarPlay {
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
 		[Export ("initWithText:detailText:image:showsDisclosureIndicator:")]
-		IntPtr Constructor ([NullAllowed] string text, [NullAllowed] string detailText, [NullAllowed] UIImage image, bool showsDisclosureIndicator);
+		NativeHandle Constructor ([NullAllowed] string text, [NullAllowed] string detailText, [NullAllowed] UIImage image, bool showsDisclosureIndicator);
 
 		[Export ("initWithText:detailText:image:")]
-		IntPtr Constructor ([NullAllowed] string text, [NullAllowed] string detailText, [NullAllowed] UIImage image);
+		NativeHandle Constructor ([NullAllowed] string text, [NullAllowed] string detailText, [NullAllowed] UIImage image);
 
 		[Export ("initWithText:detailText:")]
-		IntPtr Constructor ([NullAllowed] string text, [NullAllowed] string detailText);
+		NativeHandle Constructor ([NullAllowed] string text, [NullAllowed] string detailText);
 
 		[iOS (14, 0)]
 		[Export ("initWithText:detailText:image:accessoryImage:accessoryType:")]
-		IntPtr Constructor ([NullAllowed] string text, [NullAllowed] string detailText, [NullAllowed] UIImage image, [NullAllowed] UIImage accessoryImage, CPListItemAccessoryType accessoryType);
+		NativeHandle Constructor ([NullAllowed] string text, [NullAllowed] string detailText, [NullAllowed] UIImage image, [NullAllowed] UIImage accessoryImage, CPListItemAccessoryType accessoryType);
 
 		[NullAllowed, Export ("text")]
 		new string Text { get; }
@@ -607,7 +562,7 @@ namespace CarPlay {
 		[Export ("handler", ArgumentSemantic.Copy)]
 		new CPSelectableListItemHandler Handler { get; set; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
@@ -618,14 +573,14 @@ namespace CarPlay {
 	interface CPListSection : NSSecureCoding {
 
 		[Export ("initWithItems:header:sectionIndexTitle:")]
-		IntPtr Constructor (CPListItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
+		NativeHandle Constructor (CPListItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
 
 		[Export ("initWithItems:")]
-		IntPtr Constructor (CPListItem [] items);
+		NativeHandle Constructor (CPListItem [] items);
 
-		[iOS (15,0)]
+		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithItems:header:headerSubtitle:headerImage:headerButton:sectionIndexTitle:")]
-		IntPtr Constructor (ICPListTemplateItem[] items, string header, [NullAllowed] string headerSubtitle, [NullAllowed] UIImage headerImage, [NullAllowed] CPButton headerButton, [NullAllowed] string sectionIndexTitle);
+		NativeHandle Constructor (ICPListTemplateItem[] items, string header, [NullAllowed] string headerSubtitle, [NullAllowed] UIImage headerImage, [NullAllowed] CPButton headerButton, [NullAllowed] string sectionIndexTitle);
 
 		[NullAllowed, Export ("header")]
 		string Header { get; }
@@ -644,22 +599,22 @@ namespace CarPlay {
 		[Export ("itemAtIndex:")]
 		ICPListTemplateItem GetItem (nuint index);
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[NullAllowed]
 		[Export ("headerSubtitle")]
 		string HeaderSubtitle { get; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[NullAllowed]
 		[Export ("headerImage", ArgumentSemantic.Copy)]
-		UIImage HeaderImage { get; }
+		UIImage HeaderImage { get; set; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[NullAllowed]
 		[Export ("headerButton", ArgumentSemantic.Copy)]
 		CPButton HeaderButton { get; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("CPMaximumListSectionImageSize")]
 		CGSize MaximumImageSize { get; }
 	}
@@ -670,11 +625,11 @@ namespace CarPlay {
 	interface CPListTemplate : CPBarButtonProviding {
 
 		[Export ("initWithTitle:sections:")]
-		IntPtr Constructor ([NullAllowed] string title, CPListSection[] sections);
+		NativeHandle Constructor ([NullAllowed] string title, CPListSection[] sections);
 
-		[iOS (15,0)]
-		[Export ("initWithTitle:sections:assistantCellVisibility:assistantCellPosition:")]
-		IntPtr Constructor ([NullAllowed] string title, CPListSection[] sections, CPAssistantCellVisibility visibility, CPAssistantCellPosition position);
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initWithTitle:sections:assistantCellConfiguration:")]
+		NativeHandle Constructor ([NullAllowed] string title, CPListSection[] sections, [NullAllowed] CPAssistantCellConfiguration assistantCellConfiguration);
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
 		[Wrap ("WeakDelegate")]
@@ -725,20 +680,21 @@ namespace CarPlay {
 		[Export ("emptyViewSubtitleVariants", ArgumentSemantic.Copy)]
 		string[] EmptyViewSubtitleVariants { get; set; }
 
-		[iOS (15, 0)]
-		[Export ("assistantCellVisibility", ArgumentSemantic.Assign)]
-		CPAssistantCellVisibility AssistantCellVisibility { get; set; }
-
-		[iOS (15, 0)]
-		[Export ("assistantCellPosition", ArgumentSemantic.Assign)]
-		CPAssistantCellPosition AssistantCellPosition { get; set; }
+		[NullAllowed]
+		[iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("assistantCellConfiguration", ArgumentSemantic.Strong)]
+		CPAssistantCellConfiguration AssistantCellConfiguration { get; set; }
 	}
 
 	interface ICPListTemplateDelegate { }
 
 	[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'CPListItem.Handler' instead.")]
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CPListTemplateDelegate {
 
@@ -755,6 +711,10 @@ namespace CarPlay {
 		[NullAllowed, Export ("symbolSet", ArgumentSemantic.Strong)]
 		CPImageSet SymbolSet { get; set; }
 
+		[NullAllowed]
+		[iOS (15,4), MacCatalyst (15,4)]
+		[Export ("cardBackgroundColor", ArgumentSemantic.Strong)]
+		UIColor CardBackgroundColor { get; set; }
 
  		[iOS (13,0)]
 		[NullAllowed, Export ("symbolImage", ArgumentSemantic.Strong)]
@@ -815,7 +775,7 @@ namespace CarPlay {
 
 		[Export ("initWithHandler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] Action<CPMapButton> handler);
+		NativeHandle Constructor ([NullAllowed] Action<CPMapButton> handler);
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -902,7 +862,11 @@ namespace CarPlay {
 	interface ICPMapTemplateDelegate { }
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CPMapTemplateDelegate {
 
@@ -975,11 +939,11 @@ namespace CarPlay {
 		
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use constructor that takes in 'UIImage' instead of 'CPImageSet'.")]
 		[Export ("initWithTitleVariants:subtitleVariants:imageSet:primaryAction:secondaryAction:duration:")]
-		IntPtr Constructor (string[] titleVariants, [NullAllowed] string[] subtitleVariants, [NullAllowed] CPImageSet imageSet, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
+		NativeHandle Constructor (string[] titleVariants, [NullAllowed] string[] subtitleVariants, [NullAllowed] CPImageSet imageSet, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
 
 		[iOS (13,0)]
 		[Export ("initWithTitleVariants:subtitleVariants:image:primaryAction:secondaryAction:duration:")]
-		IntPtr Constructor (string[] titleVariants, [NullAllowed] string[] subtitleVariants, [NullAllowed] UIImage image, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
+		NativeHandle Constructor (string[] titleVariants, [NullAllowed] string[] subtitleVariants, [NullAllowed] UIImage image, CPAlertAction primaryAction, [NullAllowed] CPAlertAction secondaryAction, double duration);
 
 		[Export ("updateTitleVariants:subtitleVariants:")]
 		void UpdateTitleVariants (string [] newTitleVariants, string [] newSubtitleVariants);
@@ -1015,6 +979,10 @@ namespace CarPlay {
 		[Export ("pauseTripForReason:description:")]
 		void PauseTrip (CPTripPauseReason reason, [NullAllowed] string description);
 
+		[iOS (15,4), MacCatalyst (15,4)]
+		[Export ("pauseTripForReason:description:turnCardColor:")]
+		void PauseTrip (CPTripPauseReason reason, [NullAllowed] string description, [NullAllowed] UIColor turnCardColor);
+
 		[Export ("finishTrip")]
 		void FinishTrip ();
 
@@ -1047,7 +1015,11 @@ namespace CarPlay {
 	delegate void CPSearchTemplateDelegateUpdateHandler (CPListItem [] searchResults);
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CPSearchTemplateDelegate {
 
@@ -1070,7 +1042,7 @@ namespace CarPlay {
 
 		[Export ("initWithDelegate:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (ICPSessionConfigurationDelegate @delegate);
+		NativeHandle Constructor (ICPSessionConfigurationDelegate @delegate);
 
 		[Export ("limitedUserInterfaces")]
 		CPLimitableUserInterface LimitedUserInterfaces { get; }
@@ -1090,12 +1062,17 @@ namespace CarPlay {
 	interface ICPSessionConfigurationDelegate { }
 
 	[NoWatch, NoTV, NoMac, iOS (12,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model ( AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CPSessionConfigurationDelegate {
 
-		// This is not @required since Xcode 11 but kept for API compatibility.
+#if !NET
 		[Abstract]
+#endif
 		[Export ("sessionConfiguration:limitedUserInterfacesChanged:")]
 		void LimitedUserInterfacesChanged (CPSessionConfiguration sessionConfiguration, CPLimitableUserInterface limitedUserInterfaces);
 
@@ -1137,7 +1114,7 @@ namespace CarPlay {
 
 		[Export ("initWithSummaryVariants:additionalInformationVariants:selectionSummaryVariants:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string [] summaryVariants, string [] additionalInformationVariants, string [] selectionSummaryVariants);
+		NativeHandle Constructor (string [] summaryVariants, string [] additionalInformationVariants, string [] selectionSummaryVariants);
 
 		[Export ("summaryVariants", ArgumentSemantic.Copy)]
 		string [] SummaryVariants { get; }
@@ -1161,7 +1138,7 @@ namespace CarPlay {
 
 		[Export ("initWithOrigin:destination:routeChoices:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MKMapItem origin, MKMapItem destination, CPRouteChoice [] routeChoices);
+		NativeHandle Constructor (MKMapItem origin, MKMapItem destination, CPRouteChoice [] routeChoices);
 
 		[Export ("origin", ArgumentSemantic.Strong)]
 		MKMapItem Origin { get; }
@@ -1181,7 +1158,7 @@ namespace CarPlay {
 	interface CPVoiceControlState : NSSecureCoding {
 
 		[Export ("initWithIdentifier:titleVariants:image:repeats:")]
-		IntPtr Constructor (string identifier, [NullAllowed] string [] titleVariants, [NullAllowed] UIImage image, bool repeats);
+		NativeHandle Constructor (string identifier, [NullAllowed] string [] titleVariants, [NullAllowed] UIImage image, bool repeats);
 
 		[NullAllowed, Export ("titleVariants", ArgumentSemantic.Copy)]
 		string [] TitleVariants { get; }
@@ -1202,7 +1179,7 @@ namespace CarPlay {
 	interface CPVoiceControlTemplate {
 
 		[Export ("initWithVoiceControlStates:")]
-		IntPtr Constructor (CPVoiceControlState [] voiceControlStates);
+		NativeHandle Constructor (CPVoiceControlState [] voiceControlStates);
 
 		[Export ("voiceControlStates", ArgumentSemantic.Copy)]
 		CPVoiceControlState [] VoiceControlStates { get; }
@@ -1220,7 +1197,7 @@ namespace CarPlay {
 	interface CPImageSet : NSSecureCoding {
 
 		[Export ("initWithLightContentImage:darkContentImage:")]
-		IntPtr Constructor (UIImage lightImage, UIImage darkImage);
+		NativeHandle Constructor (UIImage lightImage, UIImage darkImage);
 
 		[Export ("lightContentImage")]
 		UIImage LightContentImage { get; }
@@ -1232,7 +1209,11 @@ namespace CarPlay {
 	interface ICPTemplateApplicationSceneDelegate { }
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CPTemplateApplicationSceneDelegate : UISceneDelegate
 	{
@@ -1255,6 +1236,10 @@ namespace CarPlay {
 		[iOS (14,0)]
 		[Export ("templateApplicationScene:didDisconnectInterfaceController:")]
 		void DidDisconnect (CPTemplateApplicationScene templateApplicationScene, CPInterfaceController interfaceController);
+
+		[iOS (15,4), MacCatalyst (15,4)]
+		[Export ("contentStyleDidChange:")]
+		void ContentStyleDidChange (UIUserInterfaceStyle contentStyle);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
@@ -1262,7 +1247,7 @@ namespace CarPlay {
 	interface CPTemplateApplicationScene
 	{
 		[Export ("initWithSession:connectionOptions:")]
-		IntPtr Constructor (UISceneSession session, UISceneConnectionOptions connectionOptions);
+		NativeHandle Constructor (UISceneSession session, UISceneConnectionOptions connectionOptions);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -1277,6 +1262,10 @@ namespace CarPlay {
 		[Export ("carWindow", ArgumentSemantic.Strong)]
 		CPWindow CarWindow { get; }
 
+		[iOS (15,4), MacCatalyst (15,4)]
+		[Export ("contentStyle")]
+		UIUserInterfaceStyle ContentStyle { get; }
+
 		[Field ("CPTemplateApplicationSceneSessionRoleApplication")]
 		[Advice ("Use 'UIWindowSceneSessionRole.CarTemplateApplication' instead.")]
 		NSString SessionRoleApplication { get; }
@@ -1287,7 +1276,7 @@ namespace CarPlay {
 	interface CPWindow {
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("mapButtonSafeAreaLayoutGuide")]
 		UILayoutGuide MapButtonSafeAreaLayoutGuide { get; }
@@ -1304,7 +1293,7 @@ namespace CarPlay {
 
 		[Export ("initWithDistanceRemaining:timeRemaining:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSMeasurement<NSUnitLength> distance, double time);
+		NativeHandle Constructor (NSMeasurement<NSUnitLength> distance, double time);
 
 		[Export ("distanceRemaining", ArgumentSemantic.Copy)]
 		NSMeasurement<NSUnitLength> DistanceRemaining { get; }
@@ -1318,7 +1307,7 @@ namespace CarPlay {
 	interface CPTripPreviewTextConfiguration : NSSecureCoding {
 
 		[Export ("initWithStartButtonTitle:additionalRoutesButtonTitle:overviewButtonTitle:")]
-		IntPtr Constructor ([NullAllowed] string startButtonTitle, [NullAllowed] string additionalRoutesButtonTitle, [NullAllowed] string overviewButtonTitle);
+		NativeHandle Constructor ([NullAllowed] string startButtonTitle, [NullAllowed] string additionalRoutesButtonTitle, [NullAllowed] string overviewButtonTitle);
 
 		[NullAllowed, Export ("startButtonTitle")]
 		string StartButtonTitle { get; }
@@ -1336,7 +1325,7 @@ namespace CarPlay {
 	interface CPActionSheetTemplate {
 
 		[Export ("initWithTitle:message:actions:")]
-		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] string message, CPAlertAction [] actions);
+		NativeHandle Constructor ([NullAllowed] string title, [NullAllowed] string message, CPAlertAction [] actions);
 
 		[NullAllowed, Export ("title")]
 		string Title { get; }
@@ -1354,7 +1343,7 @@ namespace CarPlay {
 	interface CPAlertTemplate {
 
 		[Export ("initWithTitleVariants:actions:")]
-		IntPtr Constructor (string [] titleVariants, CPAlertAction [] actions);
+		NativeHandle Constructor (string [] titleVariants, CPAlertAction [] actions);
 
 		[Export ("titleVariants", ArgumentSemantic.Copy)]
 		string [] TitleVariants { get; }
@@ -1375,7 +1364,7 @@ namespace CarPlay {
 
 		[Export ("initWithTitleVariants:subtitleVariants:image:handler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string[] titleVariants, string[] subtitleVariants, UIImage image, [NullAllowed] Action<CPDashboardButton> handler);
+		NativeHandle Constructor (string[] titleVariants, string[] subtitleVariants, UIImage image, [NullAllowed] Action<CPDashboardButton> handler);
 
 		[Export ("image")]
 		UIImage Image { get; }
@@ -1399,7 +1388,11 @@ namespace CarPlay {
 	interface ICPTemplateApplicationDashboardSceneDelegate { }
 
 	[NoWatch, NoTV, NoMac, iOS (13,4)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CPTemplateApplicationDashboardSceneDelegate : UISceneDelegate {
 
@@ -1419,7 +1412,7 @@ namespace CarPlay {
 
 		[Export ("initWithSession:connectionOptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (UISceneSession session, UISceneConnectionOptions connectionOptions);
+		NativeHandle Constructor (UISceneSession session, UISceneConnectionOptions connectionOptions);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed, New]
@@ -1442,7 +1435,7 @@ namespace CarPlay {
 	{
 		[Export ("initWithImage:handler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (UIImage image, [NullAllowed] Action<CPButton> handler);
+		NativeHandle Constructor (UIImage image, [NullAllowed] Action<CPButton> handler);
 
 		[NullAllowed, Export ("image", ArgumentSemantic.Copy)]
 		UIImage Image { get; }
@@ -1462,7 +1455,7 @@ namespace CarPlay {
 	interface CPContact : NSSecureCoding
 	{
 		[Export ("initWithName:image:")]
-		IntPtr Constructor (string name, UIImage image);
+		NativeHandle Constructor (string name, UIImage image);
 
 		[Export ("name")]
 		string Name { get; set; }
@@ -1487,10 +1480,10 @@ namespace CarPlay {
 	{
 		[Export ("initWithImage:handler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (UIImage image, [NullAllowed] Action<CPButton> handler);
+		NativeHandle Constructor (UIImage image, [NullAllowed] Action<CPButton> handler);
 
 		[Export ("initWithHandler:")]
-		IntPtr Constructor ([NullAllowed] Action<CPButton> handler);
+		NativeHandle Constructor ([NullAllowed] Action<CPButton> handler);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1500,10 +1493,10 @@ namespace CarPlay {
 	{
 		[Export ("initWithImage:handler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (UIImage image, [NullAllowed] Action<CPButton> handler);
+		NativeHandle Constructor (UIImage image, [NullAllowed] Action<CPButton> handler);
 
 		[Export ("initWithHandler:")]
-		IntPtr Constructor ([NullAllowed] Action<CPButton> handler);
+		NativeHandle Constructor ([NullAllowed] Action<CPButton> handler);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1513,7 +1506,7 @@ namespace CarPlay {
 	{
 		[Export ("initWithContact:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CPContact contact);
+		NativeHandle Constructor (CPContact contact);
 
 		[Export ("contact", ArgumentSemantic.Strong)]
 		CPContact Contact { get; set; }
@@ -1526,7 +1519,7 @@ namespace CarPlay {
 	{
 		[Export ("initWithTitle:detail:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] string title, [NullAllowed] string detail);
+		NativeHandle Constructor ([NullAllowed] string title, [NullAllowed] string detail);
 
 		[NullAllowed, Export ("title")]
 		string Title { get; }
@@ -1542,7 +1535,7 @@ namespace CarPlay {
 	{
 		[Export ("initWithTitle:layout:items:actions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string title, CPInformationTemplateLayout layout, CPInformationItem[] items, CPTextButton[] actions);
+		NativeHandle Constructor (string title, CPInformationTemplateLayout layout, CPInformationItem[] items, CPTextButton[] actions);
 
 		[Export ("layout")]
 		CPInformationTemplateLayout Layout { get; }
@@ -1565,7 +1558,7 @@ namespace CarPlay {
 	interface CPListImageRowItem : CPSelectableListItem
 	{
 		[Export ("initWithText:images:")]
-		IntPtr Constructor (string text, UIImage[] images);
+		NativeHandle Constructor (string text, UIImage[] images);
 
 		[Export ("gridImages", ArgumentSemantic.Strong)]
 		UIImage[] GridImages { get; }
@@ -1593,7 +1586,7 @@ namespace CarPlay {
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		new NSObject UserInfo { get; set; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
@@ -1605,7 +1598,7 @@ namespace CarPlay {
 	{
 		[Export ("initWithTitle:textStyle:handler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string title, CPTextButtonStyle textStyle, [NullAllowed] Action<CPTextButton> handler);
+		NativeHandle Constructor (string title, CPTextButtonStyle textStyle, [NullAllowed] Action<CPTextButton> handler);
 
 		[Export ("title")]
 		string Title { get; set; }
@@ -1624,7 +1617,7 @@ namespace CarPlay {
 		CPMessageComposeBarButton Create ();
 
 		[Export ("initWithImage:")]
-		IntPtr Constructor (UIImage image);
+		NativeHandle Constructor (UIImage image);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1666,7 +1659,7 @@ namespace CarPlay {
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		new NSObject UserInfo { get; set; }
 
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
@@ -1686,7 +1679,7 @@ namespace CarPlay {
 		UIImage LeadingImage { get; }
 
 		[Export ("initWithLeadingItem:leadingImage:unread:")]
-		IntPtr Constructor (CPMessageLeadingItem leadingItem, [NullAllowed] UIImage leadingImage, bool unread);
+		NativeHandle Constructor (CPMessageLeadingItem leadingItem, [NullAllowed] UIImage leadingImage, bool unread);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1701,7 +1694,7 @@ namespace CarPlay {
 		UIImage TrailingImage { get; }
 
 		[Export ("initWithTrailingItem:trailingImage:")]
-		IntPtr Constructor (CPMessageTrailingItem trailingItem, [NullAllowed] UIImage trailingImage);
+		NativeHandle Constructor (CPMessageTrailingItem trailingItem, [NullAllowed] UIImage trailingImage);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1710,7 +1703,7 @@ namespace CarPlay {
 	interface CPNowPlayingButton : NSSecureCoding
 	{
 		[Export ("initWithHandler:")]
-		IntPtr Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
 
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -1728,7 +1721,10 @@ namespace CarPlay {
 	interface CPNowPlayingImageButton
 	{
 		[Export ("initWithImage:handler:")]
-		IntPtr Constructor (UIImage image, [NullAllowed] Action<CPNowPlayingButton> handler);
+		NativeHandle Constructor (UIImage image, [NullAllowed] Action<CPNowPlayingButton> handler);
+
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
 
 		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
 		UIImage Image { get; }
@@ -1741,7 +1737,7 @@ namespace CarPlay {
 	{
 		[Export ("initWithLocation:title:subtitle:summary:detailTitle:detailSubtitle:detailSummary:pinImage:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (MKMapItem location, string title, [NullAllowed] string subtitle, [NullAllowed] string summary, [NullAllowed] string detailTitle, [NullAllowed] string detailSubtitle, [NullAllowed] string detailSummary, [NullAllowed] UIImage pinImage);
+		NativeHandle Constructor (MKMapItem location, string title, [NullAllowed] string subtitle, [NullAllowed] string summary, [NullAllowed] string detailTitle, [NullAllowed] string detailSubtitle, [NullAllowed] string detailSummary, [NullAllowed] UIImage pinImage);
 
 		[Export ("location", ArgumentSemantic.Strong)]
 		MKMapItem Location { get; set; }
@@ -1780,7 +1776,11 @@ namespace CarPlay {
 	interface ICPPointOfInterestTemplateDelegate { }
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof(NSObject))]
 	interface CPPointOfInterestTemplateDelegate
 	{
@@ -1799,7 +1799,7 @@ namespace CarPlay {
 	{
 		[Export ("initWithTitle:pointsOfInterest:selectedIndex:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (string title, CPPointOfInterest[] pointsOfInterest, nint selectedIndex);
+		NativeHandle Constructor (string title, CPPointOfInterest[] pointsOfInterest, nint selectedIndex);
 
 		[Export ("title")]
 		string Title { get; set; }
@@ -1824,7 +1824,11 @@ namespace CarPlay {
 	interface ICPTabBarTemplateDelegate { }
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	[BaseType (typeof (NSObject))]
 	interface CPTabBarTemplateDelegate
 	{
@@ -1840,7 +1844,7 @@ namespace CarPlay {
 	interface CPTabBarTemplate
 	{
 		[Export ("initWithTemplates:")]
-		IntPtr Constructor (CPTemplate[] templates);
+		NativeHandle Constructor (CPTemplate[] templates);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -1914,10 +1918,10 @@ namespace CarPlay {
 	{
 		[Export ("initWithImage:handler:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (UIImage image, [NullAllowed] Action<CPButton> handler);
+		NativeHandle Constructor (UIImage image, [NullAllowed] Action<CPButton> handler);
 
 		[Export ("initWithPhoneOrEmail:")]
-		IntPtr Constructor (string phoneOrEmail);
+		NativeHandle Constructor (string phoneOrEmail);
 
 		[Export ("phoneOrEmail")]
 		string PhoneOrEmail { get; }
@@ -1925,23 +1929,38 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingShuffleButton {}
+	interface CPNowPlayingShuffleButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingAddToLibraryButton {}
+	interface CPNowPlayingAddToLibraryButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingMoreButton {}
+	interface CPNowPlayingMoreButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingPlaybackRateButton {}
+	interface CPNowPlayingPlaybackRateButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingRepeatButton {}
+	interface CPNowPlayingRepeatButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	interface ICPListTemplateItem { }
 
@@ -1957,10 +1976,10 @@ namespace CarPlay {
 		[NullAllowed, Export ("userInfo", ArgumentSemantic.Strong)]
 		NSObject UserInfo { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract]
 #endif
-		[iOS (15, 0)]
+		[iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 	}
@@ -1985,7 +2004,7 @@ namespace CarPlay {
 	{
 		[Export ("initWithRating:maximumRating:title:detail:")]
 		[DesignatedInitializer]
-		IntPtr Constructor ([NullAllowed] NSNumber rating, [NullAllowed] NSNumber maximumRating, [NullAllowed] string title, [NullAllowed] string detail);
+		NativeHandle Constructor ([NullAllowed] NSNumber rating, [NullAllowed] NSNumber maximumRating, [NullAllowed] string title, [NullAllowed] string detail);
 
 		[NullAllowed, Export ("rating")]
 		NSNumber Rating { get; }
@@ -1993,4 +2012,130 @@ namespace CarPlay {
 		[NullAllowed, Export ("maximumRating")]
 		NSNumber MaximumRating { get; }
 	}
+
+	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface CPAssistantCellConfiguration : NSSecureCoding
+	{
+		[Export ("initWithPosition:visibility:assistantAction:")]
+		NativeHandle Constructor (CPAssistantCellPosition position, CPAssistantCellVisibility visibility, CPAssistantCellActionType assistantAction);
+
+		[Export ("position")]
+		CPAssistantCellPosition Position { get; }
+
+		[Export ("visibility")]
+		CPAssistantCellVisibility Visibility { get; }
+
+		[Export ("assistantAction")]
+		CPAssistantCellActionType AssistantAction { get; }
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface CPInstrumentClusterController {
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		ICPInstrumentClusterControllerDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
+		NSObject WeakDelegate { get; set; }
+
+		[NullAllowed, Export ("instrumentClusterWindow", ArgumentSemantic.Strong)]
+		UIWindow InstrumentClusterWindow { get; }
+
+		[Export ("speedLimitSetting")]
+		CPInstrumentClusterSetting SpeedLimitSetting { get; }
+
+		[Export ("compassSetting")]
+		CPInstrumentClusterSetting CompassSetting { get; }
+
+		[Export ("inactiveDescriptionVariants", ArgumentSemantic.Copy)]
+		string [] InactiveDescriptionVariants { get; set; }
+
+		[Export ("attributedInactiveDescriptionVariants", ArgumentSemantic.Copy)]
+		NSAttributedString[] AttributedInactiveDescriptionVariants { get; set; }
+	}
+
+	interface ICPInstrumentClusterControllerDelegate { }
+
+	[NoWatch, NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
+#if NET
+	[Protocol, Model]
+#else
+	[Protocol, Model (AutoGeneratedName = true)]
+#endif
+	[BaseType (typeof (NSObject))]
+	interface CPInstrumentClusterControllerDelegate {
+
+		[Abstract]
+		[Export ("instrumentClusterControllerDidConnectWindow:")]
+		void DidConnectWindow (UIWindow instrumentClusterWindow);
+
+		[Abstract]
+		[Export ("instrumentClusterControllerDidDisconnectWindow:")]
+		void DidDisconnectWindow (UIWindow instrumentClusterWindow);
+
+		[Export ("instrumentClusterControllerDidZoomIn:")]
+		void DidZoomIn (CPInstrumentClusterController instrumentClusterController);
+
+		[Export ("instrumentClusterControllerDidZoomOut:")]
+		void DidZoomOut (CPInstrumentClusterController instrumentClusterController);
+
+		[Export ("instrumentClusterController:didChangeCompassSetting:")]
+		void DidChangeCompassSetting (CPInstrumentClusterController instrumentClusterController, CPInstrumentClusterSetting compassSetting);
+
+		[Export ("instrumentClusterController:didChangeSpeedLimitSetting:")]
+		void DidChangeSpeedLimitSetting (CPInstrumentClusterController instrumentClusterController, CPInstrumentClusterSetting speedLimitSetting);
+	}
+
+	interface ICPTemplateApplicationInstrumentClusterSceneDelegate { }
+
+	[NoWatch, NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
+#if NET
+	[Protocol, Model]
+#else
+	[Protocol, Model (AutoGeneratedName = true)]
+#endif
+	[BaseType (typeof (NSObject))]
+	interface CPTemplateApplicationInstrumentClusterSceneDelegate : UISceneDelegate {
+
+		[Export ("templateApplicationInstrumentClusterScene:didConnectInstrumentClusterController:")]
+		void DidConnectInstrumentClusterController (CPTemplateApplicationInstrumentClusterScene templateApplicationInstrumentClusterScene, CPInstrumentClusterController instrumentClusterController);
+
+		[Export ("templateApplicationInstrumentClusterScene:didDisconnectInstrumentClusterController:")]
+		void DidDisconnectInstrumentClusterController (CPTemplateApplicationInstrumentClusterScene templateApplicationInstrumentClusterScene, CPInstrumentClusterController instrumentClusterController);
+
+		[Export ("contentStyleDidChange:")]
+		void ContentStyleDidChange (UIUserInterfaceStyle contentStyle);
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
+	[BaseType (typeof (UIScene))]
+	[DisableDefaultCtor]
+	interface CPTemplateApplicationInstrumentClusterScene {
+
+		[Field ("CPTemplateApplicationInstrumentClusterSceneSessionRoleApplication")]
+		NSString SessionRoleApplication { get; }
+
+		[Export ("initWithSession:connectionOptions:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (UISceneSession session, UISceneConnectionOptions connectionOptions);
+
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		ICPTemplateApplicationInstrumentClusterSceneDelegate Delegate { get; set; }
+
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Strong)]
+		NSObject WeakDelegate { get; set; }
+
+		[Export ("instrumentClusterController", ArgumentSemantic.Strong)]
+		CPInstrumentClusterController InstrumentClusterController { get; }
+
+		[Export ("contentStyle")]
+		UIUserInterfaceStyle ContentStyle { get; }
+	}
+
 }

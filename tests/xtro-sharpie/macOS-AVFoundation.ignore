@@ -9,12 +9,6 @@
 !missing-field! AVMediaCharacteristicEasyToRead not bound
 !missing-field! AVVideoDecompressionPropertiesKey not bound
 
-# Deprecated so won't bind it
-!missing-selector! AVAudioUnitComponent::componentURL not bound
-!missing-selector! AVCaptureConnection::isVideoMaxFrameDurationSupported not bound
-!missing-selector! AVCaptureConnection::setVideoMaxFrameDuration: not bound
-!missing-selector! AVCaptureConnection::videoMaxFrameDuration not bound
-
 ## unsorted
 !unknown-native-enum! AVCaptureAutoFocusRangeRestriction bound
 !unknown-native-enum! AVCaptureLensStabilizationStatus bound
@@ -24,10 +18,6 @@
 
 ## https://github.com/xamarin/xamarin-macios/issues/3213 should be fixed before conformance to 'AVQueuedSampleBufferRendering' is restored.
 !missing-protocol-conformance! AVSampleBufferDisplayLayer should conform to AVQueuedSampleBufferRendering (defined in 'AVSampleBufferDisplayLayerQueueManagement' category)
-
-# Initial result from new rule missing-release-attribute-on-return-value
-!missing-release-attribute-on-return-value! CoreMedia.CMSampleBuffer AVFoundation.AVAssetReaderOutput::CopyNextSampleBuffer()'s selector's ('copyNextSampleBuffer') Objective-C method family ('copy') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
-!missing-release-attribute-on-return-value! CoreVideo.CVPixelBuffer AVFoundation.AVVideoCompositionRenderContext::CreatePixelBuffer()'s selector's ('newPixelBuffer') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 
 # AVFoundation differs between IOS and macOS. Fields not availble in macOS 10.15.
 !missing-field! AVMetadataIdentifierQuickTimeMetadataAutoLivePhoto not bound

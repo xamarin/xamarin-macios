@@ -1,10 +1,13 @@
-﻿// 
+// 
 // VTDecompressionProperties.cs: Strongly Typed dictionary for VTDecompressionPropertyKey 
 //
 // Authors: Alex Soto (alex.soto@xamarin.com)
 //     
 // Copyright 2015 Xamarin Inc.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
@@ -17,7 +20,7 @@ using CoreVideo;
 
 namespace VideoToolbox {
 	public partial class VTDecompressionProperties {
-		public CVPixelBufferPool PixelBufferPool {
+		public CVPixelBufferPool? PixelBufferPool {
 			get {
 				return GetNativeValue<CVPixelBufferPool> (VTDecompressionPropertyKey.PixelBufferPool);
 			}
@@ -27,7 +30,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.FieldMode);
 
-				if (key == null)
+				if (key is null)
 					return VTFieldMode.Unset;
 				if (key == VTDecompressionPropertyKey.FieldMode_BothFields)
 					return VTFieldMode.BothFields;
@@ -69,7 +72,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.DeinterlaceMode);
 
-				if (key == null)
+				if (key is null)
 					return VTDeinterlaceMode.Unset;
 				if (key == VTDecompressionPropertyKey.DeinterlaceMode_VerticalFilter)
 					return VTDeinterlaceMode.VerticalFilter;
@@ -96,7 +99,7 @@ namespace VideoToolbox {
 			get {
 				var key = GetNSStringValue (VTDecompressionPropertyKey.OnlyTheseFrames);
 
-				if (key == null)
+				if (key is null)
 					return VTOnlyTheseFrames.Unset;
 				if (key == VTDecompressionPropertyKey.OnlyTheseFrames_AllFrames)
 					return VTOnlyTheseFrames.AllFrames;
@@ -130,4 +133,3 @@ namespace VideoToolbox {
 		}
 	}
 }
-

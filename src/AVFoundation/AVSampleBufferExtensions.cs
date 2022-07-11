@@ -16,6 +16,8 @@ using CMSampleBufferRef = System.IntPtr;
 using AVContentKey = System.IntPtr;
 using NSErrorPtr = System.IntPtr;
 
+#nullable enable
+
 namespace AVFoundation {
     public static class AVSampleBufferExtensions {
 
@@ -30,11 +32,11 @@ namespace AVFoundation {
         [iOS (14, 5), Mac (11, 3), TV (14, 5), Watch (7,4)]
         public static bool AttachContentKey (this CMSampleBuffer sampleBuffer, AVContentKey contentKey, out NSError error)
         {
-            if (sampleBuffer == null)
-                throw new ArgumentNullException (nameof (sampleBuffer));
+            if (sampleBuffer is null)
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
 
-            if (contentKey == null)
-                throw new ArgumentNullException (nameof (contentKey));
+            if (contentKey is null)
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (contentKey));
             
             IntPtr outerr;
             var retVal = AVSampleBufferAttachContentKey (sampleBuffer.Handle, contentKey.Handle, out outerr);

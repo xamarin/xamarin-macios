@@ -11,8 +11,12 @@ namespace GameKit {
 #if !XAMCORE_3_0
 	public partial class GKMatchRequest {
 		
+#if !NET
 		[iOS (8,0), Mac (10,10)]
 		[Obsolete ("Use 'RecipientResponseHandler' property.")]
+#else
+		[Obsolete ("Use 'RecipientResponseHandler' property.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
 		public virtual void SetRecipientResponseHandler (Action<GKPlayer, GKInviteRecipientResponse> handler)
 		{
 			RecipientResponseHandler = handler;
@@ -29,7 +33,7 @@ namespace GameKit {
 	}
 #endif // !XAMCORE_3_0
 
-#if WATCH && !XAMCORE_4_0
+#if WATCH && !NET
 	[Unavailable (PlatformName.WatchOS)]
 	[Obsolete ("This API is not available on this platform.")]
 	public static class GKGameSessionErrorCodeExtensions {
@@ -38,7 +42,7 @@ namespace GameKit {
 	}
 #endif
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 	public partial class GKGameSession {
 
 		[Obsolete ("Empty stub (GKGameSessionEventListenerPrivate category members are not public API).")]

@@ -27,6 +27,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !NET
 using System;
 using System.IO;
 using System.Net;
@@ -172,3 +173,4 @@ namespace CFNetwork {
 		}
 	}
 }
+#endif // !NET

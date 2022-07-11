@@ -9,7 +9,7 @@ namespace ModelIO {
 			}
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload that takes an 'MDLLightProbeIrradianceDataSource' instead.")]
 		public static MDLLightProbe[] PlaceLightProbes (float density, MDLProbePlacement type, MDLLightProbeIrradianceDataSource dataSource)
 		{
