@@ -69,9 +69,6 @@ xamarin_bridge_initialize ()
 	DEBUG_LAUNCH_TIME_PRINT ("\tDebug init time");
 #endif
 	
-	if (xamarin_init_mono_debug)
-		mono_debug_init (MONO_DEBUG_FORMAT_MONO);
-	
 	mono_install_assembly_preload_hook (xamarin_assembly_preload_hook, NULL);
 	mono_install_load_aot_data_hook (xamarin_load_aot_data, xamarin_free_aot_data, NULL);
 
@@ -85,7 +82,16 @@ xamarin_bridge_initialize ()
 	mono_install_unhandled_exception_hook (xamarin_unhandled_exception_handler, NULL);
 	mono_install_ftnptr_eh_callback (xamarin_ftnptr_exception_handler);
 
-	mono_jit_init_version ("MonoTouch", "mobile");
+	const char *argc[] = {
+		"",
+		"--interp=-all"
+	};
+
+	if (xamarin_init_mono_debug)
+		mono_main (2, (char**)argc);
+	else
+		mono_jit_init_version ("MonoTouch", "mobile");
+	
 	/*
 	  As part of mono initialization a preload hook is added that overrides ours, so we need to re-instate it here.
 	  This is wasteful, but there's no way to manipulate the preload hook list except by adding to it.
