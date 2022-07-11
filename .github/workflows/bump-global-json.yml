@@ -13,6 +13,7 @@ jobs:
     - name: 'Update global.json'
       run: |
         set -exo pipefail
+        touch Make.config.inc # create a dummy file to avoid logic we don't need executed here
         make global.json
         if git diff --exit-code -- global.json; then
           echo "No global.json update necessary"
