@@ -20,5 +20,7 @@ jobs:
           exit 0
         fi
         git add global.json
+        git config --global user.email "github-actions-regenerate-global-json@xamarin.com"
+        git config --global user.name "GitHub Actions"
         git commit -m "Update global.json"
         git push
