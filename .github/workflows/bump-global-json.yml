@@ -1,0 +1,23 @@
+name: Bump global.json for dotnet/installer bumps
+on: pull_request
+
+jobs:
+  bump-global-json:
+    name: Bump global.json
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.title, 'Update dependencies from dotnet/installer') # && github.actor == 'dotnet-maestro[bot]'
+    steps:
+    - name: 'Checkout repo'
+      uses: actions/checkout@v3
+
+    - name: 'Update global.json'
+      run: |
+        set -exo pipefail
+        make global.json
+        if git diff --exit-code -- global.json; then
+          echo "No global.json update necessary"
+          exit 0
+        fi
+        git add global.json
+        git commit -m "Update global.json"
+        git push
