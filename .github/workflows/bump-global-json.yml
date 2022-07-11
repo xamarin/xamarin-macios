@@ -22,5 +22,6 @@ jobs:
         git add global.json
         git config --global user.email "github-actions-regenerate-global-json@xamarin.com"
         git config --global user.name "GitHub Actions"
+        git checkout "$GITHUB_HEAD_REF"
         git commit -m "Update global.json"
         git push
