@@ -10,7 +10,6 @@ jobs:
     - name: 'Checkout repo'
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0
         repository: ${{ github.event.pull_request.head.repo.full_name }}
         ref: ${{ github.event.pull_request.head.sha }}
 
@@ -23,12 +22,9 @@ jobs:
           echo "No global.json update necessary"
           exit 0
         fi
-        git branch -a || true
-        git show || true
-        git status || true
-        git add global.json
-        git config --global user.email "github-actions-regenerate-global-json@xamarin.com"
+        git add -- global.json
+        git config --global user.email "github-actions@xamarin.com"
         git config --global user.name "GitHub Actions"
         git checkout "$GITHUB_HEAD_REF"
-        git commit -m "Update global.json"
+        git commit -m "Re-generate global.json"
         git push
