@@ -75,6 +75,12 @@ namespace xsiminstaller {
 			}
 		}
 
+		static string GetIndexUrl (string xcodeVersion, string xcodeUuid)
+			=> xcodeVersion switch {
+				"14.0.0" => "https://devimages-cdn.apple.com/downloads/xcode/simulators/index2.dvtdownloadableindex",
+				_ => $"https://devimages-cdn.apple.com/downloads/xcode/simulators/index-{xcodeVersion}-{xcodeUuid}.dvtdownloadableindex"
+			};
+
 		public static int Main (string [] args)
 		{
 			var exit_code = 0;
@@ -134,7 +140,7 @@ namespace xsiminstaller {
 
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 2, ".");
 			xcodeVersion = xcodeVersion.Insert (xcodeVersion.Length - 1, ".");
-			var url = $"https://devimages-cdn.apple.com/downloads/xcode/simulators/index-{xcodeVersion}-{xcodeUuid}.dvtdownloadableindex";
+			var url = GetIndexUrl (xcodeVersion, xcodeUuid);
 			var uri = new Uri (url);
 			var tmpfile = Path.Combine (TempDirectory, Path.GetFileName (uri.LocalPath));
 			if (!File.Exists (tmpfile)) {
