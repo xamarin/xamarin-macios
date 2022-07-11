@@ -100,37 +100,6 @@ namespace Xamarin.iOS.Tasks
 			SetDeviceFamily (plist);
 
 			if (IsWatchExtension) {
-				// Note: Only watchOS1 Extensions target Xamarin.iOS
-				if (Platform == ApplePlatform.iOS) {
-					PObject value;
-
-					if (!plist.TryGetValue (ManifestKeys.UIRequiredDeviceCapabilities, out value)) {
-						var capabilities = new PArray ();
-						capabilities.Add (new PString ("watch-companion"));
-
-						plist.Add (ManifestKeys.UIRequiredDeviceCapabilities, capabilities);
-					} else if (value is PDictionary) {
-						var capabilities = (PDictionary) value;
-
-						if (!capabilities.ContainsKey ("watch-companion"))
-							capabilities.Add ("watch-companion", new PBoolean (true));
-					} else {
-						var capabilities = (PArray) value;
-						bool exists = false;
-
-						foreach (var capability in capabilities.OfType<PString> ()) {
-							if (capability.Value != "watch-companion")
-								continue;
-
-							exists = true;
-							break;
-						}
-
-						if (!exists)
-							capabilities.Add (new PString ("watch-companion"));
-					}
-				}
-
 				if (Debug)
 					SetAppTransportSecurity (plist);
 			}
