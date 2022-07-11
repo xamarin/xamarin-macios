@@ -13,11 +13,14 @@ jobs:
     - name: 'Update global.json'
       run: |
         set -exo pipefail
+        touch Make.config.inc # create a dummy file to avoid logic we don't need executed here
         make global.json
         if git diff --exit-code -- global.json; then
           echo "No global.json update necessary"
           exit 0
         fi
         git add global.json
+        git config --global user.email "github-actions-regenerate-global-json@xamarin.com"
+        git config --global user.name "GitHub Actions"
         git commit -m "Update global.json"
         git push
