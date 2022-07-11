@@ -470,24 +470,24 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-x64")] // valid RID in a previous preview (and common mistake)
-		[TestCase (ApplePlatform.iOS, "iossimulator-x84")] // it's x86, not x84
-		[TestCase (ApplePlatform.iOS, "iossimulator-arm")] // we don't support this
-		[TestCase (ApplePlatform.iOS, "helloworld")] // random text
-		[TestCase (ApplePlatform.iOS, "osx-x64")] // valid RID for another platform
-		[TestCase (ApplePlatform.TVOS, "tvos-x64")] // valid RID in a previous preview (and common mistake)
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x46")] // it's x64, not x46
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm")] // we don't support this
-		[TestCase (ApplePlatform.TVOS, "helloworld")] // random text
-		[TestCase (ApplePlatform.TVOS, "osx-x64")] // valid RID for another platform
-		[TestCase (ApplePlatform.MacOSX, "osx-x46")] // it's x64, not x46
-		[TestCase (ApplePlatform.MacOSX, "macos-arm64")] // it's osx, not macos
-		[TestCase (ApplePlatform.MacOSX, "helloworld")] // random text
-		[TestCase (ApplePlatform.MacOSX, "ios-arm64")] // valid RID for another platform
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x46")] // it's x64, not x46
-		[TestCase (ApplePlatform.MacCatalyst, "helloworld")] // random text
-		[TestCase (ApplePlatform.MacCatalyst, "osx-x64")] // valid RID for another platform
-		public void InvalidRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifier)
+		[TestCase (ApplePlatform.iOS, "ios-x64", false)] // valid RID in a previous preview (and common mistake)
+		[TestCase (ApplePlatform.iOS, "iossimulator-x84", true)] // it's x86, not x84
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm", true)] // we don't support this
+		[TestCase (ApplePlatform.iOS, "helloworld", true)] // random text
+		[TestCase (ApplePlatform.iOS, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.TVOS, "tvos-x64", false)] // valid RID in a previous preview (and common mistake)
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x46", true)] // it's x64, not x46
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm", true)] // we don't support this
+		[TestCase (ApplePlatform.TVOS, "helloworld", true)] // random text
+		[TestCase (ApplePlatform.TVOS, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.MacOSX, "osx-x46", true)] // it's x64, not x46
+		[TestCase (ApplePlatform.MacOSX, "macos-arm64", true)] // it's osx, not macos
+		[TestCase (ApplePlatform.MacOSX, "helloworld", true)] // random text
+		[TestCase (ApplePlatform.MacOSX, "ios-arm64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x46", true)] // it's x64, not x46
+		[TestCase (ApplePlatform.MacCatalyst, "helloworld", true)] // random text
+		[TestCase (ApplePlatform.MacCatalyst, "osx-x64", false)] // valid RID for another platform
+		public void InvalidRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifier, bool notRecognized)
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -499,7 +499,13 @@ namespace Xamarin.Tests {
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			var uniqueErrors = errors.Select (v => v.Message).Distinct ().ToArray ();
 			Assert.AreEqual (1, uniqueErrors.Length, "Error count");
-			Assert.AreEqual ($"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.", uniqueErrors [0], "Error message");
+			string expectedError;
+			if (notRecognized) {
+				expectedError = $"The specified RuntimeIdentifier '{runtimeIdentifier}' is not recognized.";
+			} else {
+				expectedError = $"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.";
+			}
+			Assert.AreEqual (expectedError, uniqueErrors [0], "Error message");
 		}
 
 		[Test]
