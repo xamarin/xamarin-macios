@@ -1988,7 +1988,7 @@ public class TestApp {
 		static string [] GetBindingsLibraryWithReferences (Profile profile)
 		{
 			var lib = GetBindingsLibrary (profile, out var version);
-			var nunit_framework = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), ".nuget", "packages", "nunit", version, "lib", "netstandard2.0", "nunit.framework.dll");
+			var nunit_framework = Path.Combine (Configuration.RootPath, "packages", "nunit", version, "lib", "netstandard2.0", "nunit.framework.dll");
 			if (!File.Exists (nunit_framework))
 				throw new FileNotFoundException ($"Could not find nunit.framework.dll in {nunit_framework}. Has the version changed?");
 			return new string [] { lib, nunit_framework };

@@ -99,13 +99,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 			if (IsNSObjectDerived (definition.BaseType, this)) {
 				if (definition.GetConstructors ().FirstOrDefault (IsIntPtrCtor) is MethodDefinition ctor) {
-					// How many instructions it takes to invoke a 1 or 2 param base ctor
-					// We can not safely process things that might store off the IntPtr
-					// or other such insanity, so just fail fast
-					if (ctor.Body.Instructions.Count > 7) {
-						throw new ConversionException (Errors.E0016, definition);
-					}
-
 					ctor.Parameters [0].ParameterType = NewNativeHandleTypeDefinition;
 					Transformed?.Invoke (this, new TransformEventArgs (ctor.DeclaringType.FullName,
 						ctor.Name, "IntPtr", 0, 0));

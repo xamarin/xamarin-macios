@@ -6764,7 +6764,7 @@ public partial class Generator : IMemberGatherer {
 				} else {
 					library_name = Path.GetFileNameWithoutExtension (library_name);
 				}
-				if (library_name.Contains ("."))
+				if (library_name.Contains ('.'))
 					library_name = library_name.Replace (".", string.Empty);
 			}
 		} else if (BindThirdPartyLibrary) {
