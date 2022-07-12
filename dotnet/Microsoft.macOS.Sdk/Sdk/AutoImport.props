@@ -1,4 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="..\targets\Microsoft.macOS.Sdk.DefaultItems.props" />
-	<Import Project="..\targets\Microsoft.macOS.Sdk.ImplicitNamespaceImports.props" />
-</Project>
