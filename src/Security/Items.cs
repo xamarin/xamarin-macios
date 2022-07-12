@@ -190,7 +190,7 @@ namespace Security {
 					if (max == 1)
 						return new NSData [] { Runtime.GetNSObject<NSData> (ptr, true)! };
 
-					return NSArray.ArrayFromHandle<NSData> (ptr, true);
+					return CFArray.ArrayFromHandle<NSData> (ptr, true)!;
 				}
 				return null;
 			}
@@ -237,7 +237,7 @@ namespace Security {
 				result = SecItem.SecItemCopyMatching (copy.Handle, out IntPtr ptr);
 				n = null;
 				if (result == SecStatusCode.Success)
-					return NSArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => new SecRecord (Runtime.GetNSObject<NSMutableDictionary> (element, false)!), releaseHandle: true)!;
+					return CFArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => new SecRecord (Runtime.GetNSObject<NSMutableDictionary> (element, false)!), releaseHandle: true)!;
 				return null;
 			}
 		}
