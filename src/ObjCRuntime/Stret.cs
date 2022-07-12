@@ -138,8 +138,9 @@ namespace ObjCRuntime
 					case "System.UInt32":
 					case "System.Int32":
 					case "System.IntPtr":
+					case "System.UIntPtr":
 					case "System.nuint":
-					case "System.uint":
+					case "System.nint":
 						return false;
 					// floating-point types are stret
 					}

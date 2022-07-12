@@ -22,9 +22,9 @@
 		These implicit usings are C#-specific, and governed by a single global property: ImplicitUsings, which can be either 'true' or 'enable'.
 		Ref: https://github.com/dotnet/sdk/issues/19793#issuecomment-900620060
 	-->
-	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == 'macOS' And '$(Language)' == 'C#' And ('$(ImplicitUsings)' == 'true' or '$(ImplicitUsings)' == 'enable')">
-		<Using Include="AppKit" Platform="macOS" />
-		<Using Include="CoreGraphics" Platform="macOS" />
-		<Using Include="Foundation" Platform="macOS" />
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@'
+						And '$(Language)' == 'C#'
+						And ('$(ImplicitUsings)' == 'true' Or '$(ImplicitUsings)' == 'enable')
+						And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '@TARGET_FRAMEWORK_VERSION@'))">@GLOBAL_USINGS@
 	</ItemGroup>
 </Project>
