@@ -790,6 +790,7 @@
 !unknown-type! NSObject bound
 
 ## Used 'INSFastEnumeration' placeholer (just so we can start flagging things)
+!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeration' category)
 
 ## never bound (or requested) for macOS, added to iOS/tvOS/watchOS in xcode10
 !missing-field! NSNonOwnedPointerHashCallBacks not bound
@@ -1372,6 +1373,3 @@
 ## the apple docs state that it does accept null: https://developer.apple.com/documentation/foundation/nsurl/1572047-urlwithstring
 ## An NSURL object initialized with URLString. If the URL string was malformed or nil, returns nil.
 !extra-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromString(System.String)' has a extraneous [NullAllowed] on parameter #0
-
-## Used 'INSFastEnumeration' placeholer (just so we can start flagging things)
-!missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration (defined in 'NSGenericFastEnumeration' category)
