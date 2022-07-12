@@ -327,6 +327,7 @@ stages:
   jobs:
     - template: templates/build/build-stage.yml
       parameters:
+        xcodeChannel: Stable
         signAndNotarize: true
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
@@ -345,6 +346,7 @@ stages:
     jobs:
       - template: templates/build/api-diff-stage.yml
         parameters:
+          xcodeChannel: Stable
           vsdropsPrefix: ${{ variables.vsdropsPrefix }}
           keyringPass: $(pass--lab--mac--builder--keychain)
           gitHubToken: ${{ variables['GitHub.Token'] }}
@@ -362,6 +364,7 @@ stages:
 - ${{ each config in parameters.simTestsConfigurations }}:
   - template: templates/tests/stage.yml
     parameters:
+      xcodeChannel: Stable
       testPrefix: ${{ config.testPrefix }} 
       stageName: ${{ config.stageName }} 
       displayName: ${{ config.displayName }} 
