@@ -36,5 +36,7 @@ using System.Runtime.CompilerServices;
 // - Assembly B should build just fine, because those two versions of Microsoft.*.dll have the exact same API.
 // To avoid scenarios where everybody would have to update to the latest patch version of Microsoft.*.dll
 // in order to compile stuff, we erase the third and fourth number and only use 0 for both.
-[assembly: AssemblyVersion ("@NUGET_VERSION_MAJOR@.@NUGET_VERSION_MINOR@.0.0")]
+// HACK: make the third number 700, to make it higher than the current stable.
+// HACK: do not merge this into main.
+[assembly: AssemblyVersion ("@NUGET_VERSION_MAJOR@.@NUGET_VERSION_MINOR@.700.0")]
 #endif

@@ -31,12 +31,14 @@ namespace LinkSdk {
 			// located inside System.Core.dll - IOW the linker needs to be aware of this
 			Aes aes = Aes.Create ();
 			Assert.NotNull (aes, "Aes");
-#if NET
+#if NET7_0
+			const string prefix = "System.Security.Cryptography, ";
+#elif NET
 			const string prefix = "System.Security.Cryptography.Algorithms, ";
 #else
 			const string prefix = "System.Core, ";
 #endif
-			Assert.True (aes.GetType ().Assembly.FullName.StartsWith (prefix, StringComparison.Ordinal), prefix);
+			Assert.That (aes.GetType ().Assembly.FullName, Does.StartWith (prefix), prefix);
 		}
 
 		static int trust_validation_callback;

@@ -93,7 +93,7 @@
 
   <ItemGroup>
     <KnownFrameworkReference Include="Microsoft.$(_PlatformName)"
-                            TargetFramework="net6.0"
+                            TargetFramework="net7.0"
                             RuntimeFrameworkName="Microsoft.$(_PlatformName)"
                             DefaultRuntimeFrameworkVersion="**FromWorkload**"
                             LatestRuntimeFrameworkVersion="**FromWorkload**"

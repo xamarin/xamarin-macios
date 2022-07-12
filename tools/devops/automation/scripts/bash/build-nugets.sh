@@ -21,3 +21,4 @@ DOTNET_PKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_PKG
 make -C dotnet package -j
 cp -c "$DOTNET_PKG_DIR"/*.pkg ../package/
 cp -c "$DOTNET_PKG_DIR"/*.msi ../package/
+cp -c "$DOTNET_PKG_DIR"/*.zip ../package/

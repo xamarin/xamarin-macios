@@ -121,6 +121,7 @@ steps:
     ls -R $(Build.SourcesDirectory)/artifacts/not-signed-package
     cp $(Build.SourcesDirectory)/artifacts/not-signed-package/*.nupkg $DOTNET_NUPKG_DIR
     cp $(Build.SourcesDirectory)/artifacts/not-signed-package/*.pkg $DOTNET_NUPKG_DIR
+    cp $(Build.SourcesDirectory)/artifacts/not-signed-package/*.zip $DOTNET_NUPKG_DIR
     ls -R $DOTNET_NUPKG_DIR
 
     NUGET_SOURCES=$(grep https://pkgs.dev.azure.com ./NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
@@ -134,6 +135,13 @@ steps:
       CURRENT=$(echo $platform | tr A-Z a-z)
       PLATFORMS="$PLATFORMS $CURRENT"
     done
+
+    for platform in $DOTNET_PLATFORMS; do
+      unzip -l $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip
+      unzip $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip -d tmpdir
+      rsync -av tmpdir/dotnet/sdk-manifests/* $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*/sdk-manifests/
+    done
+    find $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*
 
     $DOTNET workload install --from-rollback-file $ROLLBACK_PATH --source $DOTNET_NUPKG_DIR $SOURCES --verbosity diag $PLATFORMS
 

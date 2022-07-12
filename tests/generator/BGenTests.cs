@@ -860,6 +860,8 @@ namespace GeneratorTests
 		[Test]
 #if !NET
 		[Ignore ("This only applies to .NET")]
+#else
+		[Ignore ("https://github.com/dotnet/roslyn/issues/61525")]
 #endif
 		public void NativeIntDelegates ()
 		{

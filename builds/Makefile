@@ -6,6 +6,12 @@ PREFIX=$(abspath $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/)
 # Keep all intermediate files always.
 .SECONDARY:
 
+ifeq ($(shell arch),arm64)
+DOTNET_ARCH=arm64
+else
+DOTNET_ARCH=x64
+endif
+
 ##
 ## Mono download vs. build
 ##
@@ -19,7 +25,6 @@ download-mono: \
 downloads/$(basename $(MONO_IOS_FILENAME)): MONO_URL=$(MONO_IOS_URL)
 downloads/$(basename $(MONO_MAC_FILENAME)): MONO_URL=$(MONO_MAC_URL)
 downloads/$(basename $(MONO_MACCATALYST_FILENAME)): MONO_URL=$(MONO_MACCATALYST_URL)
-downloads/$(DOTNET_TARBALL_NAME): MONO_URL=$(DOTNET_TARBALL)
 
 include $(TOP)/mk/colors.mk
 
@@ -72,9 +77,9 @@ downloads/%: downloads/%.nupkg
 	$(Q) mv $@.tmp $@
 	$(Q) echo "Unzipped $*."
 
-downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))): dotnet-install.sh
+downloads/$(DOTNET_INSTALL_NAME): dotnet-install.sh
 	$(Q) echo "Downloading and installing .NET $(DOTNET_VERSION) into $@..."
-	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture x64 --no-path $$DOTNET_INSTALL_EXTRA_ARGS
+	$(Q) ./dotnet-install.sh --install-dir "$@.tmp" --version "$(DOTNET_VERSION)" --architecture $(DOTNET_ARCH) --no-path $$DOTNET_INSTALL_EXTRA_ARGS
 	$(Q) rm -Rf "$@"
 	$(Q) mv "$@.tmp" "$@"
 	$(Q) echo "Downloaded and installed .NET $(DOTNET_VERSION) into $@."
@@ -82,7 +87,7 @@ downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))): dotnet-install.sh
 # This is just a helpful target to print the url to the .pkg to download and install the current .NET version into the system.
 print-dotnet-pkg-urls: dotnet-install.sh
 	$(Q) rm -f $@-found-it.stamp
-	$(Q) for url in $$(./dotnet-install.sh --version "$(DOTNET_VERSION)" --architecture x64 --no-path $$DOTNET_INSTALL_EXTRA_ARGS --dry-run | grep URL.*primary: | sed 's/.*primary: //'); do \
+	$(Q) for url in $$(./dotnet-install.sh --version "$(DOTNET_VERSION)" --architecture $(DOTNET_ARCH) --no-path $$DOTNET_INSTALL_EXTRA_ARGS --dry-run | grep URL.*primary: | sed 's/.*primary: //'); do \
 		pkg=$${url/tar.gz/pkg}; \
 		if curl -LI --fail "$$pkg" >/dev/null 2>&1; then echo "$$pkg"; touch $@-found-it.stamp; break; fi; \
 	done
@@ -126,7 +131,7 @@ DOWNLOAD_DOTNET_VERSION=$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)
 endif
 endif
 
-.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(basename $(basename $(DOTNET_TARBALL_NAME)))
+.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(DOTNET_INSTALL_NAME)
 	$(Q_GEN) cd package-download && $(DOTNET) \
 		build \
 		download-packages.proj \
@@ -136,11 +141,8 @@ endif
 		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
 		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
 		/p:DotNetManifestVersionBand="$(DOTNET_MANIFEST_VERSION_BAND)" \
-		/p:ToolChainManifestVersionBand="$(TOOLCHAIN_MANIFEST_VERSION_BAND)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
-	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.mono.toolchain.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
-	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/dotnet-sdk-$(DOTNET_VERSION)-osx-x64/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
 	$(Q) touch $@
 
 .stamp-install-t4: $(TOP)/.config/dotnet-tools.json .stamp-download-dotnet-packages
@@ -152,7 +154,7 @@ endif
 BundledNETCorePlatformsPackageVersion.txt: .stamp-download-dotnet-packages
 
 DOTNET_DOWNLOADS = \
-	downloads/$(basename $(basename $(DOTNET_TARBALL_NAME))) \
+	downloads/$(DOTNET_INSTALL_NAME) \
 	.stamp-download-dotnet-packages \
 	.stamp-install-t4 \
 

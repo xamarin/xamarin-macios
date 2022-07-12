@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	This file contains implicit namespace imports
+
+	*** WARNING ***
+
+	This file is imported by AutoImport.props, and will be imported by all
+	projects using Microsoft.NET.Sdk.  All Item includes in this file *MUST*
+	be hidden behind a TargetPlatformIdentifier based condition.
+
+	This file can also not define any properties. However, due to the
+	order MSBuild evaluates properties, it's possible to use properties
+	defined in our .targets files in conditions in ItemGroups in this
+	file.
+
+	*** WARNING ***
+
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!--
+		These implicit usings are C#-specific, and governed by a single global property: ImplicitUsings, which can be either 'true' or 'enable'.
+		Ref: https://github.com/dotnet/sdk/issues/19793#issuecomment-900620060
+	-->
+	<ItemGroup Condition="'$(TargetPlatformIdentifier)' == '@PLATFORM@'
+						And '$(Language)' == 'C#'
+						And ('$(ImplicitUsings)' == 'true' Or '$(ImplicitUsings)' == 'enable')
+						And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '@TARGET_FRAMEWORK_VERSION@'))">@GLOBAL_USINGS@
+	</ItemGroup>
+</Project>
