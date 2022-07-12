@@ -11,8 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Mac.Tasks", "Xamari
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks", "Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj", "{44605724-8002-48E1-895F-7CB068099B6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks.Core", "Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj", "{7B095849-6FDB-4BD2-9B59-569D81A1A809}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.Localization.MSBuild", "Xamarin.Localization.MSBuild\Xamarin.Localization.MSBuild.csproj", "{947E3C4C-8891-49D7-B665-23F785489D3F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{D669990B-EE95-4282-AAC4-17CA05AE0575}"
@@ -67,14 +65,6 @@ Global
 		{44605724-8002-48E1-895F-7CB068099B6A}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
 		{44605724-8002-48E1-895F-7CB068099B6A}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
 		{44605724-8002-48E1-895F-7CB068099B6A}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
-		{7B095849-6FDB-4BD2-9B59-569D81A1A809}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
 		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{947E3C4C-8891-49D7-B665-23F785489D3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{947E3C4C-8891-49D7-B665-23F785489D3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
