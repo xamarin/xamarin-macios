@@ -52,6 +52,11 @@ namespace Xamarin.Tests {
 			return rv;
 		}
 
+		public static ExecutionResult AssertRestore (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("restore", project, properties, true);
+		}
+
 		public static ExecutionResult AssertBuild (string project, Dictionary<string, string> properties = null)
 		{
 			return Execute ("build", project, properties, true);
@@ -105,6 +110,7 @@ namespace Xamarin.Tests {
 			case "build":
 			case "pack":
 			case "publish":
+			case "restore":
 				var args = new List<string> ();
 				args.Add (verb);
 				args.Add (project);

@@ -282,28 +282,18 @@ namespace Foundation {
 		}
 #endif
 
+#if !NET || !__MACOS__
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
+#endif // !NET || !__MACOS__
 
 		[DllImport ("__Internal")]
 		static extern void xamarin_release_managed_ref (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool user_type);
 
-#if NET
-		static void RegisterToggleRefMonoVM (NSObject obj, IntPtr handle, bool isCustomType)
-		{
-			// We need this indirection for CoreCLR, otherwise JITting RegisterToggleReference will throw System.Security.SecurityException: ECall methods must be packaged into a system module.
-			RegisterToggleRef (obj, handle, isCustomType);
-		}
-#endif
-
 		static void RegisterToggleReference (NSObject obj, IntPtr handle, bool isCustomType)
 		{
-#if NET
-			if (Runtime.IsCoreCLR) {
-				Runtime.RegisterToggleReferenceCoreCLR (obj, handle, isCustomType);
-			} else {
-				RegisterToggleRefMonoVM (obj, handle, isCustomType);
-			}
+#if NET && __MACOS__
+			Runtime.RegisterToggleReferenceCoreCLR (obj, handle, isCustomType);
 #else
 			RegisterToggleRef (obj, handle, isCustomType);
 #endif
