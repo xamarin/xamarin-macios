@@ -60,6 +60,12 @@ xamarin_bridge_setup ()
 void
 xamarin_bridge_initialize ()
 {
+#if DOTNET
+	bool use_mono_workaround = xamarin_init_mono_debug;
+#else
+	bool use_mono_workaround = false;
+#endif
+
 	if (xamarin_register_modules != NULL)
 		xamarin_register_modules ();
 	DEBUG_LAUNCH_TIME_PRINT ("\tAOT register time");
@@ -69,6 +75,9 @@ xamarin_bridge_initialize ()
 	DEBUG_LAUNCH_TIME_PRINT ("\tDebug init time");
 #endif
 	
+	if (xamarin_init_mono_debug && !use_mono_workaround)
+		mono_debug_init (MONO_DEBUG_FORMAT_MONO);
+
 	mono_install_assembly_preload_hook (xamarin_assembly_preload_hook, NULL);
 	mono_install_load_aot_data_hook (xamarin_load_aot_data, xamarin_free_aot_data, NULL);
 
@@ -81,12 +90,6 @@ xamarin_bridge_initialize ()
 	mono_set_crash_chaining (TRUE);
 	mono_install_unhandled_exception_hook (xamarin_unhandled_exception_handler, NULL);
 	mono_install_ftnptr_eh_callback (xamarin_ftnptr_exception_handler);
-
-#if DOTNET
-	bool use_mono_workaround = xamarin_init_mono_debug;
-#else
-	bool use_mono_workaround = false;
-#endif
 
 	const char *argc[] = {
 		"",
