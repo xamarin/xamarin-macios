@@ -60,7 +60,6 @@ namespace Xamarin.Linker {
 					break;
 				case "Newtonsoft.Json":
 				case "Xamarin.iOS.Tasks":
-				case "Xamarin.iOS.Tasks.Core":
 				case "Xamarin.ObjcBinding.Tasks":
 				case "Xamarin.MacDev":
 				case "Xamarin.MacDev.Tasks":

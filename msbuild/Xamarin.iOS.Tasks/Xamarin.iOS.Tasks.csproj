@@ -17,7 +17,6 @@
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
     <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj" />
     <ProjectReference Include="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj" />
-  <ProjectReference Include="..\Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <!-- Compile against Microsoft.Build* NuGet refs, but do not copy to OutputDir if IncludeMSBuildAssets was not set. -->
@@ -45,7 +44,29 @@
     <Folder Include="Model\" />
     <Folder Include="Contracts\" />
     <Compile Include="../Versions.ios.g.cs" />
+
+    <None Include="NoCode.cs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="*.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="*.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="../Xamarin.Shared/*.targets">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="../Xamarin.Shared/*.props">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\tools\common\StringUtils.cs">
+      <Link>StringUtils.cs</Link>
+    </Compile>
+  </ItemGroup>
+
   <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
 
   <Target Name="BuildGeneratedVersionsFile" Inputs="../../Make.config.inc;../Makefile" Outputs="../Versions.ios.g.cs" BeforeTargets="BeforeBuild">

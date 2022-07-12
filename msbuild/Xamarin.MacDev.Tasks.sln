@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.iOS.Tasks.Core", "Xamarin.iOS.Tasks.Core\Xamarin.iOS.Tasks.Core.csproj", "{93E12FA0-089C-4BC8-840F-43CFBC7927C7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev", "..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj", "{CC3D9353-20C4-467A-8522-A9DED6F0C753}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xamarin.MacDev.Tasks", "Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj", "{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}"
@@ -37,14 +35,6 @@ Global
 		Debug-netstandard2.0|Any CPU = Debug-netstandard2.0|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug-net461|Any CPU.ActiveCfg = Debug|Any CPU
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug-net461|Any CPU.Build.0 = Debug|Any CPU
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug-netstandard2.0|Any CPU.ActiveCfg = Debug|Any CPU
-		{93E12FA0-089C-4BC8-840F-43CFBC7927C7}.Debug-netstandard2.0|Any CPU.Build.0 = Debug|Any CPU
 		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC3D9353-20C4-467A-8522-A9DED6F0C753}.Release|Any CPU.ActiveCfg = Release|Any CPU
