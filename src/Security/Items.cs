@@ -237,7 +237,11 @@ namespace Security {
 				result = SecItem.SecItemCopyMatching (copy.Handle, out IntPtr ptr);
 				n = null;
 				if (result == SecStatusCode.Success)
-					return CFArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => new SecRecord (Runtime.GetNSObject<NSMutableDictionary> (element, false)!), releaseHandle: true)!;
+					return CFArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => {
+						CFObject.CFRetain (element);
+						var dictionary = Runtime.GetNSObject<NSMutableDictionary> (element, true)!;
+						return new SecRecord (dictionary);
+					}, : true)!;
 				return null;
 			}
 		}
@@ -257,14 +261,18 @@ namespace Security {
 				if ((result == SecStatusCode.Success) && (ptr != IntPtr.Zero)) {
 					var array = CFArray.ArrayFromHandleFunc<INativeObject> (ptr, p => {
 						nint cfType = CFType.GetTypeID (p);
+						CFObject.CFRetain (p);
+
 						if (cfType == SecCertificate.GetTypeID ())
-							return new SecCertificate (p);
+							return new SecCertificate (p, true);
 						else if (cfType == SecKey.GetTypeID ())
-							return new SecKey (p);
+							return new SecKey (p, true);
 						else if (cfType == SecIdentity.GetTypeID ())
-							return new SecIdentity (p);
-						else
+							return new SecIdentity (p, true);
+						else {
+							CFObject.CFRelease (p);
 							throw new Exception (String.Format ("Unexpected type: 0x{0:x}", cfType));
+						}
 					}, releaseHandle: true)!;
 					return array;
 				}
