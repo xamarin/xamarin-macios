@@ -88,11 +88,11 @@ namespace Xharness.Jenkins {
 
 		#region private vars
 		
-		readonly Jenkins? jenkins;
+		readonly Jenkins jenkins;
 		readonly IVersionControlSystem vcs;
 
 		ILog? MainLog => jenkins?.MainLog;
-		IHarness? Harness => jenkins?.Harness;
+		IHarness Harness => jenkins.Harness;
 
 		#endregion
 
