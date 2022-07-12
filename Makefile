@@ -61,7 +61,7 @@ endif
 all-local:: global.json
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
+global.json: $(TOP)/dotnet.config Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
 		printf "  \"sdk\": {\n    \"version\": \"$(DOTNET_VERSION)\"\n  }\n" >> $@; \
