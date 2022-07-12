@@ -87,10 +87,24 @@ xamarin_bridge_initialize ()
 		"--interp=-all"
 	};
 
-	if (xamarin_init_mono_debug)
+	if (xamarin_init_mono_debug) {
+		// This is a workaround for a runtime bug that prevents debugging from working properly.
+		// We call mono_main to disable interpreter optimizations when debugging, because
+		// mono's own interpreter initialization doesn't take into account that the debugger
+		// might be attached, and the subsequent optimizations can break the debugger.
+		// The stdout dance is to hide mono's "helpful" output telling us the command line
+		// arguments are incorrect (which they would be normally, but we're abusing mono_main
+		// to get the side effects).
+		fflush (stdout);
+		int originalStdout = dup (STDOUT_FILENO);
+		int devnull = open ("/dev/null", O_RDWR);
+		dup2 (devnull, STDOUT_FILENO);
 		mono_main (2, (char**)argc);
-	else
+		fflush (stdout);
+		dup2 (originalStdout, STDOUT_FILENO);
+	} else {
 		mono_jit_init_version ("MonoTouch", "mobile");
+	}
 	
 	/*
 	  As part of mono initialization a preload hook is added that overrides ours, so we need to re-instate it here.
