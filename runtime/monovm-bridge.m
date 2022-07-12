@@ -82,12 +82,18 @@ xamarin_bridge_initialize ()
 	mono_install_unhandled_exception_hook (xamarin_unhandled_exception_handler, NULL);
 	mono_install_ftnptr_eh_callback (xamarin_ftnptr_exception_handler);
 
+#if DOTNET
+	bool use_mono_workaround = xamarin_init_mono_debug;
+#else
+	bool use_mono_workaround = false;
+#endif
+
 	const char *argc[] = {
 		"",
 		"--interp=-all"
 	};
 
-	if (xamarin_init_mono_debug) {
+	if (use_mono_workaround) {
 		// This is a workaround for a runtime bug that prevents debugging from working properly.
 		// We call mono_main to disable interpreter optimizations when debugging, because
 		// mono's own interpreter initialization doesn't take into account that the debugger
