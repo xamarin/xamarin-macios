@@ -306,7 +306,7 @@ namespace Xharness.Jenkins {
 				foreach (var report in reports.OrderBy (v => v)) {
 					MainLog.WriteLine ($"  {(report.LastWriteTimeUtc > startTimeUtc ? "x" : " ")}  {report.LastWriteTimeUtc.ToString ("u")} {report.Path}");
 				}
-				var targetDir = Path.Combine (Harness.LogDirectory, "DiagnosticReports");
+				var targetDir = Path.Combine (LogDirectory, "DiagnosticReports");
 				Directory.CreateDirectory (targetDir);
 				foreach (var report in reports.Where (v => v.LastWriteTimeUtc >= startTimeUtc)) {
 					File.Copy (report.Path, Path.Combine (targetDir, Path.GetFileName (report.Path)));
