@@ -1,7 +1,5 @@
 !missing-enum! LARightState not bound
 !missing-enum-value! LAPolicy native value LAPolicyDeviceOwnerAuthenticationWithWristDetection = 5 not bound
-!missing-field! LARightDidBecomeAuthorizedNotification not bound
-!missing-field! LARightDidBecomeUnauthorizedNotification not bound
 !missing-selector! +LAAuthenticationRequirement::biometryCurrentSetRequirement not bound
 !missing-selector! +LAAuthenticationRequirement::biometryRequirement not bound
 !missing-selector! +LAAuthenticationRequirement::biometryRequirementWithFallback: not bound
@@ -9,8 +7,6 @@
 !missing-selector! +LABiometryFallbackRequirement::defaultRequirement not bound
 !missing-selector! +LABiometryFallbackRequirement::devicePasscodeRequirement not bound
 !missing-selector! +LARightStore::sharedStore not bound
-!missing-selector! LAContext::checkCanEvaluateRight:reply: not bound
-!missing-selector! LAContext::evaluateRight:localizedReason:reply: not bound
 !missing-selector! LAPersistedRight::key not bound
 !missing-selector! LAPersistedRight::secret not bound
 !missing-selector! LAPrivateKey::canDecryptUsingSecKeyAlgorithm: not bound

@@ -1,5 +1,4 @@
 !missing-enum! DDDeviceCategory not bound
-!missing-enum! DDDeviceFlags not bound
 !missing-enum! DDDeviceProtocol not bound
 !missing-enum! DDDeviceState not bound
 !missing-enum! DDErrorCode not bound
@@ -8,7 +7,6 @@
 !missing-field! DDDeviceProtocolStringInvalid not bound
 !missing-field! DDErrorDomain not bound
 !missing-pinvoke! DDDeviceCategoryToString is not bound
-!missing-pinvoke! DDDeviceFlagsToString is not bound
 !missing-pinvoke! DDDeviceProtocolToString is not bound
 !missing-pinvoke! DDDeviceStateToString is not bound
 !missing-pinvoke! DDEventTypeToString is not bound

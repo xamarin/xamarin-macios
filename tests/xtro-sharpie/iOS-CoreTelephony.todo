@@ -1,0 +1,7 @@
+!deprecated-attribute-missing! CTCarrier missing a [Deprecated] attribute
+!deprecated-attribute-missing! CTCarrier::allowsVOIP missing a [Deprecated] attribute
+!deprecated-attribute-missing! CTCarrier::carrierName missing a [Deprecated] attribute
+!deprecated-attribute-missing! CTCarrier::isoCountryCode missing a [Deprecated] attribute
+!deprecated-attribute-missing! CTCarrier::mobileCountryCode missing a [Deprecated] attribute
+!deprecated-attribute-missing! CTCarrier::mobileNetworkCode missing a [Deprecated] attribute
+!missing-selector! CTCellularPlanProvisioning::supportsEmbeddedSIM not bound

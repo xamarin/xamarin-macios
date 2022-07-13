@@ -4,3 +4,6 @@
 !missing-selector! WKWebView::minimumViewportInset not bound
 !missing-selector! WKWebView::setFindInteractionEnabled: not bound
 !missing-selector! WKWebView::setMinimumViewportInset:maximumViewportInset: not bound
+!missing-field! WKWebsiteDataTypeFileSystem not bound
+!missing-selector! WKWebpagePreferences::isLockdownModeEnabled not bound
+!missing-selector! WKWebpagePreferences::setLockdownModeEnabled: not bound
