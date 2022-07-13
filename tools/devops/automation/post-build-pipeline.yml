@@ -57,6 +57,9 @@ jobs:
       & dotnet tool update microsoft.dotnet.darc --version "$darcVersion" --add-source "$arcadeServicesSource" --tool-path $(Agent.ToolsDirectory)\darc -v n
       & $(Agent.ToolsDirectory)\darc\darc add-build-to-channel --default-channels --id $(BARBuildId) --publishing-infra-version 3 --skip-assets-publishing --password $(MaestroAccessToken) --azdev-pat $(publishing-dnceng-devdiv-code-r-build-re)
     displayName: add build to default darc channel
+    # We can't use the global.json located in the root of our repo, because makes it required to use the exact .NET version we're referencing in our eng/Versions.Details.xml file.
+    # So in order to not use it, we set the working directory to the parent directory of xamarin-macios.
+    workingDirectory: $(Build.SourcesDirectory)\..
 
   - task: PublishPipelineArtifact@1
     displayName: 'Publish Artifact: post-build-binlogs'
