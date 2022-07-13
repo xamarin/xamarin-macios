@@ -241,7 +241,7 @@ namespace Security {
 						CFObject.CFRetain (element);
 						var dictionary = Runtime.GetNSObject<NSMutableDictionary> (element, true)!;
 						return new SecRecord (dictionary);
-					}, : true)!;
+					}, releaseHandle: true)!;
 				return null;
 			}
 		}
