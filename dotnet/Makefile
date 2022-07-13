@@ -13,6 +13,11 @@ DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 
+DOTNET_iOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
+DOTNET_tvOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
+DOTNET_MacCatalyst_GLOBAL_USINGS=CoreGraphics Foundation UIKit
+DOTNET_macOS_GLOBAL_USINGS=AppKit CoreGraphics Foundation
+
 define DefineTargets
 $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/data/UnixFilePermissions.xml \
@@ -101,13 +106,36 @@ Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.Versions.props: targets/Microsoft.$1.S
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS))))
 
+define AutoImports
+Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makefile
+	$(Q) rm -f $$@.tmp
+	$$(Q_GEN) sed \
+		-e "s/@PLATFORM@/$(1)/g" \
+		$$< > $$@.tmp
+	$(Q) mv $$@.tmp $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call AutoImports,$(platform))))
+
 define DefaultItems
 Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.DefaultItems.props: targets/Microsoft.Sdk.DefaultItems.template.props Makefile
 	$$(Q_GEN) sed \
 		-e "s/@PLATFORM@/$1/g" \
+		-e "s/@TARGET_FRAMEWORK_VERSION@/$(subst net,,$(DOTNET_TFM))/g" \
 		$$< > $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefaultItems,$(platform))))
+
+define ImplicitNamespaceImports
+Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props: targets/Microsoft.Sdk.ImplicitNamespaceImports.template.props Makefile
+	$$(Q_GEN) sed \
+		-e "s/@PLATFORM@/$1/g" \
+		-e "s/@TARGET_FRAMEWORK_VERSION@/$(subst net,,$(DOTNET_TFM))/g" \
+		-e "s/@GLOBAL_USINGS@/$(2)/g" \
+		$$< > $$@
+x:: Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props
+	cat Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call ImplicitNamespaceImports,$(platform),$(foreach using,$(DOTNET_$(platform)_GLOBAL_USINGS),\n\t\t<Using Include=\"$(using)\" Platform=\"$(platform)\" \/>))))
 
 define SupportedTargetPlatforms
 Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(TOP)/Versions-ios.plist.in $(TOP)/Versions-mac.plist.in Makefile ./generate-target-platforms.csharp Makefile
@@ -409,3 +437,19 @@ clean-local::
 $(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
 	$(Q) $(MAKE) -C $(TOP)/msbuild/Xamarin.HotRestart.PreBuilt all
 	$(Q) touch $@
+
+# We need to shut down the builder server, because:
+#   We're using parallel make, and parallel make will start a jobserver, managed by file descriptors, where these file descriptors must be closed in all subprocesses for make to realize it's done.
+#   'dotnet pack' might have started a build server
+#   The build server does not close any file descriptors it may have inherited when daemonizing itself.
+#   Thus the build server (which will still be alive after we're done building here) might have a file descriptor open which make is waiting for.
+#   The proper fix is to fix the build server to close its file descriptors.
+#   The intermediate working is to shut down the build server instead. An alternative solution would be to pass /p:UseSharedCompilation=false to 'dotnet pack' to disable the usage of the build server.
+#
+# The 'shutdown-build-server' is executed in a sub-make (and not as a dependency to the all-hook target),
+# to make sure it's executed after everything else is built in this file.
+all-hook::
+	$(Q) $(MAKE) shutdown-build-server
+
+shutdown-build-server:
+	$(Q) $(DOTNET) build-server shutdown
