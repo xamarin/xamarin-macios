@@ -90,7 +90,6 @@ namespace Xamarin
 		}
 
 		[Test]
-		[Ignore ("Issue with dlopen: https://github.com/xamarin/xamarin-macios/issues/15231")]
 		public void ExceptionMarshaling ()
 		{
 			using (var mtouch = new MTouchTool ()) {
@@ -1988,7 +1987,7 @@ public class TestApp {
 		static string [] GetBindingsLibraryWithReferences (Profile profile)
 		{
 			var lib = GetBindingsLibrary (profile, out var version);
-			var nunit_framework = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), ".nuget", "packages", "nunit", version, "lib", "netstandard2.0", "nunit.framework.dll");
+			var nunit_framework = Path.Combine (Configuration.RootPath, "packages", "nunit", version, "lib", "netstandard2.0", "nunit.framework.dll");
 			if (!File.Exists (nunit_framework))
 				throw new FileNotFoundException ($"Could not find nunit.framework.dll in {nunit_framework}. Has the version changed?");
 			return new string [] { lib, nunit_framework };
@@ -3918,7 +3917,6 @@ public class TestApp {
 		[TestCase ("HttpClientHandler", "HttpClientHandler")]
 		[TestCase (null, "NSUrlSessionHandler")]
 		[TestCase ("", "NSUrlSessionHandler")]
-		[Ignore ("Issue with dlopen: https://github.com/xamarin/xamarin-macios/issues/15231")]
 		public void HttpClientHandler (string mtouchHandler, string expectedHandler)
 		{
 			var testCode = $@"

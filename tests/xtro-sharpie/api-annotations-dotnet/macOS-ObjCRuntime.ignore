@@ -21,12 +21,3 @@
 ## used in src/Darwin/KernelNotification.cs
 !unknown-pinvoke! kevent bound
 !unknown-pinvoke! kqueue bound
-
-## /usr/include/dispatch/queue.h
-!unknown-pinvoke! dispatch_main bound
-
-## dlfcn.h
-!unknown-pinvoke! dladdr bound
-
-# unsorted
-!unknown-pinvoke! _NSGetExecutablePath bound
