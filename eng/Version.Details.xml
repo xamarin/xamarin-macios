@@ -1,8 +1,8 @@
 <Dependencies>
   <ProductDependencies>
-    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="6.0.302-servicing.22357.4">
+    <Dependency Name="Microsoft.Dotnet.Sdk.Internal" Version="6.0.303-servicing.22362.34">
       <Uri>https://github.com/dotnet/installer</Uri>
-      <Sha>5892113c0e576e9444967973de1487493d61807c</Sha>
+      <Sha>f75111bc4c035f48fec88bcc113f5883a7643dff</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.ILLink.Tasks" Version="6.0.200-1.22219.3" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/linker</Uri>
@@ -13,9 +13,9 @@
       <Sha>705ec75fc00dc5d62ffeae1b6d5439fd14ada9b4</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
-    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="6.0.6" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
+    <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="6.0.7" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://dev.azure.com/dnceng/internal/_git/dotnet-aspnetcore</Uri>
-      <Sha>68bb6fb08f8f85bb3cf08953a0d2f4a254eaccff</Sha>
+      <Sha>773e8cc3fbdc2c4ffbd57c1f53f21649ef94c35c</Sha>
     </Dependency>
     <Dependency Name="Microsoft.NET.Workload.Emscripten.Manifest-6.0.100" Version="6.0.4" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
