@@ -6,3 +6,5 @@
 !missing-selector! +CIFilter::convertRGBtoLabFilter not bound
 !missing-selector! CIImage::imageByConvertingLabToWorkingSpace not bound
 !missing-selector! CIImage::imageByConvertingWorkingSpaceToLab not bound
+!missing-protocol-member! CIImageProcessorInput::digest not found
+!missing-protocol-member! CIImageProcessorOutput::digest not found

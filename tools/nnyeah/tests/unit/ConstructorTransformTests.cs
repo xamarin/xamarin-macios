@@ -79,18 +79,6 @@ public class Foo : NSObject {
 		}
 
 		[Test]
-		public async Task RefuseToProcessCtorWithBehavior ()
-		{
-			var type = await ReworkerHelper.CompileTypeForTest (@"
-using System;
-using Foundation;
-public class Foo : NSObject {
-	public Foo (IntPtr p) : base (p) { Console.Error.WriteLine (typeof(int)); }
-}");
-			Assert.Throws<ConversionException> (() => CreateTestTransform (type).ReworkAsNeeded (type));
-		}
-
-		[Test]
 		public async Task DerivedFromNSObjectDerived ()
 		{
 			var type = await ReworkerHelper.CompileTypeForTest (@"

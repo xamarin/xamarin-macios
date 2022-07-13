@@ -17,3 +17,5 @@
 !missing-pinvoke! nw_quic_set_max_datagram_frame_size is not bound
 !missing-pinvoke! nw_quic_set_stream_is_datagram is not bound
 !missing-pinvoke! nw_ethernet_channel_create_with_parameters is not bound
+!missing-pinvoke! nw_ethernet_channel_get_maximum_payload_size is not bound
+!missing-pinvoke! nw_path_monitor_create_for_ethernet_channel is not bound

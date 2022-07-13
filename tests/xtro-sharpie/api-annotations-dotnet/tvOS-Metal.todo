@@ -23,7 +23,6 @@
 !missing-enum-value! MTLBinaryArchiveError native value MTLBinaryArchiveErrorInternalError = 4 not bound
 !missing-enum-value! MTLGpuFamily native value MTLGPUFamilyMetal3 = 5001 not bound
 !missing-enum-value! MTLLanguageVersion native value MTLLanguageVersion3_0 = 196608 not bound
-!missing-field! kMTLIOCompressionContextDefaultChunkSize not bound
 !missing-field! MTLIOErrorDomain not bound
 !missing-pinvoke! MTLIOCompressionContextAppendData is not bound
 !missing-pinvoke! MTLIOCreateCompressionContext is not bound
@@ -35,7 +34,6 @@
 !missing-protocol! MTLIOFileHandle not bound
 !missing-protocol! MTLIOScratchBuffer not bound
 !missing-protocol! MTLIOScratchBufferAllocator not bound
-!missing-protocol! MTLObjectPayloadBinding not bound
 !missing-protocol! MTLTextureBinding not bound
 !missing-protocol! MTLThreadgroupBinding not bound
 !missing-protocol-member! MTLBuffer::gpuAddress not found
@@ -65,3 +63,5 @@
 !missing-selector! MTLRenderPipelineReflection::tileBindings not bound
 !missing-selector! MTLRenderPipelineReflection::vertexBindings not bound
 !missing-type! MTLIOCommandQueueDescriptor not bound
+!deprecated-attribute-missing! MTLRenderPipelineReflection::tileArguments missing a [Deprecated] attribute
+!missing-pinvoke! MTLIOCompressionContextDefaultChunkSize is not bound
