@@ -285,7 +285,7 @@ $(U2TODO): $(wildcard u2todo/*.cs u2todo/*.csproj Filter.cs)
 	$(Q) $(SYSTEM_MSBUILD) $(MSBUILD_VERBOSITY) /bl:$@.binlog /r
 	$(Q) touch $@
 
-unclassified2todo: $(U2TODO)
+unclassified2todo-classic: $(U2TODO)
 	cd $(ANNOTATIONS_DIR) && $(MONO) $(abspath $(U2TODO))
 	@for filename in $(git status -s | cut -c4- | grep .todo); do \
 		sort -o "$filename" "$filename"; \
@@ -294,3 +294,5 @@ unclassified2todo: $(U2TODO)
 unclassified2todo-dotnet: $(U2TODO)
 	$(SYSTEM_CSC) -features:strict Filter.cs u2todo/u2todo.cs
 	cd $(DOTNET_ANNOTATIONS_DIR) && $(MONO) $(abspath $(U2TODO))
+
+unclassified2todo: unclassified2todo-classic unclassified2todo-dotnet
