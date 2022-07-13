@@ -93,7 +93,8 @@ xamarin_bridge_initialize ()
 
 	const char *argc[] = {
 		"",
-		"--interp=-all"
+		"--interp=-all",
+		NULL,
 	};
 
 	if (use_mono_workaround) {
