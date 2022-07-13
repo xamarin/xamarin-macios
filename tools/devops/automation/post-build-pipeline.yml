@@ -40,9 +40,6 @@ jobs:
   - script: make -C $(Build.SourcesDirectory)/dotnet targets/Microsoft.iOS.Sdk.Versions.props
     displayName: make Microsoft.iOS.Sdk.Versions.props
 
-  - script: rm -f $(Build.SourcesDirectory)/global.json
-    displayName: 'Remove global.json'
-
   - powershell: >-
       & dotnet build -v:n -t:PushManifestToBuildAssetRegistry
       -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\AssetManifests -p:BuildAssetRegistryToken=$(MaestroAccessToken)
