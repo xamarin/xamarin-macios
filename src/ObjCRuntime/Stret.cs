@@ -138,8 +138,9 @@ namespace ObjCRuntime
 					case "System.UInt32":
 					case "System.Int32":
 					case "System.IntPtr":
+					case "System.UIntPtr":
 					case "System.nuint":
-					case "System.uint":
+					case "System.nint":
 						return false;
 					// floating-point types are stret
 					}
@@ -269,6 +270,7 @@ namespace ObjCRuntime
 				type_size = 8;
 				return true;
 			case "IntPtr":
+			case "UIntPtr":
 #if !NET
 			case "nfloat":
 #endif
