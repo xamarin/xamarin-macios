@@ -245,25 +245,23 @@ namespace AuthenticationServices {
 
 	delegate void ASWebAuthenticationSessionCompletionHandler ([NullAllowed] NSUrl callbackUrl, [NullAllowed] NSError error);
 
-	[NoTV]
+	[TV (16,0)]
 	[Watch (6,2)]
 	[Mac (10, 15)]
 	[iOS (12,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASWebAuthenticationSession {
-		[TV (16,0)]
 		[Export ("initWithURL:callbackURLScheme:completionHandler:")]
 		NativeHandle Constructor (NSUrl url, [NullAllowed] string callbackUrlScheme, ASWebAuthenticationSessionCompletionHandler completionHandler);
 
-		[TV (16,0)]
 		[Export ("start")]
 		bool Start ();
 
 		[Export ("cancel")]
 		void Cancel ();
 
-		[iOS (13,0), NoWatch]
+		[iOS (13,0), NoWatch, NoTV]
 		[NullAllowed, Export ("presentationContextProvider", ArgumentSemantic.Weak)]
 		IASWebAuthenticationPresentationContextProviding PresentationContextProvider { get; set; }
 
@@ -271,7 +269,7 @@ namespace AuthenticationServices {
 		[Export ("prefersEphemeralWebBrowserSession")]
 		bool PrefersEphemeralWebBrowserSession { get; set; }
 
-		[Mac (10,15,4), iOS (13,4), TV (16,0)]
+		[Mac (10,15,4), iOS (13,4)]
 		[Export ("canStart")]
 		bool CanStart { get; }
 	}
@@ -361,7 +359,7 @@ namespace AuthenticationServices {
 
 		[Export ("getCredentialStateForUserID:completion:")]
 		[Async]
-		void GetCredentialState (string userID, Action<ASAuthorizationAppleIdProviderCredentialState, NSError> completion);
+		void GetCredentialState (string userId, Action<ASAuthorizationAppleIdProviderCredentialState, NSError> completion);
 
 		[Notification]
 		[Field ("ASAuthorizationAppleIDProviderCredentialRevokedNotification")]
@@ -631,6 +629,7 @@ namespace AuthenticationServices {
 
 		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13, 0)]
 		[Export ("loginManager", ArgumentSemantic.Strong)]
+		[return: NullAllowed]
 		ASAuthorizationProviderExtensionLoginManager LoginManager { get; }
 	}
 
@@ -1171,6 +1170,7 @@ namespace AuthenticationServices {
 		[Export ("userVerificationPreference")]
 		NSString UserVerificationPreference { get; set; }
 
+		[NoTV]
 		[Abstract]
 		[Export ("attestationPreference")]
 		NSString AttestationPreference { get; set; }
@@ -1349,7 +1349,7 @@ namespace AuthenticationServices {
 	{
 	}
 
-	[NoWatch, NoTV, NoMacCatalyst, Mac (13,0), iOS (16,0)]
+	[NoWatch, NoTV, MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
 	[Flags, Native]
 	public enum ASAuthorizationControllerRequestOptions : ulong
 	{
@@ -1398,11 +1398,11 @@ namespace AuthenticationServices {
 	[BaseType (typeof (NSObject))]
 	interface ASAuthorizationProviderExtensionRegistrationHandler
 	{
-		[Abstract]
+		[Abstract, Async]
 		[Export ("beginDeviceRegistrationUsingLoginManager:options:completion:")]
 		void BeginDeviceRegistration (ASAuthorizationProviderExtensionLoginManager loginManager, ASAuthorizationProviderExtensionRequestOptions options, Action<ASAuthorizationProviderExtensionRegistrationResult> completion);
 
-		[Abstract]
+		[Abstract, Async]
 		[Export ("beginUserRegistrationUsingLoginManager:userName:authenticationMethod:options:completion:")]
 		void BeginUserRegistration (ASAuthorizationProviderExtensionLoginManager loginManager, [NullAllowed] string userName, ASAuthorizationProviderExtensionAuthenticationMethod authenticationMethod, ASAuthorizationProviderExtensionRequestOptions options, Action<ASAuthorizationProviderExtensionRegistrationResult> completion);
 
@@ -1416,11 +1416,11 @@ namespace AuthenticationServices {
 	interface ASAuthorizationProviderExtensionLoginConfiguration
 	{
 		[Export ("initWithClientID:issuer:tokenEndpointURL:jwksEndpointURL:audience:")]
-		NativeHandle Constructor (string clientID, string issuer, NSUrl tokenEndpointUrl, NSUrl jwksEndpointUrl, [NullAllowed] string audience);
+		NativeHandle Constructor (string clientId, string issuer, NSUrl tokenEndpointUrl, NSUrl jwksEndpointUrl, [NullAllowed] string audience);
 
-		[Static]
+		[Static, Async]
 		[Export ("configurationWithOpenIDConfigurationURL:clientID:issuer:completion:")]
-		void CreateConfiguration (NSUrl openIDConfigurationUrl, string clientID, [NullAllowed] string issuer, Action<ASAuthorizationProviderExtensionLoginConfiguration, NSError> completion);
+		void CreateConfiguration (NSUrl openIdConfigurationUrl, string clientId, [NullAllowed] string issuer, Action<ASAuthorizationProviderExtensionLoginConfiguration, NSError> completion);
 
 		[NullAllowed, Export ("invalidCredentialPredicate")]
 		string InvalidCredentialPredicate { get; set; }
@@ -1429,7 +1429,7 @@ namespace AuthenticationServices {
 		string AccountDisplayName { get; set; }
 
 		[Export ("clientID")]
-		string ClientID { get; }
+		string ClientId { get; }
 
 		[Export ("issuer")]
 		string Issuer { get; }
@@ -1509,7 +1509,7 @@ namespace AuthenticationServices {
 		string SessionKeyKeyName { get; set; }
 	}
 
-	[NoWatch, NoTV, NoiOS, Mac (13,0)]
+	[NoWatch, NoTV, NoiOS, Mac (13,0), NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface ASAuthorizationProviderExtensionLoginManager
@@ -1535,17 +1535,21 @@ namespace AuthenticationServices {
 		[Export ("saveLoginConfiguration:error:")]
 		bool SaveLoginConfiguration (ASAuthorizationProviderExtensionLoginConfiguration loginConfiguration, [NullAllowed] out NSError error);
 
+		[Internal]
 		[Export ("saveCertificate:keyType:")]
-		void SaveCertificate (SecCertificate certificate, ASAuthorizationProviderExtensionKeyType keyType);
+		void _SaveCertificate (IntPtr certificate, ASAuthorizationProviderExtensionKeyType keyType);
 
+		[Internal]
 		[Export ("copyKeyForKeyType:")]
 		[return: NullAllowed]
-		SecKey CopyKey (ASAuthorizationProviderExtensionKeyType keyType);
+		IntPtr _CopyKey (ASAuthorizationProviderExtensionKeyType keyType);
 
 		[Export ("copyIdentityForKeyType:")]
 		[return: NullAllowed]
+		[return: Release]
 		SecIdentity CopyIdentity (ASAuthorizationProviderExtensionKeyType keyType);
 
+		[Async]
 		[Export ("userNeedsReauthenticationWithCompletion:")]
 		void ReauthenticateUser (Action<NSError> completion);
 
@@ -1558,6 +1562,7 @@ namespace AuthenticationServices {
 		[Export ("resetKeys")]
 		void ResetKeys ();
 
+		[Async]
 		[Export ("presentRegistrationViewControllerWithCompletion:")]
 		void PresentRegistrationViewController (Action<NSError> completion);
 	}
