@@ -61,7 +61,7 @@ void
 xamarin_bridge_initialize ()
 {
 #if DOTNET
-	bool use_mono_workaround = xamarin_init_mono_debug;
+	bool use_mono_workaround = xamarin_init_mono_debug && getenv ("XAMARIN_SKIP_INTERPRETER_DEBUGGING_WORKAROUND") == 0;
 #else
 	bool use_mono_workaround = false;
 #endif
