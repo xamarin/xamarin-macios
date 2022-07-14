@@ -10,7 +10,7 @@
 			<IsDynamicRegistrar Condition="'$(Configuration)' == 'Debug'">true</IsDynamicRegistrar>
 		</PropertyGroup>
 
-		<PropertyGroup Condition="'$(HasDynamicRegistrar)' == 'true'">
+		<PropertyGroup Condition="'$(IsDynamicRegistrar)' == 'true'">
 			<DefineConstants>$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
 		</PropertyGroup>
 	</Target>
