@@ -94,6 +94,7 @@ xamarin_bridge_initialize ()
 	const char *argc[] = {
 		"",
 		"--interp=-all",
+		"",
 		NULL,
 	};
 
