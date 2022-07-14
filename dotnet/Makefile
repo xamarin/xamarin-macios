@@ -359,6 +359,15 @@ $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARG
 	$$(Q) echo Created $$@
 
 PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.zip
+
+install-system-$(3): $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
+	$(Q) echo "Installing $$<..."
+	$(Q) sudo installer -pkg "$$<" -target / $$(INSTALLER_VERBOSITY)
+	$(Q) echo "Installed $$<"
+	$(Q) echo "Execute this in the project directory to be built for NuGet to find the runtime packs:"
+	$(Q) echo "    nuget sources add -Name local-macios-packages -ConfigFile NuGet.config -Source file://$(abspath $(DOTNET_NUPKG_DIR))"
+
+INSTALL_SYSTEM_PACKAGE_TARGETS += install-system-$(3)
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreatePackage,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z),$(shell echo $(platform) | tr a-z A-Z))))
 
@@ -421,6 +430,12 @@ TARGETS += $(WORKLOAD_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 
 msi: $(MSI_TARGETS)
 package: $(PACKAGE_TARGETS) $(MSI_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
+
+install-system:
+	@# We don't want to execute these in parallel
+	@for target in $(INSTALL_SYSTEM_PACKAGE_TARGETS); do \
+		$(MAKE) $$target; \
+	done
 
 ifdef ENABLE_DOTNET
 all-local:: $(TARGETS)
