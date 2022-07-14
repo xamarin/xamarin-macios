@@ -30,7 +30,7 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			using (var stpf = new UISimpleTextPrintFormatter ()) {
 				Assert.That (stpf.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-				if (TestRuntime.CheckXcodeVersion (11, 0)) {
+				if (TestRuntime.CheckXcodeVersion (14, 0)) {
 					Assert.NotNull (stpf.Color, "Color");
 					Assert.NotNull (stpf.Font, "Font");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
