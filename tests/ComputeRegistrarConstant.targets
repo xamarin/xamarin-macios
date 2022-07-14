@@ -7,7 +7,8 @@
 		</PropertyGroup>
 
 		<PropertyGroup Condition="'$(_PlatformName)' == 'macOS' Or $(TargetFramework.EndsWith('-macos')) Or '$(_PlatformName)' == 'MacCatalyst' Or $(TargetFramework.EndsWith('-maccatalyst'))">
-			<IsDynamicRegistrar Condition="'$(Configuration)' == 'Debug'">true</IsDynamicRegistrar>
+			<IsDynamicRegistrar Condition="'$(Configuration)' == 'Debug' And '$(Registrar)' == ''">true</IsDynamicRegistrar>
+			<IsDynamicRegistrar Condition="'$(Registrar)' == 'dynamic'">true</IsDynamicRegistrar>
 		</PropertyGroup>
 
 		<PropertyGroup Condition="'$(IsDynamicRegistrar)' == 'true'">
