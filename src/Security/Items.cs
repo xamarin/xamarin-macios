@@ -238,8 +238,7 @@ namespace Security {
 				n = null;
 				if (result == SecStatusCode.Success)
 					return CFArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => {
-						CFObject.CFRetain (element);
-						var dictionary = Runtime.GetNSObject<NSMutableDictionary> (element, true)!;
+						var dictionary = Runtime.GetNSObject<NSMutableDictionary> (element, false)!;
 						return new SecRecord (dictionary);
 					}, releaseHandle: true)!;
 				return null;
