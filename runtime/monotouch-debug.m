@@ -81,7 +81,6 @@ extern "C" {
 void monotouch_connect_usb ();
 void monotouch_connect_wifi (NSMutableArray *hosts);
 void xamarin_connect_http (NSMutableArray *hosts);
-int monotouch_debug_listen (int debug_port, int output_port);
 int monotouch_debug_connect (NSMutableArray *hosts, int debug_port, int output_port);
 void monotouch_configure_debugging ();
 void monotouch_load_profiler ();
@@ -1412,107 +1411,6 @@ monotouch_process_connection (int fd)
 			LOG (PRODUCT ": Unknown command received from the IDE: '%s'\n", command);
 		}
 	}
-}
-
-int monotouch_debug_listen (int debug_port, int output_port)
-{
-	struct sockaddr_in listen_addr;
-	int listen_socket;
-	int output_socket;
-	socklen_t len;
-	int rv;
-	long flags;
-	int flag;
-	fd_set rset;
-	struct timeval tv;
-	
-	// Create the listen socket and set it up
-	listen_socket = socket (PF_INET, SOCK_STREAM, IPPROTO_TCP);
-	if (listen_socket == -1) {
-		PRINT (PRODUCT ": Could not create socket for the IDE to connect to: %s", strerror (errno));
-		return 1;
-	} else {
-		flag = 1;
-		if (setsockopt (listen_socket, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof (flag)) == -1) {
-			PRINT (PRODUCT ": Could not set SO_REUSEADDR on the listening socket (%s)", strerror (errno));
-			// not a fatal failure
-		}
-
-		memset (&listen_addr, 0, sizeof (listen_addr));
-		listen_addr.sin_family = AF_INET;
-		listen_addr.sin_port = htons (output_port);
-		listen_addr.sin_addr.s_addr = INADDR_ANY;
-		rv = bind (listen_socket, (struct sockaddr *) &listen_addr, sizeof (listen_addr));
-		if (rv == -1) {
-			PRINT (PRODUCT ": Could not bind to address: %s", strerror (errno));
-			close (listen_socket);
-			return 2;
-		} else {
-			// Make the socket non-blocking
-			flags = fcntl (listen_socket, F_GETFL, NULL);
-			flags |= O_NONBLOCK;
-			fcntl (listen_socket, F_SETFL, flags);
-
-			rv = listen (listen_socket, 1);
-			if (rv == -1) {
-				PRINT (PRODUCT ": Could not listen for the IDE: %s", strerror (errno));
-				close (listen_socket);
-				return 2;
-			} else {
-				// Yay!
-			}
-		}
-	}
-
-	tv.tv_sec = 2;
-	tv.tv_usec = 0;
-	
-	FD_ZERO (&rset);
-	FD_SET (listen_socket, &rset);
-	
-	do {
-		if ((rv = select (listen_socket + 1, &rset, NULL, NULL, &tv)) == 0) {
-			// timeout hit, no connections available.
-			PRINT (PRODUCT ": Listened for connections from the IDE for 2 seconds, nobody connected.");
-			close (listen_socket);
-			return 3;
-		}
-	} while (rv == -1 && errno == EINTR);
-	
-	if (rv == -1) {
-		PRINT (PRODUCT ": Failed while waiting for the IDE to connect: %s", strerror (errno));
-		close (listen_socket);
-		return 2;
-	}
-
-	len = sizeof (struct sockaddr_in);
-	output_socket = accept (listen_socket, (struct sockaddr *) &listen_addr, &len);
-	if (output_socket == -1) {
-		PRINT (PRODUCT ": Failed to accept connection from the IDE: %s", strerror (errno));
-		close (listen_socket);
-		return 3;
-	}
-
-	flag = 1;
-	if (setsockopt (output_socket, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof (flag)) < 0) {
-		PRINT (PRODUCT ": Could not set TCP_NODELAY on socket (%s)", strerror (errno));
-		// not a fatal failure
-	}
-		
-	LOG (PRODUCT ": Successfully received USB connection from the IDE on port %i.\n", output_port);
-
-	// make the socket block on reads/writes
-	flags = fcntl (output_socket, F_GETFL, NULL);
-	fcntl (output_socket, F_SETFL, flags & ~O_NONBLOCK);
-
-	dup2 (output_socket, 1);
-	dup2 (output_socket, 2);
-
-	close (listen_socket); // no need to listen anymore
- 
-	debug_host = strdup ("127.0.0.1");
-
-	return 0;
 }
 
 // SUCCESS = 0
