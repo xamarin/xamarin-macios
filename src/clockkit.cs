@@ -1970,7 +1970,7 @@ namespace ClockKit {
 
 	[Watch (9,0), NoiOS]
 	[BaseType (typeof (NSObject))]
-	interface CLKComplicationWidgetMigrationConfiguration {}
+	interface CLKComplicationWidgetMigrationConfiguration : NSCopying {}
 
 	[Watch (9,0), NoiOS]
 	[Protocol]
