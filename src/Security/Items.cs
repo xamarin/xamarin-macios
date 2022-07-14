@@ -165,7 +165,7 @@ namespace Security {
 				else
 					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 				
-				status = SecItem.SecItemCopyMatching (copy.Handle, out IntPtr ptr);
+				status = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if (status == SecStatusCode.Success)
 					return Runtime.GetNSObject<NSData> (ptr, true);
 				return null;
@@ -184,7 +184,7 @@ namespace Security {
 				else
 					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 
-				status = SecItem.SecItemCopyMatching (copy.Handle, out IntPtr ptr);
+				status = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				n = null;
 				if (status == SecStatusCode.Success){
 					if (max == 1)
@@ -217,7 +217,7 @@ namespace Security {
 				SetLimit (copy, 1);
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnAttributes);
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
-				result = SecItem.SecItemCopyMatching (copy.Handle, out IntPtr ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if (result == SecStatusCode.Success)
 					return new SecRecord (new NSMutableDictionary (ptr, true));
 				return null;
@@ -234,7 +234,7 @@ namespace Security {
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 				var n = SetLimit (copy, max);
 				
-				result = SecItem.SecItemCopyMatching (copy.Handle, out IntPtr ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				n = null;
 				if (result == SecStatusCode.Success)
 					return CFArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => {
@@ -256,7 +256,7 @@ namespace Security {
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnRef);
 				SetLimit (copy, max);
 
-				result = SecItem.SecItemCopyMatching (copy.Handle, out IntPtr ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if ((result == SecStatusCode.Success) && (ptr != IntPtr.Zero)) {
 					var array = CFArray.ArrayFromHandleFunc<INativeObject> (ptr, p => {
 						nint cfType = CFType.GetTypeID (p);
@@ -553,7 +553,7 @@ namespace Security {
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnRef);
 				SetLimit (copy, 1);
 				
-				result = SecItem.SecItemCopyMatching (copy.Handle, out IntPtr ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if ((result == SecStatusCode.Success) && (ptr != IntPtr.Zero)) {
 					nint cfType = CFType.GetTypeID (ptr);
 					
