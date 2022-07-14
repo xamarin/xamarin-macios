@@ -21,6 +21,7 @@ using UIScrollView = AppKit.NSScrollView;
 using UIImage = AppKit.NSImage;
 using IUIContextMenuInteractionCommitAnimating = Foundation.NSObject;
 using UIContextMenuConfiguration = Foundation.NSObject;
+using UIEdgeInsets = AppKit.NSEdgeInsets;
 using UIViewController = AppKit.NSViewController;
 #else
 using UIKit;
@@ -36,7 +37,7 @@ using NativeHandle = System.IntPtr;
 
 namespace WebKit
 {
-	[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum WKFullscreenState : long {
 		NotInFullscreen,
@@ -336,11 +337,11 @@ namespace WebKit
 		[Export ("isTextInteractionEnabled")]
 		bool _NewGetTextInteractionEnabled ();
 
-		[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("siteSpecificQuirksModeEnabled")]
 		bool SiteSpecificQuirksModeEnabled { [Bind ("isSiteSpecificQuirksModeEnabled")] get; set; }
 
-		[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("elementFullscreenEnabled")]
 		bool ElementFullscreenEnabled { [Bind ("isElementFullscreenEnabled")] get; set; }
 	}
@@ -899,6 +900,11 @@ namespace WebKit
 		[Export ("createWebArchiveDataWithCompletionHandler:")]
 		void CreateWebArchive (Action<NSData, NSError> completionHandler);
 
+		[iOS (16,0), MacCatalyst(16,0), NoMac, NoWatch, NoTV]
+		[Async]
+		[Export ("retrieveAccessibilityTreeData:")]
+		void RetrieveAccessibilityTreeData (Action<NSData, NSError> completionHandler);
+
 		[Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Async]
@@ -1025,9 +1031,21 @@ namespace WebKit
 		[NullAllowed, Export ("underPageBackgroundColor", ArgumentSemantic.Copy)]
 		UIColor UnderPageBackgroundColor { get; set; }
 
-		[iOS (15,4), MacCatalyst (15,4), Mac (12,3), NoTV]
+		[iOS (16,0), MacCatalyst (16,0), Mac (13,0), NoTV]
 		[Export ("fullscreenState")]
 		WKFullscreenState FullscreenState { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst(16,0), NoWatch, NoTV]
+		[Export ("minimumViewportInset")]
+		UIEdgeInsets MinimumViewportInset { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst(16,0), NoWatch, NoTV]
+		[Export ("maximumViewportInset")]
+		UIEdgeInsets MaximumViewportInset { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst(16,0), NoWatch, NoTV]
+		[Export ("setMinimumViewportInset:maximumViewportInset:")]
+		void SetViewportInset (UIEdgeInsets minimumViewportInset, UIEdgeInsets maximumViewportInset);
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
