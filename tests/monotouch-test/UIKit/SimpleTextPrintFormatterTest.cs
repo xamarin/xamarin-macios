@@ -32,6 +32,10 @@ namespace MonoTouchFixtures.UIKit {
 				Assert.That (stpf.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 				if (TestRuntime.CheckXcodeVersion (11, 0)) {
 					Assert.NotNull (stpf.Color, "Color");
+					Assert.NotNull (stpf.Font, "Font");
+					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
+				} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
+					Assert.NotNull (stpf.Color, "Color");
 					Assert.Null (stpf.Font, "Font");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Natural), "TextAlignment");
 				} else if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false)) {
@@ -62,11 +66,7 @@ namespace MonoTouchFixtures.UIKit {
 					Assert.That (stpf.Color, Is.EqualTo (UIColor.Black), "Color");
 					Assert.That (stpf.TextAlignment, Is.EqualTo (UITextAlignment.Left), "TextAlignment");
 				}
-				if (TestRuntime.CheckXcodeVersion (14, 0)) {
-					Assert.Null (stpf.Font, "Font");
-				} else {
-					Assert.NotNull (stpf.Font, "Font");
-				}
+				Assert.NotNull (stpf.Font, "Font");
 				Assert.That (stpf.Text, Is.EqualTo ("Xamarin"), "Text");
 			}
 		}
