@@ -337,11 +337,11 @@ namespace WebKit
 		[Export ("isTextInteractionEnabled")]
 		bool _NewGetTextInteractionEnabled ();
 
-		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
 		[Export ("siteSpecificQuirksModeEnabled")]
 		bool SiteSpecificQuirksModeEnabled { [Bind ("isSiteSpecificQuirksModeEnabled")] get; set; }
 
-		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
 		[Export ("elementFullscreenEnabled")]
 		bool ElementFullscreenEnabled { [Bind ("isElementFullscreenEnabled")] get; set; }
 	}
@@ -500,6 +500,10 @@ namespace WebKit
 		[Mac (10, 13, 4), iOS (11, 3)]
 		[Field ("WKWebsiteDataTypeServiceWorkerRegistrations")]
 		NSString ServiceWorkerRegistrations { get; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Field ("WKWebsiteDataTypeFileSystem")]
+		NSString FileSystem { get; }
 	}
 	
 	[iOS (9,0), Mac(10,11)]
@@ -1030,17 +1034,25 @@ namespace WebKit
 		[Export ("fullscreenState")]
 		WKFullscreenState FullscreenState { get; }
 
-		[Mac (13,0), iOS (16,0), MacCatalyst(16,0), NoWatch, NoTV]
+		[Mac (13,0), iOS (15,5), MacCatalyst(15,5), NoWatch, NoTV]
 		[Export ("minimumViewportInset")]
 		UIEdgeInsets MinimumViewportInset { get; }
 
-		[Mac (13,0), iOS (16,0), MacCatalyst(16,0), NoWatch, NoTV]
+		[Mac (13,0), iOS (15,5), MacCatalyst(15,5), NoWatch, NoTV]
 		[Export ("maximumViewportInset")]
 		UIEdgeInsets MaximumViewportInset { get; }
 
-		[Mac (13,0), iOS (16,0), MacCatalyst(16,0), NoWatch, NoTV]
+		[Mac (13,0), iOS (15,5), MacCatalyst(15,5), NoWatch, NoTV]
 		[Export ("setMinimumViewportInset:maximumViewportInset:")]
-		void SetViewportInset (UIEdgeInsets minimumViewportInset, UIEdgeInsets maximumViewportInset);
+		void SetViewportInsets (UIEdgeInsets minimumViewportInset, UIEdgeInsets maximumViewportInset);
+
+		// [iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, NoTV]
+		// [Export ("findInteractionEnabled")]
+		// bool FindInteractionEnabled { [Bind ("isFindInteractionEnabled")] get; set; }
+
+		// [iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, NoTV]
+		// [Export ("findInteraction")]
+		// UIFindInteraction FindInteraction { get; }
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
@@ -1252,6 +1264,10 @@ namespace WebKit
 		[iOS (14,0)]
 		[Export ("allowsContentJavaScript")]
 		bool AllowsContentJavaScript { get; set; }
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("lockdownModeEnabled")]
+		bool LockdownModeEnabled { [Bind ("isLockdownModeEnabled")] get; set; }
 	}
 
 	[NoMac]
