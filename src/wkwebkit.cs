@@ -900,11 +900,6 @@ namespace WebKit
 		[Export ("createWebArchiveDataWithCompletionHandler:")]
 		void CreateWebArchive (Action<NSData, NSError> completionHandler);
 
-		[iOS (16,0), MacCatalyst(16,0), NoMac, NoWatch, NoTV]
-		[Async]
-		[Export ("retrieveAccessibilityTreeData:")]
-		void RetrieveAccessibilityTreeData (Action<NSData, NSError> completionHandler);
-
 		[Mac (11,0), iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Async]
