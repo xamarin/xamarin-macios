@@ -5,10 +5,10 @@ include $(TOP)/Make.config
 CONFIGURATION=Debug
 SRC_FILES=Main.cs $(TOP)/tools/common/StringUtils.cs
 
-all: bin/$(CONFIGURATION)/xibuild.exe
+all: bin/$(CONFIGURATION)/$(DOTNET_TFM)/xibuild.dll
 
-bin/$(CONFIGURATION)/xibuild.exe: xibuild.csproj $(SRC_FILES)
-	$(SYSTEM_MSBUILD) "/bl:$@.binlog" /restore xibuild.csproj /p:Configuration=$(CONFIGURATION)
+bin/$(CONFIGURATION)/$(DOTNET_TFM)/xibuild.dll: xibuild.csproj $(SRC_FILES)
+	$(Q_GEN) $(DOTNET) build xibuild.csproj /p:Configuration=$(CONFIGURATION) $(DOTNET_BUILD_VERBOSITY)
 
 clean-local::
 	$(SYSTEM_MSBUILD) /t:Clean xibuild.csproj
