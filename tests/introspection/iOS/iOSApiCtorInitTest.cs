@@ -196,6 +196,7 @@ namespace Introspection {
 			case "INStartAudioCallIntent":
 			case "INStartPhotoPlaybackIntent":
 			case "INStartWorkoutIntent":
+			case "CLKComplicationWidgetMigrator": // Only available on device
 				return true;
 #endif
 			// iOS 11 Beta 1
