@@ -165,10 +165,9 @@ namespace Security {
 				else
 					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 				
-				IntPtr ptr;
-				status = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				status = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if (status == SecStatusCode.Success)
-					return Runtime.GetNSObject<NSData> (ptr, false);
+					return Runtime.GetNSObject<NSData> (ptr, true);
 				return null;
 			}
 		}
@@ -185,14 +184,13 @@ namespace Security {
 				else
 					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 
-				IntPtr ptr;
-				status = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				status = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				n = null;
 				if (status == SecStatusCode.Success){
 					if (max == 1)
-						return new NSData [] { Runtime.GetNSObject<NSData> (ptr, false)! };
+						return new NSData [] { Runtime.GetNSObject<NSData> (ptr, true)! };
 
-					return NSArray.ArrayFromHandle<NSData> (ptr);
+					return CFArray.ArrayFromHandle<NSData> (ptr, true)!;
 				}
 				return null;
 			}
@@ -219,10 +217,9 @@ namespace Security {
 				SetLimit (copy, 1);
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnAttributes);
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if (result == SecStatusCode.Success)
-					return new SecRecord (new NSMutableDictionary (ptr, false));
+					return new SecRecord (new NSMutableDictionary (ptr, true));
 				return null;
 			}
 		}
@@ -237,11 +234,13 @@ namespace Security {
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 				var n = SetLimit (copy, max);
 				
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				n = null;
 				if (result == SecStatusCode.Success)
-					return NSArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => new SecRecord (Runtime.GetNSObject<NSMutableDictionary> (element, false)!))!;
+					return CFArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => {
+						var dictionary = Runtime.GetNSObject<NSMutableDictionary> (element, false)!;
+						return new SecRecord (dictionary);
+					}, releaseHandle: true)!;
 				return null;
 			}
 		}
@@ -257,20 +256,23 @@ namespace Security {
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnRef);
 				SetLimit (copy, max);
 
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if ((result == SecStatusCode.Success) && (ptr != IntPtr.Zero)) {
-					var array = NSArray.ArrayFromHandle<INativeObject> (ptr, p => {
+					var array = CFArray.ArrayFromHandleFunc<INativeObject> (ptr, p => {
 						nint cfType = CFType.GetTypeID (p);
+						CFObject.CFRetain (p);
+
 						if (cfType == SecCertificate.GetTypeID ())
 							return new SecCertificate (p, true);
 						else if (cfType == SecKey.GetTypeID ())
 							return new SecKey (p, true);
 						else if (cfType == SecIdentity.GetTypeID ())
 							return new SecIdentity (p, true);
-						else
+						else {
+							CFObject.CFRelease (p);
 							throw new Exception (String.Format ("Unexpected type: 0x{0:x}", cfType));
-					})!;
+						}
+					}, releaseHandle: true)!;
 					return array;
 				}
 				return null;
@@ -551,8 +553,7 @@ namespace Security {
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnRef);
 				SetLimit (copy, 1);
 				
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if ((result == SecStatusCode.Success) && (ptr != IntPtr.Zero)) {
 					nint cfType = CFType.GetTypeID (ptr);
 					
