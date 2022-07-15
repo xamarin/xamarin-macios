@@ -189,3 +189,4 @@ SUBDIRS += $(MACCORE_PATH)
 endif
 
 SUBDIRS += tests
+
