@@ -307,6 +307,7 @@ stages:
   jobs:
     - template: templates/build/stage.yml
       parameters:
+        xcodeChannel: Stable
         vsdropsPrefix: ${{ variables.vsdropsPrefix }}
         runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
         runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
@@ -328,6 +329,7 @@ stages:
 - ${{ each config in parameters.simTestsConfigurations }}:
   - template: templates/tests/stage.yml
     parameters:
+      xcodeChannel: Stable
       testPrefix: ${{ config.testPrefix }} 
       stageName: ${{ config.stageName }} 
       displayName: ${{ config.displayName }} 
