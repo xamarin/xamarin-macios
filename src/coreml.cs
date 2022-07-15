@@ -100,6 +100,7 @@ namespace CoreML {
 		CpuOnly = 0,
 		CpuAndGpu = 1,
 		All = 2,
+		CPUAndNeuralEngine = 3,
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -418,12 +419,28 @@ namespace CoreML {
 		[Export ("loadContentsOfURL:configuration:completionHandler:")]
 		void LoadContents (NSUrl url, MLModelConfiguration configuration, Action<MLModel, NSError> handler);
 
+		[Async (ResultTypeName="MLModelCompilationLoadResult")]
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("loadModelAsset:configuration:completionHandler:")]
+		void Load (MLModelAsset asset, MLModelConfiguration configuration, Action<MLModel, NSError> handler);
+
 		// Category MLModel (MLModelCompilation)
 
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use the asynchronous method instead.")]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the asynchronous interface instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use the asynchronous interface instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the asynchronous interface instead.")]
 		[Static]
 		[Export ("compileModelAtURL:error:")]
 		[return: NullAllowed]
 		NSUrl CompileModel (NSUrl modelUrl, out NSError error);
+
+		[Async (ResultTypeName="MLModelCompilationResult")]
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("compileModelAtURL:completionHandler:")]
+		void CompileModel (NSUrl modelUrl, Action<NSUrl, NSError> handler);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -507,6 +524,11 @@ namespace CoreML {
 	[BaseType (typeof (NSObject))]
 	interface MLMultiArray : NSSecureCoding {
 
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use 'GetBytesWithHandler' or 'GetMutableBytes' async methods instead.")]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'GetBytesWithHandler' or 'GetMutableBytes' async methods instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use 'GetBytesWithHandler' or 'GetMutableBytes' async methods instead.")]
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use 'GetBytesWithHandler' or 'GetMutableBytes' async methods instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the asynchronous interface instead.")]
 		[Export ("dataPointer")]
 		IntPtr DataPointer { get; }
 
@@ -525,7 +547,7 @@ namespace CoreML {
 		nint Count { get; }
 
 		[NullAllowed]
-		[NoWatch, NoTV, NoiOS, Mac (12,0)]
+		[Watch (9,0), TV (16,0), Mac (12,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("pixelBuffer")]
 		CVPixelBuffer PixelBuffer { get; }
 
@@ -537,7 +559,7 @@ namespace CoreML {
 		[Export ("initWithDataPointer:shape:dataType:strides:deallocator:error:")]
 		NativeHandle Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
 
-		[NoWatch, NoTV, NoiOS, Mac (12,0)]
+		[Watch (9,0), TV (16,0), Mac (12,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("initWithPixelBuffer:shape:")]
 		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSNumber [] shape);
 
@@ -573,6 +595,16 @@ namespace CoreML {
 		[Static]
 		[Export ("multiArrayByConcatenatingMultiArrays:alongAxis:dataType:")]
 		MLMultiArray Concat (MLMultiArray[] multiArrays, nint axis, MLMultiArrayDataType dataType);
+
+		[Async (ResultTypeName="MLMultiArrayDataPointer")]
+		[Watch (8,5), TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("getBytesWithHandler:")]
+		void GetBytes (Action<IntPtr, nint> handler);
+
+		[Async (ResultTypeName="MLMultiArrayMutableDataPointer")]
+		[Watch (8,5), TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("getMutableBytesWithHandler:")]
+		void GetMutableBytes (Action<IntPtr, nint, NSArray<NSNumber>> handler);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -633,7 +665,7 @@ namespace CoreML {
 		bool UsesCpuOnly { get; set; }
 
 		// Leaving it intentionally as NSDictionary to make it easier to use the lowlevel apis.
-		[NoWatch, NoTV, NoiOS, Mac (12,0)]
+		[Watch (9,0), TV (16,0), Mac (12,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("outputBackings", ArgumentSemantic.Copy)]
 		NSDictionary OutputBackings { get; set; }
 	}
@@ -807,6 +839,10 @@ namespace CoreML {
 
 		[Export ("computeUnits", ArgumentSemantic.Assign)]
 		MLComputeUnits ComputeUnits { get; set; }
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[NullAllowed, Export ("modelDisplayName")]
+		string ModelDisplayName { get; set; }
 
 		// From MLModelConfiguration (MLGPUConfigurationOptions)
 
@@ -1096,5 +1132,17 @@ namespace CoreML {
 
 		[Export ("isEqualToModelCollectionEntry:")]
 		bool IsEqual (MLModelCollectionEntry entry);
+	}
+
+	[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelAsset
+	{
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0)]
+		[Static]
+		[Export ("modelAssetWithSpecificationData:error:")]
+		[return: NullAllowed]
+		MLModelAsset Create (NSData specificationData, [NullAllowed] out NSError error);
 	}
 }
