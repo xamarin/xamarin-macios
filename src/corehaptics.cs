@@ -365,7 +365,7 @@ namespace CoreHaptics {
 
 		[TV (16,0), NoWatch, MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
 		[Field ("CHHapticPatternKeyEventWaveformLoopEnabled")]
-		NSString EventWaveformLoopEnabled { get; }
+		NSString EventWaveformLoopEnabledKey { get; }
 	}
 
 	[Mac (10,15), iOS (13,0), TV (14, 0)]
@@ -416,7 +416,7 @@ namespace CoreHaptics {
 
 		[TV (16,0), NoWatch, MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
 		[Export ("initWithContentsOfURL:error:")]
-		NativeHandle Constructor (NSUrl url, [NullAllowed] out NSError outError);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] out NSError error);
 
 		[Internal]
 		[Export ("exportDictionaryAndReturnError:")]
