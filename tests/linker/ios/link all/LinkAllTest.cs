@@ -233,10 +233,7 @@ namespace LinkAll {
 				// be called again in subsequent requests (unless it expires)
 				Assert.That (test_policy.CheckCount, Is.GreaterThan (0), "policy checked");
 			} catch (WebException we) {
-				// The remote server returned an error: (502) Bad Gateway.
-				// The remote server returned an error: (503) Service Unavailable.
-				if (we.Message.Contains ("(502)") || we.Message.Contains ("(503)"))
-					Assert.Inconclusive (we.Message);
+				TestRuntime.IgnoreIfBadCINetwork (we);
 				throw;
 			} finally {
 				ServicePointManager.CertificatePolicy = old;
