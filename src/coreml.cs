@@ -427,10 +427,10 @@ namespace CoreML {
 
 		// Category MLModel (MLModelCompilation)
 
-		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use the asynchronous method instead.")]
-		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the asynchronous interface instead.")]
-		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use the asynchronous interface instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the asynchronous interface instead.")]
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use 'CompileModel (NSUrl, Action<NSUrl, NSError>)' overload or 'CompileModelAsync' instead.")]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'CompileModel (NSUrl, Action<NSUrl, NSError>)' overload or 'CompileModelAsync' instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use 'CompileModel (NSUrl, Action<NSUrl, NSError>)' overload or 'CompileModelAsync' instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use 'CompileModel (NSUrl, Action<NSUrl, NSError>)' overload or 'CompileModelAsync' instead.")]
 		[Static]
 		[Export ("compileModelAtURL:error:")]
 		[return: NullAllowed]
@@ -524,11 +524,11 @@ namespace CoreML {
 	[BaseType (typeof (NSObject))]
 	interface MLMultiArray : NSSecureCoding {
 
-		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use 'GetBytesWithHandler' or 'GetMutableBytes' async methods instead.")]
-		[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'GetBytesWithHandler' or 'GetMutableBytes' async methods instead.")]
-		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use 'GetBytesWithHandler' or 'GetMutableBytes' async methods instead.")]
-		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use 'GetBytesWithHandler' or 'GetMutableBytes' async methods instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the asynchronous interface instead.")]
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use 'GetBytes (Action<IntPtr, nint>)' or 'GetMutableBytes' async methods instead.")]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use 'GetBytes (Action<IntPtr, nint>)' or 'GetMutableBytes' async methods instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use 'GetBytes (Action<IntPtr, nint>)' or 'GetMutableBytes' async methods instead.")]
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use 'GetBytes (Action<IntPtr, nint>)' or 'GetMutableBytes' async methods instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use 'GetBytes (Action<IntPtr, nint>)' or 'GetMutableBytes' async methods instead.")]
 		[Export ("dataPointer")]
 		IntPtr DataPointer { get; }
 
