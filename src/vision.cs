@@ -76,7 +76,9 @@ namespace Vision {
 		CenterCrop = 0,
 		ScaleFit = 1,
 		ScaleFill = 2,
+		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		ScaleFitRotate90Ccw = 256 + ScaleFit,
+		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		ScaleFillRotate90Ccw = 256 + ScaleFill,
 	}
 
