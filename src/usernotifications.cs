@@ -171,10 +171,10 @@ namespace UserNotifications {
 	[Native]
 	public enum UNNotificationInterruptionLevel : long
 	{
-		Active,
-		Critical,
 		Passive,
+		Active,
 		TimeSensitive,
+		Critical,
 	}
 
 	[iOS (10, 0)]
