@@ -1,6 +1,0 @@
-!deprecated-attribute-missing! CMTimebaseGetMaster missing a [Deprecated] attribute
-!deprecated-attribute-missing! CMTimebaseGetMasterClock missing a [Deprecated] attribute
-!deprecated-attribute-missing! CMTimebaseGetMasterTimebase missing a [Deprecated] attribute
-!deprecated-attribute-missing! CMTimebaseGetUltimateMasterClock missing a [Deprecated] attribute
-!missing-field! kCMImageDescriptionFlavor_ISOFamilyWithAppleExtensions not bound
-!missing-field! kCMTextMarkupAttribute_FontFamilyNameList not bound
