@@ -23,6 +23,8 @@ namespace ShazamKit {
 		CustomCatalogInvalid = 300,
 		CustomCatalogInvalidURL = 301,
 		MediaLibrarySyncFailed = 400,
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		InternalError = 500,
 	}
 
 	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
@@ -57,6 +59,12 @@ namespace ShazamKit {
 		MatchOffset,
 		[Field ("SHMediaItemFrequencySkew")]
 		FrequencySkew,
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Field ("SHMediaItemTimeRanges")]
+		TimeRanges,
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Field ("SHMediaItemFrequencySkewRanges")]
+		FrequencySkewRanges,
 	}
 
 	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
@@ -182,6 +190,14 @@ namespace ShazamKit {
 
 		[Export ("objectForKeyedSubscript:")]
 		NSObject GetObject (string key);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("timeRanges", ArgumentSemantic.Strong)]
+		SHRange[] TimeRanges { get; }
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("frequencySkewRanges", ArgumentSemantic.Strong)]
+		SHRange[] FrequencySkewRanges { get; }
 	}
 
 	[iOS (15,0), Mac (12,0), Watch (8,0), TV (15,0), MacCatalyst (15,0)]
@@ -252,6 +268,11 @@ namespace ShazamKit {
 
 		[Export ("signature")]
 		SHSignature Signature { get; }
+
+		[Static, Async]
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("generateSignatureFromAsset:completionHandler:")]
+		void GenerateSignature (AVAsset asset, Action<SHSignature, NSError> completionHandler);
 	}
 
 	interface ISHSessionDelegate {}
@@ -270,5 +291,25 @@ namespace ShazamKit {
 
 		[Export ("session:didNotFindMatchForSignature:error:")]
 		void DidNotFindMatch (SHSession session, SHSignature signature, [NullAllowed] NSError error);
+	}
+
+	[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SHRange : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithLowerBound:upperBound:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (double lowerBound, double upperBound);
+
+		[Export ("lowerBound")]
+		double LowerBound { get; }
+
+		[Export ("upperBound")]
+		double UpperBound { get; }
+
+		[Static]
+		[Export ("rangeWithLowerBound:upperBound:")]
+		SHRange CreateRange (double lowerBound, double upperBound);
 	}
 }
