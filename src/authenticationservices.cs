@@ -628,8 +628,7 @@ namespace AuthenticationServices {
 		bool UserInterfaceEnabled { [Bind ("isUserInterfaceEnabled")] get; }
 
 		[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13, 0)]
-		[Export ("loginManager", ArgumentSemantic.Strong)]
-		[return: NullAllowed]
+		[NullAllowed, Export ("loginManager", ArgumentSemantic.Strong)]
 		ASAuthorizationProviderExtensionLoginManager LoginManager { get; }
 	}
 
