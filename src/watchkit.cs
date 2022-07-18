@@ -1905,16 +1905,16 @@ namespace WatchKit {
 		void DeviceOrientationDidChange ();
 
 		[Export ("didRegisterForRemoteNotificationsWithDeviceToken:")]
-		void DidRegisterForRemoteNotificationsWithDeviceToken (NSData deviceToken);
+		void DidRegisterForRemoteNotifications (NSData deviceToken);
 
 		[Export ("didFailToRegisterForRemoteNotificationsWithError:")]
-		void DidFailToRegisterForRemoteNotificationsWithError (NSError error);
+		void DidFailToRegisterForRemoteNotifications (NSError error);
 
 		[Export ("didReceiveRemoteNotification:fetchCompletionHandler:")]
 		void DidReceiveRemoteNotification (NSDictionary userInfo, Action<WKBackgroundFetchResult> completionHandler);
 
 		[Export ("userDidAcceptCloudKitShareWithMetadata:")]
-		void UserDidAcceptCloudKitShareWithMetadata (CKShareMetadata cloudKitShareMetadata);
+		void UserDidAcceptCloudKitShare (CKShareMetadata cloudKitShareMetadata);
 	}
 
 	[Watch (9,0), NoiOS]
