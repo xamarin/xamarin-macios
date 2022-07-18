@@ -8,7 +8,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 		static List<Transformation>? allTransforms;
 		static Dictionary<string, Transformation>? transformTable;
 
-		public Dictionary<string, Transformation> GetTransforms (ModuleContainer modules, Func<List<bool>, CustomAttribute> attrBuilder)
+		public Dictionary<string, Transformation> GetTransforms (ModuleContainer modules, Func<List<bool>, CustomAttribute> attrBuilder,
+			TypeReference nfloatTypeRef)
 		{
 			var moduleToEdit = modules.ModuleToEdit;
 			if (transformTable is not null) {
@@ -157,7 +158,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 					Instruction.Create (OpCodes.Call, mref),
 					Instruction.Create (OpCodes.Conv_I) }));
 
-			var nfloatTypeRef = new TypeReference ("System.Runtime.InteropServices", "NFloat", moduleToEdit, moduleToEdit.TypeSystem.CoreLibrary);
 			mref = new MethodReference (".ctor", moduleToEdit.TypeSystem.Void, nfloatTypeRef);
 			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Double));
 			mref = moduleToEdit.ImportReference (mref);
@@ -307,7 +307,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 			allTransforms.Add (new Transformation ("System.Boolean System.nuint::TryParse(System.String,System.Globalization.NumberStyles,System.IFormatProvider,System.nuint&)",
 				Instruction.Create (OpCodes.Call, mref)));
 
-			decimalTypeReference = new TypeReference ("System", "Decimal", moduleToEdit, moduleToEdit.TypeSystem.CoreLibrary);
 			mref = new MethodReference ("op_Implicit", decimalTypeReference, decimalTypeReference);
 			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.UInt64));
 			mref = moduleToEdit.ImportReference (mref);
@@ -326,7 +325,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 					Instruction.Create (OpCodes.Call, mref),
 					Instruction.Create (OpCodes.Conv_U) }));
 
-			nfloatTypeRef = new TypeReference ("System.Runtime.InteropServices", "NFloat", moduleToEdit, moduleToEdit.TypeSystem.CoreLibrary);
 			mref = new MethodReference (".ctor", moduleToEdit.TypeSystem.Void, nfloatTypeRef);
 			mref.Parameters.Add (new ParameterDefinition (moduleToEdit.TypeSystem.Double));
 			mref = moduleToEdit.ImportReference (mref);
@@ -351,6 +349,103 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 			//"System.nuint System.nuint::op_Explicit(System.nfloat)"
 
+			allTransforms.Add (NewOneParamCtorXform ("System.Void System.nfloat::.ctor(System.nfloat)", moduleToEdit, nfloatTypeRef, nfloatTypeRef));
+			allTransforms.Add (NewOneParamCtorXform ("System.Void System.nfloat::.ctor(System.Single)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Single));
+			allTransforms.Add (NewOneParamCtorXform ("System.Void System.nfloat::.ctor(System.Double)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Double));
+
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.SByte)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.SByte));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.Byte)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.Byte));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.Char)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.Char));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.IntPtr)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.IntPtr));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.Int16)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.Int16));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.UInt16)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.UInt16));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.Int32)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.Int32));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.UInt32)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.UInt32));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.Int64)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.Int64));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.UInt64)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.UInt64));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Implicit(System.Single)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Implicit", moduleToEdit.TypeSystem.Single));
+			allTransforms.Add (NewFuncXform ("System.Double System.nfloat::op_Implicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Double, "op_Implicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.IntPtr System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.IntPtr, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.SByte System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.SByte, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Byte System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Byte, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Char System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Char, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Int16 System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Int16, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.IntU16 System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.UInt16, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Int32 System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Int32, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.UInt32 System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.UInt32, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Int64 System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Int64, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.UInt64 System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.UInt64, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Single System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Single, "op_Explicit", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Explicit(System.Double)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Explicit", moduleToEdit.TypeSystem.Double));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Explicit(System.IntPtr)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Explicit", moduleToEdit.TypeSystem.IntPtr));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Explicit(System.Decimal)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Explicit", decimalTypeReference));
+			allTransforms.Add (NewFuncXform ("System.Decimal System.nfloat::op_Explicit(System.nfloat)", moduleToEdit, nfloatTypeRef, decimalTypeReference, "op_Explicit", nfloatTypeRef));
+
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_UnaryPlus(System.nfloat)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_UnaryPlus", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_UnaryNegation(System.nfloat)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_UnaryNegation", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Increment(System.nfloat)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Increment", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Decrement(System.nfloat)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Decrement", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Addition(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Addition", nfloatTypeRef, nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Subtraction(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Subtraction", nfloatTypeRef, nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Multiply(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Multiply", nfloatTypeRef, nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Division(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Division", nfloatTypeRef, nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::op_Modulus(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, nfloatTypeRef, "op_Modulus", nfloatTypeRef, nfloatTypeRef));
+
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::op_Equality(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "op_Equality", nfloatTypeRef, nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::op_Inequality(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "op_Inequality", nfloatTypeRef, nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::op_LessThan(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "op_LessThan", nfloatTypeRef, nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::op_GreaterThan(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "op_GreaterThan", nfloatTypeRef, nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::op_LessThanOrEqual(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "op_LessThanOrEqual", nfloatTypeRef, nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::op_GreaterThanOrEqual(System.nfloat,System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "op_GreaterThanOrEqual", nfloatTypeRef, nfloatTypeRef));
+
+			allTransforms.Add (NewFuncXform ("System.Int32 System.nfloat::CompareTo(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Int32, "CompareTo", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Int32 System.nfloat::CompareTo(System.Object)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Int32, "CompareTo", moduleToEdit.TypeSystem.Object));
+
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::Equals(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "Equals", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::Equals(System.Object)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "Equals", moduleToEdit.TypeSystem.Object));
+
+			allTransforms.Add (NewFuncXform ("System.Int32 System.nfloat::GetHashCode()", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Int32, "GetHashCode"));
+
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::IsNaN(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "IsNaN", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::IsInfinity(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "IsInfinity", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::IsPositiveInfinity(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "IsPositiveInfinity", nfloatTypeRef));
+			allTransforms.Add (NewFuncXform ("System.Boolean System.nfloat::IsNegativeInfinity(System.nfloat)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.Boolean, "IsNegativeInfinity", nfloatTypeRef));
+
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::Parse(System.String,System.IFormatProvider)",
+				moduleToEdit, nfloatTypeRef, nfloatTypeRef, "Parse", moduleToEdit.TypeSystem.String, formatProviderTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::Parse(System.String,System.Globalization.NumberStyles)",
+				moduleToEdit, nfloatTypeRef, nfloatTypeRef, "Parse", moduleToEdit.TypeSystem.String, globNumberStylesTypeRef));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::Parse(System.String)",
+				moduleToEdit, nfloatTypeRef, nfloatTypeRef, "Parse", moduleToEdit.TypeSystem.String));
+			allTransforms.Add (NewFuncXform ("System.nfloat System.nfloat::Parse(System.String,System.Globalization.NumberStyles,System.IFormatProvider)",
+				moduleToEdit, nfloatTypeRef, nfloatTypeRef, "Parse", moduleToEdit.TypeSystem.String, globNumberStylesTypeRef, formatProviderTypeRef));
+
+			var nfloatRefParam = new ParameterDefinition (nfloatTypeRef);
+			nfloatRefParam.CustomAttributes.Add (attrBuilder (singleBool));
+			nfloatRefParam.IsOut = true;
+			mref = new MethodReference ("TryParse", boolType, nfloatTypeRef);
+			mref.Parameters.Add (stringParam);
+			mref.Parameters.Add (nfloatRefParam);
+			mref = moduleToEdit.ImportReference (mref);
+			allTransforms.Add (new Transformation ("System.Boolean System.nfloat::TryParse(System.String,System.nfloat&)",
+				Instruction.Create (OpCodes.Call, mref)));
+
+			mref = new MethodReference ("TryParse", boolType, nfloatTypeRef);
+			mref.Parameters.Add (stringParam);
+			mref.Parameters.Add (globNumberStylesParam);
+			mref.Parameters.Add (formatProviderParam);
+			mref.Parameters.Add (nfloatRefParam);
+			mref = moduleToEdit.ImportReference (mref);
+			allTransforms.Add (new Transformation ("System.Boolean System.nfloat::TryParse(System.String,System.Globalization.NumberStyles,System.IFormatProvider,System.nfloat&)",
+				Instruction.Create (OpCodes.Call, mref)));
+
+			allTransforms.Add (NewFuncXform ("System.String System.nfloat::ToString()", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.String, "ToString"));
+			allTransforms.Add (NewFuncXform ("System.String System.nfloat::ToString(System.IFormatProvider)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.String, "ToString", formatProviderTypeRef));
+			allTransforms.Add (NewFuncXform ("System.String System.nfloat::ToString(System.String)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.String, "ToString", moduleToEdit.TypeSystem.String));
+			allTransforms.Add (NewFuncXform ("System.String System.nfloat::ToString(System.String,System.IFormatProvider)", moduleToEdit, nfloatTypeRef, moduleToEdit.TypeSystem.String, "ToString", moduleToEdit.TypeSystem.String, formatProviderTypeRef));
+
+			allTransforms.Add (NewFuncXform ("System.TypeCode System.nfloat::GetTypeCode()", moduleToEdit, nfloatTypeRef, typeCodeRef, "GetTypeCode"));
+
 			transformTable = new Dictionary<string, Transformation> ();
 
 			foreach (var xform in allTransforms) {
@@ -359,6 +454,31 @@ namespace Microsoft.MaciOS.Nnyeah {
 			return transformTable;
 		}
 
+		static Transformation NewOneParamCtorXform (string oldSignature, ModuleDefinition moduleToEdit, TypeReference owningType,
+			TypeReference parameterType)
+		{
+			var mref = new MethodReference (".ctor", moduleToEdit.TypeSystem.Void, owningType)
+				.WithParameter (parameterType);
+			moduleToEdit.ImportReference (mref);
+			return new Transformation (oldSignature,
+				TransformationAction.Replace,
+				new List<Instruction> () {
+					Instruction.Create (OpCodes.Newobj, mref)
+				});
+		}
+
+		static Transformation NewFuncXform (string oldSignature, ModuleDefinition moduleToEdit, TypeReference owningType,
+			TypeReference returnType, string methodName, params TypeReference [] parameterTypes)
+		{
+			var mref = new MethodReference (methodName, returnType, owningType)
+				.WithParameters (parameterTypes);
+			moduleToEdit.ImportReference (mref);
+			return new Transformation (oldSignature,
+				TransformationAction.Replace,
+				new List<Instruction> () {
+					Instruction.Create (OpCodes.Call, mref)
+				});
+		}
 
 		static Transformation [] transforms = new Transformation [] {
 			new Transformation (
@@ -844,6 +964,10 @@ namespace Microsoft.MaciOS.Nnyeah {
 			new Transformation ("System.Void System.nuint::CopyArray(System.IntPtr,System.nuint[],System.Int32,System.Int32)",
 				Errors.N0002),
 			new Transformation ("System.Void System.nuint::CopyArray(System.nuint[],System.Int32,System.IntPtr,System.Int32)",
+				Errors.N0002),
+			new Transformation ("System.Void System.nfloat::CopyArray(System.IntPtr,System.nfloat[],System.Int32,System.Int32)",
+				Errors.N0002),
+			new Transformation ("System.Void System.nfloat::CopyArray(System.nfloat[],System.Int32,System.IntPtr,System.Int32)",
 				Errors.N0002),
 		};
 	}
