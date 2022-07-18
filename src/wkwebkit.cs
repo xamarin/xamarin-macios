@@ -1034,15 +1034,15 @@ namespace WebKit
 		[Export ("fullscreenState")]
 		WKFullscreenState FullscreenState { get; }
 
-		[Mac (13,0), iOS (15,5), MacCatalyst(15,5), NoWatch, NoTV]
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
 		[Export ("minimumViewportInset")]
 		UIEdgeInsets MinimumViewportInset { get; }
 
-		[Mac (13,0), iOS (15,5), MacCatalyst(15,5), NoWatch, NoTV]
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
 		[Export ("maximumViewportInset")]
 		UIEdgeInsets MaximumViewportInset { get; }
 
-		[Mac (13,0), iOS (15,5), MacCatalyst(15,5), NoWatch, NoTV]
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
 		[Export ("setMinimumViewportInset:maximumViewportInset:")]
 		void SetViewportInsets (UIEdgeInsets minimumViewportInset, UIEdgeInsets maximumViewportInset);
 
