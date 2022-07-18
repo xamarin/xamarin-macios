@@ -663,6 +663,13 @@ namespace Vision {
 		Fast,
 	}
 
+	[TV (16,0), Mac (13,0), iOS (16,0), NoMacCatalyst (16,0)]
+	[Native]
+	enum VSUserAccountQueryOption : ulong {
+		None = 0,
+		AllDevices,
+	}
+
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(VNDetectedObjectObservation))]
 	[DisableDefaultCtor]
