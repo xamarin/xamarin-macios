@@ -94,7 +94,7 @@ namespace CoreSpotlight {
 		// from interface CSExternalProvider (CSSearchableIndex)
 
 		[Async (ResultTypeName="CSSearchableIndexBundleDataResult")]
-		[NoTV, iOS (16,0), Mac (13,0)]
+		[NoTV, iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Export ("provideDataForBundle:identifier:type:completionHandler:")]
 		void ProvideData (string bundle, string identifier, string type, Action<NSData, NSError> completionHandler);
 	}
