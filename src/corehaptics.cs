@@ -241,6 +241,7 @@ namespace CoreHaptics {
 	[DisableDefaultCtor]
 	interface CHHapticEngine
 	{
+
 		[Static]
 		[Export ("capabilitiesForHardware")]
 		ICHHapticDeviceCapability GetHardwareCapabilities ();
@@ -309,6 +310,10 @@ namespace CoreHaptics {
 
 		[Export ("playPatternFromData:error:")]
 		bool PlayPattern (NSData data, [NullAllowed] out NSError outError);
+
+		[TV (16,0), NoWatch, MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
+		[Export ("playsAudioOnly")]
+		bool PlaysAudioOnly { get; set; }
 	}
 
 	[Static]
@@ -357,6 +362,10 @@ namespace CoreHaptics {
 		[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("CHHapticPatternKeyEventWaveformUseVolumeEnvelope")]
 		NSString EventWaveformUseVolumeEnvelopeKey { get; }
+
+		[TV (16,0), NoWatch, MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
+		[Field ("CHHapticPatternKeyEventWaveformLoopEnabled")]
+		NSString EventWaveformLoopEnabledKey { get; }
 	}
 
 	[Mac (10,15), iOS (13,0), TV (14, 0)]
@@ -405,6 +414,10 @@ namespace CoreHaptics {
 		[Wrap ("this (patternDefinition.GetDictionary ()!, out outError)")]
 		NativeHandle Constructor (CHHapticPatternDefinition patternDefinition, [NullAllowed] out NSError outError);
 
+		[TV (16,0), NoWatch, MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
+		[Export ("initWithContentsOfURL:error:")]
+		NativeHandle Constructor (NSUrl url, [NullAllowed] out NSError error);
+
 		[Internal]
 		[Export ("exportDictionaryAndReturnError:")]
 		[return: NullAllowed]
@@ -421,6 +434,11 @@ namespace CoreHaptics {
 	partial interface CHHapticAudioResourceKeys {
 		[Field ("CHHapticAudioResourceKeyUseVolumeEnvelope")]
 		NSString UseVolumeEnvelopeKey { get; }
+
+		[TV (16,0), NoWatch, MacCatalyst (16, 0), Mac (13,0), iOS (16, 0)]
+		[Field ("CHHapticAudioResourceKeyLoopEnabled")]
+		NSString LoopEnabledKey { get; }
+
 	}
 
 	[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
@@ -428,6 +446,9 @@ namespace CoreHaptics {
 	partial interface CHHapticAudioResourceDefinition {
 		[Advice ("The default value is true.")]
 		bool UseVolumeEnvelope { get; set; }
+
+		[Advice ("The default value is false.")]
+		bool LoopEnabled { get; set; }
 	}
 
 }
