@@ -1824,7 +1824,7 @@ namespace WatchKit {
 		bool IsApplicationRunningInDock { get; }
 
 		[Export ("autorotating")]
-		bool Autorotating { [Bind ("isAutorotating")] get; set; }
+		bool IsAutorotating { [Bind ("isAutorotating")] get; set; }
 
 		[Export ("autorotated")]
 		bool Autorotated { [Bind ("isAutorotated")] get; }
