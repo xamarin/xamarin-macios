@@ -34,7 +34,7 @@ namespace Xamarin.Messaging.Build {
 
 		internal void LoadTasks (Assembly assembly) => tasks.AddRange (assembly.GetTypes ());
 
-		internal void LoadXamarinTasks () => LoadTasks (typeof (iOS.Tasks.CompileAppManifest).Assembly);
+		internal void LoadXamarinTasks () => LoadTasks (typeof (iOS.Tasks.MTouch).Assembly);
 
 		public ExecuteTaskResult Execute (string taskName, string inputs)
 		{

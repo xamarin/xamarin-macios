@@ -79,18 +79,6 @@ public class Foo : NSObject {
 		}
 
 		[Test]
-		public async Task RefuseToProcessCtorWithBehavior ()
-		{
-			var type = await ReworkerHelper.CompileTypeForTest (@"
-using System;
-using Foundation;
-public class Foo : NSObject {
-	public Foo (IntPtr p) : base (p) { Console.Error.WriteLine (typeof(int)); }
-}");
-			Assert.Throws<ConversionException> (() => CreateTestTransform (type).ReworkAsNeeded (type));
-		}
-
-		[Test]
 		public async Task DerivedFromNSObjectDerived ()
 		{
 			var type = await ReworkerHelper.CompileTypeForTest (@"
@@ -294,6 +282,21 @@ public class Foo : NSObject {
 			AssertInstruction (instructions [createInstructionIndex - 2], "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
 			AssertInstruction (instructions [createInstructionIndex - 1], "ldloc");
 			AssertNativeHandleCtorCalled (instructions);
+		}
+
+
+		[Test]
+		public async Task OneReferenceThanks ()
+		{
+			var pathToModule = await TestRunning.BuildTemporaryLibrary (@"
+using System;
+using Foundation;
+public class Foo : NSObject {
+	public Foo (IntPtr p) : base (p) { }
+}");
+			var editedModule = ReworkerHelper.GetReworkedModule (pathToModule)!;
+			var totalMSModules = editedModule.AssemblyReferences.Count ((nameRef => nameRef.Name == "Microsoft.macOS"));
+			Assert.AreEqual (1, totalMSModules, "More than one Microsoft.macOS reference");
 		}
 	}
 }

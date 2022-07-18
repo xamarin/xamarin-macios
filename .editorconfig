@@ -219,6 +219,9 @@ dotnet_naming_style.camelcase.required_suffix =
 dotnet_naming_style.camelcase.word_separator = 
 dotnet_naming_style.camelcase.capitalization = camel_case
 
+# specify StringComparison for correctness
+dotnet_diagnostic.CA1309.severity = error
+
 # generated code from the project
 [*.g.cs]
 generated_code = true
