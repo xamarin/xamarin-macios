@@ -4945,10 +4945,12 @@ namespace Registrar {
 
 			string wrapperName;
 			if (!signatures.TryGetValue (signature.ToString (), out wrapperName)) {
-				var name = "xamarin_pinvoke_wrapper_" + method.Name;
+				var methodName = method.Name.Replace ('<', '_').Replace ('>', '_').Replace ('|', '_');
+				var baseName = "xamarin_pinvoke_wrapper_" + methodName;
+				var name = baseName;
 				var counter = 0;
 				while (names.Contains (name)) {
-					name = "xamarin_pinvoke_wrapper_" + method.Name + (++counter).ToString ();
+					name = baseName + (++counter).ToString ();
 				}
 				names.Add (name);
 				signatures [signature.ToString ()] = wrapperName = name;
