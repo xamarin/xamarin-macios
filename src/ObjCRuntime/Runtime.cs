@@ -137,7 +137,7 @@ namespace ObjCRuntime {
 		internal enum InitializationFlags : int {
 			IsPartialStaticRegistrar= 0x01,
 			/* unused				= 0x02,*/
-			DynamicRegistrar		= 0x04,
+			/* unused				= 0x04,*/
 			/* unused				= 0x08,*/
 			IsSimulator				= 0x10,
 #if NET

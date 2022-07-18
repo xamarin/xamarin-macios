@@ -125,6 +125,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			NewNativeHandleTypeDefinition = modules.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
 
 			var nativeHandleOpImplicit = NewNativeHandleTypeDefinition.Resolve ().GetMethods ().First (m => m.FullName == "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+			ReplacePlatformAssemblyReference ();
 			ConstructorTransforms = new ConstructorTransforms (ModuleToEdit.ImportReference (NewNativeHandleTypeDefinition), ModuleToEdit.TypeSystem.Boolean, ModuleToEdit.ImportReference (nativeHandleOpImplicit), WarningIssued, Transformed);
 			NativeHandleGetHandleReference = NewNativeHandleTypeDefinition.Methods.First (m => m.Name == "get_Handle");
 
@@ -284,7 +285,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		public void Rework (Stream stm)
 		{
-			ReplacePlatformAssemblyReference ();
 			foreach (var type in ModuleToEdit.Types) {
 				ReworkType (type);
 			}
@@ -318,7 +318,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		{
 			for (int i = ModuleToEdit.AssemblyReferences.Count - 1; i >= 0; i--) {
 				if (IsXamarinReference (ModuleToEdit.AssemblyReferences [i])) {
-					ModuleToEdit.AssemblyReferences[i] = new AssemblyNameReference (Modules.MicrosoftModule.Assembly.Name.Name, Modules.MicrosoftModule.Assembly.Name.Version);
+					ModuleToEdit.AssemblyReferences [i] = AssemblyNameReference.Parse (Modules.MicrosoftModule.Assembly.ToString ());
 				}
 			}
 		}
