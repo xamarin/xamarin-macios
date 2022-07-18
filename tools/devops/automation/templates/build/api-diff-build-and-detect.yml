@@ -34,6 +34,7 @@ steps:
     gitHubToken: ${{ parameters.gitHubToken }}
     xqaCertPass: ${{ parameters.xqaCertPass }}
     enableDotnet: ${{ parameters.enableDotnet }}
+    makeParallelism: '4'
 
 # detect changes
 - bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/compare.sh
