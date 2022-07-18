@@ -296,8 +296,11 @@ function download_xcode_platforms ()
 		return
 	fi
 
-	if test -d /Library/Developer/CoreSimulator/Volumes/tvOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/"tvOS $TVOS_VERSION".simruntime; then
-		if test -d /Library/Developer/CoreSimulator/Volumes/watchOS_*/Library/Developer/CoreSimulator/Profiles/Runtimes/"watchOS $WATCHOS_VERSION".simruntime; then
+	TVOS_SIMULATOR_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :ProductBuildVersion' "$XCODE_DEVELOPER_ROOT"/Platforms/AppleTVSimulator.platform/version.plist)
+	WATCHOS_SIMULATOR_VERSION=$(/usr/libexec/PlistBuddy -c 'Print :ProductBuildVersion' "$XCODE_DEVELOPER_ROOT"/Platforms/WatchSimulator.platform/version.plist)
+
+	if test -d "/Library/Developer/CoreSimulator/Volumes/tvOS_$TVOS_SIMULATOR_VERSION/Library/Developer/CoreSimulator/Profiles/Runtimes/tvOS $TVOS_VERSION.simruntime"; then
+		if test -d "/Library/Developer/CoreSimulator/Volumes/watchOS_$WATCHOS_SIMULATOR_VERSION/Library/Developer/CoreSimulator/Profiles/Runtimes/watchOS $WATCHOS_VERSION.simruntime"; then
 			log "All the additional platforms have already been downloaded for this version of Xcode ($XCODE_VERSION)"
 			return
 		fi

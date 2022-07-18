@@ -1,9 +1,0 @@
-<Project>
-  <Target Name="ExtractMlaunch" BeforeTargets="Build" Condition="'$(TargetFrameworks)' == '' OR $(TargetFrameworks.EndsWith($(TargetFramework)))">
-    <Message Condition=" '$(MlaunchDestinationDir)' != '' " Text="Copying mlaunch to $(MlaunchDestinationDir)" />
-    <Copy Condition=" '$(MlaunchDestinationDir)' != '' "
-          SourceFiles="@(_MlaunchFiles)"
-          DestinationFiles="@(_MlaunchFiles->'$(MlaunchDestinationDir)\%(RecursiveDir)%(Filename)%(Extension)')"
-          SkipUnchangedFiles="true" />
-  </Target>
-</Project>

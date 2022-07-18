@@ -156,6 +156,8 @@ namespace CoreTelephony {
 
 	}
 
+	[Deprecated (PlatformName.MacCatalyst, 16, 0, message: Constants.UseCallKitInstead)]
+	[Deprecated (PlatformName.iOS, 16, 0, message: Constants.UseCallKitInstead)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface CTCarrier {
@@ -260,5 +262,9 @@ namespace CoreTelephony {
 		[Async]
 		[Export ("addPlanWith:completionHandler:")]
 		void AddPlan (CTCellularPlanProvisioningRequest request, Action<CTCellularPlanProvisioningAddPlanResult> completionHandler);
+
+		[iOS (16, 0)]
+		[Export ("supportsEmbeddedSIM")]
+		bool SupportsEmbeddedSim { get; }
 	}
 }
