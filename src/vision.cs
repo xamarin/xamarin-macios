@@ -76,8 +76,8 @@ namespace Vision {
 		CenterCrop = 0,
 		ScaleFit = 1,
 		ScaleFill = 2,
-		ScaleFitRotate90CCW = 256 + ScaleFit,
-		ScaleFillRotate90CCW = 256 + ScaleFill,
+		ScaleFitRotate90Ccw = 256 + ScaleFit,
+		ScaleFillRotate90Ccw = 256 + ScaleFill,
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1857,7 +1857,7 @@ namespace Vision {
 
 		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("transformForImageWidth:height:")]
-		CGAffineTransform TransformForImageWidth (nuint width, nuint height);
+		CGAffineTransform CreateTransform (nuint width, nuint height);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
