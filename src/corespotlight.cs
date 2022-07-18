@@ -1141,6 +1141,7 @@ namespace CoreSpotlight {
 
 	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (CSSearchQueryContext))]
+	[DisableDefaultCtor]
 	interface CSUserQueryContext
 	{
 		[Static]
@@ -1157,6 +1158,7 @@ namespace CoreSpotlight {
 
 	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (CSUserQueryContext))]
+	[DisableDefaultCtor]
 	interface CSTopHitQueryContext
 	{
 		[Static]
@@ -1183,6 +1185,7 @@ namespace CoreSpotlight {
 
 	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface CSSuggestion : NSSecureCoding, NSCopying
 	{
 
