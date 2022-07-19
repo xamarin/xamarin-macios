@@ -196,7 +196,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 			typeDef.CustomAttributes.Add (attr_Embedded);
 
 			// add [AttributeUsage(...)]
-			var attrUsageCtorReference = new MethodReference (".ctor", module.TypeSystem.Void, AttributeTargetsTypeReference);
+			module.ImportReference (AttributeUsageTypeReference);
+			var attrUsageCtorReference = new MethodReference (".ctor", module.TypeSystem.Void, AttributeUsageTypeReference);
 			attrUsageCtorReference.HasThis = true;
 			attrUsageCtorReference.Parameters.Add (new ParameterDefinition (AttributeTargetsTypeReference));
 			module.ImportReference (attrUsageCtorReference);
