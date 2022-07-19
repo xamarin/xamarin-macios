@@ -1,7 +1,0 @@
-!deprecated-attribute-missing! TVAppProfileDescriptor missing a [Deprecated] attribute
-!deprecated-attribute-missing! TVUserManager::currentUserIdentifier missing a [Deprecated] attribute
-!deprecated-attribute-missing! TVUserManager::presentProfilePreferencePanelWithCurrentSettings:availableProfiles:completion: missing a [Deprecated] attribute
-!deprecated-attribute-missing! TVUserManager::setUserIdentifiersForCurrentProfile: missing a [Deprecated] attribute
-!deprecated-attribute-missing! TVUserManager::shouldStorePreferenceForCurrentUserToProfile:completion: missing a [Deprecated] attribute
-!deprecated-attribute-missing! TVUserManager::userIdentifiersForCurrentProfile missing a [Deprecated] attribute
-!missing-selector! TVUserManager::shouldStorePreferencesForCurrentUser not bound
