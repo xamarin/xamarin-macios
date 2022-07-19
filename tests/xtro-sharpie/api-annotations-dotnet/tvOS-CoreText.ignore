@@ -1,0 +1,3 @@
+# bound in previous versions but removed in xcode 14
+!extra-enum-value! Managed value 1 for CTFontTableOptions.ExcludeSynthetic is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 10 for CTParagraphStyleSpecifier.LineSpacing is available for the current platform while the value in the native header is not
