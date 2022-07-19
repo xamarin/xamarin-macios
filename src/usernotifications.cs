@@ -518,7 +518,7 @@ namespace UserNotifications {
 		[Export ("relevanceScore")]
 		double RelevanceScore { get; set; }
 
-		[Watch (9,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[TV(16,0), Watch (9,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[NullAllowed, Export ("filterCriteria")]
 		string FilterCriteria { get; set; }
 	}
