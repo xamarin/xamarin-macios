@@ -302,7 +302,10 @@ namespace Extrospection {
 				Console.WriteLine ($"Sanity check failed ({count})");
 
 			// useful when updating stuff locally - we report but we don't fail
-			return Environment.GetEnvironmentVariable ("XTRO_SANITY_SKIP") == "1" ? 0 : count;
+			var sanitizedOrSkippedSanity =
+				!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XTRO_SANITY_SKIP"))
+				|| !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"));
+			return  sanitizedOrSkippedSanity ? 0 : count;
 		}
 	}
 }
