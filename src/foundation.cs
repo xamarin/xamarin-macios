@@ -10351,6 +10351,18 @@ namespace Foundation
 		[MacCatalyst (13, 0)]
 		[Export ("preferredPresentationStyle", ArgumentSemantic.Assign)]
 		UIPreferredPresentationStyle PreferredPresentationStyle { get; set; }
+
+		// extension methods from CloudKit
+
+		[Async]
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("registerCKShareWithContainer:allowedSharingOptions:preparationHandler:")]
+		void RegisterCKShare (CKContainer container, CKAllowedSharingOptions allowedOptions, CKSharePreparationHandler preparationHandler);
+
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("registerCKShare:container:allowedSharingOptions:")]
+		void RegisterCKShare (CKShare share, CKContainer container, CKAllowedSharingOptions allowedOptions);
+
 	}
     
 	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);

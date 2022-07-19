@@ -2076,18 +2076,4 @@ namespace CloudKit {
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	delegate void CKSharePreparationHandler ();
-
-	[Category]
-	[BaseType (typeof (NSItemProvider))]
-	interface NSItemProvider_CKSharingSupport
-	{
-		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-		[Async]
-		[Export ("registerCKShareWithContainer:allowedSharingOptions:preparationHandler:")]
-		void RegisterCKShare (CKContainer container, CKAllowedSharingOptions allowedOptions, CKSharePreparationHandler preparationHandler);
-
-		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-		[Export ("registerCKShare:container:allowedSharingOptions:")]
-		void RegisterCKShare (CKShare share, CKContainer container, CKAllowedSharingOptions allowedOptions);
-	}
 }
