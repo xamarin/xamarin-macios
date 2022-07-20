@@ -279,6 +279,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "BackgroundAssets", "BackgroundAssets", 13,0},
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
+					{ "ExtensionKit", "ExtensionKit", 13,0 },
 				};
 			}
 			return mac_frameworks;
