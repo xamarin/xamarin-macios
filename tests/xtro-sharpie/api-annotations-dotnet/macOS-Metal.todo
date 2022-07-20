@@ -27,7 +27,6 @@
 !missing-enum-value! MTLLanguageVersion native value MTLLanguageVersion3_0 = 196608 not bound
 !missing-enum-value! MTLRenderStages native value MTLRenderStageMesh = 16 not bound
 !missing-enum-value! MTLRenderStages native value MTLRenderStageObject = 8 not bound
-!missing-field! kMTLIOCompressionContextDefaultChunkSize not bound
 !missing-field! MTLIOErrorDomain not bound
 !missing-pinvoke! MTLIOCompressionContextAppendData is not bound
 !missing-pinvoke! MTLIOCreateCompressionContext is not bound
@@ -184,9 +183,7 @@
 !missing-selector! MTLMeshRenderPipelineDescriptor::setStencilAttachmentPixelFormat: not bound
 !missing-selector! MTLMeshRenderPipelineDescriptor::stencilAttachmentPixelFormat not bound
 !missing-selector! MTLRenderPipelineReflection::fragmentBindings not bound
-!missing-selector! MTLRenderPipelineReflection::meshArguments not bound
 !missing-selector! MTLRenderPipelineReflection::meshBindings not bound
-!missing-selector! MTLRenderPipelineReflection::objectArguments not bound
 !missing-selector! MTLRenderPipelineReflection::objectBindings not bound
 !missing-selector! MTLRenderPipelineReflection::tileBindings not bound
 !missing-selector! MTLRenderPipelineReflection::vertexBindings not bound
@@ -197,3 +194,6 @@
 !missing-type! MTLAccelerationStructurePassSampleBufferAttachmentDescriptorArray not bound
 !missing-type! MTLIOCommandQueueDescriptor not bound
 !missing-type! MTLMeshRenderPipelineDescriptor not bound
+!deprecated-attribute-missing! MTLRenderPipelineReflection::tileArguments missing a [Deprecated] attribute
+!missing-pinvoke! MTLIOCompressionContextDefaultChunkSize is not bound
+!missing-protocol-member! MTLResourceStateCommandEncoder::moveTextureMappingsFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin: not found

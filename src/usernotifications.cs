@@ -43,6 +43,7 @@ namespace UserNotifications {
 		NotificationInvalidNoContent,
 		ContentProvidingObjectNotAllowed = 1500,
 		ContentProvidingInvalid = 1501,
+		BadgeInputInvalid = 1600,
 	}
 
 	[iOS (10, 0)]
@@ -131,6 +132,10 @@ namespace UserNotifications {
 		[iOS (12, 0), TV(12,0), Watch (5,0)]
 		Provisional = (1 << 6),
 		[iOS (13,0)][TV (13,0)][Watch (6,0)]
+		[Deprecated (PlatformName.iOS, 15,0, message: "Announcement is always included.")]
+		[Deprecated (PlatformName.TvOS, 15,0, message: "Announcement is always included.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Announcement is always included.")]
+		[Deprecated (PlatformName.MacOSX, 15,0, message: "Announcement is always included.")]
 		Announcement = (1 << 7),
 		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0), Watch (8,0)]
 		TimeSensitive = (1 << 8),
@@ -437,6 +442,11 @@ namespace UserNotifications {
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("relevanceScore")]
 		double RelevanceScore { get; }
+
+		[Watch (9,0), NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("filterCriteria")]
+		[NullAllowed]
+		string FilterCriteria { get; }
 	}
 
 	[iOS (10, 0)]
@@ -507,6 +517,10 @@ namespace UserNotifications {
 		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0), Watch (8,0)]
 		[Export ("relevanceScore")]
 		double RelevanceScore { get; set; }
+
+		[TV(16,0), Watch (9,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[NullAllowed, Export ("filterCriteria")]
+		string FilterCriteria { get; set; }
 	}
 
 	[iOS (10, 0)]
@@ -882,6 +896,11 @@ namespace UserNotifications {
 		[Unavailable (PlatformName.TvOS)]
 		[Export ("removeAllDeliveredNotifications")]
 		void RemoveAllDeliveredNotifications ();
+
+		[Async]
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("setBadgeCount:withCompletionHandler:")]
+		void SetBadgeCount (nint newBadgeCount, [NullAllowed] Action<NSError> completionHandler);
 	}
 
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0), Watch (8,0)]

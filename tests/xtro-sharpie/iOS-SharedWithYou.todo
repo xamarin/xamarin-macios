@@ -78,3 +78,5 @@
 !missing-type! SWHighlightMembershipEvent not bound
 !missing-type! SWHighlightMentionEvent not bound
 !missing-type! SWHighlightPersistenceEvent not bound
+!missing-selector! SWCollaborationView::cloudSharingControllerDelegate not bound
+!missing-selector! SWCollaborationView::setCloudSharingControllerDelegate: not bound

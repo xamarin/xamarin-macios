@@ -173,6 +173,15 @@ namespace CoreText {
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFont.h
 	public enum CTFontTableOptions : uint {
 		None              = 0,
+#if NET
+		[UnsupportedOSPlatform ("tvos16.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos16.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
+#endif
 		ExcludeSynthetic  = (1 << 0),
 	}
 
