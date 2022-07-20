@@ -43,7 +43,6 @@
 !unknown-native-enum! VNStatefulRequestRevision bound
 !unknown-native-enum! VNDetectDocumentSegmentationRequestRevision bound
 !unknown-native-enum! VNGeneratePersonSegmentationRequestRevision bound
-!unknown-native-enum! VSUserAccountQueryOption bound
 
 ## VNRequest is an abstract class so this will be bound in subclasses
 ## matching the return type to the above defined custom enums 

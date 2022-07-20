@@ -668,14 +668,7 @@ namespace Vision {
 		Balanced,
 		Fast,
 	}
-
-	[TV (16,0), Mac (13,0), iOS (16,0), NoMacCatalyst (16,0)]
-	[Native]
-	enum VSUserAccountQueryOption : ulong {
-		None = 0,
-		AllDevices,
-	}
-  
+ 
 	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum VNPointsClassification : long
