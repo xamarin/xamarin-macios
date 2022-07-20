@@ -39,6 +39,7 @@ namespace Vision {
 	[TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	enum VNErrorCode : long {
+		TuriCore = -1,
 		Ok = 0,
 		RequestCancelled,
 		InvalidFormat,
@@ -59,6 +60,7 @@ namespace Vision {
 		DataUnavailable,
 		TimeStampNotFound,
 		UnsupportedRequest,
+		Timeout,
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -74,6 +76,10 @@ namespace Vision {
 		CenterCrop = 0,
 		ScaleFit = 1,
 		ScaleFill = 2,
+		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		ScaleFitRotate90Ccw = 256 + ScaleFit,
+		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		ScaleFillRotate90Ccw = 256 + ScaleFill,
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -669,6 +675,15 @@ namespace Vision {
 		None = 0,
 		AllDevices,
 	}
+  
+	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Native]
+	public enum VNPointsClassification : long
+	{
+		Disconnected = 0,
+		OpenPath,
+		ClosedPath,
+	}
 
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(VNDetectedObjectObservation))]
@@ -1088,6 +1103,10 @@ namespace Vision {
 		[BindAs (typeof (nfloat []))]
 		[NullAllowed, Export ("precisionEstimatesPerPoint")]
 		NSNumber [] PrecisionEstimatesPerPoint { get; }
+
+		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("pointsClassification")]
+		VNPointsClassification PointsClassification { get; }
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -1844,6 +1863,10 @@ namespace Vision {
 
 		[Export ("angle")]
 		nfloat Angle { get; }
+
+		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("transformForImageWidth:height:")]
+		CGAffineTransform CreateTransform (nuint width, nuint height);
 	}
 
 	[TV (11,0), Mac (10,13), iOS (11,0)]
@@ -2836,6 +2859,10 @@ namespace Vision {
 		[Static]
 		[Export ("currentRevision")]
 		VNRecognizeTextRequestRevision CurrentRevision { get; }
+
+		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("automaticallyDetectsLanguage")]
+		bool AutomaticallyDetectsLanguage { get; set; }
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0)]
@@ -3484,6 +3511,10 @@ namespace Vision {
 		[Static]
 		[Export ("currentRevision")]
 		VNGenerateOpticalFlowRequestRevision CurrentRevision { get; }
+
+		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("keepNetworkOutput")]
+		bool KeepNetworkOutput { get; set; }
 	}
 
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]

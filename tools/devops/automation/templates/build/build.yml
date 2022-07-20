@@ -27,6 +27,10 @@ parameters:
   type: stepList 
   default: []
 
+- name: makeParallelism
+  type: string
+  default: '8'
+
 steps:
 
 - template: ../common/checkout.yml
@@ -252,8 +256,12 @@ steps:
       MAKE_FLAGS="V=1 -w"
     fi
 
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8 $MAKE_FLAGS
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8 $MAKE_FLAGS
+    if test -z "$makeParallelism"; then
+      makeParallelism=8
+    fi
+
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS
   name: build
   displayName: 'Build'
   timeoutInMinutes: 300
