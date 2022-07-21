@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
+using System.Linq;
 
 namespace Microsoft.MaciOS.Nnyeah {
 	public class MethodTransformations {
@@ -446,12 +447,44 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 			allTransforms.Add (NewFuncXform ("System.TypeCode System.nfloat::GetTypeCode()", moduleToEdit, nfloatTypeRef, typeCodeRef, "GetTypeCode"));
 
+			var getConstantRef = GetGetConstantRef (modules.MicrosoftModule, moduleToEdit);
+
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_Video()", 0));
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_Audio()", 1));
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_Text()", 2));
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_ClosedCaption()", 3));
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_Subtitle()", 4));
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_Timecode()", 5));
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_TimedMetadata()", 6));
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_Muxed()", 7));
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_MetadataObject()", 8));
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_Metadata()", 9));
+			allTransforms.Add (AVMediaTypeTransform (getConstantRef, "Foundation.NSString AVFoundation.AVMediaType::get_DepthData()", 10));
+
 			transformTable = new Dictionary<string, Transformation> ();
 
 			foreach (var xform in allTransforms) {
 				transformTable.Add (xform.Operand, xform);
 			}
 			return transformTable;
+		}
+
+		static Transformation AVMediaTypeTransform (MethodReference getConstantRef, string oldSignature, int constant)
+		{
+			return new Transformation (oldSignature,
+				TransformationAction.Replace,
+				new List<Instruction> () {
+					Instruction.Create (OpCodes.Ldc_I4, constant),
+					Instruction.Create (OpCodes.Call, getConstantRef),
+				});
+		}
+
+		static MethodReference GetGetConstantRef (ModuleDefinition msModule, ModuleDefinition moduleToEdit)
+		{
+			var mediaTypesExtensionsDef = msModule.GetType ("AVFoundation.AVMediaTypesExtensions");
+			var avMediaTypesExtensionsRef = moduleToEdit.ImportReference (mediaTypesExtensionsDef);
+			var getConstantDef = mediaTypesExtensionsDef.Methods.FirstOrDefault (m => m.Name == "GetConstant");
+			return moduleToEdit.ImportReference (getConstantDef);
 		}
 
 		static Transformation NewOneParamCtorXform (string oldSignature, ModuleDefinition moduleToEdit, TypeReference owningType,
