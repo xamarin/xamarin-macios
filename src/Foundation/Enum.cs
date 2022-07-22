@@ -617,6 +617,7 @@ namespace Foundation  {
 		ItemReplacementDirectory = 99,
 		AllApplicationsDirectory = 100,
 		AllLibrariesDirectory = 101,
+		[NoTV, NoWatch]
 		TrashDirectory = 102,
 	}
 
@@ -749,6 +750,10 @@ namespace Foundation  {
 		MutableContainers = 1,
 		MutableLeaves = 2,
 		FragmentsAllowed = 4,
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		Json5Allowed = 8,
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		TopLevelDictionaryAssumed = 16,
 #if !NET
 		[Obsolete ("Use 'FragmentsAllowed. instead.")]
 		AllowFragments = FragmentsAllowed,
@@ -880,8 +885,12 @@ namespace Foundation  {
 		PreferFileIDResolution = 1 << 8,
 		MinimalBookmark = 1 << 9,
 		SuitableForBookmarkFile = 1 << 10,
+		[NoiOS, NoTV, NoWatch]
 		WithSecurityScope = 1 << 11,
-		SecurityScopeAllowOnlyReadAccess = 1 << 12
+		[NoiOS, NoTV, NoWatch]
+		SecurityScopeAllowOnlyReadAccess = 1 << 12,
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		CreationWithoutImplicitSecurityScope = 1 << 29,
 	}
 
 	[Flags]
@@ -889,7 +898,10 @@ namespace Foundation  {
 	public enum NSUrlBookmarkResolutionOptions : ulong {
 		WithoutUI = 1 << 8,
 		WithoutMounting = 1 << 9,
+		[NoiOS, NoTV, NoWatch]
 		WithSecurityScope = 1 << 10,
+		[Mac (12,0), iOS (15,0), TV (15,0), Watch (8,0), MacCatalyst (15,0)]
+		WithoutImplicitStartAccessing = 1 << 15,
 	}
 
 	[Native]
@@ -1305,7 +1317,9 @@ namespace Foundation  {
 	[Native]
 	public enum NSItemProviderRepresentationVisibility : long {
 		All = 0,
+		[NoMac]
 		Team = 1,
+		[NoiOS, NoTV, NoWatch]
 		Group = 2,
 		OwnProcess = 3,
 	}

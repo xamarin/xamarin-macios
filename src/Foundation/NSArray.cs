@@ -27,6 +27,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using CoreFoundation;
 using ObjCRuntime;
@@ -36,6 +37,8 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
+
+	public delegate bool NSOrderedCollectionDifferenceEquivalenceTest (NSObject first, NSObject second);
 
 	public partial class NSArray {
 
@@ -427,6 +430,39 @@ namespace Foundation {
 				return ret;
 			} catch {
 				return null;
+			}
+		}
+
+		static readonly NSOrderedCollectionDifferenceEquivalenceTestProxy static_DiffEquality = DiffEqualityHandler;
+
+		[MonoPInvokeCallback (typeof (NSOrderedCollectionDifferenceEquivalenceTestProxy))]
+		static bool DiffEqualityHandler (IntPtr block, IntPtr first, IntPtr second)
+		{
+			var callback = BlockLiteral.GetTarget<NSOrderedCollectionDifferenceEquivalenceTest> (block);
+			if (callback is not null) {
+				var nsFirst = Runtime.GetNSObject<NSObject> (first, false);
+				var nsSecond = Runtime.GetNSObject<NSObject> (second, false);
+				return callback (nsFirst, nsSecond);
+			}
+			return false;
+		}
+
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public NSOrderedCollectionDifference GetDifferenceFromArray (NSArray other, NSOrderedCollectionDifferenceCalculationOptions options, NSOrderedCollectionDifferenceEquivalenceTest equivalenceTest) 
+		{
+			if (equivalenceTest is null)
+				throw new ArgumentNullException (nameof (equivalenceTest));
+
+			var block = new BlockLiteral ();
+			block.SetupBlock (static_DiffEquality, equivalenceTest);
+			try {
+				return Runtime.GetNSObject<NSOrderedCollectionDifference> (_GetDifferenceFromArray (other, options, ref block));
+			} finally {
+				block.CleanupBlock ();
 			}
 		}
 	}

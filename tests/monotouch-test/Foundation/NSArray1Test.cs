@@ -16,6 +16,8 @@ using NUnit.Framework;
 
 using Foundation;
 
+#nullable enable
+
 namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
@@ -92,6 +94,29 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.IsNull (arr [1], "NSArray null indexer");
 				Assert.AreSame (str3, arr [2], "NSArray indexer");
 			}
+		}
+
+		[Test]
+		public void GetDifferenceFromArrayTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			using var str1 = (NSString) "1";
+			using var str2 = (NSString) "1";
+			using var str3 = (NSString) "1";
+			
+			using var array1 = NSArray.FromObjects (str1, str2);
+			using var array2 = NSArray.FromObjects (str1, str3);
+			NSOrderedCollectionDifference? diff = null;
+			Assert.DoesNotThrow (() => {
+				diff = array1.GetDifferenceFromArray (array2,
+					NSOrderedCollectionDifferenceCalculationOptions.OmitInsertedObjects,
+					(first, second) => {
+						var firstStr = (NSString) first;
+						var secondStr = (NSString) second;
+						return first.ToString ().Equals (second.ToString ());
+					});
+			}, "Not throws");
+			Assert.NotNull (diff, "Not null");
 		}
 	}
 }
