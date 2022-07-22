@@ -10385,11 +10385,13 @@ namespace Foundation
 
 		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("loadFileRepresentationForContentType:openInPlace:completionHandler:")]
-		NSProgress LoadFileRepresentation (UTType contentType, bool openInPlace, ItemProviderDataCompletionHandler completionHandler);
+		NSProgress LoadFileRepresentation (UTType contentType, bool openInPlace, LoadFileRepresentationHandler completionHandler);
 	}
     
 	[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	delegate NSProgress NSItemProviderUTTypeLoadDelegate ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
+	[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	delegate void LoadFileRepresentationHandler (NSUrl fileUrl, bool openInPlace, NSError error);
 	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
 	delegate void RegisterFileRepresentationCompletionHandler (NSUrl fileUrl, bool coordinated, NSError error);
 	delegate void ItemProviderDataCompletionHandler (NSData data, NSError error);
