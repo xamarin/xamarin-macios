@@ -2417,11 +2417,7 @@ public partial class Generator : IMemberGatherer {
 		print (m, "namespace {0} {{", ns.ObjCRuntime);
 		print (m, "\tstatic partial class Messaging {");
 
-		print (m, "#if __MACOS__ && NET");
 		print (m, "\t\tinternal const string LIBOBJC_DYLIB = \"/usr/lib/libobjc.dylib\";\n");
-		print (m, "#else");
-		print (m, "\t\tinternal const string LIBOBJC_DYLIB = \"/usr/lib/libobjc.A.dylib\";\n");
-		print (m, "#endif");
 		if (BindThirdPartyLibrary){
 			print (m, "\t\tstatic internal System.Reflection.Assembly this_assembly = typeof (Messaging).Assembly;\n");
 			// IntPtr_objc_msgSend[Super]: for init
@@ -6764,7 +6760,7 @@ public partial class Generator : IMemberGatherer {
 				} else {
 					library_name = Path.GetFileNameWithoutExtension (library_name);
 				}
-				if (library_name.Contains ("."))
+				if (library_name.Contains ('.'))
 					library_name = library_name.Replace (".", string.Empty);
 			}
 		} else if (BindThirdPartyLibrary) {

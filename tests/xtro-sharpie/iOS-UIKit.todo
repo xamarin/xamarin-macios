@@ -433,3 +433,6 @@
 !missing-selector! UIWindowSceneGeometryPreferencesMac::systemFrame not bound
 !missing-type! UIWindowSceneGeometryPreferencesIOS not bound
 !missing-type! UIWindowSceneGeometryPreferencesMac not bound
+!missing-protocol-member! UIContentView::supportsConfiguration: not found
+!missing-selector! UIView::anchorPoint not bound
+!missing-selector! UIView::setAnchorPoint: not bound

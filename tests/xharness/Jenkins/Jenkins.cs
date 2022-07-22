@@ -25,6 +25,7 @@ namespace Xharness.Jenkins {
 		readonly TestVariationsFactory testVariationsFactory;
 		public JenkinsDeviceLoader DeviceLoader { get; private set; }
 		readonly ResourceManager resourceManager;
+		readonly DateTime startTimeUtc = DateTime.UtcNow;
 
 		// report writers, do need to be a class instance because the have state.
 		readonly HtmlReportWriter xamarinStorageHtmlReportWriter;
@@ -287,6 +288,31 @@ namespace Xharness.Jenkins {
 				MainLog.WriteLine ("Unexpected exception: {0}", ex);
 				Console.WriteLine ("Unexpected exception: {0}", ex);
 				return 2;
+			} finally {
+				CollectCrashReports ();
+			}
+		}
+
+		// Collect any crash reports that were created during the test run
+		void CollectCrashReports ()
+		{
+			try {
+				var dir = Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports");
+				var reports = Directory.GetFiles (dir).Select (v => {
+					(string Path, DateTime LastWriteTimeUtc) rv = (v, File.GetLastWriteTimeUtc (v));
+					return rv;
+				}).ToArray ();
+				MainLog.WriteLine ($"Found {reports.Length} crash reports in {dir} (the ones marked with 'x' occurred during this test run):");
+				foreach (var report in reports.OrderBy (v => v)) {
+					MainLog.WriteLine ($"  {(report.LastWriteTimeUtc > startTimeUtc ? "x" : " ")}  {report.LastWriteTimeUtc.ToString ("u")} {report.Path}");
+				}
+				var targetDir = Path.Combine (LogDirectory, "DiagnosticReports");
+				Directory.CreateDirectory (targetDir);
+				foreach (var report in reports.Where (v => v.LastWriteTimeUtc >= startTimeUtc)) {
+					File.Copy (report.Path, Path.Combine (targetDir, Path.GetFileName (report.Path)));
+				}
+			} catch (Exception e) {
+				MainLog.WriteLine ($"Failed to collect crash reports: {e}");
 			}
 		}
 

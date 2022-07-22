@@ -781,7 +781,11 @@ namespace Xamarin.Bundler {
 #if !NET
 				sw.WriteLine ("\tmono_ee_interp_init (NULL);");
 #endif
-				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
+				if ((abi & Abi.x86_64) == Abi.x86_64) {
+					sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP_ONLY);");
+				} else {
+					sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
+				}
 			} else if (app.IsDeviceBuild) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 			} else if (app.Platform == ApplePlatform.MacCatalyst && ((abi & Abi.ARM64) == Abi.ARM64)) {

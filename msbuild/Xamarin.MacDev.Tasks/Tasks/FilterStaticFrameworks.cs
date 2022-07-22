@@ -32,6 +32,8 @@ namespace Xamarin.MacDev.Tasks {
 					// Copy all the files from the framework to the mac (copying only the executable won't work if it's just a symlink to elsewhere)
 					if (File.Exists (fw))
 						fw = Path.GetDirectoryName (fw);
+					if (!Directory.Exists (fw))
+						continue;
 					foreach (var file in Directory.EnumerateFiles (fw, "*.*", SearchOption.AllDirectories)) {
 						yield return new TaskItem (file);
 					}

@@ -21,7 +21,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void OpenClose_libSystem ()
 		{
-			IntPtr handle = Dlfcn.dlopen ("/usr/lib/libSystem.B.dylib", 0);
+			IntPtr handle = Dlfcn.dlopen ("/usr/lib/libSystem.dylib", 0);
 			Assert.That (handle, Is.Not.EqualTo (IntPtr.Zero), "dlopen");
 			var err = Dlfcn.dlclose (handle);
 			var expected = 0;
