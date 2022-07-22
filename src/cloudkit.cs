@@ -2042,6 +2042,7 @@ namespace CloudKit {
 
 	[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface CKAllowedSharingOptions : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithAllowedParticipantPermissionOptions:allowedParticipantAccessOptions:")]
@@ -2068,12 +2069,9 @@ namespace CloudKit {
 		NativeHandle Constructor (CKContainer container);
 
 		[NullAllowed, Export ("systemSharingUIDidSaveShareBlock", ArgumentSemantic.Copy)]
-		Action<CKRecordID, CKShare, NSError> SystemSharingUIDidSaveShareBlock { get; set; }
+		Action<CKRecordID, CKShare, NSError> SystemSharingUIDidSaveShareHandler { get; set; }
 
 		[NullAllowed, Export ("systemSharingUIDidStopSharingBlock", ArgumentSemantic.Copy)]
-		Action<CKRecordID, NSError> SystemSharingUIDidStopSharingBlock { get; set; }
+		Action<CKRecordID, NSError> SystemSharingUIDidStopSharingHandler { get; set; }
 	}
-
-	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	delegate void CKSharePreparationHandler ();
 }

@@ -270,6 +270,6 @@ namespace CloudKit
 	{
 		ReadOnly = 1uL << 0,
 		ReadWrite = 1uL << 1,
-		Any = ReadOnly | ReadWrite
+		Any = ReadOnly | ReadWrite,
 	}
 }
