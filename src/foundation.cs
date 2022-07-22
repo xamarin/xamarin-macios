@@ -37,6 +37,7 @@ using CoreData;
 using CoreFoundation;
 using Foundation;
 using CoreGraphics;
+using UniformTypeIdentifiers;
 #if HAS_APPCLIP
 using AppClip;
 #endif
@@ -10362,8 +10363,43 @@ namespace Foundation
 		[Export ("registerCKShare:container:allowedSharingOptions:")]
 		void RegisterCKShare (CKShare share, CKContainer container, CKAllowedSharingOptions allowedOptions);
 
+		// from interface UTType (NSItemProvider)
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("initWithContentsOfURL:contentType:openInPlace:coordinated:visibility:")]
+		NativeHandle Constructor (NSUrl fileUrl, [NullAllowed] UTType contentType, bool openInPlace, bool coordinated, NSItemProviderRepresentationVisibility visibility);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("registerDataRepresentationForContentType:visibility:loadHandler:")]
+		void RegisterDataRepresentation (UTType contentType, NSItemProviderRepresentationVisibility visibility, NSItemProviderUTTypeLoadDelegate loadHandler);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("registerFileRepresentationForContentType:visibility:openInPlace:loadHandler:")]
+		void RegisterFileRepresentation (UTType contentType, NSItemProviderRepresentationVisibility visibility, bool openInPlace, NSItemProviderUTTypeLoadDelegate loadHandler);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("registeredContentTypes", ArgumentSemantic.Copy)]
+		UTType[] RegisteredContentTypes { get; }
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("registeredContentTypesForOpenInPlace", ArgumentSemantic.Copy)]
+		UTType[] RegisteredContentTypesForOpenInPlace { get; }
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("registeredContentTypesConformingToContentType:")]
+		UTType[] RegisteredContentTypesConforming (UTType contentType);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("loadDataRepresentationForContentType:completionHandler:")]
+		NSProgress LoadDataRepresentation (UTType contentType, ItemProviderDataCompletionHandler completionHandler);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("loadFileRepresentationForContentType:openInPlace:completionHandler:")]
+		NSProgress LoadFileRepresentation (UTType contentType, bool openInPlace, ItemProviderDataCompletionHandler completionHandler);
 	}
     
+	[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	delegate NSProgress NSItemProviderUTTypeLoadDelegate ([BlockCallback] ItemProviderDataCompletionHandler completionHandler);
 	delegate NSProgress RegisterFileRepresentationLoadHandler ([BlockCallback] RegisterFileRepresentationCompletionHandler completionHandler);
 	delegate void RegisterFileRepresentationCompletionHandler (NSUrl fileUrl, bool coordinated, NSError error);
 	delegate void ItemProviderDataCompletionHandler (NSData data, NSError error);
