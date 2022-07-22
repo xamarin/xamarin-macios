@@ -1,0 +1,4 @@
+## https://github.com/xamarin/xamarin-macios/issues/15526
+!missing-selector! WKWebView::findInteraction not bound
+!missing-selector! WKWebView::isFindInteractionEnabled not bound
+!missing-selector! WKWebView::setFindInteractionEnabled: not bound
