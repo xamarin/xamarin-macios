@@ -64,7 +64,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 			if (CreateReworker (map) is Reworker reworker) {
 				reworker.WarningIssued += (_, e) => warnings.Add (e.HelpfulMessage ());
-				reworker.Transformed += (_, e) => warnings.Add (e.HelpfulMessage ());
+				reworker.Transformed += (_, e) => transforms.Add (e.HelpfulMessage ());
 
 				try {
 					using var ostm = new FileStream (Outfile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);

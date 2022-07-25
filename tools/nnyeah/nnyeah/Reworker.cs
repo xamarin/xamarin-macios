@@ -118,10 +118,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 			if (!ModuleToEdit.TryGetTypeReference ("System.nfloat", out NfloatTypeReference)) {
 				NfloatTypeReference = EmptyTypeReference;
-				NewNfloatTypeReference = EmptyTypeReference;
-			} else {
-				NewNfloatTypeReference = ModuleToEdit.ImportReference (new TypeReference ("System.Runtime.InteropServices", "NFloat", null, InteropServicesAssembly, true));
 			}
+			NewNfloatTypeReference = ModuleToEdit.ImportReference (new TypeReference ("System.Runtime.InteropServices", "NFloat", null, InteropServicesAssembly, true));
 			NewNativeHandleTypeDefinition = modules.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
 
 			var nativeHandleOpImplicit = NewNativeHandleTypeDefinition.Resolve ().GetMethods ().First (m => m.FullName == "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
@@ -198,7 +196,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 			typeDef.CustomAttributes.Add (attr_Embedded);
 
 			// add [AttributeUsage(...)]
-			var attrUsageCtorReference = new MethodReference (".ctor", module.TypeSystem.Void, AttributeTargetsTypeReference);
+			module.ImportReference (AttributeUsageTypeReference);
+			var attrUsageCtorReference = new MethodReference (".ctor", module.TypeSystem.Void, AttributeUsageTypeReference);
 			attrUsageCtorReference.HasThis = true;
 			attrUsageCtorReference.Parameters.Add (new ParameterDefinition (AttributeTargetsTypeReference));
 			module.ImportReference (attrUsageCtorReference);
@@ -270,7 +269,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		Dictionary<string, Transformation> LoadMethodSubs ()
 		{
 			var methodSubSource = new MethodTransformations ();
-			var subs = methodSubSource.GetTransforms (Modules, NativeIntAttribute);
+			var subs = methodSubSource.GetTransforms (Modules, NativeIntAttribute, NewNfloatTypeReference);
 
 			return subs;
 		}
