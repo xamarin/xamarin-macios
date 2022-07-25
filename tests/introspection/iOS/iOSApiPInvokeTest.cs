@@ -96,7 +96,6 @@ namespace Introspection {
 				let attr = type.GetCustomAttribute<MonoNativeFunctionWrapperAttribute> () where attr != null
 				select type;
 
-			var failed_api = new List<string> ();
 			Errors = 0;
 			int c = 0, n = 0;
 			foreach (var t in nativeDelegates) {
@@ -109,13 +108,12 @@ namespace Introspection {
 				}
 				n++;
 			}
-			Assert.AreEqual (0, Errors, "{0} errors found in {1} native delegate validated: {2}", Errors, n, string.Join (", ", failed_api));
+			AssertIfErrors ("{0} errors found in {1} native delegate validated", Errors, n);
 		}
 
 		[Test]
 		public void MonoPInvokeCallback ()
 		{
-			var failed_api = new List<string> ();
 			Errors = 0;
 			int c = 0, n = 0;
 			foreach (var type in Assembly.GetTypes ()) {
@@ -142,7 +140,7 @@ namespace Introspection {
 					n++;
 				}
 			}
-			Assert.AreEqual (0, Errors, "{0} errors found in {1} native delegate validated: {2}", Errors, n, string.Join (", ", failed_api));
+			AssertIfErrors ("{0} errors found in {1} native delegate validated", Errors, n);
 		}
 	}
 }
