@@ -90,11 +90,19 @@ namespace Xamarin.MacDev.Tasks {
 			File.WriteAllText (projectPath, csproj);
 
 			var arguments = new List<string> ();
-			if (IsDotNet) {
+			var environment = default (Dictionary<string, string>);
+
+			if (IsDotNet) {				
 				executable = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
 				if (string.IsNullOrEmpty (executable))
 					executable = "dotnet";
 				arguments.Add ("build");
+
+				var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
+
+				if (!string.IsNullOrEmpty (customHome)) {
+					environment = new Dictionary<string, string> { { "HOME", customHome } };
+				}
 			} else {
 				executable = "/Library/Frameworks/Mono.framework/Commands/msbuild";
 			}
@@ -108,7 +116,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			arguments.Add (projectPath);
 
-			ExecuteAsync (executable, arguments).Wait ();
+			ExecuteAsync (executable, arguments, environment: environment).Wait ();
 			var computedPropertes = File.ReadAllLines (outputFile);
 			foreach (var line in computedPropertes) {
 				var property = line.Substring (0, line.IndexOf ('='));
