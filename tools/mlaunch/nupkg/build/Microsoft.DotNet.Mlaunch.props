@@ -1,7 +1,0 @@
-<Project TreatAsLocalProperty="TaskFolder;TaskAssembly">
-
-  <ItemGroup>
-    <_MlaunchFiles Include="$(MSBuildThisFileDirectory)\..\mlaunch\**\*.*" />
-  </ItemGroup>
-
-</Project>

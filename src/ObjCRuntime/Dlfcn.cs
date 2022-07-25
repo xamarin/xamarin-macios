@@ -80,6 +80,18 @@ namespace ObjCRuntime {
 			MainOnly = -5
 		}
 
+		[Flags]
+		public enum Mode : int {
+			None = 0x0,
+			Lazy = 0x1,
+			Now = 0x2,
+			Local = 0x4,
+			Global = 0x8,
+			NoLoad = 0x10,
+			NoDelete = 0x80,
+			First = 0x100,
+		}
+
 #if MONOMAC
 		[DllImport (Constants.libcLibrary)]
 		internal static extern int dladdr (IntPtr addr, out Dl_info info);
@@ -97,11 +109,16 @@ namespace ObjCRuntime {
 		public static extern int dlclose (IntPtr handle);
 
 		[DllImport (Constants.libSystemLibrary, EntryPoint="dlopen")]
-		internal static extern IntPtr _dlopen (string? path, int mode /* this is int32, not nint */);
+		internal static extern IntPtr _dlopen (string? path, Mode mode /* this is int32, not nint */);
 
 		public static IntPtr dlopen (string? path, int mode)
 		{
 			return dlopen (path, mode, showWarning: true);
+		}
+
+		public static IntPtr dlopen (string? path, Mode mode)
+		{
+			return _dlopen (path, mode);
 		}
 
 		static bool warningShown;
@@ -115,7 +132,7 @@ namespace ObjCRuntime {
 
 		internal static IntPtr dlopen (string? path, int mode, bool showWarning)
 		{
-			var x = _dlopen (path, mode);
+			var x = _dlopen (path, (Mode) mode);
 			if (x != IntPtr.Zero)
 				return x;
 

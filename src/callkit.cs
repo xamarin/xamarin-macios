@@ -345,7 +345,7 @@ namespace CallKit {
 		void CallChanged (CXCallObserver callObserver, CXCall call);
 	}
 
-	[iOS (10, 0), NoMac]
+	[iOS (10, 0), NoMac, Watch (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface CXCallObserver {
 
@@ -462,7 +462,7 @@ namespace CallKit {
 		void DidDeactivateAudioSession (CXProvider provider, AVAudioSession audioSession);
 	}
 
-	[iOS (10, 0)] [NoMac]
+	[iOS (10, 0)] [NoMac] [Watch (9,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CXProvider {
