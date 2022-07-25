@@ -26,7 +26,7 @@ $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mla
 	$(Q) mkdir -p $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/
 	$(Q) $(CP) -R $(TOP)/packages/microsoft.tools.mlaunch/$(MLAUNCH_NUGET_VERSION)/mlaunch/bin/mlaunch $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/
 	$(Q) $(CP) -R $(TOP)/packages/microsoft.tools.mlaunch/$(MLAUNCH_NUGET_VERSION)/mlaunch/lib/mlaunch $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/
-	$(Q) chmod ugo+x $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch
+	$(Q) chmod a+x $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin/mlaunch
 
 define DotNetInstall
 $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/bin/mlaunch: $$(DOWNLOAD_STAMP_FILE)
@@ -36,7 +36,7 @@ $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/bin/mlaunch: $$(DOWNLOAD_STAMP_FILE)
 	$$(Q) mkdir -p $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/lib
 	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.mlaunch/$$(MLAUNCH_NUGET_VERSION)/mlaunch/bin/mlaunch $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/bin/mlaunch
 	$$(Q) $$(CP) -R $(TOP)/packages/microsoft.tools.mlaunch/$$(MLAUNCH_NUGET_VERSION)/mlaunch/lib/mlaunch $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/lib
-	$$(Q) chmod ugo+x $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/bin/mlaunch
+	$$(Q) chmod a+x $$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/tools/bin/mlaunch
 endef
 
 $(foreach platform,$(DOTNET_PLATFORMS_MOBILE),$(eval $(call DotNetInstall,$(platform))))
