@@ -113,6 +113,12 @@ namespace HealthKit
 		Asleep,
 		[Watch (3,0), iOS (10,0)]
 		Awake,
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		AsleepCore = 3,
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		AsleepDeep = 4,
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		AsleepREM = 5,
 	}
 
 	// NSUInteger -> HKQuery.h
@@ -277,6 +283,10 @@ namespace HealthKit
 		Pickleball = 79,
 		[iOS (14,0)][Watch (7,0)]
 		Cooldown = 80,
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		SwimBikeRun = 82,
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		Transition = 83,
 		[iOS (8,2)]
 		Other = 3000
 	}
@@ -435,6 +445,8 @@ namespace HealthKit
 		Backstroke,
 		Breaststroke,
 		Butterfly,
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		Kickboard = 6,
 	}
 
 	[Watch (4, 0), iOS (11, 0)]
@@ -611,5 +623,50 @@ namespace HealthKit
 		R4,
 		[Field ("HKFHIRReleaseUnknown")]
 		Unknown,
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[Native]
+	public enum HKHeartRateRecoveryTestType : long
+	{
+		MaxExercise = 1,
+		PredictionSubMaxExercise,
+		PredictionNonExercise,
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[Native]
+	public enum HKPrismBase : long
+	{
+		None = 0,
+		Up,
+		Down,
+		In,
+		Out,
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[Native]
+	public enum HKUserMotionContext : long
+	{
+		NotSet = 0,
+		Stationary,
+		Active,
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[Native]
+	public enum HKVisionEye : long
+	{
+		Left = 1,
+		Right,
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[Native]
+	public enum HKVisionPrescriptionType : ulong
+	{
+		Glasses = 1,
+		Contacts,
 	}
 }

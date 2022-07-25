@@ -16,6 +16,7 @@ using Foundation;
 using System;
 using System.ComponentModel;
 using CoreLocation;
+using UniformTypeIdentifiers;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -342,6 +343,58 @@ namespace HealthKit {
 		[Watch (7, 0), iOS (14, 0)]
 		[Field ("HKPredicateKeyPathECGSymptomsStatus")]
 		NSString EcgSymptomsStatus { get; }
+		
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutActivityType")]
+		NSString WorkoutActivityType { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutActivityDuration")]
+		NSString WorkoutActivityDuration { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutActivityStartDate")]
+		NSString WorkoutActivityStartDate { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutActivityEndDate")]
+		NSString WorkoutActivityEndDate { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutActivitySumQuantity")]
+		NSString WorkoutActivitySumQuantity { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutActivityMinimumQuantity")]
+		NSString WorkoutActivityMinimumQuantity { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutActivityMaximumQuantity")]
+		NSString WorkoutActivityMaximumQuantity { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutActivityAverageQuantity")]
+		NSString WorkoutActivityAverageQuantity { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutSumQuantity")]
+		NSString WorkoutSumQuantity { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutMinimumQuantity")]
+		NSString WorkoutMinimumQuantity { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutMaximumQuantity")]
+		NSString WorkoutMaximumQuantity { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutAverageQuantity")]
+		NSString WorkoutAverageQuantity { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKPredicateKeyPathWorkoutActivity")]
+		NSString WorkoutActivity { get; }
 	}
 
 	[NoWatch] // headers says it's available but it's only usable from another, unavailable, type
@@ -1053,6 +1106,46 @@ namespace HealthKit {
 		[Watch (8, 0), iOS (15, 0)]
 		[Field ("HKMetadataKeyAlgorithmVersion")]
 		NSString AlgorithmVersion { get; }
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
+		[Field ("HKMetadataKeySWOLFScore")]
+		NSString SWOLFScore { get; }
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
+		[Field ("HKMetadataKeyQuantityClampedToLowerBound")]
+		NSString QuantityClampedToLowerBound { get; }
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
+		[Field ("HKMetadataKeyQuantityClampedToUpperBound")]
+		NSString QuantityClampedToUpperBound { get; }
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
+		[Field ("HKMetadataKeyGlassesPrescriptionDescription")]
+		NSString GlassesPrescriptionDescription { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKMetadataKeyHeartRateRecoveryTestType")]
+		NSString HeartRateRecoveryTestType { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKMetadataKeyHeartRateRecoveryActivityType")]
+		NSString HeartRateRecoveryActivityType { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKMetadataKeyHeartRateRecoveryActivityDuration")]
+		NSString HeartRateRecoveryActivityDuration { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKMetadataKeyHeartRateRecoveryMaxObservedRecoveryHeartRate")]
+		NSString HeartRateRecoveryMaxObservedRecoveryHeartRate { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKMetadataKeySessionEstimate")]
+		NSString SessionEstimate { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKMetadataKeyUserMotionContext")]
+		NSString UserMotionContext { get; }
 	}
 
 	[Watch (2,0)]
@@ -1184,6 +1277,11 @@ namespace HealthKit {
 		[Static]
 		[Export ("electrocardiogramType")]
 		HKElectrocardiogramType ElectrocardiogramType { get; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Static]
+		[Export ("visionPrescriptionType")]
+		HKPrescriptionType VisionPrescriptionType { get; }
 	}
 
 	[Watch (7, 0), iOS (14, 0)]
@@ -1506,6 +1604,51 @@ namespace HealthKit {
 		[Static]
 		[Export ("predicateForVerifiableClinicalRecordsWithRelevantDateWithinDateInterval:")]
 		NSPredicate GetPredicateForVerifiableClinicalRecords (NSDateInterval dateInterval);
+	
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Static]
+		[Export ("predicateForCategorySamplesEqualToValues:")]
+		NSPredicate GetPredicate (NSSet<NSNumber> values);
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("predicateForWorkoutActivitiesWithWorkoutActivityType:")]
+		NSPredicate GetPredicate (HKWorkoutActivityType workoutActivityType);
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("predicateForWorkoutActivitiesWithOperatorType:duration:")]
+		NSPredicate GetPredicate (NSPredicateOperatorType operatorType, double duration);
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("predicateForWorkoutActivitiesWithStartDate:endDate:options:")]
+		NSPredicate GetPredicate ([NullAllowed] NSDate startDate, [NullAllowed] NSDate endDate, HKQueryOptions options);
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("predicateForWorkoutActivitiesWithOperatorType:quantityType:sumQuantity:")]
+		NSPredicate GetPredicate (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity sumQuantity);
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("predicateForWorkoutActivitiesWithOperatorType:quantityType:minimumQuantity:")]
+		NSPredicate GetPredicate (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity minimumQuantity);
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("predicateForWorkoutActivitiesWithOperatorType:quantityType:maximumQuantity:")]
+		NSPredicate GetPredicate (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity maximumQuantity);
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("predicateForWorkoutActivitiesWithOperatorType:quantityType:averageQuantity:")]
+		NSPredicate GetPredicate (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity averageQuantity);
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("predicateForWorkoutsWithActivityPredicate:")]
+		NSPredicate PredicateForWorkoutsWithActivityPredicate (NSPredicate activityPredicate);
 	}
 
 	[Watch (2,0)]
@@ -2046,6 +2189,30 @@ namespace HealthKit {
 		[Watch (8, 0), iOS (15, 0)]
 		[Field ("HKQuantityTypeIdentifierNumberOfAlcoholicBeverages")]
 		NumberOfAlcoholicBeverages,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKQuantityTypeIdentifierHeartRateRecoveryOneMinute")]
+		HeartRateRecoveryOneMinute,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKQuantityTypeIdentifierRunningGroundContactTime")]
+		RunningGroundContactTime,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKQuantityTypeIdentifierRunningStrideLength")]
+		RunningStrideLength,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKQuantityTypeIdentifierRunningVerticalOscillation")]
+		RunningVerticalOscillation,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKQuantityTypeIdentifierRunningPower")]
+		RunningPower,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[Field ("HKQuantityTypeIdentifierRunningSpeed")]
+		RunningSpeed,
 	}
 
 	[Watch (2,0)]
@@ -2643,6 +2810,26 @@ namespace HealthKit {
 		[Static]
 		[Export ("voltUnit")]
 		HKUnit Volt { get; }
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("diopterUnit")]
+		HKUnit DiopterUnit ();
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("prismDiopterUnit")]
+		HKUnit PrismDiopterUnit ();
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("wattUnitWithMetricPrefix:")]
+		HKUnit WattUnitWithMetricPrefix (HKMetricPrefix prefix);
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Static]
+		[Export ("wattUnit")]
+		HKUnit WattUnit ();
 	}
 
 	[Watch (2,0)]
@@ -2659,12 +2846,15 @@ namespace HealthKit {
 		[Export ("duration", ArgumentSemantic.UnsafeUnretained)]
 		double Duration { get; }
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
 		[NullAllowed, Export ("totalEnergyBurned", ArgumentSemantic.Retain)]
 		HKQuantity TotalEnergyBurned { get; }
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
 		[NullAllowed, Export ("totalDistance", ArgumentSemantic.Retain)]
 		HKQuantity TotalDistance { get; }
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
 		[Watch (3,0), iOS (10,0)]
 		[NullAllowed, Export ("totalSwimmingStrokeCount", ArgumentSemantic.Strong)]
 		HKQuantity TotalSwimmingStrokeCount { get; }
@@ -2746,6 +2936,7 @@ namespace HealthKit {
 		[Field ("HKWorkoutSortIdentifierTotalFlightsClimbed")]
 		NSString SortIdentifierTotalFlightsClimbed { get; }
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
 		[Watch (4, 0), iOS (11, 0)]
 		[NullAllowed, Export ("totalFlightsClimbed", ArgumentSemantic.Strong)]
 		HKQuantity TotalFlightsClimbed { get; }
@@ -3115,11 +3306,22 @@ namespace HealthKit {
 		[Export ("appleMoveTimeGoal", ArgumentSemantic.Strong)]
 		HKQuantity AppleMoveTimeGoal { get; set; }
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Mac (13,0)]
 		[Export ("appleExerciseTimeGoal", ArgumentSemantic.Strong)]
 		HKQuantity AppleExerciseTimeGoal { get; set; }
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
 		[Export ("appleStandHoursGoal", ArgumentSemantic.Strong)]
 		HKQuantity AppleStandHoursGoal { get; set; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[NullAllowed, Export ("exerciseTimeGoal", ArgumentSemantic.Strong)]
+		HKQuantity ExerciseTimeGoal { get; set; }
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
+		[NullAllowed, Export ("standHoursGoal", ArgumentSemantic.Strong)]
+		HKQuantity StandHoursGoal { get; set; }
 	}
 
 	[iOS (9,3), Watch (2,2)]
@@ -3228,7 +3430,6 @@ namespace HealthKit {
 	[BaseType (typeof(HKQuery))]
 	interface HKWorkoutRouteQuery {
 		[Export ("initWithRoute:dataHandler:")]
-		[DesignatedInitializer]
 		NativeHandle Constructor (HKWorkoutRoute workoutRoute, HKWorkoutRouteBuilderDataHandler dataHandler);
 	}
 
@@ -3635,7 +3836,7 @@ namespace HealthKit {
 	[Watch (7,0), iOS (14,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HKElectrocardiogramVoltageMeasurement
+	interface HKElectrocardiogramVoltageMeasurement : NSCopying
 	{
 		[Export ("timeSinceSampleStart")]
 		double TimeSinceSampleStart { get; }
@@ -3797,4 +3998,232 @@ namespace HealthKit {
 		NSDateComponents DateOfBirthComponents { get; }
 	}
 
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface HKAttachment : NSSecureCoding, NSCopying
+	{
+		[Export ("identifier", ArgumentSemantic.Copy)]
+		NSUuid Identifier { get; }
+
+		[Export ("name")]
+		string Name { get; }
+
+		[Export ("contentType", ArgumentSemantic.Copy)]
+		UTType ContentType { get; }
+
+		[Export ("size")]
+		nint Size { get; }
+
+		[Export ("creationDate", ArgumentSemantic.Copy)]
+		NSDate CreationDate { get; }
+
+		[NullAllowed, Export ("metadata", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> Metadata { get; }
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	interface HKAttachmentStore
+	{
+		[Export ("initWithHealthStore:")]
+		NativeHandle Constructor (HKHealthStore healthStore);
+
+		[Async]
+		[Export ("addAttachmentToObject:name:contentType:URL:metadata:completion:")]
+		void AddAttachment (HKObject @object, string name, UTType contentType, NSUrl URL, [NullAllowed] NSDictionary<NSString, NSObject> metadata, Action<HKAttachment, NSError> completion);
+
+		[Async]
+		[Export ("removeAttachment:fromObject:completion:")]
+		void RemoveAttachment (HKAttachment attachment, HKObject @object, Action<bool, NSError> completion);
+
+		[Async]
+		[Export ("getAttachmentsForObject:completion:")]
+		void GetAttachments (HKObject @object, Action<NSArray<HKAttachment>, NSError> completion);
+
+		[Async]
+		[Export ("getDataForAttachment:completion:")]
+		NSProgress GetData (HKAttachment attachment, Action<NSData, NSError> completion);
+
+		[Export ("streamDataForAttachment:dataHandler:")]
+		NSProgress StreamData (HKAttachment attachment, Action<NSData, NSError, bool> dataHandler);
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[BaseType (typeof (HKLensSpecification))]
+	[DisableDefaultCtor]
+	interface HKContactsLensSpecification : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithSphere:cylinder:axis:addPower:baseCurve:diameter:")]
+		NativeHandle Constructor (HKQuantity sphere, [NullAllowed] HKQuantity cylinder, [NullAllowed] HKQuantity axis, [NullAllowed] HKQuantity addPower, [NullAllowed] HKQuantity baseCurve, [NullAllowed] HKQuantity diameter);
+
+		[NullAllowed, Export ("baseCurve", ArgumentSemantic.Copy)]
+		HKQuantity BaseCurve { get; }
+
+		[NullAllowed, Export ("diameter", ArgumentSemantic.Copy)]
+		HKQuantity Diameter { get; }
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[BaseType (typeof (HKVisionPrescription))]
+	[DisableDefaultCtor]
+	interface HKContactsPrescription
+	{
+		[NullAllowed, Export ("rightEye", ArgumentSemantic.Copy)]
+		HKContactsLensSpecification RightEye { get; }
+
+		[NullAllowed, Export ("leftEye", ArgumentSemantic.Copy)]
+		HKContactsLensSpecification LeftEye { get; }
+
+		[Export ("brand")]
+		string Brand { get; }
+
+		[Static]
+		[Export ("prescriptionWithRightEyeSpecification:leftEyeSpecification:brand:dateIssued:expirationDate:device:metadata:")]
+		HKContactsPrescription GetPrescription ([NullAllowed] HKContactsLensSpecification rightEyeSpecification, [NullAllowed] HKContactsLensSpecification leftEyeSpecification, string brand, NSDate dateIssued, [NullAllowed] NSDate expirationDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[BaseType (typeof (HKLensSpecification))]
+	[DisableDefaultCtor]
+	interface HKGlassesLensSpecification : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithSphere:cylinder:axis:addPower:vertexDistance:prism:farPupillaryDistance:nearPupillaryDistance:")]
+		NativeHandle Constructor (HKQuantity sphere, [NullAllowed] HKQuantity cylinder, [NullAllowed] HKQuantity axis, [NullAllowed] HKQuantity addPower, [NullAllowed] HKQuantity vertexDistance, [NullAllowed] HKVisionPrism prism, [NullAllowed] HKQuantity farPupillaryDistance, [NullAllowed] HKQuantity nearPupillaryDistance);
+
+		[NullAllowed, Export ("vertexDistance", ArgumentSemantic.Copy)]
+		HKQuantity VertexDistance { get; }
+
+		[NullAllowed, Export ("prism", ArgumentSemantic.Copy)]
+		HKVisionPrism Prism { get; }
+
+		[NullAllowed, Export ("farPupillaryDistance", ArgumentSemantic.Copy)]
+		HKQuantity FarPupillaryDistance { get; }
+
+		[NullAllowed, Export ("nearPupillaryDistance", ArgumentSemantic.Copy)]
+		HKQuantity NearPupillaryDistance { get; }
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[BaseType (typeof (HKVisionPrescription))]
+	[DisableDefaultCtor]
+	interface HKGlassesPrescription
+	{
+		[NullAllowed, Export ("rightEye", ArgumentSemantic.Copy)]
+		HKGlassesLensSpecification RightEye { get; }
+
+		[NullAllowed, Export ("leftEye", ArgumentSemantic.Copy)]
+		HKGlassesLensSpecification LeftEye { get; }
+
+		[Static]
+		[Export ("prescriptionWithRightEyeSpecification:leftEyeSpecification:dateIssued:expirationDate:device:metadata:")]
+		HKGlassesPrescription GetPrescription ([NullAllowed] HKGlassesLensSpecification rightEyeSpecification, [NullAllowed] HKGlassesLensSpecification leftEyeSpecification, NSDate dateIssued, [NullAllowed] NSDate expirationDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface HKLensSpecification
+	{
+		[Export ("sphere", ArgumentSemantic.Copy)]
+		HKQuantity Sphere { get; }
+
+		[NullAllowed, Export ("cylinder", ArgumentSemantic.Copy)]
+		HKQuantity Cylinder { get; }
+
+		[NullAllowed, Export ("axis", ArgumentSemantic.Copy)]
+		HKQuantity Axis { get; }
+
+		[NullAllowed, Export ("addPower", ArgumentSemantic.Copy)]
+		HKQuantity AddPower { get; }
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[BaseType (typeof (HKSample))]
+	[DisableDefaultCtor]
+	interface HKVisionPrescription
+	{
+		[Export ("prescriptionType", ArgumentSemantic.Assign)]
+		HKVisionPrescriptionType PrescriptionType { get; }
+
+		[Export ("dateIssued", ArgumentSemantic.Copy)]
+		NSDate DateIssued { get; }
+
+		[NullAllowed, Export ("expirationDate", ArgumentSemantic.Copy)]
+		NSDate ExpirationDate { get; }
+
+		[Static]
+		[Export ("prescriptionWithType:dateIssued:expirationDate:device:metadata:")]
+		HKVisionPrescription GetPrescription (HKVisionPrescriptionType type, NSDate dateIssued, [NullAllowed] NSDate expirationDate, [NullAllowed] HKDevice device, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface HKVisionPrism : NSSecureCoding, NSCopying
+	{
+		[Export ("initWithAmount:angle:eye:")]
+		NativeHandle Constructor (HKQuantity amount, HKQuantity angle, HKVisionEye eye);
+
+		[Export ("initWithVerticalAmount:verticalBase:horizontalAmount:horizontalBase:eye:")]
+		NativeHandle Constructor (HKQuantity verticalAmount, HKPrismBase verticalBase, HKQuantity horizontalAmount, HKPrismBase horizontalBase, HKVisionEye eye);
+
+		[Export ("amount", ArgumentSemantic.Copy)]
+		HKQuantity Amount { get; }
+
+		[Export ("angle", ArgumentSemantic.Copy)]
+		HKQuantity Angle { get; }
+
+		[Export ("verticalAmount", ArgumentSemantic.Copy)]
+		HKQuantity VerticalAmount { get; }
+
+		[Export ("horizontalAmount", ArgumentSemantic.Copy)]
+		HKQuantity HorizontalAmount { get; }
+
+		[Export ("verticalBase")]
+		HKPrismBase VerticalBase { get; }
+
+		[Export ("horizontalBase")]
+		HKPrismBase HorizontalBase { get; }
+
+		[Export ("eye", ArgumentSemantic.Assign)]
+		HKVisionEye Eye { get; }
+	}
+
+	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface HKWorkoutActivity
+	{
+		[Export ("initWithWorkoutConfiguration:startDate:endDate:metadata:")]
+		NativeHandle Constructor (HKWorkoutConfiguration workoutConfiguration, NSDate startDate, [NullAllowed] NSDate endDate, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
+
+		[Export ("UUID", ArgumentSemantic.Copy)]
+		NSUuid Uuid { get; }
+
+		[Export ("workoutConfiguration", ArgumentSemantic.Copy)]
+		HKWorkoutConfiguration WorkoutConfiguration { get; }
+
+		[Export ("startDate", ArgumentSemantic.Copy)]
+		NSDate StartDate { get; }
+
+		[NullAllowed, Export ("endDate", ArgumentSemantic.Copy)]
+		NSDate EndDate { get; }
+
+		[NullAllowed, Export ("metadata", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, NSObject> Metadata { get; }
+
+		[Export ("duration")]
+		double Duration { get; }
+
+		[Export ("workoutEvents", ArgumentSemantic.Copy)]
+		HKWorkoutEvent[] WorkoutEvents { get; }
+
+		[Export ("allStatistics", ArgumentSemantic.Copy)]
+		NSDictionary<HKQuantityType, HKStatistics> AllStatistics { get; }
+
+		[Export ("statisticsForType:")]
+		[return: NullAllowed]
+		HKStatistics StatisticsForType (HKQuantityType quantityType);
+	}
 }
