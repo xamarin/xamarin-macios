@@ -258,6 +258,7 @@ namespace AuthenticationServices {
 		[Export ("start")]
 		bool Start ();
 
+		[NoTV]
 		[Export ("cancel")]
 		void Cancel ();
 
