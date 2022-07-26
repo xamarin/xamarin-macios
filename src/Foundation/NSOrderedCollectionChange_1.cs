@@ -9,7 +9,7 @@ using ObjCRuntime;
 #nullable enable
 
 namespace Foundation {
-
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 #if !NET
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
@@ -41,4 +41,5 @@ namespace Foundation {
 
 		public TKey? Object => Runtime.GetINativeObject<TKey> (_Object, true);
 	}
+#endif
 }

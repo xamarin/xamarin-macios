@@ -9,7 +9,7 @@ using ObjCRuntime;
 #nullable enable
 
 namespace Foundation {
-
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 #if !NET
 	[iOS (13,0), TV (13,0), Mac (10,15), Watch (6,0)]
 #else
@@ -25,6 +25,6 @@ namespace Foundation {
 			=> new NSOrderedCollectionChange (NSOrderedCollectionChange._ChangeWithObject (anObject.GetHandle (), type, index, associatedIndex));
 
 		public NSObject? Object => Runtime.GetNSObject<NSObject> (_Object);
-
 	}
+#endif
 }

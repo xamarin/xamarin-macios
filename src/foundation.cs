@@ -17079,7 +17079,8 @@ namespace Foundation
 		[NullAllowed, Export ("reflexiveForm")]
 		string ReflexiveForm { get; set; }
 	}
-	
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 	interface NSOrderedCollectionChange <TKey> : NSOrderedCollectionChange {}
 	
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -17127,7 +17128,6 @@ namespace Foundation
 		NativeHandle Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
 	}
 
-#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 	interface NSOrderedCollectionDifference <TKey> : NSOrderedCollectionDifference {}
 	
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
