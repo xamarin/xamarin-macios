@@ -10353,6 +10353,16 @@ namespace Foundation
 		[Export ("preferredPresentationStyle", ArgumentSemantic.Assign)]
 		UIPreferredPresentationStyle PreferredPresentationStyle { get; set; }
 
+		// extension methods from CloudKit
+
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("registerCKShareWithContainer:allowedSharingOptions:preparationHandler:")]
+		void RegisterCKShare (CKContainer container, CKAllowedSharingOptions allowedOptions, Action preparationHandler);
+
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("registerCKShare:container:allowedSharingOptions:")]
+		void RegisterCKShare (CKShare share, CKContainer container, CKAllowedSharingOptions allowedOptions);
+
 		// from interface UTType (NSItemProvider)
 
 		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]

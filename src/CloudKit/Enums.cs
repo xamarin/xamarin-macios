@@ -254,4 +254,22 @@ namespace CloudKit
 		PrivateUser = 3,
 		PublicUser = 4,
 	}
+
+	[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Native, Flags]
+	public enum CKSharingParticipantAccessOption : ulong
+	{
+		AnyoneWithLink = 1uL << 0,
+		SpecifiedRecipientsOnly = 1uL << 1,
+		Any = AnyoneWithLink | SpecifiedRecipientsOnly,
+	}
+
+	[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Native, Flags]
+	public enum CKSharingParticipantPermissionOption : ulong
+	{
+		ReadOnly = 1uL << 0,
+		ReadWrite = 1uL << 1,
+		Any = ReadOnly | ReadWrite,
+	}
 }
