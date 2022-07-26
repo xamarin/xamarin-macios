@@ -74,8 +74,15 @@ namespace Xamarin.MacDev.Tasks {
 			arguments.Add ("/t:ComputeAotCompilerPath");
 			arguments.Add (projectPath);
 
+			var environment = default (Dictionary<string, string>);
+			var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
+
+			if (!string.IsNullOrEmpty (customHome)) {
+				environment = new Dictionary<string, string> { { "HOME", customHome } };
+			}
+
 			try {
-				ExecuteAsync (executable, arguments).Wait ();
+				ExecuteAsync (executable, arguments, environment: environment).Wait ();
 				return File.ReadAllText (outputFile).Trim ();
 			} finally {
 				File.Delete (projectPath);
