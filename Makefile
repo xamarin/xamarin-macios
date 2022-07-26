@@ -105,6 +105,9 @@ package:
 	$(CP) $(MACCORE_PATH)/release/*.zip ../package
 	$(CP) $(MACCORE_PATH)/release/*updateinfo ../package
 
+dotnet-install-system:
+	$(Q) $(MAKE) -C dotnet install-system
+
 install-system: install-system-ios install-system-mac
 	@# Clean up some old files
 	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/iOS

@@ -10,6 +10,7 @@ PACKAGE_ID=$(shell grep PackageId FrameworksInRuntimesNativeDirectory.csproj | s
 PACKAGE_VERSION=$(shell grep '<PackageVersion>' FrameworksInRuntimesNativeDirectory.csproj | sed 's_.*<PackageVersion>\(.*\)</PackageVersion>.*_\1_')
 
 # Test case for https://github.com/xamarin/xamarin-macios/issues/12440
+.libs/FrameworksInRuntimesNativeDirectory.nupkg: export DOTNET_PLATFORMS:=$(shell echo $(DOTNET_PLATFORMS) | tr ' ' ';')
 .libs/FrameworksInRuntimesNativeDirectory.nupkg: FrameworksInRuntimesNativeDirectory.csproj $(wildcard *.cs) | .libs
 	$(Q) mkdir -p $(abspath $(NUGET_TEST_FEED))
 	$(Q_GEN) $(DOTNET) pack /bl $(DOTNET_PACK_VERBOSITY) $<
