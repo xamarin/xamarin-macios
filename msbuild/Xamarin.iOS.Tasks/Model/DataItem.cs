@@ -19,9 +19,11 @@ namespace Xamarin.iOS.Tasks {
 		[JsonProperty ("filename", NullValueHandling = NullValueHandling.Ignore)]
 		public string Filename { get; set; }
 
+#pragma warning disable 0169 // warning CS0169: The field 'DataItem.UnsupportedData' is never used
 		//This stores the Asset Catalogs properties we don't support yet, 
 		//by doing this we avoid loosing any change made to the json file outside VS.
 		[JsonExtensionData]
 		IDictionary<string, JToken> UnsupportedData;
+#pragma warning restore 0169
 	}
 }
