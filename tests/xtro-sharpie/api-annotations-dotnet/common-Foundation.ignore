@@ -4,7 +4,8 @@
 !missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration
 !missing-protocol-conformance! NSEnumerator should conform to NSFastEnumeration
 !missing-protocol-conformance! NSOrderedSet should conform to NSFastEnumeration
-!missing-protocol-conformance! NSOrderedCollectionDifference should conform to NSFastEnumeration
+# https://github.com/xamarin/xamarin-macios/issues/15577
+# !missing-protocol-conformance! NSOrderedCollectionDifference should conform to NSFastEnumeration
 !missing-protocol-conformance! NSSet should conform to NSFastEnumeration
 
 ## untyped enums (only values, not type name) NSError.h
@@ -1374,5 +1375,6 @@
 !extra-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromString(System.String)' has a extraneous [NullAllowed] on parameter #0
 
 # not exposed to users. 
-!extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0
+# https://github.com/xamarin/xamarin-macios/issues/15577
+# !extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
+# !extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0

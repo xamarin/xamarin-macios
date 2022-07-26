@@ -4,16 +4,6 @@
 !missing-enum-value! NSActivityOptions native value NSActivityTrackingEnabled = 70368744177664 not bound
 !missing-enum-value! NSActivityOptions native value NSActivityUserInteractive = 1095233437695 not bound
 !missing-field! NSMarkdownSourcePositionAttributeName not bound
-!missing-null-allowed! 'Foundation.NSData Foundation.NSUbiquitousKeyValueStore::GetData(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary Foundation.NSUbiquitousKeyValueStore::GetDictionary(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSUbiquitousKeyValueStore::ObjectForKey(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject[] Foundation.NSUbiquitousKeyValueStore::GetArray(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String Foundation.NSUbiquitousKeyValueStore::GetString(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetArray(Foundation.NSObject[],System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetData(Foundation.NSData,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetDictionary(Foundation.NSDictionary,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetString(System.String,System.String)' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-protocol-member! NSURLSessionTaskDelegate::URLSession:didCreateTask: not found
 !missing-selector! NSAttributedStringMarkdownParsingOptions::appliesSourcePositionAttributes not bound
 !missing-selector! NSAttributedStringMarkdownParsingOptions::setAppliesSourcePositionAttributes: not bound
@@ -33,3 +23,34 @@
 !missing-selector! NSXPCConnection::activate not bound
 !missing-selector! NSXPCListener::activate not bound
 !missing-type! NSAttributedStringMarkdownSourcePosition not bound
+
+
+# https://github.com/xamarin/xamarin-macios/issues/15577
+!missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index: not bound
+!missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index:associatedIndex: not bound
+!missing-selector! NSArray::arrayByApplyingDifference: not bound
+!missing-selector! NSArray::differenceFromArray: not bound
+!missing-selector! NSArray::differenceFromArray:withOptions: not bound
+!missing-selector! NSArray::differenceFromArray:withOptions:usingEquivalenceTest: not bound
+!missing-selector! NSMutableArray::applyDifference: not bound
+!missing-selector! NSMutableOrderedSet::applyDifference: not bound
+!missing-selector! NSOrderedCollectionChange::associatedIndex not bound
+!missing-selector! NSOrderedCollectionChange::changeType not bound
+!missing-selector! NSOrderedCollectionChange::index not bound
+!missing-selector! NSOrderedCollectionChange::initWithObject:type:index: not bound
+!missing-selector! NSOrderedCollectionChange::initWithObject:type:index:associatedIndex: not bound
+!missing-selector! NSOrderedCollectionChange::object not bound
+!missing-selector! NSOrderedCollectionDifference::differenceByTransformingChangesWithBlock: not bound
+!missing-selector! NSOrderedCollectionDifference::hasChanges not bound
+!missing-selector! NSOrderedCollectionDifference::initWithChanges: not bound
+!missing-selector! NSOrderedCollectionDifference::initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects: not bound
+!missing-selector! NSOrderedCollectionDifference::initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:additionalChanges: not bound
+!missing-selector! NSOrderedCollectionDifference::insertions not bound
+!missing-selector! NSOrderedCollectionDifference::inverseDifference not bound
+!missing-selector! NSOrderedCollectionDifference::removals not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet: not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet:withOptions: not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet:withOptions:usingEquivalenceTest: not bound
+!missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
+!missing-type! NSOrderedCollectionChange not bound
+!missing-type! NSOrderedCollectionDifference not bound

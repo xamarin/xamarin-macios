@@ -4,7 +4,8 @@
 !missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration
 !missing-protocol-conformance! NSEnumerator should conform to NSFastEnumeration
 !missing-protocol-conformance! NSOrderedSet should conform to NSFastEnumeration
-!missing-protocol-conformance! NSOrderedCollectionDifference should conform to NSFastEnumeration
+# https://github.com/xamarin/xamarin-macios/issues/15577
+# !missing-protocol-conformance! NSOrderedCollectionDifference should conform to NSFastEnumeration
 !missing-protocol-conformance! NSSet should conform to NSFastEnumeration
 
 ## untyped enums (only values, not type name) NSError.h
@@ -1389,6 +1390,7 @@
 !missing-selector! NSMutableAttributedString::appendLocalizedFormat: not bound
 
 # ignore because we did not add nullallowed but are using ref
-!extra-null-allowed! 'System.IntPtr Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
-!extra-null-allowed! 'System.IntPtr Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'System.IntPtr Foundation.NSOrderedSet::_GetDifference(Foundation.NSOrderedSet,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
+# https://github.com/xamarin/xamarin-macios/issues/15577
+# !extra-null-allowed! 'System.IntPtr Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
+# !extra-null-allowed! 'System.IntPtr Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0
+# !extra-null-allowed! 'System.IntPtr Foundation.NSOrderedSet::_GetDifference(Foundation.NSOrderedSet,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
