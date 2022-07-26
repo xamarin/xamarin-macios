@@ -1802,7 +1802,7 @@ public partial class Generator : IMemberGatherer {
 		}
 
 		var rt = mi.ReturnType;
-		var rts = IsNativeEnum (rt) ? "var" : RenderType (rt);
+		var rts = IsNativeEnum (rt) ? "var" : rt.ToString ();
 		var trampoline_name = MakeTrampolineName (t);
 		var ti = new TrampolineInfo (userDelegate: FormatType (null, t),
 					     delegateName: "D" + trampoline_name,

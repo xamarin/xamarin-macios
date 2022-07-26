@@ -96,6 +96,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 		[Test]
 		public void GetDifferenceFromArrayTest ()
 		{
@@ -118,5 +119,6 @@ namespace MonoTouchFixtures.Foundation {
 			}, "Not throws");
 			Assert.NotNull (diff, "Not null");
 		}
+#endif
 	}
 }

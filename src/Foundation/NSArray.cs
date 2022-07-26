@@ -38,7 +38,9 @@ using NativeHandle = System.IntPtr;
 
 namespace Foundation {
 
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 	public delegate bool NSOrderedCollectionDifferenceEquivalenceTest (NSObject first, NSObject second);
+#endif
 
 	public partial class NSArray {
 
@@ -433,6 +435,8 @@ namespace Foundation {
 			}
 		}
 
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+
 		static readonly NSOrderedCollectionDifferenceEquivalenceTestProxy static_DiffEquality = DiffEqualityHandler;
 
 		[MonoPInvokeCallback (typeof (NSOrderedCollectionDifferenceEquivalenceTestProxy))]
@@ -465,5 +469,6 @@ namespace Foundation {
 				block.CleanupBlock ();
 			}
 		}
+#endif
 	}
 }

@@ -22,9 +22,10 @@ using NativeHandle = System.IntPtr;
 #endif
 
 namespace Foundation {
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 	public delegate bool NSOrderedCollectionDifferenceEquivalenceTest<TValue> (TValue? first, TValue? second);
 	internal delegate bool NSOrderedCollectionDifferenceEquivalenceTestProxy (IntPtr blockLiteral, /* NSObject */ IntPtr first, /* NSObject */ IntPtr second);
-
+#endif
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
@@ -95,6 +96,8 @@ namespace Foundation {
 			}
 		}
 
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+
 #if !NET
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
@@ -150,6 +153,6 @@ namespace Foundation {
 				block.CleanupBlock ();
 			}
 		}
-
+#endif
 	}
 }

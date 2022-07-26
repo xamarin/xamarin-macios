@@ -244,6 +244,7 @@ namespace Foundation
 		[return: NullAllowed]
 		NSArray FromUrl (NSUrl url, out NSError error);
 
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Internal]
 		[Export ("differenceFromArray:withOptions:")]
@@ -278,6 +279,7 @@ namespace Foundation
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("differenceFromArray:withOptions:usingEquivalenceTest:")]
 		NativeHandle _GetDifferenceFromArray (NSArray other, NSOrderedCollectionDifferenceCalculationOptions options, /* Func<NSObject, NSObject, bool> block */ ref BlockLiteral block);
+#endif
 	}
 
 #if MONOMAC
@@ -3735,9 +3737,11 @@ namespace Foundation
 		[Static, Export ("arrayWithContentsOfURL:")]
 		NSMutableArray FromUrl (NSUrl url);
 
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("applyDifference:")]
 		void ApplyDifference (NSOrderedCollectionDifference difference);
+#endif
 	}
 	
 	interface NSMutableArray<TValue> : NSMutableArray {}
@@ -9519,7 +9523,8 @@ namespace Foundation
 
 		[Export ("reversedOrderedSet")]
 		NSOrderedSet GetReverseOrderedSet ();
-		
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference (other, options))")]
 		[return: NullAllowed]
@@ -9555,6 +9560,7 @@ namespace Foundation
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("differenceFromOrderedSet:withOptions:usingEquivalenceTest:")]
 		/* NSOrderedCollectionDifference<NSObject>*/ IntPtr _GetDifference (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options, /* Func<NSObject, NSObject, bool> */ ref BlockLiteral block);
+#endif
 	}
 
 	interface NSMutableOrderedSet<TKey> : NSMutableOrderedSet {}
@@ -9695,6 +9701,7 @@ namespace Foundation
 		[Export ("sortRange:options:usingComparator:")]
 		void SortRange (NSRange range, NSSortOptions sortOptions, NSComparator comparator);
 
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 		[Internal]
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("applyDifference:")]
@@ -9704,6 +9711,7 @@ namespace Foundation
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("applyDifference:")]
 		void ApplyDifference (NSOrderedCollectionDifference<NSObject> difference);
+#endif
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -17118,7 +17126,8 @@ namespace Foundation
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
 	}
-	
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 	interface NSOrderedCollectionDifference <TKey> : NSOrderedCollectionDifference {}
 	
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -17163,4 +17172,5 @@ namespace Foundation
 		[Export ("inverseDifference")]
 		NativeHandle _InverseDifference ();
 	}
+#endif
 }

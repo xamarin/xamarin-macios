@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Foundation;
 
 namespace MonoTouchFixtures.Foundation {
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class NSOrderedCollectionDifference1Test {
@@ -26,4 +27,5 @@ namespace MonoTouchFixtures.Foundation {
 			});
 		}
 	}
+#endif
 }

@@ -233,6 +233,7 @@ namespace Foundation {
 			return copy;
 		}
 
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
 #if !NET
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 #else
@@ -244,5 +245,6 @@ namespace Foundation {
 				throw new ArgumentNullException (nameof (difference));
 			_ApplyDifference (difference.Handle);
 		}
+#endif
 	}
 }
