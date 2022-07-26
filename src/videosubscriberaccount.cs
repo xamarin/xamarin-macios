@@ -54,6 +54,13 @@ namespace VideoSubscriberAccount {
 		Granted = 3
 	}
 
+	[TV (16,0), Mac (13,0), iOS (16,0), NoMacCatalyst]
+	[Native]
+	enum VSUserAccountQueryOption : ulong {
+		None = 0,
+		AllDevices,
+	}
+
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Mac (10,14)]

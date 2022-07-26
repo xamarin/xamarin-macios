@@ -668,7 +668,7 @@ namespace Vision {
 		Balanced,
 		Fast,
 	}
-
+ 
 	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum VNPointsClassification : long
