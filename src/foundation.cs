@@ -8129,9 +8129,6 @@ namespace Foundation
 		[Export ("attribution")]
 		NSURLRequestAttribution Attribution { get; }
 
-		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
-		[Export ("requiresDNSSECValidation")]
-		bool RequiresDnsSecValidation { get; }
 	}
 
 	[BaseType (typeof (NSDictionary))]
@@ -8319,9 +8316,10 @@ namespace Foundation
 		[Export ("attribution", ArgumentSemantic.Assign)]
 		NSURLRequestAttribution Attribution { get; set; }
 
-		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
-		[Export ("requiresDNSSECValidation")]
-		bool RequiresDnsSecValidation { get; set; }
+		// https://github.com/xamarin/maccore/issues/2608 - https://feedbackassistant.apple.com/feedback/10897552
+		// [Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		// [Export ("requiresDNSSECValidation")]
+		// bool RequiresDnsSecValidation { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject), Name="NSURLResponse")]
@@ -16369,7 +16367,7 @@ namespace Foundation
 		[Export ("invalidationHandler", ArgumentSemantic.Copy)]
 		Action InvalidationHandler { get; set; }
 
-		[Advice ("Prefer using 'Activate' for initial activation of a connection")]
+		[Advice ("Prefer using 'Activate' for initial activation of a connection.")]
 		[Export ("resume")]
 		void Resume ();
 
@@ -16447,7 +16445,7 @@ namespace Foundation
 		[Export ("endpoint")]
 		NSXpcListenerEndpoint Endpoint { get; }
 
-		[Advice ("Prefer using 'Activate' for initial activation of a listener")]
+		[Advice ("Prefer using 'Activate' for initial activation of a listener.")]
 		[Export ("resume")]
 		void Resume ();
 
