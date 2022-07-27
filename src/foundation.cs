@@ -697,6 +697,10 @@ namespace Foundation
 		[Field ("NSLanguageIdentifierAttributeName")]
 		LanguageIdentifier,
 
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("NSMarkdownSourcePositionAttributeName")]
+		MarkdownSourcePosition,
+
 		[Field ("NSMorphologyAttributeName")]
 		Morphology,
 
@@ -6742,8 +6746,13 @@ namespace Foundation
 		string PercentEncodedPassword { get; set; }
 	
 		[NullAllowed] // by default this property is null
+		[Advice ("Use 'EncodedHost' instead.")]	
 		[Export ("percentEncodedHost", ArgumentSemantic.Copy)]
 		string PercentEncodedHost { get; set; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[NullAllowed, Export ("encodedHost")]
+		string EncodedHost { get; set; }
 	
 		[NullAllowed] // by default this property is null
 		[Export ("percentEncodedPath", ArgumentSemantic.Copy)]
@@ -7704,6 +7713,10 @@ namespace Foundation
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("allowsConstrainedNetworkAccess")]
 		bool AllowsConstrainedNetworkAccess { get; set; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Export ("requiresDNSSECValidation")]
+		bool RequiresDnsSecValidation { get; set; }
 	}
 
 	[iOS (7,0)]
@@ -7757,6 +7770,10 @@ namespace Foundation
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("URLSession:taskIsWaitingForConnectivity:")]
 		void TaskIsWaitingForConnectivity (NSUrlSession session, NSUrlSessionTask task);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0)]
+		[Export ("URLSession:didCreateTask:")]
+		void DidCreateTask (NSUrlSession session, NSUrlSessionTask task);
 	}
 	
 	[iOS (7,0)]
@@ -8111,6 +8128,10 @@ namespace Foundation
 		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("attribution")]
 		NSURLRequestAttribution Attribution { get; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Export ("requiresDNSSECValidation")]
+		bool RequiresDnsSecValidation { get; }
 	}
 
 	[BaseType (typeof (NSDictionary))]
@@ -8297,6 +8318,10 @@ namespace Foundation
 		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("attribution", ArgumentSemantic.Assign)]
 		NSURLRequestAttribution Attribution { get; set; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Export ("requiresDNSSECValidation")]
+		bool RequiresDnsSecValidation { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject), Name="NSURLResponse")]
@@ -16344,6 +16369,7 @@ namespace Foundation
 		[Export ("invalidationHandler", ArgumentSemantic.Copy)]
 		Action InvalidationHandler { get; set; }
 
+		[Advice ("Prefer using 'Activate' for initial activation of a connection")]
 		[Export ("resume")]
 		void Resume ();
 
@@ -16382,6 +16408,14 @@ namespace Foundation
 		[Mac (10, 11)][iOS (9, 0)][Watch (2, 0)][TV (9, 0)]
 		[Export ("synchronousRemoteObjectProxyWithErrorHandler:"), Internal]
 		IntPtr _CreateSynchronousRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("activate")]
+		void Activate ();
+
+		[NoWatch, NoTV, NoiOS, Mac (13,0)]
+		[Export ("setCodeSigningRequirement:")]
+		void SetCodeSigningRequirement (string requirement);
 	}
 
 	interface INSXpcListenerDelegate {}
@@ -16413,6 +16447,7 @@ namespace Foundation
 		[Export ("endpoint")]
 		NSXpcListenerEndpoint Endpoint { get; }
 
+		[Advice ("Prefer using 'Activate' for initial activation of a listener")]
 		[Export ("resume")]
 		void Resume ();
 
@@ -16421,6 +16456,14 @@ namespace Foundation
 
 		[Export ("invalidate")]
 		void Invalidate ();
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("activate")]
+		void Activate ();
+
+		[NoWatch, NoTV, NoiOS, Mac (13,0)]
+		[Export ("setConnectionCodeSigningRequirement:")]
+		void SetConnectionCodeSigningRequirement (string requirement);
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSXPCListenerDelegate")]
@@ -16996,6 +17039,10 @@ namespace Foundation
 
 		[NullAllowed, Export ("languageCode")]
 		string LanguageCode { get; set; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Export ("appliesSourcePositionAttributes")]
+		bool AppliesSourcePositionAttributes { get; set; }
 	}
 	
 	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -17179,4 +17226,28 @@ namespace Foundation
 		NativeHandle _InverseDifference ();
 	}
 #endif
+
+	[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0)]
+	[BaseType (typeof(NSObject))]
+	interface NSAttributedStringMarkdownSourcePosition : NSCopying, NSSecureCoding
+	{
+		[Export ("startLine")]
+		nint StartLine { get; }
+
+		[Export ("startColumn")]
+		nint StartColumn { get; }
+
+		[Export ("endLine")]
+		nint EndLine { get; }
+
+		[Export ("endColumn")]
+		nint EndColumn { get; }
+
+		[Export ("initWithStartLine:startColumn:endLine:endColumn:")]
+		NativeHandle Constructor (nint startLine, nint startColumn, nint endLine, nint endColumn);
+
+		[Export ("rangeInString:")]
+		NSRange RangeInString (string @string);
+	}
+
 }

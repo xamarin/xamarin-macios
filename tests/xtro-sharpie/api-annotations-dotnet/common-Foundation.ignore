@@ -1378,3 +1378,6 @@
 # https://github.com/xamarin/xamarin-macios/issues/15577
 # !extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
 # !extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0
+
+# we do not expose IMP
+!missing-selector! NSInvocation::invokeUsingIMP: not bound

@@ -4,28 +4,3 @@
 !missing-selector! NSAttributedString::initWithFormat:options:locale:arguments: not bound
 !missing-selector! NSMutableAttributedString::appendLocalizedFormat: not bound
 !extra-enum-value! Managed value 2 for NSItemProviderRepresentationVisibility.Group is available for the current platform while the value in the native header is not
-!deprecated-attribute-missing! NSURLComponents::percentEncodedHost missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSURLComponents::setPercentEncodedHost: missing a [Deprecated] attribute
-!missing-enum-value! NSActivityOptions native value NSActivityAnimationTrackingEnabled = 35184372088832 not bound
-!missing-enum-value! NSActivityOptions native value NSActivityTrackingEnabled = 70368744177664 not bound
-!missing-enum-value! NSActivityOptions native value NSActivityUserInteractive = 1095233437695 not bound
-!missing-field! NSMarkdownSourcePositionAttributeName not bound
-!missing-protocol-member! NSURLSessionTaskDelegate::URLSession:didCreateTask: not found
-!missing-selector! NSAttributedStringMarkdownParsingOptions::appliesSourcePositionAttributes not bound
-!missing-selector! NSAttributedStringMarkdownParsingOptions::setAppliesSourcePositionAttributes: not bound
-!missing-selector! NSAttributedStringMarkdownSourcePosition::endColumn not bound
-!missing-selector! NSAttributedStringMarkdownSourcePosition::endLine not bound
-!missing-selector! NSAttributedStringMarkdownSourcePosition::initWithStartLine:startColumn:endLine:endColumn: not bound
-!missing-selector! NSAttributedStringMarkdownSourcePosition::rangeInString: not bound
-!missing-selector! NSAttributedStringMarkdownSourcePosition::startColumn not bound
-!missing-selector! NSAttributedStringMarkdownSourcePosition::startLine not bound
-!missing-selector! NSInvocation::invokeUsingIMP: not bound
-!missing-selector! NSMutableURLRequest::requiresDNSSECValidation not bound
-!missing-selector! NSMutableURLRequest::setRequiresDNSSECValidation: not bound
-!missing-selector! NSURLComponents::encodedHost not bound
-!missing-selector! NSURLComponents::setEncodedHost: not bound
-!missing-selector! NSURLSessionConfiguration::requiresDNSSECValidation not bound
-!missing-selector! NSURLSessionConfiguration::setRequiresDNSSECValidation: not bound
-!missing-selector! NSXPCConnection::activate not bound
-!missing-selector! NSXPCListener::activate not bound
-!missing-type! NSAttributedStringMarkdownSourcePosition not bound

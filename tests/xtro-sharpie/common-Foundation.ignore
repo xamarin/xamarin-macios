@@ -1394,3 +1394,6 @@
 # !extra-null-allowed! 'System.IntPtr Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
 # !extra-null-allowed! 'System.IntPtr Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0
 # !extra-null-allowed! 'System.IntPtr Foundation.NSOrderedSet::_GetDifference(Foundation.NSOrderedSet,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
+
+# we do not expose IMP
+!missing-selector! NSInvocation::invokeUsingIMP: not bound

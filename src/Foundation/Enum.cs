@@ -372,6 +372,7 @@ namespace Foundation  {
 		XpcConnectionInterrupted  = 4097,
 		XpcConnectionInvalid  = 4099,
 		XpcConnectionReplyInvalid  = 4101,
+		XpcConnectionCodeSigningRequirementFailure = 4102,
 		XpcConnectionErrorMinimum  = 4096,
 		XpcConnectionErrorMaximum  = 4224,
 
@@ -1044,6 +1045,9 @@ namespace Foundation  {
 		IdleSystemSleepDisabled = 1UL << 20,
 		SuddenTerminationDisabled = 1UL << 14,
 		AutomaticTerminationDisabled = 1UL << 15,
+		AnimationTrackingEnabled = 1uL << 45,
+		TrackingEnabled = 1uL << 46,
+		UserInteractive = (UserInitiated | LatencyCritical),
 		UserInitiated = 0x00FFFFFFUL | IdleSystemSleepDisabled,
 		Background = 0x000000ffUL,
 		LatencyCritical = 0xFF00000000UL,
