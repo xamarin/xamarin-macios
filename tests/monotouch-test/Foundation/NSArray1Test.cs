@@ -117,6 +117,8 @@ namespace MonoTouchFixtures.Foundation {
 						return first.ToString ().Equals (second.ToString ());
 					});
 			}, "Not throws");
+			// https://github.com/xamarin/xamarin-macios/issues/15577 - Did not rewrite tests that were disabled
+			// Maybe assert that we get a specific diff result as well?
 			Assert.NotNull (diff, "Not null");
 		}
 #endif
