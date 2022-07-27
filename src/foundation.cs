@@ -1829,7 +1829,7 @@ namespace Foundation
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
 		[Export ("stringFromMeasurement:countStyle:")]
-		string StringFromMeasurement (NSUnitInformationStorage  measurement, NSByteCountFormatterCountStyle countStyle);
+		string Create (NSUnitInformationStorage measurement, NSByteCountFormatterCountStyle countStyle);
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("stringFromMeasurement:")]
@@ -7465,6 +7465,10 @@ namespace Foundation
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Retain)]
 		NSObject WeakDelegate { get; set; }
 
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		INSUrlSessionTaskDelegate Delegate { get; set; }
 	}
 
 	[Static]
@@ -7717,6 +7721,8 @@ namespace Foundation
 		[Export ("URLSessionDidFinishEventsForBackgroundURLSession:")]
 		void DidFinishEventsForBackgroundSession (NSUrlSession session);
 	}
+
+	public interface INSUrlSessionTaskDelegate {}
 
 	[iOS (7,0)]
 	[Mac (10, 9)]
