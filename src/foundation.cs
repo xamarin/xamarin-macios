@@ -11275,6 +11275,7 @@ namespace Foundation
 		NSValue FromCGPoint (CGPoint point);
 
 #if MONOMAC
+		[Mac (10,0)]
 		[Export ("rectValue")]
 #else
 		[MacCatalyst (15,0)]
@@ -11283,6 +11284,7 @@ namespace Foundation
 		CGRect CGRectValue { get; }
 
 #if MONOMAC
+		[Mac (10,0)]
 		[Export ("sizeValue")]
 #else
 		[MacCatalyst (15,0)]
@@ -11291,6 +11293,7 @@ namespace Foundation
 		CGSize CGSizeValue { get; }
 
 #if MONOMAC
+		[Mac (10,0)]
 		[Export ("pointValue")]
 #else
 		[MacCatalyst (15,0)]
