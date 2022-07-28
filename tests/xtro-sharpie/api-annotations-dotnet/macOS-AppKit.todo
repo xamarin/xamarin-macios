@@ -85,3 +85,4 @@
 !missing-field! NSFontWidthStandard not bound
 !missing-selector! +NSImageSymbolConfiguration::configurationPreferringHierarchical not bound
 !missing-selector! +NSImageSymbolConfiguration::configurationPreferringMonochrome not bound
+!missing-selector! +NSFont::systemFontOfSize:weight:width: not bound

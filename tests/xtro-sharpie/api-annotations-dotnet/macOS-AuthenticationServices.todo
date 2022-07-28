@@ -77,3 +77,4 @@
 !missing-type! ASAuthorizationProviderExtensionKerberosMapping not bound
 !missing-type! ASAuthorizationProviderExtensionLoginConfiguration not bound
 !missing-type! ASAuthorizationProviderExtensionLoginManager not bound
+!missing-field! ASAuthorizationProviderAuthorizationOperationDirectRequest not bound
