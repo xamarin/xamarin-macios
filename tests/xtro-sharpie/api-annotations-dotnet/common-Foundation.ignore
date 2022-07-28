@@ -1381,3 +1381,7 @@
 
 # we do not expose IMP
 !missing-selector! NSInvocation::invokeUsingIMP: not bound
+
+# https://github.com/xamarin/maccore/issues/2608 - https://feedbackassistant.apple.com/feedback/10897552
+!missing-selector! NSMutableURLRequest::requiresDNSSECValidation not bound
+!missing-selector! NSMutableURLRequest::setRequiresDNSSECValidation: not bound
