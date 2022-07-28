@@ -1265,9 +1265,9 @@ namespace WebKit
 		[Export ("allowsContentJavaScript")]
 		bool AllowsContentJavaScript { get; set; }
 
-		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
-		[Export ("lockdownModeEnabled")]
-		bool LockdownModeEnabled { [Bind ("isLockdownModeEnabled")] get; set; }
+		// [Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		// [Export ("lockdownModeEnabled")]
+		// bool LockdownModeEnabled { [Bind ("isLockdownModeEnabled")] get; set; }
 	}
 
 	[NoMac]

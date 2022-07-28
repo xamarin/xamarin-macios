@@ -2,3 +2,6 @@
 !missing-selector! WKWebView::findInteraction not bound
 !missing-selector! WKWebView::isFindInteractionEnabled not bound
 !missing-selector! WKWebView::setFindInteractionEnabled: not bound
+
+!missing-selector! WKWebpagePreferences::isLockdownModeEnabled not bound
+!missing-selector! WKWebpagePreferences::setLockdownModeEnabled: not bound
