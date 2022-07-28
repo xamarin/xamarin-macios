@@ -173,3 +173,6 @@
 !missing-selector! UIWindowSceneGeometryPreferencesMac::setSystemFrame: not bound
 !missing-selector! UIWindowSceneGeometryPreferencesMac::systemFrame not bound
 !missing-type! UIWindowSceneGeometryPreferencesMac not bound
+!missing-selector! UIBarButtonItem::initWithBarButtonSystemItem:primaryAction:menu: not bound
+!missing-selector! UIBarButtonItem::initWithPrimaryAction:menu: not bound
+!missing-selector! UIBarButtonItem::initWithTitle:image:target:action:menu: not bound

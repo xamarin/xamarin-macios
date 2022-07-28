@@ -9,3 +9,4 @@
 !missing-selector! NSFileProviderManager::getServiceWithName:itemIdentifier:completionHandler: not bound
 !missing-selector! NSFileProviderManager::requestDownloadForItemWithIdentifier:requestedRange:completionHandler: not bound
 !missing-selector! NSFileProviderManager::requestModificationOfFields:forItemWithIdentifier:options:completionHandler: not bound
+!missing-protocol-member! NSFileProviderPendingSetEnumerator::isMaximumSizeReached not found
