@@ -38,9 +38,9 @@ nnyeah changes the following:
 ## What Happens When It Runs
 
 When nnyeah runs, there are three classes of output:
-1- successful with code changes (generates the output file)
-2- successful with no code changes needed (does not generate the output file)
-3- unsuccessful - nnyeah generates an error. 
+1. successful with code changes (generates the output file)
+2. successful with no code changes needed (does not generate the output file)
+3. unsuccessful - nnyeah generates an error. 
 
 In the last case, not every assembly can be changed to run in .NET 6. The most common reason for this is that the assembly uses
 an API that does not exist in .NET 6. Typically this will be a type of API that was already obsolete and has now been removed. Less commonly,
@@ -49,17 +49,17 @@ there is nothing that nnyeah can do for the old assembly and it will need to be 
 
 ## How It Works
 
-1- nnyeah builds a database of translations from the Xamarin platform dll onto the Microsoft platform dll. All types or entrypoints
+1. nnyeah builds a database of translations from the Xamarin platform dll onto the Microsoft platform dll. All types or entrypoints
 in the Xamarin platform dll that are not found are recorded as well.
-2- the input file gets loaded and is examined to see if there is any necessary work to be done. If there is no work, nnyeah exits, generating no output.
-3- nnyeah retrieves types that might be needed from Microsoft.platform.dll.
-4- nnyeah adds private attributes to the output assembly that are needed for `native int` and `native uint`
-5- all types and methods are visited and any type references and method references get changed to the Microsoft platform assembly
+2. the input file gets loaded and is examined to see if there is any necessary work to be done. If there is no work, nnyeah exits, generating no output.
+3. nnyeah retrieves types that might be needed from Microsoft.platform.dll.
+4. nnyeah adds private attributes to the output assembly that are needed for `native int` and `native uint`
+5. all types and methods are visited and any type references and method references get changed to the Microsoft platform assembly
 
 
 ## Internals
 
-# ModuleVisitor
+### ModuleVisitor
 ModuleVisitor is a class that follows the visitor pattern and fires events when it encounters the following entities:
 - Types (and inner types)
 - Methods
@@ -69,37 +69,37 @@ ModuleVisitor is a class that follows the visitor pattern and fires events when 
 
 ModuleVisitor is used by the ModuleElements type to aggregate all the types and members of an assembly.
 
-# ComparingVisitor
+### ComparingVisitor
 ComparingVisitor uses a ModuleElements type for both the earlier and later assemblies and generates events to create a map from the string signature
 of the earlier type/member to the Mono.cecil type for the later type/member.
 
-# Transformation
+### Transformation
 Transformation is a class that represents a change to be made to IL instructions in a method. This allows an instruction to
 be removed or replaced with a list of instructions or for a list of instructions to be inserted before or after an instruction.
 
-# MethodTransformations
+### MethodTransformations
 MethodTransformations is a set of static and dynamic Transformation objects to apply to IL instructions based on a signature of a method found in an existing IL instruction.
 Some transformations are static because they have no outside references. If a transformation has outside references, the transformation needs to get built at runtime.
 
-#FieldTransformations
+### FieldTransformations
 FieldTransformations is a set of dynamic Transformation objects to apply to IL instructions based on a signature of a field reference
 
-#ConstructorTransforms
+### ConstructorTransforms
 ConstructorTransforms is code that is used to find and patch constructors that take `IntPtr`
 
-#ModuleContainer
+### ModuleContainer
 ModuleContainer is a class used to hold modules that are needed for the transformation.
 
-#Reworker
+### Reworker
 The Reworker class does most of the work in terms of seeking out the places that need transformations and applying
 them.
 
-#Attributes
+### Attributes
 The Reworker class creates the following attributes for the output assembly:
 - EmbeddedAttribute
 - NativeIntegerAttribute
 
-# Platform Assemblies
+## Platform Assemblies
 nnyeah uses the platform assemblies to build the mapping from pre-.NET 6 to post .NET 6. Initially the code generated the mapping once
 and imported the mapping at runtime. The problem with this is that the mapping file was larger than the actual assemblies themselves and
 the Microsoft platform assembly would still be necessary. Because of this it made more sense to build the mapping on the fly.
