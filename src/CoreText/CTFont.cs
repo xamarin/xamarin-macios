@@ -174,6 +174,10 @@ namespace CoreText {
 	public enum CTFontTableOptions : uint {
 		None              = 0,
 #if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos16.0")]
 #if TVOS
 		[Obsolete ("Starting with tvos16.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]

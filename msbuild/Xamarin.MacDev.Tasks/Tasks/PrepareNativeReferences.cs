@@ -7,7 +7,7 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class PrepareNativeReferences : PrepareNativeReferencesTaskBase, ITaskCallback, ICancelableTask
 	{
