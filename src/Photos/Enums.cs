@@ -184,7 +184,8 @@ namespace Photos
 		SmartAlbumUnableToUpload = 216,
 		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
 		SmartAlbumRAW = 217,
-
+		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		SmartAlbumCinematic = 218,
 
 		Any           = Int64.MaxValue
 	}
@@ -232,6 +233,7 @@ namespace Photos
 		VideoStreamed      = (1 << 16),
 		VideoHighFrameRate = (1 << 17),
 		VideoTimelapse     = (1 << 18),
+		VideoCinematic     = (1 << 21),
 	}
 
 	// NSUInteger -> PhotosTypes.h
@@ -393,6 +395,7 @@ namespace Photos
 		RelinquishingLibraryBundleToWriter = 3142,
 		SwitchingSystemPhotoLibrary = 3143,
 		NetworkAccessRequired = 3164,
+		NetworkError = 3169,
 		IdentifierNotFound = 3201,
 		MultipleIdentifiersFound = 3202,
 		ChangeNotSupported = 3300,
@@ -404,6 +407,8 @@ namespace Photos
 		AccessRestricted = 3310,
 		AccessUserDenied = 3311,
 		LibraryInFileProviderSyncRoot = 5423,
+		PersistentChangeTokenExpired = 3105,
+		PersistentChangeDetailsUnavailable = 3210,
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
@@ -412,5 +417,14 @@ namespace Photos
 	{
 		AddOnly = 1,
 		ReadWrite = 2,
+	}
+
+	[TV (16,0), Mac (13,0), iOS (16,0)]
+	[Native]
+	public enum PHObjectType : long
+	{
+		Asset = 1,
+		AssetCollection = 2,
+		CollectionList = 3
 	}
 }

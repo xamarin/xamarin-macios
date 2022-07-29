@@ -4,17 +4,16 @@ using ObjCRuntime;
 using Foundation;
 #if !MONOMAC
 using UIKit;
-// ease compilation for [NoiOS] and [NoTV] decorated members
 using NSView = Foundation.NSObject;
 using PHLivePhotoViewContentMode = Foundation.NSObject;
 #else
 using AppKit;
+using UITouch = Foundation.NSObject;
 using UIImage = AppKit.NSImage;
 using UIColor = AppKit.NSColor;
-// ease compilation for [NoMac] decorated members
 using UIGestureRecognizer = Foundation.NSObject;
 using PHLivePhotoBadgeOptions = Foundation.NSObject;
-using UIViewController = Foundation.NSObject;
+using UIViewController = AppKit.NSViewController;
 #endif
 using MapKit;
 using Photos;
@@ -138,6 +137,10 @@ namespace PhotosUI {
 
 		[Export ("livePhotoView:didEndPlaybackWithStyle:")]
 		void DidEndPlayback (PHLivePhotoView livePhotoView, PHLivePhotoViewPlaybackStyle playbackStyle);
+
+		[TV (10,0), iOS (9,1), NoMac]
+		[Export ("livePhotoView:extraMinimumTouchDurationForTouch:withStyle:")]
+		double ExtraMinimumTouchDuration (PHLivePhotoView livePhotoView, UITouch touch, PHLivePhotoViewPlaybackStyle playbackStyle);
 	}
 
 	[Mac (10,13)][NoiOS][NoTV][NoWatch]
@@ -482,7 +485,10 @@ namespace PhotosUI {
 	[NoMac][NoTV]
 	[DisableDefaultCtor]
 	[NoMacCatalyst]
+#if NET // Can't apply Deprecated and Obsoleted to same element
 	[Deprecated (PlatformName.iOS, 13, 0)]
+#endif
+	[Obsoleted (PlatformName.iOS, 14, 0)] // Removed from headers completely
 	[BaseType (typeof (NSExtensionContext))]
 	interface PHEditingExtensionContext
 	{
@@ -490,7 +496,7 @@ namespace PhotosUI {
 
 	interface IPHPickerViewControllerDelegate {}
 
-	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (14,0)]
 	[MacCatalyst (14,0)]
 #if NET
 	[Protocol, Model]
@@ -505,7 +511,7 @@ namespace PhotosUI {
 		void DidFinishPicking (PHPickerViewController picker, PHPickerResult[] results);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (UIViewController))]
 	[Advice ("This type should not be subclassed.")]
@@ -524,9 +530,17 @@ namespace PhotosUI {
 		[Export ("initWithConfiguration:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (PHPickerConfiguration configuration);
+
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0)]
+		[Export ("deselectAssetsWithIdentifiers:")]
+		void DeselectAssetsWithIdentifiers (string[] identifiers);
+
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0)]
+		[Export ("moveAssetWithIdentifier:afterAssetWithIdentifier:")]
+		void MoveAssetWithIdentifier (string identifier, [NullAllowed] string afterIdentifier);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[Advice ("This type should not be subclassed.")]
@@ -553,7 +567,7 @@ namespace PhotosUI {
 		string[] PreselectedAssetIdentifiers { get; set; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[Advice ("This type should not be subclassed.")]
@@ -575,9 +589,64 @@ namespace PhotosUI {
 		[Static]
 		[Export ("anyFilterMatchingSubfilters:")]
 		PHPickerFilter GetAnyFilterMatchingSubfilters (PHPickerFilter[] subfilters);
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (16, 0)]
+		[Static]
+		[Export ("depthEffectPhotosFilter")]
+		PHPickerFilter DepthEffectPhotosFilter { get; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (16, 0)]
+		[Static]
+		[Export ("burstsFilter")]
+		PHPickerFilter BurstsFilter { get; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (15, 0)]
+		[Static]
+		[Export ("panoramasFilter")]
+		PHPickerFilter PanoramasFilter { get; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (15, 0)]
+		[Static]
+		[Export ("screenshotsFilter")]
+		PHPickerFilter ScreenshotsFilter { get; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (15, 0)]
+		[Static]
+		[Export ("screenRecordingsFilter")]
+		PHPickerFilter ScreenRecordingsFilter { get; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (16, 0)]
+		[Static]
+		[Export ("cinematicVideosFilter")]
+		PHPickerFilter CinematicVideosFilter { get; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (15, 0)]
+		[Static]
+		[Export ("slomoVideosFilter")]
+		PHPickerFilter SlomoVideosFilter { get; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (15, 0)]
+		[Static]
+		[Export ("timelapseVideosFilter")]
+		PHPickerFilter TimelapseVideosFilter { get; }
+
+		[NoWatch, NoTV, Mac (13,0), iOS (15,0)]
+		[Static]
+		[Export ("playbackStyleFilter:")]
+		PHPickerFilter GetPlaybackStyleFilter (PHAssetPlaybackStyle playbackStyle);
+
+		[NoWatch, NoTV, Mac (13,0), iOS (15,0)]
+		[Static]
+		[Export ("allFilterMatchingSubfilters:")]
+		PHPickerFilter GetAllFilterMatchingSubfilters (PHPickerFilter[] subfilters);
+
+		[NoWatch, NoTV, Mac (13,0), iOS (15,0)]
+		[Static]
+		[Export ("notFilterOfSubfilter:")]
+		PHPickerFilter GetNotFilterOfSubfilter (PHPickerFilter subfilter);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (14,0)]
 	[MacCatalyst (14,0)]
 	[BaseType (typeof (NSObject))]
 	[Advice ("This type should not be subclassed.")]
@@ -605,7 +674,7 @@ namespace PhotosUI {
 		void PresentLimitedLibraryPicker (UIViewController controller, Action<string[]> completionHandler);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (15,0), MacCatalyst (15,0)]
 	[Native]
 	public enum PHPickerConfigurationSelection : long
 	{

@@ -158,6 +158,10 @@ namespace Photos
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[NullAllowed, Export ("adjustmentFormatIdentifier")]
 		string AdjustmentFormatIdentifier { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0)]
+		[Export ("hasAdjustments")]
+		bool HasAdjustments { get; }
 	}
 
 	[iOS (8,0)]
@@ -269,6 +273,14 @@ namespace Photos
 		[Static]
 		[Export ("assetResourcesForLivePhoto:")]
 		PHAssetResource[] GetAssetResources (PHLivePhoto livePhoto);
+
+		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Export ("pixelWidth")]
+		nint PixelWidth { get; }
+
+		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Export ("pixelHeight")]
+		nint PixelHeight { get; }
 	}
 
 	[iOS (9,0)]
@@ -584,6 +596,9 @@ namespace Photos
 		[Export ("fetchAssetCollectionsContainingAsset:withType:options:")]
 		PHFetchResult FetchAssetCollections (PHAsset asset, PHAssetCollectionType type, [NullAllowed] PHFetchOptions options);
 
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Will be removed in a future release.")]
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Will be removed in a future release.")]
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Will be removed in a future release.")]
 		[Static]
 		[Export ("fetchAssetCollectionsWithALAssetGroupURLs:options:")]
 		PHFetchResult FetchAssetCollections (NSUrl[] assetGroupUrls, [NullAllowed] PHFetchOptions options);
@@ -1175,6 +1190,15 @@ namespace Photos
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("PHLocalIdentifiersErrorKey")]
 		NSString LocalIdentifiersErrorKey { get; }
+
+		[TV (16,0), Mac (13,0), iOS (16,0)]
+		[Export ("fetchPersistentChangesSinceToken:error:")]
+		[return: NullAllowed]
+		PHPersistentChangeFetchResult FetchPersistentChanges (PHPersistentChangeToken token, [NullAllowed] out NSError error);
+
+		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Export ("currentChangeToken")]
+		PHPersistentChangeToken CurrentChangeToken { get; }
 	}
 
 	[Mac (10,13)]
@@ -1471,4 +1495,55 @@ namespace Photos
 		[NullAllowed, Export ("error")]
 		NSError Error { get; }
 	}
+
+	[TV (16,0), Mac (13,0), iOS (16,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface PHPersistentChange
+	{
+		[Export ("changeToken")]
+		PHPersistentChangeToken ChangeToken { get; }
+
+		[Export ("changeDetailsForObjectType:error:")]
+		[return: NullAllowed]
+		PHPersistentObjectChangeDetails ChangeDetailsForObjectType (PHObjectType objectType, [NullAllowed] out NSError error);
+	}
+
+	delegate void PHPersistentChangeFetchResultEnumerator (PHPersistentChange change, ref bool stop);
+
+
+	[TV (16,0), Mac (13,0), iOS (16,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface PHPersistentChangeFetchResult
+	{
+		[Export ("enumerateChangesWithBlock:")]
+		void EnumerateChanges (PHPersistentChangeFetchResultEnumerator block);
+	}
+
+	[TV (16,0), Mac (13,0), iOS (16,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface PHPersistentChangeToken : NSCopying, NSSecureCoding
+	{
+	}
+
+	[TV (16,0), Mac (13,0), iOS (16,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface PHPersistentObjectChangeDetails
+	{
+		[Export ("objectType")]
+		PHObjectType ObjectType { get; }
+
+		[Export ("insertedLocalIdentifiers", ArgumentSemantic.Strong)]
+		NSSet<NSString> InsertedLocalIdentifiers { get; }
+
+		[Export ("updatedLocalIdentifiers", ArgumentSemantic.Strong)]
+		NSSet<NSString> UpdatedLocalIdentifiers { get; }
+
+		[Export ("deletedLocalIdentifiers", ArgumentSemantic.Strong)]
+		NSSet<NSString> DeletedLocalIdentifiers { get; }
+	}
+
 }
