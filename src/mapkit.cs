@@ -1571,7 +1571,7 @@ namespace MapKit {
 		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 		[Static]
 		[Export ("cameraLookingAtMapItem:forViewSize:allowPitch:")]
-		MKMapCamera CameraLookingAtMapItem (MKMapItem mapItem, CGSize viewSize, bool allowPitch);
+		MKMapCamera CameraLookingAt (MKMapItem mapItem, CGSize viewSize, bool allowPitch);
 	}
 
 	[NoWatch]
@@ -1973,7 +1973,7 @@ namespace MapKit {
 
 	[NoWatch]
 	[TV (9,2)][NoWatch][iOS (9,3)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 #if MONOMAC || XAMCORE_3_0 // "You do not create instances of this class directly"
 	[DisableDefaultCtor]
 #endif
@@ -2113,7 +2113,7 @@ namespace MapKit {
 #endif 
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 	interface MKPointOfInterestFilter : NSSecureCoding, NSCopying
 	{
 		[Static]
@@ -2146,7 +2146,7 @@ namespace MapKit {
 	interface IMKGeoJsonObject {}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-	[BaseType (typeof (NSObject), Name = "MKGeoJSONDecoder")]
+	[BaseType (typeof(NSObject), Name = "MKGeoJSONDecoder")]
 	interface MKGeoJsonDecoder
 	{
 		[Export ("geoJSONObjectsWithData:error:")]
@@ -2155,7 +2155,7 @@ namespace MapKit {
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-	[BaseType (typeof (NSObject), Name = "MKGeoJSONFeature")]
+	[BaseType (typeof(NSObject), Name = "MKGeoJSONFeature")]
 	interface MKGeoJsonFeature : MKGeoJsonObject
 	{
 		[NullAllowed, Export ("identifier")]
@@ -2169,7 +2169,7 @@ namespace MapKit {
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 	interface MKMapCameraZoomRange : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithMinCenterCoordinateDistance:maxCenterCoordinateDistance:")]
@@ -2195,7 +2195,7 @@ namespace MapKit {
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 	interface MKMapCameraBoundary : NSSecureCoding, NSCopying
 	{
 		[Export ("initWithMapRect:")]
@@ -2214,7 +2214,7 @@ namespace MapKit {
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-	[BaseType (typeof (MKShape))]
+	[BaseType (typeof(MKShape))]
 	interface MKMultiPolygon : MKOverlay, MKGeoJsonObject
 	{
 		[Export ("initWithPolygons:")]
@@ -2226,7 +2226,7 @@ namespace MapKit {
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-	[BaseType (typeof (MKOverlayPathRenderer))]
+	[BaseType (typeof(MKOverlayPathRenderer))]
 	interface MKMultiPolygonRenderer
 	{
 		[Export ("initWithMultiPolygon:")]
@@ -2237,7 +2237,7 @@ namespace MapKit {
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-	[BaseType (typeof (MKShape))]
+	[BaseType (typeof(MKShape))]
 	interface MKMultiPolyline : MKOverlay, MKGeoJsonObject
 	{
 		[Export ("initWithPolylines:")]
@@ -2249,7 +2249,7 @@ namespace MapKit {
 	}
 
 	[TV (13,0), NoWatch, Mac (10,15), iOS (13,0)]
-	[BaseType (typeof (MKOverlayPathRenderer))]
+	[BaseType (typeof(MKOverlayPathRenderer))]
 	interface MKMultiPolylineRenderer
 	{
 		[Export ("initWithMultiPolyline:")]
@@ -2272,7 +2272,7 @@ namespace MapKit {
 
 	[TV (14, 0), NoWatch, Mac (11, 0), iOS (14, 0)]
 	[MacCatalyst (14,0)]
-	[BaseType (typeof (NSObject))]
+	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface MKLocalPointsOfInterestRequest : NSCopying
 	{
@@ -2339,13 +2339,9 @@ namespace MapKit {
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[BaseType (typeof (MKMapConfiguration))]
-	[DisableDefaultCtor]
+	[DesignatedDefaultCtor]
 	interface MKHybridMapConfiguration
 	{
-		[DesignatedInitializer]
-		[Export ("init")]
-		NativeHandle Constructor ();
-
 		[Export ("initWithElevationStyle:")]
 		NativeHandle Constructor (MKMapElevationStyle elevationStyle);
 
@@ -2370,13 +2366,9 @@ namespace MapKit {
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[BaseType (typeof (MKMapConfiguration))]
-	[DisableDefaultCtor]
+	[DesignatedDefaultCtor]
 	interface MKImageryMapConfiguration
 	{
-		[DesignatedInitializer]
-		[Export ("init")]
-		NativeHandle Constructor ();
-
 		[Export ("initWithElevationStyle:")]
 		NativeHandle Constructor (MKMapElevationStyle elevationStyle);
 	}
@@ -2421,6 +2413,7 @@ namespace MapKit {
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface MKLookAroundSnapshot
 	{
 		[Export ("image")]
@@ -2490,7 +2483,7 @@ namespace MapKit {
 
 		[Export ("initWithNibName:bundle:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor ([NullAllowed] string nibNameOrNil, [NullAllowed] NSBundle nibBundleOrNil);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle nibBundle);
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
@@ -2535,7 +2528,6 @@ namespace MapKit {
 		[NullAllowed, Export ("iconStyle")]
 		MKIconStyle IconStyle { get; }
 
-		// @property (readonly, nonatomic) MKPointOfInterestCategory _Nullable pointOfInterestCategory;
 		[BindAs (typeof (MKPointOfInterestCategory))]
 		[NullAllowed, Export ("pointOfInterestCategory")]
 		NSString PointOfInterestCategory { get; }
@@ -2569,13 +2561,9 @@ namespace MapKit {
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[BaseType (typeof (MKMapConfiguration))]
-	[DisableDefaultCtor]
+	[DesignatedDefaultCtor]
 	interface MKStandardMapConfiguration
 	{
-		[DesignatedInitializer]
-		[Export ("init")]
-		NativeHandle Constructor ();
-
 		[Export ("initWithElevationStyle:")]
 		NativeHandle Constructor (MKMapElevationStyle elevationStyle);
 

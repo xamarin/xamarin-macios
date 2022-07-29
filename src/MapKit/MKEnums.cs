@@ -180,7 +180,7 @@ namespace MapKit {
 	public enum MKDirectionsRoutePreference : long
 	{
 		Any = 0,
-		Avoid
+		Avoid,
 	}
 
 	[Flags]
@@ -190,7 +190,7 @@ namespace MapKit {
 	{
 		PointsOfInterest = 1 << (int)MKMapFeatureType.PointOfInterest,
 		Territories = 1 << (int)MKMapFeatureType.Territory,
-		PhysicalFeatures = 1 << (int)MKMapFeatureType.PhysicalFeature
+		PhysicalFeatures = 1 << (int)MKMapFeatureType.PhysicalFeature,
 	}
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
@@ -199,7 +199,7 @@ namespace MapKit {
 	{
 		TopLeading = 0,
 		TopTrailing,
-		BottomTrailing
+		BottomTrailing,
 	}
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
@@ -207,7 +207,7 @@ namespace MapKit {
 	public enum MKMapElevationStyle : long
 	{
 		Flat = 0,
-		Realistic
+		Realistic,
 	}
 
 	[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
@@ -216,7 +216,7 @@ namespace MapKit {
 	{
 		PointOfInterest = 0,
 		Territory,
-		PhysicalFeature
+		PhysicalFeature,
 	}
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
@@ -224,7 +224,7 @@ namespace MapKit {
 	public enum MKStandardMapEmphasisStyle : long
 	{
 		Default = 0,
-		Muted
+		Muted,
 	}
 
 #if !WATCH
