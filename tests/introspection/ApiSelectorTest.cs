@@ -904,6 +904,14 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "MPSGraphExecutableExecutionDescriptor":
+				switch (selectorName) {
+				case "copyWithZone:":
+					if (!TestRuntime.CheckXcodeVersion (14, 0))
+						return true;
+					break;
+				}
+				break;
 			case "UIControl":
 #if __MACCATALYST__
 				switch (selectorName) {
