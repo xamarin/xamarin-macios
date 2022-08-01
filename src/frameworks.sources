@@ -2015,6 +2015,7 @@ MACOS_FRAMEWORKS =          \
 	GameController          \
 	GameplayKit             \
 	GLKit                   \
+	HealthKit \
 	ImageIO                 \
 	ImageCaptureCore	\
 	ImageKit                \

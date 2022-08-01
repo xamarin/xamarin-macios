@@ -275,6 +275,7 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ShazamKit", "ShazamKit", 12,0 },
 
 					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
+					{ "HealthKit", "HealthKit", 13,0 },
 				};
 			}
 			return mac_frameworks;
