@@ -4412,6 +4412,7 @@ namespace HealthKit {
 
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 	[BaseType (typeof (HKSampleType))]
+	[DisableDefaultCtor] // NSInvalidArgumentException Reason: The -init method is not available on HKPrescriptionType
 	interface HKPrescriptionType
 	{
 	}
