@@ -1614,7 +1614,7 @@ namespace MetalPerformanceShadersGraph
 	// @interface MPSGraphExecutableExecutionDescriptor : NSObject
 	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 	[BaseType (typeof(NSObject))]
-	interface MPSGraphExecutableExecutionDescriptor
+	interface MPSGraphExecutableExecutionDescriptor : NSCopying
 	{
 		// @property (readwrite, atomic) MPSGraphExecutableScheduledHandler _Nonnull scheduledHandler;
 		[Export ("scheduledHandler", ArgumentSemantic.Assign)]

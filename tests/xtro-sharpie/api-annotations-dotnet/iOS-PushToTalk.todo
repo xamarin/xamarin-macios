@@ -29,3 +29,5 @@
 !missing-type! PTChannelManager not bound
 !missing-type! PTParticipant not bound
 !missing-type! PTPushResult not bound
+!missing-enum! PTTransmissionMode not bound
+!missing-selector! PTChannelManager::setTransmissionMode:forChannelUUID:completionHandler: not bound
