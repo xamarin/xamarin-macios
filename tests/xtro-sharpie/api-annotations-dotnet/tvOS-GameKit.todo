@@ -1,2 +1,1 @@
-!deprecated-attribute-missing! GKLocalPlayer::loadFriendPlayersWithCompletionHandler: missing a [Deprecated] attribute
-!deprecated-attribute-missing! GKTurnBasedMatch::endMatchInTurnWithMatchData:scores:achievements:completionHandler: missing a [Deprecated] attribute
+!deprecated-attribute-missing! GKBasePlayer::playerID missing a [Deprecated] attribute

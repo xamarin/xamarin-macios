@@ -7,6 +7,8 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using System.Linq;
 
+using Xamarin.MacDev.Tasks;
+
 namespace Xamarin.iOS.Tasks
 {
 	[TestFixture]
@@ -26,7 +28,7 @@ namespace Xamarin.iOS.Tasks
 			get; set;
 		}
 
-		protected CompileAppManifestTaskCore Task {
+		protected CompileAppManifest Task {
 			get; set;
 		}
 
