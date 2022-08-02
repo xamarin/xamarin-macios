@@ -1,5 +1,0 @@
-!missing-enum! ASWebAuthenticationSessionErrorCode not bound
-!missing-field! ASAuthorizationPublicKeyCredentialUserVerificationPreferenceDiscouraged not bound
-!missing-field! ASAuthorizationPublicKeyCredentialUserVerificationPreferencePreferred not bound
-!missing-field! ASAuthorizationPublicKeyCredentialUserVerificationPreferenceRequired not bound
-!missing-field! ASWebAuthenticationSessionErrorDomain not bound

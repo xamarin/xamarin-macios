@@ -78,7 +78,7 @@ namespace AuthenticationServices {
 		Url,
 	}
 
-	[NoTV]
+	[TV (16,0)]
 	[Watch (6,2)]
 	[Mac (10,15)]
 	[iOS (12,0)]
@@ -1059,7 +1059,7 @@ namespace AuthenticationServices {
 		NSString Enterprise { get; }
 	}
 
-	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, NoTV]
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), NoWatch, TV (16,0)]
 	[Static]
 	interface ASAuthorizationPublicKeyCredentialUserVerificationPreference
 	{
