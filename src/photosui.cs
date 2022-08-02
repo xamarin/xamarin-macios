@@ -533,11 +533,11 @@ namespace PhotosUI {
 
 		[NoWatch, NoTV, Mac (13,0), iOS (16,0)]
 		[Export ("deselectAssetsWithIdentifiers:")]
-		void DeselectAssetsWithIdentifiers (string[] identifiers);
+		void DeselectAssets (string[] identifiers);
 
 		[NoWatch, NoTV, Mac (13,0), iOS (16,0)]
 		[Export ("moveAssetWithIdentifier:afterAssetWithIdentifier:")]
-		void MoveAssetWithIdentifier (string identifier, [NullAllowed] string afterIdentifier);
+		void MoveAsset (string identifier, [NullAllowed] string afterIdentifier);
 	}
 
 	[NoWatch, NoTV, Mac (13,0), iOS (14,0)]
