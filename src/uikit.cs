@@ -18221,11 +18221,19 @@ namespace UIKit {
 	}
 
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UserNotifications.UNNotificationAction' instead.")]
+#if WATCH
+	[Static]
+#else
 	[NoTV]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DesignatedDefaultCtor]
-	partial interface UIUserNotificationAction : NSCopying, NSMutableCopying, NSSecureCoding {
+#endif
+	partial interface UIUserNotificationAction 
+#if !WATCH
+		: NSCopying, NSMutableCopying, NSSecureCoding
+#endif
+		{
 
 		[NoWatch]
 		[Export ("identifier")]
