@@ -711,28 +711,33 @@ namespace UIKit {
 		[Notification (typeof (UIAccessibilityAnnouncementFinishedEventArgs))]
 		NSString AnnouncementDidFinishNotification { get; }
 
+		[NoWatch]
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use 'VoiceOverStatusDidChangeNotification' instead.")]
 		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use 'VoiceOverStatusDidChangeNotification' instead.")]
 		[Field ("UIAccessibilityVoiceOverStatusChanged")]
 		NSString VoiceOverStatusChanged { get; }
 
-		[TV (11,0), iOS (11,0)]
+		[TV (11,0), iOS (11,0), NoWatch]
 		[Field ("UIAccessibilityVoiceOverStatusDidChangeNotification")]
 		[Notification]
 		NSString VoiceOverStatusDidChangeNotification { get; }
 
+		[NoWatch]
 		[Field ("UIAccessibilityMonoAudioStatusDidChangeNotification")]
 		[Notification]
 		NSString MonoAudioStatusDidChangeNotification { get; }
 
+		[NoWatch]
 		[Field ("UIAccessibilityClosedCaptioningStatusDidChangeNotification")]
 		[Notification]
 		NSString ClosedCaptioningStatusDidChangeNotification { get; }
 
+		[NoWatch]
 		[Field ("UIAccessibilityInvertColorsStatusDidChangeNotification")]
 		[Notification]
 		NSString InvertColorsStatusDidChangeNotification { get; }
 
+		[NoWatch]
 		[Field ("UIAccessibilityGuidedAccessStatusDidChangeNotification")]
 		[Notification]
 		NSString GuidedAccessStatusDidChangeNotification { get; }
@@ -770,49 +775,49 @@ namespace UIKit {
 		[Field ("UIAccessibilitySpeechAttributePitch")]
 		NSString SpeechAttributePitch { get; }
 
-		[iOS (8,0)]
+		[iOS (8,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilityBoldTextStatusDidChangeNotification")]
 		NSString BoldTextStatusDidChangeNotification { get; }
 
-		[TV (14,0), iOS (14,0)]
+		[TV (14,0), iOS (14,0), NoWatch]
 		[MacCatalyst (14,0)]
 		[Notification]
 		[Field ("UIAccessibilityButtonShapesEnabledStatusDidChangeNotification")]
 		NSString ButtonShapesEnabledStatusDidChangeNotification { get; }
 
-		[iOS (8,0)]
+		[iOS (8,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilityDarkerSystemColorsStatusDidChangeNotification")]
 		NSString DarkerSystemColorsStatusDidChangeNotification { get; }
 
-		[iOS (8,0)]
+		[iOS (8,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilityGrayscaleStatusDidChangeNotification")]
 		NSString GrayscaleStatusDidChangeNotification { get; }
 
-		[iOS (8,0)]
+		[iOS (8,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilityReduceMotionStatusDidChangeNotification")]
 		NSString ReduceMotionStatusDidChangeNotification { get; }
 
-		[TV (14,0), iOS (14,0)]
+		[TV (14,0), iOS (14,0), NoWatch]
 		[MacCatalyst (14,0)]
 		[Notification]
 		[Field ("UIAccessibilityPrefersCrossFadeTransitionsStatusDidChangeNotification")]
 		NSString PrefersCrossFadeTransitionsStatusDidChangeNotification { get; }
 
-		[iOS (13,0), TV (13,0)]
+		[iOS (13,0), TV (13,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilityVideoAutoplayStatusDidChangeNotification")]
 		NSString VideoAutoplayStatusDidChangeNotification { get; }
 
-		[iOS (8,0)]
+		[iOS (8,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilityReduceTransparencyStatusDidChangeNotification")]
 		NSString ReduceTransparencyStatusDidChangeNotification { get; }
 
-		[iOS (8,0)]
+		[iOS (8,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilitySwitchControlStatusDidChangeNotification")]
 		NSString SwitchControlStatusDidChangeNotification { get; }
@@ -836,17 +841,17 @@ namespace UIKit {
 		[Field ("UIAccessibilityResumeAssistiveTechnologyNotification")]
 		int ResumeAssistiveTechnologyNotification { get; } // UIAccessibilityNotifications => uint32_t
 
-		[iOS (8,0)]
+		[iOS (8,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilitySpeakScreenStatusDidChangeNotification")]
 		NSString SpeakScreenStatusDidChangeNotification { get; }
 
-		[iOS (8,0)]
+		[iOS (8,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilitySpeakSelectionStatusDidChangeNotification")]
 		NSString SpeakSelectionStatusDidChangeNotification { get; }
 
-		[iOS (9,0)]
+		[iOS (9,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilityShakeToUndoDidChangeNotification")]
 		NSString ShakeToUndoDidChangeNotification { get; }
@@ -881,23 +886,23 @@ namespace UIKit {
 		[Field ("UIAccessibilityNotificationVoiceOverIdentifier")]
 		NSString NotificationVoiceOverIdentifier { get; }
 
-		[NoTV]
+		[NoTV, NoWatch]
 		[iOS (10,0)]
 		[Notification]
 		[Field ("UIAccessibilityHearingDevicePairedEarDidChangeNotification")]
 		NSString HearingDevicePairedEarDidChangeNotification { get; }
 
-		[iOS (10,0), TV (10,0)]
+		[iOS (10,0), TV (10,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilityAssistiveTouchStatusDidChangeNotification")]
 		NSString AssistiveTouchStatusDidChangeNotification { get; }
 
-		[iOS (13,0), TV (13,0)]
+		[iOS (13,0), TV (13,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilityShouldDifferentiateWithoutColorDidChangeNotification")]
 		NSString ShouldDifferentiateWithoutColorDidChangeNotification { get; }
 
-		[iOS (13,0), TV (13,0)]
+		[iOS (13,0), TV (13,0), NoWatch]
 		[Notification]
 		[Field ("UIAccessibilityOnOffSwitchLabelsDidChangeNotification")]
 		NSString OnOffSwitchLabelsDidChangeNotification { get; }
