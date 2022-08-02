@@ -18227,29 +18227,37 @@ namespace UIKit {
 	[DesignatedDefaultCtor]
 	partial interface UIUserNotificationAction : NSCopying, NSMutableCopying, NSSecureCoding {
 
+		[NoWatch]
 		[Export ("identifier")]
 		string Identifier { get; }
 
+		[NoWatch]
 		[Export ("title")]
 		string Title { get; }
 
+		[NoWatch]
 		[Export ("activationMode", ArgumentSemantic.Assign)]
 		UIUserNotificationActivationMode ActivationMode { get; }
 
+		[NoWatch]
 		[Export ("authenticationRequired", ArgumentSemantic.Assign)]
 		bool AuthenticationRequired { [Bind ("isAuthenticationRequired")]get; }
 
+		[NoWatch]
 		[Export ("destructive", ArgumentSemantic.Assign)]
 		bool Destructive { [Bind ("isDestructive")]get; }
 
+		[NoWatch]
 		[iOS (9,0)]
 		[Export ("parameters", ArgumentSemantic.Copy)]
 		NSDictionary Parameters { get; [NotImplemented] set; }
 
+		[NoWatch]
 		[iOS (9,0)]
 		[Export ("behavior", ArgumentSemantic.Assign)]
 		UIUserNotificationActionBehavior Behavior { get; [NotImplemented] set;}
 
+		[NoWatch]
 		[iOS (9,0)]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNTextInputNotificationAction.TextInputButtonTitle' instead.")]
 		[Field ("UIUserNotificationTextInputActionButtonTitleKey")]
