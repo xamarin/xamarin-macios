@@ -15,7 +15,7 @@ using Foundation;
 using HealthKit;
 using NUnit.Framework;
 #if MONOMAC
-using UIKit = AppKit;
+using AppKit;
 #else
 using UIKit;
 #endif
