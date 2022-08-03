@@ -133,7 +133,7 @@ steps:
 
     $macOSVersion = $versionData | Select-Object -ExpandProperty "macOS"
     $macOSPath = "$dir/not-signed-package/xamarin.mac-$macOSVersion.pkg"
-    Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$path"
+    Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$macOSPath"
 
   displayName: 'Set pkgs url'
   timeoutInMinutes: 5
