@@ -314,7 +314,7 @@ namespace PassKit {
 	[Native]
 	public enum PKIdentityButtonStyle : long
 	{
-		PKIdentityButtonStyleBlack = 0,
+		Black = 0,
 		Outline,
 	}
 

@@ -223,7 +223,7 @@ namespace PassKit {
 		[Async]
 		[Watch (9,0), iOS (16,0), MacCatalyst (16,0), Mac (13,0), NoTV]
 		[Export ("encryptedServiceProviderDataForSecureElementPass:completion:")]
-		void EncryptedServiceProviderDataForSecureElementPass (PKSecureElementPass secureElementPass, Action<NSDictionary, NSError> completion);
+		void GetEncryptedServiceProviderData (PKSecureElementPass secureElementPass, Action<NSDictionary, NSError> completion);
 	}
 
 	[Static]
@@ -1071,11 +1071,11 @@ namespace PassKit {
 
 		[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
 		[Field ("PKPaymentNetworkBancomat")]
-		NSString PKPaymentNetworkBancomat { get; }
+		NSString Bancomat { get; }
 
 		[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
 		[Field ("PKPaymentNetworkBancontact")]
-		NSString PKPaymentNetworkBancontact { get; }
+		NSString Bancontact { get; }
 	}
 
 #if !WATCH
@@ -1665,6 +1665,9 @@ namespace PassKit {
 	interface PKAddSecureElementPassViewControllerDelegate {
 
 		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'DidFinishAddingSecureElementPasses' instead.")]
+#if !XAMCORE_5_0
+		[Abstract]
+#endif
 		[Export ("addSecureElementPassViewController:didFinishAddingSecureElementPass:error:")]
 		void DidFinishAddingSecureElementPass (PKAddSecureElementPassViewController controller, [NullAllowed] PKSecureElementPass pass, [NullAllowed] NSError error);
 	
@@ -1704,10 +1707,12 @@ namespace PassKit {
 	interface PKShareablePassMetadata {
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("initWithProvisioningCredentialIdentifier:cardConfigurationIdentifier:sharingInstanceIdentifier:passThumbnailImage:ownerDisplayName:localizedDescription:")]
 		NativeHandle Constructor (string credentialIdentifier, string cardConfigurationIdentifier, string sharingInstanceIdentifier, CGImage passThumbnailImage, string ownerDisplayName, string localizedDescription);
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
 		[Export ("initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:passThumbnailImage:ownerDisplayName:localizedDescription:accountHash:templateIdentifier:relyingPartyIdentifier:requiresUnifiedAccessCapableDevice:")]
 		NativeHandle Constructor (string credentialIdentifier, string sharingInstanceIdentifier, CGImage passThumbnailImage, string ownerDisplayName, string localizedDescription, string accountHash, string templateIdentifier, string relyingPartyIdentifier, bool requiresUnifiedAccessCapableDevice);
@@ -1715,12 +1720,12 @@ namespace PassKit {
 		[Internal]
 		[NoWatch, NoTV, iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Export ("initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:")]
-		IntPtr InitWithCardTemplate (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview);
+		NativeHandle InitWithCardTemplate (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview);
 
 		[Internal]
 		[NoWatch, NoTV, iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Export ("initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:")]
-		IntPtr InitWithCardConfiguration (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview);
+		NativeHandle InitWithCardConfiguration (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview);
 
 		[Export ("credentialIdentifier", ArgumentSemantic.Strong)]
 		string CredentialIdentifier { get; }
@@ -1732,14 +1737,17 @@ namespace PassKit {
 		string SharingInstanceIdentifier { get; }
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("passThumbnailImage")]
 		CGImage PassThumbnailImage { get; }
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("localizedDescription", ArgumentSemantic.Strong)]
 		string LocalizedDescription { get; }
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("ownerDisplayName", ArgumentSemantic.Strong)]
 		string OwnerDisplayName { get; }
 
@@ -1748,6 +1756,7 @@ namespace PassKit {
 		string AccountHash { get; [iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)] set; }
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Watch (8,0), iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
 		[Export ("templateIdentifier", ArgumentSemantic.Strong)]
 		string TemplateIdentifier { get; }
@@ -1793,13 +1802,14 @@ namespace PassKit {
 		PKShareablePassMetadata[] CredentialsMetadata { get; }
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("provisioningPolicyIdentifier", ArgumentSemantic.Strong)]
 		string ProvisioningPolicyIdentifier { get; }
 
 		[NoWatch, NoTV, iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Static, Async]
 		[Export ("configurationForPassMetadata:primaryAction:completion:")]
-		void ConfigurationForPassMetadata (PKShareablePassMetadata[] passMetadata, PKAddShareablePassConfigurationPrimaryAction action, Action<PKAddShareablePassConfiguration, NSError> completion);
+		void GetConfiguration (PKShareablePassMetadata[] passMetadata, PKAddShareablePassConfigurationPrimaryAction action, Action<PKAddShareablePassConfiguration, NSError> completion);
 	}
 
 	[Mac (11,0)]
@@ -2209,7 +2219,7 @@ namespace PassKit {
 		[Abstract]
 		[Export ("intentToStoreForElement:")]
 		[return: NullAllowed]
-		PKIdentityIntentToStore IntentToStore (PKIdentityElement element);
+		PKIdentityIntentToStore GetIntentToStore (PKIdentityElement element);
 
 		[Abstract]
 		[Export ("addElements:withIntentToStore:")]
@@ -2282,6 +2292,7 @@ namespace PassKit {
 
 	[NoWatch, iOS (16,0), Mac (13,0), MacCatalyst (16,0), NoTV]
 	[BaseType (typeof (PKPaymentSummaryItem))]
+	[DisableDefaultCtor]
 	interface PKAutomaticReloadPaymentSummaryItem // : NSCoding, NSCopying, NSSecureCoding // https://feedbackassistant.apple.com/feedback/11018799
 	{
 		[Export ("thresholdAmount", ArgumentSemantic.Strong)]
@@ -2314,7 +2325,7 @@ namespace PassKit {
 
 		[Static]
 		[Export ("buttonWithLabel:style:")]
-		PKIdentityButton ButtonWithLabel (PKIdentityButtonLabel label, PKIdentityButtonStyle style);
+		PKIdentityButton Create (PKIdentityButtonLabel label, PKIdentityButtonStyle style);
 
 		[Export ("cornerRadius")]
 		nfloat CornerRadius { get; set; }
@@ -2432,7 +2443,7 @@ namespace PassKit {
 	{
 		[Export ("initWithOrderTypeIdentifier:orderIdentifier:webServiceURL:authenticationToken:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (string orderTypeIdentifier, string orderIdentifier, NSUrl webServiceURL, string authenticationToken);
+		NativeHandle Constructor (string orderTypeIdentifier, string orderIdentifier, NSUrl webServiceUrl, string authenticationToken);
 
 		[Export ("orderTypeIdentifier")]
 		string OrderTypeIdentifier { get; set; }
@@ -2575,7 +2586,7 @@ namespace PassKit {
 		[Async]
 		[Static]
 		[Export ("sessionForPass:delegate:completion:")]
-		void SessionForPass (PKSecureElementPass pass, IPKVehicleConnectionDelegate @delegate, Action<PKVehicleConnectionSession, NSError> completion);
+		void GetSession (PKSecureElementPass pass, IPKVehicleConnectionDelegate @delegate, Action<PKVehicleConnectionSession, NSError> completion);
 
 		[Export ("sendData:error:")]
 		bool SendData (NSData message, [NullAllowed] out NSError error);
