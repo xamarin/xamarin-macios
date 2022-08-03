@@ -1563,7 +1563,7 @@ namespace AuthenticationServices {
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface ASAuthorizationProviderExtensionRegistrationHandler
 	{
 		[Async]
