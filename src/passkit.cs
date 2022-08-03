@@ -2196,8 +2196,10 @@ namespace PassKit {
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	interface IPKIdentityDocumentDescriptor {}
+
+	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	[BaseType (typeof (NSObject))]
 	interface PKIdentityDocumentDescriptor
 	{
 		[Abstract]
@@ -2256,7 +2258,7 @@ namespace PassKit {
 	[NoWatch, iOS (16,0), Mac (13,0), MacCatalyst (16,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface PKAutomaticReloadPaymentRequest
+	interface PKAutomaticReloadPaymentRequest // : NSCoding, NSCopying, NSSecureCoding // https://feedbackassistant.apple.com/feedback/11018799
 	{
 		[Export ("paymentDescription")]
 		string PaymentDescription { get; set; }
@@ -2280,7 +2282,7 @@ namespace PassKit {
 
 	[NoWatch, iOS (16,0), Mac (13,0), MacCatalyst (16,0), NoTV]
 	[BaseType (typeof (PKPaymentSummaryItem))]
-	interface PKAutomaticReloadPaymentSummaryItem
+	interface PKAutomaticReloadPaymentSummaryItem // : NSCoding, NSCopying, NSSecureCoding // https://feedbackassistant.apple.com/feedback/11018799
 	{
 		[Export ("thresholdAmount", ArgumentSemantic.Strong)]
 		NSDecimalNumber ThresholdAmount { get; set; }
@@ -2292,7 +2294,7 @@ namespace PassKit {
 	{
 		[Async]
 		[Export ("checkCanRequestDocument:completion:")]
-		void CheckCanRequestDocument (PKIdentityDocumentDescriptor descriptor, Action<bool> completion);
+		void CheckCanRequestDocument (IPKIdentityDocumentDescriptor descriptor, Action<bool> completion);
 
 		[Async]
 		[Export ("requestDocument:completion:")]
@@ -2414,7 +2416,7 @@ namespace PassKit {
 	interface PKIdentityRequest
 	{
 		[NullAllowed, Export ("descriptor", ArgumentSemantic.Assign)]
-		PKIdentityDocumentDescriptor Descriptor { get; set; }
+		IPKIdentityDocumentDescriptor Descriptor { get; set; }
 
 		[NullAllowed, Export ("nonce", ArgumentSemantic.Copy)]
 		NSData Nonce { get; set; }
@@ -2426,7 +2428,7 @@ namespace PassKit {
 	[NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface PKPaymentOrderDetails
+	interface PKPaymentOrderDetails // : NSCopying, NSSecureCoding // https://feedbackassistant.apple.com/feedback/11018799
 	{
 		[Export ("initWithOrderTypeIdentifier:orderIdentifier:webServiceURL:authenticationToken:")]
 		[DesignatedInitializer]
@@ -2448,7 +2450,7 @@ namespace PassKit {
 	[NoWatch, iOS (16,0), MacCatalyst (16,0), Mac (13,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface PKPaymentTokenContext
+	interface PKPaymentTokenContext // : NSCoding, NSCopying, NSSecureCoding // https://feedbackassistant.apple.com/feedback/11018799
 	{
 		[Export ("initWithMerchantIdentifier:externalIdentifier:merchantName:merchantDomain:amount:")]
 		[DesignatedInitializer]
@@ -2473,7 +2475,7 @@ namespace PassKit {
 	[NoWatch, iOS (16,0), Mac (13,0), MacCatalyst (16,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface PKRecurringPaymentRequest
+	interface PKRecurringPaymentRequest // : NSCoding, NSCopying, NSSecureCoding // https://feedbackassistant.apple.com/feedback/11018799
 	{
 		[Export ("initWithPaymentDescription:regularBilling:managementURL:")]
 		[DesignatedInitializer]
@@ -2501,7 +2503,7 @@ namespace PassKit {
 	[NoWatch, NoTV, iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface PKShareablePassMetadataPreview
+	interface PKShareablePassMetadataPreview // : NSCoding, NSCopying, NSSecureCoding // https://feedbackassistant.apple.com/feedback/11018799
 	{
 		[Export ("initWithPassThumbnail:localizedDescription:")]
 		NativeHandle Constructor (CGImage passThumbnail, string description);
@@ -2532,8 +2534,15 @@ namespace PassKit {
 
 	[iOS (16,0), MacCatalyst (16,0), NoTV, NoWatch, NoMac]
 	[BaseType (typeof (UIViewController))]
+	[DisableDefaultCtor]
 	interface PKShareSecureElementPassViewController
 	{
+		// from UIViewController
+		[DesignatedInitializer]
+		[Export ("initWithNibName:bundle:")]
+		[PostGet ("NibBundle")]
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+
 		[Export ("initWithSecureElementPass:delegate:")]
 		NativeHandle Constructor (PKSecureElementPass pass, [NullAllowed] IPKShareSecureElementPassViewControllerDelegate @delegate);
 
