@@ -790,6 +790,10 @@ FOUNDATION_SOURCES = \
 	Foundation/NSBundleResourceRequest.cs \
 	Foundation/NSCalendar.cs \
 	Foundation/NSCoder.cs \
+	Foundation/NSOrderedCollectionChange.cs \
+	Foundation/NSOrderedCollectionChange_1.cs \
+	Foundation/NSOrderedCollectionDifference.cs \
+	Foundation/NSOrderedCollectionDifference_1.cs \
 	Foundation/NSConnection.cs \
 	Foundation/NSData.cs \
 	Foundation/NSDate.cs \

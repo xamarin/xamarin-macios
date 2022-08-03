@@ -243,6 +243,43 @@ namespace Foundation
 		[Export ("arrayWithContentsOfURL:error:")]
 		[return: NullAllowed]
 		NSArray FromUrl (NSUrl url, out NSError error);
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Internal]
+		[Export ("differenceFromArray:withOptions:")]
+		NativeHandle _GetDifference (NSArray other, NSOrderedCollectionDifferenceCalculationOptions options);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference (NSArray.FromNSObjects (other), options))")]
+		[return: NullAllowed]
+		NSOrderedCollectionDifference GetDifference (NSObject[] other, NSOrderedCollectionDifferenceCalculationOptions options);
+
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("differenceFromArray:")]
+		NativeHandle _GetDifference (NSArray other);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference(NSArray.FromNSObjects (other)))")]
+		[return: NullAllowed]
+		NSOrderedCollectionDifference GetDifference (NSObject[] other);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("arrayByApplyingDifference:")]
+		[return: NullAllowed]
+		NativeHandle _GetArrayByApplyingDifference (NSOrderedCollectionDifference difference);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("NSArray.ArrayFromHandle<NSObject> (_GetArrayByApplyingDifference (difference))")]
+		[return: NullAllowed]
+		NSObject[] GetArrayByApplyingDifference (NSOrderedCollectionDifference difference);
+
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("differenceFromArray:withOptions:usingEquivalenceTest:")]
+		NativeHandle _GetDifferenceFromArray (NSArray other, NSOrderedCollectionDifferenceCalculationOptions options, /* Func<NSObject, NSObject, bool> block */ ref BlockLiteral block);
+#endif
 	}
 
 #if MONOMAC
@@ -619,6 +656,59 @@ namespace Foundation
 		[Async (ResultTypeName = "NSLoadFromHtmlResult")]
 		[Wrap ("LoadFromHtml (data, options.GetDictionary ()!, completionHandler)")]
 		void LoadFromHtml (NSData data, NSAttributedStringDocumentAttributes options, NSAttributedStringCompletionHandler completionHandler);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initWithContentsOfMarkdownFileAtURL:options:baseURL:error:")]
+		NativeHandle Constructor (NSUrl markdownFile, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initWithMarkdown:options:baseURL:error:")]
+		NativeHandle Constructor (NSData markdown, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("initWithMarkdownString:options:baseURL:error:")]
+		NativeHandle Constructor (string markdownString, [NullAllowed] NSAttributedStringMarkdownParsingOptions options, [NullAllowed] NSUrl baseUrl, [NullAllowed] out NSError error);
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("attributedStringByInflectingString")]
+		NSAttributedString AttributedStringByInflectingString { get; }
+
+	}
+
+	// we follow the API found in swift
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	public enum NSAttributedStringNameKey {
+
+		[Field ("NSAlternateDescriptionAttributeName")]
+		AlternateDescription,
+
+		[Field ("NSImageURLAttributeName")]
+		ImageUrl,
+
+		[Field ("NSInflectionRuleAttributeName")]
+		InflectionRule,  
+
+		[Field ("NSInflectionAlternativeAttributeName")]
+		InflectionAlternative,
+
+		[Field ("NSInlinePresentationIntentAttributeName")]
+		InlinePresentationIntent,
+
+		[Field ("NSLanguageIdentifierAttributeName")]
+		LanguageIdentifier,
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("NSMarkdownSourcePositionAttributeName")]
+		MarkdownSourcePosition,
+
+		[Field ("NSMorphologyAttributeName")]
+		Morphology,
+
+		[Field ("NSPresentationIntentAttributeName")]
+		PresentationIntentAttributeName,
+
+		[Field ("NSReplacementIndexAttributeName")]
+		ReplacementIndex,
 	}
 
 	[NoWatch][NoTV] // really inside WKWebKit
@@ -1002,7 +1092,7 @@ namespace Foundation
 	interface NSCalendarDate {
 		[Export ("initWithString:calendarFormat:locale:")]
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
-		NativeHandle Constructor (string description, string calendarFormat, NSObject locale);
+		NativeHandle Constructor (string description, string calendarFormat, [NullAllowed] NSObject locale);
 
 		[Export ("initWithString:calendarFormat:")]
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
@@ -1056,13 +1146,14 @@ namespace Foundation
 		[Export ("yearOfCommonEra")]
 		nint YearOfCommonEra { get; }
 
+		[NullAllowed]
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("calendarFormat")]
 		string CalendarFormat { get; set; }
 
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("descriptionWithCalendarFormat:locale:")]
-		string GetDescription (string calendarFormat, NSObject locale);
+		string GetDescription (string calendarFormat, [NullAllowed] NSObject locale);
 
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("descriptionWithCalendarFormat:")]
@@ -1070,8 +1161,9 @@ namespace Foundation
 
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("descriptionWithLocale:")]
-		string GetDescription (NSLocale locale);
+		string GetDescription ([NullAllowed] NSLocale locale);
 
+		[NullAllowed]
 		[Deprecated (PlatformName.MacOSX, 10, 0)]
 		[Export ("timeZone")]
 		NSTimeZone TimeZone { get; set; }
@@ -1737,6 +1829,15 @@ namespace Foundation
 		[Export ("stringForObjectValue:")]
 		[return: NullAllowed]
 		string GetString ([NullAllowed] NSObject obj);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Static]
+		[Export ("stringFromMeasurement:countStyle:")]
+		string Create (NSUnitInformationStorage measurement, NSByteCountFormatterCountStyle countStyle);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("stringFromMeasurement:")]
+		string Create (NSUnitInformationStorage measurement);
 	}
 
 	[BaseType (typeof (NSFormatter))]
@@ -2300,6 +2401,10 @@ namespace Foundation
 		[Export ("personNameComponentsFromString:")]
 		[return: NullAllowed]
 		NSPersonNameComponents GetComponents (string @string);
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("locale", ArgumentSemantic.Copy)]
+		NSLocale Locale { get; set; }
 	}
 	
 	
@@ -3635,7 +3740,12 @@ namespace Foundation
 		[iOS (8,0), Mac(10,10)]
 		[Static, Export ("arrayWithContentsOfURL:")]
 		NSMutableArray FromUrl (NSUrl url);
-		
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("applyDifference:")]
+		void ApplyDifference (NSOrderedCollectionDifference difference);
+#endif
 	}
 	
 	interface NSMutableArray<TValue> : NSMutableArray {}
@@ -4297,7 +4407,7 @@ namespace Foundation
 #if !NET && !WATCH
 		[Obsolete("Use 'FromFunction (NSExpressionCallbackHandler, NSExpression[])' instead.")]
 		[Static, Export ("expressionForBlock:arguments:")]
-		NSExpression FromFunction (NSExpressionHandler target, NSExpression[] parameters);
+		NSExpression FromFunction (NSExpressionHandler target, [NullAllowed] NSExpression[] parameters);
 #endif
 
 		[Static, Export ("expressionForBlock:arguments:")]
@@ -4993,7 +5103,7 @@ namespace Foundation
 
 		[Obsolete ("Use the 'NSRunLoopMode' enum instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message:  "Use 'NSXpcConnection' instead.")]
-		[NoiOS, NoWatch, NoTV]
+		[NoiOS, NoWatch, NoTV, MacCatalyst (15,0)]		
 		[Field ("NSConnectionReplyMode")]
 		NSString NSRunLoopConnectionReplyMode { get; }
 
@@ -5290,24 +5400,29 @@ namespace Foundation
 		[Export ("defaultStore")]
 		NSUbiquitousKeyValueStore DefaultStore { get; }
 
+		[return: NullAllowed]
 		[Export ("objectForKey:"), Internal]
 		NSObject ObjectForKey (string aKey);
 
 		[Export ("setObject:forKey:"), Internal]
-		void SetObjectForKey (NSObject anObject, string aKey);
+		void SetObjectForKey ([NullAllowed] NSObject anObject, string aKey);
 
 		[Export ("removeObjectForKey:")]
 		void Remove (string aKey);
 
+		[return: NullAllowed]
 		[Export ("stringForKey:")]
 		string GetString (string aKey);
 
+		[return: NullAllowed]
 		[Export ("arrayForKey:")]
 		NSObject [] GetArray (string aKey);
 
+		[return: NullAllowed]
 		[Export ("dictionaryForKey:")]
 		NSDictionary GetDictionary (string aKey);
 
+		[return: NullAllowed]
 		[Export ("dataForKey:")]
 		NSData GetData (string aKey);
 
@@ -5321,16 +5436,16 @@ namespace Foundation
 		bool GetBool (string aKey);
 
 		[Export ("setString:forKey:"), Internal]
-		void _SetString (string aString, string aKey);
+		void _SetString ([NullAllowed] string aString, string aKey);
 
 		[Export ("setData:forKey:"), Internal]
-		void _SetData (NSData data, string key);
+		void _SetData ([NullAllowed] NSData data, string key);
 
 		[Export ("setArray:forKey:"), Internal]
-		void _SetArray (NSObject [] array, string key);
+		void _SetArray ([NullAllowed] NSObject [] array, string key);
 
 		[Export ("setDictionary:forKey:"), Internal]
-		void _SetDictionary (NSDictionary aDictionary, string aKey);
+		void _SetDictionary ([NullAllowed] NSDictionary aDictionary, string aKey);
 
 		[Export ("setLongLong:forKey:"), Internal]
 		void _SetLong (long value, string aKey);
@@ -5373,6 +5488,10 @@ namespace Foundation
 
 		[Export ("UUIDString")]
 		string AsString ();
+		
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("compare:")]
+		NSComparisonResult Compare (NSUuid otherUuid);
 	}
 
 	[iOS (8,0)][Mac (10,10), Watch (2,0), TV (9,0)] // .objc_class_name_NSUserActivity", referenced from '' not found
@@ -6627,8 +6746,13 @@ namespace Foundation
 		string PercentEncodedPassword { get; set; }
 	
 		[NullAllowed] // by default this property is null
+		[Advice ("Use 'EncodedHost' instead.")]	
 		[Export ("percentEncodedHost", ArgumentSemantic.Copy)]
 		string PercentEncodedHost { get; set; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[NullAllowed, Export ("encodedHost")]
+		string EncodedHost { get; set; }
 	
 		[NullAllowed] // by default this property is null
 		[Export ("percentEncodedPath", ArgumentSemantic.Copy)]
@@ -6758,21 +6882,22 @@ namespace Foundation
 		[Export ("canHandleRequest:")][Static]
 		bool CanHandleRequest (NSUrlRequest request);
 	
+		[return: NullAllowed]
 		[NoWatch]
 		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("connectionWithRequest:delegate:")][Static]
-		NSUrlConnection FromRequest (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate);
+		NSUrlConnection FromRequest (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate);
 	
 		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
-		NativeHandle Constructor (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate);
+		NativeHandle Constructor (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate);
 	
 		[Deprecated (PlatformName.iOS, 9,0, message: "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,11, message: "Use 'NSUrlSession' instead.")]
 		[Export ("initWithRequest:delegate:startImmediately:")]
-		NativeHandle Constructor (NSUrlRequest request, [Protocolize] NSUrlConnectionDelegate connectionDelegate, bool startImmediately);
+		NativeHandle Constructor (NSUrlRequest request, [NullAllowed, Protocolize] NSUrlConnectionDelegate connectionDelegate, bool startImmediately);
 	
 		[Export ("start")]
 		void Start ();
@@ -7188,6 +7313,9 @@ namespace Foundation
 		[Export ("streamTaskWithHostName:port:")]
 		NSUrlSessionStreamTask CreateBidirectionalStream (string hostname, nint port);
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the Network.framework instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the Network.framework instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the Network.framework instead.")]
 		[NoWatch]
 		[iOS (9,0), Mac(10,11)]
 		[Export ("streamTaskWithNetService:")]
@@ -7342,6 +7470,14 @@ namespace Foundation
 		[Export ("countOfBytesClientExpectsToReceive")]
 		long CountOfBytesClientExpectsToReceive { get; set; }
 
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("delegate", ArgumentSemantic.Retain)]
+		NSObject WeakDelegate { get; set; }
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Wrap ("WeakDelegate")]
+		[NullAllowed]
+		INSUrlSessionTaskDelegate Delegate { get; set; }
 	}
 
 	[Static]
@@ -7577,6 +7713,10 @@ namespace Foundation
 		[Watch (6, 0), TV (13, 0), Mac (10, 15), iOS (13, 0)]
 		[Export ("allowsConstrainedNetworkAccess")]
 		bool AllowsConstrainedNetworkAccess { get; set; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Export ("requiresDNSSECValidation")]
+		bool RequiresDnsSecValidation { get; set; }
 	}
 
 	[iOS (7,0)]
@@ -7594,6 +7734,8 @@ namespace Foundation
 		[Export ("URLSessionDidFinishEventsForBackgroundURLSession:")]
 		void DidFinishEventsForBackgroundSession (NSUrlSession session);
 	}
+
+	public interface INSUrlSessionTaskDelegate {}
 
 	[iOS (7,0)]
 	[Mac (10, 9)]
@@ -7628,6 +7770,10 @@ namespace Foundation
 		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 		[Export ("URLSession:taskIsWaitingForConnectivity:")]
 		void TaskIsWaitingForConnectivity (NSUrlSession session, NSUrlSessionTask task);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0)]
+		[Export ("URLSession:didCreateTask:")]
+		void DidCreateTask (NSUrlSession session, NSUrlSessionTask task);
 	}
 	
 	[iOS (7,0)]
@@ -7978,6 +8124,11 @@ namespace Foundation
 		[MacCatalyst (14,5)]
 		[Export ("assumesHTTP3Capable")]
 		bool AssumesHttp3Capable { get; [NotImplemented] set; }
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("attribution")]
+		NSURLRequestAttribution Attribution { get; }
+
 	}
 
 	[BaseType (typeof (NSDictionary))]
@@ -8160,6 +8311,15 @@ namespace Foundation
 		[MacCatalyst (14,5)]
 		[Export ("assumesHTTP3Capable")]
 		bool AssumesHttp3Capable { get; set; }
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Export ("attribution", ArgumentSemantic.Assign)]
+		NSURLRequestAttribution Attribution { get; set; }
+
+		// https://github.com/xamarin/maccore/issues/2608 - https://feedbackassistant.apple.com/feedback/10897552
+		// [Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		// [Export ("requiresDNSSECValidation")]
+		// bool RequiresDnsSecValidation { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject), Name="NSURLResponse")]
@@ -9363,6 +9523,7 @@ namespace Foundation
 		IntPtr _FirstObject ();
 
 		[Export ("firstObject")]
+		[return: NullAllowed]
 		NSObject FirstObject ();
 
 		[Internal]
@@ -9371,6 +9532,7 @@ namespace Foundation
 		IntPtr _LastObject ();
 
 		[Export ("lastObject")]
+		[return: NullAllowed]
 		NSObject LastObject ();
 
 		[Export ("isEqualToOrderedSet:")]
@@ -9390,6 +9552,44 @@ namespace Foundation
 
 		[Export ("reversedOrderedSet")]
 		NSOrderedSet GetReverseOrderedSet ();
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference (other, options))")]
+		[return: NullAllowed]
+		NSOrderedCollectionDifference GetDifference (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options);
+		
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("differenceFromOrderedSet:withOptions:")]
+		IntPtr _GetDifference (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("Runtime.GetNSObject <NSOrderedCollectionDifference> (_GetDifference (other))")]
+		[return: NullAllowed]
+		NSOrderedCollectionDifference GetDifference (NSOrderedSet other);
+		
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("differenceFromOrderedSet:")]
+		IntPtr _GetDifference (NSOrderedSet other);
+
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Wrap ("Runtime.GetNSObject <NSOrderedSet> (_GetOrderedSet (difference))")]
+		[return: NullAllowed]
+		NSOrderedSet GetOrderedSet (NSOrderedCollectionDifference difference);
+		
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("orderedSetByApplyingDifference:")]
+		[return: NullAllowed]
+		IntPtr _GetOrderedSet (NSOrderedCollectionDifference difference);
+
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("differenceFromOrderedSet:withOptions:usingEquivalenceTest:")]
+		/* NSOrderedCollectionDifference<NSObject>*/ IntPtr _GetDifference (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options, /* Func<NSObject, NSObject, bool> */ ref BlockLiteral block);
+#endif
 	}
 
 	interface NSMutableOrderedSet<TKey> : NSMutableOrderedSet {}
@@ -9529,6 +9729,18 @@ namespace Foundation
 
 		[Export ("sortRange:options:usingComparator:")]
 		void SortRange (NSRange range, NSSortOptions sortOptions, NSComparator comparator);
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("applyDifference:")]
+		void _ApplyDifference (IntPtr difference);
+
+		[Sealed]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("applyDifference:")]
+		void ApplyDifference (NSOrderedCollectionDifference<NSObject> difference);
+#endif
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -9999,6 +10211,10 @@ namespace Foundation
 		[iOS (9,0)]
 		[Export ("setPreservationPriority:forTags:")]
 		void SetPreservationPriority (double priority, NSSet<NSString> tags);
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("localizedAttributedStringForKey:value:table:")]
+		NSAttributedString GetLocalizedAttributedString (string key, [NullAllowed] string value, [NullAllowed] string tableName);
 	}
 
 	[NoMac]
@@ -10585,6 +10801,9 @@ namespace Foundation
 		void RemoveIndexesInRange (NSRange range);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the Network.framework instead.")]
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the Network.framework instead.")]
+	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the Network.framework instead.")]
 	[NoWatch]
 	[DisableDefaultCtor] // the instance just crash when trying to call selectors
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (NSNetServiceDelegate)})]
@@ -10633,6 +10852,7 @@ namespace Foundation
 		[Export ("name", ArgumentSemantic.Copy)]
 		string Name { get; }
 
+		[NullAllowed]
 		[Export ("addresses", ArgumentSemantic.Copy)]
 		NSData [] Addresses { get; }
 
@@ -10663,17 +10883,19 @@ namespace Foundation
 		[Static, Export ("dataFromTXTRecordDictionary:")]
 		NSData DataFromTxtRecord (NSDictionary dictionary);
 		
+		[NullAllowed]
 		[Export ("hostName", ArgumentSemantic.Copy)]
 		string HostName { get; }
 
 		[Export ("getInputStream:outputStream:")]
 		bool GetStreams (out NSInputStream inputStream, out NSOutputStream outputStream);
 		
+		[return: NullAllowed]
 		[Export ("TXTRecordData")]
 		NSData GetTxtRecordData ();
 
 		[Export ("setTXTRecordData:")]
-		bool SetTxtRecordData (NSData data);
+		bool SetTxtRecordData ([NullAllowed] NSData data);
 
 		//NSData TxtRecordData { get; set; }
 
@@ -10721,6 +10943,9 @@ namespace Foundation
 		void DidAcceptConnection (NSNetService sender, NSInputStream inputStream, NSOutputStream outputStream);
 	}
 
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the Network.framework instead.")]
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use the Network.framework instead.")]
+	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use the Network.framework instead.")]
 	[NoWatch]
 	[BaseType (typeof (NSObject),
 		   Delegates=new string [] {"WeakDelegate"},
@@ -11050,22 +11275,28 @@ namespace Foundation
 		NSValue FromCGPoint (CGPoint point);
 
 #if MONOMAC
+		[Mac (10,0)]
 		[Export ("rectValue")]
 #else
+		[MacCatalyst (15,0)]
 		[Export ("CGRectValue")]
 #endif
 		CGRect CGRectValue { get; }
 
 #if MONOMAC
+		[Mac (10,0)]
 		[Export ("sizeValue")]
 #else
+		[MacCatalyst (15,0)]
 		[Export ("CGSizeValue")]
 #endif
 		CGSize CGSizeValue { get; }
 
 #if MONOMAC
+		[Mac (10,0)]
 		[Export ("pointValue")]
 #else
+		[MacCatalyst (15,0)]
 		[Export ("CGPointValue")]
 #endif
 		CGPoint CGPointValue { get; }
@@ -11879,8 +12110,9 @@ namespace Foundation
 		[NoiOS][NoWatch][NoTV][MacCatalyst(15, 0)]
 		[DesignatedInitializer]
 		[Export ("initWithSendPort:receivePort:components:")]
-		NativeHandle Constructor (NSPort sendPort, NSPort recvPort, NSArray components);
+		NativeHandle Constructor ([NullAllowed] NSPort sendPort, [NullAllowed] NSPort recvPort, [NullAllowed] NSArray components);
 
+		[NullAllowed]
 		[NoiOS][NoWatch][NoTV][MacCatalyst(15, 0)]
 		[Export ("components")]
 		NSArray Components { get; }
@@ -11893,10 +12125,12 @@ namespace Foundation
 		[Export ("sendBeforeDate:")]
 		bool SendBefore (NSDate date);
 
+		[NullAllowed]
 		[NoiOS][NoWatch][NoTV][MacCatalyst(15, 0)]
 		[Export ("receivePort")]
 		NSPort ReceivePort { get; }
 
+		[NullAllowed]
 		[NoiOS][NoWatch][NoTV][MacCatalyst(15, 0)]
 		[Export ("sendPort")]
 		NSPort SendPort { get; }
@@ -12048,13 +12282,11 @@ namespace Foundation
 		[Export ("performExpiringActivityWithReason:usingBlock:")]
 		void PerformExpiringActivity (string reason, Action<bool> block);
 
-		[NoMac]
-		[iOS (9,0)]
+		[iOS (9,0), TV (15,0), MacCatalyst (15,0), Mac (12,0)]
 		[Export ("lowPowerModeEnabled")]
 		bool LowPowerModeEnabled { [Bind ("isLowPowerModeEnabled")] get; }
 
-		[NoMac]
-		[iOS (9,0)]
+		[iOS (9,0), Mac (12,0)]
 		[Notification]
 		[Field ("NSProcessInfoPowerStateDidChangeNotification")]
 		NSString PowerStateDidChangeNotification { get; }
@@ -12253,6 +12485,10 @@ namespace Foundation
 	
 		[Field ("NSProgressFileCompletedCountKey")]
 		NSString FileCompletedCountKey { get; }
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("NSProgressFileOperationKindDuplicating")]
+		NSString FileOperationKindDuplicatingKey { get; }
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("NSProgressFileAnimationImageKey")]
@@ -12958,6 +13194,7 @@ namespace Foundation
 		NSFileVersion GetSpecificVersion (NSUrl url, NSObject persistentIdentifier);
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[return: NullAllowed]
 		[Static]
 		[Export ("addVersionOfItemAtURL:withContentsOfURL:options:error:")]
 		NSFileVersion AddVersion (NSUrl url, NSUrl contentsURL, NSFileVersionAddingOptions options, out NSError outError);
@@ -13113,6 +13350,7 @@ namespace Foundation
 		[Export ("evaluateWithObject:substitutionVariables:")]
 		bool EvaluateWithObject (NSObject obj, NSDictionary substitutionVariables);
 
+		[return: NullAllowed]
 		[Static]
 		[Mac (10, 9)]
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
@@ -13170,11 +13408,11 @@ namespace Foundation
 
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSURLSession' instead.")]
 		[Export ("initWithRequest:delegate:")]
-		NativeHandle Constructor (NSUrlRequest request, NSObject delegate1);
+		NativeHandle Constructor (NSUrlRequest request, [NullAllowed] NSObject delegate1);
 
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'NSURLSession' instead.")]
 		[Export ("initWithResumeData:delegate:path:")]
-		NativeHandle Constructor (NSData resumeData, NSObject delegate1, string path);
+		NativeHandle Constructor (NSData resumeData, [NullAllowed] NSObject delegate1, string path);
 
 		[Export ("cancel")]
 		void Cancel ();
@@ -13185,6 +13423,7 @@ namespace Foundation
 		[Export ("request")]
 		NSUrlRequest Request { get; }
 
+		[NullAllowed]
 		[Export ("resumeData")]
 		NSData ResumeData { get; }
 
@@ -13923,6 +14162,7 @@ namespace Foundation
 #if MONOMAC
 	partial interface NSFilePresenter {
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[NullAllowed]
 		[Export ("primaryPresentedItemURL")]
 		NSUrl PrimaryPresentedItemUrl { get; }
 	}
@@ -13935,6 +14175,7 @@ namespace Foundation
 	}
 
 	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message : "Use the Network.framework instead.")]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	partial interface NSHost {
@@ -13943,23 +14184,26 @@ namespace Foundation
 		NSHost _Current { get;}
 
 		[Static, Internal, Export ("hostWithName:")]
-		NSHost _FromName (string name);
+		NSHost _FromName ([NullAllowed] string name);
 
 		[Static, Internal, Export ("hostWithAddress:")]
 		NSHost _FromAddress (string address);
 
 		[Export ("isEqualToHost:")]
-		bool Equals ([NullAllowed] NSHost host);
+		bool Equals (NSHost host);
 
+		[NullAllowed]
 		[Export ("name")]
 		string Name { get; }
 
+		[NullAllowed]
 		[Export ("localizedName")]
 		string LocalizedName { get; }
 
 		[Export ("names")]
 		string [] Names { get; }
 
+		[NullAllowed]
 		[Internal, Export ("address")]
 		string _Address { get; }
 
@@ -14003,11 +14247,13 @@ namespace Foundation
 		IntPtr GetCurrentCommand ();
 
 		[Export ("appleEvent")]
+		[NullAllowed]
 		NSAppleEventDescriptor AppleEvent { get; }
 
 		[Export ("executeCommand")]
 		IntPtr Execute ();
 		
+		[NullAllowed]
 		[Export ("evaluatedReceivers")]
 		NSObject EvaluatedReceivers { get; }
 	}
@@ -14042,7 +14288,7 @@ namespace Foundation
 		[Internal]
 		[DesignatedInitializer]
 		[Export ("initWithSuiteName:commandName:dictionary:")]
-		NativeHandle Constructor (NSString suiteName, NSString commandName, NSDictionary commandDeclaration);
+		NativeHandle Constructor (NSString suiteName, NSString commandName, [NullAllowed] NSDictionary commandDeclaration);
 
 		[Internal]
 		[Export ("appleEventClassCode")]
@@ -14072,6 +14318,7 @@ namespace Foundation
 		[Export ("isOptionalArgumentWithName:")]
 		bool NSIsOptionalArgument (NSString name);
 
+		[return: NullAllowed]
 		[Internal]
 		[Export ("typeForArgumentWithName:")]
 		NSString GetNSTypeForArgument (NSString name);
@@ -14080,6 +14327,7 @@ namespace Foundation
 		[Export ("appleEventCodeForReturnType")]
 		int FCCAppleEventCodeForReturnType { get; }
 
+		[NullAllowed]
 		[Export ("returnType")]
 		string ReturnType { get; }
 
@@ -14146,6 +14394,7 @@ namespace Foundation
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSConnection {
+		[return: NullAllowed]
 		[Static, Export ("connectionWithReceivePort:sendPort:")]
 		NSConnection Create ([NullAllowed] NSPort receivePort, [NullAllowed] NSPort sendPort);
 
@@ -14160,24 +14409,29 @@ namespace Foundation
 		[Export ("removeRunLoop:")]
 		void RemoveRunLoop (NSRunLoop runLoop);
 
+		[return: NullAllowed]
 		[Static, Export ("serviceConnectionWithName:rootObject:usingNameServer:")]
 		NSConnection CreateService (string name, NSObject root, NSPortNameServer server);
 
+		[return: NullAllowed]
 		[Static, Export ("serviceConnectionWithName:rootObject:")]
 		NSConnection CreateService (string name, NSObject root);
 
 		[Export ("registerName:")]
-		bool RegisterName (string name);
+		bool RegisterName ([NullAllowed] string name);
 
 		[Export ("registerName:withNameServer:")]
-		bool RegisterName (string name, NSPortNameServer server);
+		bool RegisterName ([NullAllowed] string name, NSPortNameServer server);
 
+		[NullAllowed]
 		[Export ("rootObject", ArgumentSemantic.Retain)]
 		NSObject RootObject { get; set; }
 
+		[return: NullAllowed]
 		[Static, Export ("connectionWithRegisteredName:host:")]
 		NSConnection LookupService (string name, [NullAllowed] string hostName);
 
+		[return: NullAllowed]
 		[Static, Export ("connectionWithRegisteredName:host:usingNameServer:")]
 		NSConnection LookupService (string name, [NullAllowed] string hostName, NSPortNameServer server);
 
@@ -14196,6 +14450,7 @@ namespace Foundation
 		[Export ("localObjects")]
 		NSObject [] LocalObjects { get; }
 
+		[NullAllowed]
 		[Static, Export ("currentConversation")]
 		NSObject CurrentConversation { get; }
 
@@ -14300,11 +14555,13 @@ namespace Foundation
 		[Static, Export ("systemDefaultPortNameServer")]
 		NSPortNameServer SystemDefault { get; }
 
+		[return: NullAllowed]
 		[Export ("portForName:")]
 		NSPort GetPort (string portName);
 
+		[return: NullAllowed]
 		[Export ("portForName:host:")]
-		NSPort GetPort (string portName, string hostName);
+		NSPort GetPort (string portName, [NullAllowed] string hostName);
 
 		[Export ("registerPort:name:")]
 		bool RegisterPort (NSPort port, string portName);
@@ -14663,30 +14920,38 @@ namespace Foundation
 	[DesignatedDefaultCtor]
 	[Advice ("'NSUserNotification' usages should be replaced with 'UserNotifications' framework.")]
 	interface NSUserNotification : NSCoding, NSCopying {
+		[NullAllowed]
 		[Export ("title", ArgumentSemantic.Copy)]
 		string Title { get; set; }
 		
+		[NullAllowed]
 		[Export ("subtitle", ArgumentSemantic.Copy)]
 		string Subtitle { get; set; }
 		
+		[NullAllowed]
 		[Export ("informativeText", ArgumentSemantic.Copy)]
 		string InformativeText { get; set; }
 		
 		[Export ("actionButtonTitle", ArgumentSemantic.Copy)]
 		string ActionButtonTitle { get; set; }
 		
+		[NullAllowed]
 		[Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary UserInfo { get; set; }
 		
+		[NullAllowed]
 		[Export ("deliveryDate", ArgumentSemantic.Copy)]
 		NSDate DeliveryDate { get; set; }
 		
+		[NullAllowed]
 		[Export ("deliveryTimeZone", ArgumentSemantic.Copy)]
 		NSTimeZone DeliveryTimeZone { get; set; }
 		
+		[NullAllowed]
 		[Export ("deliveryRepeatInterval", ArgumentSemantic.Copy)]
 		NSDateComponents DeliveryRepeatInterval { get; set; }
 		
+		[NullAllowed]
 		[Export ("actualDeliveryDate")]
 		NSDate ActualDeliveryDate { get; }
 		
@@ -14696,6 +14961,7 @@ namespace Foundation
 		[Export ("remote")]
 		bool Remote { [Bind("isRemote")] get; }
 		
+		[NullAllowed]
 		[Export ("soundName", ArgumentSemantic.Copy)]
 		string SoundName { get; set; }
 		
@@ -16104,6 +16370,7 @@ namespace Foundation
 		[Export ("invalidationHandler", ArgumentSemantic.Copy)]
 		Action InvalidationHandler { get; set; }
 
+		[Advice ("Prefer using 'Activate' for initial activation of a connection.")]
 		[Export ("resume")]
 		void Resume ();
 
@@ -16142,6 +16409,14 @@ namespace Foundation
 		[Mac (10, 11)][iOS (9, 0)][Watch (2, 0)][TV (9, 0)]
 		[Export ("synchronousRemoteObjectProxyWithErrorHandler:"), Internal]
 		IntPtr _CreateSynchronousRemoteObjectProxy ([BlockCallback] Action<NSError> errorHandler);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("activate")]
+		void Activate ();
+
+		[NoWatch, NoTV, NoiOS, Mac (13,0)]
+		[Export ("setCodeSigningRequirement:")]
+		void SetCodeSigningRequirement (string requirement);
 	}
 
 	interface INSXpcListenerDelegate {}
@@ -16173,6 +16448,7 @@ namespace Foundation
 		[Export ("endpoint")]
 		NSXpcListenerEndpoint Endpoint { get; }
 
+		[Advice ("Prefer using 'Activate' for initial activation of a listener.")]
 		[Export ("resume")]
 		void Resume ();
 
@@ -16181,6 +16457,14 @@ namespace Foundation
 
 		[Export ("invalidate")]
 		void Invalidate ();
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Export ("activate")]
+		void Activate ();
+
+		[NoWatch, NoTV, NoiOS, Mac (13,0)]
+		[Export ("setConnectionCodeSigningRequirement:")]
+		void SetConnectionCodeSigningRequirement (string requirement);
 	}
 
 	[BaseType (typeof (NSObject), Name = "NSXPCListenerDelegate")]
@@ -16650,4 +16934,321 @@ namespace Foundation
 		AllPartitionsAndEjectDisk = 1 << 0,
 		WithoutUI = 1 << 1,
 	}
+
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSPresentationIntent : NSCopying, NSSecureCoding
+	{
+		[Export ("intentKind")]
+		NSPresentationIntentKind IntentKind { get; }
+
+		[NullAllowed, Export ("parentIntent", ArgumentSemantic.Strong)]
+		NSPresentationIntent ParentIntent { get; }
+
+		[Static]
+		[Export ("paragraphIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateParagraphIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("headerIntentWithIdentity:level:nestedInsideIntent:")]
+		NSPresentationIntent CreateHeaderIntent (nint identity, nint level, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("codeBlockIntentWithIdentity:languageHint:nestedInsideIntent:")]
+		NSPresentationIntent CreateCodeBlockIntent (nint identity, [NullAllowed] string languageHint, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("thematicBreakIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateThematicBreakIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("orderedListIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateOrderedListIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("unorderedListIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateUnorderedListIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("listItemIntentWithIdentity:ordinal:nestedInsideIntent:")]
+		NSPresentationIntent CreateListItemIntent (nint identity, nint ordinal, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("blockQuoteIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateBlockQuoteIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("tableIntentWithIdentity:columnCount:alignments:nestedInsideIntent:")]
+		NSPresentationIntent CreateTableIntent (nint identity, nint columnCount, NSNumber[] alignments, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("tableHeaderRowIntentWithIdentity:nestedInsideIntent:")]
+		NSPresentationIntent CreateTableHeaderRowIntent (nint identity, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("tableRowIntentWithIdentity:row:nestedInsideIntent:")]
+		NSPresentationIntent CreateTableRowIntent (nint identity, nint row, [NullAllowed] NSPresentationIntent parent);
+
+		[Static]
+		[Export ("tableCellIntentWithIdentity:column:nestedInsideIntent:")]
+		NSPresentationIntent CreateTableCellIntent (nint identity, nint column, [NullAllowed] NSPresentationIntent parent);
+
+		[Export ("identity")]
+		nint Identity { get; }
+
+		[Export ("ordinal")]
+		nint Ordinal { get; }
+
+		[NullAllowed, Export ("columnAlignments")]
+		NSNumber[] ColumnAlignments { get; }
+
+		[Export ("columnCount")]
+		nint ColumnCount { get; }
+
+		[Export ("headerLevel")]
+		nint HeaderLevel { get; }
+
+		[NullAllowed, Export ("languageHint")]
+		string LanguageHint { get; }
+
+		[Export ("column")]
+		nint Column { get; }
+
+		[Export ("row")]
+		nint Row { get; }
+
+		[Export ("indentationLevel")]
+		nint IndentationLevel { get; }
+
+		[Export ("isEquivalentToPresentationIntent:")]
+		bool IsEquivalent (NSPresentationIntent other);
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSAttributedStringMarkdownParsingOptions : NSCopying
+	{
+		[Export ("allowsExtendedAttributes")]
+		bool AllowsExtendedAttributes { get; set; }
+
+		[Export ("interpretedSyntax", ArgumentSemantic.Assign)]
+		NSAttributedStringMarkdownInterpretedSyntax InterpretedSyntax { get; set; }
+
+		[Export ("failurePolicy", ArgumentSemantic.Assign)]
+		NSAttributedStringMarkdownParsingFailurePolicy FailurePolicy { get; set; }
+
+		[NullAllowed, Export ("languageCode")]
+		string LanguageCode { get; set; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Export ("appliesSourcePositionAttributes")]
+		bool AppliesSourcePositionAttributes { get; set; }
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSInflectionRule : NSCopying, NSSecureCoding
+	{
+		[Static]
+		[Export ("automaticRule")]
+		NSInflectionRule AutomaticRule { get; }
+
+		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0)]
+		[Static]
+		[Export ("canInflectLanguage:")]
+		bool CanInflectLanguage (string language);
+
+		[Watch (8, 0), TV (15, 0), Mac (12, 0), iOS (15, 0)]
+		[Static]
+		[Export ("canInflectPreferredLocalization")]
+		bool CanInflectPreferredLocalization { get; }
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSInflectionRule))]
+	interface NSInflectionRuleExplicit
+	{
+		[Export ("initWithMorphology:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSMorphology morphology);
+
+		[Export ("morphology", ArgumentSemantic.Copy)]
+		NSMorphology Morphology { get; }
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSMorphology : NSCopying, NSSecureCoding
+	{
+		[Export ("grammaticalGender", ArgumentSemantic.Assign)]
+		NSGrammaticalGender GrammaticalGender { get; set; }
+
+		[Export ("partOfSpeech", ArgumentSemantic.Assign)]
+		NSGrammaticalPartOfSpeech PartOfSpeech { get; set; }
+
+		[Export ("number", ArgumentSemantic.Assign)]
+		NSGrammaticalNumber Number { get; set; }
+		
+		[Export ("customPronounForLanguage:")]
+		[return: NullAllowed]
+		NSMorphologyCustomPronoun GetCustomPronoun (string language);
+
+		[Export ("setCustomPronoun:forLanguage:error:")]
+		bool SetCustomPronoun ([NullAllowed] NSMorphologyCustomPronoun features, string language, [NullAllowed] out NSError error);
+
+		[Export ("unspecified")]
+		bool Unspecified { [Bind ("isUnspecified")] get; }
+
+		[Static]
+		[Export ("userMorphology")]
+		NSMorphology UserMorphology { get; }
+	}
+	
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15, 0)]
+	[BaseType (typeof (NSObject))]
+	interface NSMorphologyCustomPronoun : NSCopying, NSSecureCoding
+	{
+		[Static]
+		[Export ("isSupportedForLanguage:")]
+		bool IsSupported (string language);
+
+		[Static]
+		[Export ("requiredKeysForLanguage:")]
+		string[] GetRequiredKeysForLanguage (string language);
+
+		[NullAllowed, Export ("subjectForm")]
+		string SubjectForm { get; set; }
+
+		[NullAllowed, Export ("objectForm")]
+		string ObjectForm { get; set; }
+
+		[NullAllowed, Export ("possessiveForm")]
+		string PossessiveForm { get; set; }
+
+		[NullAllowed, Export ("possessiveAdjectiveForm")]
+		string PossessiveAdjectiveForm { get; set; }
+
+		[NullAllowed, Export ("reflexiveForm")]
+		string ReflexiveForm { get; set; }
+	}
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+	interface NSOrderedCollectionChange <TKey> : NSOrderedCollectionChange {}
+	
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSOrderedCollectionChange
+	{
+		[Internal]
+		[Static]
+		[Export ("changeWithObject:type:index:")]
+		NativeHandle _ChangeWithObject ([NullAllowed] IntPtr anObject, NSCollectionChangeType type, nuint index);
+
+		[Internal]
+		[Static]
+		[Export ("changeWithObject:type:index:associatedIndex:")]
+		NativeHandle _ChangeWithObject ([NullAllowed] IntPtr anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+
+		[Internal]
+		[NullAllowed, Export ("object", ArgumentSemantic.Strong)]
+		NativeHandle _Object { get; }
+
+		[Export ("changeType")]
+		NSCollectionChangeType ChangeType { get; }
+
+		[Export ("index")]
+		nuint Index { get; }
+
+		[Export ("associatedIndex")]
+		nuint AssociatedIndex { get; }
+
+		[Internal]
+		[Export ("initWithObject:type:index:")]
+		NativeHandle Constructor (IntPtr anObject, NSCollectionChangeType type, nuint index);
+		
+		[Wrap ("this (anObject!.Handle, type, index)")]
+		NativeHandle Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index);
+
+		[Internal]
+		[DesignatedInitializer]
+		[Export ("initWithObject:type:index:associatedIndex:")]
+		NativeHandle Constructor (IntPtr anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+		
+		[Wrap ("this (anObject!.Handle, type, index, associatedIndex)")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] NSObject anObject, NSCollectionChangeType type, nuint index, nuint associatedIndex);
+	}
+
+	interface NSOrderedCollectionDifference <TKey> : NSOrderedCollectionDifference {}
+	
+	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSOrderedCollectionDifference : INSFastEnumeration
+	{
+		[Export ("initWithChanges:")]
+		NativeHandle Constructor (NSOrderedCollectionChange[] changes);
+		
+		[Internal]
+		[DesignatedInitializer]
+		[Export ("initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:additionalChanges:")]
+		NativeHandle Constructor (NSIndexSet inserts, [NullAllowed] NSArray insertedObjects, NSIndexSet removes, [NullAllowed] NSArray removedObjects, NSOrderedCollectionChange[] changes);
+
+		[Wrap ("this (inserts, NSArray.FromNSObjects (insertedObjects), removes, NSArray.FromNSObjects (removedObjects), changes)")]
+		NativeHandle Constructor (NSIndexSet inserts, [NullAllowed] NSObject[] insertedObjects, NSIndexSet removes, [NullAllowed] NSObject[] removedObjects, NSOrderedCollectionChange[] changes);
+
+		[Internal]
+		[Export ("initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:")]
+		NativeHandle Constructor (NSIndexSet inserts, [NullAllowed] NSArray insertedObjects, NSIndexSet removes, [NullAllowed] NSArray removedObjects);
+		
+		[Wrap ("this (inserts, NSArray.FromNSObjects (insertedObjects), removes, NSArray.FromNSObjects (removedObjects))")]
+		NativeHandle Constructor (NSIndexSet inserts, [NullAllowed] NSObject[] insertedObjects, NSIndexSet removes, [NullAllowed] NSObject[] removedObjects);
+
+		[Internal]
+		[Export ("insertions", ArgumentSemantic.Strong)]
+		NativeHandle _Insertions { get; }
+
+		[Internal]
+		[Export ("removals", ArgumentSemantic.Strong)]
+		NativeHandle _Removals { get; }
+
+		[Export ("hasChanges")]
+		bool HasChanges { get; }
+
+		[Internal]
+		[Export ("differenceByTransformingChangesWithBlock:")]
+		NativeHandle _GetDifference (/* Func<NSOrderedCollectionChange<NSObject>, NSOrderedCollectionChange<NSObject>>*/ ref BlockLiteral block); 
+
+		[Internal]
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+		[Export ("inverseDifference")]
+		NativeHandle _InverseDifference ();
+	}
+#endif
+
+	[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0)]
+	[BaseType (typeof(NSObject))]
+	interface NSAttributedStringMarkdownSourcePosition : NSCopying, NSSecureCoding
+	{
+		[Export ("startLine")]
+		nint StartLine { get; }
+
+		[Export ("startColumn")]
+		nint StartColumn { get; }
+
+		[Export ("endLine")]
+		nint EndLine { get; }
+
+		[Export ("endColumn")]
+		nint EndColumn { get; }
+
+		[Export ("initWithStartLine:startColumn:endLine:endColumn:")]
+		NativeHandle Constructor (nint startLine, nint startColumn, nint endLine, nint endColumn);
+
+		[Export ("rangeInString:")]
+		NSRange RangeInString (string @string);
+	}
+
 }

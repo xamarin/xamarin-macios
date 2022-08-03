@@ -436,3 +436,22 @@
 !missing-protocol-member! UIContentView::supportsConfiguration: not found
 !missing-selector! UIView::anchorPoint not bound
 !missing-selector! UIView::setAnchorPoint: not bound
+!deprecated-attribute-missing! UISearchController::automaticallyShowsScopeBar missing a [Deprecated] attribute
+!deprecated-attribute-missing! UISearchController::setAutomaticallyShowsScopeBar: missing a [Deprecated] attribute
+!missing-enum! UISearchControllerScopeBarActivation not bound
+!missing-protocol-member! UITextFieldDelegate::textField:willDismissEditMenuWithAnimator: not found
+!missing-protocol-member! UITextFieldDelegate::textField:willPresentEditMenuWithAnimator: not found
+!missing-protocol-member! UITextInput::willDismissEditMenuWithAnimator: not found
+!missing-protocol-member! UITextInput::willPresentEditMenuWithAnimator: not found
+!missing-protocol-member! UITextViewDelegate::textView:willDismissEditMenuWithAnimator: not found
+!missing-protocol-member! UITextViewDelegate::textView:willPresentEditMenuWithAnimator: not found
+!missing-selector! UIBarButtonItem::initWithBarButtonSystemItem:primaryAction:menu: not bound
+!missing-selector! UIBarButtonItem::initWithPrimaryAction:menu: not bound
+!missing-selector! UIBarButtonItem::initWithTitle:image:target:action:menu: not bound
+!missing-selector! UIBarButtonItemGroup::alwaysAvailable not bound
+!missing-selector! UIBarButtonItemGroup::setAlwaysAvailable: not bound
+!missing-selector! UINavigationItem::overflowPresentationSource not bound
+!missing-selector! UINavigationItem::pinnedTrailingGroup not bound
+!missing-selector! UINavigationItem::setPinnedTrailingGroup: not bound
+!missing-selector! UISearchController::scopeBarActivation not bound
+!missing-selector! UISearchController::setScopeBarActivation: not bound

@@ -437,6 +437,7 @@ namespace Introspection {
 				case "QLPreviewReply": // conformance not in headers
 				case "QLPreviewReplyAttachment": // conformance not in headers
 				case "SNTimeDurationConstraint": // Conformance not in headers
+				case "NSInflectionRule": 
 				// Xcode 13.3
 				case "SRWristDetection": // Conformance not in headers
 				case "HMAccessorySetupPayload": // Conformance not in headers
