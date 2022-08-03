@@ -2939,16 +2939,19 @@ namespace HealthKit {
 
 		[Deprecated (PlatformName.MacOSX, 13, 0)]
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[NullAllowed, Export ("totalEnergyBurned", ArgumentSemantic.Retain)]
 		HKQuantity TotalEnergyBurned { get; }
 
 		[Deprecated (PlatformName.MacOSX, 13, 0)]
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[NullAllowed, Export ("totalDistance", ArgumentSemantic.Retain)]
 		HKQuantity TotalDistance { get; }
 
 		[Deprecated (PlatformName.MacOSX, 13, 0)]
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Watch (3,0), iOS (10,0)]
 		[NullAllowed, Export ("totalSwimmingStrokeCount", ArgumentSemantic.Strong)]
 		HKQuantity TotalSwimmingStrokeCount { get; }
@@ -3032,6 +3035,7 @@ namespace HealthKit {
 
 		[Deprecated (PlatformName.MacOSX, 13, 0)]
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Watch (4, 0), iOS (11, 0)]
 		[NullAllowed, Export ("totalFlightsClimbed", ArgumentSemantic.Strong)]
 		HKQuantity TotalFlightsClimbed { get; }
@@ -4013,7 +4017,7 @@ namespace HealthKit {
 		NativeHandle Constructor (HKElectrocardiogram electrocardiogram, HKElectrocardiogramQueryDataHandler dataHandler);
 	}
 
-	[Watch (7,0), iOS (14,0), Mac (13,0)]
+	[Watch (7,0), iOS (14,0), Mac (13,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HKElectrocardiogramVoltageMeasurement : NSCopying
