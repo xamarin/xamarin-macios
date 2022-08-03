@@ -30,6 +30,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
@@ -193,5 +194,41 @@ namespace Foundation {
 				SetObject (value, idx);
 			}
 		}
+
+#if false // https://github.com/xamarin/xamarin-macios/issues/15577
+		delegate bool NSOrderedCollectionDifferenceEquivalenceTestProxy (IntPtr blockLiteral, /* NSObject */ IntPtr first, /* NSObject */ IntPtr second);
+		static readonly NSOrderedCollectionDifferenceEquivalenceTestProxy static_DiffEquality = DiffEqualityHandler;
+
+		[MonoPInvokeCallback (typeof (NSOrderedCollectionDifferenceEquivalenceTestProxy))]
+		static bool DiffEqualityHandler (IntPtr block, IntPtr first, IntPtr second)
+		{
+			var callback = BlockLiteral.GetTarget<NSOrderedCollectionDifferenceEquivalenceTest> (block);
+			if (callback is not null) {
+				var nsFirst = Runtime.GetNSObject<NSObject> (first, false);
+				var nsSecond = Runtime.GetNSObject<NSObject> (second, false);
+				return callback (nsFirst, nsSecond);
+			}
+			return false;
+		}
+
+#if !NET
+		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
+#else
+		[SupportedOSPlatform ("ios13.0"), SupportedOSPlatform ("tvos13.0"), SupportedOSPlatform ("macos10.15")]
+#endif
+		public NSOrderedCollectionDifference GetDifference (NSOrderedSet other, NSOrderedCollectionDifferenceCalculationOptions options, NSOrderedCollectionDifferenceEquivalenceTest equivalenceTest)
+		{
+			if (equivalenceTest is null)
+				throw new ArgumentNullException (nameof (equivalenceTest));
+
+			var block = new BlockLiteral ();
+			block.SetupBlock (static_DiffEquality, equivalenceTest);
+			try {
+				return Runtime.GetNSObject<NSOrderedCollectionDifference> (_GetDifference (other, options, ref block));
+			} finally {
+				block.CleanupBlock ();
+			}
+		}
+#endif
 	}
 }

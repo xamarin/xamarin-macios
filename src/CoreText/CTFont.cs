@@ -53,6 +53,15 @@ namespace CoreText {
 	public enum CTFontOptions : ulong {
 		Default = 0,
 		PreventAutoActivation = 1 << 0,
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[iOS (16,0), TV (16,0), MacCatalyst (16,0), Mac (13,0), Watch (9,0)]
+#endif
+		PreventAutoDownload = 1 << 1,
 		PreferSystemFont      = 1 << 2,
 #if !NET
 		[Obsolete ("This API is not available on this platform.")]

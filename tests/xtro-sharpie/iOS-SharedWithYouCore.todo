@@ -77,3 +77,6 @@
 !missing-type! SWSignedPersonIdentityProof not bound
 !missing-type! SWStartCollaborationAction not bound
 !missing-type! SWUpdateCollaborationParticipantsAction not bound
+!missing-selector! SWCollaborationOptionsPickerGroup::selectedOptionIdentifier not bound
+!missing-selector! SWCollaborationOptionsPickerGroup::setSelectedOptionIdentifier: not bound
+!missing-type! SWCollaborationOptionsPickerGroup not bound
