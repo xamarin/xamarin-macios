@@ -425,6 +425,6 @@ namespace Photos
 	{
 		Asset = 1,
 		AssetCollection = 2,
-		CollectionList = 3
+		CollectionList = 3,
 	}
 }
