@@ -2292,7 +2292,6 @@ namespace PassKit {
 
 	[NoWatch, iOS (16,0), Mac (13,0), MacCatalyst (16,0), NoTV]
 	[BaseType (typeof (PKPaymentSummaryItem))]
-	[DisableDefaultCtor]
 	interface PKAutomaticReloadPaymentSummaryItem // : NSCoding, NSCopying, NSSecureCoding // https://feedbackassistant.apple.com/feedback/11018799
 	{
 		[Export ("thresholdAmount", ArgumentSemantic.Strong)]
