@@ -3389,6 +3389,7 @@ namespace HealthKit {
 
 	[NoiOS]
 	[Watch (2,0)]
+	[Mac (13,0)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface HKWorkoutSessionDelegate {
@@ -4246,7 +4247,7 @@ namespace HealthKit {
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 	[BaseType (typeof (HKVisionPrescription))]
 	[DisableDefaultCtor]
-	interface HKContactsPrescription
+	interface HKContactsPrescription // : NSCopying // https://feedbackassistant.apple.com/feedback/11018742
 	{
 		[NullAllowed, Export ("rightEye", ArgumentSemantic.Copy)]
 		HKContactsLensSpecification RightEye { get; }
@@ -4286,7 +4287,7 @@ namespace HealthKit {
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 	[BaseType (typeof (HKVisionPrescription))]
 	[DisableDefaultCtor]
-	interface HKGlassesPrescription
+	interface HKGlassesPrescription // : NSCopying // https://feedbackassistant.apple.com/feedback/11018742
 	{
 		[NullAllowed, Export ("rightEye", ArgumentSemantic.Copy)]
 		HKGlassesLensSpecification RightEye { get; }
@@ -4320,7 +4321,7 @@ namespace HealthKit {
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 	[BaseType (typeof (HKSample))]
 	[DisableDefaultCtor]
-	interface HKVisionPrescription
+	interface HKVisionPrescription // : NSCopying // https://feedbackassistant.apple.com/feedback/11018742
 	{
 		[Export ("prescriptionType", ArgumentSemantic.Assign)]
 		HKVisionPrescriptionType PrescriptionType { get; }
@@ -4376,7 +4377,7 @@ namespace HealthKit {
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HKWorkoutActivity
+	interface HKWorkoutActivity // : NSCoding, NSCopying, NSSecureCoding // https://feedbackassistant.apple.com/feedback/11018742
 	{
 		[Export ("initWithWorkoutConfiguration:startDate:endDate:metadata:")]
 		NativeHandle Constructor (HKWorkoutConfiguration workoutConfiguration, NSDate startDate, [NullAllowed] NSDate endDate, [NullAllowed] NSDictionary<NSString, NSObject> metadata);

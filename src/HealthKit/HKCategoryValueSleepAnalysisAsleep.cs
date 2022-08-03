@@ -1,7 +1,7 @@
-// HKCategoryValueSleepAnalysis
+// HKCategoryValueSleepAnalysisAsleep
 
 //
-// HKCategoryValueSleepAnalysis.cs:
+// HKCategoryValueSleepAnalysisAsleep.cs:
 //
 // Authors:
 //  TJ Lambert (TJ.Lambert@microsoft.com
@@ -15,6 +15,9 @@
 
 using System;
 using Foundation;
+using ObjCRuntime;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -22,7 +25,7 @@ using NativeHandle = System.IntPtr;
 
 namespace HealthKit
 {
-	public partial class HKCategoryValueSleepAnalysis {
+	public partial class HKCategoryValueSleepAnalysisAsleep {
 
 #if NET
 		[SupportedOSPlatform ("ios16.0")]
@@ -43,9 +46,9 @@ namespace HealthKit
 #else
 		[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
 #endif // NET
-		public static HashSet<HKCategoryValueSleepAnalysis> GetAsleepValues ()
+		public static NSSet<NSNumber> GetAsleepValues ()
 		{
-			return Runtime.GetNSObject<HashSet<HKCategoryValueSleepAnalysis>> (HKCategoryValueSleepAnalysisAsleepValues);
+			return Runtime.GetNSObject<NSSet<NSNumber>> (HKCategoryValueSleepAnalysisAsleepValues ())!;
 		}
 	}
 }

@@ -24,8 +24,8 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void GetAsleepValuesTest ()
 		{
-			var sleepValues = GetAsleepValues ();
-			Assert.IsNull (sleepValues, "Asleep Values should not actually return null - but let's see for testing");
+			var sleepValues = HKCategoryValueSleepAnalysisAsleep.GetAsleepValues ();
+			Assert.IsNotNull (sleepValues, "Asleep Values should not return null.");
 		}
 	}
 }

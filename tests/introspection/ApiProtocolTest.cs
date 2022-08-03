@@ -153,6 +153,10 @@ namespace Introspection {
 				case "CLKComplicationWidgetMigrationConfiguration":
 				case "HKElectrocardiogramVoltageMeasurement":
 				case "AVPlayerInterstitialEvent":
+				case "HKWorkoutActivity":
+				case "HKContactsPrescription":
+				case "HKGlassesPrescription":
+				case "HKVisionPrescription":
 					return true;
 				}
 				break;
@@ -302,6 +306,7 @@ namespace Introspection {
 				case "PHAssetCreationRequest":
 				case "NSUserActivity":
 				case "UIDictationPhrase":
+				case "HKWorkoutActivity":
 					return true;
 				}
 				break;
@@ -447,6 +452,7 @@ namespace Introspection {
 				case "PHAssetCreationRequest":
 				case "NSUserActivity":
 				case "UIDictationPhrase":
+				case "HKWorkoutActivity":
 					return true;
 				}
 				break;
