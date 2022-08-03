@@ -1497,7 +1497,7 @@ namespace Photos
 	}
 
 	[TV (16,0), Mac (13,0), iOS (16,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHPersistentChange
 	{
