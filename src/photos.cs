@@ -1506,7 +1506,7 @@ namespace Photos
 
 		[Export ("changeDetailsForObjectType:error:")]
 		[return: NullAllowed]
-		PHPersistentObjectChangeDetails ChangeDetailsForObjectType (PHObjectType objectType, [NullAllowed] out NSError error);
+		PHPersistentObjectChangeDetails ChangeDetails (PHObjectType objectType, [NullAllowed] out NSError error);
 	}
 
 	delegate void PHPersistentChangeFetchResultEnumerator (PHPersistentChange change, ref bool stop);
