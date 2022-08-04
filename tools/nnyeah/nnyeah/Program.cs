@@ -59,7 +59,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				Console.Out.WriteLine (Errors.N0007);
 			}
 			else {
-				AssemblyConverter.Convert (xamarinAssembly!, microsoftAssembly!, infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
+				AssemblyConverter.Convert (xamarinAssembly, microsoftAssembly!, infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
 			}
 		}
 	}

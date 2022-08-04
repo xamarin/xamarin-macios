@@ -157,7 +157,7 @@ namespace Microsoft.MaciOS.Nnyeah {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can&apos;t continue. Your best option is to port the old assembly to .NET 6.
+        ///   Looks up a localized string similar to Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can&apos;t continue. Your best option is to port the old assembly to .NET 6..
         /// </summary>
         internal static string E0012 {
             get {
@@ -166,7 +166,7 @@ namespace Microsoft.MaciOS.Nnyeah {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can&apos;t continue. Your best option is to port the old assembly to .NET 6.
+        ///   Looks up a localized string similar to Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can&apos;t continue. Your best option is to port the old assembly to .NET 6..
         /// </summary>
         internal static string E0013 {
             get {
@@ -198,6 +198,24 @@ namespace Microsoft.MaciOS.Nnyeah {
         internal static string E0016 {
             get {
                 return ResourceManager.GetString("E0016", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The supplied Microsoft assembly, {0}, is not macOS or iOS and is not currently supported..
+        /// </summary>
+        internal static string E0017 {
+            get {
+                return ResourceManager.GetString("E0017", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The legacy platform assembly {0} does not exist at the expected location. You will need to either install it or pass a path to nnyeah using the --xamarin-assembly argument..
+        /// </summary>
+        internal static string E0018 {
+            get {
+                return ResourceManager.GetString("E0018", resourceCulture);
             }
         }
         

@@ -101,5 +101,11 @@
 	<data name="E0016" xml:space="preserve">
 		<value>Error while processing constructor on type {0} in the old assembly. Constructors that do non-trivial work are not supported.</value>
 	</data>
+	<data name="E0017" xml:space="preserve">
+		<value>The supplied Microsoft assembly, {0}, is not macOS or iOS and is not currently supported.</value>
+	</data>
+	<data name="E0018" xml:space="preserve">
+		<value>The legacy platform assembly {0} does not exist at the expected location. You will need to either install it or pass a path to nnyeah using the --xamarin-assembly argument.</value>
+	</data>
 </root>
 
