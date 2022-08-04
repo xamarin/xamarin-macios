@@ -80,7 +80,9 @@ namespace Microsoft.MaciOS.Nnyeah {
 				} catch (TypeNotFoundException e) {
 					throw new ConversionException (Errors.E0012, e.TypeName);
 				} catch (MemberNotFoundException e) {
-					throw new ConversionException (Errors.E0013, e.MemberName);
+					var error = IsLikelyAnIntPtrConstructor (e.MemberName) ?
+						Errors.E0017 : Errors.E0013;
+					throw new ConversionException (error, e.MemberName);
 				} catch (Exception e) {
 					throw new ConversionException (Errors.E0004, e.Message);
 				}
@@ -100,6 +102,11 @@ namespace Microsoft.MaciOS.Nnyeah {
 			} catch (Exception e) {
 				throw new ConversionException (Errors.E0003, Infile, e.Message);
 			}
+		}
+
+		static bool IsLikelyAnIntPtrConstructor (string signature)
+		{
+			return signature.Contains ("::.ctor(System.IntPtr");
 		}
 	}
 
