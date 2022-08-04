@@ -28,7 +28,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		AssemblyConverter (string? xamarinAssembly, string microsoftAssembly, string infile, string outfile, bool verbose, bool forceOverwrite, bool suppressWarnings)
 		{
 			if (!TryGetTargetPlatform (microsoftAssembly, out var platform)) {
-				throw new ConversionException (Errors.E0017, Infile);
+				throw new ConversionException (Errors.E0018, Infile);
 			}
 
 			XamarinAssembly = xamarinAssembly ?? GetPlatformModulePath (platform.Value);
@@ -133,7 +133,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				_ => throw new NotSupportedException ()
 			};
 			if (!File.Exists (path)) {
-				throw new ConversionException (Errors.E0018, path);
+				throw new ConversionException (Errors.E0019, path);
 			}
 			return path;
 		}

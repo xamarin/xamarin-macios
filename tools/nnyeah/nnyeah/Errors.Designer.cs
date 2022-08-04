@@ -204,18 +204,18 @@ namespace Microsoft.MaciOS.Nnyeah {
         /// <summary>
         ///   Looks up a localized string similar to The supplied Microsoft assembly, {0}, is not macOS or iOS and is not currently supported..
         /// </summary>
-        internal static string E0017 {
+        internal static string E0018 {
             get {
-                return ResourceManager.GetString("E0017", resourceCulture);
+                return ResourceManager.GetString("E0018", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The legacy platform assembly {0} does not exist at the expected location. You will need to either install it or pass a path to nnyeah using the --xamarin-assembly argument..
         /// </summary>
-        internal static string E0018 {
+        internal static string E0019 {
             get {
-                return ResourceManager.GetString("E0018", resourceCulture);
+                return ResourceManager.GetString("E0019", resourceCulture);
             }
         }
         
