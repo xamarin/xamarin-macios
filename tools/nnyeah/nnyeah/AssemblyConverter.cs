@@ -19,7 +19,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		bool SuppressWarnings;
 		NNyeahAssemblyResolver Resolver;
 
-    static int Convert (string? xamarinAssembly, string microsoftAssembly, string infile, string outfile, bool verbose, bool forceOverwrite, bool suppressWarnings)
+		public static int Convert (string? xamarinAssembly, string microsoftAssembly, string infile, string outfile, bool verbose, bool forceOverwrite, bool suppressWarnings)
 		{
 			var converter = new AssemblyConverter (xamarinAssembly, microsoftAssembly, infile, outfile, verbose, forceOverwrite, suppressWarnings);
 			return converter.Convert ();
