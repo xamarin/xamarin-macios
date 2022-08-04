@@ -2,3 +2,8 @@
 !unknown-field! PDFAnnotationHit bound
 
 # Change set for XAMCORE_5_0
+!extra-designated-initializer! PDFPage::initWithImage: is incorrectly decorated with an [DesignatedInitializer] attribute
+
+# Uncomment these changes after Xcode 14 UIKit is bound - https://github.com/xamarin/xamarin-macios/issues/15623
+!missing-protocol-conformance! PDFView should conform to UIFindInteractionDelegate
+!missing-selector! PDFView::findInteraction not bound

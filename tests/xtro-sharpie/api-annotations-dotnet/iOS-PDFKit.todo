@@ -1,2 +1,0 @@
-!missing-protocol-conformance! PDFView should conform to UIFindInteractionDelegate
-!missing-selector! PDFView::findInteraction not bound
