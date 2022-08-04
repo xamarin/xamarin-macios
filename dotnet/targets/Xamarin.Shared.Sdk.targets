@@ -451,9 +451,10 @@
 
 			<!-- TrimMode specifies what the linker will do with framework assemblies -->
 			<TrimMode Condition="'$(_LinkMode)' == 'TrimMode'">$(TrimMode)</TrimMode>
-			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode> <!-- Don't use 'copyused', because that might still end up saving some assemblies, and if that's the platform assembly, it may break the partial static registrar -->
-			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly' Or '$(_LinkMode)' == 'Full'">link</TrimMode>
-			<!-- For Full link mode we also need to set TrimMode for all non-framework assemblies. This is done further below -->
+			<TrimMode Condition="'$(_LinkMode)' == 'None'">copy</TrimMode>
+			<TrimMode Condition="'$(_LinkMode)' == 'SdkOnly'">partial</TrimMode>
+			<TrimMode Condition="'$(_LinkMode)' == 'Full'">full</TrimMode>
+			<!-- For None link mode we also need to set TrimMode for all assemblies. This is done further below -->
 
 			<!-- Determine if any assemblies are actually trimmed, or if we're in a "Don't link" scenario -->
 			<!-- We're in a "Don't link" scenario if both of the following are true:
@@ -562,12 +563,12 @@
 		</PropertyGroup>
 
 		<ItemGroup>
-			<!-- Mark all assemblies to be linked if we're linking all assemblies -->
+			<!-- Mark all assemblies to be copied if we're not linking any assemblies -->
 			<ResolvedFileToPublish
 				Update="@(ResolvedFileToPublish)"
-				Condition="'$(_LinkMode)' == 'Full' And '%(ResolvedFileToPublish.Extension)' == '.dll' And '%(ResolvedFileToPublish.AssetType)' != 'native'"
+				Condition="'$(_LinkMode)' == 'None' And '%(ResolvedFileToPublish.Extension)' == '.dll' And '%(ResolvedFileToPublish.AssetType)' != 'native'"
 			>
-				<TrimMode>link</TrimMode>
+				<TrimMode>copy</TrimMode> <!-- Don't use 'copyused', because that might still end up saving some assemblies, and if that's the platform assembly, it may break the partial static registrar -->
 			</ResolvedFileToPublish>
 
 			<!-- Mark our entry assembly as a root assembly. -->
