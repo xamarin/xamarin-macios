@@ -19,10 +19,10 @@ namespace Microsoft.MaciOS.Nnyeah {
 		bool SuppressWarnings;
 		NNyeahAssemblyResolver Resolver;
 
-		public static void Convert (string xamarinAssembly, string microsoftAssembly, string infile, string outfile, bool verbose, bool forceOverwrite, bool suppressWarnings)
+		public static int Convert (string xamarinAssembly, string microsoftAssembly, string infile, string outfile, bool verbose, bool forceOverwrite, bool suppressWarnings)
 		{
 			var converter = new AssemblyConverter (xamarinAssembly, microsoftAssembly, infile, outfile, verbose, forceOverwrite, suppressWarnings);
-			converter.Convert ();
+			return converter.Convert ();
 		}
 
 		AssemblyConverter (string xamarinAssembly, string microsoftAssembly, string infile, string outfile, bool verbose, bool forceOverwrite, bool suppressWarnings)
@@ -38,14 +38,16 @@ namespace Microsoft.MaciOS.Nnyeah {
 			Resolver = new NNyeahAssemblyResolver (Infile, XamarinAssembly);
 		}
 
-		void Convert ()
+		int Convert ()
 		{
 			try {
 				var map = new TypeAndModuleMap (XamarinAssembly, MicrosoftAssembly, Resolver);
 				ReworkFile (map);
+				return 0;
 			}
 			catch (Exception e) {
 				Console.Error.WriteLine (Errors.E0011, e.Message);
+				return 1;
 			}
 		}
 
