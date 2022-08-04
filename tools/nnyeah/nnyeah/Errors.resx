@@ -101,6 +101,9 @@
 	<data name="E0016" xml:space="preserve">
 		<value>Error while processing constructor on type {0} in the old assembly. Constructors that do non-trivial work are not supported.</value>
 	</data>
+	<data name="E0017" xml:space="preserve">
+		<value>Error while attempting to map member {0} in old assembly. This code uses a constructor that took an IntPtr and used to be public and is now likely an internal constructor. It is no longer available. Conversion can't continue. Your best option is to port the old assembly to .NET 6</value>
+	</data>
 	<data name="E0018" xml:space="preserve">
 		<value>The supplied Microsoft assembly, {0}, is not macOS or iOS and is not currently supported.</value>
 	</data>

@@ -202,6 +202,14 @@ namespace Microsoft.MaciOS.Nnyeah {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while attempting to map member {0} in old assembly. This code uses a constructor that took an IntPtr and used to be public and is now likely an internal constructor. It is no longer available. Conversion can&apos;t continue. Your best option is to port the old assembly to .NET 6.
+        /// </summary>
+        internal static string E0017 {
+            get {
+                return ResourceManager.GetString("E0017", resourceCulture);
+            }
+        }
+
         ///   Looks up a localized string similar to The supplied Microsoft assembly, {0}, is not macOS or iOS and is not currently supported..
         /// </summary>
         internal static string E0018 {
