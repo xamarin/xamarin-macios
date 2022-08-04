@@ -531,4 +531,19 @@ namespace SafariServices {
 		[Export ("invalidate")]
 		void Invalidate ();
 	}
+
+	[iOS (16,0)]
+	[BaseType (typeof(NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariViewControllerDataStore
+	{
+		[Static]
+		[Export ("defaultDataStore", ArgumentSemantic.Strong)]
+		SFSafariViewControllerDataStore DefaultDataStore { get; }
+
+		[Async]
+		[Export ("clearWebsiteDataWithCompletionHandler:")]
+		void ClearWebsiteData ([NullAllowed] Action completion);
+	}
+
 }
