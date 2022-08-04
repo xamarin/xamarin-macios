@@ -4,6 +4,8 @@
 !missing-protocol-conformance! NSDictionary should conform to NSFastEnumeration
 !missing-protocol-conformance! NSEnumerator should conform to NSFastEnumeration
 !missing-protocol-conformance! NSOrderedSet should conform to NSFastEnumeration
+# https://github.com/xamarin/xamarin-macios/issues/15577
+# !missing-protocol-conformance! NSOrderedCollectionDifference should conform to NSFastEnumeration
 !missing-protocol-conformance! NSSet should conform to NSFastEnumeration
 
 ## untyped enums (only values, not type name) NSError.h
@@ -1055,8 +1057,6 @@
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForKey(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForKeyPath(Foundation.NSString)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSObject::ValueForUndefinedKey(Foundation.NSString)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSOrderedSet::FirstObject()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject Foundation.NSOrderedSet::LastObject()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSPropertyListSerialization::PropertyListWithData(Foundation.NSData,Foundation.NSPropertyListReadOptions,Foundation.NSPropertyListFormat&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSPropertyListSerialization::PropertyListWithStream(Foundation.NSInputStream,Foundation.NSPropertyListReadOptions,Foundation.NSPropertyListFormat&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSObject Foundation.NSSet::get_AnyObject()' is missing an [NullAllowed] on return type
@@ -1373,3 +1373,54 @@
 ## the apple docs state that it does accept null: https://developer.apple.com/documentation/foundation/nsurl/1572047-urlwithstring
 ## An NSURL object initialized with URLString. If the URL string was malformed or nil, returns nil.
 !extra-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromString(System.String)' has a extraneous [NullAllowed] on parameter #0
+
+# not exposed to users. 
+# https://github.com/xamarin/xamarin-macios/issues/15577
+# !extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSArray::_GetDifferenceFromArray(Foundation.NSArray,Foundation.NSOrderedCollectionDifferenceCalculationOptions,ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #2
+# !extra-null-allowed! 'ObjCRuntime.NativeHandle Foundation.NSOrderedCollectionDifference::_GetDifference(ObjCRuntime.BlockLiteral&)' has a extraneous [NullAllowed] on parameter #0
+
+# we do not expose IMP
+!missing-selector! NSInvocation::invokeUsingIMP: not bound
+
+# https://github.com/xamarin/maccore/issues/2608 - https://feedbackassistant.apple.com/feedback/10897552
+!missing-selector! NSMutableURLRequest::requiresDNSSECValidation not bound
+!missing-selector! NSMutableURLRequest::setRequiresDNSSECValidation: not bound
+
+# Variable argument, and can be done in C#
+!missing-selector! +NSString::localizedStringWithValidatedFormat:validFormatSpecifiers:error: not bound
+!missing-selector! +NSString::stringWithValidatedFormat:validFormatSpecifiers:error: not bound
+!missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:arguments:error: not bound
+!missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:error: not bound
+!missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:locale:arguments:error: not bound
+!missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:locale:error: not bound
+
+# https://github.com/xamarin/xamarin-macios/issues/15577
+!missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index: not bound
+!missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index:associatedIndex: not bound
+!missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionCallbackHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
+!missing-selector! NSArray::arrayByApplyingDifference: not bound
+!missing-selector! NSArray::differenceFromArray: not bound
+!missing-selector! NSArray::differenceFromArray:withOptions: not bound
+!missing-selector! NSArray::differenceFromArray:withOptions:usingEquivalenceTest: not bound
+!missing-selector! NSMutableArray::applyDifference: not bound
+!missing-selector! NSMutableOrderedSet::applyDifference: not bound
+!missing-selector! NSOrderedCollectionChange::associatedIndex not bound
+!missing-selector! NSOrderedCollectionChange::changeType not bound
+!missing-selector! NSOrderedCollectionChange::index not bound
+!missing-selector! NSOrderedCollectionChange::initWithObject:type:index: not bound
+!missing-selector! NSOrderedCollectionChange::initWithObject:type:index:associatedIndex: not bound
+!missing-selector! NSOrderedCollectionChange::object not bound
+!missing-selector! NSOrderedCollectionDifference::differenceByTransformingChangesWithBlock: not bound
+!missing-selector! NSOrderedCollectionDifference::hasChanges not bound
+!missing-selector! NSOrderedCollectionDifference::initWithChanges: not bound
+!missing-selector! NSOrderedCollectionDifference::initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects: not bound
+!missing-selector! NSOrderedCollectionDifference::initWithInsertIndexes:insertedObjects:removeIndexes:removedObjects:additionalChanges: not bound
+!missing-selector! NSOrderedCollectionDifference::insertions not bound
+!missing-selector! NSOrderedCollectionDifference::inverseDifference not bound
+!missing-selector! NSOrderedCollectionDifference::removals not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet: not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet:withOptions: not bound
+!missing-selector! NSOrderedSet::differenceFromOrderedSet:withOptions:usingEquivalenceTest: not bound
+!missing-selector! NSOrderedSet::orderedSetByApplyingDifference: not bound
+!missing-type! NSOrderedCollectionChange not bound
+!missing-type! NSOrderedCollectionDifference not bound

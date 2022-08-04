@@ -301,6 +301,7 @@ namespace Cecil.Tests {
 			case "AVFoundation.AVAssetDownloadDelegate.DidFinishCollectingMetrics":
 			case "AVFoundation.AVAssetDownloadDelegate.TaskIsWaitingForConnectivity":
 			case "AVFoundation.AVAssetDownloadDelegate.WillBeginDelayedRequest":
+			case "AVFoundation.AVAssetDownloadDelegate.DidCreateTask":
 			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemTitle":
 			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemUrl":
 			case "Intents.INPerson.get_AlternativeSpeakableMatches":
