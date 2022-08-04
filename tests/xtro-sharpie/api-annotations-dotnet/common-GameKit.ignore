@@ -12,6 +12,9 @@
 !missing-selector! GKLeaderboardEntry::rank not bound
 !missing-selector! GKLeaderboardEntry::score not bound
 
+# Xcode1 4 beta 4
+!deprecated-attribute-wrong! GKBasePlayer::playerID has 16.0 not 13.0 on [Deprecated] attribute
+
 ## unsorted
 
 !missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound
