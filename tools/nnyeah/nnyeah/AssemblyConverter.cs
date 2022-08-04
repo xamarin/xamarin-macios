@@ -106,6 +106,12 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		static bool TryGetTargetPlatform (string msAssembly, [NotNullWhen (returnValue: true)] out PlatformName? platform)
 		{
+			// we're using the name of the supplied microsoft assembly to get the target platform.
+			// why?
+			// initially I tried looking inside the input assembly but that is not reliable.
+			// there were a number of cases where it would fail but we lack the context here to handle
+			// it gracefully. Instead, it's much more reliable to assume that the microsoft assembly and
+			// the input assembly are going to be in sync and ensure that the legacy assembly will match that.
 			var file = Path.GetFileNameWithoutExtension (msAssembly);
 			if (file.EndsWith (".iOS", StringComparison.OrdinalIgnoreCase)) {
 				platform = PlatformName.iOS;
