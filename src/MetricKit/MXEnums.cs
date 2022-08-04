@@ -22,6 +22,6 @@ namespace MetricKit {
 		PastDeadline,
 		Duplicated,
 		Unknown,
-		InternalFailure
+		InternalFailure,
 	}
 }
