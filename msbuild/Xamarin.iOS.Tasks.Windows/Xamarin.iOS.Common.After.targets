@@ -330,7 +330,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 				ReferenceAssemblyPaths="@(ReferencePath)"
 				RootAssemblyNames="@(TrimmerRootAssembly)"
 				TrimMode="$(TrimMode)"
-				DefaultAction="$(TrimmerDefaultAction)"
+				DefaultAction="$(_TrimmerDefaultAction)"
 				RemoveSymbols="$(TrimmerRemoveSymbols)"
 				FeatureSettings="@(_TrimmerFeatureSettings)"
 				CustomData="@(_TrimmerCustomData)"
