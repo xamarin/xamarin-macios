@@ -519,6 +519,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "OSLog", "OSLog", 8,0 },
 				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
 
+				{ "DeviceCheck", "DeviceCheck", 9,0 },
 				{ "CallKit", "CallKit", 9,0 },
 			};
 		}
