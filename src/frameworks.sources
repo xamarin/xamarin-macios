@@ -2166,6 +2166,7 @@ IOS_FRAMEWORKS =         \
 	Photos \
 	PhotosUI \
 	PushKit \
+	PushToTalk \
 	QuickLook \
 	QuickLookThumbnailing \
 	ReplayKit \

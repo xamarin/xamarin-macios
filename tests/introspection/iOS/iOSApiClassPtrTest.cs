@@ -23,6 +23,7 @@ namespace Introspection {
 			case "Phase": // missing in the sim
 			case "ShazamKit": // missing in the sim
 			case "ThreadNetwork": // missing in the sim
+			case "PushToTalk": // missing in the sim
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;

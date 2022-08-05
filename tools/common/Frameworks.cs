@@ -445,6 +445,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
 				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
 
+				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
+
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
 				// please also keep it sorted to ease comparison
