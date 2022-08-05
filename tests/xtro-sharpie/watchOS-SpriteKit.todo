@@ -1,3 +1,0 @@
-!missing-enum! SKNodeFocusBehavior not bound
-!missing-selector! SKNode::focusBehavior not bound
-!missing-selector! SKNode::setFocusBehavior: not bound
