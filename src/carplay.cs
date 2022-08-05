@@ -573,6 +573,14 @@ namespace CarPlay {
 	interface CPListSection : NSSecureCoding {
 
 		[Export ("initWithItems:header:sectionIndexTitle:")]
+		[Obsolete ("Use 'CPListSection (ICPListTemplateItem [], string, string)' constructor instead.")]
+		NativeHandle Constructor (CPListItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
+
+		[Export ("initWithItems:")]
+		[Obsolete ("Use 'CPListSection (ICPListTemplateItem [])' constructor instead.")]
+		NativeHandle Constructor (CPListItem [] items);
+
+		[Export ("initWithItems:header:sectionIndexTitle:")]
 		NativeHandle Constructor (ICPListTemplateItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
 
 		[Export ("initWithItems:")]
@@ -589,7 +597,11 @@ namespace CarPlay {
 		string SectionIndexTitle { get; }
 
 		[Export ("items", ArgumentSemantic.Copy)]
+		[Obsolete ("Use 'Items : ICPListTemplateItem []' instead.")]
 		CPListItem [] Items { get; }
+
+		[Export ("items", ArgumentSemantic.Copy)]
+		ICPListTemplateItem [] Items { get; }
 
 		[iOS (14,0)]
 		[Export ("indexOfItem:")]
