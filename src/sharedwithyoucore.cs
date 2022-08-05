@@ -41,6 +41,7 @@ namespace SharedWithYouCore {
 	[NoWatch, TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Protocol]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface SWCollaborationActionHandler {
 		[Abstract]
 		[Export ("collaborationCoordinator:handleStartCollaborationAction:")]
@@ -156,7 +157,6 @@ namespace SharedWithYouCore {
 		[Static]
 		[Export ("shareOptionsWithOptionsGroups:")]
 		SWCollaborationShareOptions Create (SWCollaborationOptionsGroup[] optionsGroups);
-
 	}
 
 	[NoWatch, TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
@@ -232,7 +232,7 @@ namespace SharedWithYouCore {
 	}
 
 	[NoWatch, TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof(SWAction))]
+	[BaseType (typeof (SWAction))]
 	[DisableDefaultCtor]
 	interface SWStartCollaborationAction : NSSecureCoding, NSCopying {
 		[Export ("collaborationMetadata")]
