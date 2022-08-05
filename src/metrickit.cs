@@ -38,10 +38,6 @@ namespace MetricKit {
 		[MacCatalyst (14,0)]
 		[Export ("dictionaryRepresentation")]
 		NSDictionary _DictionaryRepresentation14 { get; }
-
-		[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
-		[Field ("MXErrorDomain")]
-		NSString ErrorDomain { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
