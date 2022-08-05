@@ -596,9 +596,11 @@ namespace CarPlay {
 		[NullAllowed, Export ("sectionIndexTitle")]
 		string SectionIndexTitle { get; }
 
+#if !XAMCORE_5_0
 		[Export ("items", ArgumentSemantic.Copy)]
 		[Obsolete ("Use 'Items : ICPListTemplateItem []' instead.")]
 		CPListItem [] Items { get; }
+#endif
 
 		[Export ("items", ArgumentSemantic.Copy)]
 		ICPListTemplateItem [] Items { get; }
