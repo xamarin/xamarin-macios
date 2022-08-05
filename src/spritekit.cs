@@ -221,9 +221,8 @@ namespace SpriteKit {
 		[Export ("userInteractionEnabled")]
 		bool UserInteractionEnabled { [Bind ("isUserInteractionEnabled")] get; set; }
 
-		[NoWatch]
 		[NoMac]
-		[TV (11,0), iOS (11,0)]
+		[TV (11,0), iOS (11,0), Watch (9,0)]
 		[Export ("focusBehavior", ArgumentSemantic.Assign)]
 		SKNodeFocusBehavior FocusBehavior { get; set; }
 
