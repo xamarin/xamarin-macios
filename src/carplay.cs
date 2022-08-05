@@ -605,7 +605,7 @@ namespace CarPlay {
 		[Export ("items", ArgumentSemantic.Copy)]
 		[Obsolete ("Use 'Items2 : ICPListTemplateItem []' instead.")]
 		CPListItem [] Items { get; }
-#eendif
+#endif
 
 		[Export ("items", ArgumentSemantic.Copy)]
 #if !XAMCORE_5_0
