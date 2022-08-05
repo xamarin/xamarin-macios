@@ -76,6 +76,11 @@ DIRECTORIES += \
 $(DIRECTORIES):
 	$(Q) mkdir -p $@
 
+.stamp-cp-mono-workload: $(TOP)/Make.config
+	$(CP) -r $(DOTNET_MANIFESTS_PATH)/../$(DOTNET_MANIFEST_VERSION_BAND)/* $(DOTNET_MANIFESTS_PATH)/
+	$(Q) touch $@
+TARGETS += .stamp-cp-mono-workload
+
 CURRENT_HASH_LONG:=$(shell git log -1 --pretty=%H)
 
 $(DOTNET_DESTDIR)/Microsoft.%: Microsoft.% | $(foreach platform,$(DOTNET_PLATFORMS),$(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/data $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/Sdk $(DOTNET_DESTDIR)/Microsoft.$(platform).Sdk/targets $(DOTNET_DESTDIR)/Microsoft.$(platform).Templates) \
