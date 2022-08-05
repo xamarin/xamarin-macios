@@ -1092,6 +1092,50 @@ namespace GameController {
 		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Field ("GCInputButtonShare")]
 		NSString ButtonShare { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputLeftPaddle")]
+		IGCButtonElementName LeftPaddle { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputPedalAccelerator")]
+		IGCButtonElementName PedalAccelerator { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputPedalBrake")]
+		IGCButtonElementName PedalBrake { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputPedalClutch")]
+		IGCButtonElementName PedalClutch { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputRightPaddle")]
+		IGCButtonElementName RightPaddle { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputShifter")]
+		IGCPhysicalInputElementName Shifter { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputSteeringWheel")]
+		IGCAxisElementName SteeringWheel { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputButtonL4")]
+		IGCAxisElementName ButtonL4 { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputButtonL5")]
+		IGCAxisElementName ButtonL5 { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputButtonR4")]
+		IGCAxisElementName ButtonR4 { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCInputButtonR5")]
+		IGCAxisElementName ButtonR5 { get; }
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
@@ -2170,5 +2214,497 @@ namespace GameController {
 
 		[Field ("GCProductCategoryKeyboard")]
 		NSString Keyboard { get; }
+
+		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+		[Field ("GCProductCategoryHID")]
+		NSString GCProductCategoryHID { get; }
+	}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface GCRacingWheel : IGCDevice
+	{
+		[Static]
+		[Export ("connectedRacingWheels")]
+		NSSet<GCRacingWheel> ConnectedRacingWheels { get; }
+
+		[Export ("acquireDeviceWithError:")]
+		bool AcquireDeviceWithError ([NullAllowed] out NSError error);
+
+		[Export ("relinquishDevice")]
+		void RelinquishDevice ();
+
+		[Export ("acquired")]
+		bool Acquired { [Bind ("isAcquired")] get; }
+
+		[Export ("wheelInput", ArgumentSemantic.Strong)]
+		GCRacingWheelInput WheelInput { get; }
+
+		[Export ("snapshot")]
+		bool Snapshot { [Bind ("isSnapshot")] get; }
+
+		[Export ("capture")]
+		GCRacingWheel Capture { get; }
+	}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (GCRacingWheelInputState))]
+	interface GCRacingWheelInput : IGCDevicePhysicalInput
+	{
+		[Export ("capture")]
+		GCRacingWheelInputState Capture { get; }
+
+		[NullAllowed, Export ("nextInputState")]
+		GCDevicePhysicalInputStateDiff NextInputState { get; }
+	}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	interface GCRacingWheelInputState : IGCDevicePhysicalInputState
+	{
+		[Export ("wheel")]
+		GCSteeringWheelElement Wheel { get; }
+
+		[NullAllowed, Export ("acceleratorPedal")]
+		IGCButtonElement AcceleratorPedal { get; }
+
+		[NullAllowed, Export ("brakePedal")]
+		IGCButtonElement BrakePedal { get; }
+
+		[NullAllowed, Export ("clutchPedal")]
+		IGCButtonElement ClutchPedal { get; }
+
+		[NullAllowed, Export ("shifter")]
+		GCGearShifterElement Shifter { get; }
+	}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface GCSteeringWheelElement : IGCAxisElement
+	{
+		[Export ("maximumDegreesOfRotation")]
+		float MaximumDegreesOfRotation { get; }
+	}
+
+	interface IGCAxisElementName {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCAxisElementName : IGCPhysicalInputElementName
+	{
+	}
+
+	interface IGCButtonElementName {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCButtonElementName : IGCPhysicalInputElementName
+	{
+	}
+
+	interface IGCPhysicalInputElementName {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCPhysicalInputElementName
+	{
+	}
+
+	interface IGCSwitchElementName {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCSwitchElementName : IGCPhysicalInputElementName
+	{
+	}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface GCPhysicalInputElementCollection<KeyIdentifierType, ElementIdentifierType> : INSFastEnumeration
+		where KeyIdentifierType : string
+		where ElementIdentifierType : IGCPhysicalInputElement
+	{
+		[Export ("count")]
+		nuint Count { get; }
+
+		[Export ("elementForAlias:")]
+		[return: NullAllowed]
+		IGCPhysicalInputElement GetElement (string alias);
+
+		[Export ("objectForKeyedSubscript:")]
+		[return: NullAllowed]
+		IGCPhysicalInputElement GetObject (string key);
+
+		[Export ("elementEnumerator")]
+		NSEnumerator<IGCPhysicalInputElement> ElementEnumerator { get; }
+	}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCAxisInput
+	{
+		[Abstract]
+		[NullAllowed, Export ("valueDidChangeHandler", ArgumentSemantic.Copy)]
+		Action<IGCPhysicalInputElement, GCAxisInput, float> ValueDidChangeHandler { get; set; }
+
+		[Abstract]
+		[Export ("value")]
+		float Value { get; }
+
+		[Abstract]
+		[Export ("analog")]
+		bool Analog { [Bind ("isAnalog")] get; }
+
+		[Abstract]
+		[Export ("canWrap")]
+		bool CanWrap { get; }
+
+		[Abstract]
+		[Export ("lastValueTimestamp")]
+		double LastValueTimestamp { get; }
+
+		[Abstract]
+		[Export ("lastValueLatency")]
+		double LastValueLatency { get; }
+	}
+
+	interface IGCAxisElement {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCAxisElement : IGCPhysicalInputElement
+	{
+		[Abstract]
+		[NullAllowed, Export ("absoluteInput")]
+		GCAxisInput AbsoluteInput { get; }
+
+		[Abstract]
+		[Export ("relativeInput")]
+		IGCRelativeInput RelativeInput { get; }
+	}
+
+	interface IGCDirectionPadElementName {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCDirectionPadElementName : IGCPhysicalInputElementName
+	{
+	}
+
+	interface IGCButtonElement {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCButtonElement : IGCPhysicalInputElement
+	{
+		[Abstract]
+		[Export ("pressedInput")]
+		NSObject PressedInput { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("touchedInput")]
+		IGCTouchedStateInput TouchedInput { get; }
+	}
+
+	interface IGCDevicePhysicalInput {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCDevicePhysicalInput : IGCDevicePhysicalInputState
+	{
+		[Abstract]
+		[NullAllowed, Export ("device", ArgumentSemantic.Weak)]
+		GCDevice Device { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("elementValueDidChangeHandler", ArgumentSemantic.Copy)]
+		Action<IGCPhysicalInputElement> ElementValueDidChangeHandler { get; set; }
+
+		[Abstract]
+		[Export ("capture")]
+		GCDevicePhysicalInputState Capture { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("inputStateAvailableHandler", ArgumentSemantic.Copy)]
+		Action InputStateAvailableHandler { get; set; }
+
+		[Abstract]
+		[Export ("inputStateQueueDepth")]
+		nint InputStateQueueDepth { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("nextInputState")]
+		NSObject NextInputState { get; }
+	}
+
+	interface IGCDevicePhysicalInputState {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCDevicePhysicalInputState
+	{
+		[Abstract]
+		[NullAllowed, Export ("device", ArgumentSemantic.Weak)]
+		GCDevice Device { get; }
+
+		[Abstract]
+		[Export ("lastEventTimestamp")]
+		double LastEventTimestamp { get; }
+
+		[Abstract]
+		[Export ("lastEventLatency")]
+		double LastEventLatency { get; }
+
+		[Abstract]
+		[Export ("elements")]
+		GCPhysicalInputElementCollection<IGCPhysicalInputElementName, IGCPhysicalInputElement> Elements { get; }
+
+		[Abstract]
+		[Export ("buttons")]
+		GCPhysicalInputElementCollection<IGCButtonElementName, IGCButtonElement> Buttons { get; }
+
+		[Abstract]
+		[Export ("axes")]
+		GCPhysicalInputElementCollection<IGCAxisElementName, IGCAxisElement> Axes { get; }
+
+		[Abstract]
+		[Export ("switches")]
+		GCPhysicalInputElementCollection<IGCSwitchElementName, IGCSwitchElement> Switches { get; }
+
+		[Abstract]
+		[Export ("dpads")]
+		GCPhysicalInputElementCollection<GCDirectionPadElementName, IGCDirectionPadElement> Dpads { get; }
+
+		[Abstract]
+		[Export ("objectForKeyedSubscript:")]
+		[return: NullAllowed]
+		IGCPhysicalInputElement GetObject (string key);
+	}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCDevicePhysicalInputStateDiff
+	{
+		[Abstract]
+		[Export ("changeForElement:")]
+		GCDevicePhysicalInputElementChange GetChange (IGCPhysicalInputElement element);
+
+		[Abstract]
+		[NullAllowed, Export ("changedElements")]
+		NSEnumerator<IGCPhysicalInputElement> ChangedElements { get; }
+	}
+
+	interface IGCDirectionPadElement {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCDirectionPadElement : IGCPhysicalInputElement
+	{
+		[Abstract]
+		[Export ("xAxis")]
+		GCAxisInput XAxis { get; }
+
+		[Abstract]
+		[Export ("yAxis")]
+		GCAxisInput YAxis { get; }
+
+		[Abstract]
+		[Export ("up")]
+		NSObject Up { get; }
+
+		[Abstract]
+		[Export ("down")]
+		NSObject Down { get; }
+
+		[Abstract]
+		[Export ("left")]
+		NSObject Left { get; }
+
+		[Abstract]
+		[Export ("right")]
+		NSObject Right { get; }
+	}
+
+	interface IGCLinearInput {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCLinearInput
+	{
+		[Abstract]
+		[NullAllowed, Export ("valueDidChangeHandler", ArgumentSemantic.Copy)]
+		Action<IGCPhysicalInputElement, GCLinearInput, float> ValueDidChangeHandler { get; set; }
+
+		[Abstract]
+		[Export ("value")]
+		float Value { get; }
+
+		[Abstract]
+		[Export ("analog")]
+		bool Analog { [Bind ("isAnalog")] get; }
+
+		[Abstract]
+		[Export ("canWrap")]
+		bool CanWrap { get; }
+
+		[Abstract]
+		[Export ("lastValueTimestamp")]
+		double LastValueTimestamp { get; }
+
+		[Abstract]
+		[Export ("lastValueLatency")]
+		double LastValueLatency { get; }
+	}
+
+	interface IGCPhysicalInputElement {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCPhysicalInputElement
+	{
+		[Abstract]
+		[NullAllowed, Export ("sfSymbolsName")]
+		string SfSymbolsName { get; }
+
+		[Abstract]
+		[NullAllowed, Export ("localizedName")]
+		string LocalizedName { get; }
+
+		[Abstract]
+		[Export ("aliases")]
+		NSSet<NSString> Aliases { get; }
+	}
+
+	interface IGCPressedStateInput {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCPressedStateInput
+	{
+		[Abstract]
+		[NullAllowed, Export ("pressedDidChangeHandler", ArgumentSemantic.Copy)]
+		Action<IGCPhysicalInputElement, IGCPressedStateInput, bool> PressedDidChangeHandler { get; set; }
+
+		[Abstract]
+		[Export ("pressed")]
+		bool Pressed { [Bind ("isPressed")] get; }
+
+		[Abstract]
+		[Export ("lastPressedStateTimestamp")]
+		double LastPressedStateTimestamp { get; }
+
+		[Abstract]
+		[Export ("lastPressedStateLatency")]
+		double LastPressedStateLatency { get; }
+	}
+
+	interface IGCRelativeInput {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCRelativeInput
+	{
+		[Abstract]
+		[NullAllowed, Export ("deltaDidChangeHandler", ArgumentSemantic.Copy)]
+		Action<IGCPhysicalInputElement, IGCRelativeInput, float> DeltaDidChangeHandler { get; set; }
+
+		[Abstract]
+		[Export ("delta")]
+		float Delta { get; }
+
+		[Abstract]
+		[Export ("analog")]
+		bool Analog { [Bind ("isAnalog")] get; }
+
+		[Abstract]
+		[Export ("lastDeltaTimestamp")]
+		double LastDeltaTimestamp { get; }
+
+		[Abstract]
+		[Export ("lastDeltaLatency")]
+		double LastDeltaLatency { get; }
+	}
+
+	interface IGCSwitchElement {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCSwitchElement : IGCPhysicalInputElement
+	{
+		[Abstract]
+		[Export ("positionInput")]
+		IGCSwitchPositionInput PositionInput { get; }
+	}
+
+	interface IGCSwitchPositionInput {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCSwitchPositionInput
+	{
+		[Abstract]
+		[NullAllowed, Export ("positionDidChangeHandler", ArgumentSemantic.Copy)]
+		Action<IGCPhysicalInputElement, IGCSwitchPositionInput, nint> PositionDidChangeHandler { get; set; }
+
+		[Abstract]
+		[Export ("position")]
+		nint Position { get; }
+
+		[Abstract]
+		[Export ("positionRange")]
+		NSRange PositionRange { get; }
+
+		[Abstract]
+		[Export ("sequential")]
+		bool Sequential { [Bind ("isSequential")] get; }
+
+		[Abstract]
+		[Export ("canWrap")]
+		bool CanWrap { get; }
+
+		[Abstract]
+		[Export ("lastPositionTimestamp")]
+		double LastPositionTimestamp { get; }
+
+		[Abstract]
+		[Export ("lastPositionLatency")]
+		double LastPositionLatency { get; }
+	}
+
+	interface IGCTouchedStateInput {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCTouchedStateInput
+	{
+		[Abstract]
+		[NullAllowed, Export ("touchedDidChangeHandler", ArgumentSemantic.Copy)]
+		Action<IGCPhysicalInputElement, IGCTouchedStateInput, bool> TouchedDidChangeHandler { get; set; }
+
+		[Abstract]
+		[Export ("touched")]
+		bool Touched { [Bind ("isTouched")] get; }
+
+		[Abstract]
+		[Export ("lastTouchedStateTimestamp")]
+		double LastTouchedStateTimestamp { get; }
+
+		[Abstract]
+		[Export ("lastTouchedStateLatency")]
+		double LastTouchedStateLatency { get; }
+	}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof(NSObject))]
+	interface GCGearShifterElement : IGCPhysicalInputElement
+	{
+		[NullAllowed, Export ("patternInput")]
+		GCSwitchPositionInput PatternInput { get; }
+
+		[NullAllowed, Export ("sequentialInput")]
+		GCRelativeInput SequentialInput { get; }
 	}
 }

@@ -6,6 +6,7 @@
 !missing-field! GCInputRightPaddle not bound
 !missing-field! GCInputShifter not bound
 !missing-field! GCInputSteeringWheel not bound
+
 !missing-field! GCProductCategoryHID not bound
 !missing-field! GCRacingWheelDidConnectNotification not bound
 !missing-field! GCRacingWheelDidDisconnectNotification not bound
