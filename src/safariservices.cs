@@ -533,7 +533,7 @@ namespace SafariServices {
 	}
 
 	[iOS (16,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariViewControllerDataStore
 	{
