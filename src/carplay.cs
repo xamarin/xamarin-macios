@@ -601,13 +601,18 @@ namespace CarPlay {
 		string SectionIndexTitle { get; }
 
 #if !XAMCORE_5_0
+		[Sealed]
 		[Export ("items", ArgumentSemantic.Copy)]
-		[Obsolete ("Use 'Items : ICPListTemplateItem []' instead.")]
+		[Obsolete ("Use 'Items2 : ICPListTemplateItem []' instead.")]
 		CPListItem [] Items { get; }
-#endif
+#eendif
 
 		[Export ("items", ArgumentSemantic.Copy)]
+#if !XAMCORE_5_0
+		ICPListTemplateItem [] Items2 { get; }
+#else
 		ICPListTemplateItem [] Items { get; }
+#endif
 
 		[iOS (14,0)]
 		[Export ("indexOfItem:")]
