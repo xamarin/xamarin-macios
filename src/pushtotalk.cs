@@ -201,7 +201,7 @@ namespace PushToTalk {
 	{
 		[Abstract]
 		[Export ("channelDescriptorForRestoredChannelUUID:")]
-		PTChannelDescriptor Create (NSUuid channelUUID);
+		PTChannelDescriptor Create (NSUuid channelUuid);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
