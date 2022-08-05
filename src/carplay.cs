@@ -573,10 +573,10 @@ namespace CarPlay {
 	interface CPListSection : NSSecureCoding {
 
 		[Export ("initWithItems:header:sectionIndexTitle:")]
-		NativeHandle Constructor (CPListItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
+		NativeHandle Constructor (ICPListTemplateItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
 
 		[Export ("initWithItems:")]
-		NativeHandle Constructor (CPListItem [] items);
+		NativeHandle Constructor (ICPListTemplateItem [] items);
 
 		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithItems:header:headerSubtitle:headerImage:headerButton:sectionIndexTitle:")]
