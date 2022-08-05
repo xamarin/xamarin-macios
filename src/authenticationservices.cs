@@ -1524,14 +1524,14 @@ namespace AuthenticationServices {
 		[Export ("saveLoginConfiguration:error:")]
 		bool Save (ASAuthorizationProviderExtensionLoginConfiguration loginConfiguration, [NullAllowed] out NSError error);
 
-		[Internal]
+		[Protected]
 		[Export ("saveCertificate:keyType:")]
 		void _Save (IntPtr certificate, ASAuthorizationProviderExtensionKeyType keyType);
 
 		[Wrap ("_Save (certificate.GetHandle (), keyType)")]
 		void Save (SecCertificate certificate, ASAuthorizationProviderExtensionKeyType keyType);
 
-		[Internal]
+		[Protected]
 		[Export ("copyKeyForKeyType:")]
 		[return: NullAllowed]
 		IntPtr _CopyKey (ASAuthorizationProviderExtensionKeyType keyType);
@@ -1564,7 +1564,7 @@ namespace AuthenticationServices {
 
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface ASAuthorizationProviderExtensionRegistrationHandler
 	{
 		[Async]
