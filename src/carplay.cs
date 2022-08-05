@@ -576,9 +576,11 @@ namespace CarPlay {
 		[Obsolete ("Use 'CPListSection (ICPListTemplateItem [], string, string)' constructor instead.")]
 		NativeHandle Constructor (CPListItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
 
+#if !XAMCORE_5_0
 		[Export ("initWithItems:")]
 		[Obsolete ("Use 'CPListSection (ICPListTemplateItem [])' constructor instead.")]
 		NativeHandle Constructor (CPListItem [] items);
+#endif
 
 		[Export ("initWithItems:header:sectionIndexTitle:")]
 		NativeHandle Constructor (ICPListTemplateItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
