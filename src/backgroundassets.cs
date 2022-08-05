@@ -51,6 +51,7 @@ namespace BackgroundAssets {
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface BAApplicationExtensionInfo : NSSecureCoding
 	{
 		[Export ("applicationIdentifier")]
@@ -116,10 +117,10 @@ namespace BackgroundAssets {
 		void DidReceiveChallenge (BADownload download, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler);
 
 		[Export ("download:failedWithError:")]
-		void failed (BADownload download, NSError error);
+		void Failed (BADownload download, NSError error);
 
 		[Export ("download:finishedWithFileURL:")]
-		void finished (BADownload download, NSUrl fileUrl);
+		void Finished (BADownload download, NSUrl fileUrl);
 	}
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
@@ -159,9 +160,9 @@ namespace BackgroundAssets {
 	}
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (BADownload))]
+	[BaseType (typeof (BADownload), Name = "BAURLDownload")]
 	[DisableDefaultCtor]
-	interface BAURLDownload
+	interface BAUrlDownload
 	{
 
 		[Field ("BADownloaderPriorityMin")]
