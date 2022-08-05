@@ -118,13 +118,12 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 			if (!ModuleToEdit.TryGetTypeReference ("System.nfloat", out NfloatTypeReference)) {
 				NfloatTypeReference = EmptyTypeReference;
-				NewNfloatTypeReference = EmptyTypeReference;
-			} else {
-				NewNfloatTypeReference = ModuleToEdit.ImportReference (new TypeReference ("System.Runtime.InteropServices", "NFloat", null, InteropServicesAssembly, true));
 			}
+			NewNfloatTypeReference = ModuleToEdit.ImportReference (new TypeReference ("System.Runtime.InteropServices", "NFloat", null, InteropServicesAssembly, true));
 			NewNativeHandleTypeDefinition = modules.MicrosoftModule.Types.First (t => t.FullName == "ObjCRuntime.NativeHandle");
 
 			var nativeHandleOpImplicit = NewNativeHandleTypeDefinition.Resolve ().GetMethods ().First (m => m.FullName == "ObjCRuntime.NativeHandle ObjCRuntime.NativeHandle::op_Implicit(System.IntPtr)");
+			ReplacePlatformAssemblyReference ();
 			ConstructorTransforms = new ConstructorTransforms (ModuleToEdit.ImportReference (NewNativeHandleTypeDefinition), ModuleToEdit.TypeSystem.Boolean, ModuleToEdit.ImportReference (nativeHandleOpImplicit), WarningIssued, Transformed);
 			NativeHandleGetHandleReference = NewNativeHandleTypeDefinition.Methods.First (m => m.Name == "get_Handle");
 
@@ -197,7 +196,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 			typeDef.CustomAttributes.Add (attr_Embedded);
 
 			// add [AttributeUsage(...)]
-			var attrUsageCtorReference = new MethodReference (".ctor", module.TypeSystem.Void, AttributeTargetsTypeReference);
+			module.ImportReference (AttributeUsageTypeReference);
+			var attrUsageCtorReference = new MethodReference (".ctor", module.TypeSystem.Void, AttributeUsageTypeReference);
 			attrUsageCtorReference.HasThis = true;
 			attrUsageCtorReference.Parameters.Add (new ParameterDefinition (AttributeTargetsTypeReference));
 			module.ImportReference (attrUsageCtorReference);
@@ -269,7 +269,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		Dictionary<string, Transformation> LoadMethodSubs ()
 		{
 			var methodSubSource = new MethodTransformations ();
-			var subs = methodSubSource.GetTransforms (Modules, NativeIntAttribute);
+			var subs = methodSubSource.GetTransforms (Modules, NativeIntAttribute, NewNfloatTypeReference);
 
 			return subs;
 		}
@@ -284,7 +284,6 @@ namespace Microsoft.MaciOS.Nnyeah {
 
 		public void Rework (Stream stm)
 		{
-			ReplacePlatformAssemblyReference ();
 			foreach (var type in ModuleToEdit.Types) {
 				ReworkType (type);
 			}
@@ -318,7 +317,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		{
 			for (int i = ModuleToEdit.AssemblyReferences.Count - 1; i >= 0; i--) {
 				if (IsXamarinReference (ModuleToEdit.AssemblyReferences [i])) {
-					ModuleToEdit.AssemblyReferences[i] = new AssemblyNameReference (Modules.MicrosoftModule.Assembly.Name.Name, Modules.MicrosoftModule.Assembly.Name.Version);
+					ModuleToEdit.AssemblyReferences [i] = AssemblyNameReference.Parse (Modules.MicrosoftModule.Assembly.ToString ());
 				}
 			}
 		}
