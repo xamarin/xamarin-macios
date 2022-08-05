@@ -2313,6 +2313,7 @@ MACCATALYST_FRAMEWORKS = \
 	DeviceCheck \
 	EventKit \
 	EventKitUI \
+	ExecutionPolicy \
 	ExternalAccessory \
 	FileProvider \
 	GameController \
