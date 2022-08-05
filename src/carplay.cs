@@ -580,7 +580,7 @@ namespace CarPlay {
 
 #if !XAMCORE_5_0
 		[Export ("initWithItems:")]
-		[Obsolete ("Use 'CPListSection (ICPListTemplateItem [])' constructor instead.")]
+		[Obsolete ("Use '.ctor (ICPListTemplateItem [])' constructor instead.")]
 		NativeHandle Constructor (CPListItem [] items);
 #endif
 
