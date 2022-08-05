@@ -21,3 +21,6 @@
 
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound
+
+# the version is not 150.15
+!deprecated-attribute-wrong! GKBasePlayer::playerID has 13.0 not 10.15 on [Deprecated] attribute
