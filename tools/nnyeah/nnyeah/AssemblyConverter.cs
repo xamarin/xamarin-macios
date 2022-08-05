@@ -19,15 +19,19 @@ namespace Microsoft.MaciOS.Nnyeah {
 		bool SuppressWarnings;
 		NNyeahAssemblyResolver Resolver;
 
-		public static void Convert (string xamarinAssembly, string microsoftAssembly, string infile, string outfile, bool verbose, bool forceOverwrite, bool suppressWarnings)
+		public static int Convert (string? xamarinAssembly, string microsoftAssembly, string infile, string outfile, bool verbose, bool forceOverwrite, bool suppressWarnings)
 		{
 			var converter = new AssemblyConverter (xamarinAssembly, microsoftAssembly, infile, outfile, verbose, forceOverwrite, suppressWarnings);
-			converter.Convert ();
+			return converter.Convert ();
 		}
 
-		AssemblyConverter (string xamarinAssembly, string microsoftAssembly, string infile, string outfile, bool verbose, bool forceOverwrite, bool suppressWarnings)
+		AssemblyConverter (string? xamarinAssembly, string microsoftAssembly, string infile, string outfile, bool verbose, bool forceOverwrite, bool suppressWarnings)
 		{
-			XamarinAssembly = xamarinAssembly;
+			if (!TryGetTargetPlatform (microsoftAssembly, out var platform)) {
+				throw new ConversionException (Errors.E0018, Infile);
+			}
+
+			XamarinAssembly = xamarinAssembly ?? GetPlatformModulePath (platform.Value);
 			MicrosoftAssembly = microsoftAssembly;
 			Infile = infile;
 			Outfile = outfile;
@@ -38,14 +42,16 @@ namespace Microsoft.MaciOS.Nnyeah {
 			Resolver = new NNyeahAssemblyResolver (Infile, XamarinAssembly);
 		}
 
-		void Convert ()
+		int Convert ()
 		{
 			try {
 				var map = new TypeAndModuleMap (XamarinAssembly, MicrosoftAssembly, Resolver);
 				ReworkFile (map);
+				return 0;
 			}
 			catch (Exception e) {
 				Console.Error.WriteLine (Errors.E0011, e.Message);
+				return 1;
 			}
 		}
 
@@ -78,7 +84,9 @@ namespace Microsoft.MaciOS.Nnyeah {
 				} catch (TypeNotFoundException e) {
 					throw new ConversionException (Errors.E0012, e.TypeName);
 				} catch (MemberNotFoundException e) {
-					throw new ConversionException (Errors.E0013, e.MemberName);
+					var error = IsLikelyAnIntPtrConstructor (e.MemberName) ?
+						Errors.E0017 : Errors.E0013;
+					throw new ConversionException (error, e.MemberName);
 				} catch (Exception e) {
 					throw new ConversionException (Errors.E0004, e.Message);
 				}
@@ -98,6 +106,43 @@ namespace Microsoft.MaciOS.Nnyeah {
 			} catch (Exception e) {
 				throw new ConversionException (Errors.E0003, Infile, e.Message);
 			}
+		}
+
+		static bool TryGetTargetPlatform (string msAssembly, [NotNullWhen (returnValue: true)] out PlatformName? platform)
+		{
+			// we're using the name of the supplied microsoft assembly to get the target platform.
+			// why?
+			// initially I tried looking inside the input assembly but that is not reliable.
+			// there were a number of cases where it would fail but we lack the context here to handle
+			// it gracefully. Instead, it's much more reliable to assume that the microsoft assembly and
+			// the input assembly are going to be in sync and ensure that the legacy assembly will match that.
+			var file = Path.GetFileNameWithoutExtension (msAssembly);
+			if (file.EndsWith (".iOS", StringComparison.OrdinalIgnoreCase)) {
+				platform = PlatformName.iOS;
+				return true;
+			} else if (file.EndsWith (".macOS", StringComparison.InvariantCultureIgnoreCase)) {
+				platform = PlatformName.macOS;
+				return true;
+			}
+			platform = null;
+			return false;
+		}
+
+		static string GetPlatformModulePath (PlatformName platform) {
+			var path = platform switch {
+				PlatformName.iOS => "/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS/Xamarin.iOS.dll",
+				PlatformName.macOS => "/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/Xamarin.Mac/Xamarin.Mac.dll",
+				_ => throw new NotSupportedException ()
+			};
+			if (!File.Exists (path)) {
+				throw new ConversionException (Errors.E0019, path);
+			}
+			return path;
+		}
+
+		static bool IsLikelyAnIntPtrConstructor (string signature)
+		{
+			return signature.Contains ("::.ctor(System.IntPtr");
 		}
 	}
 
