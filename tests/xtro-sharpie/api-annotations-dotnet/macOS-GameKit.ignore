@@ -5,7 +5,3 @@
 
 # This selector does not exist in macOS, confirmed by intro.
 !missing-selector! GKLeaderboardSet::loadImageWithCompletionHandler: not bound
-
-# the version is not 10.15
-!deprecated-attribute-wrong! GKBasePlayer::playerID has 13.0 not 10.15 on [Deprecated] attribute
-
