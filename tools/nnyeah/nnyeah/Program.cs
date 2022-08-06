@@ -59,7 +59,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				return 0;
 			}
 			else {
-				return AssemblyConverter.Convert (xamarinAssembly!, microsoftAssembly!, infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
+				return AssemblyConverter.Convert (xamarinAssembly, microsoftAssembly!, infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
 			}
 		}
 	}
