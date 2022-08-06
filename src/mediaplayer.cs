@@ -14,6 +14,7 @@ using Foundation;
 using CoreFoundation;
 using CoreGraphics;
 using CoreLocation;
+using CoreMedia;
 #if MONOMAC
 using AppKit;
 #else
@@ -285,6 +286,7 @@ namespace MediaPlayer {
 
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("initWithImage:")]
 		NativeHandle Constructor (UIImage image);
 		
@@ -297,6 +299,7 @@ namespace MediaPlayer {
 
 		[NoMac]
 		[Deprecated (PlatformName.iOS, 10, 0)]
+		[Deprecated (PlatformName.TvOS, 10, 0)]
 		[Export ("imageCropRect")]
 		CGRect ImageCropRectangle { get; }
 	}
@@ -768,7 +771,7 @@ namespace MediaPlayer {
 	[NoMac]
 #if NET
 	[NoWatch] // marked as unavailable in xcode 12 beta 1
-	[NoTV]
+	[TV (16,0)]
 #else
 	[Watch (5,0)]
 	[Obsoleted (PlatformName.TvOS, 14,0, message: "Removed in Xcode 12.")]
@@ -1306,6 +1309,7 @@ namespace MediaPlayer {
 		NativeHandle Constructor (CGRect frame);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRoutePickerView' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVRoutePickerView' instead.")]
 		[Export ("showsRouteButton")]
 		bool ShowsRouteButton { get; set; }
 
@@ -1342,25 +1346,30 @@ namespace MediaPlayer {
 		CGRect GetVolumeThumbRect (CGRect bounds, CGRect columeSliderRect, float /* float, not CGFloat */ value);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRoutePickerView.RoutePickerButtonStyle' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVRoutePickerView.RoutePickerButtonStyle' instead.")]
 		[Export ("setRouteButtonImage:forState:")]
 		void SetRouteButtonImage ([NullAllowed] UIImage image, UIControlState state);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
 		[return: NullAllowed]
 		[Export ("routeButtonImageForState:")]
 		UIImage GetRouteButtonImage (UIControlState state);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "See 'AVRoutePickerView' for possible replacements.")]
 		[Export ("routeButtonRectForBounds:")]
 		CGRect GetRouteButtonRect (CGRect bounds);
 
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVRouteDetector.MultipleRoutesDetected' instead.")]
 		[Export ("wirelessRoutesAvailable")]
 		bool AreWirelessRoutesAvailable { [Bind ("areWirelessRoutesAvailable")] get; }
 
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AVPlayer.ExternalPlaybackActive' instead.")]
 		[Export ("wirelessRouteActive")]
 		bool IsWirelessRouteActive { [Bind ("isWirelessRouteActive")] get; }
 
@@ -1499,6 +1508,14 @@ namespace MediaPlayer {
 		[Internal]
 		[Field ("MPNowPlayingInfoPropertyCurrentPlaybackDate")]
 		NSString PropertyCurrentPlaybackDate { get; }
+
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16,0), Watch (9,0)]
+		[Field ("MPNowPlayingInfoPropertyAdTimeRanges")]
+		NSString PropertyAdTimeRanges { get; }
+
+		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16,0), Watch (9,0)]
+		[Field ("MPNowPlayingInfoPropertyCreditsStartTime")]
+		NSString MPNowPlayingInfoPropertyCreditsStartTime { get; }
 	}
 
 	[Mac (10,12,2)]
@@ -2280,8 +2297,8 @@ namespace MediaPlayer {
 
 	interface IMPNowPlayingSessionDelegate {}
 
-	[TV (14,0)]
-	[NoWatch, NoMac, NoiOS]
+	[TV (14,0), iOS (16,0)]
+	[NoWatch, NoMac, NoMacCatalyst]
 #if NET
 	[Protocol, Model]
 #else
@@ -2297,8 +2314,8 @@ namespace MediaPlayer {
 		void DidChangeCanBecomeActive (MPNowPlayingSession nowPlayingSession);
 	}
 
-	[TV (14,0)]
-	[NoWatch, NoMac, NoiOS]
+	[TV (14,0), iOS (16,0)]
+	[NoWatch, NoMac, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface MPNowPlayingSession {
@@ -2337,5 +2354,23 @@ namespace MediaPlayer {
 
 		[Export ("removePlayer:")]
 		void RemovePlayer (AVPlayer player);
+
+		[TV (16, 0), NoWatch, NoMacCatalyst, NoMac]
+		[Export ("automaticallyPublishNowPlayingInfo")]
+		bool AutomaticallyPublishNowPlayingInfo { get; set; }
 	}
+
+	[TV (16,0), NoWatch, NoMacCatalyst, NoMac, iOS (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MPAdTimeRange : NSCopying
+	{
+		[Export ("timeRange", ArgumentSemantic.Assign)]
+		CMTimeRange TimeRange { get; set; }
+
+		[Export ("initWithTimeRange:")]
+		NativeHandle Constructor (CMTimeRange timeRange);
+	}
+
+
 }
