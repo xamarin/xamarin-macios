@@ -626,7 +626,7 @@ namespace MetricKit {
 
 	// @interface MXAppLaunchDiagnostic : MXDiagnostic
 	[NoMac, iOS (16,0), Mac (16,0), NoWatch, NoTV]
-	[BaseType (typeof(MXDiagnostic))]
+	[BaseType (typeof (MXDiagnostic))]
 	[DisableDefaultCtor]
 	interface MXAppLaunchDiagnostic
 	{
