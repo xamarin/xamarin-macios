@@ -1967,6 +1967,7 @@ COMMON_FRAMEWORKS =         \
 	CoreML                  \
 	CoreVideo               \
 	Compression             \
+	DeviceCheck             \
 	Foundation              \
 	GameKit                 \
 	NaturalLanguage         \
@@ -2009,7 +2010,6 @@ MACOS_FRAMEWORKS =          \
 	CoreSpotlight           \
 	CoreText                \
 	CoreWlan                \
-	DeviceCheck             \
 	EventKit                \
 	ExecutionPolicy		\
 	ExternalAccessory 	\
@@ -2118,7 +2118,6 @@ IOS_FRAMEWORKS =         \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
-	DeviceCheck \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
@@ -2237,7 +2236,6 @@ TVOS_FRAMEWORKS =           \
 	CoreLocation            \
 	CoreSpotlight			\
 	CoreText                \
-	DeviceCheck             \
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \
@@ -2310,9 +2308,9 @@ MACCATALYST_FRAMEWORKS = \
 	CoreTelephony \
 	CoreText \
 	CoreWlan \
-	DeviceCheck \
 	EventKit \
 	EventKitUI \
+	ExecutionPolicy \
 	ExternalAccessory \
 	FileProvider \
 	GameController \

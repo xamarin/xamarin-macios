@@ -519,6 +519,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "OSLog", "OSLog", 8,0 },
 				{ "ShazamKit", "ShazamKit", new Version (8, 0), NotAvailableInSimulator},
 
+				{ "DeviceCheck", "DeviceCheck", 9,0 },
 				{ "CallKit", "CallKit", 9,0 },
 			};
 		}
@@ -682,6 +683,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 			// Add frameworks that are not in iOS
 			catalyst_frameworks.Add ("AppKit", 13, 0);
+			catalyst_frameworks.Add ("ExecutionPolicy", 16, 0);
 			// Due to a linking problem, ScreenCpatureKit doesn't work on Mac Catalyst (we can't pass -framework ScreenCaptureKit to the native linker,
 			// because there's no Mac Catalyst tbd file for ScreenCaptureKit).
 			// catalyst_frameworks.Add ("ScreenCaptureKit", 15, 4);
