@@ -9,3 +9,7 @@
 
 # Xcode headers say nullable but web docs do not. After testing, this parameter cannot be null.
 !missing-null-allowed! 'System.Void HomeKit.HMCharacteristic::WriteValue(Foundation.NSObject,System.Action`1<Foundation.NSError>)' is missing an [NullAllowed] on parameter #0
+
+# CHIP is not bound yet and will be only when is stable
+!missing-selector! HMAccessorySetupRequest::matterPayload not bound
+!missing-selector! HMAccessorySetupRequest::setMatterPayload: not bound
