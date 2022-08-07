@@ -532,7 +532,7 @@ namespace SafariServices {
 		void Invalidate ();
 	}
 
-	[iOS (16,0)]
+	[iOS (16,0), MacCatalyst (16,0), NoMac, NoTV, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariViewControllerDataStore
