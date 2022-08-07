@@ -19,7 +19,7 @@ namespace Introspection {
 		bool Skip (Type type)
 		{
 			switch (type.Namespace) {
-#if __IOS__
+#if __IOS__ || __WATCHOS__
 			// running the .cctor on the simulator works... but makes some other CoreNFC intro tests fail later
 			// we'll still get the results from device tests
 			case "CoreNFC":
