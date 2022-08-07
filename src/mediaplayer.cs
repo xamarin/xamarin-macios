@@ -1515,7 +1515,7 @@ namespace MediaPlayer {
 
 		[TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16,0), Watch (9,0)]
 		[Field ("MPNowPlayingInfoPropertyCreditsStartTime")]
-		NSString MPNowPlayingInfoPropertyCreditsStartTime { get; }
+		NSString PropertyCreditsStartTime { get; }
 	}
 
 	[Mac (10,12,2)]
