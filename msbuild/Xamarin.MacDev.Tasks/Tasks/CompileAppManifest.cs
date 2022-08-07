@@ -6,9 +6,9 @@ using Xamarin.Messaging.Build.Client;
 
 #nullable enable
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
-	public class CompileAppManifest : CompileAppManifestTaskCore, ITaskCallback, ICancelableTask
+	public class CompileAppManifest : CompileAppManifestTaskBase, ITaskCallback, ICancelableTask
 	{
 		public override bool Execute ()
 		{
