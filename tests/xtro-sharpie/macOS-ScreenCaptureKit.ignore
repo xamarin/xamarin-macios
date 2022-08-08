@@ -1,0 +1,3 @@
+# ignoring due to https://github.com/xamarin/xamarin-macios/issues/15656
+!missing-field! SCStreamErrorDomain not bound
+!missing-null-allowed! 'CoreMedia.CMClock ScreenCaptureKit.SCStream::get_SynchronizationClock()' is missing an [NullAllowed] on return type
