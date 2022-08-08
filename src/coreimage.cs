@@ -9741,6 +9741,7 @@ namespace CoreImage {
 
 // LabToRGBFilter and RGBtoLabFilter are names for filter API but return the same type CIConvertLab
 // Enabling these cause a large number of introspection errors
+// https://github.com/xamarin/xamarin-macios/issues/15662
 #if false
 	[CoreImageFilter]
 	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
