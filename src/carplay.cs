@@ -573,14 +573,14 @@ namespace CarPlay {
 	interface CPListSection : NSSecureCoding {
 
 #if !XAMCORE_5_0
-		[Export ("initWithItems:header:sectionIndexTitle:")]
-		[Obsolete ("Use '.ctor (ICPListTemplateItem [], string, string)' constructor instead.")]
+		[Wrap ("base (true ? throw new InvalidOperationException (Constants.BrokenBinding) : NSObjectFlag.Empty)")]
+		[Obsolete ("Use '.ctor (ICPListTemplateItem [], string, string)' constructor instead. Warning: this will throw InvalidOperationException at runtime.")]
 		NativeHandle Constructor (CPListItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
 #endif
 
 #if !XAMCORE_5_0
-		[Export ("initWithItems:")]
-		[Obsolete ("Use '.ctor (ICPListTemplateItem [])' constructor instead.")]
+		[Wrap ("base (true ? throw new InvalidOperationException (Constants.BrokenBinding) : NSObjectFlag.Empty)")]
+		[Obsolete ("Use '.ctor (ICPListTemplateItem [], string, string)' constructor instead. Warning: this will throw InvalidOperationException at runtime.")]
 		NativeHandle Constructor (CPListItem [] items);
 #endif
 
