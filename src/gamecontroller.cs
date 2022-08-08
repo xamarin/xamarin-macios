@@ -2320,27 +2320,27 @@ namespace GameController {
 	{
 	}
 
-	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface GCPhysicalInputElementCollection<KeyIdentifierType, ElementIdentifierType> : INSFastEnumeration
-		where KeyIdentifierType : string
-		where ElementIdentifierType : IGCPhysicalInputElement
-	{
-		[Export ("count")]
-		nuint Count { get; }
+	// [iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	// [BaseType (typeof (NSObject))]
+	// [DisableDefaultCtor]
+	// interface GCPhysicalInputElementCollection<KeyIdentifierType, ElementIdentifierType> : INSFastEnumeration
+	// 	where KeyIdentifierType : string
+	// 	where ElementIdentifierType : IGCPhysicalInputElement
+	// {
+	// 	[Export ("count")]
+	// 	nuint Count { get; }
 
-		[Export ("elementForAlias:")]
-		[return: NullAllowed]
-		IGCPhysicalInputElement GetElement (string alias);
+	// 	[Export ("elementForAlias:")]
+	// 	[return: NullAllowed]
+	// 	IGCPhysicalInputElement GetElement (string alias);
 
-		[Export ("objectForKeyedSubscript:")]
-		[return: NullAllowed]
-		IGCPhysicalInputElement GetObject (string key);
+	// 	[Export ("objectForKeyedSubscript:")]
+	// 	[return: NullAllowed]
+	// 	IGCPhysicalInputElement GetObject (string key);
 
-		[Export ("elementEnumerator")]
-		NSEnumerator<IGCPhysicalInputElement> ElementEnumerator { get; }
-	}
+	// 	[Export ("elementEnumerator")]
+	// 	NSEnumerator<IGCPhysicalInputElement> ElementEnumerator { get; }
+	// }
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
@@ -2458,25 +2458,25 @@ namespace GameController {
 		[Export ("lastEventLatency")]
 		double LastEventLatency { get; }
 
-		[Abstract]
-		[Export ("elements")]
-		GCPhysicalInputElementCollection<IGCPhysicalInputElementName, IGCPhysicalInputElement> Elements { get; }
+		// [Abstract]
+		// [Export ("elements")]
+		// GCPhysicalInputElementCollection<IGCPhysicalInputElementName, IGCPhysicalInputElement> Elements { get; }
 
-		[Abstract]
-		[Export ("buttons")]
-		GCPhysicalInputElementCollection<IGCButtonElementName, IGCButtonElement> Buttons { get; }
+		// [Abstract]
+		// [Export ("buttons")]
+		// GCPhysicalInputElementCollection<IGCButtonElementName, IGCButtonElement> Buttons { get; }
 
-		[Abstract]
-		[Export ("axes")]
-		GCPhysicalInputElementCollection<IGCAxisElementName, IGCAxisElement> Axes { get; }
+		// [Abstract]
+		// [Export ("axes")]
+		// GCPhysicalInputElementCollection<IGCAxisElementName, IGCAxisElement> Axes { get; }
 
-		[Abstract]
-		[Export ("switches")]
-		GCPhysicalInputElementCollection<IGCSwitchElementName, IGCSwitchElement> Switches { get; }
+		// [Abstract]
+		// [Export ("switches")]
+		// GCPhysicalInputElementCollection<IGCSwitchElementName, IGCSwitchElement> Switches { get; }
 
-		[Abstract]
-		[Export ("dpads")]
-		GCPhysicalInputElementCollection<GCDirectionPadElementName, IGCDirectionPadElement> Dpads { get; }
+		// [Abstract]
+		// [Export ("dpads")]
+		// GCPhysicalInputElementCollection<GCDirectionPadElementName, IGCDirectionPadElement> Dpads { get; }
 
 		[Abstract]
 		[Export ("objectForKeyedSubscript:")]
@@ -2698,8 +2698,8 @@ namespace GameController {
 	}
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof(NSObject))]
-	interface GCGearShifterElement : IGCPhysicalInputElement
+	[BaseType (typeof (NSObject))]
+	interface GCGearShifterElement : GCPhysicalInputElement
 	{
 		[NullAllowed, Export ("patternInput")]
 		GCSwitchPositionInput PatternInput { get; }
