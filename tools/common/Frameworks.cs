@@ -275,6 +275,8 @@ public class Frameworks : Dictionary <string, Framework>
 					{ "ShazamKit", "ShazamKit", 12,0 },
 
 					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
+
+					{ "BackgroundAssets", "BackgroundAssets", 13,0},
 				};
 			}
 			return mac_frameworks;
@@ -444,6 +446,9 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "OSLog", "OSLog", 15,0 },
 				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
 				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
+
+				{ "BackgroundAssets", "BackgroundAssets", 16,0},
+				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile

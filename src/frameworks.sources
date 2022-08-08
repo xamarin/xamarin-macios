@@ -1992,6 +1992,7 @@ MACOS_FRAMEWORKS =          \
 	AutomaticAssessmentConfiguration \
 	AVKit                   \
 	BusinessChat            \
+	BackgroundAssets        \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
@@ -2095,6 +2096,7 @@ IOS_FRAMEWORKS =         \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
+	BackgroundAssets \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \
@@ -2166,6 +2168,7 @@ IOS_FRAMEWORKS =         \
 	Photos \
 	PhotosUI \
 	PushKit \
+	PushToTalk \
 	QuickLook \
 	QuickLookThumbnailing \
 	ReplayKit \
@@ -2286,6 +2289,7 @@ MACCATALYST_FRAMEWORKS = \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
+	BackgroundAssets \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \

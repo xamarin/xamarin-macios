@@ -1010,10 +1010,6 @@ namespace UIKit {
 		PreferredFramesPerSecond30 = 7 << 24,
 	}
 
-#if !WATCH
-	delegate void UIPrintInteractionCompletionHandler (UIPrintInteractionController printInteractionController, bool completed, NSError error);
-#endif
-
 	// untyped (and unamed) enum -> UIPrintError.h
 	// note: it looks unused by any API
 	[NoTV][NoWatch]
