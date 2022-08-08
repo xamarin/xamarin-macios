@@ -161,7 +161,12 @@ namespace SharedWithYouCore {
 	[NoWatch, TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface SWCollaborationMetadata : NSSecureCoding, NSCopying, NSMutableCopying {
+	interface SWCollaborationMetadata : NSSecureCoding, NSCopying, NSMutableCopying 
+#if IOS
+		, NSItemProviderReading
+		, NSItemProviderWriting
+#endif
+	{
 		[Export ("collaborationIdentifier")]
 		string CollaborationIdentifier { get; }
 

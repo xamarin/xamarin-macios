@@ -1,2 +1,5 @@
 !missing-field! SharedWithYouCoreVersionNumber not bound
 !missing-field! SharedWithYouCoreVersionString not bound
+
+# ignoring due to issue: https://github.com/xamarin/xamarin-macios/issues/15658
+!extra-designated-initializer! SWCollaborationOption::initWithCoder: is incorrectly decorated with an [DesignatedInitializer] attribute
