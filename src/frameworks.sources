@@ -2070,6 +2070,7 @@ MACOS_FRAMEWORKS =          \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
+	SharedWithYouCore       \
 	Social                  \
 	Speech                  \
 	SystemConfiguration     \
@@ -2176,6 +2177,7 @@ IOS_FRAMEWORKS =         \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYouCore \
 	Social \
 	Speech \
 	SystemConfiguration \
@@ -2266,6 +2268,7 @@ TVOS_FRAMEWORKS =           \
 	PhotosUI                \
 	ReplayKit               \
 	Security                \
+	SharedWithYouCore       \
 	SystemConfiguration     \
 	TVMLKit                 \
 	TVUIKit					\
@@ -2362,6 +2365,7 @@ MACCATALYST_FRAMEWORKS = \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYouCore \
 	Social \
 	Speech \
 	SystemConfiguration \

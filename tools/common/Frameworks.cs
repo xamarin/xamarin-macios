@@ -276,7 +276,9 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
 
+
 					{ "BackgroundAssets", "BackgroundAssets", 13,0},
+          { "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 				};
 			}
 			return mac_frameworks;
@@ -447,8 +449,10 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
 				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
 
+
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
 				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
+        { "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -621,6 +625,8 @@ public class Frameworks : Dictionary <string, Framework>
 #endif
 					{ "OSLog", "OSLog", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
+
+					{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 				};
 			}
 			return tvos_frameworks;
