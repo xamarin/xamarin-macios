@@ -1992,6 +1992,7 @@ MACOS_FRAMEWORKS =          \
 	AutomaticAssessmentConfiguration \
 	AVKit                   \
 	BusinessChat            \
+	BackgroundAssets        \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
@@ -2095,6 +2096,7 @@ IOS_FRAMEWORKS =         \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
+	BackgroundAssets \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \
@@ -2287,6 +2289,7 @@ MACCATALYST_FRAMEWORKS = \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
+	BackgroundAssets \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \
