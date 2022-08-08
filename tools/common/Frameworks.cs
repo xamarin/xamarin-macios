@@ -448,6 +448,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
 
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
+				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
