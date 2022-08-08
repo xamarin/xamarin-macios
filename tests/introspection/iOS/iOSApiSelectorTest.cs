@@ -93,6 +93,7 @@ namespace Introspection {
 					return true;
 				break;
 #endif // HAS_WATCHCONNECTIVITY
+			case "PushToTalk":
 			case "ShazamKit":
 				// ShazamKit is not fully supported in the simulator
 				if (TestRuntime.IsSimulatorOrDesktop)

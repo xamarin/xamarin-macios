@@ -173,6 +173,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework CoreLocationUI \
 	-weak_framework OSLog \
 						\
+	-weak_framework BackgroundAssets \
 	-weak_framework SharedWithYouCore \
 
 SIMLAUNCHER64_FRAMEWORKS =  \

@@ -41,6 +41,7 @@ namespace Introspection {
 			case "MediaSetup":
 			case "Phase":
 			case "ThreadNetwork":
+			case "PushToTalk":
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
