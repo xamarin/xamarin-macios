@@ -86,3 +86,4 @@
 !missing-selector! +NSImageSymbolConfiguration::configurationPreferringHierarchical not bound
 !missing-selector! +NSImageSymbolConfiguration::configurationPreferringMonochrome not bound
 !missing-selector! +NSFont::systemFontOfSize:weight:width: not bound
+!missing-selector! +NSImage::imageWithSymbolName:bundle:variableValue: not bound
