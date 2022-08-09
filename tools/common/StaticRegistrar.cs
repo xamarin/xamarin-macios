@@ -2219,7 +2219,7 @@ namespace Registrar {
 				case ApplePlatform.iOS when App.SdkVersion.Major <= 15:
 				case ApplePlatform.TVOS when App.SdkVersion.Major <= 15:
 				case ApplePlatform.MacOSX when App.SdkVersion.Major <= 12:
-				case ApplePlatform.WatchOS when App.SdkVersion.Major <= 8):
+				case ApplePlatform.WatchOS when App.SdkVersion.Major <= 8:
 					h = "<CHIP/CHIP.h>";
 					break;
 				default:
