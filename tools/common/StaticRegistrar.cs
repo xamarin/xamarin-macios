@@ -2216,24 +2216,11 @@ namespace Registrar {
 #if !NET
 			case "Chip":
 				switch (App.Platform) {
-				case ApplePlatform.iOS:
-				case ApplePlatform.TVOS:
-					if (App.SdkVersion.Major <= 15)
-						h = "<CHIP/CHIP.h>";
-					else
-						goto default;
-					break;
-				case ApplePlatform.MacOSX:
-					if (App.SdkVersion.Major <= 12)
-						h = "<CHIP/CHIP.h>";
-					else
-						goto default;
-					break;
-				case ApplePlatform.WatchOS:
-					if (App.SdkVersion.Major <= 8)
-						h = "<CHIP/CHIP.h>";
-					else
-						goto default;
+				case ApplePlatform.iOS when App.SdkVersion.Major <= 15:
+				case ApplePlatform.TVOS when App.SdkVersion.Major <= 15:
+				case ApplePlatform.MacOSX when App.SdkVersion.Major <= 12:
+				case ApplePlatform.WatchOS when App.SdkVersion.Major <= 8):
+					h = "<CHIP/CHIP.h>";
 					break;
 				default:
 					// The framework has been renamed.
