@@ -65,7 +65,7 @@ namespace PushKit
 	interface PKPushType {
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
-		[NoWatch]
+		[Watch (9,0)]
 		[NoMac]
 		[Field ("PKPushTypeVoIP")]
 		NSString Voip { get; }

@@ -3421,19 +3421,36 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 		else {
-			// Revision is optional, and is returned as -1 if not yet. However the Version ctor called inside the attributes throws if you pass -1 so coerse to 0
-			int revision = attr.Version.Revision == -1 ? 0 : attr.Version.Revision;
-			switch (attr.AvailabilityKind) {
-				case AvailabilityKind.Introduced:
-					return new IntroducedAttribute(platform, attr.Version.Major, attr.Version.Minor, revision, message: attr.Message);
-				case AvailabilityKind.Deprecated:
-					return new DeprecatedAttribute(platform, attr.Version.Major, attr.Version.Minor, revision, message: attr.Message);
-				case AvailabilityKind.Obsoleted:
-					return new ObsoletedAttribute(platform, attr.Version.Major, attr.Version.Minor, revision, message: attr.Message);
-				case AvailabilityKind.Unavailable:
-					return new UnavailableAttribute(platform, message: attr.Message);
-				default:
-					throw new NotImplementedException ();
+			// Due to the absurd API of Version, you can not pass a -1 to the revision constructor
+			// nor can you coerse to 0, as that will fail with "16.0.0 <= 16.0" => false in the registrar
+			// So determine if the revision is -1, and use the 2 or 3 param ctor...
+			if (attr.Version.Revision == -1) {
+				switch (attr.AvailabilityKind) {
+					case AvailabilityKind.Introduced:
+						return new IntroducedAttribute(platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					case AvailabilityKind.Deprecated:
+						return new DeprecatedAttribute(platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					case AvailabilityKind.Obsoleted:
+						return new ObsoletedAttribute(platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					case AvailabilityKind.Unavailable:
+						return new UnavailableAttribute(platform, message: attr.Message);
+					default:
+						throw new NotImplementedException ();
+				}
+			}
+			else {
+				switch (attr.AvailabilityKind) {
+					case AvailabilityKind.Introduced:
+						return new IntroducedAttribute(platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					case AvailabilityKind.Deprecated:
+						return new DeprecatedAttribute(platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					case AvailabilityKind.Obsoleted:
+						return new ObsoletedAttribute(platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					case AvailabilityKind.Unavailable:
+						return new UnavailableAttribute(platform, message: attr.Message);
+					default:
+						throw new NotImplementedException ();
+				}
 			}
 		}
 	}

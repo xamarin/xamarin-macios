@@ -77,6 +77,7 @@ namespace Introspection {
 				break;
 			case "DeviceCheck": // Only available on device
 			case "MLCompute": // Only available on device
+			case "PushToTalk":
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
