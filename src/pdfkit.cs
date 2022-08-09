@@ -1535,9 +1535,7 @@ namespace PdfKit {
 		[DesignatedInitializer]
 		NativeHandle Constructor ();
 
-#if !XAMCORE_5_0
 		[DesignatedInitializer]
-#endif
 		[Export ("initWithImage:")]
 		NativeHandle Constructor (NSImage image);
 
