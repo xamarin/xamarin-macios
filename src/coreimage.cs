@@ -6589,8 +6589,10 @@ namespace CoreImage {
 		[Export ("scaleFactor")]
 		float ScaleFactor { get; set; }
 
-		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+#if XAMCORE_5_0
 		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Export ("padding")]
 		float Padding { get; set; }
 	}
@@ -6952,8 +6954,10 @@ namespace CoreImage {
 		[Export ("cubeData", ArgumentSemantic.Retain)]
 		NSData CubeData { get; set; }
 
-		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+#if XAMCORE_5_0
 		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Export ("extrapolate")]
 		bool Extrapolate { get; set; }
 	}
@@ -6988,8 +6992,10 @@ namespace CoreImage {
 		[NullAllowed, Export ("colorSpace", ArgumentSemantic.Assign)]
 		CGColorSpace ColorSpace { get; set; }
 
-		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+#if XAMCORE_5_0
 		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Export ("extrapolate")]
 		bool Extrapolate { get; set; }
 	}
@@ -7016,8 +7022,10 @@ namespace CoreImage {
 		[NullAllowed, Export ("colorSpace", ArgumentSemantic.Assign)]
 		CGColorSpace ColorSpace { get; set; }
 
-		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+#if XAMCORE_5_0
 		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Export ("extrapolate")]
 		bool Extrapolate { get; set; }
 	}
@@ -9239,8 +9247,10 @@ namespace CoreImage {
 		[Export ("scaleFactor")]
 		float ScaleFactor { get; set; }
 
-		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+#if XAMCORE_5_0
 		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Export ("padding")]
 		float Padding { get; set; }
 	}
