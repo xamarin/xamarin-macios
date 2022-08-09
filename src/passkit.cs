@@ -1718,12 +1718,12 @@ namespace PassKit {
 		NativeHandle Constructor (string credentialIdentifier, string sharingInstanceIdentifier, CGImage passThumbnailImage, string ownerDisplayName, string localizedDescription, string accountHash, string templateIdentifier, string relyingPartyIdentifier, bool requiresUnifiedAccessCapableDevice);
 
 		[Internal]
-		[NoWatch, NoTV, iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[iOS (16,0), Mac (13,0), MacCatalyst (16,0), NoWatch, NoTV]
 		[Export ("initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:")]
 		NativeHandle InitWithCardTemplate (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview);
 
 		[Internal]
-		[NoWatch, NoTV, iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[iOS (16,0), Mac (13,0), MacCatalyst (16,0), NoWatch, NoTV]
 		[Export ("initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:")]
 		NativeHandle InitWithCardConfiguration (string credentialIdentifier, string sharingInstanceIdentifier, string templateIdentifier, PKShareablePassMetadataPreview preview);
 
@@ -2337,9 +2337,6 @@ namespace PassKit {
 	{
 		[Export ("encryptedData")]
 		NSData EncryptedData { get; }
-
-		[NullAllowed, Export ("rawElements")]
-		PKIdentityDocumentRawElements RawElements { get; }
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
@@ -2592,68 +2589,5 @@ namespace PassKit {
 
 		[Export ("invalidate")]
 		void Invalidate ();
-	}
-
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface PKIdentityDocumentRawElements
-	{
-		[NullAllowed, Export ("name")]
-		NSPersonNameComponents Name { get; }
-
-		[NullAllowed, Export ("address")]
-		CNPostalAddress Address { get; }
-
-		[NullAllowed, Export ("issuingAuthority")]
-		PKIdentityDocumentIssuingAuthority IssuingAuthority { get; }
-
-		[NullAllowed, Export ("documentIssueDate")]
-		NSDateComponents DocumentIssueDate { get; }
-
-		[NullAllowed, Export ("documentExpirationDate")]
-		NSDateComponents DocumentExpirationDate { get; }
-
-		[NullAllowed, Export ("documentNumber")]
-		string DocumentNumber { get; }
-
-		[NullAllowed, Export ("age")]
-		NSNumber Age { get; }
-
-		[NullAllowed, Export ("ageThreshold")]
-		PKIdentityDocumentAgeThreshold AgeThreshold { get; }
-
-		[NullAllowed, Export ("dateOfBirth")]
-		NSDateComponents DateOfBirth { get; }
-
-		[NullAllowed, Export ("portraitImageData")]
-		NSData PortraitImageData { get; }
-	}
-
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface PKIdentityDocumentIssuingAuthority
-	{
-		[NullAllowed, Export ("name")]
-		string Name { get; }
-
-		[NullAllowed, Export ("jurisdiction")]
-		string Jurisdiction { get; }
-
-		[NullAllowed, Export ("ISOCountryCode")]
-		string IsoCountryCode { get; }
-	}
-
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface PKIdentityDocumentAgeThreshold
-	{
-		[Export ("years")]
-		nint Years { get; }
-
-		[Export ("atLeastYearsOld")]
-		bool AtLeastYearsOld { [Bind ("isAtLeastYearsOld")] get; }
 	}
 }

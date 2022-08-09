@@ -1201,7 +1201,7 @@ namespace Introspection {
 			case "initWithCenter:diameter:":
 			case "initWithCenter:radius:":
 			case "initWithR:theta:":
-			// HealthKit
+			// PassKit
 			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:":
 			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:":
 			// NSImage

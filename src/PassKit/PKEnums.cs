@@ -323,16 +323,14 @@ namespace PassKit {
 	[ErrorDomain ("PKIdentityErrorDomain")]
 	public enum PKIdentityError : long
 	{
-		Unknown = 1,
-		NotEntitled = 2,
-		Cancelled = 3,
-		NetworkUnavailable = 4,
-		NoElementsRequested = 5,
-		RequestAlreadyInProgress = 6,
-		InvalidNonce = 7,
-		InvalidElement = 8,
-		InvalidMerchantID = 9,
-		NotSupported = 10,
+		Unknown = 0,
+		NotSupported = 1,
+		Cancelled = 2,
+		NetworkUnavailable = 3,
+		NoElementsRequested = 4,
+		RequestAlreadyInProgress = 5,
+		InvalidNonce = 6,
+		InvalidElement = 7,
 	}
 
 	[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
