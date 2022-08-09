@@ -28,7 +28,6 @@ using NSRulerMarker=System.Object;
 using NSRulerView=System.Object;
 using NSTextAttachmentCell=System.Object;
 using NSTextBlock=System.Object;
-using NSTextList=System.Object;
 using NSTextTableBlock=System.Object;
 using NSTextTabType=System.Object;
 using NSTextStorageEditedFlags=System.Object;
@@ -3416,6 +3415,18 @@ namespace UIKit {
 
 		[NullAllowed, Export ("elementRange", ArgumentSemantic.Strong)]
 		NSTextRange ElementRange { get; set; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0)]
+		[Export ("childElements", ArgumentSemantic.Copy)]
+		NSTextElement[] ChildElements { get; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0)]
+		[NullAllowed, Export ("parentElement", ArgumentSemantic.Weak)]
+		NSTextElement ParentElement { get; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0)]
+		[Export ("isRepresentedElement")]
+		bool IsRepresentedElement { get; }
 	}
 
 	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -3963,4 +3974,153 @@ namespace UIKit {
 		NSTextRange GetAdjustedRange (NSTextRange textRange, bool forEditingTextSelection);
 	}
 
+	[TV (9,0), NoWatch, Mac (10,0), iOS (7,0)]
+	[BaseType (typeof (NSObject))]
+	interface NSTextList : NSCoding, NSCopying, NSSecureCoding {
+		[Export ("initWithMarkerFormat:options:")]
+#if NET
+		NativeHandle Constructor ([BindAs (typeof (NSTextListMarkerFormats))] NSString format, NSTextListOptions mask);
+#else
+		NativeHandle Constructor (string format, NSTextListOptions mask);
+#endif
+
+#if !NET
+		[Wrap ("this (format.GetConstant(), mask)")]
+		NativeHandle Constructor (NSTextListMarkerFormats format, NSTextListOptions mask);
+#endif
+
+#if NET
+		[BindAs (typeof (NSTextListMarkerFormats))] 
+#endif
+		[Export ("markerFormat")]
+#if NET
+		NSString MarkerFormat { get; }
+#else
+		string MarkerFormat { get; }
+#endif
+
+		[Export ("listOptions")]
+		NSTextListOptions ListOptions { get; }
+
+		[Export ("markerForItemNumber:")]
+		string GetMarker (nint itemNum);
+
+		[Export ("startingItemNumber")]
+		nint StartingItemNumber { get; set; }
+
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0)]
+		[Export ("initWithMarkerFormat:options:startingItemNumber:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (string markerFormat, NSTextListOptions options, nint startingItemNumber);
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0)]
+		[Export ("ordered")]
+		bool Ordered { [Bind ("isOrdered")] get; }		
+	}
+
+	[TV (16,0), NoWatch, Mac (13,0), iOS (16,0)]
+	[BaseType (typeof(NSTextParagraph))]
+	interface NSTextListElement
+	{
+		[Export ("initWithAttributedString:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedString);
+
+		[Export ("initWithTextContentManager:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] NSTextContentManager textContentManager);
+
+		[Export ("initWithParentElement:textList:contents:markerAttributes:childElements:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] NSTextListElement parent, NSTextList textList, [NullAllowed] NSAttributedString contents, [NullAllowed] NSDictionary<NSString, NSObject> markerAttributes, [NullAllowed] NSTextListElement[] children);
+
+		[Static]
+		[Export ("textListElementWithContents:markerAttributes:textList:childElements:")]
+		NSTextListElement CreateWithContents (NSAttributedString contents, [NullAllowed] NSDictionary<NSString, NSObject> markerAttributes, NSTextList textList, [NullAllowed] NSTextListElement[] children);
+
+		[Static]
+		[Export ("textListElementWithChildElements:textList:nestingLevel:")]
+		[return: NullAllowed]
+		NSTextListElement CreateWithChildElements (NSTextListElement[] children, NSTextList textList, nint nestingLevel);
+
+		[Export ("textList", ArgumentSemantic.Strong)]
+		NSTextList TextList { get; }
+
+		[NullAllowed, Export ("contents", ArgumentSemantic.Strong)]
+		NSAttributedString Contents { get; }
+
+		[NullAllowed, Export ("markerAttributes", ArgumentSemantic.Strong)]
+		NSDictionary<NSString, NSObject> MarkerAttributes { get; }
+
+		[Export ("attributedString", ArgumentSemantic.Strong)]
+		NSAttributedString AttributedString { get; }
+
+		[Export ("childElements", ArgumentSemantic.Copy)]
+		NSTextListElement[] ChildElements { get; }
+
+		[NullAllowed, Export ("parentElement", ArgumentSemantic.Weak)]
+		NSTextListElement ParentElement { get; }
+	}
+
+	[Mac (10, 13)][MacCatalyst (13, 1)][NoWatch]
+	enum NSTextListMarkerFormats
+	{
+		[Field ("NSTextListMarkerBox")]
+		Box,
+
+		[Field ("NSTextListMarkerCheck")]
+		Check,
+
+		[Field ("NSTextListMarkerCircle")]
+		Circle,
+
+		[Field ("NSTextListMarkerDiamond")]
+		Diamond,
+
+		[Field ("NSTextListMarkerDisc")]
+		Disc,
+
+		[Field ("NSTextListMarkerHyphen")]
+		Hyphen,
+
+		[Field ("NSTextListMarkerSquare")]
+		Square,
+
+		[Field ("NSTextListMarkerLowercaseHexadecimal")]
+		LowercaseHexadecimal,
+
+		[Field ("NSTextListMarkerUppercaseHexadecimal")]
+		UppercaseHexadecimal,
+
+		[Field ("NSTextListMarkerOctal")]
+		Octal,
+
+		[Field ("NSTextListMarkerLowercaseAlpha")]
+		LowercaseAlpha,
+
+		[Field ("NSTextListMarkerUppercaseAlpha")]
+		UppercaseAlpha,
+
+		[Field ("NSTextListMarkerLowercaseLatin")]
+		LowercaseLatin,
+
+		[Field ("NSTextListMarkerUppercaseLatin")]
+		UppercaseLatin,
+
+		[Field ("NSTextListMarkerLowercaseRoman")]
+		LowercaseRoman,
+
+		[Field ("NSTextListMarkerUppercaseRoman")]
+		UppercaseRoman,
+
+		[Field ("NSTextListMarkerDecimal")]
+		Decimal,
+	}
+
+	[TV (16,0), NoWatch, Mac (10,10), iOS (16,0)]
+	[Flags]
+	[Native]
+	public enum NSTextListOptions : ulong {
+		PrependEnclosingMarker = 1
+	}
 }

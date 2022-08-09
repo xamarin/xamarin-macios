@@ -1639,13 +1639,6 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-	[Native]
-	public enum NSTextListOptions : ulong {
-		PrependEnclosingMarker = 1
-	}
-
-	[NoMacCatalyst]
-	[Flags]
 	public enum NSFontSymbolicTraits : int { // uint32_t NSFontSymbolicTraits
 		ItalicTrait = (1 << 0),
 		BoldTrait = (1 << 1),
@@ -3250,5 +3243,22 @@ namespace AppKit {
 		Small = 1,
 		Medium = 2,
 		Large = 3,
+	}
+
+	[NoMacCatalyst, Mac (13,0)]
+	[Native]
+	public enum NSColorWellStyle : long
+	{
+		Default = 0,
+		Minimal,
+		Expanded
+	}
+
+	[NoMacCatalyst, Mac (13,0)]
+	[Native]
+	public enum NSComboButtonStyle : long
+	{
+		Split = 0,
+		Unified = 1
 	}
 }
