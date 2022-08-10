@@ -41,6 +41,7 @@ namespace Introspection {
 			case "MediaSetup":
 			case "Phase":
 			case "ThreadNetwork":
+			case "PushToTalk":
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
@@ -86,6 +87,7 @@ namespace Introspection {
 			case "CAMetalLayer":
 			case "MTLFunctionConstantValues":
 			case "MTLHeapDescriptor":
+			case "SWCollaborationActionHandler":
 				// Symbol not available in simulator - but works on BigSur (others might too)
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
