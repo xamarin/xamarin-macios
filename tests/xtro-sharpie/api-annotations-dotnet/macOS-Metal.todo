@@ -4,10 +4,6 @@
 !extra-enum-value! Managed value 3 for MTLFeatureSet.iOS_GPUFamily2_v2 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 30000 for MTLFeatureSet.tvOS_GPUFamily1_v1 is available for the current platform while the value in the native header is not
 !extra-enum-value! Managed value 4 for MTLFeatureSet.iOS_GPUFamily3_v1 is available for the current platform while the value in the native header is not
-!deprecated-attribute-missing! MTLArgument missing a [Deprecated] attribute
-!deprecated-attribute-missing! MTLComputePipelineReflection::arguments missing a [Deprecated] attribute
-!deprecated-attribute-missing! MTLRenderPipelineReflection::fragmentArguments missing a [Deprecated] attribute
-!deprecated-attribute-missing! MTLRenderPipelineReflection::vertexArguments missing a [Deprecated] attribute
 !missing-enum! MTLAccelerationStructureRefitOptions not bound
 !missing-enum! MTLBindingType not bound
 !missing-enum! MTLIOCommandQueueType not bound
@@ -194,6 +190,5 @@
 !missing-type! MTLAccelerationStructurePassSampleBufferAttachmentDescriptorArray not bound
 !missing-type! MTLIOCommandQueueDescriptor not bound
 !missing-type! MTLMeshRenderPipelineDescriptor not bound
-!deprecated-attribute-missing! MTLRenderPipelineReflection::tileArguments missing a [Deprecated] attribute
 !missing-pinvoke! MTLIOCompressionContextDefaultChunkSize is not bound
 !missing-protocol-member! MTLResourceStateCommandEncoder::moveTextureMappingsFromTexture:sourceSlice:sourceLevel:sourceOrigin:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin: not found
