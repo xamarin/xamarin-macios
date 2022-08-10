@@ -779,6 +779,10 @@ namespace UIKit {
 		FlightNumber           = 1 << 5,
 		[iOS (10,0)]
 		LookupSuggestion       = 1 << 6,
+		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
+		Money = 1uL << 7,
+		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
+		PhysicalValue = 1uL << 8,
 
 		None          = 0,
 		All           = UInt64.MaxValue
@@ -1375,7 +1379,12 @@ namespace UIKit {
 	[Native]
 	[NoWatch]
 	public enum UIScrollViewKeyboardDismissMode : long {
-		None, OnDrag, Interactive
+		None,
+		OnDrag,
+		Interactive,
+		OnDragWithAccessory,
+		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+		InteractiveWithAccessory,
 	}
 
 	// NSInteger -> UIWebView.h
@@ -2270,6 +2279,10 @@ namespace UIKit {
 	{
 		MultipleScenesNotSupported,
 		RequestDenied,
+		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+		GeometryRequestUnsupported = 100,
+		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+		GeometryRequestDenied
 	}
 
 	[Watch (6,0), TV (13,0), iOS (13,0)]
@@ -2322,6 +2335,8 @@ namespace UIKit {
 		Disabled = 1uL << 0,
 		Destructive = 1uL << 1,
 		Hidden = 1uL << 2,
+		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+		KeepsMenuPresented = 1uL << 3,
 	}
 
 	[Flags]
