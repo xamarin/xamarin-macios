@@ -313,7 +313,7 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 
 		<PropertyGroup>
 			<!-- We need to use net5.0 because when building from VS it sets MSBuildRuntimeType to Core and will pick net472 (which doesn't contain the illink assembly) -->
-			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net6.0').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
+			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net7.0').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
 		</PropertyGroup>
 
 		<!-- Include Debug symbols as input so those are copied to the server -->
