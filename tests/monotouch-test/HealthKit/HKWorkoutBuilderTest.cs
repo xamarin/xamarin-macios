@@ -29,9 +29,8 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void GetSeriesBuilderNullReturnTest ()
 		{
-#if MONOMAC
 			TestRuntime.AssertXcodeVersion (14, 0);
-#endif
+
 			var store = new HKHealthStore ();
 			var seriesBuilder = new HKWorkoutBuilder (new HKHealthStore (), new HKWorkoutConfiguration (), HKDevice.LocalDevice);
 			var ret = seriesBuilder.GetSeriesBuilder (HKSeriesType.HeartbeatSeriesType);
