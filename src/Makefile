@@ -155,6 +155,7 @@ IOS_DOTNET_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 
@@ -162,6 +163,7 @@ IOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 
@@ -547,6 +549,7 @@ MAC_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 
@@ -864,6 +867,7 @@ WATCHOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 
 WATCHOS_CORE_SOURCES +=           \
     $(WATCHOS_EXTRA_CORE_SOURCES) \
@@ -1158,6 +1162,7 @@ TVOS_DOTNET_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
@@ -1166,6 +1171,7 @@ TVOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
@@ -1381,6 +1387,7 @@ MACCATALYST_DOTNET_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
@@ -1389,6 +1396,7 @@ MACCATALYST_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
