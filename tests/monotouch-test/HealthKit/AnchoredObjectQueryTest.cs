@@ -29,7 +29,11 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void NoAnchor ()
 		{
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#else
 			TestRuntime.AssertXcodeVersion (6, 0);
+#endif
 
 			using (var t = HKCategoryType.Create (HKCategoryTypeIdentifier.SleepAnalysis))
 #if __WATCHOS__

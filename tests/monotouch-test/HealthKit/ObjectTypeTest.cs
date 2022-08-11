@@ -29,7 +29,12 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void Workout ()
 		{
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#else
 			TestRuntime.AssertXcodeVersion (6, 0);
+#endif
+
 
 #if NET
 			using (var t = HKObjectType.WorkoutType) {

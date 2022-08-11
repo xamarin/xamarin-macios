@@ -26,6 +26,14 @@ namespace MonoTouchFixtures.HealthKit {
 	[Preserve (AllMembers = true)]
 	public class HKHealthStoreTest {
 
+		[SetUp]
+		public void SetUp ()
+		{
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#endif
+		}
+
 		[Test]
 		public void GetBiologicalSexNullReturnTest ()
 		{
