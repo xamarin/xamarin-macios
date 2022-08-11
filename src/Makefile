@@ -153,11 +153,13 @@ IOS_EXTRA_SOURCES = \
 
 IOS_DOTNET_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 
 IOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 
@@ -541,6 +543,7 @@ MAC_CFNETWORK_SOURCES = \
 
 MAC_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 
@@ -856,6 +859,7 @@ WATCHOS_EXTRA_CORE_SOURCES = \
 
 WATCHOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 
 WATCHOS_CORE_SOURCES +=           \
     $(WATCHOS_EXTRA_CORE_SOURCES) \
@@ -1148,12 +1152,14 @@ TVOS_CORE_SOURCES +=           \
 
 TVOS_DOTNET_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
 
 TVOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
@@ -1367,12 +1373,14 @@ MACCATALYST_DOTNET_CORE_SOURCES += \
 
 MACCATALYST_DOTNET_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
 
 MACCATALYST_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
