@@ -1,0 +1,8 @@
+## https://github.com/xamarin/xamarin-macios/issues/15526
+!missing-selector! WKWebView::findInteraction not bound
+!missing-selector! WKWebView::isFindInteractionEnabled not bound
+!missing-selector! WKWebView::setFindInteractionEnabled: not bound
+
+## https://github.com/xamarin/xamarin-macios/issues/15593
+!missing-selector! WKWebpagePreferences::isLockdownModeEnabled not bound
+!missing-selector! WKWebpagePreferences::setLockdownModeEnabled: not bound

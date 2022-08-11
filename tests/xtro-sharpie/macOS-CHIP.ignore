@@ -4,7 +4,6 @@
 !missing-type! CHIPContentLauncher not bound
 
 # Ignoring for now until a stable API is released
-!extra-enum-value! Managed value 10 for ChipErrorCode.UnsupportedAttribute not found in native headers
 !missing-selector! CHIPAccessControl::readAttributeAttributeListWithCompletionHandler: not bound
 !missing-selector! CHIPAccessControl::readAttributeClusterRevisionWithCompletionHandler: not bound
 !missing-selector! CHIPAccessControl::writeAttributeAclWithValue:completionHandler: not bound
