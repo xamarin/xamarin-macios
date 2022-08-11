@@ -1,0 +1,13 @@
+!missing-selector! PDFView::isInMarkupMode not bound
+!missing-selector! PDFView::pageOverlayViewProvider not bound
+!missing-selector! PDFView::setInMarkupMode: not bound
+!missing-selector! PDFView::setPageOverlayViewProvider: not bound
+!missing-field! PDFDocumentBurnInAnnotationsOption not bound
+!missing-field! PDFDocumentSaveTextFromOCROption not bound
+!missing-protocol! PDFPageOverlayViewProvider not bound
+!extra-designated-initializer! PDFPage::initWithImage: is incorrectly decorated with an [DesignatedInitializer] attribute
+!missing-field! PDFPageImageInitializationOptionCompressionQuality not bound
+!missing-field! PDFPageImageInitializationOptionMediaBox not bound
+!missing-field! PDFPageImageInitializationOptionRotation not bound
+!missing-field! PDFPageImageInitializationOptionUpscaleIfSmaller not bound
+!missing-selector! PDFPage::initWithImage:options: not bound

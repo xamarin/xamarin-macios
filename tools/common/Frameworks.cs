@@ -278,7 +278,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 
 					{ "BackgroundAssets", "BackgroundAssets", 13,0},
-          { "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
+					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 				};
 			}
 			return mac_frameworks;
@@ -452,7 +452,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
 				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
-        { "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
+				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 
 				// the above MUST be kept in sync with simlauncher
 				// see tools/mtouch/Makefile
@@ -625,8 +625,6 @@ public class Frameworks : Dictionary <string, Framework>
 #endif
 					{ "OSLog", "OSLog", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
-
-					{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 				};
 			}
 			return tvos_frameworks;
@@ -761,6 +759,18 @@ public class Frameworks : Dictionary <string, Framework>
 	static bool FilterFrameworks (Application app, Framework framework)
 	{
 		switch (app.Platform) {
+#if !NET
+		// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
+		case ApplePlatform.iOS when framework.Name == "CHIP":
+		case ApplePlatform.TVOS when framework.Name == "CHIP":
+		case ApplePlatform.MacOSX when framework.Name == "CHIP":
+		case ApplePlatform.WatchOS when framework.Name == "CHIP":
+			if (Driver.XcodeVersion.Major >= 14) {
+				Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+.", framework.Name);
+				return false;
+			}
+			break;
+#endif
 		case ApplePlatform.iOS:
 			switch (framework.Name) {
 			case "GameKit":
