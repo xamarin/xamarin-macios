@@ -601,8 +601,7 @@ namespace CarPlay {
 		string SectionIndexTitle { get; }
 
 #if !XAMCORE_5_0
-		[Sealed]
-		[Export ("items", ArgumentSemantic.Copy)]
+		[Wrap ("throw new InvalidOperationException (Constants.BrokenBinding)", IsVirtual = true)]
 		[Obsolete ("Use 'Items2 : ICPListTemplateItem []' instead.")]
 		CPListItem [] Items { get; }
 #endif
