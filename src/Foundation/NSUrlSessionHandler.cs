@@ -63,21 +63,16 @@ namespace Foundation {
 
 	public partial class NSUrlSessionHandler : HttpMessageHandler
 	{
-		private const string Cookie = "Cookie";
-		internal CookieContainer? cookieContainer;
+		const string Cookie = "Cookie";
+		NSUrlSession session;
+		readonly NSUrlSessionConfiguration.SessionConfigurationType sessionType;
 		readonly Dictionary<string, string> headerSeparators = new Dictionary<string, string> {
 			["User-Agent"] = " ",
 			["Server"] = " "
 		};
 
-		NSUrlSession session;
-		internal readonly Dictionary<NSUrlSessionTask, InflightData> inflightRequests;
-		internal readonly object inflightRequestsLock = new object ();
-		readonly NSUrlSessionConfiguration.SessionConfigurationType sessionType;
-#if !MONOMAC && !__WATCHOS__
-		NSObject? notificationToken;  // needed to make sure we do not hang if not using a background session
-		readonly object notificationTokenLock = new object (); // need to make sure that threads do no step on each other with a dispose and a remove  inflight data
-#endif
+		internal CookieContainer? cookieContainer;
+		internal readonly NSUrlSessionHandlerInflightData inflightRequests;
 
 		static NSUrlSessionConfiguration CreateConfig ()
 		{
@@ -118,12 +113,15 @@ namespace Foundation {
 				configuration.TLSMinimumSupportedProtocol = SslProtocol.Tls_1_3;
 
 			session = NSUrlSession.FromConfiguration (configuration, (INSUrlSessionDelegate) new NSUrlSessionHandlerDelegate (this), null);
-			inflightRequests = new Dictionary<NSUrlSessionTask, InflightData> ();
+			inflightRequests = new (this);
 		}
 
 #if !MONOMAC  && !__WATCHOS__
 
-		void AddNotification ()
+		NSObject? notificationToken;  // needed to make sure we do not hang if not using a background session
+		readonly object notificationTokenLock = new object (); // need to make sure that threads do no step on each other with a dispose and a remove  inflight data
+
+		internal void AddNotification ()
 		{
 			lock (notificationTokenLock) {
 				if (!bypassBackgroundCheck && sessionType != NSUrlSessionConfiguration.SessionConfigurationType.Background && notificationToken is null)
@@ -131,7 +129,7 @@ namespace Foundation {
 			} // lock
 		}
 
-		void RemoveNotification ()
+		internal void RemoveNotification ()
 		{
 			NSObject? localNotificationToken;
 			lock (notificationTokenLock) {
@@ -142,62 +140,16 @@ namespace Foundation {
 				NSNotificationCenter.DefaultCenter.RemoveObserver (localNotificationToken);
 		}
 
-		void BackgroundNotificationCb (NSNotification obj)
-		{
-			// the cancelation task of each of the sources will clean the different resources. Each removal is done
-			// inside a lock, but of course, the .Values collection will not like that because it is modified during the
-			// iteration. We split the operation in two, get all the diff cancelation sources, then try to cancel each of them
-			// which will do the correct lock dance. Note that we could be tempted to do a RemoveAll, that will yield the same
-			// runtime issue, this is dull but safe. 
-			List<TaskCompletionSource<HttpResponseMessage>> sources;
-			lock (inflightRequestsLock) { // just lock when we iterate
-				sources = new List <TaskCompletionSource<HttpResponseMessage>> (inflightRequests.Count);
-				foreach (var r in inflightRequests.Values) {
-					sources.Add (r.CompletionSource);
-				}
-			}
-			sources.ForEach (source => { source.TrySetCanceled (); });
-		}
+		void BackgroundNotificationCb (NSNotification _) => inflightRequests.CancelAll ();
+
 #endif
 
 		public long MaxInputInMemory { get; set; } = long.MaxValue;
 
-		internal void RemoveInflightData (NSUrlSessionTask task, bool cancel = true)
-		{
-			lock (inflightRequestsLock) {
-				if (inflightRequests.TryGetValue (task, out var data)) {
-					if (cancel)
-						data.CancellationTokenSource.Cancel ();
-					data.Dispose ();
-					inflightRequests.Remove (task);
-				}
-#if !MONOMAC  && !__WATCHOS__
-				// do we need to be notified? If we have not inflightData, we do not
-				if (inflightRequests.Count == 0)
-					RemoveNotification ();
-#endif
-			}
-
-			if (cancel)
-				task?.Cancel ();
-
-			task?.Dispose ();
-		}
-
 		protected override void Dispose (bool disposing)
 		{
-			lock (inflightRequestsLock) {
-#if !MONOMAC  && !__WATCHOS__
-			// remove the notification if present, method checks against null
-			RemoveNotification ();
-#endif
-				foreach (var pair in inflightRequests) {
-					pair.Key?.Cancel ();
-					pair.Key?.Dispose ();
-					pair.Value?.Dispose ();
-				}
-
-				inflightRequests.Clear ();
+			if (disposing) {
+				inflightRequests.Dispose ();
 			}
 			base.Dispose (disposing);
 		}
@@ -413,36 +365,10 @@ namespace Foundation {
 
 			var nsrequest = await CreateRequest (request).ConfigureAwait(false);
 			var dataTask = session.CreateDataTask (nsrequest);
-
-			var inflightData = new InflightData (request.RequestUri?.AbsoluteUri!, cancellationToken, request);
-
-			lock (inflightRequestsLock) {
-#if !MONOMAC  && !__WATCHOS__
-				// Add the notification whenever needed
-				AddNotification ();
-#endif
-				inflightRequests.Add (dataTask, inflightData);
-			}
+			var inflightData = inflightRequests.Create (dataTask, request.RequestUri?.AbsoluteUri!, request, cancellationToken);
 
 			if (dataTask.State == NSUrlSessionTaskState.Suspended)
 				dataTask.Resume ();
-
-			// as per documentation: 
-			// If this token is already in the canceled state, the 
-			// delegate will be run immediately and synchronously.
-			// Any exception the delegate generates will be 
-			// propagated out of this method call.
-			//
-			// The execution of the register ensures that if we 
-			// receive a already cancelled token or it is cancelled
-			// just before this call, we will cancel the task. 
-			// Other approaches are harder, since querying the state
-			// of the token does not guarantee that in the next
-			// execution a threads cancels it.
-			cancellationToken.Register (() => {
-				RemoveInflightData (dataTask);
-				inflightData.CompletionSource.TrySetCanceled ();
-			});
 
 			return await inflightData.CompletionSource.Task.ConfigureAwait (false);
 		}
