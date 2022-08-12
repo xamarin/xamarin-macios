@@ -152,7 +152,7 @@ IOS_EXTRA_SOURCES = \
 	$(SHARED_SYSTEM_DRAWING_SOURCES) \
 
 IOS_DOTNET_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
@@ -164,7 +164,7 @@ IOS_DOTNET_HTTP_SOURCES = \
 	System.Net.Http/CFNetworkHandler.cs \
 
 IOS_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
@@ -549,7 +549,7 @@ MAC_CFNETWORK_SOURCES = \
 	CFNetwork/WorkerThread.cs
 
 MAC_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
@@ -871,7 +871,7 @@ WATCHOS_EXTRA_CORE_SOURCES = \
     System.Drawing/ColorKnownColorTypeForwarders.cs \
 
 WATCHOS_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
