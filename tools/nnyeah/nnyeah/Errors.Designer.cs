@@ -209,7 +209,8 @@ namespace Microsoft.MaciOS.Nnyeah {
                 return ResourceManager.GetString("E0017", resourceCulture);
             }
         }
-
+        
+        /// <summary>
         ///   Looks up a localized string similar to The supplied Microsoft assembly, {0}, is not macOS or iOS and is not currently supported..
         /// </summary>
         internal static string E0018 {
@@ -282,7 +283,14 @@ namespace Microsoft.MaciOS.Nnyeah {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If you want to compare assemblies, the earlier and later assembly options *must* be set..
+        ///   Looks up a localized string similar to nnyeah is a tool for converting legacy Xamarin assemblies (pre .NET 6)
+        ///to work with .NET 6 or later. It does this by scanning the --input assembly for
+        ///dependencies of legacy methods, types, or fields and converts them to references
+        ///in the --microsoft-assembly and writes the result in the --ouput assembly.
+        ///nnyeah attempts to find the legacy Xamarin assembly automatically. If it can&apos;t
+        ///find it, you will need to supply a path to it with the --xamarin-assembly
+        ///argument.
+        ///nnyeah needs to have a path to target Micr [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string N0007 {
             get {
