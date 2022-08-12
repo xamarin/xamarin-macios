@@ -365,12 +365,12 @@ namespace Foundation {
 
 			var nsrequest = await CreateRequest (request).ConfigureAwait(false);
 			var dataTask = session.CreateDataTask (nsrequest);
-			var inflightData = inflightRequests.Create (dataTask, request.RequestUri?.AbsoluteUri!, request, cancellationToken);
+			var (inflightData, cancellationData) = inflightRequests.Create (dataTask, request.RequestUri?.AbsoluteUri!, request, cancellationToken);
 
 			if (dataTask.State == NSUrlSessionTaskState.Suspended)
 				dataTask.Resume ();
 
-			return await inflightData.CompletionSource.Task.ConfigureAwait (false);
+			return await cancellationData.CompletionSource.Task.ConfigureAwait (false);
 		}
 
 #if NET

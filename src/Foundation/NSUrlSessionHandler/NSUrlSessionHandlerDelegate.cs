@@ -54,40 +54,11 @@ namespace Foundation {
 			return new HttpRequestException (error.LocalizedDescription, innerException);
  		}
 
-
-		InflightData? GetInflightData (NSUrlSessionTask task)
-		{
-			var inflight = default (InflightData);
-
-			lock (sessionHandler.inflightRequestsLock)
-				if (sessionHandler.inflightRequests.TryGetValue (task, out inflight)) {
-					// ensure that we did not cancel the request, if we did, do cancel the task, if we 
-					// cancel the task it means that we are not interested in any of the delegate methods:
-					// 
-					// DidReceiveResponse     We might have received a response, but either the user cancelled or a 
-					//                        timeout did, if that is the case, we do not care about the response.
-					// DidReceiveData         Of buffer has a partial response ergo garbage and there is not real 
-					//                        reason we would like to add more data.
-					// DidCompleteWithError - We are not changing a behaviour compared to the case in which 
-					//                        we did not find the data.
-					if (inflight.CancellationToken.IsCancellationRequested) {
-						task?.Cancel ();
-						// return null so that we break out of any delegate method.
-						return null;
-					}
-					return inflight;
-				}
-
-			// if we did not manage to get the inflight data, we either got an error or have been canceled, lets cancel the task, that will execute DidCompleteWithError
-			task?.Cancel ();
-			return null;
-		}
-
 		void UpdateManagedCookieContainer (NSUrl url, NSHttpCookie[] cookies)
 		{
 			var uri = new Uri (url.AbsoluteString);
 			if (sessionHandler.cookieContainer is not null && cookies.Length > 0)
-				lock (sessionHandler.inflightRequestsLock) { // ensure we lock when writing to the collection
+				lock (sessionHandler.inflightRequests.Lock) { // ensure we lock when writing to the collection
 					var cookiesContents = new string [cookies.Length];
 					for (var index = 0; index < cookies.Length; index++)
 						cookiesContents [index] = cookies [index].GetHeaderValue ();
@@ -98,9 +69,9 @@ namespace Foundation {
 		[Preserve (Conditional = true)]
 		public override void DidReceiveResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSUrlResponse response, Action<NSUrlSessionResponseDisposition> completionHandler)
 		{
-			var inflight = GetInflightData (dataTask);
+			sessionHandler.inflightRequests.Get (dataTask, out var inflight, out var cancellation);
 
-			if (inflight is null)
+			if (inflight is null || cancellation is null)
 				return;
 
 			try {
@@ -115,8 +86,8 @@ namespace Foundation {
 					inflight.Disposed = true;
 					inflight.Stream.TrySetException (new ObjectDisposedException ("The content stream was disposed."));
 
-					sessionHandler.RemoveInflightData (dataTask);
-				}, inflight.CancellationTokenSource.Token);
+					sessionHandler.inflightRequests.Remove (dataTask);
+				}, cancellation.CancellationTokenSource.Token);
 
 				// NB: The double cast is because of a Xamarin compiler bug
 				var httpResponse = new HttpResponseMessage ((HttpStatusCode)status) {
@@ -155,10 +126,10 @@ namespace Foundation {
 					dataTask.Resume ();
 
 			} catch (Exception ex) {
-				inflight.CompletionSource.TrySetException (ex);
+				cancellation.CompletionSource.TrySetException (ex);
 				inflight.Stream.TrySetException (ex);
 
-				sessionHandler.RemoveInflightData (dataTask);
+				sessionHandler.inflightRequests.Remove (dataTask);
 			}
 
 			completionHandler (NSUrlSessionResponseDisposition.Allow);
@@ -167,69 +138,67 @@ namespace Foundation {
 		[Preserve (Conditional = true)]
 		public override void DidReceiveData (NSUrlSession session, NSUrlSessionDataTask dataTask, NSData data)
 		{
-			var inflight = GetInflightData (dataTask);
+			sessionHandler.inflightRequests.Get (dataTask, out var inflight, out var cancellation);
 
-			if (inflight is null)
+			if (inflight is null || cancellation is null)
 				return;
 
 			inflight.Stream.Add (data);
-			SetResponse (inflight);
+			SetResponse (inflight, cancellation);
 		}
 
 		[Preserve (Conditional = true)]
 		public override void DidCompleteWithError (NSUrlSession session, NSUrlSessionTask task, NSError? error)
 		{
-			var inflight = GetInflightData (task);
+			sessionHandler.inflightRequests.Get (task, out var inflight, out var cancellation);
 			var serverError = task.Error;
 
 			// this can happen if the HTTP request times out and it is removed as part of the cancellation process
-			if (inflight is not null) {
+			if (inflight is not null && cancellation is not null) {
 				// set the stream as finished
 				inflight.Stream.TrySetReceivedAllData ();
 
 				// send the error or send the response back
 				if (error is not null || serverError is not null) {
 					// got an error, cancel the stream operatios before we do anything
-					inflight.CancellationTokenSource.Cancel (); 
+					cancellation?.CancellationTokenSource.Cancel ();
 					inflight.Errored = true;
 
 					var exc = inflight.Exception ?? createExceptionForNSError (error ?? serverError!);  // client errors wont happen if we get server errors
-					inflight.CompletionSource.TrySetException (exc);
+					cancellation?.CompletionSource.TrySetException (exc);
 					inflight.Stream.TrySetException (exc);
 				} else {
 					inflight.Completed = true;
-					SetResponse (inflight);
+					SetResponse (inflight, cancellation);
 				}
 
-				sessionHandler.RemoveInflightData (task, cancel: false);
+				sessionHandler.inflightRequests.Remove (task, cancel: false);
 			}
 		}
 
-		void SetResponse (InflightData inflight)
+		void SetResponse (InflightData inflight, CancellationData cancellation)
 		{
 			lock (inflight.Lock) {
 				if (inflight.ResponseSent)
 					return;
 
-				if (inflight.CancellationTokenSource.Token.IsCancellationRequested)
+				if (cancellation.CancellationTokenSource.Token.IsCancellationRequested)
 					return;
 
-				if (inflight.CompletionSource.Task.IsCompleted)
+				if (cancellation.CompletionSource.Task.IsCompleted)
 					return;
 
 				var httpResponse = inflight.Response;
-
 				inflight.ResponseSent = true;
 
-				// EVIL HACK: having TrySetResult inline was blocking the request from completing
-				Task.Run (() => inflight.CompletionSource.TrySetResult (httpResponse!));
+				cancellation.CompletionSource.TrySetResult (httpResponse!);
 			}
 		}
 
 		[Preserve (Conditional = true)]
 		public override void WillCacheResponse (NSUrlSession session, NSUrlSessionDataTask dataTask, NSCachedUrlResponse proposedResponse, Action<NSCachedUrlResponse> completionHandler)
 		{
-			var inflight = GetInflightData (dataTask);
+			sessionHandler.inflightRequests.Get (dataTask, out var inflight, out var _);
 
 			if (inflight is null)
 				return;
@@ -247,7 +216,7 @@ namespace Foundation {
 		[Preserve (Conditional = true)]
 		public override void DidReceiveChallenge (NSUrlSession session, NSUrlSessionTask task, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler)
 		{
-			var inflight = GetInflightData (task);
+			sessionHandler.inflightRequests.Get (task, out var inflight, out var _);
 
 			if (inflight is null)
 				return;
