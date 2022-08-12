@@ -156,6 +156,7 @@ IOS_DOTNET_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
 	Foundation/NSUrlSessionHandler/InflightData.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
 	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
@@ -167,6 +168,7 @@ IOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
 	Foundation/NSUrlSessionHandler/InflightData.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
 	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
@@ -551,6 +553,7 @@ MAC_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
 	Foundation/NSUrlSessionHandler/InflightData.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
 	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
@@ -872,6 +875,7 @@ WATCHOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
 	Foundation/NSUrlSessionHandler/InflightData.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
 	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
@@ -1170,6 +1174,7 @@ TVOS_DOTNET_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
 	Foundation/NSUrlSessionHandler/InflightData.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
 	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
@@ -1182,6 +1187,7 @@ TVOS_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
 	Foundation/NSUrlSessionHandler/InflightData.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
 	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
@@ -1401,6 +1407,7 @@ MACCATALYST_DOTNET_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
 	Foundation/NSUrlSessionHandler/InflightData.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
 	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
@@ -1413,6 +1420,7 @@ MACCATALYST_HTTP_SOURCES = \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
 	Foundation/NSUrlSessionHandler/InflightData.cs \
 	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
 	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
