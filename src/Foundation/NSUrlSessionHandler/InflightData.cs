@@ -190,8 +190,6 @@ namespace Foundation {
 		public bool Errored { get; set; }
 		public bool Disposed { get; set; }
 		public bool Completed { get; set; }
-		// CancellationToken.IsCancellationRequested
-		public bool Done { get { return Errored || Disposed || Completed; } }
 
 		public InflightData (string requestUrl, HttpRequestMessage request)
 		{
