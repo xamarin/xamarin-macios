@@ -52,6 +52,7 @@ using NSPrintOperation = Foundation.NSObject;
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
+using System.ComponentModel;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -404,6 +405,31 @@ namespace PdfKit {
 
 		[Field ("PDFDocumentKeywordsAttribute", "+PDFKit")]
 		NSString KeywordsKey { get; }
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[StrongDictionary ("PDFPageImageInitializationOptionKeys")]
+	interface PDFPageImageInitializationOption {
+		CGRect MediaBox { get; set; }
+		int Rotation { get; set; }
+		bool UpscaleIfSmaller { get; set; }
+		double CompressionQuality { get; set; }
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Static]
+	interface PDFPageImageInitializationOptionKeys {
+		[Field ("PDFPageImageInitializationOptionMediaBox")]
+		NSString MediaBoxKey { get; }
+
+		[Field ("PDFPageImageInitializationOptionRotation")]
+		NSString RotationKey { get; }
+
+		[Field ("PDFPageImageInitializationOptionUpscaleIfSmaller")]
+		NSString UpscaleIfSmallerKey { get; }
+
+		[Field ("PDFPageImageInitializationOptionCompressionQuality")]
+		NSString CompressionQualityKey { get; }
 	}
 
 	[iOS (11,0)]
@@ -1538,6 +1564,15 @@ namespace PdfKit {
 		[DesignatedInitializer]
 		[Export ("initWithImage:")]
 		NativeHandle Constructor (NSImage image);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("initWithImage:options:")]
+		NativeHandle Constructor (NSImage image, NSDictionary options);
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Wrap ("this (image, options.GetDictionary ()!)")]
+		NativeHandle Constructor (NSImage image, PDFPageImageInitializationOption options);
 
 		[Export ("document"), NullAllowed]
 		PdfDocument Document { get; }

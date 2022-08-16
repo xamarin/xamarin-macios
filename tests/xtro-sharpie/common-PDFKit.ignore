@@ -1,2 +1,8 @@
 # Field used in an EventArg based structure that are in documentation but not in headers
 !unknown-field! PDFAnnotationHit bound
+
+# These fields are not picked up by Xtro
+!unknown-field! PDFPageImageInitializationOptionCompressionQuality bound
+!unknown-field! PDFPageImageInitializationOptionMediaBox bound
+!unknown-field! PDFPageImageInitializationOptionRotation bound
+!unknown-field! PDFPageImageInitializationOptionUpscaleIfSmaller bound
