@@ -40,6 +40,7 @@ using NativeHandle = System.IntPtr;
 
 namespace EventKit {
 
+	[Mac (10,8), iOS (13,0), MacCatalyst (13,1), Watch (6,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[Abstract]
 	interface EKObject {
@@ -162,6 +163,10 @@ namespace EventKit {
 
 		[Export ("calendarsForEntityType:")]
 		NSSet GetCalendars (EKEntityType entityType);
+
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), NoTV]
+		[Export ("isDelegate", ArgumentSemantic.Assign)]
+		bool IsDelegate { get; }
 	}
 
 	[BaseType (typeof (EKObject))]
@@ -498,7 +503,7 @@ namespace EventKit {
 
 	[BaseType (typeof (NSObject))]
 	interface EKEventStore {
-		[NoiOS, Mac (10,11), NoWatch, NoMacCatalyst]
+		[Mac (10,11), iOS (16,0), MacCatalyst (16,0), Watch (9,0), NoTV]
 		[Export ("initWithSources:")]
 		NativeHandle Constructor (EKSource[] sources);
 

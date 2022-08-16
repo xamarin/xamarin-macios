@@ -78,6 +78,10 @@ namespace WebKit
 		JavaScriptInvalidFrameTarget,
 		NavigationAppBoundDomain,
 		JavaScriptAppBoundDomain,
+		// Xcode 14
+		DuplicateCredential,
+		MalformedCredential,
+	    CredentialNotFound,
 	}
 
 #if NET

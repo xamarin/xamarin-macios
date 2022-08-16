@@ -1,0 +1,12 @@
+!extra-null-allowed! 'System.Void CoreSpotlight.CSSearchQueryContext::set_FetchAttributes(System.String[])' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void CoreSpotlight.CSSearchQueryContext::set_FilterQueries(System.String[])' has a extraneous [NullAllowed] on parameter #0
+!missing-null-allowed! 'System.Void CoreSpotlight.CSSearchQuery::.ctor(System.String,CoreSpotlight.CSSearchQueryContext)' is missing an [NullAllowed] on parameter #1
+!missing-selector! CSSearchableItem::compareByRank: not bound
+!missing-selector! CSSuggestion::compareByRank: not bound
+!missing-selector! CSUserQuery::initWithUserQueryString:userQueryContext: not bound
+!missing-selector! CSUserQueryContext::enableRankedResults not bound
+!missing-selector! CSUserQueryContext::maxResultCount not bound
+!missing-selector! CSUserQueryContext::setEnableRankedResults: not bound
+!missing-selector! CSUserQueryContext::setMaxResultCount: not bound
+!unknown-type! CSTopHitQuery bound
+!unknown-type! CSTopHitQueryContext bound

@@ -71,6 +71,10 @@ namespace Speech {
 		[iOS (13, 0)]
 		[Export ("requiresOnDeviceRecognition")]
 		bool RequiresOnDeviceRecognition { get; set; }
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("addsPunctuation")]
+		bool AddsPunctuation { get; set; }
 	}
 
 	[iOS (10, 0), Mac (10, 15)]
