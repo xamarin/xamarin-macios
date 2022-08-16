@@ -152,12 +152,26 @@ IOS_EXTRA_SOURCES = \
 	$(SHARED_SYSTEM_DRAWING_SOURCES) \
 
 IOS_DOTNET_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
+	Foundation/NSUrlSessionHandler/InflightData.cs \
+	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 
 IOS_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
+	Foundation/NSUrlSessionHandler/InflightData.cs \
+	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 
@@ -535,7 +549,14 @@ MAC_CFNETWORK_SOURCES = \
 	CFNetwork/WorkerThread.cs
 
 MAC_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
+	Foundation/NSUrlSessionHandler/InflightData.cs \
+	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 
@@ -850,7 +871,14 @@ WATCHOS_EXTRA_CORE_SOURCES = \
     System.Drawing/ColorKnownColorTypeForwarders.cs \
 
 WATCHOS_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
+	Foundation/NSUrlSessionHandler/InflightData.cs \
+	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 
 WATCHOS_CORE_SOURCES +=           \
     $(WATCHOS_EXTRA_CORE_SOURCES) \
@@ -1142,13 +1170,27 @@ TVOS_CORE_SOURCES +=           \
 	$(TVOS_EXTRA_CORE_SOURCES) \
 
 TVOS_DOTNET_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
+	Foundation/NSUrlSessionHandler/InflightData.cs \
+	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
 
 TVOS_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
+	Foundation/NSUrlSessionHandler/InflightData.cs \
+	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
@@ -1361,13 +1403,27 @@ MACCATALYST_DOTNET_CORE_SOURCES += \
 	$(MACCATALYST_DOTNET_EXTRA_CORE_SOURCES) \
 
 MACCATALYST_DOTNET_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
+	Foundation/NSUrlSessionHandler/InflightData.cs \
+	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
 
 MACCATALYST_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandlerDelegate.cs \
+	Foundation/NSUrlSessionHandler/InflightData.cs \
+	Foundation/NSUrlSessionHandler/MonoStreamContent.cs \
+	Foundation/NSUrlSessionHandler/WrappedNSInputStream.cs \
 	System.Net.Http/CFContentStream.cs \
 	System.Net.Http/CFNetworkHandler.cs \
 	$(SHARED_DESIGNER_CS) \
