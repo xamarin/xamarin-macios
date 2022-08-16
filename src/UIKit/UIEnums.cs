@@ -898,6 +898,9 @@ namespace UIKit {
 		OverCurrentContext,
 		[NoTV]
 		Popover,
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		BlurOverFullScreen,
 	}
 	
@@ -1695,6 +1698,14 @@ namespace UIKit {
 		Black,
 	}
 
+	[Watch (9,0), TV (16,0), iOS (16, 0), MacCatalyst (16,0)]
+	public enum UIFontWidth {
+		Condensed,
+		Standard,
+		Expanded,
+		Compressed,
+	}
+
 	[NoWatch]
 	[iOS (9,0)]
 	[Native]
@@ -2369,6 +2380,10 @@ namespace UIKit {
 		[Field ("CPTemplateApplicationSceneSessionRoleApplication", "CarPlay")]
 #endif
 		CarTemplateApplication,
+
+		[TV (16,0), iOS (16, 0), MacCatalyst (16,0)]
+		[Field ("UIWindowSceneSessionRoleExternalDisplayNonInteractive")]
+		ExternalDisplayNonInteractive,
 	}
 
 	[iOS (13,0), TV (13,0), NoWatch]
@@ -2470,6 +2485,11 @@ namespace UIKit {
 		[MacCatalyst (14,0)]
 		[Field ("UIMenuOpenRecent")]
 		OpenRecent,
+
+		[TV (16,0), iOS (16, 0), MacCatalyst (16,0)]
+		[Field ("UIMenuDocument")]
+		Document,
+
 	}
 
 	[iOS (13,0), TV (13,0), Watch (6,0)]

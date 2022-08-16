@@ -1697,7 +1697,7 @@ namespace UIKit {
 		NSTextTableBlock [] TextBlocks { get; [NotImplemented] set; }
 #endif
 
-		[NoiOS, NoTV, NoWatch]
+		[iOS (16,0), TV (16,0), NoWatch, MacCatalyst (16,0)]
 		[Export ("textLists")]
 		NSTextList[] TextLists { get; [NotImplemented] set; }
 
@@ -1816,7 +1816,7 @@ namespace UIKit {
 		NSTextTableBlock [] TextBlocks { get; set; }
 #endif
 
-		[NoiOS, NoTV, NoWatch]
+		[iOS (16,0), TV (16,0), NoWatch, MacCatalyst (16,0)]
 		[NoMacCatalyst]
 		[Override]
 		[Export ("textLists")]
@@ -1898,6 +1898,16 @@ namespace UIKit {
 
 		[Export ("visualDescription")]
 		string VisualDescription { get; }
+
+		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("horizontalGroupWithLayoutSize:repeatingSubitem:count:")]
+		NSCollectionLayoutGroup GetHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+
+		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("verticalGroupWithLayoutSize:repeatingSubitem:count:")]
+		NSCollectionLayoutGroup GetVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]
@@ -1931,6 +1941,10 @@ namespace UIKit {
 		[Export ("boundarySupplementaryItems", ArgumentSemantic.Copy)]
 		NSCollectionLayoutBoundarySupplementaryItem [] BoundarySupplementaryItems { get; set; }
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
 		[Export ("supplementariesFollowContentInsets")]
 		bool SupplementariesFollowContentInsets { get; set; }
 
@@ -1953,6 +1967,10 @@ namespace UIKit {
 		[Static]
 		[Export ("orthogonalLayoutSectionForMediaItems")]
 		NSCollectionLayoutSection GetOrthogonalLayoutSectionForMediaItems ();
+
+		[Watch (9, 0), TV (16, 0), iOS (16, 0), NoMac]
+		[Export ("supplementaryContentInsetsReference", ArgumentSemantic.Assign)]
+		UIContentInsetsReference SupplementaryContentInsetsReference { get; set; }
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]
@@ -2048,12 +2066,12 @@ namespace UIKit {
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Abstract]
 		[Export ("center", ArgumentSemantic.Assign)]
-		CGPoint Center { get; set; }
+		new CGPoint Center { get; set; }
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Abstract]
 		[Export ("bounds")]
-		CGRect Bounds { get; }
+		new CGRect Bounds { get; }
 
 		[NoMac]
 		[Abstract]
@@ -2380,7 +2398,7 @@ namespace UIKit {
 		string Identifier { get; set; }
 	}
 
-	[NoWatch]
+	[Watch (9,0)]
 	[Introduced (PlatformName.iOS)]
 	[TV (9,0)]
 	[Mac (10,11)]
@@ -2389,6 +2407,7 @@ namespace UIKit {
 	[Protocol]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextAttachmentContainer {
+		[NoWatch]
 		[Abstract]
 		[Export ("imageForBounds:textContainer:characterIndex:")]
 		[return: NullAllowed]
@@ -2398,6 +2417,7 @@ namespace UIKit {
 		Image GetImageForBounds (CGRect bounds, [NullAllowed] NSTextContainer textContainer, nuint characterIndex);
 #endif
 
+		[NoWatch]
 		[Abstract]
 		[Export ("attachmentBoundsForTextContainer:proposedLineFragment:glyphPosition:characterIndex:")]
 		CGRect GetAttachmentBounds ([NullAllowed] NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint glyphPosition, nuint characterIndex);
@@ -2481,19 +2501,22 @@ namespace UIKit {
 		bool UsesTextAttachmentView { get; }
 	}
 
-	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0)]
+	[TV (15,0), Watch (9,0), Mac (12,0), iOS (15,0)]
 	[Protocol]
 	interface NSTextAttachmentLayout {
 
+		[NoWatch]
 		[Abstract]
 		[Export ("imageForBounds:attributes:location:textContainer:")]
 		[return: NullAllowed]
 		Image GetImageForBounds (CGRect bounds, NSDictionary<NSString, NSObject> attributes, INSTextLocation location, [NullAllowed] NSTextContainer textContainer);
 
+		[NoWatch]
 		[Abstract]
 		[Export ("attachmentBoundsForAttributes:location:textContainer:proposedLineFragment:position:")]
 		CGRect GetAttachmentBounds (NSDictionary<NSString, NSObject> attributes, INSTextLocation location, [NullAllowed] NSTextContainer textContainer, CGRect proposedLineFragment, CGPoint position);
 
+		[NoWatch]
 		[Abstract]
 		[Export ("viewProviderForParentView:location:textContainer:")]
 		[return: NullAllowed]
@@ -3416,6 +3439,18 @@ namespace UIKit {
 
 		[NullAllowed, Export ("elementRange", ArgumentSemantic.Strong)]
 		NSTextRange ElementRange { get; set; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("childElements", ArgumentSemantic.Copy)]
+		NSTextElement[] ChildElements { get; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[NullAllowed, Export ("parentElement", ArgumentSemantic.Weak)]
+		NSTextElement ParentElement { get; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("isRepresentedElement")]
+		bool IsRepresentedElement { get; }
 	}
 
 	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
@@ -4067,6 +4102,11 @@ namespace UIKit {
 		string MarkerFormat { get; }
 #endif
 
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("initWithMarkerFormat:options:startingItemNumber:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (string markerFormat, NSTextListOptions options, nint startingItemNumber);
+
 		[Export ("listOptions")]
 		NSTextListOptions ListOptions { get; }
 
@@ -4076,6 +4116,10 @@ namespace UIKit {
 		//Detected properties
 		[Export ("startingItemNumber")]
 		nint StartingItemNumber { get; set; }
+
+		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("ordered")]
+		bool Ordered { [Bind ("isOrdered")] get; }
 
 	}
 

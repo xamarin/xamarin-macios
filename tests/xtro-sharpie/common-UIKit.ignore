@@ -242,3 +242,38 @@
 
 ## manually bound
 !missing-field! UIListSeparatorAutomaticInsets not bound
+
+## added in xcode 14 and is between a #if XAMCORE_5_0
+!incorrect-protocol-member! UISearchSuggestion::localizedAttributedSuggestion is REQUIRED and should be abstract
+!incorrect-protocol-member! UISearchSuggestion::representedObject is REQUIRED and should be abstract
+!incorrect-protocol-member! UISearchSuggestion::setRepresentedObject: is REQUIRED and should be abstract
+
+# deprecated in xcode 14 beta 5
+!extra-enum-value! Managed value 8 for UIModalPresentationStyle.BlurOverFullScreen is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 2 for UIActivityIndicatorViewStyle.Gray is available for the current platform while the value in the native header is not
+
+# out trampolines generators does not support the following
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::canReorderItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::didReorderHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setCanReorderItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setDidReorderHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setWillReorderHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::willReorderHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setShouldCollapseItemHandler: not bound
+
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setShouldExpandItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setSnapshotForExpandingParentItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setWillCollapseItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setWillExpandItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::shouldCollapseItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::shouldExpandItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
+
+# no bound due to issues with foundation https://github.com/xamarin/xamarin-macios/issues/15577
+!missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
+!missing-selector! NSDiffableDataSourceTransaction::difference not bound
+
+!missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
+!missing-selector! NSDiffableDataSourceTransaction::difference not bound

@@ -14,6 +14,9 @@
 !missing-pinvoke! NSTextAlignmentFromCTTextAlignment is not bound
 !missing-pinvoke! NSTextAlignmentToCTTextAlignment is not bound
 
+## this was (pre iOS10) a required member that was deprecated and made optional
+!incorrect-protocol-member! UIFocusEnvironment::preferredFocusedView is OPTIONAL and should NOT be abstract
+
 ## https://bugzilla.xamarin.com/show_bug.cgi?id=43788
 !missing-selector! +UIView::layerClass not bound
 
@@ -47,6 +50,16 @@
 !missing-selector! UILabel::isUserInteractionEnabled not bound
 !missing-selector! UILabel::setUserInteractionEnabled: not bound
 
+## it's technically optional but there's no point in adopting the protocol if you do not provide the implemenation
+!incorrect-protocol-member! UIInputViewAudioFeedback::enableInputClicksWhenVisible is OPTIONAL and should NOT be abstract
+
+## fixed in .NET - API break
+!incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorDidPause: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UIDynamicAnimatorDelegate::dynamicAnimatorWillResume: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UILayoutSupport::bottomAnchor is REQUIRED and should be abstract
+!incorrect-protocol-member! UILayoutSupport::heightAnchor is REQUIRED and should be abstract
+!incorrect-protocol-member! UILayoutSupport::topAnchor is REQUIRED and should be abstract
+
 ## the [Sealed] attributes removes the [Export] one so it seems missing (but it's not)
 !missing-selector! UIGestureRecognizer::ignorePress:forEvent: not bound
 
@@ -62,8 +75,31 @@
 !missing-pinvoke! CGPointFromString is not bound
 !missing-pinvoke! CGRectFromString is not bound
 !missing-pinvoke! CGSizeFromString is not bound
+!missing-pinvoke! NSStringFromCGAffineTransform is not bound
+!missing-pinvoke! NSStringFromCGPoint is not bound
+!missing-pinvoke! NSStringFromCGRect is not bound
+!missing-pinvoke! NSStringFromCGSize is not bound
 !missing-pinvoke! NSStringFromUIOffset is not bound
 !missing-pinvoke! UIOffsetFromString is not bound
+
+## HACK: those members are not *required* in ObjC but we made them abstract to have them inlined in UITextField and UITextView
+## Even more confusing it that respondToSelecttor return NO on them even if it works in _real_ life (compare unit and introspection tests)
+!incorrect-protocol-member! UITextInputTraits::autocapitalizationType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::autocorrectionType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::enablesReturnKeyAutomatically is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::isSecureTextEntry is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::keyboardAppearance is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::keyboardType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::returnKeyType is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setAutocapitalizationType: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setAutocorrectionType: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setEnablesReturnKeyAutomatically: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setKeyboardAppearance: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setKeyboardType: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setReturnKeyType: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setSecureTextEntry: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::setSpellCheckingType: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! UITextInputTraits::spellCheckingType is OPTIONAL and should NOT be abstract
 
 ## UIAccessibility
 ## We can't expose them as categories of NSObject so we have custom types instead
@@ -115,11 +151,24 @@
 !missing-selector! NSObject::setShouldGroupAccessibilityChildren: not bound
 !missing-selector! NSObject::shouldGroupAccessibilityChildren not bound
 
+## @required members added to exixting interfaces (breaking change), fixed on .NET
+!incorrect-protocol-member! UIFocusEnvironment::preferredFocusEnvironments is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::documentInputMode is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::documentIdentifier is REQUIRED and should be abstract
+!incorrect-protocol-member! UITextDocumentProxy::selectedText is REQUIRED and should be abstract
+!incorrect-protocol-member! UIViewControllerContextTransitioning::pauseInteractiveTransition is REQUIRED and should be abstract
+!incorrect-protocol-member! UIViewControllerTransitionCoordinator::notifyWhenInteractionChangesUsingBlock: is REQUIRED and should be abstract
+!incorrect-protocol-member! UIViewControllerTransitionCoordinatorContext::isInterruptible is REQUIRED and should be abstract
+
 # Apple renamed it from UILineBreakMode and we kept the old name for API compatibility
 !missing-enum! NSLineBreakMode not bound
 
 # Apple renamed it from UITextAlignment and we kept the old name for API compatibility
 !missing-enum! NSTextAlignment not bound
+
+## It got renamed from UITextWritingDirection to NSWritingDirection but it is a breaking change
+## Fixed in .NET
+!unknown-native-enum! UITextWritingDirection bound
 
 ## macro is used in UIBarCommon.h: #define UIToolbarPosition UIBarPosition
 !unknown-native-enum! UIToolbarPosition bound
@@ -156,6 +205,14 @@
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISearchBar::GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UINavigationBar::GetTitleTextAttributes() should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UIBarItem::SetTitleTextAttributes(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! System.Void UIKit.UISegmentedControl::SetTitleTextAttributes(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UIBarItem::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
+
+## manually bound (better, stronger signature) on `[setS|s]copeBarButtonTitleTextAttributes:forState:` which is decorated with `UI_APPEARANCE_SELECTOR`
+!extra-ui-appearance-support! System.Void UIKit.UISearchBar::SetScopeBarButtonTitle(UIKit.UITextAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
+!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UISearchBar::GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 
 ## [Wrap] over `[largeT|t]itleTextAttributes` which is decorated with `UI_APPEARANCE_SELECTOR`
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UINavigationBar::get_LargeTitleTextAttributes() should NOT be decorated with [Appearance]
@@ -185,3 +242,39 @@
 
 ## manually bound
 !missing-field! UIListSeparatorAutomaticInsets not bound
+
+## added in xcode 14 and is between a #if XAMCORE_5_0
+!incorrect-protocol-member! UISearchSuggestion::localizedAttributedSuggestion is REQUIRED and should be abstract
+!incorrect-protocol-member! UISearchSuggestion::representedObject is REQUIRED and should be abstract
+!incorrect-protocol-member! UISearchSuggestion::setRepresentedObject: is REQUIRED and should be abstract
+
+# deprecated in xcode 14 beta 5
+!extra-enum-value! Managed value 8 for UIModalPresentationStyle.BlurOverFullScreen is available for the current platform while the value in the native header is not
+!extra-enum-value! Managed value 2 for UIActivityIndicatorViewStyle.Gray is available for the current platform while the value in the native header is not
+
+# out trampolines generators does not support the following
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::canReorderItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::didReorderHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setCanReorderItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setDidReorderHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::setWillReorderHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceReorderingHandlers::willReorderHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setShouldCollapseItemHandler: not bound
+
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setShouldExpandItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setSnapshotForExpandingParentItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setWillCollapseItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::setWillExpandItemHandler: not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::shouldCollapseItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::shouldExpandItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::snapshotForExpandingParentItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willCollapseItemHandler not bound
+!missing-selector! UICollectionViewDiffableDataSourceSectionSnapshotHandlers::willExpandItemHandler not bound
+
+# no bound due to issues with foundation https://github.com/xamarin/xamarin-macios/issues/15577
+!missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
+!missing-selector! NSDiffableDataSourceTransaction::difference not bound
+
+!missing-selector! NSDiffableDataSourceSectionTransaction::difference not bound
+!missing-selector! NSDiffableDataSourceTransaction::difference not bound
+
