@@ -2040,7 +2040,7 @@ namespace CloudKit {
 		Action<CKRecordZoneID> RecordZoneWithIdWasDeletedDueToUserEncryptedDataReset { get; set; }
 	}
 
-	[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoTV, NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CKAllowedSharingOptions : NSSecureCoding, NSCopying
