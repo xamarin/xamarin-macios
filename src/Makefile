@@ -1170,7 +1170,7 @@ TVOS_CORE_SOURCES +=           \
 	$(TVOS_EXTRA_CORE_SOURCES) \
 
 TVOS_DOTNET_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
@@ -1183,7 +1183,7 @@ TVOS_DOTNET_HTTP_SOURCES = \
 	$(SHARED_DESIGNER_CS) \
 
 TVOS_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
@@ -1403,7 +1403,7 @@ MACCATALYST_DOTNET_CORE_SOURCES += \
 	$(MACCATALYST_DOTNET_EXTRA_CORE_SOURCES) \
 
 MACCATALYST_DOTNET_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
@@ -1416,7 +1416,7 @@ MACCATALYST_DOTNET_HTTP_SOURCES = \
 	$(SHARED_DESIGNER_CS) \
 
 MACCATALYST_HTTP_SOURCES = \
-	Foundation/NSUrlSessionHandler.cs \
+	Foundation/NSUrlSessionHandler/NSUrlSessionHandler.cs \
 	Foundation/NSUrlSessionHandler/NSHttpCookieExtensions.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStream.cs \
 	Foundation/NSUrlSessionHandler/NSUrlSessionDataTaskStreamContent.cs \
