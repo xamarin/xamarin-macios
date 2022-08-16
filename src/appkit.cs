@@ -13322,6 +13322,7 @@ namespace AppKit {
 
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'AllowedContentTypes' instead.")]
 		[Export ("allowedFileTypes")]
+		[NullAllowed]
 		string [] AllowedFileTypes { get; set; }
 	
 		[Mac (11, 0)]
