@@ -408,8 +408,8 @@ namespace PdfKit {
 	}
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	[StrongDictionary ("PDFPageImageInitializationOptionKeys")]
-	interface PDFPageImageInitializationOption {
+	[StrongDictionary ("PdfPageImageInitializationOptionKeys")]
+	interface PdfPageImageInitializationOption {
 		CGRect MediaBox { get; set; }
 		int Rotation { get; set; }
 		bool UpscaleIfSmaller { get; set; }
@@ -418,17 +418,17 @@ namespace PdfKit {
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Static]
-	interface PDFPageImageInitializationOptionKeys {
-		[Field ("PDFPageImageInitializationOptionMediaBox")]
+	interface PdfPageImageInitializationOptionKeys {
+		[Field ("PdfPageImageInitializationOptionMediaBox")]
 		NSString MediaBoxKey { get; }
 
-		[Field ("PDFPageImageInitializationOptionRotation")]
+		[Field ("PdfPageImageInitializationOptionRotation")]
 		NSString RotationKey { get; }
 
-		[Field ("PDFPageImageInitializationOptionUpscaleIfSmaller")]
+		[Field ("PdfPageImageInitializationOptionUpscaleIfSmaller")]
 		NSString UpscaleIfSmallerKey { get; }
 
-		[Field ("PDFPageImageInitializationOptionCompressionQuality")]
+		[Field ("PdfPageImageInitializationOptionCompressionQuality")]
 		NSString CompressionQualityKey { get; }
 	}
 
@@ -468,7 +468,7 @@ namespace PdfKit {
 
 		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Field ("PDFDocumentSaveTextFromOCROption", "+PDFKit")]
-		NSString SaveTextFromOCRKey { get; }
+		NSString SaveTextFromOcrKey { get; }
 	}
 
 	[Mac (10,13)]
@@ -1572,7 +1572,7 @@ namespace PdfKit {
 
 		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[Wrap ("this (image, options.GetDictionary ()!)")]
-		NativeHandle Constructor (NSImage image, PDFPageImageInitializationOption options);
+		NativeHandle Constructor (NSImage image, PdfPageImageInitializationOption options);
 
 		[Export ("document"), NullAllowed]
 		PdfDocument Document { get; }
@@ -2115,7 +2115,7 @@ namespace PdfKit {
 
 		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[NullAllowed, Export ("pageOverlayViewProvider", ArgumentSemantic.Weak)]
-		IPDFPageOverlayViewProvider PageOverlayViewProvider { get; set; }
+		IPdfPageOverlayViewProvider PageOverlayViewProvider { get; set; }
 
 		[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
 		[Export ("inMarkupMode")]
@@ -2183,11 +2183,11 @@ namespace PdfKit {
 	}
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	interface IPDFPageOverlayViewProvider {}
+	interface IPdfPageOverlayViewProvider {}
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	interface PDFPageOverlayViewProvider
+	interface PdfPageOverlayViewProvider
 	{
 		[Abstract]
 		[Export ("pdfView:overlayViewForPage:")]

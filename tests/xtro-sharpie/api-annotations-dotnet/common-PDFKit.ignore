@@ -2,7 +2,7 @@
 !unknown-field! PDFAnnotationHit bound
 
 # These fields are not picked up by Xtro
-!unknown-field! PDFPageImageInitializationOptionCompressionQuality bound
-!unknown-field! PDFPageImageInitializationOptionMediaBox bound
-!unknown-field! PDFPageImageInitializationOptionRotation bound
-!unknown-field! PDFPageImageInitializationOptionUpscaleIfSmaller bound
+!unknown-field! PdfPageImageInitializationOptionCompressionQuality bound
+!unknown-field! PdfPageImageInitializationOptionMediaBox bound
+!unknown-field! PdfPageImageInitializationOptionRotation bound
+!unknown-field! PdfPageImageInitializationOptionUpscaleIfSmaller bound
