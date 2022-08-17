@@ -749,7 +749,7 @@ namespace HealthKit {
 		[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
 		[Async]
 		[Export ("requestPerObjectReadAuthorizationForType:predicate:completion:")]
-		void RequestPerObjectReadAuthorizationForType (HKObjectType objectType, [NullAllowed] NSPredicate predicate, Action<bool, NSError> completion);
+		void RequestPerObjectReadAuthorization (HKObjectType objectType, [NullAllowed] NSPredicate predicate, Action<bool, NSError> completion);
 	}
 
 	delegate void HKStoreSampleAddedCallback (bool success, NSError error);
@@ -1131,7 +1131,7 @@ namespace HealthKit {
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
 		[Field ("HKMetadataKeySWOLFScore")]
-		NSString SWOLFScore { get; }
+		NSString SwolfScore { get; }
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0)]
 		[Field ("HKMetadataKeyQuantityClampedToLowerBound")]
@@ -1594,22 +1594,22 @@ namespace HealthKit {
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("predicateForWorkoutsWithOperatorType:quantityType:sumQuantity:")]
-		NSPredicate GetPredicateForWorkoutsforSumQuantity (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity sumQuantity);
+		NSPredicate GetSumQuantityPredicateForWorkouts (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity sumQuantity);
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("predicateForWorkoutsWithOperatorType:quantityType:minimumQuantity:")]
-		NSPredicate GetPredicateForWorkoutsforMinimumQuantity (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity minimumQuantity);
+		NSPredicate GetMinimumQuantityPredicateForWorkouts (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity minimumQuantity);
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("predicateForWorkoutsWithOperatorType:quantityType:maximumQuantity:")]
-		NSPredicate GetPredicateForWorkoutsforMaximumQuantity (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity maximumQuantity);
+		NSPredicate GetMaximumQuantityPredicateForWorkouts (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity maximumQuantity);
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("predicateForWorkoutsWithOperatorType:quantityType:averageQuantity:")]
-		NSPredicate GetPredicateForWorkoutsForAverageQuantity (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity averageQuantity);
+		NSPredicate GetAverageQuantityPredicateForWorkouts (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity averageQuantity);
 
 		// HKActivitySummaryPredicates
 
@@ -1686,22 +1686,22 @@ namespace HealthKit {
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("predicateForWorkoutActivitiesWithOperatorType:quantityType:sumQuantity:")]
-		NSPredicate GetPredicateForWorkoutActivitiesSumQuantity (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity sumQuantity);
+		NSPredicate GetSumQuantityPredicateForWorkoutActivities (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity sumQuantity);
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("predicateForWorkoutActivitiesWithOperatorType:quantityType:minimumQuantity:")]
-		NSPredicate GetPredicateForWorkoutActivitiesMinimumQuantity (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity minimumQuantity);
+		NSPredicate GetMinimumQuantityPredicateForWorkoutActivities (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity minimumQuantity);
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("predicateForWorkoutActivitiesWithOperatorType:quantityType:maximumQuantity:")]
-		NSPredicate GetPredicateForWorkoutActivitiesMaximumQuantity (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity maximumQuantity);
+		NSPredicate GetMaximumQuantityPredicateForWorkoutActivities (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity maximumQuantity);
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("predicateForWorkoutActivitiesWithOperatorType:quantityType:averageQuantity:")]
-		NSPredicate GetPredicateForWorkoutActivitiesAverageQuantity (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity averageQuantity);
+		NSPredicate GetAverageQuantityPredicateForWorkoutActivities (NSPredicateOperatorType operatorType, HKQuantityType quantityType, HKQuantity averageQuantity);
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
@@ -2283,7 +2283,7 @@ namespace HealthKit {
 
 		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 		[Field ("HKQuantityTypeIdentifierAtrialFibrillationBurden")]
-		HKQuantityTypeIdentifierAtrialFibrillationBurden,
+		AtrialFibrillationBurden,
 	}
 
 	[Watch (2,0)]
@@ -2889,37 +2889,37 @@ namespace HealthKit {
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("diopterUnit")]
-		HKUnit DiopterUnit ();
+		HKUnit Diopter { get; }
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("prismDiopterUnit")]
-		HKUnit PrismDiopterUnit ();
+		HKUnit PrismDiopter { get; }
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("wattUnitWithMetricPrefix:")]
-		HKUnit WattUnitWithMetricPrefix (HKMetricPrefix prefix);
+		HKUnit CreateWatt (HKMetricPrefix prefix);
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("wattUnit")]
-		HKUnit WattUnit ();
+		HKUnit Watt { get; }
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("radianAngleUnitWithMetricPrefix:")]
-		HKUnit RadianAngleUnitWithMetricPrefix (HKMetricPrefix prefix);
+		HKUnit CreateRadianAngle (HKMetricPrefix prefix);
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("radianAngleUnit")]
-		HKUnit RadianAngleUnit ();
+		HKUnit RadianAngle { get; }
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Static]
 		[Export ("degreeAngleUnit")]
-		HKUnit DegreeAngleUnit ();
+		HKUnit DegreeAngle { get; }
 	}
 
 	[Watch (2,0)]
@@ -3671,12 +3671,12 @@ namespace HealthKit {
 		[Async]
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Export ("updateActivityWithUUID:endDate:completion:")]
-		void UpdateActivityWithUuid (NSUuid uuid, NSDate endDate, Action<bool, NSError> completion);
+		void UpdateActivity (NSUuid uuid, NSDate endDate, Action<bool, NSError> completion);
 
 		[Async]
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Export ("updateActivityWithUUID:addMedatata:completion:")]
-		void UpdateActivityWithUuid (NSUuid uuid, NSDictionary<NSString, NSObject> metadata, Action<bool, NSError> completion);
+		void UpdateActivity (NSUuid uuid, NSDictionary<NSString, NSObject> metadata, Action<bool, NSError> completion);
 	}
 
 	delegate void HKQuantitySeriesSampleQueryQuantityDelegate (HKQuantitySeriesSampleQuery query, HKQuantity quantity, NSDate date, bool done, NSError error);
@@ -4252,7 +4252,7 @@ namespace HealthKit {
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 	[BaseType (typeof (HKVisionPrescription))]
 	[DisableDefaultCtor]
-	interface HKContactsPrescription // : NSCopying // https://feedbackassistant.apple.com/feedback/11018742
+	interface HKContactsPrescription // : NSCopying // https://github.com/xamarin/maccore/issues/2610
 	{
 		[NullAllowed, Export ("rightEye", ArgumentSemantic.Copy)]
 		HKContactsLensSpecification RightEye { get; }
@@ -4292,7 +4292,7 @@ namespace HealthKit {
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 	[BaseType (typeof (HKVisionPrescription))]
 	[DisableDefaultCtor]
-	interface HKGlassesPrescription // : NSCopying // https://feedbackassistant.apple.com/feedback/11018742
+	interface HKGlassesPrescription // : NSCopying // https://github.com/xamarin/maccore/issues/2610
 	{
 		[NullAllowed, Export ("rightEye", ArgumentSemantic.Copy)]
 		HKGlassesLensSpecification RightEye { get; }
@@ -4326,7 +4326,7 @@ namespace HealthKit {
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 	[BaseType (typeof (HKSample))]
 	[DisableDefaultCtor]
-	interface HKVisionPrescription // : NSCopying // https://feedbackassistant.apple.com/feedback/11018742
+	interface HKVisionPrescription // : NSCopying // https://github.com/xamarin/maccore/issues/2610
 	{
 		[Export ("prescriptionType", ArgumentSemantic.Assign)]
 		HKVisionPrescriptionType PrescriptionType { get; }
@@ -4382,7 +4382,7 @@ namespace HealthKit {
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HKWorkoutActivity // : NSCoding, NSCopying, NSSecureCoding // https://feedbackassistant.apple.com/feedback/11018742
+	interface HKWorkoutActivity // : NSCoding, NSCopying, NSSecureCoding // https://github.com/xamarin/maccore/issues/2610
 	{
 		[Export ("initWithWorkoutConfiguration:startDate:endDate:metadata:")]
 		NativeHandle Constructor (HKWorkoutConfiguration workoutConfiguration, NSDate startDate, [NullAllowed] NSDate endDate, [NullAllowed] NSDictionary<NSString, NSObject> metadata);
@@ -4413,7 +4413,7 @@ namespace HealthKit {
 
 		[Export ("statisticsForType:")]
 		[return: NullAllowed]
-		HKStatistics StatisticsForType (HKQuantityType quantityType);
+		HKStatistics GetStatistics (HKQuantityType quantityType);
 	}
 
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]

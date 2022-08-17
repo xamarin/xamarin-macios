@@ -29,7 +29,9 @@ namespace MonoTouchFixtures.HealthKit {
 		[SetUp]
 		public void SetUp ()
 		{
+#if MONOMAC
 			TestRuntime.AssertXcodeVersion (14, 0);
+#endif
 		}
 
 		[Test]
