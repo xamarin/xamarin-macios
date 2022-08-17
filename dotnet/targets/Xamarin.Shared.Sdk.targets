@@ -395,6 +395,7 @@
 			<_MonoComponent Include="hot_reload" Condition="'$(MtouchInterpreter)' == 'true'" />
 			<_MonoComponent Include="debugger" Condition="'$(_BundlerDebug)' == 'true'" />
 			<_MonoComponent Include="diagnostics_tracing" Condition="'$(_BundlerDebug)' == 'true'" />
+			<_MonoComponent Include="marshal-ilgen" />
 		</ItemGroup>
 	</Target>
 
