@@ -1007,6 +1007,10 @@ namespace GameController {
 		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("mappedPhysicalInputNamesForElementAlias:")]
 		NSSet<NSString> GetMappedPhysicalInputNames (string elementAlias);
+
+		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[NullAllowed, Export ("valueDidChangeHandler", ArgumentSemantic.Copy)]
+		Action<GCPhysicalInputProfile, GCControllerElement> ValueDidChangeHandler { get; set; }
 	}
 
 	[TV (14, 0), Mac (11, 0), iOS (14, 0)]
@@ -1095,47 +1099,31 @@ namespace GameController {
 
 		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 		[Field ("GCInputLeftPaddle")]
-		IGCButtonElementName LeftPaddle { get; }
+		NSString /* IGCButtonElementName */ LeftPaddle { get; }
 
 		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 		[Field ("GCInputPedalAccelerator")]
-		IGCButtonElementName PedalAccelerator { get; }
+		NSString /* IGCButtonElementName */ PedalAccelerator { get; }
 
 		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 		[Field ("GCInputPedalBrake")]
-		IGCButtonElementName PedalBrake { get; }
+		NSString /* IGCButtonElementName */ PedalBrake { get; }
 
 		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 		[Field ("GCInputPedalClutch")]
-		IGCButtonElementName PedalClutch { get; }
+		NSString /* IGCButtonElementName */ PedalClutch { get; }
 
 		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 		[Field ("GCInputRightPaddle")]
-		IGCButtonElementName RightPaddle { get; }
+		NSString /* IGCButtonElementName */ RightPaddle { get; }
 
 		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 		[Field ("GCInputShifter")]
-		IGCPhysicalInputElementName Shifter { get; }
+		NSString /* IGCPhysicalInputElementName */ Shifter { get; }
 
 		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 		[Field ("GCInputSteeringWheel")]
-		IGCAxisElementName SteeringWheel { get; }
-
-		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-		[Field ("GCInputButtonL4")]
-		IGCAxisElementName ButtonL4 { get; }
-
-		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-		[Field ("GCInputButtonL5")]
-		IGCAxisElementName ButtonL5 { get; }
-
-		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-		[Field ("GCInputButtonR4")]
-		IGCAxisElementName ButtonR4 { get; }
-
-		[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-		[Field ("GCInputButtonR5")]
-		IGCAxisElementName ButtonR5 { get; }
+		NSString /* IGCAxisElementName */ SteeringWheel { get; }
 	}
 
 	[TV (14,0), Mac (11,0), iOS (14,0)]
@@ -2223,7 +2211,7 @@ namespace GameController {
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface GCRacingWheel : IGCDevice
+	interface GCRacingWheel : GCDevice
 	{
 		[Static]
 		[Export ("connectedRacingWheels")]
@@ -2238,30 +2226,37 @@ namespace GameController {
 		[Export ("acquired")]
 		bool Acquired { [Bind ("isAcquired")] get; }
 
-		[Export ("wheelInput", ArgumentSemantic.Strong)]
-		GCRacingWheelInput WheelInput { get; }
+		// [Export ("wheelInput", ArgumentSemantic.Strong)]
+		// GCRacingWheelInput WheelInput { get; }
 
 		[Export ("snapshot")]
 		bool Snapshot { [Bind ("isSnapshot")] get; }
 
 		[Export ("capture")]
 		GCRacingWheel Capture { get; }
+
+		[Notification, Field ("GCRacingWheelDidConnectNotification")]
+		NSString GCRacingWheelDidConnectNotification { get; }
+
+		[Notification, Field ("GCRacingWheelDidDisconnectNotification")]
+		NSString GCRacingWheelDidDisconnectNotification { get; }
 	}
 
-	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (GCRacingWheelInputState))]
-	interface GCRacingWheelInput : IGCDevicePhysicalInput
-	{
-		[Export ("capture")]
-		GCRacingWheelInputState Capture { get; }
+	// TODO after I figure out xcode14 chat question
+	// [iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	// [BaseType (typeof (GCRacingWheelInputState))]
+	// interface GCRacingWheelInput : GCDevicePhysicalInput
+	// {
+	// 	[Export ("capture")]
+	// 	GCRacingWheelInputState Capture { get; }
 
-		[NullAllowed, Export ("nextInputState")]
-		GCDevicePhysicalInputStateDiff NextInputState { get; }
-	}
+	// 	[NullAllowed, Export ("nextInputState")]
+	// 	IGCDevicePhysicalInputStateDiff NextInputState { get; }
+	// }
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
-	interface GCRacingWheelInputState : IGCDevicePhysicalInputState
+	interface GCRacingWheelInputState : GCDevicePhysicalInputState
 	{
 		[Export ("wheel")]
 		GCSteeringWheelElement Wheel { get; }
@@ -2282,7 +2277,7 @@ namespace GameController {
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface GCSteeringWheelElement : IGCAxisElement
+	interface GCSteeringWheelElement : GCAxisElement
 	{
 		[Export ("maximumDegreesOfRotation")]
 		float MaximumDegreesOfRotation { get; }
@@ -2292,7 +2287,7 @@ namespace GameController {
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	interface GCAxisElementName : IGCPhysicalInputElementName
+	interface GCAxisElementName : GCPhysicalInputElementName
 	{
 	}
 
@@ -2300,7 +2295,7 @@ namespace GameController {
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	interface GCButtonElementName : IGCPhysicalInputElementName
+	interface GCButtonElementName : GCPhysicalInputElementName
 	{
 	}
 
@@ -2316,31 +2311,33 @@ namespace GameController {
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	interface GCSwitchElementName : IGCPhysicalInputElementName
+	interface GCSwitchElementName : GCPhysicalInputElementName
 	{
 	}
 
-	// [iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	// [BaseType (typeof (NSObject))]
-	// [DisableDefaultCtor]
-	// interface GCPhysicalInputElementCollection<KeyIdentifierType, ElementIdentifierType> : INSFastEnumeration
-	// 	where KeyIdentifierType : string
-	// 	where ElementIdentifierType : IGCPhysicalInputElement
-	// {
-	// 	[Export ("count")]
-	// 	nuint Count { get; }
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface GCPhysicalInputElementCollection<KeyIdentifierType, ElementIdentifierType> // : INSFastEnumeration // # no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+		where KeyIdentifierType : IGCPhysicalInputElementName /* NSString */ // there's currently not an conversion from GCPhysicalInputElementName, GCButtonElementName, and GCDirectionPadElementName to NSString
+		where ElementIdentifierType : IGCPhysicalInputElement
+	{
+		[Export ("count")]
+		nuint Count { get; }
 
-	// 	[Export ("elementForAlias:")]
-	// 	[return: NullAllowed]
-	// 	IGCPhysicalInputElement GetElement (string alias);
+		[Export ("elementForAlias:")]
+		[return: NullAllowed]
+		IGCPhysicalInputElement GetElement (string alias);
 
-	// 	[Export ("objectForKeyedSubscript:")]
-	// 	[return: NullAllowed]
-	// 	IGCPhysicalInputElement GetObject (string key);
+		[Export ("objectForKeyedSubscript:")]
+		[return: NullAllowed]
+		IGCPhysicalInputElement GetObject (string key);
 
-	// 	[Export ("elementEnumerator")]
-	// 	NSEnumerator<IGCPhysicalInputElement> ElementEnumerator { get; }
-	// }
+		[Export ("elementEnumerator")]
+		NSEnumerator<IGCPhysicalInputElement> ElementEnumerator { get; }
+	}
+
+	interface IGCAxisInput {}
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
@@ -2348,7 +2345,7 @@ namespace GameController {
 	{
 		[Abstract]
 		[NullAllowed, Export ("valueDidChangeHandler", ArgumentSemantic.Copy)]
-		Action<IGCPhysicalInputElement, GCAxisInput, float> ValueDidChangeHandler { get; set; }
+		Action<IGCPhysicalInputElement, IGCAxisInput, float> ValueDidChangeHandler { get; set; }
 
 		[Abstract]
 		[Export ("value")]
@@ -2375,11 +2372,11 @@ namespace GameController {
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	interface GCAxisElement : IGCPhysicalInputElement
+	interface GCAxisElement : GCPhysicalInputElement
 	{
 		[Abstract]
 		[NullAllowed, Export ("absoluteInput")]
-		GCAxisInput AbsoluteInput { get; }
+		IGCAxisInput AbsoluteInput { get; }
 
 		[Abstract]
 		[Export ("relativeInput")]
@@ -2390,7 +2387,7 @@ namespace GameController {
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	interface GCDirectionPadElementName : IGCPhysicalInputElementName
+	interface GCDirectionPadElementName : GCPhysicalInputElementName
 	{
 	}
 
@@ -2398,7 +2395,7 @@ namespace GameController {
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	interface GCButtonElement : IGCPhysicalInputElement
+	interface GCButtonElement : GCPhysicalInputElement
 	{
 		[Abstract]
 		[Export ("pressedInput")]
@@ -2413,11 +2410,11 @@ namespace GameController {
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	interface GCDevicePhysicalInput : IGCDevicePhysicalInputState
+	interface GCDevicePhysicalInput : GCDevicePhysicalInputState
 	{
 		[Abstract]
 		[NullAllowed, Export ("device", ArgumentSemantic.Weak)]
-		GCDevice Device { get; }
+		IGCDevice Device { get; }
 
 		[Abstract]
 		[NullAllowed, Export ("elementValueDidChangeHandler", ArgumentSemantic.Copy)]
@@ -2425,7 +2422,7 @@ namespace GameController {
 
 		[Abstract]
 		[Export ("capture")]
-		GCDevicePhysicalInputState Capture { get; }
+		IGCDevicePhysicalInputState Capture { get; }
 
 		[Abstract]
 		[NullAllowed, Export ("inputStateAvailableHandler", ArgumentSemantic.Copy)]
@@ -2448,7 +2445,7 @@ namespace GameController {
 	{
 		[Abstract]
 		[NullAllowed, Export ("device", ArgumentSemantic.Weak)]
-		GCDevice Device { get; }
+		IGCDevice Device { get; }
 
 		[Abstract]
 		[Export ("lastEventTimestamp")]
@@ -2476,13 +2473,15 @@ namespace GameController {
 
 		// [Abstract]
 		// [Export ("dpads")]
-		// GCPhysicalInputElementCollection<GCDirectionPadElementName, IGCDirectionPadElement> Dpads { get; }
+		// GCPhysicalInputElementCollection<IGCDirectionPadElementName, IGCDirectionPadElement> Dpads { get; }
 
 		[Abstract]
 		[Export ("objectForKeyedSubscript:")]
 		[return: NullAllowed]
 		IGCPhysicalInputElement GetObject (string key);
 	}
+
+	interface IGCDevicePhysicalInputStateDiff {}
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
@@ -2501,15 +2500,15 @@ namespace GameController {
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	interface GCDirectionPadElement : IGCPhysicalInputElement
+	interface GCDirectionPadElement : GCPhysicalInputElement
 	{
 		[Abstract]
 		[Export ("xAxis")]
-		GCAxisInput XAxis { get; }
+		IGCAxisInput XAxis { get; }
 
 		[Abstract]
 		[Export ("yAxis")]
-		GCAxisInput YAxis { get; }
+		IGCAxisInput YAxis { get; }
 
 		[Abstract]
 		[Export ("up")]
@@ -2536,7 +2535,7 @@ namespace GameController {
 	{
 		[Abstract]
 		[NullAllowed, Export ("valueDidChangeHandler", ArgumentSemantic.Copy)]
-		Action<IGCPhysicalInputElement, GCLinearInput, float> ValueDidChangeHandler { get; set; }
+		Action<IGCPhysicalInputElement, IGCLinearInput, float> ValueDidChangeHandler { get; set; }
 
 		[Abstract]
 		[Export ("value")]
@@ -2632,7 +2631,7 @@ namespace GameController {
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	interface GCSwitchElement : IGCPhysicalInputElement
+	interface GCSwitchElement : GCPhysicalInputElement
 	{
 		[Abstract]
 		[Export ("positionInput")]
@@ -2699,12 +2698,13 @@ namespace GameController {
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface GCGearShifterElement : GCPhysicalInputElement
 	{
 		[NullAllowed, Export ("patternInput")]
-		GCSwitchPositionInput PatternInput { get; }
+		IGCSwitchPositionInput PatternInput { get; }
 
 		[NullAllowed, Export ("sequentialInput")]
-		GCRelativeInput SequentialInput { get; }
+		IGCRelativeInput SequentialInput { get; }
 	}
 }
