@@ -555,6 +555,9 @@
 			<_ExtraTrimmerArgs Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' == 'true'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator true</_ExtraTrimmerArgs>
 			<_ExtraTrimmerArgs Condition="('$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS') And '$(_SdkIsSimulator)' != 'true'">$(_ExtraTrimmerArgs) --feature ObjCRuntime.Runtime.Arch.IsSimulator false</_ExtraTrimmerArgs>
 
+			<!-- Enable serialization discovery. Ref: https://github.com/xamarin/xamarin-macios/issues/15676 -->
+			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --enable-serialization-discovery</_ExtraTrimmerArgs>
+
 			<!-- We always want the linker to process debug symbols, even when building in Release mode, because the AOT compiler uses the managed debug symbols to output DWARF debugging symbols -->
 			<TrimmerRemoveSymbols Condition="'$(TrimmerRemoveSymbols)' == ''">false</TrimmerRemoveSymbols>
 
