@@ -9,8 +9,6 @@ using Xamarin.iOS.Windows;
 
 namespace Xamarin.iOS.HotRestart.Tasks {
 	public class Codesign : Task, ICancelableTask {
-		CancellationTokenSource cancellationSource;
-
 		#region Inputs
 
 		[Required]
@@ -53,7 +51,9 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		public void Cancel () => cancellationSource?.Cancel ();
+		public void Cancel ()
+		{
+		}
 
 		string GetFullExceptionMesage (Exception ex)
 		{
