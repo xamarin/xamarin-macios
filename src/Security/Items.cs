@@ -187,6 +187,11 @@ namespace Security {
 				status = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				n = null;
 				if (status == SecStatusCode.Success){
+					// From the header docs, it's guaranteed the function will return an array only if we pass max > 1.
+
+					// By default, this function returns only the first match found.
+					// To obtain more than one matching item at a time, specify the search key kSecMatchLimit with a value greater than 1.
+					// The result will be an object of type CFArrayRef containing up to that number of matching items.
 					if (max == 1)
 						return new NSData [] { Runtime.GetNSObject<NSData> (ptr, true)! };
 

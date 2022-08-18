@@ -6,8 +6,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 		static int Main (string [] args)
 		{
 			try {
-				Main2 (args);
-				return 0;
+				return Main2 (args);
 			}
 			catch (ConversionException e) {
 				Console.Error.WriteLine (e.Message);
@@ -19,7 +18,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 			}
 		}
 
-		static void Main2 (string [] args)
+		static int Main2 (string [] args)
 		{
 			var doHelp = false;
 			string? infile = null, outfile = null;
@@ -45,6 +44,12 @@ namespace Microsoft.MaciOS.Nnyeah {
 				doHelp = true;
 			}
 
+			if (doHelp) {
+				options.WriteOptionDescriptions (Console.Out);
+				Console.Out.WriteLine (Errors.N0007);
+				return 0;
+			}
+
 			if (infile is null || outfile is null) {
 				throw new ConversionException (Errors.E0014);
 			}
@@ -54,13 +59,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				throw new ConversionException (Errors.E0015);
 			}
 
-			if (doHelp) {
-				options.WriteOptionDescriptions (Console.Out);
-				Console.Out.WriteLine (Errors.N0007);
-			}
-			else {
-				AssemblyConverter.Convert (xamarinAssembly!, microsoftAssembly!, infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
-			}
+			return AssemblyConverter.Convert (xamarinAssembly, microsoftAssembly!, infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
 		}
 	}
 
