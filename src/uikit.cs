@@ -14356,11 +14356,11 @@ namespace UIKit {
 
 		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("tableView:canPerformPrimaryActionForRowAtIndexPath:")]
-		bool CanPerformPrimaryActionForRow (UITableView tableView, NSIndexPath indexPath);
+		bool CanPerformPrimaryAction (UITableView tableView, NSIndexPath rowIndexPath);
 
 		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("tableView:performPrimaryActionForRowAtIndexPath:")]
-		void PerformPrimaryActionForRow (UITableView tableView, NSIndexPath indexPath);
+		void PerformPrimaryAction (UITableView tableView, NSIndexPath rowIndexPath);
 	}
 
 	[TV (15,0), Watch (8,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
@@ -14670,7 +14670,7 @@ namespace UIKit {
 
 		[NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("textField:willDismissEditMenuWithAnimator:")]
-		void WillDismissEditMenu (UITextField textField, IUIEditMenuInteractionAnimating aniamtor);
+		void WillDismissEditMenu (UITextField textField, IUIEditMenuInteractionAnimating animator);
 
 		[IgnoredInDelegate]
 		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
@@ -25072,7 +25072,7 @@ namespace UIKit {
 		void ReloadVisibleMenu ();
 
 		[Export ("updateVisibleMenuPositionAnimated:")]
-		void UpdateVisibleMenuPositionAnimated (bool animated);
+		void UpdateVisibleMenuPosition (bool animated);
 
 		[Export ("locationInView:")]
 		CGPoint GetLocation ([NullAllowed] UIView inView);
