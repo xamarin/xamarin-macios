@@ -487,10 +487,10 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "win10-x86", null)]
-		[TestCase (ApplePlatform.TVOS, "win10-x64", null)]
+		[TestCase (ApplePlatform.iOS, "win10-x86", "Error getting pack version: Pack 'Microsoft.NETCore.App.Runtime.Mono.win-x86' was not present in workload manifests.")]
+		[TestCase (ApplePlatform.TVOS, "win10-x64", "Error getting pack version: Pack 'Microsoft.NETCore.App.Runtime.Mono.win-x64' was not present in workload manifests.")]
 		[TestCase (ApplePlatform.MacOSX, "win10-arm", null)]
-		[TestCase (ApplePlatform.MacCatalyst, "win10-arm64", "Unable to find package Microsoft.NETCore.App.Runtime.Mono.win-arm64. No packages exist with this id in source[(]s[)]:.*")]
+		[TestCase (ApplePlatform.MacCatalyst, "win10-arm64", "Error getting pack version: Pack 'Microsoft.NETCore.App.Runtime.Mono.win-arm64' was not present in workload manifests.")]
 		public void InvalidRuntimeIdentifier_Restore (ApplePlatform platform, string runtimeIdentifier, string? failureMessagePattern)
 		{
 			var project = "MySimpleApp";
