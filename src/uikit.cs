@@ -3092,11 +3092,13 @@ namespace UIKit {
 		UIContextMenuConfiguration GetConfigurationForMenu (UIContextMenuInteraction interaction, CGPoint location);
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("contextMenuInteraction:previewForHighlightingMenuWithConfiguration:")]
 		[return: NullAllowed]
 		UITargetedPreview GetPreviewForHighlightingMenu (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration);
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("contextMenuInteraction:previewForDismissingMenuWithConfiguration:")]
 		[return: NullAllowed]
 		UITargetedPreview GetPreviewForDismissingMenu (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration);
@@ -6219,8 +6221,9 @@ namespace UIKit {
 
 		[Watch (9,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 		[Static]
+		[Internal]
 		[Export ("systemFontOfSize:weight:width:")]
-		UIFont SystemFontOfSize (nfloat fontSize, double weight, double width);
+		IntPtr _SystemFontOfSize (nfloat fontSize, double weight, double width);
 
 	}
 

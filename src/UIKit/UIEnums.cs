@@ -780,7 +780,7 @@ namespace UIKit {
 		[iOS (10,0)]
 		LookupSuggestion       = 1 << 6,
 		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
-		Money = 1uL << 7,
+		Money = 1 << 7,
 		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
 		PhysicalValue = 1uL << 8,
 
@@ -1385,6 +1385,7 @@ namespace UIKit {
 		None,
 		OnDrag,
 		Interactive,
+		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		OnDragWithAccessory,
 		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		InteractiveWithAccessory,
@@ -2291,7 +2292,7 @@ namespace UIKit {
 		MultipleScenesNotSupported,
 		RequestDenied,
 		GeometryRequestUnsupported = 100,
-		GeometryRequestDenied
+		GeometryRequestDenied,
 	}
 
 	[Watch (6,0), TV (13,0), iOS (13,0)]
