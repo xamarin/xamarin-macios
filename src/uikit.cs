@@ -3113,12 +3113,12 @@ namespace UIKit {
 		[iOS (16,0)]
 		[Export ("contextMenuInteraction:configuration:highlightPreviewForItemWithIdentifier:")]
 		[return: NullAllowed]
-		UITargetedPreview GethighlightPreview (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, INSCopying identifier);
+		UITargetedPreview GetHighlightPreview (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, INSCopying identifier);
 
 		[iOS (16,0)]
 		[Export ("contextMenuInteraction:configuration:dismissalPreviewForItemWithIdentifier:")]
 		[return: NullAllowed]
-		UITargetedPreview GetDismissalPreviewForItemWithIdentifier (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, INSCopying identifier);
+		UITargetedPreview GetDismissalPreview (UIContextMenuInteraction interaction, UIContextMenuConfiguration configuration, INSCopying identifier);
 	}
 
 	[NoWatch, NoTV, iOS (13,0)]
@@ -4308,11 +4308,11 @@ namespace UIKit {
 
 		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("collectionView:canPerformPrimaryActionForItemAtIndexPath:")]
-		bool CanPerformPrimaryActionForItemAtIndexPath (UICollectionView collectionView, NSIndexPath indexPath);
+		bool CanPerformPrimaryActionForItem (UICollectionView collectionView, NSIndexPath indexPath);
 
 		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("collectionView:performPrimaryActionForItemAtIndexPath:")]
-		void PerformPrimaryActionForItemAtIndexPath (UICollectionView collectionView, NSIndexPath indexPath);
+		void PerformPrimaryActionForItem (UICollectionView collectionView, NSIndexPath indexPath);
 
 		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("collectionView:contextMenuConfigurationForItemsAtIndexPaths:point:")]
@@ -4322,12 +4322,12 @@ namespace UIKit {
 		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("collectionView:contextMenuConfiguration:highlightPreviewForItemAtIndexPath:")]
 		[return: NullAllowed]
-		UITargetedPreview GetContextMenuConfigurationhighlightPreview (UICollectionView collectionView, UIContextMenuConfiguration configuration, NSIndexPath indexPath);
+		UITargetedPreview GetContextMenuConfigurationHighlightPreview (UICollectionView collectionView, UIContextMenuConfiguration configuration, NSIndexPath indexPath);
 
 		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("collectionView:contextMenuConfiguration:dismissalPreviewForItemAtIndexPath:")]
 		[return: NullAllowed]
-		UITargetedPreview GetContextMenuConfigurationDismissalPreview(UICollectionView collectionView, UIContextMenuConfiguration configuration, NSIndexPath indexPath);
+		UITargetedPreview GetContextMenuConfigurationDismissalPreview (UICollectionView collectionView, UIContextMenuConfiguration configuration, NSIndexPath indexPath);
 	}
 
 	[Watch (8,0), TV (15,0), iOS (15,0), MacCatalyst (15,0)]
@@ -7443,11 +7443,11 @@ namespace UIKit {
 
 		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("willPresentEditMenuWithAnimator:")]
-		void WillPresentEditMenuWithAnimator (IUIEditMenuInteractionAnimating animator);
+		void WillPresentEditMenu (IUIEditMenuInteractionAnimating animator);
 
 		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("willDismissEditMenuWithAnimator:")]
-		void WillDismissEditMenuWithAnimator (IUIEditMenuInteractionAnimating animator);
+		void WillDismissEditMenu (IUIEditMenuInteractionAnimating animator);
 
 		[iOS (16,0)]
 		[Export ("editMenuForTextRange:suggestedActions:")]
@@ -8278,7 +8278,7 @@ namespace UIKit {
 		[Static]
 		[Export ("imageNamed:inBundle:variableValue:withConfiguration:")]
 		[return: NullAllowed]
-		UIImage GetImageNamed (string name, [NullAllowed] NSBundle bundle, double value, [NullAllowed] UIImageConfiguration configuration);
+		UIImage FromBundle (string name, [NullAllowed] NSBundle bundle, double value, [NullAllowed] UIImageConfiguration configuration);
 	}
 
 	[Watch (6,0), TV (13,0), iOS (13,0)]
@@ -10557,7 +10557,7 @@ namespace UIKit {
 		[iOS (16,0), MacCatalyst (16,0)]
 		[Export ("currentPageIndicatorImageForPage:")]
 		[return: NullAllowed]
-		UIImage CurrentPageIndicatorImageForPage (nint page);
+		UIImage CurrentPageIndicatorImage (nint page);
 
 		[iOS (16,0), MacCatalyst (16,0)]
 		[Export ("setCurrentPageIndicatorImage:forPage:")]
@@ -11674,7 +11674,7 @@ namespace UIKit {
 		[Notification]
 		NSString DidConnectNotification { get; }
 
-		[TV(16,0), iOS (16, 0), MacCatalyst (16,0)]
+		[TV (16,0), iOS (16, 0), MacCatalyst (16,0)]
 		[Notification]
 		[Field ("UIScreenReferenceDisplayModeStatusDidChangeNotification")]
 		NSString ReferenceDisplayModeStatusDidChangeNotification { get; }
@@ -14353,11 +14353,11 @@ namespace UIKit {
 
 		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("tableView:canPerformPrimaryActionForRowAtIndexPath:")]
-		bool CanPerformPrimaryActionForRowAtIndexPath (UITableView tableView, NSIndexPath indexPath);
+		bool CanPerformPrimaryActionForRow (UITableView tableView, NSIndexPath indexPath);
 
 		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("tableView:performPrimaryActionForRowAtIndexPath:")]
-		void PerformPrimaryAction (UITableView tableView, NSIndexPath indexPath);
+		void PerformPrimaryActionForRow (UITableView tableView, NSIndexPath indexPath);
 	}
 
 	[TV (15,0), Watch (8,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
@@ -14875,7 +14875,7 @@ namespace UIKit {
 		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("textView:editMenuForTextInRange:suggestedActions:")]
 		[return: NullAllowed]
-		UIMenu GetEditMenuForTextInRange (UITextView textView, NSRange range, UIMenuElement[] suggestedActions);
+		UIMenu GetEditMenuForText (UITextView textView, NSRange range, UIMenuElement[] suggestedActions);
 
 		[IgnoredInDelegate]
 		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
@@ -22296,7 +22296,7 @@ namespace UIKit {
 
 		[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("requestGeometryUpdateWithPreferences:errorHandler:")]
-		void RequestGeometryUpdateWithPreferences (UIWindowSceneGeometryPreferences geometryPreferences, [NullAllowed] Action<NSError> errorHandler);
+		void RequestGeometryUpdate (UIWindowSceneGeometryPreferences geometryPreferences, [NullAllowed] Action<NSError> errorHandler);
 
 		[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("effectiveGeometry")]
@@ -23973,24 +23973,24 @@ namespace UIKit {
 		[NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Static]
 		[Export ("suggestionWithLocalizedAttributedSuggestion:descriptionString:")]
-		UISearchSuggestionItem Create (NSAttributedString suggestion, [NullAllowed] string description);
+		UISearchSuggestionItem Create (NSAttributedString localizedSuggestion, [NullAllowed] string description);
 
 		[NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Static]
 		[Export ("suggestionWithLocalizedAttributedSuggestion:descriptionString:iconImage:")]
-		UISearchSuggestionItem Create (NSAttributedString suggestion, [NullAllowed] string description, [NullAllowed] UIImage iconImage);
+		UISearchSuggestionItem Create (NSAttributedString localizedSuggestion, [NullAllowed] string description, [NullAllowed] UIImage iconImage);
 
 		[NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("initWithLocalizedAttributedSuggestion:")]
-		NativeHandle Constructor (NSAttributedString suggestion);
+		NativeHandle Constructor (NSAttributedString localizedSuggestion);
 
 		[NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("initWithLocalizedAttributedSuggestion:localizedDescription:")]
-		NativeHandle Constructor (NSAttributedString suggestion, [NullAllowed] string description);
+		NativeHandle Constructor (NSAttributedString localizedSuggestion, [NullAllowed] string description);
 
 		[NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("initWithLocalizedAttributedSuggestion:localizedDescription:iconImage:")]
-		NativeHandle Constructor (NSAttributedString suggestion, [NullAllowed] string description, [NullAllowed] UIImage iconImage);
+		NativeHandle Constructor (NSAttributedString localizedSuggestion, [NullAllowed] string description, [NullAllowed] UIImage iconImage);
 
 		[NoTV, iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("localizedAttributedSuggestion")]
@@ -24187,8 +24187,7 @@ namespace UIKit {
 
 		[Abstract]
 		[Export ("activityItemsConfiguration", ArgumentSemantic.Strong)]
-		[NullAllowed
-]
+		[NullAllowed]
 		IUIActivityItemsConfigurationReading ActivityItemsConfiguration { get; }
 	}
 
@@ -24399,7 +24398,7 @@ namespace UIKit {
 
 		[NoWatch, NoTV, iOS (16, 0), MacCatalyst (16,0)]
 		[Field ("UISheetPresentationControllerDetentInactive")]
-		nfloat ControllerDetentInactive { get; }
+		nfloat DetentInactive { get; }
 
 		[Static]
 		[Export ("mediumDetent")]
@@ -24409,10 +24408,6 @@ namespace UIKit {
 		[Export ("largeDetent")]
 		UISheetPresentationControllerDetent CreateLargeDetent ();
 
-		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
-		[Static]
-		[Export ("customDetentWithIdentifier:resolver:")]
-		UISheetPresentationControllerDetent GetCustomDetent ([NullAllowed] string identifier, Func<IUISheetPresentationControllerDetentResolutionContext, nfloat> resolver);
 
 		[NoWatch, NoTV, iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("identifier", ArgumentSemantic.Strong)]
@@ -24425,7 +24420,7 @@ namespace UIKit {
 
 		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("resolvedValueInContext:")]
-		nfloat ResolvedValue (IUISheetPresentationControllerDetentResolutionContext context);
+		nfloat GetResolvedValue (IUISheetPresentationControllerDetentResolutionContext context);
 	}
 
 	[NoWatch, NoTV, iOS (15,0), MacCatalyst (15,0)]
@@ -24748,7 +24743,7 @@ namespace UIKit {
 		[Abstract]
 		[Export ("calendarView:decorationForDateComponents:")]
 		[return: NullAllowed]
-		UICalendarViewDecoration GetDecorationForDateComponents (UICalendarView calendarView, NSDateComponents dateComponents);
+		UICalendarViewDecoration GetDecoration (UICalendarView calendarView, NSDateComponents dateComponents);
 	}
 
 	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
@@ -24763,19 +24758,19 @@ namespace UIKit {
 
 		[Static]
 		[Export ("decorationWithColor:size:")]
-		UICalendarViewDecoration DecorationWithColor ([NullAllowed] UIColor color, UICalendarViewDecorationSize size);
+		UICalendarViewDecoration Create ([NullAllowed] UIColor color, UICalendarViewDecorationSize size);
 
 		[Static]
 		[Export ("decorationWithImage:")]
-		UICalendarViewDecoration DecorationWithImage ([NullAllowed] UIImage image);
+		UICalendarViewDecoration Create ([NullAllowed] UIImage image);
 
 		[Static]
 		[Export ("decorationWithImage:color:size:")]
-		UICalendarViewDecoration DecorationWithImage ([NullAllowed] UIImage image, [NullAllowed] UIColor color, UICalendarViewDecorationSize size);
+		UICalendarViewDecoration Create ([NullAllowed] UIImage image, [NullAllowed] UIColor color, UICalendarViewDecorationSize size);
 
 		[Static]
 		[Export ("decorationWithCustomViewProvider:")]
-		UICalendarViewDecoration DecorationWithCustomViewProvider (Func<UIView> customViewProvider);
+		UICalendarViewDecoration Create (Func<UIView> customViewProvider);
 	}
 
 	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
@@ -24822,7 +24817,7 @@ namespace UIKit {
 		bool WantsDateDecorations { get; set; }
 
 		[Export ("reloadDecorationsForDateComponents:animated:")]
-		void ReloadDecorationsForDateComponents (NSDateComponents[] dates, bool animated);
+		void ReloadDecorations (NSDateComponents[] dates, bool animated);
 	}
 
 
@@ -24854,16 +24849,16 @@ namespace UIKit {
 	{
 		[Export ("editMenuInteraction:menuForConfiguration:suggestedActions:")]
 		[return: NullAllowed]
-		UIMenu MenuForConfiguration (UIEditMenuInteraction interaction, UIEditMenuConfiguration configuration, UIMenuElement[] suggestedActions);
+		UIMenu GetMenu (UIEditMenuInteraction interaction, UIEditMenuConfiguration configuration, UIMenuElement[] suggestedActions);
 
 		[Export ("editMenuInteraction:targetRectForConfiguration:")]
-		CGRect GetTargetRectForConfiguration (UIEditMenuInteraction interaction, UIEditMenuConfiguration configuration);
+		CGRect GetTargetRect (UIEditMenuInteraction interaction, UIEditMenuConfiguration configuration);
 
 		[Export ("editMenuInteraction:willPresentMenuForConfiguration:animator:")]
-		void WillPresentMenuForConfiguration (UIEditMenuInteraction interaction, UIEditMenuConfiguration configuration, IUIEditMenuInteractionAnimating animator);
+		void WillPresentMenu (UIEditMenuInteraction interaction, UIEditMenuConfiguration configuration, IUIEditMenuInteractionAnimating animator);
 
 		[Export ("editMenuInteraction:willDismissMenuForConfiguration:animator:")]
-		void WillDismissMenuForConfiguration (UIEditMenuInteraction interaction, UIEditMenuConfiguration configuration, IUIEditMenuInteractionAnimating animator);
+		void WillDismissMenu (UIEditMenuInteraction interaction, UIEditMenuConfiguration configuration, IUIEditMenuInteractionAnimating animator);
 	}
 
 	[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
@@ -24933,7 +24928,7 @@ namespace UIKit {
 	{
 		[Abstract]
 		[Export ("navigationItem:didEndRenamingWithTitle:")]
-		void DidEndRenamingWithTitle (UINavigationItem navigationItem, string title);
+		void DidEndRenaming (UINavigationItem navigationItem, string title);
 
 		[Export ("navigationItemShouldBeginRenaming:")]
 		bool ShouldBeginRenaming (UINavigationItem navigationItem);
@@ -24976,7 +24971,7 @@ namespace UIKit {
 
 		[Abstract]
 		[Export ("invalidateFoundRange:inDocument:")]
-		void InvalidateFoundRange (UITextRange range, [NullAllowed] INSCopying document);
+		void Invalidate (UITextRange foundRange, [NullAllowed] INSCopying document);
 
 		[Abstract]
 		[Export ("finishedSearching")]
@@ -25010,7 +25005,7 @@ namespace UIKit {
 
 		[Abstract]
 		[Export ("compareFoundRange:toRange:inDocument:")]
-		NSComparisonResult CompareFoundRange (UITextRange foundRange, UITextRange toRange, [NullAllowed] INSCopying document);
+		NSComparisonResult Compare (UITextRange foundRange, UITextRange toRange, [NullAllowed] INSCopying document);
 
 		[Abstract]
 		[Export ("performTextSearchWithQueryString:usingOptions:resultAggregator:")]
@@ -25018,7 +25013,7 @@ namespace UIKit {
 
 		[Abstract]
 		[Export ("decorateFoundTextRange:inDocument:usingStyle:")]
-		void DecorateFoundTextRange (UITextRange range, [NullAllowed] INSCopying document, UITextSearchFoundTextStyle style);
+		void Decorate (UITextRange foundRange, [NullAllowed] INSCopying document, UITextSearchFoundTextStyle style);
 
 		[Abstract]
 		[Export ("clearAllDecoratedFoundText")]
@@ -25037,7 +25032,7 @@ namespace UIKit {
 		void ReplaceAllOccurrences (string queryString, UITextSearchOptions options, string replacementText);
 
 		[Export ("willHighlightFoundTextRange:inDocument:")]
-		void WillHighlightFoundTextRange (UITextRange range, [NullAllowed] INSCopying document);
+		void WillHighlight (UITextRange foundRange, [NullAllowed] INSCopying document);
 
 		[Export ("scrollRangeToVisible:inDocument:")]
 		void ScrollRangeToVisible (UITextRange range, [NullAllowed] INSCopying document);
@@ -25077,7 +25072,7 @@ namespace UIKit {
 		void UpdateVisibleMenuPositionAnimated (bool animated);
 
 		[Export ("locationInView:")]
-		CGPoint LocationInView ([NullAllowed] UIView view);
+		CGPoint GetLocation ([NullAllowed] UIView inView);
 	}
 
 	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
@@ -25200,16 +25195,16 @@ namespace UIKit {
 		UIFindSessionSearchResultDisplayStyle SearchResultDisplayStyle { get; set; }
 
 		[Export ("performSearchWithQuery:options:")]
-		void PerformSearchWithQuery (string query, [NullAllowed] UITextSearchOptions options);
+		void PerformSearch (string query, [NullAllowed] UITextSearchOptions options);
 
 		[Export ("performSingleReplacementWithSearchQuery:replacementString:options:")]
 		void PerformSingleReplacement (string searchQuery, string replacementString, [NullAllowed] UITextSearchOptions options);
 
 		[Export ("replaceAllInstancesOfSearchQuery:withReplacementString:options:")]
-		void ReplaceAllInstancesOfSearchQuery (string searchQuery, string replacementString, [NullAllowed] UITextSearchOptions options);
+		void ReplaceAllInstances (string searchQuery, string replacementString, [NullAllowed] UITextSearchOptions options);
 
 		[Export ("highlightNextResultInDirection:")]
-		void HighlightNextResultInDirection (UITextStorageDirection direction);
+		void HighlightNextResult (UITextStorageDirection direction);
 
 		[Export ("invalidateFoundResults")]
 		void InvalidateFoundResults ();
@@ -25256,7 +25251,7 @@ namespace UIKit {
 		[Abstract]
 		[Export ("findInteraction:sessionForView:")]
 		[return: NullAllowed]
-		UIFindSession GetSessionForView (UIFindInteraction interaction, UIView view);
+		UIFindSession GetSession (UIFindInteraction interaction, UIView view);
 
 		[Export ("findInteraction:didBeginFindSession:")]
 		void DidBeginFindSession (UIFindInteraction interaction, UIFindSession session);
@@ -25291,7 +25286,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIWindowSceneGeometry : NSCopying
 	{
@@ -25304,11 +25299,11 @@ namespace UIKit {
 	}
 
 	[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	interface UIWindowSceneGeometryPreferences {}
 
 	[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof(UIWindowSceneGeometryPreferences))]
+	[BaseType (typeof (UIWindowSceneGeometryPreferences))]
 	[DisableDefaultCtor]
 	interface UIWindowSceneGeometryPreferencesMac
 	{
@@ -25324,7 +25319,7 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof(UIWindowSceneGeometryPreferences))]
+	[BaseType (typeof (UIWindowSceneGeometryPreferences))]
 	[DisableDefaultCtor]
 	interface UIWindowSceneGeometryPreferencesIOS
 	{

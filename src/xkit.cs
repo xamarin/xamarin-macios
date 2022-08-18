@@ -1902,12 +1902,12 @@ namespace UIKit {
 		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Static]
 		[Export ("horizontalGroupWithLayoutSize:repeatingSubitem:count:")]
-		NSCollectionLayoutGroup GetHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+		NSCollectionLayoutGroup GetHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem repeatingSubitem, nint count);
 
 		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Static]
 		[Export ("verticalGroupWithLayoutSize:repeatingSubitem:count:")]
-		NSCollectionLayoutGroup GetVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem subitem, nint count);
+		NSCollectionLayoutGroup GetVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem repeatingSubitem, nint count);
 	}
 
 	[NoWatch, TV (13,0), iOS (13,0)]
@@ -4040,7 +4040,7 @@ namespace UIKit {
 	[Flags]
 	[Native]
 	public enum NSTextListOptions : ulong {
-		PrependEnclosingMarker = 1
+		PrependEnclosingMarker = 1,
 	}
 
 	[TV (15,0), NoWatch, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
