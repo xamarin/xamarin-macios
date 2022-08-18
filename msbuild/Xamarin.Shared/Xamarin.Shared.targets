@@ -1790,6 +1790,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			NoSymbolStrip="$(NoSymbolStrip)"
 			NoDSymUtil="$(NoDSymUtil)"
 			PackageDebugSymbols="$(PackageDebugSymbols)"
+			Registrar="$(Registrar)"
 			Verbosity="$(_BundlerVerbosity)"
 			>
 			<Output TaskParameter="Aot" ItemName="_AotArguments" />
@@ -1803,7 +1804,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<Output TaskParameter="NoDSymUtil" PropertyName="NoDSymUtil"/>
 			<Output TaskParameter="Optimize" PropertyName="_BundlerOptimize"/>
 			<Output TaskParameter="PackageDebugSymbols" PropertyName="PackageDebugSymbols" />
-			<Output TaskParameter="Registrar" PropertyName="_BundlerRegistrar" />
+			<Output TaskParameter="Registrar" PropertyName="Registrar" />
 			<Output TaskParameter="RequirePInvokeWrappers" PropertyName="_RequirePInvokeWrappers" />
 			<Output TaskParameter="Verbosity" PropertyName="_BundlerVerbosity" />
 			<Output TaskParameter="XmlDefinitions" ItemName="_BundlerXmlDefinitions" />
