@@ -10264,6 +10264,10 @@ namespace UIKit {
 		Func<NSArray<UIMenuElement>, UIMenu> TitleMenuProvider { get; set; }
 
 		[NoWatch, NoTV, iOS (16, 0), MacCatalyst (16,0)]
+		[Wrap ("WeakRenameDelegate")]
+		IUINavigationItemRenameDelegate RenameDelegate { get; set; }
+
+		[NoWatch, NoTV, iOS (16, 0), MacCatalyst (16,0)]
 		[NullAllowed, Export ("renameDelegate", ArgumentSemantic.Weak)]
 		NSObject WeakRenameDelegate { get; set; }
 
@@ -25138,6 +25142,9 @@ namespace UIKit {
 	}
 
 	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
+	delegate UIMenu OptionsMenuProviderHandler (UIMenuElement [] elements);
+
+	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface UIFindInteraction : UIInteraction
@@ -25155,7 +25162,7 @@ namespace UIKit {
 		string ReplacementText { get; set; }
 
 		[NullAllowed, Export ("optionsMenuProvider", ArgumentSemantic.Copy)]
-		Func<NSArray<UIMenuElement>, UIMenu> OptionsMenuProvider { get; set; }
+		OptionsMenuProviderHandler OptionsMenuProvider { get; set; }
 
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
