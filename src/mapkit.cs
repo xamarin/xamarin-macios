@@ -1788,7 +1788,6 @@ namespace MapKit {
 		[Export ("contentScaleFactor")]
 		nfloat ContentScaleFactor { get; }
 
-		// @property (assign, nonatomic) CGBlendMode blendMode __attribute__((availability(ios, introduced=16.0))) __attribute__((availability(tvos, introduced=16.0))) __attribute__((availability(macos, unavailable))) __attribute__((availability(watchos, unavailable))) __attribute__((availability(maccatalyst, unavailable)));
 		[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, TV (16,0)]
 		[Export ("blendMode", ArgumentSemantic.Assign)]
 		CGBlendMode BlendMode { get; set; }
