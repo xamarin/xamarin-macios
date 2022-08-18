@@ -268,7 +268,13 @@ namespace Xamarin.MacDev.Tasks {
 			BTouchToolPath = PathUtils.ConvertToMacPath (BTouchToolPath);
 			DotNetCscCompiler = PathUtils.ConvertToMacPath (DotNetCscCompiler);
 
-			if (!IsDotNet) {
+			if (IsDotNet) {
+				var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
+
+				if(!string.IsNullOrEmpty(customHome)) {
+					EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"HOME={customHome}");
+				}
+			} else {
 				ToolExe = BTouchToolExe;
 				ToolPath = BTouchToolPath;
 			}

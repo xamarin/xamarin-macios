@@ -7,8 +7,10 @@ namespace Xamarin.iOS.Tasks {
 		[JsonProperty ("data")]
 		public IEnumerable<DataItem> DataItems { get; set; }
 
+#pragma warning disable 0169 // warning CS0169: The field 'DataSet.JsonData' is never used
 		//This stores the properties we don't need to deserialize but exist, just to avoid loosing information
 		[JsonExtensionData]
 		IDictionary<string, JToken> JsonData;
+#pragma warning restore 0169
 	}
 }
