@@ -4127,6 +4127,15 @@ namespace UIKit {
 	[BaseType (typeof (NSTextParagraph))]
 	interface NSTextListElement
 	{
+
+		[Export ("initWithAttributedString:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedString);
+
+		[Export ("initWithTextContentManager:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor ([NullAllowed] NSTextContentManager textContentManager);
+
 		[Export ("initWithParentElement:textList:contents:markerAttributes:childElements:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] NSTextListElement parent, NSTextList textList, [NullAllowed] NSAttributedString contents, [NullAllowed] NSDictionary<NSString, NSObject> markerAttributes, [NullAllowed] NSTextListElement[] children);

@@ -2290,9 +2290,7 @@ namespace UIKit {
 	{
 		MultipleScenesNotSupported,
 		RequestDenied,
-		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		GeometryRequestUnsupported = 100,
-		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		GeometryRequestDenied
 	}
 

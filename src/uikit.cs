@@ -2048,11 +2048,13 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	interface UIViewControllerPreviewingDelegate {
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 		[Abstract]
 		[Export ("previewingContext:viewControllerForLocation:")]
 		UIViewController GetViewControllerForPreview (IUIViewControllerPreviewing previewingContext, CGPoint location);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 		[Abstract]
 		[Export ("previewingContext:commitViewController:")]
 		void CommitViewController (IUIViewControllerPreviewing previewingContext, UIViewController viewControllerToCommit);
@@ -2174,6 +2176,7 @@ namespace UIKit {
 		bool IdleTimerDisabled { [Bind ("isIdleTimerDisabled")] get; set; }
 
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Please use the overload instead.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Please use the overload instead.")]
 		[Export ("openURL:")]
 		bool OpenUrl (NSUrl url);
 
@@ -2201,6 +2204,7 @@ namespace UIKit {
 		UIWindow KeyWindow { get; }
 
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'UIWindowScene.Windows' in the desired window scene object instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'UIWindowScene.Windows' in the desired window scene object instead.")]
 		[Export ("windows")]
 		[Transient]
 		UIWindow [] Windows { get; } 
@@ -2917,7 +2921,7 @@ namespace UIKit {
 		Large = 2,
 	}
 
-	[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum UICollectionViewSelfSizingInvalidation : long {
 		Disabled,
@@ -3020,7 +3024,7 @@ namespace UIKit {
 		Enabled,
 	}
 
-	[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum UITableViewSelfSizingInvalidation : long {
 		Disabled,
@@ -3060,7 +3064,7 @@ namespace UIKit {
 
 		[iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("secondaryItemIdentifiers", ArgumentSemantic.Copy)]
-		NSSet<NSCopying> SecondaryItemIdentifiers { get; set; }
+		NSSet<INSCopying> SecondaryItemIdentifiers { get; set; }
 
 		[iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("badgeCount")]
@@ -3246,6 +3250,7 @@ namespace UIKit {
 		void FailedToRegisterForRemoteNotifications (UIApplication application, NSError error);
 
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'UNUserNotificationCenterDelegate.WillPresentNotification/DidReceiveNotificationResponse' for user visible notifications and 'ReceivedRemoteNotification' for silent remote notifications.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'UNUserNotificationCenterDelegate.WillPresentNotification/DidReceiveNotificationResponse' for user visible notifications and 'ReceivedRemoteNotification' for silent remote notifications.")]
 		[Export ("application:didReceiveRemoteNotification:")]
 		void ReceivedRemoteNotification (UIApplication application, NSDictionary userInfo);
 
@@ -4191,14 +4196,17 @@ namespace UIKit {
 		void SupplementaryViewDisplayingEnded (UICollectionView collectionView, UICollectionReusableView view, NSString elementKind, NSIndexPath indexPath);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("collectionView:shouldShowMenuForItemAtIndexPath:")]
 		bool ShouldShowMenu (UICollectionView collectionView, NSIndexPath indexPath);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("collectionView:canPerformAction:forItemAtIndexPath:withSender:")]
 		bool CanPerformAction (UICollectionView collectionView, Selector action, NSIndexPath indexPath, NSObject sender);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("collectionView:performAction:forItemAtIndexPath:withSender:")]
 		void PerformAction (UICollectionView collectionView, Selector action, NSIndexPath indexPath, NSObject sender);
 
@@ -4207,6 +4215,7 @@ namespace UIKit {
 		UICollectionViewTransitionLayout TransitionLayout (UICollectionView collectionView, UICollectionViewLayout fromLayout, UICollectionViewLayout toLayout);
 
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'GetTargetIndexPathForMoveOfItemFromOriginalIndexPath' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'GetTargetIndexPathForMoveOfItemFromOriginalIndexPath' instead.")]
 		[iOS (9,0)]
 		[Export ("collectionView:targetIndexPathForMoveFromItemAtIndexPath:toProposedIndexPath:")]
 		NSIndexPath GetTargetIndexPathForMove (UICollectionView collectionView, NSIndexPath originalIndexPath, NSIndexPath proposedIndexPath);
@@ -4261,6 +4270,8 @@ namespace UIKit {
 		[Export ("collectionViewDidEndMultipleSelectionInteraction:")]
 		void DidEndMultipleSelectionInteraction (UICollectionView collectionView);
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[NoWatch, NoTV, iOS (13,0)]
 		[Export ("collectionView:contextMenuConfigurationForItemAtIndexPath:point:")]
 		[return: NullAllowed]
@@ -6206,7 +6217,7 @@ namespace UIKit {
 		[Internal]
 		IntPtr _GetPreferredFontForTextStyle (NSString uiFontTextStyle, [NullAllowed] UITraitCollection traitCollection);
 
-		[Watch (9,0), iOS (16,0), TV (16,0), Watch (9,0), MacCatalyst (16,0)]
+		[Watch (9,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 		[Static]
 		[Export ("systemFontOfSize:weight:width:")]
 		UIFont SystemFontOfSize (nfloat fontSize, double weight, double width);
@@ -10232,7 +10243,8 @@ namespace UIKit {
 
 		[NoWatch, NoTV, iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("overflowPresentationSource", ArgumentSemantic.Strong)]
-		IUIPopoverPresentationControllerSourceItem OverflowPresentationSource { [return: NullAllowed] get; }
+		[NullAllowed]
+		IUIPopoverPresentationControllerSourceItem OverflowPresentationSource { get; }
 
 		[NoWatch, NoTV, iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("trailingItemGroups", ArgumentSemantic.Copy)]
@@ -12286,9 +12298,9 @@ namespace UIKit {
 		[Export ("automaticallyShowsCancelButton")]
 		bool AutomaticallyShowsCancelButton { get; set; }
 
-		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the 'ScopeBarActivation' property instead")]
-		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the 'ScopeBarActivation' property instead")]
-		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use the 'ScopeBarActivation' property instead")]
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the 'ScopeBarActivation' property instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the 'ScopeBarActivation' property instead.")]
+		[Deprecated (PlatformName.TvOS, 16, 0, message: "Use the 'ScopeBarActivation' property instead.")]
 		[iOS (13,0), TV (13,0)]
 		[Export ("automaticallyShowsScopeBar")]
 		bool AutomaticallyShowsScopeBar { get; set; }
@@ -13764,6 +13776,7 @@ namespace UIKit {
 
 		// Copy Paste support
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("tableView:shouldShowMenuForRowAtIndexPath:")]
 		bool ShouldShowMenu (UITableView tableView, NSIndexPath rowAtindexPath);
 
@@ -13942,14 +13955,17 @@ namespace UIKit {
 		UIView ContentView { get; }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'UIListContentConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'UIListContentConfiguration' instead.")]
 		[Export ("imageView", ArgumentSemantic.Retain)]
 		UIImageView ImageView { get; } 
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'UIListContentConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'UIListContentConfiguration' instead.")]
 		[Export ("textLabel", ArgumentSemantic.Retain)]
 		UILabel TextLabel { get; }
 
 		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'UIListContentConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'UIListContentConfiguration' instead.")]
 		[Export ("detailTextLabel", ArgumentSemantic.Retain)]
 		UILabel DetailTextLabel { get; }
 
@@ -14202,14 +14218,17 @@ namespace UIKit {
 
 		// Copy Paste support
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("tableView:shouldShowMenuForRowAtIndexPath:")]
 		bool ShouldShowMenu (UITableView tableView, NSIndexPath rowAtindexPath);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("tableView:canPerformAction:forRowAtIndexPath:withSender:")]
 		bool CanPerformAction (UITableView tableView, Selector action, NSIndexPath indexPath, NSObject sender);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'GetContextMenuConfiguration' instead.")]
 		[Export ("tableView:performAction:forRowAtIndexPath:withSender:")]
 		void PerformAction (UITableView tableView, Selector action, NSIndexPath indexPath, NSObject sender);
 
@@ -14379,10 +14398,12 @@ namespace UIKit {
 		bool AutomaticallyUpdatesContentConfiguration { get; set; }
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.TvOS, 14, 0)]
 		[Export ("textLabel", ArgumentSemantic.Retain)]
 		UILabel TextLabel { get;  }
 
 		[Deprecated (PlatformName.iOS, 14, 0)]
+		[Deprecated (PlatformName.TvOS, 14, 0)]
 		[Export ("detailTextLabel", ArgumentSemantic.Retain)]
 		UILabel DetailTextLabel { get;  }
 
@@ -14653,10 +14674,6 @@ namespace UIKit {
 		[Export ("textField:editMenuForCharactersInRange:suggestedActions:")]
 		[return: NullAllowed]
 		UIMenu GetEditMenu (UITextField textField, NSRange range, UIMenuElement[] suggestedActions);
-
-		[TV (16,0), iOS (16,0), MacCatalyst (16,0)]
-		[Export ("tableView:performPrimaryActionForRowAtIndexPath:")]
-		void PerformPrimaryAction (UITableView tableView, NSIndexPath indexPath);
 	}
 	
 	[NoWatch]
@@ -14836,11 +14853,13 @@ namespace UIKit {
 
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use the 'ShouldInteractWithUrl' overload that takes 'UITextItemInteraction' instead.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use the 'ShouldInteractWithUrl' overload that takes 'UITextItemInteraction' instead.")]
 		[Export ("textView:shouldInteractWithURL:inRange:"), DelegateName ("Func<UITextView,NSUrl,NSRange,bool>"), DefaultValue ("true")]
 		bool ShouldInteractWithUrl (UITextView textView, NSUrl URL, NSRange characterRange);
 
 		[iOS (7,0)]
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use the 'ShouldInteractWithTextAttachment' overload that takes 'UITextItemInteraction' instead.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use the 'ShouldInteractWithTextAttachment' overload that takes 'UITextItemInteraction' instead.")]
 		[Export ("textView:shouldInteractWithTextAttachment:inRange:"), DelegateName ("Func<UITextView,NSTextAttachment,NSRange,bool>"), DefaultValue ("true")]
 		bool ShouldInteractWithTextAttachment (UITextView textView, NSTextAttachment textAttachment, NSRange characterRange);
 
@@ -14868,11 +14887,6 @@ namespace UIKit {
 		[Export ("textView:willDismissEditMenuWithAnimator:")]
 		void WillDismissEditMenu (UITextView textView, IUIEditMenuInteractionAnimating aniamtor);
 
-		[IgnoredInDelegate]
-		[iOS (16,0), MacCatalyst (16,0)]
-		[Export ("editMenuForTextRange:suggestedActions:")]
-		[return: NullAllowed]
-		UIMenu GetEditMenu (UITextRange textRange, UIMenuElement[] suggestedActions);
 	}
 	
 	[NoTV, NoWatch]
@@ -16032,6 +16046,7 @@ namespace UIKit {
 		// This is defined in a category in UIPopoverSupport.h: UIViewController (UIPopoverController)
 		[Export ("modalInPopover")]
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'ModalInPresentation' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'ModalInPresentation' instead.")]
 		bool ModalInPopover { [Bind ("isModalInPopover")] get; set; }
 
 		// It seems apple added a setter now but seems it is a mistake on new property radar:27929872
@@ -16164,10 +16179,12 @@ namespace UIKit {
 #endif
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Export ("viewControllerForUnwindSegueAction:fromViewController:withSender:")]
 		UIViewController GetViewControllerForUnwind (Selector segueAction, UIViewController fromViewController, NSObject sender);
 
 		[Deprecated (PlatformName.iOS, 9, 0)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 		[Export ("segueForUnwindingToViewController:fromViewController:identifier:")]
 		UIStoryboardSegue GetSegueForUnwinding (UIViewController toViewController, UIViewController fromViewController, string identifier);
 
@@ -16378,16 +16395,19 @@ namespace UIKit {
 		void RemoveKeyCommand (UIKeyCommand command);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 		[iOS (9,0)]
 		[Export ("registerForPreviewingWithDelegate:sourceView:")]
 		IUIViewControllerPreviewing RegisterForPreviewingWithDelegate (IUIViewControllerPreviewingDelegate previewingDelegate, UIView sourceView);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 		[iOS (9,0)]
 		[Export ("unregisterForPreviewingWithContext:")]
 		void UnregisterForPreviewingWithContext (IUIViewControllerPreviewing previewing);
 
 		[Deprecated (PlatformName.iOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Replaced by 'UIContextMenuInteraction'.")]
 		[iOS (9,0)]
 		[Export ("previewActionItems")]
 		IUIPreviewActionItem[] PreviewActionItems { get; }
@@ -16518,7 +16538,8 @@ namespace UIKit {
 
 		[TV (16, 0), NoWatch, iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("activePresentationController")]
-		UIPresentationController ActivePresentationController { [return: NullAllowed] get; }
+		[NullAllowed]
+		UIPresentationController ActivePresentationController { get; }
 
 		[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("setNeedsUpdateOfSupportedInterfaceOrientations")]
@@ -17606,6 +17627,7 @@ namespace UIKit {
 
 	[NoWatch]
 	[Deprecated (PlatformName.iOS, 9, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	[DisableDefaultCtor] // as it subclass UIStoryboardSegue we end up with the same error
 	[BaseType (typeof (UIStoryboardSegue))]
 	interface UIStoryboardPopoverSegue {
@@ -17700,6 +17722,7 @@ namespace UIKit {
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(UIPopoverControllerDelegate)})]
 	[DisableDefaultCtor] // bug #1786
 	[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'UIViewController' with style of 'UIModalPresentationStyle.Popover' or UIPopoverPresentationController' instead.")]
+	[Deprecated (PlatformName.TvOS, 9, 0, message: "Use 'UIViewController' with style of 'UIModalPresentationStyle.Popover' or UIPopoverPresentationController' instead.")]
 	interface UIPopoverController : UIAppearanceContainer {
 		[Export ("initWithContentViewController:")][PostGet ("ContentViewController")]
 		NativeHandle Constructor (UIViewController viewController);
@@ -17760,6 +17783,7 @@ namespace UIKit {
 	[Model]
 	[Protocol]
 	[Deprecated (PlatformName.iOS, 9, 0)]
+	[Deprecated (PlatformName.TvOS, 9, 0)]
 	interface UIPopoverControllerDelegate {
 		[Export ("popoverControllerDidDismissPopover:"), EventArgs ("UIPopoverController")]
 		void DidDismiss (UIPopoverController popoverController);
@@ -19253,6 +19277,7 @@ namespace UIKit {
 		bool Enabled { [Bind ("isEnabled")] get; set; }
 
 		[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'PreferredFocusEnvironments' instead.")]
+		[Deprecated (PlatformName.TvOS, 10, 0, message: "Use 'PreferredFocusEnvironments' instead.")]
 		[NullAllowed, Export ("preferredFocusedView", ArgumentSemantic.Weak)]
 		UIView PreferredFocusedView { get; set; }
 
@@ -23969,7 +23994,8 @@ namespace UIKit {
 
 		[NoTV, iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("localizedAttributedSuggestion")]
-		new NSAttributedString LocalizedAttributedSuggestion { [return: NullAllowed] get; }
+		[NullAllowed]
+		new NSAttributedString LocalizedAttributedSuggestion { get; }
 
 		[TV (16, 0), iOS (16, 0), MacCatalyst (16,0)]
 		[NullAllowed, Export ("representedObject", ArgumentSemantic.Strong)]
@@ -24756,6 +24782,11 @@ namespace UIKit {
 	[BaseType (typeof (UIView))]
 	interface UICalendarView
 	{
+
+		[DesignatedInitializer]
+		[Export ("initWithFrame:")]
+		NativeHandle Constructor (CGRect frame);
+
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		IUICalendarViewDelegate Delegate { get; set; }

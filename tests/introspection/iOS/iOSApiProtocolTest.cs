@@ -127,6 +127,12 @@ namespace Introspection {
 					return true;
 				break;
 #endif
+			case "UILayoutGuideAspectFitting":
+			case "UISceneWindowingBehaviors":
+				// Symbol not available in simulator - but works on BigSur (others might too)
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
 			}
 
 			return base.Skip (type);
