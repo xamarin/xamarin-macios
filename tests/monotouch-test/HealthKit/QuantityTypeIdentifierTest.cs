@@ -97,6 +97,16 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (13, 0))
 						continue;
 					break;
+				case HKQuantityTypeIdentifier.HeartRateRecoveryOneMinute:
+				case HKQuantityTypeIdentifier.RunningGroundContactTime:
+				case HKQuantityTypeIdentifier.RunningStrideLength:
+				case HKQuantityTypeIdentifier.RunningVerticalOscillation:
+				case HKQuantityTypeIdentifier.RunningPower:
+				case HKQuantityTypeIdentifier.RunningSpeed:
+				case HKQuantityTypeIdentifier.AtrialFibrillationBurden:
+					if (!TestRuntime.CheckXcodeVersion (14, 0))
+						continue;
+					break;
 				}
 
 				try {
