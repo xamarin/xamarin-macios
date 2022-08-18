@@ -2471,6 +2471,18 @@ namespace MapKit {
 
 		[Export ("lookAroundViewControllerDidUpdateScene:")]
 		void DidUpdateScene (MKLookAroundViewController viewController);
+
+		[Export ("lookAroundViewControllerWillPresentFullScreen:")]
+		void WillPresentFullScreen (MKLookAroundViewController viewController);
+
+		[Export ("lookAroundViewControllerDidPresentFullScreen:")]
+		void DidPresentFullScreen (MKLookAroundViewController viewController);
+
+		[Export ("lookAroundViewControllerWillDismissFullScreen:")]
+		void WillDismissFullScreen (MKLookAroundViewController viewController);
+
+		[Export ("lookAroundViewControllerDidDismissFullScreen:")]
+		void DidDismissFullScreen (MKLookAroundViewController viewController);
 	}
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
