@@ -1210,18 +1210,21 @@ namespace Introspection {
 			case "initWithCenter:diameter:":
 			case "initWithCenter:radius:":
 			case "initWithR:theta:":
+			// PassKit
+			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardTemplateIdentifier:preview:":
+			case "initWithProvisioningCredentialIdentifier:sharingInstanceIdentifier:cardConfigurationIdentifier:preview:":
 			// NSImage
 			case "initWithDataIgnoringOrientation:":
-				var mi = m as MethodInfo;
-				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
-			// NSAppleEventDescriptor
-			case "initListDescriptor":
-			case "initRecordDescriptor":
 			// SCContentFilter
 			case "initWithDisplay:excludingApplications:exceptingWindows:":
 			case "initWithDisplay:excludingWindows:":
 			case "initWithDisplay:includingApplications:exceptingWindows:":
 			case "initWithDisplay:includingWindows:":
+				var mi = m as MethodInfo;
+				return mi != null && !mi.IsPublic && (mi.ReturnType.Name == "IntPtr" || mi.ReturnType.Name == "NativeHandle");
+			// NSAppleEventDescriptor
+			case "initListDescriptor":
+			case "initRecordDescriptor":
 				return true;
 			default:
 				return false;
