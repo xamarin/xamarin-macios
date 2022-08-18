@@ -57,12 +57,6 @@
     <Compile Include="..\..\common\Profile.cs">
       <Link>external\Profile.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\src\ObjCRuntime\ErrorHelper.cs">
-      <Link>external\ErrorHelper.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\tools\common\error.cs">
-      <Link>external\error.cs</Link>
-    </Compile>
     <Compile Include="..\..\common\ErrorHelper.tests.cs">
       <Link>external\ErrorHelper.tests.cs</Link>
     </Compile>
