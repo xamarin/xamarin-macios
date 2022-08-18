@@ -64,4 +64,6 @@
 	</ItemGroup>
 
 	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" />
+
+	<Import Project="$(GeneratedProjectFile)" Condition="'$(GeneratedProjectFile)' != ''" />
 </Project>
