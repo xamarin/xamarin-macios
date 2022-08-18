@@ -2356,8 +2356,8 @@ namespace MediaPlayer {
 		void RemovePlayer (AVPlayer player);
 
 		[TV (16, 0), NoWatch, NoMacCatalyst, NoMac]
-		[Export ("automaticallyPublishNowPlayingInfo")]
-		bool AutomaticallyPublishNowPlayingInfo { get; set; }
+		[Export ("automaticallyPublishesNowPlayingInfo")]
+		bool AutomaticallyPublishesNowPlayingInfo { get; set; }
 	}
 
 	[TV (16,0), NoWatch, NoMacCatalyst, NoMac, iOS (16,0)]
