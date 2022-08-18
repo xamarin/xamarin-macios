@@ -119,7 +119,7 @@ namespace MonoTouchFixtures.UIKit {
 			f2 = UIFont.FromDescriptor (d, 12);
 			SemiFactory_25511 (f1, f2, "FromDescriptor");
 
-			if (!TestRuntime.CheckXcodeVersion (16, 0))
+			if (!TestRuntime.CheckXcodeVersion (14, 0))
 				return;
 
 			f1 = UIFont.SystemFontOfSize (12, UIFontWeight.UltraLight, UIFontWidth.Condensed);
