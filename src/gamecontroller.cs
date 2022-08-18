@@ -2225,8 +2225,8 @@ namespace GameController {
 		[Export ("acquired")]
 		bool Acquired { [Bind ("isAcquired")] get; }
 
-		// [Export ("wheelInput", ArgumentSemantic.Strong)]
-		// GCRacingWheelInput WheelInput { get; }
+		[Export ("wheelInput", ArgumentSemantic.Strong)]
+		GCRacingWheelInput WheelInput { get; }
 
 		[Export ("snapshot")]
 		bool Snapshot { [Bind ("isSnapshot")] get; }
@@ -2241,16 +2241,17 @@ namespace GameController {
 		NSString GCRacingWheelDidDisconnectNotification { get; }
 	}
 
-	// TODO after I figure out xcode14 chat question
-	// [iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	// [BaseType (typeof (GCRacingWheelInputState))]
-	// interface GCRacingWheelInput : GCDevicePhysicalInput {
-	// 	[Export ("capture")]
-	// 	GCRacingWheelInputState Capture { get; }
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (GCRacingWheelInputState))]
+	interface GCRacingWheelInput : GCDevicePhysicalInput {
+		// Sealed since GCDevicePhysicalInput.Capture returns IGCDevicePhysicalInputState
+		[Sealed, Export ("capture")]
+		GCRacingWheelInputState WheelInputCapture { get; }
 
-	// 	[NullAllowed, Export ("nextInputState")]
-	// 	IGCDevicePhysicalInputStateDiff NextInputState { get; }
-	// }
+		// Sealed since GCDevicePhysicalInput.NextInputState returns NSObject
+		[Sealed, NullAllowed, Export ("nextInputState")]
+		IGCDevicePhysicalInputStateDiff WheelInputNextInputState { get; }
+	}
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
@@ -2327,6 +2328,49 @@ namespace GameController {
 
 		[Export ("elementEnumerator")]
 		NSEnumerator<IGCPhysicalInputElement> ElementEnumerator { get; }
+	}
+
+	interface IGCDevicePhysicalInputState {}
+
+	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[Protocol]
+	interface GCDevicePhysicalInputState {
+		[Abstract]
+		[NullAllowed, Export ("device", ArgumentSemantic.Weak)]
+		IGCDevice Device { get; }
+
+		[Abstract]
+		[Export ("lastEventTimestamp")]
+		double LastEventTimestamp { get; }
+
+		[Abstract]
+		[Export ("lastEventLatency")]
+		double LastEventLatency { get; }
+
+		// [Abstract]
+		// [Export ("elements")]
+		// GCPhysicalInputElementCollection<IGCPhysicalInputElementName, IGCPhysicalInputElement> Elements { get; }
+
+		// [Abstract]
+		// [Export ("buttons")]
+		// GCPhysicalInputElementCollection<IGCButtonElementName, IGCButtonElement> Buttons { get; }
+
+		// [Abstract]
+		// [Export ("axes")]
+		// GCPhysicalInputElementCollection<IGCAxisElementName, IGCAxisElement> Axes { get; }
+
+		// [Abstract]
+		// [Export ("switches")]
+		// GCPhysicalInputElementCollection<IGCSwitchElementName, IGCSwitchElement> Switches { get; }
+
+		// [Abstract]
+		// [Export ("dpads")]
+		// GCPhysicalInputElementCollection<IGCDirectionPadElementName, IGCDirectionPadElement> Dpads { get; }
+
+		[Abstract]
+		[Export ("objectForKeyedSubscript:")]
+		[return: NullAllowed]
+		IGCPhysicalInputElement GetObject (string key);
 	}
 
 	interface IGCAxisInput {}
@@ -2422,49 +2466,6 @@ namespace GameController {
 		[Abstract]
 		[NullAllowed, Export ("nextInputState")]
 		NSObject NextInputState { get; }
-	}
-
-	interface IGCDevicePhysicalInputState {}
-
-	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	[Protocol]
-	interface GCDevicePhysicalInputState {
-		[Abstract]
-		[NullAllowed, Export ("device", ArgumentSemantic.Weak)]
-		IGCDevice Device { get; }
-
-		[Abstract]
-		[Export ("lastEventTimestamp")]
-		double LastEventTimestamp { get; }
-
-		[Abstract]
-		[Export ("lastEventLatency")]
-		double LastEventLatency { get; }
-
-		// [Abstract]
-		// [Export ("elements")]
-		// GCPhysicalInputElementCollection<IGCPhysicalInputElementName, IGCPhysicalInputElement> Elements { get; }
-
-		// [Abstract]
-		// [Export ("buttons")]
-		// GCPhysicalInputElementCollection<IGCButtonElementName, IGCButtonElement> Buttons { get; }
-
-		// [Abstract]
-		// [Export ("axes")]
-		// GCPhysicalInputElementCollection<IGCAxisElementName, IGCAxisElement> Axes { get; }
-
-		// [Abstract]
-		// [Export ("switches")]
-		// GCPhysicalInputElementCollection<IGCSwitchElementName, IGCSwitchElement> Switches { get; }
-
-		// [Abstract]
-		// [Export ("dpads")]
-		// GCPhysicalInputElementCollection<IGCDirectionPadElementName, IGCDirectionPadElement> Dpads { get; }
-
-		[Abstract]
-		[Export ("objectForKeyedSubscript:")]
-		[return: NullAllowed]
-		IGCPhysicalInputElement GetObject (string key);
 	}
 
 	interface IGCDevicePhysicalInputStateDiff {}
