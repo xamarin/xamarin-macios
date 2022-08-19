@@ -639,7 +639,7 @@ namespace WebKit
 		[Async]
 		[NoMac, iOS (16,0), MacCatalyst (16,0)] // headers say 13, is not true since the enum is from 16
 		[Export ("webView:showLockdownModeFirstUseMessage:completionHandler:")]
-		void WebView (WKWebView webView, string message, Action<WKDialogResult> completionHandler);
+		void ShowLockDownMode (WKWebView webView, string firstUseMessage, Action<WKDialogResult> completionHandler);
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
