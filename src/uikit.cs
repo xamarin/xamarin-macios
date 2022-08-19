@@ -10564,7 +10564,7 @@ namespace UIKit {
 		[iOS (16,0), MacCatalyst (16,0)]
 		[Export ("currentPageIndicatorImageForPage:")]
 		[return: NullAllowed]
-		UIImage CurrentPageIndicatorImage (nint page);
+		UIImage GetCurrentPageIndicatorImage (nint page);
 
 		[iOS (16,0), MacCatalyst (16,0)]
 		[Export ("setCurrentPageIndicatorImage:forPage:")]
