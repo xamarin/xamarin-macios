@@ -419,16 +419,16 @@ namespace PdfKit {
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Static]
 	interface PdfPageImageInitializationOptionKeys {
-		[Field ("PdfPageImageInitializationOptionMediaBox")]
+		[Field ("PDFPageImageInitializationOptionMediaBox")]
 		NSString MediaBoxKey { get; }
 
-		[Field ("PdfPageImageInitializationOptionRotation")]
+		[Field ("PDFPageImageInitializationOptionRotation")]
 		NSString RotationKey { get; }
 
-		[Field ("PdfPageImageInitializationOptionUpscaleIfSmaller")]
+		[Field ("PDFPageImageInitializationOptionUpscaleIfSmaller")]
 		NSString UpscaleIfSmallerKey { get; }
 
-		[Field ("PdfPageImageInitializationOptionCompressionQuality")]
+		[Field ("PDFPageImageInitializationOptionCompressionQuality")]
 		NSString CompressionQualityKey { get; }
 	}
 
@@ -1561,12 +1561,12 @@ namespace PdfKit {
 		[DesignatedInitializer]
 		NativeHandle Constructor ();
 
-		[DesignatedInitializer]
 		[Export ("initWithImage:")]
 		NativeHandle Constructor (NSImage image);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[DesignatedInitializer]
 		[Export ("initWithImage:options:")]
 		NativeHandle Constructor (NSImage image, NSDictionary options);
 
@@ -2186,7 +2186,7 @@ namespace PdfKit {
 	interface IPdfPageOverlayViewProvider {}
 
 	[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	[Protocol]
+	[Protocol (Name = "PDFPageOverlayViewProvider")]
 	interface PdfPageOverlayViewProvider
 	{
 		[Abstract]
