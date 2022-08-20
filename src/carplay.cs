@@ -601,7 +601,7 @@ namespace CarPlay {
 		string SectionIndexTitle { get; }
 
 #if !XAMCORE_5_0
-		[Wrap ("throw new InvalidOperationException (Constants.BrokenBinding)", IsVirtual = true)]
+		[Wrap ("true ? throw new InvalidOperationException (Constants.BrokenBinding) : new NSArray ()", IsVirtual = true)]
 		[Obsolete ("Use 'Items2 : ICPListTemplateItem []' instead.")]
 		CPListItem [] Items { get; }
 #endif
