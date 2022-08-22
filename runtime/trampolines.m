@@ -201,7 +201,6 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 					}
 				}
 			} else {
-				char *fullname = xamarin_class_get_full_name (r_klass, exception_gchandle);
 #if DOTNET
 				if (xamarin_is_class_intptr (r_klass) || xamarin_is_class_nativehandle (r_klass)) {
 #else
@@ -209,9 +208,8 @@ xamarin_marshal_return_value_impl (MonoType *mtype, const char *type, MonoObject
 #endif
 					returnValue = *(void **) mono_object_unbox (retval);
 				} else {
-					xamarin_assertion_message ("Don't know how to marshal a return value of type '%s'. Please file a bug with a test case at https://github.com/xamarin/xamarin-macios/issues/new\n", fullname);
+					xamarin_assertion_message ("Don't know how to marshal a return value of type '%s.%s'. Please file a bug with a test case at https://github.com/xamarin/xamarin-macios/issues/new\n", mono_class_get_namespace (r_klass), mono_class_get_name (r_klass));
 				}
-				xamarin_free (fullname);
 			}
 
 			xamarin_mono_object_release (&r_klass);
