@@ -704,6 +704,11 @@ COREWLAN_SOURCES = \
 	CoreWlan/CWInterface.cs \
 	CoreWlan/CWKeychain.cs \
 
+# DeviceDiscoveryExtension
+
+DEVICEDISCOVERYEXTENSION_API_SOURCES = \
+	DeviceDiscoveryExtension/Enums.cs \
+
 # EventKit
 
 EVENTKIT_API_SOURCES = \
@@ -2129,6 +2134,7 @@ IOS_FRAMEWORKS =         \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
+	DeviceDiscoveryExtension \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \

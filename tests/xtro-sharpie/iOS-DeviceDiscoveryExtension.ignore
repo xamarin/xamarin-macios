@@ -1,0 +1,5 @@
+!missing-pinvoke! DDDeviceCategoryToString is not bound
+!missing-pinvoke! DDDeviceMediaPlaybackStateToString is not bound
+!missing-pinvoke! DDDeviceProtocolToString is not bound
+!missing-pinvoke! DDDeviceStateToString is not bound
+!missing-pinvoke! DDEventTypeToString is not bound

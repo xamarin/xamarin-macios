@@ -451,6 +451,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
+				{ "DeviceDiscoveryExtension", "DeviceDiscoveryExtension", 16,0},
 				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
 				{ "SharedWithYou", "SharedWithYouCore", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },

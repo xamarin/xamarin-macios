@@ -358,6 +358,10 @@ namespace Introspection {
 				case "OSLogEntryLog":
 				case "OSLogEntrySignpost":
 					return true;
+				// iOS 16
+				case "DDDevice":
+				case "DDDeviceEvent":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -611,6 +615,10 @@ namespace Introspection {
 				case "OSLogEntryLog":
 				case "OSLogEntrySignpost":
 					return true;
+				// iOS 16
+				case "DDDevice":
+				case "DDDeviceEvent":
+					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
 				case "CLKComplicationTemplateCircularSmallRingImage":
@@ -766,6 +774,9 @@ namespace Introspection {
 				// iOS 11.3
 				case "WKPreferences": // Conformance not in headers
 				case "QLPreviewSceneActivationConfiguration":
+					return true;
+				// iOS 16
+				case "DDDevice":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":
