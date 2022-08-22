@@ -26,6 +26,13 @@ namespace MonoTouchFixtures.NaturalLanguage {
 				if (v == NLLanguage.Unevaluated)
 					continue; // this is not a value provided by Apple.
 
+				switch (v){
+				case NLLanguage.Kazakh:
+					if (!TestRuntime.CheckXcodeVersion (14,0))
+						continue;
+					break;
+				}
+
 				NLEmbedding e = null;
 				Assert.DoesNotThrow (() => e = NLEmbedding.GetWordEmbedding (v), $"Throws: {v}");
 				if (e != null) {
