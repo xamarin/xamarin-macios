@@ -2308,27 +2308,28 @@ namespace GameController {
 	interface GCSwitchElementName : GCPhysicalInputElementName {
 	}
 
-	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (NSObject))]
-	[DisableDefaultCtor]
-	interface GCPhysicalInputElementCollection<KeyIdentifierType, ElementIdentifierType> // : INSFastEnumeration // # no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
-		where KeyIdentifierType : IGCPhysicalInputElementName /* NSString */ // there's currently not an conversion from GCPhysicalInputElementName, GCButtonElementName, and GCDirectionPadElementName to NSString
-		where ElementIdentifierType : IGCPhysicalInputElement
-	{
-		[Export ("count")]
-		nuint Count { get; }
+	// There are issues with the Generic Types listed here: https://github.com/xamarin/xamarin-macios/issues/15725
+	// [iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	// [BaseType (typeof (NSObject))]
+	// [DisableDefaultCtor]
+	// interface GCPhysicalInputElementCollection<KeyIdentifierType, ElementIdentifierType> // : INSFastEnumeration // # no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+	// 	where KeyIdentifierType : IGCPhysicalInputElementName /* NSString */ // there's currently not an conversion from GCPhysicalInputElementName, GCButtonElementName, and GCDirectionPadElementName to NSString
+	// 	where ElementIdentifierType : IGCPhysicalInputElement /* id<GCPhysicalInputElement>> */
+	// {
+	// 	[Export ("count")]
+	// 	nuint Count { get; }
 
-		[Export ("elementForAlias:")]
-		[return: NullAllowed]
-		IGCPhysicalInputElement GetElement (string alias);
+	// 	[Export ("elementForAlias:")]
+	// 	[return: NullAllowed]
+	// 	IGCPhysicalInputElement GetElement (string alias);
 
-		[Export ("objectForKeyedSubscript:")]
-		[return: NullAllowed]
-		IGCPhysicalInputElement GetObject (string key);
+	// 	[Export ("objectForKeyedSubscript:")]
+	// 	[return: NullAllowed]
+	// 	IGCPhysicalInputElement GetObject (string key);
 
-		[Export ("elementEnumerator")]
-		NSEnumerator<IGCPhysicalInputElement> ElementEnumerator { get; }
-	}
+	// 	[Export ("elementEnumerator")]
+	// 	NSEnumerator<IGCPhysicalInputElement> ElementEnumerator { get; }
+	// }
 
 	interface IGCDevicePhysicalInputState {}
 
@@ -2347,22 +2348,27 @@ namespace GameController {
 		[Export ("lastEventLatency")]
 		double LastEventLatency { get; }
 
+		// Issue with GCPhysicalInputElementCollection found here: https://github.com/xamarin/xamarin-macios/issues/15725
 		// [Abstract]
 		// [Export ("elements")]
 		// GCPhysicalInputElementCollection<IGCPhysicalInputElementName, IGCPhysicalInputElement> Elements { get; }
 
+		// Issue with GCPhysicalInputElementCollection found here: https://github.com/xamarin/xamarin-macios/issues/15725
 		// [Abstract]
 		// [Export ("buttons")]
 		// GCPhysicalInputElementCollection<IGCButtonElementName, IGCButtonElement> Buttons { get; }
 
+		// Issue with GCPhysicalInputElementCollection found here: https://github.com/xamarin/xamarin-macios/issues/15725
 		// [Abstract]
 		// [Export ("axes")]
 		// GCPhysicalInputElementCollection<IGCAxisElementName, IGCAxisElement> Axes { get; }
 
+		// Issue with GCPhysicalInputElementCollection found here: https://github.com/xamarin/xamarin-macios/issues/15725
 		// [Abstract]
 		// [Export ("switches")]
 		// GCPhysicalInputElementCollection<IGCSwitchElementName, IGCSwitchElement> Switches { get; }
 
+		// Issue with GCPhysicalInputElementCollection found here: https://github.com/xamarin/xamarin-macios/issues/15725
 		// [Abstract]
 		// [Export ("dpads")]
 		// GCPhysicalInputElementCollection<IGCDirectionPadElementName, IGCDirectionPadElement> Dpads { get; }
@@ -2683,5 +2689,12 @@ namespace GameController {
 
 		[NullAllowed, Export ("sequentialInput")]
 		IGCRelativeInput SequentialInput { get; }
+	}
+
+	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch]
+	[BaseType (typeof (NSObject))]
+	interface GCControllerUserCustomizations {
+		[Notification, Field ("GCControllerUserCustomizationsDidChangeNotification")]
+		NSString DidChangeNotification { get; }
 	}
 }

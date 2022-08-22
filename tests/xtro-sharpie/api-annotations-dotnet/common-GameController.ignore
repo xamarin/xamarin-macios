@@ -1,2 +1,14 @@
-# no generator support for FastEnumeration - https://bugzilla.xamarin.com/show_bug.cgi?id=4391
-!missing-protocol-conformance! GCPhysicalInputElementCollection should conform to NSFastEnumeration
+# There are issues with the Generic Types listed here: https://github.com/xamarin/xamarin-macios/issues/15725
+!missing-protocol-member! GCDevicePhysicalInputState::axes not found
+!missing-protocol-member! GCDevicePhysicalInputState::buttons not found
+!missing-protocol-member! GCDevicePhysicalInputState::dpads not found
+!missing-protocol-member! GCDevicePhysicalInputState::elements not found
+!missing-protocol-member! GCDevicePhysicalInputState::switches not found
+!missing-selector! GCPhysicalInputElementCollection::count not bound
+!missing-selector! GCPhysicalInputElementCollection::elementEnumerator not bound
+!missing-selector! GCPhysicalInputElementCollection::elementForAlias: not bound
+!missing-selector! GCPhysicalInputElementCollection::objectForKeyedSubscript: not bound
+!missing-type! GCPhysicalInputElementCollection not bound
+
+# After GCPhysicalInputElementCollection is fixed, we can uncomment the below
+# !missing-protocol-conformance! GCPhysicalInputElementCollection should conform to NSFastEnumeration

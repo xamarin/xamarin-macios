@@ -1,4 +1,0 @@
-!missing-selector! GCRacingWheel::wheelInput not bound
-!missing-selector! GCRacingWheelInput::capture not bound
-!missing-selector! GCRacingWheelInput::nextInputState not bound
-!missing-type! GCRacingWheelInput not bound
