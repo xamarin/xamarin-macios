@@ -36,7 +36,7 @@ namespace HealthKit
 		[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
 #endif // NET
 		[DllImport (Constants.HealthKitLibrary)]
-		static extern /* HKCategoryValueSleepAnalysis */ NativeHandle HKCategoryValueSleepAnalysisAsleepValues ();
+		static extern NativeHandle HKCategoryValueSleepAnalysisAsleepValues ();
 
 #if NET
 		[SupportedOSPlatform ("ios16.0")]
@@ -46,9 +46,14 @@ namespace HealthKit
 #else
 		[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
 #endif // NET
-		public static NSSet<NSNumber> GetAsleepValues ()
+		public static HashSet<HKCategoryValueSleepAnalysis> GetAsleepValues ()
 		{
-			return Runtime.GetNSObject<NSSet<NSNumber>> (HKCategoryValueSleepAnalysisAsleepValues ())!;
+			var values = Runtime.GetNSObject<NSSet<NSNumber>> (HKCategoryValueSleepAnalysisAsleepValues ())!;
+			var hashSet = new HashSet<HKCategoryValueSleepAnalysis> ();
+			foreach (NSNumber value in values){
+				hashSet.Add ((HKCategoryValueSleepAnalysis) (int)value);
+			}
+			return hashSet;
 		}
 	}
 }

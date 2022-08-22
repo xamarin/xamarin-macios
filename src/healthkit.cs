@@ -3450,11 +3450,13 @@ namespace HealthKit {
 		HKQuantity AppleMoveTimeGoal { get; set; }
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Mac (13,0)]
 		[Export ("appleExerciseTimeGoal", ArgumentSemantic.Strong)]
 		HKQuantity AppleExerciseTimeGoal { get; set; }
 
 		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
 		[Export ("appleStandHoursGoal", ArgumentSemantic.Strong)]
 		HKQuantity AppleStandHoursGoal { get; set; }
 
@@ -3848,11 +3850,11 @@ namespace HealthKit {
 
 		[Watch (9,0), NoiOS, Mac (13,0), NoMacCatalyst, NoTV]
 		[Export ("workoutBuilder:didBeginActivity:")]
-		void WorkoutBuilderDidBegin (HKLiveWorkoutBuilder workoutBuilder, HKWorkoutActivity workoutActivity);
+		void DidBeginActivity (HKLiveWorkoutBuilder workoutBuilder, HKWorkoutActivity workoutActivity);
 
 		[Watch (9,0), NoiOS,  Mac (13,0), NoMacCatalyst, NoTV]
 		[Export ("workoutBuilder:didEndActivity:")]
-		void WorkoutBuilderDidEnd (HKLiveWorkoutBuilder workoutBuilder, HKWorkoutActivity workoutActivity);
+		void DidEndActivity (HKLiveWorkoutBuilder workoutBuilder, HKWorkoutActivity workoutActivity);
 	}
 
 	[Watch (5,0), NoiOS, Mac (13,0)]
