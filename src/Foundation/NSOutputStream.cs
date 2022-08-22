@@ -29,10 +29,10 @@ namespace Foundation {
 				return objc_msgSend (Handle, Selector.GetHandle (selWriteMaxLength), (IntPtr) ptr, len);
 		}
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		static extern nint objc_msgSend (IntPtr handle, IntPtr sel, [In, Out] byte [] buffer, nuint len);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		static extern nint objc_msgSend (IntPtr handle, IntPtr sel, IntPtr buffer, nuint len);
 	}
 }	
