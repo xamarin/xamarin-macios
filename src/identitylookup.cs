@@ -59,6 +59,25 @@ namespace IdentityLookup {
 		ReportJunkAndBlockSender = 3,
 	}
 
+	[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+	[Native]
+	public enum ILMessageFilterSubAction : long
+	{
+		None = 0,
+		TransactionalOthers = 10000,
+		TransactionalFinance = 10001,
+		TransactionalOrders = 10002,
+		TransactionalReminders = 10003,
+		TransactionalHealth = 10004,
+		TransactionalWeather = 10005,
+		TransactionalCarrier = 10006,
+		TransactionalRewards = 10007,
+		TransactionalPublicServices = 10008,
+		PromotionalOthers = 20000,
+		PromotionalOffers = 20001,
+		PromotionalCoupons = 20002,
+	}
+
 	[iOS (11,0)]
 	[NoMac][NoWatch][NoTV]
 	[DisableDefaultCtor]
@@ -100,6 +119,10 @@ namespace IdentityLookup {
 
 		[NullAllowed, Export ("messageBody")]
 		string MessageBody { get; }
+
+		[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+		[Export ("receiverISOCountryCode")]
+		string ReceiverISOCountryCode { get; }
 	}
 
 	[iOS (11,0)]
@@ -110,6 +133,10 @@ namespace IdentityLookup {
 
 		[Export ("action", ArgumentSemantic.Assign)]
 		ILMessageFilterAction Action { get; set; }
+
+		[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+		[Export ("subAction", ArgumentSemantic.Assign)]
+		ILMessageFilterSubAction SubAction { get; set; }
 	}
 
 	[iOS (11,0)]
@@ -214,5 +241,28 @@ namespace IdentityLookup {
 
 		[Export ("isEqualToMessageCommunication:")]
 		bool IsEqualTo (ILMessageCommunication communication);
+	}
+
+	[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+	[Protocol]
+	interface ILMessageFilterCapabilitiesQueryHandling
+	{
+		[Async]
+		[Abstract]
+		[Export ("handleCapabilitiesQueryRequest:context:completion:")]
+		void HandleQueryRequest (ILMessageFilterCapabilitiesQueryRequest capabilitiesQueryRequest, ILMessageFilterExtensionContext context, Action<ILMessageFilterCapabilitiesQueryResponse> completion);
+	}
+
+	[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+	[BaseType (typeof (NSObject))]
+	interface ILMessageFilterCapabilitiesQueryResponse : INSSecureCoding
+	{
+		// @property (copy, nonatomic) NSArray<NSNumber *> * _Nonnull transactionalSubActions;
+		[Export ("transactionalSubActions", ArgumentSemantic.Copy)]
+		NSNumber[] TransactionalSubActions { get; set; }
+
+		// @property (copy, nonatomic) NSArray<NSNumber *> * _Nonnull promotionalSubActions;
+		[Export ("promotionalSubActions", ArgumentSemantic.Copy)]
+		NSNumber[] PromotionalSubActions { get; set; }
 	}
 }
