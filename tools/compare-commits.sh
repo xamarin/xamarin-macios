@@ -219,7 +219,9 @@ fi
 if test -z "$SKIP_DIRTY_CHECK"; then
 	if [ -n "$(git status --porcelain --ignore-submodule)" ]; then
 		report_error_line "${RED}** Error: Working directory isn't clean:${CLEAR}"
-		git "${GIT_COLOR_P[@]}" status --ignore-submodule | sed 's/^/    /' | while read -r line; do report_error_line "$line"; done
+		# The funny GIT_COLOR_P syntax is explained here: https://stackoverflow.com/a/61551944/183422
+		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} status --ignore-submodules | sed 's/^/    /' | while read -r line; do report_error_line "$line"; done || true
+		git ${GIT_COLOR_P[@]+"${GIT_COLOR_P[@]}"} diff --ignore-submodules | sed 's/^/    /' | while read -r line; do report_error_line "$line"; done || true
 		exit 1
 	fi
 fi
