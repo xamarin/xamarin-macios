@@ -1,0 +1,2 @@
+# In the compat file as obsoleted in iOS 14
+!missing-protocol! NSFileProviderItemDecorating not bound

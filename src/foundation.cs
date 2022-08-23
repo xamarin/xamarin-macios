@@ -4306,7 +4306,7 @@ namespace Foundation
 		[Export ("fileProviderErrorForNonExistentItemWithIdentifier:")]
 		NSError GetFileProviderError (string nonExistentItemIdentifier);
 
-		[NoiOS]
+		[iOS (16,0)]
 		[Mac (11,0)]
 		[NoMacCatalyst][NoTV][NoWatch]
 		[Static]
