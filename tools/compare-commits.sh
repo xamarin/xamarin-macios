@@ -189,8 +189,6 @@ if test -z "$BASE_HASH"; then
 elif test -n "$PULL_REQUEST_ID"; then
 	echo "${RED}Can't specify both --base and --pull-request.${CLEAR}"
 	exit 1
-else
-	BASE_HASH=HEAD^
 fi
 
 ROOT_DIR=$(git rev-parse --show-toplevel)

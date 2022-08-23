@@ -23,11 +23,6 @@
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 		</None>
 
-		<!-- Default SceneKit assets inclusion -->
-		<SceneKitAsset Include="**\*.scnassets\*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
-			<IsDefaultItem>true</IsDefaultItem>
-		</SceneKitAsset>
-
 		<!-- Default Asset Catalog file inclusion -->
 		<ImageAsset Include="**\*.xcassets\**\*.*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);**\*.xcassets\**\*.DS_Store">
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>

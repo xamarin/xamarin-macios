@@ -30,5 +30,8 @@ namespace ObjCRuntime {
 		internal const string TypeUnavailable = "This type has been removed from the current platform.";
 
 		internal const string ChipRemoved = "The CHIP framework has been removed from iOS.";
+
+		internal const string BrokenBinding = "This API was incorrectly bound and does not work correctly. Use the new version indicated in the associated Obsolete attribute.";
+
 	}
 }
