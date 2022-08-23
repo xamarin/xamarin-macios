@@ -1008,7 +1008,7 @@ namespace GameController {
 		[Export ("mappedPhysicalInputNamesForElementAlias:")]
 		NSSet<NSString> GetMappedPhysicalInputNames (string elementAlias);
 
-		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch]
 		[NullAllowed, Export ("valueDidChangeHandler", ArgumentSemantic.Copy)]
 		Action<GCPhysicalInputProfile, GCControllerElement> ValueDidChangeHandler { get; set; }
 	}
@@ -2235,10 +2235,10 @@ namespace GameController {
 		GCRacingWheel Capture { get; }
 
 		[Notification, Field ("GCRacingWheelDidConnectNotification")]
-		NSString GCRacingWheelDidConnectNotification { get; }
+		NSString DidConnectNotification { get; }
 
 		[Notification, Field ("GCRacingWheelDidDisconnectNotification")]
-		NSString GCRacingWheelDidDisconnectNotification { get; }
+		NSString DidDisconnectNotification { get; }
 	}
 
 	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
@@ -2693,7 +2693,6 @@ namespace GameController {
 
 	[Static]
 	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch]
-	[BaseType (typeof (NSObject))]
 	interface GCControllerUserCustomizations {
 		[Notification, Field ("GCControllerUserCustomizationsDidChangeNotification")]
 		NSString DidChangeNotification { get; }
