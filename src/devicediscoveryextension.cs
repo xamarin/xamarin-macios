@@ -52,8 +52,9 @@ namespace DeviceDiscoveryExtension {
 		[Export ("identifier")]
 		string Identifier { get; set; }
 
+		[Internal]
 		[Export ("networkEndpoint", ArgumentSemantic.Strong)]
-		nw_endpoint_t NetworkEndpoint { get; set; }
+		nw_endpoint_t _NetworkEndpoint { get; set; }
 
 		[Export ("protocol", ArgumentSemantic.Assign)]
 		DDDeviceProtocol Protocol { get; set; }

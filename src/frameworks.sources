@@ -731,6 +731,9 @@ COREWLAN_SOURCES = \
 DEVICEDISCOVERYEXTENSION_API_SOURCES = \
 	DeviceDiscoveryExtension/Enums.cs \
 
+DEVICEDISCOVERYEXTENSION_SOURCES = \
+	DeviceDiscoveryExtension/DDDevice.cs \
+
 # EventKit
 
 EVENTKIT_API_SOURCES = \
