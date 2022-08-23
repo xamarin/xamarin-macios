@@ -193,6 +193,10 @@ namespace CoreSpotlight {
 
 		[Export ("attributeSet", ArgumentSemantic.Strong)]
 		CSSearchableItemAttributeSet AttributeSet { get; set; }
+
+		[NoTV, iOS (16,0), MacCatalyst (16,0), Mac (13,0), NoWatch]
+		[Export ("compareByRank:")]
+		NSComparisonResult CompareByRank (CSSearchableItem other);
 	}
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
@@ -1089,7 +1093,7 @@ namespace CoreSpotlight {
 		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("initWithQueryString:queryContext:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor (string queryString, CSSearchQueryContext queryContext);
+		NativeHandle Constructor (string queryString, [NullAllowed] CSSearchQueryContext queryContext);
 
 		[Export ("cancelled")]
 		bool Cancelled { [Bind ("isCancelled")] get; }
@@ -1127,9 +1131,9 @@ namespace CoreSpotlight {
 	[DisableDefaultCtor]
 	interface CSUserQuery
 	{
-		[Export ("initWithUserQueryString:queryContext:")]
+		[Export ("initWithUserQueryString:userQueryContext:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor ([NullAllowed] string userQueryString, CSUserQueryContext queryContext);
+		NativeHandle Constructor ([NullAllowed] string userQueryString, [NullAllowed] CSUserQueryContext userQueryContext);
 
 		[Export ("foundSuggestionCount")]
 		nint FoundSuggestionCount { get; }
@@ -1159,34 +1163,14 @@ namespace CoreSpotlight {
 
 		[Export ("maxSuggestionCount")]
 		nint MaxSuggestionCount { get; set; }
+
+		[Export ("enableRankedResults")]
+		bool EnableRankedResults { get; set; }
+
+		[Export ("maxResultCount")]
+		nint MaxResultCount { get; set; }
 	}
 
-	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (CSUserQueryContext))]
-	[DisableDefaultCtor]
-	interface CSTopHitQueryContext
-	{
-		[Static]
-		[Export ("topHitQueryContext")]
-		CSTopHitQueryContext TopHitQueryContext { get; }
-
-		[Static]
-		[Export ("topHitQueryContextWithCurrentSuggestion:")]
-		CSTopHitQueryContext Create ([NullAllowed] CSSuggestion currentSuggestion);
-
-		[Export ("maxItemCount")]
-		nint MaxItemCount { get; set; }
-	}
-
-	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
-	[BaseType (typeof (CSUserQuery))]
-	[DisableDefaultCtor]
-	interface CSTopHitQuery
-	{
-		[Export ("initWithUserQueryString:queryContext:")]
-		[DesignatedInitializer]
-		NativeHandle Constructor ([NullAllowed] string userQueryString, CSTopHitQueryContext queryContext);
-	}
 
 	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
@@ -1205,19 +1189,22 @@ namespace CoreSpotlight {
 
 		[Export ("compare:")]
 		NSComparisonResult Compare (CSSuggestion other);
+
+		[Export ("compareByRank:")]
+		NSComparisonResult CompareByRank (CSSuggestion other);
 	}
 
 	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchQueryContext : NSSecureCoding, NSCopying
 	{
-		[NullAllowed, Export ("fetchAttributes", ArgumentSemantic.Strong)]
+		[Export ("fetchAttributes", ArgumentSemantic.Strong)]
 		string[] FetchAttributes { get; set; }
 
 		[NullAllowed, Export ("protectionClasses", ArgumentSemantic.Strong)]
 		string[] ProtectionClasses { get; set; }
 
-		[NullAllowed, Export ("filterQueries", ArgumentSemantic.Copy)]
+		[Export ("filterQueries", ArgumentSemantic.Copy)]
 		string[] FilterQueries { get; set; }
 
 		[NullAllowed, Export ("keyboardLanguage", ArgumentSemantic.Strong)]
@@ -1227,7 +1214,7 @@ namespace CoreSpotlight {
 		CSSearchQuerySourceOptions SourceOptions { get; set; }
 	}
 
-	[NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum CSSearchQuerySourceOptions : long
 	{

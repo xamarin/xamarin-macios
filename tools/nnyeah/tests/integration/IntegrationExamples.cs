@@ -55,15 +55,19 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 			Assert.Zero (execution.ExitCode, $"Build Output: {output}");
 		}
 
-		void ExecuteNnyeah (string tmpDir, string inputPath, string convertedPath, ApplePlatform platform)
+		void ExecuteNnyeah (string tmpDir, string inputPath, string convertedPath, ApplePlatform platform, bool useCannedLegacyPlatform = true)
 		{
-			AssemblyConverter.Convert (GetLegacyPlatform (platform), GetNetPlatform (platform), inputPath, convertedPath, true, true, false);
+			var legacyPlatform = useCannedLegacyPlatform ? GetLegacyPlatform (platform) : null;
+			AssemblyConverter.Convert (legacyPlatform, GetNetPlatform (platform), inputPath, convertedPath, true, true, false);
 		}
 
 		[Test]
-		[TestCase ("API/macOSIntegration.csproj", "API/bin/Debug/macOSIntegration.dll", "Consumer/macOS/macOS.csproj", ApplePlatform.MacOSX)]
-		[TestCase ("API/iOSIntegration.csproj", "API/bin/Debug/iOSIntegration.dll", "Consumer/ios/ios.csproj", ApplePlatform.iOS)]
-		public async Task BuildAndRunSynthetic (string libraryProject, string libraryPath, string consumerProject, ApplePlatform platform)
+		[TestCase ("API/macOSIntegration.csproj", "API/bin/Debug/macOSIntegration.dll", "Consumer/macOS/macOS.csproj", ApplePlatform.MacOSX, true)]
+		[TestCase ("API/iOSIntegration.csproj", "API/bin/Debug/iOSIntegration.dll", "Consumer/ios/ios.csproj", ApplePlatform.iOS, true)]
+		[TestCase ("API/macOSIntegration.csproj", "API/bin/Debug/macOSIntegration.dll", "Consumer/macOS/macOS.csproj", ApplePlatform.MacOSX, false)]
+		[TestCase ("API/iOSIntegration.csproj", "API/bin/Debug/iOSIntegration.dll", "Consumer/ios/ios.csproj", ApplePlatform.iOS, false)]
+		public async Task BuildAndRunSynthetic (string libraryProject, string libraryPath, string consumerProject, ApplePlatform platform,
+			bool useCannedLegacyPlatform)
 		{
 			await AssertLegacyBuild (Path.Combine (IntegrationRoot, libraryProject), platform);
 
@@ -75,7 +79,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests.Integration {
 
 			var tmpDir = Cache.CreateTemporaryDirectory ("BuildAndRunSynthetic");
 
-			ExecuteNnyeah (tmpDir, inputPath, convertedPath, platform);
+			ExecuteNnyeah (tmpDir, inputPath, convertedPath, platform, useCannedLegacyPlatform);
 
 			DotNet.AssertBuild (Path.Combine (IntegrationRoot, consumerProject));
 		}
