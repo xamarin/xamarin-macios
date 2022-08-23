@@ -2691,6 +2691,7 @@ namespace GameController {
 		IGCRelativeInput SequentialInput { get; }
 	}
 
+	[Static]
 	[TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch]
 	[BaseType (typeof (NSObject))]
 	interface GCControllerUserCustomizations {
