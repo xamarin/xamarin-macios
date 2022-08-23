@@ -257,11 +257,9 @@ namespace IdentityLookup {
 	[BaseType (typeof (NSObject))]
 	interface ILMessageFilterCapabilitiesQueryResponse : NSSecureCoding
 	{
-		// @property (copy, nonatomic) NSArray<NSNumber *> * _Nonnull transactionalSubActions;
 		[Export ("transactionalSubActions", ArgumentSemantic.Copy)]
 		NSNumber[] TransactionalSubActions { get; set; }
 
-		// @property (copy, nonatomic) NSArray<NSNumber *> * _Nonnull promotionalSubActions;
 		[Export ("promotionalSubActions", ArgumentSemantic.Copy)]
 		NSNumber[] PromotionalSubActions { get; set; }
 	}
