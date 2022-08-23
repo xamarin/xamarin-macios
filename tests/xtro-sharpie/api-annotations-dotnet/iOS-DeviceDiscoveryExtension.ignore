@@ -1,3 +1,4 @@
+## These C methods are helpers to cast an enum value to string, but the string value is not used anywhere. Ignored them for now.
 !missing-pinvoke! DDDeviceCategoryToString is not bound
 !missing-pinvoke! DDDeviceMediaPlaybackStateToString is not bound
 !missing-pinvoke! DDDeviceProtocolToString is not bound
