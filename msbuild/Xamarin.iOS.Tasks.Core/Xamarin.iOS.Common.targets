@@ -258,6 +258,7 @@ Copyright (C) 2013-2016 Xamarin. All rights reserved.
 			Profiling="$(MtouchProfiling)"
 			ProjectDir="$(MtouchProjectDirectory)"
 			References="@(ReferencePath);@(_BundlerReferencePath)"
+			Registrar="$(Registrar)"
 			ResponseFilePath="$(DeviceSpecificIntermediateOutputPath)response-file.rsp"
 			SdkRoot="$(_SdkDevPath)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
