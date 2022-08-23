@@ -1874,6 +1874,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/ErrorConstants.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
+	ObjCRuntime/Messaging.cs \
 	ObjCRuntime/NativeAttribute.cs \
 	ObjCRuntime/NativeHandle.cs \
 	ObjCRuntime/NativeNameAttribute.cs \

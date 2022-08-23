@@ -63,6 +63,7 @@
 		<ProjectReference Include="$(MSBuildThisFileDirectory)\..\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" Condition="'$(ExcludeTouchUnitReference)' != 'true'" />
 	</ItemGroup>
 
+	<Import Project="$(MSBuildThisFileDirectory)/../ComputeRegistrarConstant.targets" />
 	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" />
 
 	<Import Project="$(GeneratedProjectFile)" Condition="'$(GeneratedProjectFile)' != ''" />
