@@ -189,7 +189,7 @@ namespace PushToTalk {
 		void FailedToBeginTransmittingInChannel (PTChannelManager channelManager, NSUuid channelUuid, NSError error);
 
 		[Export ("channelManager:failedToStopTransmittingInChannelWithUUID:error:")]
-		void failedToStopTransmittingInChannel (PTChannelManager channelManager, NSUuid channelUuid, NSError error);
+		void FailedToStopTransmittingInChannel (PTChannelManager channelManager, NSUuid channelUuid, NSError error);
 	}
 
 	interface IPTChannelRestorationDelegate {}

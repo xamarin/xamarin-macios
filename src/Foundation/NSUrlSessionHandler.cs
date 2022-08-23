@@ -711,15 +711,12 @@ namespace Foundation {
 				return null;
 			}
 
-			void UpdateManagedCookieContainer (NSUrl url, NSHttpCookie[] cookies)
+			void UpdateManagedCookieContainer (Uri absoluteUri, NSHttpCookie[] cookies)
 			{
-				var uri = new Uri (url.AbsoluteString);
 				if (sessionHandler.cookieContainer is not null && cookies.Length > 0)
 					lock (sessionHandler.inflightRequestsLock) { // ensure we lock when writing to the collection
-						var cookiesContents = new string [cookies.Length];
-						for (var index = 0; index < cookies.Length; index++)
-							cookiesContents [index] = cookies [index].GetHeaderValue ();
-						sessionHandler.cookieContainer.SetCookies (uri, string.Join (',', cookiesContents)); //  as per docs: The contents of an HTTP set-cookie header as returned by a HTTP server, with Cookie instances delimited by commas.
+						var cookiesContents = Array.ConvertAll(cookies, static cookie => cookie.GetHeaderValue());
+						sessionHandler.cookieContainer.SetCookies (absoluteUri, string.Join (',', cookiesContents)); //  as per docs: The contents of an HTTP set-cookie header as returned by a HTTP server, with Cookie instances delimited by commas.
 					}
 			}
 
@@ -734,6 +731,7 @@ namespace Foundation {
 				try {
 					var urlResponse = (NSHttpUrlResponse)response;
 					var status = (int)urlResponse.StatusCode;
+					var absoluteUri = new Uri(urlResponse.Url.AbsoluteString!);
 
 					var content = new NSUrlSessionDataTaskStreamContent (inflight.Stream, () => {
 						if (!inflight.Completed) {
@@ -751,7 +749,7 @@ namespace Foundation {
 						Content = content,
 						RequestMessage = inflight.Request
 					};
-					httpResponse.RequestMessage.RequestUri = new Uri (urlResponse.Url.AbsoluteString);
+					httpResponse.RequestMessage.RequestUri = absoluteUri;
 
 					foreach (var v in urlResponse.AllHeaderFields) {
 						// NB: Cocoa trolling us so hard by giving us back dummy dictionary entries
@@ -768,7 +766,7 @@ namespace Foundation {
 					// cookie container. Once we have the cookies from the response, we need to update the managed cookie container
 					if (session.Configuration.HttpCookieStorage is not null) {
 						var cookies = session.Configuration.HttpCookieStorage.CookiesForUrl (response.Url);
-						UpdateManagedCookieContainer (response.Url, cookies);
+						UpdateManagedCookieContainer (absoluteUri, cookies);
 						for (var index = 0; index < cookies.Length; index++) {
 							httpResponse.Headers.TryAddWithoutValidation (SetCookie, cookies [index].GetHeaderValue ());
 						}
