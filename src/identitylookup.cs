@@ -121,7 +121,7 @@ namespace IdentityLookup {
 		string MessageBody { get; }
 
 		[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
-		[Export ("receiverISOCountryCode")]
+		[NullAllowed, Export ("receiverISOCountryCode")]
 		string ReceiverISOCountryCode { get; }
 	}
 
@@ -255,7 +255,7 @@ namespace IdentityLookup {
 
 	[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
 	[BaseType (typeof (NSObject))]
-	interface ILMessageFilterCapabilitiesQueryResponse : INSSecureCoding
+	interface ILMessageFilterCapabilitiesQueryResponse : NSSecureCoding
 	{
 		// @property (copy, nonatomic) NSArray<NSNumber *> * _Nonnull transactionalSubActions;
 		[Export ("transactionalSubActions", ArgumentSemantic.Copy)]
@@ -264,5 +264,11 @@ namespace IdentityLookup {
 		// @property (copy, nonatomic) NSArray<NSNumber *> * _Nonnull promotionalSubActions;
 		[Export ("promotionalSubActions", ArgumentSemantic.Copy)]
 		NSNumber[] PromotionalSubActions { get; set; }
+	}
+
+	[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface ILMessageFilterCapabilitiesQueryRequest : NSSecureCoding {
 	}
 }
