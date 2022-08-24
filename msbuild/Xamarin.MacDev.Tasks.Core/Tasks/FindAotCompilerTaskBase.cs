@@ -20,7 +20,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			if (MonoAotCrossCompiler?.Length > 0) {
+			if (MonoAotCrossCompiler?.Length > 0 && string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XAMARIN_FORCE_AOT_COMPILER_PATH_COMPUTATION"))) {
 				var aotCompilerItem = MonoAotCrossCompiler.SingleOrDefault (v => v.GetMetadata ("RuntimeIdentifier") == RuntimeIdentifier);
 
 				if (aotCompilerItem == null) {
@@ -51,7 +51,7 @@ namespace Xamarin.MacDev.Tasks {
 			var csproj = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project Sdk=""Microsoft.NET.Sdk"">
 	<PropertyGroup>
-		<TargetFramework>net6.0-{PlatformName}</TargetFramework>
+		<TargetFramework>net{TargetFramework.Version}-{PlatformName}</TargetFramework>
 	</PropertyGroup>
 	<Target Name=""ComputeAotCompilerPath"">
 		<PropertyGroup>
