@@ -83,6 +83,7 @@ namespace DeviceDiscoveryExtension {
 
 	[NoMac, iOS (16,0), NoMacCatalyst, NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface DDDeviceEvent
 	{
 		[Export ("initWithEventType:device:")]

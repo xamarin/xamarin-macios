@@ -17,8 +17,8 @@ using System;
 namespace DeviceDiscoveryExtension {
 	public partial class DDDevice {
 
-		NWEndpoint networkEndpoint = null;
-		public NWEndpoint NetworkEndpoint { 
+		NWEndpoint? networkEndpoint = null;
+		public NWEndpoint? NetworkEndpoint { 
 			get => networkEndpoint;
 			set {
 				networkEndpoint?.Dispose ();
