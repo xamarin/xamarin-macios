@@ -55,6 +55,11 @@ namespace Xamarin.Tests {
 			return Execute ("restore", project, properties, true);
 		}
 
+		public static ExecutionResult Restore (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("restore", project, properties, false);
+		}
+
 		public static ExecutionResult AssertBuild (string project, Dictionary<string, string> properties = null)
 		{
 			return Execute ("build", project, properties, true);
