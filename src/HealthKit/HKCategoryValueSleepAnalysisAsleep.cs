@@ -48,9 +48,9 @@ namespace HealthKit
 #endif // NET
 		public static HashSet<HKCategoryValueSleepAnalysis> GetAsleepValues ()
 		{
-			var values = Runtime.GetNSObject<NSSet<NSNumber>> (HKCategoryValueSleepAnalysisAsleepValues ())!;
+			using var values = Runtime.GetNSObject<NSSet<NSNumber>> (HKCategoryValueSleepAnalysisAsleepValues ())!;
 			var hashSet = new HashSet<HKCategoryValueSleepAnalysis> ();
-			foreach (NSNumber value in values){
+			foreach (NSNumber value in values) {
 				hashSet.Add ((HKCategoryValueSleepAnalysis) (int)value);
 			}
 			return hashSet;
