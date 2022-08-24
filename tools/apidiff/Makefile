@@ -28,13 +28,19 @@ MONO_API_INFO = $(API_TOOLS_PATH)/mono-api-info/bin/Debug/net6.0/mono-api-info.d
 MONO_API_HTML = $(API_TOOLS_PATH)/mono-api-html/bin/Debug/net6.0/mono-api-html.dll
 MONO_BUILD = $(SYSTEM_MONO)
 
-MONO_API_INFO_EXEC = $(DOTNET) $(MONO_API_INFO) --ignore-inherited-interfaces
-MONO_API_HTML_EXEC = $(DOTNET) $(MONO_API_HTML)
+MONO_API_INFO_EXEC = $(DOTNET) --roll-forward Major $(MONO_API_INFO) --ignore-inherited-interfaces
+MONO_API_HTML_EXEC = $(DOTNET) --roll-forward Major $(MONO_API_HTML)
 
 export HTML_BREAKING_CHANGES_MESSAGE=❗️Breaking changes❗️
 export HTML_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking changes :heavy_exclamation_mark:
 export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
+
+# Change the below to net7.0 once we have reference assemblies from net7.0 (i.e. once net7.0 goes stable).
+DOTNET_TFM_REFERENCE_iOS=net6.0
+DOTNET_TFM_REFERENCE_tvOS=net6.0
+DOTNET_TFM_REFERENCE_macOS=net6.0
+DOTNET_TFM_REFERENCE_MacCatalyst=net6.0
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
@@ -115,6 +121,14 @@ $(APIDIFF_DIR)/temp/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 # to run mono-api-html every time even if none of the
 # dependencies changed)
 
+define DotNetComputeDiff
+$(OUTPUT_DIR)/diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%html $(OUTPUT_DIR)/diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1)%xml $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).xml $(MONO_API_HTML)
+	$$(Q) mkdir -p $$(dir $$@)
+	$$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $$(abspath $(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).xml) $$(abspath $(APIDIFF_DIR)/temp/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).xml) $(APIDIFF_IGNORE) --html "$$(abspath $$(basename $$@).html)" --markdown "$$(abspath $$(basename $$@).md)"
+	$$(Q) touch $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetComputeDiff,$(platform))))
+
 $(OUTPUT_DIR)/diff/%.html $(OUTPUT_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
 	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/$*.xml) $(abspath $(APIDIFF_DIR)/temp/$*.xml) $(APIDIFF_IGNORE) --html "$(abspath $(basename $@).html)" --markdown "$(abspath $(basename $@).md)"
@@ -166,7 +180,7 @@ $(OUTPUT_DIR)/%-api-diff.html:
 		if [[ "x0" != "x`stat -L -f %z $$file`" ]]; then  \
 			cat $$file | sed "s*<h1>*<h1 id='$$file'>*" >> $@;	\
 			echo "<br><hr>" >> $@;	\
-			echo "<a href='#$$file'>`echo $$file | sed -e 's_html_dll_' -e 's_diff/xi/Xamarin.iOS/__' -e 's_diff/xi/Xamarin.WatchOS/__' -e 's_diff/xi/Xamarin.TVOS/__' -e 's_diff/xm/4.5/_\(Full profile\) _' -e 's_diff/xm/Xamarin.Mac/_\(Mobile profile\) _' -e 's_diff/xm/_\(Classic profile\) _' -e 's_diff/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/__' -e 's#/Users/.*apidiff/##' `</a><br/>" >> $@-toc; \
+			echo "<a href='#$$file'>`echo $$file | sed -e 's_html_dll_' -e 's_diff/xi/Xamarin.iOS/__' -e 's_diff/xi/Xamarin.WatchOS/__' -e 's_diff/xi/Xamarin.TVOS/__' -e 's_diff/xm/4.5/_\(Full profile\) _' -e 's_diff/xm/Xamarin.Mac/_\(Mobile profile\) _' -e 's_diff/xm/_\(Classic profile\) _' -e 's_diff/dotnet/Microsoft.iOS.Ref/ref/net[0-9].[0-9]/__' -e 's_diff/dotnet/Microsoft.tvOS.Ref/ref/net[0-9].[0-9]/__' -e 's_diff/dotnet/Microsoft.macOS.Ref/ref/net[0-9].[0-9]/__' -e 's_diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net[0-9].[0-9]/__' -e 's_diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net[0-9].[0-9]/__' -e 's_diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net[0-9].[0-9]/__' -e 's_diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net[0-9].[0-9]/__' -e 's_diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net[0-9].[0-9]/__' -e 's#/Users/.*apidiff/##' `</a><br/>" >> $@-toc; \
 		fi; \
 	done
 	$(Q) if [ ! -f $@ ]; then \
@@ -477,22 +491,12 @@ $(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURREN
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
 	$(QF_GEN) $(MONO_API_INFO_EXEC) -d $(dir $<) $(abspath $<) -o $(abspath $(APIDIFF_DIR)/references/xm/$*.xml)
 
-# The dotnet references xmls may come from different hashes, so we need to have separate rules for all of them
-$(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.dll  $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
-
-$(APIDIFF_DIR)/references/dotnet/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.xml: $(UNZIP_DIR_DOTNET_macOS)/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.dll  $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
-
-$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.dll  $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
-
-$(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.xml: $(UNZIP_DIR_DOTNET_tvOS)/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.dll  $(MONO_API_INFO)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
+define DotNetGenerateReferenceXml
+$(APIDIFF_DIR)/references/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).xml: $(UNZIP_DIR_DOTNET_$(1))/Microsoft.$(1).Ref/ref/$(DOTNET_TFM_REFERENCE_$(1))/Microsoft.$(1).dll  $(MONO_API_INFO)
+	$$(Q) mkdir -p $$(dir $$@)
+	$$(QF_GEN) $(MONO_API_INFO_EXEC) $$(abspath $$<) -o $$(abspath $$@)
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DotNetGenerateReferenceXml,$(platform))))
 
 $(APIDIFF_DIR)/updated-references/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/$*)
