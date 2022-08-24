@@ -56,6 +56,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public ITaskItem [] References { get; set; }
 
+		public string Registrar { get; set; }
+
 		[Required]
 		public string ResponseFilePath { get; set; }
 
@@ -83,6 +85,9 @@ namespace Xamarin.MacDev.Tasks {
 		protected CommandLineArgumentBuilder GenerateCommandLineArguments ()
 		{
 			var args = new CommandLineArgumentBuilder ();
+
+			if (!string.IsNullOrEmpty (Registrar))
+				args.AddLine ($"--registrar:" + Registrar);
 
 			if (bool.TryParse (ArchiveSymbols?.Trim (), out var msym))
 				args.AddLine ($"--msym={(msym ? "yes" : "no")}");

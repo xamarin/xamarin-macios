@@ -1,7 +1,7 @@
 using Microsoft.Build.Tasks;
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class CreateEmbeddedResources : CreateEmbeddedResourcesTaskBase
 	{
