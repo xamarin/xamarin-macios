@@ -378,6 +378,10 @@ namespace FileProvider {
 		[NoWatch, NoTV, NoMacCatalyst, Mac (13, 0), iOS (16, 0)]
 		[Export ("replicated")]
 		bool Replicated { [Bind ("isReplicated")] get; }
+
+		[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (13, 0)]
+		[Export ("supportsSyncingTrash")]
+		bool SupportsSyncingTrash { get; set; }
 	}
 
 	interface INSFileProviderEnumerationObserver { }
@@ -782,15 +786,20 @@ namespace FileProvider {
 		[Export ("removeDomain:mode:completionHandler:")]
 		void RemoveDomain (NSFileProviderDomain domain, NSFileProviderDomainRemovalMode mode, Action<NSUrl, NSError> completionHandler);
 
-		[Static]
+		[Static, Async]
 		[iOS (16,0), Mac (13,0), NoWatch, NoTV, NoMacCatalyst]
 		[Export ("getServiceWithName:itemIdentifier:completionHandler:")]
-		void GetServiceWithName (string serviceName, string itemIdentifier, Action<NSFileProviderService, NSError> completionHandler);
-	
-		[Static]
+		void GetService (string serviceName, string itemIdentifier, Action<NSFileProviderService, NSError> completionHandler);
+
+		[Static, Async]
 		[NoWatch, NoTV, NoMacCatalyst, Mac (13,0), iOS (16,0)]
 		[Export ("requestModificationOfFields:forItemWithIdentifier:options:completionHandler:")]
-		void RequestModificationOfFields (NSFileProviderItemFields fields, string itemIdentifier, NSFileProviderModifyItemOptions options, Action<NSError> completionHandler);
+		void RequestModification (NSFileProviderItemFields fields, string itemIdentifier, NSFileProviderModifyItemOptions options, Action<NSError> completionHandler);
+
+		[Static, Async]
+		[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (13,0)]
+		[Export ("requestDownloadForItemWithIdentifier:requestedRange:completionHandler:")]
+		void RequestDownload (string itemIdentifier, NSRange rangeToMaterialize, Action<NSError> completionHandler);
 	}
 
 	interface INSFileProviderPendingSetEnumerator { }
