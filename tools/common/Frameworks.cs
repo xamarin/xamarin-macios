@@ -630,6 +630,9 @@ public class Frameworks : Dictionary <string, Framework>
 #endif
 					{ "OSLog", "OSLog", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
+
+					{ "DeviceDiscoveryUI", "DeviceDiscoveryUI", 16,0 },
+
 				};
 			}
 			return tvos_frameworks;
