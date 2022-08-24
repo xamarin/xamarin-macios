@@ -44,6 +44,12 @@ namespace Microsoft.MaciOS.Nnyeah {
 				doHelp = true;
 			}
 
+			if (doHelp) {
+				options.WriteOptionDescriptions (Console.Out);
+				Console.Out.WriteLine (Errors.N0007);
+				return 0;
+			}
+
 			if (infile is null || outfile is null) {
 				throw new ConversionException (Errors.E0014);
 			}
@@ -53,14 +59,7 @@ namespace Microsoft.MaciOS.Nnyeah {
 				throw new ConversionException (Errors.E0015);
 			}
 
-			if (doHelp) {
-				options.WriteOptionDescriptions (Console.Out);
-				Console.Out.WriteLine (Errors.N0007);
-				return 0;
-			}
-			else {
-				return AssemblyConverter.Convert (xamarinAssembly!, microsoftAssembly!, infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
-			}
+			return AssemblyConverter.Convert (xamarinAssembly, microsoftAssembly!, infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
 		}
 	}
 
