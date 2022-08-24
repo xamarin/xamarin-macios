@@ -12,7 +12,7 @@ using ObjCRuntime;
 using Foundation;
 using UniformTypeIdentifiers;
 
-using nw_endpoint_t=System.IntPtr;
+using nw_endpoint_t = System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;

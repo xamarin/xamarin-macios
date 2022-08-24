@@ -14,18 +14,13 @@ using Foundation;
 using Network;
 using System;
 
+using nw_endpoint_t = System.IntPtr;
+
 namespace DeviceDiscoveryExtension {
 	public partial class DDDevice {
-
-		NWEndpoint? networkEndpoint = null;
-		public NWEndpoint? NetworkEndpoint { 
-			get => networkEndpoint;
-			set {
-				networkEndpoint?.Dispose ();
-				networkEndpoint = null;
-				networkEndpoint = value;
-				_NetworkEndpoint = networkEndpoint?.Handle ?? IntPtr.Zero;
-			}
+		public NWEndpoint? NetworkEndpoint {
+			get => _NetworkEndpoint != nw_endpoint_t.Zero ? new NWEndpoint (_NetworkEndpoint, false) : null;
+			set => _NetworkEndpoint = value.GetHandle();
 		}
 	}
 }
