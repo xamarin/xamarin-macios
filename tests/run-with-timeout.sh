@@ -26,7 +26,11 @@ PID=$$
 	done
 
 	# ⏰ - prepare to die
-	kill -s SIGKILL $PID
+	# but first send a QUIT to get a managed stack trace dump
+	kill -s SIGQUIT $PID
+	sleep 10
+	# and then abort since that creates a crash report
+	kill -s SIGABRT $PID
 	echo "The command '$*' timed out after $TIMEOUT second(s)."
 ) 2> /dev/null &
 
