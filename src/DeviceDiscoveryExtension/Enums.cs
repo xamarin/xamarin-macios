@@ -77,6 +77,6 @@ namespace DeviceDiscoveryExtension {
 		Unknown = 0,
 		DeviceFound = 40,
 		DeviceLost = 41,
-		DeviceChanged = 42
+		DeviceChanged = 42,
 	}
 }
