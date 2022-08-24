@@ -506,6 +506,7 @@ namespace CoreServices
 
 #if NET
 		[Obsolete ("Starting with macOS13.0 use 'SetDispatchQueue' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[UnsupportedOSPlatform ("macos13.0")]
 #else
 		[Deprecated (PlatformName.MacOSX, 13,0, message: "Use 'SetDispatchQueue' instead.")]
 #endif
@@ -535,6 +536,7 @@ namespace CoreServices
 
 #if NET
 		[Obsolete ("Starting with macOS13.0 use 'SetDispatchQueue' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+		[UnsupportedOSPlatform ("macos13.0")]
 #else
 		[Deprecated (PlatformName.MacOSX, 13,0, message: "Use 'SetDispatchQueue' instead.")]
 #endif
