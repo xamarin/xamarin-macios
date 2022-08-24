@@ -61,7 +61,7 @@ namespace VideoSubscriberAccount {
 		AllDevices,
 	}
 
-	[TV (16,0), NoMacCatalyst, iOS (16,0)]
+	[TV (16,0), NoMacCatalyst, iOS (16,0), Mac (13,0)]
 	[Flags]
 	[Native]
 	public enum VSUserAccountQueryOptions : long
@@ -70,7 +70,7 @@ namespace VideoSubscriberAccount {
 		AllDevices,
 	}
 
-	[TV (16,0), NoMacCatalyst, iOS (16,0)]
+	[TV (16,0), NoMacCatalyst, iOS (16,0), Mac (13,0)]
 	[Native]
 	public enum VSUserAccountType : long
 	{
@@ -78,7 +78,7 @@ namespace VideoSubscriberAccount {
 		Paid,
 	}
 
-	[TV (16,0), NoMacCatalyst, iOS (16,0)]
+	[TV (16,0), NoMacCatalyst, iOS (16,0), Mac (13,0)]
 	[Native]
 	public enum VSOriginatingDeviceCategory : long
 	{
@@ -400,7 +400,7 @@ namespace VideoSubscriberAccount {
 		string Identifier { get; }
 	}
 
-	[TV (16,0), NoMacCatalyst, iOS (16,0)]
+	[TV (16,0), NoMacCatalyst, iOS (16,0), Mac (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VSUserAccountManager
@@ -418,7 +418,7 @@ namespace VideoSubscriberAccount {
 		void QueryUserAccounts (VSUserAccountQueryOptions options, Action<NSArray<VSUserAccount>, NSError> completion);
 	}
 
-	[TV (16,0), NoMacCatalyst, iOS (16,0)]
+	[TV (16,0), NoMacCatalyst, iOS (16,0), Mac (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface VSUserAccount
