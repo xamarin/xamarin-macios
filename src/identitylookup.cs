@@ -122,7 +122,7 @@ namespace IdentityLookup {
 
 		[NoWatch, NoTV, NoMac, MacCatalyst (16,0), iOS (16,0)]
 		[NullAllowed, Export ("receiverISOCountryCode")]
-		string ReceiverISOCountryCode { get; }
+		string ReceiverIsoCountryCode { get; }
 	}
 
 	[iOS (11,0)]
@@ -247,7 +247,6 @@ namespace IdentityLookup {
 	[Protocol]
 	interface ILMessageFilterCapabilitiesQueryHandling
 	{
-		[Async]
 		[Abstract]
 		[Export ("handleCapabilitiesQueryRequest:context:completion:")]
 		void HandleQueryRequest (ILMessageFilterCapabilitiesQueryRequest capabilitiesQueryRequest, ILMessageFilterExtensionContext context, Action<ILMessageFilterCapabilitiesQueryResponse> completion);
@@ -257,9 +256,11 @@ namespace IdentityLookup {
 	[BaseType (typeof (NSObject))]
 	interface ILMessageFilterCapabilitiesQueryResponse : NSSecureCoding
 	{
+		[BindAs (typeof (ILMessageFilterSubAction []))]
 		[Export ("transactionalSubActions", ArgumentSemantic.Copy)]
 		NSNumber[] TransactionalSubActions { get; set; }
 
+		[BindAs (typeof (ILMessageFilterSubAction []))]
 		[Export ("promotionalSubActions", ArgumentSemantic.Copy)]
 		NSNumber[] PromotionalSubActions { get; set; }
 	}
