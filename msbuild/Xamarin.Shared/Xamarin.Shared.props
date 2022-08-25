@@ -180,7 +180,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 		<!-- If we should create a .pkg or not (only relevant for macOS / Mac Catalyst) -->
 		<!-- The equivalent property for the other platforms is 'BuildIpa' -->
-		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
+		<CreatePackage Condition="'$(CreatePackage)' == '' And '$(UsingAppleNETSdk)' != 'true'">false</CreatePackage>
 
 		<!-- If the .pkg should be signed or not. Applicable to macOS and Mac Catalyst. Defaults to false. -->
 		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
