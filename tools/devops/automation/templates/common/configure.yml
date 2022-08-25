@@ -94,6 +94,8 @@ steps:
 
       # set output variables based on the git labels
       $labelsOfInterest = @(
+        "enable-legacy-xamarin",
+        "disable-legacy-xamarin",
         "build-package",
         "skip-packages",
         "skip-nugets",

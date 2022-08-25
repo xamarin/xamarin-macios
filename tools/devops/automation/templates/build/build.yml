@@ -19,6 +19,14 @@ parameters:
   type: boolean
   default: false
 
+- name: enableLegacyXamarin
+  type: string
+  default: ''
+
+- name: disableLegacyXamarin
+  type: string
+  default: ''
+
 - name: isPR
   type: boolean
   default: false
@@ -184,6 +192,15 @@ steps:
       CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-dotnet"
     fi
 
+    if [[ "$EnableLegacyXamarin" != "" ]]; then
+      echo "Enabling legacy Xamarin builds."
+      CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-legacy-xamarin"
+    fi
+    if [[ "$DisableLegacyXamarin" != "" ]]; then
+      echo "Disabling legacy Xamarin builds."
+      CONFIGURE_FLAGS="$CONFIGURE_FLAGS --disable-legacy-xamarin"
+    fi
+
     CONFIGURE_FLAGS="$CONFIGURE_FLAGS --enable-install-source"
     echo "Configuration flags are '$CONFIGURE_FLAGS'"
 
@@ -197,6 +214,10 @@ steps:
       IsPR: 'False'
     ${{ if eq(parameters.enableDotnet, true) }}:
       EnableDotNet: 'True'
+    ${{ if ne(parameters.enableLegacyXamarin, '') }}:
+      EnableLegacyXamarin: '1'
+    ${{ if ne(parameters.disableLegacyXamarin, '') }}:
+      DisableLegacyXamarin: '1'
   displayName: "Configure build"
   timeoutInMinutes: 5
 
