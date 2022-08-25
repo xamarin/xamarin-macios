@@ -470,6 +470,9 @@ namespace Introspection {
 				case "UISheetPresentationControllerDetent": // Conformance not in headers
 				case "UIWindowSceneActivationConfiguration": // Conformance not in headers
 					return true;
+				// Xcode 14
+				case "VSUserAccount": // Conformance not in headers
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -717,6 +720,9 @@ namespace Introspection {
 				case "SRTextInputSession": // conformance not in headers
 				case "UISheetPresentationControllerDetent": // conformance not in headers
 				case "CAConstraintLayoutManager": // Not declared in header file
+					return true;
+				// Xcode 14
+				case "VSUserAccount": // Conformance not in headers
 					return true;
 				}
 				break;
