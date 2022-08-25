@@ -512,7 +512,11 @@ namespace CoreMidi {
 	public class MidiClient : MidiObject {
 #if !COREBUILD
 		[DllImport (Constants.CoreMidiLibrary)]
+#if NET
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIClientCreate (IntPtr str, delegate* unmanaged<IntPtr, IntPtr, void> callback, IntPtr context, out MidiObjectRef handle);
+#else
 		extern static int /* OSStatus = SInt32 */ MIDIClientCreate (IntPtr str, MidiNotifyProc callback, IntPtr context, out MidiObjectRef handle);
+#endif
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIClientDispose (MidiObjectRef handle);
@@ -552,7 +556,14 @@ namespace CoreMidi {
 		{
 			using (var nsstr = new NSString (name)){
 				gch = GCHandle.Alloc (this);
-				int code = MIDIClientCreate (nsstr.Handle, ClientCallback, GCHandle.ToIntPtr (gch), out handle);
+#if NET
+				int code = 0;
+				unsafe {
+					code = MIDIClientCreate (nsstr.Handle, &ClientCallback, GCHandle.ToIntPtr (gch), out handle);
+				}
+#else
+				int code = MIDIClientCreate (nsstr.Handle, static_MidiNotifyProc, GCHandle.ToIntPtr (gch), out handle);
+#endif
 				if (code != 0){
 					gch.Free ();
 					handle = MidiObject.InvalidRef;
@@ -639,10 +650,23 @@ namespace CoreMidi {
 		public event EventHandler? ThruConnectionsChanged;
 		public event EventHandler? SerialPortOwnerChanged;
 		public event EventHandler<IOErrorEventArgs>? IOError;
-		
+#if !NET
+		static MidiNotifyProc? _static_MidiNotifyProc;
+		static MidiNotifyProc static_MidiNotifyProc {
+			get {
+				if (_static_MidiNotifyProc is null)
+					_static_MidiNotifyProc = new MidiNotifyProc (ClientCallback);
+				return _static_MidiNotifyProc;
+			}
+		}
+#endif
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (MidiNotifyProc))]
 #endif
+#endif // if NET
 		static void ClientCallback (IntPtr message, IntPtr context)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
@@ -936,7 +960,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #endif
-	public class MidiPort : MidiObject {
+	public unsafe class MidiPort : MidiObject {
 #if !COREBUILD
 
 #if NET
@@ -954,9 +978,13 @@ namespace CoreMidi {
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
 #endif
+#if NET
+		[DllImport (Constants.CoreMidiLibrary)]
+		extern static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> readProc, IntPtr context, MidiPortRef* midiPort);
+#else
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, MidiReadProc readProc, IntPtr context, out MidiPortRef midiPort);
-
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIOutputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, out MidiPortRef midiPort);
 
@@ -972,10 +1000,17 @@ namespace CoreMidi {
 				GCHandle gch = GCHandle.Alloc (this);
 				int code;
 				
-				if (input)
-					code = MIDIInputPortCreate (client.handle, nsstr.Handle, Read, GCHandle.ToIntPtr (gch), out handle);
-				else
+				if (input) {
+#if NET
+					MidiPortRef tempHandle;
+					code = MIDIInputPortCreate (client.handle, nsstr.Handle, &Read, GCHandle.ToIntPtr (gch), &tempHandle);
+					handle = tempHandle;
+#else
+					code = MIDIInputPortCreate (client.handle, nsstr.Handle, static_MidiReadProc, GCHandle.ToIntPtr (gch), out handle);
+#endif
+				} else {
 					code = MIDIOutputPortCreate (client.handle, nsstr.Handle, out handle);
+				}
 				
 				if (code != 0){
 					gch.Free ();
@@ -1010,9 +1045,23 @@ namespace CoreMidi {
 		
 		public event EventHandler<MidiPacketsEventArgs>? MessageReceived;
 		
+#if !NET
+		static MidiReadProc? _static_MidiReadProc;
+		static MidiReadProc static_MidiReadProc {
+			get {
+				if (_static_MidiReadProc is null)
+					_static_MidiReadProc = new MidiReadProc (Read);
+				return _static_MidiReadProc;
+			}
+		}
+#endif
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (MidiReadProc))]
 #endif
+#endif // if NET
 		static void Read (IntPtr packetList, IntPtr context, IntPtr srcPtr)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
@@ -2095,7 +2144,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #endif
-	public class MidiEndpoint : MidiObject {
+	public unsafe class MidiEndpoint : MidiObject {
 #if !COREBUILD
 		GCHandle gch;
 
@@ -2117,8 +2166,13 @@ namespace CoreMidi {
 		[Deprecated (PlatformName.iOS, 14,0)]
 		[Deprecated (PlatformName.MacOSX, 11,0)]
 #endif
+#if NET
+		[DllImport (Constants.CoreMidiLibrary)]
+		extern static MidiError /* OSStatus = SInt32 */ MIDIDestinationCreate (MidiClientRef client, IntPtr /* CFStringRef */ name, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> readProc, IntPtr context, MidiEndpointRef* midiEndpoint);
+#else
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDIDestinationCreate (MidiClientRef client, IntPtr /* CFStringRef */ name, MidiReadProc readProc, IntPtr context, out MidiEndpointRef midiEndpoint);
+#endif
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIFlushOutput (MidiEndpointRef handle);
@@ -2195,8 +2249,13 @@ namespace CoreMidi {
 		{
 			using (var nsstr = new NSString (name)){
 				GCHandle gch = GCHandle.Alloc (this);
-				
-				code = MIDIDestinationCreate (client.handle, nsstr.Handle, Read, GCHandle.ToIntPtr (gch), out handle);
+#if NET
+				MidiEndpointRef tempHandle;
+				code = MIDIDestinationCreate (client.handle, nsstr.Handle, &Read, GCHandle.ToIntPtr (gch), &tempHandle);
+				handle = tempHandle;
+#else				
+				code = MIDIDestinationCreate (client.handle, nsstr.Handle, static_MidiReadProc, GCHandle.ToIntPtr (gch), out handle);
+#endif
 				EndpointName = name;
 			}
 		}
@@ -2208,10 +2267,24 @@ namespace CoreMidi {
 		}
 		
 		public event EventHandler<MidiPacketsEventArgs>? MessageReceived;
+#if !NET
+		static MidiReadProc? _static_MidiReadProc;
+		static MidiReadProc static_MidiReadProc {
+			get {
+				if (_static_MidiReadProc is null)
+					_static_MidiReadProc = new MidiReadProc (Read);
+				return _static_MidiReadProc;
+			}
+		}
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (MidiReadProc))]
 #endif
+#endif // if NET
 		static void Read (IntPtr packetList, IntPtr context, IntPtr srcPtr)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
