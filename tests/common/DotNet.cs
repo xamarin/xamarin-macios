@@ -120,6 +120,7 @@ namespace Xamarin.Tests {
 				args.Add (verb);
 				args.Add (project);
 				if (properties != null) {
+					Dictionary<string, string> generatedProps = null;
 					foreach (var prop in properties) {
 						if (prop.Value.IndexOfAny (new char [] { ';' }) >= 0) {
 							// https://github.com/dotnet/msbuild/issues/471
@@ -128,10 +129,33 @@ namespace Xamarin.Tests {
 							// This means that a task that takes a "string[] RuntimeIdentifiers" will get an array with
 							// a single element, where that single element is the whole RuntimeIdentifiers string.
 							// Example task: https://github.com/dotnet/sdk/blob/ffca47e9a36652da2e7041360f2201a2ba197194/src/Tasks/Microsoft.NET.Build.Tasks/ProcessFrameworkReferences.cs#L45
-							args.Add ($"/p:{prop.Key}=\"{prop.Value}\"");
+							// args.Add ($"/p:{prop.Key}=\"{prop.Value}\"");
+
+							// Setting a property with a semicolon from the command line doesn't work anymore.
+							// Ref: https://github.com/dotnet/sdk/issues/27059#issuecomment-1219319513
+							// So write these properties in a file instead. This is a behavioural difference, because
+							// they'll be project-specific instead of global, but I don't see a better workaround.
+							if (generatedProps is null)
+								generatedProps = new Dictionary<string, string> ();
+							generatedProps.Add (prop.Key, prop.Value);
 						} else {
 							args.Add ($"/p:{prop.Key}={prop.Value}");
 						}
+					}
+					if (generatedProps is not null) {
+						var sb = new StringBuilder ();
+						sb.AppendLine ("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+						sb.AppendLine ("<Project>");
+						sb.AppendLine ("\t<PropertyGroup>");
+						foreach (var prop in generatedProps) {
+							sb.AppendLine ($"\t\t<{prop.Key}>{prop.Value}</{prop.Key}>");
+						}
+						sb.AppendLine ("\t</PropertyGroup>");
+						sb.AppendLine ("</Project>");
+
+						var generatedProjectFile = Path.Combine (Cache.CreateTemporaryDirectory (), "GeneratedProjectFile.props");
+						File.WriteAllText (generatedProjectFile, sb.ToString ());
+						args.Add ($"/p:GeneratedProjectFile={generatedProjectFile}");
 					}
 				}
 				if (!string.IsNullOrEmpty (target))
