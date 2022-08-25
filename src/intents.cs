@@ -24,9 +24,11 @@ using EventKit;
 #endif
 
 #if MONOMAC
+using AppKit;
 using UIImage = Foundation.NSObject;
 #else
 using UIKit;
+using NSImage = Foundation.NSObject;
 #endif
 
 #if !NET
@@ -3801,6 +3803,11 @@ namespace Intents {
 		[Static]
 		[Export ("imageNamed:")]
 		INImage FromName (string name);
+
+		[NoWatch, NoTV, NoiOS, Mac (13,0)]
+		[Static]
+		[Export ("imageWithNSImage:")]
+		INImage FromImage (NSImage image);
 
 		[Watch (7,0), NoMac, iOS (14,0)]
 		[MacCatalyst (14,0)]
