@@ -337,6 +337,7 @@ clean-local::
 	rm -rf build
 	rm -f $(IOS_TARGETS) generated_sources *.mdb *.pdb
 
+ifdef INCLUDE_IOS
 IOS_TARGETS_DIRS += \
 	$(IOS_BUILD_DIR)                                           \
 	$(IOS_BUILD_DIR)/compat                                    \
@@ -396,6 +397,8 @@ DOTNET_TARGETS_DIRS += \
 	$(IOS_DOTNET_BUILD_DIR)/generated-sources \
 	$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/$(DOTNET_TFM) \
 	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
+
+endif
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%.dll: $(IOS_BUILD_DIR)/compat/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades
 	$(Q) install -m 0755 $< $@
@@ -461,8 +464,10 @@ $(PROJECT_DIR)/MonoTouch.NUnitLite.csproj: MonoTouch.NUnitLite.templ.csproj Make
 
 PROJECT_FILES += $(PROJECT_DIR)/xamios.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.csproj
 
+ifdef INCLUDE_IOS
 all-ios: $(IOS_TARGETS)
 install-ios: $(IOS_TARGETS)
+endif
 
 ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_IOS

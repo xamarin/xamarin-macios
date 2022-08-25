@@ -243,7 +243,7 @@ namespace MonoTouchFixtures.SceneKit {
 			var originalMatrix = matrix;
 			matrix.Invert ();
 
-			Assert.AreEqual (SCNMatrix4Invert (originalMatrix), matrix, "Native");
+			Asserts.AreEqual (SCNMatrix4Invert (originalMatrix), matrix, (pfloat) 0.00001, "Native");
 
 			var expected = new SCNMatrix4 (
 				(pfloat) (-0.6181818181818182), (pfloat) (0.3151515151515151), (pfloat) (-0.030303030303030304), (pfloat) (0.3878787878787879),
