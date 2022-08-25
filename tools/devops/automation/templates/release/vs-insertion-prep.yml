@@ -22,7 +22,7 @@ stages:
       usePipelineArtifactTasks: true
 
   # Check - "xamarin-macios (Prepare Release Convert NuGet to MSI)"
-  - template: nuget-msi-convert/job/v2.yml@templates
+  - template: nuget-msi-convert/job/v3.yml@templates
     parameters:
       yamlResourceName: templates
       dependsOn: signing
@@ -96,6 +96,19 @@ stages:
             inputs:
               artifactName: vsdrop-signed
               downloadPath: $(Build.SourcesDirectory)/vs-insertion
+
+    - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
+      parameters:
+        githubToken: $(GitHub.Token)
+        githubContext: $(MultiTargetVSDropCommitStatusName)
+        blobName: $(MultiTargetVSDropCommitStatusName)
+        packagePrefix: xamarin-macios
+        artifactsPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
+        downloadSteps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+              artifactName: vsdrop-multitarget-signed
+              downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
 
 # Check - "xamarin-macios (VS Insertion Wait For Approval)"
 # Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"
