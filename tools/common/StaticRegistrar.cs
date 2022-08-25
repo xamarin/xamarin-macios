@@ -2215,8 +2215,24 @@ namespace Registrar {
 				goto default;
 #if !NET
 			case "Chip":
-				h = "<CHIP/CHIP.h>";
-				break;
+				switch (App.Platform) {
+				case ApplePlatform.iOS when App.SdkVersion.Major <= 15:
+				case ApplePlatform.TVOS when App.SdkVersion.Major <= 15:
+				case ApplePlatform.MacOSX when App.SdkVersion.Major <= 12:
+				case ApplePlatform.WatchOS when App.SdkVersion.Major <= 8:
+					h = "<CHIP/CHIP.h>";
+					break;
+				default:
+					// The framework has been renamed.
+					header.WriteLine ("@protocol CHIPDevicePairingDelegate <NSObject>");
+					header.WriteLine ("@end");
+					header.WriteLine ("@protocol CHIPKeypair <NSObject>");
+					header.WriteLine ("@end");
+					header.WriteLine ("@protocol CHIPPersistentStorageDelegate <NSObject>");
+					header.WriteLine ("@end");
+					break;
+				}
+				return;
 #endif
 			case "GLKit":
 				// This prevents this warning:

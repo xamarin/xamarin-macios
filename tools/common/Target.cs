@@ -222,9 +222,6 @@ namespace Xamarin.Bundler {
 						case "Metal":
 						case "MetalKit":
 						case "MetalPerformanceShaders":
-#if !NET
-						case "CHIP":
-#endif
 						case "PHASE":
 						case "ThreadNetwork":
 							// some frameworks do not exists on simulators and will result in linker errors if we include them
@@ -251,6 +248,14 @@ namespace Xamarin.Bundler {
 								ErrorHelper.Warning (5219, Errors.MT5219);
 								continue;
 							}
+							break;
+						case "CHIP":
+							// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
+							if (Driver.XcodeVersion.Major >= 14) {
+								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+", framework.Name);
+								continue;
+							} else if (App.IsSimulatorBuild)
+								continue;
 							break;
 #endif
 						case "GameKit":

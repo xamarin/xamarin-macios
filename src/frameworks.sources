@@ -1411,6 +1411,7 @@ PASSKIT_API_SOURCES = \
 PASSKIT_SOURCES = \
 	PassKit/PKCompat.cs	\
 	PassKit/PKPaymentRequest.cs	\
+	PassKit/PKShareablePassMetadata.cs \
 
 # PencilKit
 PENCILKIT_API_SOURCEs = \
@@ -1878,6 +1879,7 @@ SHARED_CORE_SOURCES = \
 	ObjCRuntime/ErrorConstants.cs \
 	ObjCRuntime/INativeObject.cs \
 	ObjCRuntime/LinkWithAttribute.cs \
+	ObjCRuntime/Messaging.cs \
 	ObjCRuntime/NativeAttribute.cs \
 	ObjCRuntime/NativeHandle.cs \
 	ObjCRuntime/NativeNameAttribute.cs \
@@ -2070,6 +2072,7 @@ MACOS_FRAMEWORKS =          \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
+	SharedWithYouCore       \
 	Social                  \
 	Speech                  \
 	SystemConfiguration     \
@@ -2176,6 +2179,7 @@ IOS_FRAMEWORKS =         \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYouCore \
 	Social \
 	Speech \
 	SystemConfiguration \
@@ -2362,6 +2366,7 @@ MACCATALYST_FRAMEWORKS = \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYouCore \
 	Social \
 	Speech \
 	SystemConfiguration \
