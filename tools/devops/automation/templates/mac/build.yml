@@ -230,14 +230,14 @@ steps:
 
       # We failed, so write to the comment file why we failed.
       Set-Content -Path "$Env:GITHUB_FAILURE_COMMENT_FILE" -Value "$msg"
+
+      exit 1
     } else {
       # We succeeded, so remove the failure comment file.
       Remove-Item -Path "$Env:GITHUB_FAILURE_COMMENT_FILE"
-    }
 
-    # we set the result to 0, the reason is that release pipelines do not like failing tests,
-    # yet we do have some  flacky ones, this will allow the release to run. The comment will let use know that we failed
-    exit 0  
+      exit 0
+    }
   displayName: 'Run tests'
   timeoutInMinutes: 45
   env:

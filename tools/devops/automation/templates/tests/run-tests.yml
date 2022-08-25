@@ -240,6 +240,7 @@ steps:
     else
       echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
     fi
+    exit $RC
   env:
     TEST_PREFIX: ${{ upper(parameters.testPrefix) }}
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
@@ -276,7 +277,7 @@ steps:
   condition:  and(eq(variables['system.debug'], true), succeededOrFailed())
   continueOnError: true
 
-# set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the commnet, this way
+# set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the comment, this way
 # we report the result as soon as we have it and ensure that we set the status from pending to the appropiate value.
 
 - pwsh: |
@@ -288,6 +289,8 @@ steps:
     $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
     $statuses.SetStatus($testResult.GetStatus())
   displayName: "Set tests status."
+  continueOnError: true
+  condition: succeededOrFailed()
   timeoutInMinutes: 5
 
 # Upload TestSummary as an artifact.
@@ -306,6 +309,8 @@ steps:
       Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
     }
   displayName: Set TestSummary
+  continueOnError: true
+  condition: succeededOrFailed()
 
 - task: artifactDropTask@1
   displayName: 'Publish to Artifact Services Drop'
@@ -316,6 +321,8 @@ steps:
     sourcePath: 'xamarin-macios/jenkins-results'
     detailedLog: true
     usePat: true
+  continueOnError: true
+  condition: succeededOrFailed()
 
 # Upload test results to vsts.
 - task: PublishTestResults@2
