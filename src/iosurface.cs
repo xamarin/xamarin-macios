@@ -94,6 +94,10 @@ namespace IOSurface {
 		
 		[Field ("IOSurfacePropertyKeyPixelSizeCastingAllowed")]
 		NSString PixelSizeCastingAllowedKey { get; } 
+
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Field ("IOSurfacePropertyKeyName")]
+		NSString NameKey { get; } 
 	}
 
 	[StrongDictionary ("IOSurfacePropertyKey")]
@@ -119,6 +123,8 @@ namespace IOSurface {
 		IOSurfaceMemoryMap CacheMode { get; set; }
 		uint PixelFormat { get; set; }
 		bool PixelSizeCastingAllowed { get; set; }
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		string Name { get; set; }
 	}
 
 	[iOS (11,0)]
