@@ -61,6 +61,32 @@ namespace VideoSubscriberAccount {
 		AllDevices,
 	}
 
+	[TV (16,0), NoMacCatalyst, iOS (16,0), Mac (13,0)]
+	[Flags]
+	[Native]
+	public enum VSUserAccountQueryOptions : long
+	{
+		None = 0x0,
+		AllDevices,
+	}
+
+	[TV (16,0), NoMacCatalyst, iOS (16,0), Mac (13,0)]
+	[Native]
+	public enum VSUserAccountType : long
+	{
+		Free,
+		Paid,
+	}
+
+	[TV (16,0), NoMacCatalyst, iOS (16,0), Mac (13,0)]
+	[Native]
+	public enum VSOriginatingDeviceCategory : long
+	{
+		Mobile,
+		Other,
+	}
+
+
 	[iOS (10, 0)]
 	[TV (10, 0)]
 	[Mac (10,14)]
@@ -373,4 +399,68 @@ namespace VideoSubscriberAccount {
 		[Export ("identifier")]
 		string Identifier { get; }
 	}
+
+	[TV (16,0), NoMacCatalyst, iOS (16,0), Mac (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VSUserAccountManager
+	{
+		[Static]
+		[Export ("sharedUserAccountManager")]
+		VSUserAccountManager SharedUserAccountManager { get; }
+
+		[Async]
+		[Export ("updateUserAccount:completion:")]
+		void UpdateUserAccount (VSUserAccount account, [NullAllowed] Action<NSError> completion);
+
+		[Async]
+		[Export ("queryUserAccountsWithOptions:completion:")]
+		void QueryUserAccounts (VSUserAccountQueryOptions options, Action<NSArray<VSUserAccount>, NSError> completion);
+	}
+
+	[TV (16,0), NoMacCatalyst, iOS (16,0), Mac (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface VSUserAccount
+	{
+		[NullAllowed, Export ("updateURL", ArgumentSemantic.Copy)]
+		NSUrl UpdateUrl { get; set; }
+
+		[Export ("requiresSystemTrust")]
+		bool RequiresSystemTrust { get; set; }
+
+		[NullAllowed, Export ("accountProviderIdentifier", ArgumentSemantic.Strong)]
+		string AccountProviderIdentifier { get; set; }
+
+		[NullAllowed, Export ("identifier")]
+		string Identifier { get; set; }
+
+		[Export ("accountType", ArgumentSemantic.Assign)]
+		VSUserAccountType AccountType { get; set; }
+
+		[Export ("deleted")]
+		bool Deleted { [Bind ("isDeleted")] get; set; }
+
+		[NullAllowed, Export ("subscriptionBillingCycleEndDate", ArgumentSemantic.Copy)]
+		NSDate SubscriptionBillingCycleEndDate { get; set; }
+
+		[NullAllowed, Export ("tierIdentifiers", ArgumentSemantic.Copy)]
+		string[] TierIdentifiers { get; set; }
+
+		[NullAllowed, Export ("billingIdentifier")]
+		string BillingIdentifier { get; set; }
+
+		[NullAllowed, Export ("authenticationData")]
+		string AuthenticationData { get; set; }
+
+		[Export ("fromCurrentDevice")]
+		bool FromCurrentDevice { [Bind ("isFromCurrentDevice")] get; }
+
+		[Export ("deviceCategory")]
+		VSOriginatingDeviceCategory DeviceCategory { get; }
+
+		[Export ("initWithAccountType:updateURL:")]
+		NativeHandle Constructor (VSUserAccountType accountType, [NullAllowed] NSUrl url);
+	}
+
 }
