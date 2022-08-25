@@ -407,7 +407,7 @@ NUGET_SOURCES:=$(shell grep https://pkgs.dev.azure.com $(TOP)/NuGet.config | sed
 .stamp-install-workloads: Makefile $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
 	$(Q) $(DOTNET) workload install --skip-manifest-update \
 		$(foreach source,$(NUGET_SOURCES),--source $(source)) \
-		--source $(DOTNET_NUPKG_DIR) --verbosity diag \
+		--source $(DOTNET_NUPKG_DIR) $(DOTNET_WORKLOAD_VERBOSITY) \
 		$(foreach platform,$(DOTNET_PLATFORMS),$(shell echo $(platform) | tr A-Z a-z))
 	$(Q) touch $@
 
