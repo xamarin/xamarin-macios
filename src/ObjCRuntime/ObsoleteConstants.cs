@@ -27,5 +27,7 @@ namespace ObjCRuntime {
 
 		internal const string RemovedFromChip = "This API has been removed from the 'CHIP' framework.";
 
+		internal const string BrokenBinding = "This API was incorrectly bound and does not work correctly. Use the new version indicated in the associated Obsolete attribute.";
+
 	}
 }
