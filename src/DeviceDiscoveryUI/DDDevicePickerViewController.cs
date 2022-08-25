@@ -22,21 +22,11 @@ namespace DeviceDiscoveryUI {
 	public partial class DDDevicePickerViewController {
 		public delegate void DevicePickerCompletionHandler (NWEndpoint? endpoint, NWError? error);
 
-		public static bool IsSupported (NWBrowserDescriptor browseDescriptor, NWParameters? parameters)
-		{
-			if (browseDescriptor is null)
-				throw new ArgumentNullException (nameof (browseDescriptor));
+		public static bool IsSupported (NWBrowserDescriptor browseDescriptor, NWParameters? parameters) =>
+			_IsSupported (browseDescriptor.GetNonNullHandle (nameof (browseDescriptor)), parameters.GetHandle ());
 
-			return _IsSupported (browseDescriptor.Handle, parameters.GetHandle ());
-		}
-
-		public DDDevicePickerViewController (NWBrowserDescriptor browseDescriptor, NWParameters? parameters) : base (NSObjectFlag.Empty)
-		{
-			if (browseDescriptor is null)
-				throw new ArgumentNullException (nameof (browseDescriptor));
-
-			Handle = _InitWithBrowseDescriptorAndParameters (browseDescriptor.Handle, parameters.GetHandle ());
-		}
+		public DDDevicePickerViewController (NWBrowserDescriptor browseDescriptor, NWParameters? parameters) : base (NSObjectFlag.Empty) =>
+			Handle = _InitWithBrowseDescriptorAndParameters (browseDescriptor.GetNonNullHandle (nameof (browseDescriptor)), parameters.GetHandle ());
 
 		public void SetDevicePicker (DevicePickerCompletionHandler devicePickerCompletionHandler)
 		{
