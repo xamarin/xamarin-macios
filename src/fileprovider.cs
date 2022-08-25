@@ -290,7 +290,7 @@ namespace FileProvider {
 	}
 
 	[Native]
-	[iOS (16,0), Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[iOS (16,0), Mac (13,0), NoWatch, NoTV, NoMacCatalyst]
 	public enum NSFileProviderContentPolicy : long
 	{
 		Inherited,
