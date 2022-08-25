@@ -960,7 +960,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #endif
-	public unsafe class MidiPort : MidiObject {
+	public class MidiPort : MidiObject {
 #if !COREBUILD
 
 #if NET
@@ -980,7 +980,7 @@ namespace CoreMidi {
 #endif
 #if NET
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> readProc, IntPtr context, MidiPortRef* midiPort);
+		extern unsafe static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> readProc, IntPtr context, MidiPortRef* midiPort);
 #else
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, MidiReadProc readProc, IntPtr context, out MidiPortRef midiPort);
@@ -1002,9 +1002,11 @@ namespace CoreMidi {
 				
 				if (input) {
 #if NET
-					MidiPortRef tempHandle;
-					code = MIDIInputPortCreate (client.handle, nsstr.Handle, &Read, GCHandle.ToIntPtr (gch), &tempHandle);
-					handle = tempHandle;
+					unsafe {
+						MidiPortRef tempHandle;
+						code = MIDIInputPortCreate (client.handle, nsstr.Handle, &Read, GCHandle.ToIntPtr (gch), &tempHandle);
+						handle = tempHandle;
+					}
 #else
 					code = MIDIInputPortCreate (client.handle, nsstr.Handle, static_MidiReadProc, GCHandle.ToIntPtr (gch), out handle);
 #endif
