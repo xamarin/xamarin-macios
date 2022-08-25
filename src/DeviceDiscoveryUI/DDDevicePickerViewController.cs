@@ -24,18 +24,18 @@ namespace DeviceDiscoveryUI {
 
 		public static bool IsSupported (NWBrowserDescriptor browseDescriptor, NWParameters? parameters)
 		{
-			if (browseDescriptor == null)
+			if (browseDescriptor is null)
 				throw new ArgumentNullException (nameof (browseDescriptor));
 
-			return _IsSupported (browseDescriptor.Handle, parameters?.Handle ?? IntPtr.Zero);
+			return _IsSupported (browseDescriptor.Handle, parameters.GetHandle ());
 		}
 
 		public DDDevicePickerViewController (NWBrowserDescriptor browseDescriptor, NWParameters? parameters) : base (NSObjectFlag.Empty)
 		{
-			if (browseDescriptor == null)
+			if (browseDescriptor is null)
 				throw new ArgumentNullException (nameof (browseDescriptor));
 
-			Handle = _InitWithBrowseDescriptorAndParameters (browseDescriptor.Handle, parameters?.Handle ?? IntPtr.Zero);
+			Handle = _InitWithBrowseDescriptorAndParameters (browseDescriptor.Handle, parameters.GetHandle ());
 		}
 
 		public void SetDevicePicker (DevicePickerCompletionHandler devicePickerCompletionHandler)
