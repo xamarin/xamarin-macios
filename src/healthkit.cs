@@ -564,6 +564,7 @@ namespace HealthKit {
 
 	delegate void HKHealthStoreGetRequestStatusForAuthorizationToShareHandler (HKAuthorizationRequestStatus requestStatus, NSError error);
 	delegate void HKHealthStoreRecoverActiveWorkoutSessionHandler (HKWorkoutSession session, NSError error);
+	delegate void HKHealthStoreCompletionHandler (bool success, [NullAllowed] NSError error);
 
 	[Watch (2,0)]
 	[iOS (8,0)]
@@ -749,7 +750,7 @@ namespace HealthKit {
 		[iOS (16,0), Mac (13,0), Watch (9,0), NoTV, MacCatalyst (16,0)]
 		[Async]
 		[Export ("requestPerObjectReadAuthorizationForType:predicate:completion:")]
-		void RequestPerObjectReadAuthorization (HKObjectType objectType, [NullAllowed] NSPredicate predicate, Action<bool, NSError> completion);
+		void RequestPerObjectReadAuthorization (HKObjectType objectType, [NullAllowed] NSPredicate predicate, HKHealthStoreCompletionHandler completion);
 	}
 
 	delegate void HKStoreSampleAddedCallback (bool success, NSError error);
@@ -3573,6 +3574,8 @@ namespace HealthKit {
 		void AddMetadata (HKMetadata metadata, HKWorkoutRouteBuilderAddMetadataHandler completion);
 	}
 
+	delegate void HKWorkoutRouteQueryDataHandler (HKWorkoutRouteQuery query, [NullAllowed] CLLocation[] routeData, bool done, [NullAllowed] NSError error);
+
 	[Watch (4,0), iOS (11,0), Mac (13,0)]
 	[BaseType (typeof(HKQuery))]
 	interface HKWorkoutRouteQuery {
@@ -3581,7 +3584,7 @@ namespace HealthKit {
 
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Export ("initWithRoute:dateInterval:dataHandler:")]
-		NativeHandle Constructor (HKWorkoutRoute workoutRoute, NSDateInterval dateInterval, Action<HKWorkoutRouteQuery, NSArray<CLLocation>, bool, NSError> dataHandler);
+		NativeHandle Constructor (HKWorkoutRoute workoutRoute, NSDateInterval dateInterval, HKWorkoutRouteQueryDataHandler dataHandler);
 	}
 
 	delegate void HKWorkoutBuilderCompletionHandler (bool success, NSError error);
@@ -3668,17 +3671,17 @@ namespace HealthKit {
 		[Async]
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Export ("addWorkoutActivity:completion:")]
-		void AddWorkoutActivity (HKWorkoutActivity workoutActivity, Action<bool, NSError> completion);
+		void AddWorkoutActivity (HKWorkoutActivity workoutActivity, HKWorkoutBuilderCompletionHandler completion);
 
 		[Async]
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Export ("updateActivityWithUUID:endDate:completion:")]
-		void UpdateActivity (NSUuid uuid, NSDate endDate, Action<bool, NSError> completion);
+		void UpdateActivity (NSUuid uuid, NSDate endDate, HKWorkoutBuilderCompletionHandler completion);
 
 		[Async]
 		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 		[Export ("updateActivityWithUUID:addMedatata:completion:")]
-		void UpdateActivity (NSUuid uuid, NSDictionary<NSString, NSObject> metadata, Action<bool, NSError> completion);
+		void UpdateActivity (NSUuid uuid, NSDictionary<NSString, NSObject> metadata, HKWorkoutBuilderCompletionHandler completion);
 	}
 
 	delegate void HKQuantitySeriesSampleQueryQuantityDelegate (HKQuantitySeriesSampleQuery query, HKQuantity quantity, NSDate date, bool done, NSError error);
@@ -4209,6 +4212,10 @@ namespace HealthKit {
 		NSDictionary<NSString, NSObject> Metadata { get; }
 	}
 
+	delegate void HKAttachmentStoreCompletionHandler (bool success, [NullAllowed] NSError error);
+	delegate void HKAttachmentStoreDataHandler ([NullAllowed] NSData dataChunk, [NullAllowed] NSError error, bool done);
+	delegate void HKAttachmentStoreGetAttachmentCompletionHandler ([NullAllowed] HKAttachment[] attachments, [NullAllowed] NSError error);
+
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
 	[BaseType (typeof (NSObject))]
 	interface HKAttachmentStore
@@ -4222,18 +4229,18 @@ namespace HealthKit {
 
 		[Async]
 		[Export ("removeAttachment:fromObject:completion:")]
-		void RemoveAttachment (HKAttachment attachment, HKObject @object, Action<bool, NSError> completion);
+		void RemoveAttachment (HKAttachment attachment, HKObject @object, HKAttachmentStoreCompletionHandler completion);
 
 		[Async]
 		[Export ("getAttachmentsForObject:completion:")]
-		void GetAttachments (HKObject @object, Action<NSArray<HKAttachment>, NSError> completion);
+		void GetAttachments (HKObject @object, HKAttachmentStoreGetAttachmentCompletionHandler completion);
 
 		[Async]
 		[Export ("getDataForAttachment:completion:")]
 		NSProgress GetData (HKAttachment attachment, Action<NSData, NSError> completion);
 
 		[Export ("streamDataForAttachment:dataHandler:")]
-		NSProgress StreamData (HKAttachment attachment, Action<NSData, NSError, bool> dataHandler);
+		NSProgress StreamData (HKAttachment attachment, HKAttachmentStoreDataHandler dataHandler);
 	}
 
 	[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
