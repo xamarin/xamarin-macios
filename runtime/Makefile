@@ -559,8 +559,10 @@ $(RUNTIME_MAC_TARGETS_DIRS):
 	$(Q) mkdir -p $@
 
 ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_MAC
 all-local:: $(RUNTIME_MAC_TARGETS)
 install-local:: $(RUNTIME_MAC_TARGETS)
+endif
 endif
 
 #
