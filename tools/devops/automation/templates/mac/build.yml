@@ -247,7 +247,6 @@ steps:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
     TEST_BOT: $(Agent.Name)
-  continueOnError: true
 
 # Make sure to report any errors
 - pwsh: |
