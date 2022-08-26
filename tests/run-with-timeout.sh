@@ -30,7 +30,7 @@ PID=$$
 	# try to capture the screen
 	mkdir -p screenshots-$PID
 	screencapture -x screenshots-$PID/capture-$PID.png
-	echo "##vso[artifact.upload containerfolder=screenshots;artifactname=screenshots-$PID/capture-$PID.png]"
+	echo "##vso[artifact.upload containerfolder=screenshots;artifactname=capture-$PID.png]$PWD/screenshots-$PID/capture-$PID.png"
 
 	# but first send a QUIT to get a managed stack trace dump
 	echo "The command '$*' timed out after $TIMEOUT second(s). Sending SIGQUIT..."
