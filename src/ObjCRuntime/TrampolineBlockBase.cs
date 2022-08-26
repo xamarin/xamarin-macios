@@ -13,7 +13,7 @@ namespace ObjCRuntime {
 
 		readonly IntPtr blockPtr;
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		static extern IntPtr _Block_copy (IntPtr ptr);
 
 		protected unsafe TrampolineBlockBase (BlockLiteral *block)
