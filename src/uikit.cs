@@ -8683,7 +8683,7 @@ namespace UIKit {
 
 		[NoWatch, TV (16, 0), iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("safeAreaAspectFitLayoutGuide", ArgumentSemantic.Strong)]
-		UILayoutGuideAspectFitting SafeAreaAspectFitLayoutGuide { get; }
+		IUILayoutGuideAspectFitting SafeAreaAspectFitLayoutGuide { get; }
 	}
 
 	delegate void UIControlEnumerateEventsIteratorHandler ([NullAllowed] UIAction actionHandler, [NullAllowed] NSObject target, [NullAllowed] Selector action, UIControlEvent controlEvents, out bool stop);
@@ -24868,9 +24868,10 @@ namespace UIKit {
 		void WillDismissMenu (UIEditMenuInteraction interaction, UIEditMenuConfiguration configuration, IUIEditMenuInteractionAnimating animator);
 	}
 
+	interface IUILayoutGuideAspectFitting {}
+
 	[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	[BaseType (typeof (NSObject))]
 	interface UILayoutGuideAspectFitting
 	{
 		[Abstract]

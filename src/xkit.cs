@@ -1899,12 +1899,12 @@ namespace UIKit {
 		[Export ("visualDescription")]
 		string VisualDescription { get; }
 
-		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0), Mac (13,0)]
 		[Static]
 		[Export ("horizontalGroupWithLayoutSize:repeatingSubitem:count:")]
 		NSCollectionLayoutGroup GetHorizontalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem repeatingSubitem, nint count);
 
-		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0), Mac (13,0)]
 		[Static]
 		[Export ("verticalGroupWithLayoutSize:repeatingSubitem:count:")]
 		NSCollectionLayoutGroup GetVerticalGroup (NSCollectionLayoutSize layoutSize, NSCollectionLayoutItem repeatingSubitem, nint count);
