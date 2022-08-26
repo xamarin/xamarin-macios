@@ -968,5 +968,28 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, properties);
 		}
+
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", true)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", true)]
+		public void AutoDetectEntitlements (ApplePlatform platform, string runtimeIdentifiers, bool exclude)
+		{
+			var project = "AutoDetectEntitlements";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			if (exclude) {
+				properties ["EnableDefaultCodesignEntitlements"] = "false";
+				DotNet.AssertBuild (project_path, properties);
+			} else {
+				var rv = DotNet.AssertBuildFailure (project_path, properties);
+				var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToList ();
+				Assert.That (errors [0].Message, Does.Contain ("Error loading Entitlements.plist template 'Entitlements.plist'"), "Message");
+			}
+		}
 	}
 }
