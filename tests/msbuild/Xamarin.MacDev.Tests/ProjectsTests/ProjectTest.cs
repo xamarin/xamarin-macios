@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -18,7 +19,7 @@ namespace Xamarin.iOS.Tasks
 		{
 		}
 
-		public ProjectPaths BuildProject (string appName, int expectedErrorCount = 0, bool clean = true, bool nuget_restore = false, bool is_library = false)
+		public ProjectPaths BuildProject (string appName, int expectedErrorCount = 0, bool clean = true, bool nuget_restore = false, bool is_library = false, Dictionary<string, string> properties = null)
 		{
 			var mtouchPaths = SetupProjectPaths (appName);
 			var csproj = mtouchPaths.ProjectCSProjPath;
@@ -31,7 +32,7 @@ namespace Xamarin.iOS.Tasks
 				NugetRestore (csproj);
 
 			if (clean) {
-				RunTarget (mtouchPaths, "Clean", Mode);
+				RunTarget (mtouchPaths, "Clean", Mode, properties: properties);
 				Assert.IsFalse (Directory.Exists (AppBundlePath), "App bundle exists after cleanup: {0} ", AppBundlePath);
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".dSYM"), "App bundle .dSYM exists after cleanup: {0} ", AppBundlePath + ".dSYM");
 				Assert.IsFalse (Directory.Exists (AppBundlePath + ".mSYM"), "App bundle .mSYM exists after cleanup: {0} ", AppBundlePath + ".mSYM");
@@ -53,7 +54,7 @@ namespace Xamarin.iOS.Tasks
 				}
 			}
 
-			RunTarget (mtouchPaths, "Build", Mode, expectedErrorCount);
+			RunTarget (mtouchPaths, "Build", Mode, expectedErrorCount, properties: properties);
 
 			if (expectedErrorCount > 0 || is_library)
 				return mtouchPaths;
