@@ -233,7 +233,7 @@ namespace LinkAll {
 				// be called again in subsequent requests (unless it expires)
 				Assert.That (test_policy.CheckCount, Is.GreaterThan (0), "policy checked");
 			} catch (WebException we) {
-				TestRuntime.IgnoreIfBadCINetwork (we);
+				TestRuntime.IgnoreInCIIfBadNetwork (we);
 				throw;
 			} finally {
 				ServicePointManager.CertificatePolicy = old;
