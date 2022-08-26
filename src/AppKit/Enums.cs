@@ -3259,6 +3259,6 @@ namespace AppKit {
 	public enum NSComboButtonStyle : long
 	{
 		Split = 0,
-		Unified = 1
+		Unified = 1,
 	}
 }

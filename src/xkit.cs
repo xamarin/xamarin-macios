@@ -4032,16 +4032,16 @@ namespace UIKit {
 
 		[Export ("initWithParentElement:textList:contents:markerAttributes:childElements:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor ([NullAllowed] NSTextListElement parent, NSTextList textList, [NullAllowed] NSAttributedString contents, [NullAllowed] NSDictionary<NSString, NSObject> markerAttributes, [NullAllowed] NSTextListElement[] children);
+		NativeHandle Constructor ([NullAllowed] NSTextListElement parent, NSTextList textList, [NullAllowed] NSAttributedString contents, [NullAllowed] NSDictionary markerAttributes, [NullAllowed] NSTextListElement[] children);
 
 		[Static]
 		[Export ("textListElementWithContents:markerAttributes:textList:childElements:")]
-		NSTextListElement CreateWithContents (NSAttributedString contents, [NullAllowed] NSDictionary<NSString, NSObject> markerAttributes, NSTextList textList, [NullAllowed] NSTextListElement[] children);
+		NSTextListElement Create (NSAttributedString contents, [NullAllowed] NSDictionary markerAttributes, NSTextList textList, [NullAllowed] NSTextListElement[] children);
 
 		[Static]
 		[Export ("textListElementWithChildElements:textList:nestingLevel:")]
 		[return: NullAllowed]
-		NSTextListElement CreateWithChildElements (NSTextListElement[] children, NSTextList textList, nint nestingLevel);
+		NSTextListElement Create (NSTextListElement[] children, NSTextList textList, nint nestingLevel);
 
 		[Export ("textList", ArgumentSemantic.Strong)]
 		NSTextList TextList { get; }
@@ -4050,7 +4050,7 @@ namespace UIKit {
 		NSAttributedString Contents { get; }
 
 		[NullAllowed, Export ("markerAttributes", ArgumentSemantic.Strong)]
-		NSDictionary<NSString, NSObject> MarkerAttributes { get; }
+		NSDictionary WeakMarkerAttributes { get; }
 
 		[Export ("attributedString", ArgumentSemantic.Strong)]
 		NSAttributedString AttributedString { get; }

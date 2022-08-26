@@ -6996,7 +6996,7 @@ namespace AppKit {
 		[Mac (13,0)]
 		[Static]
 		[Export ("systemFontOfSize:weight:width:")]
-		NSFont SystemFontOfSize (nfloat fontSize, double weight, double width);
+		NSFont GetSystemFontOfSize (nfloat fontSize, double weight, double width);
 	}
 
 	[NoMacCatalyst]
@@ -9960,13 +9960,13 @@ namespace AppKit {
 		[Static]
 		[Export ("imageWithSymbolName:variableValue:")]
 		[return: NullAllowed]
-		NSImage ImageWithSymbolName (string name, double value);
+		NSImage GetImage (string symbolName, double variableValue);
 
 		[NoMacCatalyst, Mac (13,0)]
 		[Static]
 		[Export ("imageWithSystemSymbolName:variableValue:accessibilityDescription:")]
 		[return: NullAllowed]
-		NSImage ImageWithSystemSymbolName (string name, double value, [NullAllowed] string description);
+		NSImage GetImage (string systemSymbolName, double variableValue, [NullAllowed] string accessibilityDescription);
 	}
 
 	[MacCatalyst (13, 0)]
@@ -20115,11 +20115,11 @@ namespace AppKit {
 
 		[Mac (13,0), MacCatalyst (16,0), DelegateName ("NSToolbarImmovableItemIdentifiers"), DefaultValue (null)]
 		[Export ("toolbarImmovableItemIdentifiers:")]
-		NSSet<NSString> ToolbarImmovableItemIdentifiers (NSToolbar toolbar);
+		NSSet<NSString> GetToolbarImmovableItemIdentifiers (NSToolbar toolbar);
 
 		[Mac (13,0), MacCatalyst (16,0)]
 		[Export ("toolbar:itemIdentifier:canBeInsertedAtIndex:"), DelegateName ("NSToolbarCanInsert"), DefaultValue (true)]
-		bool ItemCanBeInsertedAt (NSToolbar toolbar, string itemIdentifier, nint index);
+		bool GetItemCanBeInsertedAt (NSToolbar toolbar, string itemIdentifier, nint index);
 
 	}
 
@@ -28430,12 +28430,12 @@ namespace AppKit {
 		[Mac (13,0)]
 		[Static]
 		[Export ("configurationPreferringMonochrome")]
-		NSImageSymbolConfiguration ConfigurationPreferringMonochrome ();
+		NSImageSymbolConfiguration GetConfigurationPreferringMonochrome ();
 
 		[Mac (13,0)]
 		[Static]
 		[Export ("configurationPreferringHierarchical")]
-		NSImageSymbolConfiguration ConfigurationPreferringHierarchical ();
+		NSImageSymbolConfiguration GetConfigurationPreferringHierarchical ();
 	}
 
 	[NoMacCatalyst, Mac (13,0)]
@@ -28448,15 +28448,15 @@ namespace AppKit {
 
 		[Static]
 		[Export ("comboButtonWithTitle:menu:target:action:")]
-		NSComboButton CreateWithTitle (string title, [NullAllowed] NSMenu menu, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSComboButton Create (string title, [NullAllowed] NSMenu menu, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Static]
 		[Export ("comboButtonWithImage:menu:target:action:")]
-		NSComboButton CreateWithImage (NSImage image, [NullAllowed] NSMenu menu, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSComboButton Create (NSImage image, [NullAllowed] NSMenu menu, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Static]
 		[Export ("comboButtonWithTitle:image:menu:target:action:")]
-		NSComboButton CreateWithTitle (string title, NSImage image, [NullAllowed] NSMenu menu, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+		NSComboButton Create (string title, NSImage image, [NullAllowed] NSMenu menu, [NullAllowed] NSObject target, [NullAllowed] Selector action);
 
 		[Export ("title")]
 		string Title { get; set; }
@@ -28478,7 +28478,6 @@ namespace AppKit {
 
 	[NoMacCatalyst, Mac (13,0)]
 	[Protocol]
-	[BaseType (typeof(NSObject))]
 	interface NSPreviewRepresentableActivityItem
 	{
 		[Abstract]
