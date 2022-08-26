@@ -1,6 +1,10 @@
 <Project>
-	<Import Project="Sdk.props" Sdk="Microsoft.iOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'iOS'" />
-	<Import Project="Sdk.props" Sdk="Microsoft.iOS.Windows.Sdk.Aliased" Condition=" '$(TargetPlatformIdentifier)' == 'iOS' and $([MSBuild]::IsOSPlatform('windows'))" />
+	<ImportGroup Condition=" '$(TargetPlatformIdentifier)' == 'iOS' ">
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.net7" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) " />
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.net6" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) " />
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Windows.Sdk.Aliased.net7" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) And $([MSBuild]::IsOSPlatform('windows'))" />
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Windows.Sdk.Aliased.net6" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) And $([MSBuild]::IsOSPlatform('windows'))" />
+	</ImportGroup>
 
 	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
 		<SdkSupportedTargetPlatformIdentifier Include="ios" DisplayName="iOS" />

@@ -1,5 +1,8 @@
 <Project>
-	<Import Project="Sdk.props" Sdk="Microsoft.macOS.Sdk" Condition="'$(TargetPlatformIdentifier)' == 'macOS'" />
+	<ImportGroup Condition=" '$(TargetPlatformIdentifier)' == 'macOS' ">
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.net7" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '7.0')) " />
+		<Import Project="Sdk.props" Sdk="Microsoft.$(TargetPlatformIdentifier).Sdk.net6" Condition=" $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) " />
+	</ImportGroup>
 
 	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
 		<SdkSupportedTargetPlatformIdentifier Include="macos" DisplayName="macOS" />
