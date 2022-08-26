@@ -50,10 +50,10 @@
 		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(_PlatformName)' == 'tvOS'">tvossimulator-x64</RuntimeIdentifier>
 
 		<!-- For release desktop builds we default to universal apps in .NET 7+ -->
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And $(_PlatformName)' == 'macOS'">osx-x64</RuntimeIdentifier>
-		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And $(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64</RuntimeIdentifier>
-		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' == 'Release' And $(_PlatformName)' == 'macOS'">osx-x64;osx-arm64</RuntimeIdentifiers>
-		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' == 'Release' And $(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'macOS'">osx-x64</RuntimeIdentifier>
+		<RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' != 'Release' And '$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64</RuntimeIdentifier>
+		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' == 'Release' And '$(_PlatformName)' == 'macOS'">osx-x64;osx-arm64</RuntimeIdentifiers>
+		<RuntimeIdentifiers Condition="'$(RuntimeIdentifier)' == '' And '$(Configuration)' == 'Release' And '$(_PlatformName)' == 'MacCatalyst'">maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers>
 		<!--
 			Workaround/hack:
 
