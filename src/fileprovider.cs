@@ -817,10 +817,12 @@ namespace FileProvider {
 		[Export ("refreshInterval")]
 		double RefreshInterval { get; }
 
+#if XAMCORE_5_0
 		[NoWatch, NoTV, NoMacCatalyst, Mac (13, 0), iOS (16, 0)]
 		[Abstract]
 		[Export ("maximumSizeReached")]
 		bool MaximumSizeReached { [Bind ("isMaximumSizeReached")] get; }
+#endif
 	}
 
 	// typedef NSString *NSFileProviderDomainIdentifier NS_EXTENSIBLE_STRING_ENUM
