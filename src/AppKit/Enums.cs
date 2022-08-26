@@ -3251,7 +3251,7 @@ namespace AppKit {
 	{
 		Default = 0,
 		Minimal,
-		Expanded
+		Expanded,
 	}
 
 	[NoMacCatalyst, Mac (13,0)]
