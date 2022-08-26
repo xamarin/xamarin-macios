@@ -10552,21 +10552,21 @@ namespace UIKit {
 		[Export ("updateCurrentPageDisplay")]
 		void UpdateCurrentPageDisplay ();
 
-		[iOS (16, 0), MacCatalyst (16,0)]
+		[iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 		[Export ("direction", ArgumentSemantic.Assign)]
 		UIPageControlDirection Direction { get; set; }
 
-		[iOS (16, 0), MacCatalyst (16,0)]
+		[iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 		[Export ("preferredCurrentPageIndicatorImage", ArgumentSemantic.Strong)]
 		[NullAllowed]
 		UIImage PreferredCurrentPageIndicatorImage { get; set; }
 
-		[iOS (16,0), MacCatalyst (16,0)]
+		[iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 		[Export ("currentPageIndicatorImageForPage:")]
 		[return: NullAllowed]
 		UIImage GetCurrentPageIndicatorImage (nint page);
 
-		[iOS (16,0), MacCatalyst (16,0)]
+		[iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 		[Export ("setCurrentPageIndicatorImage:forPage:")]
 		void SetCurrentPageIndicatorImage ([NullAllowed] UIImage image, nint page);
 	}
