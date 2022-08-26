@@ -2112,7 +2112,7 @@ namespace ImageIO {
 
 		[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
 		[Field ("kCGImagePropertyHEIFDictionary")]
-		NSString HEIFDictionary { get; }
+		NSString HeifDictionary { get; }
 	}
 
 	[iOS (7,0)]
@@ -2506,7 +2506,7 @@ namespace ImageIO {
 	[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
 	interface IOCameraExtrinsics {
 		[Field ("kIIOCameraExtrinsics_CoordinateSystemID")]
-		NSString CoordinateSystemID { get; }
+		NSString CoordinateSystemId { get; }
 
 		[Field ("kIIOCameraExtrinsics_Position")]
 		NSString Position { get; }
