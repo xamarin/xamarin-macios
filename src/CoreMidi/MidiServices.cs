@@ -2146,7 +2146,7 @@ namespace CoreMidi {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #endif
-	public unsafe class MidiEndpoint : MidiObject {
+	public class MidiEndpoint : MidiObject {
 #if !COREBUILD
 		GCHandle gch;
 
@@ -2170,7 +2170,7 @@ namespace CoreMidi {
 #endif
 #if NET
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static MidiError /* OSStatus = SInt32 */ MIDIDestinationCreate (MidiClientRef client, IntPtr /* CFStringRef */ name, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> readProc, IntPtr context, MidiEndpointRef* midiEndpoint);
+		extern unsafe static MidiError /* OSStatus = SInt32 */ MIDIDestinationCreate (MidiClientRef client, IntPtr /* CFStringRef */ name, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> readProc, IntPtr context, MidiEndpointRef* midiEndpoint);
 #else
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDIDestinationCreate (MidiClientRef client, IntPtr /* CFStringRef */ name, MidiReadProc readProc, IntPtr context, out MidiEndpointRef midiEndpoint);
@@ -2252,9 +2252,11 @@ namespace CoreMidi {
 			using (var nsstr = new NSString (name)){
 				GCHandle gch = GCHandle.Alloc (this);
 #if NET
-				MidiEndpointRef tempHandle;
-				code = MIDIDestinationCreate (client.handle, nsstr.Handle, &Read, GCHandle.ToIntPtr (gch), &tempHandle);
-				handle = tempHandle;
+				unsafe {
+					MidiEndpointRef tempHandle;
+					code = MIDIDestinationCreate (client.handle, nsstr.Handle, &Read, GCHandle.ToIntPtr (gch), &tempHandle);
+					handle = tempHandle;
+				}
 #else				
 				code = MIDIDestinationCreate (client.handle, nsstr.Handle, static_MidiReadProc, GCHandle.ToIntPtr (gch), out handle);
 #endif
