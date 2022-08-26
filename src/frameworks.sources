@@ -1202,6 +1202,9 @@ METALPERFORMANCESHADERSGRAPH_SOURCES = \
 
 # MetricKit
 
+METRICKIT_API_SOURCES = \
+	MetricKit/MXEnums.cs \
+
 METRICKIT_SOURCES = \
 	MetricKit/MXMetaData.cs \
 	MetricKit/MXMetric.cs \
