@@ -380,6 +380,15 @@ namespace Introspection {
 					return true;
 				}
 				break;
+#if __WATCHOS__
+			case "AVPlayerItem":
+				switch (selectorName) {
+				case "nowPlayingInfo":
+				case "setNowPlayingInfo:":
+					return TestRuntime.IsSimulatorOrDesktop;
+				}
+				break;
+#endif
 			case "AVPlayerItemVideoOutput":
 				switch (selectorName) {
 				case "initWithOutputSettings:":
