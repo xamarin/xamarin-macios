@@ -7458,7 +7458,7 @@ namespace AppKit {
 	{
 		[Mac (13, 0)]
 		[Field ("NSFontWidthCompressed")]
-		nfloat Compressed { get; }
+		double Compressed { get; }
 
 		[Field ("NSFontWidthCondensed")]
 		double Condensed { get; }
