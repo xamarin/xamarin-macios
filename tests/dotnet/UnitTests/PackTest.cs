@@ -1,14 +1,6 @@
 #nullable enable
 
-using System;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
-using Xamarin.MacDev;
 
 namespace Xamarin.Tests {
 	public class PackTest : TestBaseClass {

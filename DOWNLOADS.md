@@ -2,6 +2,7 @@
 
 | Date | Version | Package | Release Notes |
 |------|---------|---------|---------------|
+|2022/08/09|15.12.0.2|[xamarin.ios-15.12.0.2.pkg](https://download.visualstudio.microsoft.com/download/pr/e81e04d3-768a-4310-9c9b-f32e8ba00eaa/0e27caf0877adb5c6fe6d634d26da40a/xamarin.ios-15.12.0.2.pkg)||
 |2022/06/14|15.10.0.5|[xamarin.ios-15.10.0.5.pkg](https://download.visualstudio.microsoft.com/download/pr/09e9572f-1c2a-4d79-a1e8-5469de9410e8/3c7be8df7e8249f2c3142e4c10ae5523/xamarin.ios-15.10.0.5.pkg)||
 |2022/05/23|15.10.0.1|[xamarin.ios-15.10.0.1.pkg](https://download.visualstudio.microsoft.com/download/pr/afed6f32-67b3-4684-b0a4-e2b74d751bce/efaa7d62658b8285baafc2d6fc8f930a/xamarin.ios-15.10.0.1.pkg)||
 |2022/04/12|15.8.0.3|[xamarin.ios-15.8.0.3.pkg](https://download.visualstudio.microsoft.com/download/pr/d4e328bd-3f10-41f1-9b22-6bc556d1ffc2/4b781228697bd21157454ac6a956205b/xamarin.ios-15.8.0.3.pkg)||
@@ -167,6 +168,7 @@
 
 | Date | Version | Package | Release Notes |
 |------|---------|---------|---------------|
+|2022/08/09|8.12.0.2|[xamarin.mac-8.12.0.2.pkg](https://download.visualstudio.microsoft.com/download/pr/e81e04d3-768a-4310-9c9b-f32e8ba00eaa/bcff5cca8701bc5871b8892fd32fb3e6/xamarin.mac-8.12.0.2.pkg)||
 |2022/06/14|8.10.0.5|[xamarin.mac-8.10.0.5.pkg](https://download.visualstudio.microsoft.com/download/pr/09e9572f-1c2a-4d79-a1e8-5469de9410e8/f4ee484851ac275ccd51fcee70451fb0/xamarin.mac-8.10.0.5.pkg)||
 |2022/05/23|8.10.0.1|[xamarin.mac-8.10.0.1.pkg](https://download.visualstudio.microsoft.com/download/pr/afed6f32-67b3-4684-b0a4-e2b74d751bce/7a6059ca429d778d1e1a3525a337eb66/xamarin.mac-8.10.0.1.pkg)||
 |2022/04/12|8.8.0.3|[xamarin.mac-8.8.0.3.pkg](https://download.visualstudio.microsoft.com/download/pr/d4e328bd-3f10-41f1-9b22-6bc556d1ffc2/778eeb3d773a776c97efbfa84b6fefd8/xamarin.mac-8.8.0.3.pkg)||
