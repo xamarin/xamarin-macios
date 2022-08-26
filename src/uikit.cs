@@ -13914,6 +13914,14 @@ namespace UIKit {
 		[Export ("tableView:willEndContextMenuInteractionWithConfiguration:animator:")]
 		void WillEndContextMenuInteraction (UITableView tableView, UIContextMenuConfiguration configuration, [NullAllowed] IUIContextMenuInteractionAnimating animator);
 
+		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("tableView:canPerformPrimaryActionForRowAtIndexPath:")]
+		bool CanPerformPrimaryAction (UITableView tableView, NSIndexPath rowIndexPath);
+
+		[Watch (9,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("tableView:performPrimaryActionForRowAtIndexPath:")]
+		void PerformPrimaryAction (UITableView tableView, NSIndexPath rowIndexPath);
+
 		// WARNING: If you add more methods here, add them to UITableViewControllerDelegate as well.
 	}
 
