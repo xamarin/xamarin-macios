@@ -2126,16 +2126,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<ItemGroup>
 			<_ResolvedAppExtensionReferences Include="%(AdditionalAppExtensions.Identity)/%(AdditionalAppExtensions.BuildOutput)/%(AdditionalAppExtensions.Name).appex" />
 
-			<_AppExtensionCodesignProperties Include="%(AdditionalAppExtensions.Name).appex">
-				<Entitlements Condition="Exists('%(AdditionalAppExtensions.Identity)/%(AdditionalAppExtensions.Name).entitlements')">%(AdditionalAppExtensions.Identity)/%(AdditionalAppExtensions.Name).entitlements</Entitlements>
-				<SigningKey>$(CodesignKey)</SigningKey>
-				<Keychain>$(CodesignKeychain)</Keychain>
-				<DisableTimestamp>False</DisableTimestamp>
-				<DisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">True</DisableTimestamp>
+			<_CodesignItems Include="$(_AppPlugInsPath)%(AdditionalAppExtensions.Name).appex">
+				<CodesignEntitlements Condition="Exists('%(AdditionalAppExtensions.Identity)/%(AdditionalAppExtensions.Name).entitlements')">%(AdditionalAppExtensions.Identity)/%(AdditionalAppExtensions.Name).entitlements</CodesignEntitlements>
+				<CodesignSigningKey>$(CodesignKey)</CodesignSigningKey>
+				<CodesignKeychain>$(CodesignKeychain)</CodesignKeychain>
+				<CodesignDisableTimestamp Condition="'$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true'">true</CodesignDisableTimestamp>
 				<CodesignAllocate>$(_CodesignAllocate)</CodesignAllocate>
-				<ResourceRules>$(CodesignResourceRules)</ResourceRules>
-				<NativeExecutable>%(AdditionalAppExtensions.Filename)</NativeExecutable>
-			</_AppExtensionCodesignProperties> 
+				<CodesignResourceRules>$(CodesignResourceRules)</CodesignResourceRules>
+			</_CodesignItems>
 		</ItemGroup>
 	</Target>
 
