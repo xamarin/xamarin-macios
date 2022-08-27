@@ -3,6 +3,19 @@ TOP = ..
 include $(TOP)/Make.config
 include $(TOP)/mk/rules.mk
 
+ifdef INCLUDE_IOS
+BUILD_IOS=1
+endif
+ifdef INCLUDE_TVOS
+BUILD_IOS=1
+endif
+ifdef INCLUDE_WATCH
+BUILD_IOS=1
+endif
+ifdef INCLUDE_MACCATALYST
+BUILD_IOS=1
+endif
+
 #
 # To add a new MSBuild assembly, add the base name to the corresponding [IOS|MAC|WATCH]_[BINDING]_TASK_ASSEMBLIES variable.
 #
@@ -90,12 +103,13 @@ IOS_PRODUCTS =                                                                  
 all-ios: $(IOS_PRODUCTS)
 symlinks-ios: $(IOS_SYMLINKS)
 
-ifdef INCLUDE_IOS
+ifdef BUILD_IOS
 MSBUILD_PRODUCTS += all-ios
-MSBUILD_DIRECTORIES += $(IOS_DIRECTORIES)
 MSBUILD_SYMLINKS += symlinks-ios
 MSBUILD_TASK_ASSEMBLIES += $(IOS_TASK_ASSEMBLIES) $(IOS_WINDOWS_TASK_ASSEMBLIES)
+MSBUILD_DIRECTORIES += $(IOS_DIRECTORIES)
 endif
+
 
 ##
 ## MacCatalyst definitions

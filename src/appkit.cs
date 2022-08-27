@@ -19016,8 +19016,6 @@ namespace AppKit {
 		string LocalizedNameForInputSource (string inputSourceIdentifier);
 	}
 
-
-	
 	[NoMacCatalyst]
 	[BaseType (typeof (NSTextBlock))]
 	[DisableDefaultCtor]

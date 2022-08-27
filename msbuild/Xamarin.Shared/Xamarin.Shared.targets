@@ -39,7 +39,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CollectITunesSourceFiles" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CompileITunesMetadata" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.CreateAssetPack" AssemblyFile="$(_TaskAssemblyName)" />
-	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.DetectSigningIdentity" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.FindWatchOS2AppBundle" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.GetMlaunchArguments" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.MTouch" AssemblyFile="$(_TaskAssemblyName)" />
@@ -51,7 +50,6 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask Condition="'$(_PlatformName)' != 'macOS'" TaskName="Xamarin.iOS.Tasks.WriteAssetPackManifest" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Xamarin.Mac-specific tasks. Some of these are duplicated with the Xamarin.iOS ones above, and should eventually be re-namespaced to be in Xamarin.MacDev -->
-	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.DetectSigningIdentity" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask Condition="'$(_PlatformName)' == 'macOS'" TaskName="Xamarin.Mac.Tasks.Mmp" AssemblyFile="$(_TaskAssemblyName)" />
 
 	<!-- Tasks shared between Xamarin.iOS and Xamarin.Mac -->
@@ -83,6 +81,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.ComputeCodesignItems" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.DetectDebugNetworkConfiguration" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.DetectSdkLocations" AssemblyFile="$(_TaskAssemblyName)" />
+	<UsingTask TaskName="Xamarin.MacDev.Tasks.DetectSigningIdentity" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.Ditto" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.DSymUtil" AssemblyFile="$(_TaskAssemblyName)" />
 	<UsingTask TaskName="Xamarin.MacDev.Tasks.EmbedProvisionProfile" AssemblyFile="$(_TaskAssemblyName)" />
@@ -290,7 +289,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(DeviceSpecificOutputPath)bundler.stamp" />
 	</Target>
 
-	<Target Name="_CleanAppBundleRootDirectory" Condition="'$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS'">
+	<Target Name="_CleanAppBundleRootDirectory" Condition="'$(_PlatformName)' == 'MacCatalyst' Or '$(_PlatformName)' == 'macOS'" DependsOnTargets="_GenerateBundleName">
 		<!-- There shouldn't be any files in the root directory of the app bundle for macOS or Mac Catalyst (signing will fail) -->
 
 		<!-- Delete any crash dumps in the app bundle that might exist. Ref: https://github.com/xamarin/xamarin-macios/issues/12320 -->
@@ -1426,6 +1425,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_AppBundleManifestPath>$(_AppBundlePath)$(_AppBundleManifestRelativePath)Info.plist</_AppBundleManifestPath>
 			<!-- We should only write out a compiled app manifest if we're creating an app bundle -->
 			<_CreateAppManifest>$(_CanOutputAppBundle)</_CreateAppManifest>
+			<_CreateAppManifest Condition="'$(IsAppDistribution)' == 'true'">false</_CreateAppManifest>
 			<_TemporaryAppManifest>$(DeviceSpecificIntermediateOutputPath)AppManifest.plist</_TemporaryAppManifest>
 		</PropertyGroup>
 	</Target>
@@ -1831,6 +1831,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		<_CodesignAppBundleDependsOn>
 			$(_CodesignAppBundleDependsOn);
+			_DetectSigningIdentity;
 			_CleanAppBundleRootDirectory;
 			_EmbedProvisionProfile;
 			_CollectCodesigningData;
@@ -2730,7 +2731,17 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</CompileProductDefinition>
 	</Target>
 
-	<Target Name="_CreateInstaller" Condition="'$(CreatePackage)' == 'true' And '$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="Codesign;_CompileProductDefinition;_WriteAppManifest">
+	<PropertyGroup>
+		<_CreateInstallerDependsOn>
+			_GenerateBundleName;
+			_GetAppBundleEntitlements;
+			Codesign;
+			_CompileProductDefinition;
+			_WriteAppManifest
+		</_CreateInstallerDependsOn>
+	</PropertyGroup>
+
+	<Target Name="_CreateInstaller" Condition="'$(CreatePackage)' == 'true' And '$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_CreateInstallerDependsOn)">
 		<PropertyGroup>
 			<PkgPackageDir Condition="'$(PkgPackageDir)' == ''">$(TargetDir)</PkgPackageDir>
 		</PropertyGroup>
@@ -2751,6 +2762,25 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		>
 			<Output TaskParameter="PkgPackagePath" PropertyName="PkgPackagePath" />
 		</CreateInstallerPackage>
+	</Target>
+
+	<!-- 
+		Creates a plist with the entitlements used to sign the App bundle.
+		MacCatalyst apps don't have a compiled entitlements file in the app bundle, 
+		so to re-sign the app we need to reuse the entitlements that were originally used to sign it
+	-->
+	<Target Name="_GetAppBundleEntitlements" Condition="'$(IsAppDistribution)' == 'true' And '$(CodesignEntitlements)' == '' And Exists('$(AppBundleDir)\Contents\_CodeSignature')">
+		<PropertyGroup>
+			<_CompiledCodesignEntitlements>$(DeviceSpecificIntermediateOutputPath)AppBundleEntitlements.plist</_CompiledCodesignEntitlements>
+		</PropertyGroup>
+
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="$(_CompiledCodesignEntitlements)" />
+		
+		<!-- The following command grabs the entitlements that are part of the signature of the app bundle, and creates a plist containing those -->
+		<Exec 
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			Command="codesign --display --entitlements '$(_CompiledCodesignEntitlements)' --xml '$(AppBundleDir)'" />
 	</Target>
 
 	<PropertyGroup>
