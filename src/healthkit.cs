@@ -564,7 +564,7 @@ namespace HealthKit {
 
 	delegate void HKHealthStoreGetRequestStatusForAuthorizationToShareHandler (HKAuthorizationRequestStatus requestStatus, NSError error);
 	delegate void HKHealthStoreRecoverActiveWorkoutSessionHandler (HKWorkoutSession session, NSError error);
-	delegate void HKHealthStoreCompletionHandler (bool success, [NullAllowed] NSError error);
+	delegate void HKHealthStoreCompletionHandler (bool success, NSError error);
 
 	[Watch (2,0)]
 	[iOS (8,0)]
@@ -4212,7 +4212,7 @@ namespace HealthKit {
 		NSDictionary<NSString, NSObject> Metadata { get; }
 	}
 
-	delegate void HKAttachmentStoreCompletionHandler (bool success, [NullAllowed] NSError error);
+	delegate void HKAttachmentStoreCompletionHandler (bool success, NSError error);
 	delegate void HKAttachmentStoreDataHandler ([NullAllowed] NSData dataChunk, [NullAllowed] NSError error, bool done);
 	delegate void HKAttachmentStoreGetAttachmentCompletionHandler ([NullAllowed] HKAttachment[] attachments, [NullAllowed] NSError error);
 
