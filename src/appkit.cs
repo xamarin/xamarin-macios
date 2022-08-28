@@ -20084,8 +20084,6 @@ namespace AppKit {
 		[NoMacCatalyst][Mac (13, 0)]
 		[Field ("NSToolbarItemKey")]
 		NSString NSToolbarItemKey { get; }
-
-
 	}
 
 	[MacCatalyst (13, 0)]
@@ -28428,16 +28426,16 @@ namespace AppKit {
 		[Mac (13,0)]
 		[Static]
 		[Export ("configurationPreferringMonochrome")]
-		NSImageSymbolConfiguration GetConfigurationPreferringMonochrome ();
+		NSImageSymbolConfiguration CreateConfigurationPreferringMonochrome ();
 
 		[Mac (13,0)]
 		[Static]
 		[Export ("configurationPreferringHierarchical")]
-		NSImageSymbolConfiguration GetConfigurationPreferringHierarchical ();
+		NSImageSymbolConfiguration CreateConfigurationPreferringHierarchical ();
 	}
 
 	[NoMacCatalyst, Mac (13,0)]
-	[BaseType (typeof(NSControl))]
+	[BaseType (typeof (NSControl))]
 	interface NSComboButton
 	{
 		[DesignatedInitializer]
@@ -28493,7 +28491,7 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst, Mac (13,0)]
-	[BaseType (typeof(NSObject))]
+	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface NSPreviewRepresentingActivityItem : NSPreviewRepresentableActivityItem
 	{
