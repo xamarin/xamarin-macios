@@ -12,3 +12,11 @@
 
 # After GCPhysicalInputElementCollection is fixed, we can uncomment the below
 # !missing-protocol-conformance! GCPhysicalInputElementCollection should conform to NSFastEnumeration
+
+# Ignore these protocols since they are marked with 'objc_non_runtime_protocol'
+# and are being used as NSStrings
+!missing-protocol! GCAxisElementName not bound
+!missing-protocol! GCButtonElementName not bound
+!missing-protocol! GCDirectionPadElementName not bound
+!missing-protocol! GCPhysicalInputElementName not bound
+!missing-protocol! GCSwitchElementName not bound
