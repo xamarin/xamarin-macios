@@ -1789,8 +1789,7 @@ namespace PdfKit {
 	[BaseType (typeof (NSView), Name = "PDFView", Delegates = new string [] { "WeakDelegate" }, Events = new Type [] { typeof (PdfViewDelegate) })]
 	interface PdfView :
 #if IOS
-	// Uncomment this changes after Xcode 14 UIKit is bound - https://github.com/xamarin/xamarin-macios/issues/15623
-	UIGestureRecognizerDelegate//, UIFindInteractionDelegate
+	UIGestureRecognizerDelegate, UIFindInteractionDelegate
 #else
 	NSMenuDelegate, NSAnimationDelegate
 #endif
@@ -2121,10 +2120,9 @@ namespace PdfKit {
 		[Export ("inMarkupMode")]
 		bool InMarkupMode { [Bind ("isInMarkupMode")] get; set; }
 
-		// Uncomment this changes after Xcode 14 UIKit is bound - https://github.com/xamarin/xamarin-macios/issues/15623
-		// [iOS (16,0), NoMac, MacCatalyst (16,0)]
-		// [Export ("findInteraction")]
-		// UIFindInteraction FindInteraction { get; }
+		[iOS (16,0), NoMac, MacCatalyst (16,0)]
+		[Export ("findInteraction")]
+		UIFindInteraction FindInteraction { get; }
 
 		[iOS (16,0), NoMac, MacCatalyst (16,0)]
 		[Export ("findInteractionEnabled")]

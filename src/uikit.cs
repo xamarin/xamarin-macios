@@ -25258,7 +25258,7 @@ namespace UIKit {
 
 	interface IUIFindInteractionDelegate {}
 
-	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0), NoMac]
 #if NET
 	[Protocol, Model]
 #else
