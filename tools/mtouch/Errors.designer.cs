@@ -4113,5 +4113,23 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8042", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception occurred while validating the static registrar code for {0}: {1}.
+        /// </summary>
+        public static string MX8043 {
+            get {
+                return ResourceManager.GetString("MX8043", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}..
+        /// </summary>
+        public static string MX8044 {
+            get {
+                return ResourceManager.GetString("MX8044", resourceCulture);
+            }
+        }
     }
 }
