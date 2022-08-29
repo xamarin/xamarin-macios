@@ -88,7 +88,7 @@ namespace Xamarin.iOS.Tasks
 		List<AssemblyInfo> ScanFrameworkListXml (string frameworkListFile, bool isMac)
 		{
 			var assemblies = new List<AssemblyInfo> ();
-			var path = Path.GetFullPath (Path.Combine (Configuration.SourceRoot, "msbuild", isMac ? "Xamarin.Mac.Tasks" : "Xamarin.iOS.Tasks.Core", frameworkListFile));
+			var path = Path.GetFullPath (Path.Combine (Configuration.SourceRoot, "msbuild", isMac ? "Xamarin.Mac.Tasks" : "Xamarin.iOS.Tasks", frameworkListFile));
 			using (var reader = XmlReader.Create (path)) {
 				while (reader.Read ()) {
 					if (reader.IsStartElement ()) {
