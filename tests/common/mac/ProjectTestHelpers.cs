@@ -510,11 +510,16 @@ namespace TestCase
 			return string.Format ("System.IO.File.Create(\"{0}\").Dispose();",  Path.Combine (tmpDir, guid.ToString ()));
 		}
 
+		public static bool TryNugetRestore (string project, out StringBuilder output)
+		{
+			output = new StringBuilder ();
+			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/t:Restore", project}, stdout: output, stderr: output, environmentVariables: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
+			return rv == 0;
+		}
+
 		public static void NugetRestore (string project)
 		{
-			var output = new StringBuilder ();
-			var rv = ExecutionHelper.Execute (Configuration.XIBuildPath, new [] { $"--", "/t:Restore", project}, stdout: output, stderr: output, environmentVariables: Configuration.GetBuildEnvironment (ApplePlatform.MacOSX));
-			if (rv != 0) {
+			if (!TryNugetRestore (project, out var output)) {
 				Console.WriteLine ("nuget restore failed:");
 				Console.WriteLine (output);
 				Assert.Fail ($"'nuget restore' failed for {project}");
