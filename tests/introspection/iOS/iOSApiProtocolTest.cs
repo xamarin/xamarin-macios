@@ -126,6 +126,9 @@ namespace Introspection {
 				if (!TestRuntime.CheckXcodeVersion (11,0))
 					return true;
 				break;
+			case "SWHighlightEvent":
+				return TestRuntime.IsSimulatorOrDesktop;
+
 #endif
 			case "UILayoutGuideAspectFitting":
 			case "UISceneWindowingBehaviors":

@@ -22839,6 +22839,8 @@ namespace AppKit {
 
 	interface INSSharingServiceDelegate {}
 
+	interface INSCloudSharingServiceDelegate {}
+
 	[Protocol, Model]
 	[Mac (10, 12)]
 	[NoMacCatalyst]
