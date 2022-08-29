@@ -298,7 +298,7 @@ steps:
   displayName: 'Publish Artifact: TestSummary'
   inputs:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
-    artifactName: TestSummary-${{ parameters.testPrefix }}
+    artifactName: TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 
@@ -317,7 +317,7 @@ steps:
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
     dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}'
-    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)-$(System.JobAttempt)/${{ parameters.testPrefix }}'
     sourcePath: 'xamarin-macios/jenkins-results'
     detailedLog: true
     usePat: true
