@@ -133,6 +133,10 @@ namespace CoreGraphics {
 		[Field ("kCGColorSpaceITUR_709_PQ")]
 		NSString ItuR_709_PQ { get; }
 
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+		[Field ("kCGColorSpaceITUR_709_HLG")]
+		NSString ItuR_709_HLG { get; }
+
 		[Mac (10,11)]
 		[Field ("kCGColorSpaceITUR_2020")]
 		NSString ItuR_2020 { get; }

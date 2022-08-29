@@ -12,6 +12,7 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using CoreGraphics;
+using CoreFoundation;
 using ObjCRuntime;
 
 using NUnit.Framework;
@@ -497,6 +498,28 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.AreEqual ((nfloat) 1.0, transform.x0, "x0");
 			Assert.AreEqual ((nfloat) (-2.0), transform.y0, "y0");
 #endif
+		}
+
+		[Test]
+		public void Decompose ()
+		{
+			var components = new CGAffineTransform (1, 2, 3, 4, 5, 6).Decompose ();
+			Assert.AreNotEqual (0.0, components.Scale);
+			Assert.AreNotEqual (0.0, components.HorizontalShear);
+			Assert.AreNotEqual (0.0, components.Rotation);
+			Assert.AreNotEqual (new CGVector ((nfloat)0, (nfloat)0), components.Translation);
+		}
+
+		[Test]
+		public void MakeWithComponents ()
+		{
+			var components = new CGAffineTransformComponents () {
+				Scale = new CGSize (0.0, 0.0),
+				HorizontalShear = (nfloat)0.0,
+				Rotation = (nfloat)0.0,
+				Translation = new CGVector ((nfloat)1, (nfloat)1),
+			};
+			Assert.NotNull (CGAffineTransform.MakeWithComponents (components));
 		}
 
 		[Test]
