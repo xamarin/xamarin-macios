@@ -9,6 +9,7 @@
 
 // Adapted code from here: https://blogs.msdn.microsoft.com/haibo_luo/2005/10/04/read-il-from-methodbody/
 
+using CompilerErrorHere;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
