@@ -45,7 +45,7 @@
         <WarningLevel>4</WarningLevel>
         <MtouchArch>ARM64</MtouchArch>
         <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-        <CodesignKey>Apple Development: Christopher Hamons (TJNQMQ686X)</CodesignKey>
+        <CodesignKey>Apple Development</CodesignKey>
         <MtouchDebug>true</MtouchDebug>
         <CodesignProvision>iOS Team Provisioning Profile: *</CodesignProvision>
     </PropertyGroup>
