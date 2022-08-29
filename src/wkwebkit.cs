@@ -46,6 +46,15 @@ namespace WebKit
 		ExitingFullscreen,
 	}
 
+	[iOS (16,0), MacCatalyst (16,0), Mac (13,0)]
+	[Native]
+	public enum WKDialogResult : long
+	{
+		ShowDefault = 1,
+		AskAgain,
+		Handled,
+	}
+
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor ()] // Crashes during deallocation in Xcode 6 beta 2. radar 17377712.
@@ -626,6 +635,11 @@ namespace WebKit
 		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoTV]
 		[Export ("webView:requestMediaCapturePermissionForOrigin:initiatedByFrame:type:decisionHandler:")]
 		void RequestMediaCapturePermission (WKWebView webView, WKSecurityOrigin origin, WKFrameInfo frame, WKMediaCaptureType type, Action<WKPermissionDecision> decisionHandler);
+
+		[Async]
+		[NoMac, iOS (16,0), MacCatalyst (16,0)] // headers say 13, is not true since the enum is from 16
+		[Export ("webView:showLockdownModeFirstUseMessage:completionHandler:")]
+		void ShowLockDownMode (WKWebView webView, string firstUseMessage, Action<WKDialogResult> completionHandler);
 	}
 
 	[iOS (8,0), Mac (10,10)] // Not defined in 32-bit
@@ -1265,9 +1279,9 @@ namespace WebKit
 		[Export ("allowsContentJavaScript")]
 		bool AllowsContentJavaScript { get; set; }
 
-		// [Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
-		// [Export ("lockdownModeEnabled")]
-		// bool LockdownModeEnabled { [Bind ("isLockdownModeEnabled")] get; set; }
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+		[Export ("lockdownModeEnabled")]
+		bool LockdownModeEnabled { [Bind ("isLockdownModeEnabled")] get; set; }
 	}
 
 	[NoMac]

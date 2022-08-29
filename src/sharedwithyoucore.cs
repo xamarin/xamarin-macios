@@ -243,7 +243,7 @@ namespace SharedWithYouCore {
 		SWCollaborationMetadata CollaborationMetadata { get; }
 
 		[Export ("fulfillUsingURL:collaborationIdentifier:")]
-		void FulfillUsingUrl (NSUrl url, string collaborationIdentifier);
+		void Fulfill (NSUrl url, string collaborationIdentifier);
 	}
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0)]
