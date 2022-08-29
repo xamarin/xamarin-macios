@@ -6953,7 +6953,6 @@ namespace AppKit {
 		[Internal]
 		IntPtr _SystemFontOfSize (nfloat fontSize, nfloat weight);
 
-		[Advice ("Use constants from 'NSFontWeight' and 'NSFontWidth'.")]
 		[Mac (13,0)]
 		[Static]
 		[Export ("systemFontOfSize:weight:width:")]
