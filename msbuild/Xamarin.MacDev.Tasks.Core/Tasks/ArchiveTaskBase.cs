@@ -42,7 +42,6 @@ namespace Xamarin.MacDev.Tasks
 
 		public string SolutionPath { get; set; }
 
-		[Required]
 		public string SigningKey { get; set; }
 
 		public ITaskItem [] WatchAppReferences { get; set; }
@@ -205,7 +204,8 @@ namespace Xamarin.MacDev.Tasks
 				if (icons.Count > 0)
 					props.Add ("IconPaths", icons);
 
-				props.Add ("SigningIdentity", SigningKey);
+				if (!string.IsNullOrEmpty (SigningKey))
+					props.Add ("SigningIdentity", SigningKey);
 
 				arInfo.Add ("ApplicationProperties", props);
 				arInfo.Add ("ArchiveVersion", new PNumber (2));

@@ -321,3 +321,6 @@
 !missing-enum! UIListSeparatorVisibility not bound
 !missing-enum! UIPrintRenderingQuality not bound
 !missing-enum! UIBehavioralStyle not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceInsetGrouped = 2 not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebar = 3 not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebarPlain = 4 not bound
