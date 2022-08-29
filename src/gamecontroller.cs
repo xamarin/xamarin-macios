@@ -2280,34 +2280,6 @@ namespace GameController {
 		float MaximumDegreesOfRotation { get; }
 	}
 
-	interface IGCAxisElementName {}
-
-	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	[Protocol]
-	interface GCAxisElementName : GCPhysicalInputElementName {
-	}
-
-	interface IGCButtonElementName {}
-
-	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	[Protocol]
-	interface GCButtonElementName : GCPhysicalInputElementName {
-	}
-
-	interface IGCPhysicalInputElementName {}
-
-	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	[Protocol]
-	interface GCPhysicalInputElementName {
-	}
-
-	interface IGCSwitchElementName {}
-
-	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	[Protocol]
-	interface GCSwitchElementName : GCPhysicalInputElementName {
-	}
-
 	// There are issues with the Generic Types listed here: https://github.com/xamarin/xamarin-macios/issues/15725
 	// [iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
 	// [BaseType (typeof (NSObject))]
@@ -2421,13 +2393,6 @@ namespace GameController {
 		[Abstract]
 		[Export ("relativeInput")]
 		IGCRelativeInput RelativeInput { get; }
-	}
-
-	interface IGCDirectionPadElementName {}
-
-	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
-	[Protocol]
-	interface GCDirectionPadElementName : GCPhysicalInputElementName {
 	}
 
 	interface IGCButtonElement {}
