@@ -644,7 +644,7 @@ namespace Xamarin.Bundler {
 				// interpreter can use some extra code (e.g. SRE) that is not shipped in the default (AOT) profile
 				EnableRepl = true;
 			} else {
-				if (Platform == ApplePlatform.WatchOS && IsArchEnabled (Abi.ARM64_32) && BitCodeMode != BitCodeMode.LLVMOnly) {
+				if (Platform == ApplePlatform.WatchOS && IsArchEnabled (Abi.ARM64_32) && BitCodeMode != BitCodeMode.LLVMOnly && Driver.XcodeVersion.Major < 14) {
 					if (IsArchEnabled (Abi.ARMv7k)) {
 						throw ErrorHelper.CreateError (145, Errors.MT0145);
 					} else {
@@ -661,7 +661,7 @@ namespace Xamarin.Bundler {
 			if (!IsLLVM && (EnableAsmOnlyBitCode || EnableLLVMOnlyBitCode))
 				throw ErrorHelper.CreateError (3008, Errors.MT3008);
 
-			if (IsLLVM && Platform == ApplePlatform.WatchOS && BitCodeMode != BitCodeMode.LLVMOnly) {
+			if (IsLLVM && Platform == ApplePlatform.WatchOS && BitCodeMode != BitCodeMode.LLVMOnly && Driver.XcodeVersion.Major < 14) {
 				ErrorHelper.Warning (111, Errors.MT0111);
 				BitCodeMode = BitCodeMode.LLVMOnly;
 			}
@@ -842,7 +842,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			if (IsDeviceBuild) {
+			if (IsDeviceBuild && Driver.XcodeVersion.Major < 14) {
 				switch (BitCodeMode) {
 				case BitCodeMode.ASMOnly:
 					if (Platform == ApplePlatform.WatchOS)

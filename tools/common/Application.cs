@@ -874,6 +874,11 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (3007, Errors.MX3007);
 			}
 
+			if (Driver.XcodeVersion.Major >= 14 && BitCodeMode != BitCodeMode.None) {
+				ErrorHelper.Warning (186, Errors.MX0186 /* Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file. */);
+				BitCodeMode = BitCodeMode.None;
+			}
+
 			Optimizations.Initialize (this, out var messages);
 			ErrorHelper.Show (messages);
 			if (Driver.Verbosity > 3)
