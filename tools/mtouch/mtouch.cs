@@ -787,6 +787,14 @@ namespace Xamarin.Bundler
 			// we try again with clang.
 			//
 
+			switch (app.Platform) {
+				case ApplePlatform.TVOS:
+				case ApplePlatform.WatchOS:
+					if (Driver.XcodeVersion.Major >= 14 && app.IsLLVM)
+						app.EnableCxx = true;
+					break;
+			}
+
 			if (string.IsNullOrEmpty (app.Compiler)) {
 				// by default we use `gcc` before iOS7 SDK, falling back to `clang`. Otherwise we go directly to `clang`
 				// so we don't get bite by the fact that Xcode5 has a gcc compiler (which calls `clang`, even if not 100% 
