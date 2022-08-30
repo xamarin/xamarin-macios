@@ -1996,6 +1996,7 @@ MACOS_FRAMEWORKS =          \
 	AudioUnit               \
 	AutomaticAssessmentConfiguration \
 	AVKit                   \
+	AVRouting               \
 	BusinessChat            \
 	BackgroundAssets        \
 	CallKit \
@@ -2090,6 +2091,7 @@ MACOS_FRAMEWORKS =          \
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
 	AVKit \
+	AVRouting \
 	Accounts \
 	AdServices \
 	AdSupport \
@@ -2288,6 +2290,7 @@ MACCATALYST_FRAMEWORKS = \
 	AppClip \
 	AppKit \
 	AVKit \
+	AVRouting \
 	Accounts \
 	AdServices \
 	AdSupport \

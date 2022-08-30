@@ -36,6 +36,14 @@ using UIAction = Foundation.NSObject;
 using UIMenuElement = Foundation.NSObject;
 #endif // !MONOMAC
 
+#if TVOS || WATCH
+using AVCustomRoutingController = Foundation.NSObject;
+using AVCustomRoutingEvent = Foundation.NSObject;
+using AVCustomRoutingActionItem = Foundation.NSObject;
+#else
+using AVRouting;
+#endif
+
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -310,6 +318,22 @@ namespace AVKit {
 		[TV (15,0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("transportBarIncludesTitleView")]
 		bool TransportBarIncludesTitleView { get; set; }
+
+		[NoWatch, NoTV, MacCatalyst (16,0), NoMac, iOS (16,0)]
+		[Export ("allowsVideoFrameAnalysis")]
+		bool AllowsVideoFrameAnalysis { get; set; }
+
+		[iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, TV (16,0)]
+		[Export ("speeds", ArgumentSemantic.Copy)]
+		AVPlaybackSpeed[] Speeds { get; set; }
+
+		[iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, TV (16,0)]
+		[NullAllowed, Export ("selectedSpeed")]
+		AVPlaybackSpeed SelectedSpeed { get; }
+
+		[iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, TV (16,0)]
+		[Export ("selectSpeed:")]
+		void SelectSpeed (AVPlaybackSpeed speed);
 	}
 
 	[NoMac]
@@ -345,7 +369,7 @@ namespace AVKit {
 		[Export ("playerViewController:restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:")]
 		void RestoreUserInterfaceForPictureInPicture (AVPlayerViewController playerViewController, Action<bool> completionHandler);
 
-		[NoiOS][NoMac]
+		[iOS (16,0)][NoMac, NoMacCatalyst, NoWatch]
 		[TV (9,0)]
 		[Export ("playerViewController:didPresentInterstitialTimeRange:")]
 		void DidPresentInterstitialTimeRange (AVPlayerViewController playerViewController, AVInterstitialTimeRange interstitial);
@@ -365,7 +389,7 @@ namespace AVKit {
 		[Export ("playerViewControllerDidEndDismissalTransition:")]
 		void DidEndDismissalTransition (AVPlayerViewController playerViewController);
 
-		[NoiOS][NoMac]
+		[iOS (16,0)][NoMac, NoWatch, NoMacCatalyst]
 		[TV (9,0)]
 		[Export ("playerViewController:willPresentInterstitialTimeRange:")]
 		void WillPresentInterstitialTimeRange (AVPlayerViewController playerViewController, AVInterstitialTimeRange interstitial);
@@ -546,6 +570,34 @@ namespace AVKit {
 		[Mac (12,0)]
 		[NullAllowed, Export ("delegate", ArgumentSemantic.Weak)]
 		NSObject WeakDelegate { get; set; }
+
+		[Mac (13,0), NoWatch, NoiOS, NoMacCatalyst, NoTV]
+		[Export ("speeds", ArgumentSemantic.Copy)]
+		AVPlaybackSpeed[] Speeds { get; set; }
+
+		[Mac (13,0), NoWatch, NoiOS, NoMacCatalyst, NoTV]
+		[NullAllowed, Export ("selectedSpeed")]
+		AVPlaybackSpeed SelectedSpeed { get; }
+
+		[Mac (13,0), NoWatch, NoiOS, NoMacCatalyst, NoTV]
+		[Export ("selectSpeed:")]
+		void SelectSpeed (AVPlaybackSpeed speed);
+
+		[NoWatch, NoTV, NoMacCatalyst, NoiOS, Mac (13, 0)]
+		[Export ("allowsVideoFrameAnalysis")]
+		bool AllowsVideoFrameAnalysis { get; set; }
+
+		[Mac (13,0), NoWatch, NoiOS, NoMacCatalyst, NoTV]
+		[Export ("allowsMagnification")]
+		bool AllowsMagnification { get; [Bind ("setAllowsMagnification:")] set; }
+
+		[Mac (13,0), NoWatch, NoiOS, NoMacCatalyst, NoTV]
+		[Export ("magnification")]
+		nfloat Magnification { get; [Bind ("setMagnification:")] set; }
+
+		[Mac (13,0), NoWatch, NoiOS, NoMacCatalyst, NoTV]
+		[Export ("setMagnification:centeredAtPoint:")]
+		void SetMagnification (nfloat magnification, CGPoint point);
 	}
 
 	interface IAVPlayerViewPictureInPictureDelegate {}
@@ -621,7 +673,7 @@ namespace AVKit {
 		void StartRecording (AVCaptureView captureView, AVCaptureFileOutput fileOutput);
 	}
 
-	[NoiOS][NoMac]
+	[iOS (16,0)][NoMac, NoMacCatalyst, NoWatch]
 	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVInterstitialTimeRange : NSCopying, NSSecureCoding {
@@ -761,6 +813,10 @@ namespace AVKit {
 		[NoiOS, NoTV, NoWatch]
 		[NullAllowed, Export ("player", ArgumentSemantic.Assign)]
 		AVPlayer Player { get; set; }
+
+		[NoTV, NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch]
+		[NullAllowed, Export ("customRoutingController", ArgumentSemantic.Assign)]
+		AVCustomRoutingController CustomRoutingController { get; set; }
 	}
 
 	[NoiOS, NoMac, NoWatch, NoMacCatalyst]
@@ -956,4 +1012,49 @@ namespace AVKit {
 		CancelButton,
 	}
 
+	[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface AVPlaybackSpeed
+	{
+		[Static]
+		[Export ("systemDefaultSpeeds")]
+		AVPlaybackSpeed[] SystemDefaultSpeeds { get; }
+
+		[Export ("initWithRate:localizedName:")]
+		NativeHandle Constructor (float rate, string localizedName);
+
+		[Export ("rate")]
+		float Rate { get; }
+
+		[Export ("localizedName")]
+		string LocalizedName { get; }
+
+		[Export ("localizedNumericName")]
+		string LocalizedNumericName { get; }
+	}
+
+	delegate void AVCustomRoutingControllerDelegateCompletionHandler (bool success);
+
+	interface IAVCustomRoutingControllerDelegate {}
+
+	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+#if NET
+	[Protocol, Model]
+#else
+	[Protocol, Model (AutoGeneratedName = true)]
+#endif
+	[BaseType (typeof (NSObject))]
+	interface AVCustomRoutingControllerDelegate
+	{
+		[Abstract]
+		[Export ("customRoutingController:handleEvent:completionHandler:")]
+		void HandleEvent (AVCustomRoutingController controller, AVCustomRoutingEvent @event, AVCustomRoutingControllerDelegateCompletionHandler completionHandler);
+
+		[Export ("customRoutingController:eventDidTimeOut:")]
+		void EventDidTimeOut (AVCustomRoutingController controller, AVCustomRoutingEvent @event);
+
+		[Export ("customRoutingController:didSelectItem:")]
+		void DidSelectItem (AVCustomRoutingController controller, AVCustomRoutingActionItem customActionItem);
+	}
 }
