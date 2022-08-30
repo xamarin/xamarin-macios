@@ -880,7 +880,7 @@ namespace Foundation {
 #if NET
 				var hasCallBack = trustCallbackForUrl is not null || sessionHandler.ServerCertificateCustomValidationCallback is not null;
 #else
-				var hasCallBack = trustCallback is not null || trustCallbackForUrl is not null || sessionHandler.ServerCertificateCustomValidationCallback is not null;
+				var hasCallBack = trustCallback is not null || trustCallbackForUrl is not null;
 #endif
 				if (hasCallBack && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
 #if NET
@@ -891,8 +891,7 @@ namespace Foundation {
 					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
 					// more general one. Since we are using nullables, if the delegate is not present, by default is false
 					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
-						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
-						(InvokeServerCertificateCustomValidationCallback (inflight.Request, challenge.ProtectionSpace.ServerSecTrust));
+						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false);
 #endif
 
 					if (trustSec) {
@@ -967,43 +966,65 @@ namespace Foundation {
 				}
 			}
 
+#if NET
 			bool InvokeServerCertificateCustomValidationCallback (HttpRequestMessage request, SecTrust secTrust)
 			{
-				if (sessionHandler.ServerCertificateCustomValidationCallback is null)
-					return false;
+				var certificateValidationCallback = sessionHandler.ServerCertificateCustomValidationCallback;
+				if (certificateValidationCallback is null)
+					throw new InvalidOperationException ($"{nameof(NSUrlSessionHandler.ServerCertificateCustomValidationCallback)} cannot be null");
 
-				var originalChain = secTrust.GetCertificateChain (); // TODO does this work for older iOS and mac versions?
+				X509Certificate2[] certificates = ConvertCertificates (secTrust);
+				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
+				X509Chain chain = CreateChain (certificates);
+				SslPolicyErrors sslPolicyErrors = EvaluateSslPolicyErrors (certificate, chain, secTrust);
+
+				return certificateValidationCallback (request, certificate, chain, sslPolicyErrors);
+			}
+
+			X509Certificate2[] ConvertCertificates (SecTrust secTrust)
+			{
+				var originalChain = secTrust.GetCertificateChain ();
 				var certificates = new X509Certificate2 [originalChain.Length];
 				for (int i = 0; i < originalChain.Length; ++i)
 					certificates [i] = originalChain [i].ToX509Certificate2 ();
 
-				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
+				return certificates;
+			}
 
-				// TODO is NSURLAuthenticationMethodServerTrust used for every request or only when there is a problem
-				// with the remote certificate?
-				var sslPolicyErrors = SslPolicyErrors.None;
-				// var sslPolicyErrors = SslPolicyErrors.RemoteCertificateChainErrors;
-
+			X509Chain CreateChain (X509Certificate2[] certificates)
+			{
 				// the chain initialization is based on dotnet/runtime implementation in System.Net.Security.SecureChannel
 				var chain = new X509Chain ();
 				chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
 				chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
 				chain.ChainPolicy.ExtraStore.AddRange (certificates);
+				return chain;
+			}
 
-				// TODO the Build function doesn't work on Android, but maybe it works on iOS/OSX?
+			SslPolicyErrors EvaluateSslPolicyErrors (X509Certificate2? certificate, X509Chain chain, SecTrust secTrust)
+			{
+				var sslPolicyErrors = SslPolicyErrors.None;
+				
 				try {
 					if (certificate is null) {
 						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNotAvailable;
-					}
-					else if (!chain.Build (certificate)) {
+					} else if (!chain.Build (certificate)) {
 						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
 					}
 				} catch {
 					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
 				}
 
-				return sessionHandler.ServerCertificateCustomValidationCallback (request, certificate, chain, sslPolicyErrors);
+				// hostname verification
+				// based on dotnet/runtime src/native/libs/System.Security.Cryptography.Native.Apple/pal_ssl.c:512
+				var secTrustResult = secTrust.Evaluate ();
+				if (secTrustResult == SecTrustResult.Deny || secTrustResult == SecTrustResult.RecoverableTrustFailure) {
+					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNameMismatch;
+				}
+
+				return sslPolicyErrors;
 			}
+#endif // NET
 
 			static readonly string RejectProtectionSpaceAuthType = "reject";
 
