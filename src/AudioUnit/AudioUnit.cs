@@ -137,7 +137,7 @@ namespace AudioUnit
 
 #if NET
 	[StructLayout (LayoutKind.Sequential)]
-	public unsafe struct AURenderCallbackStruct
+	unsafe struct AURenderCallbackStruct
 	{
 		public delegate* unmanaged<IntPtr, int*, AudioTimeStamp*, uint, uint, IntPtr, int> Proc;
 		public IntPtr ProcRefCon; 
