@@ -60,11 +60,9 @@ namespace Xamarin.Linker {
 					break;
 				case "Newtonsoft.Json":
 				case "Xamarin.iOS.Tasks":
-				case "Xamarin.iOS.Tasks.Core":
 				case "Xamarin.ObjcBinding.Tasks":
 				case "Xamarin.MacDev":
 				case "Xamarin.MacDev.Tasks":
-				case "Xamarin.MacDev.Tasks.Core":
 				case "Xamarin.Analysis.Tasks":
 					// other stuff that is not part of the SDK but shipped in the same 2.1 directory
 					failed_bcl.Add (aname);
