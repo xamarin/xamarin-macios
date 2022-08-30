@@ -13,7 +13,7 @@
   </ItemGroup>
   <PropertyGroup>
     <!-- Unfortunately the ILRepack.MSBuild.Task package doesn't define any variables that help us find its ilrepack.exe executable, so manually create this variable (which the IRepack package defines, so remove this workaround can be removed once we switch back to ILRepack) -->
-    <ILRepack>$(HOME)/.nuget/packages/ilrepack.msbuild.task/2.0.13/tools/ilrepack.exe</ILRepack>
+    <ILRepack>$(MSBuildThisFileDirectory)/../packages/ilrepack.msbuild.task/2.0.13/tools/ilrepack.exe</ILRepack>
   </PropertyGroup>
 
   <Target Name="ILRepack" BeforeTargets="CopyFilesToOutputDirectory" Inputs="@(IntermediateAssembly -&gt; '%(FullPath)')" Outputs="$(IntermediateOutputPath)ilrepack.txt" Returns="@(MergedAssemblies)" Condition="Exists(@(IntermediateAssembly -&gt; '%(FullPath)')) And '$(ILRepack)' != 'false'">
@@ -26,9 +26,7 @@
     <!-- The assemblies are in a very different place when building for netstandard2.0, which means we need different logic to find them too -->
     <ItemGroup Condition="$(TargetFramework.StartsWith ('netstandard'))">
       <!-- I don't like to have a hard-coded list of assemblies to merge, but I couldn't find a way to calculate it -->
-      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev.Tasks.Core'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev.Tasks'" />
-      <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == '$(AssemblyName).Core'" /> <!-- Use AssemblyName so that the exact same logic works for both Xamarin.iOS.Tasks.dll and Xamarin.Mac.Tasks.dll -->
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'Xamarin.MacDev'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'DotNetZip'" />
       <MergedAssemblies Include="@(ReferencePath)" Condition="'%(FileName)' == 'ILLink.Tasks'" />

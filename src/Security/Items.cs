@@ -156,7 +156,7 @@ namespace Security {
 		public static NSData? QueryAsData (SecRecord query, bool wantPersistentReference, out SecStatusCode status)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
 
 			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
 				SetLimit (copy, 1);
@@ -165,10 +165,9 @@ namespace Security {
 				else
 					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 				
-				IntPtr ptr;
-				status = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				status = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if (status == SecStatusCode.Success)
-					return Runtime.GetNSObject<NSData> (ptr, false);
+					return Runtime.GetNSObject<NSData> (ptr, true);
 				return null;
 			}
 		}
@@ -176,7 +175,7 @@ namespace Security {
 		public static NSData []? QueryAsData (SecRecord query, bool wantPersistentReference, int max, out SecStatusCode status)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
 
 			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
 				var n = SetLimit (copy, max);
@@ -185,14 +184,18 @@ namespace Security {
 				else
 					copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 
-				IntPtr ptr;
-				status = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				status = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				n = null;
 				if (status == SecStatusCode.Success){
-					if (max == 1)
-						return new NSData [] { Runtime.GetNSObject<NSData> (ptr, false)! };
+					// From the header docs, it's guaranteed the function will return an array only if we pass max > 1.
 
-					return NSArray.ArrayFromHandle<NSData> (ptr);
+					// By default, this function returns only the first match found.
+					// To obtain more than one matching item at a time, specify the search key kSecMatchLimit with a value greater than 1.
+					// The result will be an object of type CFArrayRef containing up to that number of matching items.
+					if (max == 1)
+						return new NSData [] { Runtime.GetNSObject<NSData> (ptr, true)! };
+
+					return CFArray.ArrayFromHandle<NSData> (ptr, true)!;
 				}
 				return null;
 			}
@@ -213,16 +216,15 @@ namespace Security {
 		public static SecRecord? QueryAsRecord (SecRecord query, out SecStatusCode result)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
 			
 			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
 				SetLimit (copy, 1);
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnAttributes);
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if (result == SecStatusCode.Success)
-					return new SecRecord (new NSMutableDictionary (ptr, false));
+					return new SecRecord (new NSMutableDictionary (ptr, true));
 				return null;
 			}
 		}
@@ -230,18 +232,20 @@ namespace Security {
 		public static SecRecord []? QueryAsRecord (SecRecord query, int max, out SecStatusCode result)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
 			
 			using (var copy = NSMutableDictionary.FromDictionary (query.queryDict)){
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnAttributes);
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnData);
 				var n = SetLimit (copy, max);
 				
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				n = null;
 				if (result == SecStatusCode.Success)
-					return NSArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => new SecRecord (Runtime.GetNSObject<NSMutableDictionary> (element, false)!))!;
+					return CFArray.ArrayFromHandleFunc<SecRecord> (ptr, (element) => {
+						var dictionary = Runtime.GetNSObject<NSMutableDictionary> (element, false)!;
+						return new SecRecord (dictionary);
+					}, releaseHandle: true)!;
 				return null;
 			}
 		}
@@ -257,20 +261,23 @@ namespace Security {
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnRef);
 				SetLimit (copy, max);
 
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if ((result == SecStatusCode.Success) && (ptr != IntPtr.Zero)) {
-					var array = NSArray.ArrayFromHandle<INativeObject> (ptr, p => {
+					var array = CFArray.ArrayFromHandleFunc<INativeObject> (ptr, p => {
 						nint cfType = CFType.GetTypeID (p);
+						CFObject.CFRetain (p);
+
 						if (cfType == SecCertificate.GetTypeID ())
 							return new SecCertificate (p, true);
 						else if (cfType == SecKey.GetTypeID ())
 							return new SecKey (p, true);
 						else if (cfType == SecIdentity.GetTypeID ())
 							return new SecIdentity (p, true);
-						else
+						else {
+							CFObject.CFRelease (p);
 							throw new Exception (String.Format ("Unexpected type: 0x{0:x}", cfType));
-					})!;
+						}
+					}, releaseHandle: true)!;
 					return array;
 				}
 				return null;
@@ -280,7 +287,7 @@ namespace Security {
 		public static SecStatusCode Add (SecRecord record)
 		{
 			if (record is null)
-				throw new ArgumentNullException (nameof (record));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (record));
 			return SecItem.SecItemAdd (record.queryDict.Handle, IntPtr.Zero);
 			
 		}
@@ -288,16 +295,16 @@ namespace Security {
 		public static SecStatusCode Remove (SecRecord record)
 		{
 			if (record is null)
-				throw new ArgumentNullException (nameof (record));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (record));
 			return SecItem.SecItemDelete (record.queryDict.Handle);
 		}
 		
 		public static SecStatusCode Update (SecRecord query, SecRecord newAttributes)
 		{
 			if (query is null)
-				throw new ArgumentNullException (nameof (query));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (query));
 			if (newAttributes is null)
-				throw new ArgumentNullException (nameof (newAttributes));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (newAttributes));
 
 			return SecItem.SecItemUpdate (query.queryDict.Handle, newAttributes.queryDict.Handle);
 
@@ -551,8 +558,7 @@ namespace Security {
 				copy.LowlevelSetObject (CFBoolean.TrueHandle, SecItem.ReturnRef);
 				SetLimit (copy, 1);
 				
-				IntPtr ptr;
-				result = SecItem.SecItemCopyMatching (copy.Handle, out ptr);
+				result = SecItem.SecItemCopyMatching (copy.Handle, out var ptr);
 				if ((result == SecStatusCode.Success) && (ptr != IntPtr.Zero)) {
 					nint cfType = CFType.GetTypeID (ptr);
 					
@@ -573,7 +579,7 @@ namespace Security {
 		public static void AddIdentity (SecIdentity identity)
 		{
 			if (identity is null)
-				throw new ArgumentNullException (nameof (identity));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			using (var record = new SecRecord ()) {
 				record.SetValueRef (identity);
 
@@ -587,7 +593,7 @@ namespace Security {
 		public static void RemoveIdentity (SecIdentity identity)
 		{
 			if (identity is null)
-				throw new ArgumentNullException (nameof (identity));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (identity));
 			using (var record = new SecRecord ()) {
 				record.SetValueRef (identity);
 
@@ -601,7 +607,7 @@ namespace Security {
 		public static SecIdentity? FindIdentity (SecCertificate certificate, bool throwOnError = false)
 		{
 			if (certificate is null)
-				throw new ArgumentNullException (nameof (certificate));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (certificate));
 			var identity = FindIdentity (cert => SecCertificate.Equals (certificate, cert));
 			if (!throwOnError || identity is not null)
 				return identity;
@@ -801,7 +807,7 @@ namespace Security {
 			// FIXME: it's not clear that we should not allow null (i.e. that null should remove entries)
 			// but this is compatible with the exiting behaviour of older XI/XM
 			if (value is null)
-				throw new ArgumentNullException (nameof (value));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			var ptr = CFString.CreateNative (value);
 			try {
 				queryDict.LowlevelSetObject (ptr, key);
@@ -885,7 +891,7 @@ namespace Security {
 			
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecAttributeKey.CreationDate);
 			}
 		}
@@ -897,7 +903,7 @@ namespace Security {
 			
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecAttributeKey.ModificationDate);
 			}
 		}
@@ -1059,7 +1065,7 @@ namespace Security {
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value.Handle, SecItem.UseAuthenticationContext);
 			}
 		}
@@ -1074,7 +1080,7 @@ namespace Security {
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				_secAccessControl = value;
 				SetValue (value.Handle, SecAttributeKeys.AccessControlKey.Handle);
 			}
@@ -1087,7 +1093,7 @@ namespace Security {
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecAttributeKey.Generic);
 			}
 		}
@@ -1268,7 +1274,7 @@ namespace Security {
 			
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecAttributeKeys.ApplicationTagKey.Handle);
 			}
 		}
@@ -1442,7 +1448,7 @@ namespace Security {
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value.Handle, SecItem.MatchPolicy);
 			}
 		}
@@ -1454,7 +1460,7 @@ namespace Security {
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				using (var array = NSArray.FromNativeObjects (value))
 					SetValue (array, SecItem.MatchItemList);
 			}
@@ -1466,7 +1472,7 @@ namespace Security {
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				
 				SetValue (NSArray.FromNSObjects (value), SecItem.MatchIssuers);
 			}
@@ -1519,7 +1525,7 @@ namespace Security {
 			
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecItem.MatchValidOnDate);
 			}
 		}
@@ -1531,7 +1537,7 @@ namespace Security {
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetValue (value, SecItem.ValueData);
 			}
 		}
@@ -1843,7 +1849,7 @@ namespace Security {
 			}
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				_secAccessControl = value;
 				SetNativeValue (SecAttributeKeys.AccessControlKey, value);
 			}
@@ -1886,7 +1892,7 @@ namespace Security {
 
 			set {
 				if (value is null)
-					throw new ArgumentNullException (nameof (value));
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				_secAccessControl = value;
 				SetNativeValue (SecAttributeKeys.AccessControlKey, value);
 			}

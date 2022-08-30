@@ -10,6 +10,8 @@ using Xamarin.Utils;
 
 using NUnit.Framework;
 
+#nullable disable
+
 namespace Xamarin.Tests {
 	public static class DotNet {
 		static string dotnet_executable;
@@ -48,6 +50,16 @@ namespace Xamarin.Tests {
 			var rv = Execute ("publish", project, properties, false);
 			Assert.AreNotEqual (0, rv.ExitCode, "Unexpected success");
 			return rv;
+		}
+
+		public static ExecutionResult AssertRestore (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("restore", project, properties, true);
+		}
+
+		public static ExecutionResult Restore (string project, Dictionary<string, string> properties = null)
+		{
+			return Execute ("restore", project, properties, false);
 		}
 
 		public static ExecutionResult AssertBuild (string project, Dictionary<string, string> properties = null)
@@ -103,6 +115,7 @@ namespace Xamarin.Tests {
 			case "build":
 			case "pack":
 			case "publish":
+			case "restore":
 				var args = new List<string> ();
 				args.Add (verb);
 				args.Add (project);
@@ -132,8 +145,9 @@ namespace Xamarin.Tests {
 				var output = new StringBuilder ();
 				var rv = Execution.RunWithStringBuildersAsync (Executable, args, env, output, output, Console.Out, workingDirectory: Path.GetDirectoryName (project), timeout: TimeSpan.FromMinutes (10)).Result;
 				if (assert_success && rv.ExitCode != 0) {
+					var outputStr = output.ToString ();
 					Console.WriteLine ($"'{Executable} {StringUtils.FormatArguments (args)}' failed with exit code {rv.ExitCode}.");
-					Console.WriteLine (output);
+					Console.WriteLine (outputStr);
 					Assert.AreEqual (0, rv.ExitCode, $"Exit code: {Executable} {StringUtils.FormatArguments (args)}");
 				}
 				return new ExecutionResult {

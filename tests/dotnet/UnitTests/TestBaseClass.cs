@@ -1,19 +1,10 @@
 #nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 using Mono.Cecil;
 
-using NUnit.Framework;
-
-using Xamarin.Utils;
 using Xamarin.Tests;
-using Xamarin.MacDev;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -262,8 +253,6 @@ namespace Xamarin.Tests {
 			sb.AppendLine ($"</Project>");
 
 			File.WriteAllText (csproj, sb.ToString ());
-
-			Configuration.CopyDotNetSupportingFiles (dir);
 
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			appPath = Path.Combine (dir, "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, name + ".app");

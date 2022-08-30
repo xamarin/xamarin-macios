@@ -14,6 +14,9 @@ parameters:
   type: string
   default: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests' # default context, since we started dealing with iOS devices.
 
+- name: label
+  type: string
+
 - name: disableProvisionatorCache
   type: boolean
   default: false
@@ -47,9 +50,14 @@ parameters:
   type: string
   default: 'vsts-device-tests' # target to be used to run the tests
 
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - template: ../common/setup.yml
   parameters:
@@ -108,29 +116,26 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
-# download the not notarized pkgs since we do not need them to be signed
 - task: DownloadPipelineArtifact@2
-  displayName: Download not notaraized build
+  displayName: Download artifacts
   inputs:
-    artifact: 'not-signed-package'
     allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/package
+    path: $(Build.SourcesDirectory)/artifacts
 
 - pwsh: |
-    $dir = "$(Build.SourcesDirectory)/package"
-    Dir $dir
-    $items = Get-ChildItem $dir -Recurse
-    foreach ($i in $items) {
-      if ($i.Name -like "xamarin.ios-*.pkg") {
-        $path = $i.FullName
-        Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$path"
-      }
-      if ($i.Name -like "xamarin.mac-*.pkg") {
-        $path = $i.FullName
-        Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$path"
-      }
-    }
-  displayName: 'Set iOS pkgs url'
+    $dir = "$(Build.SourcesDirectory)/artifacts"
+    $versionsPath = "$dir/PkgsVersions/PkgsVersions.json"
+    $versionData = Get-Content $versionsPath | ConvertFrom-Json
+
+    $iOSVersion = $versionData | Select-Object -ExpandProperty "iOS"
+    $iOSPath = "$dir/not-signed-package/xamarin.ios-$iOSVersion.pkg"
+    Write-Host "##vso[task.setvariable variable=XI_PACKAGE;]$iOSPath"
+
+    $macOSVersion = $versionData | Select-Object -ExpandProperty "macOS"
+    $macOSPath = "$dir/not-signed-package/xamarin.mac-$macOSVersion.pkg"
+    Write-Host "##vso[task.setvariable variable=XM_PACKAGE;]$macOSPath"
+
+  displayName: 'Set pkgs url'
   timeoutInMinutes: 5
 
 - bash: |
@@ -166,6 +171,11 @@ steps:
   timeoutInMinutes: 250
 
 - bash: |
+    ls -R /Library/Frameworks/Xamarin.iOS.framework
+    ls -R /Library/Frameworks/Xamarin.Mac.framework
+  displayName: "Show installed Frameworks"
+
+- bash: |
     set -e
     set -x
     mac_var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR MAC_DESTDIR=)
@@ -191,6 +201,7 @@ steps:
 
 - template: ./run-tests.yml
   parameters:
+    label: ${{ parameters.label }}
     statusContext: ${{ parameters.statusContext }}
     testsLabels: ${{ parameters.testsLabels }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}

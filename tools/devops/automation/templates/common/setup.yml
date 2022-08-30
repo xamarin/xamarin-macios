@@ -6,7 +6,9 @@ parameters:
   type: string
 
 steps:
-- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache
+- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache and kills processes at the end
+  parameters:
+    CleanseProcesses: true
 
 - bash: cd $(System.DefaultWorkingDirectory)/xamarin-macios/ && git clean -xdf
   displayName: 'Clean workspace'
@@ -30,18 +32,11 @@ steps:
     }
 
     gci env: | format-table -autosize -wrap
+
+    system_profiler SPSoftwareDataType SPHardwareDataType SPDeveloperToolsDataType
   displayName: 'Show Environment'
 
 - powershell: |
-    Write-Host "Python version"
-    python --version
-
-    Write-Host "Python location"
-    which python
-
-    Write-Host "Python2 location"
-    which python2
-
     Write-Host "Python3 location"
     which python3
 
@@ -54,6 +49,7 @@ steps:
     sudo rm -Rf /Developer/MonoTouch
     sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
     sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
+    ls -R /Library/Frameworks
   displayName: 'Delete library folders'
   timeoutInMinutes: 5
 

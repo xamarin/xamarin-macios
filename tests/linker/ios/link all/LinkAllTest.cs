@@ -232,6 +232,9 @@ namespace LinkAll {
 				// caching means it will be called at least for the first run, but it might not
 				// be called again in subsequent requests (unless it expires)
 				Assert.That (test_policy.CheckCount, Is.GreaterThan (0), "policy checked");
+			} catch (WebException we) {
+				TestRuntime.IgnoreInCIIfBadNetwork (we);
+				throw;
 			} finally {
 				ServicePointManager.CertificatePolicy = old;
 			}

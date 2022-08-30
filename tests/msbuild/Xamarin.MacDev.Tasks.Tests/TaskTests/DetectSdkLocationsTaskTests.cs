@@ -3,7 +3,9 @@ using System.IO;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks
+using Xamarin.iOS.Tasks;
+
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class DetectSdkLocationsTaskTests : TestBase

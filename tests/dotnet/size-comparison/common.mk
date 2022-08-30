@@ -3,12 +3,7 @@ TOP=../../../..
 include $(TOP)/Make.config
 
 TARGETS += \
-	.config.stamp \
 	.install-workloads.stamp \
-
-.config.stamp: Makefile
-	$(Q) $(MAKE) -C ../.. NuGet.config global.json
-	$(Q) touch $@
 
 all-local:: compare
 
@@ -38,7 +33,6 @@ report:
 
 COMMON_ARGS=/p:Platform=iPhone /p:Configuration=Release $(MSBUILD_VERBOSITY)
 
-build-oldnet: export MD_APPLE_SDK_ROOT=$(abspath $(XCODE_DEVELOPER_ROOT)/../..)
 build-oldnet: export MD_MTOUCH_SDK_ROOT=$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
 build-oldnet: export MSBUILD_EXE_PATH=$(MONO_PREFIX)/lib/mono/msbuild/15.0/bin/MSBuild.dll
 build-oldnet: export TargetFrameworkFallbackSearchPaths=$(IOS_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks

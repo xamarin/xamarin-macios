@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
@@ -21,10 +20,12 @@ namespace Xharness.Jenkins {
 		public readonly IHardwareDeviceLoader Devices;
 		readonly IMlaunchProcessManager processManager;
 		public ITunnelBore TunnelBore { get; private set; }
+		public TestSelection TestSelection { get; } = new ();
 		readonly TestSelector testSelector;
 		readonly TestVariationsFactory testVariationsFactory;
 		public JenkinsDeviceLoader DeviceLoader { get; private set; }
 		readonly ResourceManager resourceManager;
+		readonly DateTime startTimeUtc = DateTime.UtcNow;
 
 		// report writers, do need to be a class instance because the have state.
 		readonly HtmlReportWriter xamarinStorageHtmlReportWriter;
@@ -34,34 +35,7 @@ namespace Xharness.Jenkins {
 		public bool Populating { get; private set; } = true;
 
 		public IHarness Harness { get; }
-		public bool IncludeAll;
-		public bool IncludeBcl;
-		public bool IncludeMac = true;
-		public bool IncludeiOS = true;
-		public bool IncludeiOS64 = true;
-		public bool IncludeiOS32 = false; // broken in xcode 12 beta 3, not possible with DTK
-		public bool IncludeiOSExtensions;
 		public bool ForceExtensionBuildOnly;
-		public bool IncludetvOS = true;
-		public bool IncludewatchOS = true;
-		public bool IncludeMmpTest;
-		public bool IncludeMSBuild = true;
-		public bool IncludeMtouch;
-		public bool IncludeBtouch;
-		public bool IncludeMacBindingProject;
-		public bool IncludeSimulator = true;
-		public bool IncludeOldSimulatorTests;
-		public bool IncludeDevice;
-		public bool IncludeXtro;
-		public bool IncludeCecil;
-		public bool IncludeDocs;
-		public bool IncludeBCLxUnit;
-		public bool IncludeBCLNUnit;
-		public bool IncludeMscorlib;
-		public bool IncludeNonMonotouch = true;
-		public bool IncludeMonotouch = true;
-		public bool IncludeDotNet;
-		public bool IncludeMacCatalyst = true;
 
 		public bool CleanSuccessfulTestRuns = true;
 		public bool UninstallTestApp = true;
@@ -102,7 +76,7 @@ namespace Xharness.Jenkins {
 			Harness = harness ?? throw new ArgumentNullException (nameof (harness));
 			Simulators = new SimulatorLoader (processManager, new SimulatorSelector ());
 			Devices = new HardwareDeviceLoader (processManager);
-			testSelector = new TestSelector (this, processManager, new GitHub (harness, processManager));
+			testSelector = new TestSelector (this, new GitHub (harness, processManager));
 			testVariationsFactory = new TestVariationsFactory (this, processManager);
 			DeviceLoader = new JenkinsDeviceLoader (Simulators, Devices, Logs);
 			resourceManager = new ResourceManager ();
@@ -115,27 +89,21 @@ namespace Xharness.Jenkins {
 
 		public bool IsIncluded (TestProject project)
 		{
-			if (!project.IsExecutableProject)
+			MainLog.WriteLine ($"Testing {project.Name} with label {project.Label.ToString ()} is included.");
+			if (!project.IsExecutableProject) {
+				MainLog.WriteLine ($"Ignoring {project.Name} because is not a executable project.");
 				return false;
-			
-			if (project.IsBclTest ()) {
-				if (!project.IsBclxUnit ())
-					return IncludeBcl || IncludeBCLNUnit;
-				if (project.IsMscorlib ()) 
-					return IncludeMscorlib;
-				return IncludeBcl || IncludeBCLxUnit;
 			}
 
-			if (!IncludeMonotouch && project.IsMonotouch ())
+			if (!TestSelection.IsEnabled(TestLabel.SystemPermission) && project.Label == TestLabel.Introspection) {
+				MainLog.WriteLine ($"Ignoring {project.Name} because we cannot include the system permission tests");
 				return false;
+			}
 
-			if (!IncludeNonMonotouch && !project.IsMonotouch ())
-				return false;
-
-			if (Harness.IncludeSystemPermissionTests == false && project.Name == "introspection")
-				return false;
-
-			return true;
+			MainLog.WriteLine ($"Selected tests are {TestSelection.SelectedTests.ToString ()}");
+			MainLog.WriteLine ($"Selected platforms are {TestSelection.SelectedPlatforms.ToString () }");
+			MainLog.WriteLine ($"Prohect {project.Name} is included: {TestSelection.IsEnabled (project.Label)}");
+			return TestSelection.IsEnabled (project.Label);
 		}
 
 		public bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
@@ -145,7 +113,7 @@ namespace Xharness.Jenkins {
 			// Missing:
 			// api-diff
 
-			testSelector.SelectTests ();
+			testSelector.SelectTests (TestSelection);
 
 			DeviceLoader.LoadAllAsync ().DoNotAwait ();
 
@@ -182,7 +150,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !IncludeXtro,
+				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
@@ -202,7 +170,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "dotnet-wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !IncludeXtro && !IncludeDotNet,
+				Ignored = !(TestSelection.IsEnabled (TestLabel.Xtro) && TestSelection.IsEnabled (PlatformLabel.Dotnet)),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
@@ -217,7 +185,7 @@ namespace Xharness.Jenkins {
 			};
 			Tasks.Add (runDotNetXtroReporter);
 
-			var buildDotNetGeneratorProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
+			var buildDotNetGeneratorProject = new TestProject (TestLabel.Generator, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "bgen", "bgen-tests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var buildDotNetGenerator = new MSBuildTask (jenkins: this, testProject: buildDotNetGeneratorProject, processManager: processManager) {
@@ -231,25 +199,25 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				TestName = "Generator tests",
 				Mode = ".NET",
-				Ignored = !IncludeBtouch,
+				Ignored = !TestSelection.IsEnabled (TestLabel.Generator) || !TestSelection.IsEnabled (PlatformLabel.Dotnet),
 			};
 			Tasks.Add (runDotNetGenerator);
 
-			var buildDotNetTestsProject = new TestProject (Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
+			var buildDotNetTestsProject = new TestProject (TestLabel.DotnetTest, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "dotnet", "UnitTests", "DotNetUnitTests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var buildDotNetTests = new MSBuildTask (this, testProject: buildDotNetTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				Platform = TestPlatform.All,
 				ProjectConfiguration = "Debug",
-				Ignored = !IncludeDotNet,
+				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest),
 			};
 			var runDotNetTests = new DotNetTestTask (this, buildDotNetTests, processManager) {
 				TestProject = buildDotNetTestsProject,
 				Platform = TestPlatform.All,
 				TestName = "DotNet tests",
 				Timeout = TimeSpan.FromMinutes (240),
-				Ignored = !IncludeDotNet,
+				Ignored = !TestSelection.IsEnabled (TestLabel.DotnetTest),
 			};
 			Tasks.Add (runDotNetTests);
 
@@ -320,6 +288,31 @@ namespace Xharness.Jenkins {
 				MainLog.WriteLine ("Unexpected exception: {0}", ex);
 				Console.WriteLine ("Unexpected exception: {0}", ex);
 				return 2;
+			} finally {
+				CollectCrashReports ();
+			}
+		}
+
+		// Collect any crash reports that were created during the test run
+		void CollectCrashReports ()
+		{
+			try {
+				var dir = Path.Combine (Environment.GetEnvironmentVariable ("HOME"), "Library", "Logs", "DiagnosticReports");
+				var reports = Directory.GetFiles (dir).Select (v => {
+					(string Path, DateTime LastWriteTimeUtc) rv = (v, File.GetLastWriteTimeUtc (v));
+					return rv;
+				}).ToArray ();
+				MainLog.WriteLine ($"Found {reports.Length} crash reports in {dir} (the ones marked with 'x' occurred during this test run):");
+				foreach (var report in reports.OrderBy (v => v)) {
+					MainLog.WriteLine ($"  {(report.LastWriteTimeUtc > startTimeUtc ? "x" : " ")}  {report.LastWriteTimeUtc.ToString ("u")} {report.Path}");
+				}
+				var targetDir = Path.Combine (LogDirectory, "DiagnosticReports");
+				Directory.CreateDirectory (targetDir);
+				foreach (var report in reports.Where (v => v.LastWriteTimeUtc >= startTimeUtc)) {
+					File.Copy (report.Path, Path.Combine (targetDir, Path.GetFileName (report.Path)));
+				}
+			} catch (Exception e) {
+				MainLog.WriteLine ($"Failed to collect crash reports: {e}");
 			}
 		}
 

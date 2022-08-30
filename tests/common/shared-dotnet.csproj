@@ -53,6 +53,9 @@
 
 		<!-- XAMCORE_3_0 is always defined for .NET -->
 		<DefineConstants>$(DefineConstants);XAMCORE_3_0</DefineConstants>
+
+		<!-- Don't show warnings about platform availability -->
+		<NoWarn Condition="'$(IncludeCS1416Warnigs)' != 'true'">CA1416;$(NoWarn)</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -60,5 +63,6 @@
 		<ProjectReference Include="$(MSBuildThisFileDirectory)\..\..\external\Touch.Unit\Touch.Client\dotnet\$(_PlatformName)\Touch.Client-$(_PlatformName).dotnet.csproj" Condition="'$(ExcludeTouchUnitReference)' != 'true'" />
 	</ItemGroup>
 
+	<Import Project="$(MSBuildThisFileDirectory)/../ComputeRegistrarConstant.targets" />
 	<Import Project="$(MSBuildThisFileDirectory)/../nunit.framework.targets" />
 </Project>

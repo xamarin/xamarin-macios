@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -24,7 +26,10 @@ namespace HomeKit {
 #endif
 		static public NSPredicate CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (HMSignificantEvent significantEvent, NSDateComponents offset)
 		{
-			return CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (significantEvent.GetConstant (), offset);
+			var constant = significantEvent.GetConstant ();
+			if (constant is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (significantEvent));
+			return CreatePredicateForEvaluatingTriggerOccurringBeforeSignificantEvent (constant, offset);
 		}
 
 #if NET
@@ -45,7 +50,10 @@ namespace HomeKit {
 #endif
 		static public NSPredicate CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (HMSignificantEvent significantEvent, NSDateComponents offset)
 		{
-			return CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (significantEvent.GetConstant (), offset);
+			var constant = significantEvent.GetConstant ();
+			if (constant is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (significantEvent));
+			return CreatePredicateForEvaluatingTriggerOccurringAfterSignificantEvent (constant, offset);
 		}
 	}
 }

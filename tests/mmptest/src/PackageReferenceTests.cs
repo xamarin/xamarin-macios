@@ -8,7 +8,7 @@ namespace Xamarin.MMP.Tests
 	[TestFixture]
 	public class PackageReferenceTests
 	{
-		const string PackageReference = @"<ItemGroup><PackageReference Include = ""Newtonsoft.Json"" Version = ""10.0.3"" /></ItemGroup>";
+		const string PackageReference = @"<ItemGroup><PackageReference Include = ""Newtonsoft.Json"" Version = ""13.0.1"" /></ItemGroup>";
 		const string TestCode = @"var output = Newtonsoft.Json.JsonConvert.SerializeObject (new int[] { 1, 2, 3 });";
 
 		[TestCase (true)]
@@ -45,7 +45,8 @@ namespace Xamarin.MMP.Tests
 				TI.AddGUIDTestCode (config);
 
 				string project = TI.GenerateUnifiedExecutableProject (config);
-				TI.NugetRestore (project);
+				if (!TI.TryNugetRestore (project, out var _))
+					Assert.Ignore ("NuGet restore failed, probably due to network hiccups."); // https://github.com/xamarin/maccore/issues/2612
 				TI.BuildProject (project);
 
 				var appDir = Path.Combine (tmpDir, "bin", "Debug", full ? "XM45Example.app" : "UnifiedExample.app");

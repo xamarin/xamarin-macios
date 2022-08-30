@@ -14,6 +14,9 @@
 // which must be set for tracking to work.
 //#define TRACK_MONOOBJECTS
 
+// Uncomment VERBOSE_LOG to enable verbose logging
+// #define VERBOSE_LOG
+
 #if NET && !COREBUILD
 
 using System;
@@ -77,11 +80,45 @@ namespace ObjCRuntime {
 		static bool? track_monoobject_with_stacktraces;
 #endif
 
-		// Comment out the attribute to get all printfs
-		[System.Diagnostics.Conditional ("UNDEFINED")]
+		// Define VERBOSE_LOG at the top of this file to get all printfs
+		[System.Diagnostics.Conditional ("VERBOSE_LOG")]
 		static void log_coreclr (string message)
 		{
 			NSLog (message);
+		}
+
+		// Define VERBOSE_LOG at the top of this file to get all printfs
+		[System.Diagnostics.Conditional ("VERBOSE_LOG")]
+		static void log_coreclr_render (string message, params object[] argumentsToRender)
+		{
+			var args = new string [argumentsToRender.Length];
+			for (var i = 0; i < args.Length; i++) {
+				string arg;
+				var obj = argumentsToRender [i];
+				if (obj is null) {
+					arg = "<null>";
+				} else if (obj is IntPtr ptr) {
+					arg = $"0x{ptr.ToString ("x")} (IntPtr)";
+				} else if (obj.GetType ().IsValueType) {
+					arg = $"{obj.ToString ()} ({obj.GetType ()})";
+				} else if (obj is INativeObject inativeobj) {
+					// Don't call ToString on an INativeObject, we may end up with infinite recursion.
+					arg = $"{inativeobj.Handle.ToString ()} ({obj.GetType ()})";
+				} else {
+					var toString = obj.ToString ();
+					// Print one line, and at most 256 characters.
+					var strLength = Math.Min (256, toString.Length);
+					var eol = toString.IndexOf ('\n');
+					if (eol != -1 && eol < strLength)
+						strLength = eol;
+					if (strLength != toString.Length)
+						toString = toString.Substring (0, strLength) + " [...]";
+
+					arg = $"{toString} ({obj.GetType ()})";
+				}
+				args [i] = arg;
+			}
+			log_coreclr (string.Format (message, args));
 		}
 
 		static unsafe void InitializeCoreCLRBridge (InitializationOptions* options)
@@ -573,7 +610,7 @@ namespace ObjCRuntime {
 			}
 
 			// Log our input
-			log_coreclr ($"InvokeMethod ({method.DeclaringType.FullName}::{method}, {instance}, 0x{native_parameters.ToString ("x")})");
+			log_coreclr ($"InvokeMethod ({method.DeclaringType.FullName}::{method}, {(instance is null ? "<null>" : instance.GetType ().FullName)}, 0x{native_parameters.ToString ("x")})");
 			for (var i = 0; i < methodParameters.Length; i++) {
 				var nativeParam = nativeParameters [i];
 				var p = methodParameters [i];
@@ -591,7 +628,7 @@ namespace ObjCRuntime {
 				var isByRef = paramType.IsByRef;
 				if (isByRef)
 					paramType = paramType.GetElementType ();
-				log_coreclr ($"    Marshalling #{i + 1}: IntPtr => 0x{nativeParam.ToString ("x")} => {p.ParameterType.FullName} [...]");
+				log_coreclr ($"    Marshalling #{i + 1}: IntPtr => 0x{nativeParam.ToString ("x")} => {p.ParameterType.FullName}");
 
 				if (paramType == typeof (IntPtr)) {
 					log_coreclr ($"        IntPtr");
@@ -604,7 +641,7 @@ namespace ObjCRuntime {
 					} else {
 						parameters [i] = nativeParam == IntPtr.Zero ? IntPtr.Zero : Marshal.ReadIntPtr (nativeParam);
 					}
-					log_coreclr ($"            => 0x{((IntPtr) parameters [i]).ToString ("x")}");
+					log_coreclr_render ("            => {0}", parameters [i]);
 				} else if (paramType.IsClass || paramType.IsInterface || (paramType.IsValueType && IsNullable (paramType))) {
 					log_coreclr ($"        IsClass/IsInterface/IsNullable IsByRef: {isByRef} IsOut: {p.IsOut} ParameterType: {paramType}");
 					if (nativeParam != IntPtr.Zero) {
@@ -617,7 +654,7 @@ namespace ObjCRuntime {
 							parameters [i] = GetMonoObjectTarget (mono_obj);
 						}
 					}
-					log_coreclr ($"            => {(parameters [i] == null ? "<null>" : parameters [i].GetType ().FullName)}");
+					log_coreclr_render ("            => {0}", parameters [i]);
 				} else if (paramType.IsValueType) {
 					log_coreclr ($"        IsValueType IsByRef: {isByRef} IsOut: {p.IsOut} nativeParam: 0x{nativeParam.ToString ("x")} ParameterType: {paramType}");
 					if (nativeParam != IntPtr.Zero) {
@@ -637,7 +674,7 @@ namespace ObjCRuntime {
 							vt = Enum.ToObject (enumType, vt);
 						parameters [i] = vt;
 					}
-					log_coreclr ($"            => {(parameters [i] == null ? "<null>" : parameters [i].ToString ())}");
+					log_coreclr_render ("            => {0}", parameters [i]);
 				} else {
 					throw ErrorHelper.CreateError (8037, Errors.MX8037 /* Don't know how to marshal the parameter of type {p.ParameterType.FullName} for parameter {p.Name} in call to {method} */, p.ParameterType.FullName, p.Name, method);
 				}
@@ -657,6 +694,8 @@ namespace ObjCRuntime {
 				var ex = tie.InnerException ?? tie;
 				// This will re-throw the original exception and preserve the stacktrace.
 				ExceptionDispatchInfo.Capture (ex).Throw ();
+			} catch (Exception e) {
+				throw ErrorHelper.CreateError (8042, e, Errors.MX8042 /* An exception occurred while trying to invoke the function {0}: {1}. */, GetMethodFullName (method), e.Message);
 			}
 
 			// Copy any byref parameters back out again
@@ -668,12 +707,12 @@ namespace ObjCRuntime {
 
 				byrefParameterCount++;
 
-				log_coreclr ($"    Marshalling #{i + 1} back (Type: {p.ParameterType.FullName}) value: {(parameters [i] == null ? "<null>" : parameters [i].GetType ().FullName)}");
-
 				var parameterType = p.ParameterType.GetElementType ();
 				var isMonoObject = parameterType.IsClass || parameterType.IsInterface || (parameterType.IsValueType && IsNullable (parameterType));
 
 				var nativeParam = nativeParameters [i];
+
+				log_coreclr_render ($"    Marshalling #{i + 1} back (Type: {p.ParameterType.FullName}) nativeParam: 0x{nativeParam.ToString ("x")} value: {{0}}", parameters [i]);
 
 				if (nativeParam == IntPtr.Zero) {
 					log_coreclr ($"    No output pointer was provided.");
@@ -691,21 +730,21 @@ namespace ObjCRuntime {
 
 				if (parameterType == typeof (IntPtr)) {
 					Marshal.WriteIntPtr (nativeParam, (IntPtr) parameters [i]);
-					log_coreclr ($"        IntPtr: 0x{((IntPtr) parameters [i]).ToString ("x")} => Type: {parameters [i]?.GetType ()} nativeParam: 0x{nativeParam.ToString ("x")}");
+					log_coreclr ($"        IntPtr");
 				} else if (isMonoObject) {
 					var ptr = GetMonoObject (parameters [i]);
 					Marshal.WriteIntPtr (nativeParam, ptr);
-					log_coreclr ($"        IsClass/IsInterface/IsNullable: {(parameters [i] == null ? "<null>" : parameters [i].GetType ().FullName)}  nativeParam: 0x{nativeParam.ToString ("x")} -> MonoObject: 0x{ptr.ToString ("x")}");
+					log_coreclr ($"        IsClass/IsInterface/IsNullable  MonoObject: 0x{ptr.ToString ("x")}");
 				} else if (parameterType.IsValueType) {
 					StructureToPtr (parameters [i], nativeParam);
-					log_coreclr ($"        IsValueType: {(parameters [i] == null ? "<null>" : parameters [i].ToString ())} nativeParam: 0x{nativeParam.ToString ("x")}");
+					log_coreclr ($"        IsValueType");
 				} else {
 					throw ErrorHelper.CreateError (8038, Errors.MX8038 /* Don't know how to marshal back the parameter of type {p.ParameterType.FullName} for parameter {p.Name} in call to {method} */, p.ParameterType.FullName, p.Name, method);
 				}
 			}
 
 			// we're done!
-			log_coreclr ($"    Invoke complete with {byrefParameterCount} ref parameters and return value of type {rv?.GetType ()}");
+			log_coreclr_render ($"    Invoke complete with {byrefParameterCount} ref parameters and return value: {{0}}", rv);
 
 			return rv;
 		}

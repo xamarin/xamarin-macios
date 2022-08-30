@@ -10,11 +10,31 @@ ifdef SKIP_ADDED_APIS
 ADD_REGEX = "-a:.?"
 endif
 
-APIDIFF_DIR=.
+ifeq ($(APIDIFF_DIR),)
+APIDIFF_DIR=temp
+endif
+ifeq ($(OUTPUT_DIR),)
+OUTPUT_DIR=output
+endif
 
-MONO_API_INFO = $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tools/mono-api-info.exe
-MONO_API_HTML = $(MONO_IOS_SDK_DESTDIR)/ios-bcl/monotouch_tools/mono-api-html.exe
+ifndef SKIP_XAMARIN_VS_DOTNET
+INCLUDE_XAMARIN_VS_DOTNET=1
+endif
+ifndef SKIP_IOS_VS_MACCATALYST
+INCLUDE_IOS_VS_MACCATALYST=1
+endif
+
+MONO_API_INFO = $(API_TOOLS_PATH)/mono-api-info/bin/Debug/net6.0/mono-api-info.dll
+MONO_API_HTML = $(API_TOOLS_PATH)/mono-api-html/bin/Debug/net6.0/mono-api-html.dll
 MONO_BUILD = $(SYSTEM_MONO)
+
+MONO_API_INFO_EXEC = $(DOTNET) $(MONO_API_INFO) --ignore-inherited-interfaces
+MONO_API_HTML_EXEC = $(DOTNET) $(MONO_API_HTML)
+
+export HTML_BREAKING_CHANGES_MESSAGE=❗️Breaking changes❗️
+export HTML_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
+export MARKDOWN_BREAKING_CHANGES_MESSAGE=:heavy_exclamation_mark: Breaking changes :heavy_exclamation_mark:
+export MARKDOWN_NO_BREAKING_CHANGES_MESSAGE=No breaking changes
 
 # I18N are excluded - but otherwise if should be like ../../builds/Makefile + what XI adds
 # in the order to the api-diff.html merged file
@@ -41,52 +61,53 @@ IOS_ASSEMBLIES     = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.iOS/$(file))    $
 MAC_ASSEMBLIES     = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.Mac/$(file))     $(MAC_SRC_ASSEMBLIES)
 WATCHOS_ASSEMBLIES = $(foreach file,$(filter-out Mono.Data.Tds Mono.Security,$(MONO_ASSEMBLIES)),Xamarin.WatchOS/$(file)) $(WATCHOS_SRC_ASSEMBLIES)
 TVOS_ASSEMBLIES    = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.TVOS/$(file))    $(TVOS_SRC_ASSEMBLIES)
-DOTNET_LEGACY_ASSEMBLIES = Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS \
-	Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS
-DOTNET_ASSEMBLIES = $(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Ref/ref/net6.0/Microsoft.$(platform))
+DOTNET_LEGACY_ASSEMBLIES = Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS \
+	Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS
+DOTNET_ASSEMBLIES = $(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Ref/ref/$(DOTNET_TFM)/Microsoft.$(platform))
 
 IOS_ARCH_ASSEMBLIES = native-32/Xamarin.iOS native-64/Xamarin.iOS
 MAC_ARCH_ASSEMBLIES =                       native-64/Xamarin.Mac
 
 APIDIFF_IGNORE = -i 'INSObjectProtocol'
 
-$(APIDIFF_DIR)/.download-$(MONO_HASH).stamp:
-	$(MAKE) -C $(TOP)/builds download
-	$(Q) mkdir -p $(dir $@)
+$(MONO_API_INFO): $(wildcard $(API_TOOLS_PATH)/mono-api-info/*.cs*)
+	$(Q) $(DOTNET) build $(API_TOOLS_PATH)/mono-api-info/mono-api-info.csproj /bl:$@.binlog $(MSBUILD_VERBOSITY)
 	$(Q) touch $@
 
-$(MONO_API_INFO) $(MONO_API_HTML): $(APIDIFF_DIR)/.download-$(MONO_HASH).stamp
+$(MONO_API_HTML): $(wildcard $(API_TOOLS_PATH)/mono-api-html/*.cs*)
+	$(Q) $(DOTNET) build $(API_TOOLS_PATH)/mono-api-html/mono-api-html.csproj /bl:$@.binlog $(MSBUILD_VERBOSITY)
+	$(Q) touch $@
 
 # create api info. Directory hierarchy is based on installed hierarchy
 # (XM goes into temp/xm, and XI goes into temp/xi)
 
 $(APIDIFF_DIR)/temp/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
 
 $(APIDIFF_DIR)/temp/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(abspath $<) -o $(abspath $@)
 
 $(APIDIFF_DIR)/temp/xm/4.5/Xamarin.Mac.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5/Xamarin.Mac.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/4.5 $(abspath $<) -o $(abspath $@)
 
 $(APIDIFF_DIR)/temp/native-%/Xamarin.Mac.xml: $(TOP)/src/build/mac/mobile-%/Xamarin.Mac.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) -d $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/Xamarin.Mac $(abspath $<) -o $(abspath $@)
 
 $(APIDIFF_DIR)/temp/native-%/Xamarin.iOS.xml: $(TOP)/src/build/ios/native-%/Xamarin.iOS.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
 
 $(APIDIFF_DIR)/temp/dotnet/legacy-diff/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
 
 $(APIDIFF_DIR)/temp/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
 
 # create diff from api info and reference info
 # note that we create an empty file (the 'touch' command)
@@ -94,67 +115,58 @@ $(APIDIFF_DIR)/temp/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 # to run mono-api-html every time even if none of the
 # dependencies changed)
 
-$(APIDIFF_DIR)/diff/%.html: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
+$(OUTPUT_DIR)/diff/%.html $(OUTPUT_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml $(APIDIFF_IGNORE) $@
+	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/$*.xml) $(abspath $(APIDIFF_DIR)/temp/$*.xml) $(APIDIFF_IGNORE) --html "$(abspath $(basename $@).html)" --markdown "$(abspath $(basename $@).md)"
 	$(Q) touch $@
 
-$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS.xml $(MONO_API_HTML)
+$(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS-converted.xml: $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS.xml
+	$(Q) sed 's/assembly name="Xamarin.iOS"/assembly name="Microsoft.iOS"/' $< > $@
+
+$(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac-converted.xml: $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac.xml
+	$(Q) sed 's/assembly name="Xamarin.Mac"/assembly name="Microsoft.macOS"/' $< > $@
+
+$(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS-converted.xml: $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS.xml
+	$(Q) sed 's/assembly name="Xamarin.TVOS"/assembly name="Microsoft.tvOS"/' $< > $@
+
+$(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst-as-iOS.xml: $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.xml
+	$(Q) sed -e 's/assembly name="Microsoft.MacCatalyst"/assembly name="Microsoft.iOS"/' $< > $@
+
+$(OUTPUT_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/%.html $(OUTPUT_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/%.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS-converted.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS.xml $< $(APIDIFF_IGNORE) $@
+	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS-converted.xml) $(abspath $<) $(APIDIFF_IGNORE) --html $(abspath $(basename $@).html) --markdown $(abspath $(basename $@).md)
 	$(Q) touch $@
 
-$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.xml $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac.xml $(MONO_API_HTML)
+$(OUTPUT_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/%.html $(OUTPUT_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/%.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.xml $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac-converted.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac.xml $< $(APIDIFF_IGNORE) $@
+	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac-converted.xml) $(abspath $<) $(APIDIFF_IGNORE) --html $(abspath $(basename $@).html) --markdown $(abspath $(basename $@).md)
 	$(Q) touch $@
 
-$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS.xml $(MONO_API_HTML)
+$(OUTPUT_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/%.html $(OUTPUT_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/%.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS-converted.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS.xml $< $(APIDIFF_IGNORE) $@
+	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS-converted.xml) $(abspath $<) $(APIDIFF_IGNORE) --html $(abspath $(basename $@).html) --markdown $(abspath $(basename $@).md)
 	$(Q) touch $@
 
-$(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst.html: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.xml $(MONO_API_HTML)
+$(OUTPUT_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/%.html $(OUTPUT_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/%.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst-as-iOS.xml $(MONO_API_HTML)
 	$(Q) mkdir -p $(dir $@)
-	$(Q) sed -e 's_<assembly name="Xamarin.MacCatalyst" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.xml > $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.MacCatalyst-as-iOS.xml
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $< $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.MacCatalyst-as-iOS.xml $(APIDIFF_IGNORE) $@
-
-# this is a hack to show the difference between iOS and tvOS
-$(APIDIFF_DIR)/diff/ios-to-tvos.html: $(APIDIFF_DIR)/temp/xi/Xamarin.iOS/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml $(MONO_API_HTML)
-	$(Q) mkdir -p $(dir $@)
-	$(Q) sed -e 's_<assembly name="Xamarin.TVOS" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/xi/Xamarin.TVOS/Xamarin.TVOS.xml > $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $< $(APIDIFF_DIR)/temp/Xamarin.TVOS-as-iOS.xml $@
+	$(QF_GEN) $(MONO_API_HTML_EXEC) $(NEW_REGEX) $(ADD_REGEX) $(abspath $<) $(abspath $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst-as-iOS.xml) $(APIDIFF_IGNORE) --html $(abspath $(basename $@).html) --markdown $(abspath $(basename $@).md)
 
 # create diff files for all the assemblies per platform
 
-$(APIDIFF_DIR)/mac-api-diff.html:     $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).html)
-$(APIDIFF_DIR)/ios-api-diff.html:     $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
-$(APIDIFF_DIR)/watchos-api-diff.html: $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
-$(APIDIFF_DIR)/tvos-api-diff.html:    $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).html)
+$(OUTPUT_DIR)/mac-api-diff.html:     $(foreach file,$(MAC_ASSEMBLIES),$(OUTPUT_DIR)/diff/xm/$(file).html)
+$(OUTPUT_DIR)/ios-api-diff.html:     $(foreach file,$(IOS_ASSEMBLIES),$(OUTPUT_DIR)/diff/xi/$(file).html)
+$(OUTPUT_DIR)/watchos-api-diff.html: $(foreach file,$(WATCHOS_ASSEMBLIES),$(OUTPUT_DIR)/diff/xi/$(file).html)
+$(OUTPUT_DIR)/tvos-api-diff.html:    $(foreach file,$(TVOS_ASSEMBLIES),$(OUTPUT_DIR)/diff/xi/$(file).html)
 
-# Compare new dotnet vs. stable dotnet
-$(APIDIFF_DIR)/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html:                 $(APIDIFF_DIR)/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.html
-$(APIDIFF_DIR)/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html:               $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.html
-$(APIDIFF_DIR)/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS-api-diff.html:               $(APIDIFF_DIR)/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.html
-$(APIDIFF_DIR)/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst-api-diff.html: $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.html
-
-# Compare new dotnet vs. stable legacy
-$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html:     $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.html
-$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html:   $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.html
-$(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS-api-diff.html:   $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.html
-
-# Compare Dotnet iOS vs. Dotnet MacCatalyst
-$(APIDIFF_DIR)/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst-api-diff.html: $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst.html
-
-$(APIDIFF_DIR)/%-api-diff.html:
+$(OUTPUT_DIR)/%-api-diff.html:
 	$(Q) rm -f $@
-	mkdir -p $$(dirname "$@");
+	$(Q) mkdir -p $$(dirname "$@");
 	$(Q) touch $@-toc
 	$(Q_GEN) for file in $?; do \
 		if [[ "x0" != "x`stat -L -f %z $$file`" ]]; then  \
 			cat $$file | sed "s*<h1>*<h1 id='$$file'>*" >> $@;	\
 			echo "<br><hr>" >> $@;	\
-			echo "<a href='#$$file'>`echo $$file | sed -e 's_html_dll_' -e 's_diff/xi/Xamarin.iOS/__' -e 's_diff/xi/Xamarin.WatchOS/__' -e 's_diff/xi/Xamarin.TVOS/__' -e 's_diff/xm/4.5/_\(Full profile\) _' -e 's_diff/xm/Xamarin.Mac/_\(Mobile profile\) _' -e 's_diff/xm/_\(Classic profile\) _' -e 's_diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/__' -e 's_diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/__' -e 's_diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/__' -e 's_diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/__' -e 's_diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/__' -e 's_diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/__' -e 's_diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/__' -e 's_diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/__' -e 's#/Users/.*apidiff/##' `</a><br/>" >> $@-toc; \
+			echo "<a href='#$$file'>`echo $$file | sed -e 's_html_dll_' -e 's_diff/xi/Xamarin.iOS/__' -e 's_diff/xi/Xamarin.WatchOS/__' -e 's_diff/xi/Xamarin.TVOS/__' -e 's_diff/xm/4.5/_\(Full profile\) _' -e 's_diff/xm/Xamarin.Mac/_\(Mobile profile\) _' -e 's_diff/xm/_\(Classic profile\) _' -e 's_diff/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/__' -e 's_diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/__' -e 's#/Users/.*apidiff/##' `</a><br/>" >> $@-toc; \
 		fi; \
 	done
 	$(Q) if [ ! -f $@ ]; then \
@@ -168,129 +180,210 @@ $(APIDIFF_DIR)/%-api-diff.html:
 	$(Q) rm -f $@-toc
 
 ifdef INCLUDE_MAC
-API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/mac-api-diff.html
+API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/mac-api-diff.html
 endif
 ifdef INCLUDE_IOS
-API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/ios-api-diff.html
+API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/ios-api-diff.html
 ifdef INCLUDE_WATCH
-API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/watchos-api-diff.html
+API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/watchos-api-diff.html
 endif
 ifdef INCLUDE_TVOS
-API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/tvos-api-diff.html
-API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/diff/ios-to-tvos.html
+API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/tvos-api-diff.html
 endif
 ifdef INCLUDE_MACCATALYST
 ifdef ENABLE_DOTNET
-API_DIFF_DEPENDENCIES += $(APIDIFF_DIR)/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst-api-diff.html
+ifdef INCLUDE_IOS_VS_MACCATALYST
+API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html
+endif
 endif
 endif
 endif # INCLUDE_IOS
 ifdef ENABLE_DOTNET
-API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_ASSEMBLIES),$(APIDIFF_DIR)/dotnet/$(assembly)-api-diff.html)
-API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_LEGACY_ASSEMBLIES),$(APIDIFF_DIR)/dotnet/legacy-diff/$(assembly)-api-diff.html)
+API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_ASSEMBLIES),$(OUTPUT_DIR)/diff/dotnet/$(assembly).html)
+ifdef INCLUDE_XAMARIN_VS_DOTNET
+API_DIFF_DEPENDENCIES += $(foreach assembly,$(DOTNET_LEGACY_ASSEMBLIES),$(OUTPUT_DIR)/diff/dotnet/legacy-diff/$(assembly).html)
+endif
 endif
 
-$(APIDIFF_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
+$(OUTPUT_DIR)/index.html: $(OUTPUT_DIR)/api-diff.html
+	$(Q) $(CP) $< $@
+
+#
+# Collect all the diffs into a single api-diff.html file
+#
+
+define ApiDiffReportHtml
+	$(Q) ./report-status.sh "$(1)" "$(OUTPUT_DIR)" html "diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).html" "diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).md" "$(2)"
+
+endef
+
+$(OUTPUT_DIR)/api-diff.html: $(API_DIFF_DEPENDENCIES)
 	$(QF_GEN) echo "<h1>API diffs</h1>" > $@
+
+ifdef INCLUDE_XAMARIN_LEGACY
+	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/*-api-diff.html),! test -s "$(html)" &&) true; then \
+		echo "<h2>Legacy Xamarin (empty diffs)</h2>" >> "$@"; \
+	elif grep BreakingChangesDetected "$(OUTPUT_DIR)"/*-api-diff.html &> /dev/null; then \
+		echo "<h2>Legacy Xamarin ($(HTML_BREAKING_CHANGES_MESSAGE))</h2>" >> "$@"; \
+	else \
+		echo "<h2>Legacy Xamarin ($(HTML_NO_BREAKING_CHANGES_MESSAGE))</h2>" >> "$@"; \
+	fi
+	$(Q) echo "<ul>" >> $@
 ifdef INCLUDE_IOS
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/ios-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='ios-api-diff.html'>Xamarin.iOS API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Xamarin.iOS API diff is empty</h2>" >> $@; \
-	fi;
+	$(Q) ./report-status.sh "iOS" "$(OUTPUT_DIR)" html "ios-api-diff.html" "ios-api-diff.md" "$@"
+endif
 ifdef INCLUDE_TVOS
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/tvos-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='tvos-api-diff.html'>Xamarin.TVOS API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Xamarin.TVOS API diff is empty</h2>" >> $@; \
-	fi;
+	$(Q) ./report-status.sh "tvOS" "$(OUTPUT_DIR)" html "tvos-api-diff.html" "tvos-api-diff.md" "$@"
 endif
 ifdef INCLUDE_WATCH
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/watchos-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='watchos-api-diff.html'>Xamarin.WatchOS API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Xamarin.WatchOS API diff is empty</h2>" >> $@; \
-	fi;
-endif
+	$(Q) ./report-status.sh "watchOS" "$(OUTPUT_DIR)" html "watchos-api-diff.html" "watchos-api-diff.md" "$@"
 endif
 ifdef INCLUDE_MAC
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/mac-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='mac-api-diff.html'>Xamarin.Mac API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Xamarin.Mac API diff is empty</h2>" >> $@; \
-	fi;
+	$(Q) ./report-status.sh "macOS" "$(OUTPUT_DIR)" html "mac-api-diff.html" "mac-api-diff.md" "$@"
 endif
+	$(Q) echo "</ul>" >> $@
+endif # INCLUDE_XAMARIN_LEGACY
 
-# New Dotnet vs Stable Dotnet
 ifdef ENABLE_DOTNET
-ifdef INCLUDE_IOS
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html'>Microsoft.iOS Dotnet API diff</a></h2>" >> $@; \
+	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/diff/dotnet/Microsoft.*.Ref/ref/$(DOTNET_TFM)/Microsoft.*.html),! test -s "$(html)" &&) true; then \
+		echo "<h2>.NET (empty diffs)</h2>" >> "$@"; \
+	elif grep BreakingChangesDetected "$(OUTPUT_DIR)"/diff/dotnet/Microsoft.*.Ref/ref/"$(DOTNET_TFM)"/Microsoft.*.html &> /dev/null; then \
+		echo "<h2>.NET ($(HTML_BREAKING_CHANGES_MESSAGE))</h2>" >> "$@"; \
 	else \
-		echo "<h2>Microsoft.iOS Dotnet API diff is empty</h2>" >> $@; \
-	fi;
-ifdef INCLUDE_TVOS
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS-api-diff.html'>Microsoft.tvOS Dotnet API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Microsoft.tvOS Dotnet API diff is empty</h2>" >> $@; \
-	fi;
-endif
-ifdef INCLUDE_MACCATALYST
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst-api-diff.html'>Microsoft.MacCatalyst Dotnet API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Microsoft.MacCatalyst Dotnet API diff is empty</h2>" >> $@; \
-	fi;
-endif
-endif
-ifdef INCLUDE_MAC
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html'>Microsoft.macOS Dotnet API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Microsoft.macOS Dotnet API diff is empty</h2>" >> $@; \
-	fi;
-endif
+		echo "<h2>.NET ($(HTML_NO_BREAKING_CHANGES_MESSAGE))</h2>" >> "$@"; \
+	fi
+	$(Q) echo "<ul>" >> $@
 
-# New Dotnet vs. Stable Legacy
-ifdef INCLUDE_IOS
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS-api-diff.html'>Microsoft.iOS New Dotnet vs Legacy Stable API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Microsoft.iOS New Dotnet vs Legacy Stable API diff is empty</h2>" >> $@; \
-	fi;
-ifdef INCLUDE_TVOS
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS-api-diff.html'>Microsoft.tvOS New Dotnet vs Legacy Stable API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Microsoft.tvOS New Dotnet vs Legacy Stable API diff is empty</h2>" >> $@; \
-	fi;
-endif
-endif
-ifdef INCLUDE_MAC
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS-api-diff.html'>Microsoft.macOS New Dotnet vs Legacy Stable API diff</a></h2>" >> $@; \
-	else \
-		echo "<h2>Microsoft.macOS New Dotnet vs Legacy Stable API diff is empty</h2>" >> $@; \
-	fi;
-endif
+	@# New .NET vs Stable .NET
+	$(Q) $(foreach platform,$(DOTNET_PLATFORMS),$(call ApiDiffReportHtml,$(platform),$@))
 
-# Dotnet iOS vs. Dotnet MacCatalyst
+	@# .NET: Microsoft.iOS vs Microsoft.MacCatalyst
 ifdef INCLUDE_IOS
 ifdef INCLUDE_MACCATALYST
-	$(Q) if ! grep "No change detected" $(APIDIFF_DIR)/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst-api-diff.html >/dev/null 2>&1; then  \
-		echo "<h2><a href='dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.MacCatalyst-api-diff.html'>Microsoft.iOS-MacCatalyst Dotnet iOS vs Dotnet MacCatalyst API diff</a></h2>" >> $@; \
+ifdef INCLUDE_IOS_VS_MACCATALYST
+	$(Q) echo "<li>Microsoft.iOS vs Microsoft.MacCatalyst: <a href='diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html'>html</a> <a href='diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.md'>markdown</a></li>" >> $@
+endif
+endif
+endif
+	$(Q) echo "</ul>" >> $@
+
+ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_XAMARIN_VS_DOTNET
+	$(Q) echo "<h2>Legacy Xamarin (stable) vs .NET</h2>" >> $@
+	$(Q) echo "<ul>" >> $@
+	@# .NET vs legacy (stable)
+ifdef INCLUDE_IOS
+	$(Q) echo "<li>iOS: <a href='diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.html'>html</a> <a href='diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.md'>markdown</a></li>" >> $@
+endif
+ifdef INCLUDE_TVOS
+	$(Q) echo "<li>tvOS: <a href='diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.html'>html</a> <a href='diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.md'>markdown</a></li>" >> $@
+endif
+ifdef INCLUDE_MAC
+	$(Q) echo "<li>macOS: <a href='diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.html'>html</a> <a href='diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.md'>markdown</a></li>" >> $@
+endif
+	$(Q) echo "</ul>" >> $@
+endif # INCLUDE_XAMARIN_VS_DOTNET
+endif # INCLUDE_XAMARIN_LEGACY
+
+endif # DOTNET
+	$(Q) if grep "$(HTML_BREAKING_CHANGES_MESSAGE)" $@ >/dev/null 2>&1; then \
+		echo "" >> $@; \
+		echo "<!-- BreakingChangesDetected -->" >> $@; \
+		echo "" >> $@; \
+	fi
+
+#
+# Collect all the diffs into a single api-diff.md file
+#
+
+define ApiDiffReportMarkdown
+	$(Q) ./report-status.sh "$(1)" "$(OUTPUT_DIR)" markdown "diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).html" "diff/dotnet/Microsoft.$(1).Ref/ref/$(DOTNET_TFM)/Microsoft.$(1).md" "$(2)"
+
+endef
+
+$(OUTPUT_DIR)/api-diff.md: $(API_DIFF_DEPENDENCIES)
+ifdef INCLUDE_XAMARIN_LEGACY
+	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/*-api-diff.html),! test -s "$(html)" &&) true; then \
+		echo "<details><summary>Legacy Xamarin (empty diffs)</summary>" >> "$@"; \
+	elif grep BreakingChangesDetected "$(OUTPUT_DIR)"/*-api-diff.html &> /dev/null; then \
+		echo "<details><summary>Legacy Xamarin ($(MARKDOWN_BREAKING_CHANGES_MESSAGE))</summary>" >> "$@"; \
 	else \
-		echo "<h2>Microsoft.iOS-MacCatalyst Dotnet iOS vs Dotnet MacCatalyst API diff is empty</h2>" >> $@; \
-	fi;
+		echo "<details><summary>Legacy Xamarin ($(MARKDOWN_NO_BREAKING_CHANGES_MESSAGE))</summary>" >> "$@"; \
+	fi
+	$(Q) echo "" >> $@
+ifdef INCLUDE_IOS
+	$(Q) ./report-status.sh "iOS" "$(OUTPUT_DIR)" markdown "ios-api-diff.html" "ios-api-diff.md" "$@"
 endif
+ifdef INCLUDE_TVOS
+	$(Q) ./report-status.sh "tvOS" "$(OUTPUT_DIR)" markdown "tvos-api-diff.html" "tvos-api-diff.md" "$@"
 endif
-endif # ENABLE_DOTNET
+ifdef INCLUDE_WATCH
+	$(Q) ./report-status.sh "watchOS" "$(OUTPUT_DIR)" markdown "watchos-api-diff.html" "watchos-api-diff.md" "$@"
+endif
+ifdef INCLUDE_MAC
+	$(Q) ./report-status.sh "macOS" "$(OUTPUT_DIR)" markdown "mac-api-diff.html" "mac-api-diff.md" "$@"
+endif
+	$(Q) echo "" >> $@
+	$(Q) echo "</details>" >> "$@"
+	$(Q) echo "" >> $@
+endif # INCLUDE_XAMARIN_LEGACY
+
+ifdef ENABLE_DOTNET
+	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/diff/dotnet/Microsoft.*.Ref/ref/$(DOTNET_TFM)/Microsoft.*.html),! test -s "$(html)" &&) true; then \
+		echo "<details><summary>NET (empty diffs)</summary>" >> "$@"; \
+	elif grep BreakingChangesDetected "$(OUTPUT_DIR)"/diff/dotnet/Microsoft.*.Ref/ref/"$(DOTNET_TFM)"/Microsoft.*.html &> /dev/null; then \
+		echo "<details><summary>.NET ($(MARKDOWN_BREAKING_CHANGES_MESSAGE))</summary>" >> "$@"; \
+	else \
+		echo "<details><summary>.NET ($(MARKDOWN_NO_BREAKING_CHANGES_MESSAGE))</summary>" >> "$@"; \
+	fi
+	$(Q) echo "" >> $@
+
+	@# New .NET vs Stable .NET
+	$(Q) $(foreach platform,$(DOTNET_PLATFORMS),$(call ApiDiffReportMarkdown,$(platform),$@))
+
+	@# .NET: Microsoft.iOS vs Microsoft.MacCatalyst
+ifdef INCLUDE_IOS
+ifdef INCLUDE_MACCATALYST
+ifdef INCLUDE_IOS_VS_MACCATALYST
+	$(Q) echo "* Microsoft.iOS vs Microsoft.MacCatalyst: [vsdrops](diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.html) [gist](diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.MacCatalyst.md)" >> $@
+endif # INCLUDE_IOS_VS_MACCATALYST
+endif # INCLUDE_MACCATALYST
+endif # INCLUDE_IOS
+	$(Q) echo "" >> $@
+	$(Q) echo "</details>" >> "$@"
+	$(Q) echo "" >> $@
+
+	@# .NET vs legacy (stable)
+ifdef INCLUDE_XAMARIN_LEGACY
+ifdef INCLUDE_XAMARIN_VS_DOTNET
+	$(Q) echo "<details><summary>Legacy Xamarin (stable) vs .NET</summary>" >> "$@"
+	$(Q) echo "" >> $@
+ifdef INCLUDE_IOS
+	$(Q) echo "* iOS: [vsdrops](diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.html) [gist](diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.md)" >> $@
+endif
+ifdef INCLUDE_TVOS
+	$(Q) echo "* tvOS: [vsdrops](diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.html) [gist](diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.md)" >> $@
+endif
+ifdef INCLUDE_MAC
+	$(Q) echo "* macOS: [vsdrops](diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.html) [gist](diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.md)" >> $@
+endif
+	$(Q) echo "" >> $@
+	$(Q) echo "</details>" >> "$@"
+	$(Q) echo "" >> $@
+endif # INCLUDE_XAMARIN_VS_DOTNET
+endif # INCLUDE_XAMARIN_LEGACY
+
+endif # DOTNET
+	$(Q) if grep "$(MARKDOWN_BREAKING_CHANGES_MESSAGE)" $@ >/dev/null 2>&1; then \
+		echo "" >> $@; \
+		echo "<!-- BreakingChangesDetected -->" >> $@; \
+		echo "" >> $@; \
+	fi
 
 # easy-to-type helper targets.
 # one rule to create all the api diffs
 
-all-local:: $(APIDIFF_DIR)/api-diff.html
+all-local:: $(OUTPUT_DIR)/index.html $(OUTPUT_DIR)/api-diff.md all-markdowns
 
 # Rules to re-create the reference infos from the current stable 'bundle.zip' assemblies
 
@@ -370,40 +463,40 @@ DOTNET_REFS = $(foreach file,$(DOTNET_ASSEMBLIES),$(APIDIFF_DIR)/updated-referen
 
 $(APIDIFF_DIR)/references/xi/%.xml: $(UNZIP_DIR_iOS)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $(APIDIFF_DIR)/references/xi/$*.xml)
 
 $(APIDIFF_DIR)/updated-references/xi/%.xml: $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xi/$*)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xi/$*.xml
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $(APIDIFF_DIR)/references/xi/$*.xml)
 
 $(APIDIFF_DIR)/references/xm/%.xml: $(UNZIP_DIR_Mac)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $(APIDIFF_DIR)/references/xm/$*.xml)
 
 $(APIDIFF_DIR)/updated-references/xm/%.xml: $(MAC_DESTDIR)$(MAC_FRAMEWORK_CURRENT_DIR)/lib/mono/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/xm/$*)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) -d $(dir $<) $< -o $(APIDIFF_DIR)/references/xm/$*.xml
+	$(QF_GEN) $(MONO_API_INFO_EXEC) -d $(dir $<) $(abspath $<) -o $(abspath $(APIDIFF_DIR)/references/xm/$*.xml)
 
 # The dotnet references xmls may come from different hashes, so we need to have separate rules for all of them
-$(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.xml: $(UNZIP_DIR_DOTNET_iOS)/Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.xml: $(UNZIP_DIR_DOTNET_macOS)/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.xml: $(UNZIP_DIR_DOTNET_macOS)/Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.xml: $(UNZIP_DIR_DOTNET_MacCatalyst)/Microsoft.MacCatalyst.Ref/ref/$(DOTNET_TFM)/Microsoft.MacCatalyst.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
 
-$(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.xml: $(UNZIP_DIR_DOTNET_tvOS)/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.dll  $(MONO_API_INFO)
+$(APIDIFF_DIR)/references/dotnet/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.xml: $(UNZIP_DIR_DOTNET_tvOS)/Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS.dll  $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $@
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $@)
 
 $(APIDIFF_DIR)/updated-references/dotnet/%.xml: $(DOTNET_DESTDIR)/%.dll $(MONO_API_INFO)
 	$(Q) mkdir -p $(dir $@) $(dir $(APIDIFF_DIR)/references/dotnet/$*)
-	$(QF_GEN) mono --debug $(MONO_API_INFO) $< -o $(APIDIFF_DIR)/references/dotnet/$*.xml
+	$(QF_GEN) $(MONO_API_INFO_EXEC) $(abspath $<) -o $(abspath $(APIDIFF_DIR)/references/dotnet/$*.xml)
 
 update-tvos-refs: $(TVOS_REFS)
 update-watchos-refs: $(WATCHOS_REFS)
@@ -418,161 +511,44 @@ ifdef ENABLE_DOTNET
 update-refs: $(DOTNET_REFS)
 endif
 
-# targets to verify that the 32-bit and 64-bit assemblies have identical API.
-
-verify-reference-assemblies-ios: $(APIDIFF_DIR)/temp/native-32/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/native-64/Xamarin.iOS.xml
-	$(Q) diff $(APIDIFF_DIR)/temp/native-32/Xamarin.iOS.xml $(APIDIFF_DIR)/temp/native-64/Xamarin.iOS.xml -u
-	@echo iOS reference assemblies are identical
-
 clean-local::
 	rm -rf temp references updated-references diff dotnet *.exe* api-diff.html
 	rm -rf *.dll* bundle-*.zip $(UNZIP_STAMPS)
 	rm -rf ios-*.md tvos-*.md watchos-*.md macos-*.md dotnet-*.md
 
-DIRS += $(APIDIFF_DIR)/temp $(APIDIFF_DIR)/diff
+DIRS += $(APIDIFF_DIR)/temp $(OUTPUT_DIR)/diff
 
 # dir creation target
 $(DIRS):
 	$(Q) mkdir -p $@
 
-# make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
+# make will automatically consider files created in chained implicit rules as temporary files, and delete them afterwards
 # defining a .SECONDARY rule will prevent that deletion.
 .SECONDARY:
 
 merger.exe: merger.cs
-	$(Q) $(SYSTEM_CSC) -debug $< -out:$@
+	$(Q) $(SYSTEM_CSC) -debug $< -out:$@ /nologo
 
 ifdef INCLUDE_IOS
-ios-markdown: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(APIDIFF_DIR)/diff/xi/Xamarin.iOS/ ios $(APIDIFF_DIR)
-dotnet-ios-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.iOS.Ref/ref/net6.0/ dotnet-ios $(APIDIFF_DIR)
-dotnet-legacy-ios-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/ dotnet-legacy-ios $(APIDIFF_DIR)
-else
-ios-markdown: ; @true
-dotnet-ios-markdown: ; @true
-dotnet-legacy-ios-markdown: ; @true
+$(OUTPUT_DIR)/ios-api-diff.md: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(OUTPUT_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(OUTPUT_DIR)/diff/xi/Xamarin.iOS/ ios $(abspath $@)
+all-markdowns:: $(OUTPUT_DIR)/ios-api-diff.md
 endif
 
 ifdef INCLUDE_TVOS
-tvos-markdown: merger.exe $(foreach file,$(TVOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(APIDIFF_DIR)/diff/xi/Xamarin.TVOS/ tvos $(APIDIFF_DIR)
-dotnet-tv-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.tvOS.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.tvOS.Ref/ref/net6.0/ dotnet-tvos $(APIDIFF_DIR)
-dotnet-legacy-tv-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.tvOS.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/ dotnet-legacy-tvos $(APIDIFF_DIR)
-else
-tvos-markdown: ; @true
-dotnet-tv-markdown: ; @true
-dotnet-legacy-tv-markdown: ; @true
+$(OUTPUT_DIR)/tvos-api-diff.md: merger.exe $(foreach file,$(TVOS_ASSEMBLIES),$(OUTPUT_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.TVOS $(OUTPUT_DIR)/diff/xi/Xamarin.TVOS/ tvos $(abspath $@)
+all-markdowns:: $(OUTPUT_DIR)/tvos-api-diff.md
 endif
 
 ifdef INCLUDE_WATCH
-watchos-markdown: merger.exe $(foreach file,$(WATCHOS_ASSEMBLIES),$(APIDIFF_DIR)/diff/xi/$(file).md)
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.WatchOS $(APIDIFF_DIR)/diff/xi/Xamarin.WatchOS/ watchos $(APIDIFF_DIR)
-else
-watchos-markdown: ; @true
-endif
-
-ifdef INCLUDE_MACCATALYST
-dotnet-maccatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.MacCatalyst.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/ dotnet-maccatalyst $(APIDIFF_DIR) $(APIDIFF_DIR)
-ifdef ENABLE_DOTNET
-dotnet-iOS-MacCatalyst-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS-MacCatalyst.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Dotnet.iOS-MacCatalyst $(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/ dotnet-maccatios $(APIDIFF_DIR)
-else
-dotnet-iOS-MacCatalyst-markdown: ; @true
-endif # ENABLE_DOTNET
-else
-dotnet-maccatalyst-markdown: ; @true
-dotnet-iOS-MacCatalyst-markdown: ; @true
+$(OUTPUT_DIR)/watchos-api-diff.md: merger.exe $(foreach file,$(WATCHOS_ASSEMBLIES),$(OUTPUT_DIR)/diff/xi/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.WatchOS $(OUTPUT_DIR)/diff/xi/Xamarin.WatchOS/ watchos $(abspath $@)
+all-markdowns:: $(OUTPUT_DIR)/watchos-api-diff.md
 endif
 
 ifdef INCLUDE_MAC
-macos-markdown: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(APIDIFF_DIR)/diff/xm/$(file).md)
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(APIDIFF_DIR)/diff/xm/Xamarin.Mac/ macos $(APIDIFF_DIR)
-dotnet-macos-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.macOS.Dotnet $(APIDIFF_DIR)/diff/dotnet/Microsoft.macOS.Ref/ref/net6.0/ dotnet-macos $(APIDIFF_DIR)
-dotnet-legacy-macos-markdown: merger.exe $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.md
-	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.macOS.Stable.Legacy $(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/ dotnet-legacy-macos $(APIDIFF_DIR)
-else
-macos-markdown: ; @true
-dotnet-macos-markdown: ; @true
-dotnet-legacy-macos-markdown: ; @true
+$(OUTPUT_DIR)/mac-api-diff.md: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(OUTPUT_DIR)/diff/xm/$(file).md)
+	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(OUTPUT_DIR)/diff/xm/Xamarin.Mac/ macos $(abspath $@)
+all-markdowns:: $(OUTPUT_DIR)/mac-api-diff.md
 endif
-
-ifdef ENABLE_DOTNET
-dotnet-markdown: dotnet-ios-markdown dotnet-macos-markdown dotnet-maccatalyst-markdown dotnet-tv-markdown
-dotnet-legacy-markdown: dotnet-legacy-ios-markdown dotnet-legacy-macos-markdown dotnet-legacy-tv-markdown
-else
-dotnet-markdown: ; @true
-dotnet-legacy-markdown: ; @true
-endif
-
-all-markdowns: ios-markdown tvos-markdown watchos-markdown macos-markdown dotnet-markdown dotnet-legacy-markdown dotnet-iOS-MacCatalyst-markdown
-
-$(APIDIFF_DIR)/diff/%.md: $(APIDIFF_DIR)/temp/%.xml $(APIDIFF_DIR)/references/%.xml $(MONO_API_HTML)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $(APIDIFF_DIR)/references/$*.xml $(APIDIFF_DIR)/temp/$*.xml $(APIDIFF_IGNORE) --md $@
-
-# Dotnet Legacy markdowns need to compare against legacy xmls
-$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS.xml $(MONO_API_HTML)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $< $(APIDIFF_DIR)/references/xi/Xamarin.iOS/Xamarin.iOS.xml $(APIDIFF_IGNORE) --md $@
-
-$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.macOS.Ref/ref/net6.0/Microsoft.macOS.xml $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac.xml $(MONO_API_HTML)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $< $(APIDIFF_DIR)/references/xm/Xamarin.Mac/Xamarin.Mac.xml $(APIDIFF_IGNORE) --md $@
-
-$(APIDIFF_DIR)/diff/dotnet/legacy-diff/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.tvOS.Ref/ref/net6.0/Microsoft.tvOS.xml $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS.xml $(MONO_API_HTML)
-	$(Q) mkdir -p $(dir $@)
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $< $(APIDIFF_DIR)/references/xi/Xamarin.TVOS/Xamarin.TVOS.xml $(APIDIFF_IGNORE) --md $@
-
-# Dotnet iOS vs Dotnet MacCatalyst
-$(APIDIFF_DIR)/diff/dotnet/iOS-MacCatalyst-diff/Microsoft.iOS-MacCatalyst.md: $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.iOS.xml $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.xml $(MONO_API_HTML)
-	$(Q) mkdir -p $(dir $@)
-	$(Q) sed -e 's_<assembly name="Xamarin.MacCatalyst" version="0.0.0.0">_<assembly name="Xamarin.iOS" version="0.0.0.0">_' $(APIDIFF_DIR)/temp/dotnet/Microsoft.MacCatalyst.Ref/ref/net6.0/Microsoft.MacCatalyst.xml > $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.MacCatalyst-as-iOS.xml
-	$(QF_GEN) $(MONO_BUILD) --debug $(MONO_API_HTML) $(NEW_REGEX) $(ADD_REGEX) $< $(APIDIFF_DIR)/temp/dotnet/Microsoft.iOS.Ref/ref/net6.0/Microsoft.MacCatalyst-as-iOS.xml $(APIDIFF_IGNORE) --md $@
-	$(Q) touch $@
-
-wrench-api-diff:
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.iOS"
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.WatchOS"
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.TVOS"
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xi/Xamarin.MacCatalyst"
-ifdef INCLUDE_MAC
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xm"
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xm/4.5"
-	@echo "@MonkeyWrench: AddDirectory: $(CURDIR)/diff/xm/Xamarin.Mac"
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/mac-api-diff.html"
-endif
-ifdef INCLUDE_IOS
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/ios-api-diff.html"
-ifdef INCLUDE_WATCH
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/watchos-api-diff.html"
-endif
-ifdef INCLUDE_TVOS
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/tvos-api-diff.html"
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/diff/ios-to-tvos.html"
-endif
-endif
-	$(Q) $(MAKE) $(UNZIP_STAMPS)
-	$(Q) $(MAKE) all -j8
-	$(Q) $(MAKE) all-markdowns
-	$(Q) $(CP) api-diff.html index.html
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/index.html"
-	@echo "@MonkeyWrench: AddFile: $(CURDIR)/api-diff.html"
-	@# remove empty files so they're not uploaded
-	@-find $(CURDIR)/diff -size 0 | xargs rm
-ifdef INCLUDE_IOS
-	$(MAKE) verify-reference-assemblies-ios -j8
-endif
-
-jenkins-api-diff:
-	-$(MAKE) wrench-api-diff
-	$(Q) mkdir -p $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) *.html $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) *.md $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) -R diff $(JENKINS_RESULTS_DIRECTORY)/api-diff
-	$(Q) $(CP) -R dotnet $(JENKINS_RESULTS_DIRECTORY)/api-diff

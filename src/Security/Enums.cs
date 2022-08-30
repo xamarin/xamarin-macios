@@ -430,6 +430,7 @@ namespace Security {
 
 	// typedef uint32_t SecTrustResultType;
 	// values are defined in Security.framework/Headers/SecTrust.h 
+	[NativeName ("SecTrustResultType")]
 	public enum SecTrustResult {
 		Invalid,
 		Proceed,

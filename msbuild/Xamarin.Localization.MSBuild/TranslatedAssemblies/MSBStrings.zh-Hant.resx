@@ -423,6 +423,10 @@
         <value>{0} 已結束。代碼: {1}
         </value>
     </data>
+  <data name="E0118" xml:space="preserve">
+        <value>{0} exited with code {1}:
+{2}</value>
+    </data>
   <data name="M0119" xml:space="preserve">
         <value>因為輸出檔案 `{1}' 為較新的檔案，所以跳過 `{0}'。
         </value>
@@ -1132,12 +1136,18 @@
         <value>已為 '{0}' 使用不同的中繼資料多次要求 [程式碼簽署]。已為一個項目設定中繼資料 '{1}={2}'，但未針對另一個項目。</value>
     </data>
   <data name="W7097" xml:space="preserve">
-        <value>已為 '{0}' 使用不同的中繼資料多次要求 [程式碼簽署]。中繼資料 '{1}' 已是每個項目的值 (它曾是 '{2}'，其他時間則為 '{3}')。</value>
+        <value>已為 '{0}' 使用不同的中繼資料多次要求程式碼簽署。中繼資料 '{1}' 對每個項目有不同的值 (它曾是 '{2}'，其他時間則為 '{3}')。</value>
     </data>
   <data name="E7098" xml:space="preserve">
         <value>UIDeviceFamily 值 '6' 對此平臺無效。它僅適用於 Mac Catalyst。</value>
     </data>
   <data name="E7099" xml:space="preserve">
         <value>UIDeviceFamily 值 '6' 需要 macOS 11.0。請將專案檔中的 'SupportedOSPlatformVersion' 設定為至少 14.0 (相當於 macOS 11.0)的 Mac Catalyst 版本。目前的值{0} (等於 macOS {1})。</value>
+    </data>
+  <data name="W7100" xml:space="preserve">
+        <value>找不到繫結程序資源套件: {0}</value>
+    </data>
+  <data name="E7101" xml:space="preserve">
+        <value>值為 '{1}' 的未知屬性'{0}'。</value>
     </data>
 </root>

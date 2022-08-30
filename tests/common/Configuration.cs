@@ -9,14 +9,14 @@ using NUnit.Framework;
 
 using Xamarin.Utils;
 
+#nullable disable // until we get around to fixing this file
+
 namespace Xamarin.Tests
 {
 	static partial class Configuration
 	{
 		public const string XI_ProductName = "MonoTouch";
 		public const string XM_ProductName = "Xamarin.Mac";
-
-		const string XS_PATH = "/Applications/Visual Studio.app/Contents/Resources";
 
 		static string mt_root;
 		static string ios_destdir;
@@ -611,12 +611,6 @@ namespace Xamarin.Tests
 			}
 		}
 
-		static string XSIphoneDir {
-			get {
-				return Path.Combine (XS_PATH, "lib", "monodevelop", "AddIns", "MonoDevelop.IPhone");
-			}
-		}
-
 		public static string BtouchPath {
 			get {
 				return Path.Combine (SdkBinDir, "btouch-native");
@@ -990,25 +984,6 @@ namespace Xamarin.Tests
 			}
 		}
 
-		public static string [] CopyDotNetSupportingFiles (params string[] targetDirectories)
-		{
-			var srcDirectory = Path.Combine (SourceRoot, "tests", "dotnet");
-			var files = new string [] { "global.json", "NuGet.config" };
-			var targets = new List<string> ();
-			for (var i = 0; i < files.Length; i++) {
-				var fn = files [i];
-				var src = Path.Combine (srcDirectory, fn);
-				if (!File.Exists (src))
-					ExecutionHelper.Execute ("make", new [] { "-C", srcDirectory, fn });
-				foreach (var targetDirectory in targetDirectories) {
-					var target = Path.Combine (targetDirectory, fn);
-					File.Copy (src, target, true);
-					targets.Add (target);
-				}
-			}
-			return targets.ToArray ();
-		}
-
 		public static Dictionary<string, string> GetBuildEnvironment (ApplePlatform platform)
 		{
 			Dictionary<string, string> environment = new Dictionary<string, string> ();
@@ -1027,6 +1002,13 @@ namespace Xamarin.Tests
 			environment ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
 			
+			// This is set by `dotnet test` and can cause building legacy projects to fail to build with:
+			// Microsoft.NET.Build.Extensions.ConflictResolution.targets(30,5):
+			// error MSB4062: The "ResolvePackageFileConflicts" task could not be loaded from the assembly Microsoft.NET.Build.Extensions.Tasks.dll.
+			// Invalid Image Confirm that the <UsingTask> declaration is correct, that the assembly and all its dependencies are available,
+			// and that the task contains a public class that implements Microsoft.Build.Framework.ITask.
+			environment ["MSBuildExtensionsPath"] = null;
+
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:

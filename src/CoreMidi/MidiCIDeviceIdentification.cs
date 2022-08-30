@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -18,6 +20,7 @@ namespace CoreMidi {
 	[Mac (10,14)]
 	[iOS (12,0)]
 #endif
+	[NativeName ("MIDICIDeviceIdentification")]
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MidiCIDeviceIdentification {
 		[MarshalAs (UnmanagedType.ByValArray, SizeConst = 3)]

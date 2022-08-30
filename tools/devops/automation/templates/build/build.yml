@@ -19,13 +19,23 @@ parameters:
   type: boolean
   default: false
 
+- name: isPR
+  type: boolean
+  default: false
+
 - name: buildSteps 
   type: stepList 
   default: []
 
+- name: makeParallelism
+  type: string
+  default: '8'
+
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
 
 - template: ../common/setup.yml
   parameters:
@@ -52,6 +62,7 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
   enabled: true
+  continueOnError: true # brew installation can be temperamental, and things usually work even if the installation fail.
 
 - bash: |
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
@@ -63,12 +74,6 @@ steps:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/build-provisioning.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
-
-- bash: |
-    set -x
-    set -e
-    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
-  displayName: 'Provision simulators'
 
 # Use the env variables that were set by the label parsing in the configure step
 # print some useful logging to allow to know what is going on AND allow make some
@@ -100,8 +105,6 @@ steps:
     # a branch in origin
 
     if ($buildReason -eq "PullRequest" -or (($buildReason -eq "Manual" -or $buildReason -eq "IndividualCI") -and ($buildSourceBranchName -eq "merge")) ) {
-      $configVars.Add("IsPR", "True")
-
       $configVars.Add("BuildPkgs", "True")
 
       # interesting case, we have build-pkg and skip-pkg... if that is the case, we build it, but we set a warning
@@ -140,19 +143,11 @@ steps:
         $configVars.Add("RunMacTests", "True")
       }
 
-      if ($Env:SkipPublicJenkins -eq "True") {
-        $configVars.Add("SkipPublicJenkins", "True")
-      } else {
-        $configVars.Add("SkipPublicJenkins", "False")
-      }
-
       $configVars.Add("RunSampleTests", $Env:RunSampleTests)
       $configVars.Add("RunInternalTests", $Env:RunInternalTests)
 
     } else {
       # set the defaults, all the things! o/
-      $configVars.Add("IsPR", "False")
-
       # build pkg, nugets and sign them
       $configVars.Add("BuildPkgs", "True")
       $configVars.Add("BuildNugets", "True")
@@ -163,7 +158,6 @@ steps:
       $configVars.Add("RunExternalTests", "True")
       $configVars.Add("RunMacTests", "True")
       $configVars.Add("RunSampleTests", "False")
-      $configVars.Add("SkipPublicJenkins", "False")
 
       # if a developer decided to trigger one without device tests, allow it
       if ($Env:RUN_DEVICE_TESTS -eq "true") {
@@ -221,7 +215,10 @@ steps:
     ./configure $CONFIGURE_FLAGS
     echo $(cat $(Build.SourcesDirectory)/xamarin-macios/configure.inc)
   env:
-    IsPR: $(configuration.IsPR)
+    ${{ if eq(parameters.isPR, true) }}:
+      IsPR: 'True'
+    ${{ else }}:
+      IsPR: 'False'
     ${{ if eq(parameters.enableDotnet, true) }}:
       EnableDotNet: 'True'
   displayName: "Configure build"
@@ -254,15 +251,25 @@ steps:
     set -e
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8
+    MAKE_FLAGS=""
+
+    if [[ "$SYSTEM_DEBUG" == "true" ]]; then
+      MAKE_FLAGS="V=1 -w"
+    fi
+
+    if test -z "$makeParallelism"; then
+      makeParallelism=8
+    fi
+
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS
   name: build
   displayName: 'Build'
-  timeoutInMinutes: 180
+  timeoutInMinutes: 300
 
 - ${{ each step in parameters.buildSteps }}:
   - ${{ each pair in step }}:
-      ${{ pair.key }}: ${{ pair.value }}       
+      ${{ pair.key }}: ${{ pair.value }}
 
 # clean the bot after we use it
 - template: ../common/teardown.yml

@@ -28,3 +28,5 @@ mono-ios-sdk-destdir
 *.dylib
 *.o
 x86-64-slice*
+*.pkg
+

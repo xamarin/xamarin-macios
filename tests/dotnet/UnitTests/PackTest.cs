@@ -1,14 +1,6 @@
 #nullable enable
 
-using System;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
-using Xamarin.MacDev;
 
 namespace Xamarin.Tests {
 	public class PackTest : TestBaseClass {
@@ -26,7 +18,6 @@ namespace Xamarin.Tests {
 
 			var project_path = GetProjectPath (project, platform: platform);
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var outputPath = Path.Combine (tmpdir, "OutputPath");
@@ -57,7 +48,6 @@ namespace Xamarin.Tests {
 
 			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var outputPath = Path.Combine (tmpdir, "OutputPath");
@@ -115,7 +105,6 @@ namespace Xamarin.Tests {
 
 			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
 			Clean (project_path);
-			Configuration.CopyDotNetSupportingFiles (Path.GetDirectoryName (project_path));
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var outputPath = Path.Combine (tmpdir, "OutputPath");

@@ -12,9 +12,18 @@ parameters:
 - name: keyringPass
   type: string
 
+- name: isPR
+  type: boolean
+
 steps:
 
 - template: ../common/checkout.yml
+  parameters:
+    isPR: ${{ parameters.isPR }}
+
+- template: agent-cleanser/v1.yml@templates   # Uninstalls mono, Xamarin.Mac (if installed) plus cleanses the Provisionator Xcode cache and kills processes at the end
+  parameters:
+    CleanseProcesses: true
 
 # Write a generic failure message to the failure comment file, so a failure will be reported
 # if something goes wrong before we successfully complete the tests (in which case we delete the file).
@@ -238,6 +247,11 @@ steps:
     SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     MONO_DEBUG: no-gdb-backtrace
     TEST_BOT: $(Agent.Name)
+  continueOnError: true
+
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
+  displayName: 'Collect and upload crash reports'
+  condition: always() # who knows when crash reports can end up being useful
   continueOnError: true
 
 # Make sure to report any errors

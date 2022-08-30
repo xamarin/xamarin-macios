@@ -1,4 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<Import Project="..\targets\Microsoft.tvOS.Sdk.DefaultItems.props" />
-	<Import Project="..\targets\Microsoft.tvOS.Sdk.ImplicitNamespaceImports.props" />
-</Project>

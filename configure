@@ -60,9 +60,23 @@ echo "# Configure arguments: $*" >> $CONFIGURED_FILE
 
 while test "x$1" != x; do
     case $1 in
+    --disable-all-platforms)
+        echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
+        echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
+        echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
+        echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
+        echo "INCLUDE_MACCATALYST=" >> $CONFIGURED_FILE
+        echo "Disabled all platforms"
+        shift
+        ;;
     --disable-mac)
         echo "INCLUDE_MAC=" >> $CONFIGURED_FILE
-        echo "Mac Build disabled (partially)"
+        echo "Mac Build disabled"
+        shift
+        ;;
+    --enable-mac)
+        echo "INCLUDE_MAC=1" >> $CONFIGURED_FILE
+        echo "Mac Build enabled"
         shift
         ;;
     --disable-ios-device)
@@ -71,9 +85,42 @@ while test "x$1" != x; do
         ;;
     --disable-ios)
         echo "INCLUDE_IOS=" >> $CONFIGURED_FILE
-        echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
+        echo "iOS Build disabled"
+        shift
+        ;;
+    --enable-ios)
+        echo "INCLUDE_IOS=1" >> $CONFIGURED_FILE
+        echo "iOS Build enabled"
+        shift
+        ;;
+    --disable-tvos)
         echo "INCLUDE_TVOS=" >> $CONFIGURED_FILE
-        echo "iOS Build disabled (partially)"
+        echo "tvOS Build disabled"
+        shift
+        ;;
+    --enable-tvos)
+        echo "INCLUDE_TVOS=1" >> $CONFIGURED_FILE
+        echo "tvOS Build enabled"
+        shift
+        ;;
+    --disable-watchos)
+        echo "INCLUDE_WATCH=" >> $CONFIGURED_FILE
+        echo "watchOS Build disabled"
+        shift
+        ;;
+    --enable-watchos)
+        echo "INCLUDE_WATCH=1" >> $CONFIGURED_FILE
+        echo "watchOS Build enabled"
+        shift
+        ;;
+    --disable-maccatalyst)
+        echo "INCLUDE_MACCATALYST=" >> $CONFIGURED_FILE
+        echo "Mac Catalyst Build disabled"
+        shift
+        ;;
+    --enable-maccatalyst)
+        echo "INCLUDE_MACCATALYST=1" >> $CONFIGURED_FILE
+        echo "Mac Catalyst Build enabled"
         shift
         ;;
     --disable-strip)

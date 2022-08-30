@@ -29,5 +29,10 @@
     <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.MacCatalyst.Manifest*.nupkg" Version="@MACCATALYST_WORKLOAD_VERSION@" />
     <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.macOS.Manifest*.nupkg" Version="@MACOS_WORKLOAD_VERSION@" />
     <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.tvOS.Manifest*.nupkg" Version="@TVOS_WORKLOAD_VERSION@" />
+    <MultiTargetPackNames Include="Microsoft.iOS.Sdk" />
+    <MultiTargetPackNames Include="Microsoft.iOS.Windows.Sdk" />
+    <MultiTargetPackNames Include="Microsoft.MacCatalyst.Sdk" />
+    <MultiTargetPackNames Include="Microsoft.macOS.Sdk" />
+    <MultiTargetPackNames Include="Microsoft.tvOS.Sdk" />
   </ItemGroup>
 </Project>

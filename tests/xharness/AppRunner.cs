@@ -324,12 +324,10 @@ namespace Xharness {
 				if (!await FindSimulatorAsync ())
 					return 1;
 
-				if (runMode != RunMode.WatchOS) {
-					var stdout_log = Logs.CreateFile ($"stdout-{Harness.Helpers.Timestamp}.log", "Standard output");
-					var stderr_log = Logs.CreateFile ($"stderr-{Harness.Helpers.Timestamp}.log", "Standard error");
-					args.Add (new SetStdoutArgument (stdout_log));
-					args.Add (new SetStderrArgument (stderr_log));
-				}
+				var stdout_log = Logs.CreateFile ($"stdout-{Harness.Helpers.Timestamp}.log", "Standard output");
+				var stderr_log = Logs.CreateFile ($"stderr-{Harness.Helpers.Timestamp}.log", "Standard error");
+				args.Add (new SetStdoutArgument (stdout_log));
+				args.Add (new SetStderrArgument (stderr_log));
 
 				var simulators = new [] { simulator, companionSimulator }.Where (s => s != null);
 				var systemLogs = new List<ICaptureLog> ();
@@ -361,6 +359,15 @@ namespace Xharness {
 					}
 				}
 
+				MainLog.WriteLine ("Enabling verbose logging");
+				foreach (var sim in simulators) {
+					var udid = sim.UDID;
+					await sim.Boot (MainLog, new CancellationToken ());
+					await processManager.ExecuteXcodeCommandAsync ("simctl", new string [] { "logverbose", udid, "enable" }, MainLog, TimeSpan.FromMinutes (5));
+					await sim.Shutdown (MainLog);
+				}
+				MainLog.WriteLine ("Enabled verbose logging");
+
 				args.Add (new SimulatorUDIDArgument (simulator.UDID));
 
 				await crashReporter.StartCaptureAsync ();
@@ -377,6 +384,12 @@ namespace Xharness {
 				foreach (var log in systemLogs)
 					log.StopCapture ();
 
+				MainLog.WriteLine ("Disabling verbose logging");
+				foreach (var sim in simulators) {
+					var udid = sim.UDID;
+					await processManager.ExecuteXcodeCommandAsync ("simctl", new string [] { "logverbose", udid, "disable" }, MainLog, TimeSpan.FromMinutes (5));
+				}
+				MainLog.WriteLine ("Disabledverbose logging");
 			} else {
 				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, runMode, deviceName);
 

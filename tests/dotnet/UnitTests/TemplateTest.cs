@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -90,7 +82,6 @@ namespace Xamarin.Tests {
 
 			Configuration.IgnoreIfIgnoredPlatform (info.Platform);
 			var tmpDir = Cache.CreateTemporaryDirectory ();
-			Configuration.CopyDotNetSupportingFiles (tmpDir);
 			var outputDir = Path.Combine (tmpDir, info.Template);
 			DotNet.AssertNew (outputDir, info.Template);
 			var csproj = Path.Combine (outputDir, info.Template + ".csproj");

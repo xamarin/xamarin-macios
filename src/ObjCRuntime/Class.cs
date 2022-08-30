@@ -246,7 +246,7 @@ namespace ObjCRuntime {
 				type = type.GetGenericTypeDefinition ();
 
 			// Look for the type in the type map.
-			var asm_name = type.Assembly.GetName ().Name;
+			var asm_name = type.Assembly.GetName ().Name!;
 			var mod_token = type.Module.MetadataToken;
 			var type_token = type.MetadataToken & ~0x02000000;
 			for (int i = 0; i < map->map_count; i++) {
@@ -284,7 +284,7 @@ namespace ObjCRuntime {
 			return IntPtr.Zero;
 		}
 
-		unsafe static bool CompareTokenReference (string? asm_name, int mod_token, int type_token, uint token_reference)
+		unsafe static bool CompareTokenReference (string asm_name, int mod_token, int type_token, uint token_reference)
 		{
 			var map = Runtime.options->RegistrationMap;
 			IntPtr assembly_name;
@@ -292,7 +292,7 @@ namespace ObjCRuntime {
 			if ((token_reference & 0x1) == 0x1) {
 				// full token reference
 				var idx = (int) (token_reference >> 1);
-				var entry = Runtime.options->RegistrationMap->full_token_references + (IntPtr.Size + 8) * idx;
+				var entry = map->full_token_references + (IntPtr.Size + 8) * idx;
 				// first compare what's most likely to fail (the type's metadata token)
 				var token = (uint) Marshal.ReadInt32 (entry + IntPtr.Size + 4);
 				type_token |= 0x02000000 /* TypeDef - the token type is explicit in the full token reference, but not present in the type_token argument, so we have to add it before comparing */;
@@ -369,7 +369,7 @@ namespace ObjCRuntime {
 			type = ResolveTypeTokenReference (type_reference);
 
 #if LOG_TYPELOAD
-			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
+			Console.WriteLine ($"FindType (0x{@class:X} = {Marshal.PtrToStringAuto (class_getName (@class))}) => {type?.FullName}; is custom: {is_custom_type} (token reference: 0x{type_reference:X}).");
 #endif
 
 			class_to_type [mapIndex] = type;
@@ -451,7 +451,7 @@ namespace ObjCRuntime {
 			case 0x06000000: // Method
 				var method = module.ResolveMethod ((int) token);
 #if LOG_TYPELOAD
-				Console.WriteLine ($"ResolveToken (0x{token:X}) => Method: {method.DeclaringType.FullName}.{method.Name}");
+				Console.WriteLine ($"ResolveToken (0x{token:X}) => Method: {method?.DeclaringType?.FullName}.{method.Name}");
 #endif
 				return method;
 			default:
@@ -495,7 +495,7 @@ namespace ObjCRuntime {
 			if (type.IsGenericType)
 				type = type.GetGenericTypeDefinition ();
 
-			var asm_name = type.Module.Assembly.GetName ().Name;
+			var asm_name = type.Module.Assembly.GetName ().Name!;
 
 			// First check if there's a full token reference to this type
 			var token = GetFullTokenReference (asm_name, type.Module.MetadataToken, type.MetadataToken);
@@ -538,7 +538,7 @@ namespace ObjCRuntime {
 		}
 
 		// Look for the specified metadata token in the table of full token references.
-		static unsafe uint GetFullTokenReference (string? assembly_name, int module_token, int metadata_token)
+		static unsafe uint GetFullTokenReference (string assembly_name, int module_token, int metadata_token)
 		{
 			var map = Runtime.options->RegistrationMap;
 			for (int i = 0; i < map->full_token_reference_count; i++) {
@@ -576,50 +576,50 @@ namespace ObjCRuntime {
 			throw ErrorHelper.CreateError (8026, $"Can't determine if {type.FullName} is a custom type when the dynamic registrar has been linked away.");
 		}
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr objc_allocateClassPair (IntPtr superclass, string name, IntPtr extraBytes);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr objc_getClass (string name);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern void objc_registerClassPair (IntPtr cls);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal static extern bool class_addIvar (IntPtr cls, string name, IntPtr size, byte alignment, string types);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal static extern bool class_addMethod (IntPtr cls, IntPtr name, IntPtr imp, string types);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addMethod (IntPtr cls, IntPtr name, Delegate imp, string types);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProtocol (IntPtr cls, IntPtr protocol);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr class_getName (IntPtr cls);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr class_getSuperclass (IntPtr cls);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal static extern IntPtr object_getClass (IntPtr obj);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getMethodImplementation (IntPtr cls, IntPtr sel);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getInstanceVariable (IntPtr cls, string name);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		internal extern static IntPtr class_getInstanceMethod (IntPtr cls, IntPtr sel);
 
-		[DllImport ("/usr/lib/libobjc.dylib", CharSet=CharSet.Ansi)]
+		[DllImport (Messaging.LIBOBJC_DYLIB, CharSet=CharSet.Ansi)]
 		[return: MarshalAs (UnmanagedType.U1)]
 		internal extern static bool class_addProperty (IntPtr cls, string name, objc_attribute_prop [] attributes, int count);
 

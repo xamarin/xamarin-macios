@@ -58,14 +58,14 @@ ifdef INCLUDE_IOS
 	@echo Validated file permissions for Xamarin.iOS.
 endif
 
-all-local:: global6.json
+all-local:: global.json
 
 # This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global6.json: $(TOP)/Make.config.inc Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
+global.json: $(TOP)/dotnet.config Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
 	$(Q_GEN) \
 		printf "{\n" > $@; \
-		printf "\t\"sdk\": { \"version\": \"$(DOTNET_VERSION)\" }\n" >> $@; \
-		printf "\n}\n" >> $@
+		printf "  \"sdk\": {\n    \"version\": \"$(DOTNET_VERSION)\"\n  }\n" >> $@; \
+		printf "}\n" >> $@
 
 install-hook::
 	@$(MAKE) check-permissions
@@ -104,6 +104,9 @@ package:
 	$(CP) $(MACCORE_PATH)/release/*.pkg ../package
 	$(CP) $(MACCORE_PATH)/release/*.zip ../package
 	$(CP) $(MACCORE_PATH)/release/*updateinfo ../package
+
+dotnet-install-system:
+	$(Q) $(MAKE) -C dotnet install-system
 
 install-system: install-system-ios install-system-mac
 	@# Clean up some old files
@@ -148,6 +151,14 @@ fix-xcode-select:
 
 fix-xcode-first-run:
 	$(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -runFirstLaunch
+
+install-dotnet:
+	@echo "Figuring out package link..."
+	@export PKG=$$(make -C builds print-dotnet-pkg-urls); \
+	echo "Downloading $$(basename $$PKG)..."; \
+	curl -LO "$$PKG"; \
+	echo "Installing $$(basename $$PKG)..."; \
+	time sudo installer -pkg "$$(basename $$PKG)" -target / -verbose -dumplog
 
 git-clean-all:
 	@echo "$(COLOR_RED)Cleaning and resetting all dependencies. This is a destructive operation.$(COLOR_CLEAR)"

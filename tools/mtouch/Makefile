@@ -121,6 +121,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework Metal						\
 	-weak_framework MetalKit					\
 	-weak_framework MetalPerformanceShaders		\
+	-weak_framework MetalPerformanceShadersGraph\
 						\
 	-weak_framework HealthKitUI					\
 						\
@@ -216,6 +217,7 @@ LOCAL_MTOUCH_COMMAND=$(SYSTEM_MONO) --debug $(LOCAL_MTOUCH)
 DOTNET_PLATFORMS_MTOUCH=$(filter-out macOS,$(DOTNET_PLATFORMS))
 
 # mtouch.csproj.inc contains the mtouch_dependencies variable used to determine if mtouch needs to be rebuilt or not.
+mtouch.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include mtouch.csproj.inc
 
 $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)

@@ -35,9 +35,13 @@ parameters:
   type: boolean
   default: false # only to be used when testing the CI and we do not need a signed pkg
 
+- name: isPR
+  type: boolean
+
 steps:
 - template: build.yml
   parameters:
+    isPR: ${{ parameters.isPR }}
     runDeviceTests: ${{ parameters.runDeviceTests }}
     vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
     keyringPass: ${{ parameters.keyringPass }}
@@ -96,6 +100,34 @@ steps:
         inputs:
           targetPath: $(Build.SourcesDirectory)/WorkloadRollback.json
           artifactName: WorkloadRollback
+        continueOnError: true
+
+      - bash: |
+          var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=IOS_PACKAGE_VERSION)
+          IOS_PACKAGE_VERSION=${var#*=}
+          IOS_PACKAGE_VERSION=$(echo $IOS_PACKAGE_VERSION | cut -d "+" -f1)
+
+          var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MAC_PACKAGE_VERSION)
+          MAC_PACKAGE_VERSION=${var#*=}
+          MAC_PACKAGE_VERSION=$(echo $MAC_PACKAGE_VERSION | cut -d "+" -f1)
+
+          PKG_DST="$(Build.SourcesDirectory)/PkgsVersions.json"
+
+          echo "{" > $PKG_DST
+          echo "\"iOS\": \"$IOS_PACKAGE_VERSION\"," >>  $PKG_DST
+          echo "\"macOS\": \"$MAC_PACKAGE_VERSION\"" >> $PKG_DST
+          echo "}" >>  $PKG_DST
+
+          echo "PkgVersions.json file contents:" 
+          echo "$(cat $PKG_DST)"
+        name: pkg_versions_file
+        displayName: 'Generate PkgsVersions.json'
+
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish PkgsVersions.json'
+        inputs:
+          targetPath: $(Build.SourcesDirectory)/PkgsVersions.json
+          artifactName: PkgsVersions
         continueOnError: true
 
       # upload each of the pkgs into the pipeline artifacts
@@ -194,6 +226,6 @@ steps:
           displayName: 'Publish Artifact: All binlogs'
           inputs:
             targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
-            artifactName: all-binlogs-$(Build.BuildId)
+            artifactName: all-binlogs-$(Build.BuildId)-$(System.JobAttempt)
           continueOnError: true
           condition: succeededOrFailed()

@@ -32,14 +32,14 @@ namespace Xharness {
 
 		public string Platform = "x86";
 
-		public MacTestProject (string path, bool isExecutableProject = true, MacFlavors targetFrameworkFlavor = MacFlavors.Full | MacFlavors.Modern) : base (path, isExecutableProject)
+		public MacTestProject (TestLabel label, string path, bool isExecutableProject = true, MacFlavors targetFrameworkFlavor = MacFlavors.Full | MacFlavors.Modern) : base (label, path, isExecutableProject)
 		{
 			TargetFrameworkFlavors = targetFrameworkFlavor;
 		}
 
 		public override TestProject Clone ()
 		{
-			return CompleteClone (new MacTestProject (Path, IsExecutableProject, TargetFrameworkFlavors));
+			return CompleteClone (new MacTestProject (Label, Path, IsExecutableProject, TargetFrameworkFlavors));
 		}
 
 		protected override TestProject CompleteClone (TestProject project)

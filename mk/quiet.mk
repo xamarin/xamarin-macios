@@ -70,20 +70,20 @@ XBUILD_VERBOSITY=/nologo /verbosity:quiet
 XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
 MMP_VERBOSITY=-q
 MTOUCH_VERBOSITY=-q
-MDTOOL_VERBOSITY=
 DOTNET_PACK_VERBOSITY=--verbosity:quiet --nologo
 DOTNET_BUILD_VERBOSITY=--verbosity quiet --nologo -consoleLoggerParameters:NoSummary
 NUGET_VERBOSITY=-verbosity quiet
+INSTALLER_VERBOSITY=
 else
 # CI build
 XBUILD_VERBOSITY=/nologo /verbosity:normal
 XBUILD_VERBOSITY_QUIET=/nologo /verbosity:quiet
 MMP_VERBOSITY=-vvvv
 MTOUCH_VERBOSITY=-vvvv
-MDTOOL_VERBOSITY=-v -v -v -v
 DOTNET_PACK_VERBOSITY=
 DOTNET_BUILD_VERBOSITY=
 NUGET_VERBOSITY=
+INSTALLER_VERBOSITY=
 endif
 else
 # verbose build
@@ -91,10 +91,10 @@ XBUILD_VERBOSITY=/verbosity:diagnostic
 XBUILD_VERBOSITY_QUIET=/verbosity:diagnostic
 MMP_VERBOSITY=-vvvv
 MTOUCH_VERBOSITY=-vvvv
-MDTOOL_VERBOSITY=-v -v -v -v
 DOTNET_PACK_VERBOSITY=--verbosity:detailed
 DOTNET_BUILD_VERBOSITY=--verbosity detailed
 NUGET_VERBOSITY=-verbosity detailed
+INSTALLER_VERBOSITY=-verbose -dumplog
 endif
 MSBUILD_VERBOSITY=$(XBUILD_VERBOSITY)
 MSBUILD_VERBOSITY_QUIET=$(XBUILD_VERBOSITY_QUIET)

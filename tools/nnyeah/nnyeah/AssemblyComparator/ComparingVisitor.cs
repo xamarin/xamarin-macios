@@ -8,20 +8,30 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 	public class ComparingVisitor {
 		ModuleDefinition EarlierModule, LaterModule;
 		bool PublicOnly;
+		NNyeahAssemblyResolver Resolver;
 
-		public ComparingVisitor (ModuleDefinition earlierModule, ModuleDefinition laterModule, bool publicOnly)
+		public ComparingVisitor (ModuleDefinition earlierModule, ModuleDefinition laterModule, NNyeahAssemblyResolver resolver, bool publicOnly)
 		{
 			EarlierModule = earlierModule;
 			LaterModule = laterModule;
 			PublicOnly = publicOnly;
+			Resolver = resolver;
 		}
 
 		public void Visit ()
 		{
-			var earlierElements = ModuleElements.Import (EarlierModule, PublicOnly);
+			var earlierElements = ModuleElements.Import (EarlierModule, Resolver, PublicOnly);
 			if (earlierElements is null)
 				throw new Exception (Errors.E0007);
-			var laterElements = ModuleElements.Import (LaterModule, PublicOnly);
+
+			// why is PublicOnly being ignored here?
+			// The reason is that in the earlier assembly, you might
+			// have a constructor of the form:
+			// public SomeObject (IntPtr handle) { }
+			// but in the later assembly it will be:
+			// protected SomeObject (IntPtr handle) { }
+			// If we use PublicOnly here, this will not work.
+			var laterElements = ModuleElements.Import (LaterModule, Resolver, publicOnly: false);
 			if (laterElements is null)
 				throw new Exception (Errors.E0007);
 			var reworker = new TypeReworker (EarlierModule);

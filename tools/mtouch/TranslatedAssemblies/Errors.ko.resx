@@ -1232,6 +1232,9 @@
 		<value>'{0}'에 잘못된 BindAsAttribute가 있습니다. {1}의 기본 열거형 형식을 찾을 수 없습니다. https://github.com/xamarin/xamarin-macios/issues/new에 버그 보고서를 제출하세요.
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>등록자가 '{1}' 메서드의 시그니처에서 잘못된 '{0}' 형식을 찾았습니다. 인터페이스에는 래퍼 형식을 지정하는 Protocol 특성이 있어야 합니다.
 		</value>
@@ -1739,5 +1742,12 @@
 	</data>
   <data name="MX8041" xml:space="preserve">
 		<value>{0} 형식의 인스턴스를 만들 수 없습니다.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

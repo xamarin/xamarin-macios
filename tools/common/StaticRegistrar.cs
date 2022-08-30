@@ -1862,6 +1862,28 @@ namespace Registrar {
 			return rv;
 		}
 
+		NativeNameAttribute GetNativeNameAttribute (TypeReference type)
+		{
+			if (!TryGetAttribute ((ICustomAttributeProvider) type, ObjCRuntime, "NativeNameAttribute", out var attrib))
+				return null;
+
+			return CreateNativeNameAttribute (attrib, type);
+		}
+
+		static NativeNameAttribute CreateNativeNameAttribute (ICustomAttribute attrib, TypeReference type)
+		{
+			if (attrib.HasFields)
+				throw ErrorHelper.CreateError (4124, Errors.MT4124_I, "NativeNameAttribute", type.FullName);
+
+			switch (attrib.ConstructorArguments.Count) {
+			case 1:
+				var t1 = (string) attrib.ConstructorArguments [0].Value;
+				return new NativeNameAttribute (t1);
+			default:
+				throw ErrorHelper.CreateError (4124, Errors.MT4124_I, "NativeNameAttribute", type.FullName);
+			}
+		}
+
 		protected override BindAsAttribute GetBindAsAttribute (PropertyDefinition property)
 		{
 			if (property == null)
@@ -2307,6 +2329,7 @@ namespace Registrar {
 			n = "struct trampoline_struct_" + name.ToString ();
 			if (!structures.Contains (n)) {
 				structures.Add (n);
+				declarations.WriteLine ($"// {structure.FullName} (+other structs with same layout)");
 				declarations.WriteLine ("{0} {{\n{1}}};", n, body.ToString ());
 			}
 			
@@ -2364,7 +2387,7 @@ namespace Registrar {
 			case "System.UIntPtr":
 				name.Append ('p');
 				body.AppendLine ("void *v{0};", size);
-				size += 4; // for now at least...
+				size += Is64Bits ? 8 : 4;
 				break;
 			default:
 				bool found = false;
@@ -2484,6 +2507,7 @@ namespace Registrar {
 			case "System.Drawing.PointF": return App.Platform == ApplePlatform.MacOSX ? "NSPoint" : "CGPoint";
 			case "System.Drawing.SizeF": return App.Platform == ApplePlatform.MacOSX ? "NSSize" : "CGSize";
 			case "System.String": return "NSString *";
+			case "System.UIntPtr":
 			case "System.IntPtr": return "void *";
 			case "System.SByte": return "signed char";
 			case "System.Byte": return "unsigned char";
@@ -2508,6 +2532,7 @@ namespace Registrar {
 				throw ErrorHelper.CreateError (4102, Errors.MT4102, "System.DateTime", "Foundation.NSDate", descriptiveMethodName);
 			case "ObjCRuntime.Selector": return "SEL";
 			case "ObjCRuntime.Class": return "Class";
+			case "ObjCRuntime.NativeHandle": return "void *";
 			default:
 				if (type.FullName == NFloatTypeName) {
 					CheckNamespace ("CoreGraphics", exceptions);
@@ -2540,7 +2565,7 @@ namespace Registrar {
 				} else if (td.IsValueType) {
 					if (IsPlatformType (td)) {
 						CheckNamespace (td, exceptions);
-						return td.Name;
+						return GetNativeName (td);
 					}
 					return CheckStructure (td, descriptiveMethodName, inMethod);
 				} else {
@@ -2549,6 +2574,15 @@ namespace Registrar {
 			}
 		}
 		
+		string GetNativeName (TypeDefinition type)
+		{
+			var attrib = GetNativeNameAttribute (type);
+			if (attrib is null)
+				return type.Name;
+
+			return attrib.NativeName;
+		}
+
 		string GetPrintfFormatSpecifier (TypeDefinition type, out bool unknown)
 		{
 			unknown = false;
@@ -4911,10 +4945,12 @@ namespace Registrar {
 
 			string wrapperName;
 			if (!signatures.TryGetValue (signature.ToString (), out wrapperName)) {
-				var name = "xamarin_pinvoke_wrapper_" + method.Name;
+				var methodName = method.Name.Replace ('<', '_').Replace ('>', '_').Replace ('|', '_');
+				var baseName = "xamarin_pinvoke_wrapper_" + methodName;
+				var name = baseName;
 				var counter = 0;
 				while (names.Contains (name)) {
-					name = "xamarin_pinvoke_wrapper_" + method.Name + (++counter).ToString ();
+					name = baseName + (++counter).ToString ();
 				}
 				names.Add (name);
 				signatures [signature.ToString ()] = wrapperName = name;
@@ -4951,7 +4987,7 @@ namespace Registrar {
 				sb.WriteLine ("{");
 				if (is_stret) {
 					sb.StringBuilder.AppendLine ("#if defined (__arm64__)");
-					sb.WriteLine ("xamarin_process_managed_exception (xamarin_create_system_entry_point_not_found_exception (\"{0}\"));", pinfo.EntryPoint);
+					sb.WriteLine ("xamarin_process_managed_exception ((MonoObject *) xamarin_create_system_entry_point_not_found_exception (\"{0}\"));", pinfo.EntryPoint);
 					sb.StringBuilder.AppendLine ("#else");
 				}
 				sb.WriteLine ("@try {");

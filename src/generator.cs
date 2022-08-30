@@ -791,6 +791,8 @@ public class NamespaceManager
 			ImplicitNamespaces.Add ("ModelIO");
 		if (Frameworks.HaveMetal)
 			ImplicitNamespaces.Add ("Metal");
+		if (Frameworks.HaveMetalPerformanceShadersGraph)
+			ImplicitNamespaces.Add ("MetalPerformanceShadersGraph");
 
 		if (Frameworks.HaveCoreImage)
 			ImplicitNamespaces.Add ("CoreImage");
@@ -2415,8 +2417,8 @@ public partial class Generator : IMemberGatherer {
 		print (m, "namespace {0} {{", ns.ObjCRuntime);
 		print (m, "\tstatic partial class Messaging {");
 
-		print (m, "\t\tinternal const string LIBOBJC_DYLIB = \"/usr/lib/libobjc.dylib\";\n");
 		if (BindThirdPartyLibrary){
+			print (m, "\t\tinternal const string LIBOBJC_DYLIB = \"/usr/lib/libobjc.dylib\";\n");
 			print (m, "\t\tstatic internal System.Reflection.Assembly this_assembly = typeof (Messaging).Assembly;\n");
 			// IntPtr_objc_msgSend[Super]: for init
 			print (m, "\t\t[DllImport (LIBOBJC_DYLIB, EntryPoint=\"objc_msgSend\")]");
@@ -3419,19 +3421,36 @@ public partial class Generator : IMemberGatherer {
 			}
 		}
 		else {
-			// Revision is optional, and is returned as -1 if not yet. However the Version ctor called inside the attributes throws if you pass -1 so coerse to 0
-			int revision = attr.Version.Revision == -1 ? 0 : attr.Version.Revision;
-			switch (attr.AvailabilityKind) {
-				case AvailabilityKind.Introduced:
-					return new IntroducedAttribute(platform, attr.Version.Major, attr.Version.Minor, revision, message: attr.Message);
-				case AvailabilityKind.Deprecated:
-					return new DeprecatedAttribute(platform, attr.Version.Major, attr.Version.Minor, revision, message: attr.Message);
-				case AvailabilityKind.Obsoleted:
-					return new ObsoletedAttribute(platform, attr.Version.Major, attr.Version.Minor, revision, message: attr.Message);
-				case AvailabilityKind.Unavailable:
-					return new UnavailableAttribute(platform, message: attr.Message);
-				default:
-					throw new NotImplementedException ();
+			// Due to the absurd API of Version, you can not pass a -1 to the revision constructor
+			// nor can you coerse to 0, as that will fail with "16.0.0 <= 16.0" => false in the registrar
+			// So determine if the revision is -1, and use the 2 or 3 param ctor...
+			if (attr.Version.Revision == -1) {
+				switch (attr.AvailabilityKind) {
+					case AvailabilityKind.Introduced:
+						return new IntroducedAttribute(platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					case AvailabilityKind.Deprecated:
+						return new DeprecatedAttribute(platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					case AvailabilityKind.Obsoleted:
+						return new ObsoletedAttribute(platform, attr.Version.Major, attr.Version.Minor, message: attr.Message);
+					case AvailabilityKind.Unavailable:
+						return new UnavailableAttribute(platform, message: attr.Message);
+					default:
+						throw new NotImplementedException ();
+				}
+			}
+			else {
+				switch (attr.AvailabilityKind) {
+					case AvailabilityKind.Introduced:
+						return new IntroducedAttribute(platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					case AvailabilityKind.Deprecated:
+						return new DeprecatedAttribute(platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					case AvailabilityKind.Obsoleted:
+						return new ObsoletedAttribute(platform, attr.Version.Major, attr.Version.Minor, attr.Version.Revision, message: attr.Message);
+					case AvailabilityKind.Unavailable:
+						return new UnavailableAttribute(platform, message: attr.Message);
+					default:
+						throw new NotImplementedException ();
+				}
 			}
 		}
 	}
@@ -6758,7 +6777,7 @@ public partial class Generator : IMemberGatherer {
 				} else {
 					library_name = Path.GetFileNameWithoutExtension (library_name);
 				}
-				if (library_name.Contains ("."))
+				if (library_name.Contains ('.'))
 					library_name = library_name.Replace (".", string.Empty);
 			}
 		} else if (BindThirdPartyLibrary) {

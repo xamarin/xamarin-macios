@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Mono.Cecil;
 using System.Xml.Serialization;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable enable
 
@@ -25,6 +26,43 @@ namespace Microsoft.MaciOS.Nnyeah.AssemblyComparator {
 
 		public TypeAndMemberMap ()
 		{
+		}
+
+		public bool TypeIsNotPresent (string typeName)
+		{
+			return TypesNotPresent.Contains (typeName);
+		}
+
+		public bool TryGetMappedType (string typeName, [NotNullWhen (returnValue: true)] out TypeDefinition? result)
+		{
+			return TypeMap.TryGetValue (typeName, out result);
+		}
+
+		public bool MemberIsNotPresent (string member)
+		{
+			return MethodsNotPresent.Contains (member) ||
+				FieldsNotPresent.Contains (member) ||
+				EventsNotPresent.Contains (member) ||
+				PropertiesNotPresent.Contains (member);
+		}
+
+		public bool TryGetMappedMember (string memberName, [NotNullWhen (returnValue: true)] out IMemberDefinition? member)
+		{
+			if (MethodMap.TryGetValue (memberName, out var method)) {
+				member = method;
+				return true;
+			} else if (FieldMap.TryGetValue (memberName, out var field)) {
+				member = field;
+				return true;
+			} else if (EventMap.TryGetValue (memberName, out var @event)) {
+				member = @event;
+				return true;
+			} else if (PropertyMap.TryGetValue (memberName, out var property)) {
+				member = property;
+				return true;
+			}
+			member = null;
+			return false;
 		}
 	}
 }

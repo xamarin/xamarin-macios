@@ -1,13 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
@@ -53,7 +44,6 @@ class MainClass {
 </Project>";
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-			Configuration.CopyDotNetSupportingFiles (tmpdir);
 			var project_path = Path.Combine (tmpdir, "TestProject.csproj");
 			File.WriteAllText (project_path, csproj);
 			File.WriteAllText (Path.Combine (tmpdir, "Info.plist"), EmptyAppManifest);
@@ -88,7 +78,6 @@ class MainClass {
 	</ItemGroup>
 </Project>";
 
-			Configuration.CopyDotNetSupportingFiles (tmpdir);
 			var project_path = Path.Combine (tmpdir, "TestProject.csproj");
 			File.WriteAllText (project_path, csproj);
 			File.WriteAllText (Path.Combine (tmpdir, "Info.plist"), EmptyAppManifest);
@@ -161,7 +150,6 @@ $@"<Project Sdk=""Microsoft.NET.Sdk"">
 			var csprojfn = Path.Combine (projdir, Path.GetFileName (projdir) + ".csproj");
 			File.WriteAllText (csprojfn, csproj);
 
-			Configuration.CopyDotNetSupportingFiles (tmpdir);
 			DotNet.AssertBuild (csprojfn);
 			ExecuteProjectWithMagicWordAndAssert (csprojfn, platform);
 		}
@@ -179,7 +167,6 @@ $@"<Project Sdk=""Microsoft.NET.Sdk"">
 </Project>";
 
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-			Configuration.CopyDotNetSupportingFiles (tmpdir);
 			var project_path = Path.Combine (tmpdir, "TestProject.csproj");
 			File.WriteAllText (project_path, csproj);
 			File.WriteAllText (Path.Combine (tmpdir, "Main.cs"), EmptyMainFile);
