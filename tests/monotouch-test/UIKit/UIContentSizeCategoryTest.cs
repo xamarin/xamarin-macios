@@ -54,7 +54,7 @@ namespace MonoTouchFixtures.UIKit {
             var size = UIApplication.SharedApplication.GetPreferredContentSizeCategory();
             Assert.AreEqual (sizeEnum, size, "String");
             var sizeReverse = size.GetConstant();
-            Assert.True (sizeNSString == sizeReverse, "NSString");
+            Assert.AreEqual (sizeNSString, sizeReverse, "NSString");
 		}
 	}
 }
