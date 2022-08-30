@@ -487,10 +487,10 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "win10-x86", "Error getting pack version: Pack 'Microsoft.NETCore.App.Runtime.Mono.win-x86' was not present in workload manifests.")]
-		[TestCase (ApplePlatform.TVOS, "win10-x64", "Error getting pack version: Pack 'Microsoft.NETCore.App.Runtime.Mono.win-x64' was not present in workload manifests.")]
+		[TestCase (ApplePlatform.iOS, "win10-x86", null)]
+		[TestCase (ApplePlatform.TVOS, "win10-x64", null)]
 		[TestCase (ApplePlatform.MacOSX, "win10-arm", null)]
-		[TestCase (ApplePlatform.MacCatalyst, "win10-arm64", "Error getting pack version: Pack 'Microsoft.NETCore.App.Runtime.Mono.win-arm64' was not present in workload manifests.")]
+		[TestCase (ApplePlatform.MacCatalyst, "win10-arm64", "Unable to find package Microsoft.NETCore.App.Runtime.Mono.win-arm64. No packages exist with this id in source[(]s[)]:.*")]
 		public void InvalidRuntimeIdentifier_Restore (ApplePlatform platform, string runtimeIdentifier, string? failureMessagePattern)
 		{
 			var project = "MySimpleApp";
@@ -946,6 +946,35 @@ namespace Xamarin.Tests {
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {minOS} (equivalent to macOS 10.15.2).", errors [0].Message, "Error message");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		public void BuildNet6_0App (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "Net6_0SimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, netVersion: "net6.0");
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+
+			var result = DotNet.AssertBuild (project_path, properties);
+			AssertThatLinkerExecuted (result);
+			var infoPlistPath = GetInfoPListPath (platform, appPath);
+			Assert.That (infoPlistPath, Does.Exist, "Info.plist");
+			var infoPlist = PDictionary.FromFile (infoPlistPath);
+			Assert.AreEqual ("com.xamarin.mysimpleapp", infoPlist.GetString ("CFBundleIdentifier").Value, "CFBundleIdentifier");
+			Assert.AreEqual ("MySimpleApp", infoPlist.GetString ("CFBundleDisplayName").Value, "CFBundleDisplayName");
+			Assert.AreEqual ("6.0", infoPlist.GetString ("CFBundleVersion").Value, "CFBundleVersion");
+			Assert.AreEqual ("6.0", infoPlist.GetString ("CFBundleShortVersionString").Value, "CFBundleShortVersionString");
+
+			var appExecutable = GetNativeExecutable (platform, appPath);
+			ExecuteWithMagicWordAndAssert (platform, runtimeIdentifiers, appExecutable);
 		}
 
 		[Test]

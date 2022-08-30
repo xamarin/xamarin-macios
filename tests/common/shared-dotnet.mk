@@ -10,6 +10,10 @@ ifeq ($(TESTNAME),)
 TESTNAME:=$(notdir $(shell dirname "$(shell dirname "$(CURDIR)")"))
 endif
 
+ifeq ($(TEST_TFM),)
+TEST_TFM=$(DOTNET_TFM)
+endif
+
 prepare:
 	@# nothing to do here right now
 
@@ -34,12 +38,12 @@ run: prepare
 	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) -t:Run
 
 run-bare:
-	$(Q) "$(abspath .)"/bin/Debug/$(DOTNET_TFM)-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
+	$(Q) "$(abspath .)"/bin/Debug/$(TEST_TFM)-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
 
 run-remote:
 	$(Q) test -n "$(REMOTE_HOST)" || ( echo "Must specify the remote machine by setting the REMOTE_HOST environment variable"; exit 1 )
 	@echo "Copying the '$(TESTNAME)' test app to $(REMOTE_HOST)..."
-	rsync -avz ./bin/Debug/$(DOTNET_TFM)-*/*/"$(TESTNAME)".app $(USER)@$(REMOTE_HOST):/tmp/test-run-remote-execution/
+	rsync -avz ./bin/Debug/$(TEST_TFM)-*/*/"$(TESTNAME)".app $(USER)@$(REMOTE_HOST):/tmp/test-run-remote-execution/
 	@echo "Killing any existing test executables ('$(TESTNAME)')"
 	ssh $(USER)@$(REMOTE_HOST) -- pkill -9 "$(TESTNAME)" || true
 	@echo "Executing '$(TESTNAME)' on $(REMOTE_HOST)..."

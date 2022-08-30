@@ -744,7 +744,9 @@ namespace Xamarin.Bundler {
 			if (app.UseInterpreter) {
 				sw.WriteLine ("extern \"C\" { void mono_ee_interp_init (const char *); }");
 				sw.WriteLine ("extern \"C\" { void mono_icall_table_init (void); }");
+#if !NET
 				sw.WriteLine ("extern \"C\" { void mono_marshal_ilgen_init (void); }");
+#endif
 				sw.WriteLine ("extern \"C\" { void mono_method_builder_ilgen_init (void); }");
 				sw.WriteLine ("extern \"C\" { void mono_sgen_mono_ilgen_init (void); }");
 			}
@@ -769,7 +771,9 @@ namespace Xamarin.Bundler {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_LLVMONLY);");
 			else if (app.UseInterpreter) {
 				sw.WriteLine ("\tmono_icall_table_init ();");
+#if !NET
 				sw.WriteLine ("\tmono_marshal_ilgen_init ();");
+#endif
 				sw.WriteLine ("\tmono_method_builder_ilgen_init ();");
 				sw.WriteLine ("\tmono_sgen_mono_ilgen_init ();");
 #if !NET

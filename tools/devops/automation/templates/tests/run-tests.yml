@@ -140,10 +140,16 @@ steps:
       PLATFORMS="$PLATFORMS $CURRENT"
     done
 
+    pushd .
+    cd $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*/
+    mkdir -p template-packs
+    popd
+
     for platform in $DOTNET_PLATFORMS; do
       unzip -l $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip
       unzip $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip -d tmpdir
       rsync -av tmpdir/dotnet/sdk-manifests/* $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*/sdk-manifests/
+      rsync -av tmpdir/dotnet/template-packs/* $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*/template-packs/
     done
     find $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*
 
