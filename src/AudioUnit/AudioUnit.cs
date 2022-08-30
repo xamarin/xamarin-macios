@@ -135,12 +135,21 @@ namespace AudioUnit
 	delegate AudioUnitStatus CallbackShared (IntPtr /* void* */ clientData, ref AudioUnitRenderActionFlags /* AudioUnitRenderActionFlags* */ actionFlags, ref AudioTimeStamp /* AudioTimeStamp* */ timeStamp, uint /* UInt32 */ busNumber, uint /* UInt32 */ numberFrames, IntPtr /* AudioBufferList* */ data);
 #endif // !COREBUILD
 
+#if NET
+	[StructLayout (LayoutKind.Sequential)]
+	public unsafe struct AURenderCallbackStruct
+	{
+		public delegate* unmanaged<IntPtr, int*, AudioTimeStamp*, uint, uint, IntPtr, int> Proc;
+		public IntPtr ProcRefCon; 
+	}
+#else
 	[StructLayout (LayoutKind.Sequential)]
 	struct AURenderCallbackStruct
 	{
 		public Delegate Proc;
 		public IntPtr ProcRefCon; 
 	}
+#endif
 
 	[StructLayout (LayoutKind.Sequential)]
 	struct AudioUnitConnection
@@ -349,8 +358,10 @@ namespace AudioUnit
 	public class AudioUnit : DisposableObject
 	{
 #if !COREBUILD
+#if !NET
 		static readonly CallbackShared CreateRenderCallback = RenderCallbackImpl;
 		static readonly CallbackShared CreateInputCallback = InputCallbackImpl;
+#endif
 
 		GCHandle gcHandle;
 		bool _isPlaying;
@@ -657,26 +668,55 @@ namespace AudioUnit
 				gcHandle = GCHandle.Alloc (this);
 
 			var cb = new AURenderCallbackStruct ();
+#if NET
+			unsafe {
+				cb.Proc = &RenderCallbackImpl;
+			}
+#else
 			cb.Proc = CreateRenderCallback;
+#endif
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
 			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SetRenderCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf (cb));
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+		static unsafe int RenderCallbackImpl (IntPtr clientData, int* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+#else
 		[MonoPInvokeCallback (typeof (CallbackShared))]
 		static AudioUnitStatus RenderCallbackImpl (IntPtr clientData, ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+#endif
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
 			var au = (AudioUnit?) gch.Target;
 			var renderer = au?.renderer;
+#if NET
+			if (renderer is null)
+				return (int)AudioUnitStatus.Uninitialized;
 
+			if (!renderer.TryGetValue (busNumber, out var render))
+				return (int)AudioUnitStatus.Uninitialized;
+#else
 			if (renderer is null)
 				return AudioUnitStatus.Uninitialized;
 
 			if (!renderer.TryGetValue (busNumber, out var render))
 				return AudioUnitStatus.Uninitialized;
+#endif
 
 			using (var buffers = new AudioBuffers (data)) {
+#if NET
+				unsafe {
+					var tempActionFlags = (AudioUnitRenderActionFlags)(*actionFlags);
+					var tempTimeStamp = *timeStamp;
+					var returnValue = render (tempActionFlags, tempTimeStamp, busNumber, numberFrames, buffers);
+					*actionFlags = (int)tempActionFlags;
+					*timeStamp = tempTimeStamp;
+					return (int)returnValue;
+				}
+#else
 				return render (actionFlags, timeStamp, busNumber, numberFrames, buffers);
+#endif
 			}
 		}
 
@@ -695,14 +735,46 @@ namespace AudioUnit
 				gcHandle = GCHandle.Alloc (this);
 
 			var cb = new AURenderCallbackStruct ();
+#if NET
+			unsafe {
+				cb.Proc = &InputCallbackImpl;
+			}
+#else
 			cb.Proc = CreateInputCallback;
+#endif
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
 			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SetInputCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf (cb));
 		}
-
+#if NET
+		[UnmanagedCallersOnly]
+		static unsafe int InputCallbackImpl (IntPtr clientData, int* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+#else
 		[MonoPInvokeCallback (typeof (CallbackShared))]
 		static AudioUnitStatus InputCallbackImpl (IntPtr clientData, ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+#endif
 		{
+#if NET
+			GCHandle gch = GCHandle.FromIntPtr (clientData);
+			var au =  gch.Target as AudioUnit;
+			if (au is null)
+				return (int)AudioUnitStatus.Uninitialized;
+
+			var inputs = au.inputs;
+			if (inputs is null)
+				return (int)AudioUnitStatus.Uninitialized;
+
+			if (!inputs.TryGetValue (busNumber, out var input))
+				return (int)AudioUnitStatus.Uninitialized;
+
+			unsafe {
+				var tempActionFlags = (AudioUnitRenderActionFlags)(*actionFlags);
+				var tempTimeStamp = *timeStamp;
+				var returnValue = input (tempActionFlags, tempTimeStamp, busNumber, numberFrames, au);
+				*timeStamp = tempTimeStamp;
+				*actionFlags = (int)tempActionFlags;
+				return (int)returnValue;
+			}
+#else
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
 			var au =  gch.Target as AudioUnit;
 			if (au is null)
@@ -716,6 +788,7 @@ namespace AudioUnit
 				return AudioUnitStatus.Uninitialized;
 
 			return input (actionFlags, timeStamp, busNumber, numberFrames, au);
+#endif
 		}
 
 		#endregion

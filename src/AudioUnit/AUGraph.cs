@@ -140,8 +140,15 @@ namespace AudioUnit
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			AudioUnitStatus error = AudioUnitStatus.OK;
+#if NET
+			unsafe {
+				if (graphUserCallbacks.Count == 0)
+					error = (AudioUnitStatus) AUGraphAddRenderNotify (Handle, &renderCallback, GCHandle.ToIntPtr (gcHandle));
+			}
+#else
 			if (graphUserCallbacks.Count == 0)
 				error = (AudioUnitStatus) AUGraphAddRenderNotify (Handle, renderCallback, GCHandle.ToIntPtr (gcHandle));
+#endif
 
 			if (error == AudioUnitStatus.OK)
 				graphUserCallbacks.Add (callback);
@@ -156,8 +163,15 @@ namespace AudioUnit
 				throw new ArgumentException ("Cannot unregister a callback that has not been registered");
 
 			AudioUnitStatus error = AudioUnitStatus.OK;
+#if NET
+			unsafe {
+				if (graphUserCallbacks.Count == 0)
+					error = (AudioUnitStatus)AUGraphRemoveRenderNotify (Handle, &renderCallback, GCHandle.ToIntPtr (gcHandle));
+			}
+#else
 			if (graphUserCallbacks.Count == 0)
 				error = (AudioUnitStatus)AUGraphRemoveRenderNotify (Handle, renderCallback, GCHandle.ToIntPtr (gcHandle));
+#endif
 
 			graphUserCallbacks.Remove (callback); // Remove from list even if there is an error
 			return error;
@@ -165,6 +179,26 @@ namespace AudioUnit
 
 		HashSet<RenderDelegate> graphUserCallbacks = new HashSet<RenderDelegate> ();
 
+#if !NET
+		static CallbackShared? _static_CallbackShared;
+		static CallbackShared static_CallbackShared {
+			get {
+				if (_static_CallbackShared is null)
+					_static_CallbackShared = new CallbackShared (renderCallback);
+				return _static_CallbackShared;
+			}
+		}
+#endif
+
+#if NET
+		[UnmanagedCallersOnly]
+		static unsafe AudioUnitStatus renderCallback(IntPtr inRefCon,
+					AudioUnitRenderActionFlags* _ioActionFlags,
+					AudioTimeStamp* _inTimeStamp,
+					uint _inBusNumber,
+					uint _inNumberFrames,
+					IntPtr _ioData)
+#else
 		[MonoPInvokeCallback (typeof(CallbackShared))]
 		static AudioUnitStatus renderCallback(IntPtr inRefCon,
 					ref AudioUnitRenderActionFlags _ioActionFlags,
@@ -172,6 +206,7 @@ namespace AudioUnit
 					uint _inBusNumber,
 					uint _inNumberFrames,
 					IntPtr _ioData)
+#endif
 		{
 			// getting audiounit instance
 			var handler = GCHandle.FromIntPtr (inRefCon);
@@ -183,8 +218,18 @@ namespace AudioUnit
 
 			if (renderers.Count != 0) {
 				using (var buffers = new AudioBuffers (_ioData)) {
+#if NET
+					foreach (RenderDelegate renderer in renderers) {
+						var tempActionFlags = *_ioActionFlags;
+						var tempTimeStamp = *_inTimeStamp;
+						renderer (tempActionFlags, tempTimeStamp, _inBusNumber, _inNumberFrames, buffers);
+						*_ioActionFlags = tempActionFlags;
+						*_inTimeStamp = tempTimeStamp;
+					}
+#else
 					foreach (RenderDelegate renderer in renderers)
 						renderer (_ioActionFlags, _inTimeStamp, _inBusNumber, _inNumberFrames, buffers);
+#endif
 					return AudioUnitStatus.OK;
 				}
 			}
@@ -313,7 +358,9 @@ namespace AudioUnit
 		}
 
 		Dictionary<uint, RenderDelegate>? nodesCallbacks;
+#if !NET
 		static readonly CallbackShared CreateRenderCallback = RenderCallbackImpl;
+#endif
 
 		public AUGraphError SetNodeInputCallback (int destNode, uint destInputNumber, RenderDelegate renderDelegate)
 		{
@@ -323,25 +370,52 @@ namespace AudioUnit
 			nodesCallbacks [destInputNumber] = renderDelegate;
 
 			var cb = new AURenderCallbackStruct ();
+#if NET
+			unsafe {
+				cb.Proc = &RenderCallbackImpl;
+			}
+#else
 			cb.Proc = CreateRenderCallback;
+#endif
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
 			return AUGraphSetNodeInputCallback (Handle, destNode, destInputNumber, ref cb);
 		}
+#if NET
+		[UnmanagedCallersOnly]
+		static unsafe int RenderCallbackImpl (IntPtr clientData, int* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+#else
 
 		[MonoPInvokeCallback (typeof (CallbackShared))]
 		static AudioUnitStatus RenderCallbackImpl (IntPtr clientData, ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+#endif
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
 			var au = gch.Target as AUGraph;
+#if NET
+			if (au?.nodesCallbacks is null)
+				return (int)AudioUnitStatus.InvalidParameter;
 
+			if (!au.nodesCallbacks.TryGetValue (busNumber, out var callback))
+				return (int)AudioUnitStatus.InvalidParameter;
+#else
 			if (au?.nodesCallbacks is null)
 				return AudioUnitStatus.InvalidParameter;
 
 			if (!au.nodesCallbacks.TryGetValue (busNumber, out var callback))
 				return AudioUnitStatus.InvalidParameter;
+#endif
 
 			using (var buffers = new AudioBuffers (data)) {
+#if NET
+				AudioUnitRenderActionFlags tempActionFlags = (AudioUnitRenderActionFlags)(*actionFlags);
+				var tempTimeStamp = *timeStamp;
+				var returnValue = callback (tempActionFlags, tempTimeStamp, busNumber, numberFrames, buffers);
+				*actionFlags = (int)tempActionFlags;
+				*timeStamp = tempTimeStamp;
+				return (int)returnValue;
+#else
 				return callback (actionFlags, timeStamp, busNumber, numberFrames, buffers);
+#endif
 			}
 		}
 
@@ -435,10 +509,19 @@ namespace AudioUnit
 		static extern AUGraphError AUGraphInitialize (IntPtr inGraph);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
+#if NET
+		static unsafe extern int AUGraphAddRenderNotify (IntPtr inGraph, delegate* unmanaged<IntPtr, AudioUnitRenderActionFlags*, AudioTimeStamp*, uint, uint, IntPtr, AudioUnitStatus> inCallback, IntPtr inRefCon );
+#else
 		static extern int AUGraphAddRenderNotify (IntPtr inGraph, CallbackShared inCallback, IntPtr inRefCon );
+#endif
 
+#if NET
+		[DllImport (Constants.AudioToolboxLibrary)]
+		static unsafe extern int AUGraphRemoveRenderNotify (IntPtr inGraph, delegate* unmanaged<IntPtr, AudioUnitRenderActionFlags*, AudioTimeStamp*, uint, uint, IntPtr, AudioUnitStatus> inCallback, IntPtr inRefCon );
+#else
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern int AUGraphRemoveRenderNotify (IntPtr inGraph, CallbackShared inCallback, IntPtr inRefCon );
+#endif
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AUGraphError AUGraphStart (IntPtr inGraph);
