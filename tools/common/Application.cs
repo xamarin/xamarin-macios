@@ -874,7 +874,8 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (3007, Errors.MX3007);
 			}
 
-			if (Driver.XcodeVersion.Major >= 14 && BitCodeMode != BitCodeMode.None) {
+			if (Driver.XcodeVersion.Major >= 14 && BitCodeMode != BitCodeMode.None && Platform == ApplePlatform.TVOS) {
+				// We currently have to leave watchOS alone, because the process is to first build bitcode, then compile bitcode into native code, and finally remove the bitcode from the executable (this is likely fixable, but looks like it's a larger effort involving the runtime team).
 				ErrorHelper.Warning (186, Errors.MX0186 /* Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file. */);
 				BitCodeMode = BitCodeMode.None;
 			}
