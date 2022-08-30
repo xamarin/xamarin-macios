@@ -2190,12 +2190,12 @@ namespace PdfKit {
 		[Abstract]
 		[Export ("pdfView:overlayViewForPage:")]
 		[return: NullAllowed]
-		UIView RequestPdfView (PdfView view, PdfPage page);
+		UIView GetOverlayView (PdfView view, PdfPage page);
 
 		[Export ("pdfView:willDisplayOverlayView:forPage:")]
-		void WillDisplay (PdfView pdfView, UIView overlayView, PdfPage page);
+		void WillDisplayOverlayView (PdfView pdfView, UIView overlayView, PdfPage page);
 
 		[Export ("pdfView:willEndDisplayingOverlayView:forPage:")]
-		void WillEndDisplaying (PdfView pdfView, UIView overlayView, PdfPage page);
+		void WillEndDisplayingOverlayView (PdfView pdfView, UIView overlayView, PdfPage page);
 	}
 }
