@@ -1115,6 +1115,33 @@ public class B : A {}
 		}
 
 		[Test]
+		[TestCase (Profile.tvOS, MTouchBitcode.ASMOnly, "arm64+llvm")]
+		[TestCase (Profile.tvOS, MTouchBitcode.Full, "arm64+llvm")]
+		[TestCase (Profile.tvOS, MTouchBitcode.Marker, "arm64+llvm")]
+		[TestCase (Profile.iOS, MTouchBitcode.ASMOnly, "arm64+llvm")]
+		[TestCase (Profile.iOS, MTouchBitcode.Full, "arm64+llvm")]
+		[TestCase (Profile.iOS, MTouchBitcode.Marker, "arm64+llvm")]
+		[TestCase (Profile.watchOS, MTouchBitcode.ASMOnly, "arm64_32+llvm")]
+		[TestCase (Profile.watchOS, MTouchBitcode.Full, "arm64_32+llvm")]
+		[TestCase (Profile.watchOS, MTouchBitcode.Marker, "arm64_32+llvm")]
+		public void MT0186 (Profile profile, MTouchBitcode mode, string abi)
+		{
+			using (var mtouch = new MTouchTool ()) {
+				mtouch.Profile = profile;
+				if (profile == Profile.watchOS) {
+					mtouch.CreateTemporaryWatchKitExtension ();
+				} else {
+					mtouch.CreateTemporaryApp ();
+				}
+				mtouch.Abi = abi;
+				mtouch.Bitcode = mode;
+				mtouch.WarnAsError = new int[] { 186 };
+				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildDev));
+				mtouch.AssertError (186, "Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.");
+			}
+		}
+
+		[Test]
 		public void MT0095_SharedCode ()
 		{
 			using (var exttool = new MTouchTool ()) {
