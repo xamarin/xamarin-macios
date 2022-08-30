@@ -1639,13 +1639,6 @@ namespace AppKit {
 
 	[NoMacCatalyst]
 	[Flags]
-	[Native]
-	public enum NSTextListOptions : ulong {
-		PrependEnclosingMarker = 1
-	}
-
-	[NoMacCatalyst]
-	[Flags]
 	public enum NSFontSymbolicTraits : int { // uint32_t NSFontSymbolicTraits
 		ItalicTrait = (1 << 0),
 		BoldTrait = (1 << 1),
