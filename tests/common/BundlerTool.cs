@@ -326,7 +326,7 @@ namespace Xamarin.Tests
 			if (rv == 0)
 				return;
 			var errors = Messages.Where ((v) => v.IsError).ToList ();
-			Assert.Fail ($"Expected execution to succeed, but exit code was {rv}, and there were {errors.Count} error(s): {message}\n\t" +
+			Assert.Fail ($"Expected execution to succeed, but exit code was {rv}, and there were {errors.Count} error(s).\nCommand: {ToolPath} {StringUtils.FormatArguments (ToolArguments)}\nMessage: {message}\n\t" +
 				     string.Join ("\n\t", errors.Select ((v) => v.ToString ())));
 		}
 
