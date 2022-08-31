@@ -27,7 +27,7 @@
 				"any": "Microsoft.@PLATFORM@.Sdk"
 			}
 		},
-		"Microsoft.@PLATFORM@.Windows.Sdk.Aliased": {
+		"Microsoft.@PLATFORM@.Windows.Sdk.Aliased.net6": {
 			"kind": "sdk",
 			"version": "@VERSION@",
 			"alias-to": {
