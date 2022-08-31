@@ -75,7 +75,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"			}}");
 	writer.WriteLine ($"		}},");
 	if (hasWindows) {
-		writer.WriteLine ($"		\"Microsoft.@PLATFORM@.Windows.Sdk.Aliased.net7\": {{");
+		writer.WriteLine ($"		\"Microsoft.{platform}.Windows.Sdk.Aliased.net7\": {{");
 		writer.WriteLine ($"			\"kind\": \"sdk\",");
 		writer.WriteLine ($"			\"version\": \"{version}\",");
 		writer.WriteLine ($"			\"alias-to\": {{");
