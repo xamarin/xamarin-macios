@@ -1,6 +1,5 @@
 // Copyright (c) Microsoft Corp
 
-using CompilerErrorHere;
 using System;
 using Microsoft.Build.Framework;
 using NUnit.Framework;
