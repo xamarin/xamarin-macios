@@ -332,7 +332,6 @@ namespace SharedWithYou {
 
 	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
 	[Protocol]
-	[BaseType (typeof (NSObject))]
 	interface SWHighlightEvent : NSSecureCoding, NSCopying
 	{
 		[Abstract]
