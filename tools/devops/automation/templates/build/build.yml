@@ -27,6 +27,10 @@ parameters:
   type: stepList 
   default: []
 
+- name: makeParallelism
+  type: string
+  default: '8'
+
 steps:
 
 - template: ../common/checkout.yml
@@ -58,6 +62,7 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
   enabled: true
+  continueOnError: true # brew installation can be temperamental, and things usually work even if the installation fail.
 
 - bash: |
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx
@@ -246,15 +251,25 @@ steps:
     set -e
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
     time make -C $(Build.SourcesDirectory)/xamarin-macios/ reset
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j8
-    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j8
+    MAKE_FLAGS=""
+
+    if [[ "$SYSTEM_DEBUG" == "true" ]]; then
+      MAKE_FLAGS="V=1 -w"
+    fi
+
+    if test -z "$makeParallelism"; then
+      makeParallelism=8
+    fi
+
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ all -j$makeParallelism $MAKE_FLAGS
+    time make -C $(Build.SourcesDirectory)/xamarin-macios/ install -j$makeParallelism $MAKE_FLAGS
   name: build
   displayName: 'Build'
-  timeoutInMinutes: 180
+  timeoutInMinutes: 300
 
 - ${{ each step in parameters.buildSteps }}:
   - ${{ each pair in step }}:
-      ${{ pair.key }}: ${{ pair.value }}       
+      ${{ pair.key }}: ${{ pair.value }}
 
 # clean the bot after we use it
 - template: ../common/teardown.yml

@@ -591,8 +591,7 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
-				if (httpStatus == HttpStatusCode.BadGateway || httpStatus == HttpStatusCode.GatewayTimeout)
-					TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+				TestRuntime.IgnoreInCIIfBadNetwork (httpStatus);
 				Assert.IsNull (ex, "Exception not null");
 				Assert.AreEqual (expectedStatus, httpStatus, "Status not ok");
 			}
@@ -631,8 +630,7 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("First request timedout.");
 			} else {
-				if (httpStatus == HttpStatusCode.BadGateway || httpStatus == HttpStatusCode.GatewayTimeout)
-					TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+				TestRuntime.IgnoreInCIIfBadNetwork (httpStatus);
 				Assert.IsNull (ex, "First request exception not null");
 				Assert.AreEqual (HttpStatusCode.OK, httpStatus, "First status not ok");
 			}
@@ -662,8 +660,7 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Second request timedout.");
 			} else {
-				if (httpStatus == HttpStatusCode.BadGateway || httpStatus == HttpStatusCode.GatewayTimeout)
-					TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+				TestRuntime.IgnoreInCIIfBadNetwork (httpStatus);
 				Assert.IsNull (ex, "Second request exception not null");
 				Assert.AreEqual (HttpStatusCode.Unauthorized, httpStatus, "Second status not ok");
 			}

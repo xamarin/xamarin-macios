@@ -17,16 +17,11 @@
 
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0'))">
+	<ItemGroup Condition="'$(EnableDefault@PLATFORM@Items)' == 'true' And $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '@TARGET_FRAMEWORK_VERSION@'))">
 		<!-- Default plist file inclusion -->
 		<None Include="*.plist">
 			<Link>$([MSBuild]::MakeRelative ('$(MSBuildProjectDirectory)', '%(Identity)'))</Link>
 		</None>
-
-		<!-- Default SceneKit assets inclusion -->
-		<SceneKitAsset Include="**\*.scnassets\*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" >
-			<IsDefaultItem>true</IsDefaultItem>
-		</SceneKitAsset>
 
 		<!-- Default Asset Catalog file inclusion -->
 		<ImageAsset Include="**\*.xcassets\**\*.*" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder);**\*.xcassets\**\*.DS_Store">

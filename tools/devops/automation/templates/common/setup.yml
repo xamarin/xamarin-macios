@@ -32,6 +32,8 @@ steps:
     }
 
     gci env: | format-table -autosize -wrap
+
+    system_profiler SPSoftwareDataType SPHardwareDataType SPDeveloperToolsDataType
   displayName: 'Show Environment'
 
 - powershell: |
@@ -47,6 +49,7 @@ steps:
     sudo rm -Rf /Developer/MonoTouch
     sudo rm -Rf /Library/Frameworks/Xamarin.iOS.framework
     sudo rm -Rf /Library/Frameworks/Xamarin.Mac.framework
+    ls -R /Library/Frameworks
   displayName: 'Delete library folders'
   timeoutInMinutes: 5
 

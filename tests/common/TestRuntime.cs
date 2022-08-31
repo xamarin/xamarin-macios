@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -1332,6 +1333,62 @@ partial class TestRuntime
 		}
 	}
 
+	public static void IgnoreInCIIfBadNetwork (Exception ex)
+	{
+		IgnoreInCIfHttpStatusCodes (ex, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
+	}
+
+	public static void IgnoreInCIIfBadNetwork (HttpStatusCode status)
+	{
+		IgnoreInCIfHttpStatusCodes (status, HttpStatusCode.BadGateway, HttpStatusCode.GatewayTimeout, HttpStatusCode.ServiceUnavailable);
+	}
+
+	public static void IgnoreInCIfHttpStatusCodes (HttpStatusCode status, params HttpStatusCode[] statusesToIgnore)
+	{
+		if (Array.IndexOf (statusesToIgnore, status) < 0)
+			return;
+
+		IgnoreInCI ($"Ignored due to http status code '{status}'");
+	}
+
+	public static void IgnoreInCIfHttpStatusCodes (Exception ex, params HttpStatusCode[] statusesToIgnore)
+	{
+		if (!TryGetHttpStatusCode (ex, out var status))
+			return;
+
+		if (Array.IndexOf (statusesToIgnore, status) < 0)
+			return;
+
+		IgnoreInCI ($"Ignored due to http status code '{status}': {ex.Message}");
+	}
+
+	static bool TryGetHttpStatusCode (Exception ex, out HttpStatusCode status)
+	{
+		status = (HttpStatusCode) 0;
+
+		var we = ex as WebException;
+		if (we is null)
+			return false;
+
+		var repsonseStatus = (we.Response as HttpWebResponse)?.StatusCode;
+		if (repsonseStatus.HasValue) {
+			status = repsonseStatus.Value;
+			return true;
+		}
+
+		var message = we.Message;
+		if (we.Message.Contains ("(502)")) {
+			status = (HttpStatusCode) 502;
+			return true;
+		}
+
+		if (we.Message.Contains ("(503)")) {
+			status = (HttpStatusCode) 503;
+			return true;
+		}
+
+		return false;
+	}
 
 	enum NXByteOrder /* unspecified in header, means most likely int */ {
 		Unknown,

@@ -8,15 +8,14 @@
     <NoWarn>$(NoWarn);8002</NoWarn> <!-- Referenced projects aren't signed: this doesn't matter, because we use ILMerge to merge into a single assembly which we sign -->
     <LangVersion>latest</LangVersion>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
-    <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj" />
     <ProjectReference Include="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj" />
-    <ProjectReference Include="..\Xamarin.Mac.Tasks.Core\Xamarin.Mac.Tasks.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="*.targets">

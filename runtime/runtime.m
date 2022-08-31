@@ -137,7 +137,7 @@ struct Trampolines {
 enum InitializationFlags : int {
 	InitializationFlagsIsPartialStaticRegistrar = 0x01,
 	/* unused									= 0x02,*/
-	InitializationFlagsDynamicRegistrar			= 0x04,
+	/* unused									= 0x04,*/
 	/* unused									= 0x08,*/
 	InitializationFlagsIsSimulator				= 0x10,
 	InitializationFlagsIsCoreCLR                = 0x20,
@@ -1861,6 +1861,27 @@ get_safe_retainCount (id self)
 }
 #endif
 
+// It's fairly frequent (due to various types of coding errors) to have the
+// call to '[self release]' in xamarin_release_managed_ref crash. These
+// crashes are typically very hard to diagnose, because it can be hard to
+// figure out which object caused the crash. So here we store the native
+// object in a static variable, so that it can be read using lldb from a core
+// dump. The variable is declared as volatile so that the compiler doesn't
+// optimize away anything (we want both writes in
+// xamarin_release_managed_ref), and it's attributed with 'unused' because
+// otherwise the compiler complains that the variable is never read.
+//
+// Admittedly the variable should also be thread-local, but that's not
+// supported on all platforms we build for (in particular it requires min
+// iOS 10), and it's also slower than a straight forward write to a static
+// variable. Also while xamarin_release_managed_ref can be called on
+// multiple threads, the vast majority of the calls occur on the main
+// thread, so let's keep the variable global for now and if it turns out
+// to be a problem we can make it thread-local later.
+extern "C" {
+	volatile id xamarin_handle_to_be_released __attribute__((unused));
+}
+
 void
 xamarin_release_managed_ref (id self, bool user_type)
 {
@@ -1946,7 +1967,11 @@ xamarin_release_managed_ref (id self, bool user_type)
 		xamarin_framework_peer_waypoint_safe ();
 	}
 
+	xamarin_handle_to_be_released = self;
+
 	[self release];
+
+	xamarin_handle_to_be_released = NULL;
 }
 
 /*
@@ -2240,32 +2265,33 @@ xamarin_process_nsexception_using_mode (NSException *ns_exception, bool throwMan
 		break;
 	case MarshalObjectiveCExceptionModeThrowManagedException:
 		exc_handle = [[ns_exception userInfo] objectForKey: @"XamarinManagedExceptionHandle"];
+		GCHandle handle;
 		if (exc_handle != NULL) {
-			GCHandle handle = [exc_handle getHandle];
+			GCHandle e_handle = [exc_handle getHandle];
 			MONO_ENTER_GC_UNSAFE;
-			MonoObject *exc = xamarin_gchandle_get_target (handle);
-			mono_runtime_set_pending_exception ((MonoException *) exc, false);
+			MonoObject *exc = xamarin_gchandle_get_target (e_handle);
+			handle = xamarin_gchandle_new (exc, false);
 			xamarin_mono_object_release (&exc);
 			MONO_EXIT_GC_UNSAFE;
 		} else {
-			GCHandle handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
+			handle = xamarin_create_ns_exception (ns_exception, &exception_gchandle);
 			if (exception_gchandle != INVALID_GCHANDLE) {
 				PRINT (PRODUCT ": Got an exception while creating a managed NSException wrapper (will throw this exception instead):");
 				PRINT ("%@", xamarin_print_all_exceptions (exception_gchandle));
 				handle = exception_gchandle;
 				exception_gchandle = INVALID_GCHANDLE;
 			}
+		}
 
-			if (output_exception == NULL) {
-				MONO_ENTER_GC_UNSAFE;
-				MonoObject *exc = xamarin_gchandle_get_target (handle);
-				mono_runtime_set_pending_exception ((MonoException *) exc, false);
-				xamarin_mono_object_release (&exc);
-				xamarin_gchandle_free (handle);
-				MONO_EXIT_GC_UNSAFE;
-			} else {
-				*output_exception = handle;
-			}
+		if (output_exception == NULL) {
+			MONO_ENTER_GC_UNSAFE;
+			MonoObject *exc = xamarin_gchandle_get_target (handle);
+			mono_runtime_set_pending_exception ((MonoException *) exc, false);
+			xamarin_mono_object_release (&exc);
+			xamarin_gchandle_free (handle);
+			MONO_EXIT_GC_UNSAFE;
+		} else {
+			*output_exception = handle;
 		}
 		break;
 	case MarshalObjectiveCExceptionModeAbort:

@@ -8,12 +8,6 @@ steps:
   continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
 
-- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-mlaunch-nuget.sh $(Build.BuildNumber)
-  displayName: 'Build mlaunch Nugets'
-  condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
-  continueOnError: true # should not stop the build since is not official just yet.
-  timeoutInMinutes: 15
-
 - script: >-
     dotnet build -t:GenerateBuildAssetRegistryManifest /v:n
     $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj

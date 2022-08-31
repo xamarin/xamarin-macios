@@ -1,18 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Diagnostics;
 
 using Mono.Cecil;
 
-using NUnit.Framework;
-
-using Xamarin.Utils;
 using Xamarin.Tests;
-using Xamarin.MacDev;
 
 #nullable enable
 
@@ -448,24 +439,24 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase (ApplePlatform.iOS, "ios-x64")] // valid RID in a previous preview (and common mistake)
-		[TestCase (ApplePlatform.iOS, "iossimulator-x84")] // it's x86, not x84
-		[TestCase (ApplePlatform.iOS, "iossimulator-arm")] // we don't support this
-		[TestCase (ApplePlatform.iOS, "helloworld")] // random text
-		[TestCase (ApplePlatform.iOS, "osx-x64")] // valid RID for another platform
-		[TestCase (ApplePlatform.TVOS, "tvos-x64")] // valid RID in a previous preview (and common mistake)
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-x46")] // it's x64, not x46
-		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm")] // we don't support this
-		[TestCase (ApplePlatform.TVOS, "helloworld")] // random text
-		[TestCase (ApplePlatform.TVOS, "osx-x64")] // valid RID for another platform
-		[TestCase (ApplePlatform.MacOSX, "osx-x46")] // it's x64, not x46
-		[TestCase (ApplePlatform.MacOSX, "macos-arm64")] // it's osx, not macos
-		[TestCase (ApplePlatform.MacOSX, "helloworld")] // random text
-		[TestCase (ApplePlatform.MacOSX, "ios-arm64")] // valid RID for another platform
-		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x46")] // it's x64, not x46
-		[TestCase (ApplePlatform.MacCatalyst, "helloworld")] // random text
-		[TestCase (ApplePlatform.MacCatalyst, "osx-x64")] // valid RID for another platform
-		public void InvalidRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifier)
+		[TestCase (ApplePlatform.iOS, "ios-x64", false)] // valid RID in a previous preview (and common mistake)
+		[TestCase (ApplePlatform.iOS, "iossimulator-x84", true)] // it's x86, not x84
+		[TestCase (ApplePlatform.iOS, "iossimulator-arm", true)] // we don't support this
+		[TestCase (ApplePlatform.iOS, "helloworld", true)] // random text
+		[TestCase (ApplePlatform.iOS, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.TVOS, "tvos-x64", false)] // valid RID in a previous preview (and common mistake)
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-x46", true)] // it's x64, not x46
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm", true)] // we don't support this
+		[TestCase (ApplePlatform.TVOS, "helloworld", true)] // random text
+		[TestCase (ApplePlatform.TVOS, "osx-x64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.MacOSX, "osx-x46", true)] // it's x64, not x46
+		[TestCase (ApplePlatform.MacOSX, "macos-arm64", true)] // it's osx, not macos
+		[TestCase (ApplePlatform.MacOSX, "helloworld", true)] // random text
+		[TestCase (ApplePlatform.MacOSX, "ios-arm64", false)] // valid RID for another platform
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x46", true)] // it's x64, not x46
+		[TestCase (ApplePlatform.MacCatalyst, "helloworld", true)] // random text
+		[TestCase (ApplePlatform.MacCatalyst, "osx-x64", false)] // valid RID for another platform
+		public void InvalidRuntimeIdentifier (ApplePlatform platform, string runtimeIdentifier, bool notRecognized)
 		{
 			var project = "MySimpleApp";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
@@ -477,7 +468,37 @@ namespace Xamarin.Tests {
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			var uniqueErrors = errors.Select (v => v.Message).Distinct ().ToArray ();
 			Assert.AreEqual (1, uniqueErrors.Length, "Error count");
-			Assert.AreEqual ($"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.", uniqueErrors [0], "Error message");
+			string expectedError;
+			if (notRecognized) {
+				expectedError = $"The specified RuntimeIdentifier '{runtimeIdentifier}' is not recognized.";
+			} else {
+				expectedError = $"The RuntimeIdentifier '{runtimeIdentifier}' is invalid.";
+			}
+			Assert.AreEqual (expectedError, uniqueErrors [0], "Error message");
+		}
+
+		[Test]
+		[TestCase (ApplePlatform.iOS, "win10-x86", null)]
+		[TestCase (ApplePlatform.TVOS, "win10-x64", null)]
+		[TestCase (ApplePlatform.MacOSX, "win10-arm", null)]
+		[TestCase (ApplePlatform.MacCatalyst, "win10-arm64", "Unable to find package Microsoft.NETCore.App.Runtime.Mono.win-arm64. No packages exist with this id in source[(]s[)]:.*")]
+		public void InvalidRuntimeIdentifier_Restore (ApplePlatform platform, string runtimeIdentifier, string? failureMessagePattern)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, platform: platform);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifier);
+			if (string.IsNullOrEmpty (failureMessagePattern)) {
+				DotNet.AssertRestore (project_path, properties);
+			} else {
+				var rv = DotNet.Restore (project_path, properties);
+				Assert.AreNotEqual (0, rv.ExitCode, "Expected failure");
+				var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
+				Assert.That (errors.Length, Is.GreaterThan (0), "Error count");
+				Assert.That (errors [0].Message, Does.Match (failureMessagePattern), "Message failure");
+			}
 		}
 
 		[Test]
@@ -937,6 +958,29 @@ namespace Xamarin.Tests {
 			properties ["MtouchExtraArgs"] = extraArgs;
 
 			DotNet.AssertBuild (project_path, properties);
+		}
+
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", false)]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", true)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", false)]
+		[TestCase (ApplePlatform.TVOS, "tvossimulator-arm64", true)]
+		public void AutoDetectEntitlements (ApplePlatform platform, string runtimeIdentifiers, bool exclude)
+		{
+			var project = "AutoDetectEntitlements";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			if (exclude) {
+				properties ["EnableDefaultCodesignEntitlements"] = "false";
+				DotNet.AssertBuild (project_path, properties);
+			} else {
+				var rv = DotNet.AssertBuildFailure (project_path, properties);
+				var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToList ();
+				Assert.That (errors [0].Message, Does.Contain ("Error loading Entitlements.plist template 'Entitlements.plist'"), "Message");
+			}
 		}
 	}
 }
