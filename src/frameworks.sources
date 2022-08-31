@@ -1290,6 +1290,7 @@ NETWORK_SOURCES = \
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
 	Network/NWPrivacyContext.cs	\
+	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\

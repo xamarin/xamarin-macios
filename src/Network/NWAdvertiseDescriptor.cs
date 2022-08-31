@@ -43,6 +43,60 @@ namespace Network {
 #endif
 		{ }
 
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_advertise_descriptor nw_advertise_descriptor_create_application_service (string application_service_name);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public NWAdvertiseDescriptor (string applicationServiceName) : base (nw_advertise_descriptor_create_application_service (applicationServiceName), true) {}
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern string? nw_advertise_descriptor_get_application_service_name (OS_nw_advertise_descriptor advertise_descriptor);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public string? ApplicationServiceName => nw_advertise_descriptor_get_application_service_name (GetCheckedHandle ());
+
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_advertise_descriptor_create_bonjour_service (string name, string type, string? domain);
 

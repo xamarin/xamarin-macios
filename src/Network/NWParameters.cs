@@ -46,6 +46,33 @@ namespace Network {
 		public NWParameters (NativeHandle handle, bool owns) : base (handle, owns) {}
 #endif
 
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_parameters nw_parameters_create_application_service ();
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public static NWParameters CreateApplicationService () => new NWParameters (nw_parameters_create_application_service (), true);
+
 		static unsafe BlockLiteral *DEFAULT_CONFIGURATION () => (BlockLiteral *) NWParametersConstants._DefaultConfiguration;
 
 		static unsafe BlockLiteral *DISABLE_PROTOCOL () => (BlockLiteral *) NWParametersConstants._ProtocolDisable;
@@ -682,6 +709,50 @@ namespace Network {
 					quicPtr->CleanupBlock ();
 				return new NWParameters (ptr, owns: true);
 			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern bool nw_parameters_requires_dnssec_validation (OS_nw_parameters parameters);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_parameters_set_requires_dnssec_validation (OS_nw_parameters parameters, bool requires_dnssec_validation);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public bool RequiresDnssecValidation {
+			get => nw_parameters_requires_dnssec_validation (GetCheckedHandle ());
+			set => nw_parameters_set_requires_dnssec_validation (GetCheckedHandle (), value);
 		}
 	}
 }

@@ -17,6 +17,7 @@ using Foundation;
 using CoreFoundation;
 
 using OS_nw_endpoint=System.IntPtr;
+using OS_nw_txt_record=System.IntPtr;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -183,5 +184,76 @@ namespace Network {
 		[iOS (13,0)]
 #endif
 		public string? Url => Marshal.PtrToStringAnsi (nw_endpoint_get_url (GetCheckedHandle ()));
+
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern unsafe byte* nw_endpoint_get_signature (OS_nw_endpoint endpoint, out nuint out_signature_length);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public ReadOnlySpan<byte> GetSignature {
+			get {
+				unsafe {
+					var data = nw_endpoint_get_signature (GetCheckedHandle (), out var length);
+					var mValue = new ReadOnlySpan<byte> (data, (int)length);
+					return mValue;
+				}
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_txt_record nw_endpoint_copy_txt_record (OS_nw_endpoint endpoint);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public NWTxtRecord? TxtRecord {
+			get {
+				var record = nw_endpoint_copy_txt_record (GetCheckedHandle ());
+				if (record == IntPtr.Zero)
+					return null;
+				return new NWTxtRecord (record, owns: true);
+			}
+		}
+
 	}
 }

@@ -48,11 +48,40 @@ namespace Network {
 
 		NWPath? currentPath;
 		public NWPath? CurrentPath => currentPath;
-		public NWPathMonitor ()
+
+		internal NWPathMonitor (OS_nw_path_monitor monitor)
 		{
 			InitializeHandle (nw_path_monitor_create ());
 			_SetUpdatedSnapshotHandler (SetUpdatedSnapshotHandlerWrapper);
 		}
+
+		public NWPathMonitor () : this (nw_path_monitor_create ()) { }
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (13,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_path_monitor nw_path_monitor_create_for_ethernet_channel ();
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("ios")]
+#else
+		[NoWatch]
+		[NoTV]
+		[NoiOS]
+		[Mac (13,0)]
+#endif
+		public static NWPathMonitor CreateForEthernetChannel ()
+			=> new NWPathMonitor (nw_path_monitor_create_for_ethernet_channel ());
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_path_monitor_create_with_type (NWInterfaceType interfaceType);
