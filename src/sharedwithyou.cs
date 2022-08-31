@@ -227,9 +227,9 @@ namespace SharedWithYou {
 	interface SWCollaborationViewDelegate
 	{
 
-		[DesignatedInitializer]
-		[Export ("initWithFrame:")]
-		NativeHandle Constructor (CGRect frame);
+		// [DesignatedInitializer]
+		// [Export ("initWithFrame:")]
+		// NativeHandle Constructor (CGRect frame);
 
 		[Export ("collaborationViewShouldPresentPopover:")]
 		bool ShouldPresentPopover (SWCollaborationView collaborationView);

@@ -257,7 +257,7 @@ namespace Introspection {
 
 		protected override bool SkipCheckShouldReExposeBaseCtor (Type type)
 		{
-			switch(type.Name) {
+			switch (type.Name) {
 			case "SWRemoveParticipantAlertController":
 				return true;
 			default:
