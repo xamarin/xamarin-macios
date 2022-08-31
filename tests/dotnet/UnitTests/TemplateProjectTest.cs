@@ -1,13 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
 
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;

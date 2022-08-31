@@ -1,13 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
 
 namespace Xamarin.Tests {
 	[TestFixture]
