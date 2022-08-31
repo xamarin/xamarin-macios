@@ -34,9 +34,6 @@
     <Compile Include="..\..\tools\common\FileCopier.cs">
         <Link>FileCopier.cs</Link>
     </Compile>
-    <Compile Include="..\..\tools\mtouch\errors.Designer.cs">
-      <Link>errors.Designer.cs</Link>
-    </Compile>
     <Compile Include="..\..\tools\common\TargetFramework.cs">
       <Link>TargetFramework.cs</Link>
     </Compile>
