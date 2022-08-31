@@ -2511,6 +2511,10 @@ namespace UIKit {
 		[Export ("preferredContentSizeCategory")]
 		NSString PreferredContentSizeCategory { get; }
 
+		[iOS (7,0)]
+		[Wrap ("UIContentSizeCategoryExtensions.GetValue (SharedApplication.PreferredContentSizeCategory)")]
+		UIContentSizeCategory GetPreferredContentSizeCategory ();
+
 		[iOS (13,0), TV (13,0)]
 		[Export ("connectedScenes")]
 		NSSet<UIScene> ConnectedScenes { get; }
