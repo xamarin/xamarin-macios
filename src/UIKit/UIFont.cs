@@ -177,6 +177,30 @@ namespace UIKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Watch (9,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		static double GetFontWidth (UIFontWidth width)
+		{
+			switch (width) {
+			case UIFontWidth.Condensed:
+				return UIFontWidthConstants.Condensed;
+			case UIFontWidth.Standard:
+				return UIFontWidthConstants.Standard;
+			case UIFontWidth.Expanded:
+				return UIFontWidthConstants.Expanded;
+			case UIFontWidth.Compressed:
+				return UIFontWidthConstants.Compressed;
+			default:
+				throw new ArgumentException (width.ToString ());
+			}
+		}
+
+
+#if NET
 		[SupportedOSPlatform ("ios8.2")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
@@ -315,6 +339,18 @@ namespace UIKit {
 		public static UIFont SystemFontOfSize (nfloat size)
 		{
 			var ptr = _SystemFontOfSize (size);
+			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Watch (9,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		public static UIFont SystemFontOfSize (nfloat fontSize, UIFontWeight weight, UIFontWidth width) {
+			var ptr = _SystemFontOfSize (fontSize, GetFontWeight (weight), GetFontWidth (width));
 			return ptr == IntPtr.Zero ? null : new UIFont (ptr);
 		}
 

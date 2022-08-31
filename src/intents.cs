@@ -24,9 +24,11 @@ using EventKit;
 #endif
 
 #if MONOMAC
+using AppKit;
 using UIImage = Foundation.NSObject;
 #else
 using UIKit;
+using NSImage = Foundation.NSObject;
 #endif
 
 #if !NET
@@ -1953,6 +1955,9 @@ namespace Intents {
 		FailureUnableToHandOff,
 		FailureAppConfigurationRequired,
 		FailureCallInProgress,
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
 		FailureCallRinging,
 	}
 
@@ -3802,6 +3807,11 @@ namespace Intents {
 		[Export ("imageNamed:")]
 		INImage FromName (string name);
 
+		[NoWatch, NoTV, NoiOS, Mac (13,0)]
+		[Static]
+		[Export ("imageWithNSImage:")]
+		INImage FromImage (NSImage image);
+
 		[Watch (7,0), NoMac, iOS (14,0)]
 		[MacCatalyst (14,0)]
 		[Static]
@@ -4149,6 +4159,11 @@ namespace Intents {
 	[DisableDefaultCtor]
 	interface INMessage : NSCopying, NSSecureCoding {
 
+		[Watch (9,0), NoMac, iOS (16,0), MacCatalyst (16,0)]
+		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:serviceName:audioMessageFile:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (string identifier, [NullAllowed] string conversationIdentifier, [NullAllowed] string content, [NullAllowed] NSDate dateSent, [NullAllowed] INPerson sender, [NullAllowed] INPerson[] recipients, [NullAllowed] INSpeakableString groupName, INMessageType messageType, [NullAllowed] string serviceName, [NullAllowed] INFile audioMessageFile);
+
 		[Watch (6,1), NoMac, iOS (13,2)]
 		[Export ("initWithIdentifier:conversationIdentifier:content:dateSent:sender:recipients:groupName:messageType:serviceName:")]
 		[DesignatedInitializer]
@@ -4196,6 +4211,10 @@ namespace Intents {
 		[Watch (6, 1), NoMac, iOS (13, 2)]
 		[NullAllowed, Export ("serviceName")]
 		string ServiceName { get; }
+
+		[Watch (9,0), NoMac, iOS (16,0), MacCatalyst (16,0)]
+		[NullAllowed, Export ("audioMessageFile", ArgumentSemantic.Copy)]
+		INFile AudioMessageFile { get; }
 	}
 
 #if NET
@@ -6320,9 +6339,17 @@ namespace Intents {
 #if NET
 		[NoMac] // The INMessage type isn't available in macOS
 #endif
+		[Deprecated (PlatformName.iOS, 16, 0, message: "Use the 'SentMessages' property instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 16, 0, message: "Use the 'SentMessages' property instead.")]
+		[Deprecated (PlatformName.WatchOS, 9, 0, message: "Use the 'SentMessages' property instead.")]
 		[Watch (4,0), iOS (11,0)]
 		[NullAllowed, Export ("sentMessage", ArgumentSemantic.Copy)]
 		INMessage SentMessage { get; set; }
+
+		[NoMac]
+		[Watch (9, 0), iOS (16, 0)]
+		[NullAllowed, Export ("sentMessages", ArgumentSemantic.Copy)]
+		INMessage[] SentMessages { get; set; }
 	}
 
 	[iOS (10, 0)]

@@ -367,6 +367,10 @@ namespace PencilKit {
 		[Export ("initWithInk:strokePath:transform:mask:")]
 		NativeHandle Constructor (PKInk ink, PKStrokePath path, CGAffineTransform transform, [NullAllowed] BezierPath mask);
 
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("initWithInk:strokePath:transform:mask:randomSeed:")]
+		NativeHandle Constructor (PKInk ink, PKStrokePath strokePath, CGAffineTransform transform, [NullAllowed] BezierPath mask, uint randomSeed);
+
 		[Export ("ink")]
 		PKInk Ink { get; }
 
@@ -384,6 +388,10 @@ namespace PencilKit {
 
 		[Export ("maskedPathRanges")]
 		PKFloatRange[] MaskedPathRanges { get; }
+
+		[Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("randomSeed")]
+		uint RandomSeed { get; }
 	}
 
 	delegate void PKInterpolatedPointsEnumeratorHandler (PKStrokePoint strokePoint, out bool stop);
