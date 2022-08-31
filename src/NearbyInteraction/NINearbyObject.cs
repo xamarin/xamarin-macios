@@ -17,8 +17,10 @@ using Foundation;
 using ObjCRuntime;
 #if NET
 using Vector3 = global::System.Numerics.Vector3;
+using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
 #else
 using Vector3 = global::OpenTK.Vector3;
+using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #endif
 
 #if __IOS__ || WATCH
@@ -41,7 +43,22 @@ namespace NearbyInteraction {
 				return (Vector3)_DirectionNotAvailable;
 			}
 		}
-	}
 
+		static MatrixFloat4x4? _WorldTransformNotAvailable;
+
+		// TODO: Link issue here
+		[Field ("NINearbyObjectWorldTransformNotAvailable",  "NearbyInteraction")]
+		public static MatrixFloat4x4 WorldTransformNotAvailable {
+			get {
+				if (_WorldTransformNotAvailable is null) {
+					unsafe {
+						MatrixFloat4x4 *pointer = (MatrixFloat4x4 *) Dlfcn.GetIndirect (Libraries.NearbyInteraction.Handle, "NINearbyObjectWorldTransformNotAvailable");
+						_WorldTransformNotAvailable = *pointer;
+					}
+				}
+				return (MatrixFloat4x4)_WorldTransformNotAvailable;
+			}
+		}
+	}
 }
 #endif

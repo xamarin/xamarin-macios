@@ -1321,6 +1321,7 @@ NEARBYINTERACTION_API_SOURCES = \
 
 NEARBYINTERACTION_SOURCES = \
 	NearbyInteraction/NINearbyObject.cs \
+	NearbyInteraction/NIAlgorithmConvergenceStatusReasonValues.cs \
 
 # NetworkExtension
 
