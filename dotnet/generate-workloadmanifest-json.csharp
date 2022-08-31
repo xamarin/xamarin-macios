@@ -94,33 +94,14 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"			}}");
 		writer.WriteLine ($"		}},");
 	}
-	writer.WriteLine ($"		// The ref and runtime packs use the .net6 version, because when we load the .net6 SDK pack, it says to use the ref and runtime pack versions from the workload (**FromWorkload**).");
-	writer.WriteLine ($"		// This could be solvable with aliases as well, except that aliases doesn't work in this scenario (https://github.com/dotnet/sdk/issues/26384).");
-	writer.WriteLine ($"		// For the .net7 packs, we're stating the exact version to use in the KnownFrameworkReference item, so whatever we specify here is ignored.");
 	writer.WriteLine ($"		\"Microsoft.{platform}.Ref\": {{");
 	writer.WriteLine ($"			\"kind\": \"framework\",");
-	writer.WriteLine ($"			\"version\": \"{net6Version}\"");
-	writer.WriteLine ($"		}},");
-	writer.WriteLine ($"		\"Microsoft.{platform}.Ref.net7\": {{");
-	writer.WriteLine ($"			\"kind\": \"framework\",");
-	writer.WriteLine ($"			\"version\": \"{version}\",");
-	writer.WriteLine ($"			\"alias-to\": {{");
-	writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Ref\",");
-	writer.WriteLine ($"			}}");
+	writer.WriteLine ($"			\"version\": \"{version}\"");
 	writer.WriteLine ($"		}},");
 	foreach (var rid in runtimeIdentifiers) {
 		writer.WriteLine ($"		\"Microsoft.{platform}.Runtime.{rid}\": {{");
 		writer.WriteLine ($"			\"kind\": \"framework\",");
-		writer.WriteLine ($"			\"version\": \"{net6Version}\"");
-		writer.WriteLine ($"		}},");
-	}
-	foreach (var rid in runtimeIdentifiers) {
-		writer.WriteLine ($"		\"Microsoft.{platform}.Runtime.{rid}.net7\": {{");
-		writer.WriteLine ($"			\"kind\": \"framework\",");
-		writer.WriteLine ($"			\"version\": \"{version}\",");
-		writer.WriteLine ($"			\"alias-to\": {{");
-		writer.WriteLine ($"				\"any\": \"Microsoft.{platform}.Runtime.{rid}\",");
-		writer.WriteLine ($"			}}");
+		writer.WriteLine ($"			\"version\": \"{version}\"");
 		writer.WriteLine ($"		}},");
 	}
 	writer.WriteLine ($"		\"Microsoft.{platform}.Templates.net7\": {{");
