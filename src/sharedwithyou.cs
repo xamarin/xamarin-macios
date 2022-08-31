@@ -19,7 +19,7 @@ using ObjCRuntime;
 
 #if MONOMAC
 using AppKit;
-using UIViewController=System.Object;
+using UIViewController=AppKit.NSViewController;
 using UIView=AppKit.NSView;
 using UIMenu=AppKit.NSMenu;
 using UIImage=AppKit.NSImage;
