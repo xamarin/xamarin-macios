@@ -167,6 +167,11 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected string GetRelativeDylibDirectory (ApplePlatform platform)
+		{
+			return GetRelativeAssemblyDirectory (platform);
+		}
+
 		protected string GetInfoPListPath (ApplePlatform platform, string app_directory)
 		{
 			switch (platform) {
@@ -209,14 +214,34 @@ namespace Xamarin.Tests {
 		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)
 		{
 			var executableName = Path.GetFileNameWithoutExtension (app_directory);
+			return Path.Combine (app_directory, GetRelativeExecutableDirectory (platform), executableName);
+		}
+
+		protected string GetRelativeExecutableDirectory (ApplePlatform platform)
+		{
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-				return Path.Combine (app_directory, executableName);
+				return string.Empty;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
-				return Path.Combine (app_directory, "Contents", "MacOS", executableName);
+				return Path.Combine ("Contents", "Resources");
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetRelativeCodesignDirectory (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return string.Empty;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return "Contents";
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
