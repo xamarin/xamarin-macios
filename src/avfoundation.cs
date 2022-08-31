@@ -12300,7 +12300,7 @@ namespace AVFoundation {
 		[Export ("externalMetadata", ArgumentSemantic.Copy)]
 		AVMetadataItem[] ExternalMetadata { get; set; }
 
-		[iOS (16,0), NoMacCatalyst][NoMac][NoWatch]
+		[iOS (16,0)][NoMacCatalyst][NoMac][NoWatch]
 		[TV (9,0)]
 		[Export ("interstitialTimeRanges", ArgumentSemantic.Copy)]
 		AVInterstitialTimeRange[] InterstitialTimeRanges { get; set; }

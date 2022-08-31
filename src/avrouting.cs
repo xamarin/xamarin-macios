@@ -12,10 +12,13 @@ using ObjCRuntime;
 using Foundation;
 using UniformTypeIdentifiers;
 using AVKit;
-using OS_nw_endpoint = System.IntPtr;
+// using NWEndpoint = global::NetworkExtension.NWEndpoint;
 
 #if !NET
 using NativeHandle = System.IntPtr;
+using OS_nw_endpoint = System.IntPtr;
+#else
+using OS_nw_endpoint = ObjCRuntime.NativeHandle;
 #endif
 
 namespace AVRouting {
@@ -33,8 +36,12 @@ namespace AVRouting {
 	[BaseType (typeof (NSObject))]
 	interface AVCustomDeviceRoute
 	{
+		[Internal]
 		[Export ("networkEndpoint")]
-		OS_nw_endpoint NetworkEndpoint { get; }
+		OS_nw_endpoint _NetworkEndpoint { get; }
+
+		[Wrap ("new Network.NWEndpoint (_NetworkEndpoint ?? IntPtr.Zero, true)")]
+		Network.NWEndpoint NetworkEndpoint { get; }
 
 		[NullAllowed, Export ("bluetoothIdentifier")]
 		NSUuid BluetoothIdentifier { get; }

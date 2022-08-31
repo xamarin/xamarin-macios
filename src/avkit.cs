@@ -369,7 +369,7 @@ namespace AVKit {
 		[Export ("playerViewController:restoreUserInterfaceForPictureInPictureStopWithCompletionHandler:")]
 		void RestoreUserInterfaceForPictureInPicture (AVPlayerViewController playerViewController, Action<bool> completionHandler);
 
-		[iOS (16,0)][NoMac, NoMacCatalyst, NoWatch]
+		[iOS (16,0)][NoMac][NoMacCatalyst][NoWatch]
 		[TV (9,0)]
 		[Export ("playerViewController:didPresentInterstitialTimeRange:")]
 		void DidPresentInterstitialTimeRange (AVPlayerViewController playerViewController, AVInterstitialTimeRange interstitial);
@@ -389,7 +389,7 @@ namespace AVKit {
 		[Export ("playerViewControllerDidEndDismissalTransition:")]
 		void DidEndDismissalTransition (AVPlayerViewController playerViewController);
 
-		[iOS (16,0)][NoMac, NoWatch, NoMacCatalyst]
+		[iOS (16,0)][NoMac][NoWatch][NoMacCatalyst]
 		[TV (9,0)]
 		[Export ("playerViewController:willPresentInterstitialTimeRange:")]
 		void WillPresentInterstitialTimeRange (AVPlayerViewController playerViewController, AVInterstitialTimeRange interstitial);
@@ -589,15 +589,15 @@ namespace AVKit {
 
 		[Mac (13,0), NoWatch, NoiOS, NoMacCatalyst, NoTV]
 		[Export ("allowsMagnification")]
-		bool AllowsMagnification { get; [Bind ("setAllowsMagnification:")] set; }
+		bool AllowsMagnification { get; set; }
 
 		[Mac (13,0), NoWatch, NoiOS, NoMacCatalyst, NoTV]
 		[Export ("magnification")]
-		nfloat Magnification { get; [Bind ("setMagnification:")] set; }
+		nfloat Magnification { get; set; }
 
 		[Mac (13,0), NoWatch, NoiOS, NoMacCatalyst, NoTV]
 		[Export ("setMagnification:centeredAtPoint:")]
-		void SetMagnification (nfloat magnification, CGPoint point);
+		void SetMagnification (nfloat magnification, CGPoint centeredAtPoint);
 	}
 
 	interface IAVPlayerViewPictureInPictureDelegate {}
@@ -673,7 +673,7 @@ namespace AVKit {
 		void StartRecording (AVCaptureView captureView, AVCaptureFileOutput fileOutput);
 	}
 
-	[iOS (16,0)][NoMac, NoMacCatalyst, NoWatch]
+	[iOS (16,0)][NoMac][NoMacCatalyst][NoWatch]
 	[TV (9,0)]
 	[BaseType (typeof (NSObject))]
 	interface AVInterstitialTimeRange : NSCopying, NSSecureCoding {
