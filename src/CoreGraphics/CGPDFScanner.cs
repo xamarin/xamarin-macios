@@ -240,7 +240,6 @@ namespace CoreGraphics {
 		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 #endif
 		[DllImport (Constants.CoreGraphicsLibrary)]
-		[return: MarshalAs (UnmanagedType.I1)]
 		extern static void CGPDFScannerStop (/* CGPDFScannerRef */ IntPtr scanner);
 
 #if NET
