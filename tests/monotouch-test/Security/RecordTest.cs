@@ -25,7 +25,6 @@ namespace MonoTouchFixtures.Security {
 		public void Identity ()
 		{
 			var rec = new SecRecord (SecKind.Identity) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Account = "Username",
 				ValueData = NSData.FromString ("Password"),
 			};
@@ -47,13 +46,11 @@ namespace MonoTouchFixtures.Security {
 		void Accessible (SecAccessible access)
 		{
 			var rec = new SecRecord (SecKind.GenericPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Account = "Username"
 			};
 			SecKeyChain.Remove (rec); // it might already exists (or not)
 
 			rec = new SecRecord (SecKind.GenericPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Account = "Username",
 				ValueData = NSData.FromString ("Password"),
 				Accessible = access
@@ -72,7 +69,6 @@ namespace MonoTouchFixtures.Security {
 		public void Match ()
 		{
 			var rec = new SecRecord (SecKind.GenericPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Account = "Username",
 			};
 			Assert.Null (rec.MatchIssuers, "MatchIssuers");
@@ -111,14 +107,12 @@ namespace MonoTouchFixtures.Security {
 		void Protocol (SecProtocol protocol)
 		{
 			var rec = new SecRecord (SecKind.InternetPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Account = $"Protocol-{protocol}-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}",
 			};
 			try {
 				SecKeyChain.Remove (rec); // it might already exists (or not)
 
 				rec = new SecRecord (SecKind.InternetPassword) {
-					UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 					Account = "Protocol",
 					ValueData = NSData.FromString ("Password"),
 					Protocol = protocol,
@@ -180,13 +174,11 @@ namespace MonoTouchFixtures.Security {
 		void AuthenticationType (SecAuthenticationType type)
 		{
 			var rec = new SecRecord (SecKind.InternetPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Account = "AuthenticationType"
 			};
 			SecKeyChain.Remove (rec); // it might already exists (or not)
 
 			rec = new SecRecord (SecKind.InternetPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Account = $"{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}",
 				ValueData = NSData.FromString ("Password"),
 				AuthenticationType = type,
@@ -197,7 +189,6 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
 
 				var query = new SecRecord (SecKind.InternetPassword) {
-					UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 					Account = rec.Account,
 					AuthenticationType = rec.AuthenticationType,
 					Server = rec.Server,
@@ -269,7 +260,6 @@ namespace MonoTouchFixtures.Security {
 		{
 			string password = null;
 			var searchRecord = new SecRecord (SecKind.InternetPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Server = "Test1",
 				Account = username.ToLower()
 			};
@@ -284,7 +274,6 @@ namespace MonoTouchFixtures.Security {
 		{
 			var success = false;
 			var searchRecord = new SecRecord (SecKind.InternetPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Server = "Test1",
 				Account = username.ToLower ()
 			};
@@ -292,7 +281,6 @@ namespace MonoTouchFixtures.Security {
 			var record = SecKeyChain.QueryAsRecord (searchRecord, out queryCode);
 			if (queryCode == SecStatusCode.ItemNotFound) {
 				record = new SecRecord (SecKind.InternetPassword) {
-					UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 					Server = "Test1",
 					Account = username.ToLower (),
 					ValueData = NSData.FromString (password)
@@ -312,7 +300,6 @@ namespace MonoTouchFixtures.Security {
 		{
 			var success = false;
 			var searchRecord = new SecRecord (SecKind.InternetPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Server = "Test1",
 				Account = username.ToLower ()
 			};
@@ -339,7 +326,6 @@ namespace MonoTouchFixtures.Security {
 
 			using (var identity = IdentityTest.GetIdentity ())
 			using (var rec = new SecRecord (identity)) {
-				rec.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 				SecStatusCode code = SecKeyChain.Add (rec);
 				Assert.True (code == SecStatusCode.DuplicateItem || code == SecStatusCode.Success, "Identity added");
 
@@ -359,7 +345,6 @@ namespace MonoTouchFixtures.Security {
 			using (var cert = new X509Certificate (CertificateTest.mail_google_com))
 			using (var sc = new SecCertificate (cert))
 			using (var rec = new SecRecord (sc)) {
-				rec.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 				Assert.NotNull (rec, "rec is null");
 
 				var ret = rec.GetCertificate ();
@@ -384,7 +369,6 @@ namespace MonoTouchFixtures.Security {
 				trust.Evaluate ();
 				using (SecKey pubkey = trust.GetPublicKey ())
 				using (var rec = new SecRecord (pubkey)) {
-					rec.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 					Assert.NotNull (rec, "rec is null");
 
 					var ret = rec.GetKey ();

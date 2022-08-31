@@ -36,7 +36,6 @@ namespace MonoTouchFixtures.Security {
 			NSData data = NSData.FromStream (certStream);
 
 			var query = new SecRecord (SecKind.Certificate) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Label = $"Internet Widgits Pty Ltd",
 			};
 			var rec = query.Clone ();
@@ -65,7 +64,6 @@ namespace MonoTouchFixtures.Security {
 				Assert.Ignore ("code == errSecInternal (-26276)");
 			using (SecRecord rec = new SecRecord (SecKind.Identity))
 			using (var id = IdentityTest.GetIdentity ()) {
-				rec.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 				rec.SetValueRef (id);
 				SecStatusCode code = SecKeyChain.Add (rec);
 				Assert.That (code, Is.EqualTo (SecStatusCode.DuplicateItem).Or.EqualTo (SecStatusCode.Success), "code");
@@ -75,7 +73,6 @@ namespace MonoTouchFixtures.Security {
 				Assert.Inconclusive ("QueryAsConcreteType does not work before iOS7");
 
 			using (SecRecord rec = new SecRecord (SecKind.Identity)) {
-				rec.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 				SecStatusCode code;
 				var match = SecKeyChain.QueryAsConcreteType (rec, out code);
 				if ((match == null) && (code == SecStatusCode.ItemNotFound))
@@ -152,7 +149,6 @@ namespace MonoTouchFixtures.Security {
 		{
 			SecStatusCode code;
 			SecRecord queryRec = new SecRecord (SecKind.GenericPassword) { 
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Service = RecordService,
 				Account = RecordAccount,
 			};
@@ -168,7 +164,6 @@ namespace MonoTouchFixtures.Security {
 		{
 			SecStatusCode code;
 			SecRecord queryRec = new SecRecord (SecKind.GenericPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Service = RecordService,
 				Account = RecordAccount,
 			};
@@ -183,7 +178,6 @@ namespace MonoTouchFixtures.Security {
 		{
 			SecStatusCode code;
 			SecRecord queryRec = new SecRecord (SecKind.GenericPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Service = RecordService,
 				Account = RecordAccount,
 			};
@@ -196,7 +190,6 @@ namespace MonoTouchFixtures.Security {
 		SecStatusCode RemoveID ()
 		{
 			var queryRec = new SecRecord (SecKind.GenericPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Service = RecordService,
 				Account = RecordAccount,
 			};
@@ -206,7 +199,6 @@ namespace MonoTouchFixtures.Security {
 		SecStatusCode SetID (Guid setID)
 		{
 			var queryRec = new SecRecord (SecKind.GenericPassword) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Service = RecordService,
 				Account = RecordAccount,
 			};

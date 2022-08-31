@@ -52,7 +52,6 @@ namespace MonoTouchFixtures.Security {
 		public static void DeleteKeysWithLabel (string label)
 		{
 			var query = new SecRecord (SecKind.Key) {
-				UseNoAuthenticationUI = true, // Don't put up any dialogs, it hangs on the bots
 				Label = label,
 			};
 			SecStatusCode code;
@@ -120,7 +119,6 @@ namespace MonoTouchFixtures.Security {
 
 			try {
 				using (var record = new SecRecord (SecKind.Key)) {
-					record.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 					record.Label = label;
@@ -211,7 +209,6 @@ namespace MonoTouchFixtures.Security {
 
 			try {
 				using (var record = new SecRecord (SecKind.Key)) {
-					record.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 					record.Label = label;
@@ -249,7 +246,6 @@ namespace MonoTouchFixtures.Security {
 
 			try {
 				using (var record = new SecRecord (SecKind.Key)) {
-					record.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = 1024; // it's not a performance test :)
 					record.Label = label;
@@ -304,7 +300,6 @@ namespace MonoTouchFixtures.Security {
 
 			try {
 				using (var record = new SecRecord (SecKind.Key)) {
-					record.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 					record.Label = label;
@@ -341,7 +336,6 @@ namespace MonoTouchFixtures.Security {
 
 			try {
 				using (var record = new SecRecord (SecKind.Key)) {
-					record.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 					record.KeyType = SecKeyType.EC;
 					record.KeySizeInBits = 256; // it's not a performance test :)
 					record.Label = label;
@@ -378,7 +372,6 @@ namespace MonoTouchFixtures.Security {
 
 			try {
 				using (var record = new SecRecord (SecKind.Key)) {
-					record.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 					record.KeyType = SecKeyType.RSA;
 					// maximum documented as 2048, .NET maximum is 16384
 					record.KeySizeInBits = 16384;
@@ -445,7 +438,6 @@ namespace MonoTouchFixtures.Security {
 
 			try {
 				using (var record = new SecRecord (SecKind.Key)) {
-					record.UseNoAuthenticationUI = true; // Don't put up any dialogs, it hangs on the bots
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = 4096;
 					record.Label = label;
