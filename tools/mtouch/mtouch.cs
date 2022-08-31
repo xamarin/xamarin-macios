@@ -790,7 +790,7 @@ namespace Xamarin.Bundler
 			switch (app.Platform) {
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
-					if (Driver.XcodeVersion.Major >= 14 && app.IsLLVM)
+					if (Driver.XcodeVersion.Major >= 14)
 						app.EnableCxx = true;
 					break;
 			}

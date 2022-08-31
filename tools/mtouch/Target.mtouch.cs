@@ -1420,7 +1420,7 @@ namespace Xamarin.Bundler
 			}
 
 			var bitcode = App.EnableBitCode;
-			if (bitcode)
+			if (bitcode && Driver.XcodeVersion.Major < 14)
 				linker_flags.AddOtherFlag (App.EnableMarkerOnlyBitCode ? "-fembed-bitcode-marker" : "-fembed-bitcode");
 			
 			if (!App.EnablePie.HasValue)

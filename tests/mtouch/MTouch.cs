@@ -1118,12 +1118,6 @@ public class B : A {}
 		[TestCase (Profile.tvOS, MTouchBitcode.ASMOnly, "arm64+llvm")]
 		[TestCase (Profile.tvOS, MTouchBitcode.Full, "arm64+llvm")]
 		[TestCase (Profile.tvOS, MTouchBitcode.Marker, "arm64+llvm")]
-		[TestCase (Profile.iOS, MTouchBitcode.ASMOnly, "arm64+llvm")]
-		[TestCase (Profile.iOS, MTouchBitcode.Full, "arm64+llvm")]
-		[TestCase (Profile.iOS, MTouchBitcode.Marker, "arm64+llvm")]
-		[TestCase (Profile.watchOS, MTouchBitcode.ASMOnly, "arm64_32+llvm")]
-		[TestCase (Profile.watchOS, MTouchBitcode.Full, "arm64_32+llvm")]
-		[TestCase (Profile.watchOS, MTouchBitcode.Marker, "arm64_32+llvm")]
 		public void MT0186 (Profile profile, MTouchBitcode mode, string abi)
 		{
 			using (var mtouch = new MTouchTool ()) {
