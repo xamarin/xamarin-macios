@@ -22,6 +22,7 @@ using UIImage = AppKit.NSImage;
 using IUIContextMenuInteractionCommitAnimating = Foundation.NSObject;
 using UIContextMenuConfiguration = Foundation.NSObject;
 using UIEdgeInsets = AppKit.NSEdgeInsets;
+using UIFindInteraction = Foundation.NSObject;
 using UIViewController = AppKit.NSViewController;
 #else
 using UIKit;
@@ -1060,13 +1061,14 @@ namespace WebKit
 		[Export ("setMinimumViewportInset:maximumViewportInset:")]
 		void SetViewportInsets (UIEdgeInsets minimumViewportInset, UIEdgeInsets maximumViewportInset);
 
-		// [iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, NoTV]
-		// [Export ("findInteractionEnabled")]
-		// bool FindInteractionEnabled { [Bind ("isFindInteractionEnabled")] get; set; }
+		[iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, NoTV]
+		[Export ("findInteractionEnabled")]
+		bool FindInteractionEnabled { [Bind ("isFindInteractionEnabled")] get; set; }
 
-		// [iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, NoTV]
-		// [Export ("findInteraction")]
-		// UIFindInteraction FindInteraction { get; }
+		[iOS (16,0), MacCatalyst (16,0), NoMac, NoWatch, NoTV]
+		[Export ("findInteraction")]
+		[NullAllowed]
+		UIFindInteraction FindInteraction { get; }
 	}
 
 	delegate void WKJavascriptEvaluationResult (NSObject result, NSError error);
