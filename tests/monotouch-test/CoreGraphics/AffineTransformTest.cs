@@ -514,12 +514,18 @@ namespace MonoTouchFixtures.CoreGraphics {
 		public void MakeWithComponents ()
 		{
 			var components = new CGAffineTransformComponents () {
-				Scale = new CGSize (0.0, 0.0),
-				HorizontalShear = (nfloat)0.0,
-				Rotation = (nfloat)0.0,
-				Translation = new CGVector ((nfloat)1, (nfloat)1),
+				Scale = new CGSize (1.0, 2.0),
+				HorizontalShear = (nfloat)3.0,
+				Rotation = (nfloat)4.0,
+				Translation = new CGVector ((nfloat)5.0, (nfloat)6.0),
 			};
-			Assert.NotNull (CGAffineTransform.MakeWithComponents (components));
+			var transform = CGAffineTransform.MakeWithComponents (components);
+			Assert.AreNotEqual (0.0, transform.A);
+			Assert.AreNotEqual (0.0, transform.B);
+			Assert.AreNotEqual (0.0, transform.C);
+			Assert.AreNotEqual (0.0, transform.D);
+			Assert.AreNotEqual (0.0, transform.Tx);
+			Assert.AreNotEqual (0.0, transform.Ty);
 		}
 
 		[Test]
