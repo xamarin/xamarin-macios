@@ -5,6 +5,9 @@ using System.Diagnostics;
 
 using CoreFoundation;
 using Foundation;
+#if HAS_LOCALAUTHENTICATION
+using LocalAuthentication;
+#endif
 using Security;
 #if MONOMAC
 using AppKit;
@@ -21,13 +24,82 @@ namespace MonoTouchFixtures.Security {
 	[Preserve (AllMembers = true)]
 	public class RecordTest {
 
-		[Test]
-		public void Identity ()
+		static void InitSecRecord (SecRecord rec)
 		{
-			var rec = new SecRecord (SecKind.Identity) {
-				Account = "Username",
-				ValueData = NSData.FromString ("Password"),
-			};
+#if HAS_LOCALAUTHENTICATION
+			var context = new LAContext();
+			context.InteractionNotAllowed = true;
+			rec.AuthenticationContext = context;
+#else
+			// This is deprecated, but there's no alternative on tvOS
+			rec.AuthenticationUI = SecAuthenticationUI.Fail;
+#endif
+		}
+
+		public static SecRecord CreateSecRecord (SecKind kind, string? account = null, NSData? valueData = null, SecAccessible? accessible = null, SecProtocol? protocol = null, string? server = null, SecAuthenticationType? authenticationType = null, string? service = null, string? label = null)
+		{
+			var rec = new SecRecord (kind);
+			InitSecRecord (rec);
+
+			if (account is not null)
+				rec.Account = account;
+
+			if (valueData is not null)
+				rec.ValueData = valueData;
+
+			if (accessible is not null)
+				rec.Accessible = accessible.Value;
+
+			if (protocol is not null)
+				rec.Protocol = protocol.Value;
+
+			if (server is not null)
+				rec.Server = server;
+
+			if (authenticationType is not null)
+				rec.AuthenticationType = authenticationType.Value;
+
+			if (service is not null)
+				rec.Service = service;
+
+			if (label is not null)
+				rec.Label = label;
+
+			return rec;
+		}
+
+		public static SecRecord CreateSecRecord (SecIdentity identity)
+		{
+			var rec = new SecRecord (identity);
+			InitSecRecord (rec);
+			return rec;
+		}
+
+		public static SecRecord CreateSecRecord (SecKey key)
+		{
+			var rec = new SecRecord (key);
+			InitSecRecord (rec);
+			return rec;
+		}
+
+		public static SecRecord CreateSecRecord (SecCertificate certificate, string? label = null)
+		{
+			var rec = new SecRecord (certificate);
+			InitSecRecord (rec);
+
+			if (label is not null)
+				rec.Label = label;
+
+			return rec;
+		}
+
+		[Test]
+		public void Identity()
+		{
+			var rec = CreateSecRecord (SecKind.Identity,
+				account: "Username",
+				valueData: NSData.FromString ("Password")
+			);
 
 			// prior to iOS7 you had to deal without the class
 			using (var dict = rec.ToDictionary ()) {
@@ -45,16 +117,16 @@ namespace MonoTouchFixtures.Security {
 
 		void Accessible (SecAccessible access)
 		{
-			var rec = new SecRecord (SecKind.GenericPassword) {
-				Account = "Username"
-			};
+			var rec = CreateSecRecord (SecKind.GenericPassword,
+				account: "Username"
+			);
 			SecKeyChain.Remove (rec); // it might already exists (or not)
 
-			rec = new SecRecord (SecKind.GenericPassword) {
-				Account = "Username",
-				ValueData = NSData.FromString ("Password"),
-				Accessible = access
-			};
+			rec = CreateSecRecord (SecKind.GenericPassword,
+				account: "Username",
+				valueData: NSData.FromString ("Password"),
+				accessible: access
+			);
 
 			Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
 
@@ -68,9 +140,9 @@ namespace MonoTouchFixtures.Security {
 		[Test]
 		public void Match ()
 		{
-			var rec = new SecRecord (SecKind.GenericPassword) {
-				Account = "Username",
-			};
+			var rec = CreateSecRecord (SecKind.GenericPassword,
+				account: "Username"
+			);
 			Assert.Null (rec.MatchIssuers, "MatchIssuers");
 			// we do not have a way (except the getter) to craete SecKeyChain instances
 			Assert.Null (rec.MatchItemList, "MatchItemList");
@@ -106,18 +178,18 @@ namespace MonoTouchFixtures.Security {
 
 		void Protocol (SecProtocol protocol)
 		{
-			var rec = new SecRecord (SecKind.InternetPassword) {
-				Account = $"Protocol-{protocol}-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}",
-			};
+			var rec = CreateSecRecord(SecKind.InternetPassword,
+				account: $"Protocol-{protocol}-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}"
+			);
 			try {
 				SecKeyChain.Remove (rec); // it might already exists (or not)
 
-				rec = new SecRecord (SecKind.InternetPassword) {
-					Account = "Protocol",
-					ValueData = NSData.FromString ("Password"),
-					Protocol = protocol,
-					Server = "www.xamarin.com"
-				};
+				rec = CreateSecRecord (SecKind.InternetPassword,
+					account: "Protocol",
+					valueData: NSData.FromString ("Password"),
+					protocol: protocol,
+					server: "www.xamarin.com"
+				);
 
 				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
 
@@ -173,26 +245,26 @@ namespace MonoTouchFixtures.Security {
 
 		void AuthenticationType (SecAuthenticationType type)
 		{
-			var rec = new SecRecord (SecKind.InternetPassword) {
-				Account = "AuthenticationType"
-			};
+			var rec = CreateSecRecord (SecKind.InternetPassword,
+				account: "AuthenticationType"
+			);
 			SecKeyChain.Remove (rec); // it might already exists (or not)
 
-			rec = new SecRecord (SecKind.InternetPassword) {
-				Account = $"{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}",
-				ValueData = NSData.FromString ("Password"),
-				AuthenticationType = type,
-				Server = "www.xamarin.com"
-			};
+			rec = CreateSecRecord (SecKind.InternetPassword,
+				account: $"{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}",
+				valueData: NSData.FromString ("Password"),
+				authenticationType: type,
+				server: "www.xamarin.com"
+			);
 
 			try {
 				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
 
-				var query = new SecRecord (SecKind.InternetPassword) {
-					Account = rec.Account,
-					AuthenticationType = rec.AuthenticationType,
-					Server = rec.Server,
-				};
+				var query = CreateSecRecord(SecKind.InternetPassword,
+					account: rec.Account,
+					authenticationType: rec.AuthenticationType,
+					server: rec.Server
+				);
 
 				SecStatusCode code;
 				var match = SecKeyChain.QueryAsRecord (query, out code);
@@ -259,10 +331,10 @@ namespace MonoTouchFixtures.Security {
 		public static string GetUserPassword (string username)
 		{
 			string password = null;
-			var searchRecord = new SecRecord (SecKind.InternetPassword) {
-				Server = "Test1",
-				Account = username.ToLower()
-			};
+			var searchRecord = CreateSecRecord (SecKind.InternetPassword,
+				server: "Test1",
+				account: username.ToLower()
+			);
 			SecStatusCode code;
 			var record = SecKeyChain.QueryAsRecord(searchRecord, out code);
 			if (code == SecStatusCode.Success && record != null)
@@ -273,18 +345,18 @@ namespace MonoTouchFixtures.Security {
 		public static bool SaveUserPassword (string username, string password)
 		{
 			var success = false;
-			var searchRecord = new SecRecord (SecKind.InternetPassword) {
-				Server = "Test1",
-				Account = username.ToLower ()
-			};
+			var searchRecord = CreateSecRecord (SecKind.InternetPassword,
+				server: "Test1",
+				account: username.ToLower ()
+			);
 			SecStatusCode queryCode;
 			var record = SecKeyChain.QueryAsRecord (searchRecord, out queryCode);
 			if (queryCode == SecStatusCode.ItemNotFound) {
-				record = new SecRecord (SecKind.InternetPassword) {
-					Server = "Test1",
-					Account = username.ToLower (),
-					ValueData = NSData.FromString (password)
-				};
+				record = CreateSecRecord(SecKind.InternetPassword,
+					server: "Test1",
+					account: username.ToLower (),
+					valueData: NSData.FromString (password)
+				);
 				var addCode = SecKeyChain.Add (record);
 				success = (addCode == SecStatusCode.Success);
 			}
@@ -299,10 +371,10 @@ namespace MonoTouchFixtures.Security {
 		public static bool ClearUserPassword (string username)
 		{
 			var success = false;
-			var searchRecord = new SecRecord (SecKind.InternetPassword) {
-				Server = "Test1",
-				Account = username.ToLower ()
-			};
+			var searchRecord = CreateSecRecord(SecKind.InternetPassword,
+				server: "Test1",
+				account: username.ToLower ()
+			);
 			SecStatusCode queryCode;
 			var record = SecKeyChain.QueryAsRecord (searchRecord, out queryCode);
 
@@ -325,7 +397,7 @@ namespace MonoTouchFixtures.Security {
 				Assert.Ignore ("code == errSecInternal (-26276)");
 
 			using (var identity = IdentityTest.GetIdentity ())
-			using (var rec = new SecRecord (identity)) {
+			using (var rec = CreateSecRecord (identity)) {
 				SecStatusCode code = SecKeyChain.Add (rec);
 				Assert.True (code == SecStatusCode.DuplicateItem || code == SecStatusCode.Success, "Identity added");
 
@@ -344,7 +416,7 @@ namespace MonoTouchFixtures.Security {
 		{
 			using (var cert = new X509Certificate (CertificateTest.mail_google_com))
 			using (var sc = new SecCertificate (cert))
-			using (var rec = new SecRecord (sc)) {
+			using (var rec = CreateSecRecord (sc)) {
 				Assert.NotNull (rec, "rec is null");
 
 				var ret = rec.GetCertificate ();
@@ -368,7 +440,7 @@ namespace MonoTouchFixtures.Security {
 			using (var trust = new SecTrust (cert, policy)) {
 				trust.Evaluate ();
 				using (SecKey pubkey = trust.GetPublicKey ())
-				using (var rec = new SecRecord (pubkey)) {
+				using (var rec = CreateSecRecord (pubkey)) {
 					Assert.NotNull (rec, "rec is null");
 
 					var ret = rec.GetKey ();

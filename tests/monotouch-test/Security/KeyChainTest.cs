@@ -35,9 +35,9 @@ namespace MonoTouchFixtures.Security {
 #endif
 			NSData data = NSData.FromStream (certStream);
 
-			var query = new SecRecord (SecKind.Certificate) {
-				Label = $"Internet Widgits Pty Ltd",
-			};
+			var query = RecordTest.CreateSecRecord (SecKind.Certificate,
+				label: $"Internet Widgits Pty Ltd"
+			);
 			var rec = query.Clone ();
 			rec.SetValueRef (new SecCertificate (data));
 
@@ -62,7 +62,7 @@ namespace MonoTouchFixtures.Security {
 		{
 			if (TestRuntime.CheckXcodeVersion (13, 0))
 				Assert.Ignore ("code == errSecInternal (-26276)");
-			using (SecRecord rec = new SecRecord (SecKind.Identity))
+			using (var rec = RecordTest.CreateSecRecord (SecKind.Identity))
 			using (var id = IdentityTest.GetIdentity ()) {
 				rec.SetValueRef (id);
 				SecStatusCode code = SecKeyChain.Add (rec);
@@ -72,7 +72,7 @@ namespace MonoTouchFixtures.Security {
 			if (!TestRuntime.CheckXcodeVersion (5, 0))
 				Assert.Inconclusive ("QueryAsConcreteType does not work before iOS7");
 
-			using (SecRecord rec = new SecRecord (SecKind.Identity)) {
+			using (var rec = RecordTest.CreateSecRecord (SecKind.Identity)) {
 				SecStatusCode code;
 				var match = SecKeyChain.QueryAsConcreteType (rec, out code);
 				if ((match == null) && (code == SecStatusCode.ItemNotFound))
@@ -148,10 +148,10 @@ namespace MonoTouchFixtures.Security {
 		Guid GetID ()
 		{
 			SecStatusCode code;
-			SecRecord queryRec = new SecRecord (SecKind.GenericPassword) { 
-				Service = RecordService,
-				Account = RecordAccount,
-			};
+			var queryRec = RecordTest.CreateSecRecord (SecKind.GenericPassword,
+				service: RecordService,
+				account: RecordAccount
+			);
 			var queryResponse = SecKeyChain.QueryAsRecord (queryRec, out code);
 			if (code == SecStatusCode.Success && queryResponse?.Generic != null)
 				return new Guid (NSString.FromData (queryResponse.Generic, NSStringEncoding.UTF8));
@@ -163,10 +163,10 @@ namespace MonoTouchFixtures.Security {
 		public void QueryAsData ()
 		{
 			SecStatusCode code;
-			SecRecord queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = RecordService,
-				Account = RecordAccount,
-			};
+			var queryRec = RecordTest.CreateSecRecord (SecKind.GenericPassword,
+				service: RecordService,
+				account: RecordAccount
+			);
 			var data = SecKeyChain.QueryAsData (queryRec, true, out code);
 			if (code == SecStatusCode.Success && queryRec != null) {
 				Assert.NotNull (data.Bytes);
@@ -177,10 +177,10 @@ namespace MonoTouchFixtures.Security {
 		public void QueryAsDataArray ()
 		{
 			SecStatusCode code;
-			SecRecord queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = RecordService,
-				Account = RecordAccount,
-			};
+			var queryRec = RecordTest.CreateSecRecord (SecKind.GenericPassword,
+				service: RecordService,
+				account: RecordAccount
+			);
 			var data = SecKeyChain.QueryAsData (queryRec, true, 1, out code);
 			if (code == SecStatusCode.Success && queryRec != null) {
 				Assert.NotNull (data [0].Bytes);
@@ -189,19 +189,19 @@ namespace MonoTouchFixtures.Security {
 
 		SecStatusCode RemoveID ()
 		{
-			var queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = RecordService,
-				Account = RecordAccount,
-			};
+			var queryRec = RecordTest.CreateSecRecord (SecKind.GenericPassword,
+				service: RecordService,
+				account: RecordAccount
+			);
 			return SecKeyChain.Remove (queryRec);
 		}
 
 		SecStatusCode SetID (Guid setID)
 		{
-			var queryRec = new SecRecord (SecKind.GenericPassword) {
-				Service = RecordService,
-				Account = RecordAccount,
-			};
+			var queryRec = RecordTest.CreateSecRecord (SecKind.GenericPassword,
+				service: RecordService,
+				account: RecordAccount
+			);
 			var record = queryRec.Clone ();
 			record.Generic = NSData.FromString (Convert.ToString (setID), NSStringEncoding.UTF8);
 			record.Accessible = SecAccessible.Always;
