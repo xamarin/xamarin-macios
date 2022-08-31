@@ -703,12 +703,7 @@ namespace AudioUnit
 			using (var buffers = new AudioBuffers (data)) {
 #if NET
 				unsafe {
-					var tempActionFlags = *actionFlags;
-					var tempTimeStamp = *timeStamp;
-					var returnValue = render (tempActionFlags, tempTimeStamp, busNumber, numberFrames, buffers);
-					*actionFlags = tempActionFlags;
-					*timeStamp = tempTimeStamp;
-					return returnValue;
+					return render (*actionFlags, *timeStamp, busNumber, numberFrames, buffers);
 				}
 #else
 				return render (actionFlags, timeStamp, busNumber, numberFrames, buffers);
@@ -762,12 +757,7 @@ namespace AudioUnit
 				return AudioUnitStatus.Uninitialized;
 #if NET
 			unsafe {
-				var tempActionFlags = *actionFlags;
-				var tempTimeStamp = *timeStamp;
-				var returnValue = input (tempActionFlags, tempTimeStamp, busNumber, numberFrames, au);
-				*timeStamp = tempTimeStamp;
-				*actionFlags = tempActionFlags;
-				return returnValue;
+				return input (*actionFlags, *timeStamp, busNumber, numberFrames, au);
 			}
 #else
 			return input (actionFlags, timeStamp, busNumber, numberFrames, au);

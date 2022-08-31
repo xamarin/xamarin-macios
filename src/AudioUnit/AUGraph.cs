@@ -218,18 +218,13 @@ namespace AudioUnit
 
 			if (renderers.Count != 0) {
 				using (var buffers = new AudioBuffers (_ioData)) {
-#if NET
 					foreach (RenderDelegate renderer in renderers) {
-						var tempActionFlags = *_ioActionFlags;
-						var tempTimeStamp = *_inTimeStamp;
-						renderer (tempActionFlags, tempTimeStamp, _inBusNumber, _inNumberFrames, buffers);
-						*_ioActionFlags = tempActionFlags;
-						*_inTimeStamp = tempTimeStamp;
-					}
+#if NET
+						renderer (*_ioActionFlags, *_inTimeStamp, _inBusNumber, _inNumberFrames, buffers);
 #else
-					foreach (RenderDelegate renderer in renderers)
 						renderer (_ioActionFlags, _inTimeStamp, _inBusNumber, _inNumberFrames, buffers);
 #endif
+					}
 					return AudioUnitStatus.OK;
 				}
 			}
