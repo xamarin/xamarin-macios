@@ -9,4 +9,8 @@
 	<ItemGroup Condition=" '$(TargetFrameworkIdentifier)' == '.NETCoreApp' and $([MSBuild]::VersionGreaterThanOrEquals($(TargetFrameworkVersion), '6.0')) ">
 		<SdkSupportedTargetPlatformIdentifier Include="ios" DisplayName="iOS" />
 	</ItemGroup>
+
+	<PropertyGroup Condition=" '$(TargetPlatformIdentifier)' == 'iOS' and $([MSBuild]::VersionEquals($(TargetFrameworkVersion), '6.0')) ">
+		<AfterMicrosoftNETSdkTargets>$(AfterMicrosoftNETSdkTargets);$(_XamarinSdkRootDirectory)..\@NUGET_VERSION_NO_METADATA@\targets\Xamarin.Shared.Sdk.MultiTarget.targets</AfterMicrosoftNETSdkTargets>
+	</PropertyGroup>
 </Project>
