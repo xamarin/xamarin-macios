@@ -63,7 +63,6 @@ steps:
 - ${{ if and(eq(parameters.skipESRP, false), eq(parameters.isPR, false)) }}:
   - bash: |
       set -exo pipefail
-      security unlock-keychain -p $PRODUCTSIGN_KEYCHAIN_PASSWORD builder.keychain
       if [[ "$SYSTEM_DEBUG" == "true" ]]; then
         export ESRP_TEMP="$WORKING_DIR/esrp"
         echo "Temp dir is $ESRP_TEMP"
