@@ -141,8 +141,11 @@ endif
 		/p:PackageRuntimeIdentifiersCoreCLR="$(DOTNET_CORECLR_RUNTIME_IDENTIFIERS)" \
 		/p:CustomDotNetVersion="$(DOWNLOAD_DOTNET_VERSION)" \
 		/p:DotNetManifestVersionBand="$(DOTNET_MANIFEST_VERSION_BAND)" \
+		/p:ToolChainManifestVersionBand="$(TOOLCHAIN_MANIFEST_VERSION_BAND)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
+	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.mono.toolchain.net7.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain.net7/
+	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.net7.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net7/
 	$(Q) touch $@
 
 .stamp-install-t4: $(TOP)/.config/dotnet-tools.json .stamp-download-dotnet-packages

@@ -5,7 +5,8 @@
     <MicrosoftNETILLinkTasksPackageVersion>7.0.100-1.22423.4</MicrosoftNETILLinkTasksPackageVersion>
     <MicrosoftDotNetBuildTasksFeedPackageVersion>6.0.0-beta.21212.6</MicrosoftDotNetBuildTasksFeedPackageVersion>
     <MicrosoftNETILStripTasksPackageVersion>6.0.0-rc.2.21468.3</MicrosoftNETILStripTasksPackageVersion>
-    <MicrosoftNETCoreAppRefPackageVersion>7.0.0-rc.1.22423.16</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETCoreAppRefPackageVersion>7.0.0-rc.1.22426.10</MicrosoftNETCoreAppRefPackageVersion>
+    <MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>7.0.0-rc.1.22424.1</MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion>
     <MicrosoftTemplateEngineTasksVersion>7.0.100-alpha.1.21601.1</MicrosoftTemplateEngineTasksVersion>
   </PropertyGroup>
 </Project>
