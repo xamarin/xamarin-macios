@@ -139,7 +139,11 @@ namespace AudioUnit
 	[StructLayout (LayoutKind.Sequential)]
 	unsafe struct AURenderCallbackStruct
 	{
+#if COREBUILD
 		public delegate* unmanaged<IntPtr, int*, AudioTimeStamp*, uint, uint, IntPtr, int> Proc;
+#else
+		public delegate* unmanaged<IntPtr, AudioUnitRenderActionFlags*, AudioTimeStamp*, uint, uint, IntPtr, AudioUnitStatus> Proc;
+#endif
 		public IntPtr ProcRefCon; 
 	}
 #else
@@ -681,7 +685,7 @@ namespace AudioUnit
 
 #if NET
 		[UnmanagedCallersOnly]
-		static unsafe int RenderCallbackImpl (IntPtr clientData, int* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+		static unsafe AudioUnitStatus RenderCallbackImpl (IntPtr clientData,  AudioUnitRenderActionFlags* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
 #else
 		[MonoPInvokeCallback (typeof (CallbackShared))]
 		static AudioUnitStatus RenderCallbackImpl (IntPtr clientData, ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, IntPtr data)
@@ -690,29 +694,21 @@ namespace AudioUnit
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
 			var au = (AudioUnit?) gch.Target;
 			var renderer = au?.renderer;
-#if NET
-			if (renderer is null)
-				return (int)AudioUnitStatus.Uninitialized;
-
-			if (!renderer.TryGetValue (busNumber, out var render))
-				return (int)AudioUnitStatus.Uninitialized;
-#else
 			if (renderer is null)
 				return AudioUnitStatus.Uninitialized;
 
 			if (!renderer.TryGetValue (busNumber, out var render))
 				return AudioUnitStatus.Uninitialized;
-#endif
 
 			using (var buffers = new AudioBuffers (data)) {
 #if NET
 				unsafe {
-					var tempActionFlags = (AudioUnitRenderActionFlags)(*actionFlags);
+					var tempActionFlags = *actionFlags;
 					var tempTimeStamp = *timeStamp;
 					var returnValue = render (tempActionFlags, tempTimeStamp, busNumber, numberFrames, buffers);
-					*actionFlags = (int)tempActionFlags;
+					*actionFlags = tempActionFlags;
 					*timeStamp = tempTimeStamp;
-					return (int)returnValue;
+					return returnValue;
 				}
 #else
 				return render (actionFlags, timeStamp, busNumber, numberFrames, buffers);
@@ -747,46 +743,33 @@ namespace AudioUnit
 		}
 #if NET
 		[UnmanagedCallersOnly]
-		static unsafe int InputCallbackImpl (IntPtr clientData, int* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+		static unsafe AudioUnitStatus InputCallbackImpl (IntPtr clientData, AudioUnitRenderActionFlags* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
 #else
 		[MonoPInvokeCallback (typeof (CallbackShared))]
 		static AudioUnitStatus InputCallbackImpl (IntPtr clientData, ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, IntPtr data)
 #endif
 		{
-#if NET
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
 			var au =  gch.Target as AudioUnit;
 			if (au is null)
-				return (int)AudioUnitStatus.Uninitialized;
+				return AudioUnitStatus.Uninitialized;
 
 			var inputs = au.inputs;
 			if (inputs is null)
-				return (int)AudioUnitStatus.Uninitialized;
+				return AudioUnitStatus.Uninitialized;
 
 			if (!inputs.TryGetValue (busNumber, out var input))
-				return (int)AudioUnitStatus.Uninitialized;
-
+				return AudioUnitStatus.Uninitialized;
+#if NET
 			unsafe {
-				var tempActionFlags = (AudioUnitRenderActionFlags)(*actionFlags);
+				var tempActionFlags = *actionFlags;
 				var tempTimeStamp = *timeStamp;
 				var returnValue = input (tempActionFlags, tempTimeStamp, busNumber, numberFrames, au);
 				*timeStamp = tempTimeStamp;
-				*actionFlags = (int)tempActionFlags;
-				return (int)returnValue;
+				*actionFlags = tempActionFlags;
+				return returnValue;
 			}
 #else
-			GCHandle gch = GCHandle.FromIntPtr (clientData);
-			var au =  gch.Target as AudioUnit;
-			if (au is null)
-				return AudioUnitStatus.Uninitialized;
-
-			var inputs = au.inputs;
-			if (inputs is null)
-				return AudioUnitStatus.Uninitialized;
-
-			if (!inputs.TryGetValue (busNumber, out var input))
-				return AudioUnitStatus.Uninitialized;
-
 			return input (actionFlags, timeStamp, busNumber, numberFrames, au);
 #endif
 		}

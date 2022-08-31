@@ -382,7 +382,7 @@ namespace AudioUnit
 		}
 #if NET
 		[UnmanagedCallersOnly]
-		static unsafe int RenderCallbackImpl (IntPtr clientData, int* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+		static unsafe AudioUnitStatus RenderCallbackImpl (IntPtr clientData, AudioUnitRenderActionFlags* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
 #else
 
 		[MonoPInvokeCallback (typeof (CallbackShared))]
@@ -391,28 +391,20 @@ namespace AudioUnit
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
 			var au = gch.Target as AUGraph;
-#if NET
-			if (au?.nodesCallbacks is null)
-				return (int)AudioUnitStatus.InvalidParameter;
-
-			if (!au.nodesCallbacks.TryGetValue (busNumber, out var callback))
-				return (int)AudioUnitStatus.InvalidParameter;
-#else
 			if (au?.nodesCallbacks is null)
 				return AudioUnitStatus.InvalidParameter;
 
 			if (!au.nodesCallbacks.TryGetValue (busNumber, out var callback))
 				return AudioUnitStatus.InvalidParameter;
-#endif
 
 			using (var buffers = new AudioBuffers (data)) {
 #if NET
-				AudioUnitRenderActionFlags tempActionFlags = (AudioUnitRenderActionFlags)(*actionFlags);
+				AudioUnitRenderActionFlags tempActionFlags = *actionFlags;
 				var tempTimeStamp = *timeStamp;
 				var returnValue = callback (tempActionFlags, tempTimeStamp, busNumber, numberFrames, buffers);
-				*actionFlags = (int)tempActionFlags;
+				*actionFlags = tempActionFlags;
 				*timeStamp = tempTimeStamp;
-				return (int)returnValue;
+				return returnValue;
 #else
 				return callback (actionFlags, timeStamp, busNumber, numberFrames, buffers);
 #endif
