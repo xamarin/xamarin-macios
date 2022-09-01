@@ -276,9 +276,9 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
 
-
 					{ "AVRouting", "AVRouting", 13,0},
 					{ "BackgroundAssets", "BackgroundAssets", 13,0},
+					{ "HealthKit", "HealthKit", 13,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 				};
 			}
