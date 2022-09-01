@@ -284,7 +284,8 @@ steps:
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     $testResultsPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
-    $testResult = New-TestResults -Path $testResultsPath -Status "$(runTests.TESTS_JOBSTATUS)" -Context "${{ parameters.statusContext }}"
+    $testAttempt = [int]"$(System.JobAttempt)"
+    $testResult = New-TestResults -Path $testResultsPath -Status "$(runTests.TESTS_JOBSTATUS)" -Context "${{ parameters.statusContext }}" -Attempt $testAttempt
 
     $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
     $statuses.SetStatus($testResult.GetStatus())
