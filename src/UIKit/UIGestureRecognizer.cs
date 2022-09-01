@@ -221,30 +221,11 @@ namespace UIKit {
 
 	}
 
+	public partial class UIHoverGestureRecognizer : UIGestureRecognizer {
+		public UIHoverGestureRecognizer (Action<UIHoverGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIHoverGestureRecognizer>(action)) {}
+
+	}
 #endif
 }
-
-// start code for UIHoverGestureRecognizer Constructor
-	public partial class UIHoverGestureRecognizer : UIGestureRecognizer {
-		public UIHoverGestureRecognizer (Action action) : base (action) {}
-		public UIHoverGestureRecognizer (Action<UIHoverGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback (action)) {}
-
-		[Register ("__UIHoverGestureRecognizer")]
-		class Callback : Token {
-			Action<UIHoverGestureRecognizer> action;
-			
-			internal Callback (Action<UIHoverGestureRecognizer> action)
-			{
-				this.action = action;
-			}
-			
-			[Export ("target:")]
-			[Preserve (Conditional = true)]
-			public void Activated (UIHoverGestureRecognizer sender)
-			{
-				action (sender);
-			}
-		}
-	}
 
 #endif // !WATCH
