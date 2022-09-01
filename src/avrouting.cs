@@ -12,7 +12,6 @@ using ObjCRuntime;
 using Foundation;
 using UniformTypeIdentifiers;
 using AVKit;
-using Network;
 
 #if !NET
 using NativeHandle = System.IntPtr;
