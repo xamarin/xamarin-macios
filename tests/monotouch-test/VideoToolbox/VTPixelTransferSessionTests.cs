@@ -33,12 +33,12 @@ namespace MonoTouchFixtures.VideoToolbox {
 	[Preserve (AllMembers = true)]
 	public class VTPixelTransferSessionTests
 	{
+		[OneTimeSetUp]
+		public void Init () => TestRuntime.AssertXcodeVersion (14, 0);
 
 		[Test]
 		public void PixelTransferSessionCreateTest ()
 		{
-			TestRuntime.AssertXcodeVersion (14, 0);
-
 			using var session = VTPixelTransferSession.Create ();
 			Assert.IsNotNull (session, "Session should not be null");
 		}
@@ -46,8 +46,6 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void PixelTransferSessionTransferImageTest ()
 		{
-			TestRuntime.AssertXcodeVersion (14, 0);
-
 			using var session = VTPixelTransferSession.Create ();
 			using var sourcePixelBuffer = new CVPixelBuffer (640, 480, CVPixelFormatType.CV420YpCbCr8BiPlanarFullRange);
 			using var destinationPixelBuffer = new CVPixelBuffer (320, 240, CVPixelFormatType.CV420YpCbCr8BiPlanarFullRange);
@@ -58,8 +56,6 @@ namespace MonoTouchFixtures.VideoToolbox {
 		[Test]
 		public void SetTransferPropertiesTest ()
 		{
-			TestRuntime.AssertXcodeVersion (14, 0);
-
 			using var session = VTPixelTransferSession.Create ();
 			var result = session.SetTransferProperties (new VTPixelTransferProperties {
 				ScalingMode = VTScalingMode.Letterbox
