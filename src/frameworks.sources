@@ -301,6 +301,11 @@ AVKIT_API_SOURCES = \
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
 
+# AVRouting
+
+AVKIT_SOURCES = \
+	AVRouting/AVCustomDeviceRoute.cs \
+
 # BackgroundTasks
 
 BACKGROUNDTASKS_API_SOURCES = \

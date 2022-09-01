@@ -33,8 +33,9 @@ namespace AVRouting {
 	[BaseType (typeof (NSObject))]
 	interface AVCustomDeviceRoute
 	{
+		[Internal]
 		[Export ("networkEndpoint")]
-		OS_nw_endpoint NetworkEndpoint { get; }
+		OS_nw_endpoint _NetworkEndpoint { get; }
 
 		[NullAllowed, Export ("bluetoothIdentifier")]
 		NSUuid BluetoothIdentifier { get; }
