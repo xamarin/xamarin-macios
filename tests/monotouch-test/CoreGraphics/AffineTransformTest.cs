@@ -503,6 +503,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void Decompose ()
 		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+
 			var components = new CGAffineTransform (1, 2, 3, 4, 5, 6).Decompose ();
 			Assert.AreNotEqual (0.0, components.Scale);
 			Assert.AreNotEqual (0.0, components.HorizontalShear);
@@ -513,6 +515,8 @@ namespace MonoTouchFixtures.CoreGraphics {
 		[Test]
 		public void MakeWithComponents ()
 		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+
 			var components = new CGAffineTransformComponents () {
 				Scale = new CGSize (1.0, 2.0),
 				HorizontalShear = (nfloat)3.0,
