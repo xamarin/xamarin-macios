@@ -982,5 +982,19 @@ namespace Xamarin.Tests {
 				Assert.That (errors [0].Message, Does.Contain ("Error loading Entitlements.plist template 'Entitlements.plist'"), "Message");
 			}
 		}
+
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		public void CustomAppBundleDir (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var customAppBundleDir = Path.Combine (Cache.CreateTemporaryDirectory (), project + ".app");
+			properties ["AppBundleDir"] = customAppBundleDir;
+			var result = DotNet.AssertBuild (project_path, properties);
+		}
 	}
 }
