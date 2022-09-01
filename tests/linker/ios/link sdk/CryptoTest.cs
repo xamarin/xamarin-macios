@@ -71,10 +71,7 @@ namespace LinkSdk {
 				// be called again in subsequent requests (unless it expires)
 				Assert.That (trust_validation_callback, Is.GreaterThan (0), "validation done");
 			} catch (WebException we) {
-				// The remote server returned an error: (502) Bad Gateway.
-				// The remote server returned an error: (503) Service Unavailable.
-				if (we.Message.Contains ("(502)") || we.Message.Contains ("(503)"))
-					Assert.Inconclusive (we.Message);
+				TestRuntime.IgnoreInCIIfBadNetwork (we);
 				throw;
 			}
 			finally {
@@ -137,10 +134,7 @@ namespace LinkSdk {
 			catch (WebException we) {
 				// failing to get data does not mean the SSL/TLS session was not established
 				if (sne_validation_callback == 0) {
-					// The remote server returned an error: (502) Bad Gateway.
-					// The remote server returned an error: (503) Service Unavailable.
-					if (we.Message.Contains ("(502)") || we.Message.Contains ("(503)"))
-						Assert.Inconclusive (we.Message);
+					TestRuntime.IgnoreInCIIfBadNetwork (we);
 					throw;
 				}
 			}
