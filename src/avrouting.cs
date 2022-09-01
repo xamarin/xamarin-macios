@@ -40,9 +40,6 @@ namespace AVRouting {
 		[Export ("networkEndpoint")]
 		OS_nw_endpoint _NetworkEndpoint { get; }
 
-		[Wrap ("new NWEndpoint (_NetworkEndpoint ?? IntPtr.Zero, true)")]
-		NWEndpoint NetworkEndpoint { get; }
-
 		[NullAllowed, Export ("bluetoothIdentifier")]
 		NSUuid BluetoothIdentifier { get; }
 	}
