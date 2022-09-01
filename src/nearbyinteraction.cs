@@ -27,16 +27,6 @@ using Vector3 = global::OpenTK.Vector3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
 #endif
 
-// #if NET
-// using Vector3 = global::System.Numerics.Vector3;
-// using MatrixFloat4x4 = global::CoreGraphics.NMatrix4;
-// #elif WATCH || __MACCATALYST
-// using MatrixFloat4x4 = Foundation.NSObject;
-// #else
-// using Vector3 = global::OpenTK.Vector3;
-// using MatrixFloat4x4 = global::OpenTK.NMatrix4;
-// #endif
-
 #if !NET
 using NativeHandle = System.IntPtr;
 #endif
@@ -96,23 +86,6 @@ namespace NearbyInteraction {
 		[Watch (9,0), NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
 		[Field ("NINearbyObjectAngleNotAvailable")]
 		float AngleNotAvailable { get; }
-
-		// [BindAs (typeof (SCNMatrix4))]
-		// // [BindAs (typeof (MatrixFloat4x4))]
-		// [Watch (9,0), NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
-		// [Field ("NINearbyObjectWorldTransformNotAvailable")]
-		// NSValue WorldTransformNotAvailable { get; }
-		
-		// [Internal]
-		// [Watch (9,0), NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
-		// [Export ("getNINearbyObjectWorldTransformNotAvailable")]
-		// NativeHandle _GetWorldTransformNotAvailable ();
-		
-		// [Watch (9,0), NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
-		// [Field ("NINearbyObjectWorldTransformNotAvailable")]
-		// MatrixFloat4x4 WorldTransformNotAvailable {
-		// 	[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")] get; 
-		// }
 
 		[Watch (9,0), NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("verticalDirectionEstimate")]
@@ -235,25 +208,20 @@ namespace NearbyInteraction {
 		bool CameraAssistanceEnabled { [Bind ("isCameraAssistanceEnabled")] get; set; }
 	}
 
-	[Static]
 	[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
-	interface NIAlgorithmConvergenceStatusReason
+	public enum NIAlgorithmConvergenceStatusReason
 	{
-		[Watch (9, 0), NoTV, NoMac, iOS (16, 0)]
 		[Field ("NIAlgorithmConvergenceStatusReasonInsufficientHorizontalSweep")]
-		NSString InsufficientHorizontalSweep { get; }
+		InsufficientHorizontalSweep,
 
-		[Watch (9, 0), NoTV, NoMac, iOS (16, 0)]
 		[Field ("NIAlgorithmConvergenceStatusReasonInsufficientVerticalSweep")]
-		NSString InsufficientVerticalSweep { get; }
+		InsufficientVerticalSweep,
 
-		[Watch (9, 0), NoTV, NoMac, iOS (16, 0)]
 		[Field ("NIAlgorithmConvergenceStatusReasonInsufficientMovement")]
-		NSString InsufficientMovement { get; }
+		InsufficientMovement,
 
-		[Watch (9, 0), NoTV, NoMac, iOS (16, 0)]
 		[Field ("NIAlgorithmConvergenceStatusReasonInsufficientLighting")]
-		NSString InsufficientLighting { get; }
+		InsufficientLighting,
 	}
 
 	interface INIDeviceCapability {}

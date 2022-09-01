@@ -33,7 +33,7 @@ namespace NearbyInteraction {
 		[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
 #endif // NET
 		[DllImport (Constants.NearbyInteractionLibrary)]
-		static extern NativeHandle /* NSString */ NIAlgorithmConvergenceStatusReasonDescription (NativeHandle /* NSString */ reason);
+		static extern NativeHandle /* NSString */ NIAlgorithmConvergenceStatusReasonDescription (NativeHandle /* NIAlgorithmConvergenceStatusReason */ reason);
 
 #if NET
 		[SupportedOSPlatform ("ios16.0")]
@@ -43,11 +43,9 @@ namespace NearbyInteraction {
 #else
 		[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
 #endif // NET
-		public static NSString GetConvergenceStatusReason (NSString reason)
+		public static NSString GetConvergenceStatusReason (NIAlgorithmConvergenceStatusReason reason)
 		{
-			if (reason is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (reason));
-			return Runtime.GetNSObject<NSString> (NIAlgorithmConvergenceStatusReasonDescription (reason.GetHandle ()))!;
+			return Runtime.GetNSObject<NSString> (NIAlgorithmConvergenceStatusReasonDescription (reason.GetConstant ().GetHandle ()))!;
 		}
 	}
 }

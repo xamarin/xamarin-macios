@@ -13,7 +13,7 @@ namespace MonoTouchFixtures.NearbyInteraction {
 
 	[TestFixture]
 	[Preserve (AllMembers = true)]
-	public class NIAlgorithmConvergenceStatusReasonValues {
+	public class NIAlgorithmConvergenceStatusReasonValuesTest {
 
 		[SetUp]
 		public void Setup ()
@@ -22,11 +22,10 @@ namespace MonoTouchFixtures.NearbyInteraction {
 		}
 
 		[Test]
-		public void GetConvergenceStatusReason ()
+		public void GetConvergenceStatusReasonTest ()
 		{
 			var reason = NIAlgorithmConvergenceStatusReason.InsufficientHorizontalSweep;
-			// Assert.IsNotNull (GetConvergenceStatusReason (reason), "NIAlgorithmConvergenceStatusReason should not be null.");
-			Assert.IsNull (GetConvergenceStatusReason (reason), "NIAlgorithmConvergenceStatusReason should not be null.");
+			Assert.IsNotNull (NIAlgorithmConvergenceStatusReasonValues.GetConvergenceStatusReason (reason), "NIAlgorithmConvergenceStatusReason should not be null.");
 		}
 	}
 }
