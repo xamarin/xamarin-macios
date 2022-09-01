@@ -482,55 +482,58 @@ namespace ObjCRuntime {
 
 // Restrict this code to desktop for now, which is where most of the problems with outdated generated static registrar code occur.
 #if __MACOS__ || __MACCATALYST__
-		static bool verified_static_registrar_code;
-		unsafe static void VerifyStaticRegistrarCode ()
+		static bool? verify_static_registrar_code;
+		static object? verification_lock;
+		static Dictionary<IntPtr, object?>? verified_assemblies; // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
+		unsafe static void VerifyStaticRegistrarCode (IntPtr assembly_name, Assembly assembly)
 		{
-			if (verified_static_registrar_code)
+			if (verify_static_registrar_code is null) {
+				verify_static_registrar_code = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XAMARIN_VALIDATE_STATIC_REGISTRAR_CODE"));
+				verification_lock = new object ();
+			}
+			if (verify_static_registrar_code != true)
 				return;
-			verified_static_registrar_code = true;
 
-			if (string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XAMARIN_VALIDATE_STATIC_REGISTRAR_CODE")))
-				return;
+			lock (verification_lock!) {
+				if (verified_assemblies is null) {
+					verified_assemblies = new Dictionary<IntPtr, object?> (Runtime.IntPtrEqualityComparer);
+				} else if (verified_assemblies.ContainsKey (assembly_name)) {
+					return;
+				}
+				verified_assemblies [assembly_name] = null;
+			}
 
 			var map = Runtime.options->RegistrationMap;
-			List<Exception>? exceptions = null;
-
 			if (map is null)
 				return;
 
 			for (var i = 0; i < map->assembly_count; i++) {
 				var entry = map->assemblies [i];
 				var name = Marshal.PtrToStringAuto (entry.name)!;
+				if (!Runtime.StringEquals (assembly_name, name))
+					continue;
 				try {
-					if (!TryResolveAssembly (entry.name, out var assembly))
-						continue;
 					var mvid = Marshal.PtrToStringAuto (entry.mvid)!;
 					var runtime_mvid = assembly.ManifestModule.ModuleVersionId;
 					var registered_mvid = Guid.Parse (mvid);
 					if (registered_mvid == runtime_mvid)
 						continue;
-					if (exceptions is null)
-						exceptions = new List<Exception> ();
-					exceptions.Add (ErrorHelper.CreateError (8044, Errors.MX8044 /* The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}. */, name, runtime_mvid, registered_mvid));
+					throw ErrorHelper.CreateError (8044, Errors.MX8044 /* The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}. */, name, runtime_mvid, registered_mvid);
 				} catch (Exception e) {
-					if (exceptions is null)
-						exceptions = new List<Exception> ();
-					exceptions.Add (ErrorHelper.CreateError (8043, e, Errors.MX8043 /* An exception occurred while validating the static registrar code for {0}: {1} */, name, e.Message));
+					throw ErrorHelper.CreateError (8043, e, Errors.MX8043 /* An exception occurred while validating the static registrar code for {0}: {1} */, name, e.Message);
 				}
 			}
-
-			if (exceptions is not null)
-				throw new AggregateException (exceptions);
 		}
 #endif // __MACOS__ || __MACCATALYST__
 
 		static Assembly ResolveAssembly (IntPtr assembly_name)
 		{
+			if (TryResolveAssembly (assembly_name, out var asm)) {
 #if __MACOS__ || __MACCATALYST__
-			VerifyStaticRegistrarCode ();
+				VerifyStaticRegistrarCode (assembly_name, asm);
 #endif
-			if (TryResolveAssembly (assembly_name, out var asm))
 				return asm;
+			}
 
 			throw ErrorHelper.CreateError (8019, $"Could not find the assembly {Marshal.PtrToStringAuto (assembly_name)} in the loaded assemblies.");
 		}
