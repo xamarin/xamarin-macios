@@ -159,7 +159,7 @@ namespace SharedWithYou {
 	{
 		[Abstract]
 		[Export ("highlightCenterHighlightsDidChange:")]
-		void HighlightCenterHighlightsDidChange (SWHighlightCenter highlightCenter);
+		void HighlightsDidChange (SWHighlightCenter highlightCenter);
 	}
 
 	[NoWatch, TV (16,0), NoMac, iOS (16,0), MacCatalyst (16,0)]
@@ -197,7 +197,7 @@ namespace SharedWithYou {
 		void GetCollaborationHighlight (NSUrl url, Action<SWCollaborationHighlight, NSError> completionHandler);
 
 		[Export ("postNoticeForHighlightEvent:")]
-		void PostNoticeForHighlightEvent (ISWHighlightEvent @event);
+		void PostNotice (ISWHighlightEvent @event);
 
 		[Async]
 		[Export ("getSignedIdentityProofForCollaborationHighlight:usingData:completionHandler:")]
