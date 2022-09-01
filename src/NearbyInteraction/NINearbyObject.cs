@@ -46,7 +46,7 @@ namespace NearbyInteraction {
 
 		static MatrixFloat4x4? _WorldTransformNotAvailable;
 
-		// TODO: Link issue here
+		// Following similar strategy found here: https://github.com/xamarin/maccore/issues/2274
 		[Field ("NINearbyObjectWorldTransformNotAvailable",  "NearbyInteraction")]
 		public static MatrixFloat4x4 WorldTransformNotAvailable {
 			get {

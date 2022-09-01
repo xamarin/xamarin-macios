@@ -130,12 +130,10 @@ namespace NearbyInteraction {
 		[Export ("invalidate")]
 		void Invalidate ();
 
-		// ARSession is not available in Watch or MacCatalyst
 		[Watch (9,0), NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("setARSession:")]
 		void SetARSession (ARSession session);
 
-		// MatrixFloat4x4 is not available in Watch or !NET MacCatalyst
 		[Watch (9,0), NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("worldTransformForObject:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
