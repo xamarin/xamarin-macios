@@ -1,0 +1,69 @@
+<!--
+***********************************************************************************************
+Xamarin.iOS.Common.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file defines default properties for iOS projects.
+
+Copyright (C) 2013-2016 Xamarin. All rights reserved.
+***********************************************************************************************
+-->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
+
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.props" />
+
+	<PropertyGroup>
+		<MtouchFastDev Condition="'$(MtouchFastDev)' == ''">False</MtouchFastDev>
+		<MtouchHttpClientHandler Condition="'$(MtouchHttpClientHandler)' == ''">NSUrlSessionHandler</MtouchHttpClientHandler>
+		<MtouchProfiling Condition="'$(MtouchProfiling)' == ''">False</MtouchProfiling>
+		<MtouchLinkerDumpDependencies Condition="'$(MtouchLinkerDumpDependencies)' == ''">False</MtouchLinkerDumpDependencies>
+		<MtouchUseLlvm Condition="'$(MtouchUseLlvm)' == ''">False</MtouchUseLlvm>
+		<MtouchFloat32 Condition="'$(MtouchFloat32)' == '' And '$(UsingAppleNETSdk)' != 'true'">False</MtouchFloat32>
+		<MtouchEnableBitcode Condition="'$(MtouchEnableBitcode)' == ''">False</MtouchEnableBitcode>
+		<MtouchUseThumb Condition="'$(MtouchUseThumb)' == ''">False</MtouchUseThumb>
+		<MtouchProjectDirectory>$(MSBuildProjectDirectory)</MtouchProjectDirectory>
+		<MtouchVerbosity Condition="$(MtouchVerbosity) == ''">2</MtouchVerbosity>
+
+		<IpaIncludeArtwork Condition="'$(IpaIncludeArtwork)' == ''">False</IpaIncludeArtwork>
+		<BuildIpa Condition="'$(BuildIpa)' == '' And '$(UsingAppleNETSdk)' != 'true'">False</BuildIpa>
+		<BuildSessionId></BuildSessionId>
+
+		<!-- Backward Compatability -->
+		<IOSDebuggerConnectOverUsb Condition="'$(IOSDebuggerConnectOverUsb)' == ''">True</IOSDebuggerConnectOverUsb>
+
+		<IOSDebugOverWiFi Condition="'$(IOSDebugOverWiFi)' == '' And '$(IOSDebuggerConnectOverUsb)' == 'True'">False</IOSDebugOverWiFi>
+		<IOSDebugOverWiFi Condition="'$(IOSDebugOverWiFi)' == '' And '$(IOSDebuggerConnectOverUsb)' == 'False'">True</IOSDebugOverWiFi>
+		<!--<IOSDebuggerHosts Condition="'$(IOSDebuggerHosts)' == ''">127.0.0.1</IOSDebuggerHosts>-->
+		<IOSDebuggerPort Condition="'$(IOSDebuggerPort)' == ''">10000</IOSDebuggerPort>
+
+		<!-- On-Demand Resources -->
+		<OnDemandResourcesInitialInstallTags Condition="'$(OnDemandResourcesInitialInstallTags)' == '' Or '$(EnableOnDemandResources)' != 'true'"></OnDemandResourcesInitialInstallTags>
+		<OnDemandResourcesPrefetchOrder Condition="'$(OnDemandResourcesPrefetchOrder)' == '' Or '$(EnableOnDemandResources)' != 'true'"></OnDemandResourcesPrefetchOrder>
+		<EmbedOnDemandResources Condition="'$(EmbedOnDemandResources)' == ''">true</EmbedOnDemandResources>
+
+		<!-- Device-Specific Builds -->
+		<DeviceSpecificBuild Condition="'$(DeviceSpecificBuild)' == ''">$(_BundlerDebug)</DeviceSpecificBuild>
+		<DeviceSpecificBuild Condition="'$(_BundlerDebug)' != 'true'">False</DeviceSpecificBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<AvailableItemName Include="BundleResource" />
+	</ItemGroup>
+
+	<!-- Do not resolve from the GAC under any circumstances in Mobile -->
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
+		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
+		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
+	</PropertyGroup>
+
+	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props"
+			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).After.props')"/>
+
+</Project>

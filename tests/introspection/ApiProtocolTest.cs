@@ -153,6 +153,16 @@ namespace Introspection {
 				case "CLKComplicationWidgetMigrationConfiguration":
 				case "HKElectrocardiogramVoltageMeasurement":
 				case "AVPlayerInterstitialEvent":
+				case "HKWorkoutActivity":
+				case "HKContactsPrescription":
+				case "HKGlassesPrescription":
+				case "HKVisionPrescription":
+				case "PKAutomaticReloadPaymentRequest":
+				case "PKAutomaticReloadPaymentSummaryItem":
+				case "PKPaymentOrderDetails":
+				case "PKPaymentTokenContext":
+				case "PKRecurringPaymentRequest":
+				case "PKShareablePassMetadataPreview":
 					return true;
 				}
 				break;
@@ -302,6 +312,13 @@ namespace Introspection {
 				case "PHAssetCreationRequest":
 				case "NSUserActivity":
 				case "UIDictationPhrase":
+				case "HKWorkoutActivity":
+				case "PKAutomaticReloadPaymentRequest":
+				case "PKAutomaticReloadPaymentSummaryItem":
+				case "PKPaymentOrderDetails":
+				case "PKPaymentTokenContext":
+				case "PKRecurringPaymentRequest":
+				case "PKShareablePassMetadataPreview":
 					return true;
 				}
 				break;
@@ -448,6 +465,13 @@ namespace Introspection {
 				case "PHAssetCreationRequest":
 				case "NSUserActivity":
 				case "UIDictationPhrase":
+				case "HKWorkoutActivity":
+				case "PKAutomaticReloadPaymentRequest":
+				case "PKAutomaticReloadPaymentSummaryItem":
+				case "PKPaymentOrderDetails":
+				case "PKPaymentTokenContext":
+				case "PKRecurringPaymentRequest":
+				case "PKShareablePassMetadataPreview":
 					return true;
 				}
 				break;

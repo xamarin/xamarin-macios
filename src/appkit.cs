@@ -4827,6 +4827,24 @@ namespace AppKit {
 		[Export ("color", ArgumentSemantic.Copy)]
 		NSColor Color { get; set; }
 
+		[Mac (13, 0)]
+		[Export ("colorWellStyle", ArgumentSemantic.Assign)]
+		NSColorWellStyle ColorWellStyle { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("image", ArgumentSemantic.Strong)]
+		[NullAllowed]
+		NSImage Image { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("pulldownTarget", ArgumentSemantic.Weak)]
+		[NullAllowed]
+		NSObject PulldownTarget { get; set; }
+
+		[Mac (13, 0)]
+		[Export ("pulldownAction", ArgumentSemantic.Assign)]
+		[NullAllowed]
+		Selector PulldownAction { get; set; }
 	}
 
 	[NoMacCatalyst]
@@ -6935,6 +6953,12 @@ namespace AppKit {
 		[Internal]
 		IntPtr _SystemFontOfSize (nfloat fontSize, nfloat weight);
 
+		[Mac (13,0)]
+		[Static]
+		[Export ("systemFontOfSize:weight:width:")]
+		[Internal]
+		IntPtr _SystemFontOfSize (nfloat fontSize, nfloat weight, nfloat width);
+
 		[Mac (10,11)]
 		[Static]
 		[Export ("monospacedDigitSystemFontOfSize:weight:")]
@@ -7425,6 +7449,25 @@ namespace AppKit {
 
 		[Field ("NSFontWeightBlack")]
 		nfloat Black { get; }
+	}
+
+	[Mac (10, 10)]
+	[NoMacCatalyst]
+	[Static]
+	interface NSFontWidth
+	{
+		[Mac (13, 0)]
+		[Field ("NSFontWidthCompressed")]
+		double Compressed { get; }
+
+		[Field ("NSFontWidthCondensed")]
+		double Condensed { get; }
+
+		[Field ("NSFontWidthStandard")]
+		double Standard { get; }
+
+		[Field ("NSFontWidthExpanded")]
+		double Expanded { get; }
 	}
 
 	[Deprecated (PlatformName.MacOSX, 10, 10)]
@@ -9912,6 +9955,18 @@ namespace AppKit {
 		[NoMacCatalyst]
 		[Export ("symbolConfiguration", ArgumentSemantic.Copy)]
 		NSImageSymbolConfiguration SymbolConfiguration { get; }
+
+		[NoMacCatalyst, Mac (13,0)]
+		[Static]
+		[Export ("imageWithSymbolName:variableValue:")]
+		[return: NullAllowed]
+		NSImage GetImage (string symbolName, double variableValue);
+
+		[NoMacCatalyst, Mac (13,0)]
+		[Static]
+		[Export ("imageWithSystemSymbolName:variableValue:accessibilityDescription:")]
+		[return: NullAllowed]
+		NSImage GetImage (string systemSymbolName, double variableValue, [NullAllowed] string accessibilityDescription);
 	}
 
 	[MacCatalyst (13, 0)]
@@ -18962,115 +19017,6 @@ namespace AppKit {
 	}
 
 	[NoMacCatalyst]
-	[BaseType (typeof (NSObject))]
-	interface NSTextList : NSCoding, NSCopying, NSSecureCoding {
-		[Export ("initWithMarkerFormat:options:")]
-#if NET
-		NativeHandle Constructor ([BindAs (typeof (NSTextListMarkerFormats))] NSString format, NSTextListOptions mask);
-#else
-		NativeHandle Constructor (string format, NSTextListOptions mask);
-#endif
-
-#if !NET
-		[Wrap ("this (format.GetConstant(), mask)")]
-		NativeHandle Constructor (NSTextListMarkerFormats format, NSTextListOptions mask);
-#endif
-
-#if NET
-		[BindAs (typeof (NSTextListMarkerFormats))] 
-#endif
-		[Export ("markerFormat")]
-#if NET
-		NSString MarkerFormat { get; }
-#else
-		string MarkerFormat { get; }
-#endif
-
-		[Export ("listOptions")]
-		NSTextListOptions ListOptions { get; }
-
-		[Export ("markerForItemNumber:")]
-		string GetMarker (nint itemNum);
-
-		//Detected properties
-		[Export ("startingItemNumber")]
-		nint StartingItemNumber { get; set; }
-
-	}
-
-	[NoMacCatalyst]
-	enum NSTextListMarkerFormats
-	{
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerBox")]
-		Box,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerCheck")]
-		Check,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerCircle")]
-		Circle,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerDiamond")]
-		Diamond,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerDisc")]
-		Disc,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerHyphen")]
-		Hyphen,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerSquare")]
-		Square,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerLowercaseHexadecimal")]
-		LowercaseHexadecimal,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerUppercaseHexadecimal")]
-		UppercaseHexadecimal,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerOctal")]
-		Octal,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerLowercaseAlpha")]
-		LowercaseAlpha,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerUppercaseAlpha")]
-		UppercaseAlpha,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerLowercaseLatin")]
-		LowercaseLatin,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerUppercaseLatin")]
-		UppercaseLatin,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerLowercaseRoman")]
-		LowercaseRoman,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerUppercaseRoman")]
-		UppercaseRoman,
-
-		[Mac (10, 13)]
-		[Field ("NSTextListMarkerDecimal")]
-		Decimal,
-	}
-	
-	[NoMacCatalyst]
 	[BaseType (typeof (NSTextBlock))]
 	[DisableDefaultCtor]
 	interface NSTextTableBlock {
@@ -20130,6 +20076,14 @@ namespace AppKit {
 		// [MacCatalyst (14,0)][NoMac]
 		// [Field ("NSToolbarSupplementarySidebarTrackingSeparatorItemIdentifier")]
 		// NSString SupplementarySidebarTrackingSeparatorItemIdentifier { get; }
+
+		[Mac (13, 0), MacCatalyst (16, 0)]
+		[Export ("centeredItemIdentifiers", ArgumentSemantic.Copy)]
+		NSSet<NSString> CenteredItemIdentifiers { get; set; }
+
+		[NoMacCatalyst][Mac (13, 0)]
+		[Field ("NSToolbarItemKey")]
+		NSString NSToolbarItemKey { get; }
 	}
 
 	[MacCatalyst (13, 0)]
@@ -20154,6 +20108,15 @@ namespace AppKit {
 
 		[Export ("toolbarDidRemoveItem:"), EventArgs ("NSNotification")]
 		void DidRemoveItem (NSNotification notification);
+
+		[Mac (13,0), MacCatalyst (16,0), DelegateName ("NSToolbarImmovableItemIdentifiers"), DefaultValue (null)]
+		[Export ("toolbarImmovableItemIdentifiers:")]
+		NSSet<NSString> GetToolbarImmovableItemIdentifiers (NSToolbar toolbar);
+
+		[Mac (13,0), MacCatalyst (16,0)]
+		[Export ("toolbar:itemIdentifier:canBeInsertedAtIndex:"), DelegateName ("NSToolbarCanInsert"), DefaultValue (true)]
+		bool GetItemCanBeInsertedAt (NSToolbar toolbar, string itemIdentifier, nint index);
+
 	}
 
 	[NoMacCatalyst]
@@ -20281,6 +20244,10 @@ namespace AppKit {
 		[Export ("itemMenuFormRepresentation", ArgumentSemantic.Copy)]
 		[NullAllowed]
 		UIMenuElement ItemMenuFormRepresentation { get; set; }
+
+		[Mac (13, 0)][NoMacCatalyst]
+		[Export ("possibleLabels", ArgumentSemantic.Copy)]
+		NSSet<NSString> PossibleLabels { get; set; }
 	}
 
 	[MacCatalyst (13,0)]
@@ -22791,6 +22758,7 @@ namespace AppKit {
 		[Export ("alternateImage", ArgumentSemantic.Strong)]
 		NSImage AlternateImage { get; }
 		
+		[Deprecated (PlatformName.MacOSX, 13, 0, message: "Use 'NSSharingServicePicker.StandardShareMenuItem' instead.")]
 		[Export ("sharingServicesForItems:")][Static]
 		NSSharingService [] SharingServicesForItems (NSObject [] items);
 		
@@ -22986,6 +22954,10 @@ namespace AppKit {
 		
 		[Export ("showRelativeToRect:ofView:preferredEdge:")]
 		void ShowRelativeToRect (CGRect rect, NSView view, NSRectEdge preferredEdge);
+
+		[Mac (13, 0)]
+		[Export ("standardShareMenuItem")]
+		NSMenuItem StandardShareMenuItem { get; }
 	}
 
 	interface INSSharingServicePickerDelegate {}
@@ -28450,5 +28422,87 @@ namespace AppKit {
 		[Mac (12,0)]
 		[Export ("configurationByApplyingConfiguration:")]
 		NSImageSymbolConfiguration Create (NSImageSymbolConfiguration configuration);
+
+		[Mac (13,0)]
+		[Static]
+		[Export ("configurationPreferringMonochrome")]
+		NSImageSymbolConfiguration CreateConfigurationPreferringMonochrome ();
+
+		[Mac (13,0)]
+		[Static]
+		[Export ("configurationPreferringHierarchical")]
+		NSImageSymbolConfiguration CreateConfigurationPreferringHierarchical ();
 	}
+
+	[NoMacCatalyst, Mac (13,0)]
+	[BaseType (typeof (NSControl))]
+	interface NSComboButton
+	{
+		[DesignatedInitializer]
+		[Export ("initWithFrame:")]
+		NativeHandle Constructor (CGRect frameRect);
+
+		[Static]
+		[Export ("comboButtonWithTitle:menu:target:action:")]
+		NSComboButton Create (string title, [NullAllowed] NSMenu menu, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Static]
+		[Export ("comboButtonWithImage:menu:target:action:")]
+		NSComboButton Create (NSImage image, [NullAllowed] NSMenu menu, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Static]
+		[Export ("comboButtonWithTitle:image:menu:target:action:")]
+		NSComboButton Create (string title, NSImage image, [NullAllowed] NSMenu menu, [NullAllowed] NSObject target, [NullAllowed] Selector action);
+
+		[Export ("title")]
+		string Title { get; set; }
+
+		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
+		NSImage Image { get; set; }
+
+		[Export ("imageScaling", ArgumentSemantic.Assign)]
+		NSImageScaling ImageScaling { get; set; }
+
+		[Export ("menu", ArgumentSemantic.Strong)]
+		NSMenu Menu { get; set; }
+
+		[Export ("style", ArgumentSemantic.Assign)]
+		NSComboButtonStyle Style { get; set; }
+	}
+
+	interface INSPreviewRepresentableActivityItem { }
+
+	[NoMacCatalyst, Mac (13,0)]
+	[Protocol]
+	interface NSPreviewRepresentableActivityItem
+	{
+		[Abstract]
+		[Export ("item", ArgumentSemantic.Strong)]
+		NSObject Item { get; }
+
+		[NullAllowed, Export ("title")]
+		string Title { get; }
+
+		[NullAllowed, Export ("imageProvider", ArgumentSemantic.Strong)]
+		NSItemProvider ImageProvider { get; }
+
+		[NullAllowed, Export ("iconProvider", ArgumentSemantic.Strong)]
+		NSItemProvider IconProvider { get; }
+	}
+
+	[NoMacCatalyst, Mac (13,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface NSPreviewRepresentingActivityItem : NSPreviewRepresentableActivityItem
+	{
+		[NoiOS]
+		[Export ("initWithItem:title:image:icon:")]
+		NativeHandle Constructor (NSObject item, [NullAllowed] string title, [NullAllowed] NSImage image, [NullAllowed] NSImage icon);
+
+		[NoiOS]
+		[Export ("initWithItem:title:imageProvider:iconProvider:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (NSObject item, [NullAllowed] string title, [NullAllowed] NSItemProvider imageProvider, [NullAllowed] NSItemProvider iconProvider);
+	}
+
 }
