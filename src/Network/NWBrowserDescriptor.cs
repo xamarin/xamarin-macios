@@ -67,7 +67,13 @@ namespace Network {
 		[iOS (16,0)]
 		[Watch (9,0)]
 #endif
-		public NWBrowserDescriptor (string applicationServiceName) : base (nw_browse_descriptor_create_application_service (applicationServiceName), true) {}
+		public static NWBrowserDescriptor CreateapplicAtionServiceName (string applicationServiceName)
+		{
+			if (applicationServiceName is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationServiceName));
+
+			return new NWBrowserDescriptor (nw_browse_descriptor_create_application_service (applicationServiceName), owns: true);
+		}
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -81,7 +87,7 @@ namespace Network {
 		[Watch (9,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern string nw_browse_descriptor_get_application_service_name (OS_nw_browse_descriptor descriptor);
+		static extern IntPtr nw_browse_descriptor_get_application_service_name (OS_nw_browse_descriptor descriptor);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -94,7 +100,14 @@ namespace Network {
 		[iOS (16,0)]
 		[Watch (9,0)]
 #endif
-		public string? ApplicationServiceName => nw_browse_descriptor_get_application_service_name (GetCheckedHandle ());
+		public string? ApplicationServiceName {
+			get {
+				var appNamePtr = nw_browse_descriptor_get_application_service_name (GetCheckedHandle ());
+				if (appNamePtr == IntPtr.Zero)
+					return null;
+				return Marshal.PtrToStringAnsi (appNamePtr);
+			}
+		}
 
 		public static NWBrowserDescriptor CreateBonjourService (string type, string? domain)
 		{

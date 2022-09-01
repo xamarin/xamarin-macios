@@ -74,6 +74,8 @@ namespace Network {
 		Address = 1,
 		Host = 2,
 		BonjourService = 3,
+		[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+		Url = 4,
 	}
 
 	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]

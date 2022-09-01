@@ -722,6 +722,7 @@ namespace Network {
 		[iOS (16,0)]
 		[Watch (9,0)]
 #endif
+		[return: MarshalAs (UnmanagedType.I1)]
 		[DllImport (Constants.NetworkLibrary)]
 		static extern bool nw_parameters_requires_dnssec_validation (OS_nw_parameters parameters);
 
@@ -737,7 +738,7 @@ namespace Network {
 		[Watch (9,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_parameters_set_requires_dnssec_validation (OS_nw_parameters parameters, bool requires_dnssec_validation);
+		static extern void nw_parameters_set_requires_dnssec_validation (OS_nw_parameters parameters, [MarshalAs (UnmanagedType.I1)] bool requires_dnssec_validation);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]

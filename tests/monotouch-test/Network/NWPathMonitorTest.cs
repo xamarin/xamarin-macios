@@ -125,6 +125,14 @@ namespace monotouchtest.Network
 				monitor.ProhibitInterfaceType (NWInterfaceType.Wifi);
 			});
 		}
+		
+		[Test]
+		public void CreateForEthernetChannelTest ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			using var pathMonitor = NWPathMonitor.CreateForEthernetChannel ();
+			Assert.NotNull (pathMonitor);
+		}
 	}
 }
 #endif

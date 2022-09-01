@@ -28,7 +28,6 @@ using NSRulerMarker=System.Object;
 using NSRulerView=System.Object;
 using NSTextAttachmentCell=System.Object;
 using NSTextBlock=System.Object;
-using NSTextList=System.Object;
 using NSTextTableBlock=System.Object;
 using NSTextTabType=System.Object;
 using NSTextStorageEditedFlags=System.Object;
@@ -4077,7 +4076,7 @@ namespace UIKit {
 		NSTextRange GetAdjustedRange (NSTextRange textRange, bool forEditingTextSelection);
 	}
 
-	[NoWatch, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+	[TV (9,0), NoWatch, Mac (10,0), iOS (7,0), MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSTextList : NSCoding, NSCopying, NSSecureCoding {
 		[Export ("initWithMarkerFormat:options:")]
@@ -4127,7 +4126,6 @@ namespace UIKit {
 	[BaseType (typeof (NSTextParagraph))]
 	interface NSTextListElement
 	{
-
 		[Export ("initWithAttributedString:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor ([NullAllowed] NSAttributedString attributedString);
@@ -4138,11 +4136,11 @@ namespace UIKit {
 
 		[Export ("initWithParentElement:textList:contents:markerAttributes:childElements:")]
 		[DesignatedInitializer]
-		NativeHandle Constructor ([NullAllowed] NSTextListElement parent, NSTextList textList, [NullAllowed] NSAttributedString contents, [NullAllowed] NSDictionary<NSString, NSObject> markerAttributes, [NullAllowed] NSTextListElement[] children);
+		NativeHandle Constructor ([NullAllowed] NSTextListElement parent, NSTextList textList, [NullAllowed] NSAttributedString contents, [NullAllowed] NSDictionary markerAttributes, [NullAllowed] NSTextListElement[] children);
 
 		[Static]
 		[Export ("textListElementWithContents:markerAttributes:textList:childElements:")]
-		NSTextListElement Create (NSAttributedString contents, [NullAllowed] NSDictionary<NSString, NSObject> markerAttributes, NSTextList textList, [NullAllowed] NSTextListElement[] children);
+		NSTextListElement Create (NSAttributedString contents, [NullAllowed] NSDictionary markerAttributes, NSTextList textList, [NullAllowed] NSTextListElement[] children);
 
 		[Static]
 		[Export ("textListElementWithChildElements:textList:nestingLevel:")]
@@ -4156,7 +4154,7 @@ namespace UIKit {
 		NSAttributedString Contents { get; }
 
 		[NullAllowed, Export ("markerAttributes", ArgumentSemantic.Strong)]
-		NSDictionary<NSString, NSObject> MarkerAttributes { get; }
+		NSDictionary WeakMarkerAttributes { get; }
 
 		[Export ("attributedString", ArgumentSemantic.Strong)]
 		NSAttributedString AttributedString { get; }
@@ -4167,6 +4165,5 @@ namespace UIKit {
 		[NullAllowed, Export ("parentElement", ArgumentSemantic.Weak)]
 		NSTextListElement ParentElement { get; }
 	}
-
 
 }

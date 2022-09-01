@@ -82,7 +82,7 @@ namespace Network {
 		[Watch (9,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern string? nw_advertise_descriptor_get_application_service_name (OS_nw_advertise_descriptor advertise_descriptor);
+		static extern IntPtr nw_advertise_descriptor_get_application_service_name (OS_nw_advertise_descriptor advertise_descriptor);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -95,7 +95,14 @@ namespace Network {
 		[iOS (16,0)]
 		[Watch (9,0)]
 #endif
-		public string? ApplicationServiceName => nw_advertise_descriptor_get_application_service_name (GetCheckedHandle ());
+		public string? ApplicationServiceName {
+			get {
+				var appNamePtr = nw_advertise_descriptor_get_application_service_name (GetCheckedHandle ());
+				if (appNamePtr == IntPtr.Zero)
+					return null;
+				return Marshal.PtrToStringAnsi (appNamePtr);
+			}
+		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern IntPtr nw_advertise_descriptor_create_bonjour_service (string name, string type, string? domain);

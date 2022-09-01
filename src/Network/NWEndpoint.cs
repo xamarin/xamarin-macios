@@ -211,7 +211,7 @@ namespace Network {
 		[iOS (16,0)]
 		[Watch (9,0)]
 #endif
-		public ReadOnlySpan<byte> GetSignature {
+		public ReadOnlySpan<byte> Signature {
 			get {
 				unsafe {
 					var data = nw_endpoint_get_signature (GetCheckedHandle (), out var length);

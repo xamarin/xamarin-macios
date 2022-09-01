@@ -1,4 +1,5 @@
 #if !__WATCHOS__
+using System;
 using Foundation;
 using Network;
 
@@ -51,6 +52,19 @@ namespace MonoTouchFixtures.Network {
 
 		[Test]
 		public void TestBonjourDomainProperty () => Assert.AreEqual (domain, descriptor.BonjourDomain);
+
+		[Test]
+		public void TestApplicationServiceConstructor ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+			Assert.Throws<ArgumentNullException> (() => {
+				using var appServiceDescriptor = NWBrowserDescriptor.CreateapplicAtionServiceName (null);
+			}, "App service is null");
+			
+			var appName = "myService"; 
+			using var appServiceDescriptor = NWBrowserDescriptor.CreateapplicAtionServiceName (appName);
+			Assert.AreEqual (appName, appServiceDescriptor.ApplicationServiceName);
+		}
 	}
 }
 #endif
