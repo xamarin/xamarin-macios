@@ -817,8 +817,10 @@ namespace FileProvider {
 		[Export ("refreshInterval")]
 		double RefreshInterval { get; }
 
-		[NoWatch, NoTV, NoMacCatalyst, Mac (13, 0), iOS (16, 0)]
+#if XAMCORE_5_0
 		[Abstract]
+#endif
+		[NoWatch, NoTV, NoMacCatalyst, Mac (13, 0), iOS (16, 0)]
 		[Export ("maximumSizeReached")]
 		bool MaximumSizeReached { [Bind ("isMaximumSizeReached")] get; }
 	}

@@ -3244,4 +3244,21 @@ namespace AppKit {
 		Medium = 2,
 		Large = 3,
 	}
+
+	[NoMacCatalyst, Mac (13,0)]
+	[Native]
+	public enum NSColorWellStyle : long
+	{
+		Default = 0,
+		Minimal,
+		Expanded,
+	}
+
+	[NoMacCatalyst, Mac (13,0)]
+	[Native]
+	public enum NSComboButtonStyle : long
+	{
+		Split = 0,
+		Unified = 1,
+	}
 }

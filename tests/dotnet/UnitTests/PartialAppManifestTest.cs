@@ -1,10 +1,3 @@
-using System.Collections.Generic;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
-using Xamarin.MacDev;
-
 namespace Xamarin.Tests {
 	public class PartialAppManifestTest : TestBaseClass {
 

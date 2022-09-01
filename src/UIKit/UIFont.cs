@@ -183,7 +183,7 @@ namespace UIKit {
 #else
 		[Watch (9,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
 #endif
-		static double GetFontWidth (UIFontWidth width)
+		static nfloat GetFontWidth (UIFontWidth width)
 		{
 			switch (width) {
 			case UIFontWidth.Condensed:

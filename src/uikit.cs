@@ -6223,7 +6223,7 @@ namespace UIKit {
 		[Static]
 		[Internal]
 		[Export ("systemFontOfSize:weight:width:")]
-		IntPtr _SystemFontOfSize (nfloat fontSize, double weight, double width);
+		IntPtr _SystemFontOfSize (nfloat fontSize, nfloat weight, nfloat width);
 
 	}
 
@@ -25376,16 +25376,16 @@ namespace UIKit {
 	[Watch (9,0), TV (16,0), iOS (16, 0), MacCatalyst (16,0)]
 	interface UIFontWidthConstants {
 		[Field ("UIFontWidthCondensed")]
-		double Condensed { get; }
+		nfloat Condensed { get; }
 
 		[Field ("UIFontWidthStandard")]
-		double Standard { get; }
+		nfloat Standard { get; }
 
 		[Field ("UIFontWidthExpanded")]
-		double Expanded { get; }
+		nfloat Expanded { get; }
 
 		[Field ("UIFontWidthCompressed")]
-		double Compressed { get; }
+		nfloat Compressed { get; }
 	}
 
 
