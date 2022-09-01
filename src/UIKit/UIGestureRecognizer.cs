@@ -78,7 +78,7 @@ namespace UIKit {
 		}
 
 		[Register ("__UIGestureRecognizerGenericCB")]
-		public class Callback<T> : Token where T: UIGestureRecognizer {
+		internal class Callback<T> : Token where T: UIGestureRecognizer {
 			Action<T> action;
 			
 			internal Callback (Action<T> action)
