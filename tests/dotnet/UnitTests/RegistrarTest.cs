@@ -38,11 +38,16 @@ namespace Xamarin.Tests {
 			// Revert to the original version of the main assembly
 			File.WriteAllBytes (appExecutable, firstAssembly);
 
-			if (validated) {
-				ExecuteProjectWithMagicWordAndAssert (projectPath, platform, runtimeIdentifiers);
-			} else if (CanExecute (platform, runtimeIdentifiers)) {
-				var rv = base.Execute (GetNativeExecutable (platform, appDir), out var output, out _);
-				Assert.AreEqual (1, rv.ExitCode, "Expected no validation");
+			Environment.SetEnvironmentVariable ("XAMARIN_VALIDATE_STATIC_REGISTRAR_CODE", "1");
+			try {
+				if (validated) {
+					ExecuteProjectWithMagicWordAndAssert (projectPath, platform, runtimeIdentifiers);
+				} else if (CanExecute (platform, runtimeIdentifiers)) {
+					var rv = base.Execute (GetNativeExecutable (platform, appDir), out var output, out _);
+					Assert.AreEqual (1, rv.ExitCode, "Expected no validation");
+				}
+			} finally {
+				Environment.SetEnvironmentVariable ("XAMARIN_VALIDATE_STATIC_REGISTRAR_CODE", null);
 			}
 		}
 	}

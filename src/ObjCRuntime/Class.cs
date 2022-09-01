@@ -489,7 +489,7 @@ namespace ObjCRuntime {
 				return;
 			verified_static_registrar_code = true;
 
-			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XAMARIN_SKIP_STATIC_REGISTRAR_CODE_VALIDATION")))
+			if (string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XAMARIN_VALIDATE_STATIC_REGISTRAR_CODE")))
 				return;
 
 			var map = Runtime.options->RegistrationMap;
