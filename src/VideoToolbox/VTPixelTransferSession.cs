@@ -94,5 +94,13 @@ namespace VideoToolbox {
 
 			return VTPixelTransferSessionTransferImage (GetCheckedHandle (), sourceBuffer.Handle, destinationBuffer.Handle);
 		}
+
+		public VTStatus SetTransferProperties (VTPixelTransferProperties options)
+		{
+			if (options is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
+
+			return VTSessionSetProperties (Handle, options.Dictionary.Handle);
+		}
 	}	
 }

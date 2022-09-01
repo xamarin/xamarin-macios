@@ -94,5 +94,13 @@ namespace VideoToolbox {
 
 			return VTPixelRotationSessionRotateImage (GetCheckedHandle (), sourceBuffer.Handle, destinationBuffer.Handle);
 		}
+
+		public VTStatus SetRotationProperties (VTPixelRotationProperties options)
+		{
+			if (options is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (options));
+
+			return VTSessionSetProperties (Handle, options.Dictionary.Handle);
+		}
 	}	
 }
