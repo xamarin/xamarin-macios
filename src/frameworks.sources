@@ -303,7 +303,7 @@ AVKIT_SOURCES = \
 
 # AVRouting
 
-AVKIT_SOURCES = \
+AVROUTING_SOURCES = \
 	AVRouting/AVCustomDeviceRoute.cs \
 
 # BackgroundTasks
