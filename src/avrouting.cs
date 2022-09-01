@@ -12,7 +12,7 @@ using ObjCRuntime;
 using Foundation;
 using UniformTypeIdentifiers;
 using AVKit;
-// using NWEndpoint = global::NetworkExtension.NWEndpoint;
+using Network;
 
 #if !NET
 using NativeHandle = System.IntPtr;
@@ -40,8 +40,8 @@ namespace AVRouting {
 		[Export ("networkEndpoint")]
 		OS_nw_endpoint _NetworkEndpoint { get; }
 
-		[Wrap ("new Network.NWEndpoint (_NetworkEndpoint ?? IntPtr.Zero, true)")]
-		Network.NWEndpoint NetworkEndpoint { get; }
+		[Wrap ("new NWEndpoint (_NetworkEndpoint ?? IntPtr.Zero, true)")]
+		NWEndpoint NetworkEndpoint { get; }
 
 		[NullAllowed, Export ("bluetoothIdentifier")]
 		NSUuid BluetoothIdentifier { get; }
