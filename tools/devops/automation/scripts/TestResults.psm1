@@ -368,5 +368,72 @@ function New-ParallelTestsResults {
     return [ParallelTestsResults]::new($Results, $Context, $TestPrefix, $VSDropsIndex)
 }
 
+<#
+    .SYNOPSIS
+        Find test results in a directory
+#>
+function New-TestSummaryResults {
+    param (
+        [string]
+        $Path,
+        [string[]]
+        $Labels,
+        [string]
+        $TestPrefix
+    )
+
+    $testResults = [System.Collections.ArrayList]@()
+    foreach ($label in $Labels) {
+        $label = $label.Replace("-", "_")
+        $environmentVariable = "TESTS_JOBSTATUS_$($label.ToUpper())"
+        $status = [Environment]::GetEnvironmentVariable($environmentVariable)
+
+        Write-Host "Test results for $label is '$status'"
+
+        $testSummaryDirectoryExpression = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-$TestPrefix$label-*"
+
+        # Get the list of directories
+        $directoryFilter = "TestSummary-$TestPrefix$label-*"
+        $testSummaryDirectories = Get-ChildItem -Path $Path -Directory -Filter $directoryFilter
+
+        if ($testSummaryDirectories.length -eq 0) {
+            Write-Host "WARNING: Found no directories matching $directoryFilter for label $label"
+            continue
+        }
+
+        # Compute the attempt # and create a list of (Name, Attempt) entries
+        $attemptDirectories = [System.Collections.ArrayList]@()
+        $computeAttempt = {this.Name.Substring($this.Name.LastIndexOf("-") + 1)}
+        foreach ($dir in $testSummaryDirectories) {
+            $attempt = [int] $dir.Name.Substring($dir.Name.LastIndexOf("-") + 1)
+            $obj = [PSCustomObject]@{
+                Name = $dir
+                Attempt = [int] $attempt
+            }
+            $attemptDirectories += $obj
+        }
+
+        # Sort the list by attempt #
+        $attemptDirectories = $attemptDirectories | Sort-Object -Property "Attempt"
+
+        # Get the last path in the array, that's the last attempt
+        $testSummaryDirectory = $attemptDirectories[$attemptDirectories.count-1]
+        $attemptPath = $testSummaryDirectory.Name
+        $testSummaryPath = Join-Path $attemptPath "TestSummary.md"
+
+        Write-Host "Found "$attemptDirectories.count" directories, selected $testSummaryDirectory and final path is $testSummaryPath"
+
+        if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
+            Write-Host "WARNING: Path $testSummaryPath does not exist"
+        }
+
+        $result = New-TestResults -Path $testSummaryPath -Status $status -Label $label -Context "$Env:CONTEXT - $label"
+        $testResults += $result
+    }
+
+    return $testResults
+}
+
 Export-ModuleMember -Function New-TestResults
 Export-ModuleMember -Function New-ParallelTestsResults
+Export-ModuleMember -Function New-TestSummaryResults

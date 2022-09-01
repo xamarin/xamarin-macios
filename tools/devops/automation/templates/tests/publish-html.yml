@@ -54,21 +54,8 @@ steps:
     $DebugPreference = "Continue" # enable debug messages
 
     $labels = "$Env:LABELS".Split(";")
-    $testResults = [System.Collections.ArrayList]@()
-    foreach ($label in $labels) {
-      $label = $label.Replace("-", "_")
-      $status = Get-Item "Env:TESTS_JOBSTATUS_$($label.ToUpper())"
-      $testSummaryPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-${{ parameters.testPrefix }}$label\TestSummary.md"
 
-      Write-Host "Test results for $label $($status.Value)"
-      Write-Host "Test summary path for $label $($testSummaryPath)"
-      if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
-        Write-Host "WARNING: Path is not present."
-      }
-
-      $result = New-TestResults -Path $testSummaryPath -Status $status.Value -Label $label -Context "$Env:CONTEXT - $label"
-      $testResults.Add($result)
-    }
+    $testResults = New-TestSummaryResults -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" -Labels $labels -TestPrefix "${{ parameters.testPrefix }}"
 
     $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT" -TestPrefix "${{ parameters.testPrefix }}" -VSDropsIndex $vsdropsIndex
     $success = $parallelResults.IsSuccess()
