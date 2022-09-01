@@ -46,6 +46,14 @@ namespace NearbyInteraction {
 
 		static MatrixFloat4x4? _WorldTransformNotAvailable;
 
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
+		[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
+#endif // NET
 		// Following similar strategy found here: https://github.com/xamarin/maccore/issues/2274
 		[Field ("NINearbyObjectWorldTransformNotAvailable",  "NearbyInteraction")]
 		public static MatrixFloat4x4 WorldTransformNotAvailable {
@@ -53,6 +61,8 @@ namespace NearbyInteraction {
 				if (_WorldTransformNotAvailable is null) {
 					unsafe {
 						MatrixFloat4x4 *pointer = (MatrixFloat4x4 *) Dlfcn.GetIndirect (Libraries.NearbyInteraction.Handle, "NINearbyObjectWorldTransformNotAvailable");
+						if (pointer is null)
+							throw new PlatformNotSupportedException ("This property is not supported on this version of the OS");
 						_WorldTransformNotAvailable = *pointer;
 					}
 				}
