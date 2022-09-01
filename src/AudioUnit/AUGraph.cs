@@ -394,12 +394,7 @@ namespace AudioUnit
 
 			using (var buffers = new AudioBuffers (data)) {
 #if NET
-				AudioUnitRenderActionFlags tempActionFlags = *actionFlags;
-				var tempTimeStamp = *timeStamp;
-				var returnValue = callback (tempActionFlags, tempTimeStamp, busNumber, numberFrames, buffers);
-				*actionFlags = tempActionFlags;
-				*timeStamp = tempTimeStamp;
-				return returnValue;
+				return callback (*actionFlags, *timeStamp, busNumber, numberFrames, buffers);
 #else
 				return callback (actionFlags, timeStamp, busNumber, numberFrames, buffers);
 #endif
