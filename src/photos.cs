@@ -1194,7 +1194,7 @@ namespace Photos
 		[TV (16,0), Mac (13,0), iOS (16,0)]
 		[Export ("fetchPersistentChangesSinceToken:error:")]
 		[return: NullAllowed]
-		PHPersistentChangeFetchResult FetchPersistentChanges (PHPersistentChangeToken token, [NullAllowed] out NSError error);
+		PHPersistentChangeFetchResult FetchPersistentChanges (PHPersistentChangeToken since, [NullAllowed] out NSError error);
 
 		[TV (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Export ("currentChangeToken")]
@@ -1506,7 +1506,7 @@ namespace Photos
 
 		[Export ("changeDetailsForObjectType:error:")]
 		[return: NullAllowed]
-		PHPersistentObjectChangeDetails ChangeDetails (PHObjectType objectType, [NullAllowed] out NSError error);
+		PHPersistentObjectChangeDetails GetChangeDetails (PHObjectType objectType, [NullAllowed] out NSError error);
 	}
 
 	delegate void PHPersistentChangeFetchResultEnumerator (PHPersistentChange change, ref bool stop);

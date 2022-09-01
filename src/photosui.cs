@@ -140,7 +140,7 @@ namespace PhotosUI {
 
 		[TV (10,0), iOS (9,1), NoMac]
 		[Export ("livePhotoView:extraMinimumTouchDurationForTouch:withStyle:")]
-		double ExtraMinimumTouchDuration (PHLivePhotoView livePhotoView, UITouch touch, PHLivePhotoViewPlaybackStyle playbackStyle);
+		double GetExtraMinimumTouchDuration (PHLivePhotoView livePhotoView, UITouch touch, PHLivePhotoViewPlaybackStyle playbackStyle);
 	}
 
 	[Mac (10,13)][NoiOS][NoTV][NoWatch]
