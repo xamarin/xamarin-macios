@@ -11,12 +11,10 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 using System;
-#if __MACCATALYST__
+#if __MACCATALYST__ || !IOS
 using ARSession = Foundation.NSObject;
-#elif IOS
-using ARKit;
 #else
-using ARSession = Foundation.NSObject;
+using ARKit;
 #endif
 
 #if NET
@@ -183,7 +181,7 @@ namespace NearbyInteraction {
 
 		[Watch (9,0), NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("sessionDidStartRunning:")]
-		void SessionDidStartRunning (NISession session);
+		void DidSessionStartRunning (NISession session);
 	}
 
 	[Watch (8,0), NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
