@@ -67,7 +67,7 @@ namespace Network {
 		[iOS (16,0)]
 		[Watch (9,0)]
 #endif
-		public static NWBrowserDescriptor CreateapplicAtionServiceName (string applicationServiceName)
+		public static NWBrowserDescriptor CreateApplicationServiceName (string applicationServiceName)
 		{
 			if (applicationServiceName is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (applicationServiceName));
@@ -103,8 +103,6 @@ namespace Network {
 		public string? ApplicationServiceName {
 			get {
 				var appNamePtr = nw_browse_descriptor_get_application_service_name (GetCheckedHandle ());
-				if (appNamePtr == IntPtr.Zero)
-					return null;
 				return Marshal.PtrToStringAnsi (appNamePtr);
 			}
 		}

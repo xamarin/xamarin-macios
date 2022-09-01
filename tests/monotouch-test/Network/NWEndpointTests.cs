@@ -18,7 +18,7 @@ namespace MonoTouchFixtures.Network {
 		[SetUp]
 		public void SetUp ()
 		{
-				endpoint = NWEndpoint.Create ("https://github.com");
+			endpoint = NWEndpoint.Create ("https://github.com");
 		}
 
 		[TearDown]

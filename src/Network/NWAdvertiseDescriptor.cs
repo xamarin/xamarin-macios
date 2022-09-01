@@ -98,8 +98,6 @@ namespace Network {
 		public string? ApplicationServiceName {
 			get {
 				var appNamePtr = nw_advertise_descriptor_get_application_service_name (GetCheckedHandle ());
-				if (appNamePtr == IntPtr.Zero)
-					return null;
 				return Marshal.PtrToStringAnsi (appNamePtr);
 			}
 		}

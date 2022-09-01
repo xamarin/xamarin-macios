@@ -1,10 +1,10 @@
 //
-// NSProtocolFramerOptions : Bindings the Netowrk nw_protocol_options API focus on Framer options.
+// NSProtocolFramerOptions : Bindings the Network nw_protocol_options API focus on Framer options.
 //
 // Authors:
 //   Manuel de la Pena <mandel@microsoft.com>
 //
-// Copyrigh 2019 Microsoft Inc
+// Copyright 2019 Microsoft Inc
 //
 
 #nullable enable
