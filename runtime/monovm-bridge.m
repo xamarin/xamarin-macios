@@ -60,12 +60,6 @@ xamarin_bridge_setup ()
 void
 xamarin_bridge_initialize ()
 {
-#if DOTNET
-	bool use_mono_workaround = xamarin_init_mono_debug && getenv ("XAMARIN_SKIP_INTERPRETER_DEBUGGING_WORKAROUND") == 0;
-#else
-	bool use_mono_workaround = false;
-#endif
-
 	if (xamarin_register_modules != NULL)
 		xamarin_register_modules ();
 	DEBUG_LAUNCH_TIME_PRINT ("\tAOT register time");
@@ -75,9 +69,9 @@ xamarin_bridge_initialize ()
 	DEBUG_LAUNCH_TIME_PRINT ("\tDebug init time");
 #endif
 	
-	if (xamarin_init_mono_debug && !use_mono_workaround)
+	if (xamarin_init_mono_debug)
 		mono_debug_init (MONO_DEBUG_FORMAT_MONO);
-
+	
 	mono_install_assembly_preload_hook (xamarin_assembly_preload_hook, NULL);
 	mono_install_load_aot_data_hook (xamarin_load_aot_data, xamarin_free_aot_data, NULL);
 
@@ -91,32 +85,7 @@ xamarin_bridge_initialize ()
 	mono_install_unhandled_exception_hook (xamarin_unhandled_exception_handler, NULL);
 	mono_install_ftnptr_eh_callback (xamarin_ftnptr_exception_handler);
 
-	const char *argc[] = {
-		"",
-		"--interp=-all",
-		"",
-		NULL,
-	};
-
-	if (use_mono_workaround) {
-		// This is a workaround for a runtime bug that prevents debugging from working properly.
-		// We call mono_main to disable interpreter optimizations when debugging, because
-		// mono's own interpreter initialization doesn't take into account that the debugger
-		// might be attached, and the subsequent optimizations can break the debugger.
-		// The stdout dance is to hide mono's "helpful" output telling us the command line
-		// arguments are incorrect (which they would be normally, but we're abusing mono_main
-		// to get the side effects).
-		fflush (stdout);
-		int originalStdout = dup (STDOUT_FILENO);
-		int devnull = open ("/dev/null", O_RDWR);
-		dup2 (devnull, STDOUT_FILENO);
-		mono_main (2, (char**)argc);
-		fflush (stdout);
-		dup2 (originalStdout, STDOUT_FILENO);
-	} else {
-		mono_jit_init_version ("MonoTouch", "mobile");
-	}
-	
+	mono_jit_init_version ("MonoTouch", "mobile");
 	/*
 	  As part of mono initialization a preload hook is added that overrides ours, so we need to re-instate it here.
 	  This is wasteful, but there's no way to manipulate the preload hook list except by adding to it.
