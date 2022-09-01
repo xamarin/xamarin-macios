@@ -430,6 +430,10 @@ namespace VideoToolbox {
 		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0), NoWatch]
 		[Export ("SupportsBaseFrameQP")]
 		bool SupportsBaseFrameQP { get; }
+
+		[Watch (8,5), TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("OutputBitDepth")]
+		bool OutputBitDepth { get; set; }
 	}
 
 	[iOS (8,0), TV (10,2)]

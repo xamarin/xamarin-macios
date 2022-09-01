@@ -514,19 +514,5 @@ namespace VideoToolbox {
 			get => VTAlphaChannelModeExtensions.GetValue (GetNSStringValue (VTCompressionPropertyKey.AlphaChannelMode)!);
 			set => SetStringValue (VTCompressionPropertyKey.AlphaChannelMode, value.GetConstant ());
 		}
-
-#if NET
-		[SupportedOSPlatform ("macos12.3")]
-		[SupportedOSPlatform ("ios15.4")]
-		[SupportedOSPlatform ("maccatalyst15.4")]
-		[SupportedOSPlatform ("watchos8.5")]
-		[SupportedOSPlatform ("tvos15.4")]
-#else
-		[Watch (8,5), TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
-#endif
-		public long? OutputBitDepth { 
-			get => GetLongValue (VTCompressionPropertyKey.OutputBitDepth);
-			set => SetNumberValue (VTCompressionPropertyKey.OutputBitDepth, value);
-		}
 	}
 }
