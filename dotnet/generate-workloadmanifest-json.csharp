@@ -40,10 +40,8 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net7\",");
 		writer.WriteLine ($"				\"Microsoft.{platform}.Windows.Sdk.Aliased.net6\",");
 	}
-	writer.WriteLine ($"				\"Microsoft.{platform}.Ref.net7\",");
 	writer.WriteLine ($"				\"Microsoft.{platform}.Ref\",");
 	foreach (var rid in runtimeIdentifiers) {
-		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}.net7\",");
 		writer.WriteLine ($"				\"Microsoft.{platform}.Runtime.{rid}\",");
 	}
 	writer.WriteLine ($"				\"Microsoft.{platform}.Templates.net7\"");
