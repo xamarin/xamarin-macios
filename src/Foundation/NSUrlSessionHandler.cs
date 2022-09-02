@@ -886,7 +886,7 @@ namespace Foundation {
 #if NET
 					// if the trust delegate allows to ignore the cert, do it. Since we are using nullables, if the delegate is not present, by default is false
 					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
-						(InvokeServerCertificateCustomValidationCallback (inflight.Request, challenge.ProtectionSpace.ServerSecTrust));
+						(sessionHandler.ServerCertificateCustomValidationCallback is not null && InvokeServerCertificateCustomValidationCallback (inflight.Request, challenge.ProtectionSpace.ServerSecTrust));
 #else
 					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
 					// more general one. Since we are using nullables, if the delegate is not present, by default is false
@@ -1015,11 +1015,8 @@ namespace Foundation {
 					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
 				}
 
-				// hostname verification
-				// based on dotnet/runtime src/native/libs/System.Security.Cryptography.Native.Apple/pal_ssl.c:512
-				var secTrustResult = secTrust.Evaluate ();
-				if (secTrustResult == SecTrustResult.Deny || secTrustResult == SecTrustResult.RecoverableTrustFailure) {
-					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNameMismatch;
+				if (!secTrust.Evaluate (out _)) {
+					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
 				}
 
 				return sslPolicyErrors;
