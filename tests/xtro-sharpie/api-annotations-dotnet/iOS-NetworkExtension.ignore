@@ -3,3 +3,6 @@
 ## is, which means we can't use the same managed enum for both cases (the native enums aren't entirely identical
 ## either: one is pointer sized while the other is 32-bit always).
 !duplicate-type-name! NWPathStatus enum exists as both NetworkExtension.NWPathStatus and Network.NWPathStatus
+
+# value got removed in xcode14
+!extra-enum-value! Managed value 1 for NEOnDemandRuleInterfaceType.Ethernet is available for the current platform while the value in the native header is not

@@ -177,6 +177,33 @@ namespace NetworkExtension {
 		Unknown = 4,
 	}
 
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Native]
+	[ErrorDomain ("NEVPNConnectionErrorDomain")]
+	public enum NEVpnConnectionError : long
+	{
+		Overslept = 1,
+		NoNetworkAvailable = 2,
+		UnrecoverableNetworkChange = 3,
+		ConfigurationFailed = 4,
+		ServerAddressResolutionFailed = 5,
+		ServerNotResponding = 6,
+		ServerDead = 7,
+		AuthenticationFailed = 8,
+		ClientCertificateInvalid = 9,
+		ClientCertificateNotYetValid = 10,
+		ClientCertificateExpired = 11,
+		PluginFailed = 12,
+		ConfigurationNotFound = 13,
+		PluginDisabled = 14,
+		NegotiationFailed = 15,
+		ServerDisconnected = 16,
+		ServerCertificateInvalid = 17,
+		ServerCertificateNotYetValid = 18,
+		ServerCertificateExpired = 19,
+	}
+
+
 	[iOS (9,0)][Mac (10,11)]
 	[BaseType (typeof (NSObject))]
 	[Abstract] // documented as such and ...
@@ -930,6 +957,11 @@ namespace NetworkExtension {
 	
 		[NullAllowed, Export ("excludedRoutes", ArgumentSemantic.Copy)]
 		NEIPv4Route[] ExcludedRoutes { get; set; }
+
+		[NoWatch, NoTV, NoiOS, Mac (13, 0)]
+		[Export ("router")]
+		[NullAllowed]
+		string Router { get; set; }
 	}
 
 	[iOS (9,0)][Mac (10,11)]
@@ -1249,6 +1281,11 @@ namespace NetworkExtension {
 		[Notification]
 		[Field ("NEVPNStatusDidChangeNotification")]
 		NSString StatusDidChangeNotification { get; }
+
+		[Async]
+		[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Export ("fetchLastDisconnectErrorWithCompletionHandler:")]
+		void FetchLastDisconnectError (Action<NSError> handler);
 	}
 
 	[Static][Internal]
@@ -2303,6 +2340,11 @@ namespace NetworkExtension {
 		[NullAllowed]
 		[Export ("serverURL", ArgumentSemantic.Copy)]
 		NSUrl ServerUrl { get; set; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("identityReference", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		NSData IdentityReference { get; set; }
 	}
 
 	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
@@ -2312,6 +2354,11 @@ namespace NetworkExtension {
 		[NullAllowed]
 		[Export ("serverName")]
 		string ServerName { get; set; }
+
+		[NoWatch, NoTV, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("identityReference", ArgumentSemantic.Copy)]
+		[NullAllowed]
+		NSData IdentityReference { get; set; }
 	}
 
 	[NoWatch, NoTV, Mac (11,0), iOS (14,0)]
@@ -2388,6 +2435,23 @@ namespace NetworkExtension {
 		[NullAllowed]
 		[Export ("trackingAreaCode")]
 		string TrackingAreaCode { get; set; }
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (13,0)]
+	[BaseType (typeof (NEPacketTunnelProvider))]
+	interface NEEthernetTunnelProvider
+	{
+	}
+
+	[NoWatch, NoTV, NoiOS, Mac (13,0)]
+	[BaseType (typeof (NEPacketTunnelNetworkSettings))]
+	interface NEEthernetTunnelNetworkSettings
+	{
+		[Export ("initWithTunnelRemoteAddress:ethernetAddress:mtu:")]
+		NativeHandle Constructor (string address, string ethernetAddress, nint mtu);
+
+		[Export ("ethernetAddress")]
+		string EthernetAddress { get; }
 	}
 
 }
