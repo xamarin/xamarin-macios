@@ -14,8 +14,12 @@ using Foundation;
 using ObjCRuntime;
 
 using HealthKit;
-using UIKit;
 using NUnit.Framework;
+#if MONOMAC
+using AppKit;
+#else
+using UIKit;
+#endif
 
 namespace MonoTouchFixtures.HealthKit {
 
@@ -26,7 +30,11 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void Error ()
 		{
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#else
 			TestRuntime.AssertXcodeVersion (8, 0);
+#endif
 
 			NSError error;
 			using (var d = new NSData ()) {
@@ -44,7 +52,7 @@ namespace MonoTouchFixtures.HealthKit {
 #endif
 
 				if (throwsException) {
-#if NET
+#if NET || MONOMAC
 					var ex = Assert.Throws<ObjCException> (action, "Exception");
 #else
 					var ex = Assert.Throws<MonoTouchException> (action, "Exception");
