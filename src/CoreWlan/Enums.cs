@@ -92,6 +92,10 @@ namespace CoreWlan {
 		[Mac (10,15)]
 		Wpa3Transition = 13,
 		Unknown = long.MaxValue,
+		[Mac (13,0)]
+		Owe = 14,
+		[Mac (13,0)]
+		OweTransition = 15,
 	}
 
 	[NoMacCatalyst]
