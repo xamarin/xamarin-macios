@@ -101,15 +101,9 @@ namespace Network {
 		[NoiOS]
 		[Mac (13,0)]
 #endif
-		public NWEthernetChannel (ushort ethernetType, NWInterface networkInterface, NWParameters parameters) {
-			if (networkInterface is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (networkInterface));
-
-			if (parameters is null)
-				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameters));
-
-			InitializeHandle (nw_ethernet_channel_create_with_parameters (ethernetType, networkInterface.Handle, parameters.Handle));
-		}
+		public NWEthernetChannel (ushort ethernetType, NWInterface networkInterface, NWParameters parameters) =>
+			InitializeHandle (nw_ethernet_channel_create_with_parameters (ethernetType, 
+						networkInterface.GetNonNullHandle (nameof (networkInterface)), parameters.GetNonNullHandle (nameof (parameters))));
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_ethernet_channel_start (OS_nw_ethernet_channel ethernet_channel);
