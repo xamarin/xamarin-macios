@@ -25267,6 +25267,11 @@ namespace UIKit {
 	[BaseType (typeof(NSObject))]
 	interface UIFindInteractionDelegate
 	{
+		// This abstract method needs attributes since PDFKit.PDFView
+		// implements this interface and has iOS 11 support. When inlining
+		// this method, the attributes are not carried over and causes issues
+		// since it is not supported until iOS 16
+		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0), NoMac]
 		[Abstract]
 		[Export ("findInteraction:sessionForView:")]
 		[return: NullAllowed]
