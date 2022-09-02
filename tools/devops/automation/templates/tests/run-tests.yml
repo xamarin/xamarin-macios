@@ -100,59 +100,7 @@ steps:
     Write-Host "##vso[task.setvariable variable=MACCATALYST_WORKLOAD_VERSION;]$catalystVersion"
   displayName: 'Set workload versions for xtro'
 
-- bash: |
-    set -x
-    set -e
-
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET)
-    DOTNET=${var#*=}
-    echo "Using dotnet found at $DOTNET"
-
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET_PLATFORMS)
-    DOTNET_PLATFORMS=${var#*=}
-    echo "Dotnet platforms are '$DOTNET_PLATFORMS'"
-
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR)
-    DOTNET_NUPKG_DIR=${var#*=}
-    echo "Using nuget dir $DOTNET_NUPKG_DIR"
-
-    ROLLBACK_PATH="$(Build.SourcesDirectory)/artifacts/WorkloadRollback/WorkloadRollback.json"
-
-    echo "Rollback file contents:" 
-    echo "$(cat $ROLLBACK_PATH)"
-
-    mkdir -p $DOTNET_NUPKG_DIR
-    ls -R $(Build.SourcesDirectory)/artifacts/not-signed-package
-    cp $(Build.SourcesDirectory)/artifacts/not-signed-package/*.nupkg $DOTNET_NUPKG_DIR
-    cp $(Build.SourcesDirectory)/artifacts/not-signed-package/*.pkg $DOTNET_NUPKG_DIR
-    cp $(Build.SourcesDirectory)/artifacts/not-signed-package/*.zip $DOTNET_NUPKG_DIR
-    ls -R $DOTNET_NUPKG_DIR
-
-    NUGET_SOURCES=$(grep https://pkgs.dev.azure.com ./NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
-    SOURCES=""
-    for source in $NUGET_SOURCES; do
-      SOURCES="$SOURCES --source $source"
-    done
-
-    PLATFORMS=""
-    for platform in $DOTNET_PLATFORMS; do
-      CURRENT=$(echo $platform | tr A-Z a-z)
-      PLATFORMS="$PLATFORMS $CURRENT"
-    done
-
-    for platform in $DOTNET_PLATFORMS; do
-      unzip -l $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip
-      unzip $DOTNET_NUPKG_DIR/Microsoft.$platform.Bundle.*.zip -d tmpdir
-      rsync -av tmpdir/dotnet/sdk-manifests/* $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*/sdk-manifests/
-    done
-    find $(Build.SourcesDirectory)/xamarin-macios/builds/downloads/dotnet-*
-
-    $DOTNET workload install --from-rollback-file $ROLLBACK_PATH --source $DOTNET_NUPKG_DIR $SOURCES --verbosity diag $PLATFORMS
-
-    var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=DOTNET_DIR)
-    DOTNET_DIR=${var#*=}
-    ls -lR $DOTNET_DIR
-
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Install dotnet workloads'
 
