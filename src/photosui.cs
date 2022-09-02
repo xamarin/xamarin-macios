@@ -485,7 +485,7 @@ namespace PhotosUI {
 	[NoMac][NoTV]
 	[DisableDefaultCtor]
 	[NoMacCatalyst]
-#if NET // Can't apply Deprecated and Obsoleted to same element
+#if !NET // Can't apply Deprecated and Obsoleted to same element
 	[Deprecated (PlatformName.iOS, 13, 0)]
 #endif
 	[Obsoleted (PlatformName.iOS, 14, 0)] // Removed from headers completely
