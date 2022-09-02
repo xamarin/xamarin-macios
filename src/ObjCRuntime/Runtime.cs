@@ -1946,6 +1946,8 @@ namespace ObjCRuntime {
 					}
 					if (b != (short) str [i])
 						return false;
+					if (b == 0)
+						return false;
 				}
 				return c [str.Length] == 0;
 			}
