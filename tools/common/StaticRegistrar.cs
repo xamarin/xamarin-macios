@@ -3340,6 +3340,25 @@ namespace Registrar {
 				return;
 			}
 
+			var customConformsToProtocol = method.Selector == "conformsToProtocol:" && method.Method.DeclaringType.Is ("Foundation", "NSObject") && method.Method.Name == "InvokeConformsToProtocol" && method.Parameters.Length == 1;
+			if (customConformsToProtocol) {
+				if (Driver.IsDotNet) {
+					customConformsToProtocol &= method.Parameters [0].Is ("ObjCRuntime", "NativeHandle");
+				} else {
+					customConformsToProtocol &= method.Parameters [0].Is ("System", "IntPtr");
+				}
+				if (customConformsToProtocol) {
+					sb.AppendLine ("-(BOOL) conformsToProtocol: (void *) protocol");
+					sb.AppendLine ("{");
+					sb.AppendLine ("GCHandle exception_gchandle;");
+					sb.AppendLine ("BOOL rv = xamarin_invoke_conforms_to_protocol (self, (Protocol *) protocol, &exception_gchandle);");
+					sb.AppendLine ("xamarin_process_managed_exception_gchandle (exception_gchandle);");
+					sb.AppendLine ("return rv;");
+					sb.AppendLine ("}");
+					return;
+				}
+			}
+
 			var rettype = string.Empty;
 			var returntype = method.ReturnType;
 			var isStatic = method.IsStatic;

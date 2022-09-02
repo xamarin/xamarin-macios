@@ -45,6 +45,17 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.Throws<ArgumentException> (() => UIContentSizeCategoryExtensions.Compare (small, (UIContentSizeCategory)271828));
 			Assert.Throws<ArgumentException> (() => ((UIContentSizeCategory)1234).IsAccessibilityCategory ());
 		}
+
+		[Test]
+		public void GetPreferredContentSizeCategoryTest ()
+		{
+			var sizeNSString = UIApplication.SharedApplication.PreferredContentSizeCategory;
+            var sizeEnum = UIContentSizeCategoryExtensions.GetValue (sizeNSString);
+            var size = UIApplication.SharedApplication.GetPreferredContentSizeCategory ();
+            Assert.AreEqual (sizeEnum, size, "String");
+            var sizeReverse = size.GetConstant ();
+            Assert.AreEqual (sizeNSString, sizeReverse, "NSString");
+		}
 	}
 }
 
