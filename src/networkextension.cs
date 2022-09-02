@@ -180,7 +180,7 @@ namespace NetworkExtension {
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	[ErrorDomain ("NEVPNConnectionErrorDomain")]
-	public enum NEVPNConnectionError : long
+	public enum NEVpnConnectionError : long
 	{
 		Overslept = 1,
 		NoNetworkAvailable = 2,
