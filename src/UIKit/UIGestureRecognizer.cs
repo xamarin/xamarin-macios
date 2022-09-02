@@ -175,26 +175,26 @@ namespace UIKit {
 #if !TVOS
 	public partial class UIRotationGestureRecognizer : UIGestureRecognizer {
 		public UIRotationGestureRecognizer (Action action) : base (action) {}
-		public UIRotationGestureRecognizer (Action<UIRotationGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIRotationGestureRecognizer>(action)) {}
+		public UIRotationGestureRecognizer (Action<UIRotationGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIRotationGestureRecognizer> (action)) {}
 
 	}
 #endif
 
 	public partial class UILongPressGestureRecognizer : UIGestureRecognizer {
 		public UILongPressGestureRecognizer (Action action) : base (action) {}
-		public UILongPressGestureRecognizer (Action<UILongPressGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UILongPressGestureRecognizer>(action)) {}
+		public UILongPressGestureRecognizer (Action<UILongPressGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UILongPressGestureRecognizer> (action)) {}
 
 	}
 
 	public partial class UITapGestureRecognizer : UIGestureRecognizer {
 		public UITapGestureRecognizer (Action action) : base (action) {}
-		public UITapGestureRecognizer (Action<UITapGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UITapGestureRecognizer>(action)) {}
+		public UITapGestureRecognizer (Action<UITapGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UITapGestureRecognizer> (action)) {}
 
 	}
 
 	public partial class UIPanGestureRecognizer : UIGestureRecognizer {
 		public UIPanGestureRecognizer (Action action) : base (action) {}
-		public UIPanGestureRecognizer (Action<UIPanGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIPanGestureRecognizer>(action)) {}
+		public UIPanGestureRecognizer (Action<UIPanGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIPanGestureRecognizer> (action)) {}
 
 		internal UIPanGestureRecognizer (IntPtr sel, Token token) : base (token, sel) {}
 
@@ -203,21 +203,21 @@ namespace UIKit {
 #if !TVOS
 	public partial class UIPinchGestureRecognizer : UIGestureRecognizer {
 		public UIPinchGestureRecognizer (Action action) : base (action) {}
-		public UIPinchGestureRecognizer (Action<UIPinchGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIPinchGestureRecognizer>(action)) {}
+		public UIPinchGestureRecognizer (Action<UIPinchGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIPinchGestureRecognizer> (action)) {}
 
 	}
 #endif
 
 	public partial class UISwipeGestureRecognizer : UIGestureRecognizer {
 		public UISwipeGestureRecognizer (Action action) : base (action) {}
-		public UISwipeGestureRecognizer (Action<UISwipeGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UISwipeGestureRecognizer>(action)) {}
+		public UISwipeGestureRecognizer (Action<UISwipeGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UISwipeGestureRecognizer> (action)) {}
 
 	}
 
 #if !TVOS
 	public partial class UIScreenEdgePanGestureRecognizer : UIPanGestureRecognizer {
 		public UIScreenEdgePanGestureRecognizer (Action action) : base (action) {}
-		public UIScreenEdgePanGestureRecognizer (Action<UIScreenEdgePanGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIScreenEdgePanGestureRecognizer>(action)) {}
+		public UIScreenEdgePanGestureRecognizer (Action<UIScreenEdgePanGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIScreenEdgePanGestureRecognizer> (action)) {}
 
 	}
 
