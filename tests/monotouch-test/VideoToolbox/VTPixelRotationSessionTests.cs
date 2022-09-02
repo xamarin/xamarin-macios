@@ -50,11 +50,11 @@ namespace MonoTouchFixtures.VideoToolbox {
 			using var sourcePixelBuffer = new CVPixelBuffer (640, 480, CVPixelFormatType.CV420YpCbCr8BiPlanarFullRange);
 			using var destinationPixelBuffer = new CVPixelBuffer (480, 640, CVPixelFormatType.CV420YpCbCr8BiPlanarFullRange);
 			
-			var result = session.SetProperty (VTPixelRotationPropertyKeys.Rotation, VTRotation.Clockwise90.GetConstant ());
-			Assert.That (result, Is.EqualTo (VTStatus.Ok), "SetProperty");
+			var result = session.SetProperty (VTPixelRotationPropertyKeys.Rotation, VTRotation.ClockwiseNinety.GetConstant ());
+			Assert.AreEqual (result, VTStatus.Ok, "SetProperty");
 			
 			result = session.RotateImage (sourcePixelBuffer, destinationPixelBuffer);
-			Assert.That (result, Is.EqualTo (VTStatus.Ok), "RotateImage");
+			Assert.AreEqual (result, VTStatus.Ok, "RotateImage");
 		}
 
 		[Test]
@@ -62,10 +62,10 @@ namespace MonoTouchFixtures.VideoToolbox {
 		{
 			using var session = VTPixelRotationSession.Create ();
 			var result = session.SetRotationProperties (new VTPixelRotationProperties {
-				Rotation = VTRotation.Clockwise90
+				Rotation = VTRotation.ClockwiseNinety
 			});
 
-			Assert.That (result == VTStatus.Ok, "SetRotationProperties");
+			Assert.AreEqual (result, VTStatus.Ok, "SetRotationProperties");
 		}
 	}
 }

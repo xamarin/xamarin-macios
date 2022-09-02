@@ -21,6 +21,10 @@ namespace VideoToolbox {
 
 #if NET
 	[SupportedOSPlatform ("macos10.9")]
+	[UnsupportedOSPlatform ("ios")]
+	[UnsupportedOSPlatform ("maccatalyst")]
+	[UnsupportedOSPlatform ("watchos")]
+	[UnsupportedOSPlatform ("tvos")]
 #else
 	[Mac (10,9), NoiOS, NoMacCatalyst, NoWatch, NoTV]
 #endif

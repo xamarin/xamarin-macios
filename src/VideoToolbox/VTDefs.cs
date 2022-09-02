@@ -33,7 +33,6 @@ namespace VideoToolbox {
 		VideoDecoderNotAvailableNow               = -12913,
 		[Obsolete ("Use PixelRotationNotSupported enum value instead.")]
 		ImageRotationNotSupported                 = -12914,
-		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
 		PixelRotationNotSupported                 = -12914,
 		VideoEncoderNotAvailableNow               = -12915,
 		FormatDescriptionChangeNotSupported       = -12916,
@@ -282,10 +281,10 @@ namespace VideoToolbox {
 		[Field ("kVTRotation_0")]
 		Zero,
 		[Field ("kVTRotation_CW90")]
-		Clockwise90,
+		ClockwiseNinety,
 		[Field ("kVTRotation_180")]
 		OneHundredAndEighty,
 		[Field ("kVTRotation_CCW90")]
-		Counterclockwise90,
+		CounterclockwiseNinety,
 	}
 }

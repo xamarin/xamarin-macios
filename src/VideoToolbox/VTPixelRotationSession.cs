@@ -69,7 +69,8 @@ namespace VideoToolbox {
 
 		public static VTPixelRotationSession? Create () => Create (null);
 		
-		public static VTPixelRotationSession? Create (CFAllocator? allocator) {
+		public static VTPixelRotationSession? Create (CFAllocator? allocator)
+		{
 			var result = VTPixelRotationSessionCreate (allocator.GetHandle (), out var ret);
 
 			if (result == VTStatus.Ok && ret != IntPtr.Zero)
