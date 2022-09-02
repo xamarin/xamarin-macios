@@ -69,16 +69,6 @@ steps:
     allowFailedBuilds: true
     path: $(Build.SourcesDirectory)/artifacts
 
-- bash: |
-    set -x
-    set -e
-
-    make global.json
-    make -C builds dotnet
-  workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
-  displayName: Bootstrap dotnet
-  timeoutInMinutes: 30
-
 - pwsh: |
     $workloadPath = "$(Build.SourcesDirectory)/artifacts/WorkloadRollback/WorkloadRollback.json"
     $versionData = Get-Content $workloadPath | ConvertFrom-Json
@@ -103,6 +93,7 @@ steps:
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/install-workloads.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: 'Install dotnet workloads'
+  timeoutInMinutes: 45
 
 - bash: |
     set -x
