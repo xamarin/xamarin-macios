@@ -276,7 +276,7 @@ namespace Network {
 		[Watch (9,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
-		static extern NWQuicStreamType nw_quic_get_stream_type (OS_nw_protocol_metadata stream_metadata);
+		static extern byte nw_quic_get_stream_type (OS_nw_protocol_metadata stream_metadata);
 
 #if NET
 		[SupportedOSPlatform ("tvos16.0")]
@@ -289,7 +289,7 @@ namespace Network {
 		[iOS (16,0)]
 		[Watch (9,0)]
 #endif
-		public NWQuicStreamType StreamType => nw_quic_get_stream_type (GetCheckedHandle ());
+		public NWQuicStreamType StreamType => (NWQuicStreamType) nw_quic_get_stream_type (GetCheckedHandle ());
 
 	}
 }
