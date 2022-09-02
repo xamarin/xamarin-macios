@@ -11,11 +11,10 @@
 #if !WATCH
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Foundation; 
 using ObjCRuntime;
-using CoreGraphics;
+#nullable enable
 
 namespace UIKit {
 
@@ -23,7 +22,7 @@ namespace UIKit {
 		//
 		// Tracks the targets (NSObject, which we always enforce to be Token) to the Selector the point to, used when disposing
 		//
-		Dictionary<Token,IntPtr> recognizers = new Dictionary<Token,IntPtr> ();
+		Dictionary<Token,IntPtr>? recognizers = new Dictionary<Token,IntPtr> ();
 		const string tsel = "target";
 		internal const string parametrized_selector = "target:";
 
@@ -43,7 +42,7 @@ namespace UIKit {
 			var savedHandle = Handle;
 			recognizers = null;
 			
-			if (copyOfRecognizers == null)
+			if (copyOfRecognizers is null)
 				return;
 
 			DangerousRetain (savedHandle);
@@ -59,13 +58,14 @@ namespace UIKit {
 		//
 		public UIGestureRecognizer (Selector sel, Token token) : this (token, sel)
 		{
-			recognizers [token] = sel.Handle;
+
+			recognizers?.Add (token, sel.Handle);
 			MarkDirty ();
 		}
 
 		internal UIGestureRecognizer (IntPtr sel, Token token) : this (token, sel)
 		{
-			recognizers [token] = sel;
+			recognizers?.Add (token, sel);
 			MarkDirty ();
 		}
 		
@@ -80,12 +80,12 @@ namespace UIKit {
 		[Register ("__UIGestureRecognizerGenericCB")]
 		internal class Callback<T> : Token where T: UIGestureRecognizer {
 			Action<T> action;
-			
+
 			internal Callback (Action<T> action)
 			{
 				this.action = action;
 			}
-			
+
 			[Export ("target:")]
 			[Preserve (Conditional = true)]
 			public void Activated (T sender) => action (sender);
@@ -150,7 +150,7 @@ namespace UIKit {
 		{
 			AddTarget (target, sel);
 			MarkDirty ();
-			recognizers [target] = sel;
+			recognizers?.Add(target, sel);
 		}
 
 		public void RemoveTarget (Token token)
@@ -168,7 +168,11 @@ namespace UIKit {
 		//
 		public IEnumerable<Token> GetTargets ()
 		{
-			return (IEnumerable<Token>) recognizers?.Keys ?? Array.Empty<Token> ();
+			if (recognizers?.Keys is null) {
+				return Array.Empty<Token> ();
+			} else {
+				return (IEnumerable<Token>) recognizers.Keys;
+			}
 		}
 	}
 
