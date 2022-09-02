@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
-    <RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
-    <OutputType>Exe</OutputType>
-    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="../AppDelegate.cs" />
-    <None Include="../Info.plist">
-      <Link>Info.plist</Link>
-    </None>
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+		<RuntimeIdentifier>ios-arm64</RuntimeIdentifier>
+		<OutputType>Exe</OutputType>
+		<SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<Compile Include="../AppDelegate.cs" />
+		<None Include="../Info.plist">
+			<Link>Info.plist</Link>
+		</None>
+	</ItemGroup>
 </Project>
