@@ -52,7 +52,7 @@ namespace NearbyInteraction {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos")]
 #else
-		[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
+		[iOS (16,0), Watch (9,0), MacCatalyst (16,0)]
 #endif // NET
 		// Following similar strategy found here: https://github.com/xamarin/maccore/issues/2274
 		[Field ("NINearbyObjectWorldTransformNotAvailable",  "NearbyInteraction")]
