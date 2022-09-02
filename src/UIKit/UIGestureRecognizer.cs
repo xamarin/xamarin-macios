@@ -22,7 +22,7 @@ namespace UIKit {
 		//
 		// Tracks the targets (NSObject, which we always enforce to be Token) to the Selector the point to, used when disposing
 		//
-		Dictionary<Token,IntPtr>? recognizers = new Dictionary<Token,IntPtr> ();
+		Dictionary<Token,IntPtr> recognizers = new Dictionary<Token,IntPtr> ();
 		const string tsel = "target";
 		internal const string parametrized_selector = "target:";
 
@@ -40,7 +40,7 @@ namespace UIKit {
 		{
 			var copyOfRecognizers = recognizers;
 			var savedHandle = Handle;
-			recognizers = null;
+			recognizers.Clear ();
 			
 			if (copyOfRecognizers is null)
 				return;
@@ -58,14 +58,13 @@ namespace UIKit {
 		//
 		public UIGestureRecognizer (Selector sel, Token token) : this (token, sel)
 		{
-
-			recognizers?.Add (token, sel.Handle);
+			recognizers [token] = sel.Handle;
 			MarkDirty ();
 		}
 
 		internal UIGestureRecognizer (IntPtr sel, Token token) : this (token, sel)
 		{
-			recognizers?.Add (token, sel);
+			recognizers [token] = sel;
 			MarkDirty ();
 		}
 		
@@ -150,7 +149,7 @@ namespace UIKit {
 		{
 			AddTarget (target, sel);
 			MarkDirty ();
-			recognizers?.Add(target, sel);
+			recognizers [target] = sel;
 		}
 
 		public void RemoveTarget (Token token)
@@ -168,11 +167,10 @@ namespace UIKit {
 		//
 		public IEnumerable<Token> GetTargets ()
 		{
-			if (recognizers?.Keys is null) {
+			var keys = recognizers?.Keys;
+			if (keys is null)
 				return Array.Empty<Token> ();
-			} else {
-				return (IEnumerable<Token>) recognizers.Keys;
-			}
+			return (IEnumerable<Token>) keys;
 		}
 	}
 
