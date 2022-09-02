@@ -6,7 +6,7 @@ IFS=$'\n\t '
 env | sort
 
 make global.json
-make -C builds dotnet
+make -C builds dotnet SKIP_CUSTOM_DOTNET_RUNTIME_INSTALL=1
 
 var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET)
 DOTNET=${var#*=}
