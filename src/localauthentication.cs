@@ -29,6 +29,7 @@ namespace LocalAuthentication {
 	[iOS (8,0), Mac (10,10), NoTV] // ".objc_class_name_LAContext", referenced from: '' not found
 	[BaseType (typeof (NSObject))]
 	interface LAContext {
+		[NoWatch]
 		[NullAllowed] // by default this property is null
 		[Export ("localizedFallbackTitle")]
 		string LocalizedFallbackTitle { get; set; }
@@ -70,7 +71,7 @@ namespace LocalAuthentication {
 		[NullAllowed]
 		NSData EvaluatedPolicyDomainState { get; }
 
-		[iOS (10,0)][Mac (10,12)]
+		[iOS (10,0)][Mac (10,12)][NoWatch]
 		[NullAllowed, Export ("localizedCancelTitle")]
 		string LocalizedCancelTitle { get; set; }
 
@@ -92,7 +93,7 @@ namespace LocalAuthentication {
 		[Export ("localizedReason")]
 		string LocalizedReason { get; set; }
 
-		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (4,0), NoTV, Mac (10, 13), iOS (11, 0)]
 		[Export ("interactionNotAllowed")]
 		bool InteractionNotAllowed { get; set; }
 
@@ -157,12 +158,14 @@ namespace LocalAuthentication {
 		[Export ("exportBytesWithCompletion:")]
 		void ExportBytes (LAPublicKeyCompletionHandler handler);
 
+		[Async]
 		[Export ("encryptData:secKeyAlgorithm:completion:")]
 		void EncryptData (NSData data, SecKeyAlgorithm algorithm, LAPublicKeyCompletionHandler handler);
 
 		[Export ("canEncryptUsingSecKeyAlgorithm:")]
 		bool CanEncrypt (SecKeyAlgorithm algorithm);
 
+		[Async]
 		[Export ("verifyData:signature:secKeyAlgorithm:completion:")]
 		void VerifyData (NSData signedData, NSData signature, SecKeyAlgorithm algorithm, LAPublicKeyVerifyDataCompletionHandler handler);
 
