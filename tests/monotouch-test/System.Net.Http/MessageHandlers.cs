@@ -546,6 +546,7 @@ namespace MonoTests.System.Net.Http
 			}
 		}
 
+#if NET
 		[TestCase ("https://self-signed.badssl.com/")]
 		[TestCase ("https://wrong.host.badssl.com/")]
 		public void AcceptSslCertificatesWithCustomValidationCallbackNSUrlSessionHandler (string url)
@@ -629,6 +630,7 @@ namespace MonoTests.System.Net.Http
 				Assert.IsInstanceOf (typeof (WebException), ex.InnerException, "InnerException type");
 			}
 		}
+#endif
 
 		[Test]
 		public void AssertDefaultValuesNSUrlSessionHandler ()
