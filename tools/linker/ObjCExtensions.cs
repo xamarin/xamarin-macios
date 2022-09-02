@@ -38,6 +38,7 @@ namespace Xamarin.Linker {
 		public const string GameKit = nameof (GameKit);
 		public const string GameplayKit = nameof (GameplayKit);
 		public const string GLKit = nameof (GLKit);
+		public const string HealthKit = nameof (HealthKit);
 		public const string ImageCaptureCore = nameof (ImageCaptureCore);
 		public const string ImageKit = nameof (ImageKit);
 		public const string InputMethodKit = nameof (InputMethodKit);

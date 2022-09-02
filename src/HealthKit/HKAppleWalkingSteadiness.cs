@@ -12,9 +12,11 @@ namespace HealthKit {
 #if NET
 	[SupportedOSPlatform ("ios15.0")]
 	[SupportedOSPlatform ("maccatalyst15.0")]
+	[SupportedOSPlatform ("macos13.0")]
 #else
 	[Watch (8,0)]
 	[iOS (15,0)]
+	[Mac (13,0)]
 #endif
 	public static class HKAppleWalkingSteadiness
 	{

@@ -147,6 +147,16 @@ namespace CoreVideo {
 #endif
 		public static readonly NSString ContainsGrayscaleKey;
 
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		public static readonly NSString ContainsSenselArray;
+
 		static CVPixelFormatDescription ()
 		{
 			var handle = Libraries.CoreVideo.Handle;
@@ -185,6 +195,9 @@ namespace CoreVideo {
 
 			// Xcode 10
 			ContainsGrayscaleKey = Dlfcn.GetStringConstant (handle, "kCVPixelFormatContainsGrayscale")!;
+
+			// Xcode 14
+			ContainsSenselArray = Dlfcn.GetStringConstant (handle, "kCVPixelFormatContainsSenselArray")!;
 		}
 
 		// note: bad documentation, ref: https://bugzilla.xamarin.com/show_bug.cgi?id=13917

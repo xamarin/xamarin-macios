@@ -4,7 +4,7 @@
 		"@PLATFORM_LOWERCASE@": {
 			"description": ".NET SDK Workload for building macOS applications with @PLATFORM@.",
 			"packs": [
-				"Microsoft.@PLATFORM@.Sdk",
+				"Microsoft.@PLATFORM@.Sdk.net6",
 				"Microsoft.@PLATFORM@.Ref",
 				"Microsoft.@PLATFORM@.Runtime.maccatalyst-arm64",
 				"Microsoft.@PLATFORM@.Runtime.maccatalyst-x64",
@@ -16,9 +16,12 @@
 		}
 	},
 	"packs": {
-		"Microsoft.@PLATFORM@.Sdk": {
+		"Microsoft.@PLATFORM@.Sdk.net6": {
 			"kind": "sdk",
-			"version": "@VERSION@"
+			"version": "@VERSION@",
+			"alias-to": {
+				"any": "Microsoft.@PLATFORM@.Sdk"
+			}
 		},
 		"Microsoft.@PLATFORM@.Ref": {
 			"kind": "framework",
