@@ -2185,6 +2185,7 @@ IOS_FRAMEWORKS =         \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYou \
 	SharedWithYouCore \
 	Social \
 	Speech \
@@ -2372,6 +2373,7 @@ MACCATALYST_FRAMEWORKS = \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYou \
 	SharedWithYouCore \
 	Social \
 	Speech \

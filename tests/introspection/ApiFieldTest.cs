@@ -59,6 +59,13 @@ namespace Introspection {
 						default:
 							return false;
 					}
+				case "SWHighlight":
+					switch (property.Name) {
+						case "MetadataTypeIdentifier":
+							return TestRuntime.IsSimulatorOrDesktop;
+						default:
+							return false;
+					}
 			}
 			return SkipDueToAttribute (property);
 		}

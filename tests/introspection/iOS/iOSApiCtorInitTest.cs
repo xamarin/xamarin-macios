@@ -255,6 +255,18 @@ namespace Introspection {
 			return base.Skip (type);
 		}
 
+		protected override bool SkipCheckShouldReExposeBaseCtor (Type type)
+		{
+			switch (type.Name) {
+			case "SWRemoveParticipantAlertController":
+				return true;
+			default:
+				return false;
+			}
+
+			return base.SkipCheckShouldReExposeBaseCtor (type);
+		}
+
 		static List<NSObject> do_not_dispose = new List<NSObject> ();
 
 		protected override void Dispose (NSObject obj, Type type)
