@@ -26,6 +26,12 @@ namespace MonoTouchFixtures.Security {
 
 		static void InitSecRecord (SecRecord rec)
 		{
+#if __MACOS__
+			// ignore on macOS 11.* (but not 12+)
+			if (TestRuntime.CheckXcodeVersion (12, 2) && !TestRuntime.CheckXcodeVersion (13, 0))
+				Assert.Ignore ("Skip on macOS 11.*");
+#endif
+
 #if HAS_LOCALAUTHENTICATION
 			var context = new LAContext();
 			context.InteractionNotAllowed = true;
