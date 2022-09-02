@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 #if NET
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 #endif
 using System.Linq;
 using System.IO;
@@ -557,12 +558,15 @@ namespace MonoTests.System.Net.Http
 			bool callbackWasExecuted = false;
 			bool done = false;
 			Exception ex = null;
+			HttpResponseMessage result = null;
+			X509Certificate2 serverCertificate = null;
+			SslPolicyErrors sslPolicyErrors = SslPolicyErrors.None;
 
 			var handler = new NSUrlSessionHandler {
 				ServerCertificateCustomValidationCallback = (request, certificate, chain, errors) => {
 					callbackWasExecuted = true;
-					Assert.IsNotNull (certificate);
-					Assert.AreNotEqual (SslPolicyErrors.None, errors);
+					serverCertificate = certificate;
+					sslPolicyErrors = errors;
 					return true;
 				}
 			};
@@ -571,7 +575,7 @@ namespace MonoTests.System.Net.Http
 			{
 				try {
 					var client = new HttpClient (handler);
-					var result = await client.GetAsync (url);
+					result = await client.GetAsync (url);
 				} catch (Exception e) {
 					ex = e;
 				} finally {
@@ -582,9 +586,12 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
-				Assert.True (validationCbWasExecuted, "Validation Callback called");
-				// assert that we did not get an exception
-				Assert.IsNotNull (ex, "Exception wasn't expected.");
+				Assert.True (callbackWasExecuted, "Validation Callback called");
+				Assert.AreNotEqual (SslPolicyErrors.None, sslPolicyErrors, "Callback was called with unexpected SslPolicyErrors");
+				Assert.IsNotNull (serverCertificate, "Server certificate is null");
+				Assert.IsNull (ex, "Exception wasn't expected.");
+				Assert.IsNotNull (result, "Result was null");
+				Assert.IsTrue (result.IsSuccessStatusCode, "Status code was not success");
 			}
 		}
 
@@ -623,7 +630,7 @@ namespace MonoTests.System.Net.Http
 			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
 				Assert.Inconclusive ("Request timedout.");
 			} else {
-				Assert.True (validationCbWasExecuted, "Validation Callback called.");
+				Assert.True (callbackWasExecuted, "Validation Callback called.");
 				Assert.IsNotNull (ex, result == null ? "Expected exception is missing and got no result." : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}.");
 				Assert.IsInstanceOf (typeof (HttpRequestException), ex, "Exception type");
 				Assert.IsNotNull (ex.InnerException, "InnerException");
