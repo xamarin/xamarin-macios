@@ -5,6 +5,9 @@ IFS=$'\n\t '
 
 env | sort
 
+make global.json
+make -C builds dotnet
+
 var=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable VARIABLE=DOTNET)
 DOTNET=${var#*=}
 echo "Using dotnet found at $DOTNET"
