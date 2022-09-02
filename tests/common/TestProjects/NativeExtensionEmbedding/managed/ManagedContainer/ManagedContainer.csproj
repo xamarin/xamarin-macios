@@ -47,7 +47,6 @@
         <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
         <CodesignKey>Apple Development</CodesignKey>
         <MtouchDebug>true</MtouchDebug>
-        <CodesignProvision>iOS Team Provisioning Profile: *</CodesignProvision>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
         <DebugType>none</DebugType>
