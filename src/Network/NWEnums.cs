@@ -285,4 +285,11 @@ namespace Network {
 		Developer = 1,
 		User = 2,
 	}
+
+	[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	public enum NWQuicStreamType {
+		Unknown = 0,
+		Bidirectional = 1,
+		Unidirectional = 2,
+	}
 }

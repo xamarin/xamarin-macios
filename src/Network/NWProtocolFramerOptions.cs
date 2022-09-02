@@ -55,8 +55,6 @@ namespace Network {
 
 		public T? GetValue<T> (string key) where T : NSObject {
 			var value = nw_framer_options_copy_object_value (GetCheckedHandle (), key);
-			if (value == IntPtr.Zero)
-				return null;
 			return Runtime.GetNSObject<T> (value, owns: true);
 		}
 
