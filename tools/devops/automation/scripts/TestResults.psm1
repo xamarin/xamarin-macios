@@ -42,7 +42,7 @@ class TestResults {
 
     [string] GetAttemptText() {
         if ($this.Attempt -gt 1) {
-            return " [attempt #$($this.Attempt)]"
+            return " [attempt $($this.Attempt)]"
         }
         return ""
     }
