@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-
-using Xamarin.Utils;
-
 namespace Xamarin.Tests {
 	[TestFixture]
 	public class PublishTrimmedTest : TestBaseClass {
