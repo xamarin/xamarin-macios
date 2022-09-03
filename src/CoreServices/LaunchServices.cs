@@ -52,6 +52,12 @@ namespace CoreServices
 	public enum LSResult
 	{
 		Success = 0,
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+#else
+		[Mac (13,0)]
+#endif
+		MalformedLocErr = -10400,
 		AppInTrash = -10660,
 		ExecutableIncorrectFormat = -10661,
 		AttributeNotFound = -10662,
