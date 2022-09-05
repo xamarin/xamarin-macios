@@ -419,6 +419,13 @@ namespace ObjCRuntime {
 			if (obj == null)
 				return;
 
+			var structType = obj.GetType ();
+			// Unwrap enums, Marshal.StructureToPtr complains they're not blittable (https://github.com/xamarin/xamarin-macios/issues/15744)
+			if (structType.IsEnum) {
+				structType = Enum.GetUnderlyingType (structType);
+				obj = Convert.ChangeType (obj, structType);
+			}
+
 			if (obj is bool b) {
 				// Only write a single byte for bools
 				Marshal.WriteByte (ptr, b ? (byte) 1 : (byte) 0);
