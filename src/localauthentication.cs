@@ -75,7 +75,7 @@ namespace LocalAuthentication {
 		[NullAllowed, Export ("localizedCancelTitle")]
 		string LocalizedCancelTitle { get; set; }
 
-		[iOS (9,0)][Mac (10,12,4)]
+		[iOS (9,0)][Mac (10,12,4)][NoWatch]
 		[Field ("LATouchIDAuthenticationMaximumAllowableReuseDuration")]
 		double /* NSTimeInterval */ TouchIdAuthenticationMaximumAllowableReuseDuration { get; }
 

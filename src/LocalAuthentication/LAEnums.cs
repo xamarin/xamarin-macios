@@ -12,9 +12,9 @@ namespace LocalAuthentication {
 		[Mac (10,12,2), NoWatch]
 		DeviceOwnerAuthenticationWithBiometrics = 1,
 		DeviceOwnerAuthentication = 2,
-		[NoiOS][Mac (10,15)]
+		[NoiOS][Mac (10,15)][NoWatch]
 		DeviceOwnerAuthenticationWithWatch = 3,
-		[NoiOS][Mac (10,15)]
+		[NoiOS][Mac (10,15)][NoWatch]
 		DeviceOwnerAuthenticationWithBiometricsOrWatch = 4,
 		[Obsolete ("Use DeviceOwnerAuthenticationWithBiometricsOrWatch enum value instead.")]
 		[NoiOS][Mac (10,15)]

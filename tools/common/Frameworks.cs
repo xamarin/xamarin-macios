@@ -531,6 +531,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "DeviceCheck", "DeviceCheck", 9,0 },
 				{ "CallKit", "CallKit", 9,0 },
+				{ "LocalAuthentication", "LocalAuthentication", 9,0 },
 			};
 		}
 		return watch_frameworks;
