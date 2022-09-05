@@ -983,12 +983,37 @@ namespace Foundation {
 
 			X509Certificate2[] ConvertCertificates (SecTrust secTrust)
 			{
-				var originalChain = secTrust.GetCertificateChain ();
-				var certificates = new X509Certificate2 [originalChain.Length];
-				for (int i = 0; i < originalChain.Length; ++i)
-					certificates [i] = originalChain [i].ToX509Certificate2 ();
+				var certificates = new X509Certificate2 [secTrust.Count];
+
+				if (IsSecTrustGetCertificateChainSupported) {
+					var originalChain = secTrust.GetCertificateChain ();
+					for (int i = 0; i < originalChain.Length; ++i)
+						certificates [i] = originalChain [i].ToX509Certificate2 ();
+				} else {
+					for (int i = 0; i < secTrust.Count; i++)
+						certificates [i] = secTrust [i].ToX509Certificate2 ();
+				}
 
 				return certificates;
+			}
+
+			static bool? isSecTrustGetCertificateChainSupported = null;
+			static bool IsSecTrustGetCertificateChainSupported {
+				get {
+					if (!isSecTrustGetCertificateChainSupported.HasValue) {
+#if MONOMAC
+						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckmacOS (12, 0);
+#elif WATCH
+						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckWatchOS (8, 0);
+#elif IOS || TVOS || MACCATALYST
+						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckiOS (15, 0);
+#else
+						#error Unknown platform
+#endif
+					}
+
+					return isSecTrustGetCertificateChainSupported.Value;
+				}
 			}
 
 			X509Chain CreateChain (X509Certificate2[] certificates)
