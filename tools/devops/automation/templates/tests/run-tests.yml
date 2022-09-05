@@ -230,17 +230,15 @@ steps:
     # uri used to create the vsdrops index using full uri
     export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/$PARAMETERS_TESTPREFIX;/tests/"
 
-    make -C builds download -j || true
-    make -C builds downloads -j || true
-    make -C builds .stamp-mono-ios-sdk-destdir -j || true
-    RC=0
-    make -C tests ${{ parameters.makeTarget }} || RC=$?
-    if [ $RC -eq 0 ]; then
-      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
-    else
-      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
-    fi
-    exit $RC
+    # assume something is going to fail
+    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+
+    make -C builds download -j
+    make -C builds .stamp-mono-ios-sdk-destdir -j
+    make -C tests ${{ parameters.makeTarget }}
+
+    # We reached the end! This means we succeeded!
+    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
   env:
     TEST_PREFIX: ${{ upper(parameters.testPrefix) }}
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
