@@ -2683,7 +2683,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<AppBundleDir>$(_AppContainerDir)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
 		</PropertyGroup>
 		<PropertyGroup>
-			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
+			<!-- Ensure _AppBundlePath is a relative path (relative to the project directory) and contains a trailing slash -->
+			<_AppBundlePath>$(AppBundleDir)</_AppBundlePath>
+			<_AppBundlePath Condition="$([System.IO.Path]::IsPathRooted('$(AppBundleDir)'))">$([MSBuild]::MakeRelative('$(MSBuildProjectDirectory)','$(AppBundleDir)'))</_AppBundlePath>
+			<_AppBundlePath>$([MSBuild]::EnsureTrailingSlash('$(_AppBundlePath)'))</_AppBundlePath>
 			<_AppResourcesRelativePath Condition="'$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst'">Contents\Resources\</_AppResourcesRelativePath>
 			<_AppResourcesRelativePath Condition="'$(_PlatformName)' == 'iOS' Or '$(_PlatformName)' == 'tvOS' Or '$(_PlatformName)' == 'watchOS'"></_AppResourcesRelativePath>
 			<_AppResourcesPath>$(_AppBundlePath)$(_AppResourcesRelativePath)</_AppResourcesPath>
