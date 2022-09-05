@@ -8,6 +8,7 @@ $(BUILD_DIR)/generator.csproj: generator.csproj | $(BUILD_DIR)
 	$(Q) $(CP) $< $@
 
 # generator.csproj.inc contains the generator_dependencies variable used to determine if the generator needs to be rebuilt or not.
+$(BUILD_DIR)/generator.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 -include $(BUILD_DIR)/generator.csproj.inc
 
 $(BUILD_DIR)/common/bgen.exe: $(generator_dependencies) Makefile.generator $(BUILD_DIR)/generator-frameworks.g.cs

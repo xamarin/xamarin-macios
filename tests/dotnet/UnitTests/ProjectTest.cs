@@ -1,18 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Diagnostics;
 
 using Mono.Cecil;
 
-using NUnit.Framework;
-
-using Xamarin.Utils;
 using Xamarin.Tests;
-using Xamarin.MacDev;
 
 #nullable enable
 

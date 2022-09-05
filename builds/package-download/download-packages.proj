@@ -18,6 +18,12 @@
 
     <!-- download the reference assemblies -->
     <PackageDownload Include="microsoft.netcore.app.ref" Version="[$(ActualPackageVersion)]" />
+
+    <!-- and get the mono workload as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net7.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
+
+    <!-- and get the emscripten workload as well -->
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net7.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion)]" />
   </ItemGroup>
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->
