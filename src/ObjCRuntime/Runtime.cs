@@ -2143,6 +2143,14 @@ namespace ObjCRuntime {
 		static extern IntPtr xamarin_get_original_working_directory_path ();
 #endif // NET || !__MACOS__
 
+		static bool InvokeConformsToProtocol (IntPtr handle, IntPtr protocol)
+		{
+			var obj = Runtime.GetNSObject (handle);
+			if (obj is null)
+				return false;
+			return obj.ConformsToProtocol (protocol);
+		}
+
 	}
 	
 	internal class IntPtrEqualityComparer : IEqualityComparer<IntPtr>

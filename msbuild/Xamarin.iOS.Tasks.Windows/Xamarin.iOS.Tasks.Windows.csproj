@@ -11,6 +11,7 @@
     <RuntimeIdentifier>win</RuntimeIdentifier>
     <LangVersion>latest</LangVersion>
     <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
   </PropertyGroup>
   <Import Project="..\..\eng\Versions.props" />
   <ItemGroup>

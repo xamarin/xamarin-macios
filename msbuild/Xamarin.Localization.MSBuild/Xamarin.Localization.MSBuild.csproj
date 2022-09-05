@@ -9,11 +9,7 @@
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="MSBStrings.Designer.cs">
-      <DependentUpon>MSBStrings.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
+    <Compile Remove="MSBStrings.Designer.cs" />
     <EmbeddedResource Include="MSBStrings.resx">
       <Type>Resx</Type>
       <Generator>PublicResXFileCodeGenerator</Generator>
