@@ -987,7 +987,7 @@ namespace Foundation {
 
 				if (IsSecTrustGetCertificateChainSupported) {
 					var originalChain = secTrust.GetCertificateChain ();
-					for (int i = 0; i < originalChain.Length; ++i)
+					for (int i = 0; i < originalChain.Length; i++)
 						certificates [i] = originalChain [i].ToX509Certificate2 ();
 				} else {
 					for (int i = 0; i < secTrust.Count; i++)
