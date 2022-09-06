@@ -216,7 +216,9 @@ namespace Network {
 				unsafe {
 					var data = nw_endpoint_get_signature (GetCheckedHandle (), out var length);
 					var mValue = new ReadOnlySpan<byte> (data, (int)length);
-					return mValue;
+					// we do not know who manages the byte array, so we return a copy, is more expensive but
+					// safer until we know what is the mem management.
+					return new ReadOnlySpan<byte> (mValue.ToArray ());
 				}
 			}
 		}
