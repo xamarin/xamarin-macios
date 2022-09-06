@@ -316,8 +316,6 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net$(BundledNETCoreAppTargetFrameworkVersion)').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
 		</PropertyGroup>
 
-		<Error Condition="!Exists('$(_RemoteILLinkPath)')" Text="Could not find the path to illink.dll ('$(_RemoteILLinkPath)' does not exist)" />
-
 		<!-- Include Debug symbols as input so those are copied to the server -->
 		<ItemGroup>
 			<!-- @(_PDBToLink) comes from the _ComputeManagedAssemblyToLink target, which is a dependency of this target and is included in Microsoft.NET.ILLink.targets -->
