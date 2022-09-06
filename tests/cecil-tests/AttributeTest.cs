@@ -285,7 +285,7 @@ namespace Cecil.Tests {
  			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialRegistration"):
  				return true;
 			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor"):
-				return true;
+ 				return true;
  			}
 			switch (member) {
 			case "GameplayKit.GKHybridStrategist.get_GameModel":

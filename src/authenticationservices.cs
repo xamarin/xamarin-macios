@@ -1536,8 +1536,7 @@ namespace AuthenticationServices {
 		[return: NullAllowed]
 		IntPtr _CopyKey (ASAuthorizationProviderExtensionKeyType keyType);
 
-		[return: Release]
-		[Wrap ("new SecKey (_CopyKey (keyType), false);")]
+		[Wrap ("new SecKey (_CopyKey (keyType), true);")]
 		SecKey CopyKey (ASAuthorizationProviderExtensionKeyType keyType);
 
 		[Export ("copyIdentityForKeyType:")]
