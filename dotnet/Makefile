@@ -225,11 +225,11 @@ $(DOTNET_NUPKG_DIR)/%.nupkg: nupkgs/%.nupkg | $(DOTNET_NUPKG_DIR)
 	$(Q) $(CP) $< $@
 
 ifdef INCLUDE_IOS
-SDK_PACK_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA).nupkg
-SDK_PACKS_WINDOWS += $(SDK_PACK_IOS_WINDOWS)
+SDK_PACKS_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA).nupkg
+SDK_PACKS_WINDOWS += $(SDK_PACKS_IOS_WINDOWS)
 endif
 
-pack-ios-windows: $(SDK_PACK_IOS_WINDOWS)
+pack-ios-windows: $(SDK_PACKS_IOS_WINDOWS)
 
 define PacksDefinitions
 RUNTIME_PACKS_$(1) = $$(foreach rid,$$(DOTNET_$(1)_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Runtime.$$(rid).$($(1)_NUGET_VERSION_NO_METADATA).nupkg)
@@ -298,7 +298,7 @@ $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TA
 	$$(Q) mv $$@.tmp $$@
 
 # The sdk package
-$(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg: $(REF_PACK_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg: $(SDK_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.$1.Sdk.$2/
 	$$(Q) mkdir -p tmpdir/Microsoft.$1.Sdk.$2/usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2/
@@ -307,7 +307,7 @@ $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg: $(REF_PACK_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) mv $$@.tmp $$@
 
 # The ref package
-$(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg: $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg: $(REF_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.$1.Ref.$2/
 	$$(Q) mkdir -p tmpdir/Microsoft.$1.Ref.$2/usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2/
@@ -344,7 +344,7 @@ $(DOTNET_PKG_DIR)/%: $(TMP_PKG_DIR)/% | $(DOTNET_PKG_DIR)
 
 PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 
-$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKs_$(4)) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
@@ -372,7 +372,7 @@ endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreatePackage,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z),$(shell echo $(platform) | tr a-z A-Z))))
 
 define CreateWindowsBundle
-$(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) $(SDK_PACK_$(4)_WINDOWS) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKS_$(4)) $(SDK_PACKS_$(4)_WINDOWS) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
