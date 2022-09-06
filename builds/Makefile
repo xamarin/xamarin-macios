@@ -132,9 +132,6 @@ endif
 endif
 
 .stamp-install-custom-dotnet-runtime-workloads:
-ifeq ($(SKIP_CUSTOM_DOTNET_RUNTIME_INSTALL),1)
-	$(Q) echo "Skipped custom .NET runtime install"
-else
 	@# mono toolchain
 	$(Q) mv ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain.net7
 	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.mono.toolchain.net7.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain.net7/
@@ -145,8 +142,18 @@ else
 	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.net7.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net7/
 	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net6/
 	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.net6.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net6/
+	$(Q) make .stamp-copy-stuff-everywhere
 	$(Q) touch $@
+
+.stamp-copy-stuff-everywhere:
+ifeq ($(CUSTOM_DOTNET_RUNTIME_INSTALL),1)
+	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)-rc.2
+	$(Q) $(CP) -r ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain.net7 ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)-rc.2/microsoft.net.workload.mono.toolchain.net7
+	$(Q) $(CP) -r ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain.net6 ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)-rc.2/microsoft.net.workload.mono.toolchain.net6
+	$(Q) $(CP) -r ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net7 ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)-rc.2/microsoft.net.workload.emscripten.net7
+	$(Q) $(CP) -r ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten.net6 ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)-rc.2/microsoft.net.workload.emscripten.net6
 endif
+	$(Q) touch $@
 
 .stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(DOTNET_INSTALL_NAME)
 	$(Q_GEN) cd package-download && $(DOTNET) \
