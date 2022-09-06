@@ -523,6 +523,128 @@ namespace AudioUnit
 #endif
 
 #if IOS || MONOMAC
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern int AudioComponentCopyConfigurationInfo (IntPtr /* AudioComponent */ inComponent, out /* CFDictionaryRef** */ IntPtr outConfigurationInfo);
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		public NSDictionary? ConfigurationInfo {
+			get {
+				var success = AudioComponentCopyConfigurationInfo (GetCheckedHandle (), out var dictPtr);
+				if (success == 0) {
+					return Runtime.GetNSObject<NSDictionary> (dictPtr, owns: true);
+				}
+				return null;
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern int AudioComponentValidate (IntPtr /* AudioComponent* */ inComponent, IntPtr /* CFDictionaryRef* */ inValidationParameters,
+				out AudioComponentValidationResult outValidationResult);
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[MacCatalyst (16,0)]
+#endif
+		public AudioComponentValidationResult Validate (NSDictionary validationParameters) {
+			var success = AudioComponentValidate (GetCheckedHandle (), validationParameters.GetNonNullHandle (nameof (validationParameters)), out var result);
+			if (success == 0)
+				return result;
+			return AudioComponentValidationResult.Unknown;
+		}
+
+		delegate void TrampolineCallback (IntPtr blockPtr, AudioComponentValidationResult result, IntPtr dictionary);
+
+		static unsafe readonly TrampolineCallback static_action = TrampolineAction;
+
+		[MonoPInvokeCallback (typeof (TrampolineCallback))]
+		static void TrampolineAction (IntPtr blockPtr, AudioComponentValidationResult result, IntPtr dictionary)
+		{
+			var del = BlockLiteral.GetTarget<Action<AudioComponentValidationResult, NSDictionary?>> (blockPtr);
+			if (del is not null)
+				del (result, Runtime.GetNSObject<NSDictionary>(dictionary));
+		}
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern int AudioComponentValidateWithResults (IntPtr /* AudioComponent* */ inComponent, IntPtr /* CFDictionaryRef* */ inValidationParameters, ref BlockLiteral inCompletionHandler);
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		public void ValidateAsync (NSDictionary validationParameters,
+				Action<AudioComponentValidationResult, NSDictionary?> onCompletion) {
+			if (onCompletion is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompletion));
+			
+			var block_handler= new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_action, onCompletion);
+			try {
+				AudioComponentValidateWithResults (GetCheckedHandle (), validationParameters.GetNonNullHandle (nameof (validationParameters)), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
+		}
+
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
@@ -608,7 +730,8 @@ namespace AudioUnit
 				}
 			}
 		}
-#endif
+
+#endif // IOS || MONOMAC
 
 #endif // !COREBUILD
     }
