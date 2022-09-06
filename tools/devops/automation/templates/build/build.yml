@@ -62,6 +62,7 @@ steps:
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 30
   enabled: true
+  continueOnError: true # brew installation can be temperamental, and things usually work even if the installation fail.
 
 - bash: |
     make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops build-provisioning.csx

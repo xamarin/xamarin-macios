@@ -1,4 +1,3 @@
-!missing-field! kCVPixelFormatContainsSenselArray not bound
 !missing-pinvoke! CVDisplayLinkCreateWithActiveCGDisplays is not bound
 !missing-pinvoke! CVDisplayLinkCreateWithCGDisplay is not bound
 !missing-pinvoke! CVDisplayLinkCreateWithCGDisplays is not bound

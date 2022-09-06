@@ -450,6 +450,7 @@ COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/DispatchData.cs \
 	CoreFoundation/NativeObject.cs \
 	CoreFoundation/Architecture.cs \
+	CoreFoundation/CGAffineTransformComponents.cs \
 
 COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFAllocator.cs \
@@ -938,6 +939,7 @@ HEALTHKIT_SOURCES = \
 	HealthKit/EnumsCompat.cs \
 	HealthKit/HKAppleWalkingSteadiness.cs \
 	HealthKit/HKAnchoredObjectQuery.cs \
+	HealthKit/HKCategoryValueSleepAnalysisAsleep.cs \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
 	HealthKit/HKSampleQuery.cs \
@@ -1201,6 +1203,9 @@ METALPERFORMANCESHADERSGRAPH_SOURCES = \
 	MetalPerformanceShadersGraph/MPSGraphTensorData.cs \
 
 # MetricKit
+
+METRICKIT_API_SOURCES = \
+	MetricKit/MXEnums.cs \
 
 METRICKIT_SOURCES = \
 	MetricKit/MXMetaData.cs \
@@ -2023,6 +2028,7 @@ MACOS_FRAMEWORKS =          \
 	GameController          \
 	GameplayKit             \
 	GLKit                   \
+	HealthKit               \
 	ImageIO                 \
 	ImageCaptureCore	\
 	ImageKit                \
@@ -2180,6 +2186,7 @@ IOS_FRAMEWORKS =         \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYou \
 	SharedWithYouCore \
 	Social \
 	Speech \
@@ -2367,6 +2374,7 @@ MACCATALYST_FRAMEWORKS = \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYou \
 	SharedWithYouCore \
 	Social \
 	Speech \

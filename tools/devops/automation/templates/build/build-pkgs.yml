@@ -226,6 +226,6 @@ steps:
           displayName: 'Publish Artifact: All binlogs'
           inputs:
             targetPath: $(Build.ArtifactStagingDirectory)/all-binlogs
-            artifactName: all-binlogs-$(Build.BuildId)
+            artifactName: all-binlogs-$(Build.BuildId)-$(System.JobAttempt)
           continueOnError: true
           condition: succeededOrFailed()

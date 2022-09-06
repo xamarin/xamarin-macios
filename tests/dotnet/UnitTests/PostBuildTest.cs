@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
-
 using Microsoft.Build.Framework;
 using Microsoft.Build.Logging.StructuredLogger;
 using Mono.Cecil;

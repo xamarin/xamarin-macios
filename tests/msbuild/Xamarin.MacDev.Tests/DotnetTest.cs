@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 using Xamarin.Tests;
@@ -52,6 +53,15 @@ namespace Xamarin.iOS.Tasks {
 		{
 			Configuration.AssertDotNetAvailable ();
 
+			Dictionary<string, string> properties = null;
+
+			if (Platform == "iPhoneSimulator") {
+				properties = new Dictionary<string, string>
+				{
+					{ "EnableDefaultCodesignEntitlements", "false" },
+				};
+			}
+
 			tfi = "Xamarin.iOS";
 			switch (project) {
 			case "MyMetalGame":
@@ -67,7 +77,7 @@ namespace Xamarin.iOS.Tasks {
 			ClearTestDirectory ();
 
 			Mode = ExecutionMode.DotNet;
-			BuildProject (project, clean: false, expectedErrorCount: expectedErrorCount);
+			BuildProject (project, clean: false, expectedErrorCount: expectedErrorCount, properties: properties);
 			var dotnet_bundle = AppBundlePath;
 
 			Mode = ExecutionMode.MSBuild;
@@ -80,7 +90,7 @@ namespace Xamarin.iOS.Tasks {
 				NugetRestore (Path.Combine (net461, "MyExtensionWithPackageReference", "MyExtensionWithPackageReference.csproj"));
 				break;
 			}
-			BuildProject (project, nuget_restore: true, expectedErrorCount: expectedErrorCount);
+			BuildProject (project, nuget_restore: true, expectedErrorCount: expectedErrorCount, properties: properties);
 			var net461_bundle = AppBundlePath;
 
 			if (expectedErrorCount == 0)

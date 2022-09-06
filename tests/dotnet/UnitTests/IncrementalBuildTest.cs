@@ -1,14 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-
 using Microsoft.Build.Logging.StructuredLogger;
-
-using NUnit.Framework;
-
-using Xamarin.Utils;
-using Xamarin.MacDev;
 
 namespace Xamarin.Tests {
 	public class IncrementalBuildTest : TestBaseClass {

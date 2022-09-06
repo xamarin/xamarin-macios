@@ -276,8 +276,8 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
 
-
-					{ "BackgroundAssets", "BackgroundAssets", 13,0},
+					{ "BackgroundAssets", "BackgroundAssets", 13,0 },
+					{ "HealthKit", "HealthKit", 13,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 					{ "ExtensionKit", "ExtensionKit", 13,0 },
 				};
@@ -453,6 +453,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
 				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
+				{ "SharedWithYou", "SharedWithYouCore", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 
 				// the above MUST be kept in sync with simlauncher

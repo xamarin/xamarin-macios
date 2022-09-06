@@ -126,7 +126,16 @@ namespace Introspection {
 				if (!TestRuntime.CheckXcodeVersion (11,0))
 					return true;
 				break;
+			case "SWHighlightEvent":
+				return TestRuntime.IsSimulatorOrDesktop;
+
 #endif
+			case "UILayoutGuideAspectFitting":
+			case "UISceneWindowingBehaviors":
+				// Symbol not available in simulator - but works on BigSur (others might too)
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
 			}
 
 			return base.Skip (type);

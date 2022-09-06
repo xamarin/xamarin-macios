@@ -1,9 +1,11 @@
 TOP=../..
 include $(TOP)/Make.config
 
+ifdef INCLUDE_IOS
 all-local:: nnyeah/bin/Debug/net6.0/nnyeah.dll
-
 install-local:: all-local
+endif
+
 
 IOS_DLL=$(TOP)/src/build/ios/native-64/Xamarin.iOS.dll
 NUPKG_VERSION=$(shell grep '<PackageVersion>' nnyeah/nnyeah.csproj | sed 's_.*<PackageVersion>\(.*\)</PackageVersion>.*_\1_')
