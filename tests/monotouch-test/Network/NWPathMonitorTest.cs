@@ -125,7 +125,7 @@ namespace monotouchtest.Network
 				monitor.ProhibitInterfaceType (NWInterfaceType.Wifi);
 			});
 		}
-		
+#if MONOMAC
 		[Test]
 		public void CreateForEthernetChannelTest ()
 		{
@@ -133,6 +133,7 @@ namespace monotouchtest.Network
 			using var pathMonitor = NWPathMonitor.CreateForEthernetChannel ();
 			Assert.NotNull (pathMonitor);
 		}
+#endif
 	}
 }
 #endif
