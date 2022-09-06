@@ -93,7 +93,7 @@ namespace LocalAuthentication {
 		[Export ("localizedReason")]
 		string LocalizedReason { get; set; }
 
-		[Watch (4,0), NoTV, Mac (10, 13), iOS (11, 0)]
+		[Watch (9,0), NoTV, Mac (10, 13), iOS (11, 0)]
 		[Export ("interactionNotAllowed")]
 		bool InteractionNotAllowed { get; set; }
 
@@ -249,27 +249,27 @@ namespace LocalAuthentication {
 
 		[Async]
 		[Export ("rightForIdentifier:completion:")]
-		void GetRight (string identifier, LARightStoreCompletionHandler handler);
+		void Get (string identifier, LARightStoreCompletionHandler handler);
 
 		[Async]
 		[Export ("saveRight:identifier:completion:")]
-		void SaveRight (LARight right, string identifier, LARightStoreCompletionHandler handler);
+		void Save (LARight right, string identifier, LARightStoreCompletionHandler handler);
 
 		[Async]
 		[Export ("saveRight:identifier:secret:completion:")]
-		void SaveRight (LARight right, string identifier, NSData secret, LARightStoreCompletionHandler handler);
+		void Save (LARight right, string identifier, NSData secret, LARightStoreCompletionHandler handler);
 
 		[Async]
 		[Export ("removeRight:completion:")]
-		void RemoveRight (LAPersistedRight right, LARightStoreRemoveRightCompletionHandler handler);
+		void Remove (LAPersistedRight right, LARightStoreRemoveRightCompletionHandler handler);
 
 		[Async]
 		[Export ("removeRightForIdentifier:completion:")]
-		void RemoveRight (string identifier, LARightStoreRemoveRightCompletionHandler handler);
+		void Remove (string identifier, LARightStoreRemoveRightCompletionHandler handler);
 
 		[Async]
 		[Export ("removeAllRightsWithCompletion:")]
-		void RemoveAllRights (LARightStoreRemoveRightCompletionHandler handler);
+		void RemoveAll (LARightStoreRemoveRightCompletionHandler handler);
 	}
 
 	delegate void LASecretCompletionHandler ([NullAllowed] NSData data, [NullAllowed] NSError error);
