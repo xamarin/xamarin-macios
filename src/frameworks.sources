@@ -2020,6 +2020,7 @@ MACOS_FRAMEWORKS =          \
 	CoreWlan                \
 	EventKit                \
 	ExecutionPolicy		\
+	ExtensionKit		\
 	ExternalAccessory 	\
 	FileProvider	\
 	FileProviderUI	\
