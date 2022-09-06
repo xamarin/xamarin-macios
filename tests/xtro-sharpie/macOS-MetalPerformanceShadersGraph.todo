@@ -170,3 +170,5 @@
 !missing-selector! MPSGraph::sortWithTensor:axis:name: not bound
 !missing-selector! MPSGraph::sortWithTensor:axisTensor:descending:name: not bound
 !missing-selector! MPSGraph::sortWithTensor:axisTensor:name: not bound
+!missing-null-allowed! 'MetalPerformanceShadersGraph.MPSGraphTensor MetalPerformanceShadersGraph.MPSGraph_MPSGraphTensorShapeOps::Cast(MetalPerformanceShadersGraph.MPSGraph,MetalPerformanceShadersGraph.MPSGraphTensor,MetalPerformanceShaders.MPSDataType,System.String)' is missing an [NullAllowed] on parameter #3
+!missing-selector! MPSGraph::transposeTensor:permutation:name: not bound

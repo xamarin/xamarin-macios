@@ -671,10 +671,10 @@ namespace Foundation {
 				SetObjCIvar (name, value.Handle);
 		}
 		
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		extern static void object_getInstanceVariable (IntPtr obj, string name, out IntPtr val);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		extern static void object_setInstanceVariable (IntPtr obj, string name, IntPtr val);
 #endif // !XAMCORE_3_0
 

@@ -52,7 +52,7 @@ namespace BackgroundAssets {
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface BAApplicationExtensionInfo : NSSecureCoding
+	interface BAAppExtensionInfo : NSSecureCoding
 	{
 		[Export ("applicationIdentifier")]
 		string ApplicationIdentifier { get; }
@@ -72,13 +72,13 @@ namespace BackgroundAssets {
 	interface BADownloaderExtension {
 
 		[Export ("applicationDidInstallWithMetadata:")]
-		void DidInstallWithMetadata (BAApplicationExtensionInfo metadata);
+		void DidInstallWithMetadata (BAAppExtensionInfo metadata);
 
 		[Export ("applicationDidUpdateWithMetadata:")]
-		void DidUpdateWithMetadata (BAApplicationExtensionInfo metadata);
+		void DidUpdateWithMetadata (BAAppExtensionInfo metadata);
 
 		[Export ("checkForUpdatesWithMetadata:")]
-		void CheckForUpdates (BAApplicationExtensionInfo metadata);
+		void CheckForUpdates (BAAppExtensionInfo metadata);
 
 		[Export ("receivedAuthenticationChallenge:download:completionHandler:")]
 		void ReceivedAuthenticationChallenge (NSUrlAuthenticationChallenge challenge, BADownload download, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler);

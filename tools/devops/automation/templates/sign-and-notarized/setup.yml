@@ -38,7 +38,7 @@ steps:
       version: 3.x
     displayName: 'Install .NET Core SDK 3.x needed for ESRP'
 
-  - task: MicroBuildSigningPlugin@3
+  - task: MicroBuildSigningPlugin@4
     displayName: 'Install Signing Plugin'
     inputs:
       signType: '${{ parameters.signatureType }}'
@@ -48,7 +48,7 @@ steps:
       SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     condition: ${{ parameters.condition }}
 
-  - task: ms-vseng.MicroBuildTasks.30666190-6959-11e5-9f96-f56098202fef.MicroBuildSigningPlugin@3
+  - task: MicroBuildSigningPlugin@4
     displayName: 'Install Notarizing Plugin'
     inputs:
       signType: 'Real'  # test is not present for mac..

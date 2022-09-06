@@ -1,0 +1,3 @@
+# New abstract protocol member was added in Xcode14
+# which is a breaking change so adding it to XAMCORE_5_0
+!incorrect-protocol-member! NSFileProviderPendingSetEnumerator::isMaximumSizeReached is REQUIRED and should be abstract

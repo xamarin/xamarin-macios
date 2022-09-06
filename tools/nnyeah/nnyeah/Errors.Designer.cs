@@ -157,7 +157,7 @@ namespace Microsoft.MaciOS.Nnyeah {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can&apos;t continue. Your best option is to port the old assembly to .NET 6.
+        ///   Looks up a localized string similar to Error while attempting to map type {0} in old assembly. This type does not exist in the new assembly or has been renamed. Conversion can&apos;t continue. Your best option is to port the old assembly to .NET 6..
         /// </summary>
         internal static string E0012 {
             get {
@@ -166,7 +166,7 @@ namespace Microsoft.MaciOS.Nnyeah {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can&apos;t continue. Your best option is to port the old assembly to .NET 6.
+        ///   Looks up a localized string similar to Error while attempting to map member {0} in old assembly. This member does not exist in the new assembly or has been renamed. Conversion can&apos;t continue. Your best option is to port the old assembly to .NET 6..
         /// </summary>
         internal static string E0013 {
             get {
@@ -198,6 +198,33 @@ namespace Microsoft.MaciOS.Nnyeah {
         internal static string E0016 {
             get {
                 return ResourceManager.GetString("E0016", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while attempting to map member {0} in old assembly. This code uses a constructor that took an IntPtr and used to be public and is now likely an internal constructor. It is no longer available. Conversion can&apos;t continue. Your best option is to port the old assembly to .NET 6.
+        /// </summary>
+        internal static string E0017 {
+            get {
+                return ResourceManager.GetString("E0017", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The supplied Microsoft assembly, {0}, is not macOS or iOS and is not currently supported..
+        /// </summary>
+        internal static string E0018 {
+            get {
+                return ResourceManager.GetString("E0018", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The legacy platform assembly {0} does not exist at the expected location. You will need to either install it or pass a path to nnyeah using the --xamarin-assembly argument..
+        /// </summary>
+        internal static string E0019 {
+            get {
+                return ResourceManager.GetString("E0019", resourceCulture);
             }
         }
         
@@ -256,7 +283,14 @@ namespace Microsoft.MaciOS.Nnyeah {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If you want to compare assemblies, the earlier and later assembly options *must* be set..
+        ///   Looks up a localized string similar to nnyeah is a tool for converting legacy Xamarin assemblies (pre .NET 6)
+        ///to work with .NET 6 or later. It does this by scanning the --input assembly for
+        ///dependencies of legacy methods, types, or fields and converts them to references
+        ///in the --microsoft-assembly and writes the result in the --ouput assembly.
+        ///nnyeah attempts to find the legacy Xamarin assembly automatically. If it can&apos;t
+        ///find it, you will need to supply a path to it with the --xamarin-assembly
+        ///argument.
+        ///nnyeah needs to have a path to target Micr [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string N0007 {
             get {

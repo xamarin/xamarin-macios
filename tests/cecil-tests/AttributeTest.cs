@@ -278,6 +278,8 @@ namespace Cecil.Tests {
  				return true;
  			case string s when s.StartsWith ("AVFoundation.AVAudioSession"):
  				return true;
+			case string s when s.StartsWith("MediaPlayer.MPMoviePlayerController"):
+ 				return true;
  			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialAssertion"):
  				return true;
  			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialRegistration"):

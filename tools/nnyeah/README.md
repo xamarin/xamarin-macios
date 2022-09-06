@@ -12,7 +12,7 @@ Usage:
 dotnet run --project /path/to/nnyeah.csproj \
            --input /path/to/fileToBeConverted.dll \
            --output /path/to/finaloutput.dll \
-           --xamarin-assembly /path/to/Xamarin.platform.dll \
+           [--xamarin-assembly /path/to/Xamarin.platform.dll \]
            --microsoft-assembly /path/to/Microsoft.platform.dll \
            [--force-overwrite]
            [--verbose]
@@ -25,6 +25,19 @@ The `--microsoft-assembly` is a path to the platform assembly used by the `dotne
 If `--force-overwrite` is supplied, then `nnyeah` will overwrite the output file if it exists. If it is not supplied then nnyeah will stop with an error.
 If `--verbose` is set then `nnyeah` will print out messages journaling every code change that it makes.
 
+If you don't speficy `--xamarin-assembly` nnyeah will try to find the right file for you. It will look at the supplied `--microsoft-assembly` and
+will look for a matching legacy Xamarin assembly (ie, iOS or macOS).
+
+## Finding the Microsoft assembly
+You can find the Microsoft platform assembly with either of these shell commands:
+```
+find $(dirname $(which dotnet)) -name Microsoft.iOS.dll -print | grep ref
+find $(dirname $(which dotnet)) -name Microsoft.macOS.dll -print | grep ref
+```
+These may print a number of matches. The best one to use will look something like:
+```
+/usr/local/share/dotnet/packs/Microsoft.PLATFORM-NAME.Ref/THE-VERSION-YOU-WANT/ref/net6.0/Microsoft.PLATFORM-NAME.dll
+```
 
 nnyeah changes the following:
 

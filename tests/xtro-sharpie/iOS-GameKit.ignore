@@ -6,4 +6,3 @@
 
 # API removed by Apple, marked as deprecated
 !unknown-native-enum! GKAuthenticationType bound
-!unknown-native-enum! GKPeerPickerConnectionType bound

@@ -87,6 +87,7 @@ namespace Introspection {
 			case "CAMetalLayer":
 			case "MTLFunctionConstantValues":
 			case "MTLHeapDescriptor":
+			case "SWCollaborationActionHandler":
 				// Symbol not available in simulator - but works on BigSur (others might too)
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
@@ -125,7 +126,16 @@ namespace Introspection {
 				if (!TestRuntime.CheckXcodeVersion (11,0))
 					return true;
 				break;
+			case "SWHighlightEvent":
+				return TestRuntime.IsSimulatorOrDesktop;
+
 #endif
+			case "UILayoutGuideAspectFitting":
+			case "UISceneWindowingBehaviors":
+				// Symbol not available in simulator - but works on BigSur (others might too)
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
 			}
 
 			return base.Skip (type);
@@ -463,6 +473,9 @@ namespace Introspection {
 				case "UISheetPresentationControllerDetent": // Conformance not in headers
 				case "UIWindowSceneActivationConfiguration": // Conformance not in headers
 					return true;
+				// Xcode 14
+				case "VSUserAccount": // Conformance not in headers
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -710,6 +723,9 @@ namespace Introspection {
 				case "SRTextInputSession": // conformance not in headers
 				case "UISheetPresentationControllerDetent": // conformance not in headers
 				case "CAConstraintLayoutManager": // Not declared in header file
+					return true;
+				// Xcode 14
+				case "VSUserAccount": // Conformance not in headers
 					return true;
 				}
 				break;

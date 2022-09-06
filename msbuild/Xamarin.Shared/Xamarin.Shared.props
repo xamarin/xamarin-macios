@@ -120,11 +120,21 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 		<!-- Other variables that are used in code signing / packaging, but that are by default empty (so no need for any logic): -->
 		<!-- CodesignProvision: the name of the provisioning profile to use when signing the bundle -->
-		<!-- CodesignEntitlements: the path to the Entitlements.plist to use when signing the bundle -->
 		<!-- CodesignExtraArgs: any extra arguments to pass to 'codesign' -->
 		<!-- PackageSigningKey: the certificate used to sign packages (.pkg). Applicable to macOS and Mac Catalyst -->
 		<!-- PackagingExtraArgs: any extra arguments passed to the productbuild tool when creating packages (.pkg). Applicable to macOS and Mac Catalyst -->
 		<!-- ProductDefinition: the product definition template (plist) used when creating the product definition to pass to the product build tool when creating packages (.pkg). Applicable to mcOS and Mac Catalyst -->
+
+		<!-- CodesignEntitlements: the path to the Entitlements.plist to use when signing the bundle
+			If:
+			* We're building for .NET, and
+			* There's an Entitlements.plist file in the root project directory, and
+			* The CodesignEntitlements property is empty, and
+			* The EnableDefaultCodesignEntitlements property is not false
+
+			Then we'll automatically set the CodesignEntitlements property to "Entitlements.plist"
+		-->
+		<CodesignEntitlements Condition="'$(UsingAppleNETSdk)' == 'true' And '$(CodesignEntitlements)' == '' And Exists('Entitlements.plist') And '$(EnableDefaultCodesignEntitlements)' != 'false'">Entitlements.plist</CodesignEntitlements>
 
 		<!-- _RequireProvisioningProfile -->
 		<!-- Default: false -->
@@ -180,7 +190,7 @@ Copyright (C) 2020 Microsoft. All rights reserved.
 
 		<!-- If we should create a .pkg or not (only relevant for macOS / Mac Catalyst) -->
 		<!-- The equivalent property for the other platforms is 'BuildIpa' -->
-		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
+		<CreatePackage Condition="'$(CreatePackage)' == '' And '$(UsingAppleNETSdk)' != 'true'">false</CreatePackage>
 
 		<!-- If the .pkg should be signed or not. Applicable to macOS and Mac Catalyst. Defaults to false. -->
 		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>

@@ -183,6 +183,10 @@ namespace NaturalLanguage {
 		Urdu,
 		[Field ("NLLanguageVietnamese")]
 		Vietnamese,
+
+		[iOS (16,0), Mac (13,0), Watch (9,0), TV (16,0), MacCatalyst (16,0)]
+		[Field ("NLLanguageKazakh")]
+		Kazakh,
 	}
 
 	[iOS (12,0), Mac (10,14), TV (12,0), Watch (5,0)]

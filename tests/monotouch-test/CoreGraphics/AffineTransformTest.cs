@@ -12,6 +12,7 @@ using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using CoreGraphics;
+using CoreFoundation;
 using ObjCRuntime;
 
 using NUnit.Framework;
@@ -497,6 +498,38 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.AreEqual ((nfloat) 1.0, transform.x0, "x0");
 			Assert.AreEqual ((nfloat) (-2.0), transform.y0, "y0");
 #endif
+		}
+
+		[Test]
+		public void Decompose ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+
+			var components = new CGAffineTransform (1, 2, 3, 4, 5, 6).Decompose ();
+			Assert.AreNotEqual (0.0, components.Scale);
+			Assert.AreNotEqual (0.0, components.HorizontalShear);
+			Assert.AreNotEqual (0.0, components.Rotation);
+			Assert.AreNotEqual (new CGVector ((nfloat)0, (nfloat)0), components.Translation);
+		}
+
+		[Test]
+		public void MakeWithComponents ()
+		{
+			TestRuntime.AssertXcodeVersion (14, 0);
+
+			var components = new CGAffineTransformComponents () {
+				Scale = new CGSize (1.0, 2.0),
+				HorizontalShear = (nfloat)3.0,
+				Rotation = (nfloat)4.0,
+				Translation = new CGVector ((nfloat)5.0, (nfloat)6.0),
+			};
+			var transform = CGAffineTransform.MakeWithComponents (components);
+			Assert.AreNotEqual (0.0, transform.A);
+			Assert.AreNotEqual (0.0, transform.B);
+			Assert.AreNotEqual (0.0, transform.C);
+			Assert.AreNotEqual (0.0, transform.D);
+			Assert.AreNotEqual (0.0, transform.Tx);
+			Assert.AreNotEqual (0.0, transform.Ty);
 		}
 
 		[Test]

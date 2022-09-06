@@ -890,6 +890,7 @@ namespace ModelIO {
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use the 'NSError' overload.")]
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use the 'NSError' overload.")]
+		[Deprecated (PlatformName.TvOS, 11, 0, message: "Use the 'NSError' overload.")]
 		[Export ("makeVerticesUnique")]
 		void MakeVerticesUnique ();
 

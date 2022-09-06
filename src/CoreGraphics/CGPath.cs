@@ -29,6 +29,9 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using CoreFoundation;
@@ -527,6 +530,170 @@ namespace CoreGraphics {
 			GCHandle gch = GCHandle.Alloc (func);
 			CGPathApply (Handle, GCHandle.ToIntPtr (gch), ApplierCallback);
 			gch.Free ();
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGPathCreateCopyByNormalizing (IntPtr path, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+
+		public CGPath? CreateByNormalizing (bool evenOddFillRule)
+		{
+			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyByNormalizing (Handle, evenOddFillRule), owns: true);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGPathCreateCopyByUnioningPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+
+		public CGPath? CreateByUnioningPath (CGPath? maskPath, bool evenOddFillRule)
+		{			
+			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyByUnioningPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGPathCreateCopyByIntersectingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+
+		public CGPath? CreateByIntersectingPath (CGPath? maskPath, bool evenOddFillRule)
+		{
+			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyByIntersectingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGPathCreateCopyBySubtractingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+
+		public CGPath? CreateBySubtractingPath (CGPath? maskPath, bool evenOddFillRule)
+		{
+			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyBySubtractingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGPathCreateCopyBySymmetricDifferenceOfPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+
+		public CGPath? CreateBySymmetricDifferenceOfPath (CGPath? maskPath, bool evenOddFillRule)
+		{
+			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyBySymmetricDifferenceOfPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGPathCreateCopyOfLineBySubtractingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+
+		public CGPath? CreateLineBySubtractingPath (CGPath? maskPath, bool evenOddFillRule)
+		{
+			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyOfLineBySubtractingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGPathCreateCopyOfLineByIntersectingPath (IntPtr path, IntPtr maskPath, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+
+		public CGPath? CreateLineByIntersectingPath (CGPath? maskPath, bool evenOddFillRule)
+		{
+			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyOfLineByIntersectingPath (Handle, maskPath.GetHandle (), evenOddFillRule), owns: true);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern unsafe /* CFArrayRef __nullable */ IntPtr CGPathCreateSeparateComponents (IntPtr path, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+
+		public CGPath[] GetSeparateComponents (bool evenOddFillRule)
+		{
+			var cfArrayRef = CGPathCreateSeparateComponents (Handle, evenOddFillRule);
+			if (cfArrayRef == IntPtr.Zero)
+				return Array.Empty<CGPath> ();
+			return NSArray.ArrayFromHandle<CGPath> (cfArrayRef);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		static extern IntPtr CGPathCreateCopyByFlattening (IntPtr path, nfloat flatteningThreshold);
+
+		public CGPath? CreateByFlattening (nfloat flatteningThreshold)
+		{
+			return Runtime.GetINativeObject<CGPath>(CGPathCreateCopyByFlattening (Handle, flatteningThreshold), owns: true);
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool CGPathIntersectsPath (IntPtr path1, IntPtr path2, [MarshalAs (UnmanagedType.I1)] bool evenOddFillRule);
+
+		public bool DoesIntersect (CGPath? maskPath, bool evenOddFillRule)
+		{
+			return CGPathIntersectsPath (Handle, maskPath.GetHandle (), evenOddFillRule);
 		}
 
 		static CGPath MakeMutable (IntPtr source, bool owns)

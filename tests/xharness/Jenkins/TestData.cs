@@ -24,5 +24,6 @@ namespace Xharness.Jenkins {
 		public IEnumerable<IDevice> Candidates;
 		public string XamMacArch;
 		public string RuntimeIdentifier;
+		public string Registrar;
 	}
 }

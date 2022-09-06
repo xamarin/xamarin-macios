@@ -718,7 +718,6 @@
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSWorkspace::UrlForApplication(Foundation.NSUrl)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl AppKit.NSWorkspace::UrlForApplication(System.String)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSBundle::GetUrlForImageResource(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl Foundation.NSUrl::FromPasteboard(AppKit.NSPasteboard)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl[] AppKit.NSDocumentController::UrlsFromRunningOpenPanel()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl[] AppKit.NSSharingService::get_AttachmentFileUrls()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'ObjCRuntime.Class AppKit.NSDocumentController::DocumentClassForType(System.String)' is missing an [NullAllowed] on return type
@@ -1319,3 +1318,15 @@
 # deprecated
 !extra-enum-value! Managed value 2048 for NSWindowStyle.Unscaled not found in native headers
 
+# Will be deprecated in a future release 
+!deprecated-attribute-missing! NSColorWell::isBordered missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSColorWell::setBordered: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSImage::lockFocus missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSImage::lockFocusFlipped: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSImage::unlockFocus missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::centeredItemIdentifier missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::setCenteredItemIdentifier: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::setSizeMode: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSToolbar::sizeMode missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSWindow::setShowsToolbarButton: missing a [Deprecated] attribute
+!deprecated-attribute-missing! NSWindow::showsToolbarButton missing a [Deprecated] attribute

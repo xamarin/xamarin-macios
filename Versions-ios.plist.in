@@ -155,6 +155,8 @@
 		<string>12.1</string>
 		<key>15.4</key>
 		<string>12.3</string>
+		<key>16.0</key>
+		<string>13.0</string>
 	</dict>
 	<key>RecommendedXcodeVersion</key>
 	<string>@XCODE_VERSION@</string>

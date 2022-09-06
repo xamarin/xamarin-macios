@@ -1861,6 +1861,27 @@ get_safe_retainCount (id self)
 }
 #endif
 
+// It's fairly frequent (due to various types of coding errors) to have the
+// call to '[self release]' in xamarin_release_managed_ref crash. These
+// crashes are typically very hard to diagnose, because it can be hard to
+// figure out which object caused the crash. So here we store the native
+// object in a static variable, so that it can be read using lldb from a core
+// dump. The variable is declared as volatile so that the compiler doesn't
+// optimize away anything (we want both writes in
+// xamarin_release_managed_ref), and it's attributed with 'unused' because
+// otherwise the compiler complains that the variable is never read.
+//
+// Admittedly the variable should also be thread-local, but that's not
+// supported on all platforms we build for (in particular it requires min
+// iOS 10), and it's also slower than a straight forward write to a static
+// variable. Also while xamarin_release_managed_ref can be called on
+// multiple threads, the vast majority of the calls occur on the main
+// thread, so let's keep the variable global for now and if it turns out
+// to be a problem we can make it thread-local later.
+extern "C" {
+	volatile id xamarin_handle_to_be_released __attribute__((unused));
+}
+
 void
 xamarin_release_managed_ref (id self, bool user_type)
 {
@@ -1946,7 +1967,11 @@ xamarin_release_managed_ref (id self, bool user_type)
 		xamarin_framework_peer_waypoint_safe ();
 	}
 
+	xamarin_handle_to_be_released = self;
+
 	[self release];
+
+	xamarin_handle_to_be_released = NULL;
 }
 
 /*
