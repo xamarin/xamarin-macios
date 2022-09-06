@@ -40,9 +40,9 @@ namespace UIKit {
 		{
 			var copyOfRecognizers = recognizers;
 			var savedHandle = Handle;
-			recognizers.Clear ();
+			recognizers = new Dictionary<Token, IntPtr> ();
 			
-			if (copyOfRecognizers is null)
+			if (copyOfRecognizers.Count == 0)
 				return;
 
 			DangerousRetain (savedHandle);
