@@ -126,21 +126,21 @@ namespace LocalAuthentication {
 
 		[Async]
 		[Export ("signData:secKeyAlgorithm:completion:")]
-		void SignData (NSData data, SecKeyAlgorithm algorithm, LAPrivateKeyCompletionHandler handler);
+		void Sign (NSData data, SecKeyAlgorithm algorithm, LAPrivateKeyCompletionHandler handler);
 
 		[Export ("canSignUsingSecKeyAlgorithm:")]
 		bool CanSign (SecKeyAlgorithm algorithm);
 
 		[Async]
 		[Export ("decryptData:secKeyAlgorithm:completion:")]
-		void DecryptData (NSData data, SecKeyAlgorithm algorithm, LAPrivateKeyCompletionHandler handler);
+		void Decrypt (NSData data, SecKeyAlgorithm algorithm, LAPrivateKeyCompletionHandler handler);
 
 		[Export ("canDecryptUsingSecKeyAlgorithm:")]
 		bool CanDecrypt (SecKeyAlgorithm algorithm);
 
 		[Async]
 		[Export ("exchangeKeysWithPublicKey:secKeyAlgorithm:secKeyParameters:completion:")]
-		void ExchangeKeysWithPublicKey (NSData publicKey, SecKeyAlgorithm algorithm, NSDictionary parameters, LAPrivateKeyCompletionHandler handler);
+		void ExchangeKeys (NSData publicKey, SecKeyAlgorithm algorithm, NSDictionary parameters, LAPrivateKeyCompletionHandler handler);
 
 		[Export ("canExchangeKeysUsingSecKeyAlgorithm:")]
 		bool CanExchangeKeys (SecKeyAlgorithm algorithm);
@@ -160,14 +160,14 @@ namespace LocalAuthentication {
 
 		[Async]
 		[Export ("encryptData:secKeyAlgorithm:completion:")]
-		void EncryptData (NSData data, SecKeyAlgorithm algorithm, LAPublicKeyCompletionHandler handler);
+		void Encrypt (NSData data, SecKeyAlgorithm algorithm, LAPublicKeyCompletionHandler handler);
 
 		[Export ("canEncryptUsingSecKeyAlgorithm:")]
 		bool CanEncrypt (SecKeyAlgorithm algorithm);
 
 		[Async]
 		[Export ("verifyData:signature:secKeyAlgorithm:completion:")]
-		void VerifyData (NSData signedData, NSData signature, SecKeyAlgorithm algorithm, LAPublicKeyVerifyDataCompletionHandler handler);
+		void Verify (NSData signedData, NSData signature, SecKeyAlgorithm algorithm, LAPublicKeyVerifyDataCompletionHandler handler);
 
 		[Export ("canVerifyUsingSecKeyAlgorithm:")]
 		bool CanVerify (SecKeyAlgorithm algorithm);

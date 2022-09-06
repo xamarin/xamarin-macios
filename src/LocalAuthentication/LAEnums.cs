@@ -17,7 +17,7 @@ namespace LocalAuthentication {
 		[NoiOS][Mac (10,15)][NoWatch]
 		DeviceOwnerAuthenticationWithBiometricsOrWatch = 4,
 		[Obsolete ("Use DeviceOwnerAuthenticationWithBiometricsOrWatch enum value instead.")]
-		[NoiOS][Mac (10,15)]
+		[NoiOS][Mac (10,15)][NoWatch]
 		OwnerAuthenticationWithBiometricsOrWatch = DeviceOwnerAuthenticationWithBiometricsOrWatch,
 		[NoMac, NoiOS, NoMacCatalyst, Watch (9,0)]
 		DeviceOwnerAuthenticationWithWristDetection = 5,
