@@ -21,9 +21,11 @@
 
     <!-- and get the mono workload as well -->
     <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net7.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
+    <PackageDownload Include="Microsoft.NET.Workload.Mono.ToolChain.net6.Manifest-$(ToolChainManifestVersionBand)" Version="[$(ActualPackageVersion)]" />
 
     <!-- and get the emscripten workload as well -->
     <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net7.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion)]" />
+    <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net6.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion)]" />
   </ItemGroup>
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->
