@@ -11,11 +11,10 @@
 #if !WATCH
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Foundation; 
 using ObjCRuntime;
-using CoreGraphics;
+#nullable enable
 
 namespace UIKit {
 
@@ -41,9 +40,9 @@ namespace UIKit {
 		{
 			var copyOfRecognizers = recognizers;
 			var savedHandle = Handle;
-			recognizers = null;
+			recognizers = new Dictionary<Token, IntPtr> ();
 			
-			if (copyOfRecognizers == null)
+			if (copyOfRecognizers.Count == 0)
 				return;
 
 			DangerousRetain (savedHandle);
@@ -80,12 +79,12 @@ namespace UIKit {
 		[Register ("__UIGestureRecognizerGenericCB")]
 		internal class Callback<T> : Token where T: UIGestureRecognizer {
 			Action<T> action;
-			
+
 			internal Callback (Action<T> action)
 			{
 				this.action = action;
 			}
-			
+
 			[Export ("target:")]
 			[Preserve (Conditional = true)]
 			public void Activated (T sender) => action (sender);
@@ -168,7 +167,10 @@ namespace UIKit {
 		//
 		public IEnumerable<Token> GetTargets ()
 		{
-			return (IEnumerable<Token>) recognizers?.Keys ?? Array.Empty<Token> ();
+			var keys = recognizers?.Keys;
+			if (keys is null)
+				return Array.Empty<Token> ();
+			return (IEnumerable<Token>) keys;
 		}
 	}
 
