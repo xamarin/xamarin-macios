@@ -345,15 +345,10 @@ namespace CoreVideo {
 			DisplayLinkOutputCallback func = (DisplayLinkOutputCallback) callbackHandle.Target!;
 			CVDisplayLink delegateDisplayLink = new CVDisplayLink(displayLink, false);
 #if NET
-			var tempInNow = *inNow;
-			var tempInOutputTime = *inOutputTime;
-			var tempFlagsOut = *flagsOut;
-			var returnValue = func (delegateDisplayLink, ref tempInNow, ref tempInOutputTime, flagsIn, ref tempFlagsOut);
-			*inNow = tempInNow;
-			*inOutputTime = tempInOutputTime;
-			*flagsOut = tempFlagsOut;
-			return returnValue;
-			
+			return func (delegateDisplayLink,
+				ref System.Runtime.CompilerServices.Unsafe.AsRef<CVTimeStamp> (inNow),
+				ref System.Runtime.CompilerServices.Unsafe.AsRef<CVTimeStamp> (inOutputTime),
+				flagsIn, ref System.Runtime.CompilerServices.Unsafe.AsRef<CVOptionFlags> (flagsOut));
 #else
 			return func (delegateDisplayLink, ref inNow, ref inOutputTime, flagsIn, ref flagsOut);
 #endif
