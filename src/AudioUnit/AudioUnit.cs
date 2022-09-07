@@ -135,12 +135,25 @@ namespace AudioUnit
 	delegate AudioUnitStatus CallbackShared (IntPtr /* void* */ clientData, ref AudioUnitRenderActionFlags /* AudioUnitRenderActionFlags* */ actionFlags, ref AudioTimeStamp /* AudioTimeStamp* */ timeStamp, uint /* UInt32 */ busNumber, uint /* UInt32 */ numberFrames, IntPtr /* AudioBufferList* */ data);
 #endif // !COREBUILD
 
+#if NET
+	[StructLayout (LayoutKind.Sequential)]
+	unsafe struct AURenderCallbackStruct
+	{
+#if COREBUILD
+		public delegate* unmanaged<IntPtr, int*, AudioTimeStamp*, uint, uint, IntPtr, int> Proc;
+#else
+		public delegate* unmanaged<IntPtr, AudioUnitRenderActionFlags*, AudioTimeStamp*, uint, uint, IntPtr, AudioUnitStatus> Proc;
+#endif
+		public IntPtr ProcRefCon; 
+	}
+#else
 	[StructLayout (LayoutKind.Sequential)]
 	struct AURenderCallbackStruct
 	{
 		public Delegate Proc;
 		public IntPtr ProcRefCon; 
 	}
+#endif
 
 	[StructLayout (LayoutKind.Sequential)]
 	struct AudioUnitConnection
@@ -349,8 +362,10 @@ namespace AudioUnit
 	public class AudioUnit : DisposableObject
 	{
 #if !COREBUILD
+#if !NET
 		static readonly CallbackShared CreateRenderCallback = RenderCallbackImpl;
 		static readonly CallbackShared CreateInputCallback = InputCallbackImpl;
+#endif
 
 		GCHandle gcHandle;
 		bool _isPlaying;
@@ -657,18 +672,28 @@ namespace AudioUnit
 				gcHandle = GCHandle.Alloc (this);
 
 			var cb = new AURenderCallbackStruct ();
+#if NET
+			unsafe {
+				cb.Proc = &RenderCallbackImpl;
+			}
+#else
 			cb.Proc = CreateRenderCallback;
+#endif
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
 			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SetRenderCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf (cb));
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+		static unsafe AudioUnitStatus RenderCallbackImpl (IntPtr clientData,  AudioUnitRenderActionFlags* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+#else
 		[MonoPInvokeCallback (typeof (CallbackShared))]
 		static AudioUnitStatus RenderCallbackImpl (IntPtr clientData, ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+#endif
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
 			var au = (AudioUnit?) gch.Target;
 			var renderer = au?.renderer;
-
 			if (renderer is null)
 				return AudioUnitStatus.Uninitialized;
 
@@ -676,7 +701,13 @@ namespace AudioUnit
 				return AudioUnitStatus.Uninitialized;
 
 			using (var buffers = new AudioBuffers (data)) {
+#if NET
+				unsafe {
+					return render (*actionFlags, *timeStamp, busNumber, numberFrames, buffers);
+				}
+#else
 				return render (actionFlags, timeStamp, busNumber, numberFrames, buffers);
+#endif
 			}
 		}
 
@@ -695,13 +726,23 @@ namespace AudioUnit
 				gcHandle = GCHandle.Alloc (this);
 
 			var cb = new AURenderCallbackStruct ();
+#if NET
+			unsafe {
+				cb.Proc = &InputCallbackImpl;
+			}
+#else
 			cb.Proc = CreateInputCallback;
+#endif
 			cb.ProcRefCon = GCHandle.ToIntPtr (gcHandle);
 			return AudioUnitSetProperty (Handle, AudioUnitPropertyIDType.SetInputCallback, scope, audioUnitElement, ref cb, Marshal.SizeOf (cb));
 		}
-
+#if NET
+		[UnmanagedCallersOnly]
+		static unsafe AudioUnitStatus InputCallbackImpl (IntPtr clientData, AudioUnitRenderActionFlags* actionFlags, AudioTimeStamp* timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+#else
 		[MonoPInvokeCallback (typeof (CallbackShared))]
 		static AudioUnitStatus InputCallbackImpl (IntPtr clientData, ref AudioUnitRenderActionFlags actionFlags, ref AudioTimeStamp timeStamp, uint busNumber, uint numberFrames, IntPtr data)
+#endif
 		{
 			GCHandle gch = GCHandle.FromIntPtr (clientData);
 			var au =  gch.Target as AudioUnit;
@@ -714,8 +755,13 @@ namespace AudioUnit
 
 			if (!inputs.TryGetValue (busNumber, out var input))
 				return AudioUnitStatus.Uninitialized;
-
+#if NET
+			unsafe {
+				return input (*actionFlags, *timeStamp, busNumber, numberFrames, au);
+			}
+#else
 			return input (actionFlags, timeStamp, busNumber, numberFrames, au);
+#endif
 		}
 
 		#endregion
