@@ -587,12 +587,26 @@ namespace AudioUnit
 		[iOS (16,0)]
 		[MacCatalyst (16,0)]
 #endif
-		public AudioComponentValidationResult Validate (NSDictionary validationParameters) {
-			var success = AudioComponentValidate (GetCheckedHandle (), validationParameters.GetNonNullHandle (nameof (validationParameters)), out var result);
-			if (success == 0)
+		public AudioComponentValidationResult Validate (NSDictionary validationParameters, out int resultCode) {
+			resultCode = AudioComponentValidate (GetCheckedHandle (), validationParameters.GetHandle (), out var result);
+			if (resultCode == 0)
 				return result;
 			return AudioComponentValidationResult.Unknown;
 		}
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[MacCatalyst (16,0)]
+#endif
+		public AudioComponentValidationResult Validate (NSDictionary validationParameters) => Validate (validationParameters, out var _);
 
 		delegate void TrampolineCallback (IntPtr blockPtr, AudioComponentValidationResult result, IntPtr dictionary);
 
@@ -632,18 +646,32 @@ namespace AudioUnit
 		[iOS (16,0)]
 #endif
 		public void ValidateAsync (NSDictionary validationParameters,
-				Action<AudioComponentValidationResult, NSDictionary?> onCompletion) {
+				Action<AudioComponentValidationResult, NSDictionary?> onCompletion, out int resultCode) {
 			if (onCompletion is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompletion));
 			
 			var block_handler= new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_action, onCompletion);
 			try {
-				AudioComponentValidateWithResults (GetCheckedHandle (), validationParameters.GetNonNullHandle (nameof (validationParameters)), ref block_handler);
+				resultCode = AudioComponentValidateWithResults (GetCheckedHandle (), validationParameters.GetHandle (), ref block_handler);
 			} finally {
 				block_handler.CleanupBlock ();
 			}
 		}
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		public void ValidateAsync (NSDictionary validationParameters,
+				Action<AudioComponentValidationResult, NSDictionary?> onCompletion) => ValidateAsync (validationParameters, onCompletion, out var _);
 
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
