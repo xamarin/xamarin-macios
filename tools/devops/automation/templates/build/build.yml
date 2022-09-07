@@ -285,3 +285,9 @@ steps:
     $githubComments.NewCommentFromMessage("Build failed", ":fire:", "Build failed for the job '$(System.JobDisplayName)'")
   condition: failed()
   displayName: 'Report build failure'
+
+# Upload any crash reports that occurred during the build. This is helpful if we want to file issues about dotnet/csc crashing during the build.
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/collect-and-upload-crash-reports.sh
+  displayName: 'Collect and upload crash reports'
+  condition: always() # who knows when crash reports can end up being useful
+  continueOnError: true
