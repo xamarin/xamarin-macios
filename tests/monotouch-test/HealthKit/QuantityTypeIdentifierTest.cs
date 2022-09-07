@@ -14,8 +14,12 @@ using System.Collections.Generic;
 
 using Foundation;
 using HealthKit;
-using UIKit;
 using NUnit.Framework;
+#if MONOMAC
+using AppKit;
+#else
+using UIKit;
+#endif
 
 namespace MonoTouchFixtures.HealthKit {
 
@@ -26,7 +30,11 @@ namespace MonoTouchFixtures.HealthKit {
 		[Test]
 		public void EnumValues_22351 ()
 		{
+#if MONOMAC
+			TestRuntime.AssertXcodeVersion (14, 0);
+#else
 			TestRuntime.AssertXcodeVersion (6, 0);
+#endif
 
 			var failures = new List<string> ();
 
@@ -87,6 +95,16 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKQuantityTypeIdentifier.AppleWalkingSteadiness:
 				case HKQuantityTypeIdentifier.NumberOfAlcoholicBeverages:
 					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						continue;
+					break;
+				case HKQuantityTypeIdentifier.HeartRateRecoveryOneMinute:
+				case HKQuantityTypeIdentifier.RunningGroundContactTime:
+				case HKQuantityTypeIdentifier.RunningStrideLength:
+				case HKQuantityTypeIdentifier.RunningVerticalOscillation:
+				case HKQuantityTypeIdentifier.RunningPower:
+				case HKQuantityTypeIdentifier.RunningSpeed:
+				case HKQuantityTypeIdentifier.AtrialFibrillationBurden:
+					if (!TestRuntime.CheckXcodeVersion (14, 0))
 						continue;
 					break;
 				}

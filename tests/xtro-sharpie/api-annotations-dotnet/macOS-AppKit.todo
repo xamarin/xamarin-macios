@@ -1,46 +1,7 @@
-!deprecated-attribute-missing! NSColorWell::isBordered missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSColorWell::setBordered: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::lockFocus missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::lockFocusFlipped: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSImage::unlockFocus missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::centeredItemIdentifier missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::setCenteredItemIdentifier: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::setSizeMode: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSToolbar::sizeMode missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWindow::setShowsToolbarButton: missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSWindow::showsToolbarButton missing a [Deprecated] attribute
-!missing-enum! NSColorWellStyle not bound
-!missing-enum! NSComboButtonStyle not bound
-!missing-field! NSToolbarItemKey not bound
 !missing-protocol! NSAccessibilityColor not bound
-!missing-protocol! NSPreviewRepresentableActivityItem not bound
 !missing-protocol-conformance! NSColor should conform to NSAccessibilityColor (defined in 'NSAccessibilityColorConformance' category)
-!missing-protocol-member! NSToolbarDelegate::toolbar:itemIdentifier:canBeInsertedAtIndex: not found
-!missing-protocol-member! NSToolbarDelegate::toolbarImmovableItemIdentifiers: not found
 !missing-selector! +NSColorWell::colorWellWithStyle: not bound
-!missing-selector! +NSComboButton::comboButtonWithImage:menu:target:action: not bound
-!missing-selector! +NSComboButton::comboButtonWithTitle:image:menu:target:action: not bound
-!missing-selector! +NSComboButton::comboButtonWithTitle:menu:target:action: not bound
-!missing-selector! +NSImage::imageWithSymbolName:variableValue: not bound
-!missing-selector! +NSImage::imageWithSystemSymbolName:variableValue:accessibilityDescription: not bound
-!missing-selector! NSColorWell::colorWellStyle not bound
-!missing-selector! NSColorWell::image not bound
-!missing-selector! NSColorWell::pulldownAction not bound
-!missing-selector! NSColorWell::pulldownTarget not bound
-!missing-selector! NSColorWell::setColorWellStyle: not bound
-!missing-selector! NSColorWell::setImage: not bound
-!missing-selector! NSColorWell::setPulldownAction: not bound
-!missing-selector! NSColorWell::setPulldownTarget: not bound
-!missing-selector! NSComboButton::image not bound
-!missing-selector! NSComboButton::imageScaling not bound
-!missing-selector! NSComboButton::menu not bound
-!missing-selector! NSComboButton::setImage: not bound
-!missing-selector! NSComboButton::setImageScaling: not bound
-!missing-selector! NSComboButton::setMenu: not bound
-!missing-selector! NSComboButton::setStyle: not bound
-!missing-selector! NSComboButton::setTitle: not bound
-!missing-selector! NSComboButton::style not bound
-!missing-selector! NSComboButton::title not bound
+!missing-selector! +NSImage::imageWithSymbolName:bundle:variableValue: not bound
 !missing-selector! NSNibConnector::destination not bound
 !missing-selector! NSNibConnector::establishConnection not bound
 !missing-selector! NSNibConnector::label not bound
@@ -51,24 +12,7 @@
 !missing-selector! NSNibConnector::source not bound
 !missing-selector! NSNibControlConnector::establishConnection not bound
 !missing-selector! NSNibOutletConnector::establishConnection not bound
-!missing-selector! NSPreviewRepresentingActivityItem::initWithItem:title:image:icon: not bound
-!missing-selector! NSPreviewRepresentingActivityItem::initWithItem:title:imageProvider:iconProvider: not bound
-!missing-selector! NSSharingServicePicker::standardShareMenuItem not bound
-!missing-selector! NSToolbar::centeredItemIdentifiers not bound
-!missing-selector! NSToolbar::setCenteredItemIdentifiers: not bound
 !missing-selector! NSToolbarItem::isVisible not bound
-!missing-selector! NSToolbarItem::possibleLabels not bound
-!missing-selector! NSToolbarItem::setPossibleLabels: not bound
-!missing-type! NSComboButton not bound
 !missing-type! NSNibConnector not bound
 !missing-type! NSNibControlConnector not bound
 !missing-type! NSNibOutletConnector not bound
-!missing-type! NSPreviewRepresentingActivityItem not bound
-!missing-field! NSFontWidthCompressed not bound
-!missing-field! NSFontWidthCondensed not bound
-!missing-field! NSFontWidthExpanded not bound
-!missing-field! NSFontWidthStandard not bound
-!missing-selector! +NSImageSymbolConfiguration::configurationPreferringHierarchical not bound
-!missing-selector! +NSImageSymbolConfiguration::configurationPreferringMonochrome not bound
-!missing-selector! +NSFont::systemFontOfSize:weight:width: not bound
-!missing-selector! +NSImage::imageWithSymbolName:bundle:variableValue: not bound

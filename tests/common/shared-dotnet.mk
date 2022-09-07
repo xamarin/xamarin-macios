@@ -10,6 +10,12 @@ ifeq ($(TESTNAME),)
 TESTNAME:=$(notdir $(shell dirname "$(shell dirname "$(CURDIR)")"))
 endif
 
+ifeq ($(CONFIG),)
+CONFIG=Debug
+else
+CONFIG_ARGUMENT=/p:Configuration=$(CONFIG)
+endif
+
 prepare:
 	@# nothing to do here right now
 
@@ -28,18 +34,18 @@ reload-and-run:
 	$(Q) $(MAKE) run
 
 build: prepare
-	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS)
+	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) $(CONFIG_ARGUMENT)
 
 run: prepare
-	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) -t:Run
+	$(Q) $(DOTNET) build "/bl:$(abspath $@-$(BINLOG_TIMESTAMP).binlog)" *.?sproj $(MSBUILD_VERBOSITY) $(BUILD_ARGUMENTS) $(CONFIG_ARGUMENT) -t:Run
 
 run-bare:
-	$(Q) "$(abspath .)"/bin/Debug/$(DOTNET_TFM)-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
+	$(Q) "$(abspath .)"/bin/$(CONFIG)/$(DOTNET_TFM)-*/*/"$(TESTNAME)".app/Contents/MacOS/"$(TESTNAME)" --autostart --autoexit
 
 run-remote:
 	$(Q) test -n "$(REMOTE_HOST)" || ( echo "Must specify the remote machine by setting the REMOTE_HOST environment variable"; exit 1 )
 	@echo "Copying the '$(TESTNAME)' test app to $(REMOTE_HOST)..."
-	rsync -avz ./bin/Debug/$(DOTNET_TFM)-*/*/"$(TESTNAME)".app $(USER)@$(REMOTE_HOST):/tmp/test-run-remote-execution/
+	rsync -avz ./bin/$(CONFIG)/$(DOTNET_TFM)-*/*/"$(TESTNAME)".app $(USER)@$(REMOTE_HOST):/tmp/test-run-remote-execution/
 	@echo "Killing any existing test executables ('$(TESTNAME)')"
 	ssh $(USER)@$(REMOTE_HOST) -- pkill -9 "$(TESTNAME)" || true
 	@echo "Executing '$(TESTNAME)' on $(REMOTE_HOST)..."

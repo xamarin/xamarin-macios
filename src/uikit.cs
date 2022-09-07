@@ -6223,7 +6223,7 @@ namespace UIKit {
 		[Static]
 		[Internal]
 		[Export ("systemFontOfSize:weight:width:")]
-		IntPtr _SystemFontOfSize (nfloat fontSize, double weight, double width);
+		IntPtr _SystemFontOfSize (nfloat fontSize, nfloat weight, nfloat width);
 
 	}
 
@@ -25258,7 +25258,7 @@ namespace UIKit {
 
 	interface IUIFindInteractionDelegate {}
 
-	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0), NoMac]
 #if NET
 	[Protocol, Model]
 #else
@@ -25267,6 +25267,11 @@ namespace UIKit {
 	[BaseType (typeof(NSObject))]
 	interface UIFindInteractionDelegate
 	{
+		// This abstract method needs attributes since PDFKit.PDFView
+		// implements this interface and has iOS 11 support. When inlining
+		// this method, the attributes are not carried over and causes issues
+		// since it is not supported until iOS 16
+		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0), NoMac]
 		[Abstract]
 		[Export ("findInteraction:sessionForView:")]
 		[return: NullAllowed]
@@ -25376,16 +25381,16 @@ namespace UIKit {
 	[Watch (9,0), TV (16,0), iOS (16, 0), MacCatalyst (16,0)]
 	interface UIFontWidthConstants {
 		[Field ("UIFontWidthCondensed")]
-		double Condensed { get; }
+		nfloat Condensed { get; }
 
 		[Field ("UIFontWidthStandard")]
-		double Standard { get; }
+		nfloat Standard { get; }
 
 		[Field ("UIFontWidthExpanded")]
-		double Expanded { get; }
+		nfloat Expanded { get; }
 
 		[Field ("UIFontWidthCompressed")]
-		double Compressed { get; }
+		nfloat Compressed { get; }
 	}
 
 

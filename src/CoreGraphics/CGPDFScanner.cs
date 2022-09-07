@@ -230,5 +230,29 @@ namespace CoreGraphics {
 				return false;
 			}
 		}
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static void CGPDFScannerStop (/* CGPDFScannerRef */ IntPtr scanner);
+
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[Mac (13,0), iOS (16,0), TV (16,0), MacCatalyst (16,0)]
+#endif
+		public void Stop ()
+		{
+			CGPDFScannerStop (Handle);
+		}
 	}
 }
