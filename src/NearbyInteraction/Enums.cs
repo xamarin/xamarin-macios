@@ -24,6 +24,8 @@ namespace NearbyInteraction {
 		ResourceUsageTimeout = -5886,
 		ActiveSessionsLimitExceeded = -5885,
 		UserDidNotAllow = -5884,
+		AccessoryPeerDeviceUnavailable = -5882,
+		InvalidARConfiguration = -5883,
 	}
 
 	[Watch (8,0), NoTV, NoMac, iOS (14,0)]
@@ -32,5 +34,25 @@ namespace NearbyInteraction {
 	{
 		Timeout,
 		PeerEnded,
+	}
+
+	[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
+	[Native]
+	public enum NIAlgorithmConvergenceStatus : long
+	{
+		Unknown,
+		NotConverged,
+		Converged,
+	}
+
+	[iOS (16,0), NoMac, Watch (9,0), NoTV, MacCatalyst (16,0)]
+	[Native]
+	public enum NINearbyObjectVerticalDirectionEstimate : long
+	{
+		Unknown = 0,
+		Same = 1,
+		Above = 2,
+		Below = 3,
+		AboveOrBelow = 4,
 	}
 }

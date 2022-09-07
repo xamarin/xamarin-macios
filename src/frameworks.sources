@@ -1323,6 +1323,7 @@ NEARBYINTERACTION_API_SOURCES = \
 
 NEARBYINTERACTION_SOURCES = \
 	NearbyInteraction/NINearbyObject.cs \
+	NearbyInteraction/NIAlgorithmConvergenceStatusReasonValues.cs \
 
 # NetworkExtension
 
@@ -2020,6 +2021,7 @@ MACOS_FRAMEWORKS =          \
 	CoreWlan                \
 	EventKit                \
 	ExecutionPolicy		\
+	ExtensionKit		\
 	ExternalAccessory 	\
 	FileProvider	\
 	FileProviderUI	\
