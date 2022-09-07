@@ -351,6 +351,7 @@ class MyObjectErr : NSObject, IFoo1, IFoo2
 					new { Framework = "ThreadNetwork", Version = "15.0" },
 					new { Framework = "BackgroundAssets", Version = "16.0" },
 					new { Framework = "PushToTalk", Version = "16.0" },
+					new { Framework = "SharedWithYou", Version = "16.0" },
 					new { Framework = "SharedWithYouCore", Version = "16.0" },
 				};
 				foreach (var framework in invalidFrameworks)

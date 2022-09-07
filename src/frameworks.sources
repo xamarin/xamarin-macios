@@ -455,6 +455,7 @@ COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/DispatchData.cs \
 	CoreFoundation/NativeObject.cs \
 	CoreFoundation/Architecture.cs \
+	CoreFoundation/CGAffineTransformComponents.cs \
 
 COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFAllocator.cs \
@@ -1327,6 +1328,7 @@ NEARBYINTERACTION_API_SOURCES = \
 
 NEARBYINTERACTION_SOURCES = \
 	NearbyInteraction/NINearbyObject.cs \
+	NearbyInteraction/NIAlgorithmConvergenceStatusReasonValues.cs \
 
 # NetworkExtension
 
@@ -2025,6 +2027,7 @@ MACOS_FRAMEWORKS =          \
 	CoreWlan                \
 	EventKit                \
 	ExecutionPolicy		\
+	ExtensionKit		\
 	ExternalAccessory 	\
 	FileProvider	\
 	FileProviderUI	\
@@ -2191,6 +2194,7 @@ IOS_FRAMEWORKS =         \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYou \
 	SharedWithYouCore \
 	Social \
 	Speech \
@@ -2379,6 +2383,7 @@ MACCATALYST_FRAMEWORKS = \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYou \
 	SharedWithYouCore \
 	Social \
 	Speech \
