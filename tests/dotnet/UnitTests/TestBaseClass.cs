@@ -35,10 +35,7 @@ namespace Xamarin.Tests {
 		protected string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug")
 		{
 			var rv = GetProjectPath (project, subdir, platform);
-			if (string.IsNullOrEmpty (runtimeIdentifiers))
-				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
-			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
-			appPath = Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
+			appPath = Path.Combine (GetOutputPath (project, subdir, runtimeIdentifiers, platform, configuration), project + ".app");
 			return rv;
 		}
 
@@ -46,6 +43,15 @@ namespace Xamarin.Tests {
 		{
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			return Path.Combine (Path.GetDirectoryName (projectPath)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, Path.GetFileNameWithoutExtension (projectPath) + ".app");
+		}
+
+		protected string GetOutputPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, string configuration = "Debug")
+		{
+			var rv = GetProjectPath (project, subdir, platform);
+			if (string.IsNullOrEmpty (runtimeIdentifiers))
+				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			return Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier);
 		}
 
 		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform)
@@ -309,6 +315,17 @@ namespace Xamarin.Tests {
 			var appPath = GetAppPath (csproj, platform, runtimeIdentifiers);
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (appExecutable);
+		}
+
+		protected bool IsRuntimeIdentifierSigned (string runtimeIdentifiers)
+		{
+			foreach (var rid in runtimeIdentifiers.Split (';', StringSplitOptions.RemoveEmptyEntries)) {
+				if (rid.StartsWith ("ios-", StringComparison.OrdinalIgnoreCase))
+					return true;
+				if (rid.StartsWith ("tvos-", StringComparison.OrdinalIgnoreCase))
+					return true;
+			}
+			return false;
 		}
 	}
 }
