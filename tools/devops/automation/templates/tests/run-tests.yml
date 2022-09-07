@@ -177,16 +177,15 @@ steps:
     # uri used to create the vsdrops index using full uri
     export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/$PARAMETERS_TESTPREFIX;/tests/"
 
-    make -C builds download -j || true
-    make -C builds downloads -j || true
-    make -C builds .stamp-mono-ios-sdk-destdir -j || true
-    RC=0
-    make -C tests ${{ parameters.makeTarget }} || RC=$?
-    if [ $RC -eq 0 ]; then
-      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
-    else
-      echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
-    fi
+    # assume something is going to fail
+    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+
+    make -C builds download -j
+    make -C builds .stamp-mono-ios-sdk-destdir -j
+    make -C tests ${{ parameters.makeTarget }}
+
+    # We reached the end! This means we succeeded!
+    echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Succeeded"
   env:
     TEST_PREFIX: ${{ upper(parameters.testPrefix) }}
     TESTS_EXTRA_ARGUMENTS: ${{ parameters.testsLabels }}
@@ -223,18 +222,21 @@ steps:
   condition:  and(eq(variables['system.debug'], true), succeededOrFailed())
   continueOnError: true
 
-# set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the commnet, this way
+# set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the comment, this way
 # we report the result as soon as we have it and ensure that we set the status from pending to the appropiate value.
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
 
     $testResultsPath = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tests/TestSummary.md"
-    $testResult = New-TestResults -Path $testResultsPath -Status "$(runTests.TESTS_JOBSTATUS)" -Context "${{ parameters.statusContext }}"
+    $testAttempt = [int]"$(System.JobAttempt)"
+    $testResult = New-TestResults -Path $testResultsPath -Status "$(runTests.TESTS_JOBSTATUS)" -Context "${{ parameters.statusContext }}" -Attempt $testAttempt
 
     $statuses = New-GitHubStatusesObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
     $statuses.SetStatus($testResult.GetStatus())
   displayName: "Set tests status."
+  continueOnError: true
+  condition: succeededOrFailed()
   timeoutInMinutes: 5
 
 # Upload TestSummary as an artifact.
@@ -242,7 +244,7 @@ steps:
   displayName: 'Publish Artifact: TestSummary'
   inputs:
     targetPath: 'xamarin-macios/tests/TestSummary.md'
-    artifactName: TestSummary-${{ parameters.testPrefix }}
+    artifactName: TestSummary-${{ parameters.testPrefix }}-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 
@@ -253,16 +255,20 @@ steps:
       Write-Host "##vso[task.addattachment type=Distributedtask.Core.Summary;name=$summaryName;]$summaryPath"
     }
   displayName: Set TestSummary
+  continueOnError: true
+  condition: succeededOrFailed()
 
 - task: artifactDropTask@1
   displayName: 'Publish to Artifact Services Drop'
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
     dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}'
-    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)-$(System.JobAttempt)/${{ parameters.testPrefix }}'
     sourcePath: 'xamarin-macios/jenkins-results'
     detailedLog: true
     usePat: true
+  continueOnError: true
+  condition: succeededOrFailed()
 
 # Upload test results to vsts.
 - task: PublishTestResults@2
