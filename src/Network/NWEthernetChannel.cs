@@ -47,9 +47,6 @@ namespace Network {
 	[UnsupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("ios")]
 #else
-	[NoWatch]
-	[NoTV]
-	[NoiOS]
 	[Mac (10,15)]
 #endif
 	public class NWEthernetChannel : NativeObject {
@@ -83,9 +80,6 @@ namespace Network {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
-		[NoTV]
-		[NoiOS]
 		[Mac (13,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -96,9 +90,6 @@ namespace Network {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
-		[NoTV]
-		[NoiOS]
 		[Mac (13,0)]
 #endif
 		public NWEthernetChannel (ushort ethernetType, NWInterface networkInterface, NWParameters parameters) =>
@@ -237,9 +228,6 @@ namespace Network {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
-		[NoTV]
-		[NoiOS]
 		[Mac (13,0)]
 #endif
 		[DllImport (Constants.NetworkLibrary)]
@@ -250,9 +238,6 @@ namespace Network {
 		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("ios")]
 #else
-		[NoWatch]
-		[NoTV]
-		[NoiOS]
 		[Mac (13,0)]
 #endif
 		public uint MaximumPayloadSize  => nw_ethernet_channel_get_maximum_payload_size (GetCheckedHandle ());
