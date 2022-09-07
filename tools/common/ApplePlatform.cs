@@ -3,6 +3,8 @@
 //
 // Copyright 2020 Microsoft Corp. All Rights Reserved.
 
+#nullable enable
+
 namespace Xamarin.Utils
 {
 	public enum ApplePlatform {
@@ -35,9 +37,11 @@ namespace Xamarin.Utils
 			}
 		}
 
-		public static string ToFramework (this ApplePlatform @this)
+		public static string ToFramework (this ApplePlatform @this, string? netVersion = null)
 		{
-			var netVersion = "net7.0";
+			if (netVersion is null)
+				netVersion = "net7.0";
+
 			switch (@this) {
 			case ApplePlatform.iOS:
 				return netVersion + "-ios";
