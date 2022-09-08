@@ -113,7 +113,7 @@ class TestResults {
                         $this.Passed = $matches.passed -as [int]
                         Write-Debug "Passed tests count: $($this.Passed)"
                     } else {
-                        throw "Unknown result pattern '$content'"
+                        throw "Unable to understand the test result '$content' for test '$($this.Label)'"
                     }
                 }
             } else {
