@@ -165,10 +165,14 @@ class TestResults {
                                 $this.Failed = $matches.failed -as [int]
                                 Write-Debug "\t\tPassed: $($this.Passed) Failed: $($this.Failed)"
                             } else {
-                                throw "Unknown result pattern '$content'"
+                                Write-Debug "`t`tAdding a single fail because unexpected <summary> contents found: $($content)"
+                                $this.Passed = 0
+                                $this.Failed = 1
                             }
                         } else {
-                            throw "Unknown result pattern of a failed test"
+                            Write-Debug "`t`tNo <summary> found, adding a single fail"
+                            $this.Passed = 0
+                            $this.Failed = 1
                         }
                     }
                 }
