@@ -149,12 +149,12 @@ Describe "TestResults tests" {
 
             $testResults[0].Label | Should -Be "linker"
             $testResults[0].Context | Should -Be " - linker"
-            $testResults[0].ResultsPath | Should -Be "$Env:PWD/subdir/TestSummary-prefixlinker-200/TestSummary.md"
+            $testResults[0].ResultsPath | Should -Be "$(get-location)/subdir/TestSummary-prefixlinker-200/TestSummary.md"
             $testResults[0].TestsJobStatus | Should -Be "yay"
 
             $testResults[1].Label | Should -Be "introspection"
             $testResults[1].Context | Should -Be " - introspection"
-            $testResults[1].ResultsPath | Should -Be "$Env:PWD/subdir/TestSummary-prefixintrospection-2/TestSummary.md"
+            $testResults[1].ResultsPath | Should -Be "$(get-location)/subdir/TestSummary-prefixintrospection-2/TestSummary.md"
             $testResults[1].TestsJobStatus | Should -Be "nay"
         }
     }
