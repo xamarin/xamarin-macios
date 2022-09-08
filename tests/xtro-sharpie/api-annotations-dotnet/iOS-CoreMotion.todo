@@ -1,4 +1,3 @@
-!missing-selector! +CMMovementDisorderManager::version not bound
 !missing-enum! CMWaterSubmersionDepthState not bound
 !missing-enum! CMWaterSubmersionState not bound
 !missing-protocol! CMWaterSubmersionManagerDelegate not bound
