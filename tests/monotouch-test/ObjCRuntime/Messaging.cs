@@ -263,7 +263,22 @@ namespace ObjCRuntime
 
 		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
 		public extern static void void_objc_msgSend_NSRange_out_NSRange_ref_NSRange (IntPtr receiver, IntPtr selector, _LongNSRange p1, out _LongNSRange p2, ref _LongNSRange p3);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		public extern static void void_objc_msgSend_ref_byte_ref_sbyte_ref_short_ref_ushort_ref_int_ref_uint_ref_long_ref_ulong (IntPtr receiver, IntPtr selector, ref EnumB b, ref EnumSB sb, ref EnumS s, ref EnumUS us, ref EnumI i, ref EnumUI ui, ref EnumL l, ref EnumUL ul);
+
+		[DllImport (LIBOBJC_DYLIB, EntryPoint = "objc_msgSend")]
+		public extern static void void_objc_msgSend_out_byte_out_sbyte_out_short_out_ushort_out_int_out_uint_out_long_out_ulong (IntPtr receiver, IntPtr selector, out EnumB b, out EnumSB sb, out EnumS s, out EnumUS us, out EnumI i, out EnumUI ui, out EnumL l, out EnumUL ul);
 	}
+
+	public enum EnumB : byte { a, b = 10 };
+	public enum EnumSB : sbyte { a, b = 11 };
+	public enum EnumS : short { a, b = 12 };
+	public enum EnumUS : ushort { a, b = 13 };
+	public enum EnumI : int { a, b = 14 };
+	public enum EnumUI : uint { a, b = 15 };
+	public enum EnumL : long { a, b = 16 };
+	public enum EnumUL : ulong { a, b = 17 };
 
 	public struct _LongNSRange {
 		public long Location;
