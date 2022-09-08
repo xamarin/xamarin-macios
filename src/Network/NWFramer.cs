@@ -455,5 +455,41 @@ namespace Network {
 					nw_framer_deliver_input (GetCheckedHandle (),mh, (nuint)buffer.Length, message.Handle, isComplete);
 			}
 		}
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[MacCatalyst (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern OS_nw_protocol_options nw_framer_copy_options (OS_nw_framer framer);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[MacCatalyst (16,0)]
+		[Watch (9,0)]
+#endif
+		public NSProtocolFramerOptions? ProtocolOptions {
+			get {
+				var x = nw_framer_copy_options (GetCheckedHandle ());
+				if (x == IntPtr.Zero)
+					return null;
+				return new NSProtocolFramerOptions (x, owns: true);
+			}
+		}
 	}
 }
