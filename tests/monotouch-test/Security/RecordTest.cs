@@ -29,11 +29,11 @@ namespace MonoTouchFixtures.Security {
 #if __MACOS__
 			// ignore on macOS 11.* (but not 12+)
 			if (TestRuntime.CheckXcodeVersion (12, 2) && !TestRuntime.CheckXcodeVersion (13, 0))
-				Assert.Ignore ("Skip on macOS 11.*");
+				TestRuntime.IgnoreInCI ("Skip on macOS 11.* because it hangs");
 #endif
 
 #if HAS_LOCALAUTHENTICATION
-			var context = new LAContext();
+			var context = new LAContext ();
 			context.InteractionNotAllowed = true;
 			rec.AuthenticationContext = context;
 #else
@@ -100,7 +100,7 @@ namespace MonoTouchFixtures.Security {
 		}
 
 		[Test]
-		public void Identity()
+		public void Identity ()
 		{
 			var rec = CreateSecRecord (SecKind.Identity,
 				account: "Username",
@@ -184,7 +184,7 @@ namespace MonoTouchFixtures.Security {
 
 		void Protocol (SecProtocol protocol)
 		{
-			var rec = CreateSecRecord(SecKind.InternetPassword,
+			var rec = CreateSecRecord (SecKind.InternetPassword,
 				account: $"Protocol-{protocol}-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}"
 			);
 			try {
@@ -266,7 +266,7 @@ namespace MonoTouchFixtures.Security {
 			try {
 				Assert.That (SecKeyChain.Add (rec), Is.EqualTo (SecStatusCode.Success), "Add");
 
-				var query = CreateSecRecord(SecKind.InternetPassword,
+				var query = CreateSecRecord (SecKind.InternetPassword,
 					account: rec.Account,
 					authenticationType: rec.AuthenticationType,
 					server: rec.Server
@@ -339,7 +339,7 @@ namespace MonoTouchFixtures.Security {
 			string password = null;
 			var searchRecord = CreateSecRecord (SecKind.InternetPassword,
 				server: "Test1",
-				account: username.ToLower()
+				account: username.ToLower ()
 			);
 			SecStatusCode code;
 			var record = SecKeyChain.QueryAsRecord(searchRecord, out code);
@@ -358,7 +358,7 @@ namespace MonoTouchFixtures.Security {
 			SecStatusCode queryCode;
 			var record = SecKeyChain.QueryAsRecord (searchRecord, out queryCode);
 			if (queryCode == SecStatusCode.ItemNotFound) {
-				record = CreateSecRecord(SecKind.InternetPassword,
+				record = CreateSecRecord (SecKind.InternetPassword,
 					server: "Test1",
 					account: username.ToLower (),
 					valueData: NSData.FromString (password)
@@ -377,7 +377,7 @@ namespace MonoTouchFixtures.Security {
 		public static bool ClearUserPassword (string username)
 		{
 			var success = false;
-			var searchRecord = CreateSecRecord(SecKind.InternetPassword,
+			var searchRecord = CreateSecRecord (SecKind.InternetPassword,
 				server: "Test1",
 				account: username.ToLower ()
 			);
