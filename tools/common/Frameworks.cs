@@ -281,6 +281,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "BackgroundAssets", "BackgroundAssets", 13,0},
 					{ "HealthKit", "HealthKit", 13,0 },
 					{ "MetalFX", "MetalFX", 13, 0 },
+					{ "SafetyKit", "SafetyKit", 13, 0 },
 					{ "SharedWithYou", "SharedWithYou", 13,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 					{ "ExtensionKit", "ExtensionKit", 13,0 },
@@ -463,6 +464,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
 				{ "MetalFX", "MetalFX", new Version (16,0), NotAvailableInSimulator },
 				{ "PushToTalk", "PushToTalk", new Version (16,0), new Version (16, 2) /* available to build with, although it's unusable */},
+				{ "SafetyKit", "SafetyKit", 16, 0 },
 				{ "SharedWithYou", "SharedWithYou", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 
@@ -548,6 +550,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "DeviceCheck", "DeviceCheck", 9,0 },
 				{ "CallKit", "CallKit", 9,0 },
 				{ "LocalAuthentication", "LocalAuthentication", 9,0 },
+				{ "SafetyKit", "SafetyKit", 9, 0 },
 
 				{ "Symbols", "Symbols", 10, 0 },
 			};

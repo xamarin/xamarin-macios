@@ -1530,6 +1530,11 @@ SAFARISERVICES_CORE_SOURCES = \
 
 SAFARISERVICES_SOURCES = \
 
+# SafetyKit
+
+SAFETYKIT_API_SOURCES = \
+	SafetyKit/SAEnums.cs \
+
 # SceneKit
 
 SCENEKIT_API_SOURCES = \
@@ -2131,6 +2136,7 @@ MACOS_FRAMEWORKS =          \
 	QuickLookUI             \
 	ReplayKit               \
 	SafariServices          \
+	SafetyKit               \
 	ScreenCaptureKit        \
 	ScreenTime              \
 	ScriptingBridge         \
@@ -2245,6 +2251,7 @@ IOS_FRAMEWORKS =         \
 	QuickLookThumbnailing \
 	ReplayKit \
 	SafariServices \
+	SafetyKit \
 	ScreenTime \
 	Security \
 	SensitiveContentAnalysis \
@@ -2291,6 +2298,7 @@ WATCHOS_FRAMEWORKS =        \
 	NearbyInteraction       \
 	PassKit                 \
 	PushKit			\
+	SafetyKit               \
 	Security                \
 	UIKit XKit              \
 	UserNotifications       \

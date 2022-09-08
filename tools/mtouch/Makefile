@@ -178,6 +178,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 						\
 	-weak_framework AVRouting \
 	-weak_framework BackgroundAssets \
+	-weak_framework SafetyKit \
 	-weak_framework SharedWithYou \
 	-weak_framework SharedWithYouCore \
 						\
