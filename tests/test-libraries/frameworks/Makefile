@@ -6,6 +6,7 @@ NAMES+=FrameworksInRuntimesNativeDirectory1 FrameworksInRuntimesNativeDirectory2
 # These frameworks are used in the BundleStructure test
 NAMES+=FrameworkTest1 FrameworkTest2 FrameworkTest3 FrameworkTest4 FrameworkTest5
 NAMES+=UnknownD UnknownE UnknownF1 UnknownF2 SomewhatUnknownD SomewhatUnknownE SomewhatUnknownF1 SomewhatUnknownF2
+NAMES+=Framework.With.Dots
 # Used in mmptest
 NAMES+=MmpTestFramework
 
@@ -86,7 +87,7 @@ all-local:: $$($(3)_TARGETS)
 	$$(Q) touch $$@
 
 .libs/$(3)/lib$(1).dylib: shared.c | .libs/$(3)
-	$$(call Q_2,CC,    [$(3)]) $$(XCODE_CC) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_DYLIB_FLAGS) $$($(3)_DYLIB_FLAGS) -DNAME=$(1)
+	$$(call Q_2,CC,    [$(3)]) $$(XCODE_CC) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_DYLIB_FLAGS) $$($(3)_DYLIB_FLAGS) -DNAME=$(4)
 	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/lib$(1).dylib $$@
 
 .libs/$(3)/$(1).framework$($(2)_BINARY_INFIX)/$(1): .libs/$(3)/lib$(1).dylib | .libs/$(3)/$(1).framework$($(2)_BINARY_INFIX)
@@ -150,7 +151,7 @@ endef
 # 1: name
 # 2: sdk platform (iphoneos, iphonesimulator, tvos, tvsimulator, maccatalyst, mac)
 # 3: runtime identifier
-$(foreach name,$(NAMES),$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call FrameworkTemplate,$(name),$(DOTNET_$(rid)_SDK_PLATFORM),$(rid))))))
+$(foreach name,$(NAMES),$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call FrameworkTemplate,$(name),$(DOTNET_$(rid)_SDK_PLATFORM),$(rid),$(shell echo $(name) | tr '.' '_'))))))
 
 define XCTemplate
 .libs/$(3)/$(1).framework.stamp: $$(foreach rid,$$($(3)_XC_RUNTIMEIDENTIFIERS),.libs/$$(rid)/$(1).framework.stamp) | .libs/$(3)
@@ -223,7 +224,7 @@ all-local:: $$($(3)_PLUGIN_TARGETS)
 	$$(Q) touch $$@
 
 .libs/$(3)/lib$(1).dylib: shared.c | .libs/$(3)
-	$$(call Q_2,CC,    [$(3)]) $$(XCODE_CC) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_DYLIB_FLAGS) $$($(3)_DYLIB_FLAGS) -DNAME=$(1)
+	$$(call Q_2,CC,    [$(3)]) $$(XCODE_CC) -o $$@ $$(foreach arch,$$($(3)_ARCHITECTURES),-arch $$(arch)) $$($(2)_DYLIB_FLAGS) $$($(3)_DYLIB_FLAGS) -DNAME=$(4)
 	$$(Q) $(XCODE_DEVELOPER_ROOT)/Toolchains/XcodeDefault.xctoolchain/usr/bin/install_name_tool -id @rpath/lib$(1).dylib $$@
 
 .libs/$(3)/$(1).bundle$($(2)_BINARY_INFIX)/$(1): .libs/$(3)/lib$(1).dylib | .libs/$(3)/$(1).bundle$($(2)_BINARY_INFIX)
