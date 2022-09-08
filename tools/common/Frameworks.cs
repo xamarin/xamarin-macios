@@ -276,6 +276,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
 
+					{ "AVRouting", "AVRouting", 13,0},
 					{ "HealthKit", "HealthKit", 13,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 					{ "ExtensionKit", "ExtensionKit", 13,0 },
@@ -449,6 +450,8 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "ShazamKit", "ShazamKit", new Version (15,0), NotAvailableInSimulator},
 				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
 
+
+				{ "AVRouting", "AVRouting", 16,0},
 				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
 				{ "SharedWithYou", "SharedWithYouCore", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
@@ -529,6 +532,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "DeviceCheck", "DeviceCheck", 9,0 },
 				{ "CallKit", "CallKit", 9,0 },
+				{ "LocalAuthentication", "LocalAuthentication", 9,0 },
 			};
 		}
 		return watch_frameworks;

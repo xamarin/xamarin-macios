@@ -173,6 +173,7 @@ SIMLAUNCHER_FRAMEWORKS =  \
 	-weak_framework CoreLocationUI \
 	-weak_framework OSLog \
 						\
+	-weak_framework AVRouting \
 	-weak_framework SharedWithYou \
 	-weak_framework SharedWithYouCore \
 
