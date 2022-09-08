@@ -241,7 +241,7 @@ class ParallelTestsResults {
         }
 
         # we return the patterns we already know
-        if ($failedTests -eq 0) {
+        if ($failedTests -eq 0 -and $crashedTests -eq 0) {
             return ":tada: All $passedTests tests passed :tada:"
         } else {
             return "$crashedTests tests crashed, $failedTests tests failed, $passedTests tests passed."
