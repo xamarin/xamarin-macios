@@ -5,6 +5,7 @@ class TestResults {
     [string] $TestsJobStatus # the value of the env var that lets us know if the tests passed or not can be null or empty
     [string] $Label
     [string] $Context
+    [int] $Attempt
     hidden [int] $Passed
     hidden [int] $Failed
     hidden [string[]] $NotTestSummaryLabels = @("install-source")
@@ -13,13 +14,15 @@ class TestResults {
         [string] $path,
         [string] $status,
         [string] $label,
-        [string] $context
+        [string] $context,
+        [int] $attempt
     ) {
-        Write-Debug "TestsResults::new($path, $status, $label, $context)"
+        Write-Debug "TestsResults::new($path, $status, $label, $context, $attempt)"
         $this.ResultsPath = $path
         $this.TestsJobStatus = $status
         $this.Label = $label
         $this.Context = $context
+        $this.Attempt = $attempt
         $this.Passed = -1
         $this.Failed = -1
     }
@@ -35,6 +38,13 @@ class TestResults {
             Write-Debug "\t\t$($this.Label) - Test status: $($this.TestsJobStatus)"
             return $hasResultsPath -and ($this.TestsJobStatus -eq "Succeeded")
         }
+    }
+
+    [string] GetAttemptText() {
+        if ($this.Attempt -gt 1) {
+            return " [attempt $($this.Attempt)]"
+        }
+        return ""
     }
 
     [void] WriteComment($stringBuilder) {
@@ -248,10 +258,11 @@ class ParallelTestsResults {
     [void] PrintSuccessMessage($testResult, $stringBuilder) {
         $downloadInfo = $this.GetDownloadLinks($testResult)
         $result = $testResult.GetPassedTests()
+        $attemptText = $testResult.GetAttemptText()
         if ($result.Passed -eq 0) {
-            $stringBuilder.AppendLine(":warning: $($testResult.Label): No tests selected. $downloadInfo")
+            $stringBuilder.AppendLine(":warning: $($testResult.Label): No tests selected.$attemptText $downloadInfo")
         } else {
-            $stringBuilder.AppendLine(":white_check_mark: $($testResult.Label): All $($result.Passed) tests passed. $downloadInfo")
+            $stringBuilder.AppendLine(":white_check_mark: $($testResult.Label): All $($result.Passed) tests passed.$attemptText $downloadInfo")
         }
     }
 
@@ -282,7 +293,8 @@ class ParallelTestsResults {
             # loop over all results and add the content
             foreach ($r in $failingTests)
             {
-                $stringBuilder.AppendLine("### :x: $($r.Label) tests")
+                $attemptText = $r.GetAttemptText()
+                $stringBuilder.AppendLine("### :x: $($r.Label) tests$attemptText")
                 $stringBuilder.AppendLine("")
                 # print diff messages if the tests crash or if the tests did indeed fail
                 # get the result, if -1, we had a crash, else we print the result
@@ -345,9 +357,11 @@ function New-TestResults {
         [string]
         $Label,
         [string]
-        $Context
+        $Context,
+        [int]
+        $Attempt
     )
-    return [TestResults]::new($Path, $Status, $Label, $Context)
+    return [TestResults]::new($Path, $Status, $Label, $Context, $Attempt)
 }
 
 <#
@@ -368,5 +382,73 @@ function New-ParallelTestsResults {
     return [ParallelTestsResults]::new($Results, $Context, $TestPrefix, $VSDropsIndex)
 }
 
+<#
+    .SYNOPSIS
+        Find test results in a directory
+#>
+function New-TestSummaryResults {
+    param (
+        [string]
+        $Path,
+        [string[]]
+        $Labels,
+        [string]
+        $TestPrefix
+    )
+
+    $testResults = [System.Collections.ArrayList]@()
+    foreach ($label in $Labels) {
+        $label = $label.Replace("-", "_")
+        $environmentVariable = "TESTS_JOBSTATUS_$($label.ToUpper())"
+        $status = [Environment]::GetEnvironmentVariable($environmentVariable)
+
+        Write-Host "Test results for $label is '$status'"
+
+        $testSummaryDirectoryExpression = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-$TestPrefix$label-*"
+
+        # Get the list of directories
+        $directoryFilter = "TestSummary-$TestPrefix$label-*"
+        $testSummaryDirectories = Get-ChildItem -Path $Path -Directory -Filter $directoryFilter
+
+        if ($testSummaryDirectories.length -eq 0) {
+            Write-Host "WARNING: Found no directories matching $directoryFilter for label $label"
+            continue
+        }
+
+        # Compute the attempt # and create a list of (Name, Attempt) entries
+        $attemptDirectories = [System.Collections.ArrayList]@()
+        $computeAttempt = {this.Name.Substring($this.Name.LastIndexOf("-") + 1)}
+        foreach ($dir in $testSummaryDirectories) {
+            $attempt = [int] $dir.Name.Substring($dir.Name.LastIndexOf("-") + 1)
+            $obj = [PSCustomObject]@{
+                Name = $dir
+                Attempt = [int] $attempt
+            }
+            $attemptDirectories += $obj
+        }
+
+        # Sort the list by attempt #
+        $attemptDirectories = $attemptDirectories | Sort-Object -Property "Attempt"
+
+        # Get the last path in the array, that's the last attempt
+        $testSummaryDirectory = $attemptDirectories[$attemptDirectories.count-1]
+        $testAttempt = $testSummaryDirectory.Attempt
+        $testAttemptPath = $testSummaryDirectory.Name
+        $testSummaryPath = Join-Path $testAttemptPath "TestSummary.md"
+
+        Write-Host "Found "$attemptDirectories.count" directories, selected $testSummaryDirectory and final path is $testSummaryPath"
+
+        if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
+            Write-Host "WARNING: Path $testSummaryPath does not exist"
+        }
+
+        $result = New-TestResults -Path $testSummaryPath -Status $status -Label $label -Context "$Env:CONTEXT - $label" -Attempt $testAttempt
+        $testResults += $result
+    }
+
+    return $testResults
+}
+
 Export-ModuleMember -Function New-TestResults
 Export-ModuleMember -Function New-ParallelTestsResults
+Export-ModuleMember -Function New-TestSummaryResults

@@ -983,16 +983,25 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		public void CustomAppBundleDir (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var customAppBundleDir = Path.Combine (Cache.CreateTemporaryDirectory (), project + ".app");
+			properties ["AppBundleDir"] = customAppBundleDir;
+			var result = DotNet.AssertBuild (project_path, properties);
+		}
+
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		public void CustomizedCodeSigning (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "CustomizedCodeSigning";
-			Configuration.IgnoreIfIgnoredPlatform (platform);
-
-			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
-			Clean (project_path);
-
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			DotNet.AssertBuild (project_path, properties);
 
