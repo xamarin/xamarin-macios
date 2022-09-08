@@ -2544,9 +2544,14 @@ namespace UIKit {
 		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use a 'BGAppRefreshTask' from 'BackgroundTasks' framework.")]
 		void SetMinimumBackgroundFetchInterval (double minimumBackgroundFetchInterval);
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[iOS (7,0)]
 		[Export ("preferredContentSizeCategory")]
 		NSString PreferredContentSizeCategory { get; }
+
+		[iOS (7,0)]
+		[Wrap ("UIContentSizeCategoryExtensions.GetValue (SharedApplication.PreferredContentSizeCategory)")]
+		UIContentSizeCategory GetPreferredContentSizeCategory ();
 
 		[iOS (13,0), TV (13,0)]
 		[Export ("connectedScenes")]
@@ -25258,7 +25263,7 @@ namespace UIKit {
 
 	interface IUIFindInteractionDelegate {}
 
-	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0), NoMac]
 #if NET
 	[Protocol, Model]
 #else
@@ -25267,6 +25272,11 @@ namespace UIKit {
 	[BaseType (typeof(NSObject))]
 	interface UIFindInteractionDelegate
 	{
+		// This abstract method needs attributes since PDFKit.PDFView
+		// implements this interface and has iOS 11 support. When inlining
+		// this method, the attributes are not carried over and causes issues
+		// since it is not supported until iOS 16
+		[NoWatch, NoTV, iOS (16,0), MacCatalyst (16,0), NoMac]
 		[Abstract]
 		[Export ("findInteraction:sessionForView:")]
 		[return: NullAllowed]

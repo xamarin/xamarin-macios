@@ -678,6 +678,13 @@
 			WrappedManagedFunction = "AttemptRetainNSObject",
 			OnlyDynamicUsage = false,
 		},
+
+		new XDelegate ("bool", "bool", "xamarin_invoke_conforms_to_protocol",
+			"id", "IntPtr", "obj",
+			"Protocol *", "IntPtr", "protocol"
+		) {
+			WrappedManagedFunction = "InvokeConformsToProtocol",
+		},
 	};
 	delegates.CalculateLengths ();
 #><#+
