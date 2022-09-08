@@ -62,5 +62,22 @@
 	<array>
 		<string>processing</string>
 	</array>
+	<key>NSApplicationServices</key>
+	<dict>
+		<key>Browses</key>
+		<array>
+			<dict>
+				<key>NSApplicationServiceIdentifier</key>
+				<string>MyAppService</string>
+				<key>NSApplicationServicePlatformSupport</key>
+				<array>
+					<string>iPadOS</string>
+					<string>iOS</string>
+				</array>
+				<key>NSApplicationServiceUsageDescription</key>
+				<string>You can control this app using an iOS device.</string>
+			</dict>
+		</array>
+	</dict>
 </dict>
 </plist>
