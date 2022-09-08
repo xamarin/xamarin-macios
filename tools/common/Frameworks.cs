@@ -276,7 +276,8 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "ScreenCaptureKit", "ScreenCaptureKit", 12,3 },
 
-					{ "BackgroundAssets", "BackgroundAssets", 13,0 },
+					{ "AVRouting", "AVRouting", 13,0},
+					{ "BackgroundAssets", "BackgroundAssets", 13,0},
 					{ "HealthKit", "HealthKit", 13,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 					{ "ExtensionKit", "ExtensionKit", 13,0 },
@@ -451,6 +452,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "ThreadNetwork", "ThreadNetwork", new Version (15,0), NotAvailableInSimulator},
 
 
+				{ "AVRouting", "AVRouting", 16,0},
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
 				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
 				{ "SharedWithYou", "SharedWithYouCore", 16, 0 },

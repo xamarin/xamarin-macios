@@ -14,6 +14,7 @@ namespace Xamarin.Linker {
 		public const string AppKit = nameof (AppKit);
 		public const string AVFoundation = nameof (AVFoundation);
 		public const string AVKit = nameof (AVKit);
+		public const string AVRouting = nameof (AVRouting);
 #if !NET
 		public const string Chip = nameof (Chip);
 #endif
