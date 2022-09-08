@@ -140,12 +140,12 @@ Describe "TestResults tests" {
             New-Item -Path "$testDirectory/TestSummary-prefixintrospection-2" -Name "TestSummary.md" -Value "SummaryE" -Force
             New-Item -Path "$testDirectory/TestSummary-prefixmtouch-3" -Name "TestSummary.md" -Value "SummaryF" -Force
 
-            $labels = "linker;introspection".Split(";")
+            $labels = "linker;introspection;monotouch-test".Split(";")
             $testResults = New-TestSummaryResults -Path "$testDirectory" -Labels $labels -TestPrefix "prefix"
 
             Remove-Item -Path $testDirectory -Recurse
 
-            $testResults.count | Should -Be 2
+            $testResults.count | Should -Be 3
 
             $testResults[0].Label | Should -Be "linker"
             $testResults[0].Context | Should -Be " - linker"
