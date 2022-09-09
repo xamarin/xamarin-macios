@@ -656,6 +656,7 @@ namespace AudioUnit
 		[Mac (13,0)]
 		[iOS (16,0)]
 #endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void ValidateAsync (NSDictionary? validationParameters,
 				Action<AudioComponentValidationResult, NSDictionary?> onCompletion, out int resultCode) {
 			if (onCompletion is null)
