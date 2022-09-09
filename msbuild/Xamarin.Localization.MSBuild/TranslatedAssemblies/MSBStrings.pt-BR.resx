@@ -997,10 +997,6 @@
         <value>Configurar: A Entrada, "{0}", Não Existe
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>Não é possível criar um pacote de recursos de associação, a menos que haja referências nativas no projeto de associação.
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>O Xamarin.iOS 14+ não oferece suporte a aplicativos watchOS 1. Migre seu projeto para watchOS 2.</value>
     </data>

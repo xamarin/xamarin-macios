@@ -1796,16 +1796,6 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can&apos;t create a binding resource package unless there are native references in the binding project.
-        ///        .
-        /// </summary>
-        public static string E7068 {
-            get {
-                return ResourceManager.GetString("E7068", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+..
         /// </summary>
         public static string E7069 {

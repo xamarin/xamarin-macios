@@ -1239,10 +1239,7 @@
         </value>
     </data>
     
-    <data name="E7068" xml:space="preserve">
-        <value>Can't create a binding resource package unless there are native references in the binding project.
-        </value>
-    </data>
+    <!-- E7068: not in use anymore -->
     
     <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+.</value>
