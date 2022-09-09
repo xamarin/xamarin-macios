@@ -24,6 +24,12 @@ steps:
     parameters:
       testPrefix: ${{ parameters.testPrefix }}
 
+- bash: |
+    find . -name 'vsts-*.xml'
+    find . -name 'vsts-*.xml' -ls -exec cat {} \;
+  continueOnError: true
+  condition: succeededOrFailed()
+
   # Upload test results to vsts.
   - task: PublishTestResults@2
     displayName: 'Publish NUnit Device Test Results'
