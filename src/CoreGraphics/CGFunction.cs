@@ -109,21 +109,17 @@ namespace CoreGraphics {
 		unsafe delegate void CGFunctionEvaluateCallback (/* void* */ IntPtr info, /* CGFloat* */ nfloat *data, /* CGFloat* */ nfloat *outData); 
 		delegate void CGFunctionReleaseCallback (IntPtr info);
 
-#if NET
-		[StructLayout (LayoutKind.Sequential)]
-		unsafe struct CGFunctionCallbacks {
-			public /* unsigned int */ uint version;
-			public delegate* unmanaged<IntPtr, nfloat*, nfloat*, void> evaluate;
-			public delegate* unmanaged<IntPtr, void> release;
-		}
-#else			
 		[StructLayout (LayoutKind.Sequential)]
 		struct CGFunctionCallbacks {
 			public /* unsigned int */ uint version;
+#if NET
+			public unsafe delegate* unmanaged<IntPtr, nfloat*, nfloat*, void> evaluate;
+			public unsafe delegate* unmanaged<IntPtr, void> release;
+#else
 			public CGFunctionEvaluateCallback? evaluate;
 			public CGFunctionReleaseCallback? release;
-		}
 #endif
+		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static IntPtr CGFunctionCreate (/* void* */ IntPtr data, /* size_t */ nint domainDimension, /* CGFloat* */ nfloat []? domain, nint rangeDimension, /* CGFloat* */ nfloat []? range, ref CGFunctionCallbacks callbacks);

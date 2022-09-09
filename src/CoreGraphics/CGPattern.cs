@@ -53,21 +53,17 @@ namespace CoreGraphics {
 	delegate void DrawPatternCallback (/* void* */ IntPtr info, /* CGContextRef */ IntPtr c);
 	delegate void ReleaseInfoCallback (/* void* */ IntPtr info);
 
-#if NET
-	[StructLayout (LayoutKind.Sequential)]
-	unsafe struct CGPatternCallbacks {
-		internal /* unsigned int */ uint version;
-		internal delegate* unmanaged<IntPtr, IntPtr, void> draw;
-		internal delegate* unmanaged<IntPtr, void> release;
-	}
-#else
 	[StructLayout (LayoutKind.Sequential)]
 	struct CGPatternCallbacks {
 		internal /* unsigned int */ uint version;
+#if NET
+		internal unsafe delegate* unmanaged<IntPtr, IntPtr, void> draw;
+		internal unsafe delegate* unmanaged<IntPtr, void> release;
+#else
 		internal DrawPatternCallback draw;
 		internal ReleaseInfoCallback release;
-	}
 #endif
+	}
 
 
 #if NET
