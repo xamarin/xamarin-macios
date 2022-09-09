@@ -157,6 +157,7 @@ steps:
     provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
+  continueOnError: true
 
 - bash: |
     echo "Pkg uri is $XM_PACKAGE"
@@ -172,27 +173,33 @@ steps:
   continueOnError: true
 
 - bash: |
-    ls -R /Library/Frameworks/Xamarin.iOS.framework
-    ls -R /Library/Frameworks/Xamarin.Mac.framework
+    ls -R /Library/Frameworks/Xamarin.iOS.framework || true
+    ls -R /Library/Frameworks/Xamarin.Mac.framework || true
   displayName: "Show installed Frameworks"
+  continueOnError: true
 
 - bash: |
     set -e
     set -x
-    mac_var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR MAC_DESTDIR=)
-    ios_var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR IOS_DESTDIR=)
-    MAC_DESTDIR=${mac_var#*=}
-    IOS_DESTDIR=${ios_var#*=}
-    XM_DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/"
-    XI_DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
-    mkdir -p "$XM_DEST_DIR"
-    mkdir -p "$XI_DEST_DIR"
-    ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$XM_DEST_DIR/git"
-    ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$XI_DEST_DIR/git"
-    ls -laR "$XM_DEST_DIR"
-    ls -laR "$XI_DEST_DIR"
+    if test -d /Library/Frameworks/Xamarin.Mac.framework/Versions/Current; then
+      mac_var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR MAC_DESTDIR=)
+      MAC_DESTDIR=${mac_var#*=}
+      XM_DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/"
+      mkdir -p "$XM_DEST_DIR"
+      ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$XM_DEST_DIR/git"
+      ls -laR "$XM_DEST_DIR"
+    if
+    if test -d /Library/Frameworks/Xamarin.iOS.framework/Versions/Current; then
+      ios_var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR IOS_DESTDIR=)
+      IOS_DESTDIR=${ios_var#*=}
+      XI_DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
+      mkdir -p "$XI_DEST_DIR"
+      ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$XI_DEST_DIR/git"
+      ls -laR "$XI_DEST_DIR"
+    fi
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
   displayName: Create legacy iOS/Mac SDK symlinks
+  continueOnError: true
 
 - bash: |
     set -x
