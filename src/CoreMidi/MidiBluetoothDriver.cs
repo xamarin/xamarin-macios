@@ -33,17 +33,11 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		static extern int MIDIBluetoothDriverActivateAllConnections ();
 
-		public static int ActivateAllConnections ()
-		{
-			return MIDIBluetoothDriverActivateAllConnections ();
-		}
+		public static int ActivateAllConnections () => MIDIBluetoothDriverActivateAllConnections ();
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		static extern unsafe int MIDIBluetoothDriverDisconnect (/* CFStringRef* */ NativeHandle uuid);
 
-		public static int Disconnect (NSString uuid)
-		{
-			return MIDIBluetoothDriverDisconnect (uuid.GetHandle ());
-		}
+		public static int Disconnect (NSString uuid) => MIDIBluetoothDriverDisconnect (uuid.GetHandle ());
 	}
 }

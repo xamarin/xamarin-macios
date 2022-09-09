@@ -143,7 +143,7 @@ namespace CoreMidi {
 	[Flags]
 	public enum MidiProgramChangeOptions : byte
 	{
-		MIDIProgramChangeBankValid = 1 << 0,
+		BankValid = 1 << 0,
 	}
 
 	[iOS (16,0), Mac (13,0), MacCatalyst (16,0)]
