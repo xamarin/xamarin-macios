@@ -297,7 +297,7 @@ steps:
   displayName: 'Publish Artifact: HtmlReport'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifactName: HtmlReport-${{ parameters.testPrefix }}
+    artifactName: HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 
