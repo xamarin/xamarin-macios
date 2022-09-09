@@ -99,17 +99,16 @@ namespace MonoTouchFixtures.UIKit {
 				didRun = true;
 				callbackEvent.Set ();
 			};
-			var recognizer = new UITapGestureRecognizer (callback);
+			using var recognizer = new UITapGestureRecognizer (callback);
 
 			// add gesture recognizer to UI view
-			using (UIView view = new UIView ()) {
-				view.AddGestureRecognizer (recognizer);
-				TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => {
-					// change state of gesture recognizer to execute callback
-					recognizer.State = UIGestureRecognizerState.Changed;
-					recognizer.State = UIGestureRecognizerState.Ended;
-				}, () => didRun);
-			}
+			using UIView view = new UIView ();
+			view.AddGestureRecognizer (recognizer);
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), () => {
+				// change state of gesture recognizer to execute callback
+				recognizer.State = UIGestureRecognizerState.Changed;
+				recognizer.State = UIGestureRecognizerState.Ended;
+			}, () => didRun);
 
 			// blocks main thread until event is trigerred
 			callbackEvent.WaitOne (30000);
