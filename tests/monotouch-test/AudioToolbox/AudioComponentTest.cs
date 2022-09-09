@@ -162,7 +162,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 			Assert.IsNotNull (component);
 			// validate and break
 			var validation = component.Validate(null);
-			Assert.AreEqual (AudioComponentValidationResult.Unknown, validation);
+			Assert.Contains (validation,
+				new List<AudioComponentValidationResult> () {AudioComponentValidationResult.Unknown, AudioComponentValidationResult.Passed}, "validation");
 		}
 
 		[Test]
