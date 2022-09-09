@@ -156,6 +156,11 @@ Describe "TestResults tests" {
             $testResults[1].Context | Should -Be " - introspection"
             $testResults[1].ResultsPath | Should -Be "$(get-location)/subdir/TestSummary-prefixintrospection-2/TestSummary.md"
             $testResults[1].TestsJobStatus | Should -Be "nay"
+
+            $testResults[2].Label | Should -Be "monotouch_test"
+            $testResults[2].Context | Should -Be " - monotouch_test"
+            $testResults[2].ResultsPath | Should -Be "./subdir/TestSummary-prefixmonotouch_test-1/TestSummary.md"
+            $testResults[2].TestsJobStatus | Should -Be ""
         }
     }
 
