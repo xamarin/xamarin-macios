@@ -654,7 +654,7 @@
 
 			<!-- Set TargetDirectory and SourceDirectory for all frameworks we have to publish -->
 			<_FrameworkToPublish Update="@(_FrameworkToPublish)">
-				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename).framework</TargetDirectory>
+				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename)%(Extension).framework</TargetDirectory>
 				<SourceDirectory>%(RelativeDir)</SourceDirectory>
 			</_FrameworkToPublish>
 		</ItemGroup>
@@ -975,6 +975,7 @@
 		<FindAotCompiler
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true'"
+			KeepTemporaryOutput="$(FindAotCompilerKeepKeepTemporaryOutput)"
 			MonoAotCrossCompiler="@(MonoAotCrossCompiler)"
 			RuntimeIdentifier="$(RuntimeIdentifier)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"

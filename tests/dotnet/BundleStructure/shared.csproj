@@ -142,6 +142,9 @@
 		<!-- any files in the root directory will make macOS or Mac Catalyst app bundles invalid, and code signing will fail, so skip the following for those platforms when signing the app bundle-->
 		<None Update="SomewhatUnknownJ.bin" CopyToOutputDirectory="PreserveNewest" Link="Subfolder/SomewhatUnknownJ.bin" PublishFolderType="RootDirectory" Condition="('$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst') Or '$(_IsAppSigned)' == 'false'" />
 
+		<!-- https://github.com/xamarin/xamarin-macios/issues/15727 -->
+		<None Include="$(RootTestsDirectory)/test-libraries/frameworks/.libs/$(RuntimeIdentifier)/Framework.With.Dots.framework"           CopyToPublishDirectory="PreserveNewest" PublishFolderType="AppleFramework" />
+
 		<!-- Content items -->
 
 		<!-- Content without any metadata: bundled -->
