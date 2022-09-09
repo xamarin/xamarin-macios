@@ -16,6 +16,7 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class MarshalAsTest {
 		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		public void TestAssembly (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
