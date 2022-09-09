@@ -169,6 +169,7 @@ steps:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
+  continueOnError: true
 
 - bash: |
     ls -R /Library/Frameworks/Xamarin.iOS.framework
