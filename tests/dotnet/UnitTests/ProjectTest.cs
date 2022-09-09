@@ -1003,6 +1003,8 @@ namespace Xamarin.Tests {
 		{
 			var project = "CustomizedCodeSigning";
 			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+
 			DotNet.AssertBuild (project_path, properties);
 
 			var codesignDirectory =GetRelativeCodesignDirectory (platform);
