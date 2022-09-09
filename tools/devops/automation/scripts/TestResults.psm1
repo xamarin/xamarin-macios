@@ -310,8 +310,8 @@ class ParallelTestsResults {
                 } else {
                     # create a detail per test result with the name of the test and will contain the exact summary
                     $stringBuilder.AppendLine("<summary>$($result.Failed) tests failed, $($result.Passed) tests passed.</summary>")
+                    $stringBuilder.AppendLine("<details>")
                     if (Test-Path -Path $r.ResultsPath -PathType Leaf) {
-                        $stringBuilder.AppendLine("<details>")
                         $stringBuilder.AppendLine("")
                         $foundTests = $false
                         foreach ($line in Get-Content -Path $r.ResultsPath)
@@ -324,12 +324,8 @@ class ParallelTestsResults {
                                 }
                             }
                         }
-                        $stringBuilder.AppendLine("</details>")
-                        $stringBuilder.AppendLine("")
                     } else {
-                        $stringBuilder.AppendLine("<details>")
                         $stringBuilder.AppendLine(" Test has no summary file.")
-                        $stringBuilder.AppendLine("</details>")
                     }
                     $stringBuilder.AppendLine("</details>")
                     $stringBuilder.AppendLine("")
