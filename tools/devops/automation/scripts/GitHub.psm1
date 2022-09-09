@@ -846,7 +846,7 @@ function New-GitHubSummaryComment {
     $sb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
     if ($Env:VSDROPS_INDEX) {
         # we did generate an index with the files in vsdrops
-        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-simulator&api-version=6.0&`$format=zip)")
+        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-simulator-$Env:SYSTEM_JOBATTEMPT&api-version=6.0&`$format=zip)")
     }
 
     if (-not $DeviceTest) {
