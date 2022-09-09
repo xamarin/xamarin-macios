@@ -152,8 +152,8 @@ namespace CoreGraphics {
 		extern static IntPtr CGDataProviderCreateWithData (/* void* */ IntPtr info, /* const void* */ IntPtr data, /* size_t */ nint size, /* CGDataProviderReleaseDataCallback */ CGDataProviderReleaseDataCallback releaseData);
 #endif
 
-		delegate void CGDataProviderReleaseDataCallback (IntPtr info, IntPtr data, nint size);
 #if !NET
+		delegate void CGDataProviderReleaseDataCallback (IntPtr info, IntPtr data, nint size);
 		static CGDataProviderReleaseDataCallback release_gchandle_callback = ReleaseGCHandle;
 		static CGDataProviderReleaseDataCallback release_buffer_callback = ReleaseBuffer;
 		static CGDataProviderReleaseDataCallback release_func_callback = ReleaseFunc;
