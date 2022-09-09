@@ -36,7 +36,7 @@ NUGET_SOURCES=$(grep https://pkgs.dev.azure.com ./NuGet.config | sed -e 's/.*val
 SOURCES=()
 for source in $NUGET_SOURCES; do
   SOURCES+=(--source)
-  SOURCES+=($source)
+  SOURCES+=("$source")
 done
 
 PLATFORMS=()
