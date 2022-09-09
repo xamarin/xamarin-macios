@@ -74,3 +74,5 @@
 !missing-pinvoke! MIDIReceivedEventList is not bound
 !missing-pinvoke! MIDISendEventList is not bound
 !missing-pinvoke! MIDISourceCreateWithProtocol is not bound
+# introduced in Xcode13.3 but low level and cannot test without device
+!missing-pinvoke! MIDIEventListForEachEvent is not bound
