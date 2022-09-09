@@ -2684,6 +2684,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_AppContainerDir Condition="'$(IsAppDistribution)' == 'true'">$(ArchivePath)\Products\Applications\</_AppContainerDir>
 			<AppBundleDir>$(_AppContainerDir)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
 		</PropertyGroup>
+		<PropertyGroup Condition="'$(_AppContainerDir)' == ''">
+			 <_AppContainerDir>$([System.IO.Path]::GetDirectoryName($(AppBundleDir)))/</_AppContainerDir>
+		</PropertyGroup>
 		<PropertyGroup>
 			<!-- Ensure _AppBundlePath is a relative path (relative to the project directory) and contains a trailing slash -->
 			<_AppBundlePath>$(AppBundleDir)</_AppBundlePath>
