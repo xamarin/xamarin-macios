@@ -25,10 +25,16 @@ steps:
       testPrefix: ${{ parameters.testPrefix }}
 
 - bash: |
-    find . -name 'vsts-*.xml'
-    find . -name 'vsts-*.xml' -ls -exec cat {} \;
+    set -ex
+    find . -name 'vsts-*.xml' || true
+    find . -name 'vsts-*.xml' -ls -exec cat {} \; || true
+    VSTS_XML_FILES=$(find . -name 'vsts-*.xml' | wc -l | sed 's/ //g')
+    set +x
+    echo "##vso[task.setvariable variable=VSTS_XML_FILES]$VSTS_XML_FILES"
+    set -x
   continueOnError: true
   condition: succeededOrFailed()
+  displayName: 'List NUnit test results'
 
   # Upload test results to vsts.
   - task: PublishTestResults@2
@@ -38,4 +44,4 @@ steps:
       testResultsFiles: '**/vsts-*.xml'
       failTaskOnFailedTests: true
     continueOnError: true
-    condition: succeededOrFailed()
+    condition: and(ne($(VSTS_XML_FILES),0),succeededOrFailed())
