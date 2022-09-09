@@ -8,9 +8,9 @@
       <Uri>https://github.com/dotnet/linker</Uri>
       <Sha>5f9bfd94d9c687207872ae03f751ea19704381c0</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.0-rc.2.22456.11">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.0-rc.2.22458.21">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>9dda76511887faec0f5cc65d1e305be839a2dcbc</Sha>
+      <Sha>00908575fcc36922f4fccc21a905fc008d082596</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.0-rc.2.22452.11" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
