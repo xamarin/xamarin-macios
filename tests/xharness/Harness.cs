@@ -103,7 +103,21 @@ namespace Xharness {
 			}
 		}
 
-		string MlaunchPath => Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
+		string MlaunchPath {
+			get {
+				if (INCLUDE_XAMARIN_LEGACY) {
+					if (INCLUDE_IOS)
+						return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
+				} else {
+					var dotnetRootDir = Path.Combine (RootDirectory, "..", "_build");
+					if (INCLUDE_IOS)
+						return Path.Combine (dotnetRootDir, "Microsoft.iOS.Sdk", "tools", "bin", "mlaunch");
+					if (INCLUDE_TVOS)
+						return Path.Combine (dotnetRootDir, "Microsoft.tvOS.Sdk", "tools", "bin", "mlaunch");
+				}
+				return $"Not building any mobile platform, so can't provide a location to mlaunch.";
+			}
+		}
 
 		public List<iOSTestProject> IOSTestProjects { get; }
 		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
