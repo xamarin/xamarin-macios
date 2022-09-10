@@ -410,7 +410,10 @@ function New-TestSummaryResults {
         $testSummaryDirectories = Get-ChildItem -Path $Path -Directory -Filter $directoryFilter
 
         if ($testSummaryDirectories.length -eq 0) {
-            Write-Host "WARNING: Found no directories matching $directoryFilter for label $label"
+            Write-Debug "WARNING: Found no directories matching $directoryFilter for label $label and prefix $TestPrefix"
+            $testSummaryPath = Join-Path $Path "TestSummary-$TestPrefix$label-1" "TestSummary.md"
+            $result = New-TestResults -Path $testSummaryPath -Status $status -Label $label -Context "$Env:CONTEXT - $label" -Attempt 1
+            $testResults += $result
             continue
         }
 

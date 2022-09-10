@@ -140,12 +140,12 @@ Describe "TestResults tests" {
             New-Item -Path "$testDirectory/TestSummary-prefixintrospection-2" -Name "TestSummary.md" -Value "SummaryE" -Force
             New-Item -Path "$testDirectory/TestSummary-prefixmtouch-3" -Name "TestSummary.md" -Value "SummaryF" -Force
 
-            $labels = "linker;introspection".Split(";")
+            $labels = @("linker", "introspection", "monotouch-test")
             $testResults = New-TestSummaryResults -Path "$testDirectory" -Labels $labels -TestPrefix "prefix"
 
             Remove-Item -Path $testDirectory -Recurse
 
-            $testResults.count | Should -Be 2
+            $testResults.count | Should -Be $labels.count
 
             $testResults[0].Label | Should -Be "linker"
             $testResults[0].Context | Should -Be " - linker"
@@ -156,6 +156,11 @@ Describe "TestResults tests" {
             $testResults[1].Context | Should -Be " - introspection"
             $testResults[1].ResultsPath | Should -Be "$(get-location)/subdir/TestSummary-prefixintrospection-2/TestSummary.md"
             $testResults[1].TestsJobStatus | Should -Be "nay"
+
+            $testResults[2].Label | Should -Be "monotouch_test"
+            $testResults[2].Context | Should -Be " - monotouch_test"
+            $testResults[2].ResultsPath | Should -Be "./subdir/TestSummary-prefixmonotouch_test-1/TestSummary.md"
+            $testResults[2].TestsJobStatus | Should -Be ""
         }
     }
 
