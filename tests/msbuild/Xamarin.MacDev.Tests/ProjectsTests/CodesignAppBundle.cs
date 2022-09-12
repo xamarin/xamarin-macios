@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 using Xamarin.MacDev;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture ("iPhone", "Debug")]
 	[TestFixture ("iPhone", "Release")]

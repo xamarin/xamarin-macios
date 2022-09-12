@@ -7,7 +7,7 @@ using Microsoft.Build.Evaluation;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class Bug60536 : ProjectTest
