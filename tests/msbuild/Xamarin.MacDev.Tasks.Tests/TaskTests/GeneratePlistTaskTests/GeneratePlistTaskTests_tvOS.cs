@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Xamarin.MacDev;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class GeneratePlistTaskTests_tvOS : GeneratePlistTaskTests_Core
