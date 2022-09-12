@@ -123,7 +123,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (testCase.Required) {
 				Assert.That (task.DetectedAppId, Is.Not.Null.And.Not.Empty, "DetectedAppId");
 				Assert.AreEqual ("-", task.DetectedCodeSigningKey, "DetectedCodeSigningKey");
-				Assert.AreEqual ("Development", task.DetectedDistributionType, "DetectedDistributionType");
+				Assert.That (task.DetectedDistributionType, Is.EqualTo ("Development").Or.EqualTo ("AppStore"), "DetectedDistributionType");
 				Assert.That (task.DetectedProvisioningProfile, Is.Not.Null.And.Not.Empty, "DetectedProvisioningProfile");
 			} else {
 				Assert.IsNull (task.DetectedAppId, "DetectedAppId");
