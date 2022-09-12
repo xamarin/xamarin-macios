@@ -890,7 +890,7 @@ namespace Foundation {
 #else
 					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
 					// more general one. Since we are using nullables, if the delegate is not present, by default is false
-					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
+					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) || 
 						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false);
 #endif
 
@@ -971,7 +971,7 @@ namespace Foundation {
 			{
 				var certificateValidationCallback = sessionHandler.ServerCertificateCustomValidationCallback;
 				if (certificateValidationCallback is null)
-					throw new InvalidOperationException ($"{nameof(NSUrlSessionHandler.ServerCertificateCustomValidationCallback)} cannot be null");
+					throw new InvalidOperationException ($"{nameof (NSUrlSessionHandler.ServerCertificateCustomValidationCallback)} cannot be null");
 
 				X509Certificate2[] certificates = ConvertCertificates (secTrust);
 				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
