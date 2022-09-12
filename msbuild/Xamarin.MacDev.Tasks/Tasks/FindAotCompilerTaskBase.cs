@@ -12,6 +12,8 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public ITaskItem[] MonoAotCrossCompiler { get; set; }
 
+		public bool KeepTemporaryOutput { get; set; }
+
 		[Required]
 		public string RuntimeIdentifier { get; set; }
 
@@ -45,9 +47,12 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var projectPath = Path.GetTempFileName ();
 			var outputFile = Path.GetTempFileName ();
+			var binlog = Path.GetTempFileName ();
 
 			File.Delete (projectPath);
 			projectPath += ".csproj";
+			File.Delete (binlog);
+			binlog += ".binlog";
 			var csproj = $@"<?xml version=""1.0"" encoding=""utf-8""?>
 <Project Sdk=""Microsoft.NET.Sdk"">
 	<PropertyGroup>
@@ -72,6 +77,7 @@ namespace Xamarin.MacDev.Tasks {
 			arguments.Add ("/p:OutputFilePath=" + outputFile);
 			arguments.Add ("/p:RuntimeIdentifier=" + RuntimeIdentifier);
 			arguments.Add ("/t:ComputeAotCompilerPath");
+			arguments.Add ("/bl:" + binlog);
 			arguments.Add (projectPath);
 
 			var environment = default (Dictionary<string, string>);
@@ -85,8 +91,16 @@ namespace Xamarin.MacDev.Tasks {
 				ExecuteAsync (executable, arguments, environment: environment).Wait ();
 				return File.ReadAllText (outputFile).Trim ();
 			} finally {
-				File.Delete (projectPath);
-				File.Delete (outputFile);
+				if (KeepTemporaryOutput) {
+					Log.LogMessage (MessageImportance.Normal, "Temporary files for the FindAotCompiler task:");
+					Log.LogMessage (MessageImportance.Normal, $"    Project file: {projectPath}");
+					Log.LogMessage (MessageImportance.Normal, $"    Output file: {outputFile}");
+					Log.LogMessage (MessageImportance.Normal, $"    Binary log: {binlog}");
+				} else {
+					File.Delete (projectPath);
+					File.Delete (outputFile);
+					File.Delete (binlog);
+				}
 			}
 		}
 	}
