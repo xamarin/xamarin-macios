@@ -34,6 +34,3 @@ logs
 x86
 bcl-test/templates
 *.7z
-BundledResources/Info.plist
-EmbeddedResources/Info.plist
-fsharplibrary/Info.plist

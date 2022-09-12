@@ -39,7 +39,3 @@ provision-xcode.csx
 mono_crash.*.json
 *.binlog
 .vscode
-tests/BundledResources/BundledResources.csproj
-tests/EmbeddedResources/EmbeddedResources.csproj
-tests/fsharplibrary/fsharplibrary.fsproj
-external/Touch.Unit
