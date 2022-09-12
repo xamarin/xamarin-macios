@@ -191,6 +191,8 @@ namespace Xamarin.Tests {
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
 
+			AddExpectedFrameworkFiles (platform, expectedFiles, "Framework.With.Dots", isSigned); // https://github.com/xamarin/xamarin-macios/issues/15727
+
 			expectedFiles.Add ($"{resourcesDirectory}ContentA.txt");
 			expectedFiles.Add ($"{resourcesDirectory}ContentB.txt");
 			expectedFiles.Add ($"{resourcesDirectory}ContentC.txt");
