@@ -3616,27 +3616,6 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	// Both deprecated and obsolete turn into UnsupportedOSPlatform, so we have to match more generally
-	static bool ImpliedKindsMatch (AvailabilityKind left, AvailabilityKind right)
-	{
-		return ConvertKindToMatchKind (left) == ConvertKindToMatchKind (right);
-	}
-
-	static bool ConvertKindToMatchKind (AvailabilityKind kind)
-	{
-		switch (kind)
-		{
-			case AvailabilityKind.Introduced:
-				return true;
-			case AvailabilityKind.Deprecated:
-			case AvailabilityKind.Obsoleted:
-			case AvailabilityKind.Unavailable:
-				return false;
-			default:
-				throw new NotImplementedException ($"ConvertKindToMatchKind with unknown kind {kind}");
-		}
-	}
-
 	// This assumes the compiler implements property methods as get_ or set_ prefixes
 	static PropertyInfo GetProperyFromGetSetMethod (MethodInfo method)
 	{

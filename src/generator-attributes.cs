@@ -971,6 +971,13 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 		builder.AppendLine ("\")]");
 	}
 
+	void GenerateDeprecated (StringBuilder builder)
+	{
+		builder.Append ("[ObsoletedOSPlatform (\"");
+		GeneratePlatformNameAndVersion (builder);
+		builder.AppendLine ("\")]");
+	}
+
 	void GenerateSupported (StringBuilder builder)
 	{
 		builder.Append ("[SupportedOSPlatform (\"");
@@ -1012,8 +1019,7 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 			GenerateSupported (builder);
 			break;
 		case AvailabilityKind.Deprecated:
-			GenerateAdvice (builder);
-			GenerateUnsupported (builder);
+			GenerateDeprecated (builder);
 			break;
 		case AvailabilityKind.Obsoleted:
 			GenerateObsolete (builder);
