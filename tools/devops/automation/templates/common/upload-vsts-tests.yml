@@ -45,4 +45,4 @@ steps:
       testResultsFiles: '**/vsts-*.xml'
       failTaskOnFailedTests: true
     continueOnError: true
-    condition: and(ne($[VSTS_XML_FILES],0),succeededOrFailed())
+    condition: and(ne(variables['VSTS_XML_FILES'], 0), succeededOrFailed())
