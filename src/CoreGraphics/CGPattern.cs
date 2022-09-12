@@ -56,8 +56,13 @@ namespace CoreGraphics {
 	[StructLayout (LayoutKind.Sequential)]
 	struct CGPatternCallbacks {
 		internal /* unsigned int */ uint version;
+#if NET
+		internal unsafe delegate* unmanaged<IntPtr, IntPtr, void> draw;
+		internal unsafe delegate* unmanaged<IntPtr, void> release;
+#else
 		internal DrawPatternCallback draw;
 		internal ReleaseInfoCallback release;
+#endif
 	}
 
 
@@ -95,11 +100,25 @@ namespace CoreGraphics {
 			/* CGFloat */ nfloat xStep, /* CGFloat */ nfloat yStep, CGPatternTiling tiling, [MarshalAs (UnmanagedType.I1)] bool isColored,
 			/* const CGPatternCallbacks* */ ref CGPatternCallbacks callbacks);
 
+#if NET
+		static CGPatternCallbacks callbacks;
+
+		static CGPattern () {
+			unsafe {
+				callbacks = new CGPatternCallbacks () {
+					version = 0,
+					draw = &DrawCallback,
+					release = &ReleaseCallback,
+				};
+			}
+		}
+#else
 		static CGPatternCallbacks callbacks = new CGPatternCallbacks () {
 			version = 0,
 			draw = DrawCallback,
 			release = ReleaseCallback,
 		};
+#endif
 		GCHandle gch;
 		
 		public CGPattern (CGRect bounds, CGAffineTransform matrix, nfloat xStep, nfloat yStep, CGPatternTiling tiling, bool isColored, DrawPattern drawPattern)
@@ -111,8 +130,12 @@ namespace CoreGraphics {
 			Handle = CGPatternCreate (GCHandle.ToIntPtr (gch), bounds, matrix, xStep, yStep, tiling, isColored, ref callbacks);
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (DrawPatternCallback))]
+#endif
 #endif
 		static void DrawCallback (IntPtr voidptr, IntPtr cgcontextptr)
 		{
@@ -123,8 +146,12 @@ namespace CoreGraphics {
 			}
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ReleaseInfoCallback))]
+#endif
 #endif
 		static void ReleaseCallback (IntPtr voidptr)
 		{

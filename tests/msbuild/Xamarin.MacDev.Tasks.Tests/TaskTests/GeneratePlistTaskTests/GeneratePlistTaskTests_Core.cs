@@ -9,7 +9,7 @@ using System.Linq;
 
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public abstract class GeneratePlistTaskTests_Core : TestBase
