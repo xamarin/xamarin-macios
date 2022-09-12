@@ -13,6 +13,7 @@ using System;
 using DeviceDiscoveryUI;
 using Foundation;
 using ObjCRuntime;
+using Network;
 using NUnit.Framework;
 using Xamarin.Utils;
 
