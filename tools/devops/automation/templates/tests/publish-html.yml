@@ -49,24 +49,28 @@ steps:
 # build a message with all the content of all tests, to do so, we get the labels and to pass them to pwsh we do a join with ;
 # as the separator
 - pwsh: |
-    $vsdropsIndex="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID-$Env:SYSTEM_JOBATTEMPT/"
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
-    $DebugPreference = "Continue" # enable debug messages
+      try {
+        $vsdropsIndex="$Env:VSDROPSPREFIX/$Env:BUILD_BUILDNUMBER/$Env:BUILD_BUILDID-$Env:SYSTEM_JOBATTEMPT/"
+        Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY\xamarin-macios\tools\devops\automation\scripts\MaciosCI.psd1
+        $DebugPreference = "Continue" # enable debug messages
 
-    $labels = "$Env:LABELS".Split(";")
+        $labels = "$Env:LABELS".Split(";")
 
-    $testResults = New-TestSummaryResults -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" -Labels $labels -TestPrefix "${{ parameters.testPrefix }}"
+        $testResults = New-TestSummaryResults -Path "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports" -Labels $labels -TestPrefix "${{ parameters.testPrefix }}"
 
-    $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT" -TestPrefix "${{ parameters.testPrefix }}" -VSDropsIndex $vsdropsIndex
-    $success = $parallelResults.IsSuccess()
-    $emoji = ":rocket:"
-    if (-not $success) {
-      Set-PipelineResult -Status partiallySucceeded
-      $emoji = ":fire:"
-    }
+        $parallelResults = New-ParallelTestsResults -Results $testResults -Context "$Env:CONTEXT" -TestPrefix "${{ parameters.testPrefix }}" -VSDropsIndex $vsdropsIndex
+        $success = $parallelResults.IsSuccess()
+        $emoji = ":rocket:"
+        if (-not $success) {
+          Set-PipelineResult -Status partiallySucceeded
+          $emoji = ":fire:"
+        }
 
-    $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH -Debug
-    $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults)
+        $gihubComments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $Env:GITHUB_TOKEN -Hash $Env:GIT_HASH -Debug
+        $result = $gihubComments.NewCommentFromObject("Test results", $emoji, $parallelResults)
+      } catch {
+        New-GitHubComment -Header "Failed to compute test summaries on $Env:CONTEXT" -Emoji ":fire:" -Description "Failed to compute test summaries: $_."
+      }
   env:
     LABELS: ${{ join(';', parameters.simTestsConfigurations) }}
     BUILD_REVISION: $(Build.SourceVersion)
