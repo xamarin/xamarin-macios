@@ -51,9 +51,9 @@ namespace MonoTouchFixtures.Security {
 
 		public static void DeleteKeysWithLabel (string label)
 		{
-			var query = new SecRecord (SecKind.Key) {
-				Label = label,
-			};
+			var query = RecordTest.CreateSecRecord (SecKind.Key,
+				label: label
+			);
 			SecStatusCode code;
 			do {
 				// For some reason each call to SecKeyChain will only remove a single key, so do a loop.
@@ -118,7 +118,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.RoundtripRSAMinPKCS1-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 					record.Label = label;
@@ -208,7 +208,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.EncryptTooLarge-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 					record.Label = label;
@@ -245,7 +245,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.RoundtripRSA1024OAEP-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = 1024; // it's not a performance test :)
 					record.Label = label;
@@ -299,7 +299,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.SignVerifyRSAMinPKCS1SHA1-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = MinRsaKeySize; // it's not a performance test :)
 					record.Label = label;
@@ -335,7 +335,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.SignVerifyECSHA1-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.EC;
 					record.KeySizeInBits = 256; // it's not a performance test :)
 					record.Label = label;
@@ -371,7 +371,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.GenerateKeyPairTooLargeRSA-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					// maximum documented as 2048, .NET maximum is 16384
 					record.KeySizeInBits = 16384;
@@ -437,7 +437,7 @@ namespace MonoTouchFixtures.Security {
 			var label = $"KeyTest.BenchmarkNative4096-{CFBundle.GetMain ().Identifier}-{GetType ().FullName}-{Process.GetCurrentProcess ().Id}";
 
 			try {
-				using (var record = new SecRecord (SecKind.Key)) {
+				using (var record = RecordTest.CreateSecRecord (SecKind.Key)) {
 					record.KeyType = SecKeyType.RSA;
 					record.KeySizeInBits = 4096;
 					record.Label = label;
