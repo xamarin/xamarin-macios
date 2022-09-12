@@ -58,12 +58,6 @@ namespace Xamarin.iOS.Tasks
 			Assert.True (File.Exists (finalFrameworkPath), $"{finalFrameworkPath} file was not part of bundle?");
 		}
 
-		// [Test] MISSING_TEST - No LinkWith only projects
-		public void DoesNotSupportLinkWith ()
-		{
-			Assert.Fail ();
-		}
-
 		[TestCase (true)]
 		// [TestCase (false)] MISSING_TEST - Framework only tests
 		public void ShouldNotUnnecessarilyRebuildBindingProject (bool framework)
