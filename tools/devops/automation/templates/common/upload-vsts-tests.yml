@@ -32,6 +32,7 @@ steps:
     set +x
     echo "##vso[task.setvariable variable=VSTS_XML_FILES]$VSTS_XML_FILES"
     set -x
+  name: ListNUnitTestResults
   continueOnError: true
   condition: succeededOrFailed()
   displayName: 'List NUnit test results'
@@ -44,4 +45,4 @@ steps:
       testResultsFiles: '**/vsts-*.xml'
       failTaskOnFailedTests: true
     continueOnError: true
-    condition: and(ne($(VSTS_XML_FILES),0),succeededOrFailed())
+    condition: and(ne($[VSTS_XML_FILES],0),succeededOrFailed())
