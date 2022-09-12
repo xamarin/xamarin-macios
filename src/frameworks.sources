@@ -301,6 +301,11 @@ AVKIT_API_SOURCES = \
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
 
+# AVRouting
+
+AVROUTING_SOURCES = \
+	AVRouting/AVCustomDeviceRoute.cs \
+
 # BackgroundTasks
 
 BACKGROUNDTASKS_API_SOURCES = \
@@ -1295,6 +1300,7 @@ NETWORK_SOURCES = \
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
 	Network/NWPrivacyContext.cs	\
+	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
@@ -2002,6 +2008,7 @@ MACOS_FRAMEWORKS =          \
 	AudioUnit               \
 	AutomaticAssessmentConfiguration \
 	AVKit                   \
+	AVRouting               \
 	BusinessChat            \
 	BackgroundAssets        \
 	CallKit \
@@ -2098,6 +2105,7 @@ MACOS_FRAMEWORKS =          \
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
 	AVKit \
+	AVRouting \
 	Accounts \
 	AdServices \
 	AdSupport \
@@ -2225,6 +2233,7 @@ WATCHOS_FRAMEWORKS =        \
 	HomeKit                 \
 	ImageIO                 \
 	Intents                 \
+	LocalAuthentication     \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \
@@ -2297,6 +2306,7 @@ MACCATALYST_FRAMEWORKS = \
 	AppClip \
 	AppKit \
 	AVKit \
+	AVRouting \
 	Accounts \
 	AdServices \
 	AdSupport \

@@ -1694,20 +1694,37 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Register ("UnderlyingEnumValues")]
-		class UnderlyingEnumValues : NSObject 
+		internal class UnderlyingEnumValues : NSObject
 		{
-			enum B : byte { a };
-			enum SB : sbyte { a };
-			enum S : short { a };
-			enum US : ushort { a };
-			enum I : int { a };
-			enum UI : uint { a };
-			enum L : long { a };
-			enum UL : ulong { a };
-
 			[Export ("Foo:a:b:c:d:e:f:g:h")]
-			void Foo (B b, SB sb, S s, US us, I i, UI ui, L l, UL ul)
+			void Foo (EnumB b, EnumSB sb, EnumS s, EnumUS us, EnumI i, EnumUI ui, EnumL l, EnumUL ul)
 			{
+			}
+
+			[Export ("ByRef:a:b:c:d:e:f:g:")]
+			void ByRef (ref EnumB b, ref EnumSB sb, ref EnumS s, ref EnumUS us, ref EnumI i, ref EnumUI ui, ref EnumL l, ref EnumUL ul)
+			{
+				b = EnumB.b;
+				sb = EnumSB.b;
+				s = EnumS.b;
+				us = EnumUS.b;
+				i = EnumI.b;
+				ui = EnumUI.b;
+				l = EnumL.b;
+				ul = EnumUL.b;
+			}
+
+			[Export ("Out:a:b:c:d:e:f:g:")]
+			void Out (out EnumB b, out EnumSB sb, out EnumS s, out EnumUS us, out EnumI i, out EnumUI ui, out EnumL l, out EnumUL ul)
+			{
+				b = EnumB.b;
+				sb = EnumSB.b;
+				s = EnumS.b;
+				us = EnumUS.b;
+				i = EnumI.b;
+				ui = EnumUI.b;
+				l = EnumL.b;
+				ul = EnumUL.b;
 			}
 		}
 
@@ -5456,6 +5473,43 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 #endif // !__WATCHOS__ && !__TVOS__
+
+		[Test]
+		public void RefEnumValues ()
+		{
+			EnumB b = 0;
+			EnumSB sb = 0;
+			EnumS s = 0;
+			EnumUS us = 0;
+			EnumI i = 0;
+			EnumUI ui = 0;
+			EnumL l = 0;
+			EnumUL ul = 0;
+
+			using (var obj = new UnderlyingEnumValues ()) {
+				b = 0; sb = 0; s = 0; us = 0; i = 0; ui = 0; l = 0; ul = 0;
+				Messaging.void_objc_msgSend_ref_byte_ref_sbyte_ref_short_ref_ushort_ref_int_ref_uint_ref_long_ref_ulong (obj.Handle, Selector.GetHandle ("ByRef:a:b:c:d:e:f:g:"), ref b, ref sb, ref s, ref us, ref i, ref ui, ref l, ref ul);
+				Assert.AreEqual (EnumB.b, b, "ref: B");
+				Assert.AreEqual (EnumSB.b, sb, "ref: SB");
+				Assert.AreEqual (EnumS.b, s, "ref: S");
+				Assert.AreEqual (EnumUS.b, us, "ref: US");
+				Assert.AreEqual (EnumI.b, i, "ref: I");
+				Assert.AreEqual (EnumUI.b, ui, "ref: UI");
+				Assert.AreEqual (EnumL.b, l, "ref: L");
+				Assert.AreEqual (EnumUL.b, ul, "ref: UL");
+
+				b = 0; sb = 0; s = 0; us = 0; i = 0; ui = 0; l = 0; ul = 0;
+				Messaging.void_objc_msgSend_out_byte_out_sbyte_out_short_out_ushort_out_int_out_uint_out_long_out_ulong (obj.Handle, Selector.GetHandle ("Out:a:b:c:d:e:f:g:"), out b, out sb, out s, out us, out i, out ui, out l, out ul);
+				Assert.AreEqual (EnumB.b, b, "out: B");
+				Assert.AreEqual (EnumSB.b, sb, "out: SB");
+				Assert.AreEqual (EnumS.b, s, "out: S");
+				Assert.AreEqual (EnumUS.b, us, "out: US");
+				Assert.AreEqual (EnumI.b, i, "out: I");
+				Assert.AreEqual (EnumUI.b, ui, "out: UI");
+				Assert.AreEqual (EnumL.b, l, "out: L");
+				Assert.AreEqual (EnumUL.b, ul, "out: UL");
+			}
+		}
 	}
 
 #if !__WATCHOS__
