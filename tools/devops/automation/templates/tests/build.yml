@@ -188,7 +188,7 @@ steps:
       mkdir -p "$XM_DEST_DIR"
       ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$XM_DEST_DIR/git"
       ls -laR "$XM_DEST_DIR"
-    if
+    fi
     if test -d /Library/Frameworks/Xamarin.iOS.framework/Versions/Current; then
       ios_var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR IOS_DESTDIR=)
       IOS_DESTDIR=${ios_var#*=}
