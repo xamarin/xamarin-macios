@@ -83,6 +83,11 @@ namespace Cecil.Tests {
 			var rv = true;
 
 			var type = tr.Resolve ();
+
+			// System.Runtime.InteropServices.NFloat is in a custom assembly in .NET 6, so add a special case.
+			if (type is null && tr.FullName == "System.Runtime.InteropServices.NFloat")
+				return true;
+
 			if (type.IsEnum)
 				return true;
 
