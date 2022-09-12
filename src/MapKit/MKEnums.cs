@@ -115,7 +115,7 @@ namespace MapKit {
 		None,
 		Follow, 
 #if !XAMCORE_5_0 && !(IOS || MACCATALYST)
-		[Obsolete ("This is only available on iOS and MacCatalyst")]
+		[Obsolete ("This is only available on iOS and MacCatalyst.")]
 		FollowWithHeading,
 #elif IOS || MACCATALYST
 		FollowWithHeading,
