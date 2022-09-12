@@ -975,7 +975,7 @@ namespace Foundation {
 
 				X509Certificate2[] certificates = ConvertCertificates (secTrust);
 				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
-				X509Chain chain = CreateChain (certificates);
+				using X509Chain chain = CreateChain (certificates);
 				SslPolicyErrors sslPolicyErrors = EvaluateSslPolicyErrors (certificate, chain, secTrust);
 
 				return certificateValidationCallback (request, certificate, chain, sslPolicyErrors);
@@ -1018,7 +1018,7 @@ namespace Foundation {
 
 			X509Chain CreateChain (X509Certificate2[] certificates)
 			{
-				// the chain initialization is based on dotnet/runtime implementation in System.Net.Security.SecureChannel
+				// inspired by https://github.com/dotnet/runtime/blob/99d21b9276ebe8f7bea7fb3ba74dca9fca625fe2/src/libraries/System.Security.Cryptography.Pkcs/src/System/Security/Cryptography/Pkcs/SignerInfo.cs#L691-L696
 				var chain = new X509Chain ();
 				chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
 				chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
@@ -1036,7 +1036,7 @@ namespace Foundation {
 					} else if (!chain.Build (certificate)) {
 						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
 					}
-				} catch {
+				} catch (ArgumentException) {
 					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
 				}
 
