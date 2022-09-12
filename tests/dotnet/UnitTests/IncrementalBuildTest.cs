@@ -34,7 +34,7 @@ class MainClass {
 
 			// Capture the current time
 			var timestamp = DateTime.UtcNow;
-			File.WriteAllText (mainFile, mainContents + "\n");
+			File.WriteAllText (mainFile, mainContents);
 
 			// Build again
 			rv = DotNet.AssertBuild (project_path, properties);
