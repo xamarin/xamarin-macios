@@ -1231,6 +1231,8 @@ namespace Introspection {
 			// NSAppleEventDescriptor
 			case "initListDescriptor":
 			case "initRecordDescriptor":
+			// DDDevicePickerViewController
+			case "initWithBrowseDescriptor:parameters:":
 				return true;
 			default:
 				return false;
