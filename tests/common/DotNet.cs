@@ -193,6 +193,9 @@ namespace Xamarin.Tests {
 						return false; // the .NET runtime will deal with selecting the http handler, no need for us to do anything
 					case "runtimeconfig.bin":
 						return false; // this file is present for .NET apps, but not legacy apps.
+					case "embedded.mobileprovision":
+					case "CodeResources":
+						return false; // sometimes we don't sign in .NET when we do in legacy (if there's an empty Entitlements.plist file)
 					}
 
 					var components = v.Split ('/');

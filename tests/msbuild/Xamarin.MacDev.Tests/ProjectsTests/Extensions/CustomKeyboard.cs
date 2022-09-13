@@ -2,7 +2,7 @@ using System;
 using NUnit.Framework;
 using System.Linq;
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class CustomKeyboardTests : ExtensionTestBase {

@@ -175,21 +175,7 @@ steps:
     ls -R /Library/Frameworks/Xamarin.Mac.framework
   displayName: "Show installed Frameworks"
 
-- bash: |
-    set -e
-    set -x
-    mac_var=$(make -C tools/devops print-variable VARIABLE=MAC_DESTDIR MAC_DESTDIR=)
-    ios_var=$(make -C tools/devops print-variable VARIABLE=IOS_DESTDIR IOS_DESTDIR=)
-    MAC_DESTDIR=${mac_var#*=}
-    IOS_DESTDIR=${ios_var#*=}
-    XM_DEST_DIR="$MAC_DESTDIR/Library/Frameworks/Xamarin.Mac.framework/Versions/"
-    XI_DEST_DIR="$IOS_DESTDIR/Library/Frameworks/Xamarin.iOS.framework/Versions/"
-    mkdir -p "$XM_DEST_DIR"
-    mkdir -p "$XI_DEST_DIR"
-    ln -s /Library/Frameworks/Xamarin.Mac.framework/Versions/Current "$XM_DEST_DIR/git"
-    ln -s /Library/Frameworks/Xamarin.iOS.framework/Versions/Current "$XI_DEST_DIR/git"
-    ls -laR "$XM_DEST_DIR"
-    ls -laR "$XI_DEST_DIR"
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/create-legacy-ios-mac-sdk-symlinks.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
   displayName: Create legacy iOS/Mac SDK symlinks
 
