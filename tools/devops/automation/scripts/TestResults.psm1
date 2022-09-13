@@ -28,14 +28,14 @@ class TestResults {
     }
 
     [bool] IsSuccess() {
-        Write-Debug "\t$($this.Label) - IsSuccess()"
+        Write-Debug "`t$($this.Label) - IsSuccess()"
         if ($this.NotTestSummaryLabels.Contains($this.Label)) {
-            Write-Debug "\t\t$($this.Label) - Found special label $($this.Label), checking only status."
+            Write-Debug "`t`t$($this.Label) - Found special label $($this.Label), checking only status."
             return $this.TestsJobStatus -eq "Succeeded"
         } else {
             $hasResultsPath = Test-Path $this.ResultsPath -PathType Leaf
-            Write-Debug "\t\t$($this.Label) - Path $($this.ResultsPath) exits? $hasResultsPath"
-            Write-Debug "\t\t$($this.Label) - Test status: $($this.TestsJobStatus)"
+            Write-Debug "`t`t$($this.Label) - Path $($this.ResultsPath) exists? $hasResultsPath"
+            Write-Debug "`t`t$($this.Label) - Test status: $($this.TestsJobStatus)"
             return $hasResultsPath -and ($this.TestsJobStatus -eq "Succeeded")
         }
     }
@@ -91,13 +91,13 @@ class TestResults {
     [object] GetPassedTests() {
         Write-Debug "$($this.Label) - GetPassedTests()"
         if ($this.Passed -eq -1 -or $this.Failed -eq -1) {
-            Write-Debug "\t$($this.Label) - Calculate results."
+            Write-Debug "`t$($this.Label) - Calculate results."
             # the result file is diff if the result was a success or not
             if ($this.IsSuccess()) {
-                Write-Debug "$($this.Label) - IsSuccess() => TRUE"
+                Write-Debug "`t$($this.Label) - IsSuccess() => TRUE"
                 $this.Failed = 0
                 if ($this.NotTestSummaryLabels.Contains($this.Label)) {
-                    Write-Debug "\t\t$($this.Label) - Found special label $($this.Label), adding a single pass."
+                    Write-Debug "`t`t$($this.Label) - Found special label $($this.Label), adding a single pass."
                     $this.Passed = 1
                 } else {
                     # in this case, the file contains a single line with the number and the following
@@ -106,27 +106,26 @@ class TestResults {
                     $regexp = "(# :tada: All )(?<passed>[0-9]+)( tests passed :tada:)"
                     $content = Get-Content $this.ResultsPath | Select -First 1
                     if ($content -eq "# No tests selected.") {
-                        Write-Debug "\t\tNo tests selected"
+                        Write-Debug "`t`tNo tests selected"
                         $this.Passed = 0
                     } elseif ($content -match $regexp) {
-                        Write-Debug "Did match regexp"
                         $this.Passed = $matches.passed -as [int]
-                        Write-Debug "Passed tests count: $($this.Passed)"
+                        Write-Debug "`tPassed tests count: $($this.Passed)"
                     } else {
-                        throw "Unknown result pattern '$content'"
+                        throw "Unable to understand the test result '$content' for test '$($this.Label)'"
                     }
                 }
             } else {
-                Write-Debug "IsSuccess() => FALSE"
+                Write-Debug "`t$($this.Label) - IsSuccess() => FALSE"
                 $fileIsPresent = Test-Path $this.ResultsPath -PathType Leaf
                 if ($this.TestsJobStatus -eq "" -or -not (Test-Path $this.ResultsPath -PathType Leaf)) {
-                    Write-Debug "\t\tTests job status: $($this.TestsJobStatus)"
-                    Write-Debug "\t\tNot Found results path: $fileIsPresent"
+                    Write-Debug "`t`tTests job status: $($this.TestsJobStatus)"
+                    Write-Debug "`t`tNot Found results path: $fileIsPresent"
                     $this.Passed = -2
                     $this.Failed = -2
                 } else {
                     if ($this.NotTestSummaryLabels.Contains($this.Label)) {
-                        Write-Debug "\t\tFound special label $($this.Label), adding a single fail."
+                        Write-Debug "`t`tFound special label $($this.Label), adding a single fail."
                         $this.Passed = 0
                         $this.Failed = 1
                     } else {
@@ -160,20 +159,24 @@ class TestResults {
                             # <summary>4 tests failed, 144 tests passed.</summary>
                             $regexp = "(\<summary\>)(?<failed>[0-9]+)( tests failed, )(?<passed>[0-9]+)( tests passed\.\</summary\>)"
                             if ($content -match $regexp) {
-                                Write-Debug "\t\tMatched regexpt."
+                                Write-Debug "`t`tMatched regexpt."
                                 $this.Passed = $matches.passed -as [int]
                                 $this.Failed = $matches.failed -as [int]
-                                Write-Debug "\t\tPassed: $($this.Passed) Failed: $($this.Failed)"
                             } else {
-                                throw "Unknown result pattern '$content'"
+                                Write-Debug "`t`tAdding a single fail because unexpected <summary> contents found: $($content)"
+                                $this.Passed = 0
+                                $this.Failed = 1
                             }
                         } else {
-                            throw "Unknown result pattern of a failed test"
+                            Write-Debug "`t`tNo <summary> found, adding a single fail"
+                            $this.Passed = 0
+                            $this.Failed = 1
                         }
                     }
                 }
             }
         }
+        Write-Debug "`t$($this.Label) - Passed: $($this.Passed) Failed: $($this.Failed)"
         return [PSCustomObject]@{
             Passed = $this.Passed
             Failed = $this.Failed
@@ -241,7 +244,7 @@ class ParallelTestsResults {
         }
 
         # we return the patterns we already know
-        if ($failedTests -eq 0) {
+        if ($failedTests -eq 0 -and $crashedTests -eq 0) {
             return ":tada: All $passedTests tests passed :tada:"
         } else {
             return "$crashedTests tests crashed, $failedTests tests failed, $passedTests tests passed."
@@ -307,8 +310,8 @@ class ParallelTestsResults {
                 } else {
                     # create a detail per test result with the name of the test and will contain the exact summary
                     $stringBuilder.AppendLine("<summary>$($result.Failed) tests failed, $($result.Passed) tests passed.</summary>")
+                    $stringBuilder.AppendLine("<details>")
                     if (Test-Path -Path $r.ResultsPath -PathType Leaf) {
-                        $stringBuilder.AppendLine("<details>")
                         $stringBuilder.AppendLine("")
                         $foundTests = $false
                         foreach ($line in Get-Content -Path $r.ResultsPath)
@@ -321,12 +324,8 @@ class ParallelTestsResults {
                                 }
                             }
                         }
-                        $stringBuilder.AppendLine("</details>")
-                        $stringBuilder.AppendLine("")
                     } else {
-                        $stringBuilder.AppendLine("<details>")
                         $stringBuilder.AppendLine(" Test has no summary file.")
-                        $stringBuilder.AppendLine("</details>")
                     }
                     $stringBuilder.AppendLine("</details>")
                     $stringBuilder.AppendLine("")
@@ -402,7 +401,7 @@ function New-TestSummaryResults {
         $environmentVariable = "TESTS_JOBSTATUS_$($label.ToUpper())"
         $status = [Environment]::GetEnvironmentVariable($environmentVariable)
 
-        Write-Host "Test results for $label is '$status'"
+        Write-Debug "Test results for $label is '$status'"
 
         $testSummaryDirectoryExpression = "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY\Reports\TestSummary-$TestPrefix$label-*"
 
@@ -411,7 +410,10 @@ function New-TestSummaryResults {
         $testSummaryDirectories = Get-ChildItem -Path $Path -Directory -Filter $directoryFilter
 
         if ($testSummaryDirectories.length -eq 0) {
-            Write-Host "WARNING: Found no directories matching $directoryFilter for label $label"
+            Write-Debug "WARNING: Found no directories matching $directoryFilter for label $label and prefix $TestPrefix"
+            $testSummaryPath = Join-Path $Path "TestSummary-$TestPrefix$label-1" "TestSummary.md"
+            $result = New-TestResults -Path $testSummaryPath -Status $status -Label $label -Context "$Env:CONTEXT - $label" -Attempt 1
+            $testResults += $result
             continue
         }
 
@@ -436,10 +438,10 @@ function New-TestSummaryResults {
         $testAttemptPath = $testSummaryDirectory.Name
         $testSummaryPath = Join-Path $testAttemptPath "TestSummary.md"
 
-        Write-Host "Found "$attemptDirectories.count" directories, selected $testSummaryDirectory and final path is $testSummaryPath"
+        Write-Debug "Found $($attemptDirectories.count) directories, selected $testSummaryDirectory and final path is $testSummaryPath"
 
         if (-not (Test-Path -Path $testSummaryPath -PathType Leaf)) {
-            Write-Host "WARNING: Path $testSummaryPath does not exist"
+            Write-Debug "WARNING: Path $testSummaryPath does not exist"
         }
 
         $result = New-TestResults -Path $testSummaryPath -Status $status -Label $label -Context "$Env:CONTEXT - $label" -Attempt $testAttempt

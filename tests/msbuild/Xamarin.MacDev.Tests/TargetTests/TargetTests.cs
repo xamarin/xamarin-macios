@@ -8,7 +8,7 @@ using Xamarin.MacDev;
 
 using Xamarin.Tests;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class TargetTests : TestBase
