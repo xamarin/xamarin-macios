@@ -705,6 +705,42 @@ function New-GitHubComment {
     return $request
 }
 
+<# 
+    .SYNOPSIS
+        Get the information of a PR in GitHub.
+
+    .PARAMETER ChangeId
+        The Id whose labels we want to retrieve.
+#>
+function Get-GitHubPRInfo {
+    param (
+        [Parameter(Mandatory)]
+        [String]
+        $ChangeId
+    )
+
+    $envVars = @{
+        "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
+    }
+
+    foreach ($key in $envVars.Keys) {
+        if (-not($envVars[$key])) {
+            Write-Debug "Environment variable missing: $key"
+            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
+        }
+    }
+
+    $url = "https://api.github.com/repos/xamarin/xamarin-macios/pulls/$ChangeId"
+
+    $headers = @{
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
+    }
+
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' -Headers $headers }
+    Write-Debug $request
+    return $request
+}
+
 <#
     .SYNOPSIS
         Class used to represent a single file to be added to a gist.
