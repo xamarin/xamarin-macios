@@ -58,8 +58,13 @@ namespace CoreGraphics {
 		unsafe static CGFunction ()
 		{
 			cbacks.version = 0;
+#if NET
+			cbacks.evaluate = &EvaluateCallback;
+			cbacks.release = &ReleaseCallback;
+#else
 			cbacks.evaluate = new CGFunctionEvaluateCallback (EvaluateCallback);
 			cbacks.release = new CGFunctionReleaseCallback (ReleaseCallback);
+#endif
 		}
 
 #if !NET
@@ -103,12 +108,17 @@ namespace CoreGraphics {
 		// Apple's documentation says 'float', the header files say 'CGFloat'
 		unsafe delegate void CGFunctionEvaluateCallback (/* void* */ IntPtr info, /* CGFloat* */ nfloat *data, /* CGFloat* */ nfloat *outData); 
 		delegate void CGFunctionReleaseCallback (IntPtr info);
-			
+
 		[StructLayout (LayoutKind.Sequential)]
 		struct CGFunctionCallbacks {
 			public /* unsigned int */ uint version;
+#if NET
+			public unsafe delegate* unmanaged<IntPtr, nfloat*, nfloat*, void> evaluate;
+			public unsafe delegate* unmanaged<IntPtr, void> release;
+#else
 			public CGFunctionEvaluateCallback? evaluate;
 			public CGFunctionReleaseCallback? release;
+#endif
 		}
 		
 		[DllImport (Constants.CoreGraphicsLibrary)]
@@ -136,17 +146,24 @@ namespace CoreGraphics {
 			var handle = CGFunctionCreate (GCHandle.ToIntPtr (gch), domain is not null ? domain.Length / 2 : 0, domain, range is not null ? range.Length / 2 : 0, range, ref cbacks);
 			InitializeHandle (handle);
 		}
-
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CGFunctionReleaseCallback))]
+#endif
 #endif
 		static void ReleaseCallback (IntPtr info)
 		{
 			GCHandle.FromIntPtr (info).Free ();
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CGFunctionEvaluateCallback))]
+#endif
 #endif
 		unsafe static void EvaluateCallback (IntPtr info, nfloat *input, nfloat *output)
 		{
