@@ -17,6 +17,10 @@ for platform in $DOTNET_PLATFORMS; do
 
     echo "\"microsoft.net.sdk.$CURRENT_LOWER\": \"$NUGET_VERSION_FULL\"," >> "$WORKLOAD_DST"
 done
+
+# Remove the trailing comma from the last entry, because json :/
+sed -i '' '$ s/,$//' "$WORKLOAD_DST"
+
 echo "}" >>  "$WORKLOAD_DST"
 
 echo "Rollback file contents:"
