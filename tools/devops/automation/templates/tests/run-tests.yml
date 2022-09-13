@@ -278,10 +278,10 @@ steps:
     set +x
     echo "##vso[task.setvariable variable=VSTS_XML_FILES]$VSTS_XML_FILES"
     set -x
-  name: ListNUnitTestResults
+  name: CountNUnitTestResults
   continueOnError: true
   condition: succeededOrFailed()
-  displayName: 'List NUnit test results'
+  displayName: 'Count NUnit test results'
 
 # Upload test results to vsts.
 - task: PublishTestResults@2
@@ -289,7 +289,6 @@ steps:
   inputs:
     testResultsFormat: NUnit
     testResultsFiles: '**/vsts-*.xml'
-    failTaskOnFailedTests: true
   continueOnError: true
   condition: and(ne(variables['VSTS_XML_FILES'], 0), succeededOrFailed())
 
