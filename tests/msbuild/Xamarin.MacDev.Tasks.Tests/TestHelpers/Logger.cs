@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 using Microsoft.Build.Framework;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class Logger : ILogger
 	{
