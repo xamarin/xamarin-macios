@@ -997,10 +997,6 @@
         <value>設定: エントリ "{0}" が存在しません
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>バインド プロジェクトにネイティブ参照がある場合を除いて、バインド リソース パッケージは作成できません。
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14 以降では watchOS 1 アプリがサポートされていません。プロジェクトを watchOS 2 以降に移行してください。</value>
     </data>

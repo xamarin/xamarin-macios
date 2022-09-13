@@ -997,10 +997,6 @@
         <value>Ayarla: "{0}" Girişi Yok
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>Bağlama projesinde yerel başvurular olmadığı sürece, bağlama kaynak paketi oluşturulamaz.
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ uzantısı watchOS 1 uygulamalarını desteklemiyor. Lütfen projenizi watchOS 2+ sürümüne geçirin.</value>
     </data>
