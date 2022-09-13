@@ -247,7 +247,7 @@ namespace Xamarin.Tests {
 				return string.Empty;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
-				return Path.Combine ("Contents", "Resources");
+				return Path.Combine ("Contents", "MacOS");
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}

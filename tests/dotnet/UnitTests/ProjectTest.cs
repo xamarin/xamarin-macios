@@ -1009,7 +1009,6 @@ namespace Xamarin.Tests {
 
 			var codesignDirectory =GetRelativeCodesignDirectory (platform);
 			var sharedSupportDir = string.Empty;
-			var appExecutableDir = GetRelativeExecutableDirectory (platform);
 			var dylibDir = GetRelativeDylibDirectory (platform);
 
 			switch (platform) {
