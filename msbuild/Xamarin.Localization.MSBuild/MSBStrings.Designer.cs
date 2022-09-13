@@ -2030,6 +2030,33 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for the entitlement &apos;{1}&apos; of type &apos;{2}&apos; specified in the CustomEntitlements item group. Expected no value at all..
+        /// </summary>
+        public static string E7102 {
+            get {
+                return ResourceManager.GetString("E7102", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for the entitlement &apos;{1}&apos; of type &apos;{2}&apos; specified in the CustomEntitlements item group. Expected &apos;true&apos; or &apos;false&apos;..
+        /// </summary>
+        public static string E7103 {
+            get {
+                return ResourceManager.GetString("E7103", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown type &apos;{0}&apos; for the entitlement &apos;{1}&apos; specified in the CustomEntitlements item group. Expected &apos;Remove&apos;, &apos;Boolean&apos;, &apos;String&apos;, or &apos;StringArray&apos;..
+        /// </summary>
+        public static string E7104 {
+            get {
+                return ResourceManager.GetString("E7104", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid framework: {0}.
         /// </summary>
         public static string InvalidFramework {
