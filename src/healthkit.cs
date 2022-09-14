@@ -2558,6 +2558,34 @@ namespace HealthKit {
 		[Watch (8, 0), iOS (15, 0)]
 		[Field ("HKCategoryTypeIdentifierProgesteroneTestResult")]
 		ProgesteroneTestResult,
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Field ("HKCategoryTypeIdentifierInfrequentMenstrualCycles")]
+		InfrequentMenstrualCycles,
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Field ("HKCategoryTypeIdentifierIrregularMenstrualCycles")]
+		IrregularMenstrualCycles,
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Field ("HKCategoryTypeIdentifierPersistentIntermenstrualBleeding")]
+		PersistentIntermenstrualBleeding,
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Field ("HKCategoryTypeIdentifierProlongedMenstrualPeriods")]
+		ProlongedMenstrualPeriods,
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Field ("HKQuantityTypeIdentifierAppleSleepingWristTemperature")]
+		AppleSleepingWristTemperature,
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Field ("HKQuantityTypeIdentifierUnderwaterDepth")]
+		UnderwaterDepth,
+
+		[Watch (9,0), MacCatalyst (16,0), Mac (13,0), iOS (16,0), NoTV]
+		[Field ("HKQuantityTypeIdentifierWaterTemperature")]
+		WaterTemperature,
 	}
 
 	[Watch (2,0)]
