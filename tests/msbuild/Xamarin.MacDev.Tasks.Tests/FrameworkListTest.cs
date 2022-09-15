@@ -8,7 +8,7 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using System.Linq;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class FrameworkListTests
