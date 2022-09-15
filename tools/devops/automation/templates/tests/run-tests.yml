@@ -270,15 +270,27 @@ steps:
   continueOnError: true
   condition: succeededOrFailed()
 
+- bash: |
+    set -ex
+    find . -name 'vsts-*.xml' || true
+    find . -name 'vsts-*.xml' -ls -exec cat {} \; || true
+    VSTS_XML_FILES=$(find . -name 'vsts-*.xml' | wc -l | sed 's/ //g')
+    set +x
+    echo "##vso[task.setvariable variable=VSTS_XML_FILES]$VSTS_XML_FILES"
+    set -x
+  name: CountNUnitTestResults
+  continueOnError: true
+  condition: succeededOrFailed()
+  displayName: 'Count NUnit test results'
+
 # Upload test results to vsts.
 - task: PublishTestResults@2
   displayName: 'Publish NUnit Device Test Results'
   inputs:
     testResultsFormat: NUnit
     testResultsFiles: '**/vsts-*.xml'
-    failTaskOnFailedTests: true
   continueOnError: true
-  condition: succeededOrFailed()
+  condition: and(ne(variables['VSTS_XML_FILES'], 0), succeededOrFailed())
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
