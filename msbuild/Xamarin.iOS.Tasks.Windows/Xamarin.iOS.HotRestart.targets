@@ -38,7 +38,7 @@
 		<CollectBundleResources
 			OptimizePropertyLists="$(OptimizePropertyLists)"
 			OptimizePNGs="$(OptimizePNGs)"
-			BundleResources="@(Content);@(BundleResource)"
+			BundleResources="@(Content);@(BundleResource);@(MauiAsset)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(IPhoneResourcePrefix)">
 
