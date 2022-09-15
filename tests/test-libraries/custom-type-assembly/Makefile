@@ -14,6 +14,8 @@ include $(TOP)/Make.config
 bin/Debug/$(DOTNET_TFM)-macos/custom-type-assembly.dll: custom-type-assembly.csproj custom-type-assembly.cs
 	$(Q) $(DOTNET) build $< "/bl:$@.binlog" $(MSBUILD_VERBOSITY)
 
+ifdef INCLUDE_MAC
+
 ifdef INCLUDE_XAMARIN_LEGACY
 TARGETS += \
 	.libs/macos/custom-type-assembly.dll \
@@ -25,5 +27,7 @@ TARGETS += \
 	.libs/dotnet/macos/custom-type-assembly.dll \
 
 endif
+
+endif # INCLUDE_MAC
 
 build-assembly: $(TARGETS)
