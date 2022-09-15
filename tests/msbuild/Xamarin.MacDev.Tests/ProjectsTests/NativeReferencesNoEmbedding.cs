@@ -40,6 +40,9 @@ namespace Xamarin.MacDev.Tasks
 		[TestCase (true)]
 		public void FrameworksEmbeddedProperly (bool useProjectReference)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			// TODO - Checked in projects are project reference only...
 			Assert.True (useProjectReference);
 
@@ -62,6 +65,9 @@ namespace Xamarin.MacDev.Tasks
 		// [TestCase (false)] MISSING_TEST - Framework only tests
 		public void ShouldNotUnnecessarilyRebuildBindingProject (bool framework)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			Assert.True (framework);
 
 			var bindingLib = SetupProjectPaths ("MyiOSFrameworkBinding");
@@ -105,6 +111,9 @@ namespace Xamarin.MacDev.Tasks
 		// [TestCase (false)] MISSING_TEST - Project reference only 
 		public void ShouldNotUnnecessarilyRebuildFinalProject (bool useProjectReference)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			Assert.True (useProjectReference);
 
 			var appProject = SetupProjectPaths ("MyiOSAppWithBinding");
