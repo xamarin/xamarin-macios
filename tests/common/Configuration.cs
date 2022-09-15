@@ -851,6 +851,17 @@ namespace Xamarin.Tests
 				yield return ApplePlatform.WatchOS;
 		}
 
+		public static IEnumerable<ApplePlatform> GetAllPlatforms (bool dotnet)
+		{
+			yield return ApplePlatform.iOS;
+			yield return ApplePlatform.TVOS;
+			yield return ApplePlatform.MacOSX;
+			if (dotnet)
+				yield return ApplePlatform.MacCatalyst;
+			if (!dotnet)
+				yield return ApplePlatform.WatchOS;
+		}
+
 		public static string GetTargetFramework (Profile profile)
 		{
 			switch (profile) {
@@ -1075,6 +1086,15 @@ namespace Xamarin.Tests
 			default:
 				throw new ArgumentOutOfRangeException ($"Unknown platform: {platform}");
 			}
+		}
+
+		public static void IgnoreIfAnyIgnoredPlatforms (bool dotnet = true)
+		{
+			var allPlatforms = GetAllPlatforms (dotnet);
+			var includedPlatforms = GetIncludedPlatforms (dotnet);
+			var	notIncluded = allPlatforms.Where (v => !includedPlatforms.Contains (v));
+			if (notIncluded.Any ())
+				Assert.Ignore ($"This test requires all platforms to be included, but the following platforms aren't included: {string.Join (", ", notIncluded.Select (v => v.AsString ()))}");
 		}
 
 		public static string GetTestLibraryDirectory (ApplePlatform platform, bool? simulator = null)

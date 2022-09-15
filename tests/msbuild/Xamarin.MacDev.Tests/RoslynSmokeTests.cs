@@ -4,6 +4,7 @@ using System.Text;
 using NUnit.Framework;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MMP.Tests
 {
@@ -15,6 +16,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void XMModernRoslynProject_ShouldBuildAndRunWithMSBuild ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
 			string projectPath = Path.Combine (RoslynTestProjectRoot, "Modern/RoslynTestApp.sln");
 
 			TI.CleanUnifiedProject (projectPath);
@@ -25,6 +27,7 @@ namespace Xamarin.MMP.Tests
 		[Test]
 		public void XMFullRoslynProject_ShouldBuildAndRunWithMSBuild ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
 			string projectPath = Path.Combine (RoslynTestProjectRoot, "Full/RoslynTestApp.sln");
 
 			TI.CleanUnifiedProject (projectPath);
