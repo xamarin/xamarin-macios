@@ -28,13 +28,13 @@ namespace Xamarin.Tests {
 			new TemplateInfo (ApplePlatform.iOS, "ios"),
 			new TemplateInfo (ApplePlatform.iOS, "ios-tabbed"),
 			new TemplateInfo (ApplePlatform.iOS, "ioslib"),
-			new TemplateInfo (ApplePlatform.iOS, "iosbinding", false), // Bindings can not build without a native library assigned
+			new TemplateInfo (ApplePlatform.iOS, "iosbinding"),
 			new TemplateInfo (ApplePlatform.TVOS, "tvos"),
-			new TemplateInfo (ApplePlatform.TVOS, "tvosbinding", false), // Bindings can not build without a native library assigned
+			new TemplateInfo (ApplePlatform.TVOS, "tvosbinding"),
 			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", execute: true),
-			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystbinding", false), // Bindings can not build without a native library assigned
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystbinding"),
 			new TemplateInfo (ApplePlatform.MacOSX, "macos", execute: true),
-			new TemplateInfo (ApplePlatform.MacOSX, "macosbinding", false), // Bindings can not build without a native library assigned
+			new TemplateInfo (ApplePlatform.MacOSX, "macosbinding"),
 		};
 
 		public class TemplateConfig {
