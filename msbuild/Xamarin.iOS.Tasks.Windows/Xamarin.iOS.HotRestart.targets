@@ -163,9 +163,8 @@
 			<_FilesToHotRestartContent Include="@(_FilesToHotRestartContent -> '%(RootDir)%(Directory)%(Filename).pdb')"
 													 Condition="Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
 
-			<!-- TODO: We stopped filtering assemblies until we fix the net6 build -->
-			<!-- <_FilesToHotRestartContent Include="@(ReferenceCopyLocalPaths -> Distinct())" Condition="Exists('$(HotRestartAppBundlePath)\%(Filename)%(Extension)') == 'false'"/> -->
-			<_FilesToHotRestartContent Include="@(ReferenceCopyLocalPaths -> Distinct())"/>
+			<_FilesToHotRestartContent Include="@(ReferenceCopyLocalPaths -> Distinct())" 
+				Condition="Exists('$(HotRestartAppBundlePath)\%(Filename)%(Extension)') == 'false' And '%(Extension)' != '.a' And '%(Extension)' != '.dylib' And '%(Extension)' != '.dat'"/>
 		</ItemGroup>
 	</Target>
 
