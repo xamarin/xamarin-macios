@@ -645,12 +645,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		Condition="'$(_RequireCodeSigning)' == 'true' Or '$(CodesignEntitlements)' != ''"
 		DependsOnTargets="$(_CompileEntitlementsDependsOn)"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
+		<!-- Automatically add the 'allow-jit' entitlement for desktop release builds in .NET -->
+		<ItemGroup Condition="'$(Configuration)' == 'Release' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '$(UsingAppleNETSdk)' == 'true'">
+			<!-- We need to compare the result of AnyHaveMetadataValue to 'true', because if it's empty, the return value is not a boolean, it's an empty string -->
+			<CustomEntitlements Condition="'@(CustomEntitlements->AnyHaveMetadataValue('Identity','com.apple.security.cs.allow-jit'))' != 'true'" Include="com.apple.security.cs.allow-jit" Type="Boolean" Value="true" />
+		</ItemGroup>
 		<CompileEntitlements
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
+			CustomEntitlements="@(CustomEntitlements)"
 			Entitlements="$(CodesignEntitlements)"
 			CompiledEntitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
 			IsAppExtension="$(IsAppExtension)"
