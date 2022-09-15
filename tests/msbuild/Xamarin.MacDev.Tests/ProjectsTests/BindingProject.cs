@@ -2,7 +2,7 @@ using NUnit.Framework;
 using System.IO;
 using Xamarin.Tests;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]

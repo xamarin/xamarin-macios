@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhoneSimulator")]
 	[TestFixture ("iPhone")]
 	public class ShareTests : ExtensionTestBase {

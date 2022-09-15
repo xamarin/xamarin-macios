@@ -481,9 +481,12 @@ namespace CoreGraphics {
 		public delegate void ApplierFunction (CGPathElement element);
 
 		delegate void CGPathApplierFunction (/* void* */ IntPtr info, /* const CGPathElement* */ IntPtr element);
-		
+#if NET
+		[UnmanagedCallersOnly]
+#else		
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CGPathApplierFunction))]
+#endif
 #endif
 		static void ApplierCallback (IntPtr info, IntPtr element_ptr)
 		{
@@ -523,12 +526,22 @@ namespace CoreGraphics {
 
 
 		[DllImport (Constants.CoreGraphicsLibrary)]
+#if NET
+		extern unsafe static void CGPathApply (/* CGPathRef */ IntPtr path, /* void* */ IntPtr info, delegate* unmanaged<IntPtr, IntPtr, void> function);
+#else
 		extern static void CGPathApply (/* CGPathRef */ IntPtr path, /* void* */ IntPtr info, CGPathApplierFunction function);
+#endif
 
 		public void Apply (ApplierFunction func)
 		{
 			GCHandle gch = GCHandle.Alloc (func);
+#if NET
+			unsafe {
+				CGPathApply (Handle, GCHandle.ToIntPtr (gch), &ApplierCallback);
+			}
+#else
 			CGPathApply (Handle, GCHandle.ToIntPtr (gch), ApplierCallback);
+#endif
 			gch.Free ();
 		}
 

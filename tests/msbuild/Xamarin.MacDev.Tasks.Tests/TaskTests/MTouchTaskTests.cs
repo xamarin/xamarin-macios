@@ -6,9 +6,11 @@ using System.Linq;
 using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
+
+using Xamarin.iOS.Tasks;
 using Xamarin.MacDev;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	class CustomMTouchTask : MTouch
 	{

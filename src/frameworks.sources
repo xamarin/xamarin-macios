@@ -602,6 +602,9 @@ COREMIDI_CORE_SOURCES = \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
 
+COREMIDI_SOURCES = \
+	CoreMidi/MidiBluetoothDriver.cs \
+
 # CoreML
 
 COREML_SOURCES = \

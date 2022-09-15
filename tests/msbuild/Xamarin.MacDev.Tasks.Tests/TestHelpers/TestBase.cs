@@ -7,7 +7,7 @@ using NUnit.Framework;
 
 using Xamarin.Tests;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public abstract class TestBase
 	{
