@@ -997,10 +997,6 @@
         <value>Задание: запись "{0}" не существует.
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>Создание пакета ресурсов привязки возможно, только если в проекте привязки есть собственные ссылки.
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ не поддерживает приложения watchOS 1. Перенесите свой проект на watchOS 2+.</value>
     </data>

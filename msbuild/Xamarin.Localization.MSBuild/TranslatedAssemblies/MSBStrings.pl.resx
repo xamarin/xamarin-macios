@@ -997,10 +997,6 @@
         <value>Ustawianie: wpis („{0}”) nie istnieje
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>Nie można utworzyć pakietu zasobów powiązania, chyba że istnieją odwołania natywne w projekcie powiązania.
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ nie obsługuje aplikacji systemu watchOS 1. Dokonaj migracji projektu do systemu watchOS 2+.</value>
     </data>
