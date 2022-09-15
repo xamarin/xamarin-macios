@@ -223,6 +223,17 @@ namespace AppKit {
 		}
 
 #if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[UnsupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (13,0)]
+#endif
+		public static NSFont SystemFontOfSize (nfloat fontSize, nfloat weight, nfloat width) {
+			var ptr = _SystemFontOfSize (fontSize, weight, width);
+			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
+		}
+
+#if NET
 		[SupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else

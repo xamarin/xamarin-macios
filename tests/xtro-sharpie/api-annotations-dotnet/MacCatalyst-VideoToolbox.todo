@@ -1,0 +1,18 @@
+!missing-field! kVTCompressionPropertyKey_ConstantBitRate not bound
+!missing-field! kVTCompressionPropertyKey_MinAllowedFrameQP not bound
+!missing-field! kVTCompressionPropertyKey_ReferenceBufferCount not bound
+!missing-field! kVTPixelRotationPropertyKey_FlipHorizontalOrientation not bound
+!missing-field! kVTPixelRotationPropertyKey_FlipVerticalOrientation not bound
+!missing-field! kVTPixelRotationPropertyKey_Rotation not bound
+!missing-field! kVTRotation_0 not bound
+!missing-field! kVTRotation_180 not bound
+!missing-field! kVTRotation_CCW90 not bound
+!missing-field! kVTRotation_CW90 not bound
+!missing-pinvoke! VTPixelRotationSessionCreate is not bound
+!missing-pinvoke! VTPixelRotationSessionGetTypeID is not bound
+!missing-pinvoke! VTPixelRotationSessionInvalidate is not bound
+!missing-pinvoke! VTPixelRotationSessionRotateImage is not bound
+!missing-pinvoke! VTPixelTransferSessionCreate is not bound
+!missing-pinvoke! VTPixelTransferSessionGetTypeID is not bound
+!missing-pinvoke! VTPixelTransferSessionInvalidate is not bound
+!missing-pinvoke! VTPixelTransferSessionTransferImage is not bound

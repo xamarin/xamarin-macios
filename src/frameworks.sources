@@ -301,6 +301,11 @@ AVKIT_API_SOURCES = \
 AVKIT_SOURCES = \
 	AVKit/AVPlayerViewController.cs \
 
+# AVRouting
+
+AVROUTING_SOURCES = \
+	AVRouting/AVCustomDeviceRoute.cs \
+
 # BackgroundTasks
 
 BACKGROUNDTASKS_API_SOURCES = \
@@ -450,6 +455,7 @@ COREFOUNDATION_CORE_SOURCES = \
 	CoreFoundation/DispatchData.cs \
 	CoreFoundation/NativeObject.cs \
 	CoreFoundation/Architecture.cs \
+	CoreFoundation/CGAffineTransformComponents.cs \
 
 COREFOUNDATION_SOURCES = \
 	CoreFoundation/CFAllocator.cs \
@@ -595,6 +601,9 @@ COREMIDI_CORE_SOURCES = \
 	CoreMidi/MidiServices.cs \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
+
+COREMIDI_SOURCES = \
+	CoreMidi/MidiBluetoothDriver.cs \
 
 # CoreML
 
@@ -790,6 +799,10 @@ FOUNDATION_SOURCES = \
 	Foundation/NSBundleResourceRequest.cs \
 	Foundation/NSCalendar.cs \
 	Foundation/NSCoder.cs \
+	Foundation/NSOrderedCollectionChange.cs \
+	Foundation/NSOrderedCollectionChange_1.cs \
+	Foundation/NSOrderedCollectionDifference.cs \
+	Foundation/NSOrderedCollectionDifference_1.cs \
 	Foundation/NSConnection.cs \
 	Foundation/NSData.cs \
 	Foundation/NSDate.cs \
@@ -934,6 +947,7 @@ HEALTHKIT_SOURCES = \
 	HealthKit/EnumsCompat.cs \
 	HealthKit/HKAppleWalkingSteadiness.cs \
 	HealthKit/HKAnchoredObjectQuery.cs \
+	HealthKit/HKCategoryValueSleepAnalysisAsleep.cs \
 	HealthKit/HKObjectType.cs \
 	HealthKit/HKObsolete.cs \
 	HealthKit/HKSampleQuery.cs \
@@ -1198,6 +1212,9 @@ METALPERFORMANCESHADERSGRAPH_SOURCES = \
 
 # MetricKit
 
+METRICKIT_API_SOURCES = \
+	MetricKit/MXEnums.cs \
+
 METRICKIT_SOURCES = \
 	MetricKit/MXMetaData.cs \
 	MetricKit/MXMetric.cs \
@@ -1283,6 +1300,7 @@ NETWORK_SOURCES = \
 	Network/NWIPMetadata.cs			\
 	Network/NWListener.cs			\
 	Network/NWPrivacyContext.cs	\
+	Network/NWProtocolFramerOptions.cs \
 	Network/NWProtocolIPOptions.cs	\
 	Network/NWParameters.cs			\
 	Network/NWPath.cs			\
@@ -1314,6 +1332,7 @@ NEARBYINTERACTION_API_SOURCES = \
 
 NEARBYINTERACTION_SOURCES = \
 	NearbyInteraction/NINearbyObject.cs \
+	NearbyInteraction/NIAlgorithmConvergenceStatusReasonValues.cs \
 
 # NetworkExtension
 
@@ -1407,6 +1426,7 @@ PASSKIT_API_SOURCES = \
 PASSKIT_SOURCES = \
 	PassKit/PKCompat.cs	\
 	PassKit/PKPaymentRequest.cs	\
+	PassKit/PKShareablePassMetadata.cs \
 
 # PencilKit
 PENCILKIT_API_SOURCEs = \
@@ -1964,6 +1984,7 @@ COMMON_FRAMEWORKS =         \
 	CoreML                  \
 	CoreVideo               \
 	Compression             \
+	DeviceCheck             \
 	Foundation              \
 	GameKit                 \
 	NaturalLanguage         \
@@ -1987,6 +2008,7 @@ MACOS_FRAMEWORKS =          \
 	AudioUnit               \
 	AutomaticAssessmentConfiguration \
 	AVKit                   \
+	AVRouting               \
 	BusinessChat            \
 	CallKit \
 	CFNetwork               \
@@ -2006,9 +2028,9 @@ MACOS_FRAMEWORKS =          \
 	CoreSpotlight           \
 	CoreText                \
 	CoreWlan                \
-	DeviceCheck             \
 	EventKit                \
 	ExecutionPolicy		\
+	ExtensionKit		\
 	ExternalAccessory 	\
 	FileProvider	\
 	FileProviderUI	\
@@ -2016,6 +2038,7 @@ MACOS_FRAMEWORKS =          \
 	GameController          \
 	GameplayKit             \
 	GLKit                   \
+	HealthKit               \
 	ImageIO                 \
 	ImageCaptureCore	\
 	ImageKit                \
@@ -2066,6 +2089,7 @@ MACOS_FRAMEWORKS =          \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
+	SharedWithYouCore       \
 	Social                  \
 	Speech                  \
 	SystemConfiguration     \
@@ -2080,6 +2104,7 @@ MACOS_FRAMEWORKS =          \
 IOS_FRAMEWORKS =         \
 	$(COMMON_FRAMEWORKS) \
 	AVKit \
+	AVRouting \
 	Accounts \
 	AdServices \
 	AdSupport \
@@ -2115,7 +2140,6 @@ IOS_FRAMEWORKS =         \
 	CoreSpotlight \
 	CoreTelephony \
 	CoreText \
-	DeviceCheck \
 	EventKit \
 	EventKitUI \
 	ExternalAccessory \
@@ -2164,6 +2188,7 @@ IOS_FRAMEWORKS =         \
 	Photos \
 	PhotosUI \
 	PushKit \
+	PushToTalk \
 	QuickLook \
 	QuickLookThumbnailing \
 	ReplayKit \
@@ -2171,6 +2196,8 @@ IOS_FRAMEWORKS =         \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYou \
+	SharedWithYouCore \
 	Social \
 	Speech \
 	SystemConfiguration \
@@ -2190,6 +2217,7 @@ IOS_FRAMEWORKS =         \
 
 WATCHOS_FRAMEWORKS =        \
 	$(COMMON_FRAMEWORKS)    \
+	CallKit                 \
 	Chip                    \
 	ClockKit                \
 	CloudKit                \
@@ -2203,6 +2231,7 @@ WATCHOS_FRAMEWORKS =        \
 	HomeKit                 \
 	ImageIO                 \
 	Intents                 \
+	LocalAuthentication     \
 	MapKit                  \
 	MediaPlayer             \
 	MobileCoreServices      \
@@ -2233,7 +2262,6 @@ TVOS_FRAMEWORKS =           \
 	CoreLocation            \
 	CoreSpotlight			\
 	CoreText                \
-	DeviceCheck             \
 	ExternalAccessory       \
 	GLKit                   \
 	GameController          \
@@ -2276,6 +2304,7 @@ MACCATALYST_FRAMEWORKS = \
 	AppClip \
 	AppKit \
 	AVKit \
+	AVRouting \
 	Accounts \
 	AdServices \
 	AdSupport \
@@ -2306,9 +2335,9 @@ MACCATALYST_FRAMEWORKS = \
 	CoreTelephony \
 	CoreText \
 	CoreWlan \
-	DeviceCheck \
 	EventKit \
 	EventKitUI \
+	ExecutionPolicy \
 	ExternalAccessory \
 	FileProvider \
 	GameController \
@@ -2356,6 +2385,8 @@ MACCATALYST_FRAMEWORKS = \
 	ScreenTime \
 	Security \
 	SensorKit \
+	SharedWithYou \
+	SharedWithYouCore \
 	Social \
 	Speech \
 	SystemConfiguration \

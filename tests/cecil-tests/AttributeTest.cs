@@ -173,6 +173,8 @@ namespace Cecil.Tests {
 		[Test]
 		public void FindSupportedOnElementsThatDoNotExistInThatAssembly ()
 		{
+			Configuration.IgnoreIfAnyIgnoredPlatforms ();
+
 			// Dictionary of (FullName of Member) -> (Dictionary of (Actual Platform) -> Platform Claim Info)
 			var harvestedInfo = new Dictionary<string, Dictionary<string, PlatformClaimInfo>> ();
 
@@ -273,10 +275,20 @@ namespace Cecil.Tests {
 				return true;
 			}
 			// Generator Bug - Protocol inline with different attribute bug
-			if (member.StartsWith ("SceneKit.SCNLayer") || 
-				member.StartsWith ("AVFoundation.AVAudioSession")) {
-				return true;
-			}
+			switch (member) {
+ 			case string s when s.StartsWith ("SceneKit.SCNLayer"):
+ 				return true;
+ 			case string s when s.StartsWith ("AVFoundation.AVAudioSession"):
+ 				return true;
+			case string s when s.StartsWith("MediaPlayer.MPMoviePlayerController"):
+ 				return true;
+ 			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialAssertion"):
+ 				return true;
+ 			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialRegistration"):
+ 				return true;
+			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor"):
+ 				return true;
+ 			}
 			switch (member) {
 			case "GameplayKit.GKHybridStrategist.get_GameModel":
 			case "GameplayKit.GKHybridStrategist.get_RandomSource":
@@ -301,6 +313,7 @@ namespace Cecil.Tests {
 			case "AVFoundation.AVAssetDownloadDelegate.DidFinishCollectingMetrics":
 			case "AVFoundation.AVAssetDownloadDelegate.TaskIsWaitingForConnectivity":
 			case "AVFoundation.AVAssetDownloadDelegate.WillBeginDelayedRequest":
+			case "AVFoundation.AVAssetDownloadDelegate.DidCreateTask":
 			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemTitle":
 			case "ARKit.ARQuickLookPreviewItem.get_PreviewItemUrl":
 			case "Intents.INPerson.get_AlternativeSpeakableMatches":

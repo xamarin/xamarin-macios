@@ -47,8 +47,13 @@ namespace StoreKit {
 		InvalidAdvertisedAppId = 8,
 		InvalidVersion = 9,
 		Unknown = 10,
+		ImpressionTooShort = 11,
 	}
 
+	[Deprecated (PlatformName.iOS, 16, 0)]
+	[Deprecated (PlatformName.MacOSX, 13, 0)]
+	[Deprecated (PlatformName.TvOS, 16, 0)]
+	[Deprecated (PlatformName.WatchOS, 9, 0)]
 	[Watch (6, 2)]
 	[BaseType (typeof (NSObject))]
 	partial interface SKDownload {
@@ -245,15 +250,31 @@ namespace StoreKit {
 		//
 		// iOS 6.0
 		//
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
 		[Export ("startDownloads:")]
 		void StartDownloads (SKDownload [] downloads);
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
 		[Export ("pauseDownloads:")]
 		void PauseDownloads (SKDownload [] downloads);
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
 		[Export ("resumeDownloads:")]
 		void ResumeDownloads (SKDownload [] downloads);
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
 		[Export ("cancelDownloads:")]
 		void CancelDownloads (SKDownload [] downloads);
 
@@ -393,6 +414,10 @@ namespace StoreKit {
 		[Export ("paymentQueueRestoreCompletedTransactionsFinished:")]
 		void RestoreCompletedTransactionsFinished (SKPaymentQueue queue);
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
 		[Export ("paymentQueue:updatedDownloads:")]
 		void UpdatedDownloads (SKPaymentQueue queue, SKDownload [] downloads);
 
@@ -443,6 +468,10 @@ namespace StoreKit {
 		[Export ("transactionState")]
 		SKPaymentTransactionState TransactionState { get; }
 
+		[Deprecated (PlatformName.iOS, 16, 0)]
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
 		[Export ("downloads")]
 		SKDownload [] Downloads { get;  }
 	}
@@ -570,6 +599,16 @@ namespace StoreKit {
 		[Wrap ("LoadProduct (parameters.GetDictionary ()!, callback)")]
 		[Async]
 		void LoadProduct (StoreProductParameters parameters, [NullAllowed] Action<bool,NSError> callback);
+
+		[Async]
+		[NoMac, iOS (16,0)]
+		[Export ("loadProductWithParameters:impression:completionBlock:")]
+		void LoadProduct (NSDictionary parameters, SKAdImpression impression, [NullAllowed] Action<bool, NSError> callback);
+
+		[Async]
+		[NoMac, iOS (16,0)]
+		[Wrap ("LoadProduct (parameters.GetDictionary ()!, impression, callback)")]
+		void LoadProduct (StoreProductParameters parameters, SKAdImpression impression, [NullAllowed] Action<bool, NSError> callback);
 	}
 
 	[Mac (11,0), NoTV, NoWatch]
@@ -1140,6 +1179,10 @@ namespace StoreKit {
 		[Export ("additionalValueForKey:")]
 		[return: NullAllowed]
 		NSObject GetAdditionalValue (string key);
+
+		[iOS (16,0)]
+		[Export ("setAdImpression:")]
+		void SetAdImpression (SKAdImpression impression);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
@@ -1238,6 +1281,10 @@ namespace StoreKit {
 	[BaseType (typeof (NSObject))]
 	interface SKAdImpression {
 
+		[iOS (16,0)]
+		[Export ("initWithSourceAppStoreItemIdentifier:advertisedAppStoreItemIdentifier:adNetworkIdentifier:adCampaignIdentifier:adImpressionIdentifier:timestamp:signature:version:")]
+		NativeHandle Constructor (NSNumber sourceAppStoreItemIdentifier, NSNumber advertisedAppStoreItemIdentifier, string adNetworkIdentifier, NSNumber adCampaignIdentifier, string adImpressionIdentifier, NSNumber timestamp, string signature, string version);
+
 		[Export ("sourceAppStoreItemIdentifier", ArgumentSemantic.Strong)]
 		NSNumber SourceAppStoreItemIdentifier { get; set; }
 
@@ -1270,5 +1317,6 @@ namespace StoreKit {
 
 		[Export ("version", ArgumentSemantic.Strong)]
 		string Version { get; set; }
+
 	}
 }

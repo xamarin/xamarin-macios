@@ -310,6 +310,10 @@ namespace Introspection {
 			int n = 0;
 
 			foreach (Type t in Assembly.GetTypes ()) {
+
+				if (SkipCheckShouldReExposeBaseCtor (t))
+					continue;
+
 				// we only care for NSObject subclasses that we expose publicly
 				if (!t.IsPublic || !NSObjectType.IsAssignableFrom (t))
 					continue;
@@ -604,12 +608,11 @@ namespace Introspection {
 					return true;
 			}
 
-			// Add Skipped types here
-			//switch (type.Namespace) {
-			//case "":
-			//	return true;
-			//}
+			return SkipDueToAttribute (type);
+		}
 
+		protected virtual bool SkipCheckShouldReExposeBaseCtor (Type type)
+		{
 			return SkipDueToAttribute (type);
 		}
 

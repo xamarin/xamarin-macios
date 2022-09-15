@@ -36,7 +36,6 @@ namespace Network {
 		
 		public NWProtocolQuicOptions () : this (nw_quic_create_options (), owns: true) {}
 
-		// extern void nw_quic_add_tls_application_protocol (nw_protocol_options_t _Nonnull options, const char * _Nonnull application_protocol) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(watchos, introduced=8.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_quic_add_tls_application_protocol (OS_nw_protocol_options options, string applicationProtocol);
 
@@ -94,11 +93,9 @@ namespace Network {
 			set => nw_quic_set_idle_timeout (GetCheckedHandle (), value);
 		}
 
-		// extern uint64_t nw_quic_get_initial_max_streams_bidirectional (nw_protocol_options_t _Nonnull options) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(watchos, introduced=8.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[DllImport (Constants.NetworkLibrary)]
 		static extern ulong nw_quic_get_initial_max_streams_bidirectional (OS_nw_protocol_options options);
 		
-		// extern void nw_quic_set_initial_max_streams_bidirectional (nw_protocol_options_t _Nonnull options, uint64_t initial_max_streams_bidirectional) __attribute__((availability(macos, introduced=12.0))) __attribute__((availability(ios, introduced=15.0))) __attribute__((availability(watchos, introduced=8.0))) __attribute__((availability(tvos, introduced=15.0)));
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_quic_set_initial_max_streams_bidirectional (OS_nw_protocol_options options, ulong initial_max_streams_bidirectional);
 
@@ -150,5 +147,149 @@ namespace Network {
 			get => nw_quic_get_initial_max_stream_data_unidirectional (GetCheckedHandle ());
 			set => nw_quic_set_initial_max_stream_data_unidirectional (GetCheckedHandle (), value);
 		}
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern ushort nw_quic_get_max_datagram_frame_size (OS_nw_protocol_options options);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_quic_set_max_datagram_frame_size (OS_nw_protocol_options options, ushort max_datagram_frame_size);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public ushort DatagramFrameSize {
+			get => nw_quic_get_max_datagram_frame_size (GetCheckedHandle ());
+			set => nw_quic_set_max_datagram_frame_size (GetCheckedHandle (), value);
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		[return: MarshalAs (UnmanagedType.I1)]
+		static extern bool nw_quic_get_stream_is_datagram (OS_nw_protocol_options options);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern void nw_quic_set_stream_is_datagram (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool is_datagram);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public bool StreamIsDatagram {
+			get => nw_quic_get_stream_is_datagram (GetCheckedHandle ());
+			set => nw_quic_set_stream_is_datagram (GetCheckedHandle (), value);
+		}
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern ushort nw_quic_get_stream_usable_datagram_frame_size (OS_nw_protocol_metadata metadata);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public ushort StreamUsableDatagramFrameSize => nw_quic_get_stream_usable_datagram_frame_size (GetCheckedHandle ());
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		[DllImport (Constants.NetworkLibrary)]
+		static extern byte nw_quic_get_stream_type (OS_nw_protocol_metadata stream_metadata);
+
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[TV (16,0)]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[Watch (9,0)]
+#endif
+		public NWQuicStreamType StreamType => (NWQuicStreamType) nw_quic_get_stream_type (GetCheckedHandle ());
+
 	}
 }

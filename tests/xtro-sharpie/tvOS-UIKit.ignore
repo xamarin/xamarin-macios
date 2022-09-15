@@ -329,12 +329,10 @@
 !missing-null-allowed! 'UIKit.UIWindow UIKit.UITouch::get_Window()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'UIKit.UIWindow UIKit.UIView::get_Window()' is missing an [NullAllowed] on return type
 
-## not available on tvOS (iOS 14+ only)
-!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceInsetGrouped = 2 not bound
-!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebar = 3 not bound
-!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebarPlain = 4 not bound
-
 ## Enums not needed on tvOS
 !missing-enum! UIListSeparatorVisibility not bound
 !missing-enum! UIPrintRenderingQuality not bound
 !missing-enum! UIBehavioralStyle not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceInsetGrouped = 2 not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebar = 3 not bound
+!missing-enum-value! UICollectionLayoutListAppearance native value UICollectionLayoutListAppearanceSidebarPlain = 4 not bound

@@ -33,3 +33,6 @@
 !missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat: not bound
 !missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat:fromTable: not bound
 !missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat:fromTable:arguments: not bound
+
+# enum value got removed in xcode14 beta 5
+!extra-enum-value! Managed value 12 for INStartCallIntentResponseCode.FailureCallRinging is available for the current platform while the value in the native header is not

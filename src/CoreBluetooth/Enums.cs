@@ -118,6 +118,8 @@ namespace CoreBluetooth {
 		PeerRemovedPairingInformation,
 		EncryptionTimedOut,
 		TooManyLEPairedDevices = 16,
+		LEGattExceededBackgroundNotificationLimit = 17,
+		LEGattNearBackgroundNotificationLimit = 18,
 	}
 
 	[Watch (4,0)]

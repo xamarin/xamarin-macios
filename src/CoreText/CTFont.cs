@@ -53,6 +53,15 @@ namespace CoreText {
 	public enum CTFontOptions : ulong {
 		Default = 0,
 		PreventAutoActivation = 1 << 0,
+#if NET
+		[SupportedOSPlatform ("tvos16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+#else
+		[iOS (16,0), TV (16,0), MacCatalyst (16,0), Mac (13,0), Watch (9,0)]
+#endif
+		PreventAutoDownload = 1 << 1,
 		PreferSystemFont      = 1 << 2,
 #if !NET
 		[Obsolete ("This API is not available on this platform.")]
@@ -173,6 +182,19 @@ namespace CoreText {
 	// defined as uint32_t - /System/Library/Frameworks/CoreText.framework/Headers/CTFont.h
 	public enum CTFontTableOptions : uint {
 		None              = 0,
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos16.0")]
+#if TVOS
+		[Obsolete ("Starting with tvos16.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.TvOS, 16, 0)]
+		[Deprecated (PlatformName.WatchOS, 9, 0)]
+#endif
 		ExcludeSynthetic  = (1 << 0),
 	}
 

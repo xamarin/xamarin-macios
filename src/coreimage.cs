@@ -1853,6 +1853,7 @@ namespace CoreImage {
 
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
+		[Deprecated (PlatformName.TvOS, 10, 14)]
 		[Export ("initWithTexture:size:flipped:colorSpace:")]
 		NativeHandle Constructor (int /* unsigned int */ glTextureName, CGSize size, bool flipped, [NullAllowed] CGColorSpace colorSpace);
 
@@ -2375,6 +2376,14 @@ namespace CoreImage {
 		[Static]
 		[Export ("clearImage", ArgumentSemantic.Strong)]
 		CIImage ClearImage { get; }
+
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("imageByConvertingWorkingSpaceToLab")]
+		CIImage ConvertWorkingSpaceToLab ();
+
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("imageByConvertingLabToWorkingSpace")]
+		CIImage ConvertLabToWorkingSpace ();
 	}
 
 	interface ICIImageProcessorInput {}
@@ -2414,6 +2423,13 @@ namespace CoreImage {
 		[Mac (10,13)]
 		[Export ("surface")]
 		IOSurface.IOSurface Surface { get; }
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("digest")]
+		ulong Digest { get; }
 	}
 
 	interface ICIImageProcessorOutput {}
@@ -2457,6 +2473,13 @@ namespace CoreImage {
 		[Mac (10,13)]
 		[Export ("surface")]
 		IOSurface.IOSurface Surface { get; }
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("digest")]
+		ulong Digest { get; }
 	}
 
 	[iOS (9,0)]
@@ -6565,6 +6588,13 @@ namespace CoreImage {
 		[Abstract]
 		[Export ("scaleFactor")]
 		float ScaleFactor { get; set; }
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("padding")]
+		float Padding { get; set; }
 	}
 
 	[iOS (13,0)]
@@ -6923,6 +6953,13 @@ namespace CoreImage {
 		[Abstract]
 		[Export ("cubeData", ArgumentSemantic.Retain)]
 		NSData CubeData { get; set; }
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("extrapolate")]
+		bool Extrapolate { get; set; }
 	}
 
 	[iOS (13,0)]
@@ -6954,6 +6991,13 @@ namespace CoreImage {
 		[Abstract]
 		[NullAllowed, Export ("colorSpace", ArgumentSemantic.Assign)]
 		CGColorSpace ColorSpace { get; set; }
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("extrapolate")]
+		bool Extrapolate { get; set; }
 	}
 
 	[iOS (13,0)]
@@ -6977,6 +7021,13 @@ namespace CoreImage {
 		[Abstract]
 		[NullAllowed, Export ("colorSpace", ArgumentSemantic.Assign)]
 		CGColorSpace ColorSpace { get; set; }
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("extrapolate")]
+		bool Extrapolate { get; set; }
 	}
 
 	[iOS (13,0)]
@@ -9195,6 +9246,13 @@ namespace CoreImage {
 		[Abstract]
 		[Export ("scaleFactor")]
 		float ScaleFactor { get; set; }
+
+#if XAMCORE_5_0
+		[Abstract]
+#endif
+		[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+		[Export ("padding")]
+		float Padding { get; set; }
 	}
 
 	[iOS (13,0)]
@@ -9649,5 +9707,69 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputImage")]
 		CIImage InputImage { get; set; }
 	}
+
+	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[Protocol (Name="CIAreaLogarithmicHistogram")]
+	interface CIAreaLogarithmicHistogramProtocol : CIAreaReductionFilterProtocol
+	{
+		[Abstract]
+		[Export ("scale")]
+		float Scale { get; set; }
+
+		[Abstract]
+		[Export ("count")]
+		nint Count { get; set; }
+
+		[Abstract]
+		[Export ("minimumStop")]
+		float MinimumStop { get; set; }
+
+		[Abstract]
+		[Export ("maximumStop")]
+		float MaximumStop { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIAreaLogarithmicHistogram : CIAreaLogarithmicHistogramProtocol {
+	}
+
+	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[Protocol (Name="CIConvertLab")]
+	interface CIConvertLabProtocol : CIFilterProtocol
+	{
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("normalize")]
+		bool Normalize { get; set; }
+	}
+	
+
+// LabToRGBFilter and RGBtoLabFilter are names for filter API but return the same type CIConvertLab
+// Enabling these cause a large number of introspection errors
+// https://github.com/xamarin/xamarin-macios/issues/15662
+#if false
+	[CoreImageFilter]
+	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[BaseType (typeof (CIFilter), Name = "CIConvertLab")]
+	interface LabToRGBFilter : CIConvertLabProtocol
+	{
+
+	}
+
+	[CoreImageFilter]
+	[iOS (16,0), TV (16,0), Mac (13,0), MacCatalyst (16,0)]
+	[BaseType (typeof (CIFilter), Name = "CIConvertLab")]
+	interface RGBtoLabFilter : CIConvertLabProtocol
+	{
+
+	}
+#endif
+
 #endregion
+
 }
