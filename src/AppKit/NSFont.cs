@@ -157,7 +157,7 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
-		[ObsoletedOSPlatform ("macos10.13.")]
+		[ObsoletedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
@@ -172,7 +172,7 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
-		[ObsoletedOSPlatform ("macos10.13.")]
+		[ObsoletedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
@@ -187,7 +187,7 @@ namespace AppKit {
 #if NET
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.13")]
-		[ObsoletedOSPlatform ("macos10.13.")]
+		[ObsoletedOSPlatform ("macos10.13")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
