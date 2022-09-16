@@ -5,7 +5,9 @@ using Microsoft.Build.Utilities;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks {
+using Xamarin.iOS.Tasks;
+
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture]
 	public class CollectITunesArtworkTaskTests : TestBase {
 		string AppPath => Path.GetDirectoryName (GetType ().Assembly.Location);

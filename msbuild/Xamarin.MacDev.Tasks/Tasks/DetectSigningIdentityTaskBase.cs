@@ -104,6 +104,12 @@ namespace Xamarin.MacDev.Tasks
 
 		public string BundleIdentifier { get; set; }
 
+		public string CodesignProvision { get; set; }
+
+		public string CodesignEntitlements { get; set; }
+
+		public string CodesignRequireProvisioningProfile { get; set; }
+
 		public string Keychain { get; set; }
 
 		public string SigningKey { get; set; }
@@ -116,8 +122,6 @@ namespace Xamarin.MacDev.Tasks
 		public bool SdkIsSimulator { get; set; }
 
 		public bool RequireCodeSigning { get; set; }
-
-		public bool RequireProvisioningProfile { get; set; }
 
 		#endregion
 
@@ -140,6 +144,59 @@ namespace Xamarin.MacDev.Tasks
 		public string DetectedProvisioningProfile { get; set; }
 
 		#endregion
+
+		bool? requireProvisioningProfile;
+		public bool RequireProvisioningProfile {
+			get {
+				// RequireProvisioningProfile:
+				// * iOS, tvOS, watchOS: required if building for device or if a custom (.NET: non-empty) entitlement file is used
+				// * macOS, Mac Catalyst: requirerd if a provisioning profile is specified
+				// * Default logic is overridable by setting the "CodesignRequireProvisioningProfile=true|false" property
+
+				if (!requireProvisioningProfile.HasValue) {
+					if (string.IsNullOrEmpty (CodesignRequireProvisioningProfile)) {
+						switch (Platform) {
+						case ApplePlatform.iOS:
+						case ApplePlatform.TVOS:
+						case ApplePlatform.WatchOS:
+							requireProvisioningProfile = !SdkIsSimulator || HasEntitlements;
+							break;
+						case ApplePlatform.MacCatalyst:
+						case ApplePlatform.MacOSX:
+							requireProvisioningProfile = !string.IsNullOrEmpty (CodesignProvision);
+							break;
+						default:
+							throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+						}
+					} else {
+						requireProvisioningProfile = string.Equals (CodesignRequireProvisioningProfile, "true", StringComparison.OrdinalIgnoreCase);
+					}
+				}
+				return requireProvisioningProfile.Value;
+			}
+		}
+
+		bool? hasEntitlements;
+		bool HasEntitlements {
+			get {
+				if (!hasEntitlements.HasValue) {
+					if (string.IsNullOrEmpty (CodesignEntitlements)) {
+						// If no CodesignEntitlements was specified, we don't have any entitlements
+						hasEntitlements = false;
+					} else {
+						if (IsDotNet) {
+							// .NET: Check the file to see if there are any entitlements inside
+							var entitlements = PDictionary.FromFile (CodesignEntitlements);
+							hasEntitlements = entitlements.Count > 0;
+						} else {
+							// Legacy Xamarin: to preserve backwards compat, consider the presence of a file enough to say we have entitlements.
+							hasEntitlements = true;
+						}
+					}
+				}
+				return hasEntitlements.Value;
+			}
+		}
 
 		class CodeSignIdentity
 		{
