@@ -3,15 +3,34 @@
 set -o pipefail
 IFS=$'\n\t '
 
-DOTNET_PLATFORMS=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value VARIABLE=DOTNET_PLATFORMS)
-ALL_DOTNET_PLATFORMS=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value VARIABLE=ALL_DOTNET_PLATFORMS)
-ENABLE_DOTNET=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value VARIABLE=ENABLE_DOTNET)
+FILE=$(pwd)/tmp.txt
 
-INCLUDE_XAMARIN_LEGACY=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value VARIABLE=INCLUDE_XAMARIN_LEGACY)
-INCLUDE_IOS=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value VARIABLE=INCLUDE_IOS)
-INCLUDE_TVOS=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value VARIABLE=INCLUDE_TVOS)
-INCLUDE_WATCH=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value VARIABLE=INCLUDE_WATCH)
-INCLUDE_MAC=$(make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value VARIABLE=INCLUDE_MAC)
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=DOTNET_PLATFORMS
+DOTNET_PLATFORMS=$(cat "$FILE")
+
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=ALL_DOTNET_PLATFORMS
+ALL_DOTNET_PLATFORMS=$(cat "$FILE")
+
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=ENABLE_DOTNET
+ENABLE_DOTNET=$(cat "$FILE")
+
+
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_XAMARIN_LEGACY
+INCLUDE_XAMARIN_LEGACY=$(cat "$FILE")
+
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_IOS
+INCLUDE_IOS=$(cat "$FILE")
+
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_TVOS
+INCLUDE_TVOS=$(cat "$FILE")
+
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_WATCH
+INCLUDE_WATCH=$(cat "$FILE")
+
+make -C "$BUILD_SOURCESDIRECTORY/xamarin-macios/tools/devops" print-variable-value-to-file FILE="$FILE" VARIABLE=INCLUDE_MAC
+INCLUDE_MAC=$(cat "$FILE")
+
+rm -f "$FILE"
 
 # print it out, so turn off echoing since that confuses Azure DevOps
 set +x
