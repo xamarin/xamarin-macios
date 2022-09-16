@@ -932,50 +932,25 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 		}
 	}
 
-	void GenerateObsolete (StringBuilder builder)
-	{
-		GeneratePlatformDefine (builder);
-		builder.Append ("[Obsolete (\"Starting with ");
-
-		GeneratePlatformNameAndVersion (builder);
-
-		if (!String.IsNullOrEmpty (Message))
-			builder.Append (' ').Append (Message);
-		else
-			builder.Append ('.'); // intro check messages to they end with a '.'
-									// TODO add a URL (wiki?) and DiagnosticId (one per platform?) for documentation
-		builder.AppendLine ("\", DiagnosticId = \"BI1234\", UrlFormat = \"https://github.com/xamarin/xamarin-macios/wiki/Obsolete\")]");
-		builder.AppendLine ("#endif");
-	}
-
-	void GenerateAdvice (StringBuilder builder)
-	{
-		GeneratePlatformDefine (builder);
-		builder.Append ("[Advice (\"Starting with ");
-
-		GeneratePlatformNameAndVersion (builder);
-
-		if (!String.IsNullOrEmpty (Message))
-			builder.Append (' ').Append (Message);
-		else
-			builder.Append ('.'); // intro check messages to they end with a '.'
-									// TODO add a URL (wiki?) and DiagnosticId (one per platform?) for documentation
-		builder.AppendLine ("\")]");
-		builder.AppendLine ("#endif");
-	}
-
 	void GenerateUnsupported (StringBuilder builder)
 	{
 		builder.Append ("[UnsupportedOSPlatform (\"");
 		GeneratePlatformNameAndVersion (builder);
-		builder.AppendLine ("\")]");
+		builder.Append ("\"");
+		if (!String.IsNullOrEmpty (Message))
+			builder.Append (", \"").Append (Message).Append ('"');
+
+		builder.AppendLine (")]");
 	}
 
 	void GenerateDeprecated (StringBuilder builder)
 	{
 		builder.Append ("[ObsoletedOSPlatform (\"");
 		GeneratePlatformNameAndVersion (builder);
-		builder.AppendLine ("\")]");
+		builder.Append ("\"");
+		if (!String.IsNullOrEmpty (Message))
+			builder.Append (", \"").Append (Message).Append ('"');
+		builder.AppendLine (")]");
 	}
 
 	void GenerateSupported (StringBuilder builder)
@@ -1022,7 +997,6 @@ public abstract class AvailabilityBaseAttribute : Attribute {
 			GenerateDeprecated (builder);
 			break;
 		case AvailabilityKind.Obsoleted:
-			GenerateObsolete (builder);
 			GenerateUnsupported (builder);
 			break;
 		case AvailabilityKind.Unavailable:
