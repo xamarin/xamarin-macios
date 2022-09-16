@@ -82,6 +82,7 @@
 
 # ignored in the past on macOS now ignored in every platform.
 !missing-pinvoke! AUListenerAddParameter is not bound
+!missing-pinvoke! AUListenerRemoveParameter is not bound
 !missing-pinvoke! AUListenerCreate is not bound
 !missing-pinvoke! AUListenerCreateWithDispatchQueue is not bound
 !missing-pinvoke! AUListenerDispose is not bound

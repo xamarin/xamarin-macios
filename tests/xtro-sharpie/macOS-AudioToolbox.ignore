@@ -27,7 +27,6 @@
 !missing-pinvoke! AudioFileComponentSetUserData is not bound
 !missing-pinvoke! AudioFileComponentWriteBytes is not bound
 !missing-pinvoke! AudioFileComponentWritePackets is not bound
-!missing-pinvoke! AUListenerRemoveParameter is not bound
 !missing-pinvoke! CAClockAddListener is not bound
 !missing-pinvoke! CAClockArm is not bound
 !missing-pinvoke! CAClockBarBeatTimeToBeats is not bound
