@@ -25,37 +25,37 @@ parameters:
       job: 'xamarin_ios_sign_notarize',
       name: 'Xamarin.iOS',
       pattern: 'xamarin.ios-*',
-      condition: "ne( $[ dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ],'')",
+      condition: "ne(dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'],'')",
     },
     {
       job: 'xamarin_mac_sing_notarie',
       name: 'Xamarin.Mac',
       pattern: 'xamarin.mac-*',
-      condition: "ne( $[ dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ],'')",
+      condition: "ne(dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'],'')",
     },
     {
       job: 'microsoft_ios_sign_notarize',
       name: 'Microsoft.iOS',
       pattern: 'Microsoft.iOS.Bundle*.pkg',
-      condition: "ne( $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ],'')",
+      condition: "ne(dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'],'')",
     },
     {
       job: 'microsoft_tvos_sign_notarize',
       name: 'Microsoft.tvOS',
       pattern: 'Microsoft.tvOS.Bundle*.pkg',
-      condition: "ne( $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ],'')",
+      condition: "ne(dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'],'')",
     },
     {
       job: 'microsoft_mac_sign_notarize',
       name: 'Microsoft.macOS',
       pattern: 'Microsoft.macOS.Bundle*.pkg',
-      condition: "ne( $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ],'')",
+      condition: "ne(dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'],'')",
     },
     {
       job: 'microsoft_maccatalyst_sign_notarize',
       name: 'Microsoft.MacCatalyst',
       pattern: 'Microsoft.MacCatalyst.Bundle*.pkg',
-      condition: "ne( $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ],'')",
+      condition: "ne(dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'],'')",
     },
   ]
 
