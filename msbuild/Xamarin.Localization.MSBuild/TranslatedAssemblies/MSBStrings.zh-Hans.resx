@@ -997,10 +997,6 @@
         <value>设置: 不存在条目“{0}”
 </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>除非绑定项目中存在本机引用，否则无法创建绑定资源包。
-</value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ 不支持 watchOS 1 应用。请将你的项目迁移到 watchOS 2+。</value>
     </data>
