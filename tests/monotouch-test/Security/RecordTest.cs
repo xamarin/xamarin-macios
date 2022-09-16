@@ -160,7 +160,11 @@ namespace MonoTouchFixtures.Security {
 
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				return;
+#if __TVOS__ || __WATCHOS__
+			Assert.That (rec.AuthenticationUI, Is.EqualTo (SecAuthenticationUI.Fail), "AuthenticationUI-get");
+#else
 			Assert.That (rec.AuthenticationUI, Is.EqualTo (SecAuthenticationUI.NotSet), "AuthenticationUI-get");
+#endif
 			rec.AuthenticationUI = SecAuthenticationUI.Allow;
 			Assert.That (rec.AuthenticationUI, Is.EqualTo (SecAuthenticationUI.Allow), "AuthenticationUI-set");
 		}
