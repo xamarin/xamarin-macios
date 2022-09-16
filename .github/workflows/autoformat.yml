@@ -62,9 +62,6 @@ jobs:
 
         echo "::set-output name=autoformatted::true"
 
-    - name: 'Debug'
-      run: echo "Yay? ${{ steps.autoformat.outputs.autoformatted }}"
-
     - name: 'Upload patch'
       uses: actions/upload-artifact@v2
       if: steps.autoformat.outputs.autoformatted == 'true'
