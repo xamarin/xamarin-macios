@@ -16,6 +16,13 @@ steps:
   parameters:
     isPR: false # always use the latests set of scripts merged with main
 
+- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
+  name: 'Configure platforms'
+  displayName: 'Configure platforms'
+  env:
+    ${{ if eq(parameters.enableDotnet, true) }}:
+      ENABLE_DOTNET: "True"
+
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
 
