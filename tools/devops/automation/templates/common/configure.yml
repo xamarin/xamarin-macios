@@ -16,7 +16,7 @@ steps:
   parameters:
     isPR: false # always use the latests set of scripts merged with main
 
-- bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
+- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
   name: configure_platforms
   displayName: 'Configure platforms'
   env:
