@@ -35,8 +35,15 @@ namespace CoreMedia {
 			gch = GCHandle.Alloc (this);
 			// kCMBlockBufferCustomBlockSourceVersion = 0 <- this is the only and current value
 			Cblock.Version = 0;
+#if NET
+			unsafe {
+				Cblock.Allocate = &AllocateCallback;
+				Cblock.Free = &FreeCallback;
+			}
+#else
 			Cblock.Allocate = static_AllocateCallback;
 			Cblock.Free = static_FreeCallback;
+#endif
 			Cblock.RefCon = GCHandle.ToIntPtr (gch);
 		}
 
@@ -44,20 +51,31 @@ namespace CoreMedia {
 		[StructLayout (LayoutKind.Sequential, Pack = 4)] // it's 28 bytes (not 32) on 64 bits iOS
 		internal struct CMBlockBufferCustomBlockSource {
 			public uint Version;
+#if NET
+			public unsafe delegate* unmanaged<IntPtr, nuint, IntPtr> Allocate;
+			public unsafe delegate* unmanaged<IntPtr, IntPtr, nuint, void> Free;
+#else
 			public CMAllocateCallback Allocate;
 			public CMFreeCallback Free;
+#endif
 			public IntPtr RefCon;
 		}
 		internal CMBlockBufferCustomBlockSource Cblock;
 
+#if !NET
 		internal delegate IntPtr CMAllocateCallback (/* void* */ IntPtr refCon, /* size_t */ nuint sizeInBytes);
 		internal delegate void CMFreeCallback (/* void* */ IntPtr refCon, /* void* */ IntPtr doomedMemoryBlock, /* size_t */ nuint sizeInBytes);
 
 		static CMAllocateCallback static_AllocateCallback = AllocateCallback;
 		static CMFreeCallback static_FreeCallback = FreeCallback;
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CMAllocateCallback))]
+#endif
 #endif
 		static IntPtr AllocateCallback (IntPtr refCon, nuint sizeInBytes)
 		{
@@ -72,8 +90,12 @@ namespace CoreMedia {
 			return Marshal.AllocHGlobal ((int)sizeInBytes);
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CMFreeCallback))]
+#endif
 #endif
 		static void FreeCallback (IntPtr refCon, IntPtr doomedMemoryBlock, nuint sizeInBytes)
 		{

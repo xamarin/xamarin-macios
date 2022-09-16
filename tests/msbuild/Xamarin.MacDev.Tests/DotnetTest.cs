@@ -6,7 +6,7 @@ using Xamarin.Tests;
 
 using NUnit.Framework;
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 
 	// This test builds test projects using both MSBuild (old-style) and .NET (new-style), and
 	// compares the resulting .app directories.

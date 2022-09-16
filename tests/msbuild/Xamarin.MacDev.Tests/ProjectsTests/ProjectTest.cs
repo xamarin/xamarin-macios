@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 using Xamarin.Tests;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	public class ProjectTest : TestBase {
 		public ProjectTest (string platform)
