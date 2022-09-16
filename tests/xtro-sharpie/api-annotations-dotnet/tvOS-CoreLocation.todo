@@ -1,3 +1,0 @@
-!deprecated-attribute-missing! CLGeocoder::geocodeAddressDictionary:completionHandler: missing a [Deprecated] attribute
-!deprecated-attribute-missing! CLPlacemark::addressDictionary missing a [Deprecated] attribute
-!missing-enum-value! CLError native value kCLErrorHistoricalLocationError = 19 not bound

@@ -67,6 +67,9 @@ namespace CoreLocation {
 
 		// ios14
 		PromptDeclined = 18,
+
+		// ios 16
+		HistoricalLocationError = 19,
 	}
 
 	// untyped enum -> CLLocationManager.h
@@ -89,7 +92,8 @@ namespace CoreLocation {
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'AuthorizedAlways' instead.")]
 		Authorized,
 		AuthorizedAlways = Authorized,
-		AuthorizedWhenInUse			
+		[Obsoleted (PlatformName.MacOSX, 13, 0)]
+		AuthorizedWhenInUse,
 	}
 
 	// NSInteger -> CLLocationManager.h
