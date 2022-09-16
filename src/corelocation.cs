@@ -474,6 +474,7 @@ namespace CoreLocation {
 		[Export ("stopMonitoringLocationPushes")]
 		void StopMonitoringLocationPushes ();
 
+		[Async]
 		[Watch (9,0), NoTV, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("requestHistoricalLocationsWithPurposeKey:sampleCount:completionHandler:")]
 		void RequestHistoricalLocation (string purposeKey, nint sampleCount, Action<NSArray<CLLocation>, NSError> handler);

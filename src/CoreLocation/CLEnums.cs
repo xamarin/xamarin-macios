@@ -68,7 +68,7 @@ namespace CoreLocation {
 		// ios14
 		PromptDeclined = 18,
 
-		// ios 16
+		// ios16
 		HistoricalLocationError = 19,
 	}
 
