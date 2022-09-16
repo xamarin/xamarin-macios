@@ -997,10 +997,6 @@
         <value>Nastavení: Položka {0} neexistuje.
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>Pokud ve vazebním projektu neexistují nativní odkazy, nedá se vytvořit balíček prostředků vazby.
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ nepodporuje aplikace watchOS 1. Migrujte projekt na watchOS 2+.</value>
     </data>

@@ -71,8 +71,7 @@ namespace Xamarin.MMP.Tests
 
 				projects.Item1.LinkWithName = "SimpleClassDylib.dylib";
 
-				var buildResult = BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, false, shouldFail: true);
-				buildResult.Messages.AssertError (7068, "Can't create a binding resource package unless there are native references in the binding project.\n        ");
+				BindingProjectTests.SetupAndBuildBindingProject (projects.Item1, false);
 			});
 		}
 
