@@ -42,7 +42,7 @@ jobs:
 
         SRC_DIR=$(pwd)
         cd ..
-        dotnet format "$SRC_DIR/test-app/test-app.csproj"
+        dotnet format "$SRC_DIR/tools/xibuild/xibuild.csproj"
         # dotnet format "$SRC_DIR/[...]"
         # add more projects here...
         cd "$SRC_DIR"
