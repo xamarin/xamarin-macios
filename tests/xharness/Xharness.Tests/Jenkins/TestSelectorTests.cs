@@ -32,7 +32,7 @@ namespace Xharness.Tests.Jenkins {
 		[TestCase ("run-monotouch-tests, run-bgen-tests, run-bcl-tests, skip-all-tests", TestLabel.Bcl | TestLabel.Bgen | TestLabel.Monotouch, PlatformLabel.None)]
 		[TestCase ("run-monotouch-tests, run-bgen-tests, skip-all-tests, run-bcl-tests", TestLabel.Bcl | TestLabel.Bgen | TestLabel.Monotouch, PlatformLabel.None)]
 		[TestCase ("run-monotouch-tests, run-bgen-tests, run-all-tests, run-bcl-tests", TestLabel.All, PlatformLabel.All)]
-		public void SelectTetByLabelsTest (string cmdLabels, TestLabel expectedResult, PlatformLabel expectedPlatform)
+		public void SelectTestByLabelsTest (string cmdLabels, TestLabel expectedResult, PlatformLabel expectedPlatform)
 		{
 			var labels = new HashSet<string> ();
 			labels.UnionWith (cmdLabels.Split (','));
