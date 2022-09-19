@@ -47,6 +47,7 @@ namespace Xamarin.Tests
 		public static bool include_maccatalyst;
 		public static bool include_device;
 		public static bool include_dotnet;
+		public static bool include_legacy_xamarin;
 
 		static Version xcode_version;
 		public static Version XcodeVersion {
@@ -295,6 +296,7 @@ namespace Xamarin.Tests
 			include_maccatalyst = !string.IsNullOrEmpty (GetVariable ("INCLUDE_MACCATALYST", ""));
 			include_device = !string.IsNullOrEmpty (GetVariable ("INCLUDE_DEVICE", ""));
 			include_dotnet = !string.IsNullOrEmpty (GetVariable ("ENABLE_DOTNET", ""));
+			include_legacy_xamarin = !string.IsNullOrEmpty (GetVariable ("INCLUDE_LEGACY_XAMARIN", ""));
 			DotNetBclDir = GetVariable ("DOTNET_BCL_DIR", null);
 			DotNetCscCommand = GetVariable ("DOTNET_CSC_COMMAND", null)?.Trim ('\'');
 			DotNetExecutable = GetVariable ("DOTNET", null);
