@@ -19469,6 +19469,8 @@ namespace UIKit {
 		[Export ("simulateFocusUpdateRequestFromEnvironment:")]
 		IUIFocusDebuggerOutput SimulateFocusUpdateRequest (IUIFocusEnvironment environment);
 
+		// Removed from headers in Xcode 14
+		[Wrap ("true ? throw new InvalidOperationException (Constants.ApiRemovedGeneral) : false", IsVirtual = true)]
 		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		[Static]
 		[Export ("checkFocusGroupTreeForEnvironment:")]
