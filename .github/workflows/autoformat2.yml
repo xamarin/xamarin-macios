@@ -12,11 +12,14 @@ jobs:
     name: Push autoformatted code and notify user
     runs-on: ubuntu-latest
     if: >
-      contains(github.event.pull_request.labels.*.name, 'actions-enable-autoformat') &&
-      github.event.workflow_run.event == 'pull_request' &&
-      github.event.workflow_run.conclusion == 'success'
+      contains(github.event.pull_request.labels.*.name, 'actions-enable-autoformat')
 
     steps:
+    - name: 'Debug stuff'
+      run: |
+        echo "github.event.workflow_run.event: ${{github.event.workflow_run.event}}"
+        echo "github.event.workflow_run.conclusion: ${{github.event.workflow_run.conclusion}}"
+
     - name: 'Download artifacts'
       uses: actions/github-script@v3.1.0
       with:
