@@ -1,0 +1,69 @@
+name: Autoformat code part 2
+on:
+  workflow_run:
+    workflows: ["Autoformat code"]
+    types:
+      - completed
+
+# See autoformat.yml for a description of what happens here.
+
+jobs:
+  push-and-notify:
+    name: Push autoformatted code and notify user
+    runs-on: ubuntu-latest
+    if: >
+      contains(github.event.pull_request.labels.*.name, 'actions-enable-autoformat') &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+
+    steps:
+    - name: 'Download artifacts'
+      uses: actions/github-script@v3.1.0
+      with:
+        script: |
+          var artifacts = await github.actions.listWorkflowRunArtifacts({
+             owner: context.repo.owner,
+             repo: context.repo.repo,
+             run_id: ${{github.event.workflow_run.id }},
+          });
+          var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+            return artifact.name == "autoformat"
+          })[0];
+          var download = await github.actions.downloadArtifact({
+             owner: context.repo.owner,
+             repo: context.repo.repo,
+             artifact_id: matchArtifact.id,
+             archive_format: 'zip',
+          });
+          var fs = require('fs');
+          fs.writeFileSync('${{github.workspace}}/autoformat.zip', Buffer.from(download.data));
+
+    - run: unzip autoformat.zip
+
+    - name: 'Checkout repo'
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        ref: ${{ github.event.pull_request.head.sha }}
+
+    - name: 'Get autoformatted commit and push it'
+      run: |
+        git checkout "$GITHUB_HEAD_REF"
+        git am < autoformat/autoformat.patch
+        git show
+        #git push
+
+    - name: 'Yell at user'
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{secrets.GITHUB_TOKEN}}
+        script: |
+          let fs = require('fs');
+          let issue_number = Number(fs.readFileSync('./PR'));
+          await github.rest.issues.createComment({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            issue_number: issue_number,
+            body: '# :warning: Your code has been automatically reformatted. :warning:\n\nIf this is not desired, add the `actions-skip-autoformat` label, and revert the reformatting commit.'
+          });

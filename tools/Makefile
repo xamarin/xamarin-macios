@@ -3,14 +3,9 @@ TOP=..
 include $(TOP)/Make.config
 
 ifdef INCLUDE_MAC
-ifdef INCLUDE_XAMARIN_LEGACY
 SUBDIRS+=mmp
 endif
-endif
 
-ifdef INCLUDE_XAMARIN_LEGACY
-SUBDIRS += mtouch
-endif
 
 ifdef INCLUDE_XAMARIN_LEGACY
 SUBDIRS += xibuild
