@@ -112,6 +112,7 @@ jobs:
 
 - job: funnel_job
   dependsOn:
+  - configure
   - ${{ if eq(parameters.enableDotnet, true) }}:
     - sign_notarize_dotnet
   - ${{ each pkg in parameters.packages }}:

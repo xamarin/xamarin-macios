@@ -35,6 +35,7 @@ steps:
 - ${{ each pkg in parameters.packages }}:
   - task: DownloadPipelineArtifact@2
     displayName: Download notarized build ${{ pkg.name }}
+    condition: ${{ pkg.condition }}
     inputs:
       artifact: 'classic-${{ pkg.name }}-signed'
       allowFailedBuilds: true
