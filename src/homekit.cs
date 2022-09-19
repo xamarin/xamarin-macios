@@ -1920,37 +1920,20 @@ namespace HomeKit {
 
 	}
 
-	[iOS (15,2), NoWatch, NoTV, NoMacCatalyst]
-	[BaseType (typeof (NSObject))]
-	interface HMAccessorySetupManager
-	{
-		[Async]
-		[iOS (15,4)]
-		[Export ("performAccessorySetupUsingRequest:completionHandler:")]
-		void PerformAccessorySetup (HMAccessorySetupRequest request, Action<HMAccessorySetupResult, NSError> completion);
-
-		[Async]
-		[iOS (15,4)]
-		[Export ("performMatterEcosystemAccessorySetupUsingRequest:topology:completionHandler:")]
-		void PerformMatterEcosystemAccessorySetup (HMAccessorySetupRequest request, HMMatterTopology topology, Action<NSError> completion);
-
-		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'PerformAccessorySetup' instead.")]
-		[Async]
-		[Export ("addAndSetUpAccessoriesForTopology:completionHandler:")]
-		void AddAndSetUpAccessories (HMMatterTopology topology, Action<NSError> completion);
-	}
-
 	[iOS (15,2), Watch (8,3), TV (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMMatterHome : NSCopying, NSSecureCoding
 	{
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("uuid", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
 
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("name", ArgumentSemantic.Strong)]
 		string Name { get; }
 
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("initWithUUID:name:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSUuid uuid, string name);
@@ -1980,12 +1963,15 @@ namespace HomeKit {
 	[DisableDefaultCtor]
 	interface HMMatterRoom : NSCopying, NSSecureCoding
 	{
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("uuid", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
 
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("name", ArgumentSemantic.Strong)]
 		string Name { get; }
 
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("initWithUUID:name:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSUuid uuid, string name);
@@ -1996,9 +1982,11 @@ namespace HomeKit {
 	[DisableDefaultCtor]
 	interface HMMatterTopology : NSCopying, NSSecureCoding
 	{
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("initWithHomes:")]
 		NativeHandle Constructor (HMMatterHome [] homes);
 
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("homes", ArgumentSemantic.Copy)]
 		HMMatterHome [] Homes { get; }
 	}
