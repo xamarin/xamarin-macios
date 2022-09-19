@@ -49,6 +49,7 @@ steps:
       ls -lR $FULL_PATH
       cp -a "$FULL_PATH/." "$(Build.SourcesDirectory)/package"
     displayName: 'Move pkg ${{ pkg.name }} to its final destination'
+    condition: ${{ pkg.condition }}
 
 - template: generate-workspace-info.yml@templates
   parameters:
