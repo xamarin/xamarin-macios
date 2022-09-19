@@ -12,7 +12,8 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class EnumTest {
 
-		[TestCaseSource (typeof (Helper), "PlatformAssemblies")]
+		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		// https://github.com/xamarin/xamarin-macios/issues/9724
 		public void NoAvailabilityOnError (string assemblyPath)
 		{
