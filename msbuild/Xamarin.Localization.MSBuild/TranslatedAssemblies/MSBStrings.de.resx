@@ -997,10 +997,6 @@
         <value>Festlegen: Eintrag "{0}" ist nicht vorhanden.
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>Ein Bindungsressourcenpaket kann nur erstellt werden, wenn im Bindungsprojektsystem native Verweise vorhanden sind.
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ unterstützt keine Apps für watchOS 1. Migrieren Sie Ihr Projekt zu watchOS 2 +.</value>
     </data>
