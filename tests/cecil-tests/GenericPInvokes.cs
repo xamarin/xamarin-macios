@@ -57,6 +57,7 @@ namespace Cecil.Tests {
 
 			var assembly = Helper.GetAssembly (assemblyPath, readSymbols: true);
 			var callsToSetupBlock = AllSetupBlocks (assembly);
+			Assert.IsTrue (callsToSetupBlock.Count () > 0);
 			var results = callsToSetupBlock.Select (GenericCheckDelegateArgument);
 			var allResults = callsToSetupBlock.Zip (results, (m, r) => new MethodAndResult { Method = m, Result = r });
 			var failures = allResults.Where (mar => mar.Result != GenericCheckResult.Ok);
@@ -83,6 +84,7 @@ namespace Cecil.Tests {
 		{
 			var assembly = Helper.GetAssembly (assemblyPath, readSymbols: true);
 			var pinvokes = AllPInvokes (assembly).Where (IsPInvokeOK);
+			Assert.IsTrue (pinvokes.Count () > 0);
 
 			var failures = pinvokes.Where (ContainsGenerics).ToList ();
 			var failingMethods = ListOfFailingMethods (failures);
@@ -193,6 +195,7 @@ namespace Cecil.Tests {
 			OpCodes.Ldloc_1, OpCodes.Ldloc_2, OpCodes.Ldloc_3,
  			OpCodes.Ldloc_S
 		};
+
 		static bool IsLastArgUsageIsReasonable (Instruction instr)
 		{
 			return Array.IndexOf (reasonableOps, instr.OpCode) >= 0;
@@ -268,9 +271,8 @@ namespace Cecil.Tests {
 
 		static TypeReference GetCheckParameterType (MethodDefinition method, int index)
 		{
-			if (index >= method.Parameters.Count ()) {
-				Console.WriteLine ($"This is unexpected - asked to get parameter {index} from method {method.ToString ()}, but it's not there");
-			}
+			Assert.IsFalse (index >= method.Parameters.Count (),
+				"This is unexpected - asked to get parameter {index} from method {method.ToString ()}, but it's not there");
 
 			return method.Parameters [index].ParameterType;
 		}
