@@ -124,9 +124,6 @@ jobs:
     vmImage: internal-macos-11
   workspace:
     clean: all
-  variables:
-    ${{ each pkg in parameters.packages }}:
-      ${{ pkg.conditionVariable }}: $[ dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
 
   steps:
   - template: funnel.yml
