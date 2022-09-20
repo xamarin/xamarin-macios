@@ -176,7 +176,6 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Workloads/vs-workload.template.props
 		-e "s/@MACOS_PACK_VERSION_LONG@/$(MACOS_NUGET_VERSION_NO_METADATA)/g" \
 		-e "s/@MACOS_PACK_VERSION_SHORT@/$(MACOS_NUGET_VERSION).$(MACOS_NUGET_COMMIT_DISTANCE)/g" \
 		$< > $@.tmp
-	$(Q) xsltproc -o $@.xml clean-props.xsl $@.xml
 	$(Q) mv $@.tmp $@
 
 $(DOTNET_NUPKG_DIR)/SignList.xml: Workloads/SignList.xml
