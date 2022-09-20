@@ -51,11 +51,13 @@ namespace CoreMedia {
 		CMBufferCompare? compare;
 		CMBufferGetSize? getTotalSize;
 		
+#if !NET
 		delegate CMTime BufferGetTimeCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
 		[return: MarshalAs (UnmanagedType.I1)]
 		delegate bool   BufferGetBooleanCallback (/* CMBufferRef */ IntPtr buf, /* void* */ IntPtr refcon);
 		delegate int    BufferCompareCallback (/* CMBufferRef */ IntPtr buf1, /* CMBufferRef */ IntPtr buf2, /* void* */ IntPtr refcon);
 		delegate nint   BufferGetSizeCallback (/* CMBufferRef */ IntPtr buffer, /* void* */ IntPtr refcon);
+#endif
 		
 		[StructLayout (LayoutKind.Sequential)]
 		struct CMBufferCallbacks {
@@ -65,7 +67,7 @@ namespace CoreMedia {
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, CMTime> XgetDecodeTimeStamp;
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, CMTime> XgetPresentationTimeStamp;
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, CMTime> XgetDuration;
-			internal unsafe delegate* unmanaged<IntPtr, IntPtr, bool> XisDataReady;
+			internal unsafe delegate* unmanaged<IntPtr, IntPtr, byte> XisDataReady;
 			internal unsafe delegate* unmanaged<IntPtr, IntPtr, IntPtr, int> Xcompare;
 #else
 			internal BufferGetTimeCallback? XgetDecodeTimeStamp;
@@ -398,17 +400,23 @@ namespace CoreMedia {
 
 #if NET
 		[UnmanagedCallersOnly]
+		static byte GetDataReady (IntPtr buffer, IntPtr refcon)
 #else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (BufferGetBooleanCallback))]
 #endif
-#endif
 		static bool GetDataReady (IntPtr buffer, IntPtr refcon)
+#endif
 		{
 			var queue = (CMBufferQueue?) GCHandle.FromIntPtr (refcon).Target;
 			if (queue?.isDataReady is null)
+#if NET
+				return 0;
+			return (byte) (queue.isDataReady (queue.Surface (buffer)) ? 1 : 0);
+#else
 				return false;
 			return queue.isDataReady (queue.Surface (buffer));
+#endif
 		}
 
 #if NET
