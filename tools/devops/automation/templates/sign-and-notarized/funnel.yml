@@ -49,7 +49,7 @@ steps:
       ls -lR $FULL_PATH
       cp -a "$FULL_PATH/." "$(Build.SourcesDirectory)/package"
     displayName: 'Move pkg ${{ pkg.name }} to its final destination'
-    condition: $[ ne(dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'],'') ]
+    condition: $[ ne(dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'],'') \
 
 - template: generate-workspace-info.yml@templates
   parameters:
