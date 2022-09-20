@@ -12019,8 +12019,7 @@ namespace Foundation
 		[Export ("performExpiringActivityWithReason:usingBlock:")]
 		void PerformExpiringActivity (string reason, Action<bool> block);
 
-		[NoMac]
-		[iOS (9,0)]
+		[iOS (9,0)][Mac (10,12)][MacCatalyst (13,1)]
 		[Export ("lowPowerModeEnabled")]
 		bool LowPowerModeEnabled { [Bind ("isLowPowerModeEnabled")] get; }
 

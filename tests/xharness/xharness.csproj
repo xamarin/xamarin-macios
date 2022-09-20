@@ -147,7 +147,6 @@
     <Compile Include="Targets\TVOSTarget.cs" />
     <Compile Include="Targets\UnifiedTarget.cs" />
     <Compile Include="Targets\WatchOSTarget.cs" />
-    <Compile Include="TestImporter\BCLTestAssemblyDefinition.cs" />
     <Compile Include="TestImporter\IAssemblyLocator.cs" />
     <Compile Include="TestImporter\ITestAssemblyDefinition.cs" />
     <Compile Include="TestImporter\Platform.cs" />
