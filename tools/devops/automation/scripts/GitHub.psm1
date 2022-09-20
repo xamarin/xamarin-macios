@@ -705,6 +705,195 @@ function New-GitHubComment {
     return $request
 }
 
+<#
+    .SYNOPSIS
+        Add a new comment that contains the result summaries of the test run.
+
+    .PARAMETER Header
+        The header to be used in the comment.
+
+    .PARAMETER Description
+        A show description to be added in the comment, this will show as a short version of the comment on GitHub.
+    
+    .PARAMETER Message
+        A longer string that contains the full comment message. Will be shown when the comment is expanded.
+
+    .PARAMETER Emoji
+        Optional string representing and emoji to be used in the comments header.
+
+    .EXAMPLE
+        New-GitHubComment -Header "Tests failed catastrophically" -Emoji ":fire:" -Description "Not enough free space in the host."
+
+    .NOTES
+        This cmdlet depends on the following environment variables. If one or more of the variables is missing an
+        InvalidOperationException will be thrown:
+
+        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
+        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
+        * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
+        * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
+        * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
+#>
+function New-GitHubCommentFromFile {
+    param (
+
+        [Parameter(Mandatory)]
+        [String]
+        $Header,
+
+        [String]
+        $Description,
+
+        [Parameter(Mandatory)]
+        [String]
+        [ValidateScript({
+            Test-Path -Path $_ -PathType Leaf 
+        })]
+        $Path,
+
+        [String]
+        $Emoji #optionally use an emoji
+    )
+
+    # read the file, create a message and use the New-GithubComment function
+    $msg = [System.Text.StringBuilder]::new()
+    foreach ($line in Get-Content -Path $Path)
+    {
+        $msg.AppendLine($line)
+    }
+    $msg.AppendLine("")
+    $msg.AppendLine("[comment]: <> (This is a comment added by Azure DevOps)")
+    return New-GithubComment -Header $Header -Description $Description -Message $msg.ToString() -Emoji $Emoji
+}
+
+<#
+    .SYNOPSIS
+        Test if the current job is successful or not.
+#>
+function Test-JobSuccess {
+
+    param (
+        [Parameter(Mandatory)]
+        [String]
+        $Status
+    )
+
+    # return if the status is one of the failure ones
+    return $Status -eq "Succeeded"
+}
+
+<# 
+    .SYNOPSIS
+        Add a new comment that contains the summaries to the Html Report as well as set the status accordingly.
+
+    .PARAMETER Context
+        The context to be used to link the status and the device test run in the GitHub status API.
+
+    .PARAMETER TestSummaryPath
+        The path to the generated test summary.
+
+    .EXAMPLE
+        New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin/xamarin-macios/tests/TestSummary.md"
+    .NOTES
+        This cmdlet depends on the following environment variables. If one or more of the variables is missing an
+        InvalidOperationException will be thrown:
+
+        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
+        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
+        * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
+        * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
+        * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
+
+#>
+function New-GitHubSummaryComment {
+    param (
+        [Parameter(Mandatory)]
+        [String]
+        $Context,
+
+        [Parameter(Mandatory)]
+        [String]
+        $TestSummaryPath,
+
+        [string]
+        $Artifacts="",
+
+        [switch]
+        $DeviceTest
+    )
+
+    $envVars = @{
+        "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
+        "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
+        "BUILD_DEFINITIONNAME" = $Env:BUILD_DEFINITIONNAME;
+        "BUILD_REVISION" = $Env:BUILD_REVISION;
+        "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
+    }
+
+    foreach ($key in $envVars.Keys) {
+        if (-not($envVars[$key])) {
+            Write-Debug "Environment variable missing: $key"
+            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
+        }
+    }
+
+    $vstsTargetUrl = Get-TargetUrl
+    # build the links to provide extra info to the monitoring person, we need to make sure of a few things
+    # 1. We do have the xamarin-storage path
+    # 2. We did reach the xamarin-storage, stored in the env var XAMARIN_STORAGE_REACHED
+    $sb = [System.Text.StringBuilder]::new()
+    $sb.AppendLine(); # new line to start the list
+    $sb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
+    if ($Env:VSDROPS_INDEX) {
+        # we did generate an index with the files in vsdrops
+        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-simulator&api-version=6.0&`$format=zip)")
+    }
+
+    if (-not $DeviceTest) {
+        $artifactComment = New-ArtifactsFromJsonFile -Content $Artifacts
+        $artifactComment.WriteComment($sb)
+    }
+
+    if (Test-Path $TestSummaryPath -PathType Leaf) { # if present we did get results and add the links, else skip
+        $githubPagePrefix = "https://xamarin.github.io/macios.ci"
+        if (-not [string]::IsNullOrEmpty($Env:PR_ID)) {
+            $staticPageComment = [StaticPages]::new($githubPagePrefix, $Env:PR_ID, $Env:BUILD_BUILDID)
+            $staticPageComment.WriteComment($sb)
+        }
+    }
+
+    $headerLinks = $sb.ToString()
+    $request = $null
+
+    # set the context to be "pipeline name (Test run)", example xamarin-macios (Test run)
+    $statusContext = "$Env:BUILD_DEFINITIONNAME (Test run)"
+    if ($Context -ne "Build") { #special case when we deal with the device tests
+        $statusContext = "$Contex - $Env:BUILD_DEFINITIONNAME) (Test run)"
+    }
+
+    # make a diff between a PR and a CI build so that users do not get confused.
+    $prefix = "";
+    if ([string]::IsNullOrEmpty($Env:PR_ID)) {
+        $prefix = "[CI Build]"
+    } else {
+        $prefix = "[PR Build]"
+    }
+
+    if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
+        Write-Debug "No test summary found"
+        $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
+    } else {
+        if ($Env:TESTS_JOBSTATUS -eq "") {
+            $request = New-GitHubCommentFromFile -Header "$prefix Tests didn't execute on $Context." -Description "Tests didn't execute on $Context. $headerLinks"  -Emoji ":x:" -Path $TestSummaryPath
+        } elseif (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
+            $request = New-GitHubCommentFromFile -Header "$prefix Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
+        } else {
+            $request = New-GitHubCommentFromFile -Header "$prefix Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
+        }
+    }
+    return $request
+}
+
 <# 
     .SYNOPSIS
         Get the information of a PR in GitHub.
@@ -938,6 +1127,54 @@ function New-GistWithFiles {
     return $request.html_url
 }
 
+<#
+    .SYNOPSIS
+        Puse a repository dispatch stating which branch did trigger it.
+
+    .PARAMETER Org
+        The org of the repository to ping.
+
+    .PARAMETER Repository 
+        The repository to ping.
+
+    .PARAMETER Branch
+        The branch that triggered the event.
+#>
+function Push-RepositoryDispatch {
+    param (
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Org, 
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Repository,
+
+        [ValidateNotNullOrEmpty ()]
+        [string]
+        $Branch
+    )
+
+    # create the hashtable that will contain all the information of all types
+    $payload = @{
+        event_type = $Branch;
+    }
+
+    $url = "https://api.github.com/repos/$Org/$Repository/dispatches"
+    Write-Debug $url
+    $payloadJson = $payload | ConvertTo-Json
+
+    $headers = @{
+        Accept = "application/vnd.github.v3+json";
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
+    } 
+
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
+    Write-Debug $request
+    Write-Debug $request.Content
+}
+
 # This function processes markdown, and replaces:
 #     1. "[vsdrops](" with "[vsdrops](https://link/to/vsdrops/".
 #     2. "[gist](file)" with "[gist](url)" after uploading "file" to a gist.
@@ -995,10 +1232,14 @@ function Convert-Markdown {
 
 # module exports, any other functions are private and should not be used outside the module.
 Export-ModuleMember -Function New-GitHubComment
+Export-ModuleMember -Function New-GitHubCommentFromFile
+Export-ModuleMember -Function New-GitHubSummaryComment 
+Export-ModuleMember -Function Test-JobSuccess 
 Export-ModuleMember -Function Get-GitHubPRInfo
 Export-ModuleMember -Function New-GistWithFiles 
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
+Export-ModuleMember -Function Push-RepositoryDispatch 
 Export-ModuleMember -Function Convert-Markdown
 
 # new future API that uses objects.
