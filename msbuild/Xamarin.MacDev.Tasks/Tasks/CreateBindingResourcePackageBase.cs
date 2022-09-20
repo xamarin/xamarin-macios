@@ -32,10 +32,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			// LinkWith must be migrated for NoBindingEmbedding styled binding projects
 			if (NativeReferences.Length == 0) {
-				Log.LogError (7068, null, MSBStrings.E7068);
-				return false;
+				// Nothing to do here
+				return true;
 			}
 
 			var compress = false;

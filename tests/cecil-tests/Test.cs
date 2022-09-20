@@ -15,6 +15,7 @@ namespace Cecil.Tests {
 	public class Test {
 
 		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
 		// ref: https://github.com/xamarin/xamarin-macios/pull/7760
 		public void IdentifyBackingFieldAssignation (string assemblyPath)
 		{
@@ -50,6 +51,7 @@ namespace Cecil.Tests {
 		}
 
 		[TestCaseSource (typeof (Helper),  nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
 		// ref: https://github.com/xamarin/xamarin-macios/issues/8249
 		public void EnsureUIThreadOnInit (string assemblyPath)
 		{
@@ -84,6 +86,7 @@ namespace Cecil.Tests {
 		}
 
 		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		public void NoSystemConsoleReference (string assemblyPath)
 		{
 			if (Path.GetFileName (assemblyPath) == "Xamarin.Mac.dll")
@@ -126,6 +129,7 @@ namespace Cecil.Tests {
 		};
 
 		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		public void NoBannedApi (string assemblyPath)
 		{
 			var assembly = Helper.GetAssembly (assemblyPath);
@@ -151,6 +155,7 @@ namespace Cecil.Tests {
 		}
 
 		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformAssemblies))]
 		// ref: https://github.com/xamarin/xamarin-macios/issues/4835
 		public void Unavailable (string assemblyPath)
 		{
@@ -159,16 +164,22 @@ namespace Cecil.Tests {
 			var platform = PlatformName.None;
 			switch (assembly.Name.Name) {
 			case "Xamarin.Mac":
+			case "Microsoft.macOS":
 				platform = PlatformName.MacOSX;
 				break;
 			case "Xamarin.iOS":
+			case "Microsoft.iOS":
 				platform = PlatformName.iOS;
 				break;
 			case "Xamarin.WatchOS":
 				platform = PlatformName.WatchOS;
 				break;
 			case "Xamarin.TVOS":
+			case "Microsoft.tvOS":
 				platform = PlatformName.TvOS;
+				break;
+			case "Microsoft.MacCatalyst":
+				platform = PlatformName.MacCatalyst;
 				break;
 			}
 			Assert.That (platform, Is.Not.EqualTo (PlatformName.None), "None");

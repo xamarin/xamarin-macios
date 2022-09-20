@@ -1796,16 +1796,6 @@ namespace Xamarin.Localization.MSBuild {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Can&apos;t create a binding resource package unless there are native references in the binding project.
-        ///        .
-        /// </summary>
-        public static string E7068 {
-            get {
-                return ResourceManager.GetString("E7068", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Xamarin.iOS 14+ does not support watchOS 1 apps. Please migrate your project to watchOS 2+..
         /// </summary>
         public static string E7069 {
@@ -2036,6 +2026,33 @@ namespace Xamarin.Localization.MSBuild {
         public static string E7101 {
             get {
                 return ResourceManager.GetString("E7101", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for the entitlement &apos;{1}&apos; of type &apos;{2}&apos; specified in the CustomEntitlements item group. Expected no value at all..
+        /// </summary>
+        public static string E7102 {
+            get {
+                return ResourceManager.GetString("E7102", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid value &apos;{0}&apos; for the entitlement &apos;{1}&apos; of type &apos;{2}&apos; specified in the CustomEntitlements item group. Expected &apos;true&apos; or &apos;false&apos;..
+        /// </summary>
+        public static string E7103 {
+            get {
+                return ResourceManager.GetString("E7103", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown type &apos;{0}&apos; for the entitlement &apos;{1}&apos; specified in the CustomEntitlements item group. Expected &apos;Remove&apos;, &apos;Boolean&apos;, &apos;String&apos;, or &apos;StringArray&apos;..
+        /// </summary>
+        public static string E7104 {
+            get {
+                return ResourceManager.GetString("E7104", resourceCulture);
             }
         }
         
