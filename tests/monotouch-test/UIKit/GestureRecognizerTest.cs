@@ -95,10 +95,11 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			var didRun = false;
 			var callbackEvent = new AutoResetEvent (false);
-			var callback = (UITapGestureRecognizer _) => {
+			Action<UITapGestureRecognizer> callback = (UITapGestureRecognizer _) => {
 				didRun = true;
 				callbackEvent.Set ();
 			};
+
 			using var recognizer = new UITapGestureRecognizer (callback);
 
 			// add gesture recognizer to UI view
