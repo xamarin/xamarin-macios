@@ -59,6 +59,8 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public ITaskItem? CompiledEntitlements { get; set; }
 
+		public ITaskItem[] CustomEntitlements { get; set; } = Array.Empty<ITaskItem> ();
+
 		public bool Debug { get; set; }
 
 		public string Entitlements { get; set; } = string.Empty;
@@ -250,6 +252,64 @@ namespace Xamarin.MacDev.Tasks
 			return result;
 		}
 
+		void AddCustomEntitlements (PDictionary dict)
+		{
+			if (CustomEntitlements is null)
+				return;
+
+			// Process any custom entitlements from the 'CustomEntitlements' item group. These are applied last, and will override anything else.
+			// Possible values:
+			//     <ItemGroup>
+			//         <CustomEntitlements Include="name.of.entitlement" Type="Boolean" Value="true" /> <!-- value can be 'false' too (case doesn't matter) -->
+			//         <CustomEntitlements Include="name.of.entitlement" Type="String" Value="stringvalue" />
+			//         <CustomEntitlements Include="name.of.entitlement" Type="StringArray" Value="a;b" /> <!-- array of strings, separated by semicolon -->
+			//         <CustomEntitlements Include="name.of.entitlement" Type="StringArray" Value="a😁b" ArraySeparator="😁" /> <!-- array of strings, separated by 😁 -->
+			//         <CustomEntitlements Include="name.of.entitlement" Type="Remove" /> <!-- This will remove the corresponding entitlement  -->
+			//     </ItemGroup>
+
+			foreach (var item in CustomEntitlements) {
+				var entitlement = item.ItemSpec;
+				var type = item.GetMetadata ("Type");
+				var value = item.GetMetadata ("Value");
+				switch (type.ToLowerInvariant ()) {
+				case "remove":
+					if (!string.IsNullOrEmpty (value))
+						Log.LogError (MSBStrings.E7102, /* Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected no value at all. */ value, entitlement, type);
+					dict.Remove (entitlement);
+					break;
+				case "boolean":
+					bool booleanValue;
+					if (string.Equals (value, "true", StringComparison.OrdinalIgnoreCase)) {
+						booleanValue = true;
+					} else if (string.Equals (value, "false", StringComparison.OrdinalIgnoreCase)) {
+						booleanValue = false;
+					} else {
+						Log.LogError (MSBStrings.E7103, /* "Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected 'true' or 'false'." */ value, entitlement, type);
+						continue;
+					}
+
+					dict [entitlement] = new PBoolean (booleanValue);
+					break;
+				case "string":
+					dict [entitlement] = new PString (value ?? string.Empty);
+					break;
+				case "stringarray":
+					var arraySeparator = item.GetMetadata ("ArraySeparator");
+					if (string.IsNullOrEmpty (arraySeparator))
+						arraySeparator = ";";
+					var arrayContent = value.Split (new string[] { arraySeparator }, StringSplitOptions.None);
+					var parray = new PArray ();
+					foreach (var element in arrayContent)
+						parray.Add (new PString (element));
+					dict [entitlement] = parray;
+					break;
+				default:
+					Log.LogError (MSBStrings.E7104, /* "Unknown type '{0}' for the entitlement '{1}' specified in the CustomEntitlements item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'." */ type, entitlement);
+					break;
+				}
+			}
+		}
+
 		static bool AreEqual (byte[] x, byte[] y)
 		{
 			if (x.Length != y.Length)
@@ -355,6 +415,8 @@ namespace Xamarin.MacDev.Tasks
 					entitlements ["com.apple.security.network.client"] = new PBoolean (true);
 				break;
 			}
+
+			AddCustomEntitlements (entitlements);
 
 			return entitlements;
 		}

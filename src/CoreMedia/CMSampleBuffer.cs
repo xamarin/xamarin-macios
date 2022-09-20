@@ -139,14 +139,23 @@ namespace CoreMedia {
 		[DllImport(Constants.CoreMediaLibrary)]
 		unsafe static extern CMSampleBufferError CMSampleBufferCallForEachSample (
 			/* CMSampleBufferRef */ IntPtr sbuf,
+#if NET
+			delegate* unmanaged<IntPtr, int, IntPtr, CMSampleBufferError> callback, 
+#else
 			CMSampleBufferCallForEachSampleCallback callback, 
+#endif
 		   /* void* */ IntPtr refcon);
-
+#if !NET
 		delegate CMSampleBufferError CMSampleBufferCallForEachSampleCallback (/* CMSampleBufferRef */ IntPtr
 			sampleBuffer, int index, /* void* */ IntPtr refcon);
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CMSampleBufferCallForEachSampleCallback))]
+#endif
 #endif
 		static CMSampleBufferError ForEachSampleHandler (IntPtr sbuf, int index, IntPtr refCon)
 		{
@@ -165,7 +174,13 @@ namespace CoreMedia {
 
 			GCHandle h = GCHandle.Alloc (Tuple.Create (callback, this));
 			try {
+#if NET
+				unsafe {
+					return CMSampleBufferCallForEachSample (Handle, &ForEachSampleHandler, (IntPtr) h);
+				}
+#else
 				return CMSampleBufferCallForEachSample (Handle, ForEachSampleHandler, (IntPtr) h);
+#endif
 			} finally {
 				h.Free ();
 			}
@@ -586,18 +601,32 @@ namespace CoreMedia {
 		// however there was already a similar call that we did not bound (not sure why) 
 		// and can provide the same feature (since iOS 4 not 8.0)
 		[DllImport(Constants.CoreMediaLibrary)]
+#if NET
+		extern unsafe static /* OSStatus */ CMSampleBufferError CMSampleBufferSetInvalidateCallback (
+#else
 		extern static /* OSStatus */ CMSampleBufferError CMSampleBufferSetInvalidateCallback (
+#endif
 			/* CMSampleBufferRef */ IntPtr sbuf,
+#if NET
+			delegate* unmanaged<IntPtr, ulong, void> invalidateCallback,
+#else
 			/* CMSampleBufferInvalidateCallback */ CMSampleBufferInvalidateCallback? invalidateCallback,
+#endif
 			/* uint64_t */ ulong invalidateRefCon);
 
+#if !NET
 		delegate void CMSampleBufferInvalidateCallback (/* CMSampleBufferRef */ IntPtr sbuf, 
 			/* uint64_t */ ulong invalidateRefCon);
 
 		static CMSampleBufferInvalidateCallback invalidate_handler = InvalidateHandler;
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (CMSampleBufferInvalidateCallback))]
+#endif
 #endif
 		static void InvalidateHandler (IntPtr sbuf, ulong invalidateRefCon)
 		{
@@ -612,8 +641,13 @@ namespace CoreMedia {
 			if (invalidateHandler is null) {
 				if (invalidate.IsAllocated)
 					invalidate.Free ();
-
-				return CMSampleBufferSetInvalidateCallback (Handle, null, 0);
+#if NET
+				unsafe {
+#endif
+					return CMSampleBufferSetInvalidateCallback (Handle, null, 0);
+#if NET
+				}
+#endif
 			}
 
 			// only one callback can be assigned - and ObjC does not let you re-assign a different one,
@@ -623,7 +657,13 @@ namespace CoreMedia {
 				return CMSampleBufferError.RequiredParameterMissing;
 
 			invalidate = GCHandle.Alloc (Tuple.Create (invalidateHandler, this));
+#if NET
+			unsafe {
+				return CMSampleBufferSetInvalidateCallback (Handle, &InvalidateHandler, (ulong)(IntPtr)invalidate);
+			}
+#else
 			return CMSampleBufferSetInvalidateCallback (Handle, invalidate_handler, (ulong)(IntPtr)invalidate);
+#endif
 		}
 							
 		[DllImport(Constants.CoreMediaLibrary)]
