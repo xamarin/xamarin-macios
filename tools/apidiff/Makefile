@@ -67,8 +67,8 @@ IOS_ASSEMBLIES     = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.iOS/$(file))    $
 MAC_ASSEMBLIES     = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.Mac/$(file))     $(MAC_SRC_ASSEMBLIES)
 WATCHOS_ASSEMBLIES = $(foreach file,$(filter-out Mono.Data.Tds Mono.Security,$(MONO_ASSEMBLIES)),Xamarin.WatchOS/$(file)) $(WATCHOS_SRC_ASSEMBLIES)
 TVOS_ASSEMBLIES    = $(foreach file,$(MONO_ASSEMBLIES),Xamarin.TVOS/$(file))    $(TVOS_SRC_ASSEMBLIES)
-DOTNET_LEGACY_ASSEMBLIES = Microsoft.iOS.Ref/ref/$(DOTNET_TFM)/Microsoft.iOS Microsoft.tvOS.Ref/ref/$(DOTNET_TFM)/Microsoft.tvOS \
-	Microsoft.macOS.Ref/ref/$(DOTNET_TFM)/Microsoft.macOS
+DOTNET_LEGACY_PLATFORMS = $(filter-out MacCatalyst,$(DOTNET_PLATFORMS))
+DOTNET_LEGACY_ASSEMBLIES = $(foreach platform,$(DOTNET_LEGACY_PLATFORMS),Microsoft.$(platform).Ref/ref/$(DOTNET_TFM)/Microsoft.$(platform))
 DOTNET_ASSEMBLIES = $(foreach platform,$(DOTNET_PLATFORMS),Microsoft.$(platform).Ref/ref/$(DOTNET_TFM)/Microsoft.$(platform))
 
 IOS_ARCH_ASSEMBLIES = native-32/Xamarin.iOS native-64/Xamarin.iOS
