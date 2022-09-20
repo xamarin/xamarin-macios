@@ -89,17 +89,17 @@ executable assembly are AOT-compiled), and won't be executable on platforms
 where AOT-compilation is required.
 
 The target directory is:
-    * iOS, tvOS: the root directory of the app bundle
-    * macOS, Mac Catalyst: the `Contents/MonoBundle/` subdirectory (the
-      `MonoBundle` name can be customized if desired).
+* iOS, tvOS: the root directory of the app bundle
+* macOS, Mac Catalyst: the `Contents/MonoBundle/` subdirectory (the 
+  `MonoBundle` name can be customized if desired).
 
 ### Resource
 
 Items are copied to where resources are located in the app bundle.
 
 The target directory is:
-    * iOS, tvOS: the root directory of the app bundle
-    * macOS, Mac Catalyst: the `Contents/Resources/` subdirectory.
+* iOS, tvOS: the root directory of the app bundle
+* macOS, Mac Catalyst: the `Contents/Resources/` subdirectory.
 
 ### AppleBindingResourcePackage
 
@@ -145,8 +145,9 @@ Setting the `TargetPath` or `Link` metadata has no effect these items.
 ### PlugIns
 
 The target directory is:
-    * iOS, tvOS: the `PlugIns/` subdirectory.
-    * macOS, Mac Catalyst: the `Contents/PlugIns/` subdirectory.
+
+* iOS, tvOS: the `PlugIns/` subdirectory.
+* macOS, Mac Catalyst: the `Contents/PlugIns/` subdirectory.
 
 ### CompressedPlugIns
 
@@ -166,8 +167,9 @@ These are dynamic libraries (\*.dylib) files.
 We will link with these libraries when linking the native executable.
 
 The target directory is the same as for `Assembly`:
-    * iOS, tvOS: the root directory of the app bundle
-    * macOS, Mac Catalyst: the `Contents/MonoBundle/` subdirectory.
+
+* iOS, tvOS: the root directory of the app bundle
+* macOS, Mac Catalyst: the `Contents/MonoBundle/` subdirectory.
 
 *Warning*: The App Store will reject any apps with \*.dylib files (for iOS and
 tvOS, not for macOS or Mac Catalyst).

@@ -163,6 +163,9 @@ namespace Cecil.Tests {
 
 		public static IEnumerable PlatformAssemblies {
 			get {
+				if (!Configuration.include_legacy_xamarin)
+					yield break;
+
 				if (Configuration.include_ios) {
 					// we want to process 32/64 bits individually since their content can differ
 					yield return new TestCaseData (Path.Combine (Configuration.MonoTouchRootDirectory, "lib", "32bits", "iOS", "Xamarin.iOS.dll"));
