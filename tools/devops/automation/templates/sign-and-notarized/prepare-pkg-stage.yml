@@ -142,7 +142,7 @@ jobs:
   timeoutInMinutes: 1000
   dependsOn:
   - funnel_job
-  condition: succeeded()
+  condition: and(not(failed()), not(canceled())) # default is succeded(), but that fails if there are any skipped jobs, so change the condition to !failed && !cancelled
 
   variables:
     Parameters.outputStorageUri: ''
