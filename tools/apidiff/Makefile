@@ -506,7 +506,19 @@ ifdef ENABLE_DOTNET
 update-dotnet: $(DOTNET_REFS)
 endif
 
-update-refs: $(WATCHOS_REFS) $(TVOS_REFS) $(IOS_REFS) $(MAC_REFS)
+ifdef INCLUDE_IOS
+update-refs: $(IOS_REFS)
+endif
+ifdef INCLUDE_TVOS
+update-refs: $(TVOS_REFS)
+endif
+ifdef INCLUDE_WATCH
+update-refs: $(WATCHOS_REFS)
+endif
+ifdef INCLUDE_MAC
+update-refs: $(MAC_REFS)
+endif
+
 ifdef ENABLE_DOTNET
 update-refs: $(DOTNET_REFS)
 endif
