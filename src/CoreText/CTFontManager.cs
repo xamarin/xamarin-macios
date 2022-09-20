@@ -84,9 +84,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.13")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.13 it's now treated as 'Default'.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.13", "It's now treated as 'Default'.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "It's now treated as 'Default'.")]
 #endif
@@ -106,9 +104,7 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("macos")]
 		[UnsupportedOSPlatform ("macos10.6")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.6.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.6")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 6)]
 		[Unavailable (PlatformName.iOS)]
@@ -122,9 +118,7 @@ namespace CoreText {
 #elif !XAMCORE_3_0
 #if NET
 		[UnsupportedOSPlatform ("macos10.6")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.6.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.6")]
 		[UnsupportedOSPlatform ("ios")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10, 6)]
@@ -193,13 +187,9 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15")]
+		[ObsoletedOSPlatform ("tvos13.0")]
+		[ObsoletedOSPlatform ("ios13.0")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Deprecated (PlatformName.iOS, 13,0)]
@@ -218,13 +208,9 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'RegisterFonts' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'RegisterFonts' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0 use 'RegisterFonts' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15", "Use 'RegisterFonts' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'RegisterFonts' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'RegisterFonts' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'RegisterFonts' instead.")]
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'RegisterFonts' instead.")]
@@ -348,13 +334,9 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15")]
+		[ObsoletedOSPlatform ("tvos13.0")]
+		[ObsoletedOSPlatform ("ios13.0")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15)]
 		[Deprecated (PlatformName.iOS, 13,0)]
@@ -373,13 +355,9 @@ namespace CoreText {
 		[UnsupportedOSPlatform ("macos10.15")]
 		[UnsupportedOSPlatform ("tvos13.0")]
 		[UnsupportedOSPlatform ("ios13.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.15 use 'UnregisterFonts' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos13.0 use 'UnregisterFonts' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios13.0 use 'UnregisterFonts' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.15", "Use 'UnregisterFonts' instead.")]
+		[ObsoletedOSPlatform ("tvos13.0", "Use 'UnregisterFonts' instead.")]
+		[ObsoletedOSPlatform ("ios13.0", "Use 'UnregisterFonts' instead.")]
 #else
 		[Deprecated (PlatformName.MacOSX, 10,15, message : "Use 'UnregisterFonts' instead.")]
 		[Deprecated (PlatformName.iOS, 13,0, message : "Use 'UnregisterFonts' instead.")]

@@ -189,11 +189,8 @@ namespace CoreText {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.7")]
 		[UnsupportedOSPlatform ("ios6.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.7")]
+		[ObsoletedOSPlatform ("ios6.0")]
 #else
 		[Deprecated (PlatformName.iOS, 6, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 7)]
@@ -520,11 +517,8 @@ namespace CoreText {
 	[SupportedOSPlatform ("tvos")]
 	[UnsupportedOSPlatform ("macos10.7")]
 	[UnsupportedOSPlatform ("ios6.0")]
-#if MONOMAC
-	[Obsolete ("Starting with macos10.7.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-	[Obsolete ("Starting with ios6.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("macos10.7")]
+	[ObsoletedOSPlatform ("ios6.0")]
 #else
 	[Deprecated (PlatformName.iOS, 6, 0)]
 	[Deprecated (PlatformName.MacOSX, 10, 7)]
@@ -1253,11 +1247,8 @@ namespace CoreText {
 			[UnsupportedOSPlatform ("ios5.1")]
 			[UnsupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
-#if MONOMAC
-			[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-			[Obsolete ("Starting with ios5.1.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+			[ObsoletedOSPlatform ("macos10.8")]
+			[ObsoletedOSPlatform ("ios5.1")]
 #else
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
@@ -1268,11 +1259,8 @@ namespace CoreText {
 			[UnsupportedOSPlatform ("ios5.1")]
 			[UnsupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
-#if MONOMAC
-			[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-			[Obsolete ("Starting with ios5.1.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+			[ObsoletedOSPlatform ("macos10.8")]
+			[ObsoletedOSPlatform ("ios5.1")]
 #else
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
@@ -1395,11 +1383,8 @@ namespace CoreText {
 			[UnsupportedOSPlatform ("ios5.1")]
 			[UnsupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
-#if MONOMAC
-			[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-			[Obsolete ("Starting with ios5.1.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+			[ObsoletedOSPlatform ("macos10.8")]
+			[ObsoletedOSPlatform ("ios5.1")]
 #else
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
@@ -1410,11 +1395,8 @@ namespace CoreText {
 			[UnsupportedOSPlatform ("ios5.1")]
 			[UnsupportedOSPlatform ("tvos")]
 			[UnsupportedOSPlatform ("maccatalyst")]
-#if MONOMAC
-			[Obsolete ("Starting with macos10.8.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-			[Obsolete ("Starting with ios5.1.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+			[ObsoletedOSPlatform ("macos10.8")]
+			[ObsoletedOSPlatform ("ios5.1")]
 #else
 			[Deprecated (PlatformName.iOS, 5, 1)]
 			[Deprecated (PlatformName.MacOSX, 10, 8)]
