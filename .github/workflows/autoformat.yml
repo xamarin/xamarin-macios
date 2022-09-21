@@ -44,6 +44,7 @@ jobs:
         cd ..
         dotnet format "$SRC_DIR/tools/xibuild/xibuild.csproj"
         # dotnet format "$SRC_DIR/[...]"
+        # dotnet format "$SRC_DIR/[...]"
         # add more projects here...
         cd "$SRC_DIR"
 
