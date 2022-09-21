@@ -20,6 +20,8 @@ namespace Xamarin.MacDev.Tasks
 		[TestCase ("Xamarin.Mac-Mobile-FrameworkList.xml.in")]
 		public void CheckFrameworkListFile (string frameworkListFile)
 		{
+			Configuration.AssertLegacyXamarinAvailable ();
+
 			var fameworkListFileParts = frameworkListFile.Split ('-');
 			string frameworkName = fameworkListFileParts[0];
 			switch (frameworkName) {
