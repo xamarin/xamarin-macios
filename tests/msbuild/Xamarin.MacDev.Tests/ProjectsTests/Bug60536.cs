@@ -7,6 +7,9 @@ using Microsoft.Build.Evaluation;
 
 using NUnit.Framework;
 
+using Xamarin.Tests;
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
@@ -20,6 +23,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void TestACToolTaskCatchesJsonException ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var project = SetupProjectPaths ("Bug60536");
 			var csproj = project.ProjectCSProjPath;
 

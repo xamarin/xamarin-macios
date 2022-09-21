@@ -940,6 +940,13 @@ namespace Xamarin.Tests
 			Assert.Ignore (".NET tests not enabled");
 		}
 
+		public static void AssertLegacyXamarinAvailable ()
+		{
+			if (include_legacy_xamarin)
+				return;
+			Assert.Ignore ("Legacy xamarin build not enabled");
+		}
+
 		public static string CloneTestDirectory (string directory)
 		{
 			// Copy the test projects to a temporary directory so that we can run the tests from there without affecting the working directory.
