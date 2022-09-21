@@ -50,7 +50,7 @@ jobs:
       if: steps.unzip_artifacts.outputs.autoformatted == 'true'
       with:
         fetch-depth: 0
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        repository: ${{ github.event.workflow_run.head_repository.full_name }}
         ref: ${{ github.event.workflow_run.head_branch }}
 
     - name: 'Get autoformatted commit and push it'
