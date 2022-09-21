@@ -7,6 +7,8 @@ using Microsoft.Build.Framework;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
+#nullable enable
+
 namespace Xamarin.MacDev.Tasks
 {
 	public abstract class CompileEntitlementsTaskBase : XamarinTask
@@ -46,42 +48,44 @@ namespace Xamarin.MacDev.Tasks
 		#region Inputs
 
 		[Required]
-		public string AppBundleDir { get; set; }
+		public string AppBundleDir { get; set; } = string.Empty;
 
 		[Required]
-		public string AppIdentifier { get; set; }
+		public string AppIdentifier { get; set; } = string.Empty;
 
 		[Required]
-		public string BundleIdentifier { get; set; }
+		public string BundleIdentifier { get; set; } = string.Empty;
 
 		[Required]
-		public ITaskItem CompiledEntitlements { get; set; }
+		public ITaskItem? CompiledEntitlements { get; set; }
+
+		public ITaskItem[] CustomEntitlements { get; set; } = Array.Empty<ITaskItem> ();
 
 		public bool Debug { get; set; }
 
-		public string Entitlements { get; set; }
+		public string Entitlements { get; set; } = string.Empty;
 
 		[Required]
 		public bool IsAppExtension { get; set; }
 
-		public string ProvisioningProfile { get; set; }
+		public string ProvisioningProfile { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkDevPath { get; set; }
+		public string SdkDevPath { get; set; } = string.Empty;
 
 		public bool SdkIsSimulator { get; set; }
 
 		[Required]
-		public string SdkPlatform { get; set; }
+		public string SdkPlatform { get; set; } = string.Empty;
 
 		[Required]
-		public string SdkVersion { get; set; }
+		public string SdkVersion { get; set; } = string.Empty;
 
 		[Output]
-		public ITaskItem EntitlementsInExecutable { get; set; }
+		public ITaskItem? EntitlementsInExecutable { get; set; }
 
 		[Output]
-		public ITaskItem EntitlementsInSignature { get; set; }
+		public ITaskItem? EntitlementsInSignature { get; set; }
 
 		#endregion
 
@@ -139,11 +143,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		protected virtual bool MergeProfileEntitlements {
-			get { return true; }
-		}
-
-		PString MergeEntitlementString (PString pstr, MobileProvision profile, bool expandWildcards)
+		PString MergeEntitlementString (PString pstr, MobileProvision? profile, bool expandWildcards)
 		{
 			string TeamIdentifierPrefix;
 			string AppIdentifierPrefix;
@@ -151,7 +151,7 @@ namespace Xamarin.MacDev.Tasks
 			if (string.IsNullOrEmpty (pstr.Value))
 				return (PString) pstr.Clone ();
 
-			if (profile == null) {
+			if (profile is null) {
 				if (!warnedTeamIdentifierPrefix && pstr.Value.Contains ("$(TeamIdentifierPrefix)")) {
 					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0108);
 					warnedTeamIdentifierPrefix = true;
@@ -163,12 +163,12 @@ namespace Xamarin.MacDev.Tasks
 				}
 			}
 
-			if (profile != null && profile.ApplicationIdentifierPrefix.Count > 0)
+			if (profile is not null && profile.ApplicationIdentifierPrefix.Count > 0)
 				AppIdentifierPrefix = profile.ApplicationIdentifierPrefix[0] + ".";
 			else
 				AppIdentifierPrefix = string.Empty;
 
-			if (profile != null && profile.TeamIdentifierPrefix.Count > 0)
+			if (profile is not null && profile.TeamIdentifierPrefix.Count > 0)
 				TeamIdentifierPrefix = profile.TeamIdentifierPrefix[0] + ".";
 			else
 				TeamIdentifierPrefix = AppIdentifierPrefix;
@@ -203,12 +203,12 @@ namespace Xamarin.MacDev.Tasks
 			return new PString (expanded);
 		}
 
-		PArray MergeEntitlementArray (PArray array, MobileProvision profile)
+		PArray? MergeEntitlementArray (PArray array, MobileProvision? profile)
 		{
 			var result = new PArray ();
 
 			foreach (var item in array) {
-				PObject value;
+				PObject? value;
 
 				if (item is PDictionary)
 					value = MergeEntitlementDictionary ((PDictionary) item, profile);
@@ -219,7 +219,7 @@ namespace Xamarin.MacDev.Tasks
 				else
 					value = item.Clone ();
 
-				if (value != null)
+				if (value is not null)
 					result.Add (value);
 			}
 
@@ -229,12 +229,12 @@ namespace Xamarin.MacDev.Tasks
 			return null;
 		}
 
-		PDictionary MergeEntitlementDictionary (PDictionary dict, MobileProvision profile)
+		PDictionary MergeEntitlementDictionary (PDictionary dict, MobileProvision? profile)
 		{
 			var result = new PDictionary ();
 
 			foreach (var item in dict) {
-				PObject value = item.Value;
+				PObject? value = item.Value;
 
 				if (value is PDictionary)
 					value = MergeEntitlementDictionary ((PDictionary) value, profile);
@@ -245,11 +245,69 @@ namespace Xamarin.MacDev.Tasks
 				else
 					value = value.Clone ();
 
-				if (value != null)
+				if (value is not null)
 					result.Add (item.Key, value);
 			}
 
 			return result;
+		}
+
+		void AddCustomEntitlements (PDictionary dict)
+		{
+			if (CustomEntitlements is null)
+				return;
+
+			// Process any custom entitlements from the 'CustomEntitlements' item group. These are applied last, and will override anything else.
+			// Possible values:
+			//     <ItemGroup>
+			//         <CustomEntitlements Include="name.of.entitlement" Type="Boolean" Value="true" /> <!-- value can be 'false' too (case doesn't matter) -->
+			//         <CustomEntitlements Include="name.of.entitlement" Type="String" Value="stringvalue" />
+			//         <CustomEntitlements Include="name.of.entitlement" Type="StringArray" Value="a;b" /> <!-- array of strings, separated by semicolon -->
+			//         <CustomEntitlements Include="name.of.entitlement" Type="StringArray" Value="a😁b" ArraySeparator="😁" /> <!-- array of strings, separated by 😁 -->
+			//         <CustomEntitlements Include="name.of.entitlement" Type="Remove" /> <!-- This will remove the corresponding entitlement  -->
+			//     </ItemGroup>
+
+			foreach (var item in CustomEntitlements) {
+				var entitlement = item.ItemSpec;
+				var type = item.GetMetadata ("Type");
+				var value = item.GetMetadata ("Value");
+				switch (type.ToLowerInvariant ()) {
+				case "remove":
+					if (!string.IsNullOrEmpty (value))
+						Log.LogError (MSBStrings.E7102, /* Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected no value at all. */ value, entitlement, type);
+					dict.Remove (entitlement);
+					break;
+				case "boolean":
+					bool booleanValue;
+					if (string.Equals (value, "true", StringComparison.OrdinalIgnoreCase)) {
+						booleanValue = true;
+					} else if (string.Equals (value, "false", StringComparison.OrdinalIgnoreCase)) {
+						booleanValue = false;
+					} else {
+						Log.LogError (MSBStrings.E7103, /* "Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected 'true' or 'false'." */ value, entitlement, type);
+						continue;
+					}
+
+					dict [entitlement] = new PBoolean (booleanValue);
+					break;
+				case "string":
+					dict [entitlement] = new PString (value ?? string.Empty);
+					break;
+				case "stringarray":
+					var arraySeparator = item.GetMetadata ("ArraySeparator");
+					if (string.IsNullOrEmpty (arraySeparator))
+						arraySeparator = ";";
+					var arrayContent = value.Split (new string[] { arraySeparator }, StringSplitOptions.None);
+					var parray = new PArray ();
+					foreach (var element in arrayContent)
+						parray.Add (new PString (element));
+					dict [entitlement] = parray;
+					break;
+				default:
+					Log.LogError (MSBStrings.E7104, /* "Unknown type '{0}' for the entitlement '{1}' specified in the CustomEntitlements item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'." */ type, entitlement);
+					break;
+				}
+			}
 		}
 
 		static bool AreEqual (byte[] x, byte[] y)
@@ -289,11 +347,11 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		protected virtual PDictionary GetCompiledEntitlements (MobileProvision profile, PDictionary template)
+		protected virtual PDictionary GetCompiledEntitlements (MobileProvision? profile, PDictionary template)
 		{
 			var entitlements = new PDictionary ();
 
-			if (profile != null && MergeProfileEntitlements) {
+			if (profile is not null) {
 				// start off with the settings from the provisioning profile
 				foreach (var item in profile.Entitlements) {
 					if (!AllowedProvisioningKeys.Contains (item.Key))
@@ -312,7 +370,7 @@ namespace Xamarin.MacDev.Tasks
 					else
 						value = value.Clone ();
 
-					if (value != null)
+					if (value is not null)
 						entitlements.Add (item.Key, value);
 				}
 			}
@@ -325,7 +383,7 @@ namespace Xamarin.MacDev.Tasks
 				    item.Key == "com.apple.developer.icloud-container-identifiers" ||
 				    item.Key == "com.apple.developer.icloud-container-environment" ||
 				    item.Key == "com.apple.developer.icloud-services") {
-					if (profile == null)
+					if (profile is null)
 						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0110, item.Key);
 					else if (!profile.Entitlements.ContainsKey (item.Key))
 						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0111, item.Key);
@@ -333,7 +391,7 @@ namespace Xamarin.MacDev.Tasks
 					var str = value as PString;
 
 					// Ignore ONLY if it is empty, otherwise take the user's value
-					if (str == null || string.IsNullOrEmpty (str.Value))
+					if (str is null || string.IsNullOrEmpty (str.Value))
 						continue;
 				}
 
@@ -346,7 +404,7 @@ namespace Xamarin.MacDev.Tasks
 				else
 					value = value.Clone ();
 
-				if (value != null)
+				if (value is not null)
 					entitlements[item.Key] = value;
 			}
 
@@ -357,6 +415,8 @@ namespace Xamarin.MacDev.Tasks
 					entitlements ["com.apple.security.network.client"] = new PBoolean (true);
 				break;
 			}
+
+			AddCustomEntitlements (entitlements);
 
 			return entitlements;
 		}
@@ -389,7 +449,7 @@ namespace Xamarin.MacDev.Tasks
 		public override bool Execute ()
 		{
 			MobileProvisionPlatform platform;
-			MobileProvision profile;
+			MobileProvision? profile;
 			PDictionary template;
 			PDictionary compiled;
 			PDictionary archived;
@@ -418,7 +478,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (!string.IsNullOrEmpty (ProvisioningProfile)) {
-				if ((profile = GetMobileProvision (platform, ProvisioningProfile)) == null) {
+				if ((profile = GetMobileProvision (platform, ProvisioningProfile)) is null) {
 					Log.LogError (MSBStrings.E0049, ProvisioningProfile);
 					return false;
 				}
@@ -448,7 +508,7 @@ namespace Xamarin.MacDev.Tasks
 			archived = GetArchivedExpandedEntitlements (template, compiled);
 
 			try {
-				Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements.ItemSpec));
+				Directory.CreateDirectory (Path.GetDirectoryName (CompiledEntitlements!.ItemSpec));
 				WriteXcent (compiled, CompiledEntitlements.ItemSpec);
 			} catch (Exception ex) {
 				Log.LogError (MSBStrings.E0114, CompiledEntitlements, ex.Message);

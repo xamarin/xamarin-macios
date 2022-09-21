@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 using Xamarin.Tests;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	// [TestFixture ("iPhone")] // Skip this to speed things up a bit.
 	[TestFixture ("iPhoneSimulator")]

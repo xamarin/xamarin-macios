@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
@@ -56,12 +56,6 @@ namespace Xamarin.iOS.Tasks
 
 			string finalFrameworkPath = Path.Combine (bindingApp.AppBundlePath, "Frameworks/XTest.framework/XTest");
 			Assert.True (File.Exists (finalFrameworkPath), $"{finalFrameworkPath} file was not part of bundle?");
-		}
-
-		// [Test] MISSING_TEST - No LinkWith only projects
-		public void DoesNotSupportLinkWith ()
-		{
-			Assert.Fail ();
 		}
 
 		[TestCase (true)]
