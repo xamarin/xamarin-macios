@@ -108,11 +108,23 @@ steps:
         name: workload_file
         displayName: 'Generate "WorkloadRollback.json'
 
+      # separate macOS and Mac Catalyst packages from the rest
+      - bash: |
+          set -ex
+          rm -rf "$(Build.SourcesDirectory)/package-to-publish"
+          # Copy all the packages
+          cp -r "$(Build.SourcesDirectory)/package" "$(Build.SourcesDirectory)/package-to-publish"
+          # Remove iOS and tvOS packages
+          ls -laR "$(Build.SourcesDirectory)/package-to-publish"
+          rm -f "$(Build.SourcesDirectory)/package-to-publish"/*[.]iOS[.]*  "$(Build.SourcesDirectory)/package-to-publish/notarized"/*[.]iOS[.]*
+          rm -f "$(Build.SourcesDirectory)/package-to-publish"/*[.]tvOS[.]* "$(Build.SourcesDirectory)/package-to-publish/notarized/"*[.]tvOS[.]*
+          ls -laR "$(Build.SourcesDirectory)/package-to-publish"
+
       # upload each of the pkgs into the pipeline artifacts
       - task: PublishPipelineArtifact@1
         displayName: 'Publish Build Artifacts'
         inputs:
-          targetPath: $(Build.SourcesDirectory)/package
+          targetPath: $(Build.SourcesDirectory)/package-to-publish
           artifactName: package
         continueOnError: true
 
