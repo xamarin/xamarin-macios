@@ -997,10 +997,6 @@
         <value>Set : l'entrée "{0}" n'existe pas
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>Impossible de créer un paquet de ressources de liaison, sauf s'il existe des références natives dans le projet de liaison.
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ ne prend pas en charge les applications Watchos 1. Effectuez la migration de votre projet vers Watchos 2+.</value>
     </data>

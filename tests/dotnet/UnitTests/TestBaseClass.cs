@@ -1,9 +1,11 @@
 #nullable enable
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 
+using Xamarin.MacDev;
 using Xamarin.Tests;
 
 namespace Xamarin.Tests {
@@ -345,6 +347,26 @@ namespace Xamarin.Tests {
 				if (rid.StartsWith ("tvos-", StringComparison.OrdinalIgnoreCase))
 					return true;
 			}
+			return false;
+		}
+
+		protected bool TryGetEntitlements (string nativeExecutable, [NotNullWhen (true)] out PDictionary? entitlements)
+		{
+			var entitlementsPath = Path.Combine (Cache.CreateTemporaryDirectory (), "EntitlementsInBinary.plist");
+			var args = new string [] {
+				"--display",
+				"--entitlements",
+				entitlementsPath,
+				"--xml",
+				nativeExecutable
+			};
+			var rv = ExecutionHelper.Execute ("codesign", args, out var codesignOutput, TimeSpan.FromSeconds (15));
+			Assert.AreEqual (0, rv, $"'codesign {string.Join (" ", args)}' failed:\n{codesignOutput}");
+			if (File.Exists (entitlementsPath)) {
+				entitlements = PDictionary.FromFile(entitlementsPath);
+				return true;
+			}
+			entitlements = null;
 			return false;
 		}
 	}

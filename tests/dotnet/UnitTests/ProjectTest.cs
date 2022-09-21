@@ -1026,5 +1026,30 @@ namespace Xamarin.Tests {
 			properties ["AppBundleDir"] = customAppBundleDir;
 			var result = DotNet.AssertBuild (project_path, properties);
 		}
+
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Release")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", "Debug")]
+		public void AutoAllowJitEntitlements (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		{
+			var project = "Entitlements";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
+			DotNet.AssertBuild (project_path, properties);
+
+			var executable = GetNativeExecutable (platform, appPath);
+			var foundEntitlements = TryGetEntitlements (executable, out var entitlements);
+			if (configuration == "Release") {
+				Assert.IsTrue (foundEntitlements, "Found in Release");
+				Assert.IsTrue (entitlements!.Get<PBoolean>("com.apple.security.cs.allow-jit")?.Value, "Jit Allowed");
+			} else {
+				var jitNotAllowed = !foundEntitlements || !entitlements!.ContainsKey ("com.apple.security.cs.allow-jit");
+				Assert.True (jitNotAllowed, "Jit Not Allowed");
+			}
+		}
 	}
 }
