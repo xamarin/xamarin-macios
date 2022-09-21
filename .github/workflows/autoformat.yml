@@ -63,7 +63,8 @@ jobs:
         fi
 
     - name: 'Upload patch'
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
+      if: steps.autoformat.outputs.autoformatted == 'true'
       with:
         name: autoformat
         path: autoformat/
