@@ -104,15 +104,10 @@ namespace CoreVideo {
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos12.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos12.0")]
+		[ObsoletedOSPlatform ("tvos15.0")]
+		[ObsoletedOSPlatform ("maccatalyst15.0")]
+		[ObsoletedOSPlatform ("ios15.0")]
 #else
 		[Deprecated (PlatformName.MacOSX, 12, 0)]
 		[Deprecated (PlatformName.iOS, 15, 0)]
@@ -176,15 +171,10 @@ namespace CoreVideo {
 		[UnsupportedOSPlatform ("tvos15.0")]
 		[UnsupportedOSPlatform ("maccatalyst15.0")]
 		[UnsupportedOSPlatform ("ios15.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos12.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif TVOS
-		[Obsolete ("Starting with tvos15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif __MACCATALYST__
-		[Obsolete ("Starting with maccatalyst15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios15.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos12.0")]
+		[ObsoletedOSPlatform ("tvos15.0")]
+		[ObsoletedOSPlatform ("maccatalyst15.0")]
+		[ObsoletedOSPlatform ("ios15.0")]
 #else
 		[Deprecated (PlatformName.MacOSX, 12, 0)]
 		[Deprecated (PlatformName.iOS, 15, 0)]

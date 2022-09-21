@@ -129,7 +129,6 @@
 !missing-selector! NSPresentationIntent::ordinal not bound
 !missing-selector! NSPresentationIntent::parentIntent not bound
 !missing-selector! NSPresentationIntent::row not bound
-!missing-selector! NSProcessInfo::isLowPowerModeEnabled not bound
 !missing-selector! NSURLRequest::attribution not bound
 !missing-selector! NSURLSessionTask::delegate not bound
 !missing-selector! NSURLSessionTask::setDelegate: not bound

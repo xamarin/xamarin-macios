@@ -997,10 +997,6 @@
         <value>Impostazione: la voce "{0}" non esiste
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>Non è possibile creare un pacchetto di risorse di binding a meno che nel progetto di binding non siano presenti riferimenti nativi.
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ non supporta le app watchOS 1. Eseguire la migrazione del progetto a watchOS 2+.</value>
     </data>

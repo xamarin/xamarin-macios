@@ -170,6 +170,7 @@ steps:
 
 # sometimes the make that creates the pkgs fails.
 - bash: |
+    set -ex
     if ! test -f $(Build.SourcesDirectory)/artifacts/tmp/mac-test-package/mac-test-package.7z; then
       echo "No test package could be found for tests on macOS $CONTEXT" > "$GITHUB_FAILURE_COMMENT_FILE"
       exit 1

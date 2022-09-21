@@ -38,15 +38,23 @@ ifdef INCLUDE_IOS
 endif
 endif
 	@./system-dependencies.sh
-	@echo "Building the packages:"
-	@echo "    Xamarin.iOS $(IOS_PACKAGE_VERSION)"
-	@echo "    Xamarin.Mac $(MAC_PACKAGE_VERSION)"
-	@echo "and the NuGets:"
-	@echo "    Xamarin.iOS $(IOS_NUGET_VERSION_FULL)"
-	@echo "    Xamarin.tvOS $(TVOS_NUGET_VERSION_FULL)"
-	@echo "    Xamarin.watchOS $(WATCHOS_NUGET_VERSION_FULL)"
-	@echo "    Xamarin.macOS $(MACOS_NUGET_VERSION_FULL)"
-	@echo "    Xamarin.MacCatalyst $(MACCATALYST_NUGET_VERSION_FULL)"
+	$(Q) $(MAKE) show-versions
+
+show-versions:
+	@echo "Building:"
+ifdef INCLUDE_XAMARIN_LEGACY
+	@echo "    The legacy package(s):"
+ifdef INCLUDE_IOS
+	@echo "        Xamarin.iOS $(IOS_PACKAGE_VERSION)"
+endif
+ifdef INCLUDE_MAC
+	@echo "        Xamarin.Mac $(MAC_PACKAGE_VERSION)"
+endif
+endif
+ifdef ENABLE_DOTNET
+	@echo "    The .NET NuGet(s):"
+	@$(foreach platform,$(DOTNET_PLATFORMS),echo "        Microsoft.$(platform) $($(shell echo $(platform) | tr 'a-z' 'A-Z')_NUGET_VERSION_FULL)";)
+endif
 
 check-permissions:
 ifdef INCLUDE_MAC
