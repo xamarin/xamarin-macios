@@ -172,11 +172,11 @@ $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 	$(Q_GEN) ./generate-vs-workload.csharp \
 		$(foreach platform,$(DOTNET_PLATFORMS),--platform $(platform) $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION).$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_COMMIT_DISTANCE)) \
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--windows-platform $(platform)) \
-		--shorten $(IOS_NUGET_VERSION_NO_METADATA)=$(IOS_NUGET_VERSION).$(IOS_NUGET_COMMIT_DISTANCE) \
-		--shorten $(MACOS_NUGET_VERSION_NO_METADATA)=$(MACOS_NUGET_VERSION).$(MACOS_NUGET_COMMIT_DISTANCE) \
+		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION_NO_METADATA)=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION).$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_COMMIT_DISTANCE)) \
 		--shorten Microsoft.MacCatalyst.Runtime.maccatalyst=Microsoft.MacCatalyst.Runtime \
 		--shorten Microsoft.NET.Sdk.MacCatalyst.Manifest=Microsoft.MacCatalyst.Manifest \
 		--shorten Microsoft.tvOS.Runtime.tvossimulator=Microsoft.tvOS.Runtime \
+		--tfm $(DOTNET_TFM) \
 		--output $@.tmp
 	$(Q) mv $@.tmp $@
 
