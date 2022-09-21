@@ -9,9 +9,10 @@ using static Xamarin.Provisioning.ProvisioningScript;
 // Provision Xcode using the xip name declared in Make.config
 Xcode ("@XCODE_XIP_NAME@").XcodeSelect (allowUntrusted: true);
 
+Item ("@MONO_PACKAGE@");
+
 // provisionator knows how to deal with this items
 if (!string.IsNullOrEmpty ("@INCLUDE_XAMARIN_LEGACY@")) {
-	Item ("@MONO_PACKAGE@");
 	Item ("@VS_PACKAGE@");
 	if (!string.IsNullOrEmpty ("@INCLUDE_IOS@"))
 		Item ("@XI_PACKAGE@");

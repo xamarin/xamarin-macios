@@ -143,9 +143,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
@@ -178,9 +176,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
@@ -195,9 +191,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
@@ -212,9 +206,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
@@ -229,9 +221,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0)]
 #endif
@@ -245,9 +235,7 @@ namespace AudioToolbox {
 
 #if NET
 	[UnsupportedOSPlatform ("ios7.0")]
-#if IOS
-	[Obsolete ("Starting with ios7.0 use 'AVAudioSession' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+	[ObsoletedOSPlatform ("ios7.0", "Use 'AVAudioSession' instead.")]
 #else
 	[Deprecated (PlatformName.iOS, 7, 0, message : "Use 'AVAudioSession' instead.")]
 #endif
@@ -501,9 +489,7 @@ namespace AudioToolbox {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("ios5.0")]
-#if IOS
-		[Obsolete ("Starting with ios5.0 use 'InputRoute' or 'OutputRoute' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("ios5.0", "Use 'InputRoute' or 'OutputRoute' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 5, 0, message : "Use 'InputRoute' or 'OutputRoute' instead.")]
 #endif
