@@ -6,6 +6,9 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Shorten package names to avoid long path caching issues in Visual Studio -->
+    <ShortNames Include="@PACK_VERSION_LONG@">
+      <Replacement>@PACK_VERSION_SHORT@</Replacement>
+    </ShortNames>
     <ShortNames Include="@MACOS_PACK_VERSION_LONG@">
       <Replacement>@MACOS_PACK_VERSION_SHORT@</Replacement>
     </ShortNames>
