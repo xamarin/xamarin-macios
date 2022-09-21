@@ -9,7 +9,6 @@ using static Xamarin.Provisioning.ProvisioningScript;
 // provisionator knows how to deal with this items
 if (!string.IsNullOrEmpty ("@INCLUDE_XAMARIN_LEGACY@")) {
 	Item ("@MONO_PACKAGE@");
-	Item ("@VS_PACKAGE@");
 	if (!string.IsNullOrEmpty ("@INCLUDE_MAC@"))
 		Item ("@XM_PACKAGE@");
 }
