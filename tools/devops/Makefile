@@ -59,4 +59,7 @@ print-abspath-variable:
 print-variable:
 	@echo $(VARIABLE)=$($(VARIABLE))
 
+print-variable-value-to-file:
+	@echo $($(VARIABLE)) > "$(FILE)"
+
 provisioning: build-provisioning.csx device-tests-provisioning.csx provision-xcode.csx
