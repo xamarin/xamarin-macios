@@ -143,6 +143,7 @@ namespace Chip {
 	[Mac (12,1), Watch (8,3), TV (15,2), iOS (15,2), MacCatalyst (15,2)]
 	public delegate void ChipDeviceConnectionCallback (ChipDevice device, NSError error);
 
+	[Obsolete ("This class is removed.")]
 	[Register("CHIPDeviceController", true)]
 	public partial class ChipDeviceController : NSObject {
 		public override IntPtr ClassHandle { get { throw new InvalidOperationException (Constants.RemovedFromChip); } }
@@ -196,6 +197,7 @@ namespace Chip {
 		public static ChipDeviceController SharedController => throw new InvalidOperationException (Constants.RemovedFromChip);
 	}
 
+	[Obsolete ("This class is removed.")]
 	[Register("CHIPLowPower", true)]
 	public partial class ChipLowPower : ChipCluster {
 		public override IntPtr ClassHandle { get { throw new InvalidOperationException (Constants.RemovedFromChip); } }
@@ -219,6 +221,7 @@ namespace Chip {
 		public virtual Task<ChipReadAttributeResult> SleepAsync ()  => throw new InvalidOperationException (Constants.RemovedFromChip);
 	}
 
+	[Obsolete ("This class is removed.")]
 	[Register("CHIPTestCluster", true)]
 	public partial class ChipTestCluster : ChipCluster {
 		public override IntPtr ClassHandle { get { throw new InvalidOperationException (Constants.RemovedFromChip); } }
@@ -435,6 +438,7 @@ namespace Chip {
 		public virtual Task<ChipReadAttributeResult> WriteAttributeUnsupportedAsync (bool boolValue) => throw new InvalidOperationException (Constants.RemovedFromChip);
 	}
 
+	[Obsolete ("This class is removed.")]
 	[Register("CHIPGeneralCommissioning", true)]
 	public partial class ChipGeneralCommissioning : ChipCluster {
 		public override IntPtr ClassHandle { get { throw new InvalidOperationException (Constants.RemovedFromChip); } }
