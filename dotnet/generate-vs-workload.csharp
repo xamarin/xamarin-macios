@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 
-var shorten = new List<(string, string)> ();
+var shorten = new Dictionary<string, string> ();
 var platforms = new List<(string, string)> ();
 var windowsPlatforms = new List<string> ();
 var tfm = string.Empty;
@@ -30,7 +30,7 @@ while (args.Any ()) {
 	switch (arg) {
 	case "--shorten":
 		var values = args.Dequeue ().Split ('=');
-		shorten.Add ((values [0], values [1]));
+		shorten [values [0]] = values [1];
 		break;
 	case "--platform":
 		var platform = args.Dequeue ();
@@ -67,8 +67,8 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"  <ItemGroup>");
 	writer.WriteLine ($"    <!-- Shorten package names to avoid long path caching issues in Visual Studio -->");
 	foreach (var entry in shorten) {
-		var longName = entry.Item1;
-		var shortName = entry.Item2;
+		var longName = entry.Key;
+		var shortName = entry.Value;
 		writer.WriteLine ($"    <ShortNames Include=\"{longName}\">");
 		writer.WriteLine ($"      <Replacement>{shortName}</Replacement>");
 		writer.WriteLine ($"    </ShortNames>");
