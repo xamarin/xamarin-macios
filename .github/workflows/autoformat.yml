@@ -46,6 +46,7 @@ jobs:
         # dotnet format "$SRC_DIR/[...]"
         # dotnet format "$SRC_DIR/[...]"
         # dotnet format "$SRC_DIR/[...]"
+        # dotnet format "$SRC_DIR/[...]"
         # add more projects here...
         cd "$SRC_DIR"
 
