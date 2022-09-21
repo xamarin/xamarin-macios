@@ -53,7 +53,8 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 	writer.WriteLine ($"<Project>");
 	writer.WriteLine ($"  <PropertyGroup>");
-	writer.WriteLine ($"    <TargetName>Microsoft.NET.Sdk.MaciOS.Workload</TargetName>");
+	var allPlatforms = string.Join (".", platforms.Select (v => v.Item1).OrderBy (v => v));
+	writer.WriteLine ($"    <TargetName>Microsoft.NET.Sdk.{allPlatforms}.Workload</TargetName>");
 	// Find the iOS version, otherwise use the version of the first platform listed.
 	var iOSPlatform = platforms.Where (v => v.Item1 == "iOS");
 	var manifestBuildVersion = iOSPlatform.Any () ? iOSPlatform.First ().Item2 : platforms.First ().Item2;
