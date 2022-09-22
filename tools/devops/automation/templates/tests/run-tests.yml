@@ -128,6 +128,9 @@ steps:
     ls -R $(Build.SourcesDirectory)/artifacts/package
     cp $(Build.SourcesDirectory)/artifacts/package/*.nupkg $DOTNET_NUPKG_DIR
     cp $(Build.SourcesDirectory)/artifacts/package/*.pkg $DOTNET_NUPKG_DIR
+    ls -R $(Build.SourcesDirectory)/artifacts/packages-to-not-publish
+    cp $(Build.SourcesDirectory)/artifacts/packages-to-not-publish/*.nupkg $DOTNET_NUPKG_DIR
+    cp $(Build.SourcesDirectory)/artifacts/packages-to-not-publish/*.pkg $DOTNET_NUPKG_DIR
     ls -R $DOTNET_NUPKG_DIR
 
     NUGET_SOURCES=$(grep https://pkgs.dev.azure.com ./NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
