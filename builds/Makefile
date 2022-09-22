@@ -134,7 +134,7 @@ endif
 .stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(DOTNET_INSTALL_NAME)
 	$(Q_GEN) cd package-download && $(DOTNET) \
 		build \
-		download-packages.proj \
+		download-packages.csproj \
 		/t:WriteBundledNETCorePlatformsPackageVersion \
 		/p:WriteFilePath=$(CURDIR)/BundledNETCorePlatformsPackageVersion.txt \
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
