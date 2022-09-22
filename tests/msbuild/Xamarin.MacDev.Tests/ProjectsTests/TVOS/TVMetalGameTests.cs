@@ -2,6 +2,9 @@ using System;
 
 using NUnit.Framework;
 
+using Xamarin.Tests;
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
@@ -13,6 +16,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.TVOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			BuildProject ("MyTVMetalGame");
 		}
 

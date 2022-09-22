@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 using NUnit.Framework;
 
@@ -52,6 +53,9 @@ namespace Xamarin.MacDev.Tasks {
 		public void CompareBuilds (string project, int expectedErrorCount = 0)
 		{
 			Configuration.AssertDotNetAvailable ();
+			Configuration.AssertLegacyXamarinAvailable ();
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.TVOS);
 
 			Dictionary<string, string> properties = null;
 

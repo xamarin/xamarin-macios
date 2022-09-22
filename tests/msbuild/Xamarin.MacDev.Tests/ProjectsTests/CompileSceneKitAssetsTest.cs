@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -22,6 +23,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void Compilation ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var proj = BuildProject ("MySceneKitApp");
 			var appPath = proj.AppBundlePath;
 			var scenePath = Path.GetFullPath (Path.Combine (appPath, "art.scnassets", "scene.scn"));
@@ -33,6 +37,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void LibraryCompilation ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var appName = "MySceneKitLibrary";
 
 			Platform = "AnyCPU";

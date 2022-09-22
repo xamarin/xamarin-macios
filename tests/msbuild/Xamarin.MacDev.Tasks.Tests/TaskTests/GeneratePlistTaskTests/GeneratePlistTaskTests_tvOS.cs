@@ -1,16 +1,29 @@
 using NUnit.Framework;
+
 using Xamarin.MacDev;
+using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
-	[TestFixture]
+	[TestFixture (true)]
+	[TestFixture (false)]
 	public class GeneratePlistTaskTests_tvOS : GeneratePlistTaskTests_Core
 	{
-		public override void ConfigureTask ()
+		protected override ApplePlatform Platform => ApplePlatform.TVOS;
+
+		public GeneratePlistTaskTests_tvOS (bool isDotNet)
+			: base (isDotNet)
 		{
-			base.ConfigureTask ();
+		}
+
+		protected override void ConfigureTask (bool isDotNet)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.TVOS);
+
+			base.ConfigureTask (isDotNet);
 			Task.DefaultSdkVersion = Sdks.TVOS.GetClosestInstalledSdk (AppleSdkVersion.V9_0, true).ToString ();
-			Task.TargetFrameworkMoniker = "Xamarin.TVOS,v1.0";
+			Task.TargetFrameworkMoniker = isDotNet ? TargetFramework.DotNet_tvOS_String :  TargetFramework.Xamarin_TVOS_1_0.ToString ();
 		}
 	}
 }
