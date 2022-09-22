@@ -315,6 +315,9 @@ namespace Xamarin.Bundler
 						}
 					}
 				}
+
+				if (code == 0 && Driver.XcodeVersion.Major >= 14 && Target.App.BitCodeMode != BitCodeMode.None)
+					Target.App.StripBitcode (OutputFile);
 			} catch (System.ComponentModel.Win32Exception wex) {
 				/* This means we failed to execute the linker, not that the linker itself returned with a failure */
 				if (wex.NativeErrorCode == 7 /* E2BIG = Too many arguments */ ) {
@@ -350,6 +353,9 @@ namespace Xamarin.Bundler
 			// we can't trust the native linker to pick the right (non private) framework when an older TargetVersion is used
 			if (CompilerFlags.WeakFrameworks.Count > 0)
 				Target.AdjustDylibs (OutputFile);
+			// Remove bitcode from the binary
+			if (Driver.XcodeVersion.Major >= 14 && App.BitCodeMode != BitCodeMode.None)
+				App.StripBitcode (OutputFile);
 		}
 
 		protected override void CompilationFailed (int exitCode)

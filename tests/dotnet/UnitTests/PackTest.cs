@@ -101,7 +101,14 @@ namespace Xamarin.Tests {
 		{
 			var project = "bindings-xcframework-test";
 			var assemblyName = "bindings-framework-test";
-			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			// This tests gets really complicated if not all platforms are included,
+			// because the (number of) files included in the nupkg depends not only
+			// on the current platform, but on the other included platforms as well.
+			// For example: if either macOS or Mac Catalyst is included, then some
+			// parts of the .xcframework will be zipped differently (due to symlinks
+			// in the xcframework).
+			Configuration.IgnoreIfAnyIgnoredPlatforms ();
 
 			var project_path = Path.Combine (Configuration.RootPath, "tests", project, "dotnet", platform.AsString (), $"{project}.csproj");
 			Clean (project_path);
