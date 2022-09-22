@@ -131,7 +131,11 @@ DOWNLOAD_DOTNET_VERSION=$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)
 endif
 endif
 
-.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(DOTNET_INSTALL_NAME)
+package-download/all-package-references.csproj: $(TOP)/.git/HEAD $(TOP)/.git/index ./create-csproj-for-all-packagereferences.sh
+	$(Q_GEN) ./create-csproj-for-all-packagereferences.sh --output "$(abspath $@.tmp)" $(if $(V),-v,)
+	$(Q) mv "$@.tmp" "$@"
+
+.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(DOTNET_INSTALL_NAME) package-download/all-package-references.csproj
 	$(Q_GEN) cd package-download && $(DOTNET) \
 		build \
 		download-packages.csproj \
