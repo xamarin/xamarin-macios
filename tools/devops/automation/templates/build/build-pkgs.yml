@@ -117,10 +117,10 @@ steps:
           # Move iOS and tvOS packages to a separate artifact
           ls -laR "$(Build.SourcesDirectory)/packages-to-publish"
           mkdir -p "$(Build.SourcesDirectory)/packages-to-not-publish/notarized"
-          mv "$(Build.SourcesDirectory)/packages-to-publish"/*[.]iOS[.]*           "$(Build.SourcesDirectory)/packages-to-not-publish/"
-          mv "$(Build.SourcesDirectory)/packages-to-publish/notarized"/*[.]iOS[.]* "$(Build.SourcesDirectory)/packages-to-not-publish/notarized/"
-          mv "$(Build.SourcesDirectory)/packages-to-publish"/*[.]tvOS[.]*           "$(Build.SourcesDirectory)/packages-to-not-publish/"
-          mv "$(Build.SourcesDirectory)/packages-to-publish/notarized/"*[.]tvOS[.]* "$(Build.SourcesDirectory)/packages-to-not-publish/notarized/"
+          mv "$(Build.SourcesDirectory)/packages-to-publish"/*[.]iOS[.]*           "$(Build.SourcesDirectory)/packages-to-not-publish/" || true
+          mv "$(Build.SourcesDirectory)/packages-to-publish/notarized"/*[.]iOS[.]* "$(Build.SourcesDirectory)/packages-to-not-publish/notarized/" || true
+          mv "$(Build.SourcesDirectory)/packages-to-publish"/*[.]tvOS[.]*           "$(Build.SourcesDirectory)/packages-to-not-publish/" || true
+          mv "$(Build.SourcesDirectory)/packages-to-publish/notarized/"*[.]tvOS[.]* "$(Build.SourcesDirectory)/packages-to-not-publish/notarized/" || true
           ls -laR "$(Build.SourcesDirectory)/packages-to-not-publish"
 
       # upload each of the pkgs into the pipeline artifacts
