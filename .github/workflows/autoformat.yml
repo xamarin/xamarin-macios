@@ -47,8 +47,8 @@ jobs:
         # add more projects here...
         cd "$SRC_DIR"
 
-        mkdir -p autoformat
-        echo ${{ github.event.number }} > ./autoformat/PR
+        mkdir -p ../autoformat
+        echo ${{ github.event.number }} > ../autoformat/PR
 
         if git diff --exit-code >/dev/null; then
           echo "No code formatting occurred"
@@ -59,11 +59,11 @@ jobs:
           git checkout "$GITHUB_HEAD_REF"
           git commit -m "Auto-format source code"
 
-          git format-patch HEAD^..HEAD --stdout > ./autoformat/autoformat.patch
+          git format-patch HEAD^..HEAD --stdout > ../autoformat/autoformat.patch
         fi
 
     - name: 'Upload patch'
       uses: actions/upload-artifact@v3
       with:
         name: autoformat
-        path: autoformat/
+        path: ../autoformat/
