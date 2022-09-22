@@ -853,6 +853,8 @@ namespace Xamarin.Bundler {
 					break;
 				case BitCodeMode.None:
 					// If neither llvmonly nor asmonly is enabled, enable markeronly.
+					if (Driver.XcodeVersion.Major >= 14)
+						break;
 					if (Platform == ApplePlatform.TVOS || Platform == ApplePlatform.WatchOS)
 						BitCodeMode = BitCodeMode.MarkerOnly;
 					break;
@@ -1236,7 +1238,12 @@ namespace Xamarin.Bundler {
 		{
 			var sb = new List<string> ();
 			sb.Add (macho_file);
-			switch (BitCodeMode) {
+
+			var mode = BitCodeMode;
+			if (Driver.XcodeVersion.Major >= 14)
+				mode = BitCodeMode.None;
+
+			switch (mode) {
 			case BitCodeMode.ASMOnly:
 			case BitCodeMode.LLVMOnly:
 				// do nothing, since we don't know neither if bitcode is needed (if we're publishing) or if native code is needed (not publishing).
