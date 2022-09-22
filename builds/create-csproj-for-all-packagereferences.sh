@@ -46,6 +46,9 @@ git grep -e '<PackageReference.*Include="[a-zA-Z0-9._-]*".*Version="[a-zA-Z0-9._
 # Replace double double quotes with a single double quote. This happens in source code that generates project files (for tests).
 sed -i '' 's/""/"/g' "$TMPPATH"
 
+# Remove packages that we build locally
+sed -i '' '/Xamarin.Tests.FrameworksInRuntimesNativeDirectory/d' "$TMPPATH"
+
 # Get only the name and version of each package, and write that back in a PackageDownload item
 sed -i '' 's@.*<PackageReference.*Include="\([a-zA-Z0-9._-]*\)".*Version="\([a-zA-Z0-9._-]*\)".*>.*@\t\t<PackageDownload Include="\1" Version="[\2]" />@g' "$TMPPATH"
 
