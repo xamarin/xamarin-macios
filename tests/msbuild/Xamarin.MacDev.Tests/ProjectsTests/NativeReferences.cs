@@ -6,6 +6,7 @@ using System.Xml;
 using NUnit.Framework;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
@@ -19,6 +20,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var mtouchPaths = SetupProjectPaths ("MyTabbedApplication");
 
 			Engine.ProjectCollection.SetGlobalProperty ("Platform", Platform);
@@ -43,6 +47,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void WithIncrementalBuilds ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+	
 			if (Platform.Contains ("Simulator"))
 				return; // incremental builds on the simulator doesn't make much sense.
 

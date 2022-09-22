@@ -129,6 +129,7 @@ namespace Xamarin
 			Uuid = 0x1b,
 			//#define LC_RPATH       (0x1c | LC_REQ_DYLD)    /* runpath additions */
 			//#define LC_CODE_SIGNATURE 0x1d	/* local of code signature */
+			CodeSignature = 0x1d,
 			//#define LC_SEGMENT_SPLIT_INFO 0x1e /* local of info to split segments */
 			//#define LC_REEXPORT_DYLIB (0x1f | LC_REQ_DYLD) /* load and re-export dylib */
 			ReexportDylib = 0x1f | ReqDyld,
