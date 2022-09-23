@@ -2,7 +2,7 @@
 
 // arguments are:
 //   --shorten long=short
-//   --platform <platform> <version>
+//   --platform <platform> <version> <msiversion>
 //   --windows-platform <platform>
 
 using System.IO;
@@ -11,7 +11,7 @@ using System.Text;
 using System.Xml;
 
 var shorten = new List<(string, string)> ();
-var platforms = new List<(string, string)> ();
+var platforms = new List<(string, string, string)> ();
 var windowsPlatforms = new List<string> ();
 var outputPath = string.Empty;
 
@@ -34,7 +34,8 @@ while (args.Any ()) {
 	case "--platform":
 		var platform = args.Dequeue ();
 		var version = args.Dequeue ();
-		platforms.Add ((platform, version));
+		var msiVersion = args.Dequeue ();
+		platforms.Add ((platform, version, msiVersion));
 		break;
 	case "--windows-platform":
 		windowsPlatforms.Add (args.Dequeue ());
@@ -83,7 +84,8 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	foreach (var entry in platforms) {
 		var platform = entry.Item1;
 		var version = entry.Item2;
-		writer.WriteLine ($"    <WorkloadPackages Include=\"$(NuGetPackagePath)\\Microsoft.NET.Sdk.{platform}.Manifest*.nupkg\" Version=\"{version}\" />");
+		var msiVersion = entry.Item3;
+		writer.WriteLine ($"    <WorkloadPackages Include=\"$(NuGetPackagePath)\\Microsoft.NET.Sdk.{platform}.Manifest*.nupkg\" Version=\"{version}\" MsiVersion=\"{msiVersion}\" />");
 	}
 	foreach (var entry in platforms) {
 		var platform = entry.Item1;
