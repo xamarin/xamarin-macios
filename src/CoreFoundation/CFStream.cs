@@ -466,6 +466,7 @@ namespace CoreFoundation {
 		[UnsupportedOSPlatform ("ios9.0")]
 		[ObsoletedOSPlatform ("macos10.11")]
 		[ObsoletedOSPlatform ("ios9.0")]
+		[ObsoletedOSPlatform ("tvos9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
@@ -483,6 +484,7 @@ namespace CoreFoundation {
 		[UnsupportedOSPlatform ("ios9.0")]
 		[ObsoletedOSPlatform ("macos10.11", "Use 'NSUrlSession' instead.")]
 		[ObsoletedOSPlatform ("ios9.0", "Use 'NSUrlSession' instead.")]
+		[ObsoletedOSPlatform ("tvos9.0", "Use 'NSUrlSession' instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 9, 0, message : "Use 'NSUrlSession' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use 'NSUrlSession' instead.")]
@@ -504,8 +506,10 @@ namespace CoreFoundation {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.11")]
 		[UnsupportedOSPlatform ("ios9.0")]
+		[UnsupportedOSPlatform ("tvos9.0")]
 		[ObsoletedOSPlatform ("macos10.11")]
 		[ObsoletedOSPlatform ("ios9.0")]
+		[ObsoletedOSPlatform ("tvos9.0")]
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]

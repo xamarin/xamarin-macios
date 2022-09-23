@@ -92,7 +92,7 @@ namespace CoreText {
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
-		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.8")]
 		[UnsupportedOSPlatform ("ios6.0")]
 		[ObsoletedOSPlatform ("macos10.8", "Use 'MaximumLineSpacing' instead.")]
