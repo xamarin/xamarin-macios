@@ -20,8 +20,8 @@
     </ShortNames>
     <ComponentResources Include="maccatalyst" Version="@MACCATALYST_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for Mac Catalyst" Description=".NET SDK Workload for building macOS applications with Mac Catalyst."/>
     <ComponentResources Include="macos" Version="@MACOS_WORKLOAD_VERSION@" Category=".NET" Title=".NET SDK for macOS" Description=".NET SDK Workload for building macOS applications."/>
-    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.MacCatalyst.Manifest*.nupkg" Version="@MACCATALYST_WORKLOAD_VERSION@" />
-    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.macOS.Manifest*.nupkg" Version="@MACOS_WORKLOAD_VERSION@" />
+    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.MacCatalyst.Manifest*.nupkg" Version="@MACCATALYST_WORKLOAD_VERSION@" MsiVersion="@MACCATALYST_MSI_VERSION@"/>
+    <WorkloadPackages Include="$(NuGetPackagePath)\Microsoft.NET.Sdk.macOS.Manifest*.nupkg" Version="@MACOS_WORKLOAD_VERSION@" MsiVersion="@MACOS_MSI_VERSION@"/>
     <MultiTargetPackNames Include="Microsoft.MacCatalyst.Sdk" />
     <MultiTargetPackNames Include="Microsoft.macOS.Sdk" />
   </ItemGroup>
