@@ -173,6 +173,8 @@ namespace Cecil.Tests {
 		[Test]
 		public void FindSupportedOnElementsThatDoNotExistInThatAssembly ()
 		{
+			Configuration.IgnoreIfAnyIgnoredPlatforms ();
+
 			// Dictionary of (FullName of Member) -> (Dictionary of (Actual Platform) -> Platform Claim Info)
 			var harvestedInfo = new Dictionary<string, Dictionary<string, PlatformClaimInfo>> ();
 

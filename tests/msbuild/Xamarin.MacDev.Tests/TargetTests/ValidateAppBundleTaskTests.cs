@@ -7,6 +7,7 @@ using Microsoft.Build.Evaluation;
 using Xamarin.MacDev;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -25,6 +26,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void MissingFiles ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var paths = BuildExtension ("MyTabbedApplication", "MyActionExtension");
 			extensionBundlePath = paths.AppBundlePath;
 			mainAppPlistPath = Path.Combine (AppBundlePath, "Info.plist");
