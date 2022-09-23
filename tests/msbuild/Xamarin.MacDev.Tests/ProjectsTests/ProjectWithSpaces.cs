@@ -2,6 +2,9 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 
+using Xamarin.Tests;
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture ("iPhone")]
@@ -15,6 +18,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void BasicTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			this.BuildProject ("My Spaced App", clean: false);
 
 			// Message of the form:

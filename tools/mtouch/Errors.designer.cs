@@ -3794,6 +3794,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the &apos;MtouchEnableBitcode&apos; property from the project file..
+        /// </summary>
+        public static string MX0186 {
+            get {
+                return ResourceManager.GetString("MX0186", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not copy the assembly &apos;{0}&apos; to &apos;{1}&apos;: {2}
         ///		.
         /// </summary>
