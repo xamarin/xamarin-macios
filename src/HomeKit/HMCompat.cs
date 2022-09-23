@@ -111,7 +111,9 @@ namespace HomeKit {
 #endif // !NET
 
 #if __IOS__ && !__MACCATALYST__
+#if NET
 	[Obsolete ("This class is removed.")]
+#endif
 	public unsafe partial class HMAccessorySetupManager : NSObject {
 		public override NativeHandle ClassHandle => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
