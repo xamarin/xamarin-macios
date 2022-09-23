@@ -831,11 +831,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
@@ -851,11 +848,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -886,11 +880,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
@@ -905,11 +896,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -930,11 +918,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -951,11 +936,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
@@ -970,11 +952,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -995,11 +974,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -1016,11 +992,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
@@ -1036,11 +1009,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -1057,11 +1027,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -1078,11 +1045,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
@@ -1107,11 +1071,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
@@ -1127,11 +1088,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -1148,11 +1106,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -1173,11 +1128,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
@@ -1193,11 +1145,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -1218,11 +1167,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]
@@ -1239,11 +1185,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9")]
+		[ObsoletedOSPlatform ("ios7.0")]
 #else
 		[Deprecated (PlatformName.iOS, 7,0)]
 		[Deprecated (PlatformName.MacOSX, 10,9)]
@@ -1260,11 +1203,8 @@ namespace CoreGraphics {
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("macos10.9")]
 		[UnsupportedOSPlatform ("ios7.0")]
-#if MONOMAC
-		[Obsolete ("Starting with macos10.9 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#elif IOS
-		[Obsolete ("Starting with ios7.0 use the 'CoreText' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
-#endif
+		[ObsoletedOSPlatform ("macos10.9", "Use the 'CoreText' API instead.")]
+		[ObsoletedOSPlatform ("ios7.0", "Use the 'CoreText' API instead.")]
 #else
 		[Deprecated (PlatformName.iOS, 7, 0, message : "Use the 'CoreText' API instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 9, message : "Use the 'CoreText' API instead.")]

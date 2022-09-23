@@ -25,6 +25,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildUnifiedMobile_Program_SmokeTest ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedExample.csproj" });
 				TI.BuildProject (projectPath);
@@ -35,6 +37,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildUnifiedXM45_Program_SmokeTest ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "XM45Example.csproj" });
 				TI.BuildProject (projectPath);
@@ -55,6 +59,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildUnifiedMobile_Program_WithBCL ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				TestBCLCore (tmpDir, "UnifiedExample.csproj");
 			});
@@ -64,6 +70,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildUnifiedXM45_Program_WithBCL ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				TestBCLCore (tmpDir, "XM45Example.csproj");
 			});
@@ -73,6 +81,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildFSharpUnifiedMobile_Program_SmokeTest ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { FSharp = true, ProjectName = "FSharpUnifiedExample.fsproj" });
 				TI.BuildProject (projectPath);
@@ -83,6 +93,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildFSharpUnifiedXM45_Program_SmokeTest ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateEXEProject (new TI.UnifiedTestConfig (tmpDir) { FSharp = true, ProjectName = "FSharpXM45Example.fsproj" });
 				TI.BuildProject (projectPath);
@@ -93,6 +105,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildUnifiedMobile_Library_SmokeTest ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateUnifiedLibraryProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "UnifiedLibrary" });
 				TI.BuildProject (projectPath);
@@ -103,6 +117,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildUnifiedXM45_Library_SmokeTest ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateUnifiedLibraryProject (new TI.UnifiedTestConfig (tmpDir) { ProjectName = "XM45Library" });
 				TI.BuildProject (projectPath);
@@ -113,6 +129,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildFSharpUnifiedMobile_Library_SmokeTest ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateUnifiedLibraryProject (new TI.UnifiedTestConfig (tmpDir) { FSharp = true, ProjectName = "FSharpUnifiedLibrary" });
 				TI.BuildProject (projectPath);
@@ -123,6 +141,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildFSharpUnifiedXM45_Library_SmokeTest ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				string projectPath = TI.GenerateUnifiedLibraryProject (new TI.UnifiedTestConfig (tmpDir) { FSharp = true, ProjectName = "FSharpXM45Library" });
 				TI.BuildProject (projectPath);
@@ -133,6 +153,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildUnifiedProject_WithJustNativeRefNoLinkWith_Builds()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				var dylib = Path.GetFullPath (Path.Combine (TI.TestDirectory, "test-libraries", ".libs", "macos", "libtest.dylib"));
 				string itemGroup = $"<ItemGroup><NativeReference Include=\"{dylib}\"> <IsCxx>False</IsCxx><Kind>Dynamic</Kind> </NativeReference> </ItemGroup>";
@@ -153,6 +175,8 @@ namespace Xamarin.MMP.Tests
 		public void Build_BindingLibrary_SmokeTest (string projectName)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				TI.UnifiedTestConfig test = new TI.UnifiedTestConfig (tmpDir) { ProjectName = projectName };
 				string projectPath = TI.GenerateBindingLibraryProject (test);
@@ -167,6 +191,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildingSameBindingProject_TwoTimes_ShallNotInvokeMMPTwoTimes (string project)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var dylib = Path.GetFullPath (Path.Combine (TI.TestDirectory, "test-libraries", ".libs", "macos", "libtest.dylib"));
 			string nativeRefItemGroup = $"<ItemGroup><NativeReference Include = \"{dylib}\"><Kind>Dynamic</Kind><SmartLink>False</SmartLink></NativeReference></ItemGroup>";
 
@@ -187,6 +213,8 @@ namespace Xamarin.MMP.Tests
 		public void BuildingSameProject_TwoTimes_ShallNotInvokeMMPTwoTimes (string project)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunMSBuildTest (tmpDir => {
 				var config = new TI.UnifiedTestConfig (tmpDir) { ProjectName = project };
 				string projectPath = TI.GenerateEXEProject (config);
@@ -202,6 +230,8 @@ namespace Xamarin.MMP.Tests
 		public void MyCocoaSceneKitApp ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var projectPath = Path.Combine (Configuration.TestProjectsDirectory, "MyCocoaSceneKitApp", "MyCocoaSceneKitApp.csproj");
 			// Clone the project directory to a temporary directory
 			var testDirectory = Configuration.CloneTestDirectory (Path.GetDirectoryName (projectPath));
@@ -219,6 +249,8 @@ namespace Xamarin.MMP.Tests
 		public void MyCocoaCoreMLApp ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var projectPath = Path.Combine (Configuration.TestProjectsDirectory, "MyCocoaCoreMLApp", "MyCocoaCoreMLApp.csproj");
 			// Clone the project directory to a temporary directory
 			var testDirectory = Configuration.CloneTestDirectory (Path.GetDirectoryName (projectPath));
