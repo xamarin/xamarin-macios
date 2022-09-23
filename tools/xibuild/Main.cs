@@ -236,7 +236,7 @@ namespace xibuild {
 					return;
 
 				// MSBuild property names are case insensitive
-				var valueAttribute = toolsets.SelectSingleNode ($"property[translate(@name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='{name.ToLowerInvariant ()}']/@value");
+				var valueAttribute = toolsets.SelectSingleNode ($"property[translate(@name, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz')='{name.ToLowerInvariant()}']/@value");
 				if (valueAttribute != null) {
 					valueAttribute.Value = value;
 				} else {

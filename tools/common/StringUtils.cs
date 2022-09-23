@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-#nullable enable
+#nullable enable 
 
 namespace Xamarin.Utils {
 	internal class StringUtils {
 		static StringUtils ()
 		{
 			PlatformID pid = Environment.OSVersion.Platform;
-			if (((int) pid != 128 && pid != PlatformID.Unix && pid != PlatformID.MacOSX))
+			if (((int)pid != 128 && pid != PlatformID.Unix && pid != PlatformID.MacOSX))
 				shellQuoteChar = '"'; // Windows
 			else
 				shellQuoteChar = '\''; // !Windows
 		}
 
 		static char shellQuoteChar;
-		static char [] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
+		static char[] mustQuoteCharacters = new char [] { ' ', '\'', ',', '$', '\\' };
 		static char [] mustQuoteCharactersProcess = { ' ', '\\', '"', '\'' };
 
-		public static string []? Quote (params string [] array)
+		public static string[]? Quote (params string[] array)
 		{
 			if (array is null || array.Length == 0)
 				return array;
@@ -53,14 +53,14 @@ namespace Xamarin.Utils {
 			return s.ToString ();
 		}
 
-		public static string []? QuoteForProcess (IList<string> arguments)
+		public static string[]? QuoteForProcess (IList<string> arguments)
 		{
 			if (arguments is null)
 				return Array.Empty<string> ();
 			return QuoteForProcess (arguments.ToArray ());
 		}
 
-		public static string []? QuoteForProcess (params string [] array)
+		public static string[]? QuoteForProcess (params string [] array)
 		{
 			if (array is null || array.Length == 0)
 				return array;
@@ -184,7 +184,7 @@ namespace Xamarin.Utils {
 				} else if (qchar == '\0' && (c == '\'' || c == '"')) {
 					string sofar = builder.ToString ();
 
-					if (GetArgument (builder, buf, i, out endIndex, out ex) is string embedded) {
+					if (GetArgument (builder, buf, i, out endIndex, out ex) is string embedded ) {
 						i = endIndex;
 						builder.Clear ();
 						builder.Append (sofar);
@@ -212,7 +212,7 @@ namespace Xamarin.Utils {
 
 			return builder.ToString ();
 		}
-
+		
 		// Version.Parse requires, minimally, both major and minor parts.
 		// However we want to accept `11` as `11.0`
 		public static Version ParseVersion (string v)
@@ -224,19 +224,20 @@ namespace Xamarin.Utils {
 		}
 	}
 
-	static class StringExtensions {
+	static class StringExtensions
+	{
 		internal static string [] SplitLines (this string s) => s.Split (new [] { Environment.NewLine }, StringSplitOptions.None);
 
 		// Adds an element to an array and returns a new array with the added element.
 		// The original array is not modified.
 		// If the original array is null, a new array is also created, with just the new value.
-		internal static T [] CopyAndAdd<T> (this T [] array, T value)
+		internal static T [] CopyAndAdd<T>(this T[] array, T value)
 		{
 			if (array is null || array.Length == 0)
 				return new T [] { value };
 			var tmpArray = array;
 			Array.Resize (ref array, array.Length + 1);
-			tmpArray [tmpArray.Length - 1] = value;
+			tmpArray[tmpArray.Length - 1] = value;
 			return tmpArray;
 		}
 	}
