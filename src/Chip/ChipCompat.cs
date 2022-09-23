@@ -161,12 +161,14 @@ namespace Chip {
 
 		public virtual bool IsDevicePaired (ulong deviceID, out NSError? error) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
+#if !NET && !__MACOS__
 		[Obsolete ("This method is removed.", false)]
-		[Unavailable (PlatformName.MacOSX, ObjCRuntime.PlatformArchitecture.All)]
 		public virtual bool PairDevice (ulong deviceId, ushort discriminator, uint setupPinCode, out NSError? error) => throw new InvalidOperationException (Constants.RemovedFromChip);
+#endif
 
-		[Unavailable (PlatformName.MacOSX, ObjCRuntime.PlatformArchitecture.All)]
+#if !__MACOS__
 		public virtual bool PairDevice (ulong deviceID, ushort discriminator, uint setupPINCode, NSData? csrNonce, out NSError? error) => throw new InvalidOperationException (Constants.RemovedFromChip);
+#endif
 
 		public virtual bool PairDevice (ulong deviceId, string address, ushort port, ushort discriminator, uint setupPinCode, out NSError? error) => throw new InvalidOperationException (Constants.RemovedFromChip);
 
