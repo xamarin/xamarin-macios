@@ -103,7 +103,21 @@ namespace Xharness {
 			}
 		}
 
-		string MlaunchPath => Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
+		string MlaunchPath {
+			get {
+				if (INCLUDE_XAMARIN_LEGACY) {
+					if (INCLUDE_IOS)
+						return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
+				} else {
+					var dotnetRootDir = Path.Combine (RootDirectory, "..", "_build");
+					if (INCLUDE_IOS)
+						return Path.Combine (dotnetRootDir, "Microsoft.iOS.Sdk", "tools", "bin", "mlaunch");
+					if (INCLUDE_TVOS)
+						return Path.Combine (dotnetRootDir, "Microsoft.tvOS.Sdk", "tools", "bin", "mlaunch");
+				}
+				return $"Not building any mobile platform, so can't provide a location to mlaunch.";
+			}
+		}
 
 		public List<iOSTestProject> IOSTestProjects { get; }
 		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
@@ -131,6 +145,7 @@ namespace Xharness {
 		public string MONO_MAC_SDK_DESTDIR { get; }
 		public bool ENABLE_XAMARIN { get; }
 		public bool ENABLE_DOTNET { get; }
+		public bool INCLUDE_XAMARIN_LEGACY { get; }
 
 		// Run
 
@@ -204,6 +219,7 @@ namespace Xharness {
 			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_XAMARIN = config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (config ["ENABLE_XAMARIN"]);
 			ENABLE_DOTNET = config.ContainsKey ("ENABLE_DOTNET") && !string.IsNullOrEmpty (config ["ENABLE_DOTNET"]);
+			INCLUDE_XAMARIN_LEGACY = config.ContainsKey ("INCLUDE_XAMARIN_LEGACY") && !string.IsNullOrEmpty (config ["INCLUDE_XAMARIN_LEGACY"]);
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;

@@ -83,6 +83,7 @@ namespace Xamarin.Tests
 		[TestCase (Profile.macOSMobile)]
 		public void PublicSymbols (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var paths = new HashSet<string> ();
 			if (Configuration.include_device)
 				paths.UnionWith (Directory.GetFileSystemEntries (Configuration.GetSdkPath (profile, true), "*.a", SearchOption.AllDirectories));
