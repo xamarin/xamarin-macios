@@ -9,14 +9,12 @@ using Microsoft.Build.Framework;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class SymbolStripTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class SymbolStripTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]
-		public ITaskItem[] Executable { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] Executable { get; set; } = Array.Empty<ITaskItem> ();
 
 		// This can also be specified as metadata on the Executable item (as 'SymbolFile')
 		public string SymbolFile { get; set; } = string.Empty;

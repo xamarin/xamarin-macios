@@ -8,10 +8,8 @@ using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class WriteAppManifestTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class WriteAppManifestTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]
@@ -19,7 +17,7 @@ namespace Xamarin.MacDev.Tasks
 		public ITaskItem? AppBundleManifest { get; set; }
 
 		[Required]
-		public ITaskItem[]? AppManifests { get; set; }
+		public ITaskItem []? AppManifests { get; set; }
 
 		#endregion
 

@@ -7,11 +7,9 @@ using Microsoft.Build.Framework;
 
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class CollectITunesSourceFilesTaskBase : XamarinTask
-	{
-		static readonly string[] iTunesFileNames = { "iTunesMetadata.plist", "iTunesArtwork@2x", "iTunesArtwork" };
+namespace Xamarin.iOS.Tasks {
+	public abstract class CollectITunesSourceFilesTaskBase : XamarinTask {
+		static readonly string [] iTunesFileNames = { "iTunesMetadata.plist", "iTunesArtwork@2x", "iTunesArtwork" };
 
 		#region Inputs
 
@@ -23,7 +21,7 @@ namespace Xamarin.iOS.Tasks
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] ITunesSourceFiles { get; set; }
+		public ITaskItem [] ITunesSourceFiles { get; set; }
 
 		#endregion
 

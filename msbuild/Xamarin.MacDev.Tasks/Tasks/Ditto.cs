@@ -5,10 +5,8 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class Ditto : DittoTaskBase, ITaskCallback
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class Ditto : DittoTaskBase, ITaskCallback {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ()) {
@@ -31,8 +29,8 @@ namespace Xamarin.MacDev.Tasks
 		}
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
-		{	
-			if (!Directory.Exists(Source.ItemSpec))
+		{
+			if (!Directory.Exists (Source.ItemSpec))
 				return Enumerable.Empty<ITaskItem> ();
 
 			if (!CopyFromWindows)
@@ -41,8 +39,8 @@ namespace Xamarin.MacDev.Tasks
 			// TaskRunner doesn't know how to copy directories to Mac but `ditto` can take directories (and that's why we use ditto often).
 			// If Source is a directory path, let's add each file within it as an TaskItem, as TaskRunner knows how to copy files to Mac.
 			return Directory.GetFiles (Source.ItemSpec, "*", SearchOption.AllDirectories)
-				.Select(f => new TaskItem(f));
-		} 
+				.Select (f => new TaskItem (f));
+		}
 
 		public bool ShouldCopyToBuildServer (ITaskItem item) => true;
 

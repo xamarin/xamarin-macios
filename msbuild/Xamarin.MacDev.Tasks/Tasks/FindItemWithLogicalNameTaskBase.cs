@@ -4,10 +4,8 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class FindItemWithLogicalNameTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class FindItemWithLogicalNameTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]
@@ -19,7 +17,7 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public string LogicalName { get; set; }
 
-		public ITaskItem[] Items { get; set; }
+		public ITaskItem [] Items { get; set; }
 
 		#endregion Inputs
 
@@ -36,7 +34,7 @@ namespace Xamarin.MacDev.Tasks
 				var prefixes = BundleResource.SplitResourcePrefixes (ResourcePrefix);
 
 				foreach (var item in Items) {
-					var logical = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty(SessionId));
+					var logical = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
 
 					if (logical == LogicalName) {
 						Log.LogMessage (MessageImportance.Low, MSBStrings.M0149, LogicalName, item.ItemSpec);
