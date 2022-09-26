@@ -2,6 +2,9 @@ using System.IO;
 
 using NUnit.Framework;
 
+using Xamarin.Tests;
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture ("iPhone")]
@@ -17,6 +20,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void BuildTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			BuildProject ("MyLinkedAssets");
 
 			foreach (var name in IconNames) {

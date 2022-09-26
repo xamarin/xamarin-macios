@@ -935,6 +935,10 @@
 		<value>The option '{0}' cannot take the value '{1}' when using CoreCLR.</value>
 	</data>
 
+	<data name="MX0186" xml:space="preserve">
+		<value>Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.</value>
+	</data>
+
 	<data name="MX1009" xml:space="preserve">
 		<value>Could not copy the assembly '{0}' to '{1}': {2}
 		</value>

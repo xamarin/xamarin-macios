@@ -1027,6 +1027,98 @@ namespace Xamarin.Tests {
 			var result = DotNet.AssertBuild (project_path, properties);
 		}
 
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void CustomizedCodeSigning (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "CustomizedCodeSigning";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+
+			DotNet.AssertBuild (project_path, properties);
+
+			var codesignDirectory =GetRelativeCodesignDirectory (platform);
+			var sharedSupportDir = string.Empty;
+			var dylibDir = GetRelativeDylibDirectory (platform);
+
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				sharedSupportDir = "SharedSupport";
+				break;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				sharedSupportDir = Path.Combine ("Contents", "SharedSupport");
+				break;
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+
+			var appBundleContents = Directory
+				.GetFileSystemEntries (appPath, "*", SearchOption.AllDirectories)
+				.Select (v => v.Substring (appPath.Length + 1))
+				.ToHashSet ();
+
+			// Assert that some apps are signed
+			var directoriesThatMustExist = new string [] {
+				Path.Combine (codesignDirectory, "_CodeSignature"),
+				Path.Combine (sharedSupportDir, "app1.app", codesignDirectory, "_CodeSignature"),
+			};
+
+			foreach (var mustExist in directoriesThatMustExist)
+				Assert.That (appBundleContents, Does.Contain (mustExist), "Must exist");
+
+			appBundleContents.ExceptWith (directoriesThatMustExist);
+
+			// And that there are no other signed apps
+			var signatures = appBundleContents.Where (v => v.EndsWith ("_CodeSignature", StringComparison.Ordinal));
+			Assert.That (signatures, Is.Empty, "No other signed app budnles");
+
+			// Assert that some dylibs are signed
+			var dylibs = appBundleContents.Where (v => Path.GetExtension (v) == ".dylib").ToList ();
+			var signedDylibs = new List<string> {
+				Path.Combine (sharedSupportDir, "app2.app", dylibDir, "lib2.dylib"),
+			};
+			if (platform == ApplePlatform.MacCatalyst) {
+				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.IO.Compression.Native.dylib"));
+				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Native.dylib"));
+				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Net.Security.Native.dylib"));
+				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Security.Cryptography.Native.Apple.dylib"));
+				signedDylibs.Add (Path.Combine (dylibDir, "libmonosgen-2.0.dylib"));
+				signedDylibs.Add (Path.Combine (dylibDir, "libxamarin-dotnet-debug.dylib"));
+			}
+
+			foreach (var dylib in signedDylibs) {
+				var path = Path.Combine (appPath, dylib);
+				Assert.That (path, Does.Exist, "dylib exists");
+				Assert.IsTrue (IsDylibSigned (path), $"Signed: {path}");
+			}
+			appBundleContents.ExceptWith (signedDylibs);
+			// And that there are unsigned dylibs, but not the system ones
+			var remainingDylibs = appBundleContents
+				.Where (v => Path.GetExtension (v) == ".dylib")
+				.ToArray ();
+			foreach (var unsignedDylib in remainingDylibs) {
+				var path = Path.Combine (appPath, unsignedDylib);
+				Assert.That (path, Does.Exist, "unsigned dylib existence");
+				Assert.IsFalse (IsDylibSigned (path), $"Unsigned: {path}");
+			}
+			Assert.AreEqual (1, remainingDylibs.Length, "Unsigned count");
+		}
+
+		bool IsDylibSigned (string dylib)
+		{
+			var file = MachO.Read (dylib).Single ();
+			foreach (var lc in file.load_commands) {
+				if (lc.cmd == (int) MachO.LoadCommands.CodeSignature)
+					return true;
+			}
+
+			return false;
+		}
+
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Release")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64", "Debug")]
 		public void AutoAllowJitEntitlements (ApplePlatform platform, string runtimeIdentifiers, string configuration)

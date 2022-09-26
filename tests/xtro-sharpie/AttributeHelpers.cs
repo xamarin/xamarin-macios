@@ -63,6 +63,13 @@ namespace Extrospection
 			return false;
 		}
 
+		public static bool HasObsoletedOSPlatform (CustomAttribute attribute, Platforms platform)
+		{
+			if (attribute.Constructor.DeclaringType.Name == "ObsoletedOSPlatformAttribute")
+				return IsOSPlatformAttribute (attribute, platform);
+			return false;
+		}
+
 		public static bool HasObsolete (CustomAttribute attribute, Platforms platform)
 		{
 			return attribute.Constructor.DeclaringType.Name == "ObsoleteAttribute";
@@ -116,6 +123,10 @@ namespace Extrospection
 					if (AttributeHelpers.HasUnsupportedOSPlatform (attribute, Helpers.Platform))
 						return true;
 					if (Helpers.Platform == Platforms.MacCatalyst && AttributeHelpers.HasUnsupportedOSPlatform (attribute, Platforms.iOS))
+						return true;
+					if (AttributeHelpers.HasObsoletedOSPlatform (attribute, Helpers.Platform))
+						return true;
+					if (Helpers.Platform == Platforms.MacCatalyst && AttributeHelpers.HasObsoletedOSPlatform (attribute, Platforms.iOS))
 						return true;
 				}
 			} else {
@@ -188,6 +199,7 @@ namespace Extrospection
 			switch (attrib.AttributeType.Name) {
 			case "SupportedOSPlatformAttribute":
 			case "UnsupportedOSPlatformAttribute":
+			case "ObsoletedOSPlatformAttribute":
 				var platformName = (string) attrib.ConstructorArguments [0].Value;
 				return platformName.StartsWith (platform.AsPlatformAttributeString (), StringComparison.OrdinalIgnoreCase);
 			default:

@@ -839,31 +839,6 @@ namespace Xamarin.Tests
 				yield return Path.Combine (GetRefDirectory (platform), GetBaseLibraryName (platform, true));
 		}
 
-		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
-		{
-			if (include_ios)
-				yield return ApplePlatform.iOS;
-			if (include_tvos)
-				yield return ApplePlatform.TVOS;
-			if (include_mac)
-				yield return ApplePlatform.MacOSX;
-			if (include_maccatalyst)
-				yield return ApplePlatform.MacCatalyst;
-			if (include_watchos && !dotnet)
-				yield return ApplePlatform.WatchOS;
-		}
-
-		public static IEnumerable<ApplePlatform> GetAllPlatforms (bool dotnet)
-		{
-			yield return ApplePlatform.iOS;
-			yield return ApplePlatform.TVOS;
-			yield return ApplePlatform.MacOSX;
-			if (dotnet)
-				yield return ApplePlatform.MacCatalyst;
-			if (!dotnet)
-				yield return ApplePlatform.WatchOS;
-		}
-
 		public static string GetTargetFramework (Profile profile)
 		{
 			switch (profile) {
@@ -927,6 +902,31 @@ namespace Xamarin.Tests
 		}
 #endif // !XAMMAC_TESTS
 		
+		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
+		{
+			if (include_ios)
+				yield return ApplePlatform.iOS;
+			if (include_tvos)
+				yield return ApplePlatform.TVOS;
+			if (include_mac)
+				yield return ApplePlatform.MacOSX;
+			if (include_maccatalyst)
+				yield return ApplePlatform.MacCatalyst;
+			if (include_watchos && !dotnet)
+				yield return ApplePlatform.WatchOS;
+		}
+
+		public static IEnumerable<ApplePlatform> GetAllPlatforms (bool dotnet)
+		{
+			yield return ApplePlatform.iOS;
+			yield return ApplePlatform.TVOS;
+			yield return ApplePlatform.MacOSX;
+			if (dotnet)
+				yield return ApplePlatform.MacCatalyst;
+			if (!dotnet)
+				yield return ApplePlatform.WatchOS;
+		}
+
 		public static string NuGetPackagesDirectory {
 			get {
 				return Path.Combine (RootPath, "packages");
@@ -949,6 +949,13 @@ namespace Xamarin.Tests
 			if (include_dotnet)
 				return;
 			Assert.Ignore (".NET tests not enabled");
+		}
+
+		public static void AssertLegacyXamarinAvailable ()
+		{
+			if (include_legacy_xamarin)
+				return;
+			Assert.Ignore ("Legacy xamarin build not enabled");
 		}
 
 		public static string CloneTestDirectory (string directory)
@@ -1094,7 +1101,7 @@ namespace Xamarin.Tests
 		{
 			var allPlatforms = GetAllPlatforms (dotnet);
 			var includedPlatforms = GetIncludedPlatforms (dotnet);
-			var	notIncluded = allPlatforms.Where (v => !includedPlatforms.Contains (v));
+			var notIncluded = allPlatforms.Where (v => !includedPlatforms.Contains (v));
 			if (notIncluded.Any ())
 				Assert.Ignore ($"This test requires all platforms to be included, but the following platforms aren't included: {string.Join (", ", notIncluded.Select (v => v.AsString ()))}");
 		}

@@ -2,6 +2,9 @@ using System;
 using NUnit.Framework;
 using System.Linq;
 
+using Xamarin.Tests;
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
@@ -17,6 +20,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void BasicTest () 
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			this.BuildExtension ("MyMetalGame", "MyKeyboardExtension");
 			this.TestStoryboardC (AppBundlePath);
 		}
