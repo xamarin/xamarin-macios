@@ -273,19 +273,19 @@ namespace Cecil.Tests {
 			}
 			// Generator Bug - Protocol inline with different attribute bug
 			switch (member) {
- 			case string s when s.StartsWith ("SceneKit.SCNLayer"):
- 				return true;
- 			case string s when s.StartsWith ("AVFoundation.AVAudioSession"):
- 				return true;
-			case string s when s.StartsWith("MediaPlayer.MPMoviePlayerController"):
- 				return true;
- 			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialAssertion"):
- 				return true;
- 			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialRegistration"):
- 				return true;
+			case string s when s.StartsWith ("SceneKit.SCNLayer"):
+				return true;
+			case string s when s.StartsWith ("AVFoundation.AVAudioSession"):
+				return true;
+			case string s when s.StartsWith ("MediaPlayer.MPMoviePlayerController"):
+				return true;
+			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialAssertion"):
+				return true;
+			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialRegistration"):
+				return true;
 			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor"):
- 				return true;
- 			}
+				return true;
+			}
 			switch (member) {
 			case "GameplayKit.GKHybridStrategist.get_GameModel":
 			case "GameplayKit.GKHybridStrategist.get_RandomSource":
