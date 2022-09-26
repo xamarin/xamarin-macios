@@ -163,8 +163,6 @@ msbuild.zip:
 	cp -R $(TOP)/msbuild/Xamarin.iOS.Tasks.Windows/bin/Release/netstandard2.0/win/ msbuild/iOS
 	$(SYSTEM_MSBUILD) $(TOP)/msbuild/Xamarin.Mac.Tasks/Xamarin.Mac.Tasks.csproj -r /p:Configuration=Release
 	cp -R $(TOP)/msbuild/Xamarin.Mac.Tasks/bin/Release/netstandard2.0/ msbuild/Mac
-	$(SYSTEM_MSBUILD) $(TOP)/../xamarin-analysis/shared/Xamarin.Analysis/Xamarin.Analysis.csproj -r /p:OutputPath=msbuildOutput /p:Configuration=Release
-	cp -R $(TOP)/../xamarin-analysis/shared/Xamarin.Analysis/msbuildOutput/ msbuild/iOS
 ifdef INCLUDE_WATCH
 	mv -f msbuild/iOS/*WatchOS*.* msbuild/WatchOS
 	mv -f msbuild/iOS/NoCode.cs msbuild/WatchOS
