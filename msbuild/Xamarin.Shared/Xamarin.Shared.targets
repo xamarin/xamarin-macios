@@ -792,6 +792,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<PropertyGroup>
 		<_CompileImageAssetsDependsOn>
+			$(CompileImageAssetsDependsOn);
 			$(_CompileImageAssetsDependsOn);
 			_DetectAppManifest;
 			_DetectSdkLocations;
