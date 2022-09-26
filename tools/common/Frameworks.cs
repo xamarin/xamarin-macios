@@ -453,7 +453,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 				{ "AVRouting", "AVRouting", 16,0},
 				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
-				{ "SharedWithYou", "SharedWithYouCore", 16, 0 },
+				{ "SharedWithYou", "SharedWithYou", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 
 				// the above MUST be kept in sync with simlauncher
