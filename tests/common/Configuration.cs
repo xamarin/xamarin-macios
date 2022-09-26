@@ -11,8 +11,10 @@ using Xamarin.Utils;
 
 #nullable disable // until we get around to fixing this file
 
-namespace Xamarin.Tests {
-	static partial class Configuration {
+namespace Xamarin.Tests
+{
+	static partial class Configuration
+	{
 		public const string XI_ProductName = "MonoTouch";
 		public const string XM_ProductName = "Xamarin.Mac";
 
@@ -87,7 +89,7 @@ namespace Xamarin.Tests {
 		}
 
 		public static string IOS_DESTDIR {
-			get { return ios_destdir; }
+			get { return ios_destdir;  }
 		}
 
 		public static string MAC_DESTDIR {
@@ -119,7 +121,8 @@ namespace Xamarin.Tests {
 			if (with_versions.Count == 0)
 				return null;
 
-			with_versions.Sort ((x, y) => {
+			with_versions.Sort ((x, y) =>
+			{
 				if (x.Item1 > y.Item1)
 					return -1;
 				else if (x.Item1 < y.Item1)
@@ -351,7 +354,7 @@ namespace Xamarin.Tests {
 				return false;
 			}
 		}
-
+			
 		static string TestAssemblyDirectory {
 			get {
 				return TestContext.CurrentContext.WorkDirectory;
@@ -414,7 +417,7 @@ namespace Xamarin.Tests {
 
 		public static string TargetDirectoryXI {
 			get {
-				if (UseSystem)
+				if (UseSystem) 
 					return "/";
 				return make_config ["IOS_DESTDIR"];
 			}
@@ -422,7 +425,7 @@ namespace Xamarin.Tests {
 
 		public static string TargetDirectoryXM {
 			get {
-				if (UseSystem)
+				if (UseSystem) 
 					return "/";
 				return make_config ["MAC_DESTDIR"];
 			}
@@ -447,7 +450,7 @@ namespace Xamarin.Tests {
 		static string GetRefNuGetName (TargetFramework targetFramework) => GetRefNuGetName (targetFramework.Platform);
 
 		static string GetRefNuGetName (ApplePlatform platform)
-		{
+        {
 			switch (platform) {
 			case ApplePlatform.iOS:
 				return "Microsoft.iOS.Ref";
@@ -744,7 +747,7 @@ namespace Xamarin.Tests {
 					throw new NotSupportedException ($"Unknown assembly: {assemblyName}");
 				}
 			}
-		}
+		}		
 
 		public static string GetBaseLibrary (TargetFramework targetFramework)
 		{
@@ -898,7 +901,7 @@ namespace Xamarin.Tests {
 			return "/Library/Frameworks/Mono.framework/Commands/csc";
 		}
 #endif // !XAMMAC_TESTS
-
+		
 		public static IEnumerable<ApplePlatform> GetIncludedPlatforms (bool dotnet)
 		{
 			if (include_ios)
@@ -1018,7 +1021,7 @@ namespace Xamarin.Tests {
 			environment ["MD_APPLE_SDK_ROOT"] = Path.GetDirectoryName (Path.GetDirectoryName (xcode_root));
 			environment ["TargetFrameworkFallbackSearchPaths"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild-frameworks");
 			environment ["MSBuildExtensionsPathFallbackPathsOverride"] = Path.Combine (rootDirectory, "Library", "Frameworks", "Mono.framework", "External", "xbuild");
-
+			
 			// This is set by `dotnet test` and can cause building legacy projects to fail to build with:
 			// Microsoft.NET.Build.Extensions.ConflictResolution.targets(30,5):
 			// error MSB4062: The "ResolvePackageFileConflicts" task could not be loaded from the assembly Microsoft.NET.Build.Extensions.Tasks.dll.
@@ -1060,7 +1063,7 @@ namespace Xamarin.Tests {
 				if (!include_dotnet_watchos)
 					Assert.Ignore ("watchOS is not included in this build");
 #endif
-
+					
 				break;
 			case ApplePlatform.MacOSX:
 				if (!include_mac)

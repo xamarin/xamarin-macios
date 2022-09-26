@@ -97,7 +97,7 @@ namespace Cecil.Tests {
 		{
 			var list = new StringBuilder ();
 			foreach (var mar in methodAndResults) {
-				list.Append ("\n\"").Append (mar.Method.FullName).Append ("\" : ");
+				list.Append ("\n\"").Append (mar.Method.FullName).Append("\" : ");
 				switch (mar.Result) {
 				case GenericCheckResult.ContainsGenerics:
 					list.Append ("method contains a generic argument for the first arg of SetupBlockUnsafe. This is problematic in .NET 7 and above.");
@@ -151,7 +151,7 @@ namespace Cecil.Tests {
 				if (method.Body is null)
 					return false;
 				return method.Body.Instructions.Any (IsCallToSetupBlockUnsafe);
-			});
+				});
 		}
 
 		static bool IsCallToSetupBlockUnsafe (Instruction instr)
@@ -160,8 +160,7 @@ namespace Cecil.Tests {
 				instr.Operand.ToString () == "System.Void ObjCRuntime.BlockLiteral::SetupBlockUnsafe(System.Delegate,System.Delegate)";
 		}
 
-		static bool IsCall (Instruction instr)
-		{
+		static bool IsCall (Instruction instr) {
 			return instr.OpCode == OpCodes.Call ||
 				instr.OpCode == OpCodes.Calli;
 		}
@@ -230,7 +229,7 @@ namespace Cecil.Tests {
 
 		static TypeReference GetLastArgType (MethodDefinition method, Instruction instr)
 		{
-			var paramDef = GetOperandType (method, instr);
+			var paramDef = GetOperandType(method, instr);
 			if (paramDef is null) {
 				throw new NotImplementedException ($"Last instruction before call to SetupBlockUnsafe ({instr.ToString ()}) was not a Ldfld, Ldarg or Ldloc - this is quite unexpected - something's changed in the code base!");
 			}

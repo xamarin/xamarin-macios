@@ -50,7 +50,7 @@ namespace Cecil.Tests {
 			}
 		}
 
-		[TestCaseSource (typeof (Helper), nameof (Helper.PlatformAssemblies))]
+		[TestCaseSource (typeof (Helper),  nameof (Helper.PlatformAssemblies))]
 		[TestCaseSource (typeof (Helper), nameof (Helper.NetPlatformImplementationAssemblies))]
 		// ref: https://github.com/xamarin/xamarin-macios/issues/8249
 		public void EnsureUIThreadOnInit (string assemblyPath)
