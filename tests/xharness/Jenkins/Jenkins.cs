@@ -89,21 +89,29 @@ namespace Xharness.Jenkins {
 
 		public bool IsIncluded (TestProject project)
 		{
-			MainLog.WriteLine ($"Testing {project.Name} with label {project.Label.ToString ()} is included.");
 			if (!project.IsExecutableProject) {
-				MainLog.WriteLine ($"Ignoring {project.Name} because is not a executable project.");
+				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because is not a executable project.");
 				return false;
 			}
 
 			if (!TestSelection.IsEnabled(TestLabel.SystemPermission) && project.Label == TestLabel.Introspection) {
-				MainLog.WriteLine ($"Ignoring {project.Name} because we cannot include the system permission tests");
+				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because we cannot include the system permission tests");
 				return false;
 			}
 
-			MainLog.WriteLine ($"Selected tests are {TestSelection.SelectedTests.ToString ()}");
-			MainLog.WriteLine ($"Selected platforms are {TestSelection.SelectedPlatforms.ToString () }");
-			MainLog.WriteLine ($"Prohect {project.Name} is included: {TestSelection.IsEnabled (project.Label)}");
-			return TestSelection.IsEnabled (project.Label);
+			if (project.IsDotNetProject && !TestSelection.IsEnabled (PlatformLabel.Dotnet)) {
+				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because it's a .NET project and .NET is not included.");
+				return false;
+			}
+
+			if (!project.IsDotNetProject && !TestSelection.IsEnabled (PlatformLabel.LegacyXamarin)) {
+				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because it's a legacy Xamarin project and legacy Xamarin projects are not included.");
+				return false;
+			}
+
+			var rv = TestSelection.IsEnabled (project.Label);
+			MainLog.WriteLine ($"Including {project.Name} with label {project.Label.ToString ()}: {rv}");
+			return rv;
 		}
 
 		public bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
@@ -150,7 +158,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro),
+				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro) || !TestSelection.IsEnabled (PlatformLabel.LegacyXamarin),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
