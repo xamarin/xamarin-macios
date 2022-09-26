@@ -10,10 +10,13 @@ using Xamarin.Utils;
 
 #nullable disable // until we get around to fixing this file
 
-namespace Xamarin.Tests {
-	class XBuild {
+namespace Xamarin.Tests
+{
+	class XBuild
+	{
 		public static string ToolPath {
-			get {
+			get
+			{
 				return Configuration.XIBuildPath;
 			}
 		}
