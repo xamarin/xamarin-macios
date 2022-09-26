@@ -5,8 +5,7 @@
 
 #nullable enable
 
-namespace Xamarin.Utils
-{
+namespace Xamarin.Utils {
 	public enum ApplePlatform {
 		None,
 		MacOSX,
