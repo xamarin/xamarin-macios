@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Foundation;
 using CoreFoundation;
@@ -110,8 +111,10 @@ namespace HomeKit {
 	}	
 #endif // !NET
 
+#if !XAMCORE_5_0
 #if __IOS__ && !__MACCATALYST__
 #if NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
 	[Obsolete ("This class is removed.")]
 #endif
 	public unsafe partial class HMAccessorySetupManager : NSObject {
@@ -128,5 +131,6 @@ namespace HomeKit {
 		public virtual void PerformMatterEcosystemAccessorySetup (HMAccessorySetupRequest request, HMMatterTopology topology, Action<NSError> completion) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual Task PerformMatterEcosystemAccessorySetupAsync (HMAccessorySetupRequest request, HMMatterTopology topology) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 	}
+#endif
 #endif
 }
