@@ -1299,7 +1299,7 @@
 		<ReadItemsFromFile
 			SessionId="$(BuildSessionId)"
 			File="%(_RidSpecificCodesignItemsPath.Identity)"
-			Condition="@(_RidSpecificCodesignItemsPath->Count()) &gt; 0"
+			Condition="@(_RidSpecificCodesignItemsPath->Count()) &gt; 0 And '$(IsMacEnabled)' == 'true'"
 		>
 			<Output TaskParameter="Items" ItemName="_RidSpecificCodesignItems" />
 		</ReadItemsFromFile>
