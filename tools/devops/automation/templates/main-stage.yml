@@ -92,6 +92,59 @@ parameters:
   type: stepList
   default: []
 
+- name: packages
+  type: object
+  default: [
+    {
+      job: prepare_packages,
+      displayName: 'Prepare packages',
+      packages: [
+        {
+          job: 'microsoft_ios_sign_notarize',
+          name: 'Microsoft.iOS',
+          pattern: 'Microsoft.iOS.Bundle*.pkg',
+          conditionVariable: "INCLUDE_DOTNET_IOS",
+        },
+        {
+          job: 'microsoft_tvos_sign_notarize',
+          name: 'Microsoft.tvOS',
+          pattern: 'Microsoft.tvOS.Bundle*.pkg',
+          conditionVariable: "INCLUDE_DOTNET_TVOS",
+        },
+        {
+          job: 'microsoft_mac_sign_notarize',
+          name: 'Microsoft.macOS',
+          pattern: 'Microsoft.macOS.Bundle*.pkg',
+          conditionVariable: "INCLUDE_DOTNET_MACOS",
+        },
+        {
+          job: 'microsoft_maccatalyst_sign_notarize',
+          name: 'Microsoft.MacCatalyst',
+          pattern: 'Microsoft.MacCatalyst.Bundle*.pkg',
+          conditionVariable: "INCLUDE_DOTNET_MACCATALYST",
+        },
+      ],
+    },
+    {
+      job: prepare_packages_legacy,
+      displayName: 'Prepare legacy packages',
+      packages: [
+        {
+          job: 'xamarin_ios_sign_notarize',
+          name: 'Xamarin.iOS',
+          pattern: 'xamarin.ios-*',
+          conditionVariable: "INCLUDE_LEGACY_IOS",
+        },
+        {
+          job: 'xamarin_mac_sing_notarie',
+          name: 'Xamarin.Mac',
+          pattern: 'xamarin.mac-*',
+          conditionVariable: "INCLUDE_LEGACY_MAC",
+        },
+      ],
+    }
+  ]
+
 stages:
 
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
@@ -150,71 +203,20 @@ stages:
         skipESRP: ${{ parameters.skipESRP }}
         pool: ${{ parameters.pool }}
 
-- stage: prepare_packages
-  displayName: 'Prepare packages'
-  dependsOn:
-  - build_packages
-  jobs:
-    - template: ./sign-and-notarized/prepare-pkg-stage.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        signingSetupSteps: ${{ parameters.signingSetupSteps }}
-        keyringPass: $(pass--lab--mac--builder--keychain)
-        enableDotnet: ${{ parameters.enableDotnet }}
-        skipESRP: ${{ parameters.skipESRP }}
-        packages: [
-          {
-            job: 'microsoft_ios_sign_notarize',
-            name: 'Microsoft.iOS',
-            pattern: 'Microsoft.iOS.Bundle*.pkg',
-            conditionVariable: "INCLUDE_DOTNET_IOS",
-          },
-          {
-            job: 'microsoft_tvos_sign_notarize',
-            name: 'Microsoft.tvOS',
-            pattern: 'Microsoft.tvOS.Bundle*.pkg',
-            conditionVariable: "INCLUDE_DOTNET_TVOS",
-          },
-          {
-            job: 'microsoft_mac_sign_notarize',
-            name: 'Microsoft.macOS',
-            pattern: 'Microsoft.macOS.Bundle*.pkg',
-            conditionVariable: "INCLUDE_DOTNET_MACOS",
-          },
-          {
-            job: 'microsoft_maccatalyst_sign_notarize',
-            name: 'Microsoft.MacCatalyst',
-            pattern: 'Microsoft.MacCatalyst.Bundle*.pkg',
-            conditionVariable: "INCLUDE_DOTNET_MACCATALYST",
-          },
-        ]
-
-- stage: prepare_packages_legacy
-  displayName: 'Prepare legacy packages'
-  dependsOn:
-  - build_packages
-  jobs:
-    - template: ./sign-and-notarized/prepare-pkg-stage.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        signingSetupSteps: ${{ parameters.signingSetupSteps }}
-        keyringPass: $(pass--lab--mac--builder--keychain)
-        enableDotnet: ${{ parameters.enableDotnet }}
-        skipESRP: ${{ parameters.skipESRP }}
-        packages: [
-          {
-            job: 'xamarin_ios_sign_notarize',
-            name: 'Xamarin.iOS',
-            pattern: 'xamarin.ios-*',
-            conditionVariable: "INCLUDE_LEGACY_IOS",
-          },
-          {
-            job: 'xamarin_mac_sing_notarie',
-            name: 'Xamarin.Mac',
-            pattern: 'xamarin.mac-*',
-            conditionVariable: "INCLUDE_LEGACY_MAC",
-          },
-        ]
+- ${{ each pkg_obj in parameters.packages }}:
+  - stage: ${{ pkg_obj.job }}
+    displayName: ${{ pkg_obj.displayName }}
+    dependsOn:
+    - build_packages
+    jobs:
+      - template: ./sign-and-notarized/prepare-pkg-stage.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          signingSetupSteps: ${{ parameters.signingSetupSteps }}
+          keyringPass: $(pass--lab--mac--builder--keychain)
+          enableDotnet: ${{ parameters.enableDotnet }}
+          skipESRP: ${{ parameters.skipESRP }}
+          packages: ${{ pkg_obj.packages }}
 
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
