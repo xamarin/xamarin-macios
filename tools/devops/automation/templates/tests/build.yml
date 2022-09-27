@@ -173,6 +173,7 @@ steps:
   continueOnError: true
 
 - bash: |
+    set -ex
     ls -R /Library/Frameworks/Xamarin.iOS.framework || true
     ls -R /Library/Frameworks/Xamarin.Mac.framework || true
   displayName: "Show installed Frameworks"
