@@ -1,0 +1,6 @@
+<pkg-info format-version="2" identifier="@UNINSTALL_PKG@" version="1" install-location="/" auth="root">
+    <payload installKBytes="0" numberOfFiles="0"/>
+    <scripts>
+        <preinstall  file="./uninstall"/>
+    </scripts>
+</pkg-info>

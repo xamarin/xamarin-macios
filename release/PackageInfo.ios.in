@@ -1,0 +1,7 @@
+
+<pkg-info format-version="2" identifier="@FULL_PACKAGE_UTI@" version="1" install-location="/" auth="root">
+    <payload installKBytes="@INSTALLKBYTES@" numberOfFiles="@NUMFILES@"/>
+    <scripts>
+        <postinstall file="./postinstall"/>
+    </scripts>
+</pkg-info>
