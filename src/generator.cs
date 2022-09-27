@@ -3575,7 +3575,7 @@ public partial class Generator : IMemberGatherer {
 			var droppedPlatforms = new HashSet<PlatformName>();
 
 			// Walk all members and look for introduced that are nonsense for our containing class's platform
-			foreach (var introduced in memberAvailability.Where (a => a.AvailabilityKind == AvailabilityKind.Introduced).ToList()) {
+			foreach (var introduced in memberAvailability.Where (a => a.AvailabilityKind == AvailabilityKind.Introduced || a.AvailabilityKind == AvailabilityKind.Deprecated).ToList()) {
 				// Hack - WebKit namespace has two distinct implementations with different types
 				// It can not be hacked in IsInSupportedFramework as AddUnlistedAvailability 
 				// will add iOS implied to the mac version and so on. So hard code it here...
