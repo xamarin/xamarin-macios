@@ -12,10 +12,8 @@ using System.Linq;
 
 #nullable disable // until we get around to fixing this file
 
-namespace Xamarin.Utils
-{
-	public struct TargetFramework : IEquatable<TargetFramework>
-	{
+namespace Xamarin.Utils {
+	public struct TargetFramework : IEquatable<TargetFramework> {
 		const string TFMVersion = "6.0";
 		public const string DotNet_iOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=ios"; // Short form: netX.Y-ios
 		public const string DotNet_tvOS_String = ".NETCoreApp,Version=" + TFMVersion + ",Profile=tvos"; // Short form: netX.Y-tvos
@@ -191,7 +189,7 @@ namespace Xamarin.Utils
 
 		public override bool Equals (object obj)
 		{
-			return obj is TargetFramework ? Equals ((TargetFramework)obj) : false;
+			return obj is TargetFramework ? Equals ((TargetFramework) obj) : false;
 		}
 
 		public override int GetHashCode ()
