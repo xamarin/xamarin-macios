@@ -12,7 +12,7 @@ parameters:
 
 stages:
 - stage: prepare_release
-  displayName: Prepare Release
+  displayName: A Prepare Release
   dependsOn: ${{ parameters.dependsOn }}
   condition: and(or(eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'), eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')), eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
 
