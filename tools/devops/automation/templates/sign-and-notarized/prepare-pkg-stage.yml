@@ -20,44 +20,7 @@ parameters:
 
 - name: packages
   type: object
-  default: [
-    {
-      job: 'xamarin_ios_sign_notarize',
-      name: 'Xamarin.iOS',
-      pattern: 'xamarin.ios-*',
-      conditionVariable: "INCLUDE_LEGACY_IOS",
-    },
-    {
-      job: 'xamarin_mac_sing_notarie',
-      name: 'Xamarin.Mac',
-      pattern: 'xamarin.mac-*',
-      conditionVariable: "INCLUDE_LEGACY_MAC",
-    },
-    {
-      job: 'microsoft_ios_sign_notarize',
-      name: 'Microsoft.iOS',
-      pattern: 'Microsoft.iOS.Bundle*.pkg',
-      conditionVariable: "INCLUDE_DOTNET_IOS",
-    },
-    {
-      job: 'microsoft_tvos_sign_notarize',
-      name: 'Microsoft.tvOS',
-      pattern: 'Microsoft.tvOS.Bundle*.pkg',
-      conditionVariable: "INCLUDE_DOTNET_TVOS",
-    },
-    {
-      job: 'microsoft_mac_sign_notarize',
-      name: 'Microsoft.macOS',
-      pattern: 'Microsoft.macOS.Bundle*.pkg',
-      conditionVariable: "INCLUDE_DOTNET_MACOS",
-    },
-    {
-      job: 'microsoft_maccatalyst_sign_notarize',
-      name: 'Microsoft.MacCatalyst',
-      pattern: 'Microsoft.MacCatalyst.Bundle*.pkg',
-      conditionVariable: "INCLUDE_DOTNET_MACCATALYST",
-    },
-  ]
+  default: []
 
 jobs:
 - job: configure
@@ -73,26 +36,26 @@ jobs:
   - template: ../common/configure.yml
 
 - ${{ each pkg in parameters.packages }}:
-  - job: ${{ pkg.job }}
-    dependsOn:
-    - configure
-    displayName: 'Sign & Notarize ${{ pkg.name }}'
-    condition: ne(dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'],'')
-    timeoutInMinutes: 1000
-    pool:
-      vmImage: internal-macos-11
-    workspace:
-      clean: all
+  - ${{ if ne(pkg.condition, '') }}:
+    - job: ${{ pkg.job }}
+      dependsOn:
+      - configure
+      displayName: 'Sign & Notarize ${{ pkg.name }}'
+      timeoutInMinutes: 1000
+      pool:
+        vmImage: internal-macos-11
+      workspace:
+        clean: all
 
-    steps:
-    - template: sign-and-notarized.yml
-      parameters:
-        isPR: ${{ parameters.isPR }}
-        signingSetupSteps: ${{ parameters.signingSetupSteps }}
-        keyringPass: ${{ parameters.keyringPass }}
-        skipESRP: ${{ parameters.skipESRP }}
-        packageName: ${{ pkg.name }}
-        packagePattern: ${{ pkg.pattern }}
+      steps:
+      - template: sign-and-notarized.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+          signingSetupSteps: ${{ parameters.signingSetupSteps }}
+          keyringPass: ${{ parameters.keyringPass }}
+          skipESRP: ${{ parameters.skipESRP }}
+          packageName: ${{ pkg.name }}
+          packagePattern: ${{ pkg.pattern }}
 
 - ${{ if eq(parameters.enableDotnet, true) }}:
   - job: sign_notarize_dotnet
@@ -124,9 +87,6 @@ jobs:
     vmImage: internal-macos-11
   workspace:
     clean: all
-  variables:
-    ${{ each pkg in parameters.packages }}:
-      ${{ pkg.conditionVariable }}: $[ dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
 
   steps:
   - template: funnel.yml

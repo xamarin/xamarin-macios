@@ -162,6 +162,33 @@ stages:
         keyringPass: $(pass--lab--mac--builder--keychain)
         enableDotnet: ${{ parameters.enableDotnet }}
         skipESRP: ${{ parameters.skipESRP }}
+        # azp pipelines has a bug in the parser that takes a json definition if it contains a runtime expression of the type $[] so rather than using
+        # json, altough is more readable, we can express the same with yaml which does know how to parse the rutime expressions. /me sad 
+        packages: 
+          - job: 'xamarin_ios_sign_notarize'
+            name: 'Xamarin.iOS'
+            pattern: 'xamarin.ios-*'
+            condition: $[ stageDependencies.build_packages.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ]
+          - job: 'xamarin_mac_sing_notarie'
+            name: 'Xamarin.Mac'
+            pattern: 'xamarin.mac-*'
+            condition:  $[ stageDependencies.build_packages.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ]
+          - job: 'microsoft_ios_sign_notarize'
+            name: 'Microsoft.iOS'
+            pattern: 'Microsoft.iOS.Bundle*.pkg'
+            condition:  $[ stageDependencies.build_packages.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
+          - job: 'microsoft_tvos_sign_notarize'
+            name: 'Microsoft.tvOS'
+            pattern: 'Microsoft.tvOS.Bundle*.pkg'
+            condition: $[ stageDependencies.build_packages.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
+          - job: 'microsoft_mac_sign_notarize'
+            name: 'Microsoft.macOS'
+            pattern: 'Microsoft.macOS.Bundle*.pkg'
+            condition: $[ stageDependencies.build_packages.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+          - job: 'microsoft_maccatalyst_sign_notarize'
+            name: 'Microsoft.MacCatalyst'
+            pattern: 'Microsoft.MacCatalyst.Bundle*.pkg'
+            condition: $[ stageDependencies.build_packages.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
 
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
