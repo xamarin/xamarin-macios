@@ -228,6 +228,23 @@ stages:
         parameters:
           isPR: ${{ parameters.isPR }}
 
+- stage: funnel
+  displayName: 'Collect signed artifacts'
+  dependsOn:
+  - build_packages
+  - ${{ if eq(parameters.enableDotnet, true) }}:
+    - sign_notarize_dotnet
+  - ${{ each pkg_obj in parameters.packages }}:
+    - ${{ pkg_obj.job }}
+  jobs:
+    - template: ./sign-and-notarized/funnel.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+        packages: # flattern the pkgs for the paremter
+        - ${{ each pkg_obj in parameters.packages }}:
+          - ${{ each pkg in pkg_obj.packages }}:
+            - ${{ pkg }}
+
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
     displayName: 'API diff'
