@@ -218,6 +218,16 @@ stages:
           skipESRP: ${{ parameters.skipESRP }}
           packages: ${{ pkg_obj.packages }}
 
+- ${{ if eq(parameters.enableDotnet, true) }}:
+  - stage: sign_notarize_dotnet
+    displayName: 'Sign & Notarize Dotnet'
+    dependsOn:
+    - build_packages
+    jobs:
+      - template: ./sign-and-notarized/dotnet-signing.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
     displayName: 'API diff'
