@@ -37,10 +37,10 @@ jobs:
 
 - ${{ each pkg in parameters.packages }}:
   - ${{ if ne(pkg.condition, '') }}:
-    - job: ${{ pkg.job }}
+    - job: ${{ pkg.job }} 
       dependsOn:
       - configure
-      displayName: 'Sign & Notarize ${{ pkg.name }}'
+      displayName: 'Sign & Notarize ${{ pkg.name }} - Condition ${{ pkg.condition }}'
       timeoutInMinutes: 1000
       pool:
         vmImage: internal-macos-11
