@@ -10,6 +10,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using ObjCRuntime;
@@ -131,6 +132,7 @@ namespace Network {
 
 #if !XAMCORE_5_0
 		[Obsolete ("Use the overload that takes a 'Func<NWInterface, bool>' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public void EnumerateInterfaces (Action<NWInterface> callback)
 		{
 			if (callback is null)
@@ -227,6 +229,7 @@ namespace Network {
 		[iOS (13,0)]
 #endif
 		[Obsolete ("Use the overload that takes a 'Func<NWEndpoint, bool>' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public void EnumerateGateways (Action<NWEndpoint> callback)
 		{
 			Func<NWEndpoint,bool> func = (v) =>
