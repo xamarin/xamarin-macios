@@ -1,8 +1,10 @@
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks {
-	public class IBTool : IBToolTaskBase, ICancelableTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public class IBTool : IBToolTaskBase, ICancelableTask
+	{
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

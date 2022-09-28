@@ -3,8 +3,10 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Microsoft.Build.Tasks {
-	public class MakeDir : MakeDirBase, ITaskCallback {
+namespace Microsoft.Build.Tasks
+{
+	public class MakeDir : MakeDirBase, ITaskCallback
+	{
 		public override bool Execute ()
 		{
 			var result = base.Execute ();

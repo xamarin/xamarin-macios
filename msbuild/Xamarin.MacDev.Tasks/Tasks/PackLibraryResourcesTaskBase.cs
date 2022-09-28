@@ -6,21 +6,23 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class PackLibraryResourcesTaskBase : XamarinTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class PackLibraryResourcesTaskBase : XamarinTask
+	{
 		#region Inputs
 
 		[Required]
 		public string Prefix { get; set; }
 
-		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; }
+		public ITaskItem[] BundleResourcesWithLogicalNames { get; set; }
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem [] EmbeddedResources { get; set; }
+		public ITaskItem[] EmbeddedResources { get; set; }
 
 		#endregion
 
@@ -29,11 +31,11 @@ namespace Xamarin.MacDev.Tasks {
 			var mangled = new StringBuilder ();
 
 			for (int i = 0; i < name.Length; i++) {
-				switch (name [i]) {
+				switch (name[i]) {
 				case '\\': mangled.Append ("_b"); break;
 				case '/': mangled.Append ("_f"); break;
 				case '_': mangled.Append ("__"); break;
-				default: mangled.Append (name [i]); break;
+				default: mangled.Append (name[i]); break;
 				}
 			}
 

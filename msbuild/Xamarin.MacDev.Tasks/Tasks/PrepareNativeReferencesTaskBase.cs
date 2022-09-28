@@ -7,12 +7,14 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class PrepareNativeReferencesTaskBase : XamarinTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class PrepareNativeReferencesTaskBase : XamarinTask
+	{
 		[Required]
 		public string IntermediateOutputPath { get; set; }
 
-		public ITaskItem [] NativeReferences { get; set; }
+		public ITaskItem[] NativeReferences { get; set; }
 
 		#region Output
 
@@ -20,10 +22,10 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem LinkWithAttributes { get; set; }
 
 		[Output]
-		public ITaskItem [] EmbeddedResources { get; set; }
+		public ITaskItem[] EmbeddedResources { get; set; }
 
 		[Output]
-		public ITaskItem [] NativeFrameworks { get; set; }
+		public ITaskItem[] NativeFrameworks { get; set; }
 
 		#endregion
 
@@ -47,7 +49,7 @@ namespace Xamarin.MacDev.Tasks {
 			for (int i = 0; i < targets.Length; i++) {
 				if (i > 0)
 					builder.Append (" | ");
-				builder.AppendFormat ("LinkTarget.{0}", targets [i].Trim ());
+				builder.AppendFormat ("LinkTarget.{0}", targets[i].Trim ());
 			}
 		}
 
@@ -79,9 +81,9 @@ namespace Xamarin.MacDev.Tasks {
 
 			builder.AppendFormat (", {0} = \"", property);
 			for (int i = 0; i < value.Length; i++) {
-				if (value [i] == '\\' || value [i] == '"')
+				if (value[i] == '\\' || value[i] == '"')
 					builder.Append ('\\');
-				builder.Append (value [i]);
+				builder.Append (value[i]);
 			}
 			builder.Append ('"');
 		}
@@ -99,13 +101,13 @@ namespace Xamarin.MacDev.Tasks {
 				NativeReferenceKind kind;
 				string value;
 
-				value = NativeReferences [i].GetMetadata ("Kind") ?? string.Empty;
+				value = NativeReferences[i].GetMetadata ("Kind") ?? string.Empty;
 				if (!Enum.TryParse (value, out kind)) {
-					Log.LogError (null, null, null, NativeReferences [i].ItemSpec, 0, 0, 0, 0, MSBStrings.W0051, value);
+					Log.LogError (null, null, null, NativeReferences[i].ItemSpec, 0, 0, 0, 0, MSBStrings.W0051, value);
 					continue;
 				}
 
-				var path = NativeReferences [i].ItemSpec;
+				var path = NativeReferences[i].ItemSpec;
 				var logicalName = Path.GetFileName (path);
 
 				var item = new TaskItem (path);
@@ -120,14 +122,14 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				text.AppendFormat ("[assembly: ObjCRuntime.LinkWith (\"{0}\"", logicalName);
-				AppendLinkTargetProperty (text, NativeReferences [i]);
-				AppendBooleanProperty (text, NativeReferences [i], "IsCxx");
-				AppendBooleanProperty (text, NativeReferences [i], "NeedsGccExceptionHandling");
-				AppendBooleanProperty (text, NativeReferences [i], "SmartLink", true);
-				AppendBooleanProperty (text, NativeReferences [i], "ForceLoad");
-				AppendStringProperty (text, NativeReferences [i], "Frameworks");
-				AppendStringProperty (text, NativeReferences [i], "WeakFrameworks");
-				AppendStringProperty (text, NativeReferences [i], "LinkerFlags");
+				AppendLinkTargetProperty (text, NativeReferences[i]);
+				AppendBooleanProperty (text, NativeReferences[i], "IsCxx");
+				AppendBooleanProperty (text, NativeReferences[i], "NeedsGccExceptionHandling");
+				AppendBooleanProperty (text, NativeReferences[i], "SmartLink", true);
+				AppendBooleanProperty (text, NativeReferences[i], "ForceLoad");
+				AppendStringProperty (text, NativeReferences[i], "Frameworks");
+				AppendStringProperty (text, NativeReferences[i], "WeakFrameworks");
+				AppendStringProperty (text, NativeReferences[i], "LinkerFlags");
 				text.Append (")]");
 				text.AppendLine ();
 			}

@@ -10,8 +10,10 @@ using System.Globalization;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class ArchiveTaskBase : XamarinTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class ArchiveTaskBase : XamarinTask
+	{
 		protected readonly DateTime Now = DateTime.Now;
 
 		#region Inputs

@@ -3,8 +3,10 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks {
-	public class Codesign : CodesignTaskBase, ITaskCallback, ICancelableTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public class Codesign : CodesignTaskBase, ITaskCallback, ICancelableTask
+	{
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

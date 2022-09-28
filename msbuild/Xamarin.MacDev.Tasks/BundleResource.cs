@@ -7,8 +7,10 @@ using Microsoft.Build.Framework;
 
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev {
-	public static class BundleResource {
+namespace Xamarin.MacDev
+{
+	public static class BundleResource
+	{
 		static readonly HashSet<string> illegalDirectoryNames = new HashSet<string> (new [] {
 			"Resources",
 			"_CodeSignature",
@@ -69,9 +71,10 @@ namespace Xamarin.MacDev {
 
 			// HACK: This is for Visual Studio iOS projects
 			if (isVSBuild) {
-				if (item.GetMetadata ("DefiningProjectFullPath") != item.GetMetadata ("MSBuildProjectFullPath")) {
-					return item.GetMetadata ("FullPath").Replace (item.GetMetadata ("DefiningProjectDirectory"), string.Empty);
-				} else {
+				if (item.GetMetadata("DefiningProjectFullPath") != item.GetMetadata("MSBuildProjectFullPath")) {
+					return item.GetMetadata("FullPath").Replace(item.GetMetadata ("DefiningProjectDirectory"), string.Empty);
+				}
+				else {
 					return item.ItemSpec;
 				}
 			}
@@ -89,7 +92,7 @@ namespace Xamarin.MacDev {
 
 			baseDir = PathUtils.ResolveSymbolicLinks (baseDir);
 			path = PathUtils.ResolveSymbolicLinks (path);
-
+			
 			return PathUtils.AbsoluteToRelative (baseDir, path);
 		}
 

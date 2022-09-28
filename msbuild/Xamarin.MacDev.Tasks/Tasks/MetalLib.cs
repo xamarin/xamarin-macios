@@ -3,8 +3,10 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks {
-	public class MetalLib : MetalLibTaskBase, ITaskCallback {
+namespace Xamarin.MacDev.Tasks
+{
+	public class MetalLib : MetalLibTaskBase, ITaskCallback
+	{
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

@@ -6,8 +6,10 @@ using Microsoft.Build.Framework;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class CodesignVerifyTaskBase : XamarinToolTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class CodesignVerifyTaskBase : XamarinToolTask
+	{
 		#region Inputs
 
 		[Required]
@@ -66,7 +68,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			EnvironmentVariables = new string [] {
+			EnvironmentVariables = new string[] {
 				"CODESIGN_ALLOCATE=" + CodesignAllocate
 			};
 

@@ -6,8 +6,10 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class GetNativeExecutableNameTaskBase : XamarinTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class GetNativeExecutableNameTaskBase : XamarinTask
+	{
 		#region Inputs
 
 		[Required]

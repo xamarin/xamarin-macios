@@ -1,8 +1,10 @@
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks {
-	public class ALToolValidate : ALToolTaskBase, ICancelableTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public class ALToolValidate : ALToolTaskBase, ICancelableTask
+	{
 		protected override string ALToolAction => "--validate-app";
 
 		public override bool Execute ()

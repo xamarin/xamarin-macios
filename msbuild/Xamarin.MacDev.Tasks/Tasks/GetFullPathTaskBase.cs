@@ -5,8 +5,10 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class GetFullPathTaskBase : XamarinTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class GetFullPathTaskBase : XamarinTask
+	{
 		[Required]
 		public string RelativePath { get; set; }
 

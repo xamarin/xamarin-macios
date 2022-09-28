@@ -8,8 +8,10 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class GetDirectoriesTaskBase : XamarinTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class GetDirectoriesTaskBase : XamarinTask
+	{
 		[Required]
 		public string Path { get; set; }
 
@@ -20,7 +22,7 @@ namespace Xamarin.MacDev.Tasks {
 		public string Exclude { get; set; }
 
 		[Output]
-		public ITaskItem [] Directories { get; set; }
+		public ITaskItem[] Directories { get; set; }
 
 		public override bool Execute ()
 		{
@@ -51,7 +53,7 @@ namespace Xamarin.MacDev.Tasks {
 				dirs = Directory.EnumerateDirectories (path, "*.*", option);
 
 			if (!string.IsNullOrEmpty (Exclude)) {
-				foreach (var rpath in Exclude.Split (new char [] { ';' }, StringSplitOptions.RemoveEmptyEntries)) {
+				foreach (var rpath in Exclude.Split (new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries)) {
 					var full = System.IO.Path.Combine (path, rpath.Replace ('\\', '/'));
 					exclude.Add (full);
 				}

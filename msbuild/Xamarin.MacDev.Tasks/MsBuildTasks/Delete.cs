@@ -1,7 +1,9 @@
 using Xamarin.Messaging.Build.Client;
 
-namespace Microsoft.Build.Tasks {
-	public class Delete : DeleteBase {
+namespace Microsoft.Build.Tasks
+{
+	public class Delete : DeleteBase
+	{
 		public override bool Execute ()
 		{
 			var result = base.Execute ();

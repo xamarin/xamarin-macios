@@ -7,8 +7,10 @@ using Xamarin.Messaging.Build.Client;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks {
-	public class DSymUtil : DSymUtilTaskBase, ITaskCallback {
+namespace Xamarin.MacDev.Tasks
+{
+	public class DSymUtil : DSymUtilTaskBase, ITaskCallback
+	{
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

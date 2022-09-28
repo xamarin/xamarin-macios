@@ -4,8 +4,10 @@ using Microsoft.Build.Framework;
 
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class PrepareResourceRulesTaskBase : XamarinTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class PrepareResourceRulesTaskBase : XamarinTask
+	{
 		#region Inputs
 
 		[Required]

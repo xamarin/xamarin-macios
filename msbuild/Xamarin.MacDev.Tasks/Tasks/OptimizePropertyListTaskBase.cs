@@ -4,8 +4,10 @@ using System.IO;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class OptimizePropertyListTaskBase : XamarinToolTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class OptimizePropertyListTaskBase : XamarinToolTask
+	{
 		#region Inputs
 
 		[Required]
