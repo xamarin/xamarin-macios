@@ -4,17 +4,17 @@ parameters:
   default: true
 
 - name: dependsOn
-  type: string
-  default: prepare_packages
+  type: object 
+  default: []
 
 - name: isPR
   type: boolean
 
 stages:
 - stage: prepare_release
-  displayName: A Prepare Release
+  displayName: Prepare Release
   dependsOn: ${{ parameters.dependsOn }}
-  condition: and(or(eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'), eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')), eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
+  condition: and(eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
 
   jobs:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
