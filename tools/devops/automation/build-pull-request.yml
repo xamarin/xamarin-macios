@@ -97,17 +97,6 @@ parameters:
   type: object
   default: [
     {
-      stageName: 'mac_10_15',
-      displayName: 'Mac Catalina (10.15)',
-      macPool: 'macOS-10.15',
-      useImage: true,
-      statusContext: 'Mac Catalina (10.15)',
-      demands: [
-        "Agent.OS -equals Darwin",
-        "Agent.OSVersion -equals '10.15'"
-      ]
-    },
-    {
       stageName: 'mac_11_5_m1',
       displayName: 'M1 - Mac Big Sur (11.5)',
       macPool: 'VSEng-VSMac-Xamarin-Shared',
