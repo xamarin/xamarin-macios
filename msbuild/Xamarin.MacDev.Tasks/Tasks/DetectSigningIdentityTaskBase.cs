@@ -106,7 +106,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public string CodesignProvision { get; set; }
 
-		public string CodesignEntitlements { get; set; }
+		public ITaskItem CodesignEntitlements { get; set; }
 
 		public string CodesignRequireProvisioningProfile { get; set; }
 
@@ -180,13 +180,13 @@ namespace Xamarin.MacDev.Tasks
 		bool HasEntitlements {
 			get {
 				if (!hasEntitlements.HasValue) {
-					if (string.IsNullOrEmpty (CodesignEntitlements)) {
+					if (string.IsNullOrEmpty (CodesignEntitlements?.ItemSpec)) {
 						// If no CodesignEntitlements was specified, we don't have any entitlements
 						hasEntitlements = false;
 					} else {
 						if (IsDotNet) {
 							// .NET: Check the file to see if there are any entitlements inside
-							var entitlements = PDictionary.FromFile (CodesignEntitlements);
+							var entitlements = PDictionary.FromFile (CodesignEntitlements.ItemSpec);
 							hasEntitlements = entitlements.Count > 0;
 						} else {
 							// Legacy Xamarin: to preserve backwards compat, consider the presence of a file enough to say we have entitlements.
