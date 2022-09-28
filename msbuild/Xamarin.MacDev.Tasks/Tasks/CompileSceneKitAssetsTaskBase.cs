@@ -11,10 +11,8 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class CompileSceneKitAssetsTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class CompileSceneKitAssetsTaskBase : XamarinTask {
 		string toolExe;
 
 		#region Inputs
@@ -34,7 +32,7 @@ namespace Xamarin.MacDev.Tasks
 		public string ResourcePrefix { get; set; }
 
 		[Required]
-		public ITaskItem[] SceneKitAssets { get; set; }
+		public ITaskItem [] SceneKitAssets { get; set; }
 
 		[Required]
 		public string SdkDevPath { get; set; }
@@ -60,7 +58,7 @@ namespace Xamarin.MacDev.Tasks
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] BundleResources { get; set; }
+		public ITaskItem [] BundleResources { get; set; }
 
 		#endregion
 
@@ -138,7 +136,7 @@ namespace Xamarin.MacDev.Tasks
 
 				asset.RemoveMetadata ("LogicalName");
 
-				var bundleName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty(SessionId));
+				var bundleName = BundleResource.GetLogicalName (ProjectDir, prefixes, asset, !string.IsNullOrEmpty (SessionId));
 				var output = new TaskItem (Path.Combine (intermediate, bundleName));
 
 				if (!modified.Contains (scnassets) && (!File.Exists (output.ItemSpec) || File.GetLastWriteTimeUtc (asset.ItemSpec) > File.GetLastWriteTimeUtc (output.ItemSpec))) {
@@ -190,7 +188,7 @@ namespace Xamarin.MacDev.Tasks
 
 			var tasks = new List<Task> ();
 			foreach (var item in items) {
-				var bundleDir = BundleResource.GetLogicalName (ProjectDir, prefixes, new TaskItem (item), !string.IsNullOrEmpty(SessionId));
+				var bundleDir = BundleResource.GetLogicalName (ProjectDir, prefixes, new TaskItem (item), !string.IsNullOrEmpty (SessionId));
 				var output = Path.Combine (intermediate, bundleDir);
 
 				tasks.Add (CopySceneKitAssets (item.ItemSpec, output, intermediate));

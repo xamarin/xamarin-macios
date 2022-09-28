@@ -11,19 +11,18 @@ using Xamarin.Launcher;
 using Xamarin.Hosting;
 #endif
 
-namespace Xamarin
-{
+namespace Xamarin {
 	[Flags]
 	public enum Abi {
-		None   =   0,
-		i386   =   1,
-		ARMv6  =   2,
-		ARMv7  =   4,
-		ARMv7s =   8,
-		ARM64 =   16,
-		x86_64 =  32,
-		Thumb  =  64,
-		LLVM   = 128,
+		None = 0,
+		i386 = 1,
+		ARMv6 = 2,
+		ARMv7 = 4,
+		ARMv7s = 8,
+		ARM64 = 16,
+		x86_64 = 32,
+		Thumb = 64,
+		LLVM = 128,
 		ARMv7k = 256,
 		ARM64e = 512,
 		ARM64_32 = 1024,
@@ -51,8 +50,7 @@ namespace Xamarin
 		}
 	}
 
-	public class MachO
-	{
+	public class MachO {
 		/* definitions from: /usr/include/mach-o/loader.h */
 		/* Constant for the magic field of the mach_header (32-bit architectures) */
 		internal const uint MH_MAGIC = 0xfeedface; /* the mach magic number */
@@ -70,20 +68,19 @@ namespace Xamarin
 
 		// Values here match the corresponding values in the Abi enum.
 		public enum Architectures {
-			None   =   0,
-			i386   =   1,
-			ARMv6  =   2,
-			ARMv7  =   4,
-			ARMv7s =   8,
-			ARM64 =   16,
-			x86_64 =  32,
+			None = 0,
+			i386 = 1,
+			ARMv6 = 2,
+			ARMv7 = 4,
+			ARMv7s = 8,
+			ARM64 = 16,
+			x86_64 = 32,
 			ARMv7k = 256,
 			ARM64e = 512,
 			ARM64_32 = 1024,
 		}
 
-		public enum LoadCommands : uint
-		{
+		public enum LoadCommands : uint {
 			//#define LC_REQ_DYLD 0x80000000
 			ReqDyld = 0x80000000,
 			//
@@ -140,19 +137,19 @@ namespace Xamarin
 			//#define	LC_LOAD_UPWARD_DYLIB (0x23 | LC_REQ_DYLD) /* load upward dylib */
 			MinMacOSX = 0x24, //#define LC_VERSION_MIN_MACOSX 0x24   /* build for MacOSX min OS version */
 			MiniPhoneOS = 0x25,//#define LC_VERSION_MIN_IPHONEOS 0x25 /* build for iPhoneOS min OS version */
-			//#define LC_FUNCTION_STARTS 0x26 /* compressed table of function start addresses */
-			//#define LC_DYLD_ENVIRONMENT 0x27 /* string for dyld to treat
-			//			like environment variable */
-			//#define LC_MAIN (0x28|LC_REQ_DYLD) /* replacement for LC_UNIXTHREAD */
-			//#define LC_DATA_IN_CODE 0x29 /* table of non-instructions in __text */
-			//#define LC_SOURCE_VERSION 0x2A /* source version used to build binary */
-			//#define LC_DYLIB_CODE_SIGN_DRS 0x2B /* Code signing DRs copied from linked dylibs */
-			//#define	LC_ENCRYPTION_INFO_64 0x2C /* 64-bit encrypted segment information */
-			//#define LC_LINKER_OPTION 0x2D /* linker options in MH_OBJECT files */
-			//#define LC_LINKER_OPTIMIZATION_HINT 0x2E /* optimization hints in MH_OBJECT files */
+							   //#define LC_FUNCTION_STARTS 0x26 /* compressed table of function start addresses */
+							   //#define LC_DYLD_ENVIRONMENT 0x27 /* string for dyld to treat
+							   //			like environment variable */
+							   //#define LC_MAIN (0x28|LC_REQ_DYLD) /* replacement for LC_UNIXTHREAD */
+							   //#define LC_DATA_IN_CODE 0x29 /* table of non-instructions in __text */
+							   //#define LC_SOURCE_VERSION 0x2A /* source version used to build binary */
+							   //#define LC_DYLIB_CODE_SIGN_DRS 0x2B /* Code signing DRs copied from linked dylibs */
+							   //#define	LC_ENCRYPTION_INFO_64 0x2C /* 64-bit encrypted segment information */
+							   //#define LC_LINKER_OPTION 0x2D /* linker options in MH_OBJECT files */
+							   //#define LC_LINKER_OPTIMIZATION_HINT 0x2E /* optimization hints in MH_OBJECT files */
 			MintvOS = 0x2f,//#define LC_VERSION_MIN_TVOS 0x2F /* build for AppleTV min OS version */
 			MinwatchOS = 0x30,//#define LC_VERSION_MIN_WATCHOS 0x30 /* build for Watch min OS version */
-			//#define LC_NOTE 0x31 /* arbitrary data included within a Mach-O file */
+							  //#define LC_NOTE 0x31 /* arbitrary data included within a Mach-O file */
 			BuildVersion = 0x32,//#define LC_BUILD_VERSION 0x32 /* build for platform min OS version */
 		}
 
@@ -212,10 +209,10 @@ namespace Xamarin
 			case FAT_MAGIC: // little-endian fat binary
 			case FAT_CIGAM: // big-endian fat binary
 				{
-					var f = new FatFile (filename);
-					f.Read (reader);
-					return f;
-				}
+				var f = new FatFile (filename);
+				f.Read (reader);
+				return f;
+			}
 			default:
 				if (StaticLibrary.IsStaticLibrary (reader)) {
 					var sl = new StaticLibrary ();
@@ -260,7 +257,7 @@ namespace Xamarin
 						yield return obj;
 					yield break;
 				}
-				
+
 				throw ErrorHelper.CreateError (1604, Errors.MX1604, file.GetType ().Name, filename);
 			}
 		}
@@ -493,7 +490,7 @@ namespace Xamarin
 			foreach (var entry in fat.entries)
 				if (!entry.IsDynamicLibrary)
 					return false;
-			
+
 			return true;
 		}
 
@@ -518,8 +515,7 @@ namespace Xamarin
 		}
 	}
 
-	public class StaticLibrary
-	{
+	public class StaticLibrary {
 		List<MachOFile> object_files = new List<MachOFile> ();
 
 		public IEnumerable<MachOFile> ObjectFiles { get { return object_files; } }
@@ -567,7 +563,7 @@ namespace Xamarin
 				var fileSize = ReadDecimal (reader, 10);
 				bytes = reader.ReadBytes (2); // ending characters
 				if (bytes [0] != 0x60 && bytes [1] != 0x0A)
-					throw ErrorHelper.CreateError (1605, Errors.MT1605, fileIdentifier, filename, bytes[0].ToString("x"), bytes[1].ToString("x"));
+					throw ErrorHelper.CreateError (1605, Errors.MT1605, fileIdentifier, filename, bytes [0].ToString ("x"), bytes [1].ToString ("x"));
 
 				if (fileIdentifier.StartsWith ("#1/", StringComparison.Ordinal)) {
 					var nameLength = int.Parse (fileIdentifier.Substring (3).TrimEnd (' '));
@@ -618,8 +614,7 @@ namespace Xamarin
 		}
 	}
 
-	public class MachOFile
-	{
+	public class MachOFile {
 		FatEntry fat_parent;
 		string filename;
 
@@ -709,30 +704,30 @@ namespace Xamarin
 			* The 32-bit mach header appears at the very beginning of the object file for
 				* 32-bit architectures.
 				*/
-				//	struct mach_header {
-				//		uint32_t	magic;		/* mach magic number identifier */
-				//		cpu_type_t	cputype;	/* cpu specifier */
-				//		cpu_subtype_t	cpusubtype;	/* machine specifier */
-				//		uint32_t	filetype;	/* type of file */
-				//		uint32_t	ncmds;		/* number of load commands */
-				//		uint32_t	sizeofcmds;	/* the size of all the load commands */
-				//		uint32_t	flags;		/* flags */
-				//	};
+			//	struct mach_header {
+			//		uint32_t	magic;		/* mach magic number identifier */
+			//		cpu_type_t	cputype;	/* cpu specifier */
+			//		cpu_subtype_t	cpusubtype;	/* machine specifier */
+			//		uint32_t	filetype;	/* type of file */
+			//		uint32_t	ncmds;		/* number of load commands */
+			//		uint32_t	sizeofcmds;	/* the size of all the load commands */
+			//		uint32_t	flags;		/* flags */
+			//	};
 
-				/*
-			* The 64-bit mach header appears at the very beginning of object files for
-			* 64-bit architectures.
-			*/
-				//	struct mach_header_64 {
-				//		uint32_t	magic;		/* mach magic number identifier */
-				//		cpu_type_t	cputype;	/* cpu specifier */
-				//		cpu_subtype_t	cpusubtype;	/* machine specifier */
-				//		uint32_t	filetype;	/* type of file */
-				//		uint32_t	ncmds;		/* number of load commands */
-				//		uint32_t	sizeofcmds;	/* the size of all the load commands */
-				//		uint32_t	flags;		/* flags */
-				//		uint32_t	reserved;	/* reserved */
-				//	};
+			/*
+		* The 64-bit mach header appears at the very beginning of object files for
+		* 64-bit architectures.
+		*/
+			//	struct mach_header_64 {
+			//		uint32_t	magic;		/* mach magic number identifier */
+			//		cpu_type_t	cputype;	/* cpu specifier */
+			//		cpu_subtype_t	cpusubtype;	/* machine specifier */
+			//		uint32_t	filetype;	/* type of file */
+			//		uint32_t	ncmds;		/* number of load commands */
+			//		uint32_t	sizeofcmds;	/* the size of all the load commands */
+			//		uint32_t	flags;		/* flags */
+			//		uint32_t	reserved;	/* reserved */
+			//	};
 
 			magic = reader.ReadUInt32 ();
 			switch (magic) {
@@ -763,11 +758,12 @@ namespace Xamarin
 				switch (cmd) {
 				case MachO.LoadCommands.LoadDylib:
 				case MachO.LoadCommands.LoadWeakDylib:
-				case MachO.LoadCommands.ReexportDylib: { 
+				case MachO.LoadCommands.ReexportDylib: {
 					var dlc = new DylibLoadCommand ();
 					dlc.cmd = reader.ReadUInt32 ();
 					dlc.cmdsize = reader.ReadUInt32 ();
-					/*var nameofs = */reader.ReadUInt32 ();
+					/*var nameofs = */
+					reader.ReadUInt32 ();
 					dlc.timestamp = reader.ReadUInt32 ();
 					dlc.current_version = reader.ReadUInt32 ();
 					dlc.compatibility_version = reader.ReadUInt32 ();
@@ -789,7 +785,8 @@ namespace Xamarin
 					var dlc = new DylibIdCommand ();
 					dlc.cmd = reader.ReadUInt32 ();
 					dlc.cmdsize = reader.ReadUInt32 ();
-					/*var nameofs = */ reader.ReadUInt32 ();
+					/*var nameofs = */
+					reader.ReadUInt32 ();
 					dlc.timestamp = reader.ReadUInt32 ();
 					dlc.current_version = reader.ReadUInt32 ();
 					dlc.compatibility_version = reader.ReadUInt32 ();
@@ -833,12 +830,12 @@ namespace Xamarin
 					buildVer.minos = reader.ReadUInt32 ();
 					buildVer.sdk = reader.ReadUInt32 ();
 					buildVer.ntools = reader.ReadUInt32 ();
-					buildVer.tools = new BuildVersionCommand.BuildToolVersion[buildVer.ntools];
+					buildVer.tools = new BuildVersionCommand.BuildToolVersion [buildVer.ntools];
 					for (int j = 0; j < buildVer.ntools; j++) {
 						var buildToolVer = new BuildVersionCommand.BuildToolVersion ();
 						buildToolVer.tool = reader.ReadUInt32 ();
 						buildToolVer.version = reader.ReadUInt32 ();
-						buildVer.tools[j] = buildToolVer;
+						buildVer.tools [j] = buildToolVer;
 					}
 					lc = buildVer;
 					break;
@@ -884,7 +881,7 @@ namespace Xamarin
 		public List<FatEntry> entries;
 
 		internal bool is_big_endian {
-			get { return magic == MachO.FAT_CIGAM;	}
+			get { return magic == MachO.FAT_CIGAM; }
 		}
 
 		internal void WriteHeader (BinaryWriter writer)
@@ -927,7 +924,7 @@ namespace Xamarin
 
 		public MachOFile entry;
 		public StaticLibrary static_library;
-		
+
 		public bool IsDynamicLibrary { get { return entry == null ? false : entry.IsDynamicLibrary; } }
 		public FatFile Parent { get { return parent; } }
 
@@ -947,7 +944,7 @@ namespace Xamarin
 				writer.Write (align);
 			}
 		}
-			
+
 		internal void Write (BinaryWriter writer, BinaryReader reader, uint reader_offset)
 		{
 			writer.BaseStream.Position = offset;
@@ -1038,7 +1035,7 @@ namespace Xamarin
 		}
 #endif
 	}
-	
+
 	public class DylibIdCommand : LoadCommand {
 		public string name;
 		public uint timestamp;
@@ -1076,7 +1073,7 @@ namespace Xamarin
 
 		Version DeNibble (uint value)
 		{
-			return new Version ((int)(value >> 16), (int)((value >> 8) & 0xFF), (int)(value & 0xFF));
+			return new Version ((int) (value >> 16), (int) ((value >> 8) & 0xFF), (int) (value & 0xFF));
 		}
 
 		public Version Version {
@@ -1093,7 +1090,7 @@ namespace Xamarin
 		public uint minos; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
 		public uint sdk; /* X.Y.Z is encoded in nibbles xxxx.yy.zz */
 		public uint ntools;
-		public BuildToolVersion[] tools;
+		public BuildToolVersion [] tools;
 
 		public class BuildToolVersion {
 			public uint tool;
@@ -1102,7 +1099,7 @@ namespace Xamarin
 
 		Version DeNibble (uint value)
 		{
-			return new Version ((int)(value >> 16), (int)((value >> 8) & 0xFF), (int)(value & 0xFF));
+			return new Version ((int) (value >> 16), (int) ((value >> 8) & 0xFF), (int) (value & 0xFF));
 		}
 
 		public Version MinOS {
@@ -1114,7 +1111,7 @@ namespace Xamarin
 		}
 
 		public MachO.Platform Platform {
-			get { return (MachO.Platform)platform; }
+			get { return (MachO.Platform) platform; }
 		}
 	}
 }
