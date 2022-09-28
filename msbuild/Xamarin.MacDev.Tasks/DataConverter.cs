@@ -51,101 +51,101 @@ namespace Mono {
 #else
 	unsafe internal abstract class DataConverter {
 
-// Disables the warning: CLS compliance checking will not be performed on
-//  `XXXX' because it is not visible from outside this assembly
-#pragma warning disable  3019
+		// Disables the warning: CLS compliance checking will not be performed on
+		//  `XXXX' because it is not visible from outside this assembly
+#pragma warning disable 3019
 #endif
 		static DataConverter SwapConv = new SwapConverter ();
 		static DataConverter CopyConv = new CopyConverter ();
 
 		public static readonly bool IsLittleEndian = BitConverter.IsLittleEndian;
-			
+
 		public abstract double GetDouble (byte [] data, int index);
-		public abstract float  GetFloat  (byte [] data, int index);
-		public abstract long   GetInt64  (byte [] data, int index);
-		public abstract int    GetInt32  (byte [] data, int index);
+		public abstract float GetFloat (byte [] data, int index);
+		public abstract long GetInt64 (byte [] data, int index);
+		public abstract int GetInt32 (byte [] data, int index);
 
-		public abstract short  GetInt16  (byte [] data, int index);
+		public abstract short GetInt16 (byte [] data, int index);
 
-                [CLSCompliant (false)]
-		public abstract uint   GetUInt32 (byte [] data, int index);
-                [CLSCompliant (false)]
+		[CLSCompliant (false)]
+		public abstract uint GetUInt32 (byte [] data, int index);
+		[CLSCompliant (false)]
 		public abstract ushort GetUInt16 (byte [] data, int index);
-                [CLSCompliant (false)]
-		public abstract ulong  GetUInt64 (byte [] data, int index);
-		
+		[CLSCompliant (false)]
+		public abstract ulong GetUInt64 (byte [] data, int index);
+
 		public abstract void PutBytes (byte [] dest, int destIdx, double value);
 		public abstract void PutBytes (byte [] dest, int destIdx, float value);
 		public abstract void PutBytes (byte [] dest, int destIdx, int value);
 		public abstract void PutBytes (byte [] dest, int destIdx, long value);
 		public abstract void PutBytes (byte [] dest, int destIdx, short value);
 
-                [CLSCompliant (false)]
+		[CLSCompliant (false)]
 		public abstract void PutBytes (byte [] dest, int destIdx, ushort value);
-                [CLSCompliant (false)]
+		[CLSCompliant (false)]
 		public abstract void PutBytes (byte [] dest, int destIdx, uint value);
-                [CLSCompliant (false)]
+		[CLSCompliant (false)]
 		public abstract void PutBytes (byte [] dest, int destIdx, ulong value);
 
-		public byte[] GetBytes (double value)
+		public byte [] GetBytes (double value)
 		{
 			byte [] ret = new byte [8];
 			PutBytes (ret, 0, value);
 			return ret;
 		}
-		
-		public byte[] GetBytes (float value)
+
+		public byte [] GetBytes (float value)
 		{
 			byte [] ret = new byte [4];
 			PutBytes (ret, 0, value);
 			return ret;
 		}
-		
-		public byte[] GetBytes (int value)
+
+		public byte [] GetBytes (int value)
 		{
 			byte [] ret = new byte [4];
 			PutBytes (ret, 0, value);
 			return ret;
 		}
-		
-		public byte[] GetBytes (long value)
+
+		public byte [] GetBytes (long value)
 		{
 			byte [] ret = new byte [8];
 			PutBytes (ret, 0, value);
 			return ret;
 		}
-		
-		public byte[] GetBytes (short value)
+
+		public byte [] GetBytes (short value)
 		{
 			byte [] ret = new byte [2];
 			PutBytes (ret, 0, value);
 			return ret;
 		}
 
-                [CLSCompliant (false)]
-		public byte[] GetBytes (ushort value)
+		[CLSCompliant (false)]
+		public byte [] GetBytes (ushort value)
 		{
 			byte [] ret = new byte [2];
 			PutBytes (ret, 0, value);
 			return ret;
 		}
-		
-                [CLSCompliant (false)]
-		public byte[] GetBytes (uint value)
+
+		[CLSCompliant (false)]
+		public byte [] GetBytes (uint value)
 		{
 			byte [] ret = new byte [4];
 			PutBytes (ret, 0, value);
 			return ret;
 		}
-		
-                [CLSCompliant (false)]
-		public byte[] GetBytes (ulong value)
+
+		[CLSCompliant (false)]
+		public byte [] GetBytes (ulong value)
 		{
 			byte [] ret = new byte [8];
 			PutBytes (ret, 0, value);
 			return ret;
 		}
-		
+
 		static public DataConverter LittleEndian {
 			get {
 				return BitConverter.IsLittleEndian ? CopyConv : SwapConv;
@@ -168,7 +168,7 @@ namespace Mono {
 		{
 			return ((current + align - 1) / align) * align;
 		}
-			
+
 		class PackContext {
 			// Buffer
 			public byte [] buffer;
@@ -178,7 +178,7 @@ namespace Mono {
 			public int i; // position in the description
 			public DataConverter conv;
 			public int repeat;
-			
+
 			//
 			// if align == -1, auto align to the size of the byte array
 			// if align == 0, do not do alignment
@@ -190,13 +190,13 @@ namespace Mono {
 			{
 				//Console.WriteLine ("Adding {0} bytes to {1} (next={2}", group.Length,
 				// buffer == null ? "null" : buffer.Length.ToString (), next);
-				
-				if (buffer == null){
+
+				if (buffer == null) {
 					buffer = group;
 					next = group.Length;
 					return;
 				}
-				if (align != 0){
+				if (align != 0) {
 					if (align == -1)
 						next = Align (next, group.Length);
 					else
@@ -204,7 +204,7 @@ namespace Mono {
 					align = 0;
 				}
 
-				if (next + group.Length > buffer.Length){
+				if (next + group.Length > buffer.Length) {
 					byte [] nb = new byte [System.Math.Max (next, 16) * 2 + group.Length];
 					Array.Copy (buffer, nb, buffer.Length);
 					Array.Copy (group, 0, nb, next, group.Length);
@@ -220,8 +220,8 @@ namespace Mono {
 			{
 				if (buffer == null)
 					return new byte [0];
-				
-				if (buffer.Length != next){
+
+				if (buffer.Length != next) {
 					byte [] b = new byte [next];
 					Array.Copy (buffer, b, next);
 					return b;
@@ -248,8 +248,8 @@ namespace Mono {
 		//   f    float
 		//   d    double
 		//   b    byte
-                //   c    1-byte signed character
-                //   C    1-byte unsigned character
+		//   c    1-byte signed character
+		//   C    1-byte unsigned character
 		//   z8   string encoded as UTF8 with 1-byte null terminator
 		//   z6   string encoded as UTF16 with 2-byte null terminator
 		//   z7   string encoded as UTF7 with 1-byte null terminator
@@ -277,7 +277,7 @@ namespace Mono {
 			b.conv = CopyConv;
 			b.description = description;
 
-			for (b.i = 0; b.i < description.Length; ){
+			for (b.i = 0; b.i < description.Length;) {
 				object oarg;
 
 				if (argn < args.Length)
@@ -285,15 +285,15 @@ namespace Mono {
 				else {
 					if (b.repeat != 0)
 						break;
-					
+
 					oarg = null;
 				}
 
 				int save = b.i;
-				
-				if (PackOne (b, oarg)){
+
+				if (PackOne (b, oarg)) {
 					argn++;
-					if (b.repeat > 0){
+					if (b.repeat > 0) {
 						if (--b.repeat > 0)
 							b.i = save;
 						else
@@ -311,11 +311,11 @@ namespace Mono {
 			PackContext b = new PackContext ();
 			b.conv = CopyConv;
 			b.description = description;
-			
+
 			IEnumerator enumerator = args.GetEnumerator ();
 			bool ok = enumerator.MoveNext ();
 
-			for (b.i = 0; b.i < description.Length; ){
+			for (b.i = 0; b.i < description.Length;) {
 				object oarg;
 
 				if (ok)
@@ -325,12 +325,12 @@ namespace Mono {
 						break;
 					oarg = null;
 				}
-						
+
 				int save = b.i;
-				
-				if (PackOne (b, oarg)){
+
+				if (PackOne (b, oarg)) {
 					ok = enumerator.MoveNext ();
-					if (b.repeat > 0){
+					if (b.repeat > 0) {
 						if (--b.repeat > 0)
 							b.i = save;
 						else
@@ -342,7 +342,7 @@ namespace Mono {
 			}
 			return b.Get ();
 		}
-			
+
 		//
 		// Packs one datum `oarg' into the buffer `b', using the string format
 		// in `description' at position `i'
@@ -352,8 +352,8 @@ namespace Mono {
 		static bool PackOne (PackContext b, object oarg)
 		{
 			int n;
-			
-			switch (b.description [b.i]){
+
+			switch (b.description [b.i]) {
 			case '^':
 				b.conv = BigEndian;
 				return false;
@@ -367,44 +367,44 @@ namespace Mono {
 			case '!':
 				b.align = -1;
 				return false;
-				
+
 			case 'x':
 				b.Add (new byte [] { 0 });
 				return false;
-				
-				// Type Conversions
+
+			// Type Conversions
 			case 'i':
 				b.Add (b.conv.GetBytes (Convert.ToInt32 (oarg)));
 				break;
-				
+
 			case 'I':
 				b.Add (b.conv.GetBytes (Convert.ToUInt32 (oarg)));
 				break;
-				
+
 			case 's':
 				b.Add (b.conv.GetBytes (Convert.ToInt16 (oarg)));
 				break;
-				
+
 			case 'S':
 				b.Add (b.conv.GetBytes (Convert.ToUInt16 (oarg)));
 				break;
-				
+
 			case 'l':
 				b.Add (b.conv.GetBytes (Convert.ToInt64 (oarg)));
 				break;
-				
+
 			case 'L':
 				b.Add (b.conv.GetBytes (Convert.ToUInt64 (oarg)));
 				break;
-				
+
 			case 'f':
 				b.Add (b.conv.GetBytes (Convert.ToSingle (oarg)));
 				break;
-				
+
 			case 'd':
 				b.Add (b.conv.GetBytes (Convert.ToDouble (oarg)));
 				break;
-				
+
 			case 'b':
 				b.Add (new byte [] { Convert.ToByte (oarg) });
 				break;
@@ -417,24 +417,31 @@ namespace Mono {
 				b.Add (new byte [] { Convert.ToByte (oarg) });
 				break;
 
-				// Repeat acount;
-			case '1': case '2': case '3': case '4': case '5':
-			case '6': case '7': case '8': case '9':
+			// Repeat acount;
+			case '1':
+			case '2':
+			case '3':
+			case '4':
+			case '5':
+			case '6':
+			case '7':
+			case '8':
+			case '9':
 				b.repeat = ((short) b.description [b.i]) - ((short) '0');
 				return false;
 
 			case '*':
 				b.repeat = Int32.MaxValue;
 				return false;
-				
+
 			case '[':
 				int count = -1, j;
-				
-				for (j = b.i+1; j < b.description.Length; j++){
+
+				for (j = b.i + 1; j < b.description.Length; j++) {
 					if (b.description [j] == ']')
 						break;
 					n = ((short) b.description [j]) - ((short) '0');
-					if (n >= 0 && n <= 9){
+					if (n >= 0 && n <= 9) {
 						if (count == -1)
 							count = n;
 						else
@@ -446,16 +453,17 @@ namespace Mono {
 				b.i = j;
 				b.repeat = count;
 				return false;
-				
-			case '$': case 'z':
+
+			case '$':
+			case 'z':
 				bool add_null = b.description [b.i] == 'z';
 				b.i++;
 				if (b.i >= b.description.Length)
 					throw new ArgumentException ("$ description needs a type specified", "description");
 				char d = b.description [b.i];
 				Encoding e;
-				
-				switch (d){
+
+				switch (d) {
 				case '8':
 					e = Encoding.UTF8;
 					n = 1;
@@ -480,7 +488,7 @@ namespace Mono {
 					e = Encoding.GetEncoding (12001);
 					n = 4;
 					break;
-					
+
 				default:
 					throw new ArgumentException ("Invalid format for $ specifier", "description");
 				}
@@ -492,24 +500,24 @@ namespace Mono {
 				break;
 			default:
 				throw new ArgumentException (String.Format ("invalid format specified `{0}'",
-									    b.description [b.i]));
+										b.description [b.i]));
 			}
 			return true;
 		}
 
 		static bool Prepare (byte [] buffer, ref int idx, int size, ref bool align)
 		{
-			if (align){
+			if (align) {
 				idx = Align (idx, size);
 				align = false;
 			}
-			if (idx + size > buffer.Length){
+			if (idx + size > buffer.Length) {
 				idx = buffer.Length;
 				return false;
 			}
 			return true;
 		}
-		
+
 		static public IList Unpack (string description, byte [] buffer, int startIndex)
 		{
 			DataConverter conv = CopyConv;
@@ -517,11 +525,11 @@ namespace Mono {
 			int idx = startIndex;
 			bool align = false;
 			int repeat = 0, n;
-			
-			for (int i = 0; i < description.Length && idx < buffer.Length; ){
+
+			for (int i = 0; i < description.Length && idx < buffer.Length;) {
 				int save = i;
-				
-				switch (description [i]){
+
+				switch (description [i]) {
 				case '^':
 					conv = BigEndian;
 					break;
@@ -539,87 +547,95 @@ namespace Mono {
 					align = true;
 					break;
 
-					// Type Conversions
+				// Type Conversions
 				case 'i':
-					if (Prepare (buffer, ref idx, 4, ref align)){
+					if (Prepare (buffer, ref idx, 4, ref align)) {
 						result.Add (conv.GetInt32 (buffer, idx));
 						idx += 4;
-					} 
+					}
 					break;
-				
+
 				case 'I':
-					if (Prepare (buffer, ref idx, 4, ref align)){
+					if (Prepare (buffer, ref idx, 4, ref align)) {
 						result.Add (conv.GetUInt32 (buffer, idx));
 						idx += 4;
 					}
 					break;
-				
+
 				case 's':
-					if (Prepare (buffer, ref idx, 2, ref align)){
+					if (Prepare (buffer, ref idx, 2, ref align)) {
 						result.Add (conv.GetInt16 (buffer, idx));
 						idx += 2;
 					}
 					break;
-				
+
 				case 'S':
-					if (Prepare (buffer, ref idx, 2, ref align)){
+					if (Prepare (buffer, ref idx, 2, ref align)) {
 						result.Add (conv.GetUInt16 (buffer, idx));
 						idx += 2;
 					}
 					break;
-				
+
 				case 'l':
-					if (Prepare (buffer, ref idx, 8, ref align)){
+					if (Prepare (buffer, ref idx, 8, ref align)) {
 						result.Add (conv.GetInt64 (buffer, idx));
 						idx += 8;
 					}
 					break;
-				
+
 				case 'L':
-					if (Prepare (buffer, ref idx, 8, ref align)){
+					if (Prepare (buffer, ref idx, 8, ref align)) {
 						result.Add (conv.GetUInt64 (buffer, idx));
 						idx += 8;
 					}
 					break;
-				
+
 				case 'f':
-					if (Prepare (buffer, ref idx, 4, ref align)){
+					if (Prepare (buffer, ref idx, 4, ref align)) {
 						result.Add (conv.GetDouble (buffer, idx));
 						idx += 4;
 					}
 					break;
-				
+
 				case 'd':
-					if (Prepare (buffer, ref idx, 8, ref align)){
+					if (Prepare (buffer, ref idx, 8, ref align)) {
 						result.Add (conv.GetDouble (buffer, idx));
 						idx += 8;
 					}
 					break;
-				
+
 				case 'b':
-					if (Prepare (buffer, ref idx, 1, ref align)){
+					if (Prepare (buffer, ref idx, 1, ref align)) {
 						result.Add (buffer [idx]);
 						idx++;
 					}
 					break;
 
-				case 'c': case 'C':
-					if (Prepare (buffer, ref idx, 1, ref align)){
+				case 'c':
+				case 'C':
+					if (Prepare (buffer, ref idx, 1, ref align)) {
 						char c;
-						
+
 						if (description [i] == 'c')
-							c = ((char) ((sbyte)buffer [idx]));
+							c = ((char) ((sbyte) buffer [idx]));
 						else
-							c = ((char) ((byte)buffer [idx]));
-						
+							c = ((char) ((byte) buffer [idx]));
+
 						result.Add (c);
 						idx++;
 					}
 					break;
-					
-					// Repeat acount;
-				case '1': case '2': case '3': case '4': case '5':
-				case '6': case '7': case '8': case '9':
+
+				// Repeat acount;
+				case '1':
+				case '2':
+				case '3':
+				case '4':
+				case '5':
+				case '6':
+				case '7':
+				case '8':
+				case '9':
 					repeat = ((short) description [i]) - ((short) '0');
 					save = i + 1;
 					break;
@@ -627,15 +643,15 @@ namespace Mono {
 				case '*':
 					repeat = Int32.MaxValue;
 					break;
-				
+
 				case '[':
 					int count = -1, j;
-				
-					for (j = i+1; j < description.Length; j++){
+
+					for (j = i + 1; j < description.Length; j++) {
 						if (description [j] == ']')
 							break;
 						n = ((short) description [j]) - ((short) '0');
-						if (n >= 0 && n <= 9){
+						if (n >= 0 && n <= 9) {
 							if (count == -1)
 								count = n;
 							else
@@ -647,22 +663,23 @@ namespace Mono {
 					i = j;
 					repeat = count;
 					break;
-				
-				case '$': case 'z':
+
+				case '$':
+				case 'z':
 					// bool with_null = description [i] == 'z';
 					i++;
 					if (i >= description.Length)
 						throw new ArgumentException ("$ description needs a type specified", "description");
 					char d = description [i];
 					Encoding e;
-					if (align){
+					if (align) {
 						idx = Align (idx, 4);
 						align = false;
 					}
 					if (idx >= buffer.Length)
 						break;
-				
-					switch (d){
+
+					switch (d) {
 					case '8':
 						e = Encoding.UTF8;
 						n = 1;
@@ -687,61 +704,61 @@ namespace Mono {
 						e = Encoding.GetEncoding (12001);
 						n = 4;
 						break;
-					
+
 					default:
 						throw new ArgumentException ("Invalid format for $ specifier", "description");
 					}
 					int k = idx;
-					switch (n){
+					switch (n) {
 					case 1:
 						for (; k < buffer.Length && buffer [k] != 0; k++)
 							;
-						result.Add (e.GetChars (buffer, idx, k-idx));
+						result.Add (e.GetChars (buffer, idx, k - idx));
 						if (k == buffer.Length)
 							idx = k;
 						else
-							idx = k+1;
+							idx = k + 1;
 						break;
-						
+
 					case 2:
-						for (; k < buffer.Length; k++){
-							if (k+1 == buffer.Length){
+						for (; k < buffer.Length; k++) {
+							if (k + 1 == buffer.Length) {
 								k++;
 								break;
 							}
-							if (buffer [k] == 0 && buffer [k+1] == 0)
+							if (buffer [k] == 0 && buffer [k + 1] == 0)
 								break;
 						}
-						result.Add (e.GetChars (buffer, idx, k-idx));
+						result.Add (e.GetChars (buffer, idx, k - idx));
 						if (k == buffer.Length)
 							idx = k;
 						else
-							idx = k+2;
+							idx = k + 2;
 						break;
-						
+
 					case 4:
-						for (; k < buffer.Length; k++){
-							if (k+3 >= buffer.Length){
+						for (; k < buffer.Length; k++) {
+							if (k + 3 >= buffer.Length) {
 								k = buffer.Length;
 								break;
 							}
-							if (buffer[k]==0 && buffer[k+1] == 0 && buffer[k+2] == 0 && buffer[k+3]== 0)
+							if (buffer [k] == 0 && buffer [k + 1] == 0 && buffer [k + 2] == 0 && buffer [k + 3] == 0)
 								break;
 						}
-						result.Add (e.GetChars (buffer, idx, k-idx));
+						result.Add (e.GetChars (buffer, idx, k - idx));
 						if (k == buffer.Length)
 							idx = k;
 						else
-							idx = k+4;
+							idx = k + 4;
 						break;
 					}
 					break;
 				default:
 					throw new ArgumentException (String.Format ("invalid format specified `{0}'",
-										    description [i]));
+											description [i]));
 				}
 
-				if (repeat > 0){
+				if (repeat > 0) {
 					if (--repeat > 0)
 						i = save;
 				} else
@@ -757,7 +774,7 @@ namespace Mono {
 			if (destIdx < 0 || destIdx > dest.Length - size)
 				throw new ArgumentException ("destIdx");
 		}
-		
+
 		class CopyConverter : DataConverter {
 			public override double GetDouble (byte [] data, int index)
 			{
@@ -768,10 +785,10 @@ namespace Mono {
 				if (index < 0)
 					throw new ArgumentException ("index");
 				double ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 8; i++)
-					b [i] = data [index+i];
+					b [i] = data [index + i];
 
 				return ret;
 			}
@@ -786,10 +803,10 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				ulong ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 8; i++)
-					b [i] = data [index+i];
+					b [i] = data [index + i];
 
 				return ret;
 			}
@@ -804,15 +821,15 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				long ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 8; i++)
-					b [i] = data [index+i];
+					b [i] = data [index + i];
 
 				return ret;
 			}
-			
-			public override float GetFloat  (byte [] data, int index)
+
+			public override float GetFloat (byte [] data, int index)
 			{
 				if (data == null)
 					throw new ArgumentNullException ("data");
@@ -822,15 +839,15 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				float ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 4; i++)
-					b [i] = data [index+i];
+					b [i] = data [index + i];
 
 				return ret;
 			}
-			
-			public override int GetInt32  (byte [] data, int index)
+
+			public override int GetInt32 (byte [] data, int index)
 			{
 				if (data == null)
 					throw new ArgumentNullException ("data");
@@ -840,14 +857,14 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				int ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 4; i++)
-					b [i] = data [index+i];
+					b [i] = data [index + i];
 
 				return ret;
 			}
-			
+
 			public override uint GetUInt32 (byte [] data, int index)
 			{
 				if (data == null)
@@ -858,14 +875,14 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				uint ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 4; i++)
-					b [i] = data [index+i];
+					b [i] = data [index + i];
 
 				return ret;
 			}
-			
+
 			public override short GetInt16 (byte [] data, int index)
 			{
 				if (data == null)
@@ -876,14 +893,14 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				short ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 2; i++)
-					b [i] = data [index+i];
+					b [i] = data [index + i];
 
 				return ret;
 			}
-			
+
 			public override ushort GetUInt16 (byte [] data, int index)
 			{
 				if (data == null)
@@ -894,91 +911,91 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				ushort ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 2; i++)
-					b [i] = data [index+i];
+					b [i] = data [index + i];
 
 				return ret;
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, double value)
 			{
 				Check (dest, destIdx, 8);
-				fixed (byte *target = &dest [destIdx]){
-					long *source = (long *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					long* source = (long*) &value;
 
-					*((long *)target) = *source;
+					*((long*) target) = *source;
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, float value)
 			{
 				Check (dest, destIdx, 4);
-				fixed (byte *target = &dest [destIdx]){
-					uint *source = (uint *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					uint* source = (uint*) &value;
 
-					*((uint *)target) = *source;
+					*((uint*) target) = *source;
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, int value)
 			{
 				Check (dest, destIdx, 4);
-				fixed (byte *target = &dest [destIdx]){
-					uint *source = (uint *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					uint* source = (uint*) &value;
 
-					*((uint *)target) = *source;
+					*((uint*) target) = *source;
 				}
 			}
 
 			public override void PutBytes (byte [] dest, int destIdx, uint value)
 			{
 				Check (dest, destIdx, 4);
-				fixed (byte *target = &dest [destIdx]){
-					uint *source = (uint *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					uint* source = (uint*) &value;
 
-					*((uint *)target) = *source;
+					*((uint*) target) = *source;
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, long value)
 			{
 				Check (dest, destIdx, 8);
-				fixed (byte *target = &dest [destIdx]){
-					long *source = (long *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					long* source = (long*) &value;
 
-					*((long*)target) = *source;
+					*((long*) target) = *source;
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, ulong value)
 			{
 				Check (dest, destIdx, 8);
-				fixed (byte *target = &dest [destIdx]){
-					ulong *source = (ulong *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					ulong* source = (ulong*) &value;
 
-					*((ulong *) target) = *source;
+					*((ulong*) target) = *source;
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, short value)
 			{
 				Check (dest, destIdx, 2);
-				fixed (byte *target = &dest [destIdx]){
-					ushort *source = (ushort *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					ushort* source = (ushort*) &value;
 
-					*((ushort *)target) = *source;
+					*((ushort*) target) = *source;
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, ushort value)
 			{
 				Check (dest, destIdx, 2);
-				fixed (byte *target = &dest [destIdx]){
-					ushort *source = (ushort *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					ushort* source = (ushort*) &value;
 
-					*((ushort *)target) = *source;
+					*((ushort*) target) = *source;
 				}
 			}
 		}
@@ -994,10 +1011,10 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				double ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 8; i++)
-					b [7-i] = data [index+i];
+					b [7 - i] = data [index + i];
 
 				return ret;
 			}
@@ -1012,10 +1029,10 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				ulong ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 8; i++)
-					b [7-i] = data [index+i];
+					b [7 - i] = data [index + i];
 
 				return ret;
 			}
@@ -1030,15 +1047,15 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				long ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 8; i++)
-					b [7-i] = data [index+i];
+					b [7 - i] = data [index + i];
 
 				return ret;
 			}
-			
-			public override float GetFloat  (byte [] data, int index)
+
+			public override float GetFloat (byte [] data, int index)
 			{
 				if (data == null)
 					throw new ArgumentNullException ("data");
@@ -1048,15 +1065,15 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				float ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 4; i++)
-					b [3-i] = data [index+i];
+					b [3 - i] = data [index + i];
 
 				return ret;
 			}
-			
-			public override int GetInt32  (byte [] data, int index)
+
+			public override int GetInt32 (byte [] data, int index)
 			{
 				if (data == null)
 					throw new ArgumentNullException ("data");
@@ -1066,14 +1083,14 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				int ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 4; i++)
-					b [3-i] = data [index+i];
+					b [3 - i] = data [index + i];
 
 				return ret;
 			}
-			
+
 			public override uint GetUInt32 (byte [] data, int index)
 			{
 				if (data == null)
@@ -1084,14 +1101,14 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				uint ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 4; i++)
-					b [3-i] = data [index+i];
+					b [3 - i] = data [index + i];
 
 				return ret;
 			}
-			
+
 			public override short GetInt16 (byte [] data, int index)
 			{
 				if (data == null)
@@ -1102,14 +1119,14 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				short ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 2; i++)
-					b [1-i] = data [index+i];
+					b [1 - i] = data [index + i];
 
 				return ret;
 			}
-			
+
 			public override ushort GetUInt16 (byte [] data, int index)
 			{
 				if (data == null)
@@ -1120,10 +1137,10 @@ namespace Mono {
 					throw new ArgumentException ("index");
 
 				ushort ret;
-				byte *b = (byte *)&ret;
+				byte* b = (byte*) &ret;
 
 				for (int i = 0; i < 2; i++)
-					b [1-i] = data [index+i];
+					b [1 - i] = data [index + i];
 
 				return ret;
 			}
@@ -1132,99 +1149,99 @@ namespace Mono {
 			{
 				Check (dest, destIdx, 8);
 
-				fixed (byte *target = &dest [destIdx]){
-					byte *source = (byte *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					byte* source = (byte*) &value;
 
 					for (int i = 0; i < 8; i++)
-						target [i] = source [7-i];
+						target [i] = source [7 - i];
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, float value)
 			{
 				Check (dest, destIdx, 4);
 
-				fixed (byte *target = &dest [destIdx]){
-					byte *source = (byte *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					byte* source = (byte*) &value;
 
 					for (int i = 0; i < 4; i++)
-						target [i] = source [3-i];
+						target [i] = source [3 - i];
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, int value)
 			{
 				Check (dest, destIdx, 4);
 
-				fixed (byte *target = &dest [destIdx]){
-					byte *source = (byte *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					byte* source = (byte*) &value;
 
 					for (int i = 0; i < 4; i++)
-						target [i] = source [3-i];
+						target [i] = source [3 - i];
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, uint value)
 			{
 				Check (dest, destIdx, 4);
 
-				fixed (byte *target = &dest [destIdx]){
-					byte *source = (byte *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					byte* source = (byte*) &value;
 
 					for (int i = 0; i < 4; i++)
-						target [i] = source [3-i];
+						target [i] = source [3 - i];
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, long value)
 			{
 				Check (dest, destIdx, 8);
 
-				fixed (byte *target = &dest [destIdx]){
-					byte *source = (byte *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					byte* source = (byte*) &value;
 
 					for (int i = 0; i < 8; i++)
-						target [i] = source [7-i];
+						target [i] = source [7 - i];
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, ulong value)
 			{
 				Check (dest, destIdx, 8);
 
-				fixed (byte *target = &dest [destIdx]){
-					byte *source = (byte *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					byte* source = (byte*) &value;
 
 					for (int i = 0; i < 4; i++)
-						target [i] = source [7-i];
+						target [i] = source [7 - i];
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, short value)
 			{
 				Check (dest, destIdx, 2);
 
-				fixed (byte *target = &dest [destIdx]){
-					byte *source = (byte *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					byte* source = (byte*) &value;
 
 					for (int i = 0; i < 2; i++)
-						target [i] = source [1-i];
+						target [i] = source [1 - i];
 				}
 			}
-			
+
 			public override void PutBytes (byte [] dest, int destIdx, ushort value)
 			{
 				Check (dest, destIdx, 2);
 
-				fixed (byte *target = &dest [destIdx]){
-					byte *source = (byte *) &value;
+				fixed (byte* target = &dest [destIdx]) {
+					byte* source = (byte*) &value;
 
 					for (int i = 0; i < 2; i++)
-						target [i] = source [1-i];
+						target [i] = source [1 - i];
 				}
 			}
 		}
-		
+
 #if MONO_DATACONVERTER_STATIC_METHODS
 		static unsafe void PutBytesLE (byte *dest, byte *src, int count)
 		{
@@ -1833,6 +1850,6 @@ namespace Mono {
 			return GetBytesSwap (BitConverter.IsLittleEndian, (byte *) &value, 8);
                 }
 #endif
-		
+
 	}
 }

@@ -1,6 +1,4 @@
-namespace Xamarin.MacDev.Tasks
-{
-	public class PropertyListEditor : PropertyListEditorTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class PropertyListEditor : PropertyListEditorTaskBase {
 	}
 }

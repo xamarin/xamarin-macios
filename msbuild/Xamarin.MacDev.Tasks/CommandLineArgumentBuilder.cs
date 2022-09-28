@@ -6,14 +6,12 @@ using System.Collections.Generic;
 using Microsoft.Build.Utilities;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev
-{
+namespace Xamarin.MacDev {
 	/// <summary>
 	/// Builds a process argument string.
 	/// </summary>
-	public class CommandLineArgumentBuilder
-	{
-		static readonly char[] QuoteSpecials = new char[] { ' ', '\\', '\'', '"', ',', ';' };
+	public class CommandLineArgumentBuilder {
+		static readonly char [] QuoteSpecials = new char [] { ' ', '\\', '\'', '"', ',', ';' };
 
 		readonly HashSet<string> hash = new HashSet<string> ();
 		readonly StringBuilder builder = new StringBuilder ();
@@ -69,7 +67,7 @@ namespace Xamarin.MacDev
 		/// <summary>
 		/// Adds multiple arguments without escaping or quoting.
 		/// </summary>
-		public void Add (params string[] args)
+		public void Add (params string [] args)
 		{
 			foreach (var a in args)
 				Add (a);
@@ -78,7 +76,7 @@ namespace Xamarin.MacDev
 		/// <summary>
 		/// Adds a formatted argument, quoting and escaping as necessary.
 		/// </summary>
-		public void AddQuotedFormat (string argumentFormat, params object[] values)
+		public void AddQuotedFormat (string argumentFormat, params object [] values)
 		{
 			AddQuoted (string.Format (argumentFormat, values));
 		}
@@ -94,9 +92,9 @@ namespace Xamarin.MacDev
 				quoted.Append ("\"");
 
 				for (int i = 0; i < text.Length; i++) {
-					if (text[i] == '\\' || text[i] == '"')
+					if (text [i] == '\\' || text [i] == '"')
 						quoted.Append ('\\');
-					quoted.Append (text[i]);
+					quoted.Append (text [i]);
 				}
 
 				quoted.Append ("\"");
@@ -134,7 +132,7 @@ namespace Xamarin.MacDev
 		/// <summary>
 		/// Adds multiple arguments, quoting and escaping each as necessary.
 		/// </summary>
-		public void AddQuoted (params string[] args)
+		public void AddQuoted (params string [] args)
 		{
 			foreach (var a in args)
 				AddQuoted (a);
@@ -166,12 +164,12 @@ namespace Xamarin.MacDev
 			return builder.ToString ();
 		}
 
-		static bool TryParse (string commandline, out string[] argv, out Exception ex)
+		static bool TryParse (string commandline, out string [] argv, out Exception ex)
 		{
 			return StringUtils.TryParseArguments (commandline, out argv, out ex);
 		}
 
-		public static bool TryParse (string commandline, out string[] argv)
+		public static bool TryParse (string commandline, out string [] argv)
 		{
 			Exception ex;
 
@@ -183,9 +181,9 @@ namespace Xamarin.MacDev
 			return Parse (ToString ());
 		}
 
-		public static string[] Parse (string commandline)
+		public static string [] Parse (string commandline)
 		{
-			string[] argv;
+			string [] argv;
 			Exception ex;
 
 			if (!TryParse (commandline, out argv, out ex))

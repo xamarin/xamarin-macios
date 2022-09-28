@@ -7,15 +7,13 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class TextureAtlasTaskBase : XcodeToolTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class TextureAtlasTaskBase : XcodeToolTaskBase {
 		readonly Dictionary<string, List<ITaskItem>> atlases = new Dictionary<string, List<ITaskItem>> ();
 
 		#region Inputs
 
-		public ITaskItem[] AtlasTextures { get; set; }
+		public ITaskItem [] AtlasTextures { get; set; }
 
 		#endregion
 
@@ -69,7 +67,7 @@ namespace Xamarin.MacDev.Tasks
 			if (!File.Exists (plist))
 				return true;
 
-			var items = atlases[input.ItemSpec];
+			var items = atlases [input.ItemSpec];
 
 			foreach (var item in items) {
 				if (File.GetLastWriteTimeUtc (item.ItemSpec) > File.GetLastWriteTimeUtc (plist))
@@ -86,7 +84,7 @@ namespace Xamarin.MacDev.Tasks
 
 			// group the atlas textures by their parent .atlas directories
 			foreach (var item in AtlasTextures) {
-				var atlas = Path.GetDirectoryName (BundleResource.GetVirtualProjectPath (ProjectDir, item, !string.IsNullOrEmpty(SessionId)));
+				var atlas = Path.GetDirectoryName (BundleResource.GetVirtualProjectPath (ProjectDir, item, !string.IsNullOrEmpty (SessionId)));
 				List<ITaskItem> items;
 
 				if (!atlases.TryGetValue (atlas, out items)) {
