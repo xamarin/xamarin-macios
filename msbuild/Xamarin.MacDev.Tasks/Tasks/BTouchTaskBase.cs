@@ -25,9 +25,9 @@ namespace Xamarin.MacDev.Tasks {
 
 		public string DotNetCscCompiler { get; set; }
 
-		public ITaskItem[] ObjectiveCLibraries { get; set; }
+		public ITaskItem [] ObjectiveCLibraries { get; set; }
 
-		public ITaskItem[] AdditionalLibPaths { get; set; }
+		public ITaskItem [] AdditionalLibPaths { get; set; }
 
 		public bool AllowUnsafeBlocks { get; set; }
 
@@ -35,11 +35,11 @@ namespace Xamarin.MacDev.Tasks {
 		public string BaseLibDll { get; set; }
 
 		[Required]
-		public ITaskItem[] ApiDefinitions { get; set; }
+		public ITaskItem [] ApiDefinitions { get; set; }
 
 		public string AttributeAssembly { get; set; }
 
-		public ITaskItem[] CoreSources { get; set; }
+		public ITaskItem [] CoreSources { get; set; }
 
 		public string DefineConstants { get; set; }
 
@@ -57,7 +57,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool NoNFloatUsing { get; set; }
 
-		public ITaskItem[] NativeLibraries { get; set; }
+		public ITaskItem [] NativeLibraries { get; set; }
 
 		public string OutputAssembly { get; set; }
 
@@ -66,11 +66,11 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string ProjectDir { get; set; }
 
-		public ITaskItem[] References { get; set; }
+		public ITaskItem [] References { get; set; }
 
-		public ITaskItem[] Resources { get; set; }
+		public ITaskItem [] Resources { get; set; }
 
-		public ITaskItem[] Sources { get; set; }
+		public ITaskItem [] Sources { get; set; }
 
 		[Required]
 		public string ResponseFilePath { get; set; }
@@ -119,9 +119,9 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			var cmd = new CommandLineArgumentBuilder ();
 
-			#if DEBUG
+#if DEBUG
 			cmd.Add ("/v");
-			#endif
+#endif
 
 			cmd.Add ("/nostdlib");
 			cmd.AddQuotedSwitchIfNotNull ("/baselib:", BaseLibDll);
@@ -246,7 +246,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				for (int i = 0; i < extraArgs.Length; i++) {
-					var argument = extraArgs[i];
+					var argument = extraArgs [i];
 					cmd.Add (StringParserService.Parse (argument, customTags));
 				}
 			}
@@ -271,7 +271,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (IsDotNet) {
 				var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
 
-				if(!string.IsNullOrEmpty(customHome)) {
+				if (!string.IsNullOrEmpty (customHome)) {
 					EnvironmentVariables = EnvironmentVariables.CopyAndAdd ($"HOME={customHome}");
 				}
 			} else {
@@ -280,8 +280,8 @@ namespace Xamarin.MacDev.Tasks {
 			}
 
 			if (!string.IsNullOrEmpty (SessionId) &&
-			    !string.IsNullOrEmpty (GeneratedSourcesDir) &&
-			    !Directory.Exists (GeneratedSourcesDir)) {
+				!string.IsNullOrEmpty (GeneratedSourcesDir) &&
+				!Directory.Exists (GeneratedSourcesDir)) {
 				Directory.CreateDirectory (GeneratedSourcesDir);
 			}
 

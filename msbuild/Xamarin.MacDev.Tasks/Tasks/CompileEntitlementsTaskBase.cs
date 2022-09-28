@@ -9,10 +9,8 @@ using Xamarin.Utils;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class CompileEntitlementsTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class CompileEntitlementsTaskBase : XamarinTask {
 		bool warnedTeamIdentifierPrefix;
 		bool warnedAppIdentifierPrefix;
 
@@ -59,7 +57,7 @@ namespace Xamarin.MacDev.Tasks
 		[Required]
 		public ITaskItem? CompiledEntitlements { get; set; }
 
-		public ITaskItem[] CustomEntitlements { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] CustomEntitlements { get; set; } = Array.Empty<ITaskItem> ();
 
 		public bool Debug { get; set; }
 
@@ -156,7 +154,7 @@ namespace Xamarin.MacDev.Tasks
 					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0108);
 					warnedTeamIdentifierPrefix = true;
 				}
-				
+
 				if (!warnedAppIdentifierPrefix && pstr.Value.Contains ("$(AppIdentifierPrefix)")) {
 					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0109);
 					warnedAppIdentifierPrefix = true;
@@ -164,12 +162,12 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (profile is not null && profile.ApplicationIdentifierPrefix.Count > 0)
-				AppIdentifierPrefix = profile.ApplicationIdentifierPrefix[0] + ".";
+				AppIdentifierPrefix = profile.ApplicationIdentifierPrefix [0] + ".";
 			else
 				AppIdentifierPrefix = string.Empty;
 
 			if (profile is not null && profile.TeamIdentifierPrefix.Count > 0)
-				TeamIdentifierPrefix = profile.TeamIdentifierPrefix[0] + ".";
+				TeamIdentifierPrefix = profile.TeamIdentifierPrefix [0] + ".";
 			else
 				TeamIdentifierPrefix = AppIdentifierPrefix;
 
@@ -297,7 +295,7 @@ namespace Xamarin.MacDev.Tasks
 					var arraySeparator = item.GetMetadata ("ArraySeparator");
 					if (string.IsNullOrEmpty (arraySeparator))
 						arraySeparator = ";";
-					var arrayContent = value.Split (new string[] { arraySeparator }, StringSplitOptions.None);
+					var arrayContent = value.Split (new string [] { arraySeparator }, StringSplitOptions.None);
 					var parray = new PArray ();
 					foreach (var element in arrayContent)
 						parray.Add (new PString (element));
@@ -310,13 +308,13 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		static bool AreEqual (byte[] x, byte[] y)
+		static bool AreEqual (byte [] x, byte [] y)
 		{
 			if (x.Length != y.Length)
 				return false;
 
 			for (int i = 0; i < x.Length; i++) {
-				if (x[i] != y[i])
+				if (x [i] != y [i])
 					return false;
 			}
 
@@ -380,9 +378,9 @@ namespace Xamarin.MacDev.Tasks
 				var value = item.Value;
 
 				if (item.Key == "com.apple.developer.ubiquity-container-identifiers" ||
-				    item.Key == "com.apple.developer.icloud-container-identifiers" ||
-				    item.Key == "com.apple.developer.icloud-container-environment" ||
-				    item.Key == "com.apple.developer.icloud-services") {
+					item.Key == "com.apple.developer.icloud-container-identifiers" ||
+					item.Key == "com.apple.developer.icloud-container-environment" ||
+					item.Key == "com.apple.developer.icloud-services") {
 					if (profile is null)
 						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0110, item.Key);
 					else if (!profile.Entitlements.ContainsKey (item.Key))
@@ -405,7 +403,7 @@ namespace Xamarin.MacDev.Tasks
 					value = value.Clone ();
 
 				if (value is not null)
-					entitlements[item.Key] = value;
+					entitlements [item.Key] = value;
 			}
 
 			switch (Platform) {
