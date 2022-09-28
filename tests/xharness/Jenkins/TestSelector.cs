@@ -24,6 +24,7 @@ namespace Xharness.Jenkins {
 			PlatformLabel.iOS |
 			PlatformLabel.iOSSimulator |
 			PlatformLabel.MacCatalyst |
+			PlatformLabel.LegacyXamarin |
 			PlatformLabel.Dotnet;
 
 		public bool ForceExtensionBuildOnly { get; set; }
@@ -291,6 +292,20 @@ namespace Xharness.Jenkins {
 				MainLog?.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
 				selection.SetEnabled (PlatformLabel.Dotnet, false);
 			}
+
+			if (!Harness.INCLUDE_XAMARIN_LEGACY) {
+				MainLog?.WriteLine ("The legacy Xamarin build is disabled, so any legacy Xamarin tests will be disabled as well.");
+				selection.SetEnabled (PlatformLabel.LegacyXamarin, false);
+				selection.SetEnabled (PlatformLabel.watchOS, false);
+				selection.SetEnabled (TestLabel.Bcl, false);
+				selection.SetEnabled (TestLabel.InstallSource, false);
+				selection.SetEnabled (TestLabel.Mmp, false);
+				selection.SetEnabled (TestLabel.Mononative, false);
+				selection.SetEnabled (TestLabel.Mtouch, false);
+				selection.SetEnabled (TestLabel.Xammac, false);
+			}
+
+			MainLog?.WriteLine ($"Final test selection: tests: {selection.SelectedTests} platforms: {selection.SelectedPlatforms}");
 		}
 	}
 }
