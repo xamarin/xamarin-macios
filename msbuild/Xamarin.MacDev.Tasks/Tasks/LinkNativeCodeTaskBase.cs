@@ -10,10 +10,10 @@ using Xamarin.Utils;
 namespace Xamarin.MacDev.Tasks {
 	public abstract class LinkNativeCodeTaskBase : XamarinTask {
 
-#region Inputs
-		public ITaskItem[] LinkerFlags { get; set; }
+		#region Inputs
+		public ITaskItem [] LinkerFlags { get; set; }
 
-		public ITaskItem[] LinkWithLibraries { get; set; }
+		public ITaskItem [] LinkWithLibraries { get; set; }
 
 		// A path to entitlements to be embedded into the executable
 		public string EntitlementsInExecutable { get; set; }
@@ -38,7 +38,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		public ITaskItem [] NativeReferences { get; set; }
 
-		public ITaskItem[] Frameworks { get; set; }
+		public ITaskItem [] Frameworks { get; set; }
 
 		public string DylibRPath { get; set; }
 
@@ -48,7 +48,7 @@ namespace Xamarin.MacDev.Tasks {
 		public string TargetArchitectures { get; set; }
 
 		TargetArchitecture architectures;
-#endregion
+		#endregion
 
 		public override bool Execute ()
 		{
@@ -125,7 +125,7 @@ namespace Xamarin.MacDev.Tasks {
 			default:
 				throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
 			}
-			
+
 			bool hasDylibs = false;
 			if (LinkWithLibraries != null) {
 				foreach (var libSpec in LinkWithLibraries) {
@@ -205,7 +205,7 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		public static string[] GetEmbedEntitlementsInExecutableLinkerFlags (string entitlements)
+		public static string [] GetEmbedEntitlementsInExecutableLinkerFlags (string entitlements)
 		{
 			if (string.IsNullOrEmpty (entitlements))
 				return Array.Empty<string> ();
