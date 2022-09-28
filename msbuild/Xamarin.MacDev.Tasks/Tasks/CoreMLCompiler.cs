@@ -1,8 +1,10 @@
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks {
-	public class CoreMLCompiler : CoreMLCompilerTaskBase, ICancelableTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public class CoreMLCompiler : CoreMLCompilerTaskBase, ICancelableTask
+	{
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

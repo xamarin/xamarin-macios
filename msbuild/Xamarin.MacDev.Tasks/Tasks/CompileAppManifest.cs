@@ -6,8 +6,10 @@ using Xamarin.Messaging.Build.Client;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks {
-	public class CompileAppManifest : CompileAppManifestTaskBase, ITaskCallback, ICancelableTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public class CompileAppManifest : CompileAppManifestTaskBase, ITaskCallback, ICancelableTask
+	{
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

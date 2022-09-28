@@ -3,8 +3,10 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Xamarin.Utils {
-	public static class PathUtils {
+namespace Xamarin.Utils
+{
+	public static class PathUtils
+	{
 		static bool IsSeparator (char c)
 		{
 			return c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar || c == Path.VolumeSeparatorChar;
@@ -68,10 +70,10 @@ namespace Xamarin.Utils {
 			int index = 0;
 
 			while (index < absolute.Length) {
-				if (ToOrdinalIgnoreCase (absolute [index]) != ToOrdinalIgnoreCase (baseDirectory [index]))
+				if (ToOrdinalIgnoreCase (absolute[index]) != ToOrdinalIgnoreCase (baseDirectory[index]))
 					break;
 
-				if (IsSeparator (absolute [index])) {
+				if (IsSeparator (absolute[index])) {
 					baseDirectoryStartIndex = index;
 					absoluteStartIndex = index + 1;
 					separators++;
@@ -80,7 +82,7 @@ namespace Xamarin.Utils {
 				index++;
 
 				if (index >= baseDirectory.Length) {
-					if (index >= absolute.Length || IsSeparator (absolute [index])) {
+					if (index >= absolute.Length || IsSeparator (absolute[index])) {
 						baseDirectoryStartIndex = index;
 						absoluteStartIndex = index + 1;
 						separators++;
@@ -95,14 +97,14 @@ namespace Xamarin.Utils {
 			if (absoluteStartIndex >= absolute.Length)
 				return ".";
 
-			if (index >= absolute.Length && IsSeparator (baseDirectory [index])) {
+			if (index >= absolute.Length && IsSeparator (baseDirectory[index])) {
 				absoluteStartIndex = index + 1;
 				baseDirectoryStartIndex = index;
 			}
 
 			int parentDirCount = 0;
 			while (baseDirectoryStartIndex < baseDirectory.Length) {
-				if (IsSeparator (baseDirectory [baseDirectoryStartIndex]))
+				if (IsSeparator (baseDirectory[baseDirectoryStartIndex]))
 					parentDirCount++;
 				baseDirectoryStartIndex++;
 			}
@@ -112,13 +114,13 @@ namespace Xamarin.Utils {
 			index = 0;
 
 			for (int i = 0; i < parentDirCount; i++) {
-				result [index++] = '.';
-				result [index++] = '.';
-				result [index++] = Path.DirectorySeparatorChar;
+				result[index++] = '.';
+				result[index++] = '.';
+				result[index++] = Path.DirectorySeparatorChar;
 			}
 
 			while (absoluteStartIndex < absolute.Length)
-				result [index++] = absolute [absoluteStartIndex++];
+				result[index++] = absolute[absoluteStartIndex++];
 
 			return new string (result);
 		}
@@ -145,7 +147,7 @@ namespace Xamarin.Utils {
 		}
 
 		[DllImport ("/usr/lib/libSystem.dylib", SetLastError = true)]
-		static extern int readlink (string path, [Out] byte [] buffer, IntPtr len);
+		static extern int readlink (string path, [Out] byte[] buffer, IntPtr len);
 
 		public static string GetSymlinkTarget (string path)
 		{

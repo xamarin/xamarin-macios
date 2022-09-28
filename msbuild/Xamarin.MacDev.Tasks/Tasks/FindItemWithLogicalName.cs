@@ -1,4 +1,6 @@
-namespace Xamarin.MacDev.Tasks {
-	public class FindItemWithLogicalName : FindItemWithLogicalNameTaskBase {
+namespace Xamarin.MacDev.Tasks
+{
+	public class FindItemWithLogicalName : FindItemWithLogicalNameTaskBase
+	{
 	}
 }

@@ -10,8 +10,10 @@ using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class ACToolTaskBase : XcodeCompilerToolTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class ACToolTaskBase : XcodeCompilerToolTask
+	{
 		ITaskItem partialAppManifest;
 		string outputSpecs;
 
@@ -24,7 +26,7 @@ namespace Xamarin.MacDev.Tasks {
 		public bool EnableOnDemandResources { get; set; }
 
 		[Required]
-		public ITaskItem [] ImageAssets { get; set; }
+		public ITaskItem[] ImageAssets { get; set; }
 
 		public bool IsWatchApp { get; set; }
 
@@ -57,7 +59,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem [] items)
+		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
 		{
 			var assetDirs = new HashSet<string> (items.Select (x => BundleResource.GetVirtualProjectPath (ProjectDir, x, !string.IsNullOrEmpty (SessionId))));
 
@@ -135,7 +137,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (Platform == ApplePlatform.MacCatalyst) {
 				args.Add ("--ui-framework-family");
 				args.Add ("uikit");
-			}
+			}				
 
 			foreach (var targetDevice in GetTargetDevices ())
 				args.Add ("--target-device", targetDevice);
@@ -201,7 +203,7 @@ namespace Xamarin.MacDev.Tasks {
 			var specs = new PArray ();
 
 			for (int i = 0; i < ImageAssets.Length; i++) {
-				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, ImageAssets [i], !string.IsNullOrEmpty (SessionId));
+				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, ImageAssets[i], !string.IsNullOrEmpty (SessionId));
 
 				// Ignore MacOS .DS_Store files...
 				if (Path.GetFileName (vpath).Equals (".DS_Store", StringComparison.OrdinalIgnoreCase))
@@ -215,11 +217,11 @@ namespace Xamarin.MacDev.Tasks {
 					catalog = Path.GetDirectoryName (catalog);
 
 				if (string.IsNullOrEmpty (catalog)) {
-					Log.LogWarning (null, null, null, ImageAssets [i].ItemSpec, 0, 0, 0, 0, MSBStrings.W0090, ImageAssets [i].ItemSpec);
+					Log.LogWarning (null, null, null, ImageAssets[i].ItemSpec, 0, 0, 0, 0, MSBStrings.W0090, ImageAssets[i].ItemSpec);
 					continue;
 				}
 
-				if (ImageAssets [i].GetMetadata ("Link") != null) {
+				if (ImageAssets[i].GetMetadata ("Link") != null) {
 					// Note: if any of the files within a catalog are linked, we'll have to clone the *entire* catalog
 					clones.Add (catalog);
 					continue;
@@ -229,7 +231,7 @@ namespace Xamarin.MacDev.Tasks {
 				if (Path.GetFileName (vpath) != "Contents.json")
 					continue;
 
-				items.Add (ImageAssets [i]);
+				items.Add (ImageAssets[i]);
 			}
 
 			// clone any *.xcassets dirs that need cloning
@@ -242,7 +244,7 @@ namespace Xamarin.MacDev.Tasks {
 				items.Clear ();
 
 				for (int i = 0; i < ImageAssets.Length; i++) {
-					var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, ImageAssets [i], !string.IsNullOrEmpty (SessionId));
+					var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, ImageAssets[i], !string.IsNullOrEmpty (SessionId));
 					var clone = false;
 					ITaskItem item;
 
@@ -251,14 +253,14 @@ namespace Xamarin.MacDev.Tasks {
 						continue;
 
 					foreach (var catalog in clones) {
-						if (vpath.Length > catalog.Length && vpath [catalog.Length] == '/' && vpath.StartsWith (catalog, StringComparison.Ordinal)) {
+						if (vpath.Length > catalog.Length && vpath[catalog.Length] == '/' && vpath.StartsWith (catalog, StringComparison.Ordinal)) {
 							clone = true;
 							break;
 						}
 					}
 
 					if (clone) {
-						var src = ImageAssets [i].GetMetadata ("FullPath");
+						var src = ImageAssets[i].GetMetadata ("FullPath");
 
 						if (!File.Exists (src)) {
 							Log.LogError (null, null, null, src, 0, 0, 0, 0, MSBStrings.E0091, src);
@@ -277,14 +279,14 @@ namespace Xamarin.MacDev.Tasks {
 							continue;
 
 						item = new TaskItem (dest);
-						ImageAssets [i].CopyMetadataTo (item);
+						ImageAssets[i].CopyMetadataTo (item);
 						item.SetMetadata ("Link", vpath);
 					} else {
 						// filter out everything except paths containing a Contents.json file since our main processing loop only cares about these
 						if (Path.GetFileName (vpath) != "Contents.json")
 							continue;
 
-						item = ImageAssets [i];
+						item = ImageAssets[i];
 					}
 
 					items.Add (item);
@@ -293,8 +295,8 @@ namespace Xamarin.MacDev.Tasks {
 
 			// Note: `items` contains only the Contents.json files at this point
 			for (int i = 0; i < items.Count; i++) {
-				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, items [i], !string.IsNullOrEmpty (SessionId));
-				var path = items [i].GetMetadata ("FullPath");
+				var vpath = BundleResource.GetVirtualProjectPath (ProjectDir, items[i], !string.IsNullOrEmpty (SessionId));
+				var path = items[i].GetMetadata ("FullPath");
 
 				// get the parent (which will typically be .appiconset, .launchimage, .imageset, .iconset, etc)
 				var catalog = Path.GetDirectoryName (vpath);
@@ -314,7 +316,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 
 				if (AppleSdkSettings.XcodeVersion.Major >= 7 && SdkPlatform != "WatchSimulator") {
-					var text = File.ReadAllText (items [i].ItemSpec);
+					var text = File.ReadAllText (items[i].ItemSpec);
 
 					if (string.IsNullOrEmpty (text))
 						continue;
@@ -333,7 +335,7 @@ namespace Xamarin.MacDev.Tasks {
 						Log.LogError (null, null, null, items [i].ItemSpec, line, col, line, col, "{0}", je.Message);
 						return false;
 					} catch (Exception e) {
-						Log.LogError (null, null, null, items [i].ItemSpec, 0, 0, 0, 0, MSBStrings.E0092, e.Message);
+						Log.LogError (null, null, null, items[i].ItemSpec, 0, 0, 0, 0, MSBStrings.E0092, e.Message);
 						return false;
 
 					}
@@ -367,7 +369,7 @@ namespace Xamarin.MacDev.Tasks {
 						Directory.CreateDirectory (assetDir);
 
 						for (int j = 0; j < tagList.Count; j++)
-							ptags.Add (new PString (tagList [j]));
+							ptags.Add (new PString (tagList[j]));
 
 						assetpack.Add ("bundle-id", new PString (string.Format ("{0}.asset-pack-{1}", BundleIdentifier, hash)));
 						assetpack.Add ("bundle-path", new PString (Path.GetFullPath (assetDir)));
@@ -401,7 +403,7 @@ namespace Xamarin.MacDev.Tasks {
 			try {
 				var manifestOutput = PDictionary.FromFile (manifest.ItemSpec);
 
-				LogWarningsAndErrors (manifestOutput, catalogs [0]);
+				LogWarningsAndErrors (manifestOutput, catalogs[0]);
 
 				bundleResources.AddRange (GetCompiledBundleResources (manifestOutput, intermediateBundleDir));
 				outputManifests.Add (manifest);

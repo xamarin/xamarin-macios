@@ -7,8 +7,10 @@ using Microsoft.Build.Framework;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks {
-	public class UnpackLibraryResources : UnpackLibraryResourcesTaskBase, ITaskCallback, ICancelableTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public class UnpackLibraryResources : UnpackLibraryResourcesTaskBase, ITaskCallback, ICancelableTask
+	{
 		public override bool Execute ()
 		{
 			bool result;
@@ -28,7 +30,7 @@ namespace Xamarin.MacDev.Tasks {
 				}
 			} else {
 				result = base.Execute ();
-			}
+			}	
 
 			return result;
 		}

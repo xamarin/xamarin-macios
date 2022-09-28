@@ -7,8 +7,10 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks {
-	public abstract class CoreMLCompilerTaskBase : XamarinTask {
+namespace Xamarin.MacDev.Tasks
+{
+	public abstract class CoreMLCompilerTaskBase : XamarinTask
+	{
 		string toolExe;
 
 		public string ToolName { get { return "coremlc"; } }
@@ -21,7 +23,7 @@ namespace Xamarin.MacDev.Tasks {
 		public string IntermediateOutputPath { get; set; }
 
 		[Required]
-		public ITaskItem [] Models { get; set; }
+		public ITaskItem[] Models { get; set; }
 
 		[Required]
 		public string ProjectDir { get; set; }
@@ -47,10 +49,10 @@ namespace Xamarin.MacDev.Tasks {
 		#region Outputs
 
 		[Output]
-		public ITaskItem [] BundleResources { get; set; }
+		public ITaskItem[] BundleResources { get; set; }
 
 		[Output]
-		public ITaskItem [] PartialAppManifests { get; set; }
+		public ITaskItem[] PartialAppManifests { get; set; }
 
 		#endregion
 
@@ -180,7 +182,7 @@ namespace Xamarin.MacDev.Tasks {
 						output.SetMetadata ("ResourceTags", resourceTags);
 
 					var metadata = output.CloneCustomMetadata ();
-					mapping [outputPath + "/"] = metadata;
+					mapping[outputPath + "/"] = metadata;
 
 					if (FileChanged (model, partialPlist)) {
 						Directory.CreateDirectory (outputDir);

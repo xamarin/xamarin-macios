@@ -4,8 +4,10 @@ using Microsoft.Build.Tasks;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks {
-	public class ILStrip : ILStripTasks.ILStripBase, ITaskCallback {
+namespace Xamarin.MacDev.Tasks 
+{
+	public class ILStrip : ILStripTasks.ILStripBase, ITaskCallback
+	{
 		public override bool Execute ()
 		{
 			if (this.ShouldExecuteRemotely (SessionId))

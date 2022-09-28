@@ -1,8 +1,10 @@
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks {
-	public class FindWatchOS2AppBundle : FindWatchOS2AppBundleTaskBase, ICancelableTask {
+namespace Xamarin.iOS.Tasks
+{
+	public class FindWatchOS2AppBundle : FindWatchOS2AppBundleTaskBase, ICancelableTask
+	{
 		public override bool Execute ()
 		{
 			if (!ShouldExecuteRemotely ())

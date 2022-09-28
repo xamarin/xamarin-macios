@@ -3,8 +3,10 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks {
-	public class OptimizeImage : OptimizeImageTaskBase, ITaskCallback {
+namespace Xamarin.MacDev.Tasks
+{
+	public class OptimizeImage : OptimizeImageTaskBase, ITaskCallback
+	{
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -23,7 +25,7 @@ namespace Xamarin.MacDev.Tasks {
 		{
 			base.Cancel ();
 
-			if (!string.IsNullOrEmpty (SessionId))
+			if (!string.IsNullOrEmpty(SessionId))
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 		}
 	}
