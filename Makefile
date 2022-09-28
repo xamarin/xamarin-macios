@@ -127,9 +127,6 @@ install-system: install-system-ios install-system-mac
 	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Xamarin.ObjcBinding.Tasks.dll
 	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac
 	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C msbuild V=$(V)
-ifdef ENABLE_XAMARIN
-	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C $(MACCORE_PATH) V=$(V)
-endif
 
 install-system-ios:
 ifdef INCLUDE_IOS
@@ -197,9 +194,5 @@ git-clean-all:
 	else \
 		echo "Done"; \
 	fi; \
-
-ifdef ENABLE_XAMARIN
-SUBDIRS += $(MACCORE_PATH)
-endif
 
 SUBDIRS += tests
