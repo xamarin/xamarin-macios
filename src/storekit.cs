@@ -1017,10 +1017,17 @@ namespace StoreKit {
 		[Export ("updatePostbackConversionValue:completionHandler:")]
 		void UpdatePostback (nint conversionValue, [NullAllowed] SKAdNetworkCompletionHandler completion);
 
-		[NoMac, iOS (16,0) MacCatalyst (16,0), NoWatch, NoTV]
+		[NoMac, iOS (16,1) MacCatalyst (16,1), NoWatch, NoTV]
 		[Static]
+		[Async]
 		[Export ("updatePostbackConversionValue:coarseValue:completionHandler:")]
 		void UpdatePostbackConversionValue (nint fineValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, [NullAllowed] SKAdNetworkCompletionHandler completion);
+
+		[NoMac, iOS (16,1) MacCatalyst (16,1), NoWatch, NoTV]
+		[Static]
+		[Async]
+		[Export ("updatePostbackConversionValue:coarseValue:lockWindow:completionHandler:")]
+		void UpdatePostbackConversionValue (nint fineValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, bool lockWindow, [NullAllowed] SKAdNetworkCompletionHandler completion);
 	}
 
 	[iOS (12,2)]
