@@ -2305,7 +2305,7 @@ namespace GameController {
 
 	interface IGCDevicePhysicalInputState {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCDevicePhysicalInputState {
 		[Abstract]
@@ -2353,7 +2353,7 @@ namespace GameController {
 
 	interface IGCAxisInput {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCAxisInput {
 		[Abstract]
@@ -2383,7 +2383,7 @@ namespace GameController {
 
 	interface IGCAxisElement {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCAxisElement : GCPhysicalInputElement {
 		[Abstract]
@@ -2397,7 +2397,7 @@ namespace GameController {
 
 	interface IGCButtonElement {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCButtonElement : GCPhysicalInputElement {
 		[Abstract]
@@ -2414,7 +2414,7 @@ namespace GameController {
 
 	interface IGCDevicePhysicalInput {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCDevicePhysicalInput : GCDevicePhysicalInputState {
 		[Abstract]
@@ -2444,7 +2444,7 @@ namespace GameController {
 
 	interface IGCDevicePhysicalInputStateDiff {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCDevicePhysicalInputStateDiff {
 		[Abstract]
@@ -2458,7 +2458,7 @@ namespace GameController {
 
 	interface IGCDirectionPadElement {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCDirectionPadElement : GCPhysicalInputElement {
 		[Abstract]
@@ -2488,7 +2488,7 @@ namespace GameController {
 
 	interface IGCLinearInput {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCLinearInput {
 		[Abstract]
@@ -2518,7 +2518,7 @@ namespace GameController {
 
 	interface IGCPhysicalInputElement {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCPhysicalInputElement {
 		[Abstract]
@@ -2536,7 +2536,7 @@ namespace GameController {
 
 	interface IGCPressedStateInput {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCPressedStateInput {
 		[Abstract]
@@ -2558,7 +2558,7 @@ namespace GameController {
 
 	interface IGCRelativeInput {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCRelativeInput {
 		[Abstract]
@@ -2584,7 +2584,7 @@ namespace GameController {
 
 	interface IGCSwitchElement {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCSwitchElement : GCPhysicalInputElement {
 		[Abstract]
@@ -2594,7 +2594,7 @@ namespace GameController {
 
 	interface IGCSwitchPositionInput {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCSwitchPositionInput {
 		[Abstract]
@@ -2628,7 +2628,7 @@ namespace GameController {
 
 	interface IGCTouchedStateInput {}
 
-	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
 	[Protocol]
 	interface GCTouchedStateInput {
 		[Abstract]
