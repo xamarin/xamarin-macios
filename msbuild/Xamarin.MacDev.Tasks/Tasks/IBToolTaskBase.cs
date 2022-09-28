@@ -9,18 +9,16 @@ using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class IBToolTaskBase : XcodeCompilerToolTask
-	{
-		static readonly string[] WatchAppExtensions = { "-glance.plist", "-notification.plist" };
+namespace Xamarin.MacDev.Tasks {
+	public abstract class IBToolTaskBase : XcodeCompilerToolTask {
+		static readonly string [] WatchAppExtensions = { "-glance.plist", "-notification.plist" };
 
 		#region Inputs
 
 		public bool EnableOnDemandResources { get; set; }
 
 		[Required]
-		public ITaskItem[] InterfaceDefinitions { get; set; }
+		public ITaskItem [] InterfaceDefinitions { get; set; }
 
 		public bool IsWatchApp { get; set; }
 		public bool IsWatch2App { get; set; }
@@ -53,13 +51,13 @@ namespace Xamarin.MacDev.Tasks
 			get { return AppleSdkSettings.XcodeVersion.Major > 7 || (AppleSdkSettings.XcodeVersion.Major == 7 && AppleSdkSettings.XcodeVersion.Minor >= 2); }
 		}
 
-		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items)
+		protected override void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem [] items)
 		{
 			environment.Add ("IBSC_MINIMUM_COMPATIBILITY_VERSION", MinimumOSVersion);
 			environment.Add ("IBC_MINIMUM_COMPATIBILITY_VERSION", MinimumOSVersion);
 
 			args.Add ("--minimum-deployment-target", MinimumOSVersion);
-			
+
 			foreach (var targetDevice in GetTargetDevices ())
 				args.Add ("--target-device", targetDevice);
 
@@ -80,9 +78,9 @@ namespace Xamarin.MacDev.Tasks
 			// will retain the *.lproj directory as their parent, but the *.lproj directory will be
 			// in the root of the app bundle.
 			var components = input.ItemSpec.Split (Path.DirectorySeparatorChar);
-			var bundleName = components[components.Length - 1];
-			if (components.Length > 1 && components[components.Length - 2].EndsWith (".lproj", StringComparison.Ordinal))
-				bundleName = Path.Combine (components[components.Length - 2], bundleName);
+			var bundleName = components [components.Length - 1];
+			if (components.Length > 1 && components [components.Length - 2].EndsWith (".lproj", StringComparison.Ordinal))
+				bundleName = Path.Combine (components [components.Length - 2], bundleName);
 
 			switch (Path.GetExtension (bundleName)) {
 			case ".storyboard":
@@ -113,7 +111,7 @@ namespace Xamarin.MacDev.Tasks
 
 			// Note: all storyboardc's/nib's will be found in the top-level or within a top-level *.lproj dir (if they've been translated)
 			for (int i = 0; i < baseOutputDirs.Count; i++) {
-				foreach (var path in Directory.EnumerateFileSystemEntries (baseOutputDirs[i])) {
+				foreach (var path in Directory.EnumerateFileSystemEntries (baseOutputDirs [i])) {
 					if (i == 0 && path.EndsWith (".lproj", StringComparison.Ordinal) && Directory.Exists (path)) {
 						baseOutputDirs.Add (path);
 						continue;
@@ -231,7 +229,7 @@ namespace Xamarin.MacDev.Tasks
 					Directory.CreateDirectory (manifestDir);
 					Directory.CreateDirectory (outputDir);
 
-					if ((Compile (new[] { item }, output, manifest)) != 0)
+					if ((Compile (new [] { item }, output, manifest)) != 0)
 						return false;
 
 					changed = true;
@@ -271,7 +269,7 @@ namespace Xamarin.MacDev.Tasks
 					//
 					// In this case, we want to override the metadata for "MyView.xib" with the metadata for
 					// "MyView~ipad.xib".
-					mapping[path] = metadata;
+					mapping [path] = metadata;
 				} else {
 					compiled.AddRange (GetCompilationOutput (expected));
 				}
@@ -301,16 +299,16 @@ namespace Xamarin.MacDev.Tasks
 			// While we are at it, we'll also filter out device-specific storyboards since ibtool doesn't
 			// require them if we have an equivalent generic version.
 			for (int i = 0; i < storyboards.Count; i++) {
-				var interfaceDefinition = storyboards[i].GetMetadata ("InterfaceDefinition");
-				var bundleName = storyboards[i].GetMetadata ("LogicalName");
+				var interfaceDefinition = storyboards [i].GetMetadata ("InterfaceDefinition");
+				var bundleName = storyboards [i].GetMetadata ("LogicalName");
 				var path = Path.Combine (baseOutputDir, bundleName);
 
-				storyboards[i].RemoveMetadata ("InterfaceDefinition");
-				var metadata = storyboards[i].CloneCustomMetadata ();
+				storyboards [i].RemoveMetadata ("InterfaceDefinition");
+				var metadata = storyboards [i].CloneCustomMetadata ();
 				mapping.Add (path, metadata);
 
 				if (unique.Add (interfaceDefinition))
-					items.Add (storyboards[i]);
+					items.Add (storyboards [i]);
 			}
 
 			// We only need to run `ibtool --link` if storyboards have changed...
@@ -431,16 +429,16 @@ namespace Xamarin.MacDev.Tasks
 
 					for (int i = 0; i < compiled.Count; i++) {
 						// pretend that non-storyboardc items (e.g. *.nib) are already 'linked'
-						if (compiled[i].ItemSpec.EndsWith (".storyboardc", StringComparison.Ordinal)) {
-							var interfaceDefinition = compiled[i].GetMetadata ("InterfaceDefinition");
+						if (compiled [i].ItemSpec.EndsWith (".storyboardc", StringComparison.Ordinal)) {
+							var interfaceDefinition = compiled [i].GetMetadata ("InterfaceDefinition");
 							unique.Add (interfaceDefinition);
-							storyboards.Add (compiled[i]);
+							storyboards.Add (compiled [i]);
 							continue;
 						}
 
 						// just pretend any *nib's have already been 'linked'...
-						compiled[i].RemoveMetadata ("InterfaceDefinition");
-						linked.Add (compiled[i]);
+						compiled [i].RemoveMetadata ("InterfaceDefinition");
+						linked.Add (compiled [i]);
 					}
 
 					// only link the storyboards if there are multiple unique storyboards
@@ -454,7 +452,7 @@ namespace Xamarin.MacDev.Tasks
 					}
 				} else {
 					for (int i = 0; i < compiled.Count; i++)
-						compiled[i].RemoveMetadata ("InterfaceDefinition");
+						compiled [i].RemoveMetadata ("InterfaceDefinition");
 				}
 			}
 

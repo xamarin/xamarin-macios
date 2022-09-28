@@ -92,7 +92,7 @@ namespace Xamarin.MacDev.Tasks {
 			var arguments = new List<string> ();
 			var environment = default (Dictionary<string, string>);
 
-			if (IsDotNet) {				
+			if (IsDotNet) {
 				executable = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
 				if (string.IsNullOrEmpty (executable))
 					executable = "dotnet";

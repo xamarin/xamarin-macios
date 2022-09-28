@@ -3,6 +3,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ActualPackageVersion Condition="'$(CustomDotNetVersion)' != ''">$(CustomDotNetVersion)</ActualPackageVersion>
     <ActualPackageVersion Condition="'$(ActualPackageVersion)' == ''">$(BundledNETCorePlatformsPackageVersion)</ActualPackageVersion>
+    <NoWarn>$(NoWarn);NU1505</NoWarn> <!--  warning NU1505: Duplicate 'PackageDownload' items found. Remove the duplicate items or use the Update functionality to ensure a consistent restore behavior. -->
   </PropertyGroup>
 
   <Import Project="../../eng/Versions.props" />
@@ -27,6 +28,8 @@
     <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net7.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion)]" />
     <PackageDownload Include="Microsoft.NET.Workload.Emscripten.net6.Manifest-$(ToolChainManifestVersionBand)" Version="[$(MicrosoftNETWorkloadEmscriptennet7Manifest70100PackageVersion)]" />
   </ItemGroup>
+
+  <Import Project="all-package-references.csproj" />
 
   <!-- target to write out the BundledNETCorePlatformsPackageVersion to a file -->
   <Target Name="WriteBundledNETCorePlatformsPackageVersion" Condition="'$(WriteFilePath)' != ''">
