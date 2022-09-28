@@ -56,7 +56,7 @@ namespace Xamarin.MacDev.Tasks {
 
 			// productbuild can do a guess of the targeted architectures if not provided, but the guess
 			// is very simple : on Catalina and lower, it will suppose it's x86_64 (even with an arm64 slice).
-			HashSet <string> archStrings = new HashSet <string> (architectures.ToArray ().Select (a => a.ToNativeArchitecture ()));
+			HashSet<string> archStrings = new HashSet<string> (architectures.ToArray ().Select (a => a.ToNativeArchitecture ()));
 			if (plist.TryGetValue (ProductDefinitionKeys.Architectures, out PArray archArray)) {
 				var existingArchs = archArray.ToStringArray ();
 				if (!archStrings.SetEquals (existingArchs)) {

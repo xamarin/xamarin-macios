@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public static class LoggingExtensions
-	{
+namespace Xamarin.MacDev.Tasks {
+	public static class LoggingExtensions {
 		const MessageImportance TaskPropertyImportance = MessageImportance.Normal;
 		internal static readonly string ErrorPrefix;
 
@@ -25,7 +23,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		public static void LogTaskProperty (this TaskLoggingHelper log, string propertyName, ITaskItem[] items)
+		public static void LogTaskProperty (this TaskLoggingHelper log, string propertyName, ITaskItem [] items)
 		{
 			if (items == null) {
 				log.LogMessage (TaskPropertyImportance, "  {0}: <null>", propertyName);
@@ -35,7 +33,7 @@ namespace Xamarin.MacDev.Tasks
 			log.LogMessage (TaskPropertyImportance, "  {0}:", propertyName);
 
 			for (int i = 0; i < items.Length; i++)
-				log.LogMessage (TaskPropertyImportance, "    {0}", items[i].ItemSpec);
+				log.LogMessage (TaskPropertyImportance, "    {0}", items [i].ItemSpec);
 		}
 
 		public static void LogTaskProperty (this TaskLoggingHelper log, string propertyName, ITaskItem item)
@@ -46,7 +44,7 @@ namespace Xamarin.MacDev.Tasks
 				log.LogMessage (TaskPropertyImportance, "  {0}: ", propertyName);
 		}
 
-		public static void LogTaskProperty (this TaskLoggingHelper log, string propertyName, string[] items)
+		public static void LogTaskProperty (this TaskLoggingHelper log, string propertyName, string [] items)
 		{
 			if (items == null) {
 				log.LogMessage (TaskPropertyImportance, "  {0}: <null>", propertyName);
@@ -56,7 +54,7 @@ namespace Xamarin.MacDev.Tasks
 			log.LogMessage (TaskPropertyImportance, "  {0}:", propertyName);
 
 			for (int i = 0; i < items.Length; i++)
-				log.LogMessage (TaskPropertyImportance, "    {0}", items[i]);
+				log.LogMessage (TaskPropertyImportance, "    {0}", items [i]);
 		}
 
 		public static void LogTaskProperty (this TaskLoggingHelper log, string propertyName, string value)
@@ -81,12 +79,12 @@ namespace Xamarin.MacDev.Tasks
 		/// <param name="errorCode">In the 7xxx range for MSBuild error.</param>
 		/// <param name="message">The error's message to be displayed in the error pad.</param>
 		/// <param name="fileName">Path to the known guilty file or null.</param>
-		public static void LogError (this TaskLoggingHelper log, int errorCode, string fileName, string message, params object[] args)
+		public static void LogError (this TaskLoggingHelper log, int errorCode, string fileName, string message, params object [] args)
 		{
 			log.LogError (null, $"{ErrorPrefix}{errorCode}", null, fileName ?? "MSBuild", 0, 0, 0, 0, message, args);
 		}
 
-		public static void LogWarning (this TaskLoggingHelper log, int errorCode, string fileName, string message, params object[] args)
+		public static void LogWarning (this TaskLoggingHelper log, int errorCode, string fileName, string message, params object [] args)
 		{
 			log.LogWarning (null, $"{ErrorPrefix}{errorCode}", null, fileName ?? "MSBuild", 0, 0, 0, 0, message, args);
 		}
