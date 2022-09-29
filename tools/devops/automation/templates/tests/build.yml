@@ -171,8 +171,9 @@ steps:
   timeoutInMinutes: 250
 
 - bash: |
-    ls -R /Library/Frameworks/Xamarin.iOS.framework
-    ls -R /Library/Frameworks/Xamarin.Mac.framework
+    set -ex
+    ls -R /Library/Frameworks/Xamarin.iOS.framework || true
+    ls -R /Library/Frameworks/Xamarin.Mac.framework || true
   displayName: "Show installed Frameworks"
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/create-legacy-ios-mac-sdk-symlinks.sh

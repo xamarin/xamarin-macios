@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 using NUnit.Framework;
 
@@ -43,6 +44,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void RebuildTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			BuildProject ("MyCoreMLApp");
 
 			AssertCompiledModelExists ("SqueezeNet");

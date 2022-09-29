@@ -321,7 +321,7 @@ namespace Xamarin.Bundler {
 		static int GetDefaultVerbosity ()
 		{
 			var v = 0;
-			var fn = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), $".{NAME}-verbosity");
+			var fn = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.UserProfile), $".{NAME}-verbosity");
 			if (File.Exists (fn)) {
 				v = (int) new FileInfo (fn).Length;
 				if (v == 0)
