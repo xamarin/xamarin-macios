@@ -308,6 +308,7 @@
     <Folder Include="WebKit\" />
     <Folder Include="NearbyInteraction\" />
     <Folder Include="MetricKit\" />
+    <Folder Include="SharedWithYouCore\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
