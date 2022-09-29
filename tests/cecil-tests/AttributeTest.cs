@@ -273,20 +273,24 @@ namespace Cecil.Tests {
 				return true;
 			}
 			// Generator Bug - Protocol inline with different attribute bug
-			switch (member) {
- 			case string s when s.StartsWith ("SceneKit.SCNLayer"):
- 				return true;
- 			case string s when s.StartsWith ("AVFoundation.AVAudioSession"):
- 				return true;
-			case string s when s.StartsWith("MediaPlayer.MPMoviePlayerController"):
- 				return true;
- 			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialAssertion"):
- 				return true;
- 			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialRegistration"):
- 				return true;
-			case string s when s.StartsWith ("AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor"):
- 				return true;
- 			}
+			var inlineProtocols = new List<string> {
+				"SceneKit.SCNLayer",
+				"AVFoundation.AVAudioSession",
+				"MediaPlayer.MPMoviePlayerController",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialAssertion",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialRegistration",
+				"AuthenticationServices.ASAuthorizationSecurityKeyPublicKeyCredentialDescriptor",
+				"GameController.GCRacingWheel.get_HandlerQueue",
+				"GameController.GCRacingWheel.set_HandlerQueue",
+				"GameController.GCRacingWheel.get_VendorName",
+				"GameController.GCRacingWheel.get_ProductCategory",
+				"GameController.GCRacingWheel.get_PhysicalInputProfile",
+			};
+
+			if (inlineProtocols.Any ((p) => member.StartsWith (p))) {
+				return true;
+			}
+
 			switch (member) {
 			case "GameplayKit.GKHybridStrategist.get_GameModel":
 			case "GameplayKit.GKHybridStrategist.get_RandomSource":
