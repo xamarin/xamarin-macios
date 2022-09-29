@@ -49,6 +49,7 @@ namespace Xamarin.Tests
 		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.TvOS, true)]
 		public void MinOSVersion (Profile profile, MachO.LoadCommands load_command, MachO.Platform platform, bool device = false)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			if (device)
 				Configuration.AssertDeviceAvailable ();
 
