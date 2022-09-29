@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if !NET
 using System;
 using System.IO;
@@ -43,7 +45,7 @@ namespace CFNetwork {
 		Stream stream;
 		CFReadStream readStream;
 		CFWriteStream writeStream;
-		TaskCompletionSource<object> openTcs;
+		TaskCompletionSource<object?> openTcs;
 		CancellationTokenSource cts;
 
 		byte[] buffer;
@@ -61,7 +63,7 @@ namespace CFNetwork {
 			buffer = new byte [BufferSize];
 			cts = CancellationTokenSource.CreateLinkedTokenSource (cancellationToken);
 
-			openTcs = new TaskCompletionSource<object> ();
+			openTcs = new TaskCompletionSource<object?> ();
 
 			cts.Token.Register (() => Close ());
 
@@ -74,18 +76,18 @@ namespace CFNetwork {
 
 		public async Task Open ()
 		{
-			writeStream.OpenCompletedEvent += (sender, e) => {
+			writeStream.OpenCompletedEvent += async (sender, e) => {
 				open = true;
-				openTcs.SetResult (null);
+				openTcs?.SetResult (null);
 				if (canWrite)
-					Write ();
+					await Write ();
 			};
-			writeStream.CanAcceptBytesEvent += (sender, e) => {
+			writeStream.CanAcceptBytesEvent += async (sender, e) => {
 				if (!open) {
 					canWrite = true;
 					return;
 				}
-				Write ();
+				await Write ();
 			};
 			writeStream.ErrorEvent += (sender, e) => {
 				Close ();

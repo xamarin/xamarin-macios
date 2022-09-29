@@ -27,6 +27,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if !NET
 
 using System;
@@ -40,7 +42,7 @@ using Foundation;
 namespace CFNetwork {
 
 	class Content : StreamContent {
-		WebResponseStream responseStream;
+		WebResponseStream? responseStream;
 		long? contentLength;
 
 		internal Content (WebResponseStream stream)
