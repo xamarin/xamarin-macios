@@ -30,7 +30,7 @@ steps:
   continueOnError: true # should not stop the build since is not official just yet.
   timeoutInMinutes: 180
 
-- ${{ each platform in parameters.platforms }}:
+- ${{ each platform in parameters.dotnetPlatforms }}:
   - script: >-
       dotnet build -t:GenerateBuildAssetRegistryManifest /v:n
       $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj
