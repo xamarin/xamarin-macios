@@ -12,10 +12,8 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class DetectDebugNetworkConfigurationBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class DetectDebugNetworkConfigurationBase : XamarinTask {
 		#region Inputs
 
 		[Required]
