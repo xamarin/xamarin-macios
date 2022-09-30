@@ -14,8 +14,7 @@ namespace Xamarin.Linker {
 
 	// Similar to ExceptionalSubStep, but this only runs for marked members
 	// that were registered for handling by the subclass.
-	public abstract class ExceptionalMarkHandler : IMarkHandler
-	{
+	public abstract class ExceptionalMarkHandler : IMarkHandler {
 		public abstract void Initialize (LinkContext context, MarkContext markContext);
 
 		public virtual void Initialize (LinkContext context)

@@ -5,10 +5,8 @@ using System.IO;
 using Xamarin.MacDev;
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class CreateAssetPackTaskBase : XamarinToolTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public abstract class CreateAssetPackTaskBase : XamarinToolTask {
 		#region Inputs
 
 		[Required]
@@ -82,7 +80,7 @@ namespace Xamarin.iOS.Tasks
 			// We need to delete any existing ipa files, zip will just add to it otherwise
 			if (File.Exists (OutputFile.ItemSpec))
 				File.Delete (OutputFile.ItemSpec);
-		
+
 			return base.Execute ();
 		}
 

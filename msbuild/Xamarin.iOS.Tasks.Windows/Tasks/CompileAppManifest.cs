@@ -8,11 +8,9 @@ using Xamarin.MacDev;
 
 #nullable enable
 
-namespace Xamarin.iOS.HotRestart.Tasks
-{
-	public class CompileAppManifest : Task
-	{
-		static readonly string[] IgnorePlistKeys = {
+namespace Xamarin.iOS.HotRestart.Tasks {
+	public class CompileAppManifest : Task {
+		static readonly string [] IgnorePlistKeys = {
 		   "XSAppIconAssets",
 		   "CFBundleIconName",
 		   "XSLaunchImageAssets",
@@ -37,44 +35,37 @@ namespace Xamarin.iOS.HotRestart.Tasks
 
 		#endregion
 
-		public override bool Execute()
+		public override bool Execute ()
 		{
-			try
-			{
-				var preBuiltInfoPlistPath = Path.Combine(AppBundlePath, "Info.plist");
+			try {
+				var preBuiltInfoPlistPath = Path.Combine (AppBundlePath, "Info.plist");
 
-				if (!File.Exists(preBuiltInfoPlistPath))
-				{
-					throw new Exception(string.Format(Resources.CompileAppManifest_MissinInfoPList, preBuiltInfoPlistPath));
+				if (!File.Exists (preBuiltInfoPlistPath)) {
+					throw new Exception (string.Format (Resources.CompileAppManifest_MissinInfoPList, preBuiltInfoPlistPath));
 				}
 
-				var infoPlist = PDictionary.FromFile(AppManifestPath);
-				var preBuiltInfoPlist = PDictionary.FromFile(preBuiltInfoPlistPath);
+				var infoPlist = PDictionary.FromFile (AppManifestPath);
+				var preBuiltInfoPlist = PDictionary.FromFile (preBuiltInfoPlistPath);
 
-				foreach (var item in infoPlist)
-				{
-					if (!IgnorePlistKeys.Contains(item.Key))
-					{
-						if (preBuiltInfoPlist.ContainsKey(item.Key))
-						{
-							preBuiltInfoPlist.Remove(item.Key);
+				foreach (var item in infoPlist) {
+					if (!IgnorePlistKeys.Contains (item.Key)) {
+						if (preBuiltInfoPlist.ContainsKey (item.Key)) {
+							preBuiltInfoPlist.Remove (item.Key);
 						}
 
-						preBuiltInfoPlist.Add(item.Key, item.Value.Clone());
+						preBuiltInfoPlist.Add (item.Key, item.Value.Clone ());
 					}
 				}
 
 				if (!string.IsNullOrEmpty (ApplicationTitle)) {
-					preBuiltInfoPlist[ManifestKeys.CFBundleDisplayName] = ApplicationTitle;
+					preBuiltInfoPlist [ManifestKeys.CFBundleDisplayName] = ApplicationTitle;
 				}
 
-				preBuiltInfoPlist.Save(preBuiltInfoPlistPath, binary: true);
+				preBuiltInfoPlist.Save (preBuiltInfoPlistPath, binary: true);
 
 				return true;
-			}
-			catch (Exception ex)
-			{
-				Log.LogErrorFromException(ex);
+			} catch (Exception ex) {
+				Log.LogErrorFromException (ex);
 
 				return false;
 			}
