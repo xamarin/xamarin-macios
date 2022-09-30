@@ -22,7 +22,7 @@ namespace Xamarin.Linker {
 
 		string Content;
 		string Page;
-		
+
 		public override SubStepTargets Targets {
 			get { return SubStepTargets.Assembly; }
 		}
@@ -62,7 +62,7 @@ namespace Xamarin.Linker {
 			var module = assembly.MainModule;
 			if (!module.HasResources)
 				return;
-			
+
 			HashSet<string> libraries = null;
 			if (assembly.HasCustomAttributes) {
 				foreach (var ca in assembly.CustomAttributes) {

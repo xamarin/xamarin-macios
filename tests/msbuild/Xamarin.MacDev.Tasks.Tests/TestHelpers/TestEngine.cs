@@ -6,7 +6,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Logging;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 
 	public class TestEngine : IBuildEngine, IBuildEngine2, IBuildEngine3, IBuildEngine4

@@ -6,10 +6,8 @@ using System.Text;
 
 using Xamarin.Bundler;
 
-namespace Xamarin.Utils
-{
-	public class CompilerFlags
-	{
+namespace Xamarin.Utils {
+	public class CompilerFlags {
 		public Application Application { get { return Target.App; } }
 		public Target Target;
 
@@ -17,7 +15,7 @@ namespace Xamarin.Utils
 		public HashSet<string> WeakFrameworks;
 		public HashSet<string> LinkWithLibraries; // X, added to Inputs
 		public HashSet<string> ForceLoadLibraries; // -force_load X, added to Inputs
-		public HashSet<string[]> OtherFlags; // X
+		public HashSet<string []> OtherFlags; // X
 		public List<string> InitialOtherFlags; // same as OtherFlags, only that they're the first argument(s) to clang (because order matters!). This is a list to preserve order (fifo).
 		public HashSet<string> Defines; // -DX
 		public HashSet<string> UnresolvedSymbols; // -u X
@@ -110,7 +108,7 @@ namespace Xamarin.Utils
 				InitialOtherFlags = new List<string> ();
 			InitialOtherFlags.Add (flag);
 		}
-		
+
 		public void AddOtherFlag (IList<string> flags)
 		{
 			if (flags == null)
@@ -123,7 +121,7 @@ namespace Xamarin.Utils
 			if (flags == null || flags.Length == 0)
 				return;
 			if (OtherFlags == null)
-				OtherFlags = new HashSet<string[]> ();
+				OtherFlags = new HashSet<string []> ();
 			OtherFlags.Add (flags);
 		}
 
@@ -194,7 +192,7 @@ namespace Xamarin.Utils
 			if (Frameworks != null) {
 				if (WeakFrameworks == null)
 					WeakFrameworks = new HashSet<string> ();
-				
+
 				foreach (var fwk in Frameworks) {
 					if (!fwk.EndsWith (".framework", StringComparison.Ordinal)) {
 						var add_to = WeakFrameworks;
@@ -353,7 +351,7 @@ namespace Xamarin.Utils
 			args.Add (name);
 		}
 
-		public string[] ToArray ()
+		public string [] ToArray ()
 		{
 			var args = new List<string> ();
 			WriteArguments (args);

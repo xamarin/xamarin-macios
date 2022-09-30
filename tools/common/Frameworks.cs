@@ -10,8 +10,7 @@ using Registrar;
 
 using Xamarin.Utils;
 
-public class Framework
-{
+public class Framework {
 	public string Namespace;
 	public string Name; // this is the name to pass to the linker when linking. This can be an umbrella framework.
 	public string SubFramework; // if Name is an umbrella framework, this is the name of the actual sub framework.
@@ -44,8 +43,7 @@ public class Framework
 #endif
 }
 
-public class Frameworks : Dictionary <string, Framework>
-{
+public class Frameworks : Dictionary<string, Framework> {
 	public void Add (string @namespace, int major_version)
 	{
 		Add (@namespace, @namespace, new Version (major_version, 0));
@@ -151,7 +149,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "CoreAnimation", "QuartzCore", 10, 5 },
 					{ "CoreText", 10, 5 }, // it's own framework since at least 10.9
-					{ "InputMethodKit", 10, 5 },
+					{ "InputMethodKit", 10, 5 },
 					{ "PrintCore", "ApplicationServices", 10,5, "PrintCore" },
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },

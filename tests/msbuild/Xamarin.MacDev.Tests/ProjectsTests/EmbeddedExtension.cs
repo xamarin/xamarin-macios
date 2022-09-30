@@ -6,8 +6,9 @@ using System.Text;
 using NUnit.Framework;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks {
+namespace Xamarin.MacDev.Tasks {
 	[TestFixture ("iPhone")]
 	[TestFixture ("iPhoneSimulator")]
 	public class EmbeddedExtension : ProjectTest {
@@ -18,6 +19,9 @@ namespace Xamarin.iOS.Tasks {
 		[Test]
 		public void BasicTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var proj = SetupProjectPaths ("NativeExtensionEmbedding/managed/ManagedContainer");
 			MonoTouchProject = proj;
 

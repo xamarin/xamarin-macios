@@ -34,13 +34,13 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string SdkDevPath { get; set; } = string.Empty;
 
-#region Output
+		#region Output
 		[Output]
-		public ITaskItem[]? AssemblyFiles { get; set; }
+		public ITaskItem []? AssemblyFiles { get; set; }
 
 		[Output]
-		public ITaskItem[]? FileWrites { get; set; }
-#endregion
+		public ITaskItem []? FileWrites { get; set; }
+		#endregion
 
 		public override bool Execute ()
 		{

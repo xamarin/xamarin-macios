@@ -5,8 +5,9 @@ using System.Linq;
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture ("iPhone")]
 	public class ReleaseBuild : ProjectTest
@@ -19,6 +20,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void BuildTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			BuildProject ("MyReleaseBuild");
 
 			var args = new List<string> { "-r", "UIWebView", AppBundlePath };
@@ -29,6 +33,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void RebuildTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var csproj = BuildProject ("MyReleaseBuild");
 
 			var dsymDir = Path.GetFullPath (Path.Combine (AppBundlePath, "..", Path.GetFileName (AppBundlePath) + ".dSYM"));

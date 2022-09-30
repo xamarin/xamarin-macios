@@ -42,8 +42,8 @@ namespace Xharness {
 		string IOS_DESTDIR { get; }
 		string MONO_IOS_SDK_DESTDIR { get; }
 		string MONO_MAC_SDK_DESTDIR { get; }
-		bool ENABLE_XAMARIN { get; }
 		bool ENABLE_DOTNET { get; }
+		bool INCLUDE_XAMARIN_LEGACY { get; }
 		string XcodeRoot { get; }
 		string LogDirectory { get; } 
 		double Timeout { get; }
