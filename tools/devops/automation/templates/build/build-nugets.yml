@@ -7,20 +7,20 @@ parameters:
   default: [ {
     {
       platform: iOS,
-      conditionVariable: "INCLUDE_DOTNET_IOS",
+      conditionVariable: "INCLUDE_DOTNET_IOS"
     },
     {
       platform: tvOS,
-      conditionVariable: "INCLUDE_DOTNET_TVOS",
+      conditionVariable: "INCLUDE_DOTNET_TVOS"
     },
     {
       platform: macOS,
-      conditionVariable: "INCLUDE_DOTNET_MACOS",
+      conditionVariable: "INCLUDE_DOTNET_MACOS"
     },
     {
       platform: MacCatalyst,
-      conditionVariable: "INCLUDE_DOTNET_MACCATALYST",
-    },
+      conditionVariable: "INCLUDE_DOTNET_MACCATALYST"
+    }
   ]
 
 steps:
