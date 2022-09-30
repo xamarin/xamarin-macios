@@ -33,10 +33,10 @@ steps:
 - ${{ each platform in parameters.dotnetPlatforms }}:
   - script: >-
       dotnet build -t:GenerateBuildAssetRegistryManifest /v:n
-      $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.iOS.Ref/package.csproj
-      -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest-iOS.binlog
-    displayName: 'Generate and Upload Build Asset Registry Manifest for iOS'
-    condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(dependencies.configure.outputs['configure_platforms.iOS'],''))
+      $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.${{ platform.platform }}.Ref/package.csproj
+      -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest-${{ platform.platform }}.binlog
+    displayName: 'Generate and Upload Build Asset Registry Manifest for ${{ platform.platform }}'
+    condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(dependencies.configure.outputs['configure_platforms.${{ platform.conditionVariable }}'],''))
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: build-binlogs'
