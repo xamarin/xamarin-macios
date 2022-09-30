@@ -49,9 +49,9 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem [] NativeStripItems { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Output]
-		public ITaskItem[] OutputCodesignItems { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] OutputCodesignItems { get; set; } = Array.Empty<ITaskItem> ();
 
-		public ITaskItem[] SkipCodesignItems { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] SkipCodesignItems { get; set; } = Array.Empty<ITaskItem> ();
 
 		public override bool Execute ()
 		{
@@ -66,7 +66,7 @@ namespace Xamarin.MacDev.Tasks {
 				// or a 'CodesignSigningKey' has been provided.
 				var requireCodeSigning = bundle.GetMetadata ("RequireCodeSigning");
 				var codesignSigningKey = bundle.GetMetadata ("CodesignSigningKey");
-				if (!string.Equals (requireCodeSigning, "true") && string.IsNullOrEmpty (codesignSigningKey))
+				if (!string.Equals (requireCodeSigning, "true") && string.IsNullOrEmpty (codesignSigningKey))
 					continue;
 
 				// Create a new item for the app bundle, and copy any metadata over.
@@ -215,7 +215,7 @@ namespace Xamarin.MacDev.Tasks {
 				var outputPath = Path.GetFullPath (item.ItemSpec); // item.ItemSpec is relative to the project directory
 				outputPath = PathUtils.ResolveSymbolicLinks (outputPath); // Canonicalize
 
-				if (canonicalizedFilesToSkip.Contains (outputPath))	{
+				if (canonicalizedFilesToSkip.Contains (outputPath)) {
 					Log.LogMessage (MessageImportance.Low, $"Not signing '{output [i].ItemSpec}' because it's in the list of files that skips signing");
 					output.RemoveAt (i);
 					continue;

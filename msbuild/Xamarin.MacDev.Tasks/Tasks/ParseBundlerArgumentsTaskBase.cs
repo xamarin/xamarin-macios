@@ -17,7 +17,7 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem [] DlSym { get; set; }
 
 		[Output]
-		public ITaskItem[] EnvironmentVariables { get; set; }
+		public ITaskItem [] EnvironmentVariables { get; set; }
 
 		[Output]
 		public string MarshalManagedExceptionMode { get; set; }
@@ -29,7 +29,7 @@ namespace Xamarin.MacDev.Tasks {
 		public string CustomBundleName { get; set; }
 
 		[Output]
-		public ITaskItem[] CustomLinkFlags { get; set; }
+		public ITaskItem [] CustomLinkFlags { get; set; }
 
 		[Output]
 		public string NoSymbolStrip { get; set; }
@@ -57,7 +57,7 @@ namespace Xamarin.MacDev.Tasks {
 		public int Verbosity { get; set; }
 
 		[Output]
-		public ITaskItem[] XmlDefinitions { get; set; }
+		public ITaskItem [] XmlDefinitions { get; set; }
 
 		public override bool Execute ()
 		{

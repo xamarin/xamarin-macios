@@ -5,10 +5,8 @@ using System.Text;
 
 using Xamarin.Utils;
 
-namespace Xamarin.Bundler
-{
-	public class Optimizations
-	{
+namespace Xamarin.Bundler {
+	public class Optimizations {
 		static string [] opt_names =
 		{
 			"remove-uithread-checks",
@@ -30,8 +28,8 @@ namespace Xamarin.Bundler
 			"experimental-xforms-product-type",
 			"force-rejected-types-removal",
 		};
-		
-		static ApplePlatform [][] valid_platforms = new ApplePlatform [][] {
+
+		static ApplePlatform [] [] valid_platforms = new ApplePlatform [] [] {
 			/* Opt.RemoveUIThreadChecks               */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.DeadCodeElimination                */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 			/* Opt.InlineIsDirectBinding              */ new ApplePlatform [] { ApplePlatform.iOS, ApplePlatform.MacOSX, ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
@@ -52,8 +50,7 @@ namespace Xamarin.Bundler
 			/* Opt.ForceRejectedTypesRemoval          */ new ApplePlatform [] { ApplePlatform.iOS,                       ApplePlatform.WatchOS, ApplePlatform.TVOS, ApplePlatform.MacCatalyst },
 		};
 
-		enum Opt
-		{
+		enum Opt {
 			RemoveUIThreadChecks,
 			DeadCodeElimination,
 			InlineIsDirectBinding,
@@ -117,7 +114,7 @@ namespace Xamarin.Bundler
 			get { return values [(int) Opt.RemoveDynamicRegistrar]; }
 			set { values [(int) Opt.RemoveDynamicRegistrar] = value; }
 		}
-		
+
 		public bool? TrimArchitectures {
 			get { return values [(int) Opt.TrimArchitectures]; }
 			set { values [(int) Opt.TrimArchitectures] = value; }
@@ -190,7 +187,7 @@ namespace Xamarin.Bundler
 				switch ((Opt) i) {
 				case Opt.StaticBlockToDelegateLookup:
 					if (app.Registrar != RegistrarMode.Static) {
-						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003,  (values [i].Value ? "" : "-"), opt_names [i]));
+						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (values [i].Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
 						continue;
 					}
@@ -200,7 +197,7 @@ namespace Xamarin.Bundler
 				case Opt.RegisterProtocols:
 				case Opt.RemoveDynamicRegistrar:
 					if (app.Registrar != RegistrarMode.Static) {
-						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (values[i].Value ? "" : "-"), opt_names[i]));
+						messages.Add (ErrorHelper.CreateWarning (2003, Errors.MT2003, (values [i].Value ? "" : "-"), opt_names [i]));
 						values [i] = false;
 						continue;
 					}

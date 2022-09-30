@@ -7,17 +7,15 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class ComputeBundleResourceOutputPathsTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class ComputeBundleResourceOutputPathsTaskBase : XamarinTask {
 		[Required]
 		public ITaskItem AppResourcesPath { get; set; }
 
 		[Required]
 		public string BundleIdentifier { get; set; }
 
-		public ITaskItem[] BundleResources { get; set; }
+		public ITaskItem [] BundleResources { get; set; }
 
 		public bool EnableOnDemandResources { get; set; }
 
@@ -28,7 +26,7 @@ namespace Xamarin.MacDev.Tasks
 		public string OutputPath { get; set; }
 
 		[Output]
-		public ITaskItem[] BundleResourcesWithOutputPaths { get; set; }
+		public ITaskItem [] BundleResourcesWithOutputPaths { get; set; }
 
 		public override bool Execute ()
 		{
@@ -57,7 +55,7 @@ namespace Xamarin.MacDev.Tasks
 								var array = new PArray ();
 
 								for (int i = 0; i < tags.Count; i++)
-									array.Add (new PString (tags[i]));
+									array.Add (new PString (tags [i]));
 
 								plist.SetCFBundleIdentifier (BundleIdentifier + ".asset-pack-" + hash);
 								plist.Add ("Tags", array);
