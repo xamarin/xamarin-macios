@@ -2845,13 +2845,6 @@ namespace Registrar {
 				}
 #endif
 
-				// GameController headers are broken Xcode 14.1 beta 1
-				if (IsTypeCore (@class, "GameController"))
-					continue;
-				// GameKit headers include GameController headers, so they're broken too in Xcode 14.1 beta 1
-				if (IsTypeCore (@class, "GameKit"))
-					continue;
-
 				if (@class.IsFakeProtocol)
 					continue;
 
