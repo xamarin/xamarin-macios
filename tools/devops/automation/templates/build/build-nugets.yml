@@ -4,7 +4,7 @@ parameters:
 
 - name: dotnetPlatforms
   type: object
-  default: [{
+  default: [
     {
       platform: iOS,
       conditionVariable: "INCLUDE_DOTNET_IOS"
