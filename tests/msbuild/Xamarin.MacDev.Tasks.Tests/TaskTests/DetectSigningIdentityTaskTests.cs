@@ -113,7 +113,7 @@ namespace Xamarin.MacDev.Tasks {
 			File.WriteAllText (entitlementsPath, testCase.Entitlements);
 
 			var task = CreateTask (dir, simulator: testCase.IsSimulator);
-			task.CodesignEntitlements = entitlementsPath;
+			task.CodesignEntitlements = new TaskItem (entitlementsPath);
 			task.SdkIsSimulator = testCase.IsSimulator;
 			if (testCase.CodesignRequireProvisioningProfile.HasValue)
 				task.CodesignRequireProvisioningProfile = testCase.CodesignRequireProvisioningProfile.Value.ToString ();
