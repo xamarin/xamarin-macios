@@ -8,11 +8,9 @@ using Microsoft.Build.Utilities;
 using Microsoft.Build.Tasks;
 using System.Xml.Linq;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class ReadItemsFromFileBase : XamarinTask
-	{
-		static readonly XNamespace XmlNs = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
+namespace Xamarin.MacDev.Tasks {
+	public abstract class ReadItemsFromFileBase : XamarinTask {
+		static readonly XNamespace XmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
 
 		static readonly XName ItemGroupElementName = XmlNs + "ItemGroup";
 		const string IncludeAttributeName = "Include";
@@ -21,14 +19,14 @@ namespace Xamarin.MacDev.Tasks
 
 		[Output]
 		[Required]
-		public ITaskItem[] File { get; set; }
+		public ITaskItem [] File { get; set; }
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] Items { get; set; }
+		public ITaskItem [] Items { get; set; }
 
 		#endregion
 

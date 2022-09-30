@@ -13,7 +13,7 @@ namespace Xamarin.iOS.Tasks {
 
 		public override bool Execute () => ExecuteAsync ().Result;
 
-		async Threading.Task<bool> ExecuteAsync()
+		async Threading.Task<bool> ExecuteAsync ()
 		{
 			try {
 				var connection = await BuildConnection.GetAsync (SessionId, BuildEngine4).ConfigureAwait (continueOnCapturedContext: false);
@@ -30,10 +30,10 @@ namespace Xamarin.iOS.Tasks {
 					.ConfigureAwait (continueOnCapturedContext: false);
 
 				if (!xcodeVerificationResult.IsCompatibleVersion) {
-					if (string.IsNullOrEmpty(xcodeVerificationResult.XcodeVersion) || string.IsNullOrEmpty(xcodeVerificationResult.RecommendedXcodeVersion)) {
+					if (string.IsNullOrEmpty (xcodeVerificationResult.XcodeVersion) || string.IsNullOrEmpty (xcodeVerificationResult.RecommendedXcodeVersion)) {
 						Log.LogWarning (MSBStrings.E0183);
 					} else {
-						Log.LogWarning (MSBStrings.E0184, xcodeVerificationResult.XcodeVersion, xcodeVerificationResult.RecommendedXcodeVersion);	
+						Log.LogWarning (MSBStrings.E0184, xcodeVerificationResult.XcodeVersion, xcodeVerificationResult.RecommendedXcodeVersion);
 					}
 				}
 

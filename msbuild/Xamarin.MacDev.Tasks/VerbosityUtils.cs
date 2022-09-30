@@ -12,12 +12,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		// verbosity can be set in multiple ways
 		// this makes it a consistent interpretation of them
-		static public string[] Merge (string extraArguments, LoggerVerbosity taskVerbosity)
+		static public string [] Merge (string extraArguments, LoggerVerbosity taskVerbosity)
 		{
-			string[] result = Array.Empty<string> ();
+			string [] result = Array.Empty<string> ();
 			var empty_extra = String.IsNullOrEmpty (extraArguments);
 			// We give the priority to the extra arguments given to the tools
-  			if (empty_extra || (!empty_extra && !extraArguments.Contains ("-q") && !extraArguments.Contains ("-v"))) {
+			if (empty_extra || (!empty_extra && !extraArguments.Contains ("-q") && !extraArguments.Contains ("-v"))) {
 				// if nothing is specified fall back to msbuild settings
 				// first check if some were supplied on the command-line
 				result = GetVerbosityLevel (Environment.CommandLine);
@@ -39,7 +39,7 @@ namespace Xamarin.MacDev.Tasks {
 		//		The available verbosity levels are: q[uiet], m[inimal],
 		//		n[ormal], d[etailed], and diag[nostic]. (Short form: -v)
 		//
-		static public string[] GetVerbosityLevel (string commandLine)
+		static public string [] GetVerbosityLevel (string commandLine)
 		{
 			if (!StringUtils.TryParseArguments (commandLine, out var args, out _))
 				return GetVerbosityLevel (LoggerVerbosity.Normal);
@@ -99,7 +99,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		// The values here come from: https://github.com/mono/monodevelop/blob/143f9b6617123a0841a5cc5a2a4e13b309535792/main/src/core/MonoDevelop.Projects.Formats.MSBuild/MonoDevelop.Projects.MSBuild.Shared/RemoteBuildEngineMessages.cs#L186
 		// Assume 'Normal (2)' is the default verbosity (no change), and the other values follow from there.
-		static public string[] GetVerbosityLevel (LoggerVerbosity v)
+		static public string [] GetVerbosityLevel (LoggerVerbosity v)
 		{
 			switch ((LoggerVerbosity) v) {
 			case LoggerVerbosity.Quiet:

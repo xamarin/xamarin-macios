@@ -385,20 +385,25 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase ("iossimulator-x64", false)]
-		[TestCase ("ios-arm64", true)]
-		[TestCase ("ios-arm64", true, "PublishTrimmed=true;UseInterpreter=true")]
-		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild, string? extraProperties = null)
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true, null, "Release")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true, "PublishTrimmed=true;UseInterpreter=true")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", false)]
+		public void IsNotMacBuild (ApplePlatform platform, string runtimeIdentifiers, bool isDeviceBuild, string? extraProperties = null, string configuration = "Debug")
 		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
 			if (isDeviceBuild)
 				Configuration.AssertDeviceAvailable ();
 
-			var platform = ApplePlatform.iOS;
-			var project_path = GetProjectPath ("MySingleView", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
-			var properties = GetDefaultProperties (runtimeIdentifier);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["IsMacEnabled"] = "false";
+			if (!string.IsNullOrEmpty (configuration))
+				properties ["Configuration"] = configuration;
 			if (extraProperties is not null) {
 				foreach (var assignment in extraProperties.Split (';')) {
 					var split = assignment.Split ('=');
@@ -407,10 +412,16 @@ namespace Xamarin.Tests {
 			}
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerDidNotExecute (result);
-			var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
-			Assert.That (appPath, Does.Exist, "There is an .app");
-			Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
-			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Not.Exist, "Xamarin.iOS.dll is in the bundle");
+			switch (platform) {
+			case ApplePlatform.iOS:
+				var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
+				Assert.That (appPath, Does.Exist, "There is an .app");
+				Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
+				Assert.That (Path.Combine (appPath, Configuration.GetBaseLibraryName (platform, true)), Does.Not.Exist, "Platform assembly is in the bundle");
+				break;
+			case ApplePlatform.MacCatalyst:
+				break;
+			}
 		}
 
 		[Test]

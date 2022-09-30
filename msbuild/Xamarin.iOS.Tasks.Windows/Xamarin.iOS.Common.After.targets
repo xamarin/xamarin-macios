@@ -314,6 +314,9 @@ Copyright (C) 2011-2013 Xamarin. All rights reserved.
 		<PropertyGroup>
 			<!-- We need to use netX.Y because when building from VS it sets MSBuildRuntimeType to Core and will pick net472 (which doesn't contain the illink assembly) -->
 			<_RemoteILLinkPath>$(ILLinkTasksAssembly.Replace('$(NetCoreRoot)', '$(_DotNetRootRemoteDirectory)').Replace('net472', 'net$(BundledNETCoreAppTargetFrameworkVersion)').Replace('$([System.IO.Path]::GetFileName('$(ILLinkTasksAssembly)'))', 'illink.dll'))</_RemoteILLinkPath>
+
+			<!-- The .NET 7 linker sets _TrimmerDefaultAction instead of TrimmerDefaultAction, so copy that value if it's set (and TrimmerDefaultAction is not set) -->
+			<TrimmerDefaultAction Condition="'$(TrimmerDefaultAction)' == ''">$(_TrimmerDefaultAction)</TrimmerDefaultAction>
 		</PropertyGroup>
 
 		<!-- Include Debug symbols as input so those are copied to the server -->
