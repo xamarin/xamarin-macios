@@ -1,4 +1,4 @@
-#!/bin/bash -exo pipefail
+#!/bin/bash -ex
 
 # Go to the top level directory
 cd "$(git rev-parse --show-toplevel)"
