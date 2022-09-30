@@ -28,7 +28,7 @@ namespace Xamarin.Linker {
 		{
 			if (provider?.HasCustomAttribute (@namespace, name) == true)
 				return true;
-			
+
 			return context?.GetCustomAttributes (provider, @namespace, name)?.Count > 0;
 		}
 
@@ -56,7 +56,7 @@ namespace Xamarin.Linker {
 		{
 			if (attributes == null)
 				return null;
-			
+
 			foreach (var ca in attributes) {
 				TypeReference tr = ca.AttributeType;
 				if (!tr.Is (Namespaces.ObjCRuntime, "BindingImplAttribute"))
