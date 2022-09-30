@@ -23,7 +23,7 @@ namespace Xamarin.Linker {
 
 				TypeDefinition td = resolver.Resolve (current);
 				if (td == null)
-					return false;		// could not resolve type
+					return false; // could not resolve type
 				current = td.BaseType;
 			}
 			return false;

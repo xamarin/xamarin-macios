@@ -1,6 +1,5 @@
 namespace Xamarin.Bundler {
-	public enum AssemblyBuildTarget
-	{
+	public enum AssemblyBuildTarget {
 		StaticObject,
 		DynamicLibrary,
 		Framework,
