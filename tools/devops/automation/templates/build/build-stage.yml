@@ -83,6 +83,10 @@ jobs:
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
+    INCLUDE_DOTNET_IOS: $[ dependencies.configure.outputs['configure_platform.INCLUDE_DOTNET_IOS'] ]
+    INCLUDE_DOTNET_TVOS: $[ dependencies.configure.outputs['configure_platform.INCLUDE_DOTNET_TVOS'] ]
+    INCLUDE_DOTNET_MACOS: $[ dependencies.configure.outputs['configure_platform.INCLUDE_DOTNET_MACOS'] ]
+    INCLUDE_DOTNET_MACCATALYST: $[ dependencies.configure.outputs['configure_platform.INCLUDE_DOTNET_MACCATALYST'] ]
     ${{ if eq(parameters.pool, 'automatic') }}:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:
