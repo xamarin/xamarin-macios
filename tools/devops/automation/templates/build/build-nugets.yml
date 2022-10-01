@@ -36,7 +36,7 @@ steps:
       $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.${{ platform.platform }}.Ref/package.csproj
       -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest-${{ platform.platform }}.binlog
     displayName: 'Generate and Upload Build Asset Registry Manifest for ${{ platform.platform }}'
-    condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(dependencies.configure.outputs['configure_platforms.${{ platform.conditionVariable }}'],''))
+    condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['configuration.${{ platform.conditionVariable }}'],''))
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: build-binlogs'
