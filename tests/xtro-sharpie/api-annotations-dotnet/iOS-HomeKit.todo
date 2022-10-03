@@ -1,0 +1,10 @@
+!deprecated-attribute-missing! HMHomeManager::primaryHome missing a [Deprecated] attribute
+!deprecated-attribute-missing! HMHomeManager::updatePrimaryHome:completionHandler: missing a [Deprecated] attribute
+!extra-designated-initializer! HMCharacteristicWriteAction::initWithCharacteristic:targetValue: is incorrectly decorated with an [DesignatedInitializer] attribute
+!missing-selector! HMAccessory::matterNodeID not bound
+!missing-selector! HMHome::matterControllerID not bound
+!missing-selector! HMHome::matterControllerXPCConnectBlock not bound
+!unknown-type! HMMatterHome bound
+!unknown-type! HMMatterRequestHandler bound
+!unknown-type! HMMatterRoom bound
+!unknown-type! HMMatterTopology bound
