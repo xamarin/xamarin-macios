@@ -9,10 +9,8 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class CreateAssetPackManifestTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class CreateAssetPackManifestTaskBase : XamarinTask {
 		const double DownloadPriorityInterval = 0.90;
 		const double TopDownloadPriority = 0.95;
 
@@ -112,7 +110,7 @@ namespace Xamarin.MacDev.Tasks
 						priority = 1.0f;
 					} else {
 						for (int i = 0; i < prefetchOrder.Length; i++) {
-							if (tag == prefetchOrder[i]) {
+							if (tag == prefetchOrder [i]) {
 								var value = GetDownloadPriority (i, prefetchOrder.Length);
 
 								priority = double.IsNaN (priority) ? value : Math.Max (priority, value);

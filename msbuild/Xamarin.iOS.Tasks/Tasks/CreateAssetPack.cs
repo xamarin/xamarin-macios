@@ -1,9 +1,7 @@
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks
-{
-	public class CreateAssetPack : CreateAssetPackTaskBase
-	{
+namespace Xamarin.iOS.Tasks {
+	public class CreateAssetPack : CreateAssetPackTaskBase {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

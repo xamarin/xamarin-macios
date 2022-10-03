@@ -7,14 +7,12 @@ using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class MetalLibTaskBase : XamarinToolTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class MetalLibTaskBase : XamarinToolTask {
 		#region Inputs
 
 		[Required]
-		public ITaskItem[] Items { get; set; }
+		public ITaskItem [] Items { get; set; }
 
 		[Required]
 		public string OutputLibrary { get; set; }

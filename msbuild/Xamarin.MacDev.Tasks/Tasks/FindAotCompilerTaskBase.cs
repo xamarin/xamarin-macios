@@ -10,7 +10,7 @@ using Xamarin.Localization.MSBuild;
 namespace Xamarin.MacDev.Tasks {
 	public abstract class FindAotCompilerTaskBase : XamarinTask {
 		[Required]
-		public ITaskItem[] MonoAotCrossCompiler { get; set; }
+		public ITaskItem [] MonoAotCrossCompiler { get; set; }
 
 		public bool KeepTemporaryOutput { get; set; }
 
