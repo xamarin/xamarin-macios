@@ -101,9 +101,9 @@ package:
 	mkdir -p ../package
 	$(MAKE) -C $(MACCORE_PATH) package
 	# copy .pkg, .zip and *updateinfo to the packages directory to be uploaded to storage
-	$(CP) $(MACCORE_PATH)/release/*.pkg ../package
-	$(CP) $(MACCORE_PATH)/release/*.zip ../package
-	$(CP) $(MACCORE_PATH)/release/*updateinfo ../package
+	-$(CP) $(MACCORE_PATH)/release/*.pkg ../package
+	-$(CP) $(MACCORE_PATH)/release/*.zip ../package
+	-$(CP) $(MACCORE_PATH)/release/*updateinfo ../package
 
 dotnet-install-system:
 	$(Q) $(MAKE) -C dotnet install-system
