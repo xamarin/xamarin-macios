@@ -106,6 +106,8 @@ Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.Versions.props: targets/Microsoft.$1.S
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS))))
 
+version-props: $(foreach platform,$(DOTNET_PLATFORMS),targets/Microsoft.$(platform).Sdk.Versions.props)
+
 define AutoImports
 Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makefile
 	$(Q) rm -f $$@.tmp
