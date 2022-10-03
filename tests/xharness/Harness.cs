@@ -379,6 +379,7 @@ namespace Xharness {
 					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
 					Configurations = p.Configurations,
 					Platform = p.Platform,
+					Ignore = !INCLUDE_XAMARIN_LEGACY,
 				});
 			}
 
@@ -388,6 +389,7 @@ namespace Xharness {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
 					Platform = "AnyCPU",
+					Ignore = !INCLUDE_XAMARIN_LEGACY,
 
 				};
 

@@ -7254,7 +7254,9 @@ namespace UIKit {
 	interface UITextInput : UIKeyInput {
 		[Abstract]
 		[NullAllowed] // by default this property is null
-		[Export ("selectedTextRange", ArgumentSemantic.Copy)]
+		// This is declared as ArgumentSemantic.Copy, but UITextRange doesn't conform to NSCopying.
+		// Also declaring it as ArgumentSemantic.Copy makes UIKIt crash: https://github.com/xamarin/xamarin-macios/issues/15677
+		[Export ("selectedTextRange")]
 		UITextRange SelectedTextRange { get; set;  }
 
 		[Abstract]
@@ -19469,6 +19471,8 @@ namespace UIKit {
 		[Export ("simulateFocusUpdateRequestFromEnvironment:")]
 		IUIFocusDebuggerOutput SimulateFocusUpdateRequest (IUIFocusEnvironment environment);
 
+		// Removed from headers in Xcode 14
+		[Wrap ("true ? throw new InvalidOperationException (Constants.ApiRemovedGeneral) : false", IsVirtual = true)]
 		[TV (15,0), NoWatch, iOS (15,0), MacCatalyst (15,0)]
 		[Static]
 		[Export ("checkFocusGroupTreeForEnvironment:")]

@@ -45,27 +45,12 @@ namespace BackgroundAssets {
 		[Export ("priority")]
 		nint Priority { get; }
 
-		[NullAllowed, Export ("error")]
-		NSError Error { get; }
 	}
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface BAAppExtensionInfo : NSSecureCoding
-	{
-		[Export ("applicationIdentifier")]
-		string ApplicationIdentifier { get; }
-
-		[NullAllowed, Export ("lastPeriodicCheckTime")]
-		NSDate LastPeriodicCheckTime { get; }
-
-		[NullAllowed, Export ("lastApplicationLaunchTime")]
-		NSDate LastApplicationLaunchTime { get; }
-
-		[Export ("downloadSizeRestricted")]
-		bool DownloadSizeRestricted { get; }
-	}
+	interface BAAppExtensionInfo : NSSecureCoding { }
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Protocol]
@@ -148,9 +133,6 @@ namespace BackgroundAssets {
 
 		[Export ("performWithExclusiveControl:")]
 		void PerformWithExclusiveControl (Action<NSError> performHandler);
-
-		[Export ("performWithExclusiveControlBeforeDate:completion:")]
-		void PerformWithExclusiveControl (NSDate date, Action<bool, NSError> performHandler);
 
 		[Export ("startForegroundDownload:error:")]
 		bool StartForegroundDownload (BADownload download, [NullAllowed] out NSError outError);

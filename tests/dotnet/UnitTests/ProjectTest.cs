@@ -1003,6 +1003,7 @@ namespace Xamarin.Tests {
 		public void CustomizedCodeSigning (ApplePlatform platform, string runtimeIdentifiers)
 		{
 			var project = "CustomizedCodeSigning";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
 			var properties = GetDefaultProperties (runtimeIdentifiers);
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 

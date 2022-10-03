@@ -64,7 +64,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected string XcodeArchivesDir {
 			get {
-				var home = Environment.GetFolderPath (Environment.SpecialFolder.Personal);
+				var home = Environment.GetFolderPath (Environment.SpecialFolder.UserProfile);
 
 				return Path.Combine (home, "Library", "Developer", "Xcode", "Archives");
 			}
