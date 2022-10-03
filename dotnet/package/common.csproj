@@ -140,7 +140,7 @@
         RepoCommit="$(BUILD_SOURCEVERSION)"
         PublishingVersion="3" />
 
-    <Message Importance="high" Text="##vso[artifact.upload containerfolder=AssetManifests;artifactname=AssetManifests-$(_PlatformName)]$(BarManifestOutputPath)/AssetManifest-$(_PlatformName).xml" />
+    <Message Importance="high" Text="##vso[artifact.upload containerfolder=AssetManifests-$(_PlatformName);artifactname=AssetManifests-$(_PlatformName)]$(BarManifestOutputPath)/AssetManifest-$(_PlatformName).xml" />
   </Target>
 
   <Target Name="PushManifestToBuildAssetRegistry" >
