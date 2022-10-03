@@ -117,7 +117,7 @@ namespace StoreKit {
 		Raised = 1,
 	}
 
-	[NoMac, iOS (16,0) MacCatalyst (16,0), NoWatch, NoTV]
+	[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
 	public enum SKAdNetworkCoarseConversionValue {
 		[Field ("SKAdNetworkCoarseConversionValueHigh")]
 		High,

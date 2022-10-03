@@ -699,7 +699,7 @@ namespace StoreKit {
 		[Field ("SKStoreProductParameterAdNetworkCampaignIdentifier")]
 		NSString AdNetworkCampaignIdentifier { get; }
 
-		[NoMac, iOS (16,0) MacCatalyst (16,0), NoWatch, NoTV]
+		[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
 		[Field ("SKStoreProductParameterAdNetworkSourceIdentifier")]
 		NSString AdNetworkSourceIdentifier { get; }
 
@@ -1017,13 +1017,13 @@ namespace StoreKit {
 		[Export ("updatePostbackConversionValue:completionHandler:")]
 		void UpdatePostback (nint conversionValue, [NullAllowed] SKAdNetworkCompletionHandler completion);
 
-		[NoMac, iOS (16,1) MacCatalyst (16,1), NoWatch, NoTV]
+		[NoMac, iOS (16,1), MacCatalyst (16,1), NoWatch, NoTV]
 		[Static]
 		[Async]
 		[Export ("updatePostbackConversionValue:coarseValue:completionHandler:")]
 		void UpdatePostbackConversionValue (nint fineValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, [NullAllowed] SKAdNetworkCompletionHandler completion);
 
-		[NoMac, iOS (16,1) MacCatalyst (16,1), NoWatch, NoTV]
+		[NoMac, iOS (16,1), MacCatalyst (16,1), NoWatch, NoTV]
 		[Static]
 		[Async]
 		[Export ("updatePostbackConversionValue:coarseValue:lockWindow:completionHandler:")]
@@ -1315,7 +1315,7 @@ namespace StoreKit {
 		[Export ("adCampaignIdentifier", ArgumentSemantic.Strong)]
 		NSNumber AdCampaignIdentifier { get; set; }
 
-		[NoMac, iOS (16, 0), MacCatalyst (16,0), NoWatch, NoTv]
+		[NoMac, iOS (16, 0), MacCatalyst (16,0), NoWatch, NoTV]
 		[Export ("sourceIdentifier", ArgumentSemantic.Strong)]
 		NSNumber SourceIdentifier { get; set; }
 
