@@ -475,6 +475,7 @@ namespace Introspection {
 					return true;
 				// Xcode 14
 				case "VSUserAccount": // Conformance not in headers
+				case "PKInk":
 					return true;
 				}
 				break;
@@ -726,6 +727,7 @@ namespace Introspection {
 					return true;
 				// Xcode 14
 				case "VSUserAccount": // Conformance not in headers
+				case "PKInk":
 					return true;
 				}
 				break;
