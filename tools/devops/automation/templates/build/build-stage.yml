@@ -116,9 +116,9 @@ jobs:
     INCLUDE_LEGACY_TVOS3: $[ dependencies.configure.outputs['configure.INCLUDE_LEGACY_TVOS'] ]
     INCLUDE_LEGACY_WATCH3: $[ dependencies.configure.outputs['configure.INCLUDE_LEGACY_WATCH'] ]
     INCLUDE_LEGACY_MAC3: $[ dependencies.configure.outputs['configure.INCLUDE_LEGACY_MAC'] ]
-    TEST1: $[ dependencies ]
-    TEST2: $[ dependencies.configure ]
-    TEST3: $[ dependencies.configure.outputs ]
+    TEST1: $[ convertToJson(dependencies) ]
+    TEST2: $[ convertToJson(dependencies.configure) ]
+    TEST3: $[ convertToJson(dependencies.configure.outputs) ]
     ${{ if eq(parameters.pool, 'automatic') }}:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:
