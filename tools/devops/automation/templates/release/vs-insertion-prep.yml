@@ -30,7 +30,7 @@ stages:
       yamlResourceName: templates
       dependsOn: signing
       artifactName: nuget-signed
-      propsArtifactName: package
+      propsArtifactName: dotnet-signed
       signType: Real
       useDateTimeVersion: true
 
