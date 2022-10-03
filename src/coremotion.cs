@@ -865,7 +865,7 @@ namespace CoreMotion {
 	{
 		Unknown = 0,
 		NotSubmerged,
-		Submerged
+		Submerged,
 	}
 
 	[NoMac, NoiOS, NoMacCatalyst, Watch (9,0), NoTV]
@@ -878,7 +878,7 @@ namespace CoreMotion {
 		SubmergedDeep = 300,
 		ApproachingMaxDepth = 400,
 		PastMaxDepth = 500,
-		SensorDepthError = 600
+		SensorDepthError = 600,
 	}
 
 	[NoMac, NoiOS, NoMacCatalyst, Watch (9,0), NoTV]
