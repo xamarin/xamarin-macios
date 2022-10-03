@@ -13,7 +13,7 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.Tests;
 using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class IBToolTaskTests : TestBase

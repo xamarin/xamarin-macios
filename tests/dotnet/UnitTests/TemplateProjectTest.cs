@@ -91,6 +91,8 @@ class MainClass {
 		[TestCase (ApplePlatform.MacCatalyst)]
 		public void VeryManyRegisteredAssemblies (ApplePlatform platform)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
 			var tmpdir = Cache.CreateTemporaryDirectory ();
 			var assemblies = 200;
 

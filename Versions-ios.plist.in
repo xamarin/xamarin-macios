@@ -126,7 +126,7 @@
 			<string>15.0</string>
 			<string>15.2</string>
 			<string>15.4</string>
-			<string>16.0</string>
+			<!-- <string>16.0</string> -->
 		</array>
 	</dict>
 	<key>MacCatalystVersionMap</key>
@@ -155,8 +155,8 @@
 		<string>12.1</string>
 		<key>15.4</key>
 		<string>12.3</string>
-		<key>16.0</key>
-		<string>13.0</string>
+		<!-- <key>16.0</key>
+		<string>13.0</string> -->
 	</dict>
 	<key>RecommendedXcodeVersion</key>
 	<string>@XCODE_VERSION@</string>

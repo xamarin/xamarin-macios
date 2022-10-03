@@ -602,6 +602,9 @@ COREMIDI_CORE_SOURCES = \
 	CoreMidi/MidiThruConnection.cs \
 	CoreMidi/MidiThruConnectionParams.cs \
 
+COREMIDI_SOURCES = \
+	CoreMidi/MidiBluetoothDriver.cs \
+
 # CoreML
 
 COREML_SOURCES = \
@@ -2011,7 +2014,6 @@ MACOS_FRAMEWORKS =          \
 	AVKit                   \
 	AVRouting               \
 	BusinessChat            \
-	BackgroundAssets        \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
@@ -2119,7 +2121,6 @@ IOS_FRAMEWORKS =         \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
-	BackgroundAssets \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \
@@ -2316,7 +2317,6 @@ MACCATALYST_FRAMEWORKS = \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
-	BackgroundAssets \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \

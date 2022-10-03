@@ -1,5 +1,0 @@
-!missing-protocol! AUMessageChannel not bound
-!missing-selector! AUAudioUnit::messageChannelFor: not bound
-!missing-selector! AUAudioUnitV2Bridge::audioUnit not bound
-!missing-pinvoke! AudioComponentValidateWithResults is not bound
-!missing-enum! AUSpatialMixerPersonalizedHRTFMode not bound

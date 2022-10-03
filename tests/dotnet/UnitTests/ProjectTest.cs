@@ -861,6 +861,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "AppWithGenericLibraryReference";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX); // This test requires macOS as well, for all other platforms.
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -981,6 +982,20 @@ namespace Xamarin.Tests {
 				var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToList ();
 				Assert.That (errors [0].Message, Does.Contain ("Error loading Entitlements.plist template 'Entitlements.plist'"), "Message");
 			}
+		}
+
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		public void CustomAppBundleDir (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var customAppBundleDir = Path.Combine (Cache.CreateTemporaryDirectory (), project + ".app");
+			properties ["AppBundleDir"] = customAppBundleDir;
+			var result = DotNet.AssertBuild (project_path, properties);
 		}
 	}
 }

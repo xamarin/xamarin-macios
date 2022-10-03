@@ -1698,12 +1698,14 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 	<Target Name="_DetectSigningIdentity" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="$(_DetectSigningIdentityDependsOn)">
 		<DetectSigningIdentity
 			SessionId="$(BuildSessionId)"
+			CodesignProvision="$(CodesignProvision)"
+			CodesignEntitlements="$(CodesignEntitlements)"
+			CodesignRequireProvisioningProfile="$(CodesignRequireProvisioningProfile)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleName="$(_AppBundleName)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			Keychain="$(CodesignKeychain)"
 			RequireCodeSigning="$(_RequireCodeSigning)"
-			RequireProvisioningProfile="$(_RequireProvisioningProfile)"
 			SdkIsSimulator="$(_SdkIsSimulator)"
 			SdkPlatform="$(_SdkPlatform)"
 			ProvisioningProfile="$(CodesignProvision)"
@@ -2684,6 +2686,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_AppContainerDir Condition="'$(IsAppDistribution)' != 'true'">$(DeviceSpecificOutputPath)</_AppContainerDir>
 			<_AppContainerDir Condition="'$(IsAppDistribution)' == 'true'">$(ArchivePath)\Products\Applications\</_AppContainerDir>
 			<AppBundleDir>$(_AppContainerDir)$(_AppBundleName)$(AppBundleExtension)</AppBundleDir>
+		</PropertyGroup>
+		<PropertyGroup Condition="'$(_AppContainerDir)' == ''">
+			 <_AppContainerDir>$([System.IO.Path]::GetDirectoryName($(AppBundleDir)))/</_AppContainerDir>
 		</PropertyGroup>
 		<PropertyGroup>
 			<!-- Ensure _AppBundlePath is a relative path (relative to the project directory) and contains a trailing slash -->
