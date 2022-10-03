@@ -38,12 +38,6 @@ steps:
     displayName: 'Generate and Upload Build Asset Registry Manifest for ${{ platform.platform }}'
     condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['${{ platform.conditionVariable }}'],''))
 
-- ${{ each platform in parameters.dotnetPlatforms }}:
-  - bash: echo Yay
-    displayName: 'Debug A for ${{ platform.platform }}'
-    condition: ne(variables['configuration.${{ platform.conditionVariable }}'],'')
-
-
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: build-binlogs'
   inputs:
