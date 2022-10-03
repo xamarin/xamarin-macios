@@ -213,6 +213,13 @@ namespace Xamarin.Bundler {
 							if (!Driver.LinkProhibitedFrameworks)
 								continue;
 							break;
+						case "CHIP":
+							// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
+							if (Driver.XcodeVersion.Major >= 14) {
+								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+", framework.Name);
+								continue;
+							}
+							break;
 #else
 						case "CoreAudioKit":
 							// CoreAudioKit seems to be functional in the iOS 9 simulator.

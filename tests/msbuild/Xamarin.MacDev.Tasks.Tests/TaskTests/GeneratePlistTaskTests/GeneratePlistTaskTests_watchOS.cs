@@ -1,16 +1,30 @@
 using NUnit.Framework;
 using Xamarin.MacDev;
 
+using Xamarin.Tests;
+using Xamarin.Utils;
+
 namespace Xamarin.MacDev.Tasks
 {
-	[TestFixture]
+	[TestFixture (true)]
+	[TestFixture (false)]
 	public abstract class GeneratePlistTaskTests_watchOS: GeneratePlistTaskTests_Core
 	{
-		public override void ConfigureTask ()
+		protected override ApplePlatform Platform => ApplePlatform.WatchOS;
+
+		public GeneratePlistTaskTests_watchOS (bool isDotNet)
+			: base (isDotNet)
 		{
-			base.ConfigureTask ();
+		}
+
+		protected override void ConfigureTask (bool isDotNet)
+		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			Configuration.AssertLegacyXamarinAvailable ();
+
+			base.ConfigureTask (isDotNet);
 			Task.DefaultSdkVersion = Sdks.Watch.GetClosestInstalledSdk (AppleSdkVersion.V2_0, true).ToString ();
-			Task.TargetFrameworkMoniker = "Xamarin.WatchOS,v1.0";
+			Task.TargetFrameworkMoniker = isDotNet ? TargetFramework.DotNet_watchOS_String : TargetFramework.Xamarin_WatchOS_1_0.ToString ();
 		}
 	}
 }
