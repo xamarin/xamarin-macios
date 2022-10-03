@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 !missing-field! CHIPVersionNumber not bound
 !missing-field! CHIPVersionString not bound
 !missing-field! CHIPSizeThreadExtendedPanId not bound
@@ -5,6 +6,8 @@
 !missing-field! CHIPSizeThreadNetworkName not bound
 !missing-field! CHIPSizeThreadPSKc not bound
 
+=======
+>>>>>>> origin/xcode14.1
 !unknown-field! CHIPErrorDomain bound
 !unknown-protocol! CHIPDevicePairingDelegate bound
 !unknown-protocol! CHIPKeypair bound
@@ -68,6 +71,7 @@
 !unknown-type! CHIPWakeOnLan bound
 !unknown-type! CHIPWiFiNetworkDiagnostics bound
 !unknown-type! CHIPWindowCovering bound
+<<<<<<< HEAD
 !missing-enum! CHIPCommissioningFlow not bound
 !missing-enum! CHIPErrorCode not bound
 !missing-enum! CHIPOnboardingPayloadType not bound
@@ -90,3 +94,5 @@
 !missing-selector! CHIPDeviceController::stopDevicePairing:error: not bound
 !missing-selector! CHIPDeviceController::unpairDevice:error: not bound
 !missing-selector! CHIPDeviceController::updateDevice:fabricId: not bound
+=======
+>>>>>>> origin/xcode14.1

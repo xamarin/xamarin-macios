@@ -1,0 +1,7 @@
+!missing-enum! WKExtendedRuntimeSessionAutoLaunchAuthorizationStatus not bound
+!missing-enum-value! WKExtendedRuntimeSessionErrorCode native value WKExtendedRuntimeSessionErrorMustBeActiveToPrompt = 9 not bound
+!missing-enum-value! WKExtendedRuntimeSessionErrorCode native value WKExtendedRuntimeSessionErrorUnsupportedSessionType = 10 not bound
+!missing-enum-value! WKHapticType native value WKHapticTypeUnderwaterDepthCriticalPrompt = 13 not bound
+!missing-enum-value! WKHapticType native value WKHapticTypeUnderwaterDepthPrompt = 12 not bound
+!missing-enum-value! WKWaterResistanceRating native value WKWaterResistanceRatingWR100 = 2 not bound
+!missing-selector! +WKExtendedRuntimeSession::requestAutoLaunchAuthorizationStatusWithCompletion: not bound
