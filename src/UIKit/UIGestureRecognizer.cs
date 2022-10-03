@@ -223,6 +223,10 @@ namespace UIKit {
 
 	}
 
+	public partial class UIHoverGestureRecognizer : UIGestureRecognizer {
+		public UIHoverGestureRecognizer (Action<UIHoverGestureRecognizer> action) : base (Selector.GetHandle (UIGestureRecognizer.parametrized_selector), new Callback<UIHoverGestureRecognizer>(action)) {}
+
+	}
 #endif
 }
 

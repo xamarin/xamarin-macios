@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 using Xamarin.MacDev;
+using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -57,6 +59,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void RebuildNoChanges ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			bool expectedCodesignResults = Platform != "iPhoneSimulator";
 
 			BuildProject ("MyTabbedApplication");
@@ -117,6 +122,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void CodesignAfterModifyingAppExtensionTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var csproj = BuildProject ("MyTabbedApplication", clean: true).ProjectCSProjPath;
 			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
 			var appexProjectDir = Path.Combine (testsDir, "MyActionExtension");
@@ -152,6 +160,10 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void RebuildWatchAppNoChanges ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			bool expectedCodesignResults = Platform != "iPhoneSimulator";
 
 			BuildProject ("MyWatch2Container");
@@ -183,6 +195,10 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void CodesignAfterModifyingWatchApp2Test ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.WatchOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var csproj = BuildProject ("MyWatch2Container", clean: true).ProjectCSProjPath;
 			var testsDir = Path.GetDirectoryName (Path.GetDirectoryName (csproj));
 			var appexProjectDir = Path.Combine (testsDir, "MyWatchKit2Extension");

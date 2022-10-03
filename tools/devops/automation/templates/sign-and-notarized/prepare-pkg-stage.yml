@@ -25,31 +25,37 @@ parameters:
       job: 'xamarin_ios_sign_notarize',
       name: 'Xamarin.iOS',
       pattern: 'xamarin.ios-*',
+      conditionVariable: "INCLUDE_LEGACY_IOS",
     },
     {
       job: 'xamarin_mac_sing_notarie',
       name: 'Xamarin.Mac',
       pattern: 'xamarin.mac-*',
+      conditionVariable: "INCLUDE_LEGACY_MAC",
     },
     {
       job: 'microsoft_ios_sign_notarize',
       name: 'Microsoft.iOS',
       pattern: 'Microsoft.iOS.Bundle*.pkg',
+      conditionVariable: "INCLUDE_DOTNET_IOS",
     },
     {
       job: 'microsoft_tvos_sign_notarize',
       name: 'Microsoft.tvOS',
       pattern: 'Microsoft.tvOS.Bundle*.pkg',
+      conditionVariable: "INCLUDE_DOTNET_TVOS",
     },
     {
       job: 'microsoft_mac_sign_notarize',
       name: 'Microsoft.macOS',
       pattern: 'Microsoft.macOS.Bundle*.pkg',
+      conditionVariable: "INCLUDE_DOTNET_MACOS",
     },
     {
       job: 'microsoft_maccatalyst_sign_notarize',
       name: 'Microsoft.MacCatalyst',
       pattern: 'Microsoft.MacCatalyst.Bundle*.pkg',
+      conditionVariable: "INCLUDE_DOTNET_MACCATALYST",
     },
   ]
 
@@ -71,6 +77,7 @@ jobs:
     dependsOn:
     - configure
     displayName: 'Sign & Notarize ${{ pkg.name }}'
+    condition: ne(dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'],'')
     timeoutInMinutes: 1000
     pool:
       vmImage: internal-macos-11
@@ -105,16 +112,21 @@ jobs:
 
 - job: funnel_job
   dependsOn:
+  - configure
   - ${{ if eq(parameters.enableDotnet, true) }}:
     - sign_notarize_dotnet
   - ${{ each pkg in parameters.packages }}:
     - ${{ pkg.job }}
   displayName: 'Collect signed artifacts'
+  condition: and(not(failed()), not(canceled())) # default is succeded(), but that fails if there are any skipped jobs, so change the condition to !failed && !cancelled
   timeoutInMinutes: 1000
   pool:
     vmImage: internal-macos-11
   workspace:
     clean: all
+  variables:
+    ${{ each pkg in parameters.packages }}:
+      ${{ pkg.conditionVariable }}: $[ dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
 
   steps:
   - template: funnel.yml
@@ -130,7 +142,7 @@ jobs:
   timeoutInMinutes: 1000
   dependsOn:
   - funnel_job
-  condition: succeeded()
+  condition: and(not(failed()), not(canceled())) # default is succeded(), but that fails if there are any skipped jobs, so change the condition to !failed && !cancelled
 
   variables:
     Parameters.outputStorageUri: ''

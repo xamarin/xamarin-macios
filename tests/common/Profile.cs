@@ -1,10 +1,8 @@
 using System;
 using Xamarin.Utils;
 
-namespace Xamarin.Tests
-{
-	public enum Profile
-	{
+namespace Xamarin.Tests {
+	public enum Profile {
 		None,
 		iOS,
 		tvOS,

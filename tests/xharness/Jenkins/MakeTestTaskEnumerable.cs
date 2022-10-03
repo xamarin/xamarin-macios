@@ -41,7 +41,7 @@ namespace Xharness.Jenkins {
 				TestName = "Mac Binding Projects",
 				Target = "all",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "mac-binding-project"),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.MacBindingProject) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac),
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.MacBindingProject) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) || !jenkins.TestSelection.IsEnabled (PlatformLabel.LegacyXamarin),
 				Timeout = TimeSpan.FromMinutes (15),
 			};
 			yield return runMacBindingProject;
