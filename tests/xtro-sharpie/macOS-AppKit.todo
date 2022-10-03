@@ -16,3 +16,10 @@
 !missing-type! NSNibConnector not bound
 !missing-type! NSNibControlConnector not bound
 !missing-type! NSNibOutletConnector not bound
+!missing-enum-value! NSWindowCollectionBehavior native value NSWindowCollectionBehaviorAuxiliary = 131072 not bound
+!missing-enum-value! NSWindowCollectionBehavior native value NSWindowCollectionBehaviorCanJoinAllApplications = 262144 not bound
+!missing-enum-value! NSWindowCollectionBehavior native value NSWindowCollectionBehaviorPrimary = 65536 not bound
+!missing-null-allowed! 'Foundation.NSUrl AppKit.NSDocument::get_PresentedItemURL()' is missing an [NullAllowed] on return type
+!missing-selector! +NSTextView::textViewUsingTextLayoutManager: not bound
+!missing-selector! NSSharingServicePicker::close not bound
+!missing-selector! NSTextView::initUsingTextLayoutManager: not bound
