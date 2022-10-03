@@ -32,5 +32,9 @@ namespace ObjCRuntime {
 		internal const string ChipRemoved = "The CHIP framework has been removed from iOS.";
 
 		internal const string ApiRemovedGeneral = "This API has been removed from the framework.";
+
+		internal const string RemovedFromHomeKit = "This API has been removed from the 'HomeKit' framework.";
+
+		internal const string BrokenBinding = "This API was incorrectly bound and does not work correctly. Use the new version indicated in the associated Obsolete attribute.";
 	}
 }
