@@ -162,7 +162,11 @@ jobs:
     clean: all
 
   steps:
-  - bash: env | sort
+  - bash: |
+      echo "Sorted:"
+      env | sort
+      echo "Unsorted:"
+      env
     displayName: 'Show Early Environment'
   - template: build-pkgs.yml
     parameters:
