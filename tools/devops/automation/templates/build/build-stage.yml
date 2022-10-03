@@ -87,6 +87,38 @@ jobs:
     INCLUDE_DOTNET_TVOS: $[ dependencies.configure.outputs['configure_platform.INCLUDE_DOTNET_TVOS'] ]
     INCLUDE_DOTNET_MACOS: $[ dependencies.configure.outputs['configure_platform.INCLUDE_DOTNET_MACOS'] ]
     INCLUDE_DOTNET_MACCATALYST: $[ dependencies.configure.outputs['configure_platform.INCLUDE_DOTNET_MACCATALYST'] ]
+    INCLUDE_XAMARIN_LEGACY: $[ dependencies.configure.outputs['configure_platform.INCLUDE_XAMARIN_LEGACY'] ]
+    ENABLE_DOTNET: $[ dependencies.configure.outputs['configure_platform.ENABLE_DOTNET'] ]
+    DOTNET_PLATFORMS: $[ dependencies.configure.outputs['configure_platform.DOTNET_PLATFORMS'] ]
+    INCLUDE_LEGACY_IOS: $[ dependencies.configure.outputs['configure_platform.INCLUDE_LEGACY_IOS'] ]
+    INCLUDE_LEGACY_TVOS: $[ dependencies.configure.outputs['configure_platform.INCLUDE_LEGACY_TVOS'] ]
+    INCLUDE_LEGACY_WATCH: $[ dependencies.configure.outputs['configure_platform.INCLUDE_LEGACY_WATCH'] ]
+    INCLUDE_LEGACY_MAC: $[ dependencies.configure.outputs['configure_platform.INCLUDE_LEGACY_MAC'] ]
+    INCLUDE_DOTNET_IOS2: $[ dependencies.configure.outputs['INCLUDE_DOTNET_IOS'] ]
+    INCLUDE_DOTNET_TVOS2: $[ dependencies.configure.outputs['INCLUDE_DOTNET_TVOS'] ]
+    INCLUDE_DOTNET_MACOS2: $[ dependencies.configure.outputs['INCLUDE_DOTNET_MACOS'] ]
+    INCLUDE_DOTNET_MACCATALYST2: $[ dependencies.configure.outputs['INCLUDE_DOTNET_MACCATALYST'] ]
+    INCLUDE_XAMARIN_LEGACY2: $[ dependencies.configure.outputs['INCLUDE_XAMARIN_LEGACY'] ]
+    ENABLE_DOTNET2: $[ dependencies.configure.outputs['ENABLE_DOTNET'] ]
+    DOTNET_PLATFORMS2: $[ dependencies.configure.outputs['DOTNET_PLATFORMS'] ]
+    INCLUDE_LEGACY_IOS2: $[ dependencies.configure.outputs['INCLUDE_LEGACY_IOS'] ]
+    INCLUDE_LEGACY_TVOS2: $[ dependencies.configure.outputs['INCLUDE_LEGACY_TVOS'] ]
+    INCLUDE_LEGACY_WATCH2: $[ dependencies.configure.outputs['INCLUDE_LEGACY_WATCH'] ]
+    INCLUDE_LEGACY_MAC2: $[ dependencies.configure.outputs['INCLUDE_LEGACY_MAC'] ]
+    INCLUDE_DOTNET_IOS3: $[ dependencies.configure.outputs['configure.INCLUDE_DOTNET_IOS'] ]
+    INCLUDE_DOTNET_TVOS3: $[ dependencies.configure.outputs['configure.INCLUDE_DOTNET_TVOS'] ]
+    INCLUDE_DOTNET_MACOS3: $[ dependencies.configure.outputs['configure.INCLUDE_DOTNET_MACOS'] ]
+    INCLUDE_DOTNET_MACCATALYST3: $[ dependencies.configure.outputs['configure.INCLUDE_DOTNET_MACCATALYST'] ]
+    INCLUDE_XAMARIN_LEGACY3: $[ dependencies.configure.outputs['configure.INCLUDE_XAMARIN_LEGACY'] ]
+    ENABLE_DOTNET3: $[ dependencies.configure.outputs['configure.ENABLE_DOTNET'] ]
+    DOTNET_PLATFORMS3: $[ dependencies.configure.outputs['configure.DOTNET_PLATFORMS'] ]
+    INCLUDE_LEGACY_IOS3: $[ dependencies.configure.outputs['configure.INCLUDE_LEGACY_IOS'] ]
+    INCLUDE_LEGACY_TVOS3: $[ dependencies.configure.outputs['configure.INCLUDE_LEGACY_TVOS'] ]
+    INCLUDE_LEGACY_WATCH3: $[ dependencies.configure.outputs['configure.INCLUDE_LEGACY_WATCH'] ]
+    INCLUDE_LEGACY_MAC3: $[ dependencies.configure.outputs['configure.INCLUDE_LEGACY_MAC'] ]
+    TEST1: $[ dependencies ]
+    TEST2: $[ dependencies.configure ]
+    TEST3: $[ dependencies.configure.outputs ]
     ${{ if eq(parameters.pool, 'automatic') }}:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:
@@ -130,6 +162,8 @@ jobs:
     clean: all
 
   steps:
+  - bash: env | sort
+    displayName: 'Show Early Environment'
   - template: build-pkgs.yml
     parameters:
       isPR: ${{ parameters.isPR }}
