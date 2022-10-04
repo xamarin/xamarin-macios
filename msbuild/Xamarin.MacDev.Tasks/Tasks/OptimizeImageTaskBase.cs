@@ -4,21 +4,19 @@ using System.IO;
 using Microsoft.Build.Utilities;
 using Microsoft.Build.Framework;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class OptimizeImageTaskBase : XamarinToolTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class OptimizeImageTaskBase : XamarinToolTask {
 		ITaskItem inputImage;
 		ITaskItem outputImage;
 
 		#region Inputs
 
 		[Required]
-		public ITaskItem[] InputImages { get; set; }
+		public ITaskItem [] InputImages { get; set; }
 
 		[Required]
 		[Output]
-		public ITaskItem[] OutputImages { get; set; }
+		public ITaskItem [] OutputImages { get; set; }
 
 		[Required]
 		public string SdkDevPath { get; set; }
@@ -61,15 +59,15 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var tokens = singleLine.Split (new [] { ':' }, 2);
 
-			if (tokens.Length == 2 && tokens[0].StartsWith ("libpng ", StringComparison.Ordinal)) {
-				var type = tokens[0].Substring ("libpng ".Length).Trim ();
+			if (tokens.Length == 2 && tokens [0].StartsWith ("libpng ", StringComparison.Ordinal)) {
+				var type = tokens [0].Substring ("libpng ".Length).Trim ();
 
 				switch (type) {
 				case "warning":
-					Log.LogWarning (null, null, null, inputImage.ItemSpec, 0, 0, 0, 0, "{0}", tokens[1].Trim ());
+					Log.LogWarning (null, null, null, inputImage.ItemSpec, 0, 0, 0, 0, "{0}", tokens [1].Trim ());
 					break;
 				case "error":
-					Log.LogError (null, null, null, inputImage.ItemSpec, 0, 0, 0, 0, "{0}", tokens[1].Trim ());
+					Log.LogError (null, null, null, inputImage.ItemSpec, 0, 0, 0, 0, "{0}", tokens [1].Trim ());
 					break;
 				default:
 					Log.LogError (null, null, null, inputImage.ItemSpec, 0, 0, 0, 0, "{0}", singleLine);
@@ -85,8 +83,8 @@ namespace Xamarin.MacDev.Tasks
 			var result = true;
 
 			for (var index = 0; index < this.InputImages.Length && index < this.OutputImages.Length; index++) {
-				this.inputImage = this.InputImages[index];
-				this.outputImage = this.OutputImages[index];
+				this.inputImage = this.InputImages [index];
+				this.outputImage = this.OutputImages [index];
 
 				Directory.CreateDirectory (Path.GetDirectoryName (outputImage.ItemSpec));
 

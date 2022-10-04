@@ -21,7 +21,7 @@ namespace Xamarin.MacDev.Tasks {
 			Frameworks = new HashSet<string> ();
 		}
 
-		public void BuildNativeReferenceFlags (TaskLoggingHelper Log, ITaskItem[] NativeReferences)
+		public void BuildNativeReferenceFlags (TaskLoggingHelper Log, ITaskItem [] NativeReferences)
 		{
 			if (NativeReferences == null)
 				return;

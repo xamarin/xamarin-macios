@@ -1,9 +1,7 @@
 using Xamarin.Messaging.Build.Client;
 
-namespace Microsoft.Build.Tasks
-{
-	public class RemoveDir : RemoveDirBase
-	{
+namespace Microsoft.Build.Tasks {
+	public class RemoveDir : RemoveDirBase {
 		public bool RemoveAppDir { get; set; }
 
 		public override bool Execute ()
