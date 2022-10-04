@@ -150,12 +150,12 @@ namespace Xamarin.MacDev.Tasks {
 
 		public bool ShouldExecuteRemotely () => this.ShouldExecuteRemotely (SessionId);
 
-		protected void FileCopierReportErrorCallback (int code, string format, params object[] arguments)
+		protected void FileCopierReportErrorCallback (int code, string format, params object [] arguments)
 		{
 			Log.LogError (format, arguments);
 		}
 
-		protected void FileCopierLogCallback (int min_verbosity, string format, params object[] arguments)
+		protected void FileCopierLogCallback (int min_verbosity, string format, params object [] arguments)
 		{
 			MessageImportance importance;
 			if (min_verbosity <= 0) {

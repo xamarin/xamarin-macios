@@ -26,12 +26,12 @@ using Xamarin.Bundler;
 
 #if MTOUCH || MMP || BUNDLER
 using Xamarin.Utils;
-using TAssembly=Mono.Cecil.AssemblyDefinition;
-using TType=Mono.Cecil.TypeReference;
-using TMethod=Mono.Cecil.MethodDefinition;
-using TProperty=Mono.Cecil.PropertyDefinition;
-using TField=Mono.Cecil.FieldDefinition;
-using R=Registrar.Registrar;
+using TAssembly = Mono.Cecil.AssemblyDefinition;
+using TType = Mono.Cecil.TypeReference;
+using TMethod = Mono.Cecil.MethodDefinition;
+using TProperty = Mono.Cecil.PropertyDefinition;
+using TField = Mono.Cecil.FieldDefinition;
+using R = Registrar.Registrar;
 #else
 using TAssembly=System.Reflection.Assembly;
 using TType=System.Type;
@@ -70,11 +70,11 @@ namespace ObjCRuntime
 
 namespace Registrar {
 	static class Shared {
-		
+
 		public static List<ProductException> GetMT4127 (TMethod impl, List<TMethod> ifaceMethods)
 		{
-			var exceptions = new List <ProductException> ();
-			exceptions.Add (ErrorHelper.CreateError(4127, Errors.MT4127, impl.DeclaringType.FullName, impl.Name));
+			var exceptions = new List<ProductException> ();
+			exceptions.Add (ErrorHelper.CreateError (4127, Errors.MT4127, impl.DeclaringType.FullName, impl.Name));
 			for (int i = 0; i < ifaceMethods.Count; i++) {
 				var ifaceM = ifaceMethods [i];
 				exceptions.Add (ErrorHelper.CreateError (4137, Errors.MT4137, impl.DeclaringType.FullName, impl.Name, ifaceM.DeclaringType.FullName, ifaceM.Name));
@@ -97,7 +97,7 @@ namespace Registrar {
 #endif
 
 		Dictionary<TAssembly, object> assemblies = new Dictionary<TAssembly, object> (); // Use Dictionary instead of HashSet to avoid pulling in System.Core.dll.
-		// locking: all accesses must lock 'types'.
+																						 // locking: all accesses must lock 'types'.
 		Dictionary<TType, ObjCType> types = new Dictionary<TType, ObjCType> ();
 		// this is used to check if multiple types are registered with the same name.
 		// locking: all accesses must lock 'type_map'.
@@ -212,7 +212,7 @@ namespace Registrar {
 				var name = RegisterAttribute.Name;
 				if (string.IsNullOrEmpty (name))
 					return;
-					
+
 				for (int i = 0; i < name.Length; i++) {
 					if (!char.IsWhiteSpace (name [i]))
 						continue;
@@ -238,7 +238,7 @@ namespace Registrar {
 
 			// This list is duplicated in tests/mtouch/RegistrarTest.cs.
 			// Update that list whenever this list is updated.
-			static readonly char[] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
+			static readonly char [] invalidSelectorCharacters = { ' ', '\t', '?', '\\', '!', '|', '@', '"', '\'', '%', '&', '/', '(', ')', '=', '^', '[', ']', '{', '}', ',', '.', ';', '-', '\n', '<', '>' };
 			void VerifySelector (ObjCMethod method, ref List<Exception> exceptions)
 			{
 				if (method.Method == null)
@@ -254,7 +254,7 @@ namespace Registrar {
 				var paramCount = pars == null ? 0 : pars.Length;
 				if (method.IsCategoryInstance)
 					paramCount--;
-				
+
 				if (nativeParamCount != paramCount) {
 					Exception ex;
 
@@ -271,7 +271,7 @@ namespace Registrar {
 
 				if (method.IsVariadic && pars != null && Registrar.GetTypeFullName (pars [paramCount - 1]) != "System.IntPtr")
 					Registrar.AddException (ref exceptions, Registrar.CreateException (4123, method, Errors.MT4123, Registrar.GetDescriptiveMethodName (method.Method)));
-				
+
 				char ch;
 				var idx = method.Selector.IndexOfAny (invalidSelectorCharacters);
 				if (idx != -1) {
@@ -302,7 +302,7 @@ namespace Registrar {
 							ap = ap.Insert (idx, "}");
 						}
 
-						var m4177 = String.Format (Errors.MT4177, Registrar.GetTypeFullName(Type), ap, str);
+						var m4177 = String.Format (Errors.MT4177, Registrar.GetTypeFullName (Type), ap, str);
 						AddException (ref exceptions, new ProductException (4177, true, m4177, new string [0]));
 
 					}
@@ -437,12 +437,12 @@ namespace Registrar {
 					}
 					rv = false;
 				}
-				
+
 				Map [(member.IsNativeStatic ? "+" : "-") + member.Selector] = member;
 				return rv;
 			}
 
-			Exception CreateException (int code, ObjCMember member, string message, params object[] args)
+			Exception CreateException (int code, ObjCMember member, string message, params object [] args)
 			{
 				var method = member as ObjCMethod;
 				if (method != null)
@@ -566,8 +566,8 @@ namespace Registrar {
 			Trampoline trampoline;
 			bool? is_static;
 			bool? is_ctor;
-			TType[] parameters;
-			TType[] native_parameters;
+			TType [] parameters;
+			TType [] native_parameters;
 			TType return_type;
 			TType native_return_type;
 
@@ -694,7 +694,7 @@ namespace Registrar {
 							var originalType = Registrar.GetBindAsAttribute (this, i)?.OriginalType;
 							if (originalType != null) {
 								if (!IsValidToManagedTypeConversion (originalType, parameters [i]))
-									throw Registrar.CreateException (4172, Method, Errors.MT4172, Registrar.GetTypeFullName (parameters [i]),  originalType.FullName, Registrar.GetParameterName (Method, i), DescriptiveMethodName);
+									throw Registrar.CreateException (4172, Method, Errors.MT4172, Registrar.GetTypeFullName (parameters [i]), originalType.FullName, Registrar.GetParameterName (Method, i), DescriptiveMethodName);
 								native_parameters [i] = originalType;
 							} else {
 								native_parameters [i] = parameters [i];
@@ -889,7 +889,7 @@ namespace Registrar {
 #elif __TVOS__
 					is_stret = Runtime.Arch == Arch.SIMULATOR && Stret.X86_64NeedStret (NativeReturnType, null);
 #else
-	#error unknown architecture
+#error unknown architecture
 #endif
 					var is_static_trampoline = IsStatic && !IsCategoryInstance;
 					var is_value_type = Registrar.IsValueType (NativeReturnType) && !Registrar.IsEnum (NativeReturnType);
@@ -953,7 +953,7 @@ namespace Registrar {
 						return false;
 					}
 				}
-					
+
 				return true;
 			}
 
@@ -983,7 +983,7 @@ namespace Registrar {
 				get {
 					if (Method == null)
 						return false;
-					
+
 					return Method.IsSpecialName && (Method.Name.StartsWith ("get_", StringComparison.Ordinal) || Method.Name.StartsWith ("set_", StringComparison.Ordinal));
 				}
 			}
@@ -1066,11 +1066,11 @@ namespace Registrar {
 			}
 		}
 
-		protected virtual void OnRegisterType (ObjCType type) {}
+		protected virtual void OnRegisterType (ObjCType type) { }
 		protected virtual void OnSkipType (TType type, ObjCType registered_type) { }
-		protected virtual void OnReloadType (ObjCType type) {}
-		protected virtual void OnRegisterProtocol (ObjCType type) {}
-		protected virtual void OnRegisterCategory (ObjCType type, ref List<Exception> exceptions) {}
+		protected virtual void OnReloadType (ObjCType type) { }
+		protected virtual void OnRegisterProtocol (ObjCType type) { }
+		protected virtual void OnRegisterCategory (ObjCType type, ref List<Exception> exceptions) { }
 
 		protected virtual bool SkipRegisterAssembly (TAssembly assembly) { return false; }
 
@@ -1081,10 +1081,10 @@ namespace Registrar {
 
 		protected abstract bool ContainsPlatformReference (TAssembly assembly); // returns true if the assembly is monotouch.dll too.
 		protected abstract TType GetBaseType (TType type); // for generic parameters it returns the first specific class constraint.
-		protected abstract TType[] GetInterfaces (TType type); // may return interfaces from base classes as well. May return null if no interfaces found.
+		protected abstract TType [] GetInterfaces (TType type); // may return interfaces from base classes as well. May return null if no interfaces found.
 		protected virtual TType [] GetLinkedAwayInterfaces (TType type) { return null; } // may NOT return interfaces from base classes as well. May return null if no interfaces found.
 		protected abstract TMethod GetBaseMethod (TMethod method);
-		protected abstract TType[] GetParameters (TMethod method);
+		protected abstract TType [] GetParameters (TMethod method);
 		protected abstract string GetParameterName (TMethod method, int parameter_index);
 		protected abstract TMethod GetGetMethod (TProperty property);
 		protected abstract TMethod GetSetMethod (TProperty property);
@@ -1135,8 +1135,8 @@ namespace Registrar {
 		protected abstract int GetValueTypeSize (TType type);
 		protected abstract bool IsSimulatorOrDesktop { get; }
 		protected abstract bool Is64Bits { get; }
-		protected abstract bool IsARM64 { get; } 
-		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TMethod method, string message, params object[] args);
+		protected abstract bool IsARM64 { get; }
+		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TMethod method, string message, params object [] args);
 		protected abstract Exception CreateExceptionImpl (int code, bool error, Exception innerException, TType type, string message, params object [] args);
 		protected abstract string PlatformName { get; }
 		public abstract TType FindType (TType relative, string @namespace, string name);
@@ -1186,7 +1186,7 @@ namespace Registrar {
 					if (IsByRef (parameterType))
 						parameterType = GetElementType (parameterType);
 					if (!AreEqual (parameterType, attrib.Type))
-						throw CreateException (4171, method.Method, Errors.MT4171_A, parameter_index + 1, GetTypeFullName(attrib.Type), GetTypeFullName(parameterType));
+						throw CreateException (4171, method.Method, Errors.MT4171_A, parameter_index + 1, GetTypeFullName (attrib.Type), GetTypeFullName (parameterType));
 				}
 
 				return attrib;
@@ -1200,7 +1200,7 @@ namespace Registrar {
 			if (attrib != null) {
 				var propertyType = GetPropertyType (property);
 				if (!AreEqual (propertyType, attrib.Type))
-					throw CreateException (4171, property, Errors.MT4171_B, GetTypeFullName (method.DeclaringType.Type), GetPropertyName (property),  GetTypeFullName (attrib.Type), GetTypeFullName (propertyType));
+					throw CreateException (4171, property, Errors.MT4171_B, GetTypeFullName (method.DeclaringType.Type), GetPropertyName (property), GetTypeFullName (attrib.Type), GetTypeFullName (propertyType));
 			}
 			return attrib;
 		}
@@ -1267,7 +1267,7 @@ namespace Registrar {
 			var property = member as ObjCProperty;
 			if (property != null)
 				return GetPropertyName (property.Property);
-			return ((ObjCField)member).Name;
+			return ((ObjCField) member).Name;
 		}
 
 		internal static string Foundation {
@@ -1297,8 +1297,7 @@ namespace Registrar {
 #endif
 
 #if MTOUCH || MMP || BUNDLER
-		internal string AssemblyName
-		{
+		internal string AssemblyName {
 			get {
 				switch (App.Platform) {
 				case ApplePlatform.iOS:
@@ -1350,17 +1349,17 @@ namespace Registrar {
 #error Unknown platform
 #endif
 		internal static class StringConstants {
-				internal const string ExportAttribute         =	"ExportAttribute";
-				internal const string ModelAttribute          =	"ModelAttribute";
-				internal const string RegisterAttribute       =	"RegisterAttribute";
-				internal const string ConnectAttribute        =	"ConnectAttribute";
-				internal const string ProtocolAttribute       =	"ProtocolAttribute";
-				internal const string ProtocolMemberAttribute = "ProtocolMemberAttribute";
-				internal const string TransientAttribute      =   "TransientAttribute";
-				internal const string ReleaseAttribute        =	"ReleaseAttribute";
-				internal const string NativeAttribute         =   "NativeAttribute";
-				internal const string CategoryAttribute       =   "CategoryAttribute";
-				internal const string INativeObject           =	"INativeObject";
+			internal const string ExportAttribute = "ExportAttribute";
+			internal const string ModelAttribute = "ModelAttribute";
+			internal const string RegisterAttribute = "RegisterAttribute";
+			internal const string ConnectAttribute = "ConnectAttribute";
+			internal const string ProtocolAttribute = "ProtocolAttribute";
+			internal const string ProtocolMemberAttribute = "ProtocolMemberAttribute";
+			internal const string TransientAttribute = "TransientAttribute";
+			internal const string ReleaseAttribute = "ReleaseAttribute";
+			internal const string NativeAttribute = "NativeAttribute";
+			internal const string CategoryAttribute = "CategoryAttribute";
+			internal const string INativeObject = "INativeObject";
 		}
 
 		public string PlatformAssembly {
@@ -1376,17 +1375,17 @@ namespace Registrar {
 		}
 #endif
 
-		protected Exception CreateException (int code, string message, params object[] args)
+		protected Exception CreateException (int code, string message, params object [] args)
 		{
 			return CreateExceptionImpl (code, true, message, args);
 		}
 
-		protected Exception CreateException (int code, TMethod method, string message, params object[] args)
+		protected Exception CreateException (int code, TMethod method, string message, params object [] args)
 		{
 			return CreateExceptionImpl (code, true, method, message, args);
 		}
 
-		protected Exception CreateException (int code, TProperty property, string message, params object[] args)
+		protected Exception CreateException (int code, TProperty property, string message, params object [] args)
 		{
 			return CreateExceptionImpl (code, true, property, message, args);
 		}
@@ -1396,7 +1395,7 @@ namespace Registrar {
 			return CreateExceptionImpl (code, true, type, message, args);
 		}
 
-		protected Exception CreateException (int code, Exception innerException, TProperty property, string message, params object[] args)
+		protected Exception CreateException (int code, Exception innerException, TProperty property, string message, params object [] args)
 		{
 			return CreateExceptionImpl (code, true, innerException, property, message, args);
 		}
@@ -1436,7 +1435,7 @@ namespace Registrar {
 			return CreateExceptionImpl (code, true, member, message, args);
 		}
 
-		Exception CreateExceptionImpl (int code, bool error, ObjCMember member, string message, params object[] args)
+		Exception CreateExceptionImpl (int code, bool error, ObjCMember member, string message, params object [] args)
 		{
 			var method = member as ObjCMethod;
 			if (method != null)
@@ -1456,7 +1455,7 @@ namespace Registrar {
 		{
 			if (method == null)
 				return string.Empty;
-			
+
 			var sb = new StringBuilder ();
 
 			sb.Append (GetMethodName (method));
@@ -1515,7 +1514,7 @@ namespace Registrar {
 			object dummy;
 			return TryGetAttribute (type, Foundation, StringConstants.ModelAttribute, out dummy);
 		}
-		
+
 		// overridable so that descendant classes can provide a faster implementation
 		// do not check base types.
 		public virtual bool HasProtocolAttribute (TType type)
@@ -1737,7 +1736,7 @@ namespace Registrar {
 			var baseType = objcType.SuperType;
 			if (baseType == null || baseType.Type == null)
 				return allI;
-				
+
 			var baseI = GetInterfaces (baseType.Type);
 			if (baseI == null || baseI.Length == 0)
 				return allI;
@@ -1895,7 +1894,7 @@ namespace Registrar {
 
 				if (ea == null)
 					continue;
-					
+
 				if (!IsStatic (method)) {
 					AddException (ref exceptions, CreateException (4159, method, Errors.MT4159, GetTypeFullName (type), GetMethodName (method)));
 					return null;
@@ -1921,8 +1920,7 @@ namespace Registrar {
 
 				Trace ("        [METHOD] {0} => {1}", method, ea.Selector);
 
-				var category_method = new ObjCMethod (this, declaringType, method)
-				{
+				var category_method = new ObjCMethod (this, declaringType, method) {
 					CategoryType = objcType,
 				};
 				if (category_method.SetExportAttribute (ea, ref exceptions)) {
@@ -1937,7 +1935,7 @@ namespace Registrar {
 
 			return objcType;
 		}
-			
+
 		// This method is not thread-safe wrt 'types', and must be called with
 		// a lock held on 'types'.
 		ObjCType RegisterTypeUnsafe (TType type, ref List<Exception> exceptions)
@@ -2022,7 +2020,7 @@ namespace Registrar {
 				VerifyTypeInSDK (ref exceptions, objcType.BaseType.Type, baseTypeOf: objcType.Type);
 
 			if (ObjCType.IsObjectiveCKeyword (objcType.ExportedName))
-				AddException (ref exceptions, ErrorHelper.CreateError (4168, Errors.MT4168,  GetTypeFullName (type), objcType.ExportedName));
+				AddException (ref exceptions, ErrorHelper.CreateError (4168, Errors.MT4168, GetTypeFullName (type), objcType.ExportedName));
 
 			// make sure all the protocols this type implements are registered
 			if (objcType.Protocols != null) {
@@ -2048,9 +2046,9 @@ namespace Registrar {
 					type_map.Add (objcType.ExportedName, type);
 				}
 			}
-		
+
 			types.Add (type, objcType);
-			
+
 			Trace ("    [TYPE] Registering {0} => {1} IsWrapper: {2} BaseType: {3} IsModel: {4} IsProtocol: {5}", type.ToString ().Replace ('+', '/'), objcType.ExportedName, objcType.IsWrapper, objcType.BaseType == null ? "null" : objcType.BaseType.Name, objcType.IsModel, objcType.IsProtocol);
 
 			// Special methods
@@ -2126,14 +2124,14 @@ namespace Registrar {
 				// Special fields
 				if (is_first_nonWrapper) {
 					// static registrar
-						objcType.Add (new ObjCField () {
-							DeclaringType = objcType,
-							FieldType = "XamarinObject",// "^v", // void*
-							Name = "__monoObjectGCHandle",
-							IsPrivate = true,
-							IsStatic = false,
-						}, ref exceptions);
-					}
+					objcType.Add (new ObjCField () {
+						DeclaringType = objcType,
+						FieldType = "XamarinObject",// "^v", // void*
+						Name = "__monoObjectGCHandle",
+						IsPrivate = true,
+						IsStatic = false,
+					}, ref exceptions);
+				}
 #endif
 			}
 
@@ -2149,7 +2147,7 @@ namespace Registrar {
 							var objcGetter = new ObjCMethod (this, objcType, null) {
 								Name = attrib.Name,
 								Selector = attrib.GetterSelector,
-								Parameters = new TType[] { },
+								Parameters = new TType [] { },
 								ReturnType = attrib.PropertyType,
 								IsStatic = attrib.IsStatic,
 								IsOptional = !attrib.IsRequired,
@@ -2162,7 +2160,7 @@ namespace Registrar {
 								var objcSetter = new ObjCMethod (this, objcType, null) {
 									Name = attrib.Name,
 									Selector = attrib.SetterSelector,
-									Parameters = new TType[] { attrib.PropertyType },
+									Parameters = new TType [] { attrib.PropertyType },
 									ReturnType = GetSystemVoidType (),
 									IsStatic = attrib.IsStatic,
 									IsOptional = !attrib.IsRequired,
@@ -2214,7 +2212,7 @@ namespace Registrar {
 							}
 							objcMethod.Parameters = parameters;
 						} else {
-							objcMethod.Parameters = new TType[] { };
+							objcMethod.Parameters = new TType [] { };
 						}
 
 						objcType.Add (objcMethod, ref exceptions);
@@ -2225,7 +2223,7 @@ namespace Registrar {
 			foreach (TProperty property in properties) {
 				if (hasProtocolMemberAttributes)
 					continue;
-				
+
 				if (!isProtocol) {
 					var ca = GetConnectAttribute (property);
 					if (ca != null) {
@@ -2275,8 +2273,7 @@ namespace Registrar {
 
 				Trace ("        [PROPERTY] {0} => {1}", property, ea.Selector);
 
-				var objcProperty = new ObjCProperty ()
-				{
+				var objcProperty = new ObjCProperty () {
 					Registrar = this,
 					DeclaringType = objcType,
 					Property = property,
@@ -2315,7 +2312,7 @@ namespace Registrar {
 					var method = new ObjCMethod (this, objcType, setter) {
 						Selector = CreateSetterSelector (setterName),
 						ArgumentSemantic = ea.ArgumentSemantic,
-						Parameters = new TType[] { property_type },
+						Parameters = new TType [] { property_type },
 					};
 
 					List<Exception> excs = null;
@@ -2355,7 +2352,7 @@ namespace Registrar {
 			foreach (TMethod method in methods) {
 				if (hasProtocolMemberAttributes)
 					continue;
-				
+
 				var ea = GetExportAttribute (method);
 
 				if (ea == null) {
@@ -2446,8 +2443,7 @@ namespace Registrar {
 				if (parameters == null || parameters.Length == 0) {
 					Trace ("        [CTOR] {0} default => init", GetTypeName (type));
 
-					objcType.Add (new ObjCMethod (this, objcType, ctor)
-					{
+					objcType.Add (new ObjCMethod (this, objcType, ctor) {
 						Selector = "init",
 						Trampoline = Trampoline.Constructor,
 					}, ref exceptions);
@@ -2460,7 +2456,7 @@ namespace Registrar {
 					continue;
 
 				Trace ("        [CTOR] {2} {0} => {1}", GetMethodName (ctor), ea.Selector, GetTypeName (type));
-				
+
 				if (!VerifyNonGenericMethod (ref exceptions, type, ctor))
 					continue;
 
@@ -2497,7 +2493,7 @@ namespace Registrar {
 				assemblies.Add (assembly, null);
 				return;
 			}
-			
+
 			var exceptions = new List<Exception> ();
 
 			try {
@@ -2547,7 +2543,7 @@ namespace Registrar {
 			if (!is_ctor)
 				return_type = Method != null ? GetReturnType (Method) : method.NativeReturnType;
 
-			TType[] parameters;
+			TType [] parameters;
 			if (Method != null) {
 				parameters = GetParameters (Method);
 			} else {
@@ -2563,7 +2559,7 @@ namespace Registrar {
 			var signature = new StringBuilder ();
 			if (mi == null)
 				mi = (member as ObjCMethod)?.Method;
-			
+
 			if (is_ctor) {
 				signature.Append ('@');
 			} else {
@@ -2659,11 +2655,11 @@ namespace Registrar {
 			case "System.Double": return "d";
 			case "System.Boolean":
 				// map managed 'bool' to ObjC BOOL = 'unsigned char' in OSX and 32bit iOS architectures and 'bool' in 64bit iOS architectures
-				#if MONOMAC
+#if MONOMAC
 				return IsARM64 ? "B" : "c";
-				#else
+#else
 				return Is64Bits ? "B" : "c";
-				#endif
+#endif
 			case "System.Void": return "v";
 			case "System.String":
 				return forProperty ? "@\"NSString\"" : "@";
@@ -2772,7 +2768,7 @@ namespace Registrar {
 			R.NSLog (String.Format (message, args));
 		}
 
-		protected virtual void ReportWarning (int code, string message, params object[] args)
+		protected virtual void ReportWarning (int code, string message, params object [] args)
 		{
 			// Using Console.WriteLine here is error prone, since if we get an early error
 			// we'll end up crashing/infinite recursion since Console.WriteLine is redirected
@@ -2805,7 +2801,7 @@ namespace Registrar {
 			trace.AppendLine ();
 		}
 	}
-	
+
 	enum Trampoline {
 		None,
 		Normal,

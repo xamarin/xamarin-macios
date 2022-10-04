@@ -24,6 +24,7 @@ namespace Xharness.Jenkins {
 			PlatformLabel.iOS |
 			PlatformLabel.iOSSimulator |
 			PlatformLabel.MacCatalyst |
+			PlatformLabel.LegacyXamarin |
 			PlatformLabel.Dotnet;
 
 		public bool ForceExtensionBuildOnly { get; set; }
@@ -221,29 +222,6 @@ namespace Xharness.Jenkins {
 
 			Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission); 
 
-			// docs is a bit special:
-			// - can only be executed if the Xamarin-specific parts of the build is enabled
-			// - enabled by default if the current branch is main (or, for a pull request, if the target branch is main)
-			if (Harness.ENABLE_XAMARIN) {
-				if (!labelSelectedTests.ContainsKey ("docs")) { // don't override any value set using labels
-					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
-					if (!string.IsNullOrEmpty (branchName)) {
-						selection.SetEnabled (TestLabel.Docs, branchName == "main");
-						if (selection.IsEnabled (TestLabel.Docs))
-							MainLog?.WriteLine ("Enabled 'docs' tests because the current branch is 'main'.");
-					} else if (prTarget is not null) {
-						selection.SetEnabled (TestLabel.Docs, prTarget == "main");
-						if (selection.IsEnabled (TestLabel.Docs))
-							MainLog?.WriteLine ("Enabled 'docs' tests because the target branch is 'main'.");
-					}
-				}
-			} else {
-				if (selection.IsEnabled (TestLabel.Docs)) {
-					selection.SetEnabled (TestLabel.Docs, false); // could have been enabled by 'run-all-tests', so disable it if we can't run it.
-					MainLog?.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
-				}
-			}
-
 			// old simulator tests is also a bit special:
 			// - enabled by default if using a beta Xcode, otherwise disabled by default
 			if (!labelSelectedTests.ContainsKey ("old-simulator") && jenkins.IsBetaXcode) {
@@ -291,6 +269,20 @@ namespace Xharness.Jenkins {
 				MainLog?.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
 				selection.SetEnabled (PlatformLabel.Dotnet, false);
 			}
+
+			if (!Harness.INCLUDE_XAMARIN_LEGACY) {
+				MainLog?.WriteLine ("The legacy Xamarin build is disabled, so any legacy Xamarin tests will be disabled as well.");
+				selection.SetEnabled (PlatformLabel.LegacyXamarin, false);
+				selection.SetEnabled (PlatformLabel.watchOS, false);
+				selection.SetEnabled (TestLabel.Bcl, false);
+				selection.SetEnabled (TestLabel.InstallSource, false);
+				selection.SetEnabled (TestLabel.Mmp, false);
+				selection.SetEnabled (TestLabel.Mononative, false);
+				selection.SetEnabled (TestLabel.Mtouch, false);
+				selection.SetEnabled (TestLabel.Xammac, false);
+			}
+
+			MainLog?.WriteLine ($"Final test selection: tests: {selection.SelectedTests} platforms: {selection.SelectedPlatforms}");
 		}
 	}
 }

@@ -8,18 +8,16 @@ using System.Text;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class ALToolTaskBase : XamarinToolTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class ALToolTaskBase : XamarinToolTask {
 		string sdkDevPath;
 		StringBuilder toolOutput;
 
 		[Required]
-		public string Username { get ; set; }
+		public string Username { get; set; }
 
 		[Required]
-		public string Password { get ; set; }
+		public string Password { get; set; }
 
 		[Required]
 		public string FilePath { get; set; }
@@ -91,10 +89,10 @@ namespace Xamarin.MacDev.Tasks
 		string GetFileTypeValue ()
 		{
 			switch (Platform) {
-				case ApplePlatform.MacOSX: return "osx";
-				case ApplePlatform.TVOS: return "appletvos";
-				case ApplePlatform.iOS: return "ios";
-				default: throw new NotSupportedException ($"Provided file type '{Platform}' is not supported by altool");
+			case ApplePlatform.MacOSX: return "osx";
+			case ApplePlatform.TVOS: return "appletvos";
+			case ApplePlatform.iOS: return "ios";
+			default: throw new NotSupportedException ($"Provided file type '{Platform}' is not supported by altool");
 			}
 		}
 

@@ -3,9 +3,8 @@ using System.IO;
 using System.IO.Compression;
 
 namespace Xamarin.iOS.Tasks.Windows {
-	internal static class Zip
-	{
-		internal static void Extract(string sourceFileName, string destinationPath)
+	internal static class Zip {
+		internal static void Extract (string sourceFileName, string destinationPath)
 		{
 			// We use a temp dir because the extraction dir should not exist for the ZipFile API to work
 			var tempExtractionPath = Path.Combine (Path.GetTempPath (), Guid.NewGuid ().ToString ().Substring (0, 4));

@@ -798,6 +798,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<PropertyGroup>
 		<_CompileImageAssetsDependsOn>
+			$(CompileImageAssetsDependsOn);
 			$(_CompileImageAssetsDependsOn);
 			_DetectAppManifest;
 			_DetectSdkLocations;
@@ -2000,6 +2001,26 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_CodesignItems Include="@(_CodesignWatchItem->'$(_AppBundleName)$(AppBundleExtension)/Watch/%(Identity)')" />
 		</ItemGroup>
 
+		<!-- Add any user-specified bundles -->
+		<ItemGroup>
+			<_CustomCodesignBundle Include="@(CodesignBundle)" />
+			<_CustomCodesignBundle>
+				<CodesignAllocate Condition="'%(_CustomCodesignBundle.CodesignAllocate)' == ''">$(_CodesignAllocate)</CodesignAllocate>
+				<CodesignDisableTimestamp Condition="'%(_CustomCodesignBundle.CodesignDisableTimestamp)' == ''">false</CodesignDisableTimestamp>
+				<CodesignDisableTimestamp Condition="'%(_CustomCodesignBundle.CodesignDisableTimestamp)' == '' And ('$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true')">true</CodesignDisableTimestamp>
+				<CodesignEntitlements Condition="'%(_CustomCodesignBundle.CodesignEntitlements)' == ''">$(_CompiledCodesignEntitlements)</CodesignEntitlements>
+				<CodesignExtraArgs Condition="'%(_CustomCodesignBundle.CodesignExtraArgs)' == ''">$(CodesignExtraArgs)</CodesignExtraArgs>
+				<CodesignKeychain Condition="'%(_CustomCodesignBundle.CodesignKeychain)' == ''">$(CodesignKeychain)</CodesignKeychain>
+				<CodesignResourceRules Condition="'%(_CustomCodesignBundle.CodesignResourceRules)' == ''">$(_PreparedResourceRules)</CodesignResourceRules>
+				<CodesignSigningKey Condition="'%(_CustomCodesignBundle.CodesignSigningKey)' == ''">$(_CodeSigningKey)</CodesignSigningKey>
+				<CodesignUseHardenedRuntime Condition="'%(_CustomCodesignBundle.CodesignUseHardenedRuntime)' == ''">$(UseHardenedRuntime)</CodesignUseHardenedRuntime>
+				<CodesignUseSecureTimestamp Condition="'%(_CustomCodesignBundle.CodesignUseSecureTimestamp)' == ''">$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
+				<RequireCodeSigning Condition="'%(_CustomCodesignBundle.RequireCodeSigning)' == ''">$(_RequireCodeSigning)</RequireCodeSigning>
+				<SourceProjectPath>$(MSBuildProjectDirectory)</SourceProjectPath>
+			</_CustomCodesignBundle>
+			<_CodesignBundle Include="@(_CustomCodesignBundle)" />
+		</ItemGroup>
+
 		<!-- Add this app bundle to _CodesignBundle -->
 		<ItemGroup>
 			<_CodesignBundle Include="$(_AppBundleName)$(AppBundleExtension)">
@@ -2079,6 +2100,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		This logic is implemented in the Codesign task.
 
+		The SkipCodesignItems item group takes paths relative to the directory where the app bundle is. Example: "foo.app/dontsignme.dylib"
+	
 	-->
 	<Target Name="_CodesignAppBundle"
 			Condition="'$(_CodesignAppBundleCondition)' == 'true'"
@@ -2094,6 +2117,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			CodesignStampPath="$(DeviceSpecificIntermediateOutputPath)codesign\"
 			GenerateDSymItems="@(_GenerateDSymItems)"
 			NativeStripItems="@(_NativeStripItems)"
+			SkipCodesignItems="@(SkipCodesignItems)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="OutputCodesignItems" ItemName="_ComputedCodesignItems" />

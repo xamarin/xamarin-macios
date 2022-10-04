@@ -7,8 +7,7 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
+namespace Xamarin.MacDev.Tasks {
 	public enum PropertyListEditorAction {
 		Add,
 		Clear,
@@ -18,8 +17,7 @@ namespace Xamarin.MacDev.Tasks
 		Set
 	}
 
-	public abstract class PropertyListEditorTaskBase : Task
-	{
+	public abstract class PropertyListEditorTaskBase : Task {
 		[Required]
 		public string PropertyList { get; set; }
 
@@ -36,13 +34,13 @@ namespace Xamarin.MacDev.Tasks
 		{
 			switch (value.Type) {
 			case PObjectType.Dictionary: return "dict";
-			case PObjectType.Array:      return "array";
-			case PObjectType.Real:       return "real";
-			case PObjectType.Number:     return "integer";
-			case PObjectType.Boolean:    return "bool";
-			case PObjectType.Data:       return "data";
-			case PObjectType.String:     return "string";
-			case PObjectType.Date:       return "date";
+			case PObjectType.Array: return "array";
+			case PObjectType.Real: return "real";
+			case PObjectType.Number: return "integer";
+			case PObjectType.Boolean: return "bool";
+			case PObjectType.Data: return "data";
+			case PObjectType.String: return "string";
+			case PObjectType.Date: return "date";
 			default: return null;
 			}
 		}
@@ -100,7 +98,7 @@ namespace Xamarin.MacDev.Tasks
 				if (text != null)
 					value = new PData (Encoding.UTF8.GetBytes (Value));
 				else
-					value = new PData (new byte[0]);
+					value = new PData (new byte [0]);
 				return true;
 			default:
 				Log.LogError (7045, null, $"Unrecognized Type: {type}");
@@ -109,14 +107,14 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		string[] GetPropertyPath ()
+		string [] GetPropertyPath ()
 		{
 			var path = Entry;
 
 			if (string.IsNullOrEmpty (path))
-				return new string[0];
+				return new string [0];
 
-			if (path[0] == ':')
+			if (path [0] == ':')
 				path = path.Substring (1);
 
 			return path.Split (':');
@@ -142,15 +140,15 @@ namespace Xamarin.MacDev.Tasks
 				array = current as PArray;
 
 				if (array != null) {
-					if (!int.TryParse (path[i], out index) || index < 0 || index >= array.Count) {
+					if (!int.TryParse (path [i], out index) || index < 0 || index >= array.Count) {
 						Log.LogError (7047, null, MSBStrings.E7047, Entry);
 						return false;
 					}
 
-					current = array[index];
+					current = array [index];
 				} else if (dict != null) {
-					if (!dict.TryGetValue (path[i], out current))
-						dict[path[i]] = current = new PDictionary ();
+					if (!dict.TryGetValue (path [i], out current))
+						dict [path [i]] = current = new PDictionary ();
 				} else {
 					Log.LogError (7046, null, MSBStrings.E7046, Entry);
 					return false;
@@ -163,9 +161,9 @@ namespace Xamarin.MacDev.Tasks
 			array = current as PArray;
 
 			if (array != null) {
-				if (path[i].Length == 0) {
+				if (path [i].Length == 0) {
 					index = array.Count;
-				} else if (!int.TryParse (path[i], out index) || index < 0) {
+				} else if (!int.TryParse (path [i], out index) || index < 0) {
 					Log.LogError (7047, null, MSBStrings.E7047, Entry);
 					return false;
 				}
@@ -178,7 +176,7 @@ namespace Xamarin.MacDev.Tasks
 				else
 					array.Add (value);
 			} else if (dict != null) {
-				if (dict.ContainsKey (path[i])) {
+				if (dict.ContainsKey (path [i])) {
 					Log.LogError (7048, null, MSBStrings.E7048, Entry);
 					return false;
 				}
@@ -186,7 +184,7 @@ namespace Xamarin.MacDev.Tasks
 				if (!CreateValue (Type ?? string.Empty, Value, out value))
 					return false;
 
-				dict[path[i]] = value;
+				dict [path [i]] = value;
 			} else {
 				Log.LogError (7049, null, MSBStrings.E7049, Entry);
 				return false;
@@ -206,7 +204,7 @@ namespace Xamarin.MacDev.Tasks
 				case "real": plist = new PReal (0); break;
 				case "integer": plist = new PNumber (0); break;
 				case "date": plist = new PDate (DateTime.Now); break;
-				case "data": plist = new PData (new byte[1]); break;
+				case "data": plist = new PData (new byte [1]); break;
 				default:
 					Log.LogError (7045, null, MSBStrings.E7045, Type);
 					return false;
@@ -237,7 +235,7 @@ namespace Xamarin.MacDev.Tasks
 				array = current as PArray;
 
 				if (array != null) {
-					if (!int.TryParse (path[i], out index) || index < 0) {
+					if (!int.TryParse (path [i], out index) || index < 0) {
 						Log.LogError (7051, null, MSBStrings.E7051, Entry);
 						return false;
 					}
@@ -247,9 +245,9 @@ namespace Xamarin.MacDev.Tasks
 						return false;
 					}
 
-					current = array[index];
+					current = array [index];
 				} else if (dict != null) {
-					if (!dict.TryGetValue (path[i], out current)) {
+					if (!dict.TryGetValue (path [i], out current)) {
 						Log.LogError (7052, null, MSBStrings.E7052, Entry);
 						return false;
 					}
@@ -286,15 +284,15 @@ namespace Xamarin.MacDev.Tasks
 				array = current as PArray;
 
 				if (array != null) {
-					if (!int.TryParse (path[i], out index) || index < 0 || index >= array.Count) {
+					if (!int.TryParse (path [i], out index) || index < 0 || index >= array.Count) {
 						Log.LogError (7054, null, MSBStrings.E7054, Entry);
 						return false;
 					}
 
-					current = array[index];
+					current = array [index];
 				} else if (dict != null) {
-					if (!dict.TryGetValue (path[i], out current))
-						dict[path[i]] = current = new PDictionary ();
+					if (!dict.TryGetValue (path [i], out current))
+						dict [path [i]] = current = new PDictionary ();
 				} else {
 					Log.LogError (7053, null, MSBStrings.E7053, Entry);
 					return false;
@@ -307,9 +305,9 @@ namespace Xamarin.MacDev.Tasks
 			array = current as PArray;
 
 			if (array != null) {
-				if (path[i].Length == 0) {
+				if (path [i].Length == 0) {
 					index = array.Count;
-				} else if (!int.TryParse (path[i], out index) || index < 0) {
+				} else if (!int.TryParse (path [i], out index) || index < 0) {
 					Log.LogError (7054, null, MSBStrings.E7054, Entry);
 					return false;
 				}
@@ -333,7 +331,7 @@ namespace Xamarin.MacDev.Tasks
 					return false;
 				}
 
-				dict[path[i]] = value;
+				dict [path [i]] = value;
 			} else {
 				Log.LogError (7056, null, MSBStrings.E7056, Entry);
 				return false;
@@ -375,7 +373,7 @@ namespace Xamarin.MacDev.Tasks
 					var import = (PArray) value;
 
 					for (int i = 0; i < import.Count; i++)
-						array.Add (import[i].Clone ());
+						array.Add (import [i].Clone ());
 				} else {
 					array.Add (value);
 				}
@@ -404,7 +402,7 @@ namespace Xamarin.MacDev.Tasks
 					array = current as PArray;
 
 					if (array != null) {
-						if (!int.TryParse (path[i], out index) || index < 0) {
+						if (!int.TryParse (path [i], out index) || index < 0) {
 							Log.LogError (7059, PropertyList, MSBStrings.E7059, Entry);
 							return false;
 						}
@@ -414,9 +412,9 @@ namespace Xamarin.MacDev.Tasks
 							return false;
 						}
 
-						current = array[index];
+						current = array [index];
 					} else if (dict != null) {
-						if (!dict.TryGetValue (path[i], out current)) {
+						if (!dict.TryGetValue (path [i], out current)) {
 							Log.LogError (7060, PropertyList, MSBStrings.E7060, Entry);
 							return false;
 						}
@@ -433,8 +431,8 @@ namespace Xamarin.MacDev.Tasks
 				PObject root;
 
 				if (array != null) {
-					if (i > 0 || path[i].Length > 0) {
-						if (!int.TryParse (path[i], out index) || index < 0) {
+					if (i > 0 || path [i].Length > 0) {
+						if (!int.TryParse (path [i], out index) || index < 0) {
 							Log.LogError (7059, PropertyList, MSBStrings.E7059, Entry);
 							return false;
 						}
@@ -444,7 +442,7 @@ namespace Xamarin.MacDev.Tasks
 							return false;
 						}
 
-						root = array[index];
+						root = array [index];
 					} else {
 						root = array;
 					}
@@ -460,8 +458,8 @@ namespace Xamarin.MacDev.Tasks
 				}
 
 				if (dict != null) {
-					if (i > 0 || path[i].Length > 0) {
-						if (!dict.TryGetValue (path[i], out root)) {
+					if (i > 0 || path [i].Length > 0) {
+						if (!dict.TryGetValue (path [i], out root)) {
 							Log.LogError (7060, PropertyList, MSBStrings.E7060, Entry);
 							return false;
 						}
@@ -515,7 +513,7 @@ namespace Xamarin.MacDev.Tasks
 				array = current as PArray;
 
 				if (array != null) {
-					if (!int.TryParse (path[i], out index) || index < 0) {
+					if (!int.TryParse (path [i], out index) || index < 0) {
 						Log.LogError (7063, PropertyList, MSBStrings.E7063, Entry);
 						return false;
 					}
@@ -525,9 +523,9 @@ namespace Xamarin.MacDev.Tasks
 						return false;
 					}
 
-					current = array[index];
+					current = array [index];
 				} else if (dict != null) {
-					if (!dict.TryGetValue (path[i], out current)) {
+					if (!dict.TryGetValue (path [i], out current)) {
 						Log.LogError (7064, PropertyList, MSBStrings.E7064, Entry);
 						return false;
 					}
@@ -543,7 +541,7 @@ namespace Xamarin.MacDev.Tasks
 			array = current as PArray;
 
 			if (array != null) {
-				if (!int.TryParse (path[i], out index) || index < 0) {
+				if (!int.TryParse (path [i], out index) || index < 0) {
 					Log.LogError (7063, PropertyList, MSBStrings.E7063, Entry);
 					return false;
 				}
@@ -556,9 +554,9 @@ namespace Xamarin.MacDev.Tasks
 				if (!CreateValue (Type ?? string.Empty, Value, out value))
 					return false;
 
-				array[index] = value;
+				array [index] = value;
 			} else if (dict != null) {
-				if (!dict.TryGetValue (path[i], out value)) {
+				if (!dict.TryGetValue (path [i], out value)) {
 					Log.LogError (7064, PropertyList, MSBStrings.E7064, Entry);
 					return false;
 				}
@@ -569,7 +567,7 @@ namespace Xamarin.MacDev.Tasks
 				if (!CreateValue (type, Value, out value))
 					return false;
 
-				dict[path[i]] = value;
+				dict [path [i]] = value;
 			} else {
 				Log.LogError (7064, PropertyList, MSBStrings.E7064, Entry);
 				return false;

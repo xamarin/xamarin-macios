@@ -7,10 +7,8 @@ using System.IO;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class DittoTaskBase : XamarinToolTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class DittoTaskBase : XamarinToolTask {
 		#region Inputs
 
 		public string? AdditionalArguments { get; set; }
