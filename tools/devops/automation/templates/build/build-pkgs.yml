@@ -149,7 +149,7 @@ steps:
       - task: PublishPipelineArtifact@1
         displayName: 'Publish Build Artifacts'
         inputs:
-          targetPath: $(Build.SourcesDirectory)/package-to-publish
+          targetPath: $(Build.SourcesDirectory)/packages-to-publish
           artifactName: not-signed-package
         continueOnError: true
 
