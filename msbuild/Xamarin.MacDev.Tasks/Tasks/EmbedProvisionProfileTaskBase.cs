@@ -6,10 +6,8 @@ using Microsoft.Build.Framework;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class EmbedProvisionProfileTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class EmbedProvisionProfileTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]

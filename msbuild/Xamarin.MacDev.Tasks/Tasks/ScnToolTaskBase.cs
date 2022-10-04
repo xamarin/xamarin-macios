@@ -6,10 +6,8 @@ using Microsoft.Build.Framework;
 
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class ScnToolTaskBase : XamarinToolTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class ScnToolTaskBase : XamarinToolTask {
 		string sdkDevPath;
 
 		#region Inputs

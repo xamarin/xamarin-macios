@@ -7,10 +7,8 @@ using Microsoft.Build.Framework;
 
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class CollectAssetPacksTaskBase : XamarinTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public abstract class CollectAssetPacksTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]
@@ -21,7 +19,7 @@ namespace Xamarin.iOS.Tasks
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] AssetPacks { get; set; }
+		public ITaskItem [] AssetPacks { get; set; }
 
 		#endregion
 
@@ -33,7 +31,7 @@ namespace Xamarin.iOS.Tasks
 				//We need to add the directory separator at the end of the path 
 				//so the TaskRunner don't get confused, copying the asset pack as a file
 				assetpacks.Add (new TaskItem (dir + Path.DirectorySeparatorChar));
-			} 
+			}
 
 			AssetPacks = assetpacks.ToArray ();
 
