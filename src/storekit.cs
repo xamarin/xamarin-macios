@@ -1021,13 +1021,13 @@ namespace StoreKit {
 		[Static]
 		[Async]
 		[Export ("updatePostbackConversionValue:coarseValue:completionHandler:")]
-		void UpdatePostbackConversionValue (nint fineValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, [NullAllowed] SKAdNetworkCompletionHandler completion);
+		void UpdatePostback (nint conversionValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, [NullAllowed] SKAdNetworkCompletionHandler completion);
 
 		[NoMac, iOS (16,1), MacCatalyst (16,1), NoWatch, NoTV]
 		[Static]
 		[Async]
 		[Export ("updatePostbackConversionValue:coarseValue:lockWindow:completionHandler:")]
-		void UpdatePostbackConversionValue (nint fineValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, bool lockWindow, [NullAllowed] SKAdNetworkCompletionHandler completion);
+		void UpdatePostback (nint conversionValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, bool lockWindow, [NullAllowed] SKAdNetworkCompletionHandler completion);
 	}
 
 	[iOS (12,2)]
