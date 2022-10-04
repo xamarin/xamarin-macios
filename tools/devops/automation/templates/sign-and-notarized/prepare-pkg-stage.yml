@@ -22,24 +22,9 @@ parameters:
   type: object
   default: [
     {
-      job: 'xamarin_ios_sign_notarize',
-      name: 'Xamarin.iOS',
-      pattern: 'xamarin.ios-*',
-    },
-    {
       job: 'xamarin_mac_sing_notarie',
       name: 'Xamarin.Mac',
       pattern: 'xamarin.mac-*',
-    },
-    {
-      job: 'microsoft_ios_sign_notarize',
-      name: 'Microsoft.iOS',
-      pattern: 'Microsoft.iOS.Bundle*.pkg',
-    },
-    {
-      job: 'microsoft_tvos_sign_notarize',
-      name: 'Microsoft.tvOS',
-      pattern: 'Microsoft.tvOS.Bundle*.pkg',
     },
     {
       job: 'microsoft_mac_sign_notarize',
