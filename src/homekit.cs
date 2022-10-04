@@ -174,6 +174,7 @@ namespace HomeKit {
 		[NullAllowed, Export ("firmwareVersion")]
 		string FirmwareVersion { get; }
 
+		[NullAllowed]
 		[Mac (13,0), iOS (16,1), MacCatalyst (16,1), Watch (9,1), TV (16,1)]
 		[Export ("matterNodeID", ArgumentSemantic.Copy)]
 		NSNumber MatterNodeId { get; }
@@ -784,6 +785,15 @@ namespace HomeKit {
 		[iOS (9,0)]
 		[Export ("homeAccessControlForUser:")]
 		HMHomeAccessControl GetHomeAccessControl (HMUser user);
+
+		// @interface Matter (HMHome)
+		[TV (16,1), iOS (16, 1), MacCatalyst (16,1), Watch (9,1)]
+		[Export ("matterControllerID")]
+		string MatterControllerId { get; }
+
+		[TV (16,1), iOS (16, 1), MacCatalyst (16,1), Watch (9,1)]
+		[Export ("matterControllerXPCConnectBlock", ArgumentSemantic.Strong)]
+		Func<NSXpcConnection> MatterControllerXPCConnectBlock { get; }
 
 		// constants
 
@@ -1930,16 +1940,6 @@ namespace HomeKit {
 	[DisableDefaultCtor]
 	interface HMAccessControl {
 
-	}
-
-	[iOS (15,2), NoWatch, NoTV, NoMacCatalyst]
-	[BaseType (typeof (NSObject))]
-	interface HMAccessorySetupManager
-	{
-		[Async]
-		[iOS (15,4)]
-		[Export ("performAccessorySetupUsingRequest:completionHandler:")]
-		void PerformAccessorySetup (HMAccessorySetupRequest request, Action<HMAccessorySetupResult, NSError> completion);
 	}
 
 	[NoWatch, NoTV, NoMacCatalyst, NoMac, iOS (15,4)]
