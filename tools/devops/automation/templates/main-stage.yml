@@ -249,7 +249,7 @@ stages:
     - template: ./sign-and-notarized/funnel.yml
       parameters:
         isPR: ${{ parameters.isPR }}
-        packages: # flattern the pkgs for the paremter
+        packages: # flatten the pkgs for the parameter
         - ${{ each pkg_obj in parameters.packages }}:
           - ${{ each pkg in pkg_obj.packages }}:
             - ${{ pkg }}
