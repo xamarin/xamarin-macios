@@ -10,6 +10,7 @@
 #nullable enable
 
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
 using ObjCRuntime;
@@ -112,22 +113,42 @@ namespace Network {
 			return nw_path_is_equal (GetCheckedHandle (), other.Handle);
 		}
 
-		delegate void nw_path_enumerate_interfaces_block_t (IntPtr block, IntPtr iface);
+		// Returning 'byte' since 'bool' isn't blittable
+		delegate byte nw_path_enumerate_interfaces_block_t (IntPtr block, IntPtr iface);
 		static nw_path_enumerate_interfaces_block_t static_Enumerator = TrampolineEnumerator;
 
 		[MonoPInvokeCallback (typeof (nw_path_enumerate_interfaces_block_t))]
-		static void TrampolineEnumerator (IntPtr block, IntPtr iface)
+		static byte TrampolineEnumerator (IntPtr block, IntPtr iface)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWInterface>> (block);
+			var del = BlockLiteral.GetTarget<Func<NWInterface, bool>> (block);
 			if (del is not null)
-				del (new NWInterface (iface, owns: false));
+				return del (new NWInterface (iface, owns: false)) ? (byte) 1 : (byte) 0;
+			return 0;
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_path_enumerate_interfaces (IntPtr handle, ref BlockLiteral callback);
 
-		[BindingImpl (BindingImplOptions.Optimizable)]
+
+#if !XAMCORE_5_0
+		[Obsolete ("Use the overload that takes a 'Func<NWInterface, bool>' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public void EnumerateInterfaces (Action<NWInterface> callback)
+		{
+			if (callback is null)
+				return;
+
+			Func<NWInterface, bool> func = (v) =>
+			{
+				callback (v);
+				return true;
+			};
+			EnumerateInterfaces (func);
+		}
+#endif // !XAMCORE_5_0
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void EnumerateInterfaces (Func<NWInterface, bool> callback)
 		{
 			if (callback is null)
 				return;
@@ -181,18 +202,44 @@ namespace Network {
 		[DllImport (Constants.NetworkLibrary)]
 		static extern void nw_path_enumerate_gateways (IntPtr path, ref BlockLiteral enumerate_block);
 
-		delegate void nw_path_enumerate_gateways_t (IntPtr block, IntPtr endpoint);
+		// Returning 'byte' since 'bool' isn't blittable
+		delegate byte nw_path_enumerate_gateways_t (IntPtr block, IntPtr endpoint);
 		static nw_path_enumerate_gateways_t static_EnumerateGatewaysHandler = TrampolineGatewaysHandler;
 
 		[MonoPInvokeCallback (typeof (nw_path_enumerate_gateways_t))]
-		static void TrampolineGatewaysHandler (IntPtr block, IntPtr endpoint)
+		static byte TrampolineGatewaysHandler (IntPtr block, IntPtr endpoint)
 		{
-			var del = BlockLiteral.GetTarget<Action<NWEndpoint>> (block);
+			var del = BlockLiteral.GetTarget<Func<NWEndpoint, bool>> (block);
 			if (del is not null) {
 				var nwEndpoint = new NWEndpoint (endpoint, owns: false);
-				del (nwEndpoint);
+				return del (nwEndpoint) ? (byte) 1 : (byte) 0;
 			}
+			return 0;
 		}
+
+#if !XAMCORE_5_0
+#if NET
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (13,0)]
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
+		[Obsolete ("Use the overload that takes a 'Func<NWEndpoint, bool>' instead.")]
+		[EditorBrowsable (EditorBrowsableState.Never)]
+		public void EnumerateGateways (Action<NWEndpoint> callback)
+		{
+			Func<NWEndpoint,bool> func = (v) =>
+			{
+				callback (v);
+				return true;
+			};
+			EnumerateGateways (func);
+		}
+#endif
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -205,13 +252,13 @@ namespace Network {
 		[iOS (13,0)]
 #endif
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void EnumerateGateways (Action<NWEndpoint> callback)
+		public void EnumerateGateways (Func<NWEndpoint, bool> callback)
 		{
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
 
 			BlockLiteral block_handler = new BlockLiteral ();
-			block_handler.SetupBlockUnsafe (static_Enumerator, callback);
+			block_handler.SetupBlockUnsafe (static_EnumerateGatewaysHandler, callback);
 
 			try {
 				nw_path_enumerate_gateways (GetCheckedHandle (), ref block_handler);

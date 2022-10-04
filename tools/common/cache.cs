@@ -256,13 +256,13 @@ public class Cache {
 				if (stream.Position == 136) {
 					// skip the timestamp
 					stream.Position += 4;
-					// 					this prints the timestamp:
-					//					byte[] buf = new byte[4];
-					//					stream.Read (buf, 0, 4);
-					//					int t2 = (buf [3] << 24) + (buf [2] << 16) + (buf [1] << 8) + buf [0];
-					//					var d = new DateTime (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-					//					var d2 = d.AddSeconds (t2);
-					//					Console.WriteLine ("TS of {1}: {0}", d2, filename);
+					// this prints the timestamp:
+					// byte[] buf = new byte[4];
+					// stream.Read (buf, 0, 4);
+					// int t2 = (buf [3] << 24) + (buf [2] << 16) + (buf [1] << 8) + buf [0];
+					// var d = new DateTime (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+					// var d2 = d.AddSeconds (t2);
+					// Console.WriteLine ("TS of {1}: {0}", d2, filename);
 				}
 				return read; // don't bother reading more, this makes the implementation easier.
 			}
