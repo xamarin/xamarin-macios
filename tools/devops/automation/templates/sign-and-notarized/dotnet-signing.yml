@@ -13,8 +13,6 @@ jobs:
   pool:
     vmImage: windows-latest
 
-  variables:
-
   steps:
   - template: ../common/configure.yml
 
