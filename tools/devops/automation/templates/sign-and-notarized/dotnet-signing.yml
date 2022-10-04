@@ -14,8 +14,6 @@ jobs:
     vmImage: windows-latest
 
   variables:
-    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
 
   steps:
   - template: ../common/configure.yml
