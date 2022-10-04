@@ -2241,7 +2241,7 @@ namespace GameController {
 		NSString DidDisconnectNotification { get; }
 	}
 
-	[iOS (16,0), Mac (13,0), NoWatch, TV (16,0), MacCatalyst (16,0)]
+	[NoiOS, Mac (13,0), NoWatch, NoTV, MacCatalyst (16,0)]
 	[BaseType (typeof (GCRacingWheelInputState))]
 	interface GCRacingWheelInput : GCDevicePhysicalInput {
 		// Sealed since GCDevicePhysicalInput.Capture returns IGCDevicePhysicalInputState

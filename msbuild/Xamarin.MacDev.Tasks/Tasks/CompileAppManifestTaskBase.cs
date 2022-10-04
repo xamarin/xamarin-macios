@@ -11,10 +11,8 @@ using Xamarin.Utils;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class CompileAppManifestTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class CompileAppManifestTaskBase : XamarinTask {
 		#region Inputs
 
 		// Single-project property that maps to CFBundleIdentifier for Apple platforms
@@ -313,7 +311,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		protected void LogAppManifestError (string format, params object[] args)
+		protected void LogAppManifestError (string format, params object [] args)
 		{
 			// Log an error linking to the Info.plist file
 			if (AppManifest is not null) {
@@ -324,7 +322,7 @@ namespace Xamarin.MacDev.Tasks
 
 		}
 
-		protected void LogAppManifestWarning (string format, params object[] args)
+		protected void LogAppManifestWarning (string format, params object [] args)
 		{
 			// Log a warning linking to the Info.plist file
 			if (AppManifest is not null) {
@@ -342,22 +340,22 @@ namespace Xamarin.MacDev.Tasks
 			if (string.IsNullOrEmpty (value))
 				LogAppManifestWarning (MSBStrings.W0106, key);
 			else
-				dict[key] = value;
+				dict [key] = value;
 		}
 
 		public static void MergePartialPlistDictionary (PDictionary plist, PDictionary partial)
 		{
 			foreach (var property in partial) {
 				if (plist.ContainsKey (property.Key)) {
-					var value = plist[property.Key];
+					var value = plist [property.Key];
 
 					if (value is PDictionary && property.Value is PDictionary) {
 						MergePartialPlistDictionary ((PDictionary) value, (PDictionary) property.Value);
 					} else {
-						plist[property.Key] = property.Value.Clone ();
+						plist [property.Key] = property.Value.Clone ();
 					}
 				} else {
-					plist[property.Key] = property.Value.Clone ();
+					plist [property.Key] = property.Value.Clone ();
 				}
 			}
 		}
@@ -404,14 +402,14 @@ namespace Xamarin.MacDev.Tasks
 					string miniOSVersion = "?";
 					if (MacCatalystSupport.TryGetiOSVersion (Sdks.GetAppleSdk (Platform).GetSdkPath (SdkVersion, false), minimumOSVersion, out var iOSVersion, out var _))
 						miniOSVersion = iOSVersion?.ToString () ?? "?";
-					LogAppManifestError (MSBStrings.E7099 /* The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}). */,  miniOSVersion, minimumOSVersion);
+					LogAppManifestError (MSBStrings.E7099 /* The UIDeviceFamily value '6' requires macOS 11.0. Please set the 'SupportedOSPlatformVersion' in the project file to at least 14.0 (the Mac Catalyst version equivalent of macOS 11.0). The current value is {0} (equivalent to macOS {1}). */, miniOSVersion, minimumOSVersion);
 				}
 			}
 
 			switch (Platform) {
 			case ApplePlatform.iOS:
 				var supportsIPhone = (supportedDevices & IPhoneDeviceType.IPhone) != 0
-				                     || supportedDevices == IPhoneDeviceType.NotSet;
+									 || supportedDevices == IPhoneDeviceType.NotSet;
 				var supportsIPad = (supportedDevices & IPhoneDeviceType.IPad) != 0;
 
 				if (!IsAppExtension) {

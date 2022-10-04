@@ -1,9 +1,7 @@
 using Xamarin.Messaging.Build.Client;
 
-namespace Microsoft.Build.Tasks
-{
-	public class Copy : CopyBase
-	{
+namespace Microsoft.Build.Tasks {
+	public class Copy : CopyBase {
 		public override bool Execute ()
 		{
 			if (!this.ShouldExecuteRemotely (SessionId))

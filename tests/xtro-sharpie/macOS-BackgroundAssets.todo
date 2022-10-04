@@ -1,0 +1,13 @@
+!extra-protocol-member! unexpected selector BADownloaderExtension::applicationDidInstallWithMetadata: found
+!extra-protocol-member! unexpected selector BADownloaderExtension::applicationDidUpdateWithMetadata: found
+!extra-protocol-member! unexpected selector BADownloaderExtension::backgroundDownloadDidFail: found
+!extra-protocol-member! unexpected selector BADownloaderExtension::backgroundDownloadDidFinish:fileURL: found
+!extra-protocol-member! unexpected selector BADownloaderExtension::checkForUpdatesWithMetadata: found
+!extra-protocol-member! unexpected selector BADownloaderExtension::receivedAuthenticationChallenge:download:completionHandler: found
+!missing-enum! BAContentRequest not bound
+!missing-protocol-member! BADownloaderExtension::backgroundDownload:didReceiveChallenge:completionHandler: not found
+!missing-protocol-member! BADownloaderExtension::backgroundDownload:failedWithError: not found
+!missing-protocol-member! BADownloaderExtension::backgroundDownload:finishedWithFileURL: not found
+!missing-protocol-member! BADownloaderExtension::downloadsForRequest:manifestURL:extensionInfo: not found
+!missing-selector! BAAppExtensionInfo::restrictedDownloadSizeRemaining not bound
+!missing-selector! BADownloadManager::performWithExclusiveControlBeforeDate:performHandler: not bound

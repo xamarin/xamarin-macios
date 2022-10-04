@@ -18,10 +18,8 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.Mac.Tasks
-{
-	public abstract class MmpTaskBase : BundlerToolTaskBase
-	{
+namespace Xamarin.Mac.Tasks {
+	public abstract class MmpTaskBase : BundlerToolTaskBase {
 		protected override string ToolName {
 			get { return "mmp"; }
 		}
@@ -62,7 +60,7 @@ namespace Xamarin.Mac.Tasks
 			if (arch == XamMacArch.Default)
 				arch = XamMacArch.x86_64;
 
-			List <string> allSupportedArchs = new List <string> ();
+			List<string> allSupportedArchs = new List<string> ();
 			if (arch.HasFlag (XamMacArch.i386))
 				allSupportedArchs.Add ("i386");
 
@@ -108,7 +106,7 @@ namespace Xamarin.Mac.Tasks
 				foreach (var nr in NativeReferences)
 					args.AddQuotedLine ("/native-reference:" + Path.GetFullPath (nr.ItemSpec));
 			}
-				
+
 			if (IsAppExtension)
 				args.AddQuotedLine ("/extension");
 			if (IsXPCService)
@@ -129,8 +127,7 @@ namespace Xamarin.Mac.Tasks
 		{
 			try { // We first try to use the base logic, which shows up nicely in XS.
 				base.LogEventsFromTextOutput (singleLine, messageImportance);
-			}
-			catch { // But when that fails, just output the message to the command line and XS will output it raw
+			} catch { // But when that fails, just output the message to the command line and XS will output it raw
 				Log.LogMessage (messageImportance, "{0}", singleLine);
 			}
 		}

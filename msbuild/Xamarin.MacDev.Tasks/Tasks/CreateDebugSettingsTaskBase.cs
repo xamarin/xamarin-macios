@@ -9,10 +9,8 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class CreateDebugSettingsTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class CreateDebugSettingsTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]
