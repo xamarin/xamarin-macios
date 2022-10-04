@@ -30,6 +30,8 @@ using System;
 using NativeHandle = System.IntPtr;
 #endif
 
+#nullable enable
+
 namespace StoreKit {
 
 	[ErrorDomain ("SKANErrorDomain")]
@@ -977,8 +979,6 @@ namespace StoreKit {
 		SKProductDiscountType Type { get; }
 	}
 
-	delegate void SKAdNetworkCompletionHandler ([NullAllowed] NSError error);
-
 	[iOS (11,3), NoTV, NoMac, NoWatch]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -1001,7 +1001,7 @@ namespace StoreKit {
 		[Static]
 		[Async]
 		[Export ("startImpression:completionHandler:")]
-		void StartImpression (SKAdImpression impression, [NullAllowed] SKAdNetworkCompletionHandler completion);
+		void StartImpression (SKAdImpression impression, [NullAllowed] Action<NSError?> completion);
 
 		[NoWatch, NoTV, NoMac]
 		[iOS (14,5)]
@@ -1009,25 +1009,25 @@ namespace StoreKit {
 		[Static]
 		[Async]
 		[Export ("endImpression:completionHandler:")]
-		void EndImpression (SKAdImpression impression, [NullAllowed] SKAdNetworkCompletionHandler completion);
+		void EndImpression (SKAdImpression impression, [NullAllowed] Action<NSError?> completion);
 
 		[NoWatch, NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
 		[Static]
 		[Async]
 		[Export ("updatePostbackConversionValue:completionHandler:")]
-		void UpdatePostback (nint conversionValue, [NullAllowed] SKAdNetworkCompletionHandler completion);
+		void UpdatePostback (nint conversionValue, [NullAllowed] Action<NSError?> completion);
 
 		[NoMac, iOS (16,1), MacCatalyst (16,1), NoWatch, NoTV]
 		[Static]
 		[Async]
 		[Export ("updatePostbackConversionValue:coarseValue:completionHandler:")]
-		void UpdatePostback (nint conversionValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, [NullAllowed] SKAdNetworkCompletionHandler completion);
+		void UpdatePostback (nint conversionValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, [NullAllowed] Action<NSError?> completion);
 
 		[NoMac, iOS (16,1), MacCatalyst (16,1), NoWatch, NoTV]
 		[Static]
 		[Async]
 		[Export ("updatePostbackConversionValue:coarseValue:lockWindow:completionHandler:")]
-		void UpdatePostback (nint conversionValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, bool lockWindow, [NullAllowed] SKAdNetworkCompletionHandler completion);
+		void UpdatePostback (nint conversionValue, [BindAs (typeof (SKAdNetworkCoarseConversionValue))] NSString coarseValue, bool lockWindow, [NullAllowed] Action<NSError?> completion);
 	}
 
 	[iOS (12,2)]
