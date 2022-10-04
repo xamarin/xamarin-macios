@@ -6,10 +6,8 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class GetPropertyListValueTaskBase : Task
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class GetPropertyListValueTaskBase : Task {
 		#region Inputs
 
 		[Required]
@@ -32,7 +30,7 @@ namespace Xamarin.MacDev.Tasks
 			PArray array = null;
 			PDictionary dict;
 			PObject value;
-			string[] path;
+			string [] path;
 			int i = 0;
 
 			path = Property.TrimStart (':').Split (new [] { ':' });
@@ -51,16 +49,16 @@ namespace Xamarin.MacDev.Tasks
 
 			do {
 				if (dict != null) {
-					if (!dict.TryGetValue (path[i], out value)) {
+					if (!dict.TryGetValue (path [i], out value)) {
 						var item = i > 0 ? string.Join ("/", path, 0, i - 1) : PropertyListFile;
-						Log.LogError (MSBStrings.E0153, item, path[i]);
+						Log.LogError (MSBStrings.E0153, item, path [i]);
 						return false;
 					}
 				} else if (array != null) {
 					int arrayIndex;
 
-					if (!int.TryParse (path[i], out arrayIndex)) {
-						Log.LogError (MSBStrings.E0145, path[i]);
+					if (!int.TryParse (path [i], out arrayIndex)) {
+						Log.LogError (MSBStrings.E0145, path [i]);
 						return false;
 					}
 
@@ -70,7 +68,7 @@ namespace Xamarin.MacDev.Tasks
 						return false;
 					}
 
-					value = array[arrayIndex];
+					value = array [arrayIndex];
 				} else {
 					Log.LogError (MSBStrings.E0156, value.Type);
 					return false;

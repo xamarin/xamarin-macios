@@ -57,7 +57,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		void AddResourceFiles (ITaskItem[]? items)
+		void AddResourceFiles (ITaskItem []? items)
 		{
 			if (items is null || items.Length == 0)
 				return;
@@ -90,7 +90,7 @@ namespace Xamarin.MacDev.Tasks {
 			var appleFrameworks = new Dictionary<string, List<ITaskItem>> ();
 			var list = ResolvedFileToPublish.ToList ();
 			foreach (var item in list.ToArray ()) { // iterate over a copy of the list, because we might modify the original list
-				// Compute the publish folder type if it's not specified
+													// Compute the publish folder type if it's not specified
 				var publishFolderType = ParsePublishFolderType (item);
 				if (publishFolderType == PublishFolderType.Unset) {
 					publishFolderType = ComputePublishFolderType (list, item);

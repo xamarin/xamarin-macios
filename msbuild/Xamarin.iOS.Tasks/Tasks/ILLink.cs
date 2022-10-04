@@ -2,10 +2,8 @@ using ILLink.Tasks;
 using Microsoft.Build.Tasks;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.iOS.Tasks 
-{
-	public class ILLink : ILLinkBase
-	{
+namespace Xamarin.iOS.Tasks {
+	public class ILLink : ILLinkBase {
 		public override bool Execute ()
 		{
 			if (this.ShouldExecuteRemotely (SessionId))

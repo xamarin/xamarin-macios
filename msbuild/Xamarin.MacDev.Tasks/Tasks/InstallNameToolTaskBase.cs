@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Build.Framework;
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class InstallNameToolTaskBase : XamarinTask  {
+	public abstract class InstallNameToolTaskBase : XamarinTask {
 		[Required]
 		public ITaskItem [] DynamicLibrary { get; set; }
 
@@ -16,7 +16,7 @@ namespace Xamarin.MacDev.Tasks {
 		// This isn't consumed from the targets files, but it's needed for VSX to create corresponding
 		// files on Windows.
 		[Output]
-		public ITaskItem[] ReidentifiedDynamicLibrary { get; set; }
+		public ITaskItem [] ReidentifiedDynamicLibrary { get; set; }
 
 		public override bool Execute ()
 		{

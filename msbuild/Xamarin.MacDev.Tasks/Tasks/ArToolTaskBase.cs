@@ -6,17 +6,15 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.MacDev;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class ArToolTaskBase : XamarinToolTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class ArToolTaskBase : XamarinToolTask {
 		#region Inputs
 
 		[Required]
 		public ITaskItem Archive { get; set; }
 
 		[Required]
-		public ITaskItem[] Items { get; set; }
+		public ITaskItem [] Items { get; set; }
 
 		#endregion
 
