@@ -1,2 +1,0 @@
-!deprecated-attribute-missing! CFReadStreamCreateForHTTPRequest missing a [Deprecated] attribute
-!deprecated-attribute-missing! CFReadStreamCreateForStreamedHTTPRequest missing a [Deprecated] attribute

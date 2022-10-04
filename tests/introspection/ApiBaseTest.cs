@@ -23,6 +23,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using System.Text;
 using NUnit.Framework;
 using Xamarin.Utils;
@@ -190,6 +191,15 @@ namespace Introspection {
 			default:
 				return false;
 			}
+		}
+
+		public bool MemberHasObsolete (MemberInfo member)
+		{
+#if NET
+			return member.GetCustomAttributes<ObsoletedOSPlatformAttribute> (false).Any();
+#else
+			return member.GetCustomAttribute<ObsoleteAttribute> () != null;
+#endif
 		}
 
 		/// <summary>
