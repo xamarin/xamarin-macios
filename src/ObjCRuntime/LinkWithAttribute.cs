@@ -29,25 +29,24 @@ using System.IO;
 namespace ObjCRuntime {
 	[Flags]
 	public enum LinkTarget : int {
-		Simulator    = 1,
+		Simulator = 1,
 		i386 = Simulator,
-		ArmV6        = 2,
-		ArmV7        = 4,
-		Thumb        = 8,
-		ArmV7s       = 16,
-		Arm64        = 32,
-		Simulator64  = 64,
+		ArmV6 = 2,
+		ArmV7 = 4,
+		Thumb = 8,
+		ArmV7s = 16,
+		Arm64 = 32,
+		Simulator64 = 64,
 		x86_64 = Simulator64
 	}
-	
-	public enum DlsymOption
-	{
+
+	public enum DlsymOption {
 		Default,
 		Required,
 		Disabled,
 	}
 
-	[AttributeUsage(AttributeTargets.Assembly, AllowMultiple=true)]
+	[AttributeUsage (AttributeTargets.Assembly, AllowMultiple = true)]
 	public sealed class LinkWithAttribute : Attribute {
 		public LinkWithAttribute (string libraryName, LinkTarget target, string linkerFlags)
 		{
@@ -55,13 +54,13 @@ namespace ObjCRuntime {
 			LinkerFlags = linkerFlags;
 			LinkTarget = target;
 		}
-		
+
 		public LinkWithAttribute (string libraryName, LinkTarget target)
 		{
 			LibraryName = libraryName;
 			LinkTarget = target;
 		}
-		
+
 		public LinkWithAttribute (string libraryName)
 		{
 			LibraryName = libraryName;
@@ -70,37 +69,37 @@ namespace ObjCRuntime {
 		public LinkWithAttribute ()
 		{
 		}
-		
+
 		public bool ForceLoad {
 			get; set;
 		}
-		
+
 		public string Frameworks {
 			get; set;
 		}
-		
+
 		public string WeakFrameworks {
 			get; set;
 		}
-		
+
 		public string LibraryName {
 			get; private set;
 		}
-		
+
 		public string LinkerFlags {
 			get; set;
 		}
-		
+
 		public LinkTarget LinkTarget {
 			get; set;
 		}
-		
+
 		public bool NeedsGccExceptionHandling {
 			get; set;
 		}
-		
+
 		public bool IsCxx {
-			get; set; 
+			get; set;
 		}
 
 		public bool SmartLink {
