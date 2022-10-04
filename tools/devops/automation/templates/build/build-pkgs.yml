@@ -130,12 +130,34 @@ steps:
           artifactName: PkgsVersions
         continueOnError: true
 
+      # separate macOS and Mac Catalyst packages from the rest
+      - bash: |
+          set -ex
+          rm -rf "$(Build.SourcesDirectory)/packages-to-publish"
+          # Copy all the packages
+          cp -r "$(Build.SourcesDirectory)/package" "$(Build.SourcesDirectory)/packages-to-publish"
+          # Move iOS and tvOS packages to a separate artifact
+          ls -laR "$(Build.SourcesDirectory)/packages-to-publish"
+          mkdir -p "$(Build.SourcesDirectory)/packages-to-not-publish/notarized"
+          mv "$(Build.SourcesDirectory)/packages-to-publish"/*[.]iOS[.]*           "$(Build.SourcesDirectory)/packages-to-not-publish/" || true
+          mv "$(Build.SourcesDirectory)/packages-to-publish/notarized"/*[.]iOS[.]* "$(Build.SourcesDirectory)/packages-to-not-publish/notarized/" || true
+          mv "$(Build.SourcesDirectory)/packages-to-publish"/*[.]tvOS[.]*           "$(Build.SourcesDirectory)/packages-to-not-publish/" || true
+          mv "$(Build.SourcesDirectory)/packages-to-publish/notarized/"*[.]tvOS[.]* "$(Build.SourcesDirectory)/packages-to-not-publish/notarized/" || true
+          ls -laR "$(Build.SourcesDirectory)/packages-to-not-publish"
+
       # upload each of the pkgs into the pipeline artifacts
       - task: PublishPipelineArtifact@1
         displayName: 'Publish Build Artifacts'
         inputs:
-          targetPath: $(Build.SourcesDirectory)/package
+          targetPath: $(Build.SourcesDirectory)/packages-to-publish
           artifactName: not-signed-package
+        continueOnError: true
+
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish Build Artifacts (To Not Publish)'
+        inputs:
+          targetPath: $(Build.SourcesDirectory)/packages-to-not-publish
+          artifactName: packages-to-not-publish
         continueOnError: true
 
       # funny enough we need these profiles to build the mac tests

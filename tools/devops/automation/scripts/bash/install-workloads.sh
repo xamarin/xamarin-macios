@@ -30,6 +30,10 @@ ls -R "$BUILD_SOURCESDIRECTORY/artifacts/not-signed-package"
 cp "$BUILD_SOURCESDIRECTORY/artifacts/not-signed-package/"*.nupkg "$DOTNET_NUPKG_DIR"
 cp "$BUILD_SOURCESDIRECTORY/artifacts/not-signed-package/"*.pkg "$DOTNET_NUPKG_DIR"
 cp "$BUILD_SOURCESDIRECTORY/artifacts/not-signed-package/"*.zip "$DOTNET_NUPKG_DIR"
+ls -R "$BUILD_SOURCESDIRECTORY/artifacts/packages-to-not-publish"
+cp "$BUILD_SOURCESDIRECTORY/artifacts/packages-to-not-publish/"*.nupkg "$DOTNET_NUPKG_DIR"
+cp "$BUILD_SOURCESDIRECTORY/artifacts/packages-to-not-publish/"*.pkg "$DOTNET_NUPKG_DIR"
+cp "$BUILD_SOURCESDIRECTORY/artifacts/packages-to-not-publish/"*.zip "$DOTNET_NUPKG_DIR"
 ls -R "$DOTNET_NUPKG_DIR"
 
 NUGET_SOURCES=$(grep https://pkgs.dev.azure.com ./NuGet.config | sed -e 's/.*value="//'  -e 's/".*//')
