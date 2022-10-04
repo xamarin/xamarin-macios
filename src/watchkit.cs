@@ -1697,7 +1697,7 @@ namespace WatchKit {
 	}
 
 	delegate double WKNofityUserIntervalHandler (WKHapticType type);
-	delegate void WKRequestAutoLaunchAuthorizationStatusCompletionHandler (WKExtendedRuntimeSessionAutoLaunchAuthorizationStatus authorizationStatus, [NullAllowed] error);
+	delegate void WKRequestAutoLaunchAuthorizationStatusCompletionHandler (WKExtendedRuntimeSessionAutoLaunchAuthorizationStatus authorizationStatus, [NullAllowed] NSError error);
 
 	[Watch (6,0), NoiOS]
 	[BaseType (typeof (WKInterfaceObject), Name = "WKInterfaceAuthorizationAppleIDButton")]
