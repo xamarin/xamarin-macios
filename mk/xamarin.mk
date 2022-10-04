@@ -104,6 +104,4 @@ $(MACCORE_PATH):
 	$(Q) $(MAKE) reset-maccore
 
 $(eval $(call CheckVersionTemplate,maccore,MACCORE))
--include $(MACCORE_PATH)/mk/versions.mk
-$(MACCORE_PATH)/mk/versions.mk: | $(MACCORE_PATH)
 endif
