@@ -2,7 +2,7 @@ name: Update single-platform release tests branches
 
 on:
   # allow triggering this action manually
-  workflow_dispatch
+  workflow_dispatch:
   # run every saturday (at noon UTC), so the builds occur during the weekend during lower CI load
   schedule:
   - cron:  '0 12 * * 6'
