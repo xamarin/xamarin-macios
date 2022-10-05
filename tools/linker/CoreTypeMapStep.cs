@@ -90,7 +90,7 @@ namespace MonoTouch.Tuner {
 			// Scan the reverse references to find out which referencing assemblies
 			// are reachable from the product assembly (that is, transitively reference the product).
 			while (referencesProductToProcess.TryDequeue (out var reference)) {
-				foreach (var referrer in reversedReferences[reference]) {
+				foreach (var referrer in reversedReferences [reference]) {
 					if (_transitivelyReferencesProduct.TryGetValue (referrer, out bool referencesProduct)) {
 						Debug.Assert (referencesProduct);
 						// Any which were already determined to reference the product assembly
@@ -108,7 +108,7 @@ namespace MonoTouch.Tuner {
 			foreach (var reference in reversedReferences.Keys)
 				_transitivelyReferencesProduct.TryAdd (reference, false);
 
-			return _transitivelyReferencesProduct[assembly];
+			return _transitivelyReferencesProduct [assembly];
 		}
 
 		protected override void TryProcessAssembly (AssemblyDefinition assembly)
@@ -172,11 +172,11 @@ namespace MonoTouch.Tuner {
 			// bonus: we cache, for every type, whether or not it inherits from NSObject (very useful later)
 			if (!IsNSObject (type))
 				return;
-			
+
 			// if not, it's a user type, the IsDirectBinding check is required by all ancestors
 			SetIsDirectBindingValue (type);
 		}
-		
+
 		// called once for each 'type' so it's a nice place to cache the result
 		// and ensure later steps re-use the same, pre-computed, result
 		bool IsNSObject (TypeDefinition type)
@@ -208,7 +208,7 @@ namespace MonoTouch.Tuner {
 			}
 			return rv;
 		}
-		
+
 		void SetIsDirectBindingValue (TypeDefinition type)
 		{
 			if (isdirectbinding_value.ContainsKey (type))
