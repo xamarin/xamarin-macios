@@ -13076,6 +13076,7 @@ namespace Foundation
 	partial interface NSFilePresenter {
 		[Abstract]
 		[Export ("presentedItemURL", ArgumentSemantic.Retain)]
+		[NullAllowed]
 #if NET
 		NSUrl PresentedItemUrl { get; }
 #else

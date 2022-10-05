@@ -920,7 +920,10 @@ namespace AppKit {
 		FullScreenAuxiliary = 1 << 8,
 		FullScreenNone = 1 << 9,
 		[Mac (10, 11)] FullScreenAllowsTiling = 1 << 11,
-		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12
+		[Mac (10, 11)] FullScreenDisallowsTiling = 1 << 12,
+		[Mac (10, 13)] Primary = 1 << 16,
+		[Mac (10, 13)] Auxiliary = 1 << 17,
+		[Mac (10, 13)] CanJoinAllApplications = 1 << 18,
 	}
 
 	[NoMacCatalyst]
