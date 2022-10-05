@@ -24,6 +24,7 @@ using UIView=AppKit.NSView;
 using UIMenu=AppKit.NSMenu;
 using UIImage=AppKit.NSImage;
 using ICloudSharingControllerDelegate=AppKit.INSCloudSharingServiceDelegate;
+using UIWindow=AppKit.NSWindow;
 #else 
 using UIKit;
 using ICloudSharingControllerDelegate=UIKit.IUICloudSharingControllerDelegate;
@@ -212,7 +213,6 @@ namespace SharedWithYou {
 		void GetSignedIdentityProof (SWCollaborationHighlight collaborationHighlight, NSData data, Action<SWSignedPersonIdentityProof, NSError> completionHandler);
 	}
 
-#if __MACOS__
 	[NoWatch, Mac (13,0), NoTV, NoiOS, NoMacCatalyst]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -220,9 +220,9 @@ namespace SharedWithYou {
 	{
 		[Static]
 		[Export ("showAlertWithParticipant:highlight:inWindow:")]
-		void ShowAlert (SWPerson participant, SWCollaborationHighlight highlight, [NullAllowed] NSWindow window);
+		void ShowAlert (SWPerson participant, SWCollaborationHighlight highlight, [NullAllowed] UIWindow window);
 	}
-#else
+
 	[NoWatch, NoMac, NoTV, iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor]
@@ -232,7 +232,6 @@ namespace SharedWithYou {
 		[Export ("alertControllerWithParticipant:highlight:")]
 		SWRemoveParticipantAlertController Create (SWPerson participant, SWCollaborationHighlight highlight);
 	}
-#endif // __MACOS__
 
 	interface ISWCollaborationViewDelegate {} 
 
