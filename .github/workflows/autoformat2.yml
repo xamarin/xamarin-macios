@@ -17,7 +17,7 @@ jobs:
 
     steps:
     - name: 'Download artifacts'
-      uses: actions/github-script@v3.1.0
+      uses: actions/github-script@v6.3.1
       with:
         script: |
           var artifacts = await github.actions.listWorkflowRunArtifacts({
@@ -65,7 +65,7 @@ jobs:
 
     - name: 'Yell at user'
       if: steps.unzip_artifacts.outputs.autoformatted == 'true'
-      uses: actions/github-script@v6
+      uses: actions/github-script@v6.3.1
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
