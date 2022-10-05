@@ -75,5 +75,5 @@ jobs:
             owner: context.repo.owner,
             repo: context.repo.repo,
             issue_number: issue_number,
-            body: '# :warning: Your code has been reformatted. :warning:\n\nIf this is not desired, add the `actions-skip-autoformat` label, and revert the reformatting commit.\n\nIf files unrelated to your change were modified, try reverting the reformatting commit + merging with the target branch (and push those changes).'
+            body: '# :warning: Your code has been reformatted. :warning:\n\nIf this is not desired, add the `actions-disable-autoformat` label, and revert the reformatting commit.\n\nIf files unrelated to your change were modified, try reverting the reformatting commit + merging with the target branch (and push those changes).'
           });

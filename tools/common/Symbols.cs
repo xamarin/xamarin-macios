@@ -5,25 +5,21 @@ using System.IO;
 
 using Mono.Cecil;
 
-namespace Xamarin.Bundler
-{
-	public enum SymbolType
-	{
+namespace Xamarin.Bundler {
+	public enum SymbolType {
 		Function,
 		ObjectiveCClass,
 		Field,
 	}
 
-	public enum SymbolMode
-	{
+	public enum SymbolMode {
 		Default,
 		Linker, // pass "-u symbol" to the native linker
 		Code, // generate code
 		Ignore, // do nothing and hope for the best
 	}
 
-	public class Symbol
-	{
+	public class Symbol {
 		public SymbolType Type;
 		public bool Ignore;
 		public Abi? ValidAbis;
@@ -76,8 +72,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class Symbols : IEnumerable<Symbol>
-	{
+	public class Symbols : IEnumerable<Symbol> {
 		Dictionary<string, Symbol> store = new Dictionary<string, Symbol> (StringComparer.Ordinal);
 
 		public int Count {
