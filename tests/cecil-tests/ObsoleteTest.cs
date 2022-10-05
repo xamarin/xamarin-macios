@@ -43,7 +43,7 @@ namespace Cecil.Tests {
 			}
 
 			// TODO: Events?
-			Assert.That (found, Is.Empty, "Obsolete API");
+			Assert.That (found, Is.Empty, "Obsolete API: add '[EditorBrowsable (EditorBrowsableState.Never)]' for newly obsoleted API to pass this test.");
 		}
 
 		bool FilterMember (ICustomAttributeProvider provider)
