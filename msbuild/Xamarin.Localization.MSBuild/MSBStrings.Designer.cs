@@ -2726,5 +2726,14 @@ namespace Xamarin.Localization.MSBuild {
                 return ResourceManager.GetString("W7100", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected extension &apos;{0}&apos; for native reference &apos;{1}&apos; in manifest &apos;{2}&apos;..
+        /// </summary>
+        public static string W7105 {
+            get {
+                return ResourceManager.GetString("W7105", resourceCulture);
+            }
+        }
     }
 }
