@@ -55,8 +55,7 @@ namespace Xamarin.Bundler {
 		Static,
 	}
 
-	public partial class Application
-	{
+	public partial class Application {
 		public Cache Cache;
 		public string AppDirectory = ".";
 		public bool DeadStrip = true;
@@ -291,7 +290,7 @@ namespace Xamarin.Bundler {
 				// if there's a specific way libmono is being linked, use the same way.
 				if (libmono_link_mode.HasValue)
 					return libmono_link_mode.Value;
-				return HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary: AssemblyBuildTarget.StaticObject;
+				return HasDynamicLibraries ? AssemblyBuildTarget.DynamicLibrary : AssemblyBuildTarget.StaticObject;
 			}
 		}
 
@@ -438,7 +437,7 @@ namespace Xamarin.Bundler {
 		public Version DeploymentTarget;
 		public Version SdkVersion; // for Mac Catalyst this is the iOS version
 		public Version NativeSdkVersion; // this is the same as SdkVersion, except that for Mac Catalyst it's the macOS SDK version.
-	
+
 		public MonoNativeMode MonoNativeMode { get; set; }
 		List<Abi> abis;
 		public bool IsLLVM { get { return IsArchEnabled (Abi.LLVM); } }
@@ -656,7 +655,7 @@ namespace Xamarin.Bundler {
 				}
 			}
 		}
-		
+
 		public static bool IsUptodate (string source, string target, bool check_contents = false, bool check_stamp = true)
 		{
 			return FileCopier.IsUptodate (source, target, check_contents, check_stamp);
@@ -665,11 +664,11 @@ namespace Xamarin.Bundler {
 		public static void RemoveResource (ModuleDefinition module, string name)
 		{
 			for (int i = 0; i < module.Resources.Count; i++) {
-				EmbeddedResource embedded = module.Resources[i] as EmbeddedResource;
-				
+				EmbeddedResource embedded = module.Resources [i] as EmbeddedResource;
+
 				if (embedded == null || embedded.Name != name)
 					continue;
-				
+
 				module.Resources.RemoveAt (i);
 				break;
 			}
@@ -706,11 +705,11 @@ namespace Xamarin.Bundler {
 		public static void ExtractResource (ModuleDefinition module, string name, string path, bool remove)
 		{
 			for (int i = 0; i < module.Resources.Count; i++) {
-				EmbeddedResource embedded = module.Resources[i] as EmbeddedResource;
-				
+				EmbeddedResource embedded = module.Resources [i] as EmbeddedResource;
+
 				if (embedded == null || embedded.Name != name)
 					continue;
-				
+
 				string dirname = Path.GetDirectoryName (path);
 				if (!Directory.Exists (dirname))
 					Directory.CreateDirectory (dirname);
@@ -718,10 +717,10 @@ namespace Xamarin.Bundler {
 				using (Stream ostream = File.OpenWrite (path)) {
 					embedded.GetResourceStream ().CopyTo (ostream);
 				}
-				
+
 				if (remove)
 					module.Resources.RemoveAt (i);
-				
+
 				break;
 			}
 		}
@@ -732,8 +731,7 @@ namespace Xamarin.Bundler {
 			if (!Application.IsUptodate (source, target, check_contents)) {
 				CopyFile (source, target);
 				return true;
-			}
-			else {
+			} else {
 				Driver.Log (3, "Target '{0}' is up-to-date", target);
 				return false;
 			}
@@ -747,13 +745,13 @@ namespace Xamarin.Bundler {
 		{
 			return FileCopier.IsUptodate (sources, targets, check_stamp);
 		}
-		
+
 		public static void UpdateDirectory (string source, string target)
 		{
 			FileCopier.UpdateDirectory (source, target);
 		}
 
-		static string[] NonEssentialDirectoriesInsideFrameworks = { "CVS", ".svn", ".git", ".hg", "Headers", "PrivateHeaders", "Modules" };
+		static string [] NonEssentialDirectoriesInsideFrameworks = { "CVS", ".svn", ".git", ".hg", "Headers", "PrivateHeaders", "Modules" };
 
 		// Duplicate xcode's `builtin-copy` exclusions
 		public static void ExcludeNonEssentialFrameworkFiles (string framework)
@@ -994,21 +992,21 @@ namespace Xamarin.Bundler {
 				var rootName = Path.GetFileNameWithoutExtension (asm);
 				if (rootName == productAssembly)
 					foundProductAssembly = true;
-				
+
 				try {
 					AssemblyDefinition lastAssembly = ps.AssemblyResolver.Resolve (AssemblyNameReference.Parse (rootName), new ReaderParameters ());
 					if (lastAssembly == null) {
 						ErrorHelper.Warning (7, Errors.MX0007, rootName);
 						continue;
 					}
-					
+
 					if (resolvedAssemblies.TryGetValue (rootName, out var previousAssembly)) {
 						if (lastAssembly.MainModule.RuntimeVersion != previousAssembly.MainModule.RuntimeVersion) {
 							Driver.Log (2, "Attemping to load an assembly another time {0} (previous {1})", lastAssembly.FullName, previousAssembly.FullName);
 						}
 						continue;
 					}
-					
+
 					resolvedAssemblies.Add (rootName, lastAssembly);
 					Driver.Log (3, "Loaded {0}", lastAssembly.MainModule.FileName);
 				} catch (Exception ex) {
@@ -1491,7 +1489,7 @@ namespace Xamarin.Bundler {
 #if NET
 			if (Platform == ApplePlatform.MacOSX)
 				return false; // AOT on .NET for macOS hasn't been implemented yet.
-#else	
+#else
 			if (Platform == ApplePlatform.MacOSX)
 				throw ErrorHelper.CreateError (99, Errors.MX0099, "IsAOTCompiled isn't a valid operation for macOS apps.");
 #endif
