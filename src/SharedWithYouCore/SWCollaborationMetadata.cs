@@ -33,10 +33,13 @@ namespace SharedWithYouCore {
 			InitializeHandle (_InitWithLocalIdentifier (localIdentifier), "initWithLocalIdentifier:");
 
 #if NET
+		[UnsupportedOSPlatform ("watchos")]
+		[UnsupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("ios16.1")]
 		[SupportedOSPlatform ("maccatalyst16.1")]
 #else
-		[iOS (16,1), MacCatalyst (16,1)]
+		[NoWatch, NoTV, Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
 #endif  
 		public SWCollaborationMetadata (string identifier, SWIdentifierType identifierType) : base (NSObjectFlag.Empty) => identifierType switch
 		{
