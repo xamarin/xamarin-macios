@@ -1,0 +1,24 @@
+name: Update single-platform release tests branches
+
+on:
+  # run every saturday (at noon UTC), so the builds occur during the weekend during lower CI load
+  schedule:
+  - cron:  '0 12 * * 6'
+
+jobs:
+  updateSinglePlatformBranches:
+    name: Merge main into single-platform release test branches
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: 'Update branches'
+        run: |
+          set -ex
+          for platform in iOS tvOS MacCatalyst macOS; do
+            git checkout -b release/release-test-only-dotnet-$platform origin/release/release-test-only-dotnet-$platform
+            git merge origin/main
+            git push
+          done
