@@ -556,6 +556,7 @@ namespace NetworkExtension {
 		NSData SourceAppAuditToken { get; }
 
 		[Mac (13,0), NoiOS, NoMacCatalyst, NoWatch, NoTV]
+		[NullAllowed]
 		[Export ("sourceProcessAuditToken")]
 		NSData SourceProcessAuditToken { get; }
 
