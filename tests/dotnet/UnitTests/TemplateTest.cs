@@ -19,7 +19,7 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public static TemplateInfo[] Templates = {
+		public static TemplateInfo [] Templates = {
 			new TemplateInfo (ApplePlatform.iOS, "ios"),
 			new TemplateInfo (ApplePlatform.iOS, "ios-tabbed"),
 			new TemplateInfo (ApplePlatform.iOS, "ioslib"),
