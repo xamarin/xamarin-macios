@@ -8,10 +8,8 @@ using Microsoft.Build.Utilities;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class DSymUtilTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class DSymUtilTaskBase : XamarinTask {
 		#region Inputs
 
 		// This can also be specified as metadata on the Executable item (as 'DSymDir')
@@ -27,7 +25,7 @@ namespace Xamarin.MacDev.Tasks
 
 		// This property is required for XVS to work properly, even though it's not used for anything in the targets.
 		[Output]
-		public ITaskItem[] DsymContentFiles { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] DsymContentFiles { get; set; } = Array.Empty<ITaskItem> ();
 
 		#endregion
 

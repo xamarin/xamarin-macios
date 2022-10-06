@@ -6,10 +6,8 @@ using Microsoft.Build.Utilities;
 
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class ZipTaskBase : XamarinToolTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class ZipTaskBase : XamarinToolTask {
 		#region Inputs
 
 		[Output]
@@ -19,7 +17,7 @@ namespace Xamarin.MacDev.Tasks
 		public bool Recursive { get; set; }
 
 		[Required]
-		public ITaskItem[] Sources { get; set; }
+		public ITaskItem [] Sources { get; set; }
 
 		public bool Symlinks { get; set; }
 
@@ -61,7 +59,7 @@ namespace Xamarin.MacDev.Tasks
 
 			var root = WorkingDirectory.GetMetadata ("FullPath");
 			for (int i = 0; i < Sources.Length; i++) {
-				var relative = PathUtils.AbsoluteToRelative (root, Sources[i].GetMetadata ("FullPath"));
+				var relative = PathUtils.AbsoluteToRelative (root, Sources [i].GetMetadata ("FullPath"));
 				args.AddQuoted (relative);
 			}
 

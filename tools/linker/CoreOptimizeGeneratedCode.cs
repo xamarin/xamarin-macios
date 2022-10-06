@@ -102,7 +102,7 @@ namespace Xamarin.Linker {
 						// ARMv7k binaries can run on ARM64_32, so this can't be inlined :/
 						break;
 					default:
-						LinkContext.Exceptions.Add (ErrorHelper.CreateWarning (99, Errors.MX0099, $"unknown abi: {target.Abis[0]}"));
+						LinkContext.Exceptions.Add (ErrorHelper.CreateWarning (99, Errors.MX0099, $"unknown abi: {target.Abis [0]}"));
 						break;
 					}
 				} else if (target.Abis.Count == 2 && target.Is32Build && target.Abis.Contains (Abi.ARMv7) && target.Abis.Contains (Abi.ARMv7s)) {
@@ -148,7 +148,7 @@ namespace Xamarin.Linker {
 #endif
 				return false;
 			}
-			
+
 			// process only assemblies where the linker is enabled (e.g. --linksdk, --linkskip) 
 			AssemblyAction action = Annotations.GetAction (assembly);
 			if (action != AssemblyAction.Link) {
@@ -160,7 +160,7 @@ namespace Xamarin.Linker {
 #endif
 				return false;
 			}
-			
+
 			// if the assembly does not refer to [CompilerGeneratedAttribute] then there's not much we can do
 			foreach (TypeReference tr in assembly.MainModule.GetTypeReferences ()) {
 				if (tr.Is (Namespaces.ObjCRuntime, "BindingImplAttribute")) {
@@ -240,7 +240,7 @@ namespace Xamarin.Linker {
 		{
 			if (ins == null)
 				return null;
-			
+
 			switch (ins.OpCode.Code) {
 			case Code.Ldc_I4_0:
 				return 0;
@@ -357,82 +357,82 @@ namespace Xamarin.Linker {
 					switch (ins.OpCode.Code) {
 					case Code.Brtrue:
 					case Code.Brtrue_S: {
-							var v = GetConstantValue (ins?.Previous);
-							if (v.HasValue)
-								branch = v.Value != 0;
-							cond_instruction_count = 2;
-							break;
-						}
+						var v = GetConstantValue (ins?.Previous);
+						if (v.HasValue)
+							branch = v.Value != 0;
+						cond_instruction_count = 2;
+						break;
+					}
 					case Code.Brfalse:
 					case Code.Brfalse_S: {
-							var v = GetConstantValue (ins?.Previous);
-							if (v.HasValue)
-								branch = v.Value == 0;
-							cond_instruction_count = 2;
-							break;
-						}
+						var v = GetConstantValue (ins?.Previous);
+						if (v.HasValue)
+							branch = v.Value == 0;
+						cond_instruction_count = 2;
+						break;
+					}
 					case Code.Beq:
 					case Code.Beq_S: {
-							var x1 = GetConstantValue (ins?.Previous?.Previous);
-							var x2 = GetConstantValue (ins?.Previous);
-							if (x1.HasValue && x2.HasValue)
-								branch = x1.Value == x2.Value;
-							cond_instruction_count = 3;
-							break;
-						}
+						var x1 = GetConstantValue (ins?.Previous?.Previous);
+						var x2 = GetConstantValue (ins?.Previous);
+						if (x1.HasValue && x2.HasValue)
+							branch = x1.Value == x2.Value;
+						cond_instruction_count = 3;
+						break;
+					}
 					case Code.Bne_Un:
 					case Code.Bne_Un_S: {
-							var x1 = GetConstantValue (ins?.Previous?.Previous);
-							var x2 = GetConstantValue (ins?.Previous);
-							if (x1.HasValue && x2.HasValue)
-								branch = x1.Value != x2.Value;
-							cond_instruction_count = 3;
-							break;
-						}
+						var x1 = GetConstantValue (ins?.Previous?.Previous);
+						var x2 = GetConstantValue (ins?.Previous);
+						if (x1.HasValue && x2.HasValue)
+							branch = x1.Value != x2.Value;
+						cond_instruction_count = 3;
+						break;
+					}
 					case Code.Ble:
 					case Code.Ble_S:
 					case Code.Ble_Un:
 					case Code.Ble_Un_S: {
-							var x1 = GetConstantValue (ins?.Previous?.Previous);
-							var x2 = GetConstantValue (ins?.Previous);
-							if (x1.HasValue && x2.HasValue)
-								branch = x1.Value <= x2.Value;
-							cond_instruction_count = 3;
-							break;
-						}
+						var x1 = GetConstantValue (ins?.Previous?.Previous);
+						var x2 = GetConstantValue (ins?.Previous);
+						if (x1.HasValue && x2.HasValue)
+							branch = x1.Value <= x2.Value;
+						cond_instruction_count = 3;
+						break;
+					}
 					case Code.Blt:
 					case Code.Blt_S:
 					case Code.Blt_Un:
 					case Code.Blt_Un_S: {
-							var x1 = GetConstantValue (ins?.Previous?.Previous);
-							var x2 = GetConstantValue (ins?.Previous);
-							if (x1.HasValue && x2.HasValue)
-								branch = x1.Value < x2.Value;
-							cond_instruction_count = 3;
-							break;
-						}
+						var x1 = GetConstantValue (ins?.Previous?.Previous);
+						var x2 = GetConstantValue (ins?.Previous);
+						if (x1.HasValue && x2.HasValue)
+							branch = x1.Value < x2.Value;
+						cond_instruction_count = 3;
+						break;
+					}
 					case Code.Bge:
 					case Code.Bge_S:
 					case Code.Bge_Un:
 					case Code.Bge_Un_S: {
-							var x1 = GetConstantValue (ins?.Previous?.Previous);
-							var x2 = GetConstantValue (ins?.Previous);
-							if (x1.HasValue && x2.HasValue)
-								branch = x1.Value >= x2.Value;
-							cond_instruction_count = 3;
-							break;
-						}
+						var x1 = GetConstantValue (ins?.Previous?.Previous);
+						var x2 = GetConstantValue (ins?.Previous);
+						if (x1.HasValue && x2.HasValue)
+							branch = x1.Value >= x2.Value;
+						cond_instruction_count = 3;
+						break;
+					}
 					case Code.Bgt:
 					case Code.Bgt_S:
 					case Code.Bgt_Un:
 					case Code.Bgt_Un_S: {
-							var x1 = GetConstantValue (ins?.Previous?.Previous);
-							var x2 = GetConstantValue (ins?.Previous);
-							if (x1.HasValue && x2.HasValue)
-								branch = x1.Value > x2.Value;
-							cond_instruction_count = 3;
-							break;
-						}
+						var x1 = GetConstantValue (ins?.Previous?.Previous);
+						var x2 = GetConstantValue (ins?.Previous);
+						if (x1.HasValue && x2.HasValue)
+							branch = x1.Value > x2.Value;
+						cond_instruction_count = 3;
+						break;
+					}
 					default:
 						Driver.Log ($"Can't optimize {0} because of unknown branch instruction: {1}", method, ins);
 						break;
@@ -524,7 +524,7 @@ namespace Xamarin.Linker {
 				return;
 
 			// Handle exception handlers specially, they do not follow normal code flow.
-			bool[] reachableExceptionHandlers = null;
+			bool [] reachableExceptionHandlers = null;
 			if (caller.Body.HasExceptionHandlers) {
 				reachableExceptionHandlers = new bool [caller.Body.ExceptionHandlers.Count];
 				for (var e = 0; e < reachableExceptionHandlers.Length; e++) {
@@ -1177,7 +1177,7 @@ namespace Xamarin.Linker {
 
 			var inflatedReturnType = TypeReferenceExtensions.InflateGenericType (git, openMethod.ReturnType);
 			var mr = new MethodReference (openMethod.Name, inflatedReturnType, git);
-			if (openMethod.HasParameters) { 
+			if (openMethod.HasParameters) {
 				for (int i = 0; i < openMethod.Parameters.Count; i++) {
 					var inflatedParameterType = TypeReferenceExtensions.InflateGenericType (git, openMethod.Parameters [i].ParameterType);
 					var p = new ParameterDefinition (openMethod.Parameters [i].Name, openMethod.Parameters [i].Attributes, inflatedParameterType);

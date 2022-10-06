@@ -11,10 +11,8 @@ using Xamarin.Localization.MSBuild;
 
 using SecKeychain = Xamarin.MacDev.Keychain;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class DetectSigningIdentityTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class DetectSigningIdentityTaskBase : XamarinTask {
 		const string AutomaticProvision = "Automatic";
 		const string AutomaticAdHocProvision = "Automatic:AdHoc";
 		const string AutomaticAppStoreProvision = "Automatic:AppStore";
@@ -106,7 +104,7 @@ namespace Xamarin.MacDev.Tasks
 
 		public string CodesignProvision { get; set; }
 
-		public string CodesignEntitlements { get; set; }
+		public ITaskItem CodesignEntitlements { get; set; }
 
 		public string CodesignRequireProvisioningProfile { get; set; }
 
@@ -180,13 +178,13 @@ namespace Xamarin.MacDev.Tasks
 		bool HasEntitlements {
 			get {
 				if (!hasEntitlements.HasValue) {
-					if (string.IsNullOrEmpty (CodesignEntitlements)) {
+					if (string.IsNullOrEmpty (CodesignEntitlements?.ItemSpec)) {
 						// If no CodesignEntitlements was specified, we don't have any entitlements
 						hasEntitlements = false;
 					} else {
 						if (IsDotNet) {
 							// .NET: Check the file to see if there are any entitlements inside
-							var entitlements = PDictionary.FromFile (CodesignEntitlements);
+							var entitlements = PDictionary.FromFile (CodesignEntitlements.ItemSpec);
 							hasEntitlements = entitlements.Count > 0;
 						} else {
 							// Legacy Xamarin: to preserve backwards compat, consider the presence of a file enough to say we have entitlements.
@@ -198,8 +196,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		class CodeSignIdentity
-		{
+		class CodeSignIdentity {
 			public X509Certificate2 SigningKey { get; set; }
 			public MobileProvision Profile { get; set; }
 			public string BundleId { get; set; }
@@ -247,7 +244,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			return ConstructValidAppId (
-				provision.ApplicationIdentifierPrefix[0] + "." + bundleId,
+				provision.ApplicationIdentifierPrefix [0] + "." + bundleId,
 				((PString) provision.Entitlements [ApplicationIdentifierKey]).Value,
 				out matchLength
 			);
@@ -291,17 +288,17 @@ namespace Xamarin.MacDev.Tasks
 			Log.LogMessage (MessageImportance.High, "  App Id: {0}", DetectedAppId);
 		}
 
-		static bool MatchesAny (string name, string[] names)
+		static bool MatchesAny (string name, string [] names)
 		{
 			for (int i = 0; i < names.Length; i++) {
-				if (name == names[i])
+				if (name == names [i])
 					return true;
 			}
 
 			return false;
 		}
 
-		static bool StartsWithAny (string name, string[] prefixes)
+		static bool StartsWithAny (string name, string [] prefixes)
 		{
 			foreach (var prefix in prefixes) {
 				if (name.StartsWith (prefix, StringComparison.Ordinal))
@@ -311,7 +308,7 @@ namespace Xamarin.MacDev.Tasks
 			return false;
 		}
 
-		bool TryGetSigningCertificates (SecKeychain keychain, out IList<X509Certificate2> certs, string[] prefixes, bool allowZeroCerts)
+		bool TryGetSigningCertificates (SecKeychain keychain, out IList<X509Certificate2> certs, string [] prefixes, bool allowZeroCerts)
 		{
 			var now = DateTime.Now;
 
@@ -400,8 +397,7 @@ namespace Xamarin.MacDev.Tasks
 			}
 		}
 
-		class SigningIdentityComparer : IComparer<CodeSignIdentity>
-		{
+		class SigningIdentityComparer : IComparer<CodeSignIdentity> {
 			public int Compare (CodeSignIdentity x, CodeSignIdentity y)
 			{
 				// reverse sort by provisioning profile creation date
@@ -428,7 +424,7 @@ namespace Xamarin.MacDev.Tasks
 			if (profiles.Count == 0) {
 				foreach (var f in failures)
 					Log.LogMessage (MessageImportance.Low, "{0}", f);
-				
+
 				Log.LogError (MSBStrings.E0131, AppBundleName, PlatformName);
 				return null;
 			}
@@ -445,12 +441,15 @@ namespace Xamarin.MacDev.Tasks
 			List<CodeSignIdentity> pairs;
 
 			if (certs.Count > 0) {
-				pairs = (from p in profiles from c in certs where p.DeveloperCertificates.Any (d => {
-					var rv = d.Thumbprint == c.Thumbprint;
-					if (!rv)
-						Log.LogMessage (MessageImportance.Low, MSBStrings.M0132, d.Thumbprint, c.Thumbprint);
-					return rv;
-				}) select new CodeSignIdentity { SigningKey = c, Profile = p }).ToList ();
+				pairs = (from p in profiles
+						 from c in certs
+						 where p.DeveloperCertificates.Any (d => {
+							 var rv = d.Thumbprint == c.Thumbprint;
+							 if (!rv)
+								 Log.LogMessage (MessageImportance.Low, MSBStrings.M0132, d.Thumbprint, c.Thumbprint);
+							 return rv;
+						 })
+						 select new CodeSignIdentity { SigningKey = c, Profile = p }).ToList ();
 
 				if (pairs.Count == 0) {
 					Log.LogError (MSBStrings.E0133, PlatformName, AppBundleName);
@@ -510,14 +509,14 @@ namespace Xamarin.MacDev.Tasks
 				matches.Sort (new SigningIdentityComparer ());
 
 				for (int i = 0; i < matches.Count; i++) {
-					Log.LogMessage (MessageImportance.Normal, "{0,3}. Provisioning Profile: \"{1}\" ({2})", i + 1, matches[i].Profile.Name, matches[i].Profile.Uuid);
+					Log.LogMessage (MessageImportance.Normal, "{0,3}. Provisioning Profile: \"{1}\" ({2})", i + 1, matches [i].Profile.Name, matches [i].Profile.Uuid);
 
-					if (matches[i].SigningKey != null)
-						Log.LogMessage (MessageImportance.Normal, "{0}  Signing Identity: \"{1}\"", spaces, SecKeychain.GetCertificateCommonName (matches[i].SigningKey));
+					if (matches [i].SigningKey != null)
+						Log.LogMessage (MessageImportance.Normal, "{0}  Signing Identity: \"{1}\"", spaces, SecKeychain.GetCertificateCommonName (matches [i].SigningKey));
 				}
 			}
 
-			return matches[0];
+			return matches [0];
 		}
 
 		public override bool Execute ()
@@ -609,7 +608,7 @@ namespace Xamarin.MacDev.Tasks
 							DetectedProvisioningProfile = identity.Profile.Uuid;
 							DetectedDistributionType = identity.Profile.DistributionType.ToString ();
 						} else {
-							certs = new X509Certificate2[0];
+							certs = new X509Certificate2 [0];
 
 							if ((profiles = GetProvisioningProfiles (platform, type, identity, certs)) == null)
 								return false;
@@ -667,12 +666,12 @@ namespace Xamarin.MacDev.Tasks
 
 					for (int i = 0; i < certs.Count; i++) {
 						Log.LogMessage (MessageImportance.Normal, "{0,3}. Signing Identity: {1} ({2})", i + 1,
-						                SecKeychain.GetCertificateCommonName (certs[i]), certs[i].Thumbprint);
+										SecKeychain.GetCertificateCommonName (certs [i]), certs [i].Thumbprint);
 					}
 				}
 
-				codesignCommonName = SecKeychain.GetCertificateCommonName (certs[0]);
-				DetectedCodeSigningKey = certs[0].Thumbprint;
+				codesignCommonName = SecKeychain.GetCertificateCommonName (certs [0]);
+				DetectedCodeSigningKey = certs [0].Thumbprint;
 
 				ReportDetectedCodesignInfo ();
 

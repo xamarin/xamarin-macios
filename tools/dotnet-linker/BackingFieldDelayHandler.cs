@@ -37,7 +37,7 @@ namespace Xamarin.Linker {
 
 		// cache `Dispose` body of optimization NSObject subclasses
 		static Dictionary<MethodDefinition, MethodBody> dispose = new ();
-		
+
 		protected override void Process (MethodDefinition method)
 		{
 			if (!method.HasParameters || !method.IsVirtual || !method.HasBody)

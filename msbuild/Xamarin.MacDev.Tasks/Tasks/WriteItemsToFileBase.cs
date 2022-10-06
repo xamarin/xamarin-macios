@@ -8,11 +8,9 @@ using Microsoft.Build.Utilities;
 using Microsoft.Build.Tasks;
 using System.Xml.Linq;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class WriteItemsToFileBase : XamarinTask
-	{
-		static readonly XNamespace XmlNs = XNamespace.Get("http://schemas.microsoft.com/developer/msbuild/2003");
+namespace Xamarin.MacDev.Tasks {
+	public abstract class WriteItemsToFileBase : XamarinTask {
+		static readonly XNamespace XmlNs = XNamespace.Get ("http://schemas.microsoft.com/developer/msbuild/2003");
 
 		static readonly XName ProjectElementName = XmlNs + "Project";
 		static readonly XName ItemGroupElementName = XmlNs + "ItemGroup";
@@ -20,8 +18,8 @@ namespace Xamarin.MacDev.Tasks
 
 		#region Inputs
 
-		public ITaskItem[] Items { get; set; }
-        
+		public ITaskItem [] Items { get; set; }
+
 		public string ItemName { get; set; }
 
 		[Output]
@@ -38,12 +36,12 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var items = this.Items;
 			if (items == null)
-				items = new ITaskItem[0];
+				items = new ITaskItem [0];
 
 			var document = new XDocument (
 				new XElement (ProjectElementName,
 					new XElement (ItemGroupElementName,
-						items.Select (item => this.CreateElementFromItem(item)))));
+						items.Select (item => this.CreateElementFromItem (item)))));
 
 			if (this.Overwrite && System.IO.File.Exists (this.File.ItemSpec))
 				System.IO.File.Delete (this.File.ItemSpec);
@@ -66,11 +64,11 @@ namespace Xamarin.MacDev.Tasks
 		private IEnumerable<XElement> CreateMetadataFromItem (ITaskItem item)
 		{
 			if (this.IncludeMetadata) {
-				var metadata = item.CloneCustomMetadata();
+				var metadata = item.CloneCustomMetadata ();
 
 				return metadata.Keys
 					.OfType<object> ()
-					.Select (key => new XElement (XmlNs + key.ToString (), metadata[key].ToString ()));
+					.Select (key => new XElement (XmlNs + key.ToString (), metadata [key].ToString ()));
 			}
 
 			return Enumerable.Empty<XElement> ();
