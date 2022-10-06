@@ -5,11 +5,16 @@ parameters:
   type: string
   default: '[comment]: <> (This is a comment added by Azure DevOps)'
 
+- name: checkoutCode
+  type: boolean
+  default: true
+
 steps:
 
-- template: checkout.yml
-  parameters:
-    isPR: false # always use the latests version of the script
+- ${{ if parameters.checktCode }}:
+  - template: checkout.yml
+    parameters:
+      isPR: false # always use the latests version of the script
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
