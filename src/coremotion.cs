@@ -834,6 +834,7 @@ namespace CoreMotion {
 	// Just to please the generator that at this point does not know the hierarchy
 	interface NSUnitPressure : NSUnit { }
 	interface NSUnitTemperature : NSUnit { }
+	interface NSUnitLength : NSUnit { }
 
 	[Watch (8,5), NoTV, NoMac, iOS (15,4), MacCatalyst (15,4)]
 	[BaseType (typeof (CMLogItem))]
