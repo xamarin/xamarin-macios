@@ -7,27 +7,25 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class SmartCopyTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class SmartCopyTaskBase : XamarinTask {
 		readonly List<ITaskItem> copied = new List<ITaskItem> ();
 
 		#region Inputs
 
-		public ITaskItem[] DestinationFiles { get; set; }
+		public ITaskItem [] DestinationFiles { get; set; }
 
 		public ITaskItem DestinationFolder { get; set; }
 
 		[Required]
-		public ITaskItem[] SourceFiles { get; set; }
+		public ITaskItem [] SourceFiles { get; set; }
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] CopiedFiles { get; set; }
+		public ITaskItem [] CopiedFiles { get; set; }
 
 		#endregion
 
@@ -89,14 +87,14 @@ namespace Xamarin.MacDev.Tasks
 					}
 
 					for (int i = 0; i < SourceFiles.Length; i++) {
-						var target = DestinationFiles[i].GetMetadata ("FullPath");
-						var source = SourceFiles[i].GetMetadata ("FullPath");
+						var target = DestinationFiles [i].GetMetadata ("FullPath");
+						var source = SourceFiles [i].GetMetadata ("FullPath");
 						var targetDir = Path.GetDirectoryName (target);
 
 						EnsureDirectoryExists (targetDir);
 
 						if (FileChanged (source, target))
-							CopyFile (source, target, DestinationFiles[i].ItemSpec);
+							CopyFile (source, target, DestinationFiles [i].ItemSpec);
 					}
 				} else if (DestinationFolder != null) {
 					var destinationFolder = DestinationFolder.GetMetadata ("FullPath");

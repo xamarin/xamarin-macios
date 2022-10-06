@@ -13,10 +13,8 @@ using Xamarin.Linker;
 using Xamarin.Tuner;
 using Xamarin.Utils;
 
-namespace Xamarin.Linker.Steps
-{
-	public class ListExportedSymbols : BaseStep
-	{
+namespace Xamarin.Linker.Steps {
+	public class ListExportedSymbols : BaseStep {
 		PInvokeWrapperGenerator state;
 #if !NET
 		bool skip_sdk_assemblies;

@@ -10,20 +10,18 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class CollectITunesArtworkTaskBase : XamarinTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public abstract class CollectITunesArtworkTaskBase : XamarinTask {
 		#region Inputs
 
-		public ITaskItem[] ITunesArtwork { get; set; }
+		public ITaskItem [] ITunesArtwork { get; set; }
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] ITunesArtworkWithLogicalNames { get; set; }
+		public ITaskItem [] ITunesArtworkWithLogicalNames { get; set; }
 
 		#endregion
 
@@ -50,15 +48,15 @@ namespace Xamarin.iOS.Tasks
 				reader = new BinaryReader (File.OpenRead (path));
 				var pngHeader = reader.ReadBytes (8);
 				// Check for valid PNG header.
-				if (pngHeader[0] != 137 ||
-					pngHeader[1] != 80 || pngHeader[2] != 78 || pngHeader [3] != 71 ||
+				if (pngHeader [0] != 137 ||
+					pngHeader [1] != 80 || pngHeader [2] != 78 || pngHeader [3] != 71 ||
 					pngHeader [4] != 13 || pngHeader [5] != 10 || pngHeader [6] != 26 || pngHeader [7] != 10)
 					return false;
 
 				// First chunk is always the IHDR header chunk
 				reader.ReadBytes (4); // skip chunk size
 				var ihdrID = reader.ReadBytes (4);
-				if (ihdrID[0] != 73 || ihdrID[1] != 72 || ihdrID[2] != 68 || ihdrID[3] != 82)
+				if (ihdrID [0] != 73 || ihdrID [1] != 72 || ihdrID [2] != 68 || ihdrID [3] != 82)
 					return false;
 
 				width = ReadInt (reader);
@@ -93,8 +91,7 @@ namespace Xamarin.iOS.Tasks
 		extern static void CGImageRelease (/* CGImageRef */ IntPtr image);
 
 		// untyped enum -> CGColorSpace.h
-		enum CGColorRenderingIntent
-		{
+		enum CGColorRenderingIntent {
 			Default,
 			AbsoluteColorimetric,
 			RelativeColorimetric,
