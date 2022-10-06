@@ -19702,11 +19702,13 @@ namespace AppKit {
 #endif
 
 		[NoiOS]
+		[Mac (13, 0)]
 		[Export ("initUsingTextLayoutManager:")]
 		NativeHandle Constructor (bool usingTextLayoutManager);
 
 		[NoiOS]
 		[Static]
+		[Mac (13, 0)]
 		[Export ("textViewUsingTextLayoutManager:")]
 		NSTextView WithTextLayoutManager (bool usingTextLayoutManager);
 	}
