@@ -4,12 +4,18 @@ steps:
 
 - template: checkout.yml
   parameters:
-    isPR: false # always use the latests version of the script
+    - name: isPR
+      type: boolean
+      default: false # always use the latests version of the script
+    - name: commentToHide
+      type: string
+      default: '[comment]: <> (This is a comment added by Azure DevOps)'
+
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     $comments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
-    $ciComment = "[comment]: <> (This is a comment added by Azure DevOps)"
+    $ciComment = "$${ parameter.commentToHide }}"
 
     $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
     $prComments = $comments.GetCommentsForPR($prId)
