@@ -37,7 +37,7 @@ using NativeHandle = System.IntPtr;
 
 namespace Foundation {
 
-	public partial class NSArray {
+	public partial class NSArray : IEnumerable<NSObject> {
 
 		//
 		// Creates an array with the elements;   If the value passed is null, it
@@ -428,6 +428,29 @@ namespace Foundation {
 			} catch {
 				return null;
 			}
+		}
+
+		public TKey[] ToArray<TKey> () where TKey: class, INativeObject
+		{
+			var rv = new TKey [GetCount (Handle)];
+			for (var i = 0; i < rv.Length; i++)
+				rv [i] = GetItem<TKey> ((nuint) i);
+			return rv;
+		}
+
+		public NSObject[] ToArray ()
+		{
+			return ToArray<NSObject> ();
+		}
+
+		IEnumerator<NSObject> IEnumerable<NSObject>.GetEnumerator ()
+		{
+			return new NSFastEnumerator<NSObject> (this);
+		}
+
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			return new NSFastEnumerator<NSObject> (this);
 		}
 	}
 }
