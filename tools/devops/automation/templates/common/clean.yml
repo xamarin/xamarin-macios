@@ -11,7 +11,7 @@ parameters:
 
 steps:
 
-- ${{ if parameters.checktCode }}:
+- ${{ if parameters.checkoutCode }}:
   - template: checkout.yml
     parameters:
       isPR: false # always use the latests version of the script
