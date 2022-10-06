@@ -132,6 +132,8 @@ namespace HomeKit {
 		public virtual Task PerformMatterEcosystemAccessorySetupAsync (HMAccessorySetupRequest request, HMMatterTopology topology) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 	}
 
+#endif
+
 #if !NET
 	[Obsolete ("This class is removed.")]
 #else
@@ -236,6 +238,5 @@ namespace HomeKit {
 		public virtual void BeginRequestWithExtensionContext (NSExtensionContext context) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 	}
 
-#endif
 #endif
 }
