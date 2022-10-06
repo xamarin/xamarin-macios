@@ -16,8 +16,7 @@ namespace Xamarin.Bundler {
 #else
 namespace ObjCRuntime {
 #endif
-	class RuntimeOptions
-	{
+	class RuntimeOptions {
 #if NET
 		const string SocketsHandlerValue = "SocketsHttpHandler";
 #else

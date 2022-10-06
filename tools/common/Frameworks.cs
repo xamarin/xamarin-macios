@@ -10,8 +10,7 @@ using Registrar;
 
 using Xamarin.Utils;
 
-public class Framework
-{
+public class Framework {
 	public string Namespace;
 	public string Name; // this is the name to pass to the linker when linking. This can be an umbrella framework.
 	public string SubFramework; // if Name is an umbrella framework, this is the name of the actual sub framework.
@@ -44,8 +43,7 @@ public class Framework
 #endif
 }
 
-public class Frameworks : Dictionary <string, Framework>
-{
+public class Frameworks : Dictionary<string, Framework> {
 	public void Add (string @namespace, int major_version)
 	{
 		Add (@namespace, @namespace, new Version (major_version, 0));
@@ -151,7 +149,7 @@ public class Frameworks : Dictionary <string, Framework>
 
 					{ "CoreAnimation", "QuartzCore", 10, 5 },
 					{ "CoreText", 10, 5 }, // it's own framework since at least 10.9
-					{ "InputMethodKit", 10, 5 },
+					{ "InputMethodKit", 10, 5 },
 					{ "PrintCore", "ApplicationServices", 10,5, "PrintCore" },
 					{ "ScriptingBridge", 10, 5 },
 					{ "QuickLook", 10, 5 },
@@ -437,7 +435,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
 				{ "ScreenTime", "ScreenTime", 14,0 },
-				{ "SensorKit", "SensorKit", 14,0 },
+				{ "SensorKit", "SensorKit", new Version (14, 0), null, true }, /* not always present on device, e.g. any iPad, so must be weak linked; https://github.com/xamarin/xamarin-macios/issues/9938 */
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 
 				{ "AdServices", "AdServices", 14,3 },
@@ -456,7 +454,7 @@ public class Frameworks : Dictionary <string, Framework>
 				{ "AVRouting", "AVRouting", 16,0},
 				{ "BackgroundAssets", "BackgroundAssets", 16,0},
 				{ "PushToTalk", "PushToTalk", new Version (16,0), NotAvailableInSimulator},
-				{ "SharedWithYou", "SharedWithYouCore", 16, 0 },
+				{ "SharedWithYou", "SharedWithYou", 16, 0 },
 				{ "SharedWithYouCore", "SharedWithYouCore", 16, 0 },
 
 				// the above MUST be kept in sync with simlauncher

@@ -1,9 +1,7 @@
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class ScnTool : ScnToolTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class ScnTool : ScnToolTaskBase {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

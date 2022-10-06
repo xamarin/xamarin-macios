@@ -28,8 +28,9 @@ namespace Foundation {
 	public sealed class ConnectAttribute : Attribute {
 		string name;
 
-		public ConnectAttribute () {}
-		public ConnectAttribute (string name) {
+		public ConnectAttribute () { }
+		public ConnectAttribute (string name)
+		{
 			this.name = name;
 		}
 

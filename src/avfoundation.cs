@@ -1275,8 +1275,9 @@ namespace AVFoundation {
 		[Export ("interleaved")]
 		bool Interleaved { [Bind ("isInterleaved")] get; }
 
+		[Internal]
 		[Export ("streamDescription")]
-		AudioStreamBasicDescription StreamDescription { get; }
+		IntPtr _StreamDescription { get; }
 
 		[Export ("channelLayout"), NullAllowed]
 		AVAudioChannelLayout ChannelLayout { get; }

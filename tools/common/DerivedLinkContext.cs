@@ -13,10 +13,8 @@ using Xamarin.Bundler;
 using LinkContext = Xamarin.Bundler.DotNetLinkContext;
 #endif
 
-namespace Xamarin.Tuner
-{
-	public class DerivedLinkContext : LinkContext
-	{
+namespace Xamarin.Tuner {
+	public class DerivedLinkContext : LinkContext {
 		internal StaticRegistrar StaticRegistrar => Target.StaticRegistrar;
 		internal Target Target;
 		Symbols required_symbols;
@@ -214,8 +212,7 @@ namespace Xamarin.Tuner
 			return null;
 		}
 
-		class AttributeStorage : ICustomAttribute
-		{
+		class AttributeStorage : ICustomAttribute {
 			public CustomAttribute Attribute;
 			public TypeReference AttributeType { get; set; }
 
@@ -228,8 +225,7 @@ namespace Xamarin.Tuner
 			public Collection<CustomAttributeArgument> ConstructorArguments => Attribute.ConstructorArguments;
 		}
 
-		class LinkedAwayTypeReference : TypeReference
-		{
+		class LinkedAwayTypeReference : TypeReference {
 			// When a type is linked away, its Module and Scope properties
 			// return null.
 			// This class keeps those values around.
