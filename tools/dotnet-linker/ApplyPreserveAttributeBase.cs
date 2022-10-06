@@ -68,7 +68,7 @@ namespace Mono.Tuner {
 
 		void MarkMethodIfPreserved (MethodDefinition method)
 		{
-			foreach (var attribute in GetPreserveAttributes (method)) 
+			foreach (var attribute in GetPreserveAttributes (method))
 				MarkMethod (method, attribute);
 		}
 
@@ -133,9 +133,9 @@ namespace Mono.Tuner {
 
 				if (!attribute.HasFields)
 					continue;
- 
+
 				foreach (var named_argument in attribute.Fields)
-					if (named_argument.Name == "AllMembers" && (bool)named_argument.Argument.Value)
+					if (named_argument.Name == "AllMembers" && (bool) named_argument.Argument.Value)
 						Annotations.SetPreserve (type, TypePreserve.All);
 			}
 		}

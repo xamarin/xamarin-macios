@@ -7,7 +7,7 @@ namespace Xamarin.Linker.Steps {
 		{
 		}
 
-		public DotNetSubStepDispatcher (params BaseSubStep[] subSteps)
+		public DotNetSubStepDispatcher (params BaseSubStep [] subSteps)
 		{
 			foreach (var ss in subSteps)
 				Add (ss);

@@ -1201,9 +1201,6 @@ namespace CoreSpotlight {
 		[Export ("fetchAttributes", ArgumentSemantic.Strong)]
 		string[] FetchAttributes { get; set; }
 
-		[NullAllowed, Export ("protectionClasses", ArgumentSemantic.Strong)]
-		string[] ProtectionClasses { get; set; }
-
 		[Export ("filterQueries", ArgumentSemantic.Copy)]
 		string[] FilterQueries { get; set; }
 
