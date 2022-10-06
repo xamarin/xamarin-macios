@@ -332,6 +332,10 @@ namespace Introspection {
 					if (uaPlatform == Platform)
 						return true;
 				}
+				if (a is ObsoletedOSPlatformAttribute ab && ab.TryParse (out ApplePlatform? ubPlatform, out version)) {
+					if (ubPlatform == Platform)
+						return true;
+				}
 #else
 				if (ca is UnavailableAttribute ua) {
 					if (ua.Platform == Platform)
