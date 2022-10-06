@@ -1,16 +1,15 @@
 # Perform gihub cleaning steps
 
+parameters:
+- name: commentToHide
+  type: string
+  default: '[comment]: <> (This is a comment added by Azure DevOps)'
+
 steps:
 
 - template: checkout.yml
   parameters:
-    - name: isPR
-      type: boolean
-      default: false # always use the latests version of the script
-    - name: commentToHide
-      type: string
-      default: '[comment]: <> (This is a comment added by Azure DevOps)'
-
+    isPR: false # always use the latests version of the script
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
