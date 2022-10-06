@@ -8,11 +8,9 @@
 
 using System;
 
-namespace Xamarin.Mac.Tasks
-{
+namespace Xamarin.Mac.Tasks {
 	[Flags]
-	public enum XamMacArch
-	{
+	public enum XamMacArch {
 		Default = 0,
 		i386 = 1,
 		x86_64 = 2,

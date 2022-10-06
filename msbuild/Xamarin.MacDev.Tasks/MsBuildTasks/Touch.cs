@@ -3,10 +3,8 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Xamarin.Messaging.Build.Client;
 
-namespace Microsoft.Build.Tasks 
-{
-	public class Touch : TouchBase, ITaskCallback
-	{
+namespace Microsoft.Build.Tasks {
+	public class Touch : TouchBase, ITaskCallback {
 		public override bool Execute ()
 		{
 			bool result;

@@ -1584,6 +1584,10 @@ namespace WatchKit {
 		BARDisabled = 6,
 		NotApprovedToStartSession = 7,
 		NotApprovedToSchedule = 8,
+		[Watch (9,0)]
+		MustBeActiveToPrompt = 9,
+		[Watch (9,0)]
+		UnsupportedSessionType = 10,
 	}
 
 	[Watch (6,0), NoiOS]
@@ -1660,6 +1664,12 @@ namespace WatchKit {
 		[Export ("session")]
 		WKExtendedRuntimeSession Create ();
 
+		[Watch (9,0), NoiOS]
+		[Static]
+		[Async]
+		[Export ("requestAutoLaunchAuthorizationStatusWithCompletion:")]
+		void RequestAutoLaunchAuthorizationStatus (WKRequestAutoLaunchAuthorizationStatusCompletionHandler completion);
+
 		[Wrap ("WeakDelegate")]
 		[NullAllowed]
 		IWKExtendedRuntimeSessionDelegate Delegate { get; set; }
@@ -1687,6 +1697,7 @@ namespace WatchKit {
 	}
 
 	delegate double WKNofityUserIntervalHandler (WKHapticType type);
+	delegate void WKRequestAutoLaunchAuthorizationStatusCompletionHandler (WKExtendedRuntimeSessionAutoLaunchAuthorizationStatus authorizationStatus, [NullAllowed] NSError error);
 
 	[Watch (6,0), NoiOS]
 	[BaseType (typeof (WKInterfaceObject), Name = "WKInterfaceAuthorizationAppleIDButton")]

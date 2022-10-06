@@ -30,7 +30,7 @@ namespace Xamarin.Linker {
 					break;
 				case AssemblyAction.AddBypassNGen: // This should be turned into Save or Delete
 				case AssemblyAction.AddBypassNGenUsed: // This should be turned into Save or Delete
-					// Log this?
+													   // Log this?
 					break;
 				default:
 					// Log this?

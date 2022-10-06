@@ -16,20 +16,23 @@
     <Unzip
         SourceFiles="@(_NestedBrokerZip)"
         DestinationFolder="@(_NestedBrokerZip -> '$(_NestedZipExtractionDir)%(Filename)')"
+        Condition="'@(_NestedBrokerZip->Count())' != '0'"
     />
-    <Delete Files="@(_NestedBrokerZip)" />
+    <Delete Files="@(_NestedBrokerZip)" Condition="'@(_NestedBrokerZip->Count())' != '0'" />
 
     <Unzip
         SourceFiles="@(_NestedBuildZip)"
         DestinationFolder="@(_NestedBuildZip -> '$(_NestedZipExtractionDir)%(Filename)')"
+        Condition="'@(_NestedBuildZip->Count())' != '0'"
     />
-    <Delete Files="@(_NestedBuildZip)" />
+    <Delete Files="@(_NestedBuildZip)" Condition="'@(_NestedBuildZip->Count())' != '0'" />
 
     <Unzip
         SourceFiles="@(_NestediOSAppZip)"
         DestinationFolder="@(_NestediOSAppZip -> '$(_NestedZipExtractionDir)%(Filename)')"
+        Condition="'@(_NestediOSAppZip->Count())' != '0'"
     />
-    <Delete Files="@(_NestediOSAppZip)" />
+    <Delete Files="@(_NestediOSAppZip)" Condition="'@(_NestediOSAppZip->Count())' != '0'" />
   </Target>
 
   <Target Name="_ZipNestedZips"
@@ -38,14 +41,17 @@
     <ZipDirectory
         SourceDirectory="@(_NestedBrokerZip -> '$(_NestedZipExtractionDir)%(Filename)')"
         DestinationFile="@(_NestedBrokerZip)"
+        Condition="'@(_NestedBrokerZip->Count())' != '0'"
     />
     <ZipDirectory
         SourceDirectory="@(_NestedBuildZip -> '$(_NestedZipExtractionDir)%(Filename)')"
         DestinationFile="@(_NestedBuildZip)"
+        Condition="'@(_NestedBuildZip->Count())' != '0'"
     />
     <ZipDirectory
         SourceDirectory="@(_NestediOSAppZip -> '$(_NestedZipExtractionDir)%(Filename)')"
         DestinationFile="@(_NestediOSAppZip)"
+        Condition="'@(_NestediOSAppZip->Count())' != '0'"
     />
     <RemoveDir Directories="$(_NestedZipExtractionDir)" />
   </Target>
