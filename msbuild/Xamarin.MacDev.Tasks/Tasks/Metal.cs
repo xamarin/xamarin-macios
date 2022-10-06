@@ -1,9 +1,7 @@
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class Metal : MetalTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class Metal : MetalTaskBase {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())

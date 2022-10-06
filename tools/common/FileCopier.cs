@@ -5,8 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace Xamarin.Bundler {
-	public static class FileCopier 
-	{
+	public static class FileCopier {
 		enum CopyFileFlags : uint {
 			ACL = 1 << 0,
 			Stat = 1 << 1,
@@ -74,7 +73,7 @@ namespace Xamarin.Bundler {
 		[ThreadStatic]
 		static ReportErrorCallback reportErrorCallback;
 
-		static void Log (int min_verbosity, string format, params object[] arguments)
+		static void Log (int min_verbosity, string format, params object [] arguments)
 		{
 			if (logCallback is not null) {
 				logCallback (min_verbosity, format, arguments);
@@ -89,7 +88,7 @@ namespace Xamarin.Bundler {
 #endif
 		}
 
-		static void ReportError (int code, string format, params object[] arguments)
+		static void ReportError (int code, string format, params object [] arguments)
 		{
 			if (reportErrorCallback is not null) {
 				reportErrorCallback (code, format, arguments);
@@ -159,7 +158,7 @@ namespace Xamarin.Bundler {
 		// do not call `Marshal.GetLastWin32Error` inside this method since it's called while the p/invoke is executing and will return `260`
 		static CopyFileResult CopyFileCallback (CopyFileWhat what, CopyFileStep stage, IntPtr state, string source, string target, IntPtr ctx)
 		{
-//			Console.WriteLine ("CopyFileCallback ({0}, {1}, 0x{2}, {3}, {4}, 0x{5})", what, stage, state.ToString ("x"), source, target, ctx.ToString ("x"));
+			//			Console.WriteLine ("CopyFileCallback ({0}, {1}, 0x{2}, {3}, {4}, 0x{5})", what, stage, state.ToString ("x"), source, target, ctx.ToString ("x"));
 			switch (what) {
 			case CopyFileWhat.File:
 				if (!IsUptodate (source, target)) {
@@ -218,13 +217,13 @@ namespace Xamarin.Bundler {
 		static bool IsUptodate (string source, string target, bool check_contents = false, bool check_stamp = true)
 #endif
 		{
-#if MMP || MTOUCH || BUNDLER	// msbuild does not have force
+#if MMP || MTOUCH || BUNDLER   // msbuild does not have force                                  
 			if (Driver.Force)
 				return false;
 #endif
 
 			var tfi = new FileInfo (target);
-			
+
 			if (!tfi.Exists) {
 				Log (3, "Target '{0}' does not exist.", target);
 				return false;
@@ -245,7 +244,7 @@ namespace Xamarin.Bundler {
 				return true;
 			}
 
-#if MMP || MTOUCH || BUNDLER	// msbuild usages do not require CompareFiles optimization
+#if MMP || MTOUCH || BUNDLER   // msbuild usages do not require CompareFiles optimization                                                              
 			if (check_contents && Cache.CompareFiles (source, target)) {
 				Log (3, "Prerequisite '{0}' is newer than the target '{1}', but the contents are identical.", source, target);
 				return true;
@@ -258,7 +257,7 @@ namespace Xamarin.Bundler {
 			Log (3, "Prerequisite '{0}' is newer than the target '{1}'.", source, target);
 			return false;
 		}
-		
+
 		public static bool IsUptodate (IEnumerable<string> sources, IEnumerable<string> targets, ReportErrorCallback reportErrorCallback, LogCallback logCallback, bool check_stamp = true)
 		{
 			try {

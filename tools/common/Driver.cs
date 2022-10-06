@@ -524,7 +524,7 @@ namespace Xamarin.Bundler {
 			}
 		}
 
-		public static void WriteIfDifferent (string path, byte[] contents, bool use_stamp = false)
+		public static void WriteIfDifferent (string path, byte [] contents, bool use_stamp = false)
 		{
 			var tmp = path + ".tmp";
 
@@ -1150,7 +1150,7 @@ namespace Xamarin.Bundler {
 			return ret == 0;
 		}
 
-		public static void RunXcodeTool (Application app, string tool, params string[] arguments)
+		public static void RunXcodeTool (Application app, string tool, params string [] arguments)
 		{
 			RunXcodeTool (app, tool, (IList<string>) arguments);
 		}

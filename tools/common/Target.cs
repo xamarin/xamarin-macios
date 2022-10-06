@@ -150,7 +150,7 @@ namespace Xamarin.Bundler {
 				return rv;
 
 			var errno = Marshal.GetLastWin32Error ();
-			if (warnIfNoSuchPathExists || (errno !=2))
+			if (warnIfNoSuchPathExists || (errno != 2))
 				ErrorHelper.Warning (54, Errors.MT0054, path, FileCopier.strerror (errno), errno);
 			return path;
 		}
@@ -183,7 +183,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (asm == null)
-				throw ErrorHelper.CreateError (99, Errors.MX0099, $"could not find the product assembly {Driver.GetProductAssembly(App)} in the list of assemblies referenced by the executable");
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"could not find the product assembly {Driver.GetProductAssembly (App)} in the list of assemblies referenced by the executable");
 
 			AssemblyDefinition productAssembly = asm.AssemblyDefinition;
 

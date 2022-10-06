@@ -5,10 +5,8 @@ using Xamarin.MacDev;
 using System.Linq;
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class WriteAssetPackManifestTaskBase : XamarinTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public abstract class WriteAssetPackManifestTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]
@@ -45,7 +43,7 @@ namespace Xamarin.iOS.Tasks
 
 				url.Value = OnDemandResourceUrl + name;
 
-				resource["isStreamable"] = new PNumber (IsStreamable ? 1 : 0);
+				resource ["isStreamable"] = new PNumber (IsStreamable ? 1 : 0);
 			}
 
 			template.Save (OutputFile.ItemSpec, true, true);

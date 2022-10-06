@@ -1,7 +1,5 @@
-namespace Xamarin.MacDev.Tasks
-{
-	public static class PlatformUtils
-	{
+namespace Xamarin.MacDev.Tasks {
+	public static class PlatformUtils {
 		public static string GetTargetPlatform (string sdkPlatform, bool isWatchApp)
 		{
 			switch (sdkPlatform) {

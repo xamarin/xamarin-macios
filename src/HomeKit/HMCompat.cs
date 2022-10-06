@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using Foundation;
 using CoreFoundation;
@@ -100,6 +101,7 @@ namespace HomeKit {
 
 	} /* class HMChipServiceHome */
 
+	[Obsolete ("This class is removed.")]
 	public partial class HMAccessorySetupManager {
 
 #pragma warning disable CS0618 // HMChipServiceTopology and HMErrorHandler is obsolete
@@ -109,7 +111,12 @@ namespace HomeKit {
 	}	
 #endif // !NET
 
+#if !XAMCORE_5_0
 #if __IOS__ && !__MACCATALYST__
+#if NET
+	[EditorBrowsable (EditorBrowsableState.Never)]
+	[Obsolete ("This class is removed.")]
+#endif
 	public unsafe partial class HMAccessorySetupManager : NSObject {
 		public override NativeHandle ClassHandle => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 
@@ -124,5 +131,6 @@ namespace HomeKit {
 		public virtual void PerformMatterEcosystemAccessorySetup (HMAccessorySetupRequest request, HMMatterTopology topology, Action<NSError> completion) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual Task PerformMatterEcosystemAccessorySetupAsync (HMAccessorySetupRequest request, HMMatterTopology topology) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 	}
+#endif
 #endif
 }
