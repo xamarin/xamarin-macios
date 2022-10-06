@@ -442,7 +442,10 @@ package: $(PACKAGE_TARGETS) $(MSI_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 #
 templates: $(TEMPLATE_PACKS)
 
-install-templates: $(TEMPLATE_PACKS)
+# We manually clean first, because the makefile dependencies aren't configured correctly for the templates (the templates contain file names with spaces, which is quite hard to get right in make without making the code unbeliavably complicated)
+install-templates:
+	$(Q) $(MAKE) clean-templates
+	$(Q) $(MAKE) $(TEMPLATE_PACKS) -j4
 	$(Q) for platform in $(DOTNET_PLATFORMS); do \
 		echo "Uninstalling: $$platform"; \
 		$(DOTNET) new --uninstall Microsoft.$$platform.Templates; \
@@ -454,7 +457,10 @@ install-templates: $(TEMPLATE_PACKS)
 
 # We need to run the system dotnet, and we can't run it from inside this working copy, because we have a top-level
 # NuGet.config / global.json which will want to use the local dotnet. So run dotnet from the HOME directory instead.
-install-templates-system: $(TEMPLATE_PACKS)
+# We manually clean first, because the makefile dependencies aren't configured correctly for the templates (the templates contain file names with spaces, which is quite hard to get right in make without making the code unbeliavably complicated)
+install-templates-system:
+	$(Q) $(MAKE) clean-templates
+	$(Q) $(MAKE) $(TEMPLATE_PACKS) -j4
 	$(Q) for platform in $(DOTNET_PLATFORMS); do \
 		echo "Uninstalling: $$platform"; \
 		cd $(HOME) && dotnet new --uninstall Microsoft.$$platform.Templates || true; \
@@ -463,6 +469,9 @@ install-templates-system: $(TEMPLATE_PACKS)
 		echo "Installing $$nupkg"; \
 		cd $(HOME) && dotnet new --install $(CURDIR)/$$nupkg; \
 	done
+
+clean-templates:
+	$(Q) rm -f -- $(TEMPLATE_PACKS)
 
 install-system:
 	@# We don't want to execute these in parallel
