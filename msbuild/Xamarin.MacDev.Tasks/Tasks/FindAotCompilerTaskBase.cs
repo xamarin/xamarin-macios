@@ -45,7 +45,7 @@ namespace Xamarin.MacDev.Tasks {
 		string ComputeAotCompilerPath ()
 		{
 			var projectPath = Path.GetTempFileName ();
-			
+
 			File.Delete (projectPath);
 			projectPath += ".csproj";
 
@@ -65,10 +65,10 @@ namespace Xamarin.MacDev.Tasks {
 			File.WriteAllText (projectPath, csproj);
 
 			var dotnetPath = Environment.GetEnvironmentVariable ("DOTNET_HOST_PATH");
-			
+
 			if (string.IsNullOrEmpty (dotnetPath)) {
 				dotnetPath = "dotnet";
-			}	
+			}
 
 			var environment = default (Dictionary<string, string>);
 			var customHome = Environment.GetEnvironmentVariable ("DOTNET_CUSTOM_HOME");
@@ -103,7 +103,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (File.Exists (configFile)) {
 				arguments.Add ("/p:RestoreConfigFile=" + configFile);
 			}
-			
+
 			arguments.Add ("/bl:" + binlog);
 			arguments.Add (projectPath);
 
@@ -146,7 +146,7 @@ namespace Xamarin.MacDev.Tasks {
 			}
 		}
 
-		string GetTempBinLog()
+		string GetTempBinLog ()
 		{
 			var binlog = Path.GetTempFileName ();
 
