@@ -663,7 +663,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					f.VersionAvailableInSimulator = v14_2;
 					break;
 				case "ThreadNetwork":
-					f.Version = v16_1
+					f.Version = v16_1;
 					break;
 				// These frameworks are not available on Mac Catalyst
 				case "OpenGLES":
