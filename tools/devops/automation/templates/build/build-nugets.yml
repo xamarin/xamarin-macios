@@ -38,6 +38,14 @@ steps:
     displayName: 'Generate and Upload Build Asset Registry Manifest for ${{ platform.platform }}'
     condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['${{ platform.conditionVariable }}'],''))
 
+- publish:
+  displayName: 'Publish Artifact: AssetManifests'
+  inputs:
+    targetPath: $(Build.SourcesDirectory)/_build/bar-manifests
+    artifactName: AssetManifests
+  continueOnError: true
+  condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
+
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: build-binlogs'
   inputs:

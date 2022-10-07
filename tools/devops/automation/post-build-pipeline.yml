@@ -45,10 +45,17 @@ jobs:
   - script: make -C $(Build.SourcesDirectory)/dotnet version-props
     displayName: make version props
 
+  - bash: |
+      ls -la $(Agent.BuildDirectory)/macios || true
+      find $(Agent.BuildDirectory)/macios || true
+    displayName: 'Debug code'
+    condition: always() # we do not care about any errors here
+    continueOnError: true
+
   - ${{ each platform in parameters.dotnetPlatforms }}:
     - powershell: >-
         & dotnet build -v:n -t:PushManifestToBuildAssetRegistry
-        -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\AssetManifests-${{ platform }} -p:BuildAssetRegistryToken=$(MaestroAccessToken)
+        -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\${{ platform }} -p:BuildAssetRegistryToken=$(MaestroAccessToken)
         $(Build.SourcesDirectory)\dotnet\package\Microsoft.${{ platform }}.Ref\package.csproj
         -bl:$(Build.ArtifactStagingDirectory)\post-build-binlogs\push-bar-manifest-${{ platform }}.binlog
       displayName: 'Push ${{ platform }} manifest to build asset registry'

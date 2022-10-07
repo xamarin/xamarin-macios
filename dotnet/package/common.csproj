@@ -29,7 +29,7 @@
     <_buildPath>$(_RepositoryPath)/_build</_buildPath>
     <_packagePath Condition="'$(_packagePath)' == ''">$(_buildPath)\$(PackageId)\</_packagePath>
     <NupkgPath Condition=" '$(NupkgPath)' == '' ">$([MSBuild]::NormalizeDirectory ('$(_buildPath)\nupkgs\'))</NupkgPath>
-    <BarManifestOutputPath Condition=" '$(BarManifestOutputPath)' == '' ">$(NupkgPath)\bar-manifests</BarManifestOutputPath>
+    <BarManifestOutputPath Condition=" '$(BarManifestOutputPath)' == '' ">$(NupkgPath)\bar-manifests\$(_PlatformName)</BarManifestOutputPath>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'iOS'">iOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'tvOS'">tvOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'watchOS'">watchOS</_AssemblyInfix>
@@ -132,15 +132,13 @@
 
     <GenerateBuildManifest
         Artifacts="@(BuildArtifacts)"
-        OutputPath="$(BarManifestOutputPath)\AssetManifest-$(_PlatformName).xml"
+        OutputPath="$(BarManifestOutputPath)\AssetManifest.xml"
         BuildId="$(BUILD_BUILDNUMBER)"
         BuildData="@(ManifestBuildData)"
         RepoUri="$(BUILD_REPOSITORY_URI)"
         RepoBranch="$(BUILD_SOURCEBRANCH)"
         RepoCommit="$(BUILD_SOURCEVERSION)"
         PublishingVersion="3" />
-
-    <Message Importance="high" Text="##vso[artifact.upload containerfolder=AssetManifests-$(_PlatformName);artifactname=AssetManifests-$(_PlatformName)]$(BarManifestOutputPath)/AssetManifest-$(_PlatformName).xml" />
   </Target>
 
   <Target Name="PushManifestToBuildAssetRegistry" >
