@@ -21,18 +21,17 @@ namespace Xamarin.Tests {
 			static TemplateType ParseConfig (ApplePlatform platform, string template)
 			{
 				// read the template's configuration to figure out if it's a project template, and if not, skip it
-				var dir = Path.Combine(Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{platform.AsString()}.Templates");
-				var jsonPath = Path.Combine(dir, template, ".template.config", "template.json");
-				var options = new JsonSerializerOptions
-				{
+				var dir = Path.Combine (Configuration.SourceRoot, "dotnet", "Templates", $"Microsoft.{platform.AsString ()}.Templates");
+				var jsonPath = Path.Combine (dir, template, ".template.config", "template.json");
+				var options = new JsonSerializerOptions {
 					PropertyNameCaseInsensitive = true,
 					IncludeFields = true,
 					AllowTrailingCommas = false, // for max compat
 				};
 				try {
-					var json = JsonSerializer.Deserialize<TemplateConfig>(File.ReadAllText(jsonPath), options);
+					var json = JsonSerializer.Deserialize<TemplateConfig> (File.ReadAllText (jsonPath), options);
 					var type = json.Tags.Type;
-					return Enum.Parse<TemplateType>(type, true);
+					return Enum.Parse<TemplateType> (type, true);
 				} catch (Exception e) {
 					throw new Exception ($"Failed to parse {jsonPath}", e);
 				}
@@ -44,13 +43,12 @@ namespace Xamarin.Tests {
 			}
 		}
 
-		public enum TemplateType
-		{
+		public enum TemplateType {
 			Project,
 			Item,
 		}
 
-		public static TemplateInfo[] Templates = {
+		public static TemplateInfo [] Templates = {
 			/* project templates */
 			new TemplateInfo (ApplePlatform.iOS, "ios"),
 			new TemplateInfo (ApplePlatform.iOS, "ios-tabbed"),
@@ -91,7 +89,7 @@ namespace Xamarin.Tests {
 			new TemplateInfo (ApplePlatform.MacOSX, "macos-viewcontroller"),
 		};
 
-		public static TemplateInfo[] GetProjectTemplates ()
+		public static TemplateInfo [] GetProjectTemplates ()
 		{
 			return Templates.Where (v => v.TemplateType == TemplateType.Project).ToArray ();
 		}
@@ -205,36 +203,36 @@ namespace Xamarin.Tests {
 
 			var csproj = Path.Combine (outputDir, info.Template + ".csproj");
 			var rv = DotNet.AssertBuild (csproj);
-			var warnings = BinLog.GetBuildLogWarnings(rv.BinLogPath).Select(v => v.Message);
-			Assert.That(warnings, Is.Empty, $"Build warnings:\n\t{string.Join("\n\t", warnings)}");
+			var warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
+			Assert.That (warnings, Is.Empty, $"Build warnings:\n\t{string.Join ("\n\t", warnings)}");
 
 			if (info.Execute) {
-				var runtimeIdentifiers = GetDefaultRuntimeIdentifier(platform);
+				var runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
 
-				Assert.IsTrue(CanExecute(info.Platform, runtimeIdentifiers), "Must be executable to execute!");
+				Assert.IsTrue (CanExecute (info.Platform, runtimeIdentifiers), "Must be executable to execute!");
 
 				// First add some code to exit the template if it launches successfully.
-				var mainFile = Path.Combine(outputDir, "Main.cs");
-				var mainContents = File.ReadAllText(mainFile);
+				var mainFile = Path.Combine (outputDir, "Main.cs");
+				var mainContents = File.ReadAllText (mainFile);
 				var exitSampleWithSuccess = @"NSTimer.CreateScheduledTimer (1, (v) => {
 	Console.WriteLine (Environment.GetEnvironmentVariable (""MAGIC_WORD""));
 	Environment.Exit (0);
 			});
 			";
-				var modifiedMainContents = mainContents.Replace("// This is the main entry point of the application.", exitSampleWithSuccess);
-				Assert.AreNotEqual(modifiedMainContents, mainContents, "Failed to modify the main content");
-				File.WriteAllText(mainFile, modifiedMainContents);
+				var modifiedMainContents = mainContents.Replace ("// This is the main entry point of the application.", exitSampleWithSuccess);
+				Assert.AreNotEqual (modifiedMainContents, mainContents, "Failed to modify the main content");
+				File.WriteAllText (mainFile, modifiedMainContents);
 
 				// Build the sample
-				rv = DotNet.AssertBuild(csproj);
+				rv = DotNet.AssertBuild (csproj);
 
 				// There should still not be any warnings
-				warnings = BinLog.GetBuildLogWarnings(rv.BinLogPath).Select(v => v.Message);
-				Assert.That(warnings, Is.Empty, $"Build warnings (2):\n\t{string.Join("\n\t", warnings)}");
+				warnings = BinLog.GetBuildLogWarnings (rv.BinLogPath).Select (v => v.Message);
+				Assert.That (warnings, Is.Empty, $"Build warnings (2):\n\t{string.Join ("\n\t", warnings)}");
 
-				var appPath = GetAppPath(csproj, platform, runtimeIdentifiers);
-				var appExecutable = GetNativeExecutable(platform, appPath);
-				ExecuteWithMagicWordAndAssert(appExecutable);
+				var appPath = GetAppPath (csproj, platform, runtimeIdentifiers);
+				var appExecutable = GetNativeExecutable (platform, appPath);
+				ExecuteWithMagicWordAndAssert (appExecutable);
 			}
 		}
 	}
