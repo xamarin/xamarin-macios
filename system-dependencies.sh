@@ -190,6 +190,14 @@ while ! test -z $1; do
 			IGNORE_DOTNET=1
 			shift
 			;;
+		--ignore-shellcheck)
+			IGNORE_SHELLCHECK=1
+			shift
+			;;
+		--ignore-yamllint)
+			IGNORE_YAMLLINT=1
+			shift
+			;;
 		-v | --verbose)
 			set -x
 			shift
