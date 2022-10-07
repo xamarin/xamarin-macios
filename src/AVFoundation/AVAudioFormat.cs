@@ -11,6 +11,7 @@
 #pragma warning disable 0661
 // In both of these cases, the NSObject Equals/GetHashCode implementation works fine, so we can ignore these warnings.
 
+using AudioToolbox;
 using Foundation;
 using ObjCRuntime;
 using System;
@@ -33,6 +34,31 @@ namespace AVFoundation {
 		public static bool operator != (AVAudioFormat a, AVAudioFormat b)
 		{
 			return !(a == b);
+		}
+
+		[Export ("StreamDescription")]
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("macos10.10")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("maccatalyst8.0")]
+#endif
+		public virtual AudioStreamBasicDescription StreamDescription {
+#if NET
+			[SupportedOSPlatform ("ios8.0")]
+			[SupportedOSPlatform ("macos10.10")]
+			[SupportedOSPlatform ("tvos")]
+			[SupportedOSPlatform ("maccatalyst8.0")]
+#endif
+			get {
+				var ptr = _StreamDescription;
+				if (ptr == IntPtr.Zero)
+					return default (AudioStreamBasicDescription);
+				unsafe {
+					AudioStreamBasicDescription *p = (AudioStreamBasicDescription *) ptr;
+					return *p;
+				}
+			}
 		}
 	}
 }

@@ -23,12 +23,12 @@ namespace Xamarin.MacDev.Tasks {
 		[Required]
 		public string IntermediateOutputPath { get; set; }
 
-		[Required]		
-		public ITaskItem[] NativeReferences { get; set; }
-		
+		[Required]
+		public ITaskItem [] NativeReferences { get; set; }
+
 		// This is a list of files to copy back to Windows
 		[Output]
-		public ITaskItem[] PackagedFiles { get; set; }
+		public ITaskItem [] PackagedFiles { get; set; }
 
 		public override bool Execute ()
 		{
@@ -103,7 +103,7 @@ namespace Xamarin.MacDev.Tasks {
 			return !Log.HasLoggedErrors;
 		}
 
-		static bool ContainsSymlinks (ITaskItem[] items)
+		static bool ContainsSymlinks (ITaskItem [] items)
 		{
 			foreach (var item in items) {
 				if (PathUtils.IsSymlinkOrContainsSymlinks (item.ItemSpec))
@@ -113,11 +113,11 @@ namespace Xamarin.MacDev.Tasks {
 			return false;
 		}
 
-		string [] NativeReferenceAttributeNames = new string [] { "Kind", "ForceLoad", "SmartLink", "Frameworks", "WeakFrameworks", "LinkerFlags", "NeedsGccExceptionHandling", "IsCxx"};
+		string [] NativeReferenceAttributeNames = new string [] { "Kind", "ForceLoad", "SmartLink", "Frameworks", "WeakFrameworks", "LinkerFlags", "NeedsGccExceptionHandling", "IsCxx" };
 
 		string CreateManifest (string resourcePath)
 		{
-			XmlWriterSettings settings = new XmlWriterSettings() {
+			XmlWriterSettings settings = new XmlWriterSettings () {
 				OmitXmlDeclaration = true,
 				Indent = true,
 				IndentChars = "\t",

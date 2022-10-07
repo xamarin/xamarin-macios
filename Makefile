@@ -105,13 +105,18 @@ else
 endif
 endif
 
-package:
-	mkdir -p ../package
-	$(MAKE) -C $(MACCORE_PATH) package
+.PHONY: package release
+package release:
+	$(Q) $(MAKE) -C $(TOP)/release release
 	# copy .pkg, .zip and *updateinfo to the packages directory to be uploaded to storage
-	$(CP) $(MACCORE_PATH)/release/*.pkg ../package
-	$(CP) $(MACCORE_PATH)/release/*.zip ../package
-	$(CP) $(MACCORE_PATH)/release/*updateinfo ../package
+	$(Q) mkdir -p ../package
+	$(Q) echo "Output from 'make release':"
+	$(Q) ls -la $(TOP)/release | sed 's/^/    /'
+	$(Q) if test -n "$$(shopt -s nullglob; echo $(TOP)/release/*.pkg)"; then $(CP) $(TOP)/release/*.pkg ../package; fi
+	$(Q) if test -n "$$(shopt -s nullglob; echo $(TOP)/release/*.zip)"; then $(CP) $(TOP)/release/*.zip ../package; fi
+	$(Q) if test -n "$$(shopt -s nullglob; echo $(TOP)/release/*updateinfo)"; then $(CP) $(TOP)/release/*updateinfo ../package; fi
+	$(Q) echo "Packages:"
+	$(Q) ls -la ../package | sed 's/^/    /'
 
 dotnet-install-system:
 	$(Q) $(MAKE) -C dotnet install-system
@@ -124,9 +129,6 @@ install-system: install-system-ios install-system-mac
 	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Xamarin.ObjcBinding.Tasks.dll
 	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac
 	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C msbuild V=$(V)
-ifdef ENABLE_XAMARIN
-	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C $(MACCORE_PATH) V=$(V)
-endif
 
 install-system-ios:
 ifdef INCLUDE_IOS
@@ -194,9 +196,5 @@ git-clean-all:
 	else \
 		echo "Done"; \
 	fi; \
-
-ifdef ENABLE_XAMARIN
-SUBDIRS += $(MACCORE_PATH)
-endif
 
 SUBDIRS += tests

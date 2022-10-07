@@ -15,8 +15,7 @@ using Xamarin.Localization.MSBuild;
 
 namespace Xamarin.MacDev.Tasks {
 
-	public abstract class ResolveNativeReferencesBase : XamarinTask
-	{
+	public abstract class ResolveNativeReferencesBase : XamarinTask {
 		#region Inputs
 
 		[Required]
@@ -168,7 +167,12 @@ namespace Xamarin.MacDev.Tasks {
 					t = new TaskItem (Path.Combine (resources, name));
 					t.SetMetadata ("Kind", "Dynamic");
 					break;
+				case ".a": // static library
+					t = new TaskItem (Path.Combine (resources, name));
+					t.SetMetadata ("Kind", "Static");
+					break;
 				default:
+					Log.LogWarning (MSBStrings.W7105 /* Unexpected extension '{0}' for native reference '{1}' in manifest '{2}'. */, Path.GetExtension (name), name, manifest);
 					t = r;
 					break;
 				}
@@ -221,8 +225,7 @@ namespace Xamarin.MacDev.Tasks {
 				// note: last part is not translated since it match the (non-translated) keys inside the `Info.plist`
 				var msg = (path == null) ? MSBStrings.E0174 : MSBStrings.E0175 + $" SupportedPlatform: '{platformName}', SupportedPlatformVariant: '{variant}', SupportedArchitectures: '{Architectures}'.";
 				Log.LogError (msg, xcframework);
-			}
-			catch (Exception) {
+			} catch (Exception) {
 				Log.LogError (MSBStrings.E0174, xcframework);
 			}
 			return null;
