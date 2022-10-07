@@ -60,7 +60,7 @@ namespace Xamarin.MacDev.Tasks {
 			if (PackagedFiles is not null) {
 				foreach (var package in PackagedFiles) {
 					var localRelativePath = GetLocalRelativePath (package.ItemSpec);
-					await taskRunner.GetFileAsync (localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
+					await taskRunner.GetFileAsync (this, localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
 				}
 			}
 		}

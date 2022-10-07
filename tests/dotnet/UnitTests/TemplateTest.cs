@@ -7,28 +7,32 @@ namespace Xamarin.Tests {
 		public struct TemplateInfo {
 			public readonly ApplePlatform Platform;
 			public readonly string Template;
-			public readonly bool ValidateSuccessfulBuild;
 			public readonly bool Execute;
 
-			public TemplateInfo (ApplePlatform platform, string template, bool validateSuccessfulBuild = true, bool execute = false)
+			public TemplateInfo (ApplePlatform platform, string template, bool execute = false)
 			{
 				Platform = platform;
 				Template = template;
-				ValidateSuccessfulBuild = validateSuccessfulBuild;
 				Execute = execute;
 			}
 		}
 
-		public static TemplateInfo[] Templates = {
+		public static TemplateInfo [] Templates = {
 			new TemplateInfo (ApplePlatform.iOS, "ios"),
 			new TemplateInfo (ApplePlatform.iOS, "ios-tabbed"),
 			new TemplateInfo (ApplePlatform.iOS, "ioslib"),
 			new TemplateInfo (ApplePlatform.iOS, "iosbinding"),
+
 			new TemplateInfo (ApplePlatform.TVOS, "tvos"),
+			new TemplateInfo (ApplePlatform.TVOS, "tvoslib"),
 			new TemplateInfo (ApplePlatform.TVOS, "tvosbinding"),
+
 			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalyst", execute: true),
+			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystlib"),
 			new TemplateInfo (ApplePlatform.MacCatalyst, "maccatalystbinding"),
+
 			new TemplateInfo (ApplePlatform.MacOSX, "macos", execute: true),
+			new TemplateInfo (ApplePlatform.MacOSX, "macoslib"),
 			new TemplateInfo (ApplePlatform.MacOSX, "macosbinding"),
 		};
 
@@ -76,12 +80,8 @@ namespace Xamarin.Tests {
 
 		[Test]
 		[TestCaseSource (nameof (Templates))]
-		public void CreateAndBuildTemplate (TemplateInfo info)
+		public void CreateAndBuildProjectTemplate (TemplateInfo info)
 		{
-			if (!info.ValidateSuccessfulBuild) {
-				return;
-			}
-
 			Configuration.IgnoreIfIgnoredPlatform (info.Platform);
 			var tmpDir = Cache.CreateTemporaryDirectory ();
 			var outputDir = Path.Combine (tmpDir, info.Template);
