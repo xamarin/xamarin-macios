@@ -16,6 +16,11 @@ resources:
       stages:
       - prepare_release
 
+parameters:
+- name: dotnetPlatforms
+  type; object
+  default: [ iOS, tvOS, macOS, MacCatalyst ]
+
 jobs:
 - job: post_build
   displayName: Post Build
@@ -25,8 +30,6 @@ jobs:
     clean: all
   variables:
   - group: Publish-Build-Assets
-  - name: dotnetPlatforms
-    value: [ iOS, tvOS, macOS, MacCatalyst ]
   steps:
   - checkout: self
     path: s/xamarin-macios
@@ -42,7 +45,7 @@ jobs:
   - script: make -C $(Build.SourcesDirectory)/dotnet version-props
     displayName: make version props
 
-  - ${{ each platform in variables.dotnetPlatforms }}:
+  - ${{ each platform in parameters.dotnetPlatforms }}:
     - powershell: >-
         & dotnet build -v:n -t:PushManifestToBuildAssetRegistry
         -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\AssetManifests-{{ platform }} -p:BuildAssetRegistryToken=$(MaestroAccessToken)
