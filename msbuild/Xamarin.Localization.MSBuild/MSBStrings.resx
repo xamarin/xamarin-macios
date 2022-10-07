@@ -1450,4 +1450,13 @@
                 * 'Remove', 'Boolean', 'String', 'StringArray'
         </comment>
     </data>
+
+    <data name="W7105" xml:space="preserve">
+        <value>Unexpected extension '{0}' for native reference '{1}' in manifest '{2}'.</value>
+        <comment>
+            {0}: file extension
+            {1}: path to a file
+            {2}: path to a file
+        </comment>
+    </data>
 </root>
