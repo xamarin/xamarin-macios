@@ -22,7 +22,7 @@ namespace MonoTouchFixtures.SharedWithYouCore {
 	[Preserve (AllMembers = true)]
 	public class SWCollaborationMetadataTests {
 
-        [OneTimeSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (14, 0);
 
 		[Test]
@@ -35,8 +35,8 @@ namespace MonoTouchFixtures.SharedWithYouCore {
 				"_InitWithLocalIdentifier");
 		}
 
-        [TestCase (SWIdentifierType.Local, "_InitWithLocalIdentifier")]
-        [TestCase (SWIdentifierType.Collaboration, "_InitWithCollaborationIdentifier")]
+		[TestCase (SWIdentifierType.Local, "_InitWithLocalIdentifier")]
+		[TestCase (SWIdentifierType.Collaboration, "_InitWithCollaborationIdentifier")]
 		public void IdentifierTypeConstructorTest (SWIdentifierType identifierType, string methodName)
 		{
 			// SharedWithYouCore framework seems to work only for devices

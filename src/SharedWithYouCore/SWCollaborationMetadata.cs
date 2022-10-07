@@ -10,8 +10,10 @@
 #nullable enable
 
 using System;
-using CoreGraphics;
-using CoreFoundation;
+using Foundation;
+using ObjCRuntime;
+
+namespace SharedWithYouCore {
 
 #if NET
 	[UnsupportedOSPlatform ("watchos")]
@@ -22,7 +24,6 @@ using CoreFoundation;
 #else
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 #endif
-namespace SharedWithYouCore {
 	public enum SWIdentifierType {
 		Local,
 		Collaboration,
@@ -41,11 +42,18 @@ namespace SharedWithYouCore {
 #else
 		[NoWatch, NoTV, Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
 #endif  
-		public SWCollaborationMetadata (string identifier, SWIdentifierType identifierType) : base (NSObjectFlag.Empty) => identifierType switch
-		{
-			SWIdentifierType.Local => InitializeHandle (_InitWithLocalIdentifier (identifier), "initWithLocalIdentifier:");
-			SWIdentifierType.Collaboration => InitializeHandle (_InitWithCollaborationIdentifier (identifier), "initWithCollaborationIdentifier:");
-			_ => ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (identifierType), $"Unknown identifier type: {identifierType}");
+		public SWCollaborationMetadata (string identifier, SWIdentifierType identifierType) : base (NSObjectFlag.Empty) {
+			switch(identifierType) {
+			case SWIdentifierType.Local:
+				InitializeHandle (_InitWithLocalIdentifier (identifier), "initWithLocalIdentifier:");
+				break;
+			case SWIdentifierType.Collaboration:
+				InitializeHandle (_InitWithCollaborationIdentifier (identifier), "initWithCollaborationIdentifier:");
+				break;
+			default:
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (identifierType), $"Unknown identifier type: {identifierType}");
+				break;
+			}
 		}
 	}
 }
