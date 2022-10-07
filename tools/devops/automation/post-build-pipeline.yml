@@ -18,7 +18,7 @@ resources:
 
 parameters:
 - name: dotnetPlatforms
-  type; object
+  type: object
   default: [ iOS, tvOS, macOS, MacCatalyst ]
 
 jobs:
