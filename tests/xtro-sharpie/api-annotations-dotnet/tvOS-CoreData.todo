@@ -1,3 +1,0 @@
-!deprecated-attribute-missing! NSManagedObjectContext::init missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSPropertyDescription::isStoredInExternalRecord missing a [Deprecated] attribute
-!deprecated-attribute-missing! NSPropertyDescription::setStoredInExternalRecord: missing a [Deprecated] attribute

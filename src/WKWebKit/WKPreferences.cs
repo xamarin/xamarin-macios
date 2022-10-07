@@ -16,6 +16,7 @@ namespace WebKit {
 		[SupportedOSPlatform ("macos11.3")]
 		[SupportedOSPlatform ("ios14.5")]
 		[SupportedOSPlatform ("maccatalyst14.5")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Mac (11,3)]
 		[iOS (14,5)]

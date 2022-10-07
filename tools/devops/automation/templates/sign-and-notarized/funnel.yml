@@ -3,78 +3,160 @@ parameters:
 - name: packages
   type: object
 
-steps:
+- name: enableDotnet
+  type: boolean
+  default: true
 
-# DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: recursive
-  path: s/xamarin-macios
+- name: isPR
+  type: boolean
 
-- checkout: maccore
-  clean: true
-  persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
 
-- checkout: templates
-  clean: true
+jobs:
+- job: configure
+  displayName: 'Configure build'
+  pool:
+    vmImage: windows-latest
 
-- checkout: release-scripts
-  clean: true
+  variables:
+    isMain: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+    isScheduled: $[eq(variables['Build.Reason'], 'Schedule')]
 
-- bash: |
-    mkdir -p $(Build.SourcesDirectory)/package/notarized
-  displayName: 'Create target directories.'
+  steps:
+  - template: ../common/configure.yml
 
-- task: DownloadPipelineArtifact@2
-  displayName: Download notarized build dotnet
-  inputs:
-    artifact: 'dotnet-signed'
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/package
+- job: funnel_job
+  dependsOn:
+  - configure
+  displayName: 'Collect signed artifacts'
+  condition: and(not(failed()), not(canceled())) # default is succeded(), but that fails if there are any skipped jobs, so change the condition to !failed && !cancelled
+  timeoutInMinutes: 1000
+  pool:
+    vmImage: internal-macos-11
+  workspace:
+    clean: all
+  variables:
+    ${{ each pkg in parameters.packages }}:
+      ${{ pkg.conditionVariable }}: $[ dependencies.configure.outputs['configure_platforms.${{ pkg.conditionVariable }}'] ]
 
-- ${{ each pkg in parameters.packages }}:
-  - task: DownloadPipelineArtifact@2
-    displayName: Download notarized build ${{ pkg.name }}
-    condition: ne('', variables['${{ pkg.conditionVariable }}'])
-    inputs:
-      artifact: 'classic-${{ pkg.name }}-signed'
-      allowFailedBuilds: true
-      path: '$(Build.ArtifactStagingDirectory)/classic-${{ pkg.name }}-signed'
+  steps:
+
+  # DO NOT USE THE checkout.yml template. The reason is that the template changes the hash which results in a problem with the artifacts scripts
+  - checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
+    clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
+    submodules: recursive
+    path: s/xamarin-macios
+
+  - checkout: maccore
+    clean: true
+    persistCredentials: true  # hugely important, else there are some scripts that check a single file from maccore that will fail
+
+  - checkout: templates
+    clean: true
+
+  - checkout: release-scripts
+    clean: true
 
   - bash: |
-      set -x
-      set -e
+      mkdir -p $(Build.SourcesDirectory)/package/notarized
+    displayName: 'Create target directories.'
 
-      FULL_PATH="$(Build.ArtifactStagingDirectory)/classic-${{ pkg.name }}-signed"
-      ls -lR $FULL_PATH
-      cp -a "$FULL_PATH/." "$(Build.SourcesDirectory)/package"
-    displayName: 'Move pkg ${{ pkg.name }} to its final destination'
-    condition: ne('', variables['${{ pkg.conditionVariable }}'])
+  - task: DownloadPipelineArtifact@2
+    displayName: Download notarized build dotnet
+    inputs:
+      artifact: 'dotnet-signed'
+      allowFailedBuilds: true
+      path: $(Build.SourcesDirectory)/package
 
-- template: generate-workspace-info.yml@templates
-  parameters:
-    GitHubToken: $(GitHub.Token)
-    ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+  - ${{ each pkg in parameters.packages }}:
+    - task: DownloadPipelineArtifact@2
+      displayName: Download notarized build ${{ pkg.name }}
+      condition: ne('', variables['${{ pkg.conditionVariable }}'])
+      inputs:
+        artifact: 'classic-${{ pkg.name }}-signed'
+        allowFailedBuilds: true
+        path: '$(Build.ArtifactStagingDirectory)/classic-${{ pkg.name }}-signed'
 
-# download workload json and add it to out package internal dir, this allows the rest of jobs
-# not to need several artifacts but just package-internal
-- task: DownloadPipelineArtifact@2
-  displayName: Download WorkloadRollback.json
-  inputs:
-    patterns: '**/WorkloadRollback.json'
-    allowFailedBuilds: true
-    path: $(Build.SourcesDirectory)/package-internal
+    - bash: |
+        set -x
+        set -e
 
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Build Internal Artifacts'
-  inputs:
-    targetPath: $(Build.SourcesDirectory)/package-internal
-    artifactName: package-internal
-  continueOnError: true
+        FULL_PATH="$(Build.ArtifactStagingDirectory)/classic-${{ pkg.name }}-signed"
+        ls -lR $FULL_PATH
+        cp -a "$FULL_PATH/." "$(Build.SourcesDirectory)/package"
+      displayName: 'Move pkg ${{ pkg.name }} to its final destination'
+      condition: ne('', variables['${{ pkg.conditionVariable }}'])
 
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Build Artifacts (notarized)'
-  inputs:
-    targetPath: $(Build.SourcesDirectory)/package
-    artifactName: package
-  continueOnError: true
+  - template: generate-workspace-info.yml@templates
+    parameters:
+      GitHubToken: $(GitHub.Token)
+      ArtifactDirectory: $(Build.SourcesDirectory)/package-internal
+
+  # download workload json and add it to out package internal dir, this allows the rest of jobs
+  # not to need several artifacts but just package-internal
+  - task: DownloadPipelineArtifact@2
+    displayName: Download WorkloadRollback.json
+    inputs:
+      patterns: '**/WorkloadRollback.json'
+      allowFailedBuilds: true
+      path: $(Build.SourcesDirectory)/package-internal
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Build Internal Artifacts'
+    inputs:
+      targetPath: $(Build.SourcesDirectory)/package-internal
+      artifactName: package-internal
+    continueOnError: true
+
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Build Artifacts (notarized)'
+    inputs:
+      targetPath: $(Build.SourcesDirectory)/package
+      artifactName: package
+    continueOnError: true
+
+# This job uploads the pkgs generated by the build step in the azure blob storage. This has to be done in a different job
+# because the azure blob storate tools DO NOT work on mac OS meaning that we need a bot running Windows. build uploads the contents
+# to the pipeline artefacts and we download and upload to azure in this job.
+- job: upload_azure_blob
+  displayName: 'Upload packages to Azure & SBOM'
+  timeoutInMinutes: 1000
+  dependsOn:
+  - funnel_job
+  condition: and(not(failed()), not(canceled())) # default is succeded(), but that fails if there are any skipped jobs, so change the condition to !failed && !cancelled
+
+  variables:
+    Parameters.outputStorageUri: ''
+    NUGETS_PUBLISHED: $[ stageDependencies.sign_notarize_dotnet.sign_notarize_dotnet.outputs['nugetPublishing.NUGETS_PUBLISHED'] ] # not a typo, stage and job have the same name
+    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
+
+  pool:
+    vmImage: 'windows-latest'
+    workspace:
+      clean: all
+  steps:
+  - template: upload-azure.yml
+    parameters:
+      enableDotnet: ${{ parameters.enableDotnet }}
+      sbomFilter: '*.nupkg;*.pkg;*.msi'
+
+# Job that runs on a vm that downloads the artifacts information and adds a github comment pointing to the results of the build.
+- job: artifacts_github_comment
+  displayName: 'Publish GitHub Comment - Artifacts'
+  timeoutInMinutes: 1000
+  dependsOn:
+  - configure
+  - upload_azure_blob
+  condition: succeededOrFailed()
+  variables:
+    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
+    TESTS_BOT: $[ stageDependencies.build_packages.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
+    GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
+  pool:
+    vmImage: 'windows-latest'
+    workspace:
+      clean: all
+  steps:
+  - template: artifact-github-comment.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}

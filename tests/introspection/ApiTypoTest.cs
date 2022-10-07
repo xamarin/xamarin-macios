@@ -771,13 +771,8 @@ namespace Introspection
 				return false;
 			if (mi.GetCustomAttributes<ObsoleteAttribute> (true).Any ())
 				return true;
-#if NET
-			if (mi.GetCustomAttributes<UnsupportedOSPlatformAttribute> (true).Any ((v) => v.TryParse (out ApplePlatform? platform, out var _) && platform == PlatformInfo.Host.Name))
+			if (MemberHasObsolete (mi))
 				return true;
-#else
-			if (mi.GetCustomAttributes<ObsoletedAttribute> (true).Any ())
-				return true;
-#endif
 			return IsObsolete (mi.DeclaringType);
 		}
 

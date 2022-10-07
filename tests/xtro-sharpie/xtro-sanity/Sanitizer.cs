@@ -155,7 +155,7 @@ namespace Extrospection {
 			foreach (var file in Directory.GetFiles (directory, "*.todo")) {
 				if (!IsIncluded (file))
 					continue;
-				if (!(File.ReadLines(file).Count() > 0)) {
+				if (!(File.ReadLines (file).Count () > 0)) {
 					Log ($"?empty-todo? File '{Path.GetFileName (file)}' is empty. Empty todo files should be removed.");
 				}
 			}
@@ -178,10 +178,10 @@ namespace Extrospection {
 
 			// cache stuff
 			foreach (var file in Directory.GetFiles (directory, "common-*.ignore")) {
-				var path = Path.GetFileName (file); 
+				var path = Path.GetFileName (file);
 				var fx = path.Substring (7, path.Length - 14);
 				var common = new List<string> (File.ReadAllLines (file));
-				commons.Add (fx, common); 
+				commons.Add (fx, common);
 			}
 
 			// *.ignore validations
@@ -226,8 +226,8 @@ namespace Extrospection {
 				var common = kvp.Value;
 				//ExistingCommonEntries (common, $"common-{fx}.ignore");
 				List<string> [] raws = new List<string> [Platforms.Count];
-				for (int i=0; i < raws.Length; i++) {
-					var fname = Path.Combine (directory, $"{Platforms[i]}-{fx}.raw");
+				for (int i = 0; i < raws.Length; i++) {
+					var fname = Path.Combine (directory, $"{Platforms [i]}-{fx}.raw");
 					if (File.Exists (fname))
 						raws [i] = new List<string> (File.ReadAllLines (fname));
 					else
@@ -305,7 +305,7 @@ namespace Extrospection {
 			var sanitizedOrSkippedSanity =
 				!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XTRO_SANITY_SKIP"))
 				|| !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"));
-			return  sanitizedOrSkippedSanity ? 0 : count;
+			return sanitizedOrSkippedSanity ? 0 : count;
 		}
 	}
 }
