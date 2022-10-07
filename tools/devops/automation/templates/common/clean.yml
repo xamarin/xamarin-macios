@@ -33,5 +33,6 @@ steps:
       }
     }
     Write-Debug "Looking for '$($ciComment)' in $($prComments.count) PR comments and found $($botComments.count) matching comments."
+    Write-Host "Looking for '$($ciComment)' in $($prComments.count) PR comments and found $($botComments.count) matching comments."
     $comments.MinimizeComments($botComments)
   displayName: Clear past comments
