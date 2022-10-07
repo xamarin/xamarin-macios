@@ -96,6 +96,11 @@ namespace Foundation {
 			}
 		}
 
+		public new TKey[] ToArray ()
+		{
+			return base.ToArray<TKey> ();
+		}
+
 #if false // https://github.com/xamarin/xamarin-macios/issues/15577
 
 #if !NET
