@@ -1,7 +1,6 @@
 namespace Xamarin.Tests {
 	[TestFixture]
-	public class RegistrarTest : TestBaseClass
-	{
+	public class RegistrarTest : TestBaseClass {
 		[TestCase (ApplePlatform.MacCatalyst, true)]
 		[TestCase (ApplePlatform.MacOSX, true)]
 		[TestCase (ApplePlatform.iOS, false)]

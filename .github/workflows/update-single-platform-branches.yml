@@ -21,6 +21,8 @@ jobs:
       - name: 'Update branches'
         run: |
           set -ex
+          git config user.email "github-actions-single-platform-branch-updater@xamarin.com"
+          git config user.name "GitHub Actions Single Platform Branch Updater"
           for platform in iOS tvOS MacCatalyst macOS; do
             git checkout -b release/release-test-only-dotnet-$platform origin/release/release-test-only-dotnet-$platform
             git merge origin/main
