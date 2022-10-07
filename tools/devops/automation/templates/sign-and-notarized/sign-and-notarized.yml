@@ -32,7 +32,7 @@ steps:
 
 - ${{ each step in parameters.signingSetupSteps }}:
   - ${{ each pair in step }}:
-      ${{ pair.key }}: ${{ pair.value }}       
+      ${{ pair.key }}: ${{ pair.value }}
 
 - task: DownloadPipelineArtifact@2
   displayName: Download not notarized build

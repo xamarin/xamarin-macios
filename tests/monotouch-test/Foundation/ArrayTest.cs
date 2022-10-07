@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.Linq;
 using Foundation;
 using ObjCRuntime;
 using Security;
@@ -121,6 +122,38 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.That (a.Count, Is.EqualTo ((nuint) 0), "Count");
 				// and a valid native instance (or some other API might fail)
 				Assert.That (a.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+			}
+		}
+
+		[Test]
+		public void ToArray ()
+		{
+			using (var a = NSArray.FromStrings (new string [1] { "abc" })) {
+				var arr = a.ToArray ();
+				Assert.AreEqual (1, arr.Length, "Length");
+				Assert.AreEqual ("abc", arr [0].ToString (), "Value");
+			}
+		}
+
+		[Test]
+		public void ToArray_T ()
+		{
+			using (var a = NSArray.FromStrings (new string [1] { "abc" })) {
+				var arr = a.ToArray<NSString> ();
+				Assert.AreEqual (1, arr.Length, "Length");
+				Assert.AreEqual ("abc", arr [0].ToString (), "Value");
+			}
+		}
+
+		[Test]
+		public void Enumerator ()
+		{
+			using (var a = NSArray.FromStrings (new string [1] { "abc" })) {
+				foreach (var item in a)
+					Assert.AreEqual ("abc", item.ToString (), "Value");
+				var list = a.ToList ();
+				Assert.AreEqual (1, list.Count (), "Length");
+				Assert.AreEqual ("abc", list [0].ToString (), "Value");
 			}
 		}
 	}

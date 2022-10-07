@@ -17,10 +17,10 @@ jobs:
 
     steps:
     - name: 'Download artifacts'
-      uses: actions/github-script@v3.1.0
+      uses: actions/github-script@v6.3.1
       with:
         script: |
-          var artifacts = await github.actions.listWorkflowRunArtifacts({
+          var artifacts = await github.rest.actions.listWorkflowRunArtifacts({
              owner: context.repo.owner,
              repo: context.repo.repo,
              run_id: ${{github.event.workflow_run.id }},
@@ -28,7 +28,7 @@ jobs:
           var matchArtifact = artifacts.data.artifacts.filter((artifact) => {
             return artifact.name == "autoformat"
           })[0];
-          var download = await github.actions.downloadArtifact({
+          var download = await github.rest.actions.downloadArtifact({
              owner: context.repo.owner,
              repo: context.repo.repo,
              artifact_id: matchArtifact.id,
@@ -65,7 +65,7 @@ jobs:
 
     - name: 'Yell at user'
       if: steps.unzip_artifacts.outputs.autoformatted == 'true'
-      uses: actions/github-script@v6
+      uses: actions/github-script@v6.3.1
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
