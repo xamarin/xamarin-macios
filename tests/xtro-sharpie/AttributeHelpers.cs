@@ -43,6 +43,7 @@ namespace Extrospection
 			return false;
 		}
 
+		// Confusingly enough, ObsoletedOSPlatformAttribute is a deprecation not obsolete attribute in NET7
 		public static bool HasDeprecated (CustomAttribute attribute, Platforms platform) => HasMatchingPlatformAttribute ("DeprecatedAttribute", attribute, platform);
 		public static bool HasObsoleted (CustomAttribute attribute, Platforms platform) => HasMatchingPlatformAttribute ("ObsoletedAttribute", attribute, platform);
 
@@ -72,6 +73,7 @@ namespace Extrospection
 
 		public static bool HasObsolete (CustomAttribute attribute, Platforms platform)
 		{
+			// This intentionally does not include "ObsoletedOSPlatformAttribute", as that is for deprecation not obsolete
 			return attribute.Constructor.DeclaringType.Name == "ObsoleteAttribute";
 		}
 
@@ -92,7 +94,7 @@ namespace Extrospection
 				version = new Version ((int)attribute.ConstructorArguments[1].Value, (int)attribute.ConstructorArguments[2].Value, (int)attribute.ConstructorArguments[3].Value);
 				return true;
 			default:
-				throw new InvalidOperationException ("GetPlatformVersion with unexpected number of arguments {attribute.ConstructorArguments.Count}");
+				throw new InvalidOperationException ($"GetPlatformVersion with unexpected number of arguments {attribute.ConstructorArguments.Count} {attribute.Constructor.DeclaringType.Name}");
 			}
 		}
 
@@ -113,16 +115,31 @@ namespace Extrospection
 			if (Skip (item))
 				return false;
 
+			// Properties are a special case  as it is generated on the property itself and not the individual get_ \ set_ methods
+			// Cecil does not have a link between the MethodDefinition we have and the hosting PropertyDefinition, so we have to dig to find the match
+			if (item is MethodDefinition method) {
+				PropertyDefinition property = method.DeclaringType.Properties.FirstOrDefault (p => p.GetMethod == method || p.SetMethod == method);
+				if (property != null && HasAnyDeprecationForCurrentPlatform (property)) {
+					return true;
+				}
+			}
+
 			// This allows us to accept [Deprecated (iOS)] for watch and tv, which many of our bindings currently have
-			// If we want to force seperate tv\watch attributes remove GetRelatedPlatforms and just check Helpers.Platform
+			// If we want to force separate tv\watch attributes remove GetRelatedPlatforms and just check Helpers.Platform
 			if (Helpers.IsDotNet) {
 				foreach (var attribute in item.CustomAttributes) {
 					if (AttributeHelpers.HasObsolete (attribute, Helpers.Platform))
 						return true;
-					// The only related platforms for .NET is iOS for Mac Catalyst
-					if (AttributeHelpers.HasUnsupportedOSPlatform (attribute, Helpers.Platform))
+
+					// Consider 'HasObsoletedOSPlatform' (Deprecated) and 'UnsupportedOSPlatform' (Obsoleted/Unavailable)
+					if (AttributeHelpers.HasObsoletedOSPlatform (attribute, Helpers.Platform) ||
+						AttributeHelpers.HasUnsupportedOSPlatform (attribute, Helpers.Platform))
 						return true;
-					if (Helpers.Platform == Platforms.MacCatalyst && AttributeHelpers.HasUnsupportedOSPlatform (attribute, Platforms.iOS))
+
+					// The only related platforms for .NET is iOS for Mac Catalyst
+					if (Helpers.Platform == Platforms.MacCatalyst && 
+							(AttributeHelpers.HasObsoletedOSPlatform (attribute, Platforms.iOS) ||
+							 AttributeHelpers.HasUnsupportedOSPlatform (attribute, Platforms.iOS)))
 						return true;
 					if (AttributeHelpers.HasObsoletedOSPlatform (attribute, Helpers.Platform))
 						return true;

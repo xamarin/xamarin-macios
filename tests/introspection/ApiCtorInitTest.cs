@@ -244,8 +244,7 @@ namespace Introspection {
 		{
 			if (member == null)
 				return false;
-			var ca = member.GetCustomAttribute<ObsoleteAttribute> ();
-			return ca != null || base.SkipDueToAttribute (member);
+			return MemberHasObsolete (member) || base.SkipDueToAttribute (member);
 		}
 
 		[Test]

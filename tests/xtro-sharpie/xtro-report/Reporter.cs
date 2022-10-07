@@ -17,7 +17,7 @@ namespace Extrospection {
 			bool data = false;
 			// merge the shared and specialized ignore data into a single html page
 			List<string> ignore = new List<string> ();
-			ignore.Add ($"<h1>{framework}</h1>"); 
+			ignore.Add ($"<h1>{framework}</h1>");
 			var filename = Path.Combine (InputDirectory, $"common-{framework}.ignore");
 			if (File.Exists (filename)) {
 				data = true;
@@ -56,7 +56,7 @@ namespace Extrospection {
 			html.Add ($"<html><head><title>{name}</title></head>");
 			html.Add ($"<body><h1>{name}</h1><xmp>");
 			foreach (var line in File.ReadAllLines (filename)) {
-				html.Add (line); 
+				html.Add (line);
 				if ((line.Length > 0) && (line [0] == '!'))
 					count++;
 			}
@@ -70,7 +70,7 @@ namespace Extrospection {
 			var filename = Path.GetFileNameWithoutExtension (file);
 			var fx = filename.Substring (filename.IndexOf ('-') + 1);
 			if (!Frameworks.Contains (fx))
-				Frameworks.Add (fx); 
+				Frameworks.Add (fx);
 		}
 
 		public static int Main (string [] args)
@@ -98,9 +98,9 @@ namespace Extrospection {
 			log.WriteLine ("<tr>");
 			log.WriteLine ("<td rowspan='3' bgcolor='lightgrey'>Frameworks</td>");
 			if (full)
-				log.WriteLine ($"<td align='center' bgcolor='green' colspan='{Platforms.Length + 1}'>REVIEWED (ignored)</td>"); 
-			log.WriteLine ($"<td align='center' bgcolor='red' colspan='{Platforms.Length}'>FIXME (unclassified)</td>"); 
-			log.WriteLine ($"<td align='center' bgcolor='orange' colspan='{Platforms.Length}'>TODO (milestone)</td>"); 
+				log.WriteLine ($"<td align='center' bgcolor='green' colspan='{Platforms.Length + 1}'>REVIEWED (ignored)</td>");
+			log.WriteLine ($"<td align='center' bgcolor='red' colspan='{Platforms.Length}'>FIXME (unclassified)</td>");
+			log.WriteLine ($"<td align='center' bgcolor='orange' colspan='{Platforms.Length}'>TODO (milestone)</td>");
 			log.WriteLine ("</tr>");
 
 			log.WriteLine ("<tr>");

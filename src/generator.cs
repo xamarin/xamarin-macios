@@ -3542,14 +3542,16 @@ public partial class Generator : IMemberGatherer {
 		}
 	}
 
-	static void AddImpliedCatalyst (List<AvailabilityBaseAttribute> memberAvailability)
+	static void AddImpliedPlatforms (List<AvailabilityBaseAttribute> memberAvailability)
 	{
-		if (!PlatformMarkedUnavailable (PlatformName.MacCatalyst, memberAvailability) && 
-			!PlatformHasIntroduced (PlatformName.MacCatalyst, memberAvailability)) {
-			foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList()) {
-				var newAttribute = CloneFromOtherPlatform (attr, PlatformName.MacCatalyst);
-				if (IsValidToCopyTo (memberAvailability, newAttribute, allowIntroducedOnUnavailable: true)) {
-					memberAvailability.Add (newAttribute);
+		foreach (var platform in new [] { PlatformName.MacCatalyst, PlatformName.TvOS }) {
+			if (!PlatformMarkedUnavailable (platform, memberAvailability) && 
+				!PlatformHasIntroduced (platform, memberAvailability)) {
+				foreach (var attr in memberAvailability.Where (v => v.Platform == PlatformName.iOS).ToList()) {
+					var newAttribute = CloneFromOtherPlatform (attr, platform);
+					if (IsValidToCopyTo (memberAvailability, newAttribute, allowIntroducedOnUnavailable: true)) {
+						memberAvailability.Add (newAttribute);
+					}
 				}
 			}
 		}
@@ -3566,7 +3568,7 @@ public partial class Generator : IMemberGatherer {
 	}
 
 	// Especially for TV and Catalyst some entire namespaces are removed via framework_sources.
-	// However, almost all of those bindings are [iOS] which AddImpliedCatalyst and other places
+	// However, almost all of those bindings are [iOS] which AddImpliedPlatforms and other places
 	// happily turn into other platforms.
 	// As a final step, if we are on a namespace that flatly doesn't exist, drop it. Then if we don't have a not supported, add it
 	void StripIntroducedOnNamespaceNotIncluded (List<AvailabilityBaseAttribute> memberAvailability, MemberInfo context)
@@ -3575,7 +3577,7 @@ public partial class Generator : IMemberGatherer {
 			var droppedPlatforms = new HashSet<PlatformName>();
 
 			// Walk all members and look for introduced that are nonsense for our containing class's platform
-			foreach (var introduced in memberAvailability.Where (a => a.AvailabilityKind == AvailabilityKind.Introduced).ToList()) {
+			foreach (var introduced in memberAvailability.Where (a => a.AvailabilityKind == AvailabilityKind.Introduced || a.AvailabilityKind == AvailabilityKind.Deprecated).ToList()) {
 				// Hack - WebKit namespace has two distinct implementations with different types
 				// It can not be hacked in IsInSupportedFramework as AddUnlistedAvailability 
 				// will add iOS implied to the mac version and so on. So hard code it here...
@@ -3613,27 +3615,6 @@ public partial class Generator : IMemberGatherer {
 	{
 		foreach (var addition in additions.Where (a => IsValidToCopyTo (dest, a))) {
 			dest.Add (CloneFromOtherPlatform (addition, addition.Platform));
-		}
-	}
-
-	// Both deprecated and obsolete turn into UnsupportedOSPlatform, so we have to match more generally
-	static bool ImpliedKindsMatch (AvailabilityKind left, AvailabilityKind right)
-	{
-		return ConvertKindToMatchKind (left) == ConvertKindToMatchKind (right);
-	}
-
-	static bool ConvertKindToMatchKind (AvailabilityKind kind)
-	{
-		switch (kind)
-		{
-			case AvailabilityKind.Introduced:
-				return true;
-			case AvailabilityKind.Deprecated:
-			case AvailabilityKind.Obsoleted:
-			case AvailabilityKind.Unavailable:
-				return false;
-			default:
-				throw new NotImplementedException ($"ConvertKindToMatchKind with unknown kind {kind}");
 		}
 	}
 
@@ -3717,17 +3698,17 @@ public partial class Generator : IMemberGatherer {
 			// Copy down any unavailable from the parent before expanding, since a [NoMacCatalyst] on the type trumps [iOS] on a member
 			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind != AvailabilityKind.Introduced));
 
-			// Add implied catalyst from [iOS] _before_ copying down from parent if no catalyst attributes
+			// Add implied catalyst\TVOS from [iOS] _before_ copying down from parent if no catalyst\TVOS attributes
 			// As those take precedent. We will do this a second time later in a moment..
-			AddImpliedCatalyst (memberAvailability);
+			AddImpliedPlatforms (memberAvailability);
 
 			// Now copy it down introduced from the parent
 			CopyValidAttributes (memberAvailability, availabilityToConsider.Where (attr => attr.AvailabilityKind == AvailabilityKind.Introduced));
 
-			// Now expand the implied catalyst from [iOS] a second time
+			// Now expand the implied catalyst\TVOS from [iOS] a second time
 			// This is needed in some cases where the only iOS information is in the
-			// parent context, but we want to let any local iOS override a catalyst on the parent
-			AddImpliedCatalyst (memberAvailability);
+			// parent context, but we want to let any local iOS override a catalyst\TVOS on the parent
+			AddImpliedPlatforms (memberAvailability);
 
 			if (!BindThirdPartyLibrary) {
 				// If all of this implication gives us something silly, like being introduced
