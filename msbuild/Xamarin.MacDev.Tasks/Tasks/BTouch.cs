@@ -67,7 +67,7 @@ namespace Xamarin.MacDev.Tasks
 
 		async System.Threading.Tasks.Task GetGeneratedSourcesAsync (TaskRunner taskRunner)
 		{
-			await taskRunner.GetFileAsync (GeneratedSourcesFileList).ConfigureAwait (continueOnCapturedContext: false);
+			await taskRunner.GetFileAsync (this, GeneratedSourcesFileList).ConfigureAwait (continueOnCapturedContext: false);
 
 			var localGeneratedSourcesFileNames = new List<string> ();
 			var generatedSourcesFileNames = File.ReadAllLines (GeneratedSourcesFileList);
@@ -75,7 +75,7 @@ namespace Xamarin.MacDev.Tasks
 			foreach (var generatedSourcesFileName in generatedSourcesFileNames) {
 				var localRelativePath = GetLocalRelativePath (generatedSourcesFileName);
 
-				await taskRunner.GetFileAsync (localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
+				await taskRunner.GetFileAsync (this, localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
 
 				var localGeneratedSourcesFileName = PlatformPath.GetPathForCurrentPlatform (localRelativePath);
 
