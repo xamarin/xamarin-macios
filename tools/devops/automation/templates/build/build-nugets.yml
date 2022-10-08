@@ -35,13 +35,13 @@ steps:
       dotnet build -t:GenerateBuildAssetRegistryManifest /v:n
       $(Build.SourcesDirectory)/xamarin-macios/dotnet/package/Microsoft.${{ platform.platform }}.Ref/package.csproj
       -bl:$(Build.ArtifactStagingDirectory)/build-binlogs/generate-bar-manifest-${{ platform.platform }}.binlog
-    displayName: 'Generate and Upload Build Asset Registry Manifest for ${{ platform.platform }}'
+    displayName: 'Generate Build Asset Registry Manifest for ${{ platform.platform }}'
     condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'), ne(variables['${{ platform.conditionVariable }}'],''))
 
 - task: PublishPipelineArtifact@1
   displayName: 'Publish Artifact: AssetManifests'
   inputs:
-    targetPath: $(Build.SourcesDirectory)/_build/bar-manifests
+    targetPath: $(Build.SourcesDirectory)/xamarin-macios/_build/nupkgs/bar-manifests
     artifactName: AssetManifests
   continueOnError: true
   condition: and(succeededOrFailed(), contains(variables['configuration.BuildNugets'], 'True'))
