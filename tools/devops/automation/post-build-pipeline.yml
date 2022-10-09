@@ -46,8 +46,9 @@ jobs:
     displayName: make version props
 
   - bash: |
-      ls -la $(Agent.BuildDirectory)/macios || true
-      find $(Agent.BuildDirectory)/macios || true
+      ls -la $AGENT_BUILDDIRECTORY/macios || true
+      find $AGENT_BUILDDIRECTORY/macios || true
+      env | sort | true
     displayName: 'Debug code'
     condition: always() # we do not care about any errors here
     continueOnError: true
