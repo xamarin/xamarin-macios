@@ -68,7 +68,7 @@ jobs:
     - bash: |
         ls -la $AGENT_BUILDDIRECTORY/macios || true
         find $AGENT_BUILDDIRECTORY/macios || true
-        env | sort | true
+        env | sort || true
       displayName: 'Debug code ${{ platform}}'
       condition: always() # we do not care about any errors here
       continueOnError: true
@@ -76,7 +76,7 @@ jobs:
   - bash: |
       ls -la $AGENT_BUILDDIRECTORY/macios || true
       find $AGENT_BUILDDIRECTORY/macios || true
-      env | sort | true
+      env | sort || true
     displayName: 'Debug code post'
     condition: always() # we do not care about any errors here
     continueOnError: true
