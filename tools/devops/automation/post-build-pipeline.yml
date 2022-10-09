@@ -56,7 +56,7 @@ jobs:
   - ${{ each platform in parameters.dotnetPlatforms }}:
     - powershell: >-
         & dotnet build -v:n -t:PushManifestToBuildAssetRegistry
-        -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\${{ platform }} -p:BuildAssetRegistryToken=$(MaestroAccessToken)
+        -p:BarManifestOutputPath=$(Agent.BuildDirectory)\macios\AssetManifests\${{ platform }} -p:BuildAssetRegistryToken=$(MaestroAccessToken)
         $(Build.SourcesDirectory)\dotnet\package\Microsoft.${{ platform }}.Ref\package.csproj
         -bl:$(Build.ArtifactStagingDirectory)\post-build-binlogs\push-bar-manifest-${{ platform }}.binlog
       displayName: 'Push ${{ platform }} manifest to build asset registry'
