@@ -69,7 +69,7 @@ namespace CoreLocation {
 		PromptDeclined = 18,
 
 		// ios16
-		[NoMac, iOS (16,1), MacCatalyst (16,0), Watch (9,1), TV (16,1)]
+		[NoMac, iOS (16,1), MacCatalyst (16,1), Watch (9,1), TV (16,1)]
 		HistoricalLocationError,
 	}
 
