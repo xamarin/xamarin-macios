@@ -348,7 +348,7 @@ namespace SharedWithYou {
 
 	interface ISWHighlightEvent {}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Protocol]
 	interface SWHighlightEvent : NSSecureCoding, NSCopying
 	{
