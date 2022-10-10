@@ -10,6 +10,7 @@ cd ..
 # Start formatting!
 dotnet format "$SRC_DIR/tools/xibuild/xibuild.csproj"
 dotnet format whitespace "$SRC_DIR/tests/cecil-tests/cecil-tests.csproj"
+dotnet format whitespace "$SRC_DIR/tests/dotnet/UnitTests/DotNetUnitTests.csproj"
 dotnet format whitespace "$SRC_DIR/msbuild/Messaging/Xamarin.Messaging.Build/Xamarin.Messaging.Build.csproj"
 dotnet format whitespace "$SRC_DIR/msbuild/Xamarin.Localization.MSBuild/Xamarin.Localization.MSBuild.csproj"
 dotnet format whitespace "$SRC_DIR/msbuild/Xamarin.Mac.Tasks/Xamarin.Mac.Tasks.csproj"
