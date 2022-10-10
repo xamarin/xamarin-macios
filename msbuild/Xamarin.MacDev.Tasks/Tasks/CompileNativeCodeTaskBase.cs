@@ -12,11 +12,11 @@ using Xamarin.Utils;
 namespace Xamarin.MacDev.Tasks {
 	public abstract class CompileNativeCodeTaskBase : XamarinTask {
 
-#region Inputs
+		#region Inputs
 		[Required]
 		public ITaskItem [] CompileInfo { get; set; }
 
-		public ITaskItem[] IncludeDirectories { get; set; }
+		public ITaskItem [] IncludeDirectories { get; set; }
 
 		[Required]
 		public string MinimumOSVersion { get; set; }
@@ -29,7 +29,7 @@ namespace Xamarin.MacDev.Tasks {
 
 		[Required]
 		public bool SdkIsSimulator { get; set; }
-#endregion
+		#endregion
 
 		public override bool Execute ()
 		{

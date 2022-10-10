@@ -7,8 +7,9 @@ using Microsoft.Build.Evaluation;
 using Xamarin.MacDev;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
+namespace Xamarin.MacDev.Tasks
 {
 	[TestFixture]
 	public class ValidateAppBundleTaskTests : ExtensionTestBase
@@ -25,6 +26,9 @@ namespace Xamarin.iOS.Tasks
 		[Test]
 		public void MissingFiles ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var paths = BuildExtension ("MyTabbedApplication", "MyActionExtension");
 			extensionBundlePath = paths.AppBundlePath;
 			mainAppPlistPath = Path.Combine (AppBundlePath, "Info.plist");

@@ -115,7 +115,7 @@ namespace Xharness.Jenkins {
 				TestName = "Generator tests",
 				Mode = "NUnit",
 				Timeout = TimeSpan.FromMinutes (10),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Generator),
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Generator) || !jenkins.Harness.INCLUDE_XAMARIN_LEGACY,
 			};
 			yield return runGenerator;
 

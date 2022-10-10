@@ -106,6 +106,8 @@ namespace Xharness {
 		watchOS = 1 << 11,
 		[Label ("dotnet")]
 		Dotnet = 1 << 12,
+		[Label ("legacy-xamarin")]
+		LegacyXamarin = 1 << 13,
 		[Label ("all")]
 		All =  0xFFFFFFFF, 
 	}

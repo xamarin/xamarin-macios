@@ -7,10 +7,8 @@ using Microsoft.Build.Utilities;
 using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class PrepareNativeReferences : PrepareNativeReferencesTaskBase, ITaskCallback, ICancelableTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class PrepareNativeReferences : PrepareNativeReferencesTaskBase, ITaskCallback, ICancelableTask {
 		public override bool Execute ()
 		{
 			if (!ShouldExecuteRemotely ())
@@ -22,7 +20,7 @@ namespace Xamarin.MacDev.Tasks
 				var success = taskRunner.RunAsync (this).Result;
 
 				if (success && LinkWithAttributes != null)
-					taskRunner.GetFileAsync (LinkWithAttributes.ItemSpec).Wait ();
+					taskRunner.GetFileAsync (this, LinkWithAttributes.ItemSpec).Wait ();
 
 				return success;
 			} catch (Exception ex) {

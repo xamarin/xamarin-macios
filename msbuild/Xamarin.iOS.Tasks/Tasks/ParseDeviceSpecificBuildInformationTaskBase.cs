@@ -9,10 +9,8 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class ParseDeviceSpecificBuildInformationTaskBase : XamarinTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public abstract class ParseDeviceSpecificBuildInformationTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]

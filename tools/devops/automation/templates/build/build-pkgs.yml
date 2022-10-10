@@ -65,35 +65,9 @@ steps:
       - ${{ if eq(parameters.enableDotnet, true) }}:
         - template: build-nugets.yml
 
-      - bash: |
-          var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=IOS_NUGET_VERSION_FULL)
-          IOS_NUGET_VERSION_FULL=${var#*=}
-          IOS_NUGET_VERSION_FULL=$(echo $IOS_NUGET_VERSION_FULL | cut -d "+" -f1)
-
-          var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=TVOS_NUGET_VERSION_FULL)
-          TVOS_NUGET_VERSION_FULL=${var#*=}
-          TVOS_NUGET_VERSION_FULL=$(echo $TVOS_NUGET_VERSION_FULL | cut -d "+" -f1)
-
-          var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MACOS_NUGET_VERSION_FULL)
-          MACOS_NUGET_VERSION_FULL=${var#*=}
-          MACOS_NUGET_VERSION_FULL=$(echo $MACOS_NUGET_VERSION_FULL | cut -d "+" -f1)
-
-          var=$(make -C $(Build.SourcesDirectory)/xamarin-macios/tools/devops print-variable VARIABLE=MACCATALYST_NUGET_VERSION_FULL)
-          MACCATALYST_NUGET_VERSION_FULL=${var#*=}
-          MACCATALYST_NUGET_VERSION_FULL=$(echo $MACCATALYST_NUGET_VERSION_FULL | cut -d "+" -f1)
-          WORKLOAD_DST="$(Build.SourcesDirectory)/WorkloadRollback.json"
-
-          echo "{" > $WORKLOAD_DST
-          echo "\"microsoft.net.sdk.ios\": \"$IOS_NUGET_VERSION_FULL\"," >>  $WORKLOAD_DST
-          echo "\"microsoft.net.sdk.tvos\": \"$TVOS_NUGET_VERSION_FULL\"," >> $WORKLOAD_DST
-          echo "\"microsoft.net.sdk.macos\": \"$MACOS_NUGET_VERSION_FULL\"," >>  $WORKLOAD_DST
-          echo "\"microsoft.net.sdk.maccatalyst\": \"$MACCATALYST_NUGET_VERSION_FULL\"" >> $WORKLOAD_DST
-          echo "}" >>  $WORKLOAD_DST
-
-          echo "Rollback file contents:" 
-          echo "$(cat $WORKLOAD_DST)"
+      - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/generate-workload-rollback.sh
         name: workload_file
-        displayName: 'Generate "WorkloadRollback.json'
+        displayName: 'Generate "WorkloadRollback.json"'
 
       - task: PublishPipelineArtifact@1
         displayName: 'Publish WorkloadRollback.json'
@@ -163,19 +137,17 @@ steps:
 
           make -C $(Build.SourcesDirectory)/xamarin-macios/tests package-tests
 
+          if test -f "$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"; then
+            set +x
+            echo "##vso[artifact.upload containerfolder=CrashReports;artifactname=mac-test-package]$(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z"
+            set -x
+          fi
+
         name: macTestPkg
         displayName: 'Package macOS tests'
         condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
         continueOnError: true # not a terrible blocking issue
         timeoutInMinutes: 60
-
-      - task: PublishPipelineArtifact@1
-        displayName: 'Publish macOS tests'
-        inputs:
-          targetPath: $(Build.SourcesDirectory)/xamarin-macios/tests/mac-test-package.7z
-          artifactName: mac-test-package
-        condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
-        continueOnError: true
 
       - bash: |
           set -x

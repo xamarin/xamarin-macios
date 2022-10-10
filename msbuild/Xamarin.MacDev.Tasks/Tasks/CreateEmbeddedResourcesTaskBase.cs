@@ -5,29 +5,28 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 namespace Xamarin.MacDev.Tasks {
-	public abstract class CreateEmbeddedResourcesTaskBase : Task
-	{
+	public abstract class CreateEmbeddedResourcesTaskBase : Task {
 		public string SessionId { get; set; }
 
 		[Required]
-		public ITaskItem[] BundleResources { get; set; }
+		public ITaskItem [] BundleResources { get; set; }
 
 		[Required]
 		public string Prefix { get; set; }
 
 		[Output]
-		public ITaskItem[] EmbeddedResources { get; set; }
+		public ITaskItem [] EmbeddedResources { get; set; }
 
 		static string EscapeMangledResource (string name)
 		{
 			var mangled = new StringBuilder ();
 
 			for (int i = 0; i < name.Length; i++) {
-				switch (name[i]) {
+				switch (name [i]) {
 				case '\\': mangled.Append ("_b"); break;
 				case '/': mangled.Append ("_f"); break;
 				case '_': mangled.Append ("__"); break;
-				default: mangled.Append (name[i]); break;
+				default: mangled.Append (name [i]); break;
 				}
 			}
 
@@ -36,10 +35,10 @@ namespace Xamarin.MacDev.Tasks {
 
 		public override bool Execute ()
 		{
-			EmbeddedResources = new ITaskItem[BundleResources.Length];
+			EmbeddedResources = new ITaskItem [BundleResources.Length];
 
 			for (int i = 0; i < BundleResources.Length; i++) {
-				var bundleResource = BundleResources[i];
+				var bundleResource = BundleResources [i];
 
 				// clone the item
 				var embeddedResource = new TaskItem (bundleResource.ItemSpec);
@@ -50,9 +49,9 @@ namespace Xamarin.MacDev.Tasks {
 				embeddedResource.SetMetadata ("LogicalName", logicalName);
 
 				// add it to the output connection
-				EmbeddedResources[i] = embeddedResource;
+				EmbeddedResources [i] = embeddedResource;
 			}
-			
+
 			return true;
 		}
 	}

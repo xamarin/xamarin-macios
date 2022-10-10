@@ -11,10 +11,8 @@ using System.Security.Cryptography.X509Certificates;
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class CreateInstallerPackageTaskBase : XamarinToolTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class CreateInstallerPackageTaskBase : XamarinToolTask {
 		#region Inputs
 		[Required]
 		public string OutputDirectory { get; set; }
@@ -35,14 +33,14 @@ namespace Xamarin.MacDev.Tasks
 		public ITaskItem MainAssembly { get; set; }
 
 		[Required] // Should we even look at the PackageSigningKey?
-			// It has a default value when this is false, so we can't just switch off it being null
+				   // It has a default value when this is false, so we can't just switch off it being null
 		public bool EnablePackageSigning { get; set; }
 
 		public string ProductDefinition { get; set; }
 
 		public string PackageSigningKey { get; set; }
 
-		public string PackagingExtraArgs { get ; set; }
+		public string PackagingExtraArgs { get; set; }
 
 		// both input and output
 		[Output]
@@ -68,8 +66,7 @@ namespace Xamarin.MacDev.Tasks
 			return plist.GetCFBundleShortVersionString ();
 		}
 
-		protected override string ToolName
-		{
+		protected override string ToolName {
 			get { return "productbuild"; }
 		}
 
@@ -89,7 +86,7 @@ namespace Xamarin.MacDev.Tasks
 
 			var args = new CommandLineArgumentBuilder ();
 
-			if (!string.IsNullOrEmpty(ProductDefinition)) {
+			if (!string.IsNullOrEmpty (ProductDefinition)) {
 				args.Add ("--product");
 				args.AddQuoted (Path.GetFullPath (ProductDefinition));
 			}
@@ -129,7 +126,7 @@ namespace Xamarin.MacDev.Tasks
 		{
 			var target = this.MainAssembly.ItemSpec;
 
-			string[] argv = CommandLineArgumentBuilder.Parse (extraArgs);
+			string [] argv = CommandLineArgumentBuilder.Parse (extraArgs);
 			var customTags = new Dictionary<string, string> (StringComparer.OrdinalIgnoreCase) {
 				{ "projectdir",   Path.GetDirectoryName (this.ProjectPath) },
 			// Apparently msbuild doesn't propagate the solution path, so we can't get it. - MTouchTaskBase.cs
@@ -142,7 +139,7 @@ namespace Xamarin.MacDev.Tasks
 			};
 
 			for (int i = 0; i < argv.Length; i++)
-				args.AddQuoted (StringParserService.Parse (argv[i], customTags));
+				args.AddQuoted (StringParserService.Parse (argv [i], customTags));
 		}
 
 		string GetPackageSigningCertificateCommonName ()

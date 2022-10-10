@@ -338,7 +338,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm;ios-arm64", "MtouchLink=SdkOnly")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
-		public void BuildFatMonoTouchTest (ApplePlatform platform, string runtimeIdentifiers, params string[] additionalProperties)
+		public void BuildFatMonoTouchTest (ApplePlatform platform, string runtimeIdentifiers, params string [] additionalProperties)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
@@ -385,20 +385,25 @@ namespace Xamarin.Tests {
 		}
 
 		[Test]
-		[TestCase ("iossimulator-x64", false)]
-		[TestCase ("ios-arm64", true)]
-		[TestCase ("ios-arm64", true, "PublishTrimmed=true;UseInterpreter=true")]
-		public void IsNotMacBuild (string runtimeIdentifier, bool isDeviceBuild, string? extraProperties = null)
+		[TestCase (ApplePlatform.iOS, "iossimulator-x64", false)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true)]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true, null, "Release")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64", true, "PublishTrimmed=true;UseInterpreter=true")]
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", false)]
+		public void IsNotMacBuild (ApplePlatform platform, string runtimeIdentifiers, bool isDeviceBuild, string? extraProperties = null, string configuration = "Debug")
 		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
 			if (isDeviceBuild)
 				Configuration.AssertDeviceAvailable ();
 
-			var platform = ApplePlatform.iOS;
-			var project_path = GetProjectPath ("MySingleView", runtimeIdentifiers: runtimeIdentifier, platform: platform, out var appPath);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 			Clean (project_path);
-			var properties = GetDefaultProperties (runtimeIdentifier);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
 			properties ["IsMacEnabled"] = "false";
+			if (!string.IsNullOrEmpty (configuration))
+				properties ["Configuration"] = configuration;
 			if (extraProperties is not null) {
 				foreach (var assignment in extraProperties.Split (';')) {
 					var split = assignment.Split ('=');
@@ -407,10 +412,16 @@ namespace Xamarin.Tests {
 			}
 			var result = DotNet.AssertBuild (project_path, properties);
 			AssertThatLinkerDidNotExecute (result);
-			var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
-			Assert.That (appPath, Does.Exist, "There is an .app");
-			Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
-			Assert.That (Path.Combine (appPath, "Xamarin.iOS.dll"), Does.Not.Exist, "Xamarin.iOS.dll is in the bundle");
+			switch (platform) {
+			case ApplePlatform.iOS:
+				var appExecutable = Path.Combine (appPath, Path.GetFileName (project_path));
+				Assert.That (appPath, Does.Exist, "There is an .app");
+				Assert.That (appExecutable, Does.Not.Empty, "There is no executable");
+				Assert.That (Path.Combine (appPath, Configuration.GetBaseLibraryName (platform, true)), Does.Not.Exist, "Platform assembly is in the bundle");
+				break;
+			case ApplePlatform.MacCatalyst:
+				break;
+			}
 		}
 
 		[Test]
@@ -847,7 +858,7 @@ namespace Xamarin.Tests {
 			Clean (consumingProjectDir);
 
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
-			
+
 			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "MySimpleApp.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 		}
@@ -861,6 +872,7 @@ namespace Xamarin.Tests {
 		{
 			var project = "AppWithGenericLibraryReference";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX); // This test requires macOS as well, for all other platforms.
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -980,6 +992,137 @@ namespace Xamarin.Tests {
 				var rv = DotNet.AssertBuildFailure (project_path, properties);
 				var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToList ();
 				Assert.That (errors [0].Message, Does.Contain ("Error loading Entitlements.plist template 'Entitlements.plist'"), "Message");
+			}
+		}
+
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64")]
+		public void CustomAppBundleDir (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "MySimpleApp";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+			Clean (project_path);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var customAppBundleDir = Path.Combine (Cache.CreateTemporaryDirectory (), project + ".app");
+			properties ["AppBundleDir"] = customAppBundleDir;
+			var result = DotNet.AssertBuild (project_path, properties);
+		}
+
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64")]
+		[TestCase (ApplePlatform.iOS, "ios-arm64")]
+		public void CustomizedCodeSigning (ApplePlatform platform, string runtimeIdentifiers)
+		{
+			var project = "CustomizedCodeSigning";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
+
+			DotNet.AssertBuild (project_path, properties);
+
+			var codesignDirectory = GetRelativeCodesignDirectory (platform);
+			var sharedSupportDir = string.Empty;
+			var dylibDir = GetRelativeDylibDirectory (platform);
+
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				sharedSupportDir = "SharedSupport";
+				break;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				sharedSupportDir = Path.Combine ("Contents", "SharedSupport");
+				break;
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+
+			var appBundleContents = Directory
+				.GetFileSystemEntries (appPath, "*", SearchOption.AllDirectories)
+				.Select (v => v.Substring (appPath.Length + 1))
+				.ToHashSet ();
+
+			// Assert that some apps are signed
+			var directoriesThatMustExist = new string [] {
+				Path.Combine (codesignDirectory, "_CodeSignature"),
+				Path.Combine (sharedSupportDir, "app1.app", codesignDirectory, "_CodeSignature"),
+			};
+
+			foreach (var mustExist in directoriesThatMustExist)
+				Assert.That (appBundleContents, Does.Contain (mustExist), "Must exist");
+
+			appBundleContents.ExceptWith (directoriesThatMustExist);
+
+			// And that there are no other signed apps
+			var signatures = appBundleContents.Where (v => v.EndsWith ("_CodeSignature", StringComparison.Ordinal));
+			Assert.That (signatures, Is.Empty, "No other signed app budnles");
+
+			// Assert that some dylibs are signed
+			var dylibs = appBundleContents.Where (v => Path.GetExtension (v) == ".dylib").ToList ();
+			var signedDylibs = new List<string> {
+				Path.Combine (sharedSupportDir, "app2.app", dylibDir, "lib2.dylib"),
+			};
+			if (platform == ApplePlatform.MacCatalyst) {
+				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.IO.Compression.Native.dylib"));
+				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Native.dylib"));
+				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Net.Security.Native.dylib"));
+				signedDylibs.Add (Path.Combine (dylibDir, "libSystem.Security.Cryptography.Native.Apple.dylib"));
+				signedDylibs.Add (Path.Combine (dylibDir, "libmonosgen-2.0.dylib"));
+				signedDylibs.Add (Path.Combine (dylibDir, "libxamarin-dotnet-debug.dylib"));
+			}
+
+			foreach (var dylib in signedDylibs) {
+				var path = Path.Combine (appPath, dylib);
+				Assert.That (path, Does.Exist, "dylib exists");
+				Assert.IsTrue (IsDylibSigned (path), $"Signed: {path}");
+			}
+			appBundleContents.ExceptWith (signedDylibs);
+			// And that there are unsigned dylibs, but not the system ones
+			var remainingDylibs = appBundleContents
+				.Where (v => Path.GetExtension (v) == ".dylib")
+				.ToArray ();
+			foreach (var unsignedDylib in remainingDylibs) {
+				var path = Path.Combine (appPath, unsignedDylib);
+				Assert.That (path, Does.Exist, "unsigned dylib existence");
+				Assert.IsFalse (IsDylibSigned (path), $"Unsigned: {path}");
+			}
+			Assert.AreEqual (1, remainingDylibs.Length, "Unsigned count");
+		}
+
+		bool IsDylibSigned (string dylib)
+		{
+			var file = MachO.Read (dylib).Single ();
+			foreach (var lc in file.load_commands) {
+				if (lc.cmd == (int) MachO.LoadCommands.CodeSignature)
+					return true;
+			}
+
+			return false;
+		}
+
+		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-x64", "Release")]
+		[TestCase (ApplePlatform.MacOSX, "osx-arm64", "Debug")]
+		public void AutoAllowJitEntitlements (ApplePlatform platform, string runtimeIdentifiers, string configuration)
+		{
+			var project = "Entitlements";
+			Configuration.IgnoreIfIgnoredPlatform (platform);
+
+			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath, configuration: configuration);
+			Clean (project_path);
+
+			var properties = GetDefaultProperties (runtimeIdentifiers);
+			properties ["Configuration"] = configuration;
+			DotNet.AssertBuild (project_path, properties);
+
+			var executable = GetNativeExecutable (platform, appPath);
+			var foundEntitlements = TryGetEntitlements (executable, out var entitlements);
+			if (configuration == "Release") {
+				Assert.IsTrue (foundEntitlements, "Found in Release");
+				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.cs.allow-jit")?.Value, "Jit Allowed");
+			} else {
+				var jitNotAllowed = !foundEntitlements || !entitlements!.ContainsKey ("com.apple.security.cs.allow-jit");
+				Assert.True (jitNotAllowed, "Jit Not Allowed");
 			}
 		}
 	}

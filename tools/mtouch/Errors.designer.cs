@@ -3794,6 +3794,15 @@ namespace Xamarin.Bundler {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the &apos;MtouchEnableBitcode&apos; property from the project file..
+        /// </summary>
+        public static string MX0186 {
+            get {
+                return ResourceManager.GetString("MX0186", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not copy the assembly &apos;{0}&apos; to &apos;{1}&apos;: {2}
         ///		.
         /// </summary>
@@ -4111,6 +4120,24 @@ namespace Xamarin.Bundler {
         public static string MX8042 {
             get {
                 return ResourceManager.GetString("MX8042", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception occurred while validating the static registrar code for {0}: {1}.
+        /// </summary>
+        public static string MX8043 {
+            get {
+                return ResourceManager.GetString("MX8043", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The assembly {0} has been modified since the app was built, invalidating the generated static registrar code. The MVID for the loaded assembly is {1}, while the MVID for the assembly the generated static registrar code corresponds to is {2}..
+        /// </summary>
+        public static string MX8044 {
+            get {
+                return ResourceManager.GetString("MX8044", resourceCulture);
             }
         }
     }

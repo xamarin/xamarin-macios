@@ -6,13 +6,11 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class CollectBundleResourcesTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class CollectBundleResourcesTaskBase : XamarinTask {
 		#region Inputs
 
-		public ITaskItem[] BundleResources { get; set; }
+		public ITaskItem [] BundleResources { get; set; }
 
 		public bool OptimizePropertyLists { get; set; }
 
@@ -29,7 +27,7 @@ namespace Xamarin.MacDev.Tasks
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] BundleResourcesWithLogicalNames { get; set; }
+		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; }
 
 		#endregion
 
@@ -53,7 +51,7 @@ namespace Xamarin.MacDev.Tasks
 					if (!string.IsNullOrEmpty (publishFolderType))
 						continue;
 
-					var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty(SessionId));
+					var logicalName = BundleResource.GetLogicalName (ProjectDir, prefixes, item, !string.IsNullOrEmpty (SessionId));
 					// We need a physical path here, ignore the Link element
 					var path = item.GetMetadata ("FullPath");
 					string illegal;

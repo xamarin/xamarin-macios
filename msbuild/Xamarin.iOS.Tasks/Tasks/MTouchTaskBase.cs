@@ -11,10 +11,8 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class MTouchTaskBase : BundlerToolTaskBase
-	{
+namespace Xamarin.iOS.Tasks {
+	public abstract class MTouchTaskBase : BundlerToolTaskBase {
 		#region Inputs
 
 		public string Architectures { get; set; }
@@ -31,8 +29,8 @@ namespace Xamarin.iOS.Tasks
 
 		[Required]
 		public bool FastDev { get; set; }
-		
-		public ITaskItem[] LinkDescriptions { get; set; }
+
+		public ITaskItem [] LinkDescriptions { get; set; }
 
 		public string Interpreter { get; set; }
 
@@ -58,7 +56,7 @@ namespace Xamarin.iOS.Tasks
 		public bool UseThumb { get; set; }
 
 		[Required]
-		public ITaskItem[] AppExtensionReferences { get; set; }
+		public ITaskItem [] AppExtensionReferences { get; set; }
 
 		#endregion
 
@@ -70,7 +68,7 @@ namespace Xamarin.iOS.Tasks
 		public ITaskItem NativeExecutable { get; set; }
 
 		[Output]
-		public ITaskItem[] CopiedFrameworks { get; set; }
+		public ITaskItem [] CopiedFrameworks { get; set; }
 
 		#endregion
 
@@ -91,7 +89,7 @@ namespace Xamarin.iOS.Tasks
 			if (startIndex >= text.Length)
 				return string.Empty;
 
-			if (text[startIndex] != '"')
+			if (text [startIndex] != '"')
 				return text.Substring (startIndex);
 
 			var builder = new StringBuilder ();
@@ -99,7 +97,7 @@ namespace Xamarin.iOS.Tasks
 			var quoted = true;
 
 			for (int i = startIndex; i < text.Length && quoted; i++) {
-				switch (text[i]) {
+				switch (text [i]) {
 				case '\\':
 					if (escaped)
 						builder.Append ('\\');
@@ -114,7 +112,7 @@ namespace Xamarin.iOS.Tasks
 					}
 					break;
 				default:
-					builder.Append (text[i]);
+					builder.Append (text [i]);
 					escaped = false;
 					break;
 				}
@@ -137,7 +135,7 @@ namespace Xamarin.iOS.Tasks
 				Log.LogError (MSBStrings.E0053);
 				return null;
 			}
-			
+
 			args.AddQuotedLine ((SdkIsSimulator ? "--sim=" : "--dev=") + Path.GetFullPath (AppBundleDir));
 
 			args.AddQuotedLine ($"--executable={ExecutableName}");
@@ -158,7 +156,7 @@ namespace Xamarin.iOS.Tasks
 
 			switch (LinkMode.ToLowerInvariant ()) {
 			case "sdkonly": args.AddLine ("--linksdkonly"); break;
-			case "none":    args.AddLine ("--nolink"); break;
+			case "none": args.AddLine ("--nolink"); break;
 			}
 
 			args.AddQuotedLine ($"--sdk={SdkVersion}");
@@ -263,14 +261,14 @@ namespace Xamarin.iOS.Tasks
 				};
 
 				for (int i = 0; i < extraArgs.Length; i++) {
-					var argument = extraArgs[i];
+					var argument = extraArgs [i];
 					int startIndex = 0;
 
-					while (argument.Length > startIndex && argument[startIndex] == '-')
+					while (argument.Length > startIndex && argument [startIndex] == '-')
 						startIndex++;
 
 					int endIndex = startIndex;
-					while (endIndex < argument.Length && argument[endIndex] != '=')
+					while (endIndex < argument.Length && argument [endIndex] != '=')
 						endIndex++;
 
 					int length = endIndex - startIndex;
@@ -279,17 +277,17 @@ namespace Xamarin.iOS.Tasks
 						// user-defined -gcc_flags argument
 						string flags = null;
 
-						if (endIndex < extraArgs[i].Length) {
+						if (endIndex < extraArgs [i].Length) {
 							flags = Unquote (argument, endIndex + 1);
 						} else if (i + 1 < extraArgs.Length) {
-							flags = extraArgs[++i];
+							flags = extraArgs [++i];
 						}
 
 						if (!string.IsNullOrEmpty (flags)) {
 							var gccArgs = CommandLineArgumentBuilder.Parse (flags);
 
 							for (int j = 0; j < gccArgs.Length; j++)
-								gcc.Arguments.Add (StringParserService.Parse (gccArgs[j], customTags));
+								gcc.Arguments.Add (StringParserService.Parse (gccArgs [j], customTags));
 						}
 					} else {
 						// other user-defined mtouch arguments
@@ -314,7 +312,7 @@ namespace Xamarin.iOS.Tasks
 				unescapedArgs.Add ($"--gcc_flags={gcc.Arguments.ToString ()}");
 
 			foreach (var asm in References) {
-				if (IsFrameworkItem(asm)) {
+				if (IsFrameworkItem (asm)) {
 					args.AddQuotedLine ($"--reference={ResolveFrameworkFile (asm.ItemSpec)}");
 				} else {
 					args.AddQuotedLine ($"--reference={Path.GetFullPath (asm.ItemSpec)}");
@@ -334,8 +332,8 @@ namespace Xamarin.iOS.Tasks
 		{
 			bool isFrameworkFile;
 
-			return (bool.TryParse(item.GetMetadata("FrameworkFile"), out isFrameworkFile) && isFrameworkFile) ||
-				item.GetMetadata ("ResolvedFrom") == "{TargetFrameworkDirectory}" || 
+			return (bool.TryParse (item.GetMetadata ("FrameworkFile"), out isFrameworkFile) && isFrameworkFile) ||
+				item.GetMetadata ("ResolvedFrom") == "{TargetFrameworkDirectory}" ||
 				item.GetMetadata ("ResolvedFrom") == "ImplicitlyExpandDesignTimeFacades";
 		}
 
@@ -359,7 +357,7 @@ namespace Xamarin.iOS.Tasks
 			return result;
 		}
 
-		ITaskItem[] GetCopiedFrameworks ()
+		ITaskItem [] GetCopiedFrameworks ()
 		{
 			var copiedFrameworks = new List<ITaskItem> ();
 			var frameworksDir = Path.Combine (AppBundleDir, "Frameworks");
@@ -388,7 +386,7 @@ namespace Xamarin.iOS.Tasks
 
 			return ResolveFrameworkFileOrFacade (frameworkDir, fileName) ?? fullName;
 		}
-	
+
 		static string ResolveFrameworkFileOrFacade (string frameworkDir, string fileName)
 		{
 			var facadeFile = Path.Combine (Sdks.XamIOS.LibDir, "mono", frameworkDir, "Facades", fileName);

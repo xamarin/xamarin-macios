@@ -6,10 +6,8 @@ using System.Linq;
 using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class GetFileSystemEntriesTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class GetFileSystemEntriesTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]
@@ -28,7 +26,7 @@ namespace Xamarin.MacDev.Tasks
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] Entries { get; set; }
+		public ITaskItem [] Entries { get; set; }
 
 		#endregion
 

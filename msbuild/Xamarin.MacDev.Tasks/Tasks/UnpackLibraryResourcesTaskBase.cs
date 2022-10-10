@@ -7,38 +7,36 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class UnpackLibraryResourcesTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class UnpackLibraryResourcesTaskBase : XamarinTask {
 		List<ITaskItem> unpackedResources = new List<ITaskItem> ();
-		
+
 		#region Inputs
 
 		[Required]
 		public string Prefix { get; set; }
 
 		[Required]
-		public ITaskItem[] NoOverwrite { get; set; }
-		
+		public ITaskItem [] NoOverwrite { get; set; }
+
 		[Required]
 		public string IntermediateOutputPath { get; set; }
 
 		[Required]
-		public ITaskItem[] ReferencedLibraries { get; set; }
+		public ITaskItem [] ReferencedLibraries { get; set; }
 
 		[Required]
-		public ITaskItem[] TargetFrameworkDirectory { get; set; }
+		public ITaskItem [] TargetFrameworkDirectory { get; set; }
 
 		#endregion
 
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] BundleResourcesWithLogicalNames { get; set; }
+		public ITaskItem [] BundleResourcesWithLogicalNames { get; set; }
 
 		[Output]
-		public ITaskItem[] UnpackedResources { get; set; }
+		public ITaskItem [] UnpackedResources { get; set; }
 
 		#endregion
 
@@ -175,7 +173,7 @@ namespace Xamarin.MacDev.Tasks
 			bool escaped = false;
 
 			for (int i = 0; i < mangled.Length; i++) {
-				char c = mangled[i];
+				char c = mangled [i];
 
 				if (c == '_' && !escaped) {
 					escaped = true;
@@ -202,8 +200,7 @@ namespace Xamarin.MacDev.Tasks
 			return unmangled.ToString ();
 		}
 
-		public class ManifestResource
-		{
+		public class ManifestResource {
 			readonly Func<Stream> callback;
 
 			public ManifestResource (string name, Func<Stream> streamCallback)

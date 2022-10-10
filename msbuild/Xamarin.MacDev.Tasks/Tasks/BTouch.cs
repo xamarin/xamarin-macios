@@ -12,10 +12,8 @@ using Xamarin.iOS.Tasks;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class BTouch : BTouchTaskBase, ITaskCallback
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class BTouch : BTouchTaskBase, ITaskCallback {
 		public override bool Execute ()
 		{
 			if (!ShouldExecuteRemotely ())
@@ -61,13 +59,13 @@ namespace Xamarin.MacDev.Tasks
 		{
 			base.Cancel ();
 
-			if (!string.IsNullOrEmpty(SessionId))
+			if (!string.IsNullOrEmpty (SessionId))
 				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
 		}
 
 		async System.Threading.Tasks.Task GetGeneratedSourcesAsync (TaskRunner taskRunner)
 		{
-			await taskRunner.GetFileAsync (GeneratedSourcesFileList).ConfigureAwait (continueOnCapturedContext: false);
+			await taskRunner.GetFileAsync (this, GeneratedSourcesFileList).ConfigureAwait (continueOnCapturedContext: false);
 
 			var localGeneratedSourcesFileNames = new List<string> ();
 			var generatedSourcesFileNames = File.ReadAllLines (GeneratedSourcesFileList);
@@ -75,7 +73,7 @@ namespace Xamarin.MacDev.Tasks
 			foreach (var generatedSourcesFileName in generatedSourcesFileNames) {
 				var localRelativePath = GetLocalRelativePath (generatedSourcesFileName);
 
-				await taskRunner.GetFileAsync (localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
+				await taskRunner.GetFileAsync (this, localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
 
 				var localGeneratedSourcesFileName = PlatformPath.GetPathForCurrentPlatform (localRelativePath);
 
