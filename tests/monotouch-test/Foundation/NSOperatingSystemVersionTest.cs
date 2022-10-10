@@ -17,13 +17,13 @@ namespace MonoTouchFixtures.Foundation {
 		public static IEnumerable<(NSOperatingSystemVersion, NSOperatingSystemVersion, bool)> VersionCasesEqual 
 		{
 			get {
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 1), Result: true);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 2), Result: false);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 1), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 1), Result: false);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 0), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 1), Result: true);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 1, patchVersionArg: (nint) 2), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3), Result: false);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3), Result: true);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 0), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2), Result: true);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1), VersionTwo: new NSOperatingSystemVersion (major: (nint) 1), Result: true);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1), VersionTwo: new NSOperatingSystemVersion (major: (nint) 2), Result: false);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 1), VersionTwo: new NSOperatingSystemVersion (major: (nint) 1), Result: false);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 0), VersionTwo: new NSOperatingSystemVersion (major: (nint) 1), Result: true);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 1, patchVersion: (nint) 2), VersionTwo: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2, patchVersion: (nint) 3), Result: false);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2, patchVersion: (nint) 3), VersionTwo: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2, patchVersion: (nint) 3), Result: true);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2, patchVersion: (nint) 0), VersionTwo: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2), Result: true);
 
 			}
 		}
@@ -41,8 +41,8 @@ namespace MonoTouchFixtures.Foundation {
 		public static IEnumerable<(Object, bool)> VersionCasesObjectEqual 
 		{
 			get {
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3), Result: true);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 2), Result: false);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2, patchVersion: (nint) 3), Result: true);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 2), Result: false);
 				yield return ("hello", Result: false);
 				yield return (null, Result: false);
 			}
@@ -60,8 +60,8 @@ namespace MonoTouchFixtures.Foundation {
 		public static IEnumerable<(Object, int)> VersionCasesObjectCompare 
 		{
 			get {
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3), Result: 0);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 2), Result: -1);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2, patchVersion: (nint) 3), Result: 0);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 2), Result: -1);
 				yield return ("hello", Result: 1);
 				yield return (null, Result: 1);
 			}
@@ -79,10 +79,10 @@ namespace MonoTouchFixtures.Foundation {
 		public static IEnumerable<NSOperatingSystemVersion> VersionCasesHashCode 
 		{
 			get {
-				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3));
-				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 2));
-				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 2, minorVersion: (nint) 5));
-				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 2, minorVersion: (nint) 9, patchVersionArg: (nint) 10));
+				yield return (new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2, patchVersion: (nint) 3));
+				yield return (new NSOperatingSystemVersion (major: (nint) 2));
+				yield return (new NSOperatingSystemVersion (major: (nint) 2, minor: (nint) 5));
+				yield return (new NSOperatingSystemVersion (major: (nint) 2, minor: (nint) 9, patchVersion: (nint) 10));
 			}
 		}
 
@@ -96,10 +96,10 @@ namespace MonoTouchFixtures.Foundation {
 		public static IEnumerable<(NSOperatingSystemVersion, string)> VersionCasesString 
 		{
 			get {
-				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3), "1.2.3");
-				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 2), "2.0.0");
-				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 2, minorVersion: (nint) 5), "2.5.0");
-				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 2, minorVersion: (nint) 9, patchVersionArg: (nint) 10), "2.9.10");
+				yield return (new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2, patchVersion: (nint) 3), "1.2.3");
+				yield return (new NSOperatingSystemVersion (major: (nint) 2), "2.0.0");
+				yield return (new NSOperatingSystemVersion (major: (nint) 2, minor: (nint) 5), "2.5.0");
+				yield return (new NSOperatingSystemVersion (major: (nint) 2, minor: (nint) 9, patchVersion: (nint) 10), "2.9.10");
 			}
 		}
 
@@ -113,10 +113,10 @@ namespace MonoTouchFixtures.Foundation {
 		public static IEnumerable<(NSOperatingSystemVersion, NSOperatingSystemVersion, int)> VersionCasesCompare 
 		{
 			get {
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1), VersionTwo: new NSOperatingSystemVersion(majorVersion: (nint)1), Result: 0);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 2), Result: -1);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 1), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 1), Result: 1);
-				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 2), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3), Result: -1);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1), VersionTwo: new NSOperatingSystemVersion(major: (nint)1), Result: 0);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1), VersionTwo: new NSOperatingSystemVersion (major: (nint) 2), Result: -1);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 1), VersionTwo: new NSOperatingSystemVersion (major: (nint) 1), Result: 1);
+				yield return (VersionOne: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2, patchVersion: (nint) 2), VersionTwo: new NSOperatingSystemVersion (major: (nint) 1, minor: (nint) 2, patchVersion: (nint) 3), Result: -1);
 			}
 		}
 
