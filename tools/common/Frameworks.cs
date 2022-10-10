@@ -280,6 +280,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "SharedWithYou", "SharedWithYou", 13,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 					{ "ExtensionKit", "ExtensionKit", 13,0 },
+					{ "ThreadNetwork", "ThreadNetwork", 13,0 },
 				};
 			}
 			return mac_frameworks;
@@ -647,6 +648,7 @@ public class Frameworks : Dictionary<string, Framework> {
 			var min = new Version (13, 0);
 			var v14_0 = new Version (14, 0);
 			var v14_2 = new Version (14, 2);
+			var v16_1 = new Version (16, 1);
 			foreach (var f in catalyst_frameworks.Values) {
 				switch (f.Name) {
 				// These frameworks were added to Catalyst after they were added to iOS, so we have to adjust the Versions fields
@@ -661,6 +663,9 @@ public class Frameworks : Dictionary<string, Framework> {
 				case "UserNotificationsUI":
 					f.Version = v14_2;
 					f.VersionAvailableInSimulator = v14_2;
+					break;
+				case "ThreadNetwork":
+					f.Version = v16_1;
 					break;
 				// These frameworks are not available on Mac Catalyst
 				case "OpenGLES":
