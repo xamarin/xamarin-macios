@@ -47,8 +47,16 @@ LocProject.json: LocProject.json.in Makefile $(TOP)/Make.config
 		-e 's#@WORKING_DIRECTORY@#$(PWD)#g' \
 		$< > $(TOP)/Localize/$@;
 
-all check:
-	shellcheck *.sh
+all check: check-sh check-yaml
+	@true
+
+check-sh:
+	$(Q) if ! type shellcheck >/dev/null; then echo "shellcheck is not installed. Install it like this: 'brew install shellcheck'"; exit 1; fi
+	$(Q) shellcheck *.sh
+
+check-yml check-yaml:
+	$(Q) if ! type yamllint >/dev/null; then echo "yamllint is not installed. Install it like this: 'brew install yamllint'"; exit 1; fi
+	$(Q) yamllint -c .yamllint.yml $(shell find . -name '*.yml')
 
 print-abspath-variable:
 	@echo $(VARIABLE)=$(abspath $($(VARIABLE)))

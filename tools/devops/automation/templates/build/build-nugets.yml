@@ -2,7 +2,7 @@
 
 steps:
 
-- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/build-nugets.sh
   displayName: 'Build Nugets'
   condition: and(succeeded(), contains(variables['configuration.BuildNugets'], 'True'))
   continueOnError: true # should not stop the build since is not official just yet.
