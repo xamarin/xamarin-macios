@@ -36,20 +36,102 @@ namespace Foundation  {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	// NSProcessInfo.h
-	public struct NSOperatingSystemVersion {
+
+	public struct NSOperatingSystemVersion: IEquatable<NSOperatingSystemVersion>, IComparable{
 		public nint Major, Minor, PatchVersion;
 		
-		public NSOperatingSystemVersion (nint major, nint minor, nint patchVersion)
+        public NSOperatingSystemVersion (nint majorVersion, nint minorVersion, nint patchVersionArg)
 		{
-			Major = major;
-			Minor = minor;
-			PatchVersion = patchVersion;
+			Major = majorVersion;
+			Minor = minorVersion;
+			PatchVersion = patchVersionArg;
 		}
+
+        public NSOperatingSystemVersion (nint majorVersion, nint minorVersion)
+		{
+			Major = majorVersion;
+			Minor = minorVersion;
+			PatchVersion = 0;
+		}
+
+        public NSOperatingSystemVersion (nint majorVersion)
+		{
+			Major = majorVersion;
+			Minor = 0;
+			PatchVersion = 0;
+		}
+
+        public int CompareTo (NSOperatingSystemVersion otherVersion) {
+            int majorValue = Major.CompareTo(otherVersion.Major);
+            if (majorValue == 0) {
+                int minorValue = Minor.CompareTo(otherVersion.Minor);
+                if (minorValue == 0) {
+                    int patchValue = PatchVersion.CompareTo(otherVersion.PatchVersion);
+                    return patchValue;
+                }
+                else {
+                    return minorValue;
+                } 
+            }
+            else {
+                return majorValue;
+            }
+                
+        }
+
+        public int CompareTo(Object obj) {
+            if (obj == null) return 1;
+            if (obj is NSOperatingSystemVersion other)
+                return CompareTo(other);
+            return 1;
+        }
 
 		public override string ToString ()
 		{
 			return Major + "." + Minor + "." + PatchVersion;
 		}
+
+		public bool Equals (NSOperatingSystemVersion other) 
+        {
+            if (other == null)
+                return false;
+            
+            if (Major == other.Major && 
+                Minor == other.Minor &&
+                PatchVersion == other.PatchVersion) 
+                return true;
+            else
+                return false;
+        }
+
+		public override bool Equals (Object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is NSOperatingSystemVersion versionObj)
+                return Equals(versionObj);
+            else   
+                return false; 
+        }
+
+        public override int GetHashCode()
+        {
+            return Tuple.Create(Major, Minor, PatchVersion).GetHashCode();
+        }
+
+        public static bool operator == (NSOperatingSystemVersion os1, NSOperatingSystemVersion os2)
+        {
+            if (((object)os1) == null || ((object)os2) == null)
+                return Object.Equals(os1, os2);
+            return os1.Equals(os2);
+        }
+
+        public static bool operator != (NSOperatingSystemVersion os1, NSOperatingSystemVersion os2)
+        {
+            if (((object)os1) == null || ((object)os2) == null)
+                return ! Object.Equals(os1, os2);
+            return ! (os1.Equals(os2));
+        }
+
 	}
 }
