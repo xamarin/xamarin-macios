@@ -19710,7 +19710,7 @@ namespace AppKit {
 		[Static]
 		[Mac (13, 0)]
 		[Export ("textViewUsingTextLayoutManager:")]
-		NSTextView WithTextLayoutManager (bool usingTextLayoutManager);
+		NSTextView Create (bool usingTextLayoutManager);
 	}
 
 	[NoMacCatalyst]
