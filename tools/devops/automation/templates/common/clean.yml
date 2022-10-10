@@ -19,7 +19,7 @@ steps:
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     $comments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
-    $ciComment = "${{ parameter.commentToHide }}"
+    $ciComment = "${{ parameters.commentToHide }}"
 
     $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
     $prComments = $comments.GetCommentsForPR($prId)
