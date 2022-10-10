@@ -4,8 +4,7 @@ using Microsoft.Build.Logging.StructuredLogger;
 
 namespace Xamarin.Tests {
 	[TestFixture]
-	public class ExtensionsTest : TestBaseClass
-	{
+	public class ExtensionsTest : TestBaseClass {
 		[TestCase (ApplePlatform.iOS, "ios-arm64")]
 		[TestCase (ApplePlatform.MacOSX, "osx-x64")]
 		[TestCase (ApplePlatform.TVOS, "tvos-arm64")]
@@ -20,7 +19,7 @@ namespace Xamarin.Tests {
 
 			// Manually build the native extension project first using xcodebuild
 			var xcodeProjectFolder = Path.Combine (Path.GetDirectoryName (Path.GetDirectoryName (project_path)), "nativeextension", platform.AsString ());
-			var xcodeBuildArgs = new[] {
+			var xcodeBuildArgs = new [] {
 				"-configuration", configuration,
 				"-target", "NativeIntentsExtension",
 				"-project", Path.Combine (xcodeProjectFolder, "NativeContainer.xcodeproj"),
@@ -29,7 +28,7 @@ namespace Xamarin.Tests {
 				{ "DEVELOPER_DIR", Configuration.XcodeLocation },
 			};
 			foreach (var action in new string [] { "clean", "build" })
-				ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new[] { action }).ToArray (), environmentVariables: env, timeout: TimeSpan.FromMinutes (1), throwOnError: true);
+				ExecutionHelper.Execute ("/usr/bin/xcodebuild", xcodeBuildArgs.Concat (new [] { action }).ToArray (), environmentVariables: env, timeout: TimeSpan.FromMinutes (1), throwOnError: true);
 
 			string buildPlatform;
 			switch (platform) {
