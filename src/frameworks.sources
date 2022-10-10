@@ -2104,6 +2104,7 @@ MACOS_FRAMEWORKS =          \
 	Social                  \
 	Speech                  \
 	SystemConfiguration     \
+	ThreadNetwork           \
 	UserNotifications       \
 	UserNotificationsUI		\
 	VideoSubscriberAccount  \
@@ -2403,6 +2404,7 @@ MACCATALYST_FRAMEWORKS = \
 	Social \
 	Speech \
 	SystemConfiguration \
+	ThreadNetwork \
 	UIKit XKit \
 	UserNotifications \
 	UserNotificationsUI \
