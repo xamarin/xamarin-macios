@@ -14,7 +14,8 @@ namespace MonoTouchFixtures.Foundation {
 
 		// IEqual Tests
 
-		public static IEnumerable<(NSOperatingSystemVersion, NSOperatingSystemVersion, bool)> VersionCasesEqual {
+		public static IEnumerable<(NSOperatingSystemVersion, NSOperatingSystemVersion, bool)> VersionCasesEqual 
+		{
 			get {
 				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 1), Result: true);
 				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 2), Result: false);
@@ -30,14 +31,15 @@ namespace MonoTouchFixtures.Foundation {
 		[Test, TestCaseSource ("VersionCasesEqual")]
 		public void NSVersionEqual ((NSOperatingSystemVersion v1, NSOperatingSystemVersion v2, bool res) sample)
 		{
-			Assert.AreEqual (sample.v1 == sample.v2, sample.res);
-			Assert.AreNotEqual (sample.v1 != sample.v2, sample.res);
-
+			Assert.AreEqual (sample.v1 == sample.v2, sample.res, $"{sample.v1}=={sample.v2}");
+			Assert.AreEqual (sample.v2 == sample.v1, sample.res, $"{sample.v2}=={sample.v1}");
+			Assert.AreNotEqual (sample.v1 != sample.v2, sample.res, $"{sample.v1}!={sample.v2}");
 		}
 
 		// Object Equal Tests
 
-		public static IEnumerable<(Object, bool)> VersionCasesObjectEqual {
+		public static IEnumerable<(Object, bool)> VersionCasesObjectEqual 
+		{
 			get {
 				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3), Result: true);
 				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 2), Result: false);
@@ -55,7 +57,8 @@ namespace MonoTouchFixtures.Foundation {
 
 		// Object Compare Tests
 
-		public static IEnumerable<(Object, int)> VersionCasesObjectCompare {
+		public static IEnumerable<(Object, int)> VersionCasesObjectCompare 
+		{
 			get {
 				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3), Result: 0);
 				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 2), Result: -1);
@@ -71,10 +74,10 @@ namespace MonoTouchFixtures.Foundation {
 			Assert.AreEqual (v1.CompareTo (sample.obj), sample.result);
 		}
 
-
 		// Hash Tests
 
-		public static IEnumerable<NSOperatingSystemVersion> VersionCasesHashCode {
+		public static IEnumerable<NSOperatingSystemVersion> VersionCasesHashCode 
+		{
 			get {
 				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3));
 				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 2));
@@ -85,13 +88,13 @@ namespace MonoTouchFixtures.Foundation {
 
 		[Test, TestCaseSource("VersionCasesHashCode")]
 		public void NSVersionHashCode (NSOperatingSystemVersion version)
-		{
-			Assert.AreEqual (version.GetHashCode(), version.GetHashCode());
-		}
+			=> Assert.AreEqual (version.GetHashCode(), version.GetHashCode());
+		
 
 		// ToString Tests
 
-		public static IEnumerable<(NSOperatingSystemVersion, string)> VersionCasesString {
+		public static IEnumerable<(NSOperatingSystemVersion, string)> VersionCasesString 
+		{
 			get {
 				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 1, minorVersion: (nint) 2, patchVersionArg: (nint) 3), "1.2.3");
 				yield return (new NSOperatingSystemVersion (majorVersion: (nint) 2), "2.0.0");
@@ -102,13 +105,13 @@ namespace MonoTouchFixtures.Foundation {
 
 		[Test, TestCaseSource ("VersionCasesString")]
 		public void NSVersionToString ((NSOperatingSystemVersion version, string versionStr) sample)
-		{
-			Assert.AreEqual (sample.version.ToString(), sample.versionStr);
-		}
+			=> Assert.AreEqual (sample.version.ToString(), sample.versionStr);
+		
 
 		// ICompare Tests
 
-		public static IEnumerable<(NSOperatingSystemVersion, NSOperatingSystemVersion, int)> VersionCasesCompare {
+		public static IEnumerable<(NSOperatingSystemVersion, NSOperatingSystemVersion, int)> VersionCasesCompare 
+		{
 			get {
 				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1), VersionTwo: new NSOperatingSystemVersion(majorVersion: (nint)1), Result: 0);
 				yield return (VersionOne: new NSOperatingSystemVersion (majorVersion: (nint) 1), VersionTwo: new NSOperatingSystemVersion (majorVersion: (nint) 2), Result: -1);
@@ -119,8 +122,7 @@ namespace MonoTouchFixtures.Foundation {
 
 		[Test, TestCaseSource("VersionCasesCompare")]
 		public void NSVersionCompare ((NSOperatingSystemVersion v1, NSOperatingSystemVersion v2, int res) sample)
-		{
-			Assert.AreEqual (sample.v1.CompareTo (sample.v2), sample.res);
-		}
+			=> Assert.AreEqual (sample.v1.CompareTo (sample.v2), sample.res);
+		
 	}
 }
