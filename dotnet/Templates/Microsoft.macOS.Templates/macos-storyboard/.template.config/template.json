@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "macOS" ],
+  "name": "macOS Storyboard",
+  "description": "A macOS Storyboard",
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "identity": "Microsoft.macOS.Storyboard",
+  "shortName": "macos-storyboard",
+  "sourceName": "Storyboard1",
+  "primaryOutputs": [
+    { "path": "Stortboard1.storyboard" }
+  ],
+  "defaultName": "Storyboard1"
+}

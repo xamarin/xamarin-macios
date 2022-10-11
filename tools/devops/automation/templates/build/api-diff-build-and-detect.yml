@@ -37,7 +37,7 @@ steps:
     makeParallelism: '4'
 
 # detect changes
-- bash:  $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/compare.sh
+- bash: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/compare.sh
   displayName: 'Detect API changes'
   condition: succeeded()
   name: detectChanges

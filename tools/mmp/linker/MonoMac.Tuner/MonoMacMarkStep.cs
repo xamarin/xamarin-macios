@@ -3,7 +3,7 @@
 // adapted from xtouch/tools/mtouch/Touch.Tuner/ManualMarkStep.cs
 
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Linker;
 using Xamarin.Bundler;
@@ -58,10 +58,10 @@ namespace MonoMac.Tuner {
 				ProcessXamarinMac (type);
 				break;
 			}
-			
+
 			return type;
 		}
-		
+
 		// FIXME: we could be more precise (per field) but that would require a lot more maintenance for a very small gain
 		void ProcessSystem (TypeDefinition type)
 		{
@@ -77,7 +77,7 @@ namespace MonoMac.Tuner {
 
 					// FIXME: this is the non-MOBILE version
 					if (true) { // Mono.Tuner.Profile.Current is MobileProfile)
-						// limited machine.config support
+								// limited machine.config support
 						WebRequestConfiguration ();
 					}
 					break;
@@ -85,14 +85,14 @@ namespace MonoMac.Tuner {
 				break;
 			}
 		}
-		
+
 		void WebRequestConfiguration ()
 		{
 			// MarkMethods is used because the default .ctor is needed by Activation.Create
 			MarkMethods (GetType ("System.Configuration", "System.Configuration.ExeConfigurationHost"));
-			
+
 			AssemblyDefinition system = GetAssembly ("System");
-			
+
 			// types we could directly infer from machine.config
 			MarkMethods (GetType (system, "System.Net.Configuration.DefaultProxySection"));
 			MarkMethods (GetType (system, "System.Net.Configuration.NetSectionGroup"));
@@ -101,7 +101,7 @@ namespace MonoMac.Tuner {
 			MarkMethods (GetType (system, "System.Net.HttpRequestCreator"));
 			MarkMethods (GetType (system, "System.Net.FileWebRequestCreator"));
 			MarkMethods (GetType (system, "System.Net.FtpWebRequestCreator"));
-			
+
 			// types we cannot find (statiscally or using machine.config)
 			MarkMethods (GetType (system, "System.ComponentModel.BooleanConverter"));
 			MarkMethods (GetType (system, "System.ComponentModel.CollectionConverter"));

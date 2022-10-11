@@ -8,7 +8,7 @@ namespace Xamarin.Linker {
 
 	// this can be used (directly) with Xamarin.Mac and as the base of Xamarin.iOS step
 	public class CoreRemoveAttributes : MobileRemoveAttributes {
-		
+
 		protected DerivedLinkContext LinkContext {
 			get {
 				return (DerivedLinkContext) base.context;
@@ -29,7 +29,7 @@ namespace Xamarin.Linker {
 			switch (attr_type.Name) {
 			case "AdviceAttribute":
 			case "FieldAttribute":
-			case "PreserveAttribute":	// the ApplyPreserveAttribute substep is executed before this
+			case "PreserveAttribute":   // the ApplyPreserveAttribute substep is executed before this
 			case "LinkerSafeAttribute":
 				return attr_type.Namespace == Namespaces.Foundation;
 			// used for documentation, not at runtime
@@ -69,7 +69,7 @@ namespace Xamarin.Linker {
 			var attr_type = attribute.Constructor.DeclaringType;
 			if (attr_type.Namespace == Namespaces.ObjCRuntime) {
 				switch (attr_type.Name) {
-				case "AvailabilityAttribute":		// obsolete (could be present in user code)
+				case "AvailabilityAttribute":       // obsolete (could be present in user code)
 				case "AvailabilityBaseAttribute":   // base type for IntroducedAttribute and DeprecatedAttribute (could be in user code)
 				case "DeprecatedAttribute":
 				case "IntroducedAttribute":
