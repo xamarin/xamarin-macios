@@ -192,7 +192,7 @@ namespace SharedWithYouCore {
 		[Export ("initWithLocalIdentifier:")]
 		NativeHandle _InitWithLocalIdentifier (string localIdentifier);
 
-		[Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[iOS (16,1), MacCatalyst (16,1)]
 		[Internal]
 		[Export ("initWithCollaborationIdentifier:")]
 		NativeHandle _InitWithCollaborationIdentifier (string collaborationIdentifier);

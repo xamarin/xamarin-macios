@@ -40,7 +40,7 @@ namespace SharedWithYouCore {
 		[SupportedOSPlatform ("ios16.1")]
 		[SupportedOSPlatform ("maccatalyst16.1")]
 #else
-		[Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[iOS (16,1), MacCatalyst (16,1)]
 #endif  
 		public SWCollaborationMetadata (string identifier, SWIdentifierType identifierType) : base (NSObjectFlag.Empty) {
 			switch(identifierType) {
