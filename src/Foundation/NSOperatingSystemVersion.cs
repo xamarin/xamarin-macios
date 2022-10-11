@@ -50,7 +50,7 @@ namespace Foundation  {
 		}
 
         public NSOperatingSystemVersion (nint major, nint minor) : this (major, minor, 0) {}
-
+        
         public NSOperatingSystemVersion (nint major) : this (major, 0, 0) {}
 
         public int CompareTo (NSOperatingSystemVersion otherVersion) 
