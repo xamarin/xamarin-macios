@@ -132,6 +132,8 @@ namespace Introspection {
 				// Causes a crash later. Filed as radar://18440271.
 				// Apple said they won't fix this ('init' isn't a designated initializer)
 				return true;
+			case "HMMatterRequestHandler": // got removed and the current API throws an exception at run time.
+				return true;
 			}
 
 #if !NET
