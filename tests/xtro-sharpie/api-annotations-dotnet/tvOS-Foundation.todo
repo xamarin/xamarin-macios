@@ -10,4 +10,3 @@
 !deprecated-attribute-missing! NSURLConnection::initWithRequest:delegate: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSURLConnection::initWithRequest:delegate:startImmediately: missing a [Deprecated] attribute
 !deprecated-attribute-missing! NSUserDefaults::persistentDomainNames missing a [Deprecated] attribute
-!missing-selector! NSURLRequest::requiresDNSSECValidation not bound
