@@ -79,7 +79,7 @@ namespace Xamarin.Linker.Steps {
 			if (td == null) {
 				PropertyDefinition pd = (provider as PropertyDefinition);
 				if (pd != null) {
-					MarkDefaultConstructor (pd.DeclaringType);					
+					MarkDefaultConstructor (pd.DeclaringType);
 					MarkGenericType (pd.PropertyType as GenericInstanceType);
 					td = pd.PropertyType.Resolve ();
 				} else {
