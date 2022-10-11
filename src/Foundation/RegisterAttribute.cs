@@ -30,12 +30,14 @@ namespace Foundation {
 		string name;
 		bool is_wrapper;
 
-		public RegisterAttribute () {}
-		public RegisterAttribute (string name) {
+		public RegisterAttribute () { }
+		public RegisterAttribute (string name)
+		{
 			this.name = name;
 		}
 
-		public RegisterAttribute (string name, bool isWrapper) {
+		public RegisterAttribute (string name, bool isWrapper)
+		{
 			this.name = name;
 			this.is_wrapper = isWrapper;
 		}
