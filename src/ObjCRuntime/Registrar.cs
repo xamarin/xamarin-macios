@@ -56,12 +56,10 @@ using ProductException=ObjCRuntime.RuntimeException;
 //
 
 #if MONOMAC
-namespace ObjCRuntime
-{
+namespace ObjCRuntime {
 	public delegate void AssemblyRegistrationHandler (object sender, AssemblyRegistrationEventArgs args);
 
-	public class AssemblyRegistrationEventArgs : EventArgs
-	{
+	public class AssemblyRegistrationEventArgs : EventArgs {
 		public bool Register { get; set; }
 		public System.Reflection.AssemblyName AssemblyName { get; internal set; }
 	}

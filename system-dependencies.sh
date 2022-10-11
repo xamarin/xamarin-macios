@@ -80,6 +80,16 @@ while ! test -z $1; do
 			unset IGNORE_DOTNET
 			shift
 			;;
+		--provision-shellcheck)
+			PROVISION_SHELLCHECK=1
+			unset IGNORE_SHELLCHECK
+			shift
+			;;
+		--provision-yamllint)
+			PROVISION_YAMLLINT=1
+			unset IGNORE_YAMLLINT
+			shift
+			;;
 		--provision-all)
 			PROVISION_MONO=1
 			unset IGNORE_MONO
@@ -103,6 +113,10 @@ while ! test -z $1; do
 			unset IGNORE_PYTHON3
 			PROVISION_DOTNET=1
 			unset IGNORE_DOTNET
+			PROVISION_SHELLCHECK=1
+			unset IGNORE_SHELLCHECK
+			PROVISION_YAMLLINT=1
+			unset IGNORE_YAMLLINT
 			shift
 			;;
 		--ignore-all)
@@ -118,6 +132,8 @@ while ! test -z $1; do
 			IGNORE_SIMULATORS=1
 			IGNORE_PYTHON3=1
 			IGNORE_DOTNET=1
+			IGNORE_SHELLCHECK=1
+			IGNORE_YAMLLINT=1
 			shift
 			;;
 		--ignore-osx)
@@ -172,6 +188,14 @@ while ! test -z $1; do
 			;;
 		--ignore-dotnet)
 			IGNORE_DOTNET=1
+			shift
+			;;
+		--ignore-shellcheck)
+			IGNORE_SHELLCHECK=1
+			shift
+			;;
+		--ignore-yamllint)
+			IGNORE_YAMLLINT=1
 			shift
 			;;
 		-v | --verbose)
@@ -590,6 +614,26 @@ function install_autoconf () {
 	brew install autoconf
 }
 
+function install_shellcheck () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install shellcheck, but brew is not installed."
+		return
+	fi
+
+	ok "Installing ${COLOR_BLUE}shellcheck${COLOR_RESET}..."
+	brew install shellcheck
+}
+
+function install_yamllint () {
+	if ! brew --version >& /dev/null; then
+		fail "Asked to install yamllint, but brew is not installed."
+		return
+	fi
+
+	ok "Installing ${COLOR_BLUE}yamllint${COLOR_RESET}..."
+	brew install yamllint
+}
+
 function install_python3 () {
 	if ! brew --version >& /dev/null; then
 		fail "Asked to install python3, but brew is not installed."
@@ -652,6 +696,40 @@ IFS='
 	else
 		fail "You must install automake, read the README.md for instructions"
 	fi
+IFS=$IFS_tmp
+}
+
+function check_shellcheck () {
+	if ! test -z $IGNORE_SHELLCHECK; then return; fi
+
+IFStmp=$IFS
+IFS='
+'
+	if SHELLCHECK_VERSION=($(shellcheck --version 2>/dev/null)); then
+		ok "Found shellcheck ${SHELLCHECK_VERSION[1]} (no specific version is required)"
+	elif ! test -z $PROVISION_SHELLCHECK; then
+		install_shellcheck
+	else
+		fail "You must install shellcheck. The easiest way is to use homebrew, and execute ${COLOR_MAGENTA}brew install shellcheck${COLOR_RESET}."
+	fi
+
+IFS=$IFS_tmp
+}
+
+function check_yamllint () {
+	if ! test -z $IGNORE_YAMLLINT; then return; fi
+
+IFStmp=$IFS
+IFS='
+'
+	if YAMLLINT_VERSION=($(yamllint --version 2>/dev/null)); then
+		ok "Found ${YAMLLINT_VERSION[0]} (no specific version is required)"
+	elif ! test -z $PROVISION_YAMLLINT; then
+		install_yamllint
+	else
+		fail "You must install yamllint. The easiest way is to use homebrew, and execute ${COLOR_MAGENTA}brew install yamllint${COLOR_RESET}."
+	fi
+
 IFS=$IFS_tmp
 }
 
@@ -918,6 +996,8 @@ check_checkout_dir
 check_xcode
 check_homebrew
 check_autotools
+check_shellcheck
+check_yamllint
 check_python3
 check_mono
 check_cmake
