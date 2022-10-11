@@ -34,6 +34,11 @@
 
 		<!-- Do we need a RuntimeIdentifier? For apps and app extensions we do -->
 		<_RuntimeIdentifierIsRequired Condition="'$(OutputType)' == 'Exe' Or '$(IsAppExtension)' == 'true'">true</_RuntimeIdentifierIsRequired>
+
+		<!-- The logic to compute the default value for GenerateSatelliteAssembliesForCore is wrong when building inside Visual Studio (Windows), so make sure it defaults to the correct value -->
+		<!-- Ref: https://github.com/xamarin/xamarin-macios/issues/16193 -->
+		<!-- Ref: https://github.com/dotnet/sdk/issues/28419 -->
+		<GenerateSatelliteAssembliesForCore Condition="'$(GenerateSatelliteAssembliesForCore)' == ''">true</GenerateSatelliteAssembliesForCore>
 	</PropertyGroup>
 
 	<!-- Set the default RuntimeIdentifier if not already specified. -->

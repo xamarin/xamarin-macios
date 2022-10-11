@@ -46,7 +46,7 @@ steps:
   name: upload
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/package
-    azureSubscription:  'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: bosstoragemirror
     ContainerName: wrench
@@ -58,7 +58,7 @@ steps:
   displayName: 'Publish manifest to Azure'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/package/manifest
-    azureSubscription:  'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: bosstoragemirror
     ContainerName: wrench
@@ -70,7 +70,7 @@ steps:
   displayName: 'Publish manifest to Azure as latest'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/package/manifest
-    azureSubscription:  'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: bosstoragemirror
     ContainerName: wrench
@@ -82,7 +82,7 @@ steps:
   displayName: 'Publish manifest to Azure per commit'
   inputs:
     SourcePath: $(Build.SourcesDirectory)/artifacts/package/manifest
-    azureSubscription:  'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
+    azureSubscription: 'Azure Releng (7b4817ae-218f-464a-bab1-a9df2d99e1e5)'
     Destination: AzureBlob
     storage: bosstoragemirror
     ContainerName: wrench
