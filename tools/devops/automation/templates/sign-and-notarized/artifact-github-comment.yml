@@ -28,4 +28,3 @@ steps:
   displayName: 'Create github comment.'
   enabled: true
   timeoutInMinutes: 10
-
