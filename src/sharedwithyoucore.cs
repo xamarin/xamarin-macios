@@ -162,7 +162,7 @@ namespace SharedWithYouCore {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWCollaborationMetadata : NSSecureCoding, NSCopying, NSMutableCopying 
-#if IOS
+#if IOS || MONOMAC
 		, NSItemProviderReading
 		, NSItemProviderWriting
 #endif
