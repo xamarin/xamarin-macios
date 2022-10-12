@@ -639,9 +639,7 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("macos")]
 		public SslProtocols SslProtocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
-#if NET
 		private ServerCertificateCustomValidationCallbackHelper? _serverCertificateCustomValidationCallbackHelper;
-
 		public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback {
 			get => _serverCertificateCustomValidationCallbackHelper?.Callback;
 			set {
@@ -772,8 +770,6 @@ namespace Foundation {
 					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies.");;
 			}
 		}
-#else
-		public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback { get; set; }
 #endif // NET
 
 		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
