@@ -2,9 +2,7 @@
 
 using System;
 
-namespace Xamarin.Bundler
-{
-	partial class Target
-	{
+namespace Xamarin.Bundler {
+	partial class Target {
 	}
 }

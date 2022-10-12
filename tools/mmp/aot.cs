@@ -36,14 +36,12 @@ using Profile = Mono.Tuner.Profile;
 
 namespace Xamarin.Bundler {
 
-	public interface IFileEnumerator
-	{
+	public interface IFileEnumerator {
 		IEnumerable<string> Files { get; }
 		string RootDir { get; }
 	}
 
-	public class FileSystemEnumerator : IFileEnumerator
-	{
+	public class FileSystemEnumerator : IFileEnumerator {
 		DirectoryInfo Info;
 		public IEnumerable<string> Files => Info.GetFiles ().Select (x => x.FullName);
 		public string RootDir { get; private set; }
@@ -78,23 +76,22 @@ namespace Xamarin.Bundler {
 		Hybrid
 	}
 
-	public class AOTOptions
-	{
+	public class AOTOptions {
 		public bool IsAOT => CompilationType != AOTCompilationType.Default && CompilationType != AOTCompilationType.None;
 		public bool IsHybridAOT => IsAOT && Kind == AOTKind.Hybrid;
 
 		public AOTCompilationType CompilationType { get; private set; } = AOTCompilationType.Default;
 		public AOTKind Kind { get; private set; } = AOTKind.Standard;
 
-		public List <string> IncludedAssemblies { get; private set; } = new List <string> ();
-		public List <string> ExcludedAssemblies { get; private set; } = new List <string> ();
+		public List<string> IncludedAssemblies { get; private set; } = new List<string> ();
+		public List<string> ExcludedAssemblies { get; private set; } = new List<string> ();
 
 		public AOTOptions (string options)
 		{
 			// Syntax - all,core,sdk,none or "" if explicit then optional list of +/-'ed assemblies
 			// Sections seperated by ,
 			string [] optionParts = options.Split (',');
-			for (int i = 0 ; i < optionParts.Length ; ++i) {
+			for (int i = 0; i < optionParts.Length; ++i) {
 				string option = optionParts [i];
 
 				AOTKind kind = AOTKind.Default;
@@ -172,10 +169,9 @@ namespace Xamarin.Bundler {
 		}
 	}
 
-	public class AOTCompiler
-	{
+	public class AOTCompiler {
 		// Allows tests to stub out actual compilation and parallelism
-		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand; 
+		public RunCommandDelegate RunCommand { get; set; } = Driver.RunCommand;
 		public ParallelOptions ParallelOptions { get; set; } = new ParallelOptions () { MaxDegreeOfParallelism = Driver.Concurrency };
 
 		string xamarin_mac_prefix;
@@ -189,14 +185,14 @@ namespace Xamarin.Bundler {
 				xamarin_mac_prefix = value;
 			}
 		}
-		
+
 		AOTOptions options;
 		Abi [] abis;
 		AOTCompilerType compilerType;
 		bool IsRelease;
 		bool IsModern;
 
-		public AOTCompiler (AOTOptions options, IEnumerable <Abi> abis, AOTCompilerType compilerType, bool isModern, bool isRelease)
+		public AOTCompiler (AOTOptions options, IEnumerable<Abi> abis, AOTCompilerType compilerType, bool isModern, bool isRelease)
 		{
 			this.options = options;
 			this.abis = abis.ToArray ();
@@ -226,12 +222,12 @@ namespace Xamarin.Bundler {
 				}
 			}
 
-			Parallel.ForEach (filesToAOT.SelectMany (f => abis, (file, abi) => new Tuple <string, Abi> (file, abi)), ParallelOptions, tuple => {
+			Parallel.ForEach (filesToAOT.SelectMany (f => abis, (file, abi) => new Tuple<string, Abi> (file, abi)), ParallelOptions, tuple => {
 				var file = tuple.Item1;
 				var abi = tuple.Item2;
 
-				var cmd = new List <string> ();
-				var aotArgs = new List <string> ();
+				var cmd = new List<string> ();
+				var aotArgs = new List<string> ();
 				aotArgs.Add ($"mtriple={abi.AsArchString ()}");
 				if (options.IsHybridAOT)
 					aotArgs.Add ("hybrid");
@@ -286,11 +282,11 @@ namespace Xamarin.Bundler {
 		List<string> GetFilesToAOT (IFileEnumerator files)
 		{
 			// Make a dictionary of included/excluded files to track if we've missed some at the end
-			Dictionary <string, bool> includedAssemblies = new Dictionary <string, bool> ();
+			Dictionary<string, bool> includedAssemblies = new Dictionary<string, bool> ();
 			foreach (var item in options.IncludedAssemblies)
 				includedAssemblies [item] = false;
 
-			Dictionary <string, bool> excludedAssemblies = new Dictionary <string, bool> ();
+			Dictionary<string, bool> excludedAssemblies = new Dictionary<string, bool> ();
 			foreach (var item in options.ExcludedAssemblies)
 				excludedAssemblies [item] = false;
 
@@ -329,7 +325,7 @@ namespace Xamarin.Bundler {
 				case AOTCompilationType.Explicit:
 					break; // In explicit, only included includedAssemblies included
 				default:
-					throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"GetFilesToAOT with aot: {options.CompilationType}\"" );
+					throw ErrorHelper.CreateError (0099, Errors.MX0099, $"\"GetFilesToAOT with aot: {options.CompilationType}\"");
 				}
 			}
 
