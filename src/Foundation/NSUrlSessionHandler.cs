@@ -639,7 +639,113 @@ namespace Foundation {
 		[UnsupportedOSPlatform ("macos")]
 		public SslProtocols SslProtocols { get; set; } = SslProtocols.Tls12 | SslProtocols.Tls13;
 
-		public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback { get; set; }
+#if NET
+		private ServerCertificateCustomValidationCallbackHelper? _serverCertificateCustomValidationCallbackHelper;
+
+		public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback {
+			get => _serverCertificateCustomValidationCallbackHelper?.Callback;
+			set {
+				if (value is null) {
+					_serverCertificateCustomValidationCallbackHelper = null;
+				} else if (_serverCertificateCustomValidationCallbackHelper is null) {
+					_serverCertificateCustomValidationCallbackHelper = new ServerCertificateCustomValidationCallbackHelper (value);
+				} else {
+					_serverCertificateCustomValidationCallbackHelper.Callback = value;
+				}
+			}
+		}
+
+		internal bool InvokeServerCertificateCustomValidationCallback (HttpRequestMessage request, SecTrust secTrust)
+		{
+			var helper = _serverCertificateCustomValidationCallbackHelper;
+			return helper is not null ? helper.Invoke (request, secTrust) : false;
+		}
+
+		sealed class ServerCertificateCustomValidationCallbackHelper
+		{
+			public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> Callback { get; }
+
+			public ServerCertificateCustomValidationCallbackHelper(Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> callback)
+			{
+				Callback = callback;
+			}
+
+			public bool Invoke (HttpRequestMessage request, SecTrust secTrust)
+			{
+				X509Certificate2[] certificates = ConvertCertificates (secTrust);
+				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
+				using X509Chain chain = CreateChain (certificates);
+				SslPolicyErrors sslPolicyErrors = EvaluateSslPolicyErrors (certificate, chain, secTrust);
+
+				return Callback (request, certificate, chain, sslPolicyErrors);
+			}
+
+			X509Certificate2[] ConvertCertificates (SecTrust secTrust)
+			{
+				var certificates = new X509Certificate2 [secTrust.Count];
+
+				if (IsSecTrustGetCertificateChainSupported) {
+					var originalChain = secTrust.GetCertificateChain ();
+					for (int i = 0; i < originalChain.Length; i++)
+						certificates [i] = originalChain [i].ToX509Certificate2 ();
+				} else {
+					for (int i = 0; i < secTrust.Count; i++)
+						certificates [i] = secTrust [i].ToX509Certificate2 ();
+				}
+
+				return certificates;
+			}
+
+			static bool? isSecTrustGetCertificateChainSupported = null;
+			static bool IsSecTrustGetCertificateChainSupported {
+				get {
+					if (!isSecTrustGetCertificateChainSupported.HasValue) {
+#if MONOMAC
+						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckmacOS (12, 0);
+#elif WATCH
+						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckWatchOS (8, 0);
+#elif IOS || TVOS || MACCATALYST
+						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckiOS (15, 0);
+#else
+						#error Unknown platform
+#endif
+					}
+
+					return isSecTrustGetCertificateChainSupported.Value;
+				}
+			}
+
+			X509Chain CreateChain (X509Certificate2[] certificates)
+			{
+				// inspired by https://github.com/dotnet/runtime/blob/99d21b9276ebe8f7bea7fb3ba74dca9fca625fe2/src/libraries/System.Security.Cryptography.Pkcs/src/System/Security/Cryptography/Pkcs/SignerInfo.cs#L691-L696
+				var chain = new X509Chain ();
+				chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
+				chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
+				chain.ChainPolicy.ExtraStore.AddRange (certificates);
+				return chain;
+			}
+
+			SslPolicyErrors EvaluateSslPolicyErrors (X509Certificate2? certificate, X509Chain chain, SecTrust secTrust)
+			{
+				var sslPolicyErrors = SslPolicyErrors.None;
+				
+				try {
+					if (certificate is null) {
+						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNotAvailable;
+					} else if (!chain.Build (certificate)) {
+						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
+					}
+				} catch (ArgumentException) {
+					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
+				}
+
+				if (!secTrust.Evaluate (out _)) {
+					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
+				}
+
+				return sslPolicyErrors;
+			}
+		}
 
 		// There's no way to turn off automatic decompression, so yes, we support it
 		public bool SupportsAutomaticDecompression {
@@ -666,6 +772,8 @@ namespace Foundation {
 					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), value, "It's not possible to disable the use of system proxies.");;
 			}
 		}
+#else
+		public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool>? ServerCertificateCustomValidationCallback { get; set; }
 #endif // NET
 
 		partial class NSUrlSessionHandlerDelegate : NSUrlSessionDataDelegate
@@ -886,7 +994,7 @@ namespace Foundation {
 #if NET
 					// if the trust delegate allows to ignore the cert, do it. Since we are using nullables, if the delegate is not present, by default is false
 					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
-						(sessionHandler.ServerCertificateCustomValidationCallback is not null && InvokeServerCertificateCustomValidationCallback (inflight.Request, challenge.ProtectionSpace.ServerSecTrust));
+						sessionHandler.InvokeServerCertificateCustomValidationCallback (inflight.Request, challenge.ProtectionSpace.ServerSecTrust);
 #else
 					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
 					// more general one. Since we are using nullables, if the delegate is not present, by default is false
@@ -965,88 +1073,6 @@ namespace Foundation {
 					completionHandler (NSUrlSessionAuthChallengeDisposition.PerformDefaultHandling, challenge.ProposedCredential);
 				}
 			}
-
-#if NET
-			bool InvokeServerCertificateCustomValidationCallback (HttpRequestMessage request, SecTrust secTrust)
-			{
-				var certificateValidationCallback = sessionHandler.ServerCertificateCustomValidationCallback;
-				if (certificateValidationCallback is null)
-					throw new InvalidOperationException ($"{nameof (NSUrlSessionHandler.ServerCertificateCustomValidationCallback)} cannot be null");
-
-				X509Certificate2[] certificates = ConvertCertificates (secTrust);
-				X509Certificate2? certificate = certificates.Length > 0 ? certificates [0] : null;
-				using X509Chain chain = CreateChain (certificates);
-				SslPolicyErrors sslPolicyErrors = EvaluateSslPolicyErrors (certificate, chain, secTrust);
-
-				return certificateValidationCallback (request, certificate, chain, sslPolicyErrors);
-			}
-
-			X509Certificate2[] ConvertCertificates (SecTrust secTrust)
-			{
-				var certificates = new X509Certificate2 [secTrust.Count];
-
-				if (IsSecTrustGetCertificateChainSupported) {
-					var originalChain = secTrust.GetCertificateChain ();
-					for (int i = 0; i < originalChain.Length; i++)
-						certificates [i] = originalChain [i].ToX509Certificate2 ();
-				} else {
-					for (int i = 0; i < secTrust.Count; i++)
-						certificates [i] = secTrust [i].ToX509Certificate2 ();
-				}
-
-				return certificates;
-			}
-
-			static bool? isSecTrustGetCertificateChainSupported = null;
-			static bool IsSecTrustGetCertificateChainSupported {
-				get {
-					if (!isSecTrustGetCertificateChainSupported.HasValue) {
-#if MONOMAC
-						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckmacOS (12, 0);
-#elif WATCH
-						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckWatchOS (8, 0);
-#elif IOS || TVOS || MACCATALYST
-						isSecTrustGetCertificateChainSupported = ObjCRuntime.SystemVersion.CheckiOS (15, 0);
-#else
-						#error Unknown platform
-#endif
-					}
-
-					return isSecTrustGetCertificateChainSupported.Value;
-				}
-			}
-
-			X509Chain CreateChain (X509Certificate2[] certificates)
-			{
-				// inspired by https://github.com/dotnet/runtime/blob/99d21b9276ebe8f7bea7fb3ba74dca9fca625fe2/src/libraries/System.Security.Cryptography.Pkcs/src/System/Security/Cryptography/Pkcs/SignerInfo.cs#L691-L696
-				var chain = new X509Chain ();
-				chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
-				chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
-				chain.ChainPolicy.ExtraStore.AddRange (certificates);
-				return chain;
-			}
-
-			SslPolicyErrors EvaluateSslPolicyErrors (X509Certificate2? certificate, X509Chain chain, SecTrust secTrust)
-			{
-				var sslPolicyErrors = SslPolicyErrors.None;
-				
-				try {
-					if (certificate is null) {
-						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateNotAvailable;
-					} else if (!chain.Build (certificate)) {
-						sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
-					}
-				} catch (ArgumentException) {
-					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
-				}
-
-				if (!secTrust.Evaluate (out _)) {
-					sslPolicyErrors |= SslPolicyErrors.RemoteCertificateChainErrors;
-				}
-
-				return sslPolicyErrors;
-			}
-#endif // NET
 
 			static readonly string RejectProtectionSpaceAuthType = "reject";
 
