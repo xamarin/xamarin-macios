@@ -143,7 +143,6 @@ namespace Xharness {
 		public string IOS_DESTDIR { get; }
 		public string MONO_IOS_SDK_DESTDIR { get; }
 		public string MONO_MAC_SDK_DESTDIR { get; }
-		public bool ENABLE_XAMARIN { get; }
 		public bool ENABLE_DOTNET { get; }
 		public bool INCLUDE_XAMARIN_LEGACY { get; }
 
@@ -217,7 +216,6 @@ namespace Xharness {
 			IOS_DESTDIR = config ["IOS_DESTDIR"];
 			MONO_IOS_SDK_DESTDIR = config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
-			ENABLE_XAMARIN = config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (config ["ENABLE_XAMARIN"]);
 			ENABLE_DOTNET = config.ContainsKey ("ENABLE_DOTNET") && !string.IsNullOrEmpty (config ["ENABLE_DOTNET"]);
 			INCLUDE_XAMARIN_LEGACY = config.ContainsKey ("INCLUDE_XAMARIN_LEGACY") && !string.IsNullOrEmpty (config ["INCLUDE_XAMARIN_LEGACY"]);
 

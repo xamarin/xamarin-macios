@@ -66,7 +66,6 @@ test.config: Makefile $(TOP)/Make.config $(TOP)/mk/mono.mk $(TOP)/eng/Version.De
 	@echo "XCODE_DEVELOPER_ROOT=$(XCODE_DEVELOPER_ROOT)" >> $@
 	@echo "MONO_IOS_SDK_DESTDIR=$(MONO_IOS_SDK_DESTDIR)" >> $@
 	@echo "MONO_MAC_SDK_DESTDIR=$(MONO_MAC_SDK_DESTDIR)" >> $@
-	@echo "ENABLE_XAMARIN=$(ENABLE_XAMARIN)" >> $@
 	@echo "DOTNET=$(DOTNET)" >> $@
 	@echo "IOS_SDK_VERSION=$(IOS_SDK_VERSION)" >> $@
 	@echo "TVOS_SDK_VERSION=$(TVOS_SDK_VERSION)" >> $@
@@ -295,15 +294,7 @@ wrench-msbuild:
 	@echo Not here anymore
 
 wrench-docs:
-ifdef ENABLE_XAMARIN
-ifdef INCLUDE_IOS
-	$(MAKE) -C $(MACCORE_PATH) update-docs
-else
-	@echo "iOS tests have been disabled [$@]"
-endif
-else
 	@echo "Docs have been disabled [$@]"
-endif
 
 # the wrenchhelper-* targets are generated.
 wrench-sim-%:
@@ -338,23 +329,6 @@ runner: xharness/xharness.exe
 vsts-device-tests: xharness/xharness.exe
 	$(MAKE) -C $(TOP)/builds .stamp-mono-ios-sdk-destdir download -j
 	$(Q) ulimit -n 4096 && $(SYSTEM_MONO) --debug $(CURDIR)/$< $(XHARNESS_VERBOSITY) --jenkins --autoconf --rootdir $(CURDIR) --sdkroot $(XCODE_DEVELOPER_ROOT) --use-system:true --label=skip-all-tests,run-device-tests,run-bcl-tests --markdown-summary=$(CURDIR)/TestSummary.md $(TESTS_EXTRA_ARGUMENTS) $(TESTS_PERIODIC_COMMAND)
-
-ifdef ENABLE_XAMARIN
-wrench-launch-external wrench-report-external:
-	$(MAKE) -C $(MACCORE_PATH)/tests/external $@
-
-# This will schedule a manual device test run for the current commit. The current commit must already have packages.
-launch-manual-device-tests:
-	./launch-manual-device-tests.sh
-
-# This will schedule a manual sample test run for the current commit. The current commit must already have packages.
-launch-manual-sample-tests:
-	./launch-manual-sample-tests.sh
-
-else
-wrench-launch-external wrench-report-external:
-	@echo "External tests have been disabled"
-endif
 
 verify-system-vsmac-xcode-match:
 	@SYSTEM_XCODE=$$(dirname $$(dirname $$(xcode-select -p))); \

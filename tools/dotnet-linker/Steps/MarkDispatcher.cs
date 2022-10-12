@@ -4,7 +4,7 @@ using Xamarin.Linker;
 namespace Xamarin.Linker.Steps {
 	class MarkDispatcher : MarkSubStepsDispatcher {
 		public MarkDispatcher ()
-			: base (new BaseSubStep[] {
+			: base (new BaseSubStep [] {
 				new ApplyPreserveAttribute (),
 				new MarkNSObjects ()
 			})

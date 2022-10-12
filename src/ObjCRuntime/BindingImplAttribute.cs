@@ -8,8 +8,7 @@ using System.Runtime.InteropServices;
 namespace ObjCRuntime {
 
 	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Constructor | AttributeTargets.Field | AttributeTargets.Class, AllowMultiple = false)]
-	public class BindingImplAttribute : Attribute
-	{
+	public class BindingImplAttribute : Attribute {
 		public BindingImplAttribute (BindingImplOptions options)
 		{
 			Options = options;
@@ -19,8 +18,7 @@ namespace ObjCRuntime {
 	}
 
 	[Flags]
-	public enum BindingImplOptions
-	{
+	public enum BindingImplOptions {
 		GeneratedCode = 1,
 		Optimizable = 2,
 	}

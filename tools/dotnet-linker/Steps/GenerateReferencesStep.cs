@@ -20,7 +20,7 @@ namespace Xamarin {
 			var app = Configuration.Application;
 			var required_symbols = Configuration.DerivedLinkContext.RequiredSymbols;
 			var items = new List<MSBuildItem> ();
-				
+
 			switch (app.SymbolMode) {
 			case SymbolMode.Ignore:
 				break;
