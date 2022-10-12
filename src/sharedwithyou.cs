@@ -24,6 +24,7 @@ using UIView=AppKit.NSView;
 using UIMenu=AppKit.NSMenu;
 using UIImage=AppKit.NSImage;
 using ICloudSharingControllerDelegate=AppKit.INSCloudSharingServiceDelegate;
+using UIWindow=AppKit.NSWindow;
 #else 
 using UIKit;
 using ICloudSharingControllerDelegate=UIKit.IUICloudSharingControllerDelegate;
@@ -35,7 +36,7 @@ using NativeHandle = System.IntPtr;
 
 namespace SharedWithYou {
 
-	[NoWatch, TV (16,0), NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum SWAttributionViewBackgroundStyle : long {
 		Default = 0,
@@ -43,14 +44,14 @@ namespace SharedWithYou {
 		Material,
 	}
 
-	[NoWatch, TV (16,0), NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum SWAttributionViewDisplayContext : long {
 		Summary = 0,
 		Detail,
 	}
 
-	[NoWatch, TV (16,0), NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum SWAttributionViewHorizontalAlignment : long {
 		Default = 0,
@@ -59,7 +60,7 @@ namespace SharedWithYou {
 		Trailing,
 	}
 
-	[TV (16,0), NoMac, iOS (16,0)]
+	[TV (16,0), Mac (13,0), iOS (16,0)]
 	[Native]
 	public enum SWHighlightCenterErrorCode : long {
 		NoError = 0,
@@ -68,21 +69,21 @@ namespace SharedWithYou {
 		AccessDenied,
 	}
 
-	[NoTV, NoWatch, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoTV, NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum SWHighlightChangeEventTrigger : long {
 		Edit = 1,
 		Comment = 2,
 	}
 
-	[NoTV, NoWatch, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoTV, NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum SWHighlightMembershipEventTrigger : long {
 		AddedCollaborator = 1,
 		RemovedCollaborator = 2,
 	}
 
-	[NoTV, NoWatch, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoTV, NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native]
 	public enum SWHighlightPersistenceEventTrigger : long {
 		Created = 1,
@@ -91,7 +92,7 @@ namespace SharedWithYou {
 		Moved = 4,
 	}
 
-	[NoWatch, NoMac, TV (16,0), iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, Mac (13,0), TV (16,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (UIView))]
 	interface SWAttributionView
 	{
@@ -124,12 +125,12 @@ namespace SharedWithYou {
 		[NullAllowed, Export ("supplementalMenu", ArgumentSemantic.Strong)]
 		UIMenu SupplementalMenu { get; set; }
 
-		[NoMac, NoiOS]
+		[NoMac, NoiOS, NoMacCatalyst]
 		[Export ("enablesMarquee")]
 		bool EnablesMarquee { get; set; }
 	}
 
-	[NoWatch, TV (16,0), NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWHighlight : NSSecureCoding, NSCopying
@@ -148,7 +149,7 @@ namespace SharedWithYou {
 
 	interface ISWHighlightCenterDelegate {}
 
-	[NoWatch, TV (16,0), NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -162,7 +163,7 @@ namespace SharedWithYou {
 		void HighlightsDidChange (SWHighlightCenter highlightCenter);
 	}
 
-	[NoWatch, TV (16,0), NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	interface SWHighlightCenter
 	{
@@ -188,22 +189,39 @@ namespace SharedWithYou {
 		[Export ("getHighlightForURL:completionHandler:")]
 		void GetHighlight (NSUrl urL, Action<SWHighlight, NSError> completionHandler);
 
+		[NoTV]
 		[Export ("collaborationHighlightForIdentifier:error:")]
 		[return: NullAllowed]
 		SWCollaborationHighlight GetCollaborationHighlight (string collaborationIdentifier, [NullAllowed] out NSError error);
 
+		[NoTV]
 		[Async]
 		[Export ("getCollaborationHighlightForURL:completionHandler:")]
 		void GetCollaborationHighlight (NSUrl url, Action<SWCollaborationHighlight, NSError> completionHandler);
 
+		[NoTV]
 		[Export ("postNoticeForHighlightEvent:")]
 		void PostNotice (ISWHighlightEvent @event);
 
+		[iOS (16,1), NoTV]
+		[Export ("clearNoticesForHighlight:")]
+		void ClearNotices (SWCollaborationHighlight highlight);
+
+		[NoTV]
 		[Async]
 		[Export ("getSignedIdentityProofForCollaborationHighlight:usingData:completionHandler:")]
 		void GetSignedIdentityProof (SWCollaborationHighlight collaborationHighlight, NSData data, Action<SWSignedPersonIdentityProof, NSError> completionHandler);
 	}
 
+	[NoWatch, Mac (13,0), NoTV, NoiOS, NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SWRemoveParticipantAlert
+	{
+		[Static]
+		[Export ("showAlertWithParticipant:highlight:inWindow:")]
+		void ShowAlert (SWPerson participant, SWCollaborationHighlight highlight, [NullAllowed] UIWindow window);
+	}
 
 	[NoWatch, NoMac, NoTV, iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (UIViewController))]
@@ -217,7 +235,7 @@ namespace SharedWithYou {
 
 	interface ISWCollaborationViewDelegate {} 
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 #if NET
 	[Protocol, Model]
 #else
@@ -241,7 +259,7 @@ namespace SharedWithYou {
 		void DidDismissPopover (SWCollaborationView collaborationView);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (UIView))]
 	interface SWCollaborationView
 	{
@@ -291,12 +309,12 @@ namespace SharedWithYou {
 		[NullAllowed, Export ("cloudSharingControllerDelegate", ArgumentSemantic.Weak)]
 		NSObject WeakCloudSharingControllerDelegate { get; set; }
 
-		[NoiOS]
+		[NoiOS, NoMacCatalyst]
 		[Wrap ("WeakCloudSharingServiceDelegate")]
 		[NullAllowed]
 		ICloudSharingControllerDelegate CloudSharingServiceDelegate { get; set; }
 
-		[NoiOS]
+		[NoiOS, NoMacCatalyst]
 		[NullAllowed, Export ("cloudSharingServiceDelegate", ArgumentSemantic.Weak)]
 		NSObject WeakCloudSharingServiceDelegate { get; set; }
 
@@ -311,7 +329,7 @@ namespace SharedWithYou {
 		void SetShowManageButton (bool showManageButton);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (SWHighlight))]
 	interface SWCollaborationHighlight : NSSecureCoding, NSCopying
 	{
@@ -330,7 +348,7 @@ namespace SharedWithYou {
 
 	interface ISWHighlightEvent {}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Protocol]
 	interface SWHighlightEvent : NSSecureCoding, NSCopying
 	{
@@ -339,7 +357,7 @@ namespace SharedWithYou {
 		NSUrl HighlightUrl { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWHighlightChangeEvent : SWHighlightEvent
@@ -354,7 +372,7 @@ namespace SharedWithYou {
 		NSUrl HighlightUrl { get; }
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWHighlightMembershipEvent : SWHighlightEvent
@@ -366,8 +384,7 @@ namespace SharedWithYou {
 		NativeHandle Constructor (SWHighlight highlight, SWHighlightMembershipEventTrigger trigger);
 	}
 
-
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWHighlightMentionEvent : SWHighlightEvent
@@ -382,7 +399,7 @@ namespace SharedWithYou {
 		NativeHandle Constructor (SWHighlight highlight, SWPersonIdentity identity);
 	}
 
-	[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SWHighlightPersistenceEvent : SWHighlightEvent
