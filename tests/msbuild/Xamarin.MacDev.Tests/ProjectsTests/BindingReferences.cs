@@ -3,6 +3,7 @@ using System.IO;
 using NUnit.Framework;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks {
 	public class BindingReferences : TestBase {
@@ -10,6 +11,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void BuildTest ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var projA = SetupProjectPaths ("MyBindingsReferences/LibraryA");
 			var dllAPath = Path.Combine (projA.ProjectBinPath, "LibraryA.dll");
 
@@ -27,6 +31,9 @@ namespace Xamarin.MacDev.Tasks {
 		[Test]
 		public void SatelliteAssembliesBug ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var proj = SetupProjectPaths ("MySatelliteAssembliesBug/iOSBinding");
 			var dll = Path.Combine (proj.ProjectBinPath, "iOSBinding.dll");
 

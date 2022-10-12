@@ -63,6 +63,11 @@ steps:
   displayName: Generate constants files 
   timeoutInMinutes: 15
 
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
+
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
   inputs:
@@ -171,7 +176,7 @@ steps:
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
 
     # uri used to create the vsdrops index using full uri
-    export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID-$SYSTEM_JOBATTEMPT/$PARAMETERS_TESTPREFIX;/tests/"
+    export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/$PARAMETERS_TESTPREFIX-$SYSTEM_JOBATTEMPT;/tests/"
 
     # assume something is going to fail
     echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
@@ -258,13 +263,26 @@ steps:
   displayName: 'Publish to Artifact Services Drop'
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}'
-    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)-$(System.JobAttempt)/${{ parameters.testPrefix }}'
+    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}-$(System.JobAttempt)'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}-$(System.JobAttempt)'
     sourcePath: 'xamarin-macios/jenkins-results'
     detailedLog: true
     usePat: true
   continueOnError: true
   condition: succeededOrFailed()
+
+- bash: |
+    set -ex
+    find . -name 'vsts-*.xml' || true
+    find . -name 'vsts-*.xml' -ls -exec cat {} \; || true
+    VSTS_XML_FILES=$(find . -name 'vsts-*.xml' | wc -l | sed 's/ //g')
+    set +x
+    echo "##vso[task.setvariable variable=VSTS_XML_FILES]$VSTS_XML_FILES"
+    set -x
+  name: CountNUnitTestResults
+  continueOnError: true
+  condition: succeededOrFailed()
+  displayName: 'Count NUnit test results'
 
 # Upload test results to vsts.
 - task: PublishTestResults@2
@@ -272,9 +290,8 @@ steps:
   inputs:
     testResultsFormat: NUnit
     testResultsFiles: '**/vsts-*.xml'
-    failTaskOnFailedTests: true
   continueOnError: true
-  condition: succeededOrFailed()
+  condition: and(ne(variables['VSTS_XML_FILES'], 0), succeededOrFailed())
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
@@ -293,7 +310,7 @@ steps:
   displayName: 'Publish Artifact: HtmlReport'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifactName: HtmlReport-${{ parameters.testPrefix }}
+    artifactName: HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 

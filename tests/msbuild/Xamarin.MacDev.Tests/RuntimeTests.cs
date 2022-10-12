@@ -16,6 +16,8 @@ namespace Xamarin.MMP.Tests
 		public void AssemblyRegistration ()
 		{
 			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var projectName = "AssemblyRegistration";
 			var projectPath = Path.Combine (Configuration.TestProjectsDirectory, projectName, $"{projectName}.csproj");
 

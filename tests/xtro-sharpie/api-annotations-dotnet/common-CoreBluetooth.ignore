@@ -3,3 +3,4 @@
 !missing-selector! CBCentralManager::init not bound
 
 ## short lived instance property being replaced with a static one
+!missing-selector! CBManager::authorization not bound

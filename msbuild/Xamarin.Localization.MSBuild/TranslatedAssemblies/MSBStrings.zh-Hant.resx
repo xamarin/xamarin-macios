@@ -997,10 +997,6 @@
         <value>設定: 項目 "{0}" 不存在
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>除非繫結專案中具有原生參考，否則無法建立繫結資源套件。
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ 不支援 watchOS 1 應用程式。請將您的專案遷移到 watchOS 2+。</value>
     </data>

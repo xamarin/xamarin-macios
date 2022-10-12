@@ -1,10 +1,8 @@
 using Microsoft.Build.Tasks;
 using Xamarin.MacDev.Tasks;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class CreateEmbeddedResources : CreateEmbeddedResourcesTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class CreateEmbeddedResources : CreateEmbeddedResourcesTaskBase {
 		public override bool Execute ()
 		{
 			if (this.ShouldExecuteRemotely (SessionId)) {

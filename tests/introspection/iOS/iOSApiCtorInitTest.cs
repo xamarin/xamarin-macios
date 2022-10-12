@@ -251,6 +251,9 @@ namespace Introspection {
 					return true;
 				break;
 #endif
+			case "HMAccessorySetupManager":
+				// Selector fails submission test in Xcode 14.0 timeframe
+				return true;
 			}
 			return base.Skip (type);
 		}

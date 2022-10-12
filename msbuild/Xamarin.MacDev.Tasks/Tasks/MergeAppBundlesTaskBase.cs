@@ -29,7 +29,7 @@ namespace Xamarin.MacDev.Tasks {
 		#region Inputs
 		// This is a list of files (filename only, no path, will match any file with the given name in the app bundle)
 		// that can be put in a RID-specific subdirectory.
-		public ITaskItem[] ArchitectureSpecificFiles { get; set; }
+		public ITaskItem [] ArchitectureSpecificFiles { get; set; }
 
 		// This is a list of files (filename only, no path, will match any file with the given name in the app bundle)
 		// to ignore/skip.
@@ -275,7 +275,7 @@ namespace Xamarin.MacDev.Tasks {
 				var specificSubdirectory = input.GetMetadata ("SpecificSubdirectory");
 				var fullInput = Path.GetFullPath (input.ItemSpec);
 				// strip the trailing path separator
-				if (fullInput[fullInput.Length - 1] == Path.DirectorySeparatorChar)
+				if (fullInput [fullInput.Length - 1] == Path.DirectorySeparatorChar)
 					fullInput = fullInput.Substring (0, fullInput.Length - 1);
 				// get all the files and subdirectories in the input app bundle
 				var files = Directory.GetFileSystemEntries (fullInput, "*", SearchOption.AllDirectories);

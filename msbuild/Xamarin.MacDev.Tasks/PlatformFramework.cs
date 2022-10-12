@@ -29,10 +29,8 @@ using System.IO;
 using Xamarin.Localization.MSBuild;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public static class PlatformFrameworkHelper
-	{
+namespace Xamarin.MacDev.Tasks {
+	public static class PlatformFrameworkHelper {
 		public static ApplePlatform GetFramework (string targetFrameworkMoniker)
 		{
 			return TargetFramework.Parse (targetFrameworkMoniker).Platform;

@@ -150,7 +150,7 @@ namespace Xamarin.Bundler {
 				return rv;
 
 			var errno = Marshal.GetLastWin32Error ();
-			if (warnIfNoSuchPathExists || (errno !=2))
+			if (warnIfNoSuchPathExists || (errno != 2))
 				ErrorHelper.Warning (54, Errors.MT0054, path, FileCopier.strerror (errno), errno);
 			return path;
 		}
@@ -183,7 +183,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (asm == null)
-				throw ErrorHelper.CreateError (99, Errors.MX0099, $"could not find the product assembly {Driver.GetProductAssembly(App)} in the list of assemblies referenced by the executable");
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"could not find the product assembly {Driver.GetProductAssembly (App)} in the list of assemblies referenced by the executable");
 
 			AssemblyDefinition productAssembly = asm.AssemblyDefinition;
 
@@ -212,6 +212,13 @@ namespace Xamarin.Bundler {
 							// we already warn in Frameworks.cs Gather method
 							if (!Driver.LinkProhibitedFrameworks)
 								continue;
+							break;
+						case "CHIP":
+							// CHIP has been removed in Xcode 14 Beta 5 in favor of Matter
+							if (Driver.XcodeVersion.Major >= 14) {
+								Driver.Log (3, "Not linking with the framework {0} because it's not available when using Xcode 14+", framework.Name);
+								continue;
+							}
 							break;
 #else
 						case "CoreAudioKit":

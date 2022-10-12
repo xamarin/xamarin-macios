@@ -9,10 +9,8 @@ using Xamarin.MacDev;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class ResolveNativeWatchAppTaskBase : XamarinTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public abstract class ResolveNativeWatchAppTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]

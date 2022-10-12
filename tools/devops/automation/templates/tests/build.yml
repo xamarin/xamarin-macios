@@ -116,6 +116,11 @@ steps:
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_P12: ${{ parameters.xqaCertPass }}
     AUTH_TOKEN_VSENG_XAMARIN_MAC_DEVICES_2_P12: ${{ parameters.xqaCertPass }}
 
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
+
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
   inputs:
@@ -157,7 +162,6 @@ steps:
     provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
-  continueOnError: true
 
 - bash: |
     echo "Pkg uri is $XM_PACKAGE"
@@ -170,18 +174,16 @@ steps:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
   timeoutInMinutes: 250
-  continueOnError: true
 
 - bash: |
+    set -ex
     ls -R /Library/Frameworks/Xamarin.iOS.framework || true
     ls -R /Library/Frameworks/Xamarin.Mac.framework || true
   displayName: "Show installed Frameworks"
-  continueOnError: true
 
 - bash: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts/bash/create-legacy-ios-mac-sdk-symlinks.sh
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/
   displayName: Create legacy iOS/Mac SDK symlinks
-  continueOnError: true
 
 - bash: |
     set -x

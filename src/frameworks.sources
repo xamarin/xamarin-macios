@@ -311,6 +311,11 @@ AVROUTING_SOURCES = \
 BACKGROUNDTASKS_API_SOURCES = \
 	BackgroundTasks/Enums.cs \
 
+# BackgroundAssets
+
+BACKGROUNDASSETS_SOURCES = \
+	BackgroundAssets/BACompat.cs \
+
 # BusinessChat
 
 BUSINESSCHAT_API_SOURCES = \
@@ -1589,6 +1594,11 @@ SENSORKIT_SOURCES = \
 	SensorKit/SRAbsoluteTime.cs \
 	SensorKit/SRSensor.cs \
 
+# ShareWithYouCore
+
+SHAREDWITHYOUCORE_SOURCES = \
+	SharedWithYouCore/SWCollaborationMetadata.cs \
+
 # Social
 
 SOCIAL_API_SOURCES = \
@@ -1790,6 +1800,7 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTSession.cs \
 	VideoToolbox/VTVideoEncoder.cs \
 	VideoToolbox/VTUtilities.cs \
+	VideoToolbox/VTPixelTransferProperties.cs \
 
 # Vision
 
@@ -2014,6 +2025,7 @@ MACOS_FRAMEWORKS =          \
 	AVKit                   \
 	AVRouting               \
 	BusinessChat            \
+	BackgroundAssets        \
 	CallKit \
 	CFNetwork               \
 	Chip                    \
@@ -2097,6 +2109,7 @@ MACOS_FRAMEWORKS =          \
 	Social                  \
 	Speech                  \
 	SystemConfiguration     \
+	ThreadNetwork           \
 	UserNotifications       \
 	UserNotificationsUI		\
 	VideoSubscriberAccount  \
@@ -2121,6 +2134,7 @@ IOS_FRAMEWORKS =         \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
+	BackgroundAssets \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \
@@ -2317,6 +2331,7 @@ MACCATALYST_FRAMEWORKS = \
 	AudioToolbox \
 	AudioUnit \
 	AutomaticAssessmentConfiguration \
+	BackgroundAssets \
 	BackgroundTasks \
 	BusinessChat \
 	CallKit \
@@ -2394,6 +2409,7 @@ MACCATALYST_FRAMEWORKS = \
 	Social \
 	Speech \
 	SystemConfiguration \
+	ThreadNetwork \
 	UIKit XKit \
 	UserNotifications \
 	UserNotificationsUI \

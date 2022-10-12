@@ -112,7 +112,14 @@ namespace MapKit {
 	[NoWatch]
 	[Native]
 	public enum MKUserTrackingMode : ulong {
-		None, Follow, FollowWithHeading
+		None,
+		Follow, 
+#if !XAMCORE_5_0 && !(IOS || MACCATALYST)
+		[Obsolete ("This is only available on iOS and MacCatalyst.")]
+		FollowWithHeading,
+#elif IOS || MACCATALYST
+		FollowWithHeading,
+#endif
 	}
 
 	[TV (9,2)][NoWatch][iOS (9,3)]
@@ -166,6 +173,58 @@ namespace MapKit {
 	{
 		Address = 1 << 0,
 		PointOfInterest = 1 << 1,
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+	[Native]
+	public enum MKDirectionsRoutePreference : long
+	{
+		Any = 0,
+		Avoid,
+	}
+
+	[Flags]
+	[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[Native]
+	public enum MKMapFeatureOptions : long
+	{
+		PointsOfInterest = 1 << (int)MKMapFeatureType.PointOfInterest,
+		Territories = 1 << (int)MKMapFeatureType.Territory,
+		PhysicalFeatures = 1 << (int)MKMapFeatureType.PhysicalFeature,
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[Native]
+	public enum MKLookAroundBadgePosition : long
+	{
+		TopLeading = 0,
+		TopTrailing,
+		BottomTrailing,
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+	[Native]
+	public enum MKMapElevationStyle : long
+	{
+		Flat = 0,
+		Realistic,
+	}
+
+	[NoMac, iOS (16,0), MacCatalyst (16,0), NoWatch, NoTV]
+	[Native]
+	public enum MKMapFeatureType : long
+	{
+		PointOfInterest = 0,
+		Territory,
+		PhysicalFeature,
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), NoWatch, TV (16,0)]
+	[Native]
+	public enum MKStandardMapEmphasisStyle : long
+	{
+		Default = 0,
+		Muted,
 	}
 
 #if !WATCH
