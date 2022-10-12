@@ -19712,6 +19712,17 @@ namespace AppKit {
 		[Export ("selectedRanges", ArgumentSemantic.Copy)]
 		NSArray SelectedRanges { get; set;  }
 #endif
+
+		[NoiOS]
+		[Mac (13, 0)]
+		[Export ("initUsingTextLayoutManager:")]
+		NativeHandle Constructor (bool usingTextLayoutManager);
+
+		[NoiOS]
+		[Static]
+		[Mac (13, 0)]
+		[Export ("textViewUsingTextLayoutManager:")]
+		NSTextView Create (bool usingTextLayoutManager);
 	}
 
 	[NoMacCatalyst]
@@ -22972,6 +22983,10 @@ namespace AppKit {
 		[Mac (13, 0)]
 		[Export ("standardShareMenuItem")]
 		NSMenuItem StandardShareMenuItem { get; }
+
+		[NoiOS, Mac (13,0)]
+		[Export ("close")]
+		void Close ();
 	}
 
 	interface INSSharingServicePickerDelegate {}

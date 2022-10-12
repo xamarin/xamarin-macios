@@ -188,8 +188,14 @@ namespace SharedWithYouCore {
 		[NullAllowed, Export ("initiatorNameComponents", ArgumentSemantic.Strong)]
 		NSPersonNameComponents InitiatorNameComponents { get; set; }
 
+		[Internal]
 		[Export ("initWithLocalIdentifier:")]
-		NativeHandle Constructor (string localIdentifier);
+		NativeHandle _InitWithLocalIdentifier (string localIdentifier);
+
+		[iOS (16,1), MacCatalyst (16,1)]
+		[Internal]
+		[Export ("initWithCollaborationIdentifier:")]
+		NativeHandle _InitWithCollaborationIdentifier (string collaborationIdentifier);
 	}
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
