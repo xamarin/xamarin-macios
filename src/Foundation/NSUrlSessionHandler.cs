@@ -661,7 +661,7 @@ namespace Foundation {
 
 		sealed class ServerCertificateCustomValidationCallbackHelper
 		{
-			public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> Callback { get; }
+			public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> Callback { get; set; }
 
 			public ServerCertificateCustomValidationCallbackHelper(Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> callback)
 			{
