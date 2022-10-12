@@ -8149,6 +8149,10 @@ namespace Foundation
 		[Export ("attribution")]
 		NSURLRequestAttribution Attribution { get; }
 
+		// macOS is documented out of sync with iOS here
+		[Watch (9, 1), TV (16, 1), Mac (13, 0), iOS (16, 1)]
+		[Export ("requiresDNSSECValidation")]
+		bool RequiresDnsSecValidation { get; }
 	}
 
 	[BaseType (typeof (NSDictionary))]
@@ -8336,10 +8340,10 @@ namespace Foundation
 		[Export ("attribution", ArgumentSemantic.Assign)]
 		NSURLRequestAttribution Attribution { get; set; }
 
-		// https://github.com/xamarin/maccore/issues/2608 - https://feedbackassistant.apple.com/feedback/10897552
-		// [Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
-		// [Export ("requiresDNSSECValidation")]
-		// bool RequiresDnsSecValidation { get; set; }
+		// Documented as 16.0 but did not work until 16.1 - https://github.com/xamarin/maccore/issues/2608 - https://feedbackassistant.apple.com/feedback/10897552
+		[Watch (9, 1), TV (16, 1), Mac (13, 0), iOS (16, 1)]
+		[Export ("requiresDNSSECValidation")]
+		bool RequiresDnsSecValidation { get; set; }
 	}
 	
 	[BaseType (typeof (NSObject), Name="NSURLResponse")]
@@ -13076,6 +13080,7 @@ namespace Foundation
 	partial interface NSFilePresenter {
 		[Abstract]
 		[Export ("presentedItemURL", ArgumentSemantic.Retain)]
+		[NullAllowed]
 #if NET
 		NSUrl PresentedItemUrl { get; }
 #else

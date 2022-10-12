@@ -337,6 +337,10 @@ namespace Cecil.Tests {
 			case "CoreWlan.CWNetwork.Copy":
 			case "CoreWlan.CWNetworkProfile.Copy":
 			case "CoreWlan.CWNetworkProfile.MutableCopy":
+			case "MapKit.MKMapFeatureAnnotation.SetCoordinate":
+			case "MapKit.MKMapFeatureAnnotation.get_Coordinate":
+			case "MapKit.MKMapFeatureAnnotation.get_Subtitle":
+			case "MapKit.MKMapFeatureAnnotation.get_Title":
 				return true;
 			}
 			// Generator Bug/Limitation - Related to ^, Wrapper protocol get/set with attributes
