@@ -6,12 +6,13 @@
 //
 // Copyright 2022 Microsoft Corporation.
 //
-
 #nullable enable
 
 using System;
 using Foundation;
 using ObjCRuntime;
+
+#if !TVOS && !WATCH
 
 namespace SharedWithYouCore {
 
@@ -29,7 +30,7 @@ namespace SharedWithYouCore {
 		Collaboration,
 	}
 
-	public partial class SWCollaborationMetadata {
+	public partial class SWCollaborationMetadata : NSObject {
 		public SWCollaborationMetadata (string localIdentifier) : base (NSObjectFlag.Empty) =>
 			InitializeHandle (_InitWithLocalIdentifier (localIdentifier), "initWithLocalIdentifier:");
 
@@ -57,3 +58,4 @@ namespace SharedWithYouCore {
 		}
 	}
 }
+#endif

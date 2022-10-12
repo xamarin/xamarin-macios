@@ -2100,6 +2100,7 @@ MACOS_FRAMEWORKS =          \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
+	SharedWithYou           \
 	SharedWithYouCore       \
 	Social                  \
 	Speech                  \
@@ -2302,6 +2303,8 @@ TVOS_FRAMEWORKS =           \
 	PhotosUI                \
 	ReplayKit               \
 	Security                \
+	SharedWithYou           \
+	SharedWithYouCore       \
 	SystemConfiguration     \
 	TVMLKit                 \
 	TVUIKit					\
