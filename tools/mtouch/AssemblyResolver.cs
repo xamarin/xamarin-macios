@@ -24,7 +24,7 @@ namespace MonoTouch.Tuner {
 	public partial class MonoTouchManifestResolver : MonoTouchResolver {
 
 		internal List<Exception> list = new List<Exception> ();
-		
+
 		public override AssemblyDefinition Load (string file)
 		{
 			if (EnableRepl && Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (file))) {
@@ -45,7 +45,7 @@ namespace MonoTouch.Tuner {
 		{
 			if (fullName == null)
 				throw new ArgumentNullException (nameof (fullName));
-			
+
 			return self.Resolve (AssemblyNameReference.Parse (fullName), defaults);
 		}
 	}

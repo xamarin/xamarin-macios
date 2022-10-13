@@ -251,8 +251,8 @@ namespace Xamarin.Linker.Steps {
 			switch (type.Namespace) {
 			case "System.Runtime.CompilerServices":
 				switch (type.Name) {
-					case "AsyncTaskMethodBuilder":
-					case "AsyncTaskMethodBuilder`1":
+				case "AsyncTaskMethodBuilder":
+				case "AsyncTaskMethodBuilder`1":
 					if (DebugBuild) {
 						MarkNamedMethod (type, "SetNotificationForWaitCompletion");
 						MarkNamedMethod (type, "get_ObjectIdForDebugger");
@@ -262,7 +262,7 @@ namespace Xamarin.Linker.Steps {
 				break;
 			case "System.Threading.Tasks":
 				switch (type.Name) {
-					case "Task":
+				case "Task":
 					if (DebugBuild)
 						MarkNamedMethod (type, "NotifyDebuggerOfWaitCompletion");
 					break;

@@ -34,7 +34,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Application.mtouch.cs" />
     <Compile Include="Assembly.mtouch.cs" />
@@ -496,6 +495,7 @@
       <Link>tools\linker\RegistrarRemovalTrackingStep.cs</Link>
     </Compile>
   </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Reference Include="System.Core" />
     <Reference Include="System" />

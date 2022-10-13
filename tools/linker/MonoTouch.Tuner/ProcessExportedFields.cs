@@ -8,7 +8,7 @@ using Mono.Tuner;
 using Xamarin.Linker;
 
 namespace MonoTouch.Tuner {
-	
+
 	//
 	// We do not want to list symbols for properties that are linked away.
 	// This poses a minor challenge, because the [Field] attribute is linked away
@@ -74,11 +74,11 @@ namespace MonoTouch.Tuner {
 				if (attrib.ConstructorArguments.Count != 2)
 					continue;
 
-				var libraryName = (string) attrib.ConstructorArguments[1].Value;
+				var libraryName = (string) attrib.ConstructorArguments [1].Value;
 				if (libraryName != "__Internal")
 					continue;
 
-				return (string) attrib.ConstructorArguments[0].Value;
+				return (string) attrib.ConstructorArguments [0].Value;
 			}
 
 			return null;

@@ -2049,8 +2049,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				We only run the CodesignAppBundle target on the outer-most executable project
 			    * Not on app extensions
 			    * Not on watch apps
+			    * Not if explicitly disabled by setting EnableCodeSigning=false
 			-->
-			<_CodesignAppBundleCondition Condition="'$(_CodesignAppBundleCondition)' == '' And '$(IsAppExtension)' != 'true' And '$(IsWatchApp)' != 'true' And '$(_CanOutputAppBundle)' == 'true'">true</_CodesignAppBundleCondition>
+			<_CodesignAppBundleCondition Condition="'$(_CodesignAppBundleCondition)' == '' And '$(IsAppExtension)' != 'true' And '$(IsWatchApp)' != 'true' And '$(_CanOutputAppBundle)' == 'true' And '$(EnableCodeSigning)' != 'false'">true</_CodesignAppBundleCondition>
 			<_CodesignAppBundleCondition Condition="'$(_CodesignAppBundleCondition)' == ''">false</_CodesignAppBundleCondition>
 		</PropertyGroup>
 	</Target>

@@ -13,7 +13,7 @@ steps:
   parameters:
     isPR: ${{ parameters.isPR }}
 
-- pwsh : |
+- pwsh: |
     gci env: | format-table -autosize -wrap
   displayName: 'Dump Environment'
 

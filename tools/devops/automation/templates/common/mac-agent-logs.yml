@@ -20,10 +20,10 @@ parameters:
   type: string
   default: 'compact'
   values:
-    - default
-    - compact
-    - json
-    - syslog
+  - default
+  - compact
+  - json
+  - syslog
 
 - name: uploadLogs
   type: boolean

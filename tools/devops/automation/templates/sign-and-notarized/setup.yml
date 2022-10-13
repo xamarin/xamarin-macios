@@ -55,5 +55,5 @@ steps:
       azureSubscription: $(MicrobuildConnector)
       zipSources: false  # we do not use the feature and makes the installation to last 10/12 mins instead of < 1 min
     env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
     condition: ${{ parameters.condition }}
