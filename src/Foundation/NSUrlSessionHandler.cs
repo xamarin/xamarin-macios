@@ -645,25 +645,28 @@ namespace Foundation {
 			set {
 				if (value is null) {
 					_serverCertificateCustomValidationCallbackHelper = null;
-				} else if (_serverCertificateCustomValidationCallbackHelper is null) {
-					_serverCertificateCustomValidationCallbackHelper = new ServerCertificateCustomValidationCallbackHelper (value);
 				} else {
-					_serverCertificateCustomValidationCallbackHelper.Callback = value;
+					_serverCertificateCustomValidationCallbackHelper = new ServerCertificateCustomValidationCallbackHelper (value);
 				}
 			}
 		}
 
-		internal bool InvokeServerCertificateCustomValidationCallback (HttpRequestMessage request, SecTrust secTrust)
+		// returns false if there's no callback
+		internal bool TryInvokeServerCertificateCustomValidationCallback (HttpRequestMessage request, SecTrust secTrust, out bool trusted)
 		{
+			trusted = false;
 			var helper = _serverCertificateCustomValidationCallbackHelper;
-			return helper is not null ? helper.Invoke (request, secTrust) : false;
+			if (helper is null)
+				return false;
+			trusted = helper.TryInvoke (request, secTrust, out trusted);
+			return true;
 		}
 
 		sealed class ServerCertificateCustomValidationCallbackHelper
 		{
-			public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> Callback { get; set; }
+			public Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> Callback { get; private set; }
 
-			public ServerCertificateCustomValidationCallbackHelper(Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> callback)
+			public ServerCertificateCustomValidationCallbackHelper (Func<HttpRequestMessage, X509Certificate2?, X509Chain?, SslPolicyErrors, bool> callback)
 			{
 				Callback = callback;
 			}
@@ -977,27 +980,32 @@ namespace Foundation {
 					return;
 
 				// ToCToU for the callback
+				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
+				var trustSec = false;
+				var usedCallback = false;
 #if !NET
 				var trustCallback = sessionHandler.TrustOverride;
-#endif
-				var trustCallbackForUrl = sessionHandler.TrustOverrideForUrl;
-#if NET
-				var hasCallBack = trustCallbackForUrl is not null || sessionHandler.ServerCertificateCustomValidationCallback is not null;
-#else
 				var hasCallBack = trustCallback is not null || trustCallbackForUrl is not null;
-#endif
 				if (hasCallBack && challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
-#if NET
-					// if the trust delegate allows to ignore the cert, do it. Since we are using nullables, if the delegate is not present, by default is false
-					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) ||
-						sessionHandler.InvokeServerCertificateCustomValidationCallback (inflight.Request, challenge.ProtectionSpace.ServerSecTrust);
-#else
 					// if one of the delegates allows to ignore the cert, do it. We check first the one that takes the url because is more precisse, later the
 					// more general one. Since we are using nullables, if the delegate is not present, by default is false
-					var trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) || 
+					trustSec = (trustCallbackForUrl?.Invoke (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust) ?? false) || 
 						(trustCallback?.Invoke (sessionHandler, challenge.ProtectionSpace.ServerSecTrust) ?? false);
+					usedCallback = true;
+				}
+#else
+				if (challenge.ProtectionSpace.AuthenticationMethod == NSUrlProtectionSpace.AuthenticationMethodServerTrust) {
+					// if the trust delegate allows to ignore the cert, do it. Since we are using nullables, if the delegate is not present, by default is false
+					if (trustCallbackForUrl is not null) {
+						trustSec = trustCallbackForUrl (sessionHandler, inflight.RequestUrl, challenge.ProtectionSpace.ServerSecTrust);
+						usedCallback = true;
+					} else if (sessionHandler.TryInvokeServerCertificateCustomValidationCallback (inflight.Request, challenge.ProtectionSpace.ServerSecTrust, out trustSec)) {
+						usedCallback = true;
+					}
+				}
 #endif
 
+				if (usedCallback) {
 					if (trustSec) {
 						var credential = new NSUrlCredential (challenge.ProtectionSpace.ServerSecTrust);
 						completionHandler (NSUrlSessionAuthChallengeDisposition.UseCredential, credential);
