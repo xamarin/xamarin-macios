@@ -145,6 +145,7 @@ namespace Xharness {
 		public string MONO_MAC_SDK_DESTDIR { get; }
 		public bool ENABLE_DOTNET { get; }
 		public bool INCLUDE_XAMARIN_LEGACY { get; }
+		public string SYSTEM_MONO { get; set; }
 
 		// Run
 
@@ -217,6 +218,7 @@ namespace Xharness {
 			MONO_IOS_SDK_DESTDIR = config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_DOTNET = config.ContainsKey ("ENABLE_DOTNET") && !string.IsNullOrEmpty (config ["ENABLE_DOTNET"]);
+			SYSTEM_MONO = config ["SYSTEM_MONO"];
 			INCLUDE_XAMARIN_LEGACY = config.ContainsKey ("INCLUDE_XAMARIN_LEGACY") && !string.IsNullOrEmpty (config ["INCLUDE_XAMARIN_LEGACY"]);
 
 			if (string.IsNullOrEmpty (SdkRoot))
