@@ -5,7 +5,7 @@ namespace Xharness {
 
 	public static class TestTargetExtensions {
 
-		public static TestTarget[] GetAppRunnerTargets (this TestPlatform platform)
+		public static TestTarget [] GetAppRunnerTargets (this TestPlatform platform)
 		{
 			switch (platform) {
 			case TestPlatform.tvOS:

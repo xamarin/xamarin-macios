@@ -17,7 +17,7 @@ namespace Xharness.Jenkins.TestTasks {
 		static int counter;
 		static DriveInfo rootDrive;
 
-		protected readonly Stopwatch waitingDuration = new();
+		protected readonly Stopwatch waitingDuration = new ();
 
 		#region Private vars
 
@@ -35,7 +35,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public Task InitialTask { get; set; } // a task that's executed before this task's ExecuteAsync method.
 		public Task CompletedTask; // a task that's executed after this task's ExecuteAsync method.
 		public List<Resource> Resources = new ();
- 
+
 		#endregion
 
 		#region Properties
@@ -89,7 +89,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		public ILog MainLog 
+		public ILog MainLog
 			=> testLog ??= Logs.Create ($"main-{Timestamp}.log", "Main log");
 
 		ILogs logs;
@@ -220,7 +220,7 @@ namespace Xharness.Jenkins.TestTasks {
 			if (Finished)
 				return Task.CompletedTask;
 
-			rootDrive ??= new("/");
+			rootDrive ??= new ("/");
 			var afs = rootDrive.AvailableFreeSpace;
 			const long minSpaceRequirement = 1024 * 1024 * 1024; /* 1 GB */
 			if (afs < minSpaceRequirement) {
