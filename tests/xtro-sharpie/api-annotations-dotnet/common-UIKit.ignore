@@ -121,9 +121,6 @@
 # Apple renamed it from UITextAlignment and we kept the old name for API compatibility
 !missing-enum! NSTextAlignment not bound
 
-## macro is used in UIBarCommon.h: #define UIToolbarPosition UIBarPosition
-!unknown-native-enum! UIToolbarPosition bound
-
 ## there's no UI_APPEARANCE_SELECTOR in headers - but they can (unofficially) work, YYMV
 !extra-ui-appearance-support! UIKit.UIColor UIKit.UIBarButtonItem::get_TintColor() should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! System.Void UIKit.UIBarButtonItem::set_TintColor(UIKit.UIColor) should NOT be decorated with [Appearance]
@@ -139,28 +136,14 @@
 !extra-ui-appearance-support! System.Void UIKit.UIView::set_TintColor(UIKit.UIColor) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIColor UIKit.UIView::get_TintColor() should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! System.Void UIKit.UIBarItem::SetTitleTextAttributes(UIKit.UIStringAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UINavigationBar::SetTitleTextAttributes(UIKit.UITextAttributes) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! System.Void UIKit.UISearchBar::SetScopeBarButtonTitle(UIKit.UIStringAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! System.Void UIKit.UISegmentedControl::SetTitleTextAttributes(UIKit.UIStringAttributes,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UISlider::set_MaxValueImage(UIKit.UIImage) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UISlider::set_MinValueImage(UIKit.UIImage) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UISlider::SetMaxTrackImage(UIKit.UIImage,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UISlider::SetMinTrackImage(UIKit.UIImage,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UISlider::SetThumbImage(UIKit.UIImage,UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::get_MaxValueImage() should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::get_MinValueImage() should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::MaxTrackImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::MinTrackImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UIImage UIKit.UISlider::ThumbImage(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UIBarItem::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISearchBar::GetScopeBarButtonTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UISegmentedControl::GetTitleTextAttributes(UIKit.UIControlState) should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! UIKit.UITextAttributes UIKit.UINavigationBar::GetTitleTextAttributes() should NOT be decorated with [Appearance]
 
 ## [Wrap] over `[largeT|t]itleTextAttributes` which is decorated with `UI_APPEARANCE_SELECTOR`
-!extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UINavigationBar::get_LargeTitleTextAttributes() should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! UIKit.UIStringAttributes UIKit.UINavigationBar::get_TitleTextAttributes() should NOT be decorated with [Appearance]
-!extra-ui-appearance-support! System.Void UIKit.UINavigationBar::set_LargeTitleTextAttributes(UIKit.UIStringAttributes) should NOT be decorated with [Appearance]
 !extra-ui-appearance-support! System.Void UIKit.UINavigationBar::set_TitleTextAttributes(UIKit.UIStringAttributes) should NOT be decorated with [Appearance]
 
 ## unsorted
@@ -169,19 +152,11 @@
 !missing-field! NSDefaultAttributesDocumentOption not bound
 !missing-field! NSDocumentTypeDocumentOption not bound
 
-
 ## helpers
 !extra-enum-value! Managed value -1 for UITextFieldDidEndEditingReason.Unknown not found in native headers
 !extra-enum-value! Managed value 18 for UIViewAutoresizing.FlexibleDimensions not found in native headers
 !extra-enum-value! Managed value 45 for UIViewAutoresizing.FlexibleMargins not found in native headers
 !extra-enum-value! Managed value 63 for UIViewAutoresizing.All not found in native headers
 
-## UITextAlignment is deprecated in iOS6 in favor of NSTextAlignment - values added to avoid breaking changes
-!extra-enum-value! Managed value 3 for UITextAlignment.Justified not found in native headers
-!extra-enum-value! Managed value 4 for UITextAlignment.Natural not found in native headers
-
 ## it's a `ref` on a struct, which xtro assumes nullable
 !extra-null-allowed! 'System.Void UIKit.UIScrollViewDelegate::WillEndDragging(UIKit.UIScrollView,CoreGraphics.CGPoint,CoreGraphics.CGPoint&)' has a extraneous [NullAllowed] on parameter #2
-
-## manually bound
-!missing-field! UIListSeparatorAutomaticInsets not bound
