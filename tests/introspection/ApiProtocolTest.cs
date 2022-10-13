@@ -56,6 +56,9 @@ namespace Introspection {
 			case "CLKComplicationWidgetMigrator":
 				// Not present in the simulator, is a migration class
 				return true;
+			// was removed by apple and is a compat class.
+			case "HMMatterRequestHandler":
+				return true;
 			default:
 				return SkipDueToAttribute (type);
 			}
