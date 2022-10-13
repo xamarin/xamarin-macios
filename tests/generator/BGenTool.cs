@@ -73,27 +73,18 @@ namespace Xamarin.Tests
 			}
 		}
 
-		string [] BuildArgumentArray ()
+		static string GetTargetFramework (Profile profile)
 		{
-			var sb = new List<string> ();
-			var targetFramework = (string) null;
-
 #if NET
 			switch (Profile) {
-			case Profile.None:
-				break;
 			case Profile.iOS:
-				targetFramework = TargetFramework.DotNet_iOS_String;
-				break;
+				return TargetFramework.DotNet_iOS_String;
 			case Profile.tvOS:
-				targetFramework = TargetFramework.DotNet_tvOS_String;
-				break;
+				return TargetFramework.DotNet_tvOS_String;
 			case Profile.watchOS:
-				targetFramework = TargetFramework.DotNet_watchOS_String;
-				break;
+				return TargetFramework.DotNet_watchOS_String;
 			case Profile.macOSMobile:
-				targetFramework = TargetFramework.DotNet_macOS_String;
-				break;
+				return TargetFramework.DotNet_macOS_String;
 			case Profile.macOSFull:
 			case Profile.macOSSystem:
 				throw new InvalidOperationException ($"Only the Mobile profile can be specified for .NET");
@@ -102,33 +93,33 @@ namespace Xamarin.Tests
 			}
 #else
 			switch (Profile) {
-			case Profile.None:
-				break;
 			case Profile.iOS:
-				targetFramework = "Xamarin.iOS,v1.0";
-				break;
+				return "Xamarin.iOS,v1.0";
 			case Profile.tvOS:
-				targetFramework = "Xamarin.TVOS,v1.0";
-				break;
+				return "Xamarin.TVOS,v1.0";
 			case Profile.watchOS:
-				targetFramework = "Xamarin.WatchOS,v1.0";
-				break;
+				return "Xamarin.WatchOS,v1.0";
 			case Profile.macOSClassic:
-				targetFramework = "XamMac,v1.0";
-				break;
+				return "XamMac,v1.0";
 			case Profile.macOSFull:
-				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=Full";
-				break;
+				return "Xamarin.Mac,Version=v4.5,Profile=Full";
 			case Profile.macOSMobile:
-				targetFramework = "Xamarin.Mac,Version=v2.0,Profile=Mobile";
-				break;
+				return "Xamarin.Mac,Version=v2.0,Profile=Mobile";
 			case Profile.macOSSystem:
-				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=System";
-				break;
+				return "Xamarin.Mac,Version=v4.5,Profile=System";
 			default:
 				throw new NotImplementedException ($"Profile: {Profile}");
 			}
 #endif
+		}
+
+		string [] BuildArgumentArray ()
+		{
+			var sb = new List<string> ();
+			var targetFramework = (string) null;
+
+			if (Profile != Profile.None)
+				targetFramework = GetTargetFramework (Profile);
 
 #if NET
 			if (CompileCommand is null) {
