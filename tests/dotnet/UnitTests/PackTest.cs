@@ -26,7 +26,7 @@ namespace Xamarin.Tests {
 			properties ["OutputPath"] = outputPath + Path.DirectorySeparatorChar;
 			properties ["IntermediateOutputPath"] = intermediateOutputPath + Path.DirectorySeparatorChar;
 
-			var rv =DotNet.AssertPackFailure (project_path, properties);
+			var rv = DotNet.AssertPackFailure (project_path, properties);
 			var errors = BinLog.GetBuildLogErrors (rv.BinLogPath).ToArray ();
 			Assert.AreEqual (1, errors.Length, "Error count");
 			Assert.AreEqual ($"Creating a NuGet package is not supported for projects that have ObjcBindingNativeLibrary items. Migrate to use NativeReference items instead.", errors [0].Message, "Error message");
