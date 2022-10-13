@@ -428,7 +428,7 @@ public class Frameworks : Dictionary<string, Framework> {
 				{ "MLCompute", "MLCompute", new Version (14,0), NotAvailableInSimulator },
 				{ "NearbyInteraction", "NearbyInteraction", 14,0 },
 				{ "ScreenTime", "ScreenTime", 14,0 },
-				{ "SensorKit", "SensorKit", 14,0 },
+				{ "SensorKit", "SensorKit", new Version (14, 0), null, true }, /* not always present on device, e.g. any iPad, so must be weak linked; https://github.com/xamarin/xamarin-macios/issues/9938 */
 				{ "UniformTypeIdentifiers", "UniformTypeIdentifiers", 14,0 },
 
 				{ "AdServices", "AdServices", 14,3 },

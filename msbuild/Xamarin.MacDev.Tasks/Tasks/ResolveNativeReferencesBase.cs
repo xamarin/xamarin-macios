@@ -167,7 +167,12 @@ namespace Xamarin.MacDev.Tasks {
 					t = new TaskItem (Path.Combine (resources, name));
 					t.SetMetadata ("Kind", "Dynamic");
 					break;
+				case ".a": // static library
+					t = new TaskItem (Path.Combine (resources, name));
+					t.SetMetadata ("Kind", "Static");
+					break;
 				default:
+					Log.LogWarning (MSBStrings.W7105 /* Unexpected extension '{0}' for native reference '{1}' in manifest '{2}'. */, Path.GetExtension (name), name, manifest);
 					t = r;
 					break;
 				}

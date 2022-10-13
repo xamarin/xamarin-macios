@@ -53,4 +53,3 @@ steps:
     git remote add origin https://$(GitHub.Token)@github.com/xamarin/maccore.git
     git remote # don't add -v else we see the pat
   displayName: 'Clean git mess from VSTS'
-

@@ -34,20 +34,20 @@ steps:
   displayName: Set SDK destination dirs 
 
 # remove any old processes that might have been left behind.
-- pwsh : |
+- pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Clear-XamarinProcesses
   displayName: 'Process cleanup'
 
 # Increase mlaunch verbosity. Will step on the old setting present.
-- pwsh : |
+- pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Set-MLaunchVerbosity -Verbosity 10
   displayName: 'Make mlaunch verbose'
   condition: succeededOrFailed() # we do not care about the previous step
 
 # Re-start the daemon used to find the devices in the bot.
-- pwsh : |
+- pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Optimize-DeviceDiscovery
   displayName: 'Fix device discovery (reset launchctl)'
@@ -62,6 +62,11 @@ steps:
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Generate constants files 
   timeoutInMinutes: 15
+
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
 
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
@@ -204,7 +209,7 @@ steps:
     printf "\n" | xcrun simctl diagnose -b -X --output=$(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
 
   displayName: 'Collect diagnostic info from simulators'
-  condition:  eq(variables['system.debug'], true)
+  condition: eq(variables['system.debug'], true)
   continueOnError: true
   name: collectSimulatorInfo
   timeoutInMinutes: 30
@@ -215,7 +220,7 @@ steps:
   inputs:
     targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
     artifactName: diagnostic-simulator-info-$(Build.BuildId)-$(System.JobAttempt)-${{ parameters.label }}
-  condition:  and(eq(variables['system.debug'], true), succeededOrFailed())
+  condition: and(eq(variables['system.debug'], true), succeededOrFailed())
   continueOnError: true
 
 # set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the comment, this way
@@ -336,4 +341,3 @@ steps:
   continueOnError: true
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
   condition: always() # no matter what, includes cancellation
-

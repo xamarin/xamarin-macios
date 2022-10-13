@@ -106,6 +106,8 @@ Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.Versions.props: targets/Microsoft.$1.S
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS))))
 
+version-props: $(foreach platform,$(DOTNET_PLATFORMS),targets/Microsoft.$(platform).Sdk.Versions.props)
+
 define AutoImports
 Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makefile
 	$(Q) rm -f $$@.tmp
@@ -432,6 +434,46 @@ TARGETS += $(WORKLOAD_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 
 msi: $(MSI_TARGETS)
 package: $(PACKAGE_TARGETS) $(MSI_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
+
+# Helper targets for templates
+#
+# "make templates": only build the template nupkgs
+# "make install-templates": builds the template nupkgs, and install them into the current working copy's local .NET. This is typically needed to test templates in our own tests, or when using the templates from the command line with the local .NET.
+# "make install-templates-system": builds the template nupkgs, and installs them into the system's .NET. This is typically needed to test templates in VSMac.
+# On Windows: copy $(TOP)/_build/nupkg/*Template* to your windows machine, and "dotnet new --install template.nupkg" for each nupkg, then they'll show up in VS.
+#
+templates: $(TEMPLATE_PACKS)
+
+# We manually clean first, because the makefile dependencies aren't configured correctly for the templates (the templates contain file names with spaces, which is quite hard to get right in make without making the code unbeliavably complicated)
+install-templates:
+	$(Q) $(MAKE) clean-templates
+	$(Q) $(MAKE) $(TEMPLATE_PACKS) -j4
+	$(Q) for platform in $(DOTNET_PLATFORMS); do \
+		echo "Uninstalling: $$platform"; \
+		$(DOTNET) new --uninstall Microsoft.$$platform.Templates; \
+	done
+	$(Q) for nupkg in $(TEMPLATE_PACKS); do \
+		echo "Installing $$nupkg"; \
+		$(DOTNET) new --install $$nupkg; \
+	done
+
+# We need to run the system dotnet, and we can't run it from inside this working copy, because we have a top-level
+# NuGet.config / global.json which will want to use the local dotnet. So run dotnet from the HOME directory instead.
+# We manually clean first, because the makefile dependencies aren't configured correctly for the templates (the templates contain file names with spaces, which is quite hard to get right in make without making the code unbeliavably complicated)
+install-templates-system:
+	$(Q) $(MAKE) clean-templates
+	$(Q) $(MAKE) $(TEMPLATE_PACKS) -j4
+	$(Q) for platform in $(DOTNET_PLATFORMS); do \
+		echo "Uninstalling: $$platform"; \
+		cd $(HOME) && dotnet new --uninstall Microsoft.$$platform.Templates || true; \
+	done
+	$(Q) for nupkg in $(TEMPLATE_PACKS); do \
+		echo "Installing $$nupkg"; \
+		cd $(HOME) && dotnet new --install $(CURDIR)/$$nupkg; \
+	done
+
+clean-templates:
+	$(Q) rm -f -- $(TEMPLATE_PACKS)
 
 install-system:
 	@# We don't want to execute these in parallel
