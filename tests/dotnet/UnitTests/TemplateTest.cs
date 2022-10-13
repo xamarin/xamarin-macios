@@ -41,11 +41,6 @@ namespace Xamarin.Tests {
 			{
 				return Template;
 			}
-
-			public override string ToString ()
-			{
-				return $"Platform: {Platform} Template: {Template} ValidateSuccessfulBuild: {ValidateSuccessfulBuild} Execute: {Execute}";
-			}
 		}
 
 		public enum TemplateType {
