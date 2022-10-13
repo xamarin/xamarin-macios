@@ -2,6 +2,7 @@
 
 | Date | Version | Package | Release Notes |
 |------|---------|---------|---------------|
+|2022/09/27|16.0.0.72|[xamarin.ios-16.0.0.72.pkg](https://download.visualstudio.microsoft.com/download/pr/60e4de68-2380-4aa3-b12e-2c65838a0bdb/656877ed7c3b5e5b94f7d2fbeb886655/xamarin.ios-16.0.0.72.pkg)||
 |2022/08/09|15.12.0.2|[xamarin.ios-15.12.0.2.pkg](https://download.visualstudio.microsoft.com/download/pr/e81e04d3-768a-4310-9c9b-f32e8ba00eaa/0e27caf0877adb5c6fe6d634d26da40a/xamarin.ios-15.12.0.2.pkg)||
 |2022/06/14|15.10.0.5|[xamarin.ios-15.10.0.5.pkg](https://download.visualstudio.microsoft.com/download/pr/09e9572f-1c2a-4d79-a1e8-5469de9410e8/3c7be8df7e8249f2c3142e4c10ae5523/xamarin.ios-15.10.0.5.pkg)||
 |2022/05/23|15.10.0.1|[xamarin.ios-15.10.0.1.pkg](https://download.visualstudio.microsoft.com/download/pr/afed6f32-67b3-4684-b0a4-e2b74d751bce/efaa7d62658b8285baafc2d6fc8f930a/xamarin.ios-15.10.0.1.pkg)||

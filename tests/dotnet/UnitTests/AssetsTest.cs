@@ -12,7 +12,7 @@ namespace Xamarin.Tests {
 	[TestFixture (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64", "macosx", true)]
 	[TestFixture (ApplePlatform.MacOSX, "osx-x64", "macosx", true)]
 	[TestFixture (ApplePlatform.MacOSX, "osx-arm64;osx-x64", "macosx", true)] // https://github.com/xamarin/xamarin-macios/issues/12410
-	// Build, add the XCAssets, then build again
+																			  // Build, add the XCAssets, then build again
 	[TestFixture (ApplePlatform.iOS, "iossimulator-x64", "iphonesimulator", false)]
 	[TestFixture (ApplePlatform.iOS, "ios-arm64;ios-arm", "iphoneos", false)]
 	[TestFixture (ApplePlatform.TVOS, "tvossimulator-x64", "appletvsimulator", false)]
@@ -142,7 +142,7 @@ namespace Xamarin.Tests {
 			Assert.Greater (assets.Length, 1);
 
 			var executable = "touch";
-			var arguments = new string [] { assets[1] };
+			var arguments = new string [] { assets [1] };
 			var rv = Execution.RunWithStringBuildersAsync (executable, arguments, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (120)).Result;
 			Assert.AreEqual (0, rv.ExitCode, $"Processing Update Symlink Error: {rv.StandardError}. Unexpected ExitCode");
 		}
