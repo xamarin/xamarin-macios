@@ -360,8 +360,7 @@ namespace Extrospection {
 		}
 	}
 
-	class RawInfo
-	{
+	class RawInfo {
 		public string Platform;
 		public HashSet<string> Entries = new HashSet<string> ();
 	}
