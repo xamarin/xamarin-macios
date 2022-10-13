@@ -353,11 +353,9 @@ namespace Extrospection {
 					}
 				}
 			}
-			var rv = AllFrameworks.Count (v => v.ContainsKey (framework));
-			if (rv == 0) {
-				Console.WriteLine ($"huh? {framework}");
+			var rv = AllFrameworks.Count (v => v.Any (fw => string.Equals (fw.Key, framework, StringComparison.OrdinalIgnoreCase)));
+			if (rv == 0) // If we could find the framework in our list of framework, assume it's available in all platforms.
 				return AllPlatforms.Count;
-			}
 			return rv;
 		}
 	}
