@@ -145,6 +145,17 @@ namespace ObjCRuntime {
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="sel_registerName")]
 		public extern static /* SEL */ IntPtr GetHandle (/* const char* */ string name);
 
+		public static NativeHandle GetHandle (ReadOnlySpan<byte> name)
+		{
+			unsafe {
+				fixed (byte *ptr = name) {
+					return GetHandle (ptr);
+				}
+			}
+		}
+
+		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="sel_registerName")]
+		unsafe extern static /* SEL */ IntPtr GetHandle (byte* name);
 		// objc/objc.h
 		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		[return: MarshalAs (UnmanagedType.U1)]

@@ -22,6 +22,11 @@ namespace UIKit {
 		UIControl source;
 		internal int Counter = 1;
 		internal const string BridgeSelector = "BridgeSelector";
+		internal static byte [] BridgeSelector8 = new byte [] {
+			(byte)'B', (byte)'r', (byte)'i', (byte)'d', (byte)'g', (byte)'e', (byte)'S', (byte)'e',
+			(byte)'l', (byte)'e', (byte)'c', (byte)'t', (byte)'o', (byte)'r', 0
+		};
+
 
 		public UIControlEventProxy (UIControl source, EventHandler eh)
 		{
@@ -70,7 +75,7 @@ namespace UIKit {
 			if (!t.TryGetValue (events, out ep)) {
 				ep = new UIControlEventProxy (this, notification);
 				t [events] = ep;
-				AddTarget (ep, Selector.GetHandle (UIControlEventProxy.BridgeSelector), events);
+				AddTarget (ep, Selector.GetHandle (new ReadOnlySpan<byte> (UIControlEventProxy.BridgeSelector8)), events);
 			} else {
 				ep.Counter++;
 			}
@@ -98,7 +103,7 @@ namespace UIKit {
 			if (ep.Counter > 1)
 				return;
 
-			RemoveTarget (ep, Selector.GetHandle (UIControlEventProxy.BridgeSelector), events);
+			RemoveTarget (ep, Selector.GetHandle (new ReadOnlySpan<byte> (UIControlEventProxy.BridgeSelector8)), events);
 			t.Remove (events);
 			ep.Dispose ();
 			if (t.Count == 0)
