@@ -277,6 +277,7 @@ public class Frameworks : Dictionary<string, Framework> {
 					{ "AVRouting", "AVRouting", 13,0},
 					{ "BackgroundAssets", "BackgroundAssets", 13,0},
 					{ "HealthKit", "HealthKit", 13,0 },
+					{ "SharedWithYou", "SharedWithYou", 13,0 },
 					{ "SharedWithYouCore", "SharedWithYouCore", 13, 0 },
 					{ "ExtensionKit", "ExtensionKit", 13,0 },
 					{ "ThreadNetwork", "ThreadNetwork", 13,0 },
@@ -629,6 +630,8 @@ public class Frameworks : Dictionary<string, Framework> {
 #endif
 					{ "OSLog", "OSLog", 15,0 },
 					{ "ShazamKit", "ShazamKit", new Version (15, 0), NotAvailableInSimulator},
+					{ "SharedWithYou", "SharedWithYou", 16,0 },
+					{ "SharedWithYouCore", "SharedWithYouCore", 16,0 },
 				};
 			}
 			return tvos_frameworks;

@@ -1,8 +1,0 @@
-!deprecated-attribute-missing! HMHomeManager::primaryHome missing a [Deprecated] attribute
-!missing-selector! HMAccessory::matterNodeID not bound
-!missing-selector! HMHome::matterControllerID not bound
-!missing-selector! HMHome::matterControllerXPCConnectBlock not bound
-!unknown-type! HMMatterHome bound
-!unknown-type! HMMatterRequestHandler bound
-!unknown-type! HMMatterRoom bound
-!unknown-type! HMMatterTopology bound

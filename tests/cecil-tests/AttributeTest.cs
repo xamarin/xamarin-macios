@@ -284,6 +284,11 @@ namespace Cecil.Tests {
 				"GameController.GCRacingWheel.get_VendorName",
 				"GameController.GCRacingWheel.get_ProductCategory",
 				"GameController.GCRacingWheel.get_PhysicalInputProfile",
+				"GameController.GCGearShifterElement.get_Aliases",
+				"GameController.GCGearShifterElement.get_LocalizedName",
+				"GameController.GCGearShifterElement.get_SfSymbolsName",
+				"GameController.GCRacingWheelInput",
+				"GameController.GCSteeringWheelElemen",
 			};
 
 			if (inlineProtocols.Any ((p) => member.StartsWith (p))) {
@@ -337,6 +342,10 @@ namespace Cecil.Tests {
 			case "CoreWlan.CWNetwork.Copy":
 			case "CoreWlan.CWNetworkProfile.Copy":
 			case "CoreWlan.CWNetworkProfile.MutableCopy":
+			case "MapKit.MKMapFeatureAnnotation.SetCoordinate":
+			case "MapKit.MKMapFeatureAnnotation.get_Coordinate":
+			case "MapKit.MKMapFeatureAnnotation.get_Subtitle":
+			case "MapKit.MKMapFeatureAnnotation.get_Title":
 				return true;
 			}
 			// Generator Bug/Limitation - Related to ^, Wrapper protocol get/set with attributes
