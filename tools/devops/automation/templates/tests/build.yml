@@ -192,7 +192,7 @@ steps:
 - bash: |
     set -x
     set -e
-    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators
+    $(Build.SourcesDirectory)/xamarin-macios/system-dependencies.sh --provision-simulators --ignore-shellcheck --ignore-yamllint
   displayName: 'Provision simulators'
 
 - template: ./run-tests.yml

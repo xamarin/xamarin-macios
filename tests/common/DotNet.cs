@@ -79,13 +79,17 @@ namespace Xamarin.Tests {
 			return Execute ("build", project, properties, false);
 		}
 
-		public static ExecutionResult AssertNew (string outputDirectory, string template)
+		public static ExecutionResult AssertNew (string outputDirectory, string template, string? name = null)
 		{
 			Directory.CreateDirectory (outputDirectory);
 
 			var args = new List<string> ();
 			args.Add ("new");
 			args.Add (template);
+			if (!string.IsNullOrEmpty (name)) {
+				args.Add ("--name");
+				args.Add (name);
+			}
 
 			var env = new Dictionary<string, string> ();
 			env ["MSBuildSDKsPath"] = null;
