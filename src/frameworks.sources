@@ -1336,6 +1336,7 @@ NEARBYINTERACTION_API_SOURCES = \
 	NearbyInteraction/Enums.cs \
 
 NEARBYINTERACTION_SOURCES = \
+	NearbyInteraction/NICompat.cs \
 	NearbyInteraction/NINearbyObject.cs \
 	NearbyInteraction/NIAlgorithmConvergenceStatusReasonValues.cs \
 
