@@ -7,7 +7,7 @@ using Mono.Linker.Steps;
 using Xamarin.Tuner;
 
 namespace Xamarin.Linker.Steps {
-	
+
 	public class MobileResolveMainAssemblyStep : ResolveFromAssemblyStep {
 
 		AssemblyDefinition assembly;
