@@ -66,7 +66,7 @@ namespace Xharness.Tests.Jenkins {
 
 		[Test]
 		public async Task TestExecuteArgs ()
-		{ 
+		{
 			// all similar logic to the above one, but with arguments
 			var periodicCommand = new PeriodicCommand (command, processManager.Object, interval, logs.Object, arguments: arguments);
 			var executionTcs = new TaskCompletionSource<bool> ();

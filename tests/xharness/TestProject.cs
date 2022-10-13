@@ -87,7 +87,7 @@ namespace Xharness {
 
 		static SemaphoreSlim ls_files_semaphore = new SemaphoreSlim (1);
 
-		async Task<string[]> ListFilesAsync (ILog log, string test_dir, IProcessManager processManager)
+		async Task<string []> ListFilesAsync (ILog log, string test_dir, IProcessManager processManager)
 		{
 			var acquired = await ls_files_semaphore.WaitAsync (TimeSpan.FromMinutes (5));
 			try {

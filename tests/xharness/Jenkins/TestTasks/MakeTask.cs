@@ -6,8 +6,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
-	class MakeTask : BuildToolTask
-	{
+	class MakeTask : BuildToolTask {
 		public string Target;
 		public string WorkingDirectory;
 		public TimeSpan Timeout = TimeSpan.FromMinutes (5);

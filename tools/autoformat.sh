@@ -20,6 +20,7 @@ dotnet format whitespace "$SRC_DIR/msbuild/Xamarin.iOS.Tasks/Xamarin.iOS.Tasks.c
 dotnet format whitespace "$SRC_DIR/tools/dotnet-linker/dotnet-linker.csproj"
 dotnet format whitespace "$SRC_DIR/tools/mmp/mmp.csproj"
 dotnet format whitespace "$SRC_DIR/tools/mtouch/mtouch.csproj"
+dotnet format whitespace "$SRC_DIR/tests/xharness/xharness.sln"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-sharpie.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/u2ignore/u2ignore.csproj"
 dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/u2todo/u2todo.csproj"
