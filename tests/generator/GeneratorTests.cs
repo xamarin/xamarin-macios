@@ -25,7 +25,7 @@ namespace GeneratorTests
 			bgen.ResponseFile = Path.Combine (Cache.CreateTemporaryDirectory (), "rspfile");
 
 			var arguments = new List<string> ();
-			var targetFramework = GetTargetFramework (profile);
+			var targetFramework = BGenTool.GetTargetFramework (profile);
 #if NET
 			var tf = TargetFramework.Parse (targetFramework);
 			arguments.Add ($"--baselib={Configuration.GetBaseLibrary (tf)}");

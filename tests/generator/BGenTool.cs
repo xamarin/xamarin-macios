@@ -73,10 +73,10 @@ namespace Xamarin.Tests
 			}
 		}
 
-		static string GetTargetFramework (Profile profile)
+		public static string GetTargetFramework (Profile profile)
 		{
+			switch (profile) {
 #if NET
-			switch (Profile) {
 			case Profile.iOS:
 				return TargetFramework.DotNet_iOS_String;
 			case Profile.tvOS:
@@ -88,11 +88,7 @@ namespace Xamarin.Tests
 			case Profile.macOSFull:
 			case Profile.macOSSystem:
 				throw new InvalidOperationException ($"Only the Mobile profile can be specified for .NET");
-			default:
-				throw new NotImplementedException ($"Profile: {Profile}");
-			}
 #else
-			switch (Profile) {
 			case Profile.iOS:
 				return "Xamarin.iOS,v1.0";
 			case Profile.tvOS:
@@ -107,10 +103,10 @@ namespace Xamarin.Tests
 				return "Xamarin.Mac,Version=v2.0,Profile=Mobile";
 			case Profile.macOSSystem:
 				return "Xamarin.Mac,Version=v4.5,Profile=System";
-			default:
-				throw new NotImplementedException ($"Profile: {Profile}");
-			}
 #endif
+			default:
+				throw new NotImplementedException ($"Profile: {profile}");
+			}
 		}
 
 		string [] BuildArgumentArray ()
