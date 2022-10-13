@@ -20,7 +20,7 @@ namespace Xamarin.MacDev.Tasks {
 				var success = taskRunner.RunAsync (this).Result;
 
 				if (success && LinkWithAttributes != null)
-					taskRunner.GetFileAsync (LinkWithAttributes.ItemSpec).Wait ();
+					taskRunner.GetFileAsync (this, LinkWithAttributes.ItemSpec).Wait ();
 
 				return success;
 			} catch (Exception ex) {
