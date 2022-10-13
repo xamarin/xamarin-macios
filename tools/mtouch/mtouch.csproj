@@ -53,9 +53,7 @@
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\Mono.Options\Mono.Options\Options.cs">
       <Link>mono-archive\Options.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\build\ios\Constants.cs">
-      <Link>src\build\ios\Constants.cs</Link>
-    </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="..\..\src\ObjCRuntime\Constants.cs">
       <Link>src\ObjCRuntime\Constants.cs</Link>
     </Compile>
