@@ -117,7 +117,7 @@ namespace MonoTouch.Tuner {
 		// "System.Xml.Serialization.XmlSchemaProviderAttribute",
 		// "System.Xml.Serialization.XmlTextAttribute",
 		// "System.Xml.Serialization.XmlTypeAttribute",
-		
+
 #if DEBUG
 		HashSet<string> keep = new HashSet<string> ();
 #endif
