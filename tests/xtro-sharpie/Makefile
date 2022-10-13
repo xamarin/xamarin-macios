@@ -243,13 +243,13 @@ CLASSIFY+=.stamp-classify-macos
 endif
 
 .stamp-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(CLASSIFY)
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR)) $(INCLUDED_PLATFORMS)
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR)) "$(ALL_PLATFORMS)" $(INCLUDED_PLATFORMS)
 	$(Q) touch $@
 
 classify: .stamp-classify
 
 .stamp-dotnet-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(DOTNET_CLASSIFY)
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(DOTNET_ANNOTATIONS_DIR)) $(DOTNET_PLATFORMS)
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(DOTNET_ANNOTATIONS_DIR)) "$(ALL_DOTNET_PLATFORMS)" $(DOTNET_PLATFORMS)
 	$(Q) touch $@
 
 dotnet-classify: .stamp-dotnet-classify
