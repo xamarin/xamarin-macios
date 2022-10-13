@@ -21,7 +21,7 @@ namespace Xharness.Jenkins {
 			// Try and find an unused port
 			int attemptsLeft = 50;
 			int port = 51234; // Try this port first, to try to not vary between runs just because.
-			Random r = new Random ((int)DateTime.Now.Ticks);
+			Random r = new Random ((int) DateTime.Now.Ticks);
 			while (attemptsLeft-- > 0) {
 				var newPort = port != 0 ? port : r.Next (49152, 65535); // The suggested range for dynamic ports is 49152-65535 (IANA)
 				server.Prefixes.Clear ();
@@ -38,16 +38,14 @@ namespace Xharness.Jenkins {
 			jenkins.MainLog.WriteLine ($"Created server on localhost:{port}");
 
 			var tcs = new TaskCompletionSource<bool> ();
-			var thread = new System.Threading.Thread (() =>
-			{
+			var thread = new System.Threading.Thread (() => {
 				while (server.IsListening) {
 					var context = server.GetContext ();
 					var request = context.Request;
 					var response = context.Response;
 					var arguments = System.Web.HttpUtility.ParseQueryString (request.Url.Query);
 					try {
-						var allTasks = jenkins.Tasks.SelectMany ((v) =>
-						{
+						var allTasks = jenkins.Tasks.SelectMany ((v) => {
 							var rv = new List<ITestTask> ();
 							var runsim = v as AggregatedRunSimulatorTask;
 							if (runsim != null)
@@ -343,8 +341,7 @@ namespace Xharness.Jenkins {
 					response.Close ();
 				}
 				tcs.SetResult (true);
-			})
-			{
+			}) {
 				IsBackground = true,
 			};
 			thread.Start ();
