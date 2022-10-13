@@ -284,6 +284,11 @@ namespace Cecil.Tests {
 				"GameController.GCRacingWheel.get_VendorName",
 				"GameController.GCRacingWheel.get_ProductCategory",
 				"GameController.GCRacingWheel.get_PhysicalInputProfile",
+				"GameController.GCGearShifterElement.get_Aliases",
+				"GameController.GCGearShifterElement.get_LocalizedName",
+				"GameController.GCGearShifterElement.get_SfSymbolsName",
+				"GameController.GCRacingWheelInput",
+				"GameController.GCSteeringWheelElemen",
 			};
 
 			if (inlineProtocols.Any ((p) => member.StartsWith (p))) {
