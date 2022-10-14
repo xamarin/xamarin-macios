@@ -145,7 +145,7 @@ namespace ObjCRuntime {
 		[DllImport (Messaging.LIBOBJC_DYLIB, EntryPoint="sel_registerName")]
 		public extern static /* SEL */ IntPtr GetHandle (/* const char* */ string name);
 
-		public static NativeHandle GetHandle (ReadOnlySpan<byte> name)
+		public static NativeHandle GetHandle8 (ReadOnlySpan<byte> name)
 		{
 			unsafe {
 				fixed (byte *ptr = name) {

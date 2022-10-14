@@ -75,7 +75,7 @@ namespace UIKit {
 			if (!t.TryGetValue (events, out ep)) {
 				ep = new UIControlEventProxy (this, notification);
 				t [events] = ep;
-				AddTarget (ep, Selector.GetHandle (new ReadOnlySpan<byte> (UIControlEventProxy.BridgeSelector8)), events);
+				AddTarget (ep, Selector.GetHandle8 (new ReadOnlySpan<byte> (UIControlEventProxy.BridgeSelector8)), events);
 			} else {
 				ep.Counter++;
 			}
@@ -103,7 +103,7 @@ namespace UIKit {
 			if (ep.Counter > 1)
 				return;
 
-			RemoveTarget (ep, Selector.GetHandle (new ReadOnlySpan<byte> (UIControlEventProxy.BridgeSelector8)), events);
+			RemoveTarget (ep, Selector.GetHandle8 (new ReadOnlySpan<byte> (UIControlEventProxy.BridgeSelector8)), events);
 			t.Remove (events);
 			ep.Dispose ();
 			if (t.Count == 0)
