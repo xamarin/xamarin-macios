@@ -658,7 +658,7 @@ namespace Foundation {
 			var helper = _serverCertificateCustomValidationCallbackHelper;
 			if (helper is null)
 				return false;
-			trusted = helper.TryInvoke (request, secTrust, out trusted);
+			trusted = helper.Invoke (request, secTrust);
 			return true;
 		}
 
