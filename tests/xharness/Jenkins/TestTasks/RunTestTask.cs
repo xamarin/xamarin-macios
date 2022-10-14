@@ -8,8 +8,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
-	internal abstract class RunTestTask : AppleTestTask, IRunTestTask
-	{
+	internal abstract class RunTestTask : AppleTestTask, IRunTestTask {
 		protected RunTest runTest;
 		public IMlaunchProcessManager ProcessManager => runTest.ProcessManager;
 		public IBuildToolTask BuildTask => runTest.BuildTask;
@@ -95,7 +94,7 @@ namespace Xharness.Jenkins.TestTasks {
 		}
 
 		protected Task ExecuteProcessAsync (string filename, List<string> arguments)
-		{ 
+		{
 			return ExecuteProcessAsync (null, filename, arguments);
 		}
 

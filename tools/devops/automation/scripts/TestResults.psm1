@@ -340,6 +340,9 @@ class ParallelTestsResults {
                 $this.PrintSuccessMessage($r, $stringBuilder)
             }
         }
+
+        $stringBuilder.AppendLine()
+        $stringBuilder.AppendLine("[comment]: <> (This is a test result report added by Azure DevOps)")
     }
 }
 
