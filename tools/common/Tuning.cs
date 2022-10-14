@@ -20,7 +20,7 @@ using PlatformLinkContext = MonoMac.Tuner.MonoMacLinkContext;
 
 #if MONOTOUCH
 namespace MonoTouch.Tuner {
-#else 
+#else
 namespace MonoMac.Tuner {
 #endif
 	static partial class Linker {
@@ -53,8 +53,7 @@ namespace MonoMac.Tuner {
 				return ae;
 			case ProductException pe:
 				return pe;
-			case MarkException me:
-			{
+			case MarkException me: {
 				var re = me.InnerException as ResolutionException;
 				if (re == null) {
 					if (me.InnerException != null) {
@@ -68,8 +67,7 @@ namespace MonoMac.Tuner {
 					return ErrorHelper.CreateError (2101, me, Errors.MT2101, re.Member, me.Method.FullName, scope);
 				}
 			}
-			case ResolutionException re:
-			{
+			case ResolutionException re: {
 				TypeReference tr = (re.Member as TypeReference);
 				IMetadataScope scope = tr == null ? re.Member.DeclaringType.Scope : tr.Scope;
 				return new ProductException (2002, true, re, "Failed to resolve \"{0}\" reference from \"{1}\"", re.Member, scope);

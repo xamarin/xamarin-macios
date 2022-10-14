@@ -29,7 +29,7 @@
     <_buildPath>$(_RepositoryPath)/_build</_buildPath>
     <_packagePath Condition="'$(_packagePath)' == ''">$(_buildPath)\$(PackageId)\</_packagePath>
     <NupkgPath Condition=" '$(NupkgPath)' == '' ">$([MSBuild]::NormalizeDirectory ('$(_buildPath)\nupkgs\'))</NupkgPath>
-    <BarManifestOutputPath Condition=" '$(BarManifestOutputPath)' == '' ">$(NupkgPath)\bar-manifests</BarManifestOutputPath>
+    <BarManifestOutputPath Condition=" '$(BarManifestOutputPath)' == '' ">$(NupkgPath)\bar-manifests\$(_PlatformName)</BarManifestOutputPath>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'iOS'">iOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'tvOS'">tvOS</_AssemblyInfix>
     <_AssemblyInfix Condition="'$(_PlatformName)' == 'watchOS'">watchOS</_AssemblyInfix>
@@ -115,7 +115,7 @@
 
   <Target Name="GenerateBuildAssetRegistryManifest" >
     <ItemGroup>
-      <BuildArtifacts Include="$(NupkgPath)\*.nupkg" />
+      <BuildArtifacts Include="$(NupkgPath)\Microsoft*.$(_PlatformName).*.nupkg" />
     </ItemGroup>
 
     <Error Condition="'@(BuildArtifacts)' == ''" Text="No packages to create manifest from." />
@@ -139,8 +139,6 @@
         RepoBranch="$(BUILD_SOURCEBRANCH)"
         RepoCommit="$(BUILD_SOURCEVERSION)"
         PublishingVersion="3" />
-
-    <Message Importance="high" Text="##vso[artifact.upload containerfolder=AssetManifests;artifactname=AssetManifests]$(BarManifestOutputPath)/AssetManifest.xml" />
   </Target>
 
   <Target Name="PushManifestToBuildAssetRegistry" >

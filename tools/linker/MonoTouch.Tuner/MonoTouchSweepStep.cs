@@ -7,7 +7,7 @@ using Mono.Tuner;
 using Xamarin.Linker;
 
 namespace MonoTouch.Tuner {
-	
+
 	public class MonoTouchSweepStep : CoreSweepStep {
 
 		public MonoTouchSweepStep (LinkerOptions options)
