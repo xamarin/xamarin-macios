@@ -95,8 +95,47 @@ steps:
     set -x
     set -e
     cd xamarin-macios
-    ./configure --enable-xamarin
-  displayName: 'Enable Xamarin'
+
+    CONFIGURE_ARGS=
+    if test -n "$ENABLE_DOTNET"; then
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --enable-dotnet"
+    else
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --disable-dotnet"
+    fi
+    if test -n "$INCLUDE_XAMARIN_LEGACY"; then
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --enable-legacy-xamarin"
+    else
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --disable-legacy-xamarin"
+    fi
+
+    if test -n "$INCLUDE_DOTNET_IOS"; then
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --enable-ios"
+    else
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --disable-ios"
+    fi
+    if test -n "$INCLUDE_DOTNET_MACCATALYST"; then
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --enable-maccatalyst"
+    else
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --disable-maccatalyst"
+    fi
+    if test -n "$INCLUDE_DOTNET_MACOS"; then
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --enable-macos"
+    else
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --disable-macos"
+    fi
+    if test -n "$INCLUDE_DOTNET_TVOS"; then
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --enable-tvos"
+    else
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --disable-tvos"
+    fi
+    if test -n "$INCLUDE_LEGACY_WATCH"; then
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --enable-watchos"
+    else
+      CONFIGURE_ARGS="$CONFIGURE_ARGS --disable-watchos"
+    fi
+
+    ./configure --enable-xamarin $CONFIGURE_ARGS
+  displayName: 'Run configure'
   timeoutInMinutes: 1
 
 # Add the required provisioning profiles to be able to execute the tests.
