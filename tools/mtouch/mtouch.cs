@@ -66,8 +66,7 @@ public enum OutputFormat {
 	Xml,
 }
 
-namespace Xamarin.Bundler
-{
+namespace Xamarin.Bundler {
 	public partial class Driver {
 		internal const string NAME = "mtouch";
 
@@ -362,8 +361,7 @@ namespace Xamarin.Bundler
 				args = l.ToArray ();
 			}
 
-			Action<Action> SetAction = (Action value) =>
-			{
+			Action<Action> SetAction = (Action value) => {
 				switch (action) {
 				case Action.None:
 					action = value;
@@ -478,7 +476,7 @@ namespace Xamarin.Bundler
 			{ "argument=", "Launch the app with this command line argument. This must be specified multiple times for multiple arguments [DEPRECATED]", v => { }, true },
 			{ "sgen:", "Enable the SGen garbage collector",
 					v => {
-						if (!ParseBool (v, "sgen")) 
+						if (!ParseBool (v, "sgen"))
 							ErrorHelper.Warning (43, Errors.MX0043);
 					},
 					true // do not show the option anymore
@@ -486,7 +484,7 @@ namespace Xamarin.Bundler
 			{ "boehm:", "Enable the Boehm garbage collector",
 					v => {
 						if (ParseBool (v, "boehm"))
-							ErrorHelper.Warning (43, Errors.MX0043); }, 
+							ErrorHelper.Warning (43, Errors.MX0043); },
 					true // do not show the option anymore
 				},
 			{ "new-refcount:", "Enable new refcounting logic",
@@ -596,14 +594,14 @@ namespace Xamarin.Bundler
 			return app;
 		}
 
-		static int Main2 (string[] args)
+		static int Main2 (string [] args)
 		{
 			Action action;
 			var app = ParseArguments (args, out action);
 
 			if (app == null)
 				return 0;
-			
+
 			// Allow a few actions, since these seem to always work no matter the Xcode version.
 			var accept_any_xcode_version = action == Action.ListDevices || action == Action.ListCrashReports || action == Action.ListApps || action == Action.LogDev;
 			ValidateXcode (app, accept_any_xcode_version, false);
@@ -713,15 +711,13 @@ namespace Xamarin.Bundler
 
 		static void RedirectStream (StreamReader @in, StreamWriter @out)
 		{
-			new Thread (() =>
-			{
+			new Thread (() => {
 				string line;
 				while ((line = @in.ReadLine ()) != null) {
 					@out.WriteLine (line);
 					@out.Flush ();
 				}
-			})
-			{ IsBackground = true }.Start ();
+			}) { IsBackground = true }.Start ();
 		}
 
 		static string GetMlaunchPath (Application app)
@@ -788,11 +784,11 @@ namespace Xamarin.Bundler
 			//
 
 			switch (app.Platform) {
-				case ApplePlatform.TVOS:
-				case ApplePlatform.WatchOS:
-					if (Driver.XcodeVersion.Major >= 14)
-						app.EnableCxx = true;
-					break;
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				if (Driver.XcodeVersion.Major >= 14)
+					app.EnableCxx = true;
+				break;
 			}
 
 			if (string.IsNullOrEmpty (app.Compiler)) {

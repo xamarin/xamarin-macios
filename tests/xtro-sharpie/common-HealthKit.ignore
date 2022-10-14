@@ -5,5 +5,4 @@
 !extra-null-allowed! 'HealthKit.HKCategoryType HealthKit.HKObjectType::GetCategoryType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'HealthKit.HKCharacteristicType HealthKit.HKObjectType::GetCharacteristicType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'HealthKit.HKCorrelationType HealthKit.HKObjectType::GetCorrelationType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0
-!extra-null-allowed! 'HealthKit.HKDocumentType HealthKit.HKObjectType::_GetDocumentType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'HealthKit.HKQuantityType HealthKit.HKObjectType::GetQuantityType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0

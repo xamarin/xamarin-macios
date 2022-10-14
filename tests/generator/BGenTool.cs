@@ -73,62 +73,49 @@ namespace Xamarin.Tests
 			}
 		}
 
+		public static string GetTargetFramework (Profile profile)
+		{
+			switch (profile) {
+#if NET
+			case Profile.iOS:
+				return TargetFramework.DotNet_iOS_String;
+			case Profile.tvOS:
+				return TargetFramework.DotNet_tvOS_String;
+			case Profile.watchOS:
+				return TargetFramework.DotNet_watchOS_String;
+			case Profile.macOSMobile:
+				return TargetFramework.DotNet_macOS_String;
+			case Profile.macOSFull:
+			case Profile.macOSSystem:
+				throw new InvalidOperationException ($"Only the Mobile profile can be specified for .NET");
+#else
+			case Profile.iOS:
+				return "Xamarin.iOS,v1.0";
+			case Profile.tvOS:
+				return "Xamarin.TVOS,v1.0";
+			case Profile.watchOS:
+				return "Xamarin.WatchOS,v1.0";
+			case Profile.macOSClassic:
+				return "XamMac,v1.0";
+			case Profile.macOSFull:
+				return "Xamarin.Mac,Version=v4.5,Profile=Full";
+			case Profile.macOSMobile:
+				return "Xamarin.Mac,Version=v2.0,Profile=Mobile";
+			case Profile.macOSSystem:
+				return "Xamarin.Mac,Version=v4.5,Profile=System";
+#endif
+			default:
+				throw new NotImplementedException ($"Profile: {profile}");
+			}
+		}
+
 		string [] BuildArgumentArray ()
 		{
 			var sb = new List<string> ();
 			var targetFramework = (string) null;
 
-#if NET
-			switch (Profile) {
-			case Profile.None:
-				break;
-			case Profile.iOS:
-				targetFramework = TargetFramework.DotNet_iOS_String;
-				break;
-			case Profile.tvOS:
-				targetFramework = TargetFramework.DotNet_tvOS_String;
-				break;
-			case Profile.watchOS:
-				targetFramework = TargetFramework.DotNet_watchOS_String;
-				break;
-			case Profile.macOSMobile:
-				targetFramework = TargetFramework.DotNet_macOS_String;
-				break;
-			case Profile.macOSFull:
-			case Profile.macOSSystem:
-				throw new InvalidOperationException ($"Only the Mobile profile can be specified for .NET");
-			default:
-				throw new NotImplementedException ($"Profile: {Profile}");
-			}
-#else
-			switch (Profile) {
-			case Profile.None:
-				break;
-			case Profile.iOS:
-				targetFramework = "Xamarin.iOS,v1.0";
-				break;
-			case Profile.tvOS:
-				targetFramework = "Xamarin.TVOS,v1.0";
-				break;
-			case Profile.watchOS:
-				targetFramework = "Xamarin.WatchOS,v1.0";
-				break;
-			case Profile.macOSClassic:
-				targetFramework = "XamMac,v1.0";
-				break;
-			case Profile.macOSFull:
-				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=Full";
-				break;
-			case Profile.macOSMobile:
-				targetFramework = "Xamarin.Mac,Version=v2.0,Profile=Mobile";
-				break;
-			case Profile.macOSSystem:
-				targetFramework = "Xamarin.Mac,Version=v4.5,Profile=System";
-				break;
-			default:
-				throw new NotImplementedException ($"Profile: {Profile}");
-			}
-#endif
+			if (Profile != Profile.None)
+				targetFramework = GetTargetFramework (Profile);
 
 #if NET
 			if (CompileCommand is null) {
