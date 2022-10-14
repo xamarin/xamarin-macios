@@ -15,3 +15,4 @@
 !missing-type! PKDisbursementAuthorizationController not bound
 !missing-type! PKDisbursementRequest not bound
 !missing-type! PKDisbursementVoucher not bound
+!incorrect-protocol-member! PKPaymentAuthorizationControllerDelegate::paymentAuthorizationController:didAuthorizePayment:completion: is OPTIONAL and should NOT be abstract

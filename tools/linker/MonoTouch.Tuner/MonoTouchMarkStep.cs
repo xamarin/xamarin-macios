@@ -66,8 +66,8 @@ namespace MonoTouch.Tuner {
 				var parameters = method.Parameters;
 				if (parameters.Count != 2)
 					continue;
-				if (parameters [0].ParameterType.Name != "SerializationInfo" || 
-				    parameters [1].ParameterType.Name != "StreamingContext")
+				if (parameters [0].ParameterType.Name != "SerializationInfo" ||
+					parameters [1].ParameterType.Name != "StreamingContext")
 					continue;
 
 				if (serialization_required) {
@@ -118,8 +118,8 @@ namespace MonoTouch.Tuner {
 
 			// if the application creates instances of SerializationInfo then we assume serialization is likely
 			// and include all the .ctor(SerializationInfo,StreamingContext) inside the application
-			if (!serialization_required && method.IsConstructor && !method.IsStatic && 
-			    method.DeclaringType.Is ("System.Runtime.Serialization", "SerializationInfo")) {
+			if (!serialization_required && method.IsConstructor && !method.IsStatic &&
+				method.DeclaringType.Is ("System.Runtime.Serialization", "SerializationInfo")) {
 				serialization_required = true;
 				// stop procrastinaing and mark them all
 				foreach (var m in pending_serialization_constructors)
