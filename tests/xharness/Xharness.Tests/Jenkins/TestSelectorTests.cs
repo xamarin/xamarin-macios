@@ -8,7 +8,7 @@ namespace Xharness.Tests.Jenkins {
 	public class TestSelectorTests {
 		TestSelector selector;
 		Mock<IVersionControlSystem> versionControlSystem;
-		
+
 		[SetUp]
 		public void SetUp ()
 		{

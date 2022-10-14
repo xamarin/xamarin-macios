@@ -1,0 +1,74 @@
+# manually added in MidiServices.cs (not bindings)
+!missing-field! kMIDIPropertyAdvanceScheduleTimeMuSec not bound
+!missing-field! kMIDIPropertyCanRoute not bound
+!missing-field! kMIDIPropertyConnectionUniqueID not bound
+!missing-field! kMIDIPropertyDeviceID not bound
+!missing-field! kMIDIPropertyDisplayName not bound
+!missing-field! kMIDIPropertyDriverDeviceEditorApp not bound
+!missing-field! kMIDIPropertyDriverOwner not bound
+!missing-field! kMIDIPropertyDriverVersion not bound
+!missing-field! kMIDIPropertyImage not bound
+!missing-field! kMIDIPropertyIsBroadcast not bound
+!missing-field! kMIDIPropertyIsDrumMachine not bound
+!missing-field! kMIDIPropertyIsEffectUnit not bound
+!missing-field! kMIDIPropertyIsEmbeddedEntity not bound
+!missing-field! kMIDIPropertyIsMixer not bound
+!missing-field! kMIDIPropertyIsSampler not bound
+!missing-field! kMIDIPropertyManufacturer not bound
+!missing-field! kMIDIPropertyMaxReceiveChannels not bound
+!missing-field! kMIDIPropertyMaxSysExSpeed not bound
+!missing-field! kMIDIPropertyMaxTransmitChannels not bound
+!missing-field! kMIDIPropertyModel not bound
+!missing-field! kMIDIPropertyName not bound
+!missing-field! kMIDIPropertyOffline not bound
+!missing-field! kMIDIPropertyPanDisruptsStereo not bound
+!missing-field! kMIDIPropertyPrivate not bound
+!missing-field! kMIDIPropertyReceiveChannels not bound
+!missing-field! kMIDIPropertyReceivesBankSelectLSB not bound
+!missing-field! kMIDIPropertyReceivesBankSelectMSB not bound
+!missing-field! kMIDIPropertyReceivesClock not bound
+!missing-field! kMIDIPropertyReceivesMTC not bound
+!missing-field! kMIDIPropertyReceivesNotes not bound
+!missing-field! kMIDIPropertyReceivesProgramChanges not bound
+!missing-field! kMIDIPropertySingleRealtimeEntity not bound
+!missing-field! kMIDIPropertySupportsGeneralMIDI not bound
+!missing-field! kMIDIPropertySupportsMMC not bound
+!missing-field! kMIDIPropertySupportsShowControl not bound
+!missing-field! kMIDIPropertyTransmitChannels not bound
+!missing-field! kMIDIPropertyTransmitsBankSelectLSB not bound
+!missing-field! kMIDIPropertyTransmitsBankSelectMSB not bound
+!missing-field! kMIDIPropertyTransmitsClock not bound
+!missing-field! kMIDIPropertyTransmitsMTC not bound
+!missing-field! kMIDIPropertyTransmitsNotes not bound
+!missing-field! kMIDIPropertyTransmitsProgramChanges not bound
+!missing-field! kMIDIPropertyUniqueID not bound
+!missing-field! kMIDIPropertyNameConfigurationDictionary not bound
+!missing-field! kMIDIPropertyProtocolID not bound
+
+# no known use
+!missing-pinvoke! MIDIEndpointGetRefCons is not bound
+!missing-pinvoke! MIDIEndpointSetRefCons is not bound
+
+# old apis that have been ignored, please refer to issue https://github.com/xamarin/xamarin-macios/issues/4452
+!missing-pinvoke! MIDIClientCreateWithBlock is not bound
+!missing-pinvoke! MIDIDeviceCreate is not bound
+!missing-pinvoke! MIDIDeviceDispose is not bound
+!missing-pinvoke! MIDIDeviceRemoveEntity is not bound
+!missing-pinvoke! MIDIEntityAddOrRemoveEndpoints is not bound
+!missing-pinvoke! MIDIExternalDeviceCreate is not bound
+!missing-pinvoke! MIDIGetDriverDeviceList is not bound
+!missing-pinvoke! MIDIGetDriverIORunLoop is not bound
+!missing-pinvoke! MIDISendSysex is not bound
+!missing-pinvoke! MIDISetupAddDevice is not bound
+!missing-pinvoke! MIDISetupAddExternalDevice is not bound
+!missing-pinvoke! MIDISetupRemoveDevice is not bound
+!missing-pinvoke! MIDISetupRemoveExternalDevice is not bound
+
+# same as the above, we should bind all of them, these have been added on Xcode 12 beta 2
+# https://github.com/xamarin/xamarin-macios/issues/4452#issuecomment-660220392
+!missing-pinvoke! MIDIDestinationCreateWithProtocol is not bound
+!missing-pinvoke! MIDIDeviceNewEntity is not bound
+!missing-pinvoke! MIDIInputPortCreateWithProtocol is not bound
+!missing-pinvoke! MIDIReceivedEventList is not bound
+!missing-pinvoke! MIDISendEventList is not bound
+!missing-pinvoke! MIDISourceCreateWithProtocol is not bound
