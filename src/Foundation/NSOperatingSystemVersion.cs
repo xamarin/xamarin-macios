@@ -30,25 +30,24 @@ using ObjCRuntime;
 
 namespace Foundation {
 
+	#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+	#endif
 
-#if NET
-[SupportedOSPlatform ("ios")]
-[SupportedOSPlatform ("maccatalyst")]
-[SupportedOSPlatform ("macos")]
-[SupportedOSPlatform ("tvos")]
-#endif
-
-public struct NSOperatingSystemVersion : IEquatable<NSOperatingSystemVersion>, IComparable 
-{
-	public nint Major, Minor, PatchVersion;
-	
-	public NSOperatingSystemVersion (nint major, nint minor, nint patchVersion)
+	public struct NSOperatingSystemVersion : IEquatable<NSOperatingSystemVersion>, IComparable 
 	{
-		Major = major;
-		Minor = minor;
-		PatchVersion = patchVersion;
-		}
+		public nint Major, Minor, PatchVersion;
 		
+		public NSOperatingSystemVersion (nint major, nint minor, nint patchVersion)
+		{
+			Major = major;
+			Minor = minor;
+			PatchVersion = patchVersion;
+		}
+			
 		public NSOperatingSystemVersion (nint major, nint minor) : this (major, minor, 0) {}
 		
 		public NSOperatingSystemVersion (nint major) : this (major, 0, 0) {}
