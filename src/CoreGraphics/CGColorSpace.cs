@@ -1062,6 +1062,7 @@ namespace CoreGraphics {
 		[TV (16,0)]
 		[Mac (13,0)]
 		[MacCatalyst (16,0)]
+		[Watch (9,0)]
 #endif
 		public CGColorSpace? CreateCopyWithStandardRange () => Runtime.GetINativeObject<CGColorSpace> (CGColorSpaceCreateCopyWithStandardRange (Handle), owns: true);
 
