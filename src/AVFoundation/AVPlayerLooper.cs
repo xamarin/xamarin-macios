@@ -37,7 +37,7 @@ namespace AVFoundation {
 		bool loopingEnabled = true;
 
 		[Obsolete ("This selector does not exist in the header and was wrongly added.")]
-		public virtual bool LoopingEnabled { 
+		public virtual bool LoopingEnabled {
 			get {
 				return loopingEnabled;
 			}

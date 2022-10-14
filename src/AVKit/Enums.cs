@@ -13,14 +13,14 @@ namespace AVKit {
 		Inline,
 		Floating,
 		Minimal,
-		Default = Inline 
+		Default = Inline
 	}
 #endif
 
 	// The version of the AVError.h header file in the tvOS SDK is much newer than in the iOS SDKs,
 	// (copyright 2016 vs 2019), so this is reflecting the tvOS SDK.
-	[iOS (9,0)]
-	[TV (13,0)]
+	[iOS (9, 0)]
+	[TV (13, 0)]
 #if NET
 	[NoMac]
 	[NoWatch]
@@ -39,7 +39,7 @@ namespace AVKit {
 	[NoWatch]
 	[NoTV]
 	[NoMac]
-	[iOS (13,0)]
+	[iOS (13, 0)]
 	[Native]
 	public enum AVAudioSessionRouteSelection : long {
 		None = 0,
@@ -50,7 +50,7 @@ namespace AVKit {
 	[NoiOS]
 	[NoWatch]
 	[NoTV]
-	[Mac (10,15)]
+	[Mac (10, 15)]
 	[Native]
 	public enum AVRoutePickerViewButtonState : long {
 		Normal,
@@ -59,4 +59,4 @@ namespace AVKit {
 		ActiveHighlighted,
 	}
 
-}	
+}
