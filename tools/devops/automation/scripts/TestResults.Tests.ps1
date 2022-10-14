@@ -212,6 +212,8 @@ Describe "TestResults tests" {
 
 :white_check_mark: linker: All 3 tests passed. [attempt 200] [Html Report (VSDrops)](vsdropsIndex/prefixlinker-200/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixlinker-200&api-version=6.0&`$format=zip)
 :white_check_mark: introspection: All 5 tests passed. [attempt 2] [Html Report (VSDrops)](vsdropsIndex/prefixintrospection-2/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixintrospection-2&api-version=6.0&`$format=zip)
+
+[comment]: <> (This is a test result report added by Azure DevOps)
 "
         }
 
@@ -270,6 +272,8 @@ Describe "TestResults tests" {
 ## Successes
 
 :white_check_mark: linker: All 3 tests passed. [attempt 200] [Html Report (VSDrops)](vsdropsIndex/prefixlinker-200/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixlinker-200&api-version=6.0&`$format=zip)
+
+[comment]: <> (This is a test result report added by Azure DevOps)
 "
         }
     }

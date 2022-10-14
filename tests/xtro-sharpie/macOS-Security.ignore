@@ -601,3 +601,5 @@
 
 ## xcode 12.2 / we do not have bindings for XPC
 !missing-pinvoke! SecCodeCreateWithXPCMessage is not bound
+!extra-enum-value! Managed value -2147483648 for SecAccessControlCreateFlags.ApplicationPassword not found in native headers
+!missing-enum-value! SecAccessControlCreateFlags native value kSecAccessControlApplicationPassword = 2147483648 not bound

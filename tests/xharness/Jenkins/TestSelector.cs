@@ -16,7 +16,7 @@ namespace Xharness.Jenkins {
 			TestLabel.Msbuild |
 			TestLabel.Monotouch |
 			TestLabel.DotnetTest;
-		
+
 		PlatformLabel platform =
 			PlatformLabel.None |
 			PlatformLabel.tvOS |
@@ -33,7 +33,7 @@ namespace Xharness.Jenkins {
 			get => selection;
 			set => selection = value;
 		}
-		
+
 		public PlatformLabel SelectedPlatforms => platform;
 
 		public void SetEnabled (TestLabel label, bool enable)
@@ -44,7 +44,7 @@ namespace Xharness.Jenkins {
 				selection &= ~label;
 			}
 		}
-		
+
 		public void SetEnabled (PlatformLabel label, bool enable)
 		{
 			if (enable) {
@@ -88,7 +88,7 @@ namespace Xharness.Jenkins {
 	class TestSelector {
 
 		#region private vars
-		
+
 		readonly Jenkins jenkins;
 		readonly IVersionControlSystem vcs;
 
@@ -113,7 +113,7 @@ namespace Xharness.Jenkins {
 		{
 			if (pullRequest > 0) {
 				var labels = vcs.GetLabels (pullRequest);
-				var pullRequestLabels = labels as string[] ?? labels.ToArray ();
+				var pullRequestLabels = labels as string [] ?? labels.ToArray ();
 				if (pullRequestLabels.Length > 0) {
 					MainLog?.WriteLine ($"Found {pullRequestLabels.Length} label(s) in the pull request #{pullRequest}: {string.Join (", ", pullRequestLabels)}");
 					return pullRequestLabels;
@@ -142,7 +142,7 @@ namespace Xharness.Jenkins {
 			var customLabelsFile = Path.Combine (HarnessConfiguration.RootDirectory, "..", "jenkins", "custom-labels.txt");
 			if (File.Exists (customLabelsFile)) {
 				var customLabels = File.ReadAllLines (customLabelsFile).Select ((v) => v.Trim ()).Where (v => v.Length > 0 && v [0] != '#');
-				var customFileLabels = customLabels as string[] ?? customLabels.ToArray ();
+				var customFileLabels = customLabels as string [] ?? customLabels.ToArray ();
 				if (customFileLabels.Length > 0) {
 					MainLog?.WriteLine ($"Found {customFileLabels.Length} label(s) in {customLabelsFile}: {string.Join (", ", customFileLabels)}");
 					return customFileLabels;
@@ -173,7 +173,7 @@ namespace Xharness.Jenkins {
 			labels.UnionWith (GetPullRequestLabels (pullRequest));
 			labels.UnionWith (GetEnvironmentLabels ());
 			labels.UnionWith (GetCustomFileLabels ());
-			
+
 			MainLog?.WriteLine ($"In total found {labels.Count} label(s): {string.Join (", ", labels.ToArray ())}");
 			return labels;
 		}
@@ -197,7 +197,7 @@ namespace Xharness.Jenkins {
 					continue;
 				MainLog?.WriteLine ($"Label {label} matches regexp.");
 				var match = regexp.Match (label);
-				var matchedLabel = match.Groups [2].Value;  
+				var matchedLabel = match.Groups [2].Value;
 				var run = match.Groups [1].Value == "run-";
 				MainLog?.WriteLine ($"Setting label {matchedLabel} to be enabled: {run}");
 				if (labelSelectedTests.ContainsKey (matchedLabel)) {
@@ -212,7 +212,7 @@ namespace Xharness.Jenkins {
 
 			// special case to consider, since might set or remove all tests, we need to process it first
 			if (labelSelectedTests.ContainsKey ("all")) {
-				selection.SetEnabled ("all", labelSelectedTests["all"]);
+				selection.SetEnabled ("all", labelSelectedTests ["all"]);
 				labelSelectedTests.Remove ("all");
 			}
 
@@ -220,7 +220,7 @@ namespace Xharness.Jenkins {
 				selection.SetEnabled (entry.Key, entry.Value);
 			}
 
-			Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission); 
+			Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission);
 
 			// old simulator tests is also a bit special:
 			// - enabled by default if using a beta Xcode, otherwise disabled by default
@@ -239,7 +239,7 @@ namespace Xharness.Jenkins {
 			// whatever we did automatically.
 			var labels = GetAllLabels (pullRequest);
 			SelectTestsByLabel (labels, selection, pullRequest > 0 ?
-				vcs.GetPullRequestTargetBranch (pullRequest): null);
+				vcs.GetPullRequestTargetBranch (pullRequest) : null);
 
 			DisableKnownFailingDeviceTests ();
 

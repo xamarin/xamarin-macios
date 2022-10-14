@@ -33,14 +33,14 @@ namespace Xharness.Jenkins {
 		}
 
 		async Task ExecuteInternal (CancellationToken? cancellationToken = null)
-		{ 
+		{
 			log.WriteLine ($"Starting periodic task with interval {interval.TotalMinutes} minutes.");
 			while (true) {
 				var watch = Stopwatch.StartNew ();
 				using (var process = new Process ()) {
 					process.StartInfo.FileName = command;
 					process.StartInfo.Arguments = arguments;
-					ProcessExecutionResult? rv = cancellationToken.HasValue 
+					ProcessExecutionResult? rv = cancellationToken.HasValue
 						? await processManager.RunAsync (process, log, timeout: interval, cancellationToken: cancellationToken)
 						: await processManager.RunAsync (process, log, timeout: interval);
 					if (rv != null && !rv.Succeeded)

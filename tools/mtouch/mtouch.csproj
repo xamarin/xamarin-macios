@@ -34,7 +34,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Application.mtouch.cs" />
     <Compile Include="Assembly.mtouch.cs" />
@@ -53,9 +52,7 @@
     <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\Mono.Options\Mono.Options\Options.cs">
       <Link>mono-archive\Options.cs</Link>
     </Compile>
-    <Compile Include="..\..\src\build\ios\Constants.cs">
-      <Link>src\build\ios\Constants.cs</Link>
-    </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="..\..\src\ObjCRuntime\Constants.cs">
       <Link>src\ObjCRuntime\Constants.cs</Link>
     </Compile>
@@ -496,6 +493,7 @@
       <Link>tools\linker\RegistrarRemovalTrackingStep.cs</Link>
     </Compile>
   </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Reference Include="System.Core" />
     <Reference Include="System" />
