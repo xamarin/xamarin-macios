@@ -67,9 +67,9 @@ namespace Xharness.Jenkins.TestTasks {
 					args.Add ("-t");
 					args.Add ("--");
 					args.Add ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget");
+					args.Add ("restore");
 					args.Add ("-Verbosity");
 					args.Add ("detailed");
-					args.Add ("restore");
 				}
 				args.Add (projectPath);
 				nuget.StartInfo.Arguments = StringUtils.FormatArguments (args);
