@@ -21,3 +21,5 @@
 ## used in src/Darwin/KernelNotification.cs
 !unknown-pinvoke! kevent bound
 !unknown-pinvoke! kqueue bound
+!unknown-pinvoke! object_getInstanceVariable bound
+!unknown-pinvoke! object_setInstanceVariable bound

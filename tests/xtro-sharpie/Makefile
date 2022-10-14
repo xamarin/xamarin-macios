@@ -248,7 +248,7 @@ endif
 
 ifdef INCLUDE_XAMARIN_LEGACY
 .stamp-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(CLASSIFY)
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR)) $(INCLUDED_PLATFORMS)
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR)) "$(ALL_PLATFORMS)" $(INCLUDED_PLATFORMS)
 	$(Q) touch $@
 
 classify: .stamp-classify
@@ -256,7 +256,7 @@ endif
 
 ifdef ENABLE_DOTNET
 .stamp-dotnet-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(DOTNET_CLASSIFY)
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(DOTNET_ANNOTATIONS_DIR)) $(DOTNET_PLATFORMS)
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(DOTNET_ANNOTATIONS_DIR)) "$(ALL_DOTNET_PLATFORMS)" $(DOTNET_PLATFORMS)
 	$(Q) touch $@
 
 dotnet-classify: .stamp-dotnet-classify
