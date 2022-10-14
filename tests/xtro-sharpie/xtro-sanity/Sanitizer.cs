@@ -7,6 +7,8 @@ namespace Extrospection {
 	class Sanitizer {
 
 		static List<string> Platforms;
+		static List<string> AllPlatforms;
+		static bool Autosanitize = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"));
 
 		static bool IsEntry (string line)
 		{
@@ -137,7 +139,7 @@ namespace Extrospection {
 						failures.Add (entry);
 					}
 				}
-				if (failures.Count > 0 && !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"))) {
+				if (failures.Count > 0 && Autosanitize) {
 					var sanitized = new List<string> (entries);
 					foreach (var failure in failures)
 						sanitized.Remove (failure);
@@ -174,7 +176,8 @@ namespace Extrospection {
 		public static int Main (string [] args)
 		{
 			directory = args.Length == 0 ? "." : args [0];
-			Platforms = args.Skip (1).ToList ();
+			AllPlatforms = args.Skip (1).First ().Split (' ').ToList ();
+			Platforms = args.Skip (2).ToList ();
 
 			// cache stuff
 			foreach (var file in Directory.GetFiles (directory, "common-*.ignore")) {
@@ -220,37 +223,48 @@ namespace Extrospection {
 			// TODO entries present in all platforms .ignore files should be moved to common
 
 			// ignored entries should all exists in the unfiltered .unclassified (raw)
-			// * common-{fx}.ignored must be part of _at least_ one *-{fx}.raw file
+			// * common-{fx}.ignored must be part of _all_ one *-{fx}.raw file
 			foreach (var kvp in commons) {
 				var fx = kvp.Key;
 				var common = kvp.Value;
 				//ExistingCommonEntries (common, $"common-{fx}.ignore");
-				List<string> [] raws = new List<string> [Platforms.Count];
+				var raws = new RawInfo [Platforms.Count];
 				for (int i = 0; i < raws.Length; i++) {
 					var fname = Path.Combine (directory, $"{Platforms [i]}-{fx}.raw");
+					raws [i] = new RawInfo () {
+						Platform = Platforms [i],
+					};
 					if (File.Exists (fname))
-						raws [i] = new List<string> (File.ReadAllLines (fname));
-					else
-						raws [i] = new List<string> ();
+						raws [i].Entries = new HashSet<string> (File.ReadAllLines (fname));
 				}
-				var failures = new List<string> ();
+				var unknownFailures = new List<string> ();
 				foreach (var entry in common) {
 					if (!entry.StartsWith ("!", StringComparison.Ordinal))
 						continue;
-					bool found = false;
-					foreach (var platform in raws) {
-						found = platform.Contains (entry);
-						if (found)
-							break;
-					}
-					if (!found) {
+					var foundRaws = raws.Where (v => v.Entries.Contains (entry));
+					var rawCount = foundRaws.Count ();
+					if (rawCount == 0) {
 						Log ($"?unknown-entry? {entry} in '{Path.Combine (directory, $"common-{fx}.ignore")}'");
-						failures.Add (entry);
+						unknownFailures.Add (entry);
+					} else if (rawCount < GetPlatformCount (fx)) {
+						var notFound = raws.Where (v => !v.Entries.Contains (entry));
+						Log ($"?not-common? {entry} in '{Path.Combine (directory, $"common-{fx}.ignore")}': not in {string.Join (", ", notFound.Select (v => v.Platform))}");
+						unknownFailures.Add (entry);
+						if (Autosanitize) {
+							foreach (var nf in foundRaws) {
+								var ignore = Path.Combine (directory, $"{nf.Platform}-{fx}.ignore");
+								var sanitized = new List<string> ();
+								if (File.Exists (ignore))
+									sanitized.AddRange (File.ReadAllLines (ignore));
+								sanitized.Add (entry);
+								File.WriteAllLines (ignore, sanitized);
+							}
+						}
 					}
 				}
-				if (failures.Count > 0 && !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"))) {
+				if (unknownFailures.Count > 0 && Autosanitize) {
 					var sanitized = new List<string> (common);
-					foreach (var failure in failures)
+					foreach (var failure in unknownFailures)
 						sanitized.Remove (failure);
 					File.WriteAllLines (Path.Combine (directory, $"common-{fx}.ignore"), sanitized);
 				}
@@ -277,11 +291,15 @@ namespace Extrospection {
 					Log ($"?unknown-entry? {entry} in '{shortname}'");
 					failures.Add (entry);
 				}
-				if (failures.Count > 0 && !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"))) {
+				if (failures.Count > 0 && Autosanitize) {
 					var sanitized = new List<string> (lines);
 					foreach (var failure in failures)
 						sanitized.Remove (failure);
-					File.WriteAllLines (file, sanitized);
+					if (sanitized.Count > 0) {
+						File.WriteAllLines (file, sanitized);
+					} else {
+						File.Delete (file);
+					}
 				}
 			}
 
@@ -304,8 +322,46 @@ namespace Extrospection {
 			// useful when updating stuff locally - we report but we don't fail
 			var sanitizedOrSkippedSanity =
 				!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XTRO_SANITY_SKIP"))
-				|| !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"));
+				|| Autosanitize;
 			return sanitizedOrSkippedSanity ? 0 : count;
 		}
+
+		static List<Frameworks> AllFrameworks;
+		static int GetPlatformCount (string framework)
+		{
+			if (AllFrameworks is null) {
+				AllFrameworks = new List<Frameworks> ();
+				foreach (var platform in AllPlatforms) {
+					switch (platform) {
+					case "iOS":
+						AllFrameworks.Add (Frameworks.GetiOSFrameworks (false));
+						break;
+					case "tvOS":
+						AllFrameworks.Add (Frameworks.TVOSFrameworks);
+						break;
+					case "watchOS":
+						AllFrameworks.Add (Frameworks.GetwatchOSFrameworks (false));
+						break;
+					case "macOS":
+						AllFrameworks.Add (Frameworks.MacFrameworks);
+						break;
+					case "MacCatalyst":
+						AllFrameworks.Add (Frameworks.GetMacCatalystFrameworks ());
+						break;
+					default:
+						throw new NotImplementedException (platform);
+					}
+				}
+			}
+			var rv = AllFrameworks.Count (v => v.Any (fw => string.Equals (fw.Key, framework, StringComparison.OrdinalIgnoreCase)));
+			if (rv == 0) // If we could find the framework in our list of framework, assume it's available in all platforms.
+				return AllPlatforms.Count;
+			return rv;
+		}
+	}
+
+	class RawInfo {
+		public string Platform;
+		public HashSet<string> Entries = new HashSet<string> ();
 	}
 }

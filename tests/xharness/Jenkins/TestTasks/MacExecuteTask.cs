@@ -13,8 +13,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Jenkins.TestTasks {
-	class MacExecuteTask : MacTask
-	{
+	class MacExecuteTask : MacTask {
 		protected ICrashSnapshotReporterFactory CrashReportSnapshotFactory { get; }
 
 		public string Path;

@@ -46,6 +46,12 @@ steps:
     simTestsConfigurations: ${{ parameters.simTestsConfigurations }}
     testPrefix: ${{ parameters.testPrefix }}
 
+- ${{ if parameters.isPR }}:
+  - template: ../common/clean.yml
+    parameters:
+      commentToHide: '[comment]: <> (This is a test result report added by Azure DevOps)'
+      checkoutCode: false # we already execute the 'clean.yml' template elsewhere in this job, and running 'checkout' again is useless (it also leads to duplicate step names which Azure DevOps doesn't like).
+
 # build a message with all the content of all tests, to do so, we get the labels and to pass them to pwsh we do a join with ;
 # as the separator
 - pwsh: |

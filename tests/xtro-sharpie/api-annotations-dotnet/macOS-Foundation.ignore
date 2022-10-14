@@ -606,3 +606,7 @@
 !missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetDictionary(Foundation.NSDictionary,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::_SetString(System.String,System.String)' is missing an [NullAllowed] on parameter #0
 !missing-null-allowed! 'System.Void Foundation.NSUbiquitousKeyValueStore::SetObjectForKey(Foundation.NSObject,System.String)' is missing an [NullAllowed] on parameter #0
+
+## these are implemented in a way that xtro doesn't see
+!missing-selector! NSAppleEventDescriptor::initListDescriptor not bound
+!missing-selector! NSAppleEventDescriptor::initRecordDescriptor not bound
