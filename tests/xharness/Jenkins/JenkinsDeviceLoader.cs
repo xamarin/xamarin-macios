@@ -29,7 +29,7 @@ namespace Xharness.Jenkins {
 		}
 
 		static string BuildDevicesDescription (IHardwareDeviceLoader deviceLoader, string name)
-		{ 
+		{
 			var devicesTypes = new StringBuilder ();
 			if (deviceLoader.Connected32BitIOS.Any ()) {
 				devicesTypes.Append ("iOS 32 bit");
@@ -49,7 +49,7 @@ namespace Xharness.Jenkins {
 		static string BuildSimulatorsDescription (ISimulatorLoader simulatorLoader, string name)
 		{
 			var simCount = simulatorLoader.AvailableDevices.Count ();
-			return ( simCount == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok - Found {simCount} simulators).";
+			return (simCount == 0) ? $"{name} Listing (ok - no simulators found)." : $"{name} Listing (ok - Found {simCount} simulators).";
 		}
 
 		Task LoadAsync (ILog log, IDeviceLoader deviceManager, string name)
@@ -63,8 +63,7 @@ namespace Xharness.Jenkins {
 					capturedLog.WriteLine (v.Exception.ToString ());
 					capturedLog.Description = $"{name} Listing {v.Exception.Message})";
 				} else if (v.IsCompleted) {
-					capturedLog.Description = deviceManager switch
-					{
+					capturedLog.Description = deviceManager switch {
 						IHardwareDeviceLoader d => BuildDevicesDescription (d, name),
 						ISimulatorLoader s => BuildSimulatorsDescription (s, name),
 						_ => throw new NotImplementedException (),
