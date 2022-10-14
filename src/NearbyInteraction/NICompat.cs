@@ -38,7 +38,7 @@ namespace NearbyInteraction {
 		public virtual void SetARSession (ARSession session) => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
 
 #if !NET
-	[Obsolete ("This method was removed and will always throw a InvalidOperationException.")]
+		[Obsolete ("This method was removed and will always throw a InvalidOperationException.")]
 #endif
 		public virtual MatrixFloat4x4 GetWorldTransform (NINearbyObject @object) => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
 
