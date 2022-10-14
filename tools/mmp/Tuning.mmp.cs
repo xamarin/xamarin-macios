@@ -180,28 +180,26 @@ namespace MonoMac.Tuner {
 		{
 			return assembly.MainModule.FileName;
 		}
-		
+
 		static ResolveFromXmlStep GetResolveStep (string filename)
 		{
 			filename = Path.GetFullPath (filename);
-			
+
 			if (!File.Exists (filename))
 				throw new ProductException (2004, true, Errors.MX2004, filename);
-			
+
 			try {
 				using (StreamReader sr = new StreamReader (filename)) {
 					return new ResolveFromXmlStep (new XPathDocument (new StringReader (sr.ReadToEnd ())));
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new ProductException (2005, true, e, Errors.MX2005, filename);
 			}
 		}
 	}
 
 
-	public class CustomizeMacActions : CustomizeCoreActions
-	{
+	public class CustomizeMacActions : CustomizeCoreActions {
 		LinkMode link_mode;
 
 		public CustomizeMacActions (LinkMode mode, IEnumerable<string> skipped_assemblies)
@@ -235,15 +233,13 @@ namespace MonoMac.Tuner {
 
 			try {
 				base.ProcessAssembly (assembly);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new ProductException (2103, true, e, Errors.MX2103, assembly.FullName, e);
 			}
 		}
 	}
 
-	class LoadOptionalReferencesStep : LoadReferencesStep
-	{
+	class LoadOptionalReferencesStep : LoadReferencesStep {
 		HashSet<AssemblyNameDefinition> _references = new HashSet<AssemblyNameDefinition> ();
 
 		protected override void ProcessAssembly (AssemblyDefinition assembly)

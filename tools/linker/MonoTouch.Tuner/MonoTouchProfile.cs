@@ -11,7 +11,7 @@ namespace MonoTouch.Tuner {
 			return assemblyName == product_assembly;
 		}
 
-		public override string ProductAssembly { 
+		public override string ProductAssembly {
 			get { return product_assembly; }
 		}
 
