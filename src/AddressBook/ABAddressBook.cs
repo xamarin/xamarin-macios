@@ -55,19 +55,19 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
 #endif
 	public class ExternalChangeEventArgs : EventArgs {
 		public ExternalChangeEventArgs (ABAddressBook addressBook, NSDictionary? info)
 		{
 			AddressBook = addressBook;
-			Info        = info;
+			Info = info;
 		}
 
-		public ABAddressBook AddressBook {get; private set;}
-		public NSDictionary? Info {get; private set;}
+		public ABAddressBook AddressBook { get; private set; }
+		public NSDictionary? Info { get; private set; }
 	}
 
 	// Quoth the docs: 
@@ -83,7 +83,7 @@ namespace AddressBook {
 	// It make sense since it's not possible to call those functions, from 6.0+ they will return NULL on devices,
 	// unless the application has been authorized to access the address book.
 	static class InitConstants {
-		public static void Init () {}
+		public static void Init () { }
 
 		static InitConstants ()
 		{
@@ -125,9 +125,9 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
 #endif
 	public class ABAddressBook : NativeObject, IEnumerable<ABRecord> {
 
@@ -148,7 +148,7 @@ namespace AddressBook {
 		[Obsolete ("Starting with ios6.0 use the static Create method instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[Deprecated (PlatformName.iOS, 6, 0, message : "Use the static Create method instead")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use the static Create method instead")]
 #endif
 		public ABAddressBook ()
 			: this (ABAddressBookCreate (), true)
@@ -161,14 +161,14 @@ namespace AddressBook {
 		public static ABAddressBook? Create (out NSError? error)
 		{
 			var handle = ABAddressBookCreateWithOptions (IntPtr.Zero, out var e);
-			if (handle == IntPtr.Zero){
+			if (handle == IntPtr.Zero) {
 				error = Runtime.GetNSObject<NSError> (e);
 				return null;
 			}
 			error = null;
 			return new ABAddressBook (handle, true);
 		}
-			
+
 		[Preserve (Conditional = true)]
 		internal ABAddressBook (NativeHandle handle, bool owns)
 			: base (handle, owns)
@@ -193,14 +193,14 @@ namespace AddressBook {
 
 		public static ABAuthorizationStatus GetAuthorizationStatus ()
 		{
-			return (ABAuthorizationStatus)(long)ABAddressBookGetAuthorizationStatus ();
+			return (ABAuthorizationStatus) (long) ABAddressBookGetAuthorizationStatus ();
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static void ABAddressBookRequestAccessWithCompletion (IntPtr addressbook, ref BlockLiteral completion);
 
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		public void RequestAccess (Action<bool,NSError?> onCompleted)
+		public void RequestAccess (Action<bool, NSError?> onCompleted)
 		{
 			if (onCompleted is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompleted));
@@ -216,7 +216,7 @@ namespace AddressBook {
 		[MonoPInvokeCallback (typeof (InnerCompleted))]
 		static unsafe void TrampolineCompletionHandler (IntPtr block, bool success, IntPtr error)
 		{
-			var descriptor = (BlockLiteral *) block;
+			var descriptor = (BlockLiteral*) block;
 			var del = descriptor->Target as Action<bool, NSError?>;
 			if (del is not null)
 				del (success, Runtime.GetNSObject<NSError> (error));
@@ -309,7 +309,7 @@ namespace AddressBook {
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			var cfArrayRef = ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering (GetCheckedHandle (), source.Handle, sortOrdering);
 			return NSArray.ArrayFromHandle (cfArrayRef, l => new ABPerson (l, this));
-		}		
+		}
 
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static nint ABAddressBookGetGroupCount (IntPtr addressBook);
@@ -330,7 +330,7 @@ namespace AddressBook {
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr ABAddressBookCopyArrayOfAllGroupsInSource (IntPtr addressBook, IntPtr source);
 
-		public ABGroup[] GetGroups (ABRecord source)
+		public ABGroup [] GetGroups (ABRecord source)
 		{
 			if (source is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
@@ -365,8 +365,8 @@ namespace AddressBook {
 			if (self is null)
 				return;
 			self.OnExternalChange (new ExternalChangeEventArgs (
-					       new ABAddressBook (addressBook, false),
-					       Runtime.GetNSObject<NSDictionary> (info)));
+						   new ABAddressBook (addressBook, false),
+						   Runtime.GetNSObject<NSDictionary> (info)));
 		}
 
 		object eventLock = new object ();
@@ -448,7 +448,7 @@ namespace AddressBook {
 				CFString.ReleaseNative (nameHandle);
 			}
 		}
-		
+
 		// ABSource
 		// http://developer.apple.com/library/IOs/#documentation/AddressBook/Reference/ABSourceRef_iPhoneOS/Reference/reference.html
 
@@ -469,7 +469,7 @@ namespace AddressBook {
 				return null;
 			return new ABSource (h, this);
 		}
-		
+
 		[DllImport (Constants.AddressBookLibrary)]
 		extern static IntPtr /* ABRecordRef */ ABAddressBookGetSourceWithRecordID (IntPtr /* ABAddressBookRef */ addressBook, int /* ABRecordID */ sourceID);
 		public ABSource? GetSource (int sourceID)
