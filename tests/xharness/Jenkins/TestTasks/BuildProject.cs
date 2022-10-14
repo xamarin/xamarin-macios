@@ -59,7 +59,7 @@ namespace Xharness.Jenkins.TestTasks {
 
 			using (var nuget = new Process ()) {
 				nuget.StartInfo.FileName = msbuildPath ();
-				var args = new List<string>();
+				var args = new List<string> ();
 				if (TestProject.IsDotNetProject) {
 					args.Add ("restore");
 					args.Add ("/verbosity:detailed");

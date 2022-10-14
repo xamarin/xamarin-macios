@@ -19,8 +19,7 @@ namespace Xharness.Jenkins {
 
 		public IEnumerator<NUnitExecuteTask> GetEnumerator ()
 		{
-			var netstandard2Project = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj")))
-			{
+			var netstandard2Project = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var env = new Dictionary<string, string>
@@ -50,8 +49,7 @@ namespace Xharness.Jenkins {
 			};
 			yield return nunitExecutioniOSMSBuild;
 
-			var msbuildIntegrationTestsProject = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "Xamarin.MacDev.Tests.csproj")))
-			{
+			var msbuildIntegrationTestsProject = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "Xamarin.MacDev.Tests.csproj"))) {
 				IsDotNetProject = true,
 			};
 			var buildiOSMSBuildIntegration = new MSBuildTask (jenkins: jenkins, testProject: msbuildIntegrationTestsProject, processManager: processManager) {
