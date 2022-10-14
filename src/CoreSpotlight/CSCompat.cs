@@ -1,12 +1,11 @@
 // Compatibility stubs
 
-#if !NET && IOS
-
 using System;
 using ObjCRuntime;
 
 namespace CoreSpotlight {
 
+#if !NET && IOS
 	partial class CSCustomAttributeKey {
 
 		[Obsolete ("Use .ctor(string)")]
@@ -14,6 +13,7 @@ namespace CoreSpotlight {
 		{
 		}
 	}
+#endif
 
 #if !TV
 	public partial class CSSearchQueryContext {
@@ -33,4 +33,3 @@ namespace CoreSpotlight {
 #endif
 }
 
-#endif
