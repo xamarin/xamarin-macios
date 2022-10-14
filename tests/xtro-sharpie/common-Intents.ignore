@@ -7,13 +7,9 @@
 !incorrect-protocol-member! INSpeakable::vocabularyIdentifier is REQUIRED and should be abstract
 
 ## The following were deprecated in ios(10.0, 10.0)
-!missing-selector! INRideOption::identifier not bound
-!missing-selector! INRideOption::setIdentifier: not bound
 
 ## INPayBillIntentHandling && INSearchForBillsIntentHandling are new protocols added in iOS 10.3. This two protocols
 ## were added to the existing Protocol INPaymentsDomainHandling so making this two required would be a breaking change
-!incorrect-protocol-member! INPayBillIntentHandling::handlePayBill:completion: is REQUIRED and should be abstract
-!incorrect-protocol-member! INSearchForBillsIntentHandling::handleSearchForBills:completion: is REQUIRED and should be abstract
 
 ## Apple made this @optional in iOS 11 but this is a breaking change
 !incorrect-protocol-member! INSpeakable::identifier is OPTIONAL and should NOT be abstract
@@ -27,7 +23,6 @@
 
 ## unsorted
 
-!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound
 
 ## Research required before we can bind the following ones
 !missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat: not bound

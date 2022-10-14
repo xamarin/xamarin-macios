@@ -17,8 +17,7 @@ using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
 
-	public partial class Application
-	{
+	public partial class Application {
 		public string ProductName = "Xamarin.iOS";
 
 		public string ExecutableName;
@@ -51,7 +50,7 @@ namespace Xamarin.Bundler {
 
 		public bool LinkAway = true;
 		public bool LinkerDumpDependencies { get; set; }
-		
+
 		public bool? BuildDSym;
 
 		// If we didn't link the final executable because the existing binary is up-to-date.
@@ -172,7 +171,7 @@ namespace Xamarin.Bundler {
 				}
 				return;
 			}
-			
+
 			if (assembly_build_targets.Count == 0) {
 				// The logic here must match the logic in 'ContainsGroupedSdkAssemblyBuildTarget' (because we will execute 'ContainsGroupedSdkAssemblyBuildTargets' before this is executed)
 				assembly_build_targets.Add ("@all", new Tuple<AssemblyBuildTarget, string> (AssemblyBuildTarget.StaticObject, ""));
@@ -221,7 +220,7 @@ namespace Xamarin.Bundler {
 
 					if (exceptions == null)
 						exceptions = new List<Exception> ();
-					exceptions.Add (ErrorHelper.CreateError (108, Errors.MT0108,  abt.Key));
+					exceptions.Add (ErrorHelper.CreateError (108, Errors.MT0108, abt.Key));
 				}
 
 				if (exceptions != null)
@@ -476,21 +475,21 @@ namespace Xamarin.Bundler {
 				// We can probably lift this requirement (at least partially) at some point,
 				// but for now it makes our code simpler.
 				if (assembly_build_targets.Count != appex.assembly_build_targets.Count) {
-					ErrorHelper.Warning (113, Errors.MT0113,appex.Name, String.Format (Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_b, FormatAssemblyBuildTargets (), appex.FormatAssemblyBuildTargets ()));
 					continue;
 				}
 
 				foreach (var key in assembly_build_targets.Keys) {
 					Tuple<AssemblyBuildTarget, string> appex_value;
 					if (!appex.assembly_build_targets.TryGetValue (key, out appex_value)) {
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_b, FormatAssemblyBuildTargets (), appex.FormatAssemblyBuildTargets ()));
 						applicable = false;
 						break;
 					}
 
 					var value = assembly_build_targets [key];
 					if (value.Item1 != appex_value.Item1 || value.Item2 != appex_value.Item2) {
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_b, FormatAssemblyBuildTargets(), appex.FormatAssemblyBuildTargets()));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_b, FormatAssemblyBuildTargets (), appex.FormatAssemblyBuildTargets ()));
 						applicable = false;
 						break;
 					}
@@ -498,7 +497,7 @@ namespace Xamarin.Bundler {
 
 				if (!applicable)
 					continue;
-				
+
 				// No I18N assemblies can be included
 				if (appex.I18n != Mono.Linker.I18nAssemblies.None) {
 					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_c, I18n, appex.I18n));
@@ -514,7 +513,7 @@ namespace Xamarin.Bundler {
 				}
 
 				if (!CompareLists (AotOtherArguments, appex.AotOtherArguments)) {
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_e, StringUtils.FormatArguments(AotOtherArguments), StringUtils.FormatArguments(appex.AotOtherArguments)));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_e, StringUtils.FormatArguments (AotOtherArguments), StringUtils.FormatArguments (appex.AotOtherArguments)));
 					continue;
 				}
 
@@ -531,17 +530,17 @@ namespace Xamarin.Bundler {
 				if (LinkMode != LinkMode.None) {
 					var linkskipped_same = !LinkSkipped.Except (appex.LinkSkipped).Any () && !appex.LinkSkipped.Except (LinkSkipped).Any ();
 					if (!linkskipped_same) {
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_h, string.Join(", ", LinkSkipped), string.Join(", ", appex.LinkSkipped)));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_h, string.Join (", ", LinkSkipped), string.Join (", ", appex.LinkSkipped)));
 						continue;
 					}
 
 					if (Definitions.Count > 0) {
-						ErrorHelper.Warning (112, Errors.MT0112, String.Format (Errors.MT0112_c, string.Join(", ", Definitions)));
+						ErrorHelper.Warning (112, Errors.MT0112, String.Format (Errors.MT0112_c, string.Join (", ", Definitions)));
 						continue;
 					}
 
 					if (appex.Definitions.Count > 0) {
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_i, string.Join(", ", appex.Definitions)));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_i, string.Join (", ", appex.Definitions)));
 						continue;
 					}
 				}
@@ -553,7 +552,7 @@ namespace Xamarin.Bundler {
 					var appAssemblies = new HashSet<string> (InterpretedAssemblies);
 					var appexAssemblies = new HashSet<string> (appex.InterpretedAssemblies);
 					if (!appAssemblies.SetEquals (appexAssemblies)) {
-						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_k, (InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join(", ", InterpretedAssemblies)), (appex.InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join(", ", appex.InterpretedAssemblies))));
+						ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_k, (InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join (", ", InterpretedAssemblies)), (appex.InterpretedAssemblies.Count == 0 ? "all assemblies" : string.Join (", ", appex.InterpretedAssemblies))));
 						continue;
 					}
 				}
@@ -581,7 +580,7 @@ namespace Xamarin.Bundler {
 							return "default";
 						return v.Value ? "true" : "false";
 					};
-					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_n, bool_tostr(appex.Optimizations.RemoveDynamicRegistrar), bool_tostr(Optimizations.RemoveDynamicRegistrar)));
+					ErrorHelper.Warning (113, Errors.MT0113, appex.Name, String.Format (Errors.MT0113_n, bool_tostr (appex.Optimizations.RemoveDynamicRegistrar), bool_tostr (Optimizations.RemoveDynamicRegistrar)));
 					continue;
 				}
 
@@ -709,7 +708,7 @@ namespace Xamarin.Bundler {
 				References.Add (Path.Combine (Driver.GetPlatformFrameworkDirectory (this), Driver.GetProductAssembly (this) + ".dll"));
 			}
 
-			((MonoTouchProfile)Profile.Current).SetProductAssembly (Driver.GetProductAssembly (this));
+			((MonoTouchProfile) Profile.Current).SetProductAssembly (Driver.GetProductAssembly (this));
 
 			var FrameworkDirectory = Driver.GetPlatformFrameworkDirectory (this);
 			foreach (var root in RootAssemblies) {
@@ -783,7 +782,7 @@ namespace Xamarin.Bundler {
 			if (ExecutableName != Path.GetFileNameWithoutExtension (AppDirectory))
 				ErrorHelper.Warning (30, Errors.MT0030,
 					ExecutableName, Path.GetFileName (AppDirectory));
-			
+
 			if (IsExtension && Platform == ApplePlatform.iOS && SdkVersion < new Version (8, 0))
 				throw new ProductException (45, true, Errors.MT0045);
 
@@ -792,7 +791,7 @@ namespace Xamarin.Bundler {
 
 			if (!IsExtension && Platform == ApplePlatform.WatchOS)
 				throw new ProductException (77, true, Errors.MT0077);
-		
+
 			if (!enable_msym.HasValue)
 				enable_msym = !EnableDebug && IsDeviceBuild;
 
@@ -827,7 +826,7 @@ namespace Xamarin.Bundler {
 
 			if (!UseMonoFramework.HasValue)
 				UseMonoFramework = false;
-			
+
 			if (UseMonoFramework.Value)
 				Frameworks.Add (Path.Combine (Driver.GetMonoFrameworksDirectory (this), "Mono.framework"));
 
@@ -939,7 +938,7 @@ namespace Xamarin.Bundler {
 		void ProcessAssemblies ()
 		{
 			// This can be parallelized once we determine the linker doesn't use any static state.
-			foreach (var target in Targets)	{
+			foreach (var target in Targets) {
 				if (target.CanWeSymlinkTheApplication ()) {
 					target.Symlink ();
 				} else {
@@ -1037,20 +1036,19 @@ namespace Xamarin.Bundler {
 
 			try {
 				if (p.Start ()) {
-					var error = p.StandardError.ReadToEnd();
+					var error = p.StandardError.ReadToEnd ();
 					p.WaitForExit ();
 					if (p.ExitCode == 0)
 						return;
 					else {
-						ErrorHelper.Warning (95, Errors.MT0095, dest, error); 
+						ErrorHelper.Warning (95, Errors.MT0095, dest, error);
 						return;
 					}
 				}
 
 				ErrorHelper.Warning (95, Errors.MT0095_A, dest);
 				return;
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				ErrorHelper.Warning (95, e, Errors.MT0095_A, dest);
 				return;
 			}
@@ -1078,7 +1076,7 @@ namespace Xamarin.Bundler {
 			// Collect files to bundle from every target
 			if (Targets.Count == 1) {
 				bundle_files = Targets [0].BundleFiles;
-				require_mono_native = Targets[0].MonoNative.RequireMonoNative;
+				require_mono_native = Targets [0].MonoNative.RequireMonoNative;
 			} else {
 				foreach (var target in Targets) {
 					foreach (var kvp in target.BundleFiles) {
@@ -1145,7 +1143,7 @@ namespace Xamarin.Bundler {
 					continue; // Don't copy frameworks to app extensions (except watch extensions), they go into the container app.
 
 				if (!files.All ((v) => Directory.Exists (v) == isFramework))
-					throw ErrorHelper.CreateError (99, Errors.MX0099, $"'can't process a mix of dylibs and frameworks: {string.Join(", ", files)}'");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, $"'can't process a mix of dylibs and frameworks: {string.Join (", ", files)}'");
 
 				if (isFramework) {
 					var targetPath = Path.Combine (FrameworksDirectory, name);
@@ -1170,7 +1168,7 @@ namespace Xamarin.Bundler {
 						throw new AggregateException (exceptions);
 					}
 					if (info.DylibToFramework)
-						throw ErrorHelper.CreateError (99, Errors.MX0099, $"'can't convert frameworks to frameworks: {files.First()}'");
+						throw ErrorHelper.CreateError (99, Errors.MX0099, $"'can't convert frameworks to frameworks: {files.First ()}'");
 					var framework_src = files.First ();
 					if (VerifyDynamicFramework (framework_src)) {
 						var macho_file = Path.Combine (targetPath, Path.GetFileNameWithoutExtension (framework_src));
@@ -1289,7 +1287,7 @@ namespace Xamarin.Bundler {
 		{
 			foreach (var t in Targets) {
 				foreach (var a in t.Assemblies) {
-					if (a.EnableCxx) {	
+					if (a.EnableCxx) {
 						EnableCxx = true;
 						break;
 					}
@@ -1333,7 +1331,7 @@ namespace Xamarin.Bundler {
 		// it will also look for symbol-not-found errors and try to provide useful error messages.
 		public static void ProcessNativeLinkerOutput (Target target, string output, IEnumerable<string> inputs, List<Exception> errors, bool error)
 		{
-			List<string> lines = new List<string> (output.Split (new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+			List<string> lines = new List<string> (output.Split (new string [] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
 
 			// filter
 			for (int i = 0; i < lines.Count; i++) {
@@ -1342,10 +1340,10 @@ namespace Xamarin.Bundler {
 				if (errors.Count > 100)
 					return;
 
-				if (line.Contains ("ld: warning: ignoring file ") && 
-					line.Contains ("file was built for") && 
+				if (line.Contains ("ld: warning: ignoring file ") &&
+					line.Contains ("file was built for") &&
 					line.Contains ("which is not the architecture being linked") &&
-				// Only ignore warnings related to the object files we've built ourselves (assemblies, main.m, registrar.m)
+					// Only ignore warnings related to the object files we've built ourselves (assemblies, main.m, registrar.m)
 					inputs.Any ((v) => line.Contains (v))) {
 					continue;
 				} else if (line.Contains ("ld: symbol(s) not found for architecture") && errors.Count > 0) {
@@ -1357,7 +1355,7 @@ namespace Xamarin.Bundler {
 				} else if (line.Contains ("was built with class_ro_t pointer signing enabled, but previous .o files were not")) {
 					// https://github.com/xamarin/xamarin-macios/issues/14601
 					continue;
-				} else if (line.Contains ("was built for newer iOS version (7.0) than being linked (6.0)") && 
+				} else if (line.Contains ("was built for newer iOS version (7.0) than being linked (6.0)") &&
 					line.Contains (Driver.GetProductSdkDirectory (target.App))) {
 					continue;
 				} else if (line.Contains ("was built for newer watchOS version (5.1) than being linked (2.0)") &&
@@ -1380,7 +1378,7 @@ namespace Xamarin.Bundler {
 							var members = target.GetAllSymbols ().Find (symbol.Substring (1))?.Members;
 							if (members != null && members.Any ()) {
 								var member = members.First (); // Just report the first one.
-								// Neither P/Invokes nor fields have IL, so we can't find the source code location.
+															   // Neither P/Invokes nor fields have IL, so we can't find the source code location.
 								errors.Add (new ProductException (5214, error, Errors.MT5214,
 									symbol, member.DeclaringType.FullName, member.Name));
 							} else {
@@ -1475,7 +1473,7 @@ namespace Xamarin.Bundler {
 			if (String.IsNullOrEmpty (target_directory))
 				throw new ArgumentNullException (nameof (target_directory));
 			var root = new XElement ("mono-debug",
-				new XAttribute("version", 1),
+				new XAttribute ("version", 1),
 				new XElement ("app-id", BundleId),
 				new XElement ("build-date", DateTime.Now.ToString ("O")));
 
@@ -1513,7 +1511,7 @@ namespace Xamarin.Bundler {
 				ErrorHelper.Warning (95, Errors.MT0095_B, dest);
 				return;
 			}
-				
+
 			var dir = new DirectoryInfo (src);
 			if (!dir.Exists) {
 				ErrorHelper.Warning (95, Errors.MT0095_B, dest);
@@ -1523,7 +1521,7 @@ namespace Xamarin.Bundler {
 			var dirs = dir.GetDirectories ();
 			if (!Directory.Exists (dest))
 				Directory.CreateDirectory (dest);
-				
+
 			var files = dir.GetFiles ();
 			foreach (var file in files) {
 				var tmp = Path.Combine (dest, file.Name);
@@ -1557,12 +1555,12 @@ namespace Xamarin.Bundler {
 				}
 				// copy aot data must be done BEFORE we do copy the msym one
 				CopyAotData (msymdir, target_directory);
-				
+
 				// copy all assemblies under mvid and with the dll and mdb/pdb
-				var tmpdir =  Path.Combine (msymdir, "Msym", "tmp");
+				var tmpdir = Path.Combine (msymdir, "Msym", "tmp");
 				if (!Directory.Exists (tmpdir))
 					Directory.CreateDirectory (tmpdir);
-					
+
 				foreach (var asm in target.Assemblies) {
 					asm.CopyToDirectory (tmpdir, reload: false, only_copy: true);
 					asm.CopyAotDataFilesToDirectory (tmpdir);
@@ -1589,7 +1587,7 @@ namespace Xamarin.Bundler {
 			if (!cached_dsym) {
 				if (Directory.Exists (dsym_dir))
 					Directory.Delete (dsym_dir, true);
-				
+
 				Driver.CreateDsym (this, AppDirectory, ExecutableName, dsym_dir);
 			} else {
 				Driver.Log (3, "Target '{0}' is up-to-date.", dsym_dir);
@@ -1647,8 +1645,7 @@ namespace Xamarin.Bundler {
 
 		public void BundleAssemblies ()
 		{
-			Assembly.StripAssembly strip = ((path) => 
-			{
+			Assembly.StripAssembly strip = ((path) => {
 				if (!ManagedStrip)
 					return false;
 				if (!IsDeviceBuild)
@@ -1680,7 +1677,7 @@ namespace Xamarin.Bundler {
 					var codeShared = assemblies.Count ((v) => v.IsCodeShared || v.BundleInContainerApp);
 					if (codeShared > 0) {
 						if (codeShared != assemblies.Length)
-							throw ErrorHelper.CreateError (99, Errors.MX0099, $"all assemblies in a joined build target must have the same code sharing options ({string.Join(", ", assemblies.Select((v) => v.Identity + "=" + v.IsCodeShared))})");
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"all assemblies in a joined build target must have the same code sharing options ({string.Join (", ", assemblies.Select ((v) => v.Identity + "=" + v.IsCodeShared))})");
 
 						continue; // These resources will be found in the main app.
 					}

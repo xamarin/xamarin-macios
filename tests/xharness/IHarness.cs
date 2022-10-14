@@ -11,8 +11,8 @@ namespace Xharness {
 	/// <summary>
 	/// Interface that represents the harness class that contains all the needed info to execute the tests.
 	/// </summary>
-	public interface  IHarness {
-		
+	public interface IHarness {
+
 		#region Properties
 		HarnessAction Action { get; }
 		IFileBackedLog HarnessLog { get; set; }
@@ -31,13 +31,13 @@ namespace Xharness {
 		string TodayContainerTemplate { get; }
 		string TodayExtensionTemplate { get; }
 		string BCLTodayExtensionTemplate { get; }
-		string MONO_PATH { get; } 
-		string TVOS_MONO_PATH { get; } 
+		string MONO_PATH { get; }
+		string TVOS_MONO_PATH { get; }
 		bool INCLUDE_IOS { get; }
 		bool INCLUDE_TVOS { get; }
 		bool INCLUDE_WATCH { get; }
 		bool INCLUDE_MAC { get; }
-		string JENKINS_RESULTS_DIRECTORY { get; } 
+		string JENKINS_RESULTS_DIRECTORY { get; }
 		string MAC_DESTDIR { get; }
 		string IOS_DESTDIR { get; }
 		string MONO_IOS_SDK_DESTDIR { get; }
@@ -45,12 +45,12 @@ namespace Xharness {
 		bool ENABLE_DOTNET { get; }
 		bool INCLUDE_XAMARIN_LEGACY { get; }
 		string XcodeRoot { get; }
-		string LogDirectory { get; } 
+		string LogDirectory { get; }
 		double Timeout { get; }
 		double LaunchTimeout { get; } // in minutes
 		bool DryRun { get; } // Most things don't support this. If you need it somewhere, implement it!
 		string JenkinsConfiguration { get; }
-		Dictionary<string, string> EnvironmentVariables { get; } 
+		Dictionary<string, string> EnvironmentVariables { get; }
 		string MarkdownSummaryPath { get; }
 		string PeriodicCommand { get; }
 		string PeriodicCommandArguments { get; }
@@ -63,7 +63,7 @@ namespace Xharness {
 		bool DisableWatchOSOnWrench { get; }
 
 		#endregion
-		
+
 		#region methods
 
 		bool GetIncludeSystemPermissionTests (TestPlatform platform, bool device);

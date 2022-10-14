@@ -83,6 +83,17 @@ jobs:
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
+    DOTNET_PLATFORMS: $[ dependencies.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
+    ENABLE_DOTNET: $[ dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
+    INCLUDE_DOTNET_IOS: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
+    INCLUDE_DOTNET_MACCATALYST: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
+    INCLUDE_DOTNET_MACOS: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+    INCLUDE_DOTNET_TVOS: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
+    INCLUDE_LEGACY_IOS: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ]
+    INCLUDE_LEGACY_MAC: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ]
+    INCLUDE_LEGACY_TVOS: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_TVOS'] ]
+    INCLUDE_LEGACY_WATCH: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_WATCH'] ]
+    INCLUDE_XAMARIN_LEGACY: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
     ${{ if eq(parameters.pool, 'automatic') }}:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:

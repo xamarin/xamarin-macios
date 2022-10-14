@@ -11,8 +11,6 @@
 !missing-pinvoke! SCNMatrix4Scale is not bound
 !missing-pinvoke! SCNVector3EqualToVector3 is not bound
 !missing-pinvoke! SCNVector4EqualToVector4 is not bound
-!missing-pinvoke! SCNMatrix4FromGLKMatrix4 is not bound
-!missing-pinvoke! SCNMatrix4ToGLKMatrix4 is not bound
 
 !missing-selector! +SCNNode::simdLocalFront not bound
 !missing-selector! +SCNNode::simdLocalRight not bound

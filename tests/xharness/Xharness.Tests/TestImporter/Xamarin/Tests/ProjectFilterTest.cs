@@ -49,8 +49,7 @@ namespace Xharness.Tests.TestImporter.Xamarin.Tests {
 		Mock<IAssemblyLocator> assemblyLocator;
 		ProjectFilter projectFilter;
 
-		string GetTraitExpectedPath (Platform platform) => platform switch
-		{
+		string GetTraitExpectedPath (Platform platform) => platform switch {
 			Platform.iOS => Path.Combine (traitsFilesRootDir, "ios-bcl", "monotouch", "tests"),
 			Platform.TvOS => Path.Combine (traitsFilesRootDir, "ios-bcl", "monotouch_tv", "tests"),
 			Platform.WatchOS => Path.Combine (traitsFilesRootDir, "ios-bcl", "monotouch_watch", "tests"),
