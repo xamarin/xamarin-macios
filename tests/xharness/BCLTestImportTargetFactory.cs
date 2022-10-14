@@ -14,11 +14,11 @@ namespace Xharness {
 	public class BCLTestImportTargetFactory {
 
 		// less typing
-		class ProjectsDefinitions : Dictionary<string, (string ExtraArgs, double TimeoutMultiplier, (string Name, string [] Assemblies) [] Projects)> { } 
+		class ProjectsDefinitions : Dictionary<string, (string ExtraArgs, double TimeoutMultiplier, (string Name, string [] Assemblies) [] Projects)> { }
 
 		// we have two different types of list, those that are for the iOS like projects (ios, tvos and watch os) and those 
 		// for mac
-		static readonly ProjectsDefinitions commoniOSTestProjects = new ProjectsDefinitions { 
+		static readonly ProjectsDefinitions commoniOSTestProjects = new ProjectsDefinitions {
 			// NUNIT TESTS
 
 			["BCL tests group 1"] = (
@@ -125,11 +125,11 @@ namespace Xharness {
 				ExtraArgs: $"--xml={Path.Combine (HarnessConfiguration.RootDirectory, "bcl-test", "SystemXunitLinker.xml")} --optimize=-custom-attributes-removal", // special case due to the need of the extra args,
 				TimeoutMultiplier: 1,
 				Projects: new [] {
-					( Name: "SystemXunit", Assemblies: new [] { "monotouch_System_xunit-test.dll" }), 
+					( Name: "SystemXunit", Assemblies: new [] { "monotouch_System_xunit-test.dll" }),
 			}),
 		};
 
-		private static readonly ProjectsDefinitions macTestProjects = new ProjectsDefinitions { 
+		private static readonly ProjectsDefinitions macTestProjects = new ProjectsDefinitions {
 
 			// NUNIT Projects
 			["Mac OS X BCL tests group 1"] = (
@@ -210,7 +210,7 @@ namespace Xharness {
 		};
 
 		public bool GroupTests { get; set; }
-		public string OutputDirectoryPath { get; private  set; }
+		public string OutputDirectoryPath { get; private set; }
 		public string MonoRootPath { get; private set; }
 
 		public Func<string, Guid> GuidGenerator {
@@ -268,10 +268,10 @@ namespace Xharness {
 				OutputDirectoryPath = outputDirectory,
 				IgnoreFilesRootDirectory = outputDirectory,
 				ProjectFilter = ProjectFilter,
-				AssemblyDefinitionFactory = AssemblyDefinitionFactory, 
+				AssemblyDefinitionFactory = AssemblyDefinitionFactory,
 			};
 		}
-		
+
 		public BCLTestImportTargetFactory (string outputDirectory, string monoRootPath) : this (outputDirectory)
 		{
 			MonoRootPath = monoRootPath ?? throw new ArgumentNullException (nameof (monoRootPath));
@@ -287,15 +287,15 @@ namespace Xharness {
 		/// <returns></returns>
 		public GeneratedProjects GenerateTestProjects (IEnumerable<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> projects, Platform platform)
 			=> TemplatedProject.GenerateTestProjects (projects, platform);
-		
+
 		List<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> GetProjectDefinitions (ProjectsDefinitions definitions, Platform platform)
 		{
 			var testProjects = new List<(string Name, string [] Assemblies, string ExtraArgs, double TimeoutMultiplier)> ();
-			if (platform == Platform.WatchOS || !GroupTests) { 
+			if (platform == Platform.WatchOS || !GroupTests) {
 				// go over the keys which define the groups, and split them
 				foreach (var groupName in definitions.Keys) {
 					var (ExtraArgs, TimeoutMultiplier, Projects) = definitions [groupName];
-					foreach (var (Name, Assemblies) in Projects) { 
+					foreach (var (Name, Assemblies) in Projects) {
 						testProjects.Add ((Name, Assemblies, ExtraArgs, TimeoutMultiplier));
 					}
 				}

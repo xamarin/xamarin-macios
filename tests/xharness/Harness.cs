@@ -671,7 +671,7 @@ namespace Xharness {
 
 		int Install ()
 		{
-			HarnessLog ??= GetAdHocLog();
+			HarnessLog ??= GetAdHocLog ();
 
 			foreach (var project in IOSTestProjects) {
 				var runner = CreateAppRunner (project);

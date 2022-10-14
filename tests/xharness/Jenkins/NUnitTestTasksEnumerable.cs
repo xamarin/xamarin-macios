@@ -49,7 +49,7 @@ namespace Xharness.Jenkins {
 				SupportsParallelExecution = false,
 			};
 			yield return nunitExecutioniOSMSBuild;
-			
+
 			var msbuildIntegrationTestsProject = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "Xamarin.MacDev.Tests.csproj")))
 			{
 				IsDotNetProject = true,

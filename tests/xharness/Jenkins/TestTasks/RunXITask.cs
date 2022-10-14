@@ -9,8 +9,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness.Jenkins.TestTasks {
-	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice
-	{
+	abstract class RunXITask<TDevice> : RunTestTask where TDevice : class, IDevice {
 		public TestTarget AppRunnerTarget { get; set; }
 
 		public AppRunner Runner { get; set; }
