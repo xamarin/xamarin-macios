@@ -48,7 +48,7 @@ using NativeHandle = System.IntPtr;
 namespace AddressBook {
 	static class ABGroupProperty {
 
-		public static int Name {get; private set;}
+		public static int Name { get; private set; }
 
 		static ABGroupProperty ()
 		{
@@ -71,9 +71,9 @@ namespace AddressBook {
 	[Obsolete ("Starting with ios9.0 use the 'Contacts' API instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
-	[Deprecated (PlatformName.MacCatalyst, 14, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.MacCatalyst, 14, 0, message: "Use the 'Contacts' API instead.")]
 #endif
 	public class ABGroup : ABRecord, IEnumerable<ABRecord> {
 
@@ -105,14 +105,14 @@ namespace AddressBook {
 		}
 
 		internal ABGroup (NativeHandle handle, ABAddressBook addressbook)
-        	: base (handle, false)
+			: base (handle, false)
 		{
 			AddressBook = addressbook;
 		}
 
 		public string? Name {
 			get { return PropertyToString (ABGroupProperty.Name); }
-			set {SetValue (ABGroupProperty.Name, value);}
+			set { SetValue (ABGroupProperty.Name, value); }
 		}
 
 		[DllImport (Constants.AddressBookLibrary)]

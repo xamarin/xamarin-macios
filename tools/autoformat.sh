@@ -30,6 +30,8 @@ dotnet format whitespace "$SRC_DIR/tests/xtro-sharpie/xtro-sanity/xtro-sanity.cs
 dotnet format whitespace --folder "$SRC_DIR/src/Accelerate"
 dotnet format whitespace --folder "$SRC_DIR/src/Accessibility"
 dotnet format whitespace --folder "$SRC_DIR/src/Accounts"
+dotnet format whitespace --folder "$SRC_DIR/src/AddressBook"
+dotnet format whitespace --folder "$SRC_DIR/src/AddressBookUI"
 
 # dotnet format "$SRC_DIR/[...]"
 # add more projects here...
