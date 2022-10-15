@@ -138,6 +138,7 @@ namespace Xharness {
 		public bool INCLUDE_TVOS { get; }
 		public bool INCLUDE_WATCH { get; }
 		public bool INCLUDE_MAC { get; }
+		public bool INCLUDE_MACCATALYST { get; }
 		public string JENKINS_RESULTS_DIRECTORY { get; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; }
 		public string IOS_DESTDIR { get; }
@@ -211,6 +212,7 @@ namespace Xharness {
 			JENKINS_RESULTS_DIRECTORY = config ["JENKINS_RESULTS_DIRECTORY"];
 			INCLUDE_WATCH = config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (config ["INCLUDE_WATCH"]);
 			INCLUDE_MAC = config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (config ["INCLUDE_MAC"]);
+			INCLUDE_MACCATALYST = config.ContainsKey ("INCLUDE_MACCATALYST") && !string.IsNullOrEmpty (config ["INCLUDE_MACCATALYST"]);
 			MAC_DESTDIR = config ["MAC_DESTDIR"];
 
 			IOS_DESTDIR = config ["IOS_DESTDIR"];

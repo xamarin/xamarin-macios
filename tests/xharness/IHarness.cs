@@ -37,6 +37,7 @@ namespace Xharness {
 		bool INCLUDE_TVOS { get; }
 		bool INCLUDE_WATCH { get; }
 		bool INCLUDE_MAC { get; }
+		bool INCLUDE_MACCATALYST { get; }
 		string JENKINS_RESULTS_DIRECTORY { get; }
 		string MAC_DESTDIR { get; }
 		string IOS_DESTDIR { get; }
