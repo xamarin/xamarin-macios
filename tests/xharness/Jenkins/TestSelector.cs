@@ -265,6 +265,11 @@ namespace Xharness.Jenkins {
 				selection.SetEnabled (PlatformLabel.Mac, false);
 			}
 
+			if (!Harness.INCLUDE_MACCATALYST) {
+				MainLog?.WriteLine ("The Mac Catalyst build is disabled, so any Mac Catalyst tests will be disabled as well.");
+				selection.SetEnabled (PlatformLabel.MacCatalyst, false);
+			}
+
 			if (!Harness.ENABLE_DOTNET) {
 				MainLog?.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
 				selection.SetEnabled (PlatformLabel.Dotnet, false);
