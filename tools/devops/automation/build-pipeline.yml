@@ -85,7 +85,7 @@ parameters:
       stageName: 'ios64b_device',
       displayName: 'iOS64 Device Tests',
       testPool: 'VSEng-Xamarin-Mac-Devices',
-      useXamarinStorage: False,
+      useXamarinStorage: false,
       testsLabels: '--label=run-ios-64-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests iOS',
       makeTarget: 'vsts-device-tests',
@@ -98,7 +98,7 @@ parameters:
       stageName: 'tvos_device',
       displayName: 'tvOS Device Tests',
       testPool: 'VSEng-Xamarin-Mac-Devices',
-      useXamarinStorage: False,
+      useXamarinStorage: false,
       testsLabels: '--label=run-tvos-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests',
       statusContext: 'VSTS: device tests tvOS',
       makeTarget: 'vsts-device-tests',
@@ -206,7 +206,6 @@ stages:
     deviceTestsConfigurations: ${{ parameters.deviceTestsConfigurations }}
     macTestsConfigurations: ${{ parameters.macTestsConfigurations }}
     signingSetupSteps:
-      - template: ./templates/sign-and-notarized/setup.yml
-        parameters:
-          isPR: false
-
+    - template: ./templates/sign-and-notarized/setup.yml
+      parameters:
+        isPR: false

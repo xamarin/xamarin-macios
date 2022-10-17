@@ -189,7 +189,7 @@ stages:
     displayName: 'GitHub comment - Skipped tests'
     timeoutInMinutes: 1000
     dependsOn: # has to wait for the tests to be done AND the data to be uploaded
-    -  configure
+    - configure
 
     pool:
       vmImage: 'windows-latest'
