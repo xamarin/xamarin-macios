@@ -10,7 +10,7 @@ jobs:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/sudo backport')
 
     steps:
-      - uses: xamarin/backport-bot-action@v1.0
+      - uses: xamarin/backport-bot-action@v1.1
         with:
           pull_request_url: ${{ github.event.issue.pull_request.url }}
           comment_body: ${{ github.event.comment.body }}
