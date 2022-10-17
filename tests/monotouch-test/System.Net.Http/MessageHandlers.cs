@@ -11,6 +11,7 @@ using System.Net;
 using System.Net.Http;
 #if NET
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 #endif
 using System.Linq;
 using System.IO;
@@ -545,6 +546,98 @@ namespace MonoTests.System.Net.Http
 				}
 			}
 		}
+
+#if NET
+		[TestCase ("https://self-signed.badssl.com/")]
+		[TestCase ("https://wrong.host.badssl.com/")]
+		public void AcceptSslCertificatesWithCustomValidationCallbackNSUrlSessionHandler (string url)
+		{
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+
+			bool callbackWasExecuted = false;
+			bool done = false;
+			Exception ex = null;
+			HttpResponseMessage result = null;
+			X509Certificate2 serverCertificate = null;
+			SslPolicyErrors sslPolicyErrors = SslPolicyErrors.None;
+
+			var handler = new NSUrlSessionHandler {
+				ServerCertificateCustomValidationCallback = (request, certificate, chain, errors) => {
+					callbackWasExecuted = true;
+					serverCertificate = certificate;
+					sslPolicyErrors = errors;
+					return true;
+				}
+			};
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
+			{
+				try {
+					var client = new HttpClient (handler);
+					result = await client.GetAsync (url);
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				Assert.True (callbackWasExecuted, "Validation Callback called");
+				Assert.AreNotEqual (SslPolicyErrors.None, sslPolicyErrors, "Callback was called with unexpected SslPolicyErrors");
+				Assert.IsNotNull (serverCertificate, "Server certificate is null");
+				Assert.IsNull (ex, "Exception wasn't expected.");
+				Assert.IsNotNull (result, "Result was null");
+				Assert.IsTrue (result.IsSuccessStatusCode, "Status code was not success");
+			}
+		}
+
+		[TestCase ("https://www.microsoft.com/")]
+		public void RejectSslCertificatesWithCustomValidationCallbackNSUrlSessionHandler (string url)
+		{
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+
+			bool callbackWasExecuted = false;
+			bool done = false;
+			Exception ex = null;
+			HttpResponseMessage result = null;
+
+			var handler = new NSUrlSessionHandler {
+				ServerCertificateCustomValidationCallback = (sender, certificate, chain, errors) => {
+					callbackWasExecuted = true;
+					Assert.IsNotNull (certificate);
+					Assert.AreEqual (SslPolicyErrors.None, errors);
+					return false;
+				}
+			};
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
+			{
+				try {
+					var client = new HttpClient (handler);
+					result = await client.GetAsync (url);
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				Assert.True (callbackWasExecuted, "Validation Callback called.");
+				Assert.IsNotNull (ex, result == null ? "Expected exception is missing and got no result." : $"Expected exception but got {result.Content.ReadAsStringAsync ().Result}.");
+				Assert.IsInstanceOf (typeof (HttpRequestException), ex, "Exception type");
+				Assert.IsNotNull (ex.InnerException, "InnerException");
+				Assert.IsInstanceOf (typeof (WebException), ex.InnerException, "InnerException type");
+			}
+		}
+#endif
 
 		[Test]
 		public void AssertDefaultValuesNSUrlSessionHandler ()
