@@ -19,7 +19,7 @@ namespace AVFoundation {
 			[SupportedOSPlatform ("macos")]
 			[SupportedOSPlatform ("maccatalyst")]
 #else
-			[iOS (8,0)]
+			[iOS (8, 0)]
 #endif
 			WithNoConnection,
 		}
@@ -38,7 +38,7 @@ namespace AVFoundation {
 			}
 		}
 
-		public AVCaptureVideoPreviewLayer (AVCaptureSession session) : this (session, InitMode.WithConnection) {}
+		public AVCaptureVideoPreviewLayer (AVCaptureSession session) : this (session, InitMode.WithConnection) { }
 	}
 }
 

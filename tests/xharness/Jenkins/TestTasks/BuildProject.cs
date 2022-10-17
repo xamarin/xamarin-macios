@@ -18,6 +18,7 @@ namespace Xharness.Jenkins.TestTasks {
 		public IEnvManager EnvironmentManager { get; set; }
 		public IEventLogger EventLogger { get; set; }
 		readonly Func<string> msbuildPath;
+		bool? restoreNuGets;
 
 		public string? SolutionPath { get; set; }
 
@@ -31,11 +32,16 @@ namespace Xharness.Jenkins.TestTasks {
 
 		public bool RestoreNugets {
 			get {
+				if (restoreNuGets.HasValue)
+					return restoreNuGets.Value;
 				if (TestProject.IsDotNetProject)
 					return false;
 				if (Platform == TestPlatform.MacCatalyst)
 					return false;
 				return TestProject.RestoreNugetsInProject || !string.IsNullOrEmpty (SolutionPath);
+			}
+			set {
+				restoreNuGets = value;
 			}
 		}
 
@@ -54,13 +60,18 @@ namespace Xharness.Jenkins.TestTasks {
 			using (var nuget = new Process ()) {
 				nuget.StartInfo.FileName = msbuildPath ();
 				var args = new List<string> ();
-				args.Add ("-t");
-				args.Add ("--");
-				args.Add ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget");
-				args.Add ("restore");
+				if (TestProject.IsDotNetProject) {
+					args.Add ("restore");
+					args.Add ("/verbosity:detailed");
+				} else {
+					args.Add ("-t");
+					args.Add ("--");
+					args.Add ("/Library/Frameworks/Mono.framework/Versions/Current/Commands/nuget");
+					args.Add ("restore");
+					args.Add ("-Verbosity");
+					args.Add ("detailed");
+				}
 				args.Add (projectPath);
-				args.Add ("-Verbosity");
-				args.Add ("detailed");
 				nuget.StartInfo.Arguments = StringUtils.FormatArguments (args);
 				EnvironmentManager.SetEnvironmentVariables (nuget);
 				EventLogger.LogEvent (log, "Restoring nugets for {0} ({1}) on path {2}", TestName, Mode, projectPath);
