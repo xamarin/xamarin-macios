@@ -666,7 +666,8 @@ namespace AVFoundation {
 	[Native]
 	public enum AVSpeechSynthesisVoiceQuality : long {
 		Default = 1,
-		Enhanced
+		Enhanced,
+		Premium,
 	}
 
 	[iOS (9, 0)]
