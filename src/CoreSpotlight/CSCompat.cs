@@ -25,7 +25,7 @@ namespace CoreSpotlight {
 		[UnsupportedOSPlatform ("maccatalyst16.1")]
 		[UnsupportedOSPlatform ("macos13.0")]
 #endif
-		public string[] ProtectionClasses { 
+		public virtual string[] ProtectionClasses { 
 			get => null; 
 			set => throw new InvalidOperationException (Constants.ApiRemovedGeneral);
 		}
