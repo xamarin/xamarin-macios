@@ -55,3 +55,5 @@
 !missing-pinvoke! MusicTrackGetDestMIDIEndpoint is not bound
 !missing-pinvoke! MusicTrackSetDestMIDIEndpoint is not bound
 !missing-protocol! AUCocoaUIBase not bound
+!missing-selector! AUAudioUnit::messageChannelFor: not bound
+!missing-protocol! AUMessageChannel not bound

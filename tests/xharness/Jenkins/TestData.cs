@@ -4,8 +4,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
 namespace Xharness.Jenkins {
 
-	class TestData
-	{
+	class TestData {
 		public string Variation;
 		public string MTouchExtraArgs;
 		public string MonoBundlingExtraArgs; // mmp

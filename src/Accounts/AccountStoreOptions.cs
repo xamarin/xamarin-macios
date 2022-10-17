@@ -37,8 +37,7 @@ using System.Runtime.Versioning;
 namespace Accounts {
 
 	// XI specific, not part of ObjC (NSString mapping)
-	public enum ACFacebookAudience
-	{
+	public enum ACFacebookAudience {
 		Everyone = 1,
 		Friends,
 		OnlyMe
@@ -49,8 +48,7 @@ namespace Accounts {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("macos")]
 #endif
-	public class AccountStoreOptions : DictionaryContainer
-	{
+	public class AccountStoreOptions : DictionaryContainer {
 #if !COREBUILD
 		public AccountStoreOptions ()
 			: base (new NSMutableDictionary ())
@@ -71,7 +69,7 @@ namespace Accounts {
 			}
 		}
 
-		public void SetPermissions (ACFacebookAudience audience, params string[] permissions)
+		public void SetPermissions (ACFacebookAudience audience, params string [] permissions)
 		{
 			if (permissions == null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (permissions));
@@ -93,7 +91,7 @@ namespace Accounts {
 				v = ACFacebookAudienceValue.Friends;
 				break;
 			default:
-				throw new ArgumentOutOfRangeException ("audience");				
+				throw new ArgumentOutOfRangeException ("audience");
 			}
 
 			SetNativeValue (ACFacebookKey.Audience, v);

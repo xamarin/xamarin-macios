@@ -17,19 +17,19 @@ namespace AVFoundation {
 	public partial class AVAssetDownloadTask : NSUrlSessionTask {
 
 		// NSURLRequest and NSURLResponse objects are not available for AVAssetDownloadTask
-		public override NSUrlRequest OriginalRequest { 
+		public override NSUrlRequest OriginalRequest {
 			get {
 				throw new NotSupportedException ("OriginalRequest not available for AVAssetDownloadTask");
 			}
 		}
 
-		public override NSUrlRequest CurrentRequest { 
+		public override NSUrlRequest CurrentRequest {
 			get {
 				throw new NotSupportedException ("CurrentRequest not available for AVAssetDownloadTask");
 			}
 		}
 
-		public override NSUrlResponse Response { 
+		public override NSUrlResponse Response {
 			get {
 				throw new NotSupportedException ("Response not available for AVAssetDownloadTask");
 			}
