@@ -2,6 +2,8 @@ TOP=..
 
 include $(TOP)/Make.config
 
+SUBDIRS += devops
+
 ifdef INCLUDE_MAC
 SUBDIRS+=mmp
 endif

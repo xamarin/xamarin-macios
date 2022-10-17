@@ -11,8 +11,7 @@ using Microsoft.Build.Logging.StructuredLogger;
 
 #nullable enable
 
-namespace Xamarin.Tests
-{
+namespace Xamarin.Tests {
 	public class BuildLogEvent {
 		public BuildLogEventType Type;
 
@@ -88,10 +87,10 @@ namespace Xamarin.Tests
 				if (args is ProjectStartedEventArgs psea) {
 					if (psea.Properties != null) {
 						yield return "Initial Properties";
-						var dict =  psea.Properties as IDictionary<string, string>;
+						var dict = psea.Properties as IDictionary<string, string>;
 						if (dict == null) {
 							yield return $"Unknown property dictionary type: {psea.Properties.GetType ().FullName}";
-						} else { 
+						} else {
 							foreach (var prop in dict.OrderBy (v => v.Key))
 								yield return $"{prop.Key} = {prop.Value}";
 						}

@@ -92,6 +92,59 @@ parameters:
   type: stepList
   default: []
 
+- name: packages
+  type: object
+  default: [
+    {
+      job: prepare_packages,
+      displayName: 'Prepare packages',
+      packages: [
+        {
+          job: 'microsoft_ios_sign_notarize',
+          name: 'Microsoft.iOS',
+          pattern: 'Microsoft.iOS.Bundle*.pkg',
+          conditionVariable: "INCLUDE_DOTNET_IOS",
+        },
+        {
+          job: 'microsoft_tvos_sign_notarize',
+          name: 'Microsoft.tvOS',
+          pattern: 'Microsoft.tvOS.Bundle*.pkg',
+          conditionVariable: "INCLUDE_DOTNET_TVOS",
+        },
+        {
+          job: 'microsoft_mac_sign_notarize',
+          name: 'Microsoft.macOS',
+          pattern: 'Microsoft.macOS.Bundle*.pkg',
+          conditionVariable: "INCLUDE_DOTNET_MACOS",
+        },
+        {
+          job: 'microsoft_maccatalyst_sign_notarize',
+          name: 'Microsoft.MacCatalyst',
+          pattern: 'Microsoft.MacCatalyst.Bundle*.pkg',
+          conditionVariable: "INCLUDE_DOTNET_MACCATALYST",
+        },
+      ],
+    },
+    {
+      job: prepare_packages_legacy,
+      displayName: 'Prepare legacy packages',
+      packages: [
+        {
+          job: 'xamarin_ios_sign_notarize',
+          name: 'Xamarin.iOS',
+          pattern: 'xamarin.ios-*',
+          conditionVariable: "INCLUDE_LEGACY_IOS",
+        },
+        {
+          job: 'xamarin_mac_sing_notarie',
+          name: 'Xamarin.Mac',
+          pattern: 'xamarin.mac-*',
+          conditionVariable: "INCLUDE_LEGACY_MAC",
+        },
+      ],
+    }
+  ]
+
 stages:
 
 - ${{ if eq(parameters.runGovernanceTests, true) }}:
@@ -99,24 +152,24 @@ stages:
     displayName: 'Governance Checks'
     dependsOn: []
     jobs:
-      - job: governance
-        displayName: 'Governance Checks'
+    - job: governance
+      displayName: 'Governance Checks'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: governance-checks.yml
+        parameters:
+          isPR: ${{ parameters.isPR }}
+
+    - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+      - job: translations
+        displayName: 'Loc translations'
         pool:
           vmImage: windows-latest
         steps:
-        - template: governance-checks.yml
+        - template: loc-translations.yml
           parameters:
             isPR: ${{ parameters.isPR }}
-
-      - ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
-        - job: translations
-          displayName: 'Loc translations'
-          pool:
-            vmImage: windows-latest
-          steps:
-          - template: loc-translations.yml
-            parameters:
-              isPR: ${{ parameters.isPR }}
 
 
 - ${{ if parameters.isPR }}:
@@ -124,37 +177,38 @@ stages:
     displayName: 'Clean up'
     dependsOn: []
     jobs:
-      - job:
-        displayName: 'Clean comments'
-        pool:
-          vmImage: windows-latest
-        steps:
-          - template: ./common/clean.yml
+    - job:
+      displayName: 'Clean comments'
+      pool:
+        vmImage: windows-latest
+      steps:
+      - template: ./common/clean.yml
 
 
 - stage: build_packages
   displayName: 'Build'
   dependsOn: []
   jobs:
-    - template: ./build/build-stage.yml
-      parameters:
-        xcodeChannel: ${{ parameters.xcodeChannel }}
-        isPR: ${{ parameters.isPR }}
-        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-        runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
-        runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
-        keyringPass: $(pass--lab--mac--builder--keychain)
-        gitHubToken: ${{ variables['GitHub.Token'] }}
-        xqaCertPass: $(xqa--certificates--password)
-        enableDotnet: ${{ parameters.enableDotnet }}
-        skipESRP: ${{ parameters.skipESRP }}
-        pool: ${{ parameters.pool }}
+  - template: ./build/build-stage.yml
+    parameters:
+      xcodeChannel: ${{ parameters.xcodeChannel }}
+      isPR: ${{ parameters.isPR }}
+      vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+      runTests: ${{ and(parameters.runTests, ne(variables['Build.Reason'], 'Schedule'))}}
+      runDeviceTests: ${{ and(parameters.runDeviceTests, ne(variables['Build.Reason'], 'Schedule')) }}
+      keyringPass: $(pass--lab--mac--builder--keychain)
+      gitHubToken: ${{ variables['GitHub.Token'] }}
+      xqaCertPass: $(xqa--certificates--password)
+      enableDotnet: ${{ parameters.enableDotnet }}
+      skipESRP: ${{ parameters.skipESRP }}
+      pool: ${{ parameters.pool }}
 
-- stage: prepare_packages
-  displayName: 'Prepare packages'
-  dependsOn:
-  - build_packages
-  jobs:
+- ${{ each pkg_obj in parameters.packages }}:
+  - stage: ${{ pkg_obj.job }}
+    displayName: ${{ pkg_obj.displayName }}
+    dependsOn:
+    - build_packages
+    jobs:
     - template: ./sign-and-notarized/prepare-pkg-stage.yml
       parameters:
         isPR: ${{ parameters.isPR }}
@@ -162,28 +216,59 @@ stages:
         keyringPass: $(pass--lab--mac--builder--keychain)
         enableDotnet: ${{ parameters.enableDotnet }}
         skipESRP: ${{ parameters.skipESRP }}
+        packages: ${{ pkg_obj.packages }}
+
+- ${{ if eq(parameters.enableDotnet, true) }}:
+  - stage: sign_notarize_dotnet
+    displayName: 'Sign & Notarize Dotnet'
+    dependsOn:
+    - build_packages
+    jobs:
+    - template: ./sign-and-notarized/dotnet-signing.yml
+      parameters:
+        isPR: ${{ parameters.isPR }}
+
+# .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
+# setting the stage at this level makes the graph of the UI look better, else the lines overlap and is not clear.
+- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(parameters.forceInsertion, true))) }}:
+  - template: ./release/vs-insertion-prep.yml
+    parameters:
+      dependsOn:
+      - sign_notarize_dotnet
+      isPR: ${{ parameters.isPR }}
+
+- stage: funnel
+  displayName: 'Collect signed artifacts'
+  dependsOn:
+  - build_packages
+  - ${{ if eq(parameters.enableDotnet, true) }}:
+    - sign_notarize_dotnet
+  - ${{ each pkg_obj in parameters.packages }}:
+    - ${{ pkg_obj.job }}
+  jobs:
+  - template: ./sign-and-notarized/funnel.yml
+    parameters:
+      isPR: ${{ parameters.isPR }}
+      packages: # flatten the pkgs for the parameter
+      - ${{ each pkg_obj in parameters.packages }}:
+        - ${{ each pkg in pkg_obj.packages }}:
+          - ${{ pkg }}
 
 - ${{ if eq(parameters.enableAPIDiff, true) }}:
   - stage: generate_api_diff
     displayName: 'API diff'
     dependsOn: []
     jobs:
-      - template: ./build/api-diff-stage.yml
-        parameters:
-          xcodeChannel: ${{ parameters.xcodeChannel }}
-          isPR: ${{ parameters.isPR }}
-          vsdropsPrefix: ${{ variables.vsdropsPrefix }}
-          keyringPass: $(pass--lab--mac--builder--keychain)
-          gitHubToken: ${{ variables['GitHub.Token'] }}
-          xqaCertPass: $(xqa--certificates--password)
-          enableDotnet: ${{ parameters.enableDotnet }}
-          pool: ${{ parameters.pool }}
-
-# .NET Release Prep and VS Insertion Stages, only execute them when the build comes from an official branch and is not a schedule build from OneLoc
-- ${{ if and(ne(variables['Build.Reason'], 'Schedule'), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release/'), eq(variables['Build.SourceBranch'], 'refs/heads/net7.0'), eq(parameters.forceInsertion, true))) }}:
-  - template: ./release/vs-insertion-prep.yml
-    parameters:
-      isPR: ${{ parameters.isPR }}
+    - template: ./build/api-diff-stage.yml
+      parameters:
+        xcodeChannel: ${{ parameters.xcodeChannel }}
+        isPR: ${{ parameters.isPR }}
+        vsdropsPrefix: ${{ variables.vsdropsPrefix }}
+        keyringPass: $(pass--lab--mac--builder--keychain)
+        gitHubToken: ${{ variables['GitHub.Token'] }}
+        xqaCertPass: $(xqa--certificates--password)
+        enableDotnet: ${{ parameters.enableDotnet }}
+        pool: ${{ parameters.pool }}
 
 # Test stages
 
@@ -267,7 +352,7 @@ stages:
       stageName: 'ios32b_device'
       displayName: 'iOS32b Device Tests'
       testPool: 'VSEng-Xamarin-QA'
-      useXamarinStorage: False
+      useXamarinStorage: false
       testsLabels: '--label=run-ios-32-tests,run-non-monotouch-tests,run-monotouch-tests,run-mscorlib-tests'
       statusContext: 'VSTS: device tests iOS32b'
       extraBotDemands: ['xismoke-32']
@@ -289,7 +374,7 @@ stages:
       pool:
         vmImage: ubuntu-latest
       steps:
-        # TODO: do parse labels
-        - bash: |
-            echo "Samples!"
-          displayName: 'Sample testing'
+      # TODO: do parse labels
+      - bash: |
+          echo "Samples!"
+        displayName: 'Sample testing'
