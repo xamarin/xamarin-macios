@@ -4686,6 +4686,10 @@ namespace AVFoundation {
 		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Field ("AVURLAssetURLRequestAttributionKey")]
 		NSString RequestAttributionKey { get; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("httpSessionIdentifier")]
+		NSUuid HttpSessionIdentifier { get; }
 	}
 
 	[Watch (6,0)]
@@ -4899,7 +4903,7 @@ namespace AVFoundation {
 		[Export ("currentSampleDependencyInfo")]
 		AVSampleCursorSyncInfo CurrentSampleDependencyInfo { get; }
 
-		[Mac (10,11)]
+		[Watch (9, 0), TV (16, 0), Mac (10, 11), iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("samplesRequiredForDecoderRefresh")]
 		nint SamplesRequiredForDecoderRefresh { get; }
 
@@ -4919,18 +4923,15 @@ namespace AVFoundation {
 		[Export ("currentSampleStorageRange")]
 		AVSampleCursorStorageRange CurrentSampleStorageRange { get; }
 
-#if MONOMAC
-		[NoiOS][NoWatch][NoTV]
-		[Mac (10,15)]
+		[Watch (9, 0), TV (16, 0), Mac (10, 15), iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("currentSampleAudioDependencyInfo")]
 		AVSampleCursorAudioDependencyInfo CurrentSampleAudioDependencyInfo { get; }
-#endif
 
-		[NoiOS][NoWatch][NoTV]
 		[NullAllowed]
-		[Mac (12,0)]
+		[Watch (9, 0), TV (16, 0), Mac (12, 0), iOS (16, 0), MacCatalyst (16,0)]
 		[Export ("currentSampleDependencyAttachments")]
 		NSDictionary CurrentSampleDependencyAttachments { get; }
+
 	}
 
 	[iOS (7,0), Mac (10, 9), Watch (6,0)]
@@ -8560,6 +8561,18 @@ namespace AVFoundation {
 		[Export ("sourceSampleDataTrackIDs")]
 		[BindAs (typeof (int[]))]
 		NSNumber[] SourceSampleDataTrackIds { get; }
+
+		[Async]
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("videoCompositionWithAsset:applyingCIFiltersWithHandler:completionHandler:")]
+		void Create (AVAsset asset, Action<AVAsynchronousCIImageFilteringRequest> applier, Action<AVVideoComposition, NSError> completionHandler);
+
+		[Async]
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("videoCompositionWithPropertiesOfAsset:completionHandler:")]
+		void Create (AVAsset asset, Action<AVMutableVideoComposition, NSError> completionHandler);
 	}
 
 	[NoWatch]
@@ -8591,6 +8604,8 @@ namespace AVFoundation {
 		[Export ("newPixelBuffer")]
 		CVPixelBuffer CreatePixelBuffer ();
 	}
+
+	interface IAVVideoCompositionValidationHandling {}
 	
 	[Watch (6,0)]
 	[BaseType (typeof (NSObject))]
@@ -8680,6 +8695,25 @@ namespace AVFoundation {
 		[Export ("sourceSampleDataTrackIDs", ArgumentSemantic.Copy)]
 		[BindAs (typeof (int[]))]
 		NSNumber[] SourceSampleDataTrackIds { get; set; }
+
+		[Async]
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("videoCompositionWithAsset:applyingCIFiltersWithHandler:completionHandler:")]
+		void Create (AVAsset asset, Action<AVAsynchronousCIImageFilteringRequest> applier, Action<AVMutableVideoComposition, NSError> completionHandler);
+
+		[Async]
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("videoCompositionWithPropertiesOfAsset:completionHandler:")]
+		void Create (AVAsset asset, Action<AVVideoComposition, NSError> completionHandler);
+
+		[Async]
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("videoCompositionWithPropertiesOfAsset:prototypeInstruction:completionHandler:")]
+		void Create (AVAsset asset, AVVideoCompositionInstruction prototypeInstruction, Action<AVMutableVideoComposition, NSError> completionHandler);
+
 	}
 
 	[NoWatch]
@@ -11372,6 +11406,11 @@ namespace AVFoundation {
 		[Export ("minimumFocusDistance")]
 		nint MinimumFocusDistance { get; }
 
+		[TV (16, 0), NoWatch, MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Static]
+		[Export ("studioLightEnabled")]
+		bool IsStudioLightEnabled { [Bind ("isStudioLightEnabled")] get; set; }
+
 	}
 
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
@@ -11915,6 +11954,10 @@ namespace AVFoundation {
 		[TV (15, 0), NoWatch, Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
 		[Export ("playbackCoordinator", ArgumentSemantic.Strong)]
 		AVPlayerPlaybackCoordinator PlaybackCoordinator { get; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("defaultRate")]
+		float DefaultRate { get; set; }
 	}
 
 	[iOS (7,0), Mac (10, 9), Watch (6,0)]
@@ -13094,9 +13137,9 @@ namespace AVFoundation {
 		NSDictionary WeakPixelBufferAttributes { get; set; }
 
 		[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
-		[NullAllowed, Export ("copyDisplayedPixelBuffer")]
-		[return: Release]
-		CVPixelBuffer CopyDisplayedPixelBuffer { get; }
+		[Export ("copyDisplayedPixelBuffer")]
+		[return: Release, NullAllowed]
+		CVPixelBuffer CopyDisplayedPixelBuffer ();
 	}
 
 	[NoWatch]
@@ -13190,6 +13233,16 @@ namespace AVFoundation {
 		// [Static]
 		// [Export ("interstitialEventWithPrimaryItem:date:templateItems:restrictions:resumptionOffset:")]
 		// AVPlayerInterstitialEvent GetInterstitialEvent (AVPlayerItem primaryItem, NSDate date, AVPlayerItem[] templateItems, AVPlayerInterstitialEventRestrictions restrictions, CMTime resumptionOffset);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("interstitialEventWithPrimaryItem:date:")]
+		AVPlayerInterstitialEvent GetInterstitialEvent (AVPlayerItem primaryItem, NSDate date);
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("interstitialEventWithPrimaryItem:time:")]
+		AVPlayerInterstitialEvent GetInterstitialEvent (AVPlayerItem primaryItem, CMTime time);
 
 		// Apple changed the API signature ?!?
 		// [Static]
@@ -13703,6 +13756,12 @@ namespace AVFoundation {
 		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
 		[Export ("prefersAssistiveTechnologySettings")]
 		bool PrefersAssistiveTechnologySettings { get; set; }
+
+		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+		[Static]
+		[Export ("speechUtteranceWithSSMLRepresentation:")]
+		[return: NullAllowed]
+		AVSpeechUtterance GetSpeechUtterance (string SsmlRepresentation);
 	}
 
 	[Mac (10,15)]
@@ -14080,6 +14139,79 @@ namespace AVFoundation {
 
 		[Export ("selectMediaOption:inMediaSelectionGroup:")]
 		void SelectMediaOption ([NullAllowed] AVMediaSelectionOption mediaSelectionOption, AVMediaSelectionGroup mediaSelectionGroup);
+	}
+
+	// the key could be used to create a strong dictionary, but apple does not provide the type that is stored in the dict, meaning
+	// we yet cannot do it (xcod14.1)
+	[Static]
+	[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
+	interface AVAudioSequencerInfoDictionaryKeys {
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyAlbum")]
+		NSString AlbumKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyApproximateDurationInSeconds")]
+		NSString ApproximateDurationInSecondsKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyArtist")]
+		NSString ArtistKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyChannelLayout")]
+		NSString ChannelLayoutKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyComments")]
+		NSString CommentsKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyComposer")]
+		NSString ComposerKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyCopyright")]
+		NSString CopyrightKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyEncodingApplication")]
+		NSString EncodingApplicationKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyGenre")]
+		NSString GenreKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyISRC")]
+		NSString IsrcKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyKeySignature")]
+		NSString KeySignatureKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyLyricist")]
+		NSString LyricistKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyNominalBitRate")]
+		NSString NominalBitRateKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyRecordedDate")]
+		NSString RecordedDateKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeySourceBitDepth")]
+		NSString SourceBitDepthKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeySourceEncoder")]
+		NSString SourceEncoderKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeySubTitle")]
+		NSString SubTitleKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyTempo")]
+		NSString TempoKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyTimeSignature")]
+		NSString TimeSignatureKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyTitle")]
+		NSString TitleKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyTrackNumber")]
+		NSString TrackNumberKey { get; }
+
+		[Field ("AVAudioSequencerInfoDictionaryKeyYear")]
+		NSString YearKey { get; }
 	}
 
 	[NoWatch, iOS (9,0)][Mac (10,11)]
@@ -14742,6 +14874,10 @@ namespace AVFoundation {
 
 		[Export ("multipleRoutesDetected")]
 		bool MultipleRoutesDetected { get; }
+
+		[NoWatch, NoTV, NoMac, iOS (16, 0), MacCatalyst (16,0)]
+		[Export ("detectsCustomRoutes")]
+		bool DetectsCustomRoutes { get; set; }
 	}
 
 	interface IAVCapturePhotoFileDataRepresentationCustomizer {}
@@ -15026,6 +15162,10 @@ namespace AVFoundation {
 
 		[Export ("endCompositionTime")]
 		CMTime EndCompositionTime { get; }
+
+		[TV (16,0), NoWatch, Mac (13,0), iOS (16,0)]
+		[Export ("determineValidityForAsset:timeRange:validationDelegate:completionHandler:")]
+		void DetermineValidity ([NullAllowed] AVAsset asset, CMTimeRange timeRange, [NullAllowed] IAVVideoCompositionValidationHandling validationDelegate, Action<bool, NSError> completionHandler);
 	}
 
 	[NoWatch, NoTV, NoMac, iOS (13,0)]
