@@ -23,7 +23,9 @@ namespace Xharness.Jenkins.TestTasks {
 					return false; // we have to do 'msbuild /r'
 				return base.RestoreNugets;
 			}
+			set => base.RestoreNugets = value;
 		}
+
 		public override void SetEnvironmentVariables (Process process)
 		{
 			base.SetEnvironmentVariables (process);
