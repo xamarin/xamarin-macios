@@ -82,7 +82,7 @@ namespace Xharness.Jenkins {
 
 			var testVariations = testVariationsFactory.CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) =>
 				new RunSimulatorTask (
-					jenkins: jenkins, 
+					jenkins: jenkins,
 					simulators: jenkins.Simulators,
 					buildTask: buildTask,
 					processManager: processManager,

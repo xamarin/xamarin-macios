@@ -28,3 +28,6 @@
 !missing-selector! AVPlayerItem::automaticallyHandlesInterstitialEvents not bound
 !missing-selector! AVPlayerItem::setAutomaticallyHandlesInterstitialEvents: not bound
 !missing-selector! AVPlayerItem::templatePlayerItem not bound
+!unknown-native-enum! AVAudioSessionFlags bound
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found

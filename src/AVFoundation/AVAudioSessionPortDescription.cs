@@ -25,7 +25,7 @@ namespace AVFoundation {
 				throw new InvalidOperationException ("Call DataSourceDescriptions instead.");
 			}
 		}
-#endif	       
+#endif
 	}
 }
 #endif

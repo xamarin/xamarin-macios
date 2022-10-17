@@ -29,7 +29,7 @@ namespace Xamarin.Linker {
 		protected override string Name { get; } = "Removing Rejected Type";
 		protected override int ErrorCode { get; } = 2220;
 
-		public List<(string originalFullName, string replacementTypeName)> TypeReferencesToBeRemoved = new List<(string,string)> () {
+		public List<(string originalFullName, string replacementTypeName)> TypeReferencesToBeRemoved = new List<(string, string)> () {
 			// order is important for nested types (that's why tuples are used instead of a Dictionary)
 			( "UIKit.UIWebView/_UIWebViewDelegate", "_DeprecatedWebViewDelegate"),
 			( "UIKit.UIWebView/UIWebViewAppearance","DeprecatedWebViewAppearance"),

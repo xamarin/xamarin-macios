@@ -19,14 +19,12 @@ using Xamarin.Utils;
 
 using Registrar;
 
-namespace Xamarin.Bundler
-{
-	public class BundleFileInfo
-	{
+namespace Xamarin.Bundler {
+	public class BundleFileInfo {
 		public HashSet<string> Sources = new HashSet<string> ();
 		public bool DylibToFramework;
 	}
-	
+
 	public partial class Target {
 		public string TargetDirectory;
 		public string AppTargetDirectory;
@@ -163,8 +161,7 @@ namespace Xamarin.Bundler
 					return null;
 
 				if (pinvoke_state == null) {
-					pinvoke_state = new PInvokeWrapperGenerator ()
-					{
+					pinvoke_state = new PInvokeWrapperGenerator () {
 						App = App,
 						SourcePath = Path.Combine (ArchDirectory, "pinvokes.m"),
 						HeaderPath = Path.Combine (ArchDirectory, "pinvokes.h"),
@@ -185,8 +182,8 @@ namespace Xamarin.Bundler
 						// When using simlauncher, we copy the executable directly to the target directory.
 						// When not using the simlauncher, but still building for the simulator, we write the executable to a arch-specific app directory (if building for both 32-bit and 64-bit), or just the app directory (if building for a single architecture)
 						if (Abis.Count != 1)
-							throw ErrorHelper.CreateError (99, Errors.MX0099, $"expected exactly one abi for a simulator architecture, found: {string.Join(", ", Abis.Select((v) => v.ToString()))}");
-							executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"expected exactly one abi for a simulator architecture, found: {string.Join (", ", Abis.Select ((v) => v.ToString ()))}");
+						executables.Add (Abis [0], Path.Combine (TargetDirectory, App.ExecutableName));
 					} else {
 						foreach (var abi in Abis)
 							executables.Add (abi, Path.Combine (Path.Combine (App.Cache.Location, abi.AsArchString (), App.ExecutableName)));
@@ -228,7 +225,7 @@ namespace Xamarin.Bundler
 					// If we asked the manifest resolver for assembly X and got back a root assembly, it means the requested assembly has the same identity as the root assembly, which is not allowed.
 					throw ErrorHelper.CreateError (23, Errors.MT0023, root_assembly.MainModule.FileName, reference);
 				}
-				
+
 				if (ad.MainModule.Runtime > TargetRuntime.Net_4_0)
 					ErrorHelper.Show (new ProductException (11, false, Errors.MT0011, Path.GetFileName (reference), ad.MainModule.Runtime));
 
@@ -491,10 +488,10 @@ namespace Xamarin.Bundler
 				foreach (var root in appex.App.RootAssemblies)
 					main_assemblies.Add (Resolver.Load (root));
 			}
-			
+
 			if (Driver.Verbosity > 0)
 				Console.WriteLine ("Linking {0} into {1} using mode '{2}'", string.Join (", ", main_assemblies.Select ((v) => v.MainModule.FileName)), output_dir, App.LinkMode);
-			
+
 			LinkerOptions = new LinkerOptions {
 				MainAssemblies = main_assemblies,
 				OutputDirectory = output_dir,
@@ -533,7 +530,7 @@ namespace Xamarin.Bundler
 		{
 			if (linked)
 				return;
-			
+
 			var cache_path = Path.Combine (ArchDirectory, "linked-assemblies.txt");
 
 			// Get all the Target instances we're sharing code with. Make sure to only select targets with matching pointer size.
@@ -667,7 +664,7 @@ namespace Xamarin.Bundler
 				// Load the assemblies into memory.
 				foreach (var a in Assemblies)
 					a.LoadAssembly (a.FullPath);
-				
+
 				// Link!
 				Driver.Watch ("Managed Link Preparation", 1);
 				LinkAssemblies (out output_assemblies, PreBuildDirectory, sharingTargets);
@@ -676,7 +673,7 @@ namespace Xamarin.Bundler
 			// Verify that we don't get multiple identical assemblies from the linker.
 			foreach (var group in output_assemblies.GroupBy ((v) => v.Name.Name)) {
 				if (group.Count () != 1)
-					throw ErrorHelper.CreateError (99, Errors.MX0099, $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join("\n\t", group.Select((v) => v.MainModule.FileName).ToArray())}");
+					throw ErrorHelper.CreateError (99, Errors.MX0099, $"The linker output contains more than one assemblies named '{group.Key}':\n\t{string.Join ("\n\t", group.Select ((v) => v.MainModule.FileName).ToArray ())}");
 			}
 
 			// Update (add/remove) list of assemblies in each app, since the linker may have both added and removed assemblies.
@@ -727,16 +724,16 @@ namespace Xamarin.Bundler
 				// Find assemblies that are in more than 1 appex, but not in the container app.
 				// These assemblies will be bundled once into the container .app instead of in each appex.
 				var grouped = sharingTargets.SelectMany ((v) => v.Assemblies).
-							    GroupBy ((v) => Assembly.GetIdentity (v.AssemblyDefinition)).
-							    Where ((v) => !Assemblies.ContainsKey (v.Key)).
-							    Where ((v) => v.Count () > 1);
+								GroupBy ((v) => Assembly.GetIdentity (v.AssemblyDefinition)).
+								Where ((v) => !Assemblies.ContainsKey (v.Key)).
+								Where ((v) => v.Count () > 1);
 				foreach (var gr in grouped) {
 					var asm = gr.First ();
 					Assemblies.Add (asm);
 					Resolver.Add (asm.AssemblyDefinition);
 					gr.All ((v) => v.BundleInContainerApp = true);
 				}
-				                                                                       
+
 
 				// If any of the appex'es build to a grouped SDK framework, then we must ensure that all SDK assemblies
 				// in that appex are also in the container app.
@@ -805,7 +802,7 @@ namespace Xamarin.Bundler
 			// will still work for any appex's not sharing code).
 			allTargets.ForEach ((v) => v.linked = true);
 		}
-			
+
 		public void ProcessAssemblies ()
 		{
 			//
@@ -863,7 +860,7 @@ namespace Xamarin.Bundler
 			PreBuildDirectory = Path.Combine (ArchDirectory, "2-PreBuild");
 			if (!Directory.Exists (PreBuildDirectory))
 				Directory.CreateDirectory (PreBuildDirectory);
-			
+
 			BuildDirectory = Path.Combine (ArchDirectory, "3-Build");
 			if (!Directory.Exists (BuildDirectory))
 				Directory.CreateDirectory (BuildDirectory);
@@ -912,8 +909,7 @@ namespace Xamarin.Bundler
 					throw ErrorHelper.CreateError (100, Errors.MT0100, mode);
 				}
 
-				var pinvoke_task = new PinvokesTask
-				{
+				var pinvoke_task = new PinvokesTask {
 					Target = this,
 					Abi = abi,
 					InputFile = ifile,
@@ -1000,8 +996,7 @@ namespace Xamarin.Bundler
 							var assembly = src;
 							BitCodeifyTask bitcode_task = null;
 							if (App.EnableAsmOnlyBitCode) {
-								bitcode_task = new BitCodeifyTask ()
-								{
+								bitcode_task = new BitCodeifyTask () {
 									Input = assembly,
 									OutputFile = Path.ChangeExtension (assembly, ".ll"),
 									Platform = App.Platform,
@@ -1013,8 +1008,7 @@ namespace Xamarin.Bundler
 							}
 
 							// Compile assembly code (either .s or .ll) to object file
-							var compile_task = new CompileTask
-							{
+							var compile_task = new CompileTask {
 								Target = this,
 								SharedLibrary = false,
 								InputFile = assembly,
@@ -1122,8 +1116,7 @@ namespace Xamarin.Bundler
 
 					HandleMonoNative (App, compiler_flags);
 
-					var link_task = new LinkTask ()
-					{
+					var link_task = new LinkTask () {
 						Target = this,
 						Abi = abi,
 						OutputFile = compiler_output,
@@ -1185,7 +1178,7 @@ namespace Xamarin.Bundler
 						}
 						if (asm == dependentAssembly)
 							continue; // huh?
-						
+
 						// Nothing can depend on anything in our SDK, nor does our SDK depend on anything else in our SDK
 						// So we can remove any SDK dependency
 						if (Profile.IsSdkAssembly (dependentAssembly.AssemblyDefinition) || Profile.IsProductAssembly (dependentAssembly.AssemblyDefinition)) {
@@ -1268,8 +1261,7 @@ namespace Xamarin.Bundler
 				var registrar_m = Path.Combine (ArchDirectory, "registrar.m");
 				var registrar_h = Path.Combine (ArchDirectory, "registrar.h");
 
-				var run_registrar_task = new RunRegistrarTask
-				{
+				var run_registrar_task = new RunRegistrarTask {
 					Target = this,
 					RegistrarCodePath = registrar_m,
 					RegistrarHeaderPath = registrar_h,
@@ -1279,8 +1271,7 @@ namespace Xamarin.Bundler
 					var arch = abi.AsArchString ();
 					var ofile = Path.Combine (App.Cache.Location, arch, Path.GetFileNameWithoutExtension (registrar_m) + ".o");
 
-					var registrar_task = new CompileRegistrarTask
-					{
+					var registrar_task = new CompileRegistrarTask {
 						Target = this,
 						Abi = abi,
 						InputFile = registrar_m,
@@ -1304,7 +1295,7 @@ namespace Xamarin.Bundler
 						registrar_task.CompilerFlags.AddOtherFlag ("-Wno-unguarded-availability-new");
 
 					registrar_task.CompilerFlags.AddStandardCppLibrary ();
-						                                          
+
 					LinkWithTaskOutput (registrar_task);
 				}
 
@@ -1322,7 +1313,7 @@ namespace Xamarin.Bundler
 				case ApplePlatform.WatchOS:
 					method = "xamarin_create_classes_Xamarin_WatchOS";
 					library = "Xamarin.WatchOS.registrar.a";
-					break;					
+					break;
 				case ApplePlatform.TVOS:
 					method = "xamarin_create_classes_Xamarin_TVOS";
 					library = "Xamarin.TVOS.registrar.a";
@@ -1348,16 +1339,14 @@ namespace Xamarin.Bundler
 				var arch = abi.AsArchString ();
 				var main_m = Path.Combine (App.Cache.Location, arch, "main.m");
 
-				var generate_main_task = new GenerateMainTask
-				{
+				var generate_main_task = new GenerateMainTask {
 					Target = this,
 					Abi = abi,
 					MainM = main_m,
 					RegistrationMethods = registration_methods,
 				};
 				var main_o = Path.Combine (App.Cache.Location, arch, "main.o");
-				var main_task = new CompileMainTask
-				{
+				var main_task = new CompileMainTask {
 					Target = this,
 					Abi = abi,
 					InputFile = main_m,
@@ -1422,7 +1411,7 @@ namespace Xamarin.Bundler
 			var bitcode = App.EnableBitCode;
 			if (bitcode && Driver.XcodeVersion.Major < 14)
 				linker_flags.AddOtherFlag (App.EnableMarkerOnlyBitCode ? "-fembed-bitcode-marker" : "-fembed-bitcode");
-			
+
 			if (!App.EnablePie.HasValue)
 				App.EnablePie = true;
 
@@ -1546,8 +1535,7 @@ namespace Xamarin.Bundler
 
 			HandleMonoNative (App, linker_flags);
 
-			var link_task = new NativeLinkTask
-			{
+			var link_task = new NativeLinkTask {
 				Target = this,
 				OutputFile = output_file,
 				CompilerFlags = linker_flags,
@@ -1558,8 +1546,7 @@ namespace Xamarin.Bundler
 			return link_task;
 		}
 
-		public class MonoNativeInfo
-		{
+		public class MonoNativeInfo {
 			public bool RequireMonoNative { get; set; }
 
 			public void Load (string filename)
@@ -1574,11 +1561,11 @@ namespace Xamarin.Bundler
 						var valstr = line.Substring (eq + 1);
 						bool value = Convert.ToBoolean (valstr);
 						switch (typestr) {
-							case "RequireMonoNative":
-								RequireMonoNative = value;
-								break;
-							default:
-								throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid type string while loading cached Mono.Native info: {typestr}");
+						case "RequireMonoNative":
+							RequireMonoNative = value;
+							break;
+						default:
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"invalid type string while loading cached Mono.Native info: {typestr}");
 						}
 					}
 				}
@@ -1594,8 +1581,7 @@ namespace Xamarin.Bundler
 
 		MonoNativeInfo mono_native_info;
 
-		public MonoNativeInfo MonoNative
-		{
+		public MonoNativeInfo MonoNative {
 			get {
 				if (mono_native_info != null)
 					return mono_native_info;
@@ -1679,7 +1665,7 @@ namespace Xamarin.Bundler
 				a.Symlink ();
 
 			if (Abis.Count != 1)
-				throw ErrorHelper.CreateError (99, Errors.MX0099, $"expected exactly one abi for a simulator architecture, found: {string.Join(", ", Abis.Select((v) => v.ToString()))}");
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"expected exactly one abi for a simulator architecture, found: {string.Join (", ", Abis.Select ((v) => v.ToString ()))}");
 
 			var targetExecutable = Executables.Values.First ();
 

@@ -11,11 +11,9 @@
 using System;
 using System.Diagnostics;
 
-namespace ObjCRuntime
-{
+namespace ObjCRuntime {
 	[AttributeUsage (AttributeTargets.Enum)]
-	public sealed class NativeAttribute : Attribute
-	{
+	public sealed class NativeAttribute : Attribute {
 		public NativeAttribute ()
 		{
 		}

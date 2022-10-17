@@ -30,10 +30,10 @@ using Mono.Linker;
 
 namespace Xamarin.Bundler {
 	public partial class MonoMacResolver : CoreResolver {
-		public List <string> CommandLineAssemblies { get; set; }
+		public List<string> CommandLineAssemblies { get; set; }
 		public List<Exception> Exceptions = new List<Exception> ();
 		public string GlobalAssemblyCache;
-		public string[] SystemFrameworkDirectories;
+		public string [] SystemFrameworkDirectories;
 
 		public AssemblyDefinition GetAssembly (string fileName)
 		{
@@ -47,7 +47,7 @@ namespace Xamarin.Bundler {
 			AssemblyDefinition assembly;
 			if (cache.TryGetValue (name, out assembly))
 				return assembly;
-			
+
 			if (CommandLineAssemblies != null && CommandLineAssemblies.Count > 0) {
 				string cmdasm = CommandLineAssemblies.Find (t => {
 					if (String.IsNullOrEmpty (t))
@@ -64,7 +64,7 @@ namespace Xamarin.Bundler {
 				if (assembly != null)
 					return assembly;
 			}
-			
+
 			assembly = SearchDirectory (name, FrameworkDirectory);
 			if (assembly != null)
 				return assembly;
