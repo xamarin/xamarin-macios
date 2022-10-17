@@ -14,10 +14,8 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
-namespace AppKit
-{
-	public partial class NSStringAttributes : DictionaryContainer
-	{
+namespace AppKit {
+	public partial class NSStringAttributes : DictionaryContainer {
 		static internal NSDictionary ToDictionary (
 			NSFont font,
 			NSColor foregroundColor,
@@ -50,7 +48,7 @@ namespace AppKit
 		{
 			var attr = new NSStringAttributes ();
 
-			if (font != null){
+			if (font != null) {
 				attr.Font = font;
 			}
 
@@ -63,7 +61,7 @@ namespace AppKit
 			}
 
 			if (underlineStyle != NSUnderlineStyle.None) {
-				attr.UnderlineStyle = (int?)underlineStyle;
+				attr.UnderlineStyle = (int?) underlineStyle;
 			}
 
 			if (superscript) {
@@ -107,7 +105,7 @@ namespace AppKit
 			}
 
 			if (strikethroughStyle != NSUnderlineStyle.None) {
-				attr.StrikethroughStyle = (int?)strikethroughStyle;
+				attr.StrikethroughStyle = (int?) strikethroughStyle;
 			}
 
 			if (strikethroughColor != null) {
@@ -192,18 +190,18 @@ namespace AppKit
 		bool? GetBool (NSString key)
 		{
 			var value = GetInt32Value (key);
-			return value == null ? null : (bool?)(value.Value != 0);
+			return value == null ? null : (bool?) (value.Value != 0);
 		}
-		
+
 		void Set (NSString key, bool? value)
 		{
-			SetNumberValue (key, value == null ? null : (int?)(value.Value ? 1 : 0));
+			SetNumberValue (key, value == null ? null : (int?) (value.Value ? 1 : 0));
 		}
 
 		int SetUnderlineStyle (NSString attr, NSUnderlineStyle style,
 			NSUnderlinePattern pattern, bool byWord)
 		{
-			var value = (int)style | (int)pattern;
+			var value = (int) style | (int) pattern;
 			if (byWord) {
 				value |= (int) NSAttributedString.UnderlineByWordMaskAttributeName;
 			}
@@ -264,8 +262,8 @@ namespace AppKit
 		}
 
 		public NSLigatureType? Ligature {
-			get { return (NSLigatureType?)GetInt32Value (NSStringAttributeKey.Ligature); }
-			set { SetNumberValue (NSStringAttributeKey.Ligature, (int?)value); }
+			get { return (NSLigatureType?) GetInt32Value (NSStringAttributeKey.Ligature); }
+			set { SetNumberValue (NSStringAttributeKey.Ligature, (int?) value); }
 		}
 
 		public float? BaselineOffset {
@@ -364,8 +362,8 @@ namespace AppKit
 		}
 
 		public NSTextLayoutOrientation? VerticalGlyphForm {
-			get { return (NSTextLayoutOrientation?)GetInt32Value (NSStringAttributeKey.VerticalGlyphForm); }
-			set { SetNumberValue (NSStringAttributeKey.VerticalGlyphForm, (int?)value); }
+			get { return (NSTextLayoutOrientation?) GetInt32Value (NSStringAttributeKey.VerticalGlyphForm); }
+			set { SetNumberValue (NSStringAttributeKey.VerticalGlyphForm, (int?) value); }
 		}
 
 		public NSTextAlternatives TextAlternatives {
@@ -374,8 +372,8 @@ namespace AppKit
 		}
 
 		public NSSpellingState? SpellingState {
-			get { return (NSSpellingState?)GetInt32Value (NSStringAttributeKey.SpellingState); }
-			set { SetNumberValue (NSStringAttributeKey.SpellingState, (int?)value); }
+			get { return (NSSpellingState?) GetInt32Value (NSStringAttributeKey.SpellingState); }
+			set { SetNumberValue (NSStringAttributeKey.SpellingState, (int?) value); }
 		}
 	}
 }

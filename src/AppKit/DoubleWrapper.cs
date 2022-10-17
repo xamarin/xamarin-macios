@@ -89,7 +89,7 @@ namespace AppKit {
 			}
 		}
 	}
-	
+
 	public partial class NSTableView {
 		public event EventHandler DoubleClick {
 			add {
