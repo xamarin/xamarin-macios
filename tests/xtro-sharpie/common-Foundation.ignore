@@ -13,7 +13,6 @@
 !missing-selector! NSFileWrapper::initWithSerializedRepresentation: not bound
 
 ## the API exists but is [Sealed], until .NET, to keep compatible with iOS/Mac profiles
-!missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
 
 # missing - pending decision for implementation
 !missing-type! NSAssertionHandler not bound
@@ -42,7 +41,6 @@
 !incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
 
 ## should not have been [Native] it's 32bits only values -> .NET
-!unknown-native-enum! NSBundleExecutableArchitecture bound
 
 ## enum was [re]named to NSCalendarOptions - excluding from .NET
 !unknown-native-enum! NSDateComponentsWrappingBehavior bound
@@ -221,7 +219,6 @@
 !missing-field! NSMallocException not bound
 !missing-field! NSMaximumKeyValueOperator not bound
 !missing-field! NSMinimumKeyValueOperator not bound
-!missing-field! NSNetServicesErrorCode not bound
 !missing-field! NSObjectInaccessibleException not bound
 !missing-field! NSObjectNotAvailableException not bound
 !missing-field! NSOldStyleException not bound

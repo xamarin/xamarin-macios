@@ -56,5 +56,23 @@ namespace Xamarin.Utils {
 				return "Unknown";
 			}
 		}
+
+		public static ApplePlatform Parse (string platform)
+		{
+			switch (platform.ToLowerInvariant ()) {
+			case "ios":
+				return ApplePlatform.iOS;
+			case "tvos":
+				return ApplePlatform.TVOS;
+			case "macos":
+				return ApplePlatform.MacOSX;
+			case "watchos":
+				return ApplePlatform.WatchOS;
+			case "maccatalyst":
+				return ApplePlatform.MacCatalyst;
+			default:
+				throw new System.InvalidOperationException ($"Unknown platform: {platform}");
+			}
+		}
 	}
 }

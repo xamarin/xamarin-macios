@@ -7,9 +7,6 @@
 ## type and protocol are named identically (check the swift name, it's a similar situation to NSObject)
 !missing-protocol-conformance! AVVideoCompositionInstruction should conform to AVVideoCompositionInstruction
 
-### deprecated in iOS8
-!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
-
 ## unsorted
 
 !missing-field! AVCoreAnimationBeginTimeAtZero not bound

@@ -10,8 +10,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Jenkins.TestTasks {
-	class NUnitExecuteTask : RunTestTask
-	{
+	class NUnitExecuteTask : RunTestTask {
 		public string TestLibrary;
 		public string TestExecutable;
 		public bool ProduceHtmlReport = true;

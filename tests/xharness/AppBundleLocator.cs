@@ -86,22 +86,22 @@ namespace Xharness {
 
 					proc.StartInfo.FileName = isDotNetProject ? GetDotNetExecutable (projectPath) : msBuildPath;
 					var args = new List<string> ();
-					
+
 					if (isDotNetProject)
 						args.Add ("build");
-					
+
 					args.Add ("/p:ProjectFile=" + projectPath);
 					args.Add ("/p:OutputFile=" + output);
-					
+
 					foreach (var prop in properties)
 						args.Add ($"/p:{prop.Key}={prop.Value}");
-					
+
 					args.Add (inspector);
-					
+
 					var env = new Dictionary<string, string> {
 						{ "MSBUILD_EXE_PATH", null },
 					};
-					
+
 					proc.StartInfo.Arguments = StringUtils.FormatArguments (args);
 					proc.StartInfo.WorkingDirectory = dir;
 
@@ -123,7 +123,7 @@ namespace Xharness {
 						if (acquired)
 							evaluate_semaphore.Release ();
 					}
-					
+
 					return File.ReadAllText (output).Trim ();
 				}
 			} finally {
@@ -176,7 +176,7 @@ namespace Xharness {
 				break;
 			}
 
-			getLog()?.WriteLine ($"Mapped .NET SDK version {version} to {executable} for {directory}");
+			getLog ()?.WriteLine ($"Mapped .NET SDK version {version} to {executable} for {directory}");
 
 			lock (dotnet_executables) {
 				dotnet_executables [directory] = executable;

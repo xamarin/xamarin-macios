@@ -180,17 +180,21 @@ wrench:
 dotnet-wrench:
 	$(MAKE) -j8 dotnet-classify
 
+ifdef INCLUDE_XAMARIN_LEGACY
 report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-classify
 	rm -rf report/
 	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(ANNOTATIONS_DIR) report
 
 report: report/index.html
+endif
 
+ifdef ENABLE_DOTNET
 dotnet-report/index.html: xtro-report/bin/Debug/xtro-report.exe .stamp-dotnet-classify
 	rm -rf report-dotnet
 	$(MONO) xtro-report/bin/Debug/xtro-report.exe $(DOTNET_ANNOTATIONS_DIR) report-dotnet
 
 dotnet-report: dotnet-report/index.html
+endif
 
 report-short:
 	JENKINS_SERVER_COOKIE=1 make report
@@ -242,17 +246,21 @@ CLASSIFY+=.stamp-classify-macos
 	$(Q) touch $@
 endif
 
+ifdef INCLUDE_XAMARIN_LEGACY
 .stamp-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(CLASSIFY)
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR)) $(INCLUDED_PLATFORMS)
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(ANNOTATIONS_DIR)) "$(ALL_PLATFORMS)" $(INCLUDED_PLATFORMS)
 	$(Q) touch $@
 
 classify: .stamp-classify
+endif
 
+ifdef ENABLE_DOTNET
 .stamp-dotnet-classify: xtro-sanity/bin/Debug/xtro-sanity.exe $(DOTNET_CLASSIFY)
-	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(DOTNET_ANNOTATIONS_DIR)) $(DOTNET_PLATFORMS)
+	$(MONO) xtro-sanity/bin/Debug/xtro-sanity.exe $(abspath $(DOTNET_ANNOTATIONS_DIR)) "$(ALL_DOTNET_PLATFORMS)" $(DOTNET_PLATFORMS)
 	$(Q) touch $@
 
 dotnet-classify: .stamp-dotnet-classify
+endif
 
 insane:
 	XTRO_SANITY_SKIP=1 make all
@@ -260,7 +268,12 @@ insane:
 remove-empty:
 	find . -size 0 | xargs git rm
 
-all: report dotnet-report
+ifdef INCLUDE_XAMARIN_LEGACY
+all: report
+endif
+ifdef ENABLE_DOTNET
+all: dotnet-report
+endif
 
 .stamp-check-sharpie:
 	@$(TOP)/system-dependencies.sh --ignore-all --enforce-sharpie

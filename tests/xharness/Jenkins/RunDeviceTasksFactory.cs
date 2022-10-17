@@ -16,7 +16,7 @@ namespace Xharness.Jenkins {
 			foreach (var project in jenkins.Harness.IOSTestProjects) {
 				if (!project.IsExecutableProject)
 					continue;
-				
+
 				if (project.SkipDeviceVariations)
 					continue;
 
@@ -78,7 +78,7 @@ namespace Xharness.Jenkins {
 						tunnelBore: jenkins.TunnelBore,
 						errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 						useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-						candidates: jenkins.Devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS32)});
+						candidates: jenkins.Devices.Connected32BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOS32) });
 
 					if (createTodayExtension) {
 						var todayProject = project.GenerateVariations ? project.AsTodayExtensionProject () : project;
@@ -97,7 +97,7 @@ namespace Xharness.Jenkins {
 							tunnelBore: jenkins.TunnelBore,
 							errorKnowledgeBase: jenkins.ErrorKnowledgeBase,
 							useTcpTunnel: jenkins.Harness.UseTcpTunnel,
-							candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled(PlatformLabel.iOSExtension), BuildOnly = jenkins.ForceExtensionBuildOnly });
+							candidates: jenkins.Devices.Connected64BitIOS.Where (d => project.IsSupported (d.DevicePlatform, d.ProductVersion))) { Ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.iOSExtension), BuildOnly = jenkins.ForceExtensionBuildOnly });
 					}
 				}
 
@@ -171,7 +171,7 @@ namespace Xharness.Jenkins {
 
 			return Task.FromResult<IEnumerable<ITestTask>> (testVariationsFactory.CreateTestVariations (rv, (buildTask, test, candidates)
 				=> new RunDeviceTask (
-					jenkins: jenkins, 
+					jenkins: jenkins,
 					devices: jenkins.Devices,
 					buildTask: buildTask,
 					processManager: processManager,

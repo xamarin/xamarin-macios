@@ -35,6 +35,9 @@ bin/Debug/mtouchtests.dll: $(mtouchtests_dependencies)
 	$(SYSTEM_XIBUILD) -- mtouchtests.csproj /r $(XBUILD_VERBOSITY) /bl
 	$(Q) rm -f .failed-stamp
 
+$(abspath $(TOP)/tools/mtouch/Constants.cs):
+	$(Q) $(MAKE) $(notdir $@) -C $(dir $@)
+
 build: bin/Debug/mtouchtests.dll
 
 test.config: $(TOP)/Make.config Makefile
