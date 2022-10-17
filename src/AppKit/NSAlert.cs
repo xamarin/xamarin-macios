@@ -35,11 +35,9 @@ using System.Runtime.Versioning;
 using Foundation;
 using ObjCRuntime;
 
-namespace AppKit
-{
+namespace AppKit {
 	[Register ("__MonoMac_NSAlertDidEndDispatcher")]
-	internal class NSAlertDidEndDispatcher : NSObject
-	{
+	internal class NSAlertDidEndDispatcher : NSObject {
 		const string selector = "alertDidEnd:returnCode:contextInfo:";
 		public static readonly Selector Selector = new Selector (selector);
 
@@ -66,8 +64,7 @@ namespace AppKit
 		}
 	}
 
-	public partial class NSAlert
-	{
+	public partial class NSAlert {
 		public void BeginSheet (NSWindow window)
 		{
 			BeginSheet (window, null, null, IntPtr.Zero);
