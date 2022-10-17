@@ -205,7 +205,6 @@ namespace Xharness {
 
 			if (configuration.Labels != null)
 				Labels = new HashSet<string> (configuration.Labels);
-			Labels = new HashSet<string> (new string [] { "skip-all-tests", "run-ios-64-tests", "run-ios-simulator-tests", "run-tvos-tests", "run-watchos-tests", "run-mac-tests", "run-maccatalyst-tests", "run-dotnet-tests", "run-system-permission-tests", "run-legacy-xamarin-tests", "run-introspection-tests" });
 
 			if (configuration.EnvironmentVariables != null)
 				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
