@@ -128,11 +128,11 @@ namespace NearbyInteraction {
 		[Export ("invalidate")]
 		void Invalidate ();
 
-		[Watch (9,0), NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+		[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("setARSession:")]
 		void SetARSession (ARSession session);
 
-		[Watch (9,0), NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
+		[NoWatch, NoTV, NoMac, iOS (16,0), MacCatalyst (16,0)]
 		[Export ("worldTransformForObject:")]
 		[MarshalDirective (NativePrefix = "xamarin_simd__", Library = "__Internal")]
 		MatrixFloat4x4 GetWorldTransform (NINearbyObject @object);
