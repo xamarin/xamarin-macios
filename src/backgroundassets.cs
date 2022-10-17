@@ -29,6 +29,14 @@ namespace BackgroundAssets {
 	}
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
+	[Native]
+	public enum BAContentRequest : long {
+		Install = 1,
+		Update,
+		Periodic,
+	}
+
+	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface BADownload : NSCoding, NSSecureCoding, NSCopying
@@ -50,32 +58,32 @@ namespace BackgroundAssets {
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface BAAppExtensionInfo : NSSecureCoding { }
+	interface BAAppExtensionInfo : NSSecureCoding { 
+
+		[Mac (13,0), iOS (16,1), MacCatalyst (16,1)]
+		[NullAllowed]
+		[Export ("restrictedDownloadSizeRemaining", ArgumentSemantic.Strong)]
+		NSNumber RestrictedDownloadSizeRemaining { get; }
+	}
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Protocol]
 	interface BADownloaderExtension {
 
-		[Export ("applicationDidInstallWithMetadata:")]
-		void DidInstallWithMetadata (BAAppExtensionInfo metadata);
-
-		[Export ("applicationDidUpdateWithMetadata:")]
-		void DidUpdateWithMetadata (BAAppExtensionInfo metadata);
-
-		[Export ("checkForUpdatesWithMetadata:")]
-		void CheckForUpdates (BAAppExtensionInfo metadata);
-
-		[Export ("receivedAuthenticationChallenge:download:completionHandler:")]
-		void ReceivedAuthenticationChallenge (NSUrlAuthenticationChallenge challenge, BADownload download, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler);
-
-		[Export ("backgroundDownloadDidFail:")]
-		void BackgroundDownloadDidFail (BADownload failedDownload);
-
-		[Export ("backgroundDownloadDidFinish:fileURL:")]
-		void BackgroundDownloadDidFinish (BADownload finishedDownload, NSUrl fileUrl);
-
 		[Export ("extensionWillTerminate")]
-		void ExtensionWillTerminate ();
+		void WillTerminate ();
+
+		[Export ("backgroundDownload:didReceiveChallenge:completionHandler:")]
+		void DidReceiveChallenge (BADownload download, NSUrlAuthenticationChallenge challenge, Action<NSUrlSessionAuthChallengeDisposition, NSUrlCredential> completionHandler);
+
+		[Export ("backgroundDownload:failedWithError:")]
+		void Failed (BADownload download, NSError error);
+
+		[Export ("backgroundDownload:finishedWithFileURL:")]
+		void Finished (BADownload download, NSUrl fileUrl);
+
+		[Export ("downloadsForRequest:manifestURL:extensionInfo:")]
+		NSSet<BADownload> GetDownloads (BAContentRequest contentRequest, NSUrl manifestUrl, BAAppExtensionInfo extensionInfo);
 	}
 
 	interface IBADownloadManagerDelegate {}
@@ -139,6 +147,10 @@ namespace BackgroundAssets {
 
 		[Export ("cancelDownload:error:")]
 		bool CancelDownload (BADownload download, [NullAllowed] out NSError error);
+
+		[MacCatalyst (16,1), iOS (16,1)]
+		[Export ("performWithExclusiveControlBeforeDate:performHandler:")]
+		void PerformWithExclusiveControlBeforeDate (NSDate date, Action<bool, NSError> performHandler);
 	}
 
 	[NoWatch, NoTV, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
