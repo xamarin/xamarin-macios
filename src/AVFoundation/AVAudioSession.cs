@@ -65,7 +65,7 @@ namespace AVFoundation {
 		public NSError? SetCategory (NSString theCategory)
 		{
 			NSError outError;
-			
+
 			if (SetCategory (theCategory, out outError))
 				return null;
 			return outError;
@@ -73,7 +73,7 @@ namespace AVFoundation {
 
 		internal NSString? CategoryToToken (AVAudioSessionCategory category)
 		{
-			switch (category){
+			switch (category) {
 			case AVAudioSessionCategory.Ambient:
 				return AVAudioSession.CategoryAmbient;
 			case AVAudioSessionCategory.SoloAmbient:
@@ -93,7 +93,7 @@ namespace AVFoundation {
 			}
 			return null;
 		}
-		
+
 		public NSError? SetCategory (AVAudioSessionCategory category)
 		{
 			return SetCategory (CategoryToToken (category)!);

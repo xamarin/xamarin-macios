@@ -531,9 +531,11 @@ endif
 # we must install locally during 'make all', because the F# build depends on the msbuild targets/assemblies.
 all-local:: $(MSBUILD_PRODUCTS) .stamp-test-xml
 
+# I haven't found a way to execute ilrepack.exe on .NET (it will probably have to be built for .NET), so run it using Mono.
+
+.build-stamp: export SYSTEM_MONO:=$(SYSTEM_MONO)
 .build-stamp: $(ALL_SOURCES)
-	$(Q) $(SYSTEM_MONO) /Library/Frameworks/Mono.framework/Versions/Current/lib/mono/nuget/NuGet.exe restore $(NUGET_VERBOSITY)
-	$(Q) $(SYSTEM_MSBUILD) "/bl:$@.binlog" $(XBUILD_VERBOSITY)
+	$(Q) $(DOTNET) build "/bl:$@.binlog" $(XBUILD_VERBOSITY)
 	$(Q) touch $@
 
 # make all the target assemblies build when any of the sources have changed

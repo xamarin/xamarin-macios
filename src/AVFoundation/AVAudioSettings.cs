@@ -44,8 +44,7 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	// Should be called AVAudioSetting but AVAudioSetting has been already used by keys class
-	public class AudioSettings : DictionaryContainer
-	{
+	public class AudioSettings : DictionaryContainer {
 #if !COREBUILD
 		public AudioSettings ()
 			: base (new NSMutableDictionary ())
@@ -62,7 +61,7 @@ namespace AVFoundation {
 				SetNumberValue (AVAudioSettings.AVFormatIDKey, (int?) value);
 			}
 			get {
-				return (AudioFormatType?)GetInt32Value (AVAudioSettings.AVFormatIDKey);
+				return (AudioFormatType?) GetInt32Value (AVAudioSettings.AVFormatIDKey);
 			}
 		}
 
@@ -73,7 +72,7 @@ namespace AVFoundation {
 			get {
 				return GetDoubleValue (AVAudioSettings.AVSampleRateKey);
 			}
-		}			
+		}
 
 		public int? NumberChannels {
 			set {
@@ -147,7 +146,7 @@ namespace AVFoundation {
 			}
 			get {
 				return GetInt32Value (AVAudioSettings.AVEncoderBitRateKey);
-			}			
+			}
 		}
 
 		public int? EncoderBitRatePerChannel {
@@ -156,8 +155,8 @@ namespace AVFoundation {
 			}
 			get {
 				return GetInt32Value (AVAudioSettings.AVEncoderBitRatePerChannelKey);
-			}			
-		}			
+			}
+		}
 
 		public int? EncoderBitDepthHint {
 			set {
@@ -168,7 +167,7 @@ namespace AVFoundation {
 			}
 			get {
 				return GetInt32Value (AVAudioSettings.AVEncoderBitDepthHintKey);
-			}			
+			}
 		}
 
 #if NET
@@ -177,12 +176,12 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public AVAudioBitRateStrategy? BitRateStrategy {
 			set {
 				NSString? v = null;
-				switch (value){
+				switch (value) {
 				case AVAudioBitRateStrategy.Constant:
 					v = AVAudioSettings._Constant;
 					break;
@@ -222,7 +221,7 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public AVSampleRateConverterAlgorithm? SampleRateConverterAlgorithm {
 			get {
@@ -235,7 +234,7 @@ namespace AVFoundation {
 			}
 			set {
 				NSString? v = null;
-				switch (value){
+				switch (value) {
 				case AVSampleRateConverterAlgorithm.Mastering:
 					v = AVAudioSettings.AVSampleRateConverterAlgorithm_Mastering;
 					break;
@@ -257,7 +256,7 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
 		public AVAudioQuality? EncoderAudioQualityForVBR {
 			get {
@@ -267,7 +266,7 @@ namespace AVFoundation {
 				SetNumberValue (AVAudioSettings.AVEncoderAudioQualityForVBRKey, (nint?) (long?) value);
 			}
 		}
-		
+
 		public AudioChannelLayout ChannelLayout {
 			set {
 				SetNativeValue (AVAudioSettings.AVChannelLayoutKey, value is null ? null : value.AsData ());
