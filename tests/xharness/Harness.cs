@@ -105,15 +105,21 @@ namespace Xharness {
 
 		string MlaunchPath {
 			get {
-				if (INCLUDE_XAMARIN_LEGACY) {
-					if (INCLUDE_IOS)
-						return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
-				} else {
-					var dotnetRootDir = Path.Combine (RootDirectory, "..", "_build");
-					if (INCLUDE_IOS)
-						return Path.Combine (dotnetRootDir, "Microsoft.iOS.Sdk", "tools", "bin", "mlaunch");
-					if (INCLUDE_TVOS)
-						return Path.Combine (dotnetRootDir, "Microsoft.tvOS.Sdk", "tools", "bin", "mlaunch");
+				if (ENABLE_DOTNET) {
+					string platform;
+					if (INCLUDE_IOS) {
+						platform = "iOS";
+					} else if (INCLUDE_TVOS) {
+						platform = "tvOS";
+					} else {
+						return $"Not building any mobile platform, so can't provide a location to mlaunch.";
+					}
+					var mlaunchPath = Path.Combine (DOTNET_DIR, "packs");
+					mlaunchPath = Path.Combine (mlaunchPath, $"Microsoft.{platform}.Sdk", config [$"{platform.ToUpperInvariant ()}_NUGET_VERSION_NO_METADATA"]);
+					mlaunchPath = Path.Combine (mlaunchPath, "tools", "bin", "mlaunch");
+					return mlaunchPath;
+				} else if (INCLUDE_XAMARIN_LEGACY && INCLUDE_IOS) {
+					return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
 				}
 				return $"Not building any mobile platform, so can't provide a location to mlaunch.";
 			}
@@ -147,6 +153,7 @@ namespace Xharness {
 		public bool ENABLE_DOTNET { get; }
 		public bool INCLUDE_XAMARIN_LEGACY { get; }
 		public string SYSTEM_MONO { get; set; }
+		public string DOTNET_DIR { get; set; }
 
 		// Run
 
@@ -165,6 +172,7 @@ namespace Xharness {
 		public bool? IncludeSystemPermissionTests { get; set; }
 
 		string RootDirectory => HarnessConfiguration.RootDirectory;
+		Dictionary<string, string> config;
 
 		public Harness (IResultParser resultParser, HarnessAction action, HarnessConfiguration configuration)
 		{
@@ -197,6 +205,7 @@ namespace Xharness {
 
 			if (configuration.Labels != null)
 				Labels = new HashSet<string> (configuration.Labels);
+			Labels = new HashSet<string> (new string [] { "skip-all-tests", "run-ios-64-tests", "run-ios-simulator-tests", "run-tvos-tests", "run-watchos-tests", "run-mac-tests", "run-maccatalyst-tests", "run-dotnet-tests", "run-system-permission-tests", "run-legacy-xamarin-tests", "run-introspection-tests" });
 
 			if (configuration.EnvironmentVariables != null)
 				EnvironmentVariables = new Dictionary<string, string> (configuration.EnvironmentVariables);
@@ -221,10 +230,13 @@ namespace Xharness {
 			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_DOTNET = config.ContainsKey ("ENABLE_DOTNET") && !string.IsNullOrEmpty (config ["ENABLE_DOTNET"]);
 			SYSTEM_MONO = config ["SYSTEM_MONO"];
+			DOTNET_DIR = config ["DOTNET_DIR"];
 			INCLUDE_XAMARIN_LEGACY = config.ContainsKey ("INCLUDE_XAMARIN_LEGACY") && !string.IsNullOrEmpty (config ["INCLUDE_XAMARIN_LEGACY"]);
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
+
+			this.config = config;
 
 			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
 			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, "/usr/local/share/dotnet/dotnet", config ["DOTNET"]);
