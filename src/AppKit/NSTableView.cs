@@ -35,7 +35,7 @@ namespace AppKit {
 	public partial class NSTableView {
 		public NSTableViewSource Source {
 			get {
-				var d = WeakDelegate as NSTableViewSource; 
+				var d = WeakDelegate as NSTableViewSource;
 				if (d != null)
 					return d;
 				return null;

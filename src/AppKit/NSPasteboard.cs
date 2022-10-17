@@ -15,7 +15,7 @@ namespace AppKit {
 			nsa_pasteboardReading.Dispose ();
 			return result;
 		}
-		
+
 #if !NET
 		public bool WriteObjects (NSPasteboardWriting [] objects)
 		{

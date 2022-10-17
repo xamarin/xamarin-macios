@@ -38,27 +38,26 @@ using ObjCRuntime;
 using AudioToolbox;
 using Foundation;
 
-namespace AudioUnit
-{
-    public enum AudioComponentType : uint { // OSType in AudioComponentDescription
+namespace AudioUnit {
+	public enum AudioComponentType : uint { // OSType in AudioComponentDescription
 		Output = 0x61756f75, //'auou',
-		MusicDevice=0x61756d75, // 'aumu'
-		MusicEffect=0x61756d66, // 'aumf'
-		FormatConverter=0x61756663, // 'aufc'
-		Effect=0x61756678, // 'aufx'
-		Mixer=0x61756d78, // 'aumx'
-		Panner=0x6175706e, // 'aupn'
-		OfflineEffect=0x61756f6c, // 'auol'
-		Generator=0x6175676e, // 'augn'
+		MusicDevice = 0x61756d75, // 'aumu'
+		MusicEffect = 0x61756d66, // 'aumf'
+		FormatConverter = 0x61756663, // 'aufc'
+		Effect = 0x61756678, // 'aufx'
+		Mixer = 0x61756d78, // 'aumx'
+		Panner = 0x6175706e, // 'aupn'
+		OfflineEffect = 0x61756f6c, // 'auol'
+		Generator = 0x6175676e, // 'augn'
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
-		MIDIProcessor		= 0x61756d69, // 'aumi'
+		MIDIProcessor = 0x61756d69, // 'aumi'
 
 #if !MONOMAC
 #if NET
@@ -66,33 +65,33 @@ namespace AudioUnit
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
-		RemoteEffect		= 0x61757278, // 'aurx',
+		RemoteEffect = 0x61757278, // 'aurx',
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
-		RemoteGenerator		= 0x61757267, // 'aurg',
+		RemoteGenerator = 0x61757267, // 'aurg',
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
-		RemoteInstrument	= 0x61757269, // 'auri',
+		RemoteInstrument = 0x61757269, // 'auri',
 #if NET
 		[SupportedOSPlatform ("ios7.0")]
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (7,0)]
+		[iOS (7, 0)]
 #endif
-		RemoteMusicEffect	= 0x6174726d, // 'aurm'
+		RemoteMusicEffect = 0x6174726d, // 'aurm'
 #endif
 	}
 
@@ -111,7 +110,7 @@ namespace AudioUnit
 #else
 		[Mac (10, 15)]
 #endif
-		Remote=0x72696f63, // 'rioc'
+		Remote = 0x72696f63, // 'rioc'
 		VoiceProcessingIO = 0x7670696f // 'vpio'
 	}
 
@@ -119,7 +118,7 @@ namespace AudioUnit
 #if MONOMAC
 		DlsSynth	= 0x646c7320, // 'dls '
 #endif
-		Sampler		= 0x73616d70, // 'samp'
+		Sampler = 0x73616d70, // 'samp'
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
@@ -127,21 +126,21 @@ namespace AudioUnit
 		[SupportedOSPlatform ("macos")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[iOS (8,0)]
+		[iOS (8, 0)]
 #endif
-		MidiSynth	= 0x6d73796e, // 'msyn'
+		MidiSynth = 0x6d73796e, // 'msyn'
 	}
 
 	public enum AudioTypeConverter { // OSType in AudioComponentDescription
-		AU=0x636f6e76, // 'conv'
-		Varispeed=0x76617269, // 'vari'
-		DeferredRenderer=0x64656672, // 'defr'
-		Splitter=0x73706c74, // 'splt'
-		Merger=0x6d657267, // 'merg'
-		NewTimePitch=0x6e757470, // 'nutp'
-		AUiPodTimeOther=0x6970746f, // 'ipto
-		RoundTripAAC=0x72616163, // 'raac'
-		MultiSplitter=0x6d73706c, // 'mspl'
+		AU = 0x636f6e76, // 'conv'
+		Varispeed = 0x76617269, // 'vari'
+		DeferredRenderer = 0x64656672, // 'defr'
+		Splitter = 0x73706c74, // 'splt'
+		Merger = 0x6d657267, // 'merg'
+		NewTimePitch = 0x6e757470, // 'nutp'
+		AUiPodTimeOther = 0x6970746f, // 'ipto
+		RoundTripAAC = 0x72616163, // 'raac'
+		MultiSplitter = 0x6d73706c, // 'mspl'
 #if MONOMAC
 		TimePitch=0x746d7074, // 'tmpt'
 #else
@@ -158,21 +157,21 @@ namespace AudioUnit
 		[Obsolete ("Starting with ios13.0 use 'AudioTypeConverter.NewTimePitch' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AudioTypeConverter.NewTimePitch' instead.")]
 #endif
-		AUiPodTime=0x6970746d, // 'iptm'
+		AUiPodTime = 0x6970746d, // 'iptm'
 #endif
 	}
 
 	public enum AudioTypeEffect { // OSType in AudioComponentDescription
-		PeakLimiter=0x6c6d7472, // 'lmtr'
-		DynamicsProcessor=0x64636d70, // 'dcmp'
-		LowPassFilter=0x6c706173, // 'lpas'
-		HighPassFilter=0x68706173, // 'hpas'
-		HighShelfFilter=0x68736866, // 'hshf'
-		LowShelfFilter=0x6c736866, // 'lshf'
+		PeakLimiter = 0x6c6d7472, // 'lmtr'
+		DynamicsProcessor = 0x64636d70, // 'dcmp'
+		LowPassFilter = 0x6c706173, // 'lpas'
+		HighPassFilter = 0x68706173, // 'hpas'
+		HighShelfFilter = 0x68736866, // 'hshf'
+		LowShelfFilter = 0x6c736866, // 'lshf'
 #if NET
 		[SupportedOSPlatform ("ios")]
 		[SupportedOSPlatform ("maccatalyst")]
@@ -184,9 +183,9 @@ namespace AudioUnit
 #else
 		[Obsoleted (PlatformName.iOS, 7, 0)]
 #endif
-		DCFilter=0x6463666c, // 'dcfl'
-		ParametricEQ=0x706d6571, // 'pmeq'
-		Delay=0x64656c79, // 'dely'
+		DCFilter = 0x6463666c, // 'dcfl'
+		ParametricEQ = 0x706d6571, // 'pmeq'
+		Delay = 0x64656c79, // 'dely'
 
 #if NET
 		[SupportedOSPlatform ("ios8.0")]
@@ -196,9 +195,9 @@ namespace AudioUnit
 #else
 		[iOS (8, 0)]
 #endif
-		SampleDelay=0x73646c79, // 'sdly'
-		Distortion=0x64697374, // 'dist'
-		BandPassFilter=0x62706173, // 'bpas'
+		SampleDelay = 0x73646c79, // 'sdly'
+		Distortion = 0x64697374, // 'dist'
+		BandPassFilter = 0x62706173, // 'bpas'
 #if MONOMAC
 		GraphicEQ=0x67726571, // 'greq'
 		MultiBandCompressor=0x6d636d70, // 'mcmp'
@@ -222,11 +221,11 @@ namespace AudioUnit
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
 		[Unavailable (PlatformName.MacCatalyst)]
-		[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
-		[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
-		[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'AudioTypeEffect.GraphicEQ' instead.")]
 #endif
-		AUiPodEQ=0x69706571, // 'ipeq'
+		AUiPodEQ = 0x69706571, // 'ipeq'
 #endif
 #if NET
 		[SupportedOSPlatform ("macos10.15")]
@@ -234,17 +233,17 @@ namespace AudioUnit
 		[SupportedOSPlatform ("tvos")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,15)]
+		[Mac (10, 15)]
 		[Unavailable (PlatformName.MacCatalyst)]
 #endif
-		Reverb2=0x72766232, // 'rvb2'
-		NBandEq=0x6e626571, // 'nbeq'
+		Reverb2 = 0x72766232, // 'rvb2'
+		NBandEq = 0x6e626571, // 'nbeq'
 	}
 
 	public enum AudioTypeMixer { // OSType in AudioComponentDescription
-		MultiChannel=0x6d636d78, // 'mcmx'
-		Matrix=0x6d786d78, // 'mxmx'
-		Spacial=0x3364656d, // Same as Embedded3D
+		MultiChannel = 0x6d636d78, // 'mcmx'
+		Matrix = 0x6d786d78, // 'mxmx'
+		Spacial = 0x3364656d, // Same as Embedded3D
 #if MONOMAC
 		Stereo=0x736d7872, // 'smxr'
 #if NET
@@ -271,7 +270,7 @@ namespace AudioUnit
 		[Obsolete ("Starting with ios8.0 use 'Spacial' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #endif
-		Embedded3D=0x3364656d, // '3dem'
+		Embedded3D = 0x3364656d, // '3dem'
 #endif
 	}
 
@@ -288,23 +287,23 @@ namespace AudioUnit
 #if MONOMAC
 		NetReceive=0x6e726376, // 'nrcv'
 #endif
-		ScheduledSoundPlayer=0x7373706c, // 'sspl'
-		AudioFilePlayer=0x6166706c, // 'afpl'
-    }
-        
-    public enum AudioComponentManufacturerType : uint // OSType in AudioComponentDescription
-    {
+		ScheduledSoundPlayer = 0x7373706c, // 'sspl'
+		AudioFilePlayer = 0x6166706c, // 'afpl'
+	}
+
+	public enum AudioComponentManufacturerType : uint // OSType in AudioComponentDescription
+	{
 		Apple = 0x6170706c // little endian 0x6c707061 //'appl'
-    }
+	}
 
 	[Flags]
 	public enum AudioComponentFlag // UInt32 in AudioComponentDescription
 	{
-		Unsearchable				= 1,
-		SandboxSafe					= 2,
-		IsV3AudioUnit				= 4,
-		RequiresAsyncInstantiation	= 8,
-		CanLoadInProcess			= 0x10
+		Unsearchable = 1,
+		SandboxSafe = 2,
+		IsV3AudioUnit = 4,
+		RequiresAsyncInstantiation = 8,
+		CanLoadInProcess = 0x10
 	}
 
 #if NET
@@ -314,18 +313,17 @@ namespace AudioUnit
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct AudioComponentDescription
-	{
+	public struct AudioComponentDescription {
 		[MarshalAs (UnmanagedType.U4)]
 		public AudioComponentType ComponentType;
-		
-		[MarshalAs(UnmanagedType.U4)]
+
+		[MarshalAs (UnmanagedType.U4)]
 #if NET && !COREBUILD
 		public AudioUnitSubType ComponentSubType;
 #else
 		public int ComponentSubType;
 #endif
-        
+
 		[MarshalAs (UnmanagedType.U4)]
 		public AudioComponentManufacturerType ComponentManufacturer;
 
@@ -349,7 +347,7 @@ namespace AudioUnit
 		{
 			return new AudioComponentDescription (type, subType);
 		}
-		
+
 		public static AudioComponentDescription CreateOutput (AudioTypeOutput outputType)
 		{
 			return new AudioComponentDescription (AudioComponentType.Output, (int) outputType);
@@ -389,7 +387,7 @@ namespace AudioUnit
 		{
 			const string fmt = "[componentType={0}, subType={1}]";
 
-			switch (ComponentType){
+			switch (ComponentType) {
 			case AudioComponentType.Output:
 				return String.Format (fmt, ComponentType, (AudioTypeOutput) ComponentSubType);
 			case AudioComponentType.MusicDevice:
