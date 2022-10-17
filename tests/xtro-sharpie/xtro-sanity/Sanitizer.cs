@@ -3,6 +3,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
+using Xamarin.Utils;
+
 namespace Extrospection {
 	class Sanitizer {
 
@@ -228,6 +230,10 @@ namespace Extrospection {
 				var fx = kvp.Key;
 				var common = kvp.Value;
 				//ExistingCommonEntries (common, $"common-{fx}.ignore");
+
+				if (!IsFrameworkIncludedInAnySelectedPlatform (fx))
+					continue;
+
 				var raws = new RawInfo [Platforms.Count];
 				for (int i = 0; i < raws.Length; i++) {
 					var fname = Path.Combine (directory, $"{Platforms [i]}-{fx}.raw");
@@ -326,36 +332,58 @@ namespace Extrospection {
 			return sanitizedOrSkippedSanity ? 0 : count;
 		}
 
-		static List<Frameworks> AllFrameworks;
+		static List<Frameworks> frameworks; // the frameworks for the selected platforms
+		static List<Frameworks> all_frameworks; // the frameworks for all platforms
+
+		// If the given framework is skipped in all the currently building platforms.
+		static bool IsFrameworkIncludedInAnySelectedPlatform (string framework)
+		{
+			return Platforms.Any (v => IsFrameworkIncludedInPlatform (v, framework));
+		}
+
+		// If the given framework is skipped in the specified platform.
+		static bool IsFrameworkIncludedInPlatform (string platform, string framework)
+		{
+			// If the framework isn't in any of the registered frameworks for any platform, then treat it as included.
+			if (!GetAllFrameworks ().Any (v => v.Any (x => string.Equals (x.Key, framework, StringComparison.OrdinalIgnoreCase))))
+				return true;
+
+			// If the framework is registered for the current platform, then it's included.
+			var frameworks = Frameworks.GetFrameworks (ApplePlatformExtensions.Parse (platform), false);
+			if (frameworks.Any (x => string.Equals (x.Key, framework, StringComparison.OrdinalIgnoreCase)))
+				return true;
+
+			// found only for platforms that aren't included in the current build
+			return false;
+		}
+
+		static List<Frameworks> GetAllFrameworks ()
+		{
+			if (all_frameworks is null)
+				all_frameworks = GetFrameworks (AllPlatforms);
+			return all_frameworks;
+		}
+
+		static Frameworks GetFrameworks (string platform)
+		{
+			return Frameworks.GetFrameworks (ApplePlatformExtensions.Parse (platform), false);
+		}
+
+		static List<Frameworks> GetFrameworks (IEnumerable<string> platforms)
+		{
+			var rv = new List<Frameworks> ();
+			foreach (var platform in platforms)
+				rv.Add (GetFrameworks (platform));
+			return rv;
+		}
+
 		static int GetPlatformCount (string framework)
 		{
-			if (AllFrameworks is null) {
-				AllFrameworks = new List<Frameworks> ();
-				foreach (var platform in AllPlatforms) {
-					switch (platform) {
-					case "iOS":
-						AllFrameworks.Add (Frameworks.GetiOSFrameworks (false));
-						break;
-					case "tvOS":
-						AllFrameworks.Add (Frameworks.TVOSFrameworks);
-						break;
-					case "watchOS":
-						AllFrameworks.Add (Frameworks.GetwatchOSFrameworks (false));
-						break;
-					case "macOS":
-						AllFrameworks.Add (Frameworks.MacFrameworks);
-						break;
-					case "MacCatalyst":
-						AllFrameworks.Add (Frameworks.GetMacCatalystFrameworks ());
-						break;
-					default:
-						throw new NotImplementedException (platform);
-					}
-				}
-			}
-			var rv = AllFrameworks.Count (v => v.Any (fw => string.Equals (fw.Key, framework, StringComparison.OrdinalIgnoreCase)));
-			if (rv == 0) // If we could find the framework in our list of framework, assume it's available in all platforms.
-				return AllPlatforms.Count;
+			if (frameworks is null)
+				frameworks = GetFrameworks (Platforms);
+			var rv = frameworks.Count (v => v.Any (fw => string.Equals (fw.Key, framework, StringComparison.OrdinalIgnoreCase)));
+			if (rv == 0) // If we could find the framework in our list of framework, assume it's available in all platforms we're building for.
+				return Platforms.Count;
 			return rv;
 		}
 	}
