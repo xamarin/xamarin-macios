@@ -26,7 +26,7 @@ jobs:
         cat changelog2.txt >> $GITHUB_ENV
 
     - name: 'Add changelog'
-      uses: actions/github-script@v6.3.1
+      uses: actions/github-script@v6.3.3
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
