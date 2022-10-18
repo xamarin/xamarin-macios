@@ -53,7 +53,7 @@ namespace AudioToolbox {
 			Duration = duration;
 		}
 	}
-	
+
 	// MusicPlayer.h
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -102,7 +102,7 @@ namespace AudioToolbox {
 			data = Data;
 			buffer = IntPtr.Zero;
 		}
-		
+
 		public void SetData (int len, int start, byte [] Data)
 		{
 			if (len + start > Data.Length)
@@ -121,7 +121,7 @@ namespace AudioToolbox {
 			this.buffer = buffer;
 			this.data = null;
 		}
-		
+
 		//
 		// Converts our high-level representations to a buffer that
 		// we can pass to unmanaged functions that take a MidiRawData
@@ -139,16 +139,16 @@ namespace AudioToolbox {
 #else
 	public class MidiRawData : _MidiData {
 #endif
-		public MidiRawData () {}
+		public MidiRawData () { }
 
 		internal override IntPtr ToUnmanaged ()
 		{
 			unsafe {
 				// Length (UInt32) + length (UInt8 for each)
-				var target = (byte *) Marshal.AllocHGlobal (4 + len);
-				*((int *) target) = len;
+				var target = (byte*) Marshal.AllocHGlobal (4 + len);
+				*((int*) target) = len;
 				var rdata = target + 4;
-				
+
 				if (data is not null)
 					Marshal.Copy (data, start, (IntPtr) rdata, len);
 				else
@@ -165,7 +165,7 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public class MusicEventUserData : MidiRawData {
-		public MusicEventUserData () {}
+		public MusicEventUserData () { }
 
 		internal MusicEventUserData (IntPtr handle)
 		{
@@ -197,17 +197,17 @@ namespace AudioToolbox {
 	public class MidiMetaEvent : _MidiData {
 #endif
 		public byte MetaEventType;
-		
+
 		internal override IntPtr ToUnmanaged ()
 		{
 			unsafe {
 				// MetaEventType (UInt8) + 3 x unused (UInt8) + length (UInt32) + length (UInt8 for each)
-				var target = (byte *) Marshal.AllocHGlobal (8 + len);
+				var target = (byte*) Marshal.AllocHGlobal (8 + len);
 				*target = MetaEventType;
-				var plen = (int *)(target + 4);
+				var plen = (int*) (target + 4);
 				*plen = len;
 				var rdata = target + 8;
-				
+
 				if (data is not null)
 					Marshal.Copy (data, start, (IntPtr) rdata, len);
 				else
@@ -247,8 +247,7 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class MusicTrack : DisposableObject
-	{
+	public class MusicTrack : DisposableObject {
 #if !COREBUILD
 		MusicSequence? sequence;
 
@@ -288,7 +287,7 @@ namespace AudioToolbox {
 				return null;
 			}
 		}
- 
+
 #if IOS
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackSetDestMIDIEndpoint (/* MusicTrack */ IntPtr inTrack, MidiEndpointRef inEndpoint);
@@ -316,15 +315,15 @@ namespace AudioToolbox {
 		{
 			return MusicTrackSetDestNode (Handle, node);
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackSetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, void *inData, /* UInt32 */ int inLength);
+		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackSetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, void* inData, /* UInt32 */ int inLength);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackSetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, ref double inData, /* UInt32 */ int inLength);
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackGetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, void *outData, /* UInt32* */ ref int ioLength);
+		extern unsafe static /* OSStatus */ MusicPlayerStatus MusicTrackGetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, void* outData, /* UInt32* */ ref int ioLength);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackGetProperty (/* MusicTrack */ IntPtr inTrack, /* UInt32 */ SequenceTrackProperty propertyId, ref double outData, /* UInt32* */ ref int ioLength);
@@ -339,7 +338,7 @@ namespace AudioToolbox {
 			TrackLength,
 			TimeResolution
 		}
-	
+
 		public bool MuteStatus {
 			get {
 				byte val;
@@ -380,26 +379,26 @@ namespace AudioToolbox {
 				return value;
 			}
 			set {
-				MusicTrackSetProperty (Handle, SequenceTrackProperty.TrackLength, ref value, sizeof (double));	
+				MusicTrackSetProperty (Handle, SequenceTrackProperty.TrackLength, ref value, sizeof (double));
 			}
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
-		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMIDINoteEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, MidiNoteMessage *inMessage);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMIDINoteEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, MidiNoteMessage* inMessage);
 
 		public unsafe MusicPlayerStatus AddMidiNoteEvent (double timeStamp, MidiNoteMessage message)
 		{
 			return MusicTrackNewMIDINoteEvent (Handle, timeStamp, &message);
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
-		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMIDIChannelEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, MidiChannelMessage *inMessage);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMIDIChannelEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, MidiChannelMessage* inMessage);
 
 		public unsafe MusicPlayerStatus AddMidiChannelEvent (double timestamp, MidiChannelMessage channelMessage)
 		{
 			return MusicTrackNewMIDIChannelEvent (Handle, timestamp, &channelMessage);
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMIDIRawDataEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimestamp, /* MIDIRawData* */ IntPtr inRawData);
 
@@ -407,7 +406,7 @@ namespace AudioToolbox {
 		{
 			if (rawData is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (rawData));
-			
+
 			var native = rawData.ToUnmanaged ();
 			var r = MusicTrackNewMIDIRawDataEvent (Handle, timestamp, native);
 			Marshal.FreeHGlobal (native);
@@ -415,7 +414,7 @@ namespace AudioToolbox {
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewExtendedNoteEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, ExtendedNoteOnEvent *inInfo);
+		unsafe extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewExtendedNoteEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, ExtendedNoteOnEvent* inInfo);
 
 		public MusicPlayerStatus AddNewExtendedNoteEvent (double timestamp, ExtendedNoteOnEvent evt)
 		{
@@ -431,7 +430,7 @@ namespace AudioToolbox {
 		{
 			return MusicTrackNewExtendedTempoEvent (Handle, timestamp, bmp);
 		}
-			      
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicTrackNewMetaEvent (/* MusicTrack */ IntPtr inTrack, /* MusicTimeStamp */ double inTimeStamp, /* MIDIMetaEvent* */ IntPtr inMetaEvent);
 
@@ -439,7 +438,7 @@ namespace AudioToolbox {
 		{
 			if (metaEvent is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (metaEvent));
-			
+
 			var ptr = metaEvent.ToUnmanaged ();
 			var ret = MusicTrackNewMetaEvent (Handle, timestamp, ptr);
 			Marshal.FreeHGlobal (ptr);

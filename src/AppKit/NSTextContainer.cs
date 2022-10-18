@@ -3,12 +3,10 @@ using System;
 using CoreGraphics;
 using ObjCRuntime;
 
-namespace AppKit
-{
-	public partial class NSTextContainer
-	{
+namespace AppKit {
+	public partial class NSTextContainer {
 #if !NET
-		[Obsoleted (PlatformName.MacOSX, 10, 11, message : "Use NSTextContainer.FromSize instead.")]
+		[Obsoleted (PlatformName.MacOSX, 10, 11, message: "Use NSTextContainer.FromSize instead.")]
 		public NSTextContainer (CGSize size)
 		{
 			Handle = InitWithContainerSize (size);
@@ -29,7 +27,7 @@ namespace AppKit
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("tvos")]
 #else
-		[Mac (10,11)]
+		[Mac (10, 11)]
 #endif
 		public static NSTextContainer FromSize (CGSize size)
 		{
@@ -44,7 +42,7 @@ namespace AppKit
 		[UnsupportedOSPlatform ("macos10.11")]
 		[ObsoletedOSPlatform ("macos10.11", "Use NSTextContainer.FromSize instead.")]
 #else
-		[Deprecated (PlatformName.MacOSX, 10, 11, message : "Use NSTextContainer.FromSize instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use NSTextContainer.FromSize instead.")]
 #endif
 		public static NSTextContainer FromContainerSize (CGSize containerSize)
 		{
