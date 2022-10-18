@@ -11,8 +11,7 @@ namespace Xharness.Jenkins.TestTasks {
 	// This class groups simulator run tasks according to the
 	// simulator they'll run from, so that we minimize switching
 	// between different simulators (which is slow).
-	class AggregatedRunSimulatorTask : AppleTestTask
-	{
+	class AggregatedRunSimulatorTask : AppleTestTask {
 		public IEnumerable<RunSimulatorTask> Tasks;
 
 		// Due to parallelization this isn't the same as the sum of the duration for all the build tasks.
@@ -66,11 +65,11 @@ namespace Xharness.Jenkins.TestTasks {
 				}
 
 				var devices = executingTasks.FirstOrDefault ()?.Simulators;
-				if (devices == null || !devices.Any()) { 
+				if (devices == null || !devices.Any ()) {
 					ExecutionResult = TestExecutingResult.DeviceNotFound;
 					return;
 				}
-				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Any () ? devices.First().Name : "none");
+				Jenkins.MainLog.WriteLine ("Selected simulator: {0}", devices.Any () ? devices.First ().Name : "none");
 
 				foreach (var dev in devices) {
 					using var tcclog = Logs.Create ($"prepare-simulator-{Xharness.Harness.Helpers.Timestamp}.log", "Simulator preparation");

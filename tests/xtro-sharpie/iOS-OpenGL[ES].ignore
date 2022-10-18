@@ -1,12 +1,5 @@
-# OpenAL
-
 !missing-pinvoke! alGetBufferiv is not bound
-
-# OpenGL[ES]
-
-# only for iOS and tvOS (not watchOS) and macOS uses OpenGL
-## we use OpenTK for bindings
-
+!unknown-type! CADisplayLinkTimeSource bound
 !missing-pinvoke! glActiveTexture is not bound
 !missing-pinvoke! glBindBuffer is not bound
 !missing-pinvoke! glBindTexture is not bound

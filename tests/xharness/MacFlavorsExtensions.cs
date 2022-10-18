@@ -6,8 +6,7 @@ namespace Xharness {
 
 		public static TestPlatform ToTestPlatform (this MacFlavors flavor)
 		{
-			return flavor switch
-			{
+			return flavor switch {
 				MacFlavors.Console => TestPlatform.Mac,
 				MacFlavors.Full => TestPlatform.Mac_Full,
 				MacFlavors.Modern => TestPlatform.Mac_Modern,

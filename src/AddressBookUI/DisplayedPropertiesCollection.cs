@@ -24,25 +24,25 @@ namespace AddressBookUI {
 	[UnsupportedOSPlatform ("ios9.0")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 #endif
 	public class DisplayedPropertiesCollection : ICollection<ABPersonProperty> {
 
-		ABFunc<NSNumber[]?> g;
-		Action<NSNumber[]?> s;
+		ABFunc<NSNumber []?> g;
+		Action<NSNumber []?> s;
 
-		internal DisplayedPropertiesCollection (ABFunc<NSNumber[]?> g, Action<NSNumber[]?> s)
+		internal DisplayedPropertiesCollection (ABFunc<NSNumber []?> g, Action<NSNumber []?> s)
 		{
 			this.g = g;
 			this.s = s;
 		}
 
 		public int Count {
-			get {return g ()!.Length;}
+			get { return g ()!.Length; }
 		}
 
 		bool ICollection<ABPersonProperty>.IsReadOnly {
-			get {return false;}
+			get { return false; }
 		}
 
 		public void Add (ABPersonProperty item)
@@ -75,7 +75,7 @@ namespace AddressBookUI {
 			return false;
 		}
 
-		public void CopyTo (ABPersonProperty[] array, int arrayIndex)
+		public void CopyTo (ABPersonProperty [] array, int arrayIndex)
 		{
 			if (array is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (array));
@@ -99,7 +99,7 @@ namespace AddressBookUI {
 			var id = ABPersonPropertyId.ToId (item);
 			var values = new List<NSNumber> (dp);
 			bool found = false;
-			for (int i = values.Count-1; i >= 0; --i)
+			for (int i = values.Count - 1; i >= 0; --i)
 				if (values [i].Int32Value == id) {
 					values.RemoveAt (i);
 					found = true;

@@ -39,7 +39,7 @@ namespace AVFoundation {
 				IntPtr ptrtohandle = (IntPtr) (&errhandle);
 
 				var ap = new AVAudioPlayer (url, ptrtohandle);
-				if (ap.Handle == IntPtr.Zero){
+				if (ap.Handle == IntPtr.Zero) {
 					error = Runtime.GetNSObject<NSError> (errhandle);
 					return null;
 				} else
@@ -66,7 +66,7 @@ namespace AVFoundation {
 				IntPtr ptrtohandle = (IntPtr) (&errhandle);
 
 				var ap = new AVAudioPlayer (data, ptrtohandle);
-				if (ap.Handle == IntPtr.Zero){
+				if (ap.Handle == IntPtr.Zero) {
 					error = Runtime.GetNSObject<NSError> (errhandle);
 					return null;
 				} else

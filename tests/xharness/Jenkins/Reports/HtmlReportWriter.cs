@@ -44,13 +44,13 @@ namespace Xharness.Jenkins.Reports {
 		string GetResourcePath (string resource)
 		{
 			var executingDir = Path.GetDirectoryName (Assembly.GetExecutingAssembly ().Location);
-			return Path.Combine (executingDir, resource); 
+			return Path.Combine (executingDir, resource);
 		}
-		
+
 		void IncludeJavascript (StreamWriter writer)
 		{
 			if (embededResources) {
-				var jsPath = GetResourcePath("xharness.js"); 
+				var jsPath = GetResourcePath ("xharness.js");
 				writer.WriteLine ("<script type='text/javascript'>");
 				using (var reader = new StreamReader (jsPath)) {
 					string? line = null;
@@ -58,7 +58,7 @@ namespace Xharness.Jenkins.Reports {
 						writer.WriteLine (line);
 					}
 				}
-				writer.WriteLine("</script>");
+				writer.WriteLine ("</script>");
 			} else {
 				writer.WriteLine (@"<script type='text/javascript' src='xharness.js'></script>");
 			}
@@ -68,14 +68,14 @@ namespace Xharness.Jenkins.Reports {
 		{
 			if (embededResources) {
 				var cssPath = GetResourcePath ("xharness.css");
-				writer.WriteLine("<style>");
+				writer.WriteLine ("<style>");
 				using (var reader = new StreamReader (cssPath)) {
 					string? line = null;
 					while ((line = reader.ReadLine ()) != null) {
 						writer.WriteLine (line);
 					}
 				}
-				writer.WriteLine("</style>");
+				writer.WriteLine ("</style>");
 			} else {
 				writer.WriteLine ("<link rel='stylesheet' href='xharness.css'>");
 			}
@@ -286,8 +286,7 @@ namespace Xharness.Jenkins.Reports {
 			} else {
 				// Put failed tests at the top and ignored tests at the end.
 				// Then order alphabetically.
-				orderedTasks = orderedTasks.OrderBy ((v) =>
-				{
+				orderedTasks = orderedTasks.OrderBy ((v) => {
 					if (v.Any ((t) => t.Failed))
 						return -1;
 					if (v.All ((t) => t.Ignored))
@@ -660,7 +659,7 @@ namespace Xharness.Jenkins.Reports {
 			}
 			if (!relevantGroup.Any ())
 				return string.Empty;
-			
+
 			var results = relevantGroup
 				.GroupBy ((v) => v.ExecutionResult)
 				.Select ((v) => v.First ()) // GroupBy + Select = Distinct (lambda)
