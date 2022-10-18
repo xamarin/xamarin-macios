@@ -27,7 +27,7 @@ namespace Xamarin.Tests {
 			case Profile.macOSFull:
 			case Profile.macOSMobile:
 			case Profile.macOSSystem:
-				return ApplePlatform.MacCatalyst;
+				return ApplePlatform.MacOSX;
 			case Profile.None:
 			default:
 				throw new NotImplementedException (profile.ToString ());
