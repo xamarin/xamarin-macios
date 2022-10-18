@@ -39,47 +39,46 @@ using ObjCRuntime;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace AudioToolbox
-{
+namespace AudioToolbox {
 	public enum AudioConverterError // Impliclty cast to OSStatus in AudioConverter.h
 	{
 		None = 0,
-		FormatNotSupported			= 0x666d743f, // 'fmt?'
-		OperationNotSupported		= 0x6f703f3f, // 'op??'
-		PropertyNotSupported		= 0x70726f70, // 'prop'
-		InvalidInputSize			= 0x696e737a, // 'insz'
-		InvalidOutputSize			= 0x6f74737a, // 'otsz'
-		UnspecifiedError			= 0x77686174, // 'what'
-		BadPropertySizeError		= 0x2173697a, // '!siz'
+		FormatNotSupported = 0x666d743f, // 'fmt?'
+		OperationNotSupported = 0x6f703f3f, // 'op??'
+		PropertyNotSupported = 0x70726f70, // 'prop'
+		InvalidInputSize = 0x696e737a, // 'insz'
+		InvalidOutputSize = 0x6f74737a, // 'otsz'
+		UnspecifiedError = 0x77686174, // 'what'
+		BadPropertySizeError = 0x2173697a, // '!siz'
 		RequiresPacketDescriptionsError = 0x21706b64, // '!pkd'
-		InputSampleRateOutOfRange	= 0x21697372, // '!isr'
-		OutputSampleRateOutOfRange	= 0x216f7372, // '!osr'
-		HardwareInUse				= 0x68776975, // 'hwiu'
-	  	NoHardwarePermission		= 0x7065726d, // 'perm'
-		AudioFormatUnsupported		= 0x21646174, // '!dat' From http://lists.apple.com/archives/coreaudio-api/2009/Feb/msg00082.html
+		InputSampleRateOutOfRange = 0x21697372, // '!isr'
+		OutputSampleRateOutOfRange = 0x216f7372, // '!osr'
+		HardwareInUse = 0x68776975, // 'hwiu'
+		NoHardwarePermission = 0x7065726d, // 'perm'
+		AudioFormatUnsupported = 0x21646174, // '!dat' From http://lists.apple.com/archives/coreaudio-api/2009/Feb/msg00082.html
 	}
 
 	public enum AudioConverterSampleRateConverterComplexity // typedef UInt32 AudioConverterPropertyID
 	{
-		Linear				= 0x6c696e65, // 'line'
-		Normal				= 0x6e6f726d, // 'norm'
-		Mastering			= 0x62617473, // 'bats'
-	}	
+		Linear = 0x6c696e65, // 'line'
+		Normal = 0x6e6f726d, // 'norm'
+		Mastering = 0x62617473, // 'bats'
+	}
 
 	public enum AudioConverterQuality // typedef UInt32 AudioConverterPropertyID
 	{
-		Max					= 0x7F,
-		High				= 0x60,
-		Medium				= 0x40,
-		Low					= 0x20,
-		Min					= 0
+		Max = 0x7F,
+		High = 0x60,
+		Medium = 0x40,
+		Low = 0x20,
+		Min = 0
 	}
 
 	public enum AudioConverterPrimeMethod // typedef UInt32 AudioConverterPropertyID
 	{
-		Pre			= 0,
-		Normal		= 1,
-		None		= 2
+		Pre = 0,
+		Normal = 1,
+		None = 2
 	}
 
 #if NET
@@ -89,14 +88,13 @@ namespace AudioToolbox
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct AudioConverterPrimeInfo
-	{
+	public struct AudioConverterPrimeInfo {
 		public int LeadingFrames;
 		public int TrailingFrames;
 	}
 
 	public delegate AudioConverterError AudioConverterComplexInputData (ref int numberDataPackets, AudioBuffers data,
-		ref AudioStreamPacketDescription[]? dataPacketDescription);
+		ref AudioStreamPacketDescription []? dataPacketDescription);
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -104,8 +102,7 @@ namespace AudioToolbox
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #endif
-	public class AudioConverter : DisposableObject
-	{
+	public class AudioConverter : DisposableObject {
 		delegate AudioConverterError AudioConverterComplexInputDataShared (IntPtr inAudioConverter, ref int ioNumberDataPackets, IntPtr ioData,
 			IntPtr outDataPacketDescription, IntPtr inUserData);
 
@@ -130,7 +127,7 @@ namespace AudioToolbox
 		public uint MinimumOutputBufferSize {
 			get {
 				return GetUIntProperty (AudioConverterPropertyID.MinimumOutputBufferSize);
-			}			
+			}
 		}
 
 		public uint MaximumInputPacketSize {
@@ -210,17 +207,17 @@ namespace AudioToolbox
 				if (res != AudioConverterError.None)
 					throw new ArgumentException (res.ToString ());
 
-				return value;				
+				return value;
 			}
 		}
 
-		public int[]? ChannelMap {
+		public int []? ChannelMap {
 			get {
 				return GetArray<int> (AudioConverterPropertyID.ChannelMap, sizeof (int));
 			}
 		}
 
-		public byte[]? CompressionMagicCookie {
+		public byte []? CompressionMagicCookie {
 			get {
 				int size;
 				bool writable;
@@ -244,7 +241,7 @@ namespace AudioToolbox
 			}
 		}
 
-		public byte[]? DecompressionMagicCookie {
+		public byte []? DecompressionMagicCookie {
 			get {
 				int size;
 				bool writable;
@@ -315,31 +312,31 @@ namespace AudioToolbox
 			}
 		}
 
-		public AudioValueRange[]? ApplicableEncodeBitRates {
+		public AudioValueRange []? ApplicableEncodeBitRates {
 			get {
 				return GetAudioValueRange (AudioConverterPropertyID.ApplicableEncodeBitRates);
 			}
 		}
 
-		public AudioValueRange[]? AvailableEncodeBitRates {
+		public AudioValueRange []? AvailableEncodeBitRates {
 			get {
 				return GetAudioValueRange (AudioConverterPropertyID.AvailableEncodeBitRates);
 			}
 		}
 
-		public AudioValueRange[]? ApplicableEncodeSampleRates {
+		public AudioValueRange []? ApplicableEncodeSampleRates {
 			get {
 				return GetAudioValueRange (AudioConverterPropertyID.ApplicableEncodeSampleRates);
 			}
 		}
 
-		public AudioValueRange[]? AvailableEncodeSampleRates {
+		public AudioValueRange []? AvailableEncodeSampleRates {
 			get {
 				return GetAudioValueRange (AudioConverterPropertyID.AvailableEncodeSampleRates);
 			}
 		}
 
-		public AudioChannelLayoutTag[]? AvailableEncodeChannelLayoutTags {
+		public AudioChannelLayoutTag []? AvailableEncodeChannelLayoutTags {
 			get {
 				return GetArray<AudioChannelLayoutTag> (AudioConverterPropertyID.AvailableEncodeChannelLayoutTags, sizeof (AudioChannelLayoutTag));
 			}
@@ -358,7 +355,7 @@ namespace AudioToolbox
 				if (res != AudioConverterError.None)
 					throw new ArgumentException (res.ToString ());
 
-				var asbd = *(AudioStreamBasicDescription *) ptr;
+				var asbd = *(AudioStreamBasicDescription*) ptr;
 				Marshal.FreeHGlobal (ptr);
 				return asbd;
 			}
@@ -392,7 +389,7 @@ namespace AudioToolbox
 			}
 		}
 
-		public unsafe AudioFormat[]? FormatList {
+		public unsafe AudioFormat []? FormatList {
 			get {
 				return GetArray<AudioFormat> (AudioConverterPropertyID.PropertyFormatList, sizeof (AudioFormat));
 			}
@@ -422,7 +419,7 @@ namespace AudioToolbox
 			return new AudioConverter (ptr, true);
 		}
 
-		public static AudioConverter? Create (AudioStreamBasicDescription sourceFormat, AudioStreamBasicDescription destinationFormat, AudioClassDescription[] descriptions)
+		public static AudioConverter? Create (AudioStreamBasicDescription sourceFormat, AudioStreamBasicDescription destinationFormat, AudioClassDescription [] descriptions)
 		{
 			if (descriptions is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (descriptions));
@@ -435,15 +432,15 @@ namespace AudioToolbox
 			return new AudioConverter (ptr, true);
 		}
 
-		public static AudioFormatType[]? DecodeFormats {
+		public static AudioFormatType []? DecodeFormats {
 			get {
-				return GetFormats (AudioFormatProperty.DecodeFormatIDs); 
+				return GetFormats (AudioFormatProperty.DecodeFormatIDs);
 			}
 		}
 
-		public static AudioFormatType[]? EncodeFormats {
+		public static AudioFormatType []? EncodeFormats {
 			get {
-				return GetFormats (AudioFormatProperty.EncodeFormatIDs); 
+				return GetFormats (AudioFormatProperty.EncodeFormatIDs);
 			}
 		}
 
@@ -460,7 +457,7 @@ namespace AudioToolbox
 			base.Dispose (disposing);
 		}
 
-		public AudioConverterError ConvertBuffer (byte[] input, byte[] output)
+		public AudioConverterError ConvertBuffer (byte [] input, byte [] output)
 		{
 			if (input is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (input));
@@ -482,7 +479,7 @@ namespace AudioToolbox
 		}
 
 		public AudioConverterError FillComplexBuffer (ref int outputDataPacketSize,
-			AudioBuffers outputData, AudioStreamPacketDescription[] packetDescription, AudioConverterComplexInputData newInputDataHandler)
+			AudioBuffers outputData, AudioStreamPacketDescription [] packetDescription, AudioConverterComplexInputData newInputDataHandler)
 		{
 			if (outputData is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputData));
@@ -494,7 +491,7 @@ namespace AudioToolbox
 		}
 
 		public AudioConverterError FillComplexBuffer (ref int outputDataPacketSize,
-			AudioBuffers outputData, AudioStreamPacketDescription[] packetDescription)
+			AudioBuffers outputData, AudioStreamPacketDescription [] packetDescription)
 		{
 			if (outputData is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputData));
@@ -503,7 +500,7 @@ namespace AudioToolbox
 		}
 
 		AudioConverterError FillComplexBuffer (ref int outputDataPacketSize,
-			AudioBuffers outputData, AudioStreamPacketDescription[] packetDescription, Tuple<AudioConverter, AudioConverterComplexInputData?> instanceData)
+			AudioBuffers outputData, AudioStreamPacketDescription [] packetDescription, Tuple<AudioConverter, AudioConverterComplexInputData?> instanceData)
 		{
 			var this_handle = GCHandle.Alloc (instanceData);
 
@@ -511,11 +508,11 @@ namespace AudioToolbox
 				var this_ptr = GCHandle.ToIntPtr (this_handle);
 
 				if (packetDescription is null)
-					return AudioConverterFillComplexBuffer (Handle, ComplexInputDataShared, this_ptr, ref outputDataPacketSize, (IntPtr)outputData, IntPtr.Zero);
+					return AudioConverterFillComplexBuffer (Handle, ComplexInputDataShared, this_ptr, ref outputDataPacketSize, (IntPtr) outputData, IntPtr.Zero);
 
 				unsafe {
 					fixed (AudioStreamPacketDescription* pdesc = &packetDescription [0]) {
-						return AudioConverterFillComplexBuffer (Handle, ComplexInputDataShared, this_ptr, ref outputDataPacketSize, (IntPtr)outputData, (IntPtr)pdesc);
+						return AudioConverterFillComplexBuffer (Handle, ComplexInputDataShared, this_ptr, ref outputDataPacketSize, (IntPtr) outputData, (IntPtr) pdesc);
 					}
 				}
 			} finally {
@@ -528,7 +525,7 @@ namespace AudioToolbox
 		//
 		[MonoPInvokeCallback (typeof (AudioConverterComplexInputDataShared))]
 		static AudioConverterError FillComplexBufferShared (IntPtr inAudioConverter, ref int ioNumberDataPackets, IntPtr ioData,
-		                                                    IntPtr outDataPacketDescription, IntPtr inUserData)
+															IntPtr outDataPacketDescription, IntPtr inUserData)
 		{
 			var handler = GCHandle.FromIntPtr (inUserData);
 			var instanceData = handler.Target as Tuple<AudioConverter, AudioConverterComplexInputData?>;
@@ -581,7 +578,7 @@ namespace AudioToolbox
 							inst.packetDescriptionSize = data.Length;
 							inst.packetDescriptions = Marshal.AllocHGlobal (data.Length * size);
 						}
-						unsafe { 
+						unsafe {
 							fixed (void* source = data) {
 								Buffer.MemoryCopy (source, (void*) inst.packetDescriptions, inst.packetDescriptionSize * size, data.Length * size);
 							}
@@ -601,16 +598,16 @@ namespace AudioToolbox
 			return AudioConverterReset (Handle);
 		}
 
-		unsafe static AudioFormatType[]? GetFormats (AudioFormatProperty prop)
+		unsafe static AudioFormatType []? GetFormats (AudioFormatProperty prop)
 		{
 			int size;
 			if (AudioFormatPropertyNative.AudioFormatGetPropertyInfo (prop, 0, IntPtr.Zero, out size) != 0)
 				return null;
 
 			var elementSize = sizeof (AudioFormatType);
-			var data = new AudioFormatType[size / elementSize];
+			var data = new AudioFormatType [size / elementSize];
 			fixed (AudioFormatType* ptr = data) {
-				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, 0, IntPtr.Zero, ref size, (IntPtr)ptr);
+				var res = AudioFormatPropertyNative.AudioFormatGetProperty (prop, 0, IntPtr.Zero, ref size, (IntPtr) ptr);
 				if (res != 0)
 					return null;
 
@@ -641,12 +638,12 @@ namespace AudioToolbox
 			return value;
 		}
 
-		unsafe AudioValueRange[]? GetAudioValueRange (AudioConverterPropertyID prop)
+		unsafe AudioValueRange []? GetAudioValueRange (AudioConverterPropertyID prop)
 		{
 			return GetArray<AudioValueRange> (prop, sizeof (AudioValueRange));
 		}
 
-		unsafe T[]? GetArray<T> (AudioConverterPropertyID prop, int elementSize)
+		unsafe T []? GetArray<T> (AudioConverterPropertyID prop, int elementSize)
 		{
 			int size;
 			bool writable;
@@ -667,7 +664,7 @@ namespace AudioToolbox
 			} finally {
 				array_handle.Free ();
 			}
-		}		
+		}
 
 		void SetProperty (AudioConverterPropertyID propertyID, uint value)
 		{
@@ -691,16 +688,16 @@ namespace AudioToolbox
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-        static extern AudioConverterError AudioConverterNew (ref AudioStreamBasicDescription inSourceFormat, ref AudioStreamBasicDescription inDestinationFormat, ref IntPtr outAudioConverter);		
+		static extern AudioConverterError AudioConverterNew (ref AudioStreamBasicDescription inSourceFormat, ref AudioStreamBasicDescription inDestinationFormat, ref IntPtr outAudioConverter);
 
-		[DllImport (Constants.AudioToolboxLibrary)]	
+		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterNewSpecific (ref AudioStreamBasicDescription inSourceFormat, ref AudioStreamBasicDescription inDestinationFormat,
-			int inNumberClassDescriptions, ref AudioClassDescription[] inClassDescriptions, ref IntPtr outAudioConverter);
+			int inNumberClassDescriptions, ref AudioClassDescription [] inClassDescriptions, ref IntPtr outAudioConverter);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterDispose (IntPtr inAudioConverter);
 
-		[DllImport (Constants.AudioToolboxLibrary)]	
+		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterReset (IntPtr inAudioConverter);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
@@ -721,7 +718,7 @@ namespace AudioToolbox
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterGetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID,
-			ref int ioPropertyDataSize, byte[] outPropertyData);
+			ref int ioPropertyDataSize, byte [] outPropertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterGetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID,
@@ -749,11 +746,11 @@ namespace AudioToolbox
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterSetProperty (IntPtr inAudioConverter, AudioConverterPropertyID inPropertyID,
-			int inPropertyDataSize, byte[] inPropertyData);
+			int inPropertyDataSize, byte [] inPropertyData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		static extern AudioConverterError AudioConverterConvertBuffer (IntPtr inAudioConverter, int inInputDataSize, byte[] inInputData,
-			ref int ioOutputDataSize, byte[] outOutputData);
+		static extern AudioConverterError AudioConverterConvertBuffer (IntPtr inAudioConverter, int inInputDataSize, byte [] inInputData,
+			ref int ioOutputDataSize, byte [] outOutputData);
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		static extern AudioConverterError AudioConverterFillComplexBuffer (IntPtr inAudioConverter,
@@ -764,44 +761,44 @@ namespace AudioToolbox
 
 	enum AudioConverterPropertyID // typedef UInt32 AudioConverterPropertyID
 	{
-		MinimumInputBufferSize			= 0x6d696273, // 'mibs'
-		MinimumOutputBufferSize			= 0x6d6f6273, // 'mobs'
-		// Deprecated
-		// MaximumInputBufferSize		= 0x78696273, // 'xibs'
-		MaximumInputPacketSize			= 0x78697073, // 'xips'
-		MaximumOutputPacketSize			= 0x786f7073, // 'xops'
-		CalculateInputBufferSize		= 0x63696273, // 'cibs'
-		CalculateOutputBufferSize		= 0x636f6273, // 'cobs'
-		
+		MinimumInputBufferSize = 0x6d696273, // 'mibs'
+		MinimumOutputBufferSize = 0x6d6f6273, // 'mobs'
+											  // Deprecated
+											  // MaximumInputBufferSize		= 0x78696273, // 'xibs'
+		MaximumInputPacketSize = 0x78697073, // 'xips'
+		MaximumOutputPacketSize = 0x786f7073, // 'xops'
+		CalculateInputBufferSize = 0x63696273, // 'cibs'
+		CalculateOutputBufferSize = 0x636f6273, // 'cobs'
+
 		// TODO: Format specific
 		// InputCodecParameters         = 'icdp'
 		// OutputCodecParameters        = 'ocdp'
 
 		// Deprecated
-    	// SampleRateConverterAlgorithm = 'srci'
-		SampleRateConverterComplexity	= 0x73726361, // 'srca'
-		SampleRateConverterQuality		= 0x73726371, // 'srcq'
+		// SampleRateConverterAlgorithm = 'srci'
+		SampleRateConverterComplexity = 0x73726361, // 'srca'
+		SampleRateConverterQuality = 0x73726371, // 'srcq'
 		SampleRateConverterInitialPhase = 0x73726370, // 'srcp'
-		CodecQuality					= 0x63647175, // 'cdqu'
-		PrimeMethod						= 0x70726d6d, // 'prmm'
-		PrimeInfo						= 0x7072696d, // 'prim'
-		ChannelMap						= 0x63686d70, // 'chmp'
-		DecompressionMagicCookie		= 0x646d6763, // 'dmgc'
-		CompressionMagicCookie			= 0x636d6763, // 'cmgc'
-		EncodeBitRate					= 0x62726174, // 'brat'
-		EncodeAdjustableSampleRate		= 0x616a7372, // 'ajsr'
-		InputChannelLayout				= 0x69636c20, // 'icl '
-		OutputChannelLayout				= 0x6f636c20, // 'ocl '
-		ApplicableEncodeBitRates		= 0x61656272, // 'aebr'
-		AvailableEncodeBitRates			= 0x76656272, // 'vebr'
-		ApplicableEncodeSampleRates		= 0x61657372, // 'aesr'
-		AvailableEncodeSampleRates		= 0x76657372, // 'vesr'
-		AvailableEncodeChannelLayoutTags	= 0x6165636c, // 'aecl'
-		CurrentOutputStreamDescription	= 0x61636f64, // 'acod'
-		CurrentInputStreamDescription	= 0x61636964, // 'acid'
-		PropertySettings				= 0x61637073, // 'acps'	// TODO
-		PropertyBitDepthHint			= 0x61636264, // 'acbd'
-		PropertyFormatList				= 0x666c7374, // 'flst'
-		CanResumeFromInterruption		= 0x63726669, // 'crfi'
+		CodecQuality = 0x63647175, // 'cdqu'
+		PrimeMethod = 0x70726d6d, // 'prmm'
+		PrimeInfo = 0x7072696d, // 'prim'
+		ChannelMap = 0x63686d70, // 'chmp'
+		DecompressionMagicCookie = 0x646d6763, // 'dmgc'
+		CompressionMagicCookie = 0x636d6763, // 'cmgc'
+		EncodeBitRate = 0x62726174, // 'brat'
+		EncodeAdjustableSampleRate = 0x616a7372, // 'ajsr'
+		InputChannelLayout = 0x69636c20, // 'icl '
+		OutputChannelLayout = 0x6f636c20, // 'ocl '
+		ApplicableEncodeBitRates = 0x61656272, // 'aebr'
+		AvailableEncodeBitRates = 0x76656272, // 'vebr'
+		ApplicableEncodeSampleRates = 0x61657372, // 'aesr'
+		AvailableEncodeSampleRates = 0x76657372, // 'vesr'
+		AvailableEncodeChannelLayoutTags = 0x6165636c, // 'aecl'
+		CurrentOutputStreamDescription = 0x61636f64, // 'acod'
+		CurrentInputStreamDescription = 0x61636964, // 'acid'
+		PropertySettings = 0x61637073, // 'acps'	// TODO
+		PropertyBitDepthHint = 0x61636264, // 'acbd'
+		PropertyFormatList = 0x666c7374, // 'flst'
+		CanResumeFromInterruption = 0x63726669, // 'crfi'
 	}
 }
