@@ -317,6 +317,8 @@ define ApiDiffReportMarkdown
 
 endef
 
+all-markdowns:: $(OUTPUT_DIR)/api-diff.md
+
 $(OUTPUT_DIR)/api-diff.md: $(API_DIFF_DEPENDENCIES)
 ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/*-api-diff.html),! test -s "$(html)" &&) true; then \
