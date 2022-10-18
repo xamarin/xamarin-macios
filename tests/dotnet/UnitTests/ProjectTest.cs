@@ -872,7 +872,11 @@ namespace Xamarin.Tests {
 		{
 			var project = "AppWithGenericLibraryReference";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX); // This test requires macOS as well, for all other platforms.
+			if (platform == ApplePlatform.MacOSX) {
+				Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS); // This test requires iOS as well when testing macOS
+			} else {
+				Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX); // This test requires macOS as well (for all other platforms except macOS).
+			}
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);

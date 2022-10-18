@@ -30,8 +30,7 @@ namespace AudioUnit {
 	public class AUScheduledAudioFileRegion : IDisposable {
 
 		[StructLayout (LayoutKind.Sequential)]
-		internal struct ScheduledAudioFileRegion
-		{
+		internal struct ScheduledAudioFileRegion {
 			public AudioTimeStamp TimeStamp;
 #if NET
 			public unsafe delegate* unmanaged<IntPtr, IntPtr, AudioUnitStatus, void> CompletionHandler;
@@ -66,7 +65,7 @@ namespace AudioUnit {
 
 #if !NET
 		internal delegate void ScheduledAudioFileRegionCompletionHandler (
-			/* void * */IntPtr userData, 
+			/* void * */IntPtr userData,
 			/* ScheduledAudioFileRegion * */ IntPtr fileRegion,
 			/* OSStatus */ AudioUnitStatus result);
 
@@ -82,7 +81,7 @@ namespace AudioUnit {
 		{
 			if (userData == IntPtr.Zero)
 				return;
-			
+
 			var handle = GCHandle.FromIntPtr (userData);
 			var inst = (AUScheduledAudioFileRegion?) handle.Target;
 			if (inst?.completionHandler is not null)

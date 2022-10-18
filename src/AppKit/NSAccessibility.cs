@@ -17,22 +17,20 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
-namespace AppKit
-{
-	public partial interface INSAccessibility {}
+namespace AppKit {
+	public partial interface INSAccessibility { }
 
 #if NET
 	[SupportedOSPlatform ("macos10.9")]
 #else
-	[Mac (10,9)] // but the field/notifications are in 10.9
+	[Mac (10, 9)] // but the field/notifications are in 10.9
 #endif
-	public partial class NSAccessibility
-	{
+	public partial class NSAccessibility {
 #if !COREBUILD
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 #else
-		[Mac (10,10)]
+		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGRect NSAccessibilityFrameInView (NSView parentView, CGRect frame);
@@ -45,7 +43,7 @@ namespace AppKit
 #if NET
 		[SupportedOSPlatform ("macos10.10")]
 #else
-		[Mac (10,10)]
+		[Mac (10, 10)]
 #endif
 		[DllImport (Constants.AppKitLibrary)]
 		static extern CGPoint NSAccessibilityPointInView (NSView parentView, CGPoint point);
@@ -159,7 +157,7 @@ namespace AppKit
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityUnignoredChildren (IntPtr originalChildren);
 
-		public static NSObject[] GetUnignoredChildren (NSArray originalChildren)
+		public static NSObject [] GetUnignoredChildren (NSArray originalChildren)
 		{
 			if (originalChildren == null)
 				throw new ArgumentNullException ("originalChildren");
@@ -172,7 +170,7 @@ namespace AppKit
 		[DllImport (Constants.AppKitLibrary)]
 		static extern IntPtr NSAccessibilityUnignoredChildrenForOnlyChild (IntPtr originalChild);
 
-		public static NSObject[] GetUnignoredChildren (NSObject originalChild)
+		public static NSObject [] GetUnignoredChildren (NSObject originalChild)
 		{
 			if (originalChild == null)
 				throw new ArgumentNullException ("originalChild");
