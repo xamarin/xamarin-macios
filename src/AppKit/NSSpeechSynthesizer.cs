@@ -26,11 +26,11 @@
 using System;
 
 namespace AppKit {
-	
+
 	public partial class NSSpeechSynthesizer {
-		
+
 		// note: if needed override the protected Get|Set methods
-		public string Voice { 
+		public string Voice {
 			get { return GetVoice (); }
 			// ignore return value (bool)
 			set { SetVoice (value); }

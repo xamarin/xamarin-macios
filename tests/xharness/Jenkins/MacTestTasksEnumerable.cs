@@ -65,7 +65,14 @@ namespace Xharness.Jenkins {
 		{
 
 			foreach (var project in jenkins.Harness.MacTestProjects) {
-				bool ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac);
+				bool ignored = false;
+
+				if (project.TestPlatform == TestPlatform.MacCatalyst) {
+					ignored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst);
+				} else {
+					ignored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac);
+				}
+
 				if (project.Ignore == true)
 					ignored = true;
 

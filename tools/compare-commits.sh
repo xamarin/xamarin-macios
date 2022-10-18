@@ -119,14 +119,6 @@ while ! test -z "${1:-}"; do
 			SKIP_DIRTY_CHECK=1
 			shift
 			;;
-		--gh-comments-file=*)
-			GH_COMMENTS_FILE="${1#*=}"
-			shift
-			;;
-		--gh-comments-file)
-			GH_COMMENTS_FILE="$2"
-			shift 2
-			;;
 		*)
 			echo "${RED}Error: Unknown argument: $1${CLEAR}"
 			exit 1
@@ -214,6 +206,19 @@ else
 	GIT_COLOR_P=()
 fi
 
+GENERATOR_DIFF_FILE=
+APIDIFF_FILE=
+STABLE_API_COMPARISON_FILE=
+
+OUTPUT_RESULTS_DIR=$OUTPUT_DIR/results
+OUTPUT_TMP_DIR=$OUTPUT_DIR/tmp
+OUTPUT_SRC_DIR=$OUTPUT_TMP_DIR/src
+
+GH_COMMENTS_FILE=$OUTPUT_RESULTS_DIR/gh-comment.md
+
+rm -f "$GH_COMMENTS_FILE"
+mkdir -p "$(dirname "$GH_COMMENTS_FILE")"
+
 if test -z "$SKIP_DIRTY_CHECK"; then
 	if [ -n "$(git status --porcelain --ignore-submodule)" ]; then
 		report_error_line "${RED}** Error: Working directory isn't clean:${CLEAR}"
@@ -229,19 +234,6 @@ git log "$BASE_HASH..$CURRENT_HASH" --oneline $GIT_COLOR | sed 's/^/    /'
 BASE_HASH=$(git log -1 --pretty=%H "$BASE_HASH")
 
 # We'll clone xamarin-macios again into a different directory, and build it
-
-GENERATOR_DIFF_FILE=
-APIDIFF_FILE=
-STABLE_API_COMPARISON_FILE=
-
-OUTPUT_RESULTS_DIR=$OUTPUT_DIR/results
-OUTPUT_TMP_DIR=$OUTPUT_DIR/tmp
-OUTPUT_SRC_DIR=$OUTPUT_TMP_DIR/src
-
-GH_COMMENTS_FILE=$OUTPUT_RESULTS_DIR/gh-comment.md
-
-rm -f "$GH_COMMENTS_FILE"
-mkdir -p "$(dirname "$GH_COMMENTS_FILE")"
 
 function upon_exit ()
 {
