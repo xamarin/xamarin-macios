@@ -37,8 +37,8 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (9,0)]
-	[Mac (10,11)]
+	[iOS (9, 0)]
+	[Mac (10, 11)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVBeatRange {
@@ -72,7 +72,7 @@ namespace AVFoundation {
 			if (!(obj is AVBeatRange))
 				return false;
 
-			return this.Equals ((AVBeatRange)obj);
+			return this.Equals ((AVBeatRange) obj);
 		}
 
 		public bool Equals (AVBeatRange other)

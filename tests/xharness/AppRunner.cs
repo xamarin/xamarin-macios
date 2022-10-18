@@ -30,7 +30,7 @@ namespace Xharness {
 		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
 		readonly ITestReporterFactory testReporterFactory;
 		readonly IAppBundleInformationParser appBundleInformationParser;
-		
+
 		readonly RunMode runMode;
 		readonly bool isSimulator;
 		readonly TestTarget target;
@@ -52,7 +52,7 @@ namespace Xharness {
 			set => ensureCleanSimulatorState = value;
 		}
 
-		public AppBundleInformation AppInformation { get; private set;  }
+		public AppBundleInformation AppInformation { get; private set; }
 
 		bool IsExtension => AppInformation.Extension.HasValue;
 
@@ -415,7 +415,7 @@ namespace Xharness {
 						var tunnel = listenerFactory.TunnelBore.Create (deviceName, MainLog);
 						tunnel.Open (deviceName, tcpListener, testReporterTimeout, MainLog);
 						// wait until we started the tunnel
-						await tunnel.Started; 
+						await tunnel.Started;
 					}
 
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).

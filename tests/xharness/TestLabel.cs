@@ -22,13 +22,13 @@ namespace Xharness {
 		None = 0,
 		[Label ("bcl")]
 		Bcl = 1 << 1,
-		[Label("bgen")]
+		[Label ("bgen")]
 		Bgen = 1 << 2,
 		[Label ("binding")]
 		Binding = 1 << 3,
 		[Label ("bindings-framework")]
 		BindingFramework = 1 << 4,
-		[Label("bindings-xcframework")]
+		[Label ("bindings-xcframework")]
 		BindingsXcframework = 1 << 5,
 		[Label ("cecil")]
 		Cecil = 1 << 6,
@@ -38,13 +38,13 @@ namespace Xharness {
 		DotnetTest = 1 << 8,
 		[Label ("fsharp")]
 		Fsharp = 1 << 9,
-		[Label("framework")]
+		[Label ("framework")]
 		Framework = 1 << 10,
 		[Label ("generator")]
 		Generator = 1 << 11,
 		[Label ("interdependent-binding-projects")]
 		InterdependentBindingProjects = 1 << 12,
-		[Label("install-source")]
+		[Label ("install-source")]
 		InstallSource = 1 << 13,
 		[Label ("introspection")]
 		Introspection = 1 << 14,
@@ -75,7 +75,7 @@ namespace Xharness {
 		[Label ("xtro")]
 		Xtro = 1 << 27,
 		[Label ("all")]
-		All =  Int64.MaxValue, 
+		All = Int64.MaxValue,
 	}
 
 	[Flags]
@@ -109,7 +109,7 @@ namespace Xharness {
 		[Label ("legacy-xamarin")]
 		LegacyXamarin = 1 << 13,
 		[Label ("all")]
-		All =  0xFFFFFFFF, 
+		All = 0xFFFFFFFF,
 	}
 
 	static class TestLabelExtensions {

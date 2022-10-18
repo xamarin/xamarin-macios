@@ -14,3 +14,4 @@
 
 # Initial result from new rule missing-null-allowed
 !missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionCallbackHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
+!missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound

@@ -6,8 +6,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
-	class RunXtroTask : MacExecuteTask
-	{
+	class RunXtroTask : MacExecuteTask {
 		public string AnnotationsDirectory;
 		string mode;
 

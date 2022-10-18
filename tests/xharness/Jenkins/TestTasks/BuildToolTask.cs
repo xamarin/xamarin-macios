@@ -5,8 +5,7 @@ using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.Common.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
-	abstract class BuildToolTask : AppleTestTask, IBuildToolTask 
-	{
+	abstract class BuildToolTask : AppleTestTask, IBuildToolTask {
 		protected BuildTool buildToolTask;
 
 		public IProcessManager ProcessManager { get; }
@@ -20,11 +19,11 @@ namespace Xharness.Jenkins.TestTasks {
 			get => base.TestName;
 			set {
 				base.TestName = value;
-				buildToolTask.TestName = value; 
+				buildToolTask.TestName = value;
 			}
 		}
 
-		public bool SpecifyPlatform { 
+		public bool SpecifyPlatform {
 			get => buildToolTask.SpecifyPlatform;
 			set => buildToolTask.SpecifyPlatform = value;
 		}
@@ -46,14 +45,15 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		protected BuildToolTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) : base (jenkins) {
+		protected BuildToolTask (Jenkins jenkins, TestProject testProject, IProcessManager processManager) : base (jenkins)
+		{
 			base.TestProject = testProject;
 			ProcessManager = processManager ?? throw new ArgumentNullException (nameof (processManager));
 			InitializeTool ();
 			buildToolTask.TestProject = testProject;
 		}
 
-		public override TestPlatform Platform { 
+		public override TestPlatform Platform {
 			get => base.Platform;
 			set {
 				base.Platform = value;
