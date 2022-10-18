@@ -11,8 +11,7 @@ using Mono.Cecil;
 using Xamarin.Utils;
 
 namespace Xamarin.Bundler {
-	public class AotInfo
-	{
+	public class AotInfo {
 		public AOTTask Task;
 		public LinkTask LinkTask;
 		public List<string> BitcodeFiles = new List<string> (); // .bc files produced by the AOT compiler
@@ -21,8 +20,7 @@ namespace Xamarin.Bundler {
 		public List<string> ObjectFiles = new List<string> (); // .o files produced by the AOT compiler
 	}
 
-	public partial class Assembly
-	{
+	public partial class Assembly {
 		public bool BundleInContainerApp;
 
 		public Dictionary<Abi, AotInfo> AotInfos = new Dictionary<Abi, AotInfo> ();
@@ -184,8 +182,7 @@ namespace Xamarin.Bundler {
 
 			var aotCompiler = Driver.GetAotCompiler (App, abi, Target.Is64Build);
 			var aotArgs = App.GetAotArguments (assembly_path, abi, build_dir, asm_output ?? other_output, llvm_aot_ofile, data);
-			var task = new AOTTask
-			{
+			var task = new AOTTask {
 				Assembly = this,
 				AssemblyName = assembly_path,
 				AddBitcodeMarkerSection = BuildTarget != AssemblyBuildTarget.StaticObject && App.EnableMarkerOnlyBitCode,
