@@ -38,7 +38,7 @@ namespace AppKit {
 		{
 			BeginSheet (sheet, docWindow, null, null, IntPtr.Zero);
 		}
-		
+
 		public void BeginSheet (NSWindow sheet, NSWindow docWindow, Action onEnded)
 		{
 			var obj = new NSAsyncActionDispatcher (onEnded);
@@ -47,12 +47,12 @@ namespace AppKit {
 	}
 
 	public partial class NSOpenPanel {
-		public void BeginSheet (string directory, string fileName, string []fileTypes, NSWindow modalForWindow)
+		public void BeginSheet (string directory, string fileName, string [] fileTypes, NSWindow modalForWindow)
 		{
 			BeginSheet (directory, fileName, fileTypes, modalForWindow, null, null, IntPtr.Zero);
 		}
-		
-		public void BeginSheet (string directory, string fileName, string []fileTypes, NSWindow modalForWindow, Action onEnded)
+
+		public void BeginSheet (string directory, string fileName, string [] fileTypes, NSWindow modalForWindow, Action onEnded)
 		{
 			var obj = new NSAsyncActionDispatcher (onEnded);
 			BeginSheet (directory, fileName, fileTypes, modalForWindow, obj, NSActionDispatcher.Selector, IntPtr.Zero);
@@ -64,7 +64,7 @@ namespace AppKit {
 		{
 			BeginSheet (printInfo, docWindow, null, null, IntPtr.Zero);
 		}
-		
+
 		public void BeginSheet (NSPrintInfo printInfo, NSWindow docWindow, Action onEnded)
 		{
 			var obj = new NSAsyncActionDispatcher (onEnded);
