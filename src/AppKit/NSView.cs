@@ -19,8 +19,7 @@ namespace AppKit {
 		static view_compare_func view_comparer = view_compare;
 #endif
 
-		sealed class SortData
-		{
+		sealed class SortData {
 			public Exception Exception;
 			public Func<NSView, NSView, NSComparisonResult> Comparer;
 		}
