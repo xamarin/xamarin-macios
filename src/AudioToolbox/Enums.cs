@@ -49,8 +49,7 @@ namespace AudioToolbox {
 	[TV (16, 0)]
 	[Mac (13, 0)]
 	[iOS (16, 0)]
-	public enum AUSpatialMixerPersonalizedHrtfMode : uint
-	{
+	public enum AUSpatialMixerPersonalizedHrtfMode : uint {
 		[NoiOS, NoTV]
 		Off = 0,
 		[NoiOS, NoTV]
