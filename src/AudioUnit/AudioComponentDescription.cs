@@ -64,7 +64,7 @@ namespace AudioUnit {
 		[SupportedOSPlatform ("macos13.0")]
 		[SupportedOSPlatform ("tvos16.0")]
 #else
-		[iOS (16,0), Mac (13,0), TV (16,0), MacCatalyst (16,0)]
+		[iOS (16, 0), Mac (13, 0), TV (16, 0), MacCatalyst (16, 0)]
 #endif
 		SpeechSynthesize = 0x61757370, // ausp
 

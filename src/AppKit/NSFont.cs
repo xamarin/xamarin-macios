@@ -225,9 +225,10 @@ namespace AppKit {
 		[SupportedOSPlatform ("macos13.0")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (13,0)]
+		[Mac (13, 0)]
 #endif
-		public static NSFont SystemFontOfSize (nfloat fontSize, nfloat weight, nfloat width) {
+		public static NSFont SystemFontOfSize (nfloat fontSize, nfloat weight, nfloat width)
+		{
 			var ptr = _SystemFontOfSize (fontSize, weight, width);
 			return ptr == IntPtr.Zero ? null : new NSFont (ptr);
 		}
