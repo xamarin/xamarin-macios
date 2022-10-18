@@ -46,7 +46,7 @@ namespace MonoTouch.Tuner {
 			// no code to remove in interfaces, skip processing
 			if (type.IsInterface)
 				return;
-			
+
 			// [MonoTouch.]ObjCRuntime.Runtime.RegisterEntryAssembly is needed only for the simulator 
 			// and does not have to be preserved on devices
 			if (product) {
