@@ -4149,5 +4149,68 @@ namespace Xamarin.Bundler {
                 return ResourceManager.GetString("MX8045", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to find the method &apos;{0}&apos; in the type &apos;{1}&apos;.
+        /// </summary>
+        public static string MX8046 {
+            get {
+                return ResourceManager.GetString("MX8046", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The trampoline method {0} does not match the function pointer 0x{1} for the trampolineMethod argument (they&apos;re don&apos;t refer to the same method)..
+        /// </summary>
+        public static string MX8047 {
+            get {
+                return ResourceManager.GetString("MX8047", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The trampoline method {0} must have at least one parameter..
+        /// </summary>
+        public static string MX8048 {
+            get {
+                return ResourceManager.GetString("MX8048", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The first parameter in the trampoline method {0} must be either &apos;System.IntPtr&apos;, &apos;void*&apos; or &apos;ObjCRuntime.BlockLiteral*&apos;..
+        /// </summary>
+        public static string MX8049 {
+            get {
+                return ResourceManager.GetString("MX8049", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to BlockLiteral.GetBlockSignature is not supported when the dynamic registrar has been linked away..
+        /// </summary>
+        public static string MX8050 {
+            get {
+                return ResourceManager.GetString("MX8050", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The trampoline method {0} must have an [UnmanagedCallersOnly] attribute..
+        /// </summary>
+        public static string MX8051 {
+            get {
+                return ResourceManager.GetString("MX8051", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The signature must be a non-empty string..
+        /// </summary>
+        public static string MX8052 {
+            get {
+                return ResourceManager.GetString("MX8052", resourceCulture);
+            }
+        }
     }
 }

@@ -2191,4 +2191,33 @@
 	<data name="MX8045" xml:space="preserve">
 		<value>Unable to call release on an instance of the type {0}</value>
 	</data>
+
+	<data name="MX8046" xml:space="preserve">
+		<value>Unable to find the method '{0}' in the type '{1}'</value>
+	</data>
+
+	<data name="MX8047" xml:space="preserve">
+		<value>The trampoline method {0} does not match the function pointer 0x{1} for the trampolineMethod argument (they're don't refer to the same method).</value>
+	</data>
+
+	<data name="MX8048" xml:space="preserve">
+		<value>The trampoline method {0} must have at least one parameter.</value>
+	</data>
+
+	<data name="MX8049" xml:space="preserve">
+		<value>The first parameter in the trampoline method {0} must be either 'System.IntPtr', 'void*' or 'ObjCRuntime.BlockLiteral*'.</value>
+	</data>
+
+	<data name="MX8050" xml:space="preserve">
+		<value>BlockLiteral.GetBlockSignature is not supported when the dynamic registrar has been linked away.</value>
+	</data>
+
+	<data name="MX8051" xml:space="preserve">
+		<value>The trampoline method {0} must have an [UnmanagedCallersOnly] attribute.</value>
+	</data>
+
+	<data name="MX8052" xml:space="preserve">
+		<value>The signature must be a non-empty string.</value>
+	</data>
+
 </root>
