@@ -14,7 +14,6 @@
 !unknown-type! CHIPBridgedDeviceBasic bound
 !unknown-type! CHIPCluster bound
 !unknown-type! CHIPColorControl bound
-!unknown-type! CHIPContentLauncher bound
 !unknown-type! CHIPDescriptor bound
 !unknown-type! CHIPDevice bound
 !unknown-type! CHIPDeviceController bound

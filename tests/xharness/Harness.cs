@@ -138,6 +138,7 @@ namespace Xharness {
 		public bool INCLUDE_TVOS { get; }
 		public bool INCLUDE_WATCH { get; }
 		public bool INCLUDE_MAC { get; }
+		public bool INCLUDE_MACCATALYST { get; }
 		public string JENKINS_RESULTS_DIRECTORY { get; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; }
 		public string IOS_DESTDIR { get; }
@@ -145,6 +146,7 @@ namespace Xharness {
 		public string MONO_MAC_SDK_DESTDIR { get; }
 		public bool ENABLE_DOTNET { get; }
 		public bool INCLUDE_XAMARIN_LEGACY { get; }
+		public string SYSTEM_MONO { get; set; }
 
 		// Run
 
@@ -211,12 +213,14 @@ namespace Xharness {
 			JENKINS_RESULTS_DIRECTORY = config ["JENKINS_RESULTS_DIRECTORY"];
 			INCLUDE_WATCH = config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (config ["INCLUDE_WATCH"]);
 			INCLUDE_MAC = config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (config ["INCLUDE_MAC"]);
+			INCLUDE_MACCATALYST = config.ContainsKey ("INCLUDE_MACCATALYST") && !string.IsNullOrEmpty (config ["INCLUDE_MACCATALYST"]);
 			MAC_DESTDIR = config ["MAC_DESTDIR"];
 
 			IOS_DESTDIR = config ["IOS_DESTDIR"];
 			MONO_IOS_SDK_DESTDIR = config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
 			ENABLE_DOTNET = config.ContainsKey ("ENABLE_DOTNET") && !string.IsNullOrEmpty (config ["ENABLE_DOTNET"]);
+			SYSTEM_MONO = config ["SYSTEM_MONO"];
 			INCLUDE_XAMARIN_LEGACY = config.ContainsKey ("INCLUDE_XAMARIN_LEGACY") && !string.IsNullOrEmpty (config ["INCLUDE_XAMARIN_LEGACY"]);
 
 			if (string.IsNullOrEmpty (SdkRoot))
@@ -669,7 +673,7 @@ namespace Xharness {
 
 		int Install ()
 		{
-			HarnessLog ??= GetAdHocLog();
+			HarnessLog ??= GetAdHocLog ();
 
 			foreach (var project in IOSTestProjects) {
 				var runner = CreateAppRunner (project);

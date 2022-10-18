@@ -15,7 +15,6 @@
 !missing-selector! NSFileWrapper::initWithSerializedRepresentation: not bound
 
 ## the API exists but is [Sealed], until .NET, to keep compatible with iOS/Mac profiles
-!missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
 
 # missing - pending decision for implementation
 !missing-type! NSAssertionHandler not bound
@@ -44,7 +43,6 @@
 !incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
 
 ## should not have been [Native] it's 32bits only values -> .NET
-!unknown-native-enum! NSBundleExecutableArchitecture bound
 
 ## enum was [re]named to NSCalendarOptions - excluding from .NET
 !unknown-native-enum! NSDateComponentsWrappingBehavior bound
@@ -223,7 +221,6 @@
 !missing-field! NSMallocException not bound
 !missing-field! NSMaximumKeyValueOperator not bound
 !missing-field! NSMinimumKeyValueOperator not bound
-!missing-field! NSNetServicesErrorCode not bound
 !missing-field! NSObjectInaccessibleException not bound
 !missing-field! NSObjectNotAvailableException not bound
 !missing-field! NSOldStyleException not bound
@@ -1388,7 +1385,6 @@
 !missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:locale:error: not bound
 
 # https://github.com/xamarin/xamarin-macios/issues/15577
-!missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionCallbackHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
 !missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index: not bound
 !missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index:associatedIndex: not bound
 !missing-selector! NSArray::arrayByApplyingDifference: not bound

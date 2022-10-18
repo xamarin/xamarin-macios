@@ -72,3 +72,4 @@
 
 ## Headers say Mac (12,0) but types used in properties are still NoMac
 !missing-protocol! INStartCallIntentHandling not bound
+!missing-selector! +CLPlacemark::placemarkWithLocation:name:postalAddress: not bound

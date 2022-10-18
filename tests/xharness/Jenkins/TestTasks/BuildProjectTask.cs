@@ -2,9 +2,8 @@ using System;
 using Microsoft.DotNet.XHarness.Common.Execution;
 
 namespace Xharness.Jenkins.TestTasks {
-	abstract class BuildProjectTask : BuildToolTask
-	{
-		BuildProject BuildProject => buildToolTask as BuildProject; 
+	abstract class BuildProjectTask : BuildToolTask {
+		BuildProject BuildProject => buildToolTask as BuildProject;
 
 		public string SolutionPath {
 			get => BuildProject.SolutionPath;
@@ -16,11 +15,14 @@ namespace Xharness.Jenkins.TestTasks {
 		{
 		}
 
-		public virtual bool RestoreNugets => BuildProject.RestoreNugets;
+		public virtual bool RestoreNugets {
+			get => BuildProject.RestoreNugets;
+			set => BuildProject.RestoreNugets = value;
+		}
 
 		public override bool SupportsParallelExecution => BuildProject.SupportsParallelExecution;
 
-		protected override void InitializeTool () 
+		protected override void InitializeTool ()
 			=> buildToolTask = new BuildProject (() => Jenkins.Harness.XIBuildPath, ProcessManager, ResourceManager, this, this);
 	}
 }

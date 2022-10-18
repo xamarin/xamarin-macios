@@ -1,0 +1,6 @@
+namespace Xamarin.Bundler {
+	public static partial class Constants {
+		public const string Version = "@VERSION@";
+		internal const string Revision = "@REVISION@";
+	}
+}

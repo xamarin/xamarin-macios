@@ -52,7 +52,6 @@
 !missing-selector! AUAudioUnit::scheduleMIDIEventBlock not bound
 !missing-selector! AUAudioUnit::setMusicalContextBlock: not bound
 !missing-selector! AUAudioUnit::tokenByAddingRenderObserver: not bound
-!missing-selector! AUAudioUnit::messageChannelFor: not bound
 !missing-selector! AUAudioUnitV2Bridge::audioUnit not bound
 !missing-type! AUAudioUnitV2Bridge not bound
 !missing-pinvoke! AudioCodecAppendInputBufferList is not bound
@@ -97,4 +96,3 @@
 !missing-pinvoke! AUParameterValueFromLinear is not bound
 !missing-pinvoke! AUParameterValueToLinear is not bound
 
-!missing-protocol! AUMessageChannel not bound
