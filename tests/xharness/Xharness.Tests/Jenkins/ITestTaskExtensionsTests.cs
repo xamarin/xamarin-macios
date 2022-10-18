@@ -101,7 +101,7 @@ namespace Xharness.Tests.Jenkins {
 					Mock<ITestTask> secondTask = new Mock<ITestTask> ();
 					secondTask.Setup (t => t.Crashed).Returns (true);
 					secondTask.Setup (t => t.ExecutionResult).Returns (TestExecutingResult.Crashed);
-					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object}).Returns ("maroon");
+					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object }).Returns ("maroon");
 
 					firstTask = new Mock<ITestTask> ();
 					firstTask.Setup (t => t.Succeeded).Returns (true);
@@ -109,7 +109,7 @@ namespace Xharness.Tests.Jenkins {
 					secondTask = new Mock<ITestTask> ();
 					secondTask.Setup (t => t.TimedOut).Returns (true);
 					secondTask.Setup (t => t.ExecutionResult).Returns (TestExecutingResult.TimedOut);
-					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object}).Returns ("purple");
+					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object }).Returns ("purple");
 
 					firstTask = new Mock<ITestTask> ();
 					firstTask.Setup (t => t.Succeeded).Returns (true);
@@ -117,7 +117,7 @@ namespace Xharness.Tests.Jenkins {
 					secondTask = new Mock<ITestTask> ();
 					secondTask.Setup (t => t.BuildFailure).Returns (true);
 					secondTask.Setup (t => t.ExecutionResult).Returns (TestExecutingResult.BuildFailure);
-					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object}).Returns ("darkred");
+					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object }).Returns ("darkred");
 
 					firstTask = new Mock<ITestTask> ();
 					firstTask.Setup (t => t.Succeeded).Returns (true);
@@ -125,7 +125,7 @@ namespace Xharness.Tests.Jenkins {
 					secondTask = new Mock<ITestTask> ();
 					secondTask.Setup (t => t.Failed).Returns (true);
 					secondTask.Setup (t => t.ExecutionResult).Returns (TestExecutingResult.Failed);
-					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object}).Returns ("red");
+					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object }).Returns ("red");
 
 					firstTask = new Mock<ITestTask> ();
 					firstTask.Setup (t => t.Succeeded).Returns (true);
@@ -133,7 +133,7 @@ namespace Xharness.Tests.Jenkins {
 					secondTask = new Mock<ITestTask> ();
 					secondTask.Setup (t => t.NotStarted).Returns (true);
 					secondTask.Setup (t => t.ExecutionResult).Returns (TestExecutingResult.NotStarted);
-					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object}).Returns ("black");
+					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object }).Returns ("black");
 
 					firstTask = new Mock<ITestTask> ();
 					firstTask.Setup (t => t.Succeeded).Returns (true);
@@ -141,7 +141,7 @@ namespace Xharness.Tests.Jenkins {
 					secondTask = new Mock<ITestTask> ();
 					secondTask.Setup (t => t.Ignored).Returns (true);
 					secondTask.Setup (t => t.ExecutionResult).Returns (TestExecutingResult.Ignored);
-					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object}).Returns ("gray");
+					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object }).Returns ("gray");
 
 					firstTask = new Mock<ITestTask> ();
 					firstTask.Setup (t => t.Succeeded).Returns (true);
@@ -149,7 +149,7 @@ namespace Xharness.Tests.Jenkins {
 					secondTask = new Mock<ITestTask> ();
 					secondTask.Setup (t => t.DeviceNotFound).Returns (true);
 					secondTask.Setup (t => t.ExecutionResult).Returns (TestExecutingResult.DeviceNotFound);
-					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object}).Returns ("orangered");
+					yield return new TestCaseData (new List<ITestTask> { firstTask.Object, secondTask.Object }).Returns ("orangered");
 
 					firstTask = new Mock<ITestTask> ();
 					firstTask.Setup (t => t.BuildSucceeded).Returns (true);

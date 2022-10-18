@@ -19,7 +19,7 @@ namespace AVFoundation {
 	[iOS (11, 0)]
 #endif
 	public partial class AudioRendererWasFlushedAutomaticallyEventArgs {
-		public CMTime AudioRendererFlushTime { 
+		public CMTime AudioRendererFlushTime {
 			get {
 				return _AudioRendererFlushTime.CMTimeValue;
 			}

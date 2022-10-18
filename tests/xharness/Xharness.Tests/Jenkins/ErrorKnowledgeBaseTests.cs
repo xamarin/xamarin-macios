@@ -26,7 +26,7 @@ namespace Xharness.Tests.Jenkins {
 		[Test]
 		public void IsMonoMulti3IssuePresentTest ()
 		{
-			using var log = new LogFile("test", testFile);
+			using var log = new LogFile ("test", testFile);
 			log.WriteLine ("Some noise");
 			log.WriteLine ("error MT5210: Native linking failed, undefined symbol: ___multi3");
 			log.WriteLine ("Some noise");
@@ -34,11 +34,11 @@ namespace Xharness.Tests.Jenkins {
 			Assert.IsTrue (errorKnowledgeBase!.IsKnownBuildIssue (log, out var failureMessage));
 			Assert.IsNotNull (failureMessage);
 		}
-		
+
 		[Test]
 		public void IsMonoMulti3IssueMissingTest ()
 		{
-			using var log = new LogFile("test", testFile);
+			using var log = new LogFile ("test", testFile);
 			log.WriteLine ("Some noise");
 			log.WriteLine ("Some noise");
 			log.Flush ();
@@ -49,7 +49,7 @@ namespace Xharness.Tests.Jenkins {
 		[Test]
 		public void IsHE0038ErrorPresentTest ()
 		{
-			using var log = new LogFile("test", testFile);
+			using var log = new LogFile ("test", testFile);
 			log.WriteLine ("Some noise");
 			log.WriteLine ("error HE0038: Failed to launch the app");
 			log.WriteLine ("Some noise");
@@ -61,7 +61,7 @@ namespace Xharness.Tests.Jenkins {
 		[Test]
 		public void IsHE0038ErrorMissingTest ()
 		{
-			using var log = new LogFile("test", testFile);
+			using var log = new LogFile ("test", testFile);
 			log.WriteLine ("Some noise");
 			log.WriteLine ("Some noise");
 			log.Flush ();

@@ -6,3 +6,6 @@
 
 # not used on tvOS
 !missing-enum! AVAudioSessionInterruptionReason not bound
+
+### deprecated in iOS8
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found

@@ -6,10 +6,9 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Targets {
-	public class UnifiedTarget : iOSTarget
-	{
+	public class UnifiedTarget : iOSTarget {
 		// special cases for the BCL applications
-		
+
 		public override string Suffix {
 			get {
 				return "-ios";
@@ -77,7 +76,7 @@ namespace Xharness.Targets {
 					// most of the BCL test are grouped, but there are a number that are not, in those cases remove the "{testype} Mono " prefix
 					Name = (bclIndex == -1) ? TestProject.Name.Substring (TestProject.Name.IndexOf ("Mono ", StringComparison.Ordinal) + "Mono ".Length) : TestProject.Name.Substring (bclIndex);
 				}
-			}  else
+			} else
 				base.CalculateName ();
 		}
 
@@ -88,7 +87,7 @@ namespace Xharness.Targets {
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.iOS, MonoNativeInfo.Flavor);
 		}
 
-		protected override int[] UIDeviceFamily {
+		protected override int [] UIDeviceFamily {
 			get {
 				return new int [] { 1, 2 };
 			}

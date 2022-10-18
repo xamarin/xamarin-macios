@@ -71,7 +71,7 @@ namespace AVFoundation {
 
 		public override bool Equals (object? other)
 		{
-			if (other is AVPixelAspectRatio){
+			if (other is AVPixelAspectRatio) {
 				var o = (AVPixelAspectRatio) other;
 				return o.HorizontalSpacing == HorizontalSpacing && o.VerticalSpacing == VerticalSpacing;
 			}
