@@ -243,18 +243,17 @@ namespace CoreText {
 		}
 
 #if NET
-		[SupportedOSPlatform ("tvos13.0")]
-		[SupportedOSPlatform ("macos10.15")]
-		[SupportedOSPlatform ("ios13.0")]
-		[SupportedOSPlatform ("maccatalyst")]
-#else
-		[Watch (6, 0)]
-		[TV (13, 0)]
-		[Mac (10, 15)]
-		[iOS (13, 0)]
+		[UnmanagedCallersOnlyAttribute]
+		static unsafe byte TrampolineRegistrationHandlerCallback (IntPtr block, /* NSArray */ IntPtr errors, byte done)
+		{
+			var del = BlockLiteral.GetTarget<CTFontRegistrationHandler> (block);
+			if (del is null)
+				return 0;
+
+			var rv = del (NSArray.ArrayFromHandle<NSError> (errors), done == 0 ? false : true);
+			return rv ? (byte) 1 : (byte) 0;
+		}
 #endif
-		[DllImport (Constants.CoreTextLibrary)]
-		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, IntPtr registrationHandler);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -268,7 +267,7 @@ namespace CoreText {
 		[iOS (13, 0)]
 #endif
 		[DllImport (Constants.CoreTextLibrary)]
-		static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, ref BlockLiteral registrationHandler);
+		unsafe static extern void CTFontManagerRegisterFontURLs (/* CFArrayRef */ IntPtr fontUrls, CTFontManagerScope scope, [MarshalAs (UnmanagedType.I1)] bool enabled, BlockLiteral* registrationHandler);
 
 #if NET
 		[SupportedOSPlatform ("tvos13.0")]
@@ -286,12 +285,24 @@ namespace CoreText {
 		{
 			using (var arr = EnsureNonNullArray (fontUrls, nameof (fontUrls))) {
 				if (registrationHandler is null) {
-					CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, IntPtr.Zero);
+					unsafe {
+						CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, null);
+					}
 				} else {
+#if NET
+					unsafe {
+						delegate* unmanaged<IntPtr, IntPtr, byte, byte> trampoline = &TrampolineRegistrationHandlerCallback;
+						using var block = new BlockLiteral (trampoline, registrationHandler, typeof (CTFontManager), nameof (TrampolineRegistrationHandlerCallback));
+						CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, &block);
+					}
+#else
 					BlockLiteral block_handler = new BlockLiteral ();
 					block_handler.SetupBlockUnsafe (callback, registrationHandler);
-					CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, ref block_handler);
+					unsafe {
+						CTFontManagerRegisterFontURLs (arr.Handle, scope, enabled, &block_handler);
+					}
 					block_handler.CleanupBlock ();
+#endif
 				}
 			}
 		}
