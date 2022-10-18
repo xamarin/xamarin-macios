@@ -39,8 +39,7 @@ using ObjCRuntime;
 using CoreFoundation;
 using Foundation;
 
-namespace AudioUnit
-{
+namespace AudioUnit {
 	public enum AudioUnitStatus { // Implictly cast to OSType
 		NoError = 0,
 		OK = NoError,
@@ -63,107 +62,107 @@ namespace AudioUnit
 		Initialized = -10849,
 		InvalidOfflineRender = -10848,
 		Unauthorized = -10847,
-		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0), NoWatch]
 		MidiOutputBufferFull = -66753,
-		[iOS (11,3), Mac (10,13,4), TV (11,3), NoWatch]
+		[iOS (11, 3), Mac (10, 13, 4), TV (11, 3), NoWatch]
 		InvalidParameterValue = -66743,
-		[iOS (11,0), Mac (10,13), TV (11,0), NoWatch]
+		[iOS (11, 0), Mac (10, 13), TV (11, 0), NoWatch]
 		ExtensionNotFound = -66744,
 	}
 
 	public enum AudioComponentStatus { // Implictly cast to OSType
 		OK = 0,
-		DuplicateDescription	= -66752,
-		UnsupportedType			= -66751,
-		TooManyInstances		= -66750,
-		InstanceInvalidated		= -66749,
-		NotPermitted			= -66748,
-		InitializationTimedOut	= -66747,
-		InvalidFormat			= -66746,
-		[iOS (10,0), Mac (10,12)]
-		RenderTimeout			= -66745,
+		DuplicateDescription = -66752,
+		UnsupportedType = -66751,
+		TooManyInstances = -66750,
+		InstanceInvalidated = -66749,
+		NotPermitted = -66748,
+		InitializationTimedOut = -66747,
+		InvalidFormat = -66746,
+		[iOS (10, 0), Mac (10, 12)]
+		RenderTimeout = -66745,
 	}
 
 	public enum AudioCodecManufacturer : uint  // Implictly cast to OSType in CoreAudio.framework - CoreAudioTypes.h
 	{
-		AppleSoftware	= 0x6170706c,	// 'appl'
-		AppleHardware	= 0x61706877,	// 'aphw'
+		AppleSoftware = 0x6170706c, // 'appl'
+		AppleHardware = 0x61706877, // 'aphw'
 	}
 
 	public enum InstrumentType : byte // UInt8 in AUSamplerInstrumentData
 	{
-		DLSPreset	= 1,
-		SF2Preset	= DLSPreset,
-		AUPreset	= 2,
-		Audiofile	= 3,
-		EXS24		= 4,
+		DLSPreset = 1,
+		SF2Preset = DLSPreset,
+		AUPreset = 2,
+		Audiofile = 3,
+		EXS24 = 4,
 	}
 
 	public enum AudioUnitParameterUnit // UInt32 AudioUnitParameterUnit
 	{
-		Generic				= 0,
-		Indexed				= 1,
-		Boolean				= 2,
-		Percent				= 3,
-		Seconds				= 4,
-		SampleFrames		= 5,
-		Phase				= 6,
-		Rate				= 7,
-		Hertz				= 8,
-		Cents				= 9,
-		RelativeSemiTones	= 10,
-		MIDINoteNumber		= 11,
-		MIDIController		= 12,
-		Decibels			= 13,
-		LinearGain			= 14,
-		Degrees				= 15,
+		Generic = 0,
+		Indexed = 1,
+		Boolean = 2,
+		Percent = 3,
+		Seconds = 4,
+		SampleFrames = 5,
+		Phase = 6,
+		Rate = 7,
+		Hertz = 8,
+		Cents = 9,
+		RelativeSemiTones = 10,
+		MIDINoteNumber = 11,
+		MIDIController = 12,
+		Decibels = 13,
+		LinearGain = 14,
+		Degrees = 15,
 		EqualPowerCrossfade = 16,
-		MixerFaderCurve1	= 17,
-		Pan					= 18,
-		Meters				= 19,
-		AbsoluteCents		= 20,
-		Octaves				= 21,
-		BPM					= 22,
-		Beats               = 23,
-		Milliseconds		= 24,
-		Ratio				= 25,
-		CustomUnit			= 26,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
-		MIDI2Controller	 	= 27,
+		MixerFaderCurve1 = 17,
+		Pan = 18,
+		Meters = 19,
+		AbsoluteCents = 20,
+		Octaves = 21,
+		BPM = 22,
+		Beats = 23,
+		Milliseconds = 24,
+		Ratio = 25,
+		CustomUnit = 26,
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		MIDI2Controller = 27,
 	}
 
 	[Flags]
 	public enum AudioUnitParameterFlag : uint // UInt32 in AudioUnitParameterInfo
 	{
-		CFNameRelease		= (1 << 4),
+		CFNameRelease = (1 << 4),
 
-		[iOS (8,0)]
-		OmitFromPresets		= (1 << 13),
-		PlotHistory			= (1 << 14),
-		MeterReadOnly		= (1 << 15),
-	
+		[iOS (8, 0)]
+		OmitFromPresets = (1 << 13),
+		PlotHistory = (1 << 14),
+		MeterReadOnly = (1 << 15),
+
 		// bit positions 18,17,16 are set aside for display scales. bit 19 is reserved.
-		DisplayMask			= (7 << 16) | (1 << 22),
-		DisplaySquareRoot	= (1 << 16),
-		DisplaySquared		= (2 << 16),
-		DisplayCubed		= (3 << 16),
-		DisplayCubeRoot		= (4 << 16),
-		DisplayExponential	= (5 << 16),
+		DisplayMask = (7 << 16) | (1 << 22),
+		DisplaySquareRoot = (1 << 16),
+		DisplaySquared = (2 << 16),
+		DisplayCubed = (3 << 16),
+		DisplayCubeRoot = (4 << 16),
+		DisplayExponential = (5 << 16),
 
-		HasClump	 		= (1 << 20),
-		ValuesHaveStrings	= (1 << 21),
-	
-		DisplayLogarithmic 	= (1 << 22),
-	
-		IsHighResolution 	= (1 << 23),
-		NonRealTime 		= (1 << 24),
-		CanRamp 			= (1 << 25),
-		ExpertMode 			= (1 << 26),
-		HasCFNameString 	= (1 << 27),
-		IsGlobalMeta 		= (1 << 28),
-		IsElementMeta		= (1 << 29),
-		IsReadable			= (1 << 30),
-		IsWritable			= ((uint)1 << 31),
+		HasClump = (1 << 20),
+		ValuesHaveStrings = (1 << 21),
+
+		DisplayLogarithmic = (1 << 22),
+
+		IsHighResolution = (1 << 23),
+		NonRealTime = (1 << 24),
+		CanRamp = (1 << 25),
+		ExpertMode = (1 << 26),
+		HasCFNameString = (1 << 27),
+		IsGlobalMeta = (1 << 28),
+		IsElementMeta = (1 << 29),
+		IsReadable = (1 << 30),
+		IsWritable = ((uint) 1 << 31),
 	}
 
 	public enum AudioUnitClumpID // UInt32 in AudioUnitParameterInfo
@@ -172,8 +171,7 @@ namespace AudioUnit
 	}
 
 #if !XAMCORE_3_0 || MONOMAC || __MACCATALYST__
-	public enum AudioObjectPropertySelector : uint
-	{
+	public enum AudioObjectPropertySelector : uint {
 		PropertyDevices = 1684370979, // 'dev#'
 		Devices = 1684370979, // 'dev#'
 		DefaultInputDevice = 1682533920, // 'dIn '
@@ -192,17 +190,17 @@ namespace AudioUnit
 #if XAMCORE_3_0
 		[NoiOS][NoTV]
 #endif
-		[Deprecated (PlatformName.iOS, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
-		[Deprecated (PlatformName.MacCatalyst, 15,0, message : "Use the 'ProcessIsMain' element instead.")]
-		[Deprecated (PlatformName.MacOSX, 12,0, message : "Use the 'ProcessIsMain' element instead.")]
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the 'ProcessIsMain' element instead.")]
+		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use the 'ProcessIsMain' element instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the 'ProcessIsMain' element instead.")]
 		[Obsolete ("Use the 'ProcessIsMain' element instead.")]
 		ProcessIsMaster = 1835103092, // 'mast'
 #if !XAMCORE_3_0
-		[iOS (15,0)]
+		[iOS (15, 0)]
 #else
 		[NoiOS]
 #endif
-		[MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
+		[MacCatalyst (15, 0), Mac (12, 0), NoTV, NoWatch]
 		ProcessIsMain = 1835100526, // 'main'
 		IsInitingOrExiting = 1768845172, // 'inot'
 		UserIDChanged = 1702193508, // 'euid'
@@ -217,24 +215,22 @@ namespace AudioUnit
 		ClockDevice = 1634755428, // 'apcd',
 		IOThreadOSWorkgroup = 1869838183, // 'oswg'
 #if !XAMCORE_3_0
-		[iOS (15,0)]
+		[iOS (15, 0)]
 #else
 		[NoiOS]
 #endif
-		[MacCatalyst (15,0), Mac (12,0), NoTV, NoWatch]
+		[MacCatalyst (15, 0), Mac (12, 0), NoTV, NoWatch]
 		ProcessMute = 1634758765, // 'appm'
 	}
 
-	public enum AudioObjectPropertyScope : uint
-	{
+	public enum AudioObjectPropertyScope : uint {
 		Global = 1735159650, // 'glob'
 		Input = 1768845428, // 'inpt'
 		Output = 1869968496, // 'outp'
 		PlayThrough = 1886679669, // 'ptru'
 	}
 
-	public enum AudioObjectPropertyElement : uint
-	{
+	public enum AudioObjectPropertyElement : uint {
 #if !NET
 		[Obsolete ("Use the 'Main' element instead.")]
 		Master = 0, // 0
@@ -249,7 +245,7 @@ namespace AudioUnit
 	[Obsolete ("Please use the strongly typed properties instead.")]
 #endif
 	enum AudioUnitPropertyIDType { // UInt32 AudioUnitPropertyID
-		// Audio Unit Properties
+								   // Audio Unit Properties
 		ClassInfo = 0,
 		MakeConnection = 1,
 		SampleRate = 2,
@@ -293,17 +289,17 @@ namespace AudioUnit
 		ClassInfoFromDocument = 50,
 		RequestViewController = 56,
 		ParametersForOverview = 57,
-		[iOS (10,0), Mac (10,12)]
+		[iOS (10, 0), Mac (10, 12)]
 		SupportsMpe = 58,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		LastRenderSampleTime = 61,
-		[iOS (14,5), TV (14,5), Mac (11,3)]
+		[iOS (14, 5), TV (14, 5), Mac (11, 3)]
 		LoadedOutOfProcess = 62,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		MIDIOutputEventListCallback = 63,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		AudioUnitMIDIProtocol = 64,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
 		HostMIDIProtocol = 65,
 
 #if MONOMAC
@@ -393,7 +389,7 @@ namespace AudioUnit
 		MatrixLevels = 3006,
 		MatrixDimensions = 3009,
 		MeterClipping = 3011,
-		[iOS (10,0), Mac (10,12)]
+		[iOS (10, 0), Mac (10, 12)]
 		InputAnchorTimeStamp = 3016,
 
 		// SpatialMixer
@@ -429,7 +425,7 @@ namespace AudioUnit
 
 		// Music Device Properties
 		InstrumentName = 1001,
-		InstrumentNumber  = 1004,
+		InstrumentNumber = 1004,
 
 		// Music Device Properties used by DLSMusicDevice and AUMIDISynth
 		InstrumentCount = 1000,
@@ -466,11 +462,11 @@ namespace AudioUnit
 	public enum AudioUnitParameterType // UInt32 in AudioUnitParameterInfo
 	{
 		// AUMixer3D unit
-		Mixer3DAzimuth						= 0,
-		Mixer3DElevation					= 1,
-		Mixer3DDistance						= 2,
-		Mixer3DGain							= 3,
-		Mixer3DPlaybackRate					= 4,
+		Mixer3DAzimuth = 0,
+		Mixer3DElevation = 1,
+		Mixer3DDistance = 2,
+		Mixer3DGain = 3,
+		Mixer3DPlaybackRate = 4,
 #if MONOMAC
 		Mixer3DReverbBlend					= 5,
 		Mixer3DGlobalReverbGain				= 6,
@@ -483,170 +479,170 @@ namespace AudioUnit
 		Mixer3DPostAveragePower				= 3000,
 		Mixer3DPostPeakHoldLevel			= 4000,
 #else
-		Mixer3DEnable						= 5,
-		Mixer3DMinGain						= 6,
-		Mixer3DMaxGain						= 7,
-		Mixer3DReverbBlend					= 8,
-		Mixer3DGlobalReverbGain				= 9,
-		Mixer3DOcclusionAttenuation			= 10,
-		Mixer3DObstructionAttenuation		= 11,
+		Mixer3DEnable = 5,
+		Mixer3DMinGain = 6,
+		Mixer3DMaxGain = 7,
+		Mixer3DReverbBlend = 8,
+		Mixer3DGlobalReverbGain = 9,
+		Mixer3DOcclusionAttenuation = 10,
+		Mixer3DObstructionAttenuation = 11,
 #endif
 
 		// AUSpatialMixer unit
-		SpatialAzimuth						= 0,
-		SpatialElevation					= 1,
-		SpatialDistance						= 2,
-		SpatialGain							= 3,
-		SpatialPlaybackRate					= 4,
-		SpatialEnable						= 5,
-		SpatialMinGain						= 6,
-		SpatialMaxGain						= 7,
-		SpatialReverbBlend					= 8,
-		SpatialGlobalReverbGain				= 9,
-		SpatialOcclusionAttenuation			= 10,
-		SpatialObstructionAttenuation		= 11,
+		SpatialAzimuth = 0,
+		SpatialElevation = 1,
+		SpatialDistance = 2,
+		SpatialGain = 3,
+		SpatialPlaybackRate = 4,
+		SpatialEnable = 5,
+		SpatialMinGain = 6,
+		SpatialMaxGain = 7,
+		SpatialReverbBlend = 8,
+		SpatialGlobalReverbGain = 9,
+		SpatialOcclusionAttenuation = 10,
+		SpatialObstructionAttenuation = 11,
 
 		// Reverb applicable to the 3DMixer or AUSpatialMixer
-		ReverbFilterFrequency				= 14,
-		ReverbFilterBandwidth				= 15,
-		ReverbFilterGain					= 16,
+		ReverbFilterFrequency = 14,
+		ReverbFilterBandwidth = 15,
+		ReverbFilterGain = 16,
 		[iOS (8, 0)]
-		ReverbFilterType					= 17,
+		ReverbFilterType = 17,
 		[iOS (8, 0)]
-		ReverbFilterEnable					= 18,
+		ReverbFilterEnable = 18,
 
 		// AUMultiChannelMixer
-		MultiChannelMixerVolume				= 0,
-		MultiChannelMixerEnable				= 1,
-		MultiChannelMixerPan				= 2,
+		MultiChannelMixerVolume = 0,
+		MultiChannelMixerEnable = 1,
+		MultiChannelMixerPan = 2,
 
 		// AUMatrixMixer unit
-		MatrixMixerVolume					= 0,
-		MatrixMixerEnable					= 1,
-	
+		MatrixMixerVolume = 0,
+		MatrixMixerEnable = 1,
+
 		// AudioDeviceOutput, DefaultOutputUnit, and SystemOutputUnit units
-		HALOutputVolume 					= 14, 
+		HALOutputVolume = 14,
 
 		// AUTimePitch, AUTimePitch (offline), AUPitch units
-		TimePitchRate						= 0,
+		TimePitchRate = 0,
 #if MONOMAC
 		TimePitchPitch						= 1,
 		TimePitchEffectBlend				= 2,
 #endif
 
 		// AUNewTimePitch
-		NewTimePitchRate					= 0,
-		NewTimePitchPitch					= 1,
-		NewTimePitchOverlap					= 4,
-		NewTimePitchEnablePeakLocking		= 6,
+		NewTimePitchRate = 0,
+		NewTimePitchPitch = 1,
+		NewTimePitchOverlap = 4,
+		NewTimePitchEnablePeakLocking = 6,
 
 		// AUSampler unit
-		AUSamplerGain						= 900,
-		AUSamplerCoarseTuning				= 901,
-		AUSamplerFineTuning					= 902,
-		AUSamplerPan						= 903,
+		AUSamplerGain = 900,
+		AUSamplerCoarseTuning = 901,
+		AUSamplerFineTuning = 902,
+		AUSamplerPan = 903,
 
 		// AUBandpass
-		BandpassCenterFrequency 			= 0,
-		BandpassBandwidth	 				= 1,
+		BandpassCenterFrequency = 0,
+		BandpassBandwidth = 1,
 
 		// AUHipass
-		HipassCutoffFrequency 				= 0,
-		HipassResonance						= 1,
+		HipassCutoffFrequency = 0,
+		HipassResonance = 1,
 
 		// AULowpass
-		LowPassCutoffFrequency 				= 0,
-		LowPassResonance 					= 1,
+		LowPassCutoffFrequency = 0,
+		LowPassResonance = 1,
 
 		// AUHighShelfFilter
-		HighShelfCutOffFrequency 			= 0,
-		HighShelfGain 						= 1,
+		HighShelfCutOffFrequency = 0,
+		HighShelfGain = 1,
 
 		// AULowShelfFilter
-		AULowShelfCutoffFrequency			= 0,
-		AULowShelfGain						= 1,
+		AULowShelfCutoffFrequency = 0,
+		AULowShelfGain = 1,
 
 		[Obsoleted (PlatformName.iOS, 7, 0)]
-		AUDCFilterDecayTime					= 0,
+		AUDCFilterDecayTime = 0,
 
 		// AUParametricEQ
-		ParametricEQCenterFreq				= 0,
-		ParametricEQQ						= 1,
-		ParametricEQGain					= 2,
+		ParametricEQCenterFreq = 0,
+		ParametricEQQ = 1,
+		ParametricEQGain = 2,
 
 		// AUPeakLimiter
-		LimiterAttackTime		 			= 0,
-		LimiterDecayTime 					= 1,
-		LimiterPreGain 						= 2,
+		LimiterAttackTime = 0,
+		LimiterDecayTime = 1,
+		LimiterPreGain = 2,
 
 		// AUDynamicsProcessor
-		DynamicsProcessorThreshold 			= 0,
-		DynamicsProcessorHeadRoom	 		= 1,
-		DynamicsProcessorExpansionRatio		= 2,
-		DynamicsProcessorExpansionThreshold	= 3,
-		DynamicsProcessorAttackTime			= 4,
-		DynamicsProcessorReleaseTime 		= 5,
+		DynamicsProcessorThreshold = 0,
+		DynamicsProcessorHeadRoom = 1,
+		DynamicsProcessorExpansionRatio = 2,
+		DynamicsProcessorExpansionThreshold = 3,
+		DynamicsProcessorAttackTime = 4,
+		DynamicsProcessorReleaseTime = 5,
 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'DynamicsProcessorOverallGain' instead.")]
-		DynamicsProcessorMasterGain			= 6,
-		[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
-		DynamicsProcessorOverallGain		= 6,
-		DynamicsProcessorCompressionAmount 	= 1000,
-		DynamicsProcessorInputAmplitude		= 2000,
-		DynamicsProcessorOutputAmplitude 	= 3000,
+		DynamicsProcessorMasterGain = 6,
+		[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+		DynamicsProcessorOverallGain = 6,
+		DynamicsProcessorCompressionAmount = 1000,
+		DynamicsProcessorInputAmplitude = 2000,
+		DynamicsProcessorOutputAmplitude = 3000,
 
 		// AUVarispeed
-		VarispeedPlaybackRate				= 0,
-		VarispeedPlaybackCents				= 1,
+		VarispeedPlaybackRate = 0,
+		VarispeedPlaybackCents = 1,
 
 		// Distortion unit 
-		DistortionDelay						= 0,
-		DistortionDecay						= 1,
-		DistortionDelayMix					= 2,
-		DistortionDecimation				= 3,
-		DistortionRounding					= 4,
-		DistortionDecimationMix				= 5,
-		DistortionLinearTerm				= 6,  
-		DistortionSquaredTerm				= 7,	
-		DistortionCubicTerm					= 8,  
-		DistortionPolynomialMix				= 9,
-		DistortionRingModFreq1				= 10,
-		DistortionRingModFreq2				= 11,
-		DistortionRingModBalance			= 12,
-		DistortionRingModMix				= 13,
-		DistortionSoftClipGain				= 14,
-		DistortionFinalMix					= 15,
+		DistortionDelay = 0,
+		DistortionDecay = 1,
+		DistortionDelayMix = 2,
+		DistortionDecimation = 3,
+		DistortionRounding = 4,
+		DistortionDecimationMix = 5,
+		DistortionLinearTerm = 6,
+		DistortionSquaredTerm = 7,
+		DistortionCubicTerm = 8,
+		DistortionPolynomialMix = 9,
+		DistortionRingModFreq1 = 10,
+		DistortionRingModFreq2 = 11,
+		DistortionRingModBalance = 12,
+		DistortionRingModMix = 13,
+		DistortionSoftClipGain = 14,
+		DistortionFinalMix = 15,
 
 		// AUDelay
-		DelayWetDryMix 						= 0,
-		DelayTime							= 1,
-		DelayFeedback 						= 2,
-		DelayLopassCutoff	 				= 3,
+		DelayWetDryMix = 0,
+		DelayTime = 1,
+		DelayFeedback = 2,
+		DelayLopassCutoff = 3,
 
 		// AUNBandEQ
-		AUNBandEQGlobalGain					= 0,
-		AUNBandEQBypassBand					= 1000,
-		AUNBandEQFilterType					= 2000,
-		AUNBandEQFrequency					= 3000,
-		AUNBandEQGain						= 4000,
-		AUNBandEQBandwidth					= 5000,
+		AUNBandEQGlobalGain = 0,
+		AUNBandEQBypassBand = 1000,
+		AUNBandEQFilterType = 2000,
+		AUNBandEQFrequency = 3000,
+		AUNBandEQGain = 4000,
+		AUNBandEQBandwidth = 5000,
 
 		// AURandomUnit
-		RandomBoundA 						= 0,
-		RandomBoundB						= 1,
-		RandomCurve							= 2,
+		RandomBoundA = 0,
+		RandomBoundB = 1,
+		RandomCurve = 2,
 
 #if !MONOMAC
 		// iOS reverb
-		Reverb2DryWetMix					= 0,
-		Reverb2Gain							= 1,
-		Reverb2MinDelayTime					= 2,
-		Reverb2MaxDelayTime					= 3,
-		Reverb2DecayTimeAt0Hz				= 4,
-		Reverb2DecayTimeAtNyquist			= 5,
-		Reverb2RandomizeReflections			= 6,
+		Reverb2DryWetMix = 0,
+		Reverb2Gain = 1,
+		Reverb2MinDelayTime = 2,
+		Reverb2MaxDelayTime = 3,
+		Reverb2DecayTimeAt0Hz = 4,
+		Reverb2DecayTimeAtNyquist = 5,
+		Reverb2RandomizeReflections = 6,
 #endif
 
 		// RoundTripAAC
@@ -656,12 +652,12 @@ namespace AudioUnit
 
 		// Spacial Mixer
 		SpacialMixerAzimuth = 0,
-		Elevation = 1, 
-		Distance = 2, 
-		Gain = 3, 
+		Elevation = 1,
+		Distance = 2,
+		Gain = 3,
 		PlaybackRate = 4,
 		Enable = 5,
-		MinGain = 6, 
+		MinGain = 6,
 		MaxGain = 7,
 		ReverbBlend = 8,
 		GlobalReverbGain = 9,
@@ -693,24 +689,24 @@ namespace AudioUnit
 
 		[iOS (8, 0)]
 		[Mac (10, 10)]
-		Loop                   = 0x08,
+		Loop = 0x08,
 		[iOS (8, 0)]
 		[Mac (10, 10)]
-		Interrupt              = 0x10,
+		Interrupt = 0x10,
 		[iOS (8, 0)]
 		[Mac (10, 10)]
-		InterruptAtLoop        = 0x20,
+		InterruptAtLoop = 0x20,
 	}
 
 	public enum AudioUnitScopeType { // UInt32 AudioUnitScope
-		Global		= 0,
-		Input		= 1,
-		Output		= 2,
-		Group		= 3,
-		Part		= 4,
-		Note		= 5,
-		Layer		= 6,
-		LayerItem	= 7,
+		Global = 0,
+		Input = 1,
+		Output = 2,
+		Group = 3,
+		Part = 4,
+		Note = 5,
+		Layer = 6,
+		LayerItem = 7,
 	}
 
 	[Flags]
@@ -727,50 +723,45 @@ namespace AudioUnit
 
 	public enum AudioUnitRemoteControlEvent // Unused?
 	{
-		TogglePlayPause		= 1,
-		ToggleRecord		= 2,
-		Rewind				= 3,
+		TogglePlayPause = 1,
+		ToggleRecord = 2,
+		Rewind = 3,
 	}
 
 	[Native]
-	public enum AudioUnitBusType : long
-	{
+	public enum AudioUnitBusType : long {
 		Input = 1,
 		Output = 2,
 	}
 
 	[Native]
-	public enum AUHostTransportStateFlags : ulong
-	{
+	public enum AUHostTransportStateFlags : ulong {
 		Changed = 1,
 		Moving = 2,
 		Recording = 4,
 		Cycling = 8,
 	}
 
-	public enum AUEventSampleTime : long
-	{
-		Immediate = unchecked ((long) 0xffffffff00000000),
+	public enum AUEventSampleTime : long {
+		Immediate = unchecked((long) 0xffffffff00000000),
 	}
 
-	[iOS (9,0), Mac (10,11)]
+	[iOS (9, 0), Mac (10, 11)]
 	public enum AudioComponentInstantiationOptions : uint {
 		OutOfProcess = 1,
 		[NoiOS, NoTV, NoMacCatalyst]
 		InProcess = 2,
-		[iOS (14,5), TV (14,5), NoMac]
+		[iOS (14, 5), TV (14, 5), NoMac]
 		LoadedRemotely = 1u << 31,
 	}
 
 	[Native]
-	public enum AUAudioUnitBusType : long
-	{
+	public enum AUAudioUnitBusType : long {
 		Input = 1,
 		Output = 2
 	}
 
-	public enum AudioUnitParameterOptions : uint
-	{
+	public enum AudioUnitParameterOptions : uint {
 		CFNameRelease = (1 << 4),
 		OmitFromPresets = (1 << 13),
 		PlotHistory = (1 << 14),
@@ -792,11 +783,10 @@ namespace AudioUnit
 		IsGlobalMeta = (1 << 28),
 		IsElementMeta = (1 << 29),
 		IsReadable = (1 << 30),
-		IsWritable = unchecked((uint)1 << 31),
+		IsWritable = unchecked((uint) 1 << 31),
 	}
 
-	public enum AudioComponentValidationResult : uint
-	{
+	public enum AudioComponentValidationResult : uint {
 		Unknown = 0,
 		Passed,
 		Failed,
@@ -805,16 +795,14 @@ namespace AudioUnit
 		UnauthorizedErrorInit,
 	}
 
-	public enum AUSpatialMixerAttenuationCurve : uint
-	{
+	public enum AUSpatialMixerAttenuationCurve : uint {
 		Power = 0,
 		Exponential = 1,
 		Inverse = 2,
 		Linear = 3,
 	}
 
-	public enum AU3DMixerRenderingFlags : uint
-	{
+	public enum AU3DMixerRenderingFlags : uint {
 		InterAuralDelay = (1 << 0),
 		DopplerShift = (1 << 1),
 		DistanceAttenuation = (1 << 2),
@@ -824,8 +812,7 @@ namespace AudioUnit
 		ConstantReverbBlend = (1 << 6),
 	}
 
-	public enum AUReverbRoomType : uint
-	{
+	public enum AUReverbRoomType : uint {
 		SmallRoom = 0,
 		MediumRoom = 1,
 		LargeRoom = 2,
@@ -841,8 +828,7 @@ namespace AudioUnit
 		LargeHall2 = 12,
 	}
 
-	public enum AUScheduledAudioSliceFlags : uint
-	{
+	public enum AUScheduledAudioSliceFlags : uint {
 		Complete = 1,
 		BeganToRender = 2,
 		BeganToRenderLate = 4,
@@ -851,8 +837,7 @@ namespace AudioUnit
 		InterruptAtLoop = 32,
 	}
 
-	public enum AUSpatializationAlgorithm : uint
-	{
+	public enum AUSpatializationAlgorithm : uint {
 		EqualPowerPanning = 0,
 		SphericalHead = 1,
 		Hrtf = 2,
@@ -860,71 +845,69 @@ namespace AudioUnit
 		VectorBasedPanning = 4,
 		StereoPassThrough = 5,
 		HrtfHQ = 6,
-		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+		[iOS (14, 0)]
+		[TV (14, 0)]
+		[Mac (11, 0)]
 		UseOutputType = 7,
 	}
 
-	public enum AU3DMixerAttenuationCurve : uint
-	{
+	public enum AU3DMixerAttenuationCurve : uint {
 		Power = 0,
 		Exponential = 1,
 		Inverse = 2,
 		Linear = 3,
 	}
 
-	public enum AUSpatialMixerRenderingFlags : uint
-	{
+	public enum AUSpatialMixerRenderingFlags : uint {
 		InterAuralDelay = (1 << 0),
 		DistanceAttenuation = (1 << 2),
 	}
 
-	[iOS (10,0), Mac (10,12)]
+	[iOS (10, 0), Mac (10, 12)]
 	public enum AUParameterAutomationEventType : uint {
 		Value = 0,
 		Touch = 1,
 		Release = 2,
 	}
 
-	[iOS (15,0), TV (15,0), Mac (12,0), MacCatalyst (15,0)]
-	public enum AUVoiceIOSpeechActivityEvent : uint
-	{
+	[iOS (15, 0), TV (15, 0), Mac (12, 0), MacCatalyst (15, 0)]
+	public enum AUVoiceIOSpeechActivityEvent : uint {
 		Started = 0,
 		Ended = 1,
 	}
 
-	public enum AudioUnitSubType : uint
-	{
-		AUConverter 			= 0x636F6E76, // 'conv'
-		Varispeed 				= 0x76617269, // 'vari'
-		DeferredRenderer 		= 0x64656672, // 'defr'
-		Splitter 				= 0x73706C74, // 'splt'
-		MultiSplitter 			= 0x6D73706C, // 'mspl'
-		Merger 					= 0x6D657267, // 'merg'
-		NewTimePitch 			= 0x6E757470, // 'nutp'
-		AUiPodTimeOther 		= 0x6970746F, // 'ipto'
-		RoundTripAac 			= 0x72616163, // 'raac'
-		GenericOutput 			= 0x67656E72, // 'genr'
-		VoiceProcessingIO 		= 0x7670696F, // 'vpio'
-		Sampler 				= 0x73616D70, // 'samp'
-		MidiSynth 				= 0x6D73796E, // 'msyn'
-		PeakLimiter 			= 0x6C6D7472, // 'lmtr'
-		DynamicsProcessor 		= 0x64636D70, // 'dcmp'
-		LowPassFilter 			= 0x6C706173, // 'lpas'
-		HighPassFilter 			= 0x68706173, // 'hpas'
-		BandPassFilter 			= 0x62706173, // 'bpas'
-		HighShelfFilter 		= 0x68736866, // 'hshf'
-		LowShelfFilter 			= 0x6C736866, // 'lshf'
-		ParametricEQ 			= 0x706D6571, // 'pmeq'
-		Distortion 				= 0x64697374, // 'dist'
-		Delay 					= 0x64656C79, // 'dely'
-		SampleDelay 			= 0x73646C79, // 'sdly'
-		NBandEQ 				= 0x6E626571, // 'nbeq'
-		MultiChannelMixer 		= 0x6D636D78, // 'mcmx'
-		MatrixMixer 			= 0x6D786D78, // 'mxmx'
-		SpatialMixer 			= 0x3364656D, // '3dem'
-		ScheduledSoundPlayer 	= 0x7373706C, // 'sspl'
-		AudioFilePlayer 		= 0x6166706C, // 'afpl'
-			
+	public enum AudioUnitSubType : uint {
+		AUConverter = 0x636F6E76, // 'conv'
+		Varispeed = 0x76617269, // 'vari'
+		DeferredRenderer = 0x64656672, // 'defr'
+		Splitter = 0x73706C74, // 'splt'
+		MultiSplitter = 0x6D73706C, // 'mspl'
+		Merger = 0x6D657267, // 'merg'
+		NewTimePitch = 0x6E757470, // 'nutp'
+		AUiPodTimeOther = 0x6970746F, // 'ipto'
+		RoundTripAac = 0x72616163, // 'raac'
+		GenericOutput = 0x67656E72, // 'genr'
+		VoiceProcessingIO = 0x7670696F, // 'vpio'
+		Sampler = 0x73616D70, // 'samp'
+		MidiSynth = 0x6D73796E, // 'msyn'
+		PeakLimiter = 0x6C6D7472, // 'lmtr'
+		DynamicsProcessor = 0x64636D70, // 'dcmp'
+		LowPassFilter = 0x6C706173, // 'lpas'
+		HighPassFilter = 0x68706173, // 'hpas'
+		BandPassFilter = 0x62706173, // 'bpas'
+		HighShelfFilter = 0x68736866, // 'hshf'
+		LowShelfFilter = 0x6C736866, // 'lshf'
+		ParametricEQ = 0x706D6571, // 'pmeq'
+		Distortion = 0x64697374, // 'dist'
+		Delay = 0x64656C79, // 'dely'
+		SampleDelay = 0x73646C79, // 'sdly'
+		NBandEQ = 0x6E626571, // 'nbeq'
+		MultiChannelMixer = 0x6D636D78, // 'mcmx'
+		MatrixMixer = 0x6D786D78, // 'mxmx'
+		SpatialMixer = 0x3364656D, // '3dem'
+		ScheduledSoundPlayer = 0x7373706C, // 'sspl'
+		AudioFilePlayer = 0x6166706C, // 'afpl'
+
 #if MONOMAC
 		HALOutput 				= 0x6168616C, // 'ahal'
 		DefaultOutput 			= 0x64656620, // 'def '

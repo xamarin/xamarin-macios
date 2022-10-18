@@ -64,7 +64,7 @@ namespace AppKit {
 			//
 			// If that is the case, we take a reference first, and to keep the behavior
 			// we call Dispose after that.
-			if (WindowController == null){
+			if (WindowController == null) {
 				bool released_when_closed = ReleasedWhenClosed;
 				if (released_when_closed)
 					CFObject.CFRetain (Handle);
@@ -76,7 +76,7 @@ namespace AppKit {
 		}
 
 		// note: if needed override the protected Get|Set methods
-		public string FrameAutosaveName { 
+		public string FrameAutosaveName {
 			get { return GetFrameAutosaveName (); }
 			// ignore return value (bool)
 			set { SetFrameAutosaveName (value); }
@@ -86,7 +86,7 @@ namespace AppKit {
 		{
 			return NextEventMatchingMask ((uint) mask);
 		}
-		
+
 		public NSEvent NextEventMatchingMask (NSEventMask mask, NSDate expiration, string mode, bool deqFlag)
 		{
 			return NextEventMatchingMask ((uint) mask, expiration, mode, deqFlag);
@@ -97,27 +97,27 @@ namespace AppKit {
 			DiscardEventsMatchingMask ((uint) mask, beforeLastEvent);
 		}
 
-// NSString NSWindowDidBecomeKeyNotification;
-// NSString NSWindowDidBecomeMainNotification;
-// NSString NSWindowDidChangeScreenNotification;
-// NSString NSWindowDidDeminiaturizeNotification;
-// NSString NSWindowDidExposeNotification;
-// NSString NSWindowDidMiniaturizeNotification;
-// NSString NSWindowDidMoveNotification;
-// NSString NSWindowDidResignKeyNotification;
-// NSString NSWindowDidResignMainNotification;
-// NSString NSWindowDidResizeNotification;
-// NSString NSWindowDidUpdateNotification;
-// NSString NSWindowWillCloseNotification;
-// NSString NSWindowWillMiniaturizeNotification;
-// NSString NSWindowWillMoveNotification;
-// NSString NSWindowWillBeginSheetNotification;
-// NSString NSWindowDidEndSheetNotification;
-// NSString NSWindowDidChangeScreenProfileNotification
-// NSString NSWindowWillStartLiveResizeNotification
-// NSString NSWindowDidEndLiveResizeNotification
+		// NSString NSWindowDidBecomeKeyNotification;
+		// NSString NSWindowDidBecomeMainNotification;
+		// NSString NSWindowDidChangeScreenNotification;
+		// NSString NSWindowDidDeminiaturizeNotification;
+		// NSString NSWindowDidExposeNotification;
+		// NSString NSWindowDidMiniaturizeNotification;
+		// NSString NSWindowDidMoveNotification;
+		// NSString NSWindowDidResignKeyNotification;
+		// NSString NSWindowDidResignMainNotification;
+		// NSString NSWindowDidResizeNotification;
+		// NSString NSWindowDidUpdateNotification;
+		// NSString NSWindowWillCloseNotification;
+		// NSString NSWindowWillMiniaturizeNotification;
+		// NSString NSWindowWillMoveNotification;
+		// NSString NSWindowWillBeginSheetNotification;
+		// NSString NSWindowDidEndSheetNotification;
+		// NSString NSWindowDidChangeScreenProfileNotification
+		// NSString NSWindowWillStartLiveResizeNotification
+		// NSString NSWindowDidEndLiveResizeNotification
 
-		
+
 	}
 }
 #endif // !__MACCATALYST__
