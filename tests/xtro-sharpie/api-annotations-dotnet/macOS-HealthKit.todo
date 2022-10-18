@@ -1,4 +1,3 @@
-!extra-null-allowed! 'HealthKit.HKDocumentType HealthKit.HKObjectType::_GetDocumentType(Foundation.NSString)' has a extraneous [NullAllowed] on parameter #0
 !missing-field! HKCategoryTypeIdentifierInfrequentMenstrualCycles not bound
 !missing-field! HKCategoryTypeIdentifierIrregularMenstrualCycles not bound
 !missing-field! HKCategoryTypeIdentifierPersistentIntermenstrualBleeding not bound
