@@ -88,8 +88,77 @@ namespace ObjCRuntime {
 		[DllImport ("__Internal")]
 		static extern IntPtr xamarin_get_block_descriptor ();
 
+		/// <summary>
+		/// Creates a block literal.
+		/// </summary>
+		/// <param name="trampoline">A function pointer that will be called when the block is called. This function must have an [UnmanagedCallersOnly] attribute.</param>
+		/// <param name="context">A context object that can be retrieved from the trampoline. This is typically a delegate to the managed function to call.</param>
+		/// <param name="trampolineType">The type where the trampoline is located.</param>
+		/// <param name="trampolineMethod">The name of the trampoline method.</param>
+		/// <remarks>
+		/// The 'trampolineType' and 'trampolineMethod' must uniquely define the trampoline method (it will be looked up using reflection).
+		/// If there are multiple methods with the same name, use the overload that takes a MethodInfo instead.
+		/// </remarks>
+		public BlockLiteral (void *trampoline, object context, Type trampolineType, string trampolineMethod)
+			: this (trampoline, context, FindTrampoline (trampolineType, trampolineMethod))
+		{
+		}
+
+		/// <summary>
+		/// Creates a block literal.
+		/// </summary>
+		/// <param name="trampoline">A function pointer that will be called when the block is called. This function must have an [UnmanagedCallersOnly] attribute.</param>
+		/// <param name="context">A context object that can be retrieved from the trampoline. This is typically a delegate to the managed function to call.</param>
+		/// <param name="trampolineMethod">The MethodInfo instance corresponding with the trampoline method.</param>
+		public BlockLiteral (void *trampoline, object context, MethodInfo trampolineMethod)
+			: this (trampoline, context, GetBlockSignature (trampoline, trampolineMethod))
+		{
+		}
+
+		/// <summary>
+		/// Creates a block literal.
+		/// </summary>
+		/// <param name="trampoline">A function pointer that will be called when the block is called. This function must have an [UnmanagedCallersOnly] attribute.</param>
+		/// <param name="context">A context object that can be retrieved from the trampoline. This is typically a delegate to the managed function to call.</param>
+		/// <param name="trampolineSignature">The Objective-C signature of the trampoline method.</param>
+		public BlockLiteral (void* trampoline, object context, string trampolineSignature)
+		{
+			isa = IntPtr.Zero;
+			flags = (BlockFlags) 0;
+			reserved = 0;
+			invoke = IntPtr.Zero;
+			block_descriptor = IntPtr.Zero;
+			local_handle = IntPtr.Zero;
+			global_handle = IntPtr.Zero;
+			SetupFunctionPointerBlock ((IntPtr) trampoline, context, System.Text.Encoding.UTF8.GetBytes (trampolineSignature));
+		}
+
+		static MethodInfo FindTrampoline (Type trampolineType, string trampolineMethod)
+		{
+			var rv = trampolineType.GetMethod (trampolineMethod, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static);
+
+			if (rv is null)
+				throw ErrorHelper.CreateError (8046, "Unable to find the method '{0}' in the type '{1}'", trampolineMethod, trampolineType.FullName);
+
+			return rv;
+		}
+
 		[BindingImpl (BindingImplOptions.Optimizable)]
-		void SetupBlock (Delegate trampoline, Delegate userDelegate, bool safe)
+		static string GetBlockSignature (void* trampoline, MethodInfo trampolineMethod)
+		{
+			if (!Runtime.DynamicRegistrationSupported)
+				throw ErrorHelper.CreateError (8026, "BlockLiteral.GetBlockSignature is not supported when the dynamic registrar has been linked away.");
+
+			var functionPointer = trampolineMethod.MethodHandle.GetFunctionPointer ();
+			if (functionPointer != (IntPtr) trampoline)
+				throw ErrorHelper.CreateError (8047, "The 'trampoline' and the 'trampolineMethod' parameters refer to different methods.");
+
+			// TODO: assert that trampoline has an UnmanagedCallersOnly attribute (by looking at trampolineMethod) + that the first argument is either BlockLiteral* or IntPtr.
+			return Runtime.ComputeSignature (trampolineMethod, true);
+		}
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		void SetupBlock (Delegate trampoline, Delegate target, bool safe)
 		{
 			if (!Runtime.DynamicRegistrationSupported)
 				throw ErrorHelper.CreateError (8026, "BlockLiteral.SetupBlock is not supported when the dynamic registrar has been linked away.");
@@ -116,23 +185,34 @@ namespace ObjCRuntime {
 			}
 
 			var signature = Runtime.ComputeSignature (userMethod, blockSignature);
-			SetupBlockImpl (trampoline, userDelegate, safe, signature);
+			SetupBlockImpl (trampoline, target, safe, System.Text.Encoding.UTF8.GetBytes (signature));
 		}
 
-		// This method is not to be called manually by user code.
-		// This is enforced by making it private. If the SetupBlock optimization is enabled,
-		// the linker will make it public so that it's callable from optimized user code.
-		unsafe void SetupBlockImpl (Delegate trampoline, Delegate userDelegate, bool safe, string signature)
+		void SetupBlockImpl (Delegate trampoline, Delegate target, bool safe, string signature)
+		{
+			SetupBlockImpl (trampoline, target, safe, System.Text.Encoding.UTF8.GetBytes (signature));
+		}
+
+		void SetupBlockImpl (Delegate trampoline, Delegate target, bool safe, byte[] utf8Signature)
+		{
+			var invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
+			SetupFunctionPointerBlock (invoke, GetContext (trampoline, target, safe), utf8Signature);
+		}
+
+		static object GetContext (Delegate trampoline, Delegate target, bool safe)
+		{
+			if (safe) {
+				return new Tuple<Delegate, Delegate> (trampoline, target);
+			} else {
+				return target;
+			}
+		}
+
+		void SetupFunctionPointerBlock (IntPtr invokeMethod, object context, byte[] utf8Signature)
 		{
 			isa = NSConcreteStackBlock;
-			invoke = Marshal.GetFunctionPointerForDelegate (trampoline);
-			object delegates;
-			if (safe) {
-				delegates = new Tuple<Delegate, Delegate> (trampoline, userDelegate);
-			} else {
-				delegates = userDelegate;
-			}
-			local_handle = (IntPtr) GCHandle.Alloc (delegates);
+			invoke = invokeMethod;
+			local_handle = (IntPtr) GCHandle.Alloc (context);
 			global_handle = IntPtr.Zero;
 			flags = BlockFlags.BLOCK_HAS_COPY_DISPOSE | BlockFlags.BLOCK_HAS_SIGNATURE;
 
@@ -143,8 +223,9 @@ namespace ObjCRuntime {
 			// for the signature if we can avoid it). One descriptor is allocated for every 
 			// Block; this is potentially something the static registrar can fix, since it
 			// should know every possible trampoline signature.
-			var bytes = System.Text.Encoding.UTF8.GetBytes (signature);
-			var desclen = sizeof (XamarinBlockDescriptor) + bytes.Length + 1 /* null character */;
+			var bytes = utf8Signature;
+			var hasNull = utf8Signature [utf8Signature.Length - 1] == 0;
+			var desclen = sizeof (XamarinBlockDescriptor) + bytes.Length + (hasNull ? 0 : 1 /* null character */);
 			var descptr = Marshal.AllocHGlobal (desclen);
 
 			block_descriptor = descptr;
@@ -153,7 +234,8 @@ namespace ObjCRuntime {
 			xblock_descriptor->descriptor.signature = descptr + sizeof (BlockDescriptor) + 4 /* signature_length */;
 			xblock_descriptor->ref_count = 1;
 			Marshal.Copy (bytes, 0, xblock_descriptor->descriptor.signature, bytes.Length);
-			Marshal.WriteByte (xblock_descriptor->descriptor.signature + bytes.Length, 0); // null terminate string
+			if (!hasNull)
+				Marshal.WriteByte (xblock_descriptor->descriptor.signature + bytes.Length, 0); // null terminate string
 		}
 
 		// trampoline must be static, and someone else needs to keep a ref to it
@@ -164,6 +246,7 @@ namespace ObjCRuntime {
 		}
 
 		// trampoline must be static, but it's not necessary to keep a ref to it
+		[EditorBrowsable (EditorBrowsableState.Never)]
 		public void SetupBlock (Delegate trampoline, Delegate userDelegate)
 		{
 			if (trampoline is null)
@@ -228,10 +311,16 @@ namespace ObjCRuntime {
 			}
 		}
 
-		public object Target {
+		public object Context {
 			get {
 				var handle = global_handle != IntPtr.Zero ? global_handle : local_handle;
-				var target = GCHandle.FromIntPtr (handle).Target;
+				return GCHandle.FromIntPtr (handle).Target;
+			}
+		}
+
+		public object Target {
+			get {
+				var target = Context;
 				var tuple = target as Tuple<Delegate, Delegate>;
 				if (tuple != null)
 					return tuple.Item2;
