@@ -16,13 +16,6 @@ steps:
   parameters:
     isPR: false # always use the latests set of scripts merged with main
 
-- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
-  name: configure_platforms
-  displayName: 'Configure platforms'
-  env:
-    ${{ if eq(parameters.enableDotnet, true) }}:
-      ENABLE_DOTNET: "True"
-
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
 
@@ -142,6 +135,13 @@ steps:
       ENABLE_DOTNET: "True"
   name: labels
   displayName: 'Configure build'
+
+- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
+  name: configure_platforms
+  displayName: 'Configure platforms'
+  env:
+    ${{ if eq(parameters.enableDotnet, true) }}:
+      ENABLE_DOTNET: "True"
 
 # upload config to be consumed later
 - ${{ if eq(parameters.uploadArtifacts, true) }}:

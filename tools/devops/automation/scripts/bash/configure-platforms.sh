@@ -32,6 +32,14 @@ INCLUDE_MAC=$(cat "$FILE")
 
 rm -f "$FILE"
 
+env -0 | sort -z | tr '\0' '\n' || true
+
+if [[ "${LABELS_ENABLE_LEGACY_XAMARIN:-}" == "True" ]]; then
+	INCLUDE_XAMARIN_LEGACY=1
+elif [[ "${LABELS_DISABLE_LEGACY_XAMARIN:-}" == "True" ]]; then
+	INCLUDE_XAMARIN_LEGACY=
+fi
+
 # print it out, so turn off echoing since that confuses Azure DevOps
 set +x
 

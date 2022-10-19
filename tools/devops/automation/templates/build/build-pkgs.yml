@@ -48,8 +48,8 @@ steps:
     gitHubToken: ${{ parameters.gitHubToken }}
     xqaCertPass: ${{ parameters.xqaCertPass }}
     enableDotnet: ${{ parameters.enableDotnet }}
-    enableLegacyXamarin: $[ dependencies.configure.outputs['labels.enable-legacy-xamarin'] ]
-    disableLegacyXamarin: $[ dependencies.configure.outputs['labels.disable-legacy-xamarin'] ]
+    enableLegacyXamarin: $[ dependencies.configure.outputs['labels.enable_legacy_xamarin'] ]
+    disableLegacyXamarin: $[ dependencies.configure.outputs['labels.disable_legacy_xamarin'] ]
     buildSteps:
     # build not signed .pkgs for the SDK
     - bash: |
