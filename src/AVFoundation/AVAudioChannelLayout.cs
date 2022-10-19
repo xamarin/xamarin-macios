@@ -46,12 +46,12 @@ namespace AVFoundation {
 				return AudioChannelLayout.FromHandle (_Layout);
 			}
 		}
-		
+
 		public static bool operator == (AVAudioChannelLayout a, AVAudioChannelLayout b)
 		{
 			return a.Equals (b);
 		}
-		
+
 		public static bool operator != (AVAudioChannelLayout a, AVAudioChannelLayout b)
 		{
 			return !a.Equals (b);

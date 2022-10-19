@@ -31,7 +31,7 @@ namespace Xharness.Jenkins {
 		readonly HtmlReportWriter xamarinStorageHtmlReportWriter;
 		readonly HtmlReportWriter vsdropsHtmlReportWriter;
 		readonly MarkdownReportWriter markdownReportWriter;
-		
+
 		public bool Populating { get; private set; } = true;
 
 		public IHarness Harness { get; }
@@ -94,7 +94,7 @@ namespace Xharness.Jenkins {
 				return false;
 			}
 
-			if (!TestSelection.IsEnabled(TestLabel.SystemPermission) && project.Label == TestLabel.Introspection) {
+			if (!TestSelection.IsEnabled (TestLabel.SystemPermission) && project.Label == TestLabel.Introspection) {
 				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because we cannot include the system permission tests");
 				return false;
 			}
@@ -115,7 +115,7 @@ namespace Xharness.Jenkins {
 		}
 
 		public bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
-		
+
 		Task PopulateTasksAsync ()
 		{
 			// Missing:
@@ -135,7 +135,7 @@ namespace Xharness.Jenkins {
 						Console.WriteLine ($"Failed to create simulator tasks: {v.Exception}");
 					}
 				});
-			
+
 			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
 			var crashReportSnapshotFactory = new CrashSnapshotReporterFactory (processManager);
@@ -417,15 +417,15 @@ namespace Xharness.Jenkins {
 					}
 
 					// write the html
-					using (var stream = new FileStream (tmpreport, FileMode.Create, FileAccess.ReadWrite)) 
-					using (var writer = new StreamWriter (stream)) { 
+					using (var stream = new FileStream (tmpreport, FileMode.Create, FileAccess.ReadWrite))
+					using (var writer = new StreamWriter (stream)) {
 						xamarinStorageHtmlReportWriter.Write (allTasks, writer);
 					}
 
 					// write the vsdrops report only if needed
 					if (vsdropsHtmlReportWriter != null) {
-						using (var stream = new FileStream (tmpVsdropsReport, FileMode.Create, FileAccess.ReadWrite)) 
-						using (var writer = new StreamWriter (stream)) { 
+						using (var stream = new FileStream (tmpVsdropsReport, FileMode.Create, FileAccess.ReadWrite))
+						using (var writer = new StreamWriter (stream)) {
 							vsdropsHtmlReportWriter.Write (allTasks, writer);
 						}
 					}
@@ -446,13 +446,13 @@ namespace Xharness.Jenkins {
 							File.Delete (vsdropsReport);
 						File.Move (tmpVsdropsReport, vsdropsReport);
 					}
-					
+
 					if (!string.IsNullOrEmpty (tmpmarkdown)) {
 						if (File.Exists (Harness.MarkdownSummaryPath))
 							File.Delete (Harness.MarkdownSummaryPath);
 						File.Move (tmpmarkdown, Harness.MarkdownSummaryPath);
 					}
-					
+
 					var dependentFileLocation = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
 					foreach (var file in new string [] { "xharness.js", "xharness.css" }) {
 						File.Copy (Path.Combine (dependentFileLocation, file), Path.Combine (LogDirectory, file), true);

@@ -2,7 +2,7 @@
 #if !WATCH
 
 #if !MONOMAC
-using NSFont=UIKit.UIFont;
+using NSFont = UIKit.UIFont;
 #endif
 
 using System;

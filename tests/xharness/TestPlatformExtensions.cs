@@ -25,7 +25,7 @@ namespace Xharness {
 		}
 
 		public static bool IsMac (this TestPlatform platform)
-		{ 
+		{
 			switch (platform) {
 			case TestPlatform.Mac:
 			case TestPlatform.Mac_Modern:
@@ -38,7 +38,7 @@ namespace Xharness {
 		}
 
 		public static bool CanSymlink (this TestPlatform platform)
-		{ 
+		{
 			switch (platform) {
 			case TestPlatform.iOS:
 			case TestPlatform.iOS_TodayExtension64:
