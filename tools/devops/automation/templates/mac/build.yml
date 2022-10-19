@@ -123,7 +123,7 @@ steps:
   enabled: false
 
 - task: DownloadPipelineArtifact@2
-  displayName: Download not notaraized build
+  displayName: Download not notarized build
   inputs:
     artifact: 'not-signed-package'
     allowFailedBuilds: true
