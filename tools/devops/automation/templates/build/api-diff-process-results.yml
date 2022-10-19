@@ -48,7 +48,7 @@ steps:
   continueOnError: true # don't let any failures here stop us
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: 'DropMetadata-ChangeDetection'
+    dropMetadataContainerName: 'DropMetadata-ChangeDetection-$(System.JobAttempt)'
     buildNumber: 'xamarin-macios/detected-changes/$(Build.BuildNumber)/$(Build.BuildId)-$(System.JobAttempt)'
     sourcePath: '$(System.DefaultWorkingDirectory)/change-detection/results/'
     detailedLog: true
