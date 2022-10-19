@@ -2,10 +2,10 @@ using System;
 using System.IO;
 
 namespace Xharness.TestImporter.Xamarin {
-	public class TestAssemblyDefinition : ITestAssemblyDefinition{
-		
+	public class TestAssemblyDefinition : ITestAssemblyDefinition {
+
 		#region properties
-		
+
 		public string Name { get; set; }
 		public bool IsXUnit { get; set; }
 		public IAssemblyLocator AssemblyLocator { get; set; }
@@ -20,7 +20,7 @@ namespace Xharness.TestImporter.Xamarin {
 			// assemblies
 			IsXUnit = name.Contains ("_xunit-test");
 		}
-		
+
 		public string GetName (Platform platform)
 		{
 			switch (platform) {
@@ -34,7 +34,7 @@ namespace Xharness.TestImporter.Xamarin {
 				return Name;
 			}
 		}
-		
+
 		/// <summary>
 		/// Returns the path of the test assembly within the mono checkout.
 		/// </summary>

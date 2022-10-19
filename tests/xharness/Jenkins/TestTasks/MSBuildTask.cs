@@ -6,8 +6,7 @@ using Microsoft.DotNet.XHarness.Common.Execution;
 using Microsoft.DotNet.XHarness.iOS.Shared.Logging;
 
 namespace Xharness.Jenkins.TestTasks {
-	class MSBuildTask : BuildProjectTask
-	{
+	class MSBuildTask : BuildProjectTask {
 		protected virtual string ToolName {
 			get {
 				if (TestProject.IsDotNetProject)
@@ -24,7 +23,9 @@ namespace Xharness.Jenkins.TestTasks {
 					return false; // we have to do 'msbuild /r'
 				return base.RestoreNugets;
 			}
+			set => base.RestoreNugets = value;
 		}
+
 		public override void SetEnvironmentVariables (Process process)
 		{
 			base.SetEnvironmentVariables (process);
@@ -39,7 +40,7 @@ namespace Xharness.Jenkins.TestTasks {
 			}
 		}
 
-		protected virtual List<string> ToolArguments => 
+		protected virtual List<string> ToolArguments =>
 				MSBuild.GetToolArguments (ProjectPlatform, ProjectConfiguration, ProjectFile, BuildLog);
 
 		MSBuild MSBuild => buildToolTask as MSBuild;

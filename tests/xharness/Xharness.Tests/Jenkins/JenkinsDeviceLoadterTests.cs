@@ -39,7 +39,7 @@ namespace Xharness.Tests.Jenkins {
 					devices.Setup (d => d.ConnectedWatch).Returns (Array.Empty<IHardwareDevice> ());
 
 					yield return new TestCaseData (simulators.Object, devices.Object, $"Device Listing (ok). Devices types are: iOS 32 bit");
-					
+
 					devices = new Mock<IHardwareDeviceLoader> ();
 					devices.Setup (d => d.Connected32BitIOS).Returns (new IHardwareDevice [] { aDevice.Object });
 					devices.Setup (d => d.Connected64BitIOS).Returns (new IHardwareDevice [] { aDevice.Object });
@@ -65,7 +65,7 @@ namespace Xharness.Tests.Jenkins {
 			}
 
 			public static IEnumerable GetSimulatorTestCases {
-				get { 
+				get {
 					var devices = new Mock<IHardwareDeviceLoader> ();
 					var simulators = new Mock<ISimulatorLoader> ();
 					var processManager = new Mock<IMlaunchProcessManager> ();
@@ -75,7 +75,7 @@ namespace Xharness.Tests.Jenkins {
 					yield return new TestCaseData (simulators.Object, devices.Object, "Simulator Listing (ok - no simulators found).");
 
 					simulators = new Mock<ISimulatorLoader> ();
-					simulators.Setup (s => s.AvailableDevices).Returns (new SimulatorDevice [] { new SimulatorDevice (processManager.Object, db.Object)});
+					simulators.Setup (s => s.AvailableDevices).Returns (new SimulatorDevice [] { new SimulatorDevice (processManager.Object, db.Object) });
 					yield return new TestCaseData (simulators.Object, devices.Object, $"Simulator Listing (ok - Found 1 simulators).");
 				}
 			}
@@ -113,7 +113,7 @@ namespace Xharness.Tests.Jenkins {
 
 		[Test, TestCaseSource (typeof (TestCasesData), "GetDeviceTestCases")]
 		public async Task FoundDevicesTest (ISimulatorLoader simulators, IHardwareDeviceLoader devices, string expectedDescription)
-		{ 
+		{
 			var loader = new JenkinsDeviceLoader (simulators, devices, logs.Object);
 
 			await loader.LoadDevicesAsync ();
@@ -123,7 +123,7 @@ namespace Xharness.Tests.Jenkins {
 
 		[Test, TestCaseSource (typeof (TestCasesData), "GetSimulatorTestCases")]
 		public async Task FoundSimulatorsTest (ISimulatorLoader simulators, IHardwareDeviceLoader devices, string expectedDescription)
-		{ 
+		{
 			var loader = new JenkinsDeviceLoader (simulators, devices, logs.Object);
 
 			await loader.LoadSimulatorsAsync ();

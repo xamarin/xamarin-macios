@@ -7,8 +7,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness.Targets {
-	public class TodayExtensionTarget : UnifiedTarget
-	{
+	public class TodayExtensionTarget : UnifiedTarget {
 		public string AppName { get; private set; }
 		public string ExtensionName { get; private set; }
 
@@ -35,7 +34,7 @@ namespace Xharness.Targets {
 				return "-today";
 			}
 		}
-		
+
 		void CreateTodayContainerProject ()
 		{
 			var csproj = new XmlDocument ();
@@ -52,7 +51,7 @@ namespace Xharness.Targets {
 			ProjectGuid = TodayContainerGuid;
 			csproj.SetProjectGuid (TodayContainerGuid);
 			csproj.ResolveAllPaths (Harness.TodayContainerTemplate);
-			csproj.Save(TodayContainerProjectPath, Harness);
+			csproj.Save (TodayContainerProjectPath, Harness);
 
 			XmlDocument info_plist = new XmlDocument ();
 			var target_info_plist = Path.Combine (TargetDirectory, $"Info{suffix}.plist");
@@ -93,7 +92,7 @@ namespace Xharness.Targets {
 			info_plist.SetMinimumOSVersion (GetMinimumOSVersion ("8.0"));
 			info_plist.AddPListStringValue ("CFBundlePackageType", "XPC!");
 			info_plist.SetCFBundleDisplayName (Name);
-			info_plist.AddPListKeyValuePair ("NSExtension", "dict", 
+			info_plist.AddPListKeyValuePair ("NSExtension", "dict",
 @"
         <key>NSExtensionMainStoryboard</key>
         <string>TodayView</string>

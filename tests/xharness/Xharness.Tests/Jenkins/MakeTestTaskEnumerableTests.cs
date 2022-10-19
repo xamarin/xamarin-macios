@@ -25,7 +25,7 @@ namespace Xharness.Tests.Jenkins {
 		{
 			processManager = new Mock<IMlaunchProcessManager> ();
 			resultParser = new Mock<IResultParser> ();
-			tunnel = new Mock<ITunnelBore> ();	
+			tunnel = new Mock<ITunnelBore> ();
 			configuration = new HarnessConfiguration ();
 			harness = new Harness (resultParser.Object, HarnessAction.Jenkins, configuration);
 			jenkins = new Xharness.Jenkins.Jenkins (harness, processManager.Object, resultParser.Object, tunnel.Object);

@@ -1,0 +1,6 @@
+!unknown-type! CW8021XProfile bound
+!unknown-type! CWWirelessProfile bound
+!unknown-native-enum! CWStatus bound
+!missing-enum! CWErr not bound
+!extra-enum-value! Managed value 10 for CWEventType.RangingReportEvent not found in native headers
+!missing-pinvoke! CWMergeNetworks is not bound

@@ -13,7 +13,7 @@ namespace Xharness.Tests.Jenkins {
 		Mock<IHardwareDevice> device1;
 		Mock<IHardwareDevice> device2;
 		Xharness.Jenkins.ResourceManager resourceManager;
-		
+
 		[SetUp]
 		public void SetUp ()
 		{
@@ -44,7 +44,7 @@ namespace Xharness.Tests.Jenkins {
 
 		[Test]
 		public void GetDeviceResourcePresent ()
-		{ 
+		{
 			// call it twice to make sure we get the same results
 			var devices = new List<IHardwareDevice> { device1.Object, device2.Object };
 			// set the device expectations
@@ -90,7 +90,7 @@ namespace Xharness.Tests.Jenkins {
 			Assert.AreEqual (1, resources.Where (r => r.Name == "device1").Count (), "first device1");
 			Assert.AreEqual (0, resources.Where (r => r.Name == "device2").Count (), "first device2");
 
-			var devices2 = new List<IHardwareDevice> { device1.Object , device2.Object };
+			var devices2 = new List<IHardwareDevice> { device1.Object, device2.Object };
 			var resources2 = resourceManager.GetDeviceResources (devices2);
 
 			// assert that both are present

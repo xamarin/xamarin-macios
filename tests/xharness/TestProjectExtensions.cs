@@ -16,7 +16,7 @@ namespace Xharness {
 			var suffix = string.Empty;
 			if (self.IsDotNetProject)
 				suffix = "-dotnet";
-			clone.Path =  Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "tvos" + suffix, Path.GetFileNameWithoutExtension (self.Path) + "-tvos" + Path.GetExtension (self.Path));
+			clone.Path = Path.Combine (Path.GetDirectoryName (self.Path), Target.ProjectsDir, "tvos" + suffix, Path.GetFileNameWithoutExtension (self.Path) + "-tvos" + Path.GetExtension (self.Path));
 			return clone;
 		}
 
