@@ -21,7 +21,7 @@ resources:
 parameters:
 - name: dotnetPlatforms
   type: object
-  default: [ iOS, tvOS, macOS, MacCatalyst ]
+  default: [ iOS, tvOS ]
 
 jobs:
 - job: post_build
