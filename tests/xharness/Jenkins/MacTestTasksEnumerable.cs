@@ -58,14 +58,21 @@ namespace Xharness.Jenkins {
 				IsUnitTest = true,
 			};
 			return testVariationsFactory.CreateTestVariations (new [] { exec }, (buildTask, test, candidates) =>
-				new MacExecuteTask (jenkins, buildTask, processManager, crashReportSnapshotFactory) { IsUnitTest = true } );
+				new MacExecuteTask (jenkins, buildTask, processManager, crashReportSnapshotFactory) { IsUnitTest = true });
 		}
 
 		public IEnumerator<RunTestTask> GetEnumerator ()
 		{
 
 			foreach (var project in jenkins.Harness.MacTestProjects) {
-				bool ignored = !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac);
+				bool ignored = false;
+
+				if (project.TestPlatform == TestPlatform.MacCatalyst) {
+					ignored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.MacCatalyst);
+				} else {
+					ignored |= !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac);
+				}
+
 				if (project.Ignore == true)
 					ignored = true;
 

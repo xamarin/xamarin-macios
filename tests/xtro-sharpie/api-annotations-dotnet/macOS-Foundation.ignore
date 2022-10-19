@@ -577,4 +577,3 @@
 !missing-selector! NSXMLDTD::init not bound
 !missing-selector! NSXMLDTDNode::init not bound
 !missing-selector! NSXMLNode::detach not bound
-!missing-selector! NSXMLNode::init not bound

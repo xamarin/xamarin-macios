@@ -40,35 +40,35 @@ namespace AVFoundation {
 			return String.Format ("({0}:{1})", Forward, Up);
 		}
 
-		public static bool operator ==(AVAudio3DVectorOrientation left, AVAudio3DVectorOrientation right)
+		public static bool operator == (AVAudio3DVectorOrientation left, AVAudio3DVectorOrientation right)
 		{
 			return left.Equals (right);
 		}
-		public static bool operator !=(AVAudio3DVectorOrientation left, AVAudio3DVectorOrientation right)
+		public static bool operator != (AVAudio3DVectorOrientation left, AVAudio3DVectorOrientation right)
 		{
 			return !left.Equals (right);
 		}
-		
-		public override bool Equals(object? obj)
+
+		public override bool Equals (object? obj)
 		{
 			if (!(obj is AVAudio3DVectorOrientation))
 				return false;
-			
-			return this.Equals((AVAudio3DVectorOrientation)obj);
+
+			return this.Equals ((AVAudio3DVectorOrientation) obj);
 		}
 
-		public bool Equals(AVAudio3DVectorOrientation other)
+		public bool Equals (AVAudio3DVectorOrientation other)
 		{
 			return Forward == other.Forward && Up == other.Up;
 		}
-		
+
 		public override int GetHashCode ()
 		{
 			return Forward.GetHashCode () ^ Up.GetHashCode ();
 		}
 #endif
 	}
-	
+
 #if NET
 	[SupportedOSPlatform ("ios")]
 	[SupportedOSPlatform ("maccatalyst")]
@@ -85,33 +85,33 @@ namespace AVFoundation {
 			return String.Format ("(Yaw={0},Pitch={1},Roll={2})", Yaw, Pitch, Roll);
 		}
 
-		public static bool operator ==(AVAudio3DAngularOrientation left, AVAudio3DAngularOrientation right)
+		public static bool operator == (AVAudio3DAngularOrientation left, AVAudio3DAngularOrientation right)
 		{
 			return (left.Yaw == right.Yaw &&
 				left.Pitch == right.Pitch &&
 				left.Roll == right.Roll);
 		}
-		public static bool operator !=(AVAudio3DAngularOrientation left, AVAudio3DAngularOrientation right)
+		public static bool operator != (AVAudio3DAngularOrientation left, AVAudio3DAngularOrientation right)
 		{
 			return (left.Yaw != right.Yaw ||
 				left.Pitch != right.Pitch ||
 				left.Roll != right.Roll);
-			
+
 		}
 
-		public override bool Equals(object? obj)
+		public override bool Equals (object? obj)
 		{
 			if (!(obj is AVAudio3DAngularOrientation))
 				return false;
-			
-			return this.Equals((AVAudio3DAngularOrientation)obj);
+
+			return this.Equals ((AVAudio3DAngularOrientation) obj);
 		}
 
-		public bool Equals(AVAudio3DAngularOrientation other)
+		public bool Equals (AVAudio3DAngularOrientation other)
 		{
 			return this == other;
 		}
-		
+
 		public override int GetHashCode ()
 		{
 			return Yaw.GetHashCode () ^ Pitch.GetHashCode () ^ Roll.GetHashCode ();
@@ -140,29 +140,29 @@ namespace AVFoundation {
 			return String.Format ("(RedGain={0},GreenGain={1},BlueGain={2})", RedGain, GreenGain, BlueGain);
 		}
 
-		public static bool operator ==(AVCaptureWhiteBalanceGains left, AVCaptureWhiteBalanceGains right)
+		public static bool operator == (AVCaptureWhiteBalanceGains left, AVCaptureWhiteBalanceGains right)
 		{
 			return (left.RedGain == right.RedGain &&
 				left.GreenGain == right.GreenGain &&
 				left.BlueGain == right.BlueGain);
 		}
 
-		public static bool operator !=(AVCaptureWhiteBalanceGains left, AVCaptureWhiteBalanceGains right)
+		public static bool operator != (AVCaptureWhiteBalanceGains left, AVCaptureWhiteBalanceGains right)
 		{
 			return (left.RedGain != right.RedGain ||
 				left.GreenGain != right.GreenGain ||
 				left.BlueGain != right.BlueGain);
 		}
 
-		public override bool Equals(object? obj)
+		public override bool Equals (object? obj)
 		{
 			if (!(obj is AVCaptureWhiteBalanceGains))
 				return false;
 
-			return this.Equals((AVCaptureWhiteBalanceGains)obj);
+			return this.Equals ((AVCaptureWhiteBalanceGains) obj);
 		}
 
-		public bool Equals(AVCaptureWhiteBalanceGains other)
+		public bool Equals (AVCaptureWhiteBalanceGains other)
 		{
 			return this == other;
 		}
@@ -194,25 +194,25 @@ namespace AVFoundation {
 			return String.Format ("({0},{1})", X, Y);
 		}
 
-		public static bool operator ==(AVCaptureWhiteBalanceChromaticityValues left, AVCaptureWhiteBalanceChromaticityValues right)
+		public static bool operator == (AVCaptureWhiteBalanceChromaticityValues left, AVCaptureWhiteBalanceChromaticityValues right)
 		{
 			return left.X == right.X && left.Y == right.Y;
 		}
 
-		public static bool operator !=(AVCaptureWhiteBalanceChromaticityValues left, AVCaptureWhiteBalanceChromaticityValues right)
+		public static bool operator != (AVCaptureWhiteBalanceChromaticityValues left, AVCaptureWhiteBalanceChromaticityValues right)
 		{
 			return left.X != right.X || left.Y != right.Y;
 		}
 
-		public override bool Equals(object? obj)
+		public override bool Equals (object? obj)
 		{
 			if (!(obj is AVCaptureWhiteBalanceChromaticityValues))
 				return false;
 
-			return this.Equals((AVCaptureWhiteBalanceChromaticityValues)obj);
+			return this.Equals ((AVCaptureWhiteBalanceChromaticityValues) obj);
 		}
 
-		public bool Equals(AVCaptureWhiteBalanceChromaticityValues other)
+		public bool Equals (AVCaptureWhiteBalanceChromaticityValues other)
 		{
 			return this == other;
 		}
@@ -243,26 +243,26 @@ namespace AVFoundation {
 			return String.Format ("(Temperature={0},Tint={1})", Temperature, Tint);
 		}
 
-		public static bool operator ==(AVCaptureWhiteBalanceTemperatureAndTintValues left, AVCaptureWhiteBalanceTemperatureAndTintValues right)
+		public static bool operator == (AVCaptureWhiteBalanceTemperatureAndTintValues left, AVCaptureWhiteBalanceTemperatureAndTintValues right)
 		{
 			return left.Temperature == right.Temperature && left.Tint == right.Tint;
 		}
 
-		public static bool operator !=(AVCaptureWhiteBalanceTemperatureAndTintValues left, AVCaptureWhiteBalanceTemperatureAndTintValues right)
+		public static bool operator != (AVCaptureWhiteBalanceTemperatureAndTintValues left, AVCaptureWhiteBalanceTemperatureAndTintValues right)
 		{
 			return left.Temperature != right.Temperature || left.Tint != right.Tint;
-			
+
 		}
 
-		public override bool Equals(object? obj)
+		public override bool Equals (object? obj)
 		{
 			if (!(obj is AVCaptureWhiteBalanceTemperatureAndTintValues))
 				return false;
-			
-			return this.Equals((AVCaptureWhiteBalanceTemperatureAndTintValues)obj);
+
+			return this.Equals ((AVCaptureWhiteBalanceTemperatureAndTintValues) obj);
 		}
 
-		public bool Equals(AVCaptureWhiteBalanceTemperatureAndTintValues other)
+		public bool Equals (AVCaptureWhiteBalanceTemperatureAndTintValues other)
 		{
 			return this == other;
 		}

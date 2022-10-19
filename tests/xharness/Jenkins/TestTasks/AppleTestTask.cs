@@ -6,8 +6,7 @@ using Microsoft.DotNet.XHarness.Common.Logging;
 #nullable enable
 
 namespace Xharness.Jenkins.TestTasks {
-	abstract class AppleTestTask : TestTasks
-	{
+	abstract class AppleTestTask : TestTasks {
 		public Jenkins Jenkins { get; private set; }
 		public IHarness Harness { get { return Jenkins.Harness; } }
 		public override string RootDirectory => HarnessConfiguration.RootDirectory;

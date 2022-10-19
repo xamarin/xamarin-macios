@@ -23,7 +23,7 @@ namespace Xharness.Tests.Jenkins {
 
 		[TearDown]
 		public void TearDown ()
-		{ 
+		{
 			File.Delete (path);
 		}
 
@@ -105,13 +105,13 @@ namespace Xharness.Tests.Jenkins {
 				}
 			}
 			Assert.NotNull (summaryLine, "summary line null");
-			Assert.AreEqual ($"<summary>{count / 2} tests failed, {count /2 } tests passed.</summary>", summaryLine, "summary value");
+			Assert.AreEqual ($"<summary>{count / 2} tests failed, {count / 2} tests passed.</summary>", summaryLine, "summary value");
 			Assert.AreEqual (count / 2, failedTestsLineCount, "Error count");
 		}
 
 		[Test]
 		public void MissingDeviceTest ()
-		{ 
+		{
 			int count = 10;
 			List<ITestTask> tasks = new List<ITestTask> ();
 			for (var i = 0; i < count; i++) {
@@ -136,7 +136,7 @@ namespace Xharness.Tests.Jenkins {
 
 		[Test]
 		public void NotTestsTest ()
-		{ 
+		{
 			int count = 10;
 			List<ITestTask> tasks = new List<ITestTask> ();
 			for (var i = 0; i < count; i++) {
@@ -159,13 +159,13 @@ namespace Xharness.Tests.Jenkins {
 
 		[Test]
 		public void KnownIssueTest ()
-		{ 
+		{
 			int count = 10;
 			List<ITestTask> tasks = new List<ITestTask> ();
 
 			for (var i = 0; i < count; i++) {
 				var failure = new Mock<ITestTask> ();
-				var knownIssue = new KnownIssue(humanMessage: "Testing known issues", issueLink:"http://github.com");
+				var knownIssue = new KnownIssue (humanMessage: "Testing known issues", issueLink: "http://github.com");
 				failure.Setup (t => t.Finished).Returns (true);
 				failure.Setup (t => t.Succeeded).Returns (false);
 				failure.Setup (t => t.Failed).Returns (true);
@@ -183,7 +183,7 @@ namespace Xharness.Tests.Jenkins {
 			int failureCount = 0;
 			using (var reader = new StreamReader (path)) {
 				string line = null;
-				while ((line = reader.ReadLine ()) != null) { 
+				while ((line = reader.ReadLine ()) != null) {
 					if (line.Contains ("Failure")) {
 						Assert.AreEqual ($" * Failure with id {failureCount}: Failed Known issue: [Testing known issues](http://github.com)", line, line);
 						failureCount++;

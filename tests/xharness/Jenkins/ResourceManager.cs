@@ -11,7 +11,7 @@ namespace Xharness.Jenkins {
 
 
 		public Resource DesktopResource { get; } = new Resource ("Desktop", Environment.ProcessorCount);
-		public Resource NugetResource { get;  } = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
+		public Resource NugetResource { get; } = new Resource ("Nuget", 1); // nuget is not parallel-safe :(
 
 		public ResourceManager () { }
 
@@ -29,7 +29,7 @@ namespace Xharness.Jenkins {
 			return new Resources (resources);
 		}
 
-		public IEnumerable<Resource> GetAll () 
+		public IEnumerable<Resource> GetAll ()
 			=> deviceResources.Values.Concat (new Resource [] { DesktopResource, NugetResource });
 	}
 }
