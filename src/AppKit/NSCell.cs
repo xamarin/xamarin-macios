@@ -40,7 +40,7 @@ namespace AppKit {
 		extern static void NSDrawThreePartImage (CGRect rect,
 			IntPtr /* NSImage* */ startCap, IntPtr /* NSImage* */ centerFill, IntPtr /* NSImage* */ endCap,
 			[MarshalAs (UnmanagedType.I1)] bool vertial, nint op, nfloat alphaFraction, [MarshalAs (UnmanagedType.I1)] bool flipped);
-		
+
 		public void DrawThreePartImage (CGRect frame,
 			NSImage startCap, NSImage centerFill, NSImage endCap,
 			bool vertical, NSCompositingOperation op, nfloat alphaFraction, bool flipped)
@@ -76,7 +76,7 @@ namespace AppKit {
 				bottomEdgeFill != null ? bottomEdgeFill.Handle : IntPtr.Zero,
 				bottomRightCorner != null ? bottomRightCorner.Handle : IntPtr.Zero,
 				(nint) (long) op, alphaFraction, flipped);
- 		}
+		}
 	}
 }
 #endif // !__MACCATALYST__

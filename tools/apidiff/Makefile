@@ -516,6 +516,7 @@ ifdef ENABLE_DOTNET
 update-dotnet: $(DOTNET_REFS)
 endif
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_IOS
 update-refs: $(IOS_REFS)
 endif
@@ -527,6 +528,7 @@ update-refs: $(WATCHOS_REFS)
 endif
 ifdef INCLUDE_MAC
 update-refs: $(MAC_REFS)
+endif
 endif
 
 ifdef ENABLE_DOTNET
