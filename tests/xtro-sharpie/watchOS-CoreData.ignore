@@ -1,0 +1,2 @@
+!missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithDifference: not found
+!missing-protocol-member! NSFetchedResultsControllerDelegate::controller:didChangeContentWithSnapshot: not found

@@ -1,12 +1,18 @@
-## NSUserInterfaceItemIdentifier -> NS_TYPED_EXTENSIBLE_ENUM
-
-## 42814697 NSViewLayerContentScaleDelegate defined in header but never used
 
 ## recent fox top xtro reported additional missing API (to be reviewed)
-
-## Added in Xcode 10.2 Final but deprecated
-
-## Deprecated in Xcode 11
+!missing-selector! +NSCursor::pop not bound
 
 ## unsorted
 
+!unknown-field! item bound
+!missing-field! NSImageNameColumnViewTemplate not bound
+!missing-field! NSImageNameGoBackTemplate not bound
+!missing-field! NSImageNameGoForwardTemplate not bound
+!missing-field! NSImageNameIconViewTemplate not bound
+!missing-field! NSImageNameListViewTemplate not bound
+!missing-field! NSTypeIdentifierAddressText not bound
+!missing-field! NSTypeIdentifierDateText not bound
+!missing-field! NSTypeIdentifierPhoneNumberText not bound
+!missing-field! NSTypeIdentifierTransitInformationText not bound
+!missing-protocol! NSAnimatablePropertyContainer not bound
+!missing-selector! NSTouchBar::itemIdentifiers not bound

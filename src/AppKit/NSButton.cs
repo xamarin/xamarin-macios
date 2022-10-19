@@ -38,7 +38,7 @@ namespace AppKit {
 		NSActionDispatcher dispatcher;
 
 		public new NSButtonCell Cell {
-			get { return (NSButtonCell)base.Cell; }
+			get { return (NSButtonCell) base.Cell; }
 			set { base.Cell = value; }
 		}
 
@@ -46,7 +46,7 @@ namespace AppKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public static NSButton CreateButton (string title, NSImage image, Action action)
 		{
@@ -60,7 +60,7 @@ namespace AppKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public static NSButton CreateButton (string title, Action action)
 		{
@@ -74,7 +74,7 @@ namespace AppKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public static NSButton CreateButton (NSImage image, Action action)
 		{
@@ -88,7 +88,7 @@ namespace AppKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public static NSButton CreateCheckbox (string title, Action action)
 		{
@@ -102,7 +102,7 @@ namespace AppKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[UnsupportedOSPlatform ("maccatalyst")]
 #else
-		[Mac (10,12)]
+		[Mac (10, 12)]
 #endif
 		public static NSButton CreateRadioButton (string title, Action action)
 		{

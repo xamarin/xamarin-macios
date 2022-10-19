@@ -20,7 +20,7 @@ namespace AddressBookUI {
 	[UnsupportedOSPlatform ("ios9.0")]
 	[ObsoletedOSPlatform ("ios9.0", "Use the 'Contacts' API instead.")]
 #else
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Contacts' API instead.")]
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Contacts' API instead.")]
 #endif
 	public class ABNewPersonCompleteEventArgs : EventArgs {
 
@@ -29,9 +29,9 @@ namespace AddressBookUI {
 			Person = person;
 		}
 
-		public ABPerson? Person {get; private set;}
+		public ABPerson? Person { get; private set; }
 		public bool Completed {
-			get {return Person is not null;}
+			get { return Person is not null; }
 		}
 	}
 
@@ -107,8 +107,8 @@ namespace AddressBookUI {
 		}
 
 		public event EventHandler<ABNewPersonCompleteEventArgs> NewPersonComplete {
-			add {EnsureEventDelegate ().newPersonComplete += value;}
-			remove {EnsureEventDelegate ().newPersonComplete -= value;}
+			add { EnsureEventDelegate ().newPersonComplete += value; }
+			remove { EnsureEventDelegate ().newPersonComplete -= value; }
 		}
 	}
 }

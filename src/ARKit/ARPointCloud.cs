@@ -22,9 +22,9 @@ namespace ARKit {
 
 		public unsafe Vector3 [] Points {
 			get {
-				var count = (int)Count;
+				var count = (int) Count;
 				var rv = new Vector3 [count];
-				var ptr = (Vector3 *) GetRawPoints ();
+				var ptr = (Vector3*) GetRawPoints ();
 				for (int i = 0; i < count; i++)
 					rv [i] = *ptr++;
 				return rv;
@@ -33,9 +33,9 @@ namespace ARKit {
 
 		public unsafe ulong [] Identifiers {
 			get {
-				var count = (int)Count;
+				var count = (int) Count;
 				var rv = new ulong [count];
-				var ptr = (ulong*)GetRawIdentifiers ();
+				var ptr = (ulong*) GetRawIdentifiers ();
 				for (int i = 0; i < count; i++)
 					rv [i] = *ptr++;
 				return rv;
