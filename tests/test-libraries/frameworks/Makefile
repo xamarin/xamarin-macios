@@ -137,7 +137,7 @@ endif
 	$$(Q_ZIP) cd .libs/$(3)/$(1).resources && $(ZIP) -r $$(abspath .libs/$(3)/$(1).resources.zip) .
 
 ## a binding resource package needs an adjacent assembly to be considered a binding resource package, so create a dummy assembly.
-.libs/$(3)/$(1).dll:
+.libs/$(3)/$(1).dll: .libs/$(3)
 	$$(Q) printf "Fake assembly named $(3)\n" > $$@
 
 $(3)_BINDING_RESOURCE_PACKAGE_TARGETS += \
