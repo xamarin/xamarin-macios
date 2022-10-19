@@ -24,6 +24,7 @@ namespace CoreSpotlight {
 		[UnsupportedOSPlatform ("ios16.1")]
 		[UnsupportedOSPlatform ("maccatalyst16.1")]
 		[UnsupportedOSPlatform ("macos13.0")]
+		[UnsupportedOSPlatform ("tvos")]
 #endif
 		public virtual string[] ProtectionClasses { 
 			get => null; 
