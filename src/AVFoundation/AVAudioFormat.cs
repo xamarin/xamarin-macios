@@ -30,7 +30,7 @@ namespace AVFoundation {
 				return false;
 			return a.Equals (b);
 		}
-		
+
 		public static bool operator != (AVAudioFormat a, AVAudioFormat b)
 		{
 			return !(a == b);
@@ -55,7 +55,7 @@ namespace AVFoundation {
 				if (ptr == IntPtr.Zero)
 					return default (AudioStreamBasicDescription);
 				unsafe {
-					AudioStreamBasicDescription *p = (AudioStreamBasicDescription *) ptr;
+					AudioStreamBasicDescription* p = (AudioStreamBasicDescription*) ptr;
 					return *p;
 				}
 			}

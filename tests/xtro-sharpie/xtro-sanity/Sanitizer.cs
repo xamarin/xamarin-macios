@@ -3,10 +3,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
+using Xamarin.Utils;
+
 namespace Extrospection {
 	class Sanitizer {
 
 		static List<string> Platforms;
+		static List<string> AllPlatforms;
+		static bool Autosanitize = !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"));
 
 		static bool IsEntry (string line)
 		{
@@ -137,7 +141,7 @@ namespace Extrospection {
 						failures.Add (entry);
 					}
 				}
-				if (failures.Count > 0 && !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"))) {
+				if (failures.Count > 0 && Autosanitize) {
 					var sanitized = new List<string> (entries);
 					foreach (var failure in failures)
 						sanitized.Remove (failure);
@@ -174,7 +178,8 @@ namespace Extrospection {
 		public static int Main (string [] args)
 		{
 			directory = args.Length == 0 ? "." : args [0];
-			Platforms = args.Skip (1).ToList ();
+			AllPlatforms = args.Skip (1).First ().Split (' ').ToList ();
+			Platforms = args.Skip (2).ToList ();
 
 			// cache stuff
 			foreach (var file in Directory.GetFiles (directory, "common-*.ignore")) {
@@ -220,37 +225,52 @@ namespace Extrospection {
 			// TODO entries present in all platforms .ignore files should be moved to common
 
 			// ignored entries should all exists in the unfiltered .unclassified (raw)
-			// * common-{fx}.ignored must be part of _at least_ one *-{fx}.raw file
+			// * common-{fx}.ignored must be part of _all_ one *-{fx}.raw file
 			foreach (var kvp in commons) {
 				var fx = kvp.Key;
 				var common = kvp.Value;
 				//ExistingCommonEntries (common, $"common-{fx}.ignore");
-				List<string> [] raws = new List<string> [Platforms.Count];
+
+				if (!IsFrameworkIncludedInAnySelectedPlatform (fx))
+					continue;
+
+				var raws = new RawInfo [Platforms.Count];
 				for (int i = 0; i < raws.Length; i++) {
 					var fname = Path.Combine (directory, $"{Platforms [i]}-{fx}.raw");
+					raws [i] = new RawInfo () {
+						Platform = Platforms [i],
+					};
 					if (File.Exists (fname))
-						raws [i] = new List<string> (File.ReadAllLines (fname));
-					else
-						raws [i] = new List<string> ();
+						raws [i].Entries = new HashSet<string> (File.ReadAllLines (fname));
 				}
-				var failures = new List<string> ();
+				var unknownFailures = new List<string> ();
 				foreach (var entry in common) {
 					if (!entry.StartsWith ("!", StringComparison.Ordinal))
 						continue;
-					bool found = false;
-					foreach (var platform in raws) {
-						found = platform.Contains (entry);
-						if (found)
-							break;
-					}
-					if (!found) {
+					var foundRaws = raws.Where (v => v.Entries.Contains (entry));
+					var rawCount = foundRaws.Count ();
+					if (rawCount == 0) {
 						Log ($"?unknown-entry? {entry} in '{Path.Combine (directory, $"common-{fx}.ignore")}'");
-						failures.Add (entry);
+						unknownFailures.Add (entry);
+					} else if (rawCount < GetPlatformCount (fx)) {
+						var notFound = raws.Where (v => !v.Entries.Contains (entry));
+						Log ($"?not-common? {entry} in '{Path.Combine (directory, $"common-{fx}.ignore")}': not in {string.Join (", ", notFound.Select (v => v.Platform))}");
+						unknownFailures.Add (entry);
+						if (Autosanitize) {
+							foreach (var nf in foundRaws) {
+								var ignore = Path.Combine (directory, $"{nf.Platform}-{fx}.ignore");
+								var sanitized = new List<string> ();
+								if (File.Exists (ignore))
+									sanitized.AddRange (File.ReadAllLines (ignore));
+								sanitized.Add (entry);
+								File.WriteAllLines (ignore, sanitized);
+							}
+						}
 					}
 				}
-				if (failures.Count > 0 && !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"))) {
+				if (unknownFailures.Count > 0 && Autosanitize) {
 					var sanitized = new List<string> (common);
-					foreach (var failure in failures)
+					foreach (var failure in unknownFailures)
 						sanitized.Remove (failure);
 					File.WriteAllLines (Path.Combine (directory, $"common-{fx}.ignore"), sanitized);
 				}
@@ -277,11 +297,15 @@ namespace Extrospection {
 					Log ($"?unknown-entry? {entry} in '{shortname}'");
 					failures.Add (entry);
 				}
-				if (failures.Count > 0 && !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"))) {
+				if (failures.Count > 0 && Autosanitize) {
 					var sanitized = new List<string> (lines);
 					foreach (var failure in failures)
 						sanitized.Remove (failure);
-					File.WriteAllLines (file, sanitized);
+					if (sanitized.Count > 0) {
+						File.WriteAllLines (file, sanitized);
+					} else {
+						File.Delete (file);
+					}
 				}
 			}
 
@@ -304,8 +328,68 @@ namespace Extrospection {
 			// useful when updating stuff locally - we report but we don't fail
 			var sanitizedOrSkippedSanity =
 				!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("XTRO_SANITY_SKIP"))
-				|| !string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("AUTO_SANITIZE"));
+				|| Autosanitize;
 			return sanitizedOrSkippedSanity ? 0 : count;
 		}
+
+		static List<Frameworks> frameworks; // the frameworks for the selected platforms
+		static List<Frameworks> all_frameworks; // the frameworks for all platforms
+
+		// If the given framework is skipped in all the currently building platforms.
+		static bool IsFrameworkIncludedInAnySelectedPlatform (string framework)
+		{
+			return Platforms.Any (v => IsFrameworkIncludedInPlatform (v, framework));
+		}
+
+		// If the given framework is skipped in the specified platform.
+		static bool IsFrameworkIncludedInPlatform (string platform, string framework)
+		{
+			// If the framework isn't in any of the registered frameworks for any platform, then treat it as included.
+			if (!GetAllFrameworks ().Any (v => v.Any (x => string.Equals (x.Key, framework, StringComparison.OrdinalIgnoreCase))))
+				return true;
+
+			// If the framework is registered for the current platform, then it's included.
+			var frameworks = Frameworks.GetFrameworks (ApplePlatformExtensions.Parse (platform), false);
+			if (frameworks.Any (x => string.Equals (x.Key, framework, StringComparison.OrdinalIgnoreCase)))
+				return true;
+
+			// found only for platforms that aren't included in the current build
+			return false;
+		}
+
+		static List<Frameworks> GetAllFrameworks ()
+		{
+			if (all_frameworks is null)
+				all_frameworks = GetFrameworks (AllPlatforms);
+			return all_frameworks;
+		}
+
+		static Frameworks GetFrameworks (string platform)
+		{
+			return Frameworks.GetFrameworks (ApplePlatformExtensions.Parse (platform), false);
+		}
+
+		static List<Frameworks> GetFrameworks (IEnumerable<string> platforms)
+		{
+			var rv = new List<Frameworks> ();
+			foreach (var platform in platforms)
+				rv.Add (GetFrameworks (platform));
+			return rv;
+		}
+
+		static int GetPlatformCount (string framework)
+		{
+			if (frameworks is null)
+				frameworks = GetFrameworks (Platforms);
+			var rv = frameworks.Count (v => v.Any (fw => string.Equals (fw.Key, framework, StringComparison.OrdinalIgnoreCase)));
+			if (rv == 0) // If we could find the framework in our list of framework, assume it's available in all platforms we're building for.
+				return Platforms.Count;
+			return rv;
+		}
+	}
+
+	class RawInfo {
+		public string Platform;
+		public HashSet<string> Entries = new HashSet<string> ();
 	}
 }

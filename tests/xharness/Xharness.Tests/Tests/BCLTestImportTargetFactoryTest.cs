@@ -13,8 +13,7 @@ namespace Xharness.Tests.TestImporter.Tests {
 
 	// test the class so that we ensure that we do call the template object and that we are correctly creating the
 	// default projects.
-	public class BCLTestImportTargetFactoryTest
-	{
+	public class BCLTestImportTargetFactoryTest {
 		string outputdir;
 		AssemblyLocator assemblyLocator;
 		Mock<ITemplatedProject> template;
@@ -48,9 +47,9 @@ namespace Xharness.Tests.TestImporter.Tests {
 			Assert.Throws<ArgumentNullException> (() => new BCLTestImportTargetFactory ((string) null));
 			Assert.Throws<ArgumentNullException> (() => new BCLTestImportTargetFactory (null, ""));
 		}
-		
+
 		[Test]
-		public void ConstructorNullMonoDir () => 
+		public void ConstructorNullMonoDir () =>
 			Assert.Throws<ArgumentNullException> (() => new BCLTestImportTargetFactory ("", null));
 
 		[Test]

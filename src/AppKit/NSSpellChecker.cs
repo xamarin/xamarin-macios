@@ -26,11 +26,11 @@
 using System;
 
 namespace AppKit {
-	
+
 	public partial class NSSpellChecker {
-		
+
 		// note: if needed override the protected Get|Set methods
-		public string Language { 
+		public string Language {
 			get { return GetLanguage (); }
 			// ignore return value (bool)
 			set { SetLanguage (value); }

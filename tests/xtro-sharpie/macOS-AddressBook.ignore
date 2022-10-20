@@ -338,3 +338,7 @@
 !missing-selector! ABRecord::init not bound
 !missing-selector! ABRecord::isReadOnly not bound
 !missing-selector! NSObject::actionProperty not bound
+!missing-field! kABGroupNameProperty not bound
+!missing-field! kABHomeLabel not bound
+!missing-field! kABOtherLabel not bound
+!missing-field! kABWorkLabel not bound

@@ -14,14 +14,14 @@
 
 /mk @rolfbjarne
 
-/msbuild @emaf @mauroa @rolfbjarne @chamons
+/msbuild @emaf @mauroa @rolfbjarne
 
 /runtime @rolfbjarne
 
 /src/AddressBook @dalexsoto
 /src/addressbook.cs @dalexsoto
-/src/AppKit @chamons @dalexsoto
-/src/appkit.cs @chamons @dalexsoto
+/src/AppKit @dalexsoto
+/src/appkit.cs @dalexsoto
 /src/ARKit
 /src/arkit.cs
 /src/AudioToolbox @dalexsoto
@@ -78,9 +78,9 @@
 /src/eventkit.cs @dalexsoto
 /src/ExternalAccessory @dalexsoto
 /src/externalaccessory.cs @dalexsoto
-/src/Foundation @rolfbjarne @chamons
+/src/Foundation @rolfbjarne
 /src/Foundation/NSUrl* @mandel-macaque
-/src/foundation.cs @rolfbjarne @chamons
+/src/foundation.cs @rolfbjarne
 /src/GameController
 /src/gamecontroller.cs
 /src/GameKit
@@ -100,10 +100,10 @@
 /src/identitylookupui.cs @dalexsoto
 /src/ituneslibrary.cs @mandel-macaque
 /src/iTunesLibrary @mandel-macaque
-/src/ImageIO @chamons
-/src/imageio.cs @chamons
-/src/ImageKit @chamons
-/src/imagekit.cs @chamons
+/src/ImageIO
+/src/imageio.cs
+/src/ImageKit
+/src/imagekit.cs
 /src/Intents @dalexsoto
 /src/intents.cs @dalexsoto
 /src/IntentsUI @dalexsoto
@@ -157,8 +157,8 @@
 /src/quicklook.cs
 /src/ReplayKit @dalexsoto
 /src/replaykit.cs @dalexsoto
-/src/SafariServices @chamons
-/src/safariservices.cs @chamons
+/src/SafariServices
+/src/safariservices.cs
 /src/SceneKit @dalexsoto
 /src/scenekit.cs @dalexsoto
 /src/Security @dalexsoto
@@ -186,22 +186,22 @@
 /src/watchconnectivity.cs @rolfbjarne
 /src/WatchKit @rolfbjarne
 /src/watchkit.cs @rolfbjarne
-/src/WebKit @chamons
-/src/webkit.cs @chamons
+/src/WebKit
+/src/webkit.cs
 /src/WKWebKit
 /src/wkwebkit.cs
 
 /tests/xharness @rolfbjarne @mandel-macaque
 /tests/xtro-sharpie
-/tests/mmptest @rolfbjarne @chamons
-/tests/common/mac @rolfbjarne @chamons
+/tests/mmptest @rolfbjarne
+/tests/common/mac @rolfbjarne
 /tests/bcl-tests @mandel-macaque
 
-/tools/common @rolfbjarne @chamons
+/tools/common @rolfbjarne
 /tools/common/StaticRegistrar.cs @rolfbjarne
-/tools/tools/devops/device-tests @mandel-macaque @whitneyschmidt
+/tools/tools/devops/device-tests @mandel-macaque
 /tools/linker
-/tools/mmp @chamons
+/tools/mmp
 /tools/mtouch @rolfbjarne
 /tools/nnyeah @stephen-hawley
 

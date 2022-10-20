@@ -47,3 +47,17 @@
 
 # not used on macOS
 !missing-enum! AVAudioSessionInterruptionReason not bound
+!missing-protocol! AVVideoCompositionInstruction not bound
+!incorrect-protocol-member! AVAssetResourceLoaderDelegate::resourceLoader:shouldWaitForLoadingOfRequestedResource: is OPTIONAL and should NOT be abstract
+!unknown-native-enum! AVAudioSessionFlags bound
+!missing-protocol-conformance! AVVideoCompositionInstruction should conform to AVVideoCompositionInstruction
+!missing-field! AVCoreAnimationBeginTimeAtZero not bound
+!missing-field! AVVideoTransferFunction_ITU_R_2100_HLG not bound
+!missing-field! AVVideoTransferFunction_SMPTE_ST_2084_PQ not bound
+!missing-selector! AVVideoComposition::sourceTrackIDForFrameTiming not bound
+!incorrect-protocol-member! AVAudio3DMixing::pointSourceInHeadMode is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::setPointSourceInHeadMode: is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::setSourceMode: is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::sourceMode is REQUIRED and should be abstract
+!extra-null-allowed! 'Foundation.NSNumber[] AVFoundation.AVVideoCompositionInstruction::get_RequiredSourceTrackIDs()' has a extraneous [NullAllowed] on return type
+!missing-field! AVPlayerItemTimeJumpedOriginatingParticipantKey not bound
