@@ -504,6 +504,181 @@ namespace AudioUnit {
 #endif
 
 #if IOS || MONOMAC
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern int AudioComponentCopyConfigurationInfo (IntPtr /* AudioComponent */ inComponent, out /* CFDictionaryRef** */ IntPtr outConfigurationInfo);
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		public NSDictionary? GetConfigurationInfo (out int resultCode) {
+			resultCode = AudioComponentCopyConfigurationInfo (GetCheckedHandle (), out var dictPtr);
+			if (resultCode == 0) {
+				return Runtime.GetNSObject<NSDictionary> (dictPtr, owns: true);
+			}
+			return null;
+		}
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		public NSDictionary? GetConfigurationInfo () => GetConfigurationInfo (out var _);
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[MacCatalyst (16,0)]
+#endif
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern int AudioComponentValidate (IntPtr /* AudioComponent* */ inComponent, IntPtr /* CFDictionaryRef* */ inValidationParameters,
+				out AudioComponentValidationResult outValidationResult);
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[MacCatalyst (16,0)]
+#endif
+		public AudioComponentValidationResult Validate (NSDictionary? validationParameters, out int resultCode) {
+			resultCode = AudioComponentValidate (GetCheckedHandle (), validationParameters.GetHandle (), out var result);
+			if (resultCode == 0)
+				return result;
+			return AudioComponentValidationResult.Unknown;
+		}
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+		[MacCatalyst (16,0)]
+#endif
+		public AudioComponentValidationResult Validate (NSDictionary? validationParameters = null) => Validate (validationParameters, out var _);
+
+		delegate void TrampolineCallback (IntPtr blockPtr, AudioComponentValidationResult result, IntPtr dictionary);
+
+		static unsafe readonly TrampolineCallback static_action = TrampolineAction;
+
+		[MonoPInvokeCallback (typeof (TrampolineCallback))]
+		static void TrampolineAction (IntPtr blockPtr, AudioComponentValidationResult result, IntPtr dictionary)
+		{
+			var del = BlockLiteral.GetTarget<Action<AudioComponentValidationResult, NSDictionary?>> (blockPtr);
+			if (del is not null)
+				del (result, Runtime.GetNSObject<NSDictionary>(dictionary));
+		}
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		[DllImport (Constants.AudioUnitLibrary)]
+		static extern int AudioComponentValidateWithResults (IntPtr /* AudioComponent* */ inComponent, IntPtr /* CFDictionaryRef* */ inValidationParameters, ref BlockLiteral inCompletionHandler);
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public void ValidateAsync (NSDictionary? validationParameters,
+				Action<AudioComponentValidationResult, NSDictionary?> onCompletion, out int resultCode) {
+			if (onCompletion is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (onCompletion));
+			
+			var block_handler= new BlockLiteral ();
+			block_handler.SetupBlockUnsafe (static_action, onCompletion);
+			try {
+				resultCode = AudioComponentValidateWithResults (GetCheckedHandle (), validationParameters.GetHandle (), ref block_handler);
+			} finally {
+				block_handler.CleanupBlock ();
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		public void ValidateAsync (NSDictionary? validationParameters,
+				Action<AudioComponentValidationResult, NSDictionary?> onCompletion) => ValidateAsync (validationParameters, onCompletion, out var _);
+
+#if NET
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[NoWatch]
+		[NoTV]
+		[Mac (13,0)]
+		[iOS (16,0)]
+#endif
+		public void ValidateAsync (Action<AudioComponentValidationResult, NSDictionary?> onCompletion) => ValidateAsync (null, onCompletion, out var _);
+
 #if NET
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
@@ -589,7 +764,8 @@ namespace AudioUnit {
 				}
 			}
 		}
-#endif
+
+#endif // IOS || MONOMAC
 
 #endif // !COREBUILD
 	}

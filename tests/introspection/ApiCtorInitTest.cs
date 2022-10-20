@@ -132,6 +132,8 @@ namespace Introspection {
 				// Causes a crash later. Filed as radar://18440271.
 				// Apple said they won't fix this ('init' isn't a designated initializer)
 				return true;
+			case "HMMatterRequestHandler": // got removed and the current API throws an exception at run time.
+				return true;
 			}
 
 #if !NET
@@ -309,6 +311,10 @@ namespace Introspection {
 			int n = 0;
 
 			foreach (Type t in Assembly.GetTypes ()) {
+
+				if (SkipCheckShouldReExposeBaseCtor (t))
+					continue;
+
 				// we only care for NSObject subclasses that we expose publicly
 				if (!t.IsPublic || !NSObjectType.IsAssignableFrom (t))
 					continue;
@@ -603,12 +609,11 @@ namespace Introspection {
 					return true;
 			}
 
-			// Add Skipped types here
-			//switch (type.Namespace) {
-			//case "":
-			//	return true;
-			//}
+			return SkipDueToAttribute (type);
+		}
 
+		protected virtual bool SkipCheckShouldReExposeBaseCtor (Type type)
+		{
 			return SkipDueToAttribute (type);
 		}
 

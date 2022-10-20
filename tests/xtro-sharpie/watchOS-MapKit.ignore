@@ -1,2 +1,7 @@
 ## the enum MKErrorCode is not available in watchOS so the domain makes no sense
 !missing-field! MKErrorDomain not bound
+
+## Marked as unavailable on watchOS
+!missing-enum! MKDirectionsRoutePreference not bound
+!missing-enum! MKMapElevationStyle not bound
+!missing-enum! MKStandardMapEmphasisStyle not bound

@@ -354,6 +354,7 @@ namespace CoreMedia {
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[Deprecated (PlatformName.TvOS, 9,0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMTimebaseRef */ IntPtr CMTimebaseGetMasterTimebase (/* CMTimebaseRef */ IntPtr timebase);
@@ -392,6 +393,7 @@ namespace CoreMedia {
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[Deprecated (PlatformName.TvOS, 9,0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetMasterClock (/* CMTimebaseRef */ IntPtr timebase);
@@ -430,6 +432,7 @@ namespace CoreMedia {
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[Deprecated (PlatformName.TvOS, 9,0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMClockOrTimebaseRef */ IntPtr CMTimebaseGetMaster (/* CMTimebaseRef */ IntPtr timebase);
@@ -468,6 +471,7 @@ namespace CoreMedia {
 #else
 		[Deprecated (PlatformName.iOS, 9,0)]
 		[Deprecated (PlatformName.MacOSX, 10,11)]
+		[Deprecated (PlatformName.TvOS, 9, 0)]
 #endif
 		[DllImport (Constants.CoreMediaLibrary)]
 		extern static /* CMClockRef */ IntPtr CMTimebaseGetUltimateMasterClock (/* CMTimebaseRef */ IntPtr timebase);

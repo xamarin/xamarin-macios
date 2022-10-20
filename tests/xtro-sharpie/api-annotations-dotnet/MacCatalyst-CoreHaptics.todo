@@ -1,0 +1,5 @@
+!missing-field! CHHapticAudioResourceKeyLoopEnabled not bound
+!missing-field! CHHapticPatternKeyEventWaveformLoopEnabled not bound
+!missing-selector! CHHapticEngine::playsAudioOnly not bound
+!missing-selector! CHHapticEngine::setPlaysAudioOnly: not bound
+!missing-selector! CHHapticPattern::initWithContentsOfURL:error: not bound

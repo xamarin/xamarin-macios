@@ -79,12 +79,3 @@
 !missing-field! NSCharacterEncodingDocumentOption not bound
 !missing-field! NSDefaultAttributesDocumentOption not bound
 !missing-field! NSDocumentTypeDocumentOption not bound
-
-
-## helpers
-
-## UITextAlignment is deprecated in iOS6 in favor of NSTextAlignment - values added to avoid breaking changes
-
-## it's a `ref` on a struct, which xtro assumes nullable
-
-## manually bound

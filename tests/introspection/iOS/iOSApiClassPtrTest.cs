@@ -23,9 +23,16 @@ namespace Introspection {
 			case "Phase": // missing in the sim
 			case "ShazamKit": // missing in the sim
 			case "ThreadNetwork": // missing in the sim
+			case "PushToTalk": // missing in the sim
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
+#if __WATCHOS__
+			case "GameKit":
+				if (IntPtr.Size == 4)
+					return true;
+				break;
+#endif
 			}
 
 			// While the following types are categories and contains a class_ptr

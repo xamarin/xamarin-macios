@@ -60,6 +60,7 @@ using CoreGraphics;
 using CoreVideo;
 using UniformTypeIdentifiers;
 using ImageIO;
+using MediaPlayer;
 using System;
 
 #if MONOMAC
@@ -12311,7 +12312,7 @@ namespace AVFoundation {
 		[Export ("externalMetadata", ArgumentSemantic.Copy)]
 		AVMetadataItem[] ExternalMetadata { get; set; }
 
-		[NoiOS][NoMac][NoWatch]
+		[iOS (16,0)][NoMacCatalyst][NoMac][NoWatch]
 		[TV (9,0)]
 		[Export ("interstitialTimeRanges", ArgumentSemantic.Copy)]
 		AVInterstitialTimeRange[] InterstitialTimeRanges { get; set; }
@@ -12404,6 +12405,10 @@ namespace AVFoundation {
 		[TV (15, 0), NoWatch, NoMac, NoiOS, NoMacCatalyst]
 		[Export ("translatesPlayerInterstitialEvents")]
 		bool TranslatesPlayerInterstitialEvents { get; set; }
+
+		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[NullAllowed, Export ("nowPlayingInfo", ArgumentSemantic.Copy)]
+		NSDictionary WeakNowPlayingInfo { get; set; }
 	}
 
 	[Watch (7,4), TV (14,5), Mac (11,3), iOS (14,5)]

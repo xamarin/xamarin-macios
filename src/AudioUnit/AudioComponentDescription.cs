@@ -58,6 +58,15 @@ namespace AudioUnit {
 		[iOS (7, 0)]
 #endif
 		MIDIProcessor = 0x61756d69, // 'aumi'
+#if NET
+		[SupportedOSPlatform ("ios16.0")]
+		[SupportedOSPlatform ("maccatalyst16.0")]
+		[SupportedOSPlatform ("macos13.0")]
+		[SupportedOSPlatform ("tvos16.0")]
+#else
+		[iOS (16, 0), Mac (13, 0), TV (16, 0), MacCatalyst (16, 0)]
+#endif
+		SpeechSynthesize = 0x61757370, // ausp
 
 #if !MONOMAC
 #if NET
