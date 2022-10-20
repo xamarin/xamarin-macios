@@ -64,7 +64,6 @@ MAC_PACKAGE_VERSION=8.13.0.$(MAC_COMMIT_DISTANCE)
 # numbers (major.minor) changes.
 
 # WARNING: Do **not** use versions higher than the available Xcode SDK or else we will have issues with mtouch (See https://github.com/xamarin/xamarin-macios/issues/7705)
-# When bumping the major macOS version in MACOS_NUGET_VERSION also update the macOS version where we execute on bots in jenkins/Jenkinsfile (in the 'node' element)
 
 IOS_NUGET_OS_VERSION=15.4
 TVOS_NUGET_OS_VERSION=15.4
