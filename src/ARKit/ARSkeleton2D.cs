@@ -22,9 +22,9 @@ namespace ARKit {
 
 		public unsafe Vector2 [] JointLandmarks {
 			get {
-				var count = (int)JointCount;
+				var count = (int) JointCount;
 				var rv = new Vector2 [count];
-				var ptr = (Vector2 *) RawJointLandmarks;
+				var ptr = (Vector2*) RawJointLandmarks;
 				for (int i = 0; i < count; i++)
 					rv [i] = *ptr++;
 				return rv;

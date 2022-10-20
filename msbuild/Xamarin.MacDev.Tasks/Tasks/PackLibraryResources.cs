@@ -31,7 +31,7 @@ namespace Xamarin.MacDev.Tasks {
 					// We must get the "real" file that will be embedded in the
 					// compiled assembly in Windows
 					foreach (var embeddedResource in EmbeddedResources.Where (x => runner.ShouldCopyItemAsync (task: this, item: x).Result)) {
-						runner.GetFileAsync (embeddedResource.ItemSpec).Wait ();
+						runner.GetFileAsync (this, embeddedResource.ItemSpec).Wait ();
 					}
 				}
 

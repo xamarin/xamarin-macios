@@ -41,10 +41,9 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("macos")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[Watch (6,0)]
+	[Watch (6, 0)]
 #endif
-	public class AVUrlAssetOptions : DictionaryContainer
-	{
+	public class AVUrlAssetOptions : DictionaryContainer {
 #if !COREBUILD
 		public AVUrlAssetOptions ()
 			: base (new NSMutableDictionary ())

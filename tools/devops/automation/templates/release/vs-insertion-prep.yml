@@ -4,8 +4,8 @@ parameters:
   default: true
 
 - name: dependsOn
-  type: string
-  default: prepare_packages
+  type: object 
+  default: []
 
 - name: isPR
   type: boolean
@@ -14,13 +14,13 @@ stages:
 - stage: prepare_release
   displayName: Prepare Release
   dependsOn: ${{ parameters.dependsOn }}
-  condition: and(or(eq(dependencies.${{ parameters.dependsOn }}.result, 'Succeeded'), eq(dependencies.${{ parameters.dependsOn }}.result, 'SucceededWithIssues')), eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
+  condition: and(eq(${{ parameters.isPR }}, false), eq(${{ parameters.enableDotnet }}, true))
 
   jobs:
   # Check - "xamarin-macios (Prepare Release Sign NuGets)"
   - template: sign-artifacts/jobs/v2.yml@templates
     parameters:
-      artifactName: package
+      artifactName: dotnet-signed
       signType: Real
       usePipelineArtifactTasks: true
 
@@ -30,7 +30,7 @@ stages:
       yamlResourceName: templates
       dependsOn: signing
       artifactName: nuget-signed
-      propsArtifactName: package
+      propsArtifactName: dotnet-signed
       signType: Real
       useDateTimeVersion: true
 
@@ -95,10 +95,10 @@ stages:
         packagePrefix: xamarin-macios
         artifactsPath: $(Build.SourcesDirectory)/vs-insertion
         downloadSteps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifactName: vsdrop-signed
-              downloadPath: $(Build.SourcesDirectory)/vs-insertion
+        - task: DownloadPipelineArtifact@2
+          inputs:
+            artifactName: vsdrop-signed
+            downloadPath: $(Build.SourcesDirectory)/vs-insertion
 
     - template: templates/common/upload-vs-insertion-artifacts.yml@sdk-insertions
       parameters:
@@ -108,10 +108,10 @@ stages:
         packagePrefix: xamarin-macios
         artifactsPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
         downloadSteps:
-          - task: DownloadPipelineArtifact@2
-            inputs:
-              artifactName: vsdrop-multitarget-signed
-              downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
+        - task: DownloadPipelineArtifact@2
+          inputs:
+            artifactName: vsdrop-multitarget-signed
+            downloadPath: $(Build.StagingDirectory)\$(MultiTargetVSDropCommitStatusName)
 
 # Check - "xamarin-macios (VS Insertion Wait For Approval)"
 # Check - "xamarin-macios (VS Insertion Create VS Drop and Open PR)"

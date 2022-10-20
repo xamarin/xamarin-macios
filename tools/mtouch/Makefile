@@ -223,6 +223,11 @@ mtouch.csproj.inc: export BUILD_VERBOSITY=$(MSBUILD_VERBOSITY)
 $(MTOUCH_DIR)/mtouch.exe: $(mtouch_dependencies)
 	$(Q_GEN) $(SYSTEM_MSBUILD) $(TOP)/Xamarin.iOS.sln "/t:mtouch" $(XBUILD_VERBOSITY) /p:Configuration=$(MTOUCH_CONF)
 
+Constants.cs: Constants.cs.in Makefile $(TOP)/Make.config.inc
+	$(Q_GEN) sed \
+		-e "s/@VERSION@/$(IOS_PACKAGE_VERSION_MAJOR).$(IOS_PACKAGE_VERSION_MINOR).$(IOS_PACKAGE_VERSION_REV)/g" \
+		-e 's/@REVISION@/$(IOS_COMMIT_DISTANCE) ($(CURRENT_BRANCH_SED_ESCAPED): $(CURRENT_HASH))/g' \
+		$< > $@
 #
 # Partial static registrar libraries
 #

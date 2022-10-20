@@ -37,8 +37,8 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (9,0)]
-	[Mac (10,11)]
+	[iOS (9, 0)]
+	[Mac (10, 11)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVAudioConverterPrimeInfo {
@@ -71,7 +71,7 @@ namespace AVFoundation {
 			if (!(obj is AVAudioConverterPrimeInfo))
 				return false;
 
-			return this.Equals ((AVAudioConverterPrimeInfo)obj);
+			return this.Equals ((AVAudioConverterPrimeInfo) obj);
 		}
 
 		public bool Equals (AVAudioConverterPrimeInfo other)

@@ -64,7 +64,7 @@ namespace AppKit {
 		}
 
 		// note: if needed override the protected Get|Set methods
-		public string Name { 
+		public string Name {
 			get { return GetName (); }
 			// ignore return value (bool)
 			set { SetName (value); }
@@ -72,7 +72,7 @@ namespace AppKit {
 
 		public static NSImage ImageNamed (NSImageName name)
 		{
-			return ImageNamed (name.GetConstant ()); 
+			return ImageNamed (name.GetConstant ());
 		}
 	}
 

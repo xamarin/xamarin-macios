@@ -16,7 +16,8 @@ export WORKSPACE="$BUILD_ARTIFACTSTAGINGDIRECTORY"
 
 CHANGE_DETECTION_OUTPUT_DIR="$WORKSPACE/change-detection"
 CHANGE_DETECTION_RESULTS_DIR="$CHANGE_DETECTION_OUTPUT_DIR/results"
-CHANGE_DETECTION_GH_COMMENTS_FILE="$CHANGE_DETECTION_RESULTS_DIR/gh-comments.md"
+
+mkdir -p "$CHANGE_DETECTION_RESULTS_DIR"
 
 cd "$XAM_TOP"
 
@@ -42,7 +43,7 @@ fi
 
 # We always want to zip up (and later upload) whatever's in the results directory, so store the exit code here, and then exit with it later.
 RC=0
-./tools/compare-commits.sh --base="$BASE" "--output-dir=$CHANGE_DETECTION_OUTPUT_DIR" "--gh-comments-file=$CHANGE_DETECTION_GH_COMMENTS_FILE" || RC=$?
+./tools/compare-commits.sh --base="$BASE" "--output-dir=$CHANGE_DETECTION_OUTPUT_DIR" || RC=$?
 
 rm -f "$CHANGE_DETECTION_OUTPUT_DIR/change-detection.zip"
 cd "$CHANGE_DETECTION_OUTPUT_DIR" && zip -9r "change-detection.zip" .

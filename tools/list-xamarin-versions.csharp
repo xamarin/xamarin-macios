@@ -7,7 +7,7 @@ using System.Xml;
 var args = Environment.GetCommandLineArgs ();
 string dir;
 var defaultArgumentCount = 3;
-var scriptPath = args [1];
+var scriptPath = args [defaultArgumentCount - 1];
 var rootDir = Path.GetDirectoryName (Path.GetDirectoryName (Path.GetFullPath (scriptPath)));
 var downloadMarkdownPath = Path.Combine (rootDir, "DOWNLOADS.md");
 
@@ -62,3 +62,4 @@ foreach (var info in infos) {
 	sb.AppendLine ();
 }
 File.WriteAllText (downloadMarkdownPath, sb.ToString ());
+Console.WriteLine ($"Saved output to {downloadMarkdownPath}");

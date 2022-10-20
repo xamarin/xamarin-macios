@@ -99,9 +99,9 @@ namespace Xharness.Jenkins {
 					if (test.TestProject.IsDotNetProject)
 						yield return new TestData { Variation = "Release (LLVM)", Debug = false, UseLlvm = true, Ignored = ignore };
 					break;
-				case  string name when name.StartsWith ("mscorlib", StringComparison.Ordinal):
+				case string name when name.StartsWith ("mscorlib", StringComparison.Ordinal):
 					if (supports_debug)
-						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true};
+						yield return new TestData { Variation = "Debug: SGenConc", MTouchExtraArgs = "", Debug = true, Profiling = false, MonoNativeLinkMode = MonoNativeLinkMode.Static, EnableSGenConc = true };
 					if (supports_interpreter) {
 						if (supports_debug) {
 							yield return new TestData { Variation = "Debug (interpreter)", MTouchExtraArgs = "--interpreter", Debug = true, Profiling = false, Undefines = "FULL_AOT_RUNTIME", KnownFailure = new KnownIssue ("#1683", issueLink: "https://github.com/xamarin/maccore/issues/1683") };
@@ -163,7 +163,7 @@ namespace Xharness.Jenkins {
 						break;
 					case "Debug":
 						yield return new TestData { Variation = "Debug (all optimizations)", MonoBundlingExtraArgs = "--optimize:all,-remove-uithread-checks", Registrar = "static", Debug = true, LinkMode = "Full", Defines = "OPTIMIZEALL", Ignored = !(jenkins.TestSelection.IsEnabled (TestLabel.All) && jenkins.TestSelection.IsEnabled (PlatformLabel.Mac)) };
-						yield return new TestData { Variation = "Debug (ARM64)", XamMacArch = "ARM64", Debug = true, Ignored = !mac_supports_arm64 || !jenkins.TestSelection.IsEnabled (TestLabel.Xammac) ||!jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) };
+						yield return new TestData { Variation = "Debug (ARM64)", XamMacArch = "ARM64", Debug = true, Ignored = !mac_supports_arm64 || !jenkins.TestSelection.IsEnabled (TestLabel.Xammac) || !jenkins.TestSelection.IsEnabled (PlatformLabel.Mac) };
 						break;
 					}
 					break;
@@ -217,7 +217,7 @@ namespace Xharness.Jenkins {
 						await clone.CreateCopyAsync (jenkins.MainLog, processManager, task, HarnessConfiguration.RootDirectory);
 
 						var isMac = task.Platform.IsMac ();
-						var canSymlink = task.Platform.CanSymlink();
+						var canSymlink = task.Platform.CanSymlink ();
 
 						if (!string.IsNullOrEmpty (mtouch_extra_args))
 							clone.Xml.AddExtraMtouchArgs (mtouch_extra_args, task.ProjectPlatform, configuration);

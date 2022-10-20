@@ -1,15 +1,25 @@
 # Perform gihub cleaning steps
 
+parameters:
+- name: commentToHide
+  type: string
+  default: '[comment]: <> (This is a comment added by Azure DevOps)'
+
+- name: checkoutCode
+  type: boolean
+  default: true
+
 steps:
 
-- template: checkout.yml
-  parameters:
-    isPR: false # always use the latests version of the script
+- ${{ if parameters.checkoutCode }}:
+  - template: checkout.yml
+    parameters:
+      isPR: false # always use the latests version of the script
 
 - pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     $comments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
-    $ciComment = "[comment]: <> (This is a comment added by Azure DevOps)"
+    $ciComment = "${{ parameters.commentToHide }}"
 
     $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
     $prComments = $comments.GetCommentsForPR($prId)

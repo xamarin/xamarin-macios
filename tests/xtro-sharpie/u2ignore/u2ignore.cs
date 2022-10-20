@@ -38,7 +38,7 @@ namespace u2ignore {
 				}
 			}
 
-			var header = new string [] { "", $"# Initial result from new rule { id }" };
+			var header = new string [] { "", $"# Initial result from new rule {id}" };
 			foreach (var kvp in dict) {
 				var framework = kvp.Key;
 				var entries = kvp.Value;
@@ -47,7 +47,7 @@ namespace u2ignore {
 					var failure = kvp2.Key;
 					var platforms = kvp2.Value;
 
-					string[] files;
+					string [] files;
 					if (platforms.Count == 4) {
 						// same failure in all platforms, the result goes into the common file.
 						files = new string [] { "common" };
@@ -61,7 +61,7 @@ namespace u2ignore {
 								File.AppendAllLines (path, new string [] { "" });
 							File.AppendAllLines (path, header);
 						}
-						File.AppendAllLines (path, new string [] { failure } );
+						File.AppendAllLines (path, new string [] { failure });
 					}
 				}
 			}

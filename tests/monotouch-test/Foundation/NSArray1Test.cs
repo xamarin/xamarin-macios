@@ -93,5 +93,29 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.AreSame (str3, arr [2], "NSArray indexer");
 			}
 		}
+
+		[Test]
+		public void ToArray ()
+		{
+			using (var a = NSArray<NSString>.FromNSObjects ((NSString) "abc")) {
+				var arr = a.ToArray ();
+				NSString element = arr [0];
+				Assert.AreEqual (1, arr.Length, "Length");
+				Assert.AreEqual ("abc", arr [0].ToString (), "Value");
+				Assert.AreEqual ("abc", (string) element, "Value element");
+			}
+		}
+
+		[Test]
+		public void ToArray_T ()
+		{
+			using (var a = NSArray<NSString>.FromNSObjects ((NSString) "abc")) {
+				var arr = a.ToArray ();
+				NSString element = arr [0];
+				Assert.AreEqual (1, arr.Length, "Length");
+				Assert.AreEqual ("abc", arr [0].ToString (), "Value");
+				Assert.AreEqual ("abc", (string) element, "Value element");
+			}
+		}
 	}
 }

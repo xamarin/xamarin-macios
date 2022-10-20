@@ -338,7 +338,7 @@ namespace Xamarin.Tests {
 		[TestCase (ApplePlatform.iOS, "ios-arm;ios-arm64", "MtouchLink=SdkOnly")]
 		[TestCase (ApplePlatform.MacOSX, "osx-arm64;osx-x64")]
 		[TestCase (ApplePlatform.MacCatalyst, "maccatalyst-arm64;maccatalyst-x64")]
-		public void BuildFatMonoTouchTest (ApplePlatform platform, string runtimeIdentifiers, params string[] additionalProperties)
+		public void BuildFatMonoTouchTest (ApplePlatform platform, string runtimeIdentifiers, params string [] additionalProperties)
 		{
 			Configuration.IgnoreIfIgnoredPlatform (platform);
 
@@ -858,7 +858,7 @@ namespace Xamarin.Tests {
 			Clean (consumingProjectDir);
 
 			DotNet.AssertBuild (consumingProjectDir, verbosity);
-			
+
 			var extensionPath = Path.Combine (Path.GetDirectoryName (consumingProjectDir)!, "bin", "Debug", platform.ToFramework (), GetDefaultRuntimeIdentifier (platform), "MySimpleApp.app", GetPlugInsRelativePath (platform), "ExtensionProject.appex");
 			Assert.That (Directory.Exists (extensionPath), $"App extension directory does not exist: {extensionPath}");
 		}
@@ -872,7 +872,11 @@ namespace Xamarin.Tests {
 		{
 			var project = "AppWithGenericLibraryReference";
 			Configuration.IgnoreIfIgnoredPlatform (platform);
-			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX); // This test requires macOS as well, for all other platforms.
+			if (platform == ApplePlatform.MacOSX) {
+				Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS); // This test requires iOS as well when testing macOS
+			} else {
+				Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.MacOSX); // This test requires macOS as well (for all other platforms except macOS).
+			}
 
 			var project_path = GetProjectPath (project, runtimeIdentifiers: runtimeIdentifiers, platform: platform, out var appPath);
 			Clean (project_path);
@@ -1049,7 +1053,7 @@ namespace Xamarin.Tests {
 
 			DotNet.AssertBuild (project_path, properties);
 
-			var codesignDirectory =GetRelativeCodesignDirectory (platform);
+			var codesignDirectory = GetRelativeCodesignDirectory (platform);
 			var sharedSupportDir = string.Empty;
 			var dylibDir = GetRelativeDylibDirectory (platform);
 
@@ -1148,7 +1152,7 @@ namespace Xamarin.Tests {
 			var foundEntitlements = TryGetEntitlements (executable, out var entitlements);
 			if (configuration == "Release") {
 				Assert.IsTrue (foundEntitlements, "Found in Release");
-				Assert.IsTrue (entitlements!.Get<PBoolean>("com.apple.security.cs.allow-jit")?.Value, "Jit Allowed");
+				Assert.IsTrue (entitlements!.Get<PBoolean> ("com.apple.security.cs.allow-jit")?.Value, "Jit Allowed");
 			} else {
 				var jitNotAllowed = !foundEntitlements || !entitlements!.ContainsKey ("com.apple.security.cs.allow-jit");
 				Assert.True (jitNotAllowed, "Jit Not Allowed");

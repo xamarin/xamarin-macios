@@ -241,7 +241,7 @@ namespace GeneratorTests
 			var preserves = allMembers.Sum ((v) => v.CustomAttributes.Count ((ca) => ca.AttributeType.Name == attrib));
 			Assert.AreEqual (
 #if NET
-				36, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
+				48, // This number should be lower - https://github.com/xamarin/xamarin-macios/issues/14802
 #else
 				10,
 #endif

@@ -23,6 +23,7 @@ namespace PdfKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,12)]
 #endif
@@ -38,6 +39,7 @@ namespace PdfKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,12)]
 #endif
@@ -55,6 +57,7 @@ namespace PdfKit {
 		[SupportedOSPlatform ("macos10.12")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,12)]
 #endif
@@ -77,6 +80,7 @@ namespace PdfKit {
 		[SupportedOSPlatform ("macos10.13")]
 		[SupportedOSPlatform ("ios11.0")]
 		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
 #else
 		[Mac (10,13)]
 #endif
