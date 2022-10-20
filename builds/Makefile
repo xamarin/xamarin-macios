@@ -45,7 +45,7 @@ $(DOWNLOADS):
 		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
 	else \
 		EC=0; \
-		curl -f -L $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp || EC=$$?; \
+		curl -f -L -S --retry 20 --retry-delay 2 --connect-timeout 15 $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp || EC=$$?; \
 		if [[ x$$EC == x22 ]]; then \
 			MSG="Could not download the archive %s because the URL doesn't exist. This can happen if bumping mono very soon after the corresponding commit was pushed to mono (i.e. the archive hasn't been built yet). If so, please wait a bit and try again."; \
 			printf "$(COLOR_RED)*** $$MSG$(COLOR_CLEAR)\n" "$(notdir $@)"; \

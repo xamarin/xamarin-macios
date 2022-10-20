@@ -193,6 +193,7 @@ $(OUTPUT_DIR)/%-api-diff.html:
 	$(Q) mv $@.temp $@
 	$(Q) rm -f $@-toc
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_MAC
 API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/mac-api-diff.html
 endif
@@ -203,6 +204,7 @@ API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/watchos-api-diff.html
 endif
 ifdef INCLUDE_TVOS
 API_DIFF_DEPENDENCIES += $(OUTPUT_DIR)/tvos-api-diff.html
+endif
 endif
 ifdef INCLUDE_MACCATALYST
 ifdef ENABLE_DOTNET
@@ -315,6 +317,8 @@ define ApiDiffReportMarkdown
 
 endef
 
+all-markdowns:: $(OUTPUT_DIR)/api-diff.md
+
 $(OUTPUT_DIR)/api-diff.md: $(API_DIFF_DEPENDENCIES)
 ifdef INCLUDE_XAMARIN_LEGACY
 	$(Q) if $(foreach html,$(wildcard $(OUTPUT_DIR)/*-api-diff.html),! test -s "$(html)" &&) true; then \
@@ -397,7 +401,11 @@ endif # DOTNET
 # easy-to-type helper targets.
 # one rule to create all the api diffs
 
-all-local:: $(OUTPUT_DIR)/index.html $(OUTPUT_DIR)/api-diff.md all-markdowns
+all-local:: $(OUTPUT_DIR)/index.html $(OUTPUT_DIR)/api-diff.md
+
+ifdef INCLUDE_XAMARIN_LEGACY
+all-local:: all-markdowns
+endif
 
 # Rules to re-create the reference infos from the current stable 'bundle.zip' assemblies
 
@@ -510,6 +518,7 @@ ifdef ENABLE_DOTNET
 update-dotnet: $(DOTNET_REFS)
 endif
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_IOS
 update-refs: $(IOS_REFS)
 endif
@@ -521,6 +530,7 @@ update-refs: $(WATCHOS_REFS)
 endif
 ifdef INCLUDE_MAC
 update-refs: $(MAC_REFS)
+endif
 endif
 
 ifdef ENABLE_DOTNET
@@ -545,6 +555,7 @@ $(DIRS):
 merger.exe: merger.cs
 	$(Q) $(SYSTEM_CSC) -debug $< -out:$@ /nologo
 
+ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_IOS
 $(OUTPUT_DIR)/ios-api-diff.md: merger.exe $(foreach file,$(IOS_ASSEMBLIES),$(OUTPUT_DIR)/diff/xi/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.iOS $(OUTPUT_DIR)/diff/xi/Xamarin.iOS/ ios $(abspath $@)
@@ -567,4 +578,5 @@ ifdef INCLUDE_MAC
 $(OUTPUT_DIR)/mac-api-diff.md: merger.exe $(foreach file,$(MAC_ASSEMBLIES),$(OUTPUT_DIR)/diff/xm/$(file).md)
 	$(Q) $(SYSTEM_MONO) --debug merger.exe Xamarin.Mac $(OUTPUT_DIR)/diff/xm/Xamarin.Mac/ macos $(abspath $@)
 all-markdowns:: $(OUTPUT_DIR)/mac-api-diff.md
+endif
 endif

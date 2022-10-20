@@ -11,7 +11,7 @@ namespace Xharness.Tests.Jenkins {
 	public class TestSelectionTests {
 
 		TestSelection selection = new TestSelection ();
-		
+
 		[SetUp]
 		public void Setup ()
 		{
@@ -24,26 +24,26 @@ namespace Xharness.Tests.Jenkins {
 			// Assert tests
 			Assert.IsTrue (selection.SelectedTests.HasFlag (TestLabel.Msbuild), "msbuild");
 			Assert.IsTrue (selection.IsEnabled (TestLabel.Msbuild), "IsEnabled (msbuild)");
-			
+
 			Assert.IsTrue (selection.SelectedTests.HasFlag (TestLabel.Monotouch), "monotouch");
 			Assert.IsTrue (selection.IsEnabled (TestLabel.Monotouch), "IsEnabled (monotouch)");
-			
+
 			Assert.IsTrue (selection.SelectedTests.HasFlag (TestLabel.DotnetTest), "dotnet");
 			Assert.IsTrue (selection.IsEnabled (TestLabel.DotnetTest), "IsEnabled (dotnet)");
-			
+
 			// Assert platforms
 			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.tvOS), "tvos");
 			Assert.IsTrue (selection.IsEnabled (PlatformLabel.tvOS), "IsEnabled (tvOS)");
-			
+
 			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.watchOS), "watchOS");
 			Assert.IsTrue (selection.IsEnabled (PlatformLabel.watchOS), "IsEnabled (watchOS)");
-			
+
 			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.iOS), "iOS");
 			Assert.IsTrue (selection.IsEnabled (PlatformLabel.iOS), "IsEnabled (iOS)");
-			
+
 			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.iOSSimulator), "iOSSimulator");
 			Assert.IsTrue (selection.IsEnabled (PlatformLabel.iOSSimulator), "IsEnabled (iOSSimulator)");
-			
+
 			Assert.IsTrue (selection.SelectedPlatforms.HasFlag (PlatformLabel.MacCatalyst), "maccatalyst");
 			Assert.IsTrue (selection.IsEnabled (PlatformLabel.MacCatalyst), "IsEnabled (maccatalyst)");
 		}
@@ -60,7 +60,7 @@ namespace Xharness.Tests.Jenkins {
 					case TestLabel.None:
 						continue;
 					default:
-						Assert.IsFalse (selection.IsEnabled (label), label.ToString());
+						Assert.IsFalse (selection.IsEnabled (label), label.ToString ());
 						break;
 					}
 				}
@@ -79,7 +79,7 @@ namespace Xharness.Tests.Jenkins {
 					case TestLabel.None:
 						continue;
 					default:
-						Assert.IsTrue (selection.IsEnabled (label), label.ToString());
+						Assert.IsTrue (selection.IsEnabled (label), label.ToString ());
 						break;
 					}
 				}
@@ -99,10 +99,10 @@ namespace Xharness.Tests.Jenkins {
 					case TestLabel.None:
 						continue;
 					case TestLabel.Bcl:
-						Assert.IsTrue (selection.IsEnabled (label), label.ToString());
+						Assert.IsTrue (selection.IsEnabled (label), label.ToString ());
 						break;
 					default:
-						Assert.IsFalse (selection.IsEnabled (label), label.ToString());
+						Assert.IsFalse (selection.IsEnabled (label), label.ToString ());
 						break;
 					}
 				}
@@ -123,10 +123,10 @@ namespace Xharness.Tests.Jenkins {
 						continue;
 					case TestLabel.Bcl:
 					case TestLabel.Monotouch:
-						Assert.IsTrue (selection.IsEnabled (label), label.ToString());
+						Assert.IsTrue (selection.IsEnabled (label), label.ToString ());
 						break;
 					default:
-						Assert.IsFalse (selection.IsEnabled (label), label.ToString());
+						Assert.IsFalse (selection.IsEnabled (label), label.ToString ());
 						break;
 					}
 				}
