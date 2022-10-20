@@ -9,10 +9,8 @@ using Xamarin.Utils;
 
 #nullable enable
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class CompileEntitlementsTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class CompileEntitlementsTaskBase : XamarinTask {
 		bool warnedTeamIdentifierPrefix;
 		bool warnedAppIdentifierPrefix;
 
@@ -58,6 +56,8 @@ namespace Xamarin.MacDev.Tasks
 
 		[Required]
 		public ITaskItem? CompiledEntitlements { get; set; }
+
+		public ITaskItem [] CustomEntitlements { get; set; } = Array.Empty<ITaskItem> ();
 
 		public bool Debug { get; set; }
 
@@ -154,7 +154,7 @@ namespace Xamarin.MacDev.Tasks
 					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0108);
 					warnedTeamIdentifierPrefix = true;
 				}
-				
+
 				if (!warnedAppIdentifierPrefix && pstr.Value.Contains ("$(AppIdentifierPrefix)")) {
 					Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0109);
 					warnedAppIdentifierPrefix = true;
@@ -162,12 +162,12 @@ namespace Xamarin.MacDev.Tasks
 			}
 
 			if (profile is not null && profile.ApplicationIdentifierPrefix.Count > 0)
-				AppIdentifierPrefix = profile.ApplicationIdentifierPrefix[0] + ".";
+				AppIdentifierPrefix = profile.ApplicationIdentifierPrefix [0] + ".";
 			else
 				AppIdentifierPrefix = string.Empty;
 
 			if (profile is not null && profile.TeamIdentifierPrefix.Count > 0)
-				TeamIdentifierPrefix = profile.TeamIdentifierPrefix[0] + ".";
+				TeamIdentifierPrefix = profile.TeamIdentifierPrefix [0] + ".";
 			else
 				TeamIdentifierPrefix = AppIdentifierPrefix;
 
@@ -250,13 +250,71 @@ namespace Xamarin.MacDev.Tasks
 			return result;
 		}
 
-		static bool AreEqual (byte[] x, byte[] y)
+		void AddCustomEntitlements (PDictionary dict)
+		{
+			if (CustomEntitlements is null)
+				return;
+
+			// Process any custom entitlements from the 'CustomEntitlements' item group. These are applied last, and will override anything else.
+			// Possible values:
+			//     <ItemGroup>
+			//         <CustomEntitlements Include="name.of.entitlement" Type="Boolean" Value="true" /> <!-- value can be 'false' too (case doesn't matter) -->
+			//         <CustomEntitlements Include="name.of.entitlement" Type="String" Value="stringvalue" />
+			//         <CustomEntitlements Include="name.of.entitlement" Type="StringArray" Value="a;b" /> <!-- array of strings, separated by semicolon -->
+			//         <CustomEntitlements Include="name.of.entitlement" Type="StringArray" Value="a😁b" ArraySeparator="😁" /> <!-- array of strings, separated by 😁 -->
+			//         <CustomEntitlements Include="name.of.entitlement" Type="Remove" /> <!-- This will remove the corresponding entitlement  -->
+			//     </ItemGroup>
+
+			foreach (var item in CustomEntitlements) {
+				var entitlement = item.ItemSpec;
+				var type = item.GetMetadata ("Type");
+				var value = item.GetMetadata ("Value");
+				switch (type.ToLowerInvariant ()) {
+				case "remove":
+					if (!string.IsNullOrEmpty (value))
+						Log.LogError (MSBStrings.E7102, /* Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected no value at all. */ value, entitlement, type);
+					dict.Remove (entitlement);
+					break;
+				case "boolean":
+					bool booleanValue;
+					if (string.Equals (value, "true", StringComparison.OrdinalIgnoreCase)) {
+						booleanValue = true;
+					} else if (string.Equals (value, "false", StringComparison.OrdinalIgnoreCase)) {
+						booleanValue = false;
+					} else {
+						Log.LogError (MSBStrings.E7103, /* "Invalid value '{0}' for the entitlement '{1}' of type '{2}' specified in the CustomEntitlements item group. Expected 'true' or 'false'." */ value, entitlement, type);
+						continue;
+					}
+
+					dict [entitlement] = new PBoolean (booleanValue);
+					break;
+				case "string":
+					dict [entitlement] = new PString (value ?? string.Empty);
+					break;
+				case "stringarray":
+					var arraySeparator = item.GetMetadata ("ArraySeparator");
+					if (string.IsNullOrEmpty (arraySeparator))
+						arraySeparator = ";";
+					var arrayContent = value.Split (new string [] { arraySeparator }, StringSplitOptions.None);
+					var parray = new PArray ();
+					foreach (var element in arrayContent)
+						parray.Add (new PString (element));
+					dict [entitlement] = parray;
+					break;
+				default:
+					Log.LogError (MSBStrings.E7104, /* "Unknown type '{0}' for the entitlement '{1}' specified in the CustomEntitlements item group. Expected 'Remove', 'Boolean', 'String', or 'StringArray'." */ type, entitlement);
+					break;
+				}
+			}
+		}
+
+		static bool AreEqual (byte [] x, byte [] y)
 		{
 			if (x.Length != y.Length)
 				return false;
 
 			for (int i = 0; i < x.Length; i++) {
-				if (x[i] != y[i])
+				if (x [i] != y [i])
 					return false;
 			}
 
@@ -320,9 +378,9 @@ namespace Xamarin.MacDev.Tasks
 				var value = item.Value;
 
 				if (item.Key == "com.apple.developer.ubiquity-container-identifiers" ||
-				    item.Key == "com.apple.developer.icloud-container-identifiers" ||
-				    item.Key == "com.apple.developer.icloud-container-environment" ||
-				    item.Key == "com.apple.developer.icloud-services") {
+					item.Key == "com.apple.developer.icloud-container-identifiers" ||
+					item.Key == "com.apple.developer.icloud-container-environment" ||
+					item.Key == "com.apple.developer.icloud-services") {
 					if (profile is null)
 						Log.LogWarning (null, null, null, Entitlements, 0, 0, 0, 0, MSBStrings.W0110, item.Key);
 					else if (!profile.Entitlements.ContainsKey (item.Key))
@@ -345,7 +403,7 @@ namespace Xamarin.MacDev.Tasks
 					value = value.Clone ();
 
 				if (value is not null)
-					entitlements[item.Key] = value;
+					entitlements [item.Key] = value;
 			}
 
 			switch (Platform) {
@@ -355,6 +413,8 @@ namespace Xamarin.MacDev.Tasks
 					entitlements ["com.apple.security.network.client"] = new PBoolean (true);
 				break;
 			}
+
+			AddCustomEntitlements (entitlements);
 
 			return entitlements;
 		}

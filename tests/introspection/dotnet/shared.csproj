@@ -154,8 +154,5 @@
     <BundleResource Include="$(IntrospectionTestDirectory)\xamarin1.png">
       <Link>xamarin1.png</Link>
     </BundleResource>
-    <BundleResource Include="$(IntrospectionTestDirectory)\..\..\tools\mtouch\simlauncher64-sgen.frameworks">
-      <Link>simlauncher64-sgen.frameworks</Link>
-    </BundleResource>
   </ItemGroup>
 </Project>

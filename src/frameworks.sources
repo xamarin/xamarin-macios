@@ -311,6 +311,11 @@ AVROUTING_SOURCES = \
 BACKGROUNDTASKS_API_SOURCES = \
 	BackgroundTasks/Enums.cs \
 
+# BackgroundAssets
+
+BACKGROUNDASSETS_SOURCES = \
+	BackgroundAssets/BACompat.cs \
+
 # BusinessChat
 
 BUSINESSCHAT_API_SOURCES = \
@@ -1331,6 +1336,7 @@ NEARBYINTERACTION_API_SOURCES = \
 	NearbyInteraction/Enums.cs \
 
 NEARBYINTERACTION_SOURCES = \
+	NearbyInteraction/NICompat.cs \
 	NearbyInteraction/NINearbyObject.cs \
 	NearbyInteraction/NIAlgorithmConvergenceStatusReasonValues.cs \
 
@@ -1589,6 +1595,11 @@ SENSORKIT_SOURCES = \
 	SensorKit/SRAbsoluteTime.cs \
 	SensorKit/SRSensor.cs \
 
+# ShareWithYouCore
+
+SHAREDWITHYOUCORE_SOURCES = \
+	SharedWithYouCore/SWCollaborationMetadata.cs \
+
 # Social
 
 SOCIAL_API_SOURCES = \
@@ -1781,6 +1792,11 @@ VIDEOTOOLBOX_SOURCES = \
 	VideoToolbox/VTDecompressionSession.cs \
 	VideoToolbox/VTFrameSilo.cs \
 	VideoToolbox/VTMultiPassStorage.cs \
+	VideoToolbox/VTPixelRotationProperties.cs \
+	VideoToolbox/VTPixelRotationSession.cs \
+	VideoToolbox/VTPixelTransferProperties.cs \
+	VideoToolbox/VTPixelTransferSession.cs \
+	VideoToolbox/VTProfessionalVideoWorkflow.cs \
 	VideoToolbox/VTPropertyOptions.cs \
 	VideoToolbox/VTSession.cs \
 	VideoToolbox/VTVideoEncoder.cs \
@@ -2089,10 +2105,12 @@ MACOS_FRAMEWORKS =          \
 	ScriptingBridge         \
 	SearchKit               \
 	Security                \
+	SharedWithYou           \
 	SharedWithYouCore       \
 	Social                  \
 	Speech                  \
 	SystemConfiguration     \
+	ThreadNetwork           \
 	UserNotifications       \
 	UserNotificationsUI		\
 	VideoSubscriberAccount  \
@@ -2289,6 +2307,8 @@ TVOS_FRAMEWORKS =           \
 	PhotosUI                \
 	ReplayKit               \
 	Security                \
+	SharedWithYou           \
+	SharedWithYouCore       \
 	SystemConfiguration     \
 	TVMLKit                 \
 	TVUIKit					\
@@ -2390,6 +2410,7 @@ MACCATALYST_FRAMEWORKS = \
 	Social \
 	Speech \
 	SystemConfiguration \
+	ThreadNetwork \
 	UIKit XKit \
 	UserNotifications \
 	UserNotificationsUI \

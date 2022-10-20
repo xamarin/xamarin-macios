@@ -40,6 +40,7 @@ using CoreImage;
 using CoreAnimation;
 using CoreData;
 using Intents;
+using SharedWithYouCore;
 #if !__MACCATALYST__
 using OpenGL;
 #endif
@@ -11624,6 +11625,10 @@ namespace AppKit {
 		[Field ("NSPasteboardTypeFileURL")]
 		NSString NSPasteboardTypeFileUrl { get; }
 
+		[Mac (13,0)]
+		[Field ("NSPasteboardTypeCollaborationMetadata")]
+		NSString NSPasteboardTypeCollaborationMetadata { get; }
+
 		[Mac (10,12)]
 		[Export ("prepareForNewContentsWithOptions:")]
 		nint PrepareForNewContents (NSPasteboardContentsOptions options);
@@ -11683,6 +11688,13 @@ namespace AppKit {
 
 		[Export ("propertyListForType:")]
 		NSObject GetPropertyListForType (string type);
+
+		// @interface SWCollaborationMetadata (NSPasteboardItem)
+
+		[Mac (13,0)]
+		[NullAllowed, Export ("collaborationMetadata", ArgumentSemantic.Copy)]
+		SWCollaborationMetadata CollaborationMetadata { get; set; }
+
 	}
 
 	[NoMacCatalyst]
@@ -19700,6 +19712,17 @@ namespace AppKit {
 		[Export ("selectedRanges", ArgumentSemantic.Copy)]
 		NSArray SelectedRanges { get; set;  }
 #endif
+
+		[NoiOS]
+		[Mac (13, 0)]
+		[Export ("initUsingTextLayoutManager:")]
+		NativeHandle Constructor (bool usingTextLayoutManager);
+
+		[NoiOS]
+		[Static]
+		[Mac (13, 0)]
+		[Export ("textViewUsingTextLayoutManager:")]
+		NSTextView Create (bool usingTextLayoutManager);
 	}
 
 	[NoMacCatalyst]
@@ -22960,6 +22983,10 @@ namespace AppKit {
 		[Mac (13, 0)]
 		[Export ("standardShareMenuItem")]
 		NSMenuItem StandardShareMenuItem { get; }
+
+		[NoiOS, Mac (13,0)]
+		[Export ("close")]
+		void Close ();
 	}
 
 	interface INSSharingServicePickerDelegate {}

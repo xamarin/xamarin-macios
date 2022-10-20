@@ -645,12 +645,18 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		Condition="'$(_RequireCodeSigning)' == 'true' Or '$(CodesignEntitlements)' != ''"
 		DependsOnTargets="$(_CompileEntitlementsDependsOn)"
 		Outputs="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent">
+		<!-- Automatically add the 'allow-jit' entitlement for desktop release builds in .NET -->
+		<ItemGroup Condition="'$(Configuration)' == 'Release' And ('$(_PlatformName)' == 'macOS' Or '$(_PlatformName)' == 'MacCatalyst') And '$(UsingAppleNETSdk)' == 'true'">
+			<!-- We need to compare the result of AnyHaveMetadataValue to 'true', because if it's empty, the return value is not a boolean, it's an empty string -->
+			<CustomEntitlements Condition="'@(CustomEntitlements->AnyHaveMetadataValue('Identity','com.apple.security.cs.allow-jit'))' != 'true'" Include="com.apple.security.cs.allow-jit" Type="Boolean" Value="true" />
+		</ItemGroup>
 		<CompileEntitlements
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true'"
 			AppBundleDir="$(AppBundleDir)"
 			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
+			CustomEntitlements="@(CustomEntitlements)"
 			Entitlements="$(CodesignEntitlements)"
 			CompiledEntitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
 			IsAppExtension="$(IsAppExtension)"
@@ -792,6 +798,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 	<PropertyGroup>
 		<_CompileImageAssetsDependsOn>
+			$(CompileImageAssetsDependsOn);
 			$(_CompileImageAssetsDependsOn);
 			_DetectAppManifest;
 			_DetectSdkLocations;
@@ -1995,6 +2002,26 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			<_CodesignItems Include="@(_CodesignWatchItem->'$(_AppBundleName)$(AppBundleExtension)/Watch/%(Identity)')" />
 		</ItemGroup>
 
+		<!-- Add any user-specified bundles -->
+		<ItemGroup>
+			<_CustomCodesignBundle Include="@(CodesignBundle)" />
+			<_CustomCodesignBundle>
+				<CodesignAllocate Condition="'%(_CustomCodesignBundle.CodesignAllocate)' == ''">$(_CodesignAllocate)</CodesignAllocate>
+				<CodesignDisableTimestamp Condition="'%(_CustomCodesignBundle.CodesignDisableTimestamp)' == ''">false</CodesignDisableTimestamp>
+				<CodesignDisableTimestamp Condition="'%(_CustomCodesignBundle.CodesignDisableTimestamp)' == '' And ('$(_SdkIsSimulator)' == 'true' Or '$(_BundlerDebug)' == 'true')">true</CodesignDisableTimestamp>
+				<CodesignEntitlements Condition="'%(_CustomCodesignBundle.CodesignEntitlements)' == ''">$(_CompiledCodesignEntitlements)</CodesignEntitlements>
+				<CodesignExtraArgs Condition="'%(_CustomCodesignBundle.CodesignExtraArgs)' == ''">$(CodesignExtraArgs)</CodesignExtraArgs>
+				<CodesignKeychain Condition="'%(_CustomCodesignBundle.CodesignKeychain)' == ''">$(CodesignKeychain)</CodesignKeychain>
+				<CodesignResourceRules Condition="'%(_CustomCodesignBundle.CodesignResourceRules)' == ''">$(_PreparedResourceRules)</CodesignResourceRules>
+				<CodesignSigningKey Condition="'%(_CustomCodesignBundle.CodesignSigningKey)' == ''">$(_CodeSigningKey)</CodesignSigningKey>
+				<CodesignUseHardenedRuntime Condition="'%(_CustomCodesignBundle.CodesignUseHardenedRuntime)' == ''">$(UseHardenedRuntime)</CodesignUseHardenedRuntime>
+				<CodesignUseSecureTimestamp Condition="'%(_CustomCodesignBundle.CodesignUseSecureTimestamp)' == ''">$(UseHardenedRuntime)</CodesignUseSecureTimestamp>
+				<RequireCodeSigning Condition="'%(_CustomCodesignBundle.RequireCodeSigning)' == ''">$(_RequireCodeSigning)</RequireCodeSigning>
+				<SourceProjectPath>$(MSBuildProjectDirectory)</SourceProjectPath>
+			</_CustomCodesignBundle>
+			<_CodesignBundle Include="@(_CustomCodesignBundle)" />
+		</ItemGroup>
+
 		<!-- Add this app bundle to _CodesignBundle -->
 		<ItemGroup>
 			<_CodesignBundle Include="$(_AppBundleName)$(AppBundleExtension)">
@@ -2023,8 +2050,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				We only run the CodesignAppBundle target on the outer-most executable project
 			    * Not on app extensions
 			    * Not on watch apps
+			    * Not if explicitly disabled by setting EnableCodeSigning=false
 			-->
-			<_CodesignAppBundleCondition Condition="'$(_CodesignAppBundleCondition)' == '' And '$(IsAppExtension)' != 'true' And '$(IsWatchApp)' != 'true' And '$(_CanOutputAppBundle)' == 'true'">true</_CodesignAppBundleCondition>
+			<_CodesignAppBundleCondition Condition="'$(_CodesignAppBundleCondition)' == '' And '$(IsAppExtension)' != 'true' And '$(IsWatchApp)' != 'true' And '$(_CanOutputAppBundle)' == 'true' And '$(EnableCodeSigning)' != 'false'">true</_CodesignAppBundleCondition>
 			<_CodesignAppBundleCondition Condition="'$(_CodesignAppBundleCondition)' == ''">false</_CodesignAppBundleCondition>
 		</PropertyGroup>
 	</Target>
@@ -2074,6 +2102,8 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 
 		This logic is implemented in the Codesign task.
 
+		The SkipCodesignItems item group takes paths relative to the directory where the app bundle is. Example: "foo.app/dontsignme.dylib"
+	
 	-->
 	<Target Name="_CodesignAppBundle"
 			Condition="'$(_CodesignAppBundleCondition)' == 'true'"
@@ -2089,6 +2119,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			CodesignStampPath="$(DeviceSpecificIntermediateOutputPath)codesign\"
 			GenerateDSymItems="@(_GenerateDSymItems)"
 			NativeStripItems="@(_NativeStripItems)"
+			SkipCodesignItems="@(SkipCodesignItems)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
 			>
 			<Output TaskParameter="OutputCodesignItems" ItemName="_ComputedCodesignItems" />

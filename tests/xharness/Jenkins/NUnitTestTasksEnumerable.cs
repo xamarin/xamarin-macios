@@ -19,7 +19,13 @@ namespace Xharness.Jenkins {
 
 		public IEnumerator<NUnitExecuteTask> GetEnumerator ()
 		{
-			var netstandard2Project = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj")));
+			var netstandard2Project = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "Xamarin.MacDev.Tasks.Tests.csproj"))) {
+				IsDotNetProject = true,
+			};
+			var env = new Dictionary<string, string>
+			{
+				{ "SYSTEM_MONO", this.jenkins.Harness.SYSTEM_MONO },
+			};
 			var buildiOSMSBuild = new MSBuildTask (jenkins: jenkins, testProject: netstandard2Project, processManager: processManager) {
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
@@ -27,6 +33,8 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				SolutionPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
 				SupportsParallelExecution = false,
+				RestoreNugets = true,
+				Environment = env,
 			};
 			var nunitExecutioniOSMSBuild = new NUnitExecuteTask (jenkins, buildiOSMSBuild, processManager) {
 				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tasks.Tests", "bin", "Debug", "net472", "Xamarin.MacDev.Tasks.Tests.dll"),
@@ -40,8 +48,10 @@ namespace Xharness.Jenkins {
 				SupportsParallelExecution = false,
 			};
 			yield return nunitExecutioniOSMSBuild;
-			
-			var msbuildIntegrationTestsProject = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "Xamarin.MacDev.Tests.csproj")));
+
+			var msbuildIntegrationTestsProject = new TestProject (TestLabel.Msbuild, Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "Xamarin.MacDev.Tests.csproj"))) {
+				IsDotNetProject = true,
+			};
 			var buildiOSMSBuildIntegration = new MSBuildTask (jenkins: jenkins, testProject: msbuildIntegrationTestsProject, processManager: processManager) {
 				SpecifyPlatform = false,
 				SpecifyConfiguration = true,
@@ -49,6 +59,8 @@ namespace Xharness.Jenkins {
 				Platform = TestPlatform.iOS,
 				SolutionPath = Path.GetFullPath (Path.Combine (HarnessConfiguration.RootDirectory, "..", "msbuild", "Xamarin.MacDev.Tasks.sln")),
 				SupportsParallelExecution = false,
+				RestoreNugets = true,
+				Environment = env,
 			};
 			var nunitExecutioniOSMSBuildIntegration = new NUnitExecuteTask (jenkins, buildiOSMSBuildIntegration, processManager) {
 				TestLibrary = Path.Combine (HarnessConfiguration.RootDirectory, "msbuild", "Xamarin.MacDev.Tests", "bin", "Debug", "net472", "Xamarin.MacDev.Tests.dll"),
@@ -115,7 +127,7 @@ namespace Xharness.Jenkins {
 				TestName = "Generator tests",
 				Mode = "NUnit",
 				Timeout = TimeSpan.FromMinutes (10),
-				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Generator),
+				Ignored = !jenkins.TestSelection.IsEnabled (TestLabel.Generator) || !jenkins.Harness.INCLUDE_XAMARIN_LEGACY,
 			};
 			yield return runGenerator;
 

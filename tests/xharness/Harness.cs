@@ -103,7 +103,27 @@ namespace Xharness {
 			}
 		}
 
-		string MlaunchPath => Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
+		string MlaunchPath {
+			get {
+				if (ENABLE_DOTNET) {
+					string platform;
+					if (INCLUDE_IOS) {
+						platform = "iOS";
+					} else if (INCLUDE_TVOS) {
+						platform = "tvOS";
+					} else {
+						return $"Not building any mobile platform, so can't provide a location to mlaunch.";
+					}
+					var mlaunchPath = Path.Combine (DOTNET_DIR, "packs");
+					mlaunchPath = Path.Combine (mlaunchPath, $"Microsoft.{platform}.Sdk", config [$"{platform.ToUpperInvariant ()}_NUGET_VERSION_NO_METADATA"]);
+					mlaunchPath = Path.Combine (mlaunchPath, "tools", "bin", "mlaunch");
+					return mlaunchPath;
+				} else if (INCLUDE_XAMARIN_LEGACY && INCLUDE_IOS) {
+					return Path.Combine (IOS_DESTDIR, "Library", "Frameworks", "Xamarin.iOS.framework", "Versions", "Current", "bin", "mlaunch");
+				}
+				return $"Not building any mobile platform, so can't provide a location to mlaunch.";
+			}
+		}
 
 		public List<iOSTestProject> IOSTestProjects { get; }
 		public List<MacTestProject> MacTestProjects { get; } = new List<MacTestProject> ();
@@ -124,13 +144,16 @@ namespace Xharness {
 		public bool INCLUDE_TVOS { get; }
 		public bool INCLUDE_WATCH { get; }
 		public bool INCLUDE_MAC { get; }
+		public bool INCLUDE_MACCATALYST { get; }
 		public string JENKINS_RESULTS_DIRECTORY { get; } // Use same name as in Makefiles, so that a grep finds it.
 		public string MAC_DESTDIR { get; }
 		public string IOS_DESTDIR { get; }
 		public string MONO_IOS_SDK_DESTDIR { get; }
 		public string MONO_MAC_SDK_DESTDIR { get; }
-		public bool ENABLE_XAMARIN { get; }
 		public bool ENABLE_DOTNET { get; }
+		public bool INCLUDE_XAMARIN_LEGACY { get; }
+		public string SYSTEM_MONO { get; set; }
+		public string DOTNET_DIR { get; set; }
 
 		// Run
 
@@ -149,6 +172,7 @@ namespace Xharness {
 		public bool? IncludeSystemPermissionTests { get; set; }
 
 		string RootDirectory => HarnessConfiguration.RootDirectory;
+		Dictionary<string, string> config;
 
 		public Harness (IResultParser resultParser, HarnessAction action, HarnessConfiguration configuration)
 		{
@@ -197,16 +221,21 @@ namespace Xharness {
 			JENKINS_RESULTS_DIRECTORY = config ["JENKINS_RESULTS_DIRECTORY"];
 			INCLUDE_WATCH = config.ContainsKey ("INCLUDE_WATCH") && !string.IsNullOrEmpty (config ["INCLUDE_WATCH"]);
 			INCLUDE_MAC = config.ContainsKey ("INCLUDE_MAC") && !string.IsNullOrEmpty (config ["INCLUDE_MAC"]);
+			INCLUDE_MACCATALYST = config.ContainsKey ("INCLUDE_MACCATALYST") && !string.IsNullOrEmpty (config ["INCLUDE_MACCATALYST"]);
 			MAC_DESTDIR = config ["MAC_DESTDIR"];
 
 			IOS_DESTDIR = config ["IOS_DESTDIR"];
 			MONO_IOS_SDK_DESTDIR = config ["MONO_IOS_SDK_DESTDIR"];
 			MONO_MAC_SDK_DESTDIR = config ["MONO_MAC_SDK_DESTDIR"];
-			ENABLE_XAMARIN = config.ContainsKey ("ENABLE_XAMARIN") && !string.IsNullOrEmpty (config ["ENABLE_XAMARIN"]);
 			ENABLE_DOTNET = config.ContainsKey ("ENABLE_DOTNET") && !string.IsNullOrEmpty (config ["ENABLE_DOTNET"]);
+			SYSTEM_MONO = config ["SYSTEM_MONO"];
+			DOTNET_DIR = config ["DOTNET_DIR"];
+			INCLUDE_XAMARIN_LEGACY = config.ContainsKey ("INCLUDE_XAMARIN_LEGACY") && !string.IsNullOrEmpty (config ["INCLUDE_XAMARIN_LEGACY"]);
 
 			if (string.IsNullOrEmpty (SdkRoot))
 				SdkRoot = config ["XCODE_DEVELOPER_ROOT"] ?? configuration.SdkRoot;
+
+			this.config = config;
 
 			processManager = new MlaunchProcessManager (XcodeRoot, MlaunchPath);
 			AppBundleLocator = new AppBundleLocator (processManager, () => HarnessLog, XIBuildPath, "/usr/local/share/dotnet/dotnet", config ["DOTNET"]);
@@ -363,6 +392,7 @@ namespace Xharness {
 					SolutionPath = Path.GetFullPath (Path.Combine (RootDirectory, "tests-mac.sln")),
 					Configurations = p.Configurations,
 					Platform = p.Platform,
+					Ignore = !INCLUDE_XAMARIN_LEGACY,
 				});
 			}
 
@@ -372,6 +402,7 @@ namespace Xharness {
 					MonoNativeInfo = monoNativeInfo,
 					Name = monoNativeInfo.ProjectName,
 					Platform = "AnyCPU",
+					Ignore = !INCLUDE_XAMARIN_LEGACY,
 
 				};
 
@@ -653,7 +684,7 @@ namespace Xharness {
 
 		int Install ()
 		{
-			HarnessLog ??= GetAdHocLog();
+			HarnessLog ??= GetAdHocLog ();
 
 			foreach (var project in IOSTestProjects) {
 				var runner = CreateAppRunner (project);

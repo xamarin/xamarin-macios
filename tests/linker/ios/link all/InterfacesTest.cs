@@ -94,7 +94,9 @@ namespace LinkAll.Interfaces {
 		}
 
 		[Test]
+#if !NET
 		[Ignore ("https://github.com/xamarin/xamarin-macios/issues/9566")]
+#endif
 		public void Issue9566 ()
 		{
 			var ifaces = (I[]) (object) new B[0];

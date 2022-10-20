@@ -997,10 +997,6 @@
         <value>Establecer: la entrada, "{0}", no existe.
         </value>
     </data>
-  <data name="E7068" xml:space="preserve">
-        <value>No se puede crear un paquete de recursos de enlace, a menos que haya referencias nativas en el proyecto de enlace.
-        </value>
-    </data>
   <data name="E7069" xml:space="preserve">
         <value>Xamarin.iOS 14+ no es compatible con las aplicaciones watchOS 1. Migra tu proyecto a watchOS 2+.</value>
     </data>

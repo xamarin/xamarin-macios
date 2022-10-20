@@ -20,7 +20,7 @@ namespace AVFoundation {
 				return new AudioBuffers (audioBufferList);
 			}
 		}
-		
+
 		public AudioBuffers MutableAudioBufferList {
 			get {
 				return new AudioBuffers (mutableAudioBufferList);

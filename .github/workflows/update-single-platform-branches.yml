@@ -1,0 +1,30 @@
+name: Update single-platform release tests branches
+
+on:
+  # allow triggering this action manually
+  workflow_dispatch:
+  # run every saturday (at noon UTC), so the builds occur during the weekend during lower CI load
+  schedule:
+  - cron:  '0 12 * * 6'
+
+jobs:
+  updateSinglePlatformBranches:
+    name: Merge main into single-platform release test branches
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: 'Update branches'
+        run: |
+          set -ex
+          git config user.email "github-actions-single-platform-branch-updater@xamarin.com"
+          git config user.name "GitHub Actions Single Platform Branch Updater"
+          for platform in iOS tvOS MacCatalyst macOS; do
+            git checkout -b release-test/only-dotnet-$platform origin/release-test/only-dotnet-$platform
+            git merge origin/main
+            git push
+          done

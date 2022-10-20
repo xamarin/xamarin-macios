@@ -1130,8 +1130,12 @@ public class B : A {}
 				mtouch.Abi = abi;
 				mtouch.Bitcode = mode;
 				mtouch.WarnAsError = new int[] { 186 };
-				Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildDev));
-				mtouch.AssertError (186, "Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.");
+				if (Configuration.XcodeVersion.Major >= 14) {
+					Assert.AreEqual (1, mtouch.Execute (MTouchAction.BuildDev));
+					mtouch.AssertError (186, "Bitcode is enabled, but bitcode is not supported in Xcode 14+ and has been disabled. Please disable bitcode by removing the 'MtouchEnableBitcode' property from the project file.");
+				} else {
+					Assert.AreEqual (0, mtouch.Execute (MTouchAction.BuildDev));
+				}
 			}
 		}
 

@@ -9,7 +9,7 @@ using Threading = System.Threading.Tasks;
 namespace Xamarin.MacDev.Tasks {
 	public abstract class FindAotCompilerTaskBase : XamarinTask {
 		[Required]
-		public ITaskItem[] MonoAotCrossCompiler { get; set; }
+		public ITaskItem [] MonoAotCrossCompiler { get; set; }
 
 		public bool KeepTemporaryOutput { get; set; }
 

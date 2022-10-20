@@ -8,10 +8,8 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class CompileITunesMetadataTaskBase : XamarinTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public abstract class CompileITunesMetadataTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]
@@ -21,7 +19,7 @@ namespace Xamarin.iOS.Tasks
 
 		public string BundleVersion { get; set; }
 
-		public ITaskItem[] ITunesMetadata { get; set; }
+		public ITaskItem [] ITunesMetadata { get; set; }
 
 		[Output]
 		[Required]
@@ -39,7 +37,7 @@ namespace Xamarin.iOS.Tasks
 					return false;
 				}
 
-				var path = ITunesMetadata[0].GetMetadata ("FullPath");
+				var path = ITunesMetadata [0].GetMetadata ("FullPath");
 
 				try {
 					metadata = PDictionary.FromFile (path);

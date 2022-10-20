@@ -7,14 +7,12 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.MacDev;
 using Xamarin.Utils;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class FindWatchOS2AppBundleTaskBase : XamarinTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public abstract class FindWatchOS2AppBundleTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]
-		public ITaskItem[] WatchAppReferences { get; set; }
+		public ITaskItem [] WatchAppReferences { get; set; }
 
 		#endregion Inputs
 
@@ -30,7 +28,7 @@ namespace Xamarin.iOS.Tasks
 			var pwd = PathUtils.ResolveSymbolicLinks (Environment.CurrentDirectory);
 
 			if (WatchAppReferences.Length > 0) {
-				WatchOS2AppBundle = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (WatchAppReferences[0].ItemSpec));
+				WatchOS2AppBundle = PathUtils.AbsoluteToRelative (pwd, PathUtils.ResolveSymbolicLinks (WatchAppReferences [0].ItemSpec));
 
 				return true;
 			}

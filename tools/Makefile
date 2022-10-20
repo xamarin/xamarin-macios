@@ -2,15 +2,12 @@ TOP=..
 
 include $(TOP)/Make.config
 
+SUBDIRS += devops
+
 ifdef INCLUDE_MAC
-ifdef INCLUDE_XAMARIN_LEGACY
 SUBDIRS+=mmp
 endif
-endif
 
-ifdef INCLUDE_XAMARIN_LEGACY
-SUBDIRS += mtouch
-endif
 
 ifdef INCLUDE_XAMARIN_LEGACY
 SUBDIRS += xibuild
@@ -23,6 +20,9 @@ ifdef INCLUDE_TVOS
 INCLUDE_MTOUCH=1
 endif
 ifdef INCLUDE_WATCH
+INCLUDE_MTOUCH=1
+endif
+ifdef INCLUDE_MACCATALYST
 INCLUDE_MTOUCH=1
 endif
 

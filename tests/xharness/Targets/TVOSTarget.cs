@@ -6,8 +6,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared;
 
 namespace Xharness.Targets {
-	public class TVOSTarget : iOSTarget
-	{
+	public class TVOSTarget : iOSTarget {
 		public override string Suffix {
 			get {
 				return "-tvos";
@@ -69,7 +68,7 @@ namespace Xharness.Targets {
 			return MonoNativeHelper.GetMinimumOSVersion (DevicePlatform.tvOS, MonoNativeInfo.Flavor);
 		}
 
-		protected override int[] UIDeviceFamily {
+		protected override int [] UIDeviceFamily {
 			get {
 				return new int [] { 3 };
 			}

@@ -1,9 +1,11 @@
 #nullable enable
 
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 using Mono.Cecil;
 
+using Xamarin.MacDev;
 using Xamarin.Tests;
 
 namespace Xamarin.Tests {
@@ -188,6 +190,11 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected string GetRelativeDylibDirectory (ApplePlatform platform)
+		{
+			return GetRelativeAssemblyDirectory (platform);
+		}
+
 		protected string GetInfoPListPath (ApplePlatform platform, string app_directory)
 		{
 			switch (platform) {
@@ -210,7 +217,7 @@ namespace Xamarin.Tests {
 			foreach (var assembly in assemblies) {
 				ModuleDefinition definition = ModuleDefinition.ReadModule (assembly, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 
-				bool onlyHasEmptyMethods = definition.Assembly.MainModule.Types.All (t => 
+				bool onlyHasEmptyMethods = definition.Assembly.MainModule.Types.All (t =>
 					t.Methods.Where (m => m.HasBody).All (m => m.Body.Instructions.Count == 1));
 				if (onlyHasEmptyMethods) {
 					assembliesWithOnlyEmptyMethods.Add (assembly);
@@ -230,14 +237,34 @@ namespace Xamarin.Tests {
 		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)
 		{
 			var executableName = Path.GetFileNameWithoutExtension (app_directory);
+			return Path.Combine (app_directory, GetRelativeExecutableDirectory (platform), executableName);
+		}
+
+		protected string GetRelativeExecutableDirectory (ApplePlatform platform)
+		{
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-				return Path.Combine (app_directory, executableName);
+				return string.Empty;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
-				return Path.Combine (app_directory, "Contents", "MacOS", executableName);
+				return Path.Combine ("Contents", "MacOS");
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetRelativeCodesignDirectory (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return string.Empty;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return "Contents";
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
@@ -311,12 +338,12 @@ namespace Xamarin.Tests {
 			return Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
 		}
 
-		public static StringBuilder AssertExecute (string executable, params string[] arguments)
+		public static StringBuilder AssertExecute (string executable, params string [] arguments)
 		{
 			return AssertExecute (executable, arguments, out _);
 		}
 
-		public static StringBuilder AssertExecute (string executable, string[] arguments, out StringBuilder output)
+		public static StringBuilder AssertExecute (string executable, string [] arguments, out StringBuilder output)
 		{
 			var rv = ExecutionHelper.Execute (executable, arguments, out output);
 			if (rv != 0) {
@@ -345,6 +372,26 @@ namespace Xamarin.Tests {
 				if (rid.StartsWith ("tvos-", StringComparison.OrdinalIgnoreCase))
 					return true;
 			}
+			return false;
+		}
+
+		protected bool TryGetEntitlements (string nativeExecutable, [NotNullWhen (true)] out PDictionary? entitlements)
+		{
+			var entitlementsPath = Path.Combine (Cache.CreateTemporaryDirectory (), "EntitlementsInBinary.plist");
+			var args = new string [] {
+				"--display",
+				"--entitlements",
+				entitlementsPath,
+				"--xml",
+				nativeExecutable
+			};
+			var rv = ExecutionHelper.Execute ("codesign", args, out var codesignOutput, TimeSpan.FromSeconds (15));
+			Assert.AreEqual (0, rv, $"'codesign {string.Join (" ", args)}' failed:\n{codesignOutput}");
+			if (File.Exists (entitlementsPath)) {
+				entitlements = PDictionary.FromFile (entitlementsPath);
+				return true;
+			}
+			entitlements = null;
 			return false;
 		}
 	}

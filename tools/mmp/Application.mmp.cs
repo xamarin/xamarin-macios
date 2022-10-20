@@ -2,8 +2,7 @@ using System;
 using System.Linq;
 
 namespace Xamarin.Bundler {
-	public partial class Application
-	{
+	public partial class Application {
 		public string ProductName = "Xamarin.Mac";
 		public AOTOptions AOTOptions;
 
@@ -13,7 +12,7 @@ namespace Xamarin.Bundler {
 
 		internal void Initialize ()
 		{
-			if (DeploymentTarget == null) 
+			if (DeploymentTarget == null)
 				DeploymentTarget = SdkVersions.MinOSXVersion;
 		}
 

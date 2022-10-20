@@ -15,10 +15,8 @@ using Xamarin.Localization.MSBuild;
 using Xamarin.MacDev;
 using Xamarin.Utils;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class XcodeCompilerToolTask : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class XcodeCompilerToolTask : XamarinTask {
 		protected bool Link { get; set; }
 		IList<string> prefixes;
 		string toolExe;
@@ -67,10 +65,10 @@ namespace Xamarin.MacDev.Tasks
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] BundleResources { get; set; }
+		public ITaskItem [] BundleResources { get; set; }
 
 		[Output]
-		public ITaskItem[] OutputManifests { get; set; }
+		public ITaskItem [] OutputManifests { get; set; }
 
 		#endregion
 
@@ -164,7 +162,7 @@ namespace Xamarin.MacDev.Tasks
 			yield break;
 		}
 
-		protected abstract void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem[] items);
+		protected abstract void AppendCommandLineArguments (IDictionary<string, string> environment, CommandLineArgumentBuilder args, ITaskItem [] items);
 
 		static bool? translated;
 
@@ -182,7 +180,7 @@ namespace Xamarin.MacDev.Tasks
 			return translated.Value;
 		}
 
-		protected int Compile (ITaskItem[] items, string output, ITaskItem manifest)
+		protected int Compile (ITaskItem [] items, string output, ITaskItem manifest)
 		{
 			var environment = new Dictionary<string, string> ();
 			var args = new CommandLineArgumentBuilder ();
@@ -236,7 +234,7 @@ namespace Xamarin.MacDev.Tasks
 				// again (in case of ibtool's infamous spurious errors).
 				var errors = rv.StandardError.ToString ();
 				if (errors.Length > 0)
-					Log.LogError (null, null, null, items[0].ItemSpec, 0, 0, 0, 0, "{0}", errors);
+					Log.LogError (null, null, null, items [0].ItemSpec, 0, 0, 0, 0, "{0}", errors);
 
 				Log.LogError (MSBStrings.E0117, ToolName, exitCode);
 
@@ -245,7 +243,7 @@ namespace Xamarin.MacDev.Tasks
 					try {
 						var plist = PDictionary.FromFile (manifest.ItemSpec);
 
-						LogWarningsAndErrors (plist, items[0]);
+						LogWarningsAndErrors (plist, items [0]);
 					} catch (Exception ex) {
 						Log.LogError (MSBStrings.E0094, ToolName, manifest.ItemSpec, ex.Message);
 					}

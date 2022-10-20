@@ -31,7 +31,9 @@ namespace VideoToolbox {
 		VideoDecoderMalfunction                   = -12911,
 		VideoEncoderMalfunction                   = -12912,
 		VideoDecoderNotAvailableNow               = -12913,
+		[Obsolete ("Use PixelRotationNotSupported enum value instead.")]
 		ImageRotationNotSupported                 = -12914,
+		PixelRotationNotSupported                 = -12914,
 		VideoEncoderNotAvailableNow               = -12915,
 		FormatDescriptionChangeNotSupported       = -12916,
 		InsufficientSourceColorData               = -12917,
@@ -53,6 +55,12 @@ namespace VideoToolbox {
 		DecoderNeedsRosetta                       = -17692,
 		[Mac (11, 0)]
 		EncoderNeedsRosetta	                      = -17693,
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), Watch (9,0), TV (15,0)]
+		VideoDecoderReferenceMissing              = -17694,
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), Watch (9,0), TV (15,0)]
+		VideoDecoderCallbackMessaging             = -17695,
+		[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+		VideoDecoderUnknownErr                    = -17696,
 	}
 
 	// uint32_t -> VTErrors.h
@@ -265,5 +273,18 @@ namespace VideoToolbox {
 		None,
 		[Field ("kVTHDRMetadataInsertionMode_Auto")]
 		Auto,
+	}
+
+	[Mac (13,0), iOS (16,0), MacCatalyst (16,0), Watch (9,0), TV (16,0)]
+	public enum VTRotation {
+		[DefaultEnumValue]
+		[Field ("kVTRotation_0")]
+		Zero,
+		[Field ("kVTRotation_CW90")]
+		ClockwiseNinety,
+		[Field ("kVTRotation_180")]
+		OneHundredAndEighty,
+		[Field ("kVTRotation_CCW90")]
+		CounterclockwiseNinety,
 	}
 }

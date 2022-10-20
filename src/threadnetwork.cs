@@ -6,7 +6,7 @@ using System;
 
 namespace ThreadNetwork {
 
-	[iOS (15,0), NoMac, NoMacCatalyst]
+	[iOS (15,0), Mac (13,0), MacCatalyst (16,1), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	interface THClient
 	{
@@ -40,7 +40,7 @@ namespace ThreadNetwork {
 		void CheckPreferredNetwork (NSData activeOperationalDataSet, Action<bool> completion);
 	}
 
-	[iOS (15,0), NoMac, NoMacCatalyst]
+	[iOS (15,0), Mac (13,0), MacCatalyst (16,1), NoWatch, NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface THCredentials : NSSecureCoding

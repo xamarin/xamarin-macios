@@ -34,20 +34,20 @@ steps:
   displayName: Set SDK destination dirs 
 
 # remove any old processes that might have been left behind.
-- pwsh : |
+- pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Clear-XamarinProcesses
   displayName: 'Process cleanup'
 
 # Increase mlaunch verbosity. Will step on the old setting present.
-- pwsh : |
+- pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Set-MLaunchVerbosity -Verbosity 10
   displayName: 'Make mlaunch verbose'
   condition: succeededOrFailed() # we do not care about the previous step
 
 # Re-start the daemon used to find the devices in the bot.
-- pwsh : |
+- pwsh: |
     Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     Optimize-DeviceDiscovery
   displayName: 'Fix device discovery (reset launchctl)'
@@ -62,6 +62,11 @@ steps:
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios
   displayName: Generate constants files 
   timeoutInMinutes: 15
+
+- bash: |
+    sudo rm -Rf $(Build.SourcesDirectory)/artifacts
+  displayName: "Remove artifacts"
+  condition: always()
 
 - task: DownloadPipelineArtifact@2
   displayName: Download artifacts
@@ -171,10 +176,13 @@ steps:
     echo "##vso[task.setvariable variable=TESTS_BOT;isOutput=true]$AGENT_NAME"
 
     # uri used to create the vsdrops index using full uri
-    export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID-$SYSTEM_JOBATTEMPT/$PARAMETERS_TESTPREFIX;/tests/"
+    export VSDROPS_URI="$VSDROPSPREFIX/$BUILD_BUILDNUMBER/$BUILD_BUILDID/$PARAMETERS_TESTPREFIX-$SYSTEM_JOBATTEMPT;/tests/"
 
     # assume something is going to fail
     echo "##vso[task.setvariable variable=TESTS_JOBSTATUS;isOutput=true]Failed"
+
+    # show environment
+    env -0 | sort -z | tr '\0' '\n' || true
 
     make -C builds download -j
     make -C builds .stamp-mono-ios-sdk-destdir -j
@@ -204,7 +212,7 @@ steps:
     printf "\n" | xcrun simctl diagnose -b -X --output=$(System.DefaultWorkingDirectory)/diagnostic-sim-output/output
 
   displayName: 'Collect diagnostic info from simulators'
-  condition:  eq(variables['system.debug'], true)
+  condition: eq(variables['system.debug'], true)
   continueOnError: true
   name: collectSimulatorInfo
   timeoutInMinutes: 30
@@ -215,7 +223,7 @@ steps:
   inputs:
     targetPath: $(System.DefaultWorkingDirectory)/diagnostic-sim-output
     artifactName: diagnostic-simulator-info-$(Build.BuildId)-$(System.JobAttempt)-${{ parameters.label }}
-  condition:  and(eq(variables['system.debug'], true), succeededOrFailed())
+  condition: and(eq(variables['system.debug'], true), succeededOrFailed())
   continueOnError: true
 
 # set the status of the test results. Do not add a comment yet since we have not uploaded any of the needed files for the comment, this way
@@ -258,13 +266,26 @@ steps:
   displayName: 'Publish to Artifact Services Drop'
   inputs:
     dropServiceURI: 'https://devdiv.artifacts.visualstudio.com/DefaultCollection'
-    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}'
-    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)-$(System.JobAttempt)/${{ parameters.testPrefix }}'
+    dropMetadataContainerName: 'DropMetadata-${{ parameters.testPrefix }}${{ parameters.label }}-$(System.JobAttempt)'
+    buildNumber: 'xamarin-macios/device-tests/$(Build.BuildNumber)/$(Build.BuildId)/${{ parameters.testPrefix }}-$(System.JobAttempt)'
     sourcePath: 'xamarin-macios/jenkins-results'
     detailedLog: true
     usePat: true
   continueOnError: true
   condition: succeededOrFailed()
+
+- bash: |
+    set -ex
+    find . -name 'vsts-*.xml' || true
+    find . -name 'vsts-*.xml' -ls -exec cat {} \; || true
+    VSTS_XML_FILES=$(find . -name 'vsts-*.xml' | wc -l | sed 's/ //g')
+    set +x
+    echo "##vso[task.setvariable variable=VSTS_XML_FILES]$VSTS_XML_FILES"
+    set -x
+  name: CountNUnitTestResults
+  continueOnError: true
+  condition: succeededOrFailed()
+  displayName: 'Count NUnit test results'
 
 # Upload test results to vsts.
 - task: PublishTestResults@2
@@ -272,9 +293,8 @@ steps:
   inputs:
     testResultsFormat: NUnit
     testResultsFiles: '**/vsts-*.xml'
-    failTaskOnFailedTests: true
   continueOnError: true
-  condition: succeededOrFailed()
+  condition: and(ne(variables['VSTS_XML_FILES'], 0), succeededOrFailed())
 
 # Archive files for the Html Report so that the report can be easily uploaded as artifacts of the build.
 - task: ArchiveFiles@1
@@ -293,7 +313,7 @@ steps:
   displayName: 'Publish Artifact: HtmlReport'
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)/HtmlReport.zip'
-    artifactName: HtmlReport-${{ parameters.testPrefix }}
+    artifactName: HtmlReport-${{ parameters.testPrefix }}-$(System.JobAttempt)
   continueOnError: true
   condition: succeededOrFailed()
 
@@ -324,4 +344,3 @@ steps:
   continueOnError: true
   workingDirectory: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/automation/scripts
   condition: always() # no matter what, includes cancellation
-

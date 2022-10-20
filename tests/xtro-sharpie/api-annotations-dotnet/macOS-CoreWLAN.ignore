@@ -1,0 +1,3 @@
+# It's named `CWErr` in the header file
+!unknown-native-enum! CWStatus bound
+!missing-enum! CWErr not bound

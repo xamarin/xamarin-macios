@@ -45,7 +45,7 @@ $(DOWNLOADS):
 		$(CP) ~/Library/Caches/xamarin-macios/$(notdir $@) $@.tmp; \
 	else \
 		EC=0; \
-		curl -f -L $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp || EC=$$?; \
+		curl -f -L -S --retry 20 --retry-delay 2 --connect-timeout 15 $(if $(V),-v,-s) $(MONO_URL) --output $@.tmp || EC=$$?; \
 		if [[ x$$EC == x22 ]]; then \
 			MSG="Could not download the archive %s because the URL doesn't exist. This can happen if bumping mono very soon after the corresponding commit was pushed to mono (i.e. the archive hasn't been built yet). If so, please wait a bit and try again."; \
 			printf "$(COLOR_RED)*** $$MSG$(COLOR_CLEAR)\n" "$(notdir $@)"; \
@@ -131,10 +131,14 @@ DOWNLOAD_DOTNET_VERSION=$(BUNDLED_NETCORE_PLATFORMS_PACKAGE_VERSION)
 endif
 endif
 
-.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(DOTNET_INSTALL_NAME)
+package-download/all-package-references.csproj: $(TOP)/.git/HEAD $(TOP)/.git/index ./create-csproj-for-all-packagereferences.sh
+	$(Q_GEN) ./create-csproj-for-all-packagereferences.sh --output "$(abspath $@.tmp)" $(if $(V),-v,)
+	$(Q) mv "$@.tmp" "$@"
+
+.stamp-download-dotnet-packages: $(TOP)/Make.config downloads/$(DOTNET_INSTALL_NAME) package-download/all-package-references.csproj
 	$(Q_GEN) cd package-download && $(DOTNET) \
 		build \
-		download-packages.proj \
+		download-packages.csproj \
 		/t:WriteBundledNETCorePlatformsPackageVersion \
 		/p:WriteFilePath=$(CURDIR)/BundledNETCorePlatformsPackageVersion.txt \
 		/p:PackageRuntimeIdentifiers="$(DOTNET_RUNTIME_IDENTIFIERS)" \
@@ -144,7 +148,9 @@ endif
 		/p:ToolChainManifestVersionBand="$(TOOLCHAIN_MANIFEST_VERSION_BAND)" \
 		/bl \
 		$(DOTNET_BUILD_VERBOSITY)
+	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
 	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.mono.toolchain.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(DOWNLOAD_DOTNET_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.mono.toolchain/
+	$(Q) mkdir -p ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
 	$(Q) $(CP) $(TOP)/packages/microsoft.net.workload.emscripten.manifest-$(TOOLCHAIN_MANIFEST_VERSION_BAND)/$(EMSCRIPTEN_MANIFEST_PACKAGE_VERSION)/data/WorkloadManifest.* ./downloads/$(DOTNET_INSTALL_NAME)/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/microsoft.net.workload.emscripten/
 	$(Q) touch $@
 

@@ -16,7 +16,7 @@ namespace Xharness.Jenkins {
 			TestLabel.Msbuild |
 			TestLabel.Monotouch |
 			TestLabel.DotnetTest;
-		
+
 		PlatformLabel platform =
 			PlatformLabel.None |
 			PlatformLabel.tvOS |
@@ -24,6 +24,7 @@ namespace Xharness.Jenkins {
 			PlatformLabel.iOS |
 			PlatformLabel.iOSSimulator |
 			PlatformLabel.MacCatalyst |
+			PlatformLabel.LegacyXamarin |
 			PlatformLabel.Dotnet;
 
 		public bool ForceExtensionBuildOnly { get; set; }
@@ -32,7 +33,7 @@ namespace Xharness.Jenkins {
 			get => selection;
 			set => selection = value;
 		}
-		
+
 		public PlatformLabel SelectedPlatforms => platform;
 
 		public void SetEnabled (TestLabel label, bool enable)
@@ -43,7 +44,7 @@ namespace Xharness.Jenkins {
 				selection &= ~label;
 			}
 		}
-		
+
 		public void SetEnabled (PlatformLabel label, bool enable)
 		{
 			if (enable) {
@@ -87,7 +88,7 @@ namespace Xharness.Jenkins {
 	class TestSelector {
 
 		#region private vars
-		
+
 		readonly Jenkins jenkins;
 		readonly IVersionControlSystem vcs;
 
@@ -112,7 +113,7 @@ namespace Xharness.Jenkins {
 		{
 			if (pullRequest > 0) {
 				var labels = vcs.GetLabels (pullRequest);
-				var pullRequestLabels = labels as string[] ?? labels.ToArray ();
+				var pullRequestLabels = labels as string [] ?? labels.ToArray ();
 				if (pullRequestLabels.Length > 0) {
 					MainLog?.WriteLine ($"Found {pullRequestLabels.Length} label(s) in the pull request #{pullRequest}: {string.Join (", ", pullRequestLabels)}");
 					return pullRequestLabels;
@@ -141,7 +142,7 @@ namespace Xharness.Jenkins {
 			var customLabelsFile = Path.Combine (HarnessConfiguration.RootDirectory, "..", "jenkins", "custom-labels.txt");
 			if (File.Exists (customLabelsFile)) {
 				var customLabels = File.ReadAllLines (customLabelsFile).Select ((v) => v.Trim ()).Where (v => v.Length > 0 && v [0] != '#');
-				var customFileLabels = customLabels as string[] ?? customLabels.ToArray ();
+				var customFileLabels = customLabels as string [] ?? customLabels.ToArray ();
 				if (customFileLabels.Length > 0) {
 					MainLog?.WriteLine ($"Found {customFileLabels.Length} label(s) in {customLabelsFile}: {string.Join (", ", customFileLabels)}");
 					return customFileLabels;
@@ -172,7 +173,7 @@ namespace Xharness.Jenkins {
 			labels.UnionWith (GetPullRequestLabels (pullRequest));
 			labels.UnionWith (GetEnvironmentLabels ());
 			labels.UnionWith (GetCustomFileLabels ());
-			
+
 			MainLog?.WriteLine ($"In total found {labels.Count} label(s): {string.Join (", ", labels.ToArray ())}");
 			return labels;
 		}
@@ -196,7 +197,7 @@ namespace Xharness.Jenkins {
 					continue;
 				MainLog?.WriteLine ($"Label {label} matches regexp.");
 				var match = regexp.Match (label);
-				var matchedLabel = match.Groups [2].Value;  
+				var matchedLabel = match.Groups [2].Value;
 				var run = match.Groups [1].Value == "run-";
 				MainLog?.WriteLine ($"Setting label {matchedLabel} to be enabled: {run}");
 				if (labelSelectedTests.ContainsKey (matchedLabel)) {
@@ -211,7 +212,7 @@ namespace Xharness.Jenkins {
 
 			// special case to consider, since might set or remove all tests, we need to process it first
 			if (labelSelectedTests.ContainsKey ("all")) {
-				selection.SetEnabled ("all", labelSelectedTests["all"]);
+				selection.SetEnabled ("all", labelSelectedTests ["all"]);
 				labelSelectedTests.Remove ("all");
 			}
 
@@ -219,30 +220,7 @@ namespace Xharness.Jenkins {
 				selection.SetEnabled (entry.Key, entry.Value);
 			}
 
-			Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission); 
-
-			// docs is a bit special:
-			// - can only be executed if the Xamarin-specific parts of the build is enabled
-			// - enabled by default if the current branch is main (or, for a pull request, if the target branch is main)
-			if (Harness.ENABLE_XAMARIN) {
-				if (!labelSelectedTests.ContainsKey ("docs")) { // don't override any value set using labels
-					var branchName = Environment.GetEnvironmentVariable ("BRANCH_NAME");
-					if (!string.IsNullOrEmpty (branchName)) {
-						selection.SetEnabled (TestLabel.Docs, branchName == "main");
-						if (selection.IsEnabled (TestLabel.Docs))
-							MainLog?.WriteLine ("Enabled 'docs' tests because the current branch is 'main'.");
-					} else if (prTarget is not null) {
-						selection.SetEnabled (TestLabel.Docs, prTarget == "main");
-						if (selection.IsEnabled (TestLabel.Docs))
-							MainLog?.WriteLine ("Enabled 'docs' tests because the target branch is 'main'.");
-					}
-				}
-			} else {
-				if (selection.IsEnabled (TestLabel.Docs)) {
-					selection.SetEnabled (TestLabel.Docs, false); // could have been enabled by 'run-all-tests', so disable it if we can't run it.
-					MainLog?.WriteLine ("Disabled 'docs' tests because the Xamarin-specific parts of the build are not enabled.");
-				}
-			}
+			Harness.IncludeSystemPermissionTests = selection.IsEnabled (TestLabel.SystemPermission);
 
 			// old simulator tests is also a bit special:
 			// - enabled by default if using a beta Xcode, otherwise disabled by default
@@ -261,7 +239,7 @@ namespace Xharness.Jenkins {
 			// whatever we did automatically.
 			var labels = GetAllLabels (pullRequest);
 			SelectTestsByLabel (labels, selection, pullRequest > 0 ?
-				vcs.GetPullRequestTargetBranch (pullRequest): null);
+				vcs.GetPullRequestTargetBranch (pullRequest) : null);
 
 			DisableKnownFailingDeviceTests ();
 
@@ -287,10 +265,29 @@ namespace Xharness.Jenkins {
 				selection.SetEnabled (PlatformLabel.Mac, false);
 			}
 
+			if (!Harness.INCLUDE_MACCATALYST) {
+				MainLog?.WriteLine ("The Mac Catalyst build is disabled, so any Mac Catalyst tests will be disabled as well.");
+				selection.SetEnabled (PlatformLabel.MacCatalyst, false);
+			}
+
 			if (!Harness.ENABLE_DOTNET) {
 				MainLog?.WriteLine ("The .NET build is disabled, so any .NET tests will be disabled as well.");
 				selection.SetEnabled (PlatformLabel.Dotnet, false);
 			}
+
+			if (!Harness.INCLUDE_XAMARIN_LEGACY) {
+				MainLog?.WriteLine ("The legacy Xamarin build is disabled, so any legacy Xamarin tests will be disabled as well.");
+				selection.SetEnabled (PlatformLabel.LegacyXamarin, false);
+				selection.SetEnabled (PlatformLabel.watchOS, false);
+				selection.SetEnabled (TestLabel.Bcl, false);
+				selection.SetEnabled (TestLabel.InstallSource, false);
+				selection.SetEnabled (TestLabel.Mmp, false);
+				selection.SetEnabled (TestLabel.Mononative, false);
+				selection.SetEnabled (TestLabel.Mtouch, false);
+				selection.SetEnabled (TestLabel.Xammac, false);
+			}
+
+			MainLog?.WriteLine ($"Final test selection: tests: {selection.SelectedTests} platforms: {selection.SelectedPlatforms}");
 		}
 	}
 }

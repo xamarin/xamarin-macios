@@ -10,10 +10,8 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.Utils;
 using Xamarin.Localization.MSBuild;
 
-namespace Xamarin.iOS.Tasks
-{
-	public abstract class ValidateAppBundleTaskBase : XamarinTask
-	{
+namespace Xamarin.iOS.Tasks {
+	public abstract class ValidateAppBundleTaskBase : XamarinTask {
 		#region Inputs
 
 		[Required]
@@ -302,13 +300,13 @@ namespace Xamarin.iOS.Tasks
 			if (supportedPlatforms == null || supportedPlatforms.Count == 0) {
 				Log.LogError (7043, mainInfoPath, MSBStrings.E7043, mainInfoPath);
 			} else {
-				platform = (PString) supportedPlatforms[0];
+				platform = (PString) supportedPlatforms [0];
 			}
 
 			// Validate UIDeviceFamily
 			var deviceTypes = plist.GetUIDeviceFamily ();
 			var deviceFamilies = deviceTypes.ToDeviceFamily ();
-			AppleDeviceFamily[] validFamilies = null;
+			AppleDeviceFamily [] validFamilies = null;
 			AppleDeviceFamily [] requiredFamilies = null;
 
 			switch (Platform) {
@@ -318,16 +316,16 @@ namespace Xamarin.iOS.Tasks
 				};
 				goto case ApplePlatform.iOS;
 			case ApplePlatform.iOS:
-				validFamilies = new AppleDeviceFamily[] {
+				validFamilies = new AppleDeviceFamily [] {
 					AppleDeviceFamily.IPhone,
 					AppleDeviceFamily.IPad,
 				};
 				break;
 			case ApplePlatform.WatchOS:
-				validFamilies = new AppleDeviceFamily[] { AppleDeviceFamily.Watch };
+				validFamilies = new AppleDeviceFamily [] { AppleDeviceFamily.Watch };
 				break;
 			case ApplePlatform.TVOS:
-				validFamilies = new AppleDeviceFamily[] { AppleDeviceFamily.TV };
+				validFamilies = new AppleDeviceFamily [] { AppleDeviceFamily.TV };
 				break;
 			default:
 				Log.LogError ("Invalid platform: {0}", Platform);

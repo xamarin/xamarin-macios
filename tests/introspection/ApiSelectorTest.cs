@@ -1231,6 +1231,9 @@ namespace Introspection {
 			// NSAppleEventDescriptor
 			case "initListDescriptor":
 			case "initRecordDescriptor":
+			// SharedWithYouCore
+			case "initWithLocalIdentifier:":
+			case "initWithCollaborationIdentifier:":
 				return true;
 			default:
 				return false;

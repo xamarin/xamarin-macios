@@ -10,10 +10,8 @@ using Xamarin.Localization.MSBuild;
 
 using Xamarin.MacDev;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public abstract class XcodeToolTaskBase : XamarinTask
-	{
+namespace Xamarin.MacDev.Tasks {
+	public abstract class XcodeToolTaskBase : XamarinTask {
 		string toolExe;
 
 		#region Inputs
@@ -48,7 +46,7 @@ namespace Xamarin.MacDev.Tasks
 		#region Outputs
 
 		[Output]
-		public ITaskItem[] BundleResources { get; set; }
+		public ITaskItem [] BundleResources { get; set; }
 
 		#endregion
 
@@ -76,7 +74,7 @@ namespace Xamarin.MacDev.Tasks
 
 		protected virtual string GetBundleRelativeOutputPath (IList<string> prefixes, ITaskItem input)
 		{
-			return BundleResource.GetLogicalName (ProjectDir, prefixes, input, !string.IsNullOrEmpty(SessionId));
+			return BundleResource.GetLogicalName (ProjectDir, prefixes, input, !string.IsNullOrEmpty (SessionId));
 		}
 
 		protected virtual IEnumerable<ITaskItem> GetCompiledBundleResources (ITaskItem input, ITaskItem output)
@@ -109,7 +107,7 @@ namespace Xamarin.MacDev.Tasks
 			startInfo.WorkingDirectory = Environment.CurrentDirectory;
 
 			foreach (var variable in environment)
-				startInfo.EnvironmentVariables[variable.Key] = variable.Value;
+				startInfo.EnvironmentVariables [variable.Key] = variable.Value;
 
 			startInfo.RedirectStandardOutput = true;
 			startInfo.RedirectStandardError = true;

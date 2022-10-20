@@ -9,6 +9,6 @@ namespace Xamarin.Linker {
 	public abstract class BaseProfile : Profile {
 
 		// return assembly name without extension (.dll)
-		public abstract string ProductAssembly { get ; }
+		public abstract string ProductAssembly { get; }
 	}
 }

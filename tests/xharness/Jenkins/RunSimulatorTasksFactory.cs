@@ -61,8 +61,6 @@ namespace Xharness.Jenkins {
 							break;
 						}
 
-						configIgnored |= project.IsDotNetProject && !jenkins.TestSelection.IsEnabled (PlatformLabel.Dotnet);
-
 						var derived = new MSBuildTask (jenkins: jenkins, testProject: project, processManager: processManager);
 						derived.ProjectConfiguration = config;
 						derived.ProjectPlatform = "iPhoneSimulator";
@@ -84,7 +82,7 @@ namespace Xharness.Jenkins {
 
 			var testVariations = testVariationsFactory.CreateTestVariations (runSimulatorTasks, (buildTask, test, candidates) =>
 				new RunSimulatorTask (
-					jenkins: jenkins, 
+					jenkins: jenkins,
 					simulators: jenkins.Simulators,
 					buildTask: buildTask,
 					processManager: processManager,

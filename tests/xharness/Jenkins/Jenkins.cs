@@ -31,7 +31,7 @@ namespace Xharness.Jenkins {
 		readonly HtmlReportWriter xamarinStorageHtmlReportWriter;
 		readonly HtmlReportWriter vsdropsHtmlReportWriter;
 		readonly MarkdownReportWriter markdownReportWriter;
-		
+
 		public bool Populating { get; private set; } = true;
 
 		public IHarness Harness { get; }
@@ -89,25 +89,33 @@ namespace Xharness.Jenkins {
 
 		public bool IsIncluded (TestProject project)
 		{
-			MainLog.WriteLine ($"Testing {project.Name} with label {project.Label.ToString ()} is included.");
 			if (!project.IsExecutableProject) {
-				MainLog.WriteLine ($"Ignoring {project.Name} because is not a executable project.");
+				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because is not a executable project.");
 				return false;
 			}
 
-			if (!TestSelection.IsEnabled(TestLabel.SystemPermission) && project.Label == TestLabel.Introspection) {
-				MainLog.WriteLine ($"Ignoring {project.Name} because we cannot include the system permission tests");
+			if (!TestSelection.IsEnabled (TestLabel.SystemPermission) && project.Label == TestLabel.Introspection) {
+				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because we cannot include the system permission tests");
 				return false;
 			}
 
-			MainLog.WriteLine ($"Selected tests are {TestSelection.SelectedTests.ToString ()}");
-			MainLog.WriteLine ($"Selected platforms are {TestSelection.SelectedPlatforms.ToString () }");
-			MainLog.WriteLine ($"Prohect {project.Name} is included: {TestSelection.IsEnabled (project.Label)}");
-			return TestSelection.IsEnabled (project.Label);
+			if (project.IsDotNetProject && !TestSelection.IsEnabled (PlatformLabel.Dotnet)) {
+				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because it's a .NET project and .NET is not included.");
+				return false;
+			}
+
+			if (!project.IsDotNetProject && !TestSelection.IsEnabled (PlatformLabel.LegacyXamarin)) {
+				MainLog.WriteLine ($"Ignoring {project.Name} with label {project.Label} because it's a legacy Xamarin project and legacy Xamarin projects are not included.");
+				return false;
+			}
+
+			var rv = TestSelection.IsEnabled (project.Label);
+			MainLog.WriteLine ($"Including {project.Name} with label {project.Label.ToString ()}: {rv}");
+			return rv;
 		}
 
 		public bool IsBetaXcode => Harness.XcodeRoot.IndexOf ("beta", StringComparison.OrdinalIgnoreCase) >= 0;
-		
+
 		Task PopulateTasksAsync ()
 		{
 			// Missing:
@@ -127,7 +135,7 @@ namespace Xharness.Jenkins {
 						Console.WriteLine ($"Failed to create simulator tasks: {v.Exception}");
 					}
 				});
-			
+
 			//Tasks.AddRange (await CreateRunSimulatorTasksAsync ());
 
 			var crashReportSnapshotFactory = new CrashSnapshotReporterFactory (processManager);
@@ -150,7 +158,7 @@ namespace Xharness.Jenkins {
 				TestName = "Xtro",
 				Target = "wrench",
 				WorkingDirectory = Path.Combine (HarnessConfiguration.RootDirectory, "xtro-sharpie"),
-				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro),
+				Ignored = !TestSelection.IsEnabled (TestLabel.Xtro) || !TestSelection.IsEnabled (PlatformLabel.LegacyXamarin),
 				Timeout = TimeSpan.FromMinutes (15),
 				SupportsParallelExecution = false,
 			};
@@ -409,15 +417,15 @@ namespace Xharness.Jenkins {
 					}
 
 					// write the html
-					using (var stream = new FileStream (tmpreport, FileMode.Create, FileAccess.ReadWrite)) 
-					using (var writer = new StreamWriter (stream)) { 
+					using (var stream = new FileStream (tmpreport, FileMode.Create, FileAccess.ReadWrite))
+					using (var writer = new StreamWriter (stream)) {
 						xamarinStorageHtmlReportWriter.Write (allTasks, writer);
 					}
 
 					// write the vsdrops report only if needed
 					if (vsdropsHtmlReportWriter != null) {
-						using (var stream = new FileStream (tmpVsdropsReport, FileMode.Create, FileAccess.ReadWrite)) 
-						using (var writer = new StreamWriter (stream)) { 
+						using (var stream = new FileStream (tmpVsdropsReport, FileMode.Create, FileAccess.ReadWrite))
+						using (var writer = new StreamWriter (stream)) {
 							vsdropsHtmlReportWriter.Write (allTasks, writer);
 						}
 					}
@@ -438,13 +446,13 @@ namespace Xharness.Jenkins {
 							File.Delete (vsdropsReport);
 						File.Move (tmpVsdropsReport, vsdropsReport);
 					}
-					
+
 					if (!string.IsNullOrEmpty (tmpmarkdown)) {
 						if (File.Exists (Harness.MarkdownSummaryPath))
 							File.Delete (Harness.MarkdownSummaryPath);
 						File.Move (tmpmarkdown, Harness.MarkdownSummaryPath);
 					}
-					
+
 					var dependentFileLocation = Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
 					foreach (var file in new string [] { "xharness.js", "xharness.css" }) {
 						File.Copy (Path.Combine (dependentFileLocation, file), Path.Combine (LogDirectory, file), true);

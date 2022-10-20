@@ -7,6 +7,7 @@ using NUnit.Framework;
 using Xamarin.MacDev;
 
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Xamarin.MacDev.Tasks
 {
@@ -143,6 +144,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void GetReferencedAssemblies_Executable ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (MonoTouchProject, TargetName.ResolveReferences);
 			var references = MonoTouchProjectInstance.GetItems ("ReferencePath").ToArray ();
 			var expected_references = new string[] {
@@ -163,6 +167,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void GetReferencedAssemblies_Library ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (LibraryProject, TargetName.ResolveReferences);
 			var references = LibraryProjectInstance.GetItems ("ReferencePath").ToArray ();
 			var expected_references = new string[] {
@@ -182,6 +189,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void BuildExecutable ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var expectedFiles = ExpectedExecutableFiles;
 
 			RunTarget (MonoTouchProject, TargetName.Build);
@@ -210,6 +220,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void CopyContentToBundle ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (MonoTouchProject, TargetName.CopyResourcesToBundle);
 
 			foreach (var v in ExpectedExecutableBundleResources)
@@ -219,6 +232,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void CleanExecutable ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (MonoTouchProject, TargetName.Clean);
 			Assert.IsFalse (Directory.Exists (MonoTouchProjectBinPath), "#1a");
 			Assert.IsFalse (Directory.Exists (MonoTouchProjectObjPath), "#1b");
@@ -233,6 +249,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void CleanLibrary ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (LibraryProject, TargetName.Clean);
 			Assert.IsFalse (Directory.Exists (LibraryProjectBinPath), "#1a");
 			Assert.IsFalse (Directory.Exists (LibraryProjectObjPath), "#1b");
@@ -246,6 +265,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void CompileInterfaceDefinitions_Library ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (LibraryProject, TargetName.CompileInterfaceDefinitions);
 			Assert.IsNotEmpty (Directory.GetFiles (LibraryProjectObjPath, "*.*", SearchOption.AllDirectories), "#1");
 		}
@@ -272,6 +294,9 @@ namespace Xamarin.MacDev.Tasks
 
 		void OptimizePngs_Core (bool shouldBeDifferent)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var originalFile = Path.Combine (MonoTouchProjectPath, "Resources", "image.png");
 			var optimisedFile = Path.Combine (AppBundlePath, "image.png");
 
@@ -287,6 +312,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void RebuildExecutable_NoModifications ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			// Put a thread.sleep so that the initial build happens a noticable amount of time after we copy
 			// all the input files into the temporary directory. This means that any timestamps modified as
 			// part of the original build will definitely be newer than the timestamps written during the
@@ -306,6 +334,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void RebuildExecutable_TouchLibraryDll ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (MonoTouchProject, TargetName.Build);
 			var timestamps = ExpectedExecutableFiles.ToDictionary (file => file, file => GetLastModified (file));
 
@@ -320,6 +351,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void RebuildLibrary_NoModifications ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var libraryPath = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
 
 			RunTarget (LibraryProject, TargetName.Build);
@@ -333,6 +367,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void RebuildLibrary_TouchBundleResource ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var libraryPath = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
 
 			RunTarget (LibraryProject, TargetName.Build);
@@ -346,6 +383,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void RebuildLibrary_TouchEmbeddedResource ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var libraryPath = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
 
 			RunTarget (LibraryProject, TargetName.Build);
@@ -359,6 +399,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void RebuildLibrary_TouchStoryboard ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var libraryPath = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
 			
 			RunTarget (LibraryProject, TargetName.Build);
@@ -372,12 +415,18 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void BuildLibrary ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			BuildLibraryCore (ExpectedLibraryEmbeddedResources);
 		}
 
 		[Test]
 		public void BuildLibrary_NoInterfaceDefinitions ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			LibraryProjectInstance.RemoveItems ("InterfaceDefinition");
 			
 			BuildLibraryCore (ExpectedLibraryEmbeddedResources.Where (s => !s.Contains ("storyboardc")).ToArray ());
@@ -385,6 +434,9 @@ namespace Xamarin.MacDev.Tasks
 
 		void BuildLibraryCore (string[] expectedResources)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var library = Path.Combine (LibraryProjectBinPath, "MyLibrary.dll");
 			RunTarget (LibraryProject, TargetName.Build);
 			
@@ -405,6 +457,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void GenerateBundleName_ExecutableProject ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			// Run a target that doesn't exist (since it's not possible to evaluate the csproj without running a target)
 			RunTarget (MonoTouchProject, "None", expectedErrorCount: 1);
 
@@ -420,6 +475,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void PackLibraryResources_ExecutableProject ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (MonoTouchProject, TargetName.PackLibraryResources);
 			var embeddedResources = MonoTouchProjectInstance.GetItems ("EmbeddedResource").ToArray ();
 			Assert.AreEqual (2, embeddedResources.Length, "#1");
@@ -430,6 +488,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void PackLibraryResources_LibraryProject ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (LibraryProject, TargetName.PackLibraryResources);
 			var embeddedResources = LibraryProjectInstance.GetItems ("EmbeddedResource").ToArray ();
 			Assert.AreEqual (13, embeddedResources.Length, "#1");
@@ -438,6 +499,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void UnpackLibraryResources_ExecutableProject ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			// We unpack 4 embedded resources from the library project into BundleResources
 			RunTarget (MonoTouchProject, TargetName.Build);
 			var bundleResources = MonoTouchProjectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
@@ -447,6 +511,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void UnpackLibraryResources_LibraryProject ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			// We should not unpack any EmbeddedResources into BundleResources
 			RunTarget (LibraryProject, TargetName.Build);
 			var bundleResources = LibraryProjectInstance.GetItems ("_BundleResourceWithLogicalName").ToArray ();
@@ -456,6 +523,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void BundleResources ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var actool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "actool", "bundle");
 			var ibtool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "ibtool");
 			var path = Path.Combine (MonoTouchProjectPath, "Info.plist");
@@ -498,6 +568,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test (Description = "Xambug #39137")]
 		public void AddAppIcon_NoClean()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			var actool = Path.Combine ("obj", "iPhoneSimulator", "Debug", "actool", "bundle");
 			var path = Path.Combine (MonoTouchProjectPath, "Info.plist");
 			var plist = PDictionary.FromFile (path);
@@ -530,6 +603,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test (Description = "Xambug #16331")]
 		public void Disappearing_Bundle_Resource ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			string resource = Path.Combine (MonoTouchProjectPath, "Folder", "BundleResource.txt");
 			string resourceGone = resource + ".disabled";
 			try {
@@ -547,6 +623,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test (Description = "Xambug #16331")]
 		public void Disappearing_Content ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			string resource = Path.Combine (MonoTouchProjectPath, "Folder", "Content.txt");
 			string resourceGone = resource + ".disabled";
 			try {
@@ -564,6 +643,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void DetectAppManifest_ExecutableProject ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (MonoTouchProject, TargetName.DetectAppManifest);
 			Assert.That (MonoTouchProjectInstance.GetPropertyValue ("AppBundleManifest"), Is.Not.Null.And.Not.Empty, "#1");
 		}
@@ -571,6 +653,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void DetectAppManifest_ExecutableProject_NoPList ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			MonoTouchProjectInstance.RemoveItems ("None");
 
 			RunTarget (MonoTouchProject, TargetName.DetectAppManifest, expectedErrorCount: 1);
@@ -580,6 +665,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void DetectAppManifest_ExecutableProject_TwoPLists ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			MonoTouchProjectInstance.RemoveItems ("None");
 
 			MonoTouchProjectInstance.AddItem ("None", "Fake/Info.plist");
@@ -592,6 +680,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void DetectAppManifest_ExecutableProject_LinkedPList ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			string linkedPlist = CreateTempFile ("Linked.plist");
 
 			MonoTouchProjectInstance.RemoveItems ("None");
@@ -605,6 +696,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void DetectAppManifest_ExecutableProject_LogicalNamePList ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			string logicalPlist = CreateTempFile ("Logical.plist");
 
 			MonoTouchProjectInstance.RemoveItems ("None");
@@ -618,6 +712,9 @@ namespace Xamarin.MacDev.Tasks
 		[Test]
 		public void DetectAppManifest_LibraryProject ()
 		{
+			Configuration.IgnoreIfIgnoredPlatform (ApplePlatform.iOS);
+			Configuration.AssertLegacyXamarinAvailable (); // Investigate whether this test should be ported to .NET
+
 			RunTarget (LibraryProject, TargetName.DetectAppManifest);
 			Assert.That (LibraryProjectInstance.GetPropertyValue ("AppBundleManifest"), Is.Null.Or.Empty, "#1");
 		}

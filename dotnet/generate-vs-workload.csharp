@@ -2,7 +2,7 @@
 
 // arguments are:
 //   --shorten long=short
-//   --platform <platform> <version> <msiversion>
+//   --platform <platform> <version>
 //   --windows-platform <platform>
 
 using System.IO;
@@ -10,9 +10,10 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Xml;
 
-var shorten = new List<(string, string)> ();
-var platforms = new List<(string, string, string)> ();
+var shorten = new Dictionary<string, string> ();
+var platforms = new List<(string, string)> ();
 var windowsPlatforms = new List<string> ();
+var tfm = string.Empty;
 var outputPath = string.Empty;
 
 var args = new Queue<string> (Environment.GetCommandLineArgs ());
@@ -29,19 +30,21 @@ while (args.Any ()) {
 	switch (arg) {
 	case "--shorten":
 		var values = args.Dequeue ().Split ('=');
-		shorten.Add ((values [0], values [1]));
+		shorten [values [0]] = values [1];
 		break;
 	case "--platform":
 		var platform = args.Dequeue ();
 		var version = args.Dequeue ();
-		var msiVersion = args.Dequeue ();
-		platforms.Add ((platform, version, msiVersion));
+		platforms.Add ((platform, version));
 		break;
 	case "--windows-platform":
 		windowsPlatforms.Add (args.Dequeue ());
 		break;
 	case "--output":
 		outputPath = args.Dequeue ();
+		break;
+	case "--tfm":
+		tfm = args.Dequeue ();
 		break;
 	default:
 		Console.Error.WriteLine ($"Unknown argument: {arg}");
@@ -55,7 +58,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"<Project>");
 	writer.WriteLine ($"  <PropertyGroup>");
 	var allPlatforms = string.Join (".", platforms.Select (v => v.Item1).OrderBy (v => v));
-	writer.WriteLine ($"    <TargetName>Microsoft.NET.Sdk.{allPlatforms}.Workload</TargetName>");
+	writer.WriteLine ($"    <TargetName>Microsoft.NET.Sdk.{allPlatforms}.Workload.{tfm}</TargetName>");
 	// Find the iOS version, otherwise use the version of the first platform listed.
 	var iOSPlatform = platforms.Where (v => v.Item1 == "iOS");
 	var manifestBuildVersion = iOSPlatform.Any () ? iOSPlatform.First ().Item2 : platforms.First ().Item2;
@@ -64,8 +67,8 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	writer.WriteLine ($"  <ItemGroup>");
 	writer.WriteLine ($"    <!-- Shorten package names to avoid long path caching issues in Visual Studio -->");
 	foreach (var entry in shorten) {
-		var longName = entry.Item1;
-		var shortName = entry.Item2;
+		var longName = entry.Key;
+		var shortName = entry.Value;
 		writer.WriteLine ($"    <ShortNames Include=\"{longName}\">");
 		writer.WriteLine ($"      <Replacement>{shortName}</Replacement>");
 		writer.WriteLine ($"    </ShortNames>");
@@ -84,8 +87,7 @@ using (TextWriter writer = new StreamWriter (outputPath)) {
 	foreach (var entry in platforms) {
 		var platform = entry.Item1;
 		var version = entry.Item2;
-		var msiVersion = entry.Item3;
-		writer.WriteLine ($"    <WorkloadPackages Include=\"$(NuGetPackagePath)\\Microsoft.NET.Sdk.{platform}.Manifest*.nupkg\" Version=\"{version}\" MsiVersion=\"{msiVersion}\" />");
+		writer.WriteLine ($"    <WorkloadPackages Include=\"$(NuGetPackagePath)\\Microsoft.NET.Sdk.{platform}.Manifest*.nupkg\" Version=\"{version}\" />");
 	}
 	foreach (var entry in platforms) {
 		var platform = entry.Item1;

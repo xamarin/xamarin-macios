@@ -15,7 +15,6 @@
 !missing-selector! NSFileWrapper::initWithSerializedRepresentation: not bound
 
 ## the API exists but is [Sealed], until .NET, to keep compatible with iOS/Mac profiles
-!missing-selector! NSURLSession::getTasksWithCompletionHandler: not bound
 
 # missing - pending decision for implementation
 !missing-type! NSAssertionHandler not bound
@@ -44,7 +43,6 @@
 !incorrect-protocol-member! NSProgressReporting::progress is REQUIRED and should be abstract
 
 ## should not have been [Native] it's 32bits only values -> .NET
-!unknown-native-enum! NSBundleExecutableArchitecture bound
 
 ## enum was [re]named to NSCalendarOptions - excluding from .NET
 !unknown-native-enum! NSDateComponentsWrappingBehavior bound
@@ -223,7 +221,6 @@
 !missing-field! NSMallocException not bound
 !missing-field! NSMaximumKeyValueOperator not bound
 !missing-field! NSMinimumKeyValueOperator not bound
-!missing-field! NSNetServicesErrorCode not bound
 !missing-field! NSObjectInaccessibleException not bound
 !missing-field! NSObjectNotAvailableException not bound
 !missing-field! NSOldStyleException not bound
@@ -1118,7 +1115,6 @@
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrl(Foundation.NSSearchPathDirectory,Foundation.NSSearchPathDomain,Foundation.NSUrl,System.Boolean,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrlForPublishingUbiquitousItem(Foundation.NSUrl,Foundation.NSDate&,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileManager::GetUrlForUbiquityContainer(System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl Foundation.NSFilePresenter::get_PresentedItemURL()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileVersion::ReplaceItem(Foundation.NSUrl,Foundation.NSFileVersionReplacingOptions,Foundation.NSError&)' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSFileWrapper::get_SymbolicLinkDestinationURL()' is missing an [NullAllowed] on return type
 !missing-null-allowed! 'Foundation.NSUrl Foundation.NSHttpCookie::get_CommentUrl()' is missing an [NullAllowed] on return type
@@ -1380,10 +1376,6 @@
 # we do not expose IMP
 !missing-selector! NSInvocation::invokeUsingIMP: not bound
 
-# https://github.com/xamarin/maccore/issues/2608 - https://feedbackassistant.apple.com/feedback/10897552
-!missing-selector! NSMutableURLRequest::requiresDNSSECValidation not bound
-!missing-selector! NSMutableURLRequest::setRequiresDNSSECValidation: not bound
-
 # Variable argument, and can be done in C#
 !missing-selector! +NSString::localizedStringWithValidatedFormat:validFormatSpecifiers:error: not bound
 !missing-selector! +NSString::stringWithValidatedFormat:validFormatSpecifiers:error: not bound
@@ -1393,7 +1385,6 @@
 !missing-selector! NSString::initWithValidatedFormat:validFormatSpecifiers:locale:error: not bound
 
 # https://github.com/xamarin/xamarin-macios/issues/15577
-!missing-null-allowed! 'Foundation.NSExpression Foundation.NSExpression::FromFunction(Foundation.NSExpressionCallbackHandler,Foundation.NSExpression[])' is missing an [NullAllowed] on parameter #1
 !missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index: not bound
 !missing-selector! +NSOrderedCollectionChange::changeWithObject:type:index:associatedIndex: not bound
 !missing-selector! NSArray::arrayByApplyingDifference: not bound

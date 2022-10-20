@@ -11,19 +11,16 @@
 
 using System;
 
-namespace AppKit
-{
-	public enum NSStatusItemLength
-	{
+namespace AppKit {
+	public enum NSStatusItemLength {
 		Variable = -1,
 		Square = -2
 	}
 
-	public partial class NSStatusBar
-	{
+	public partial class NSStatusBar {
 		public NSStatusItem CreateStatusItem (NSStatusItemLength length)
 		{
-			return CreateStatusItem ((float)length);
+			return CreateStatusItem ((float) length);
 		}
 	}
 }

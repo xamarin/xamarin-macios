@@ -206,12 +206,14 @@ Describe "TestResults tests" {
 
 :fire: Failed catastrophically on  - monotouch_test (no summary found).
 
-[Html Report (VSDrops)](vsdropsIndex/prefixmonotouch_test/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixmonotouch_test&api-version=6.0&`$format=zip)
+[Html Report (VSDrops)](vsdropsIndex/prefixmonotouch_test-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixmonotouch_test-1&api-version=6.0&`$format=zip)
 
 ## Successes
 
-:white_check_mark: linker: All 3 tests passed. [attempt 200] [Html Report (VSDrops)](vsdropsIndex/prefixlinker/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixlinker&api-version=6.0&`$format=zip)
-:white_check_mark: introspection: All 5 tests passed. [attempt 2] [Html Report (VSDrops)](vsdropsIndex/prefixintrospection/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixintrospection&api-version=6.0&`$format=zip)
+:white_check_mark: linker: All 3 tests passed. [attempt 200] [Html Report (VSDrops)](vsdropsIndex/prefixlinker-200/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixlinker-200&api-version=6.0&`$format=zip)
+:white_check_mark: introspection: All 5 tests passed. [attempt 2] [Html Report (VSDrops)](vsdropsIndex/prefixintrospection-2/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixintrospection-2&api-version=6.0&`$format=zip)
+
+[comment]: <> (This is a test result report added by Azure DevOps)
 "
         }
 
@@ -259,17 +261,19 @@ Describe "TestResults tests" {
 
 </details>
 
-[Html Report (VSDrops)](vsdropsIndex/prefixintrospection/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixintrospection&api-version=6.0&`$format=zip)
+[Html Report (VSDrops)](vsdropsIndex/prefixintrospection-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixintrospection-1&api-version=6.0&`$format=zip)
 
 ### :x: monotouch_test tests
 
 :fire: Failed catastrophically on  - monotouch_test (no summary found).
 
-[Html Report (VSDrops)](vsdropsIndex/prefixmonotouch_test/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixmonotouch_test&api-version=6.0&`$format=zip)
+[Html Report (VSDrops)](vsdropsIndex/prefixmonotouch_test-1/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixmonotouch_test-1&api-version=6.0&`$format=zip)
 
 ## Successes
 
-:white_check_mark: linker: All 3 tests passed. [attempt 200] [Html Report (VSDrops)](vsdropsIndex/prefixlinker/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixlinker&api-version=6.0&`$format=zip)
+:white_check_mark: linker: All 3 tests passed. [attempt 200] [Html Report (VSDrops)](vsdropsIndex/prefixlinker-200/;/tests/vsdrops_index.html) [Download](/_apis/build/builds//artifacts?artifactName=HtmlReport-prefixlinker-200&api-version=6.0&`$format=zip)
+
+[comment]: <> (This is a test result report added by Azure DevOps)
 "
         }
     }

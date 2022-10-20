@@ -49,7 +49,9 @@ namespace Xamarin.MacDev.Tasks {
 		public ITaskItem [] NativeStripItems { get; set; } = Array.Empty<ITaskItem> ();
 
 		[Output]
-		public ITaskItem[] OutputCodesignItems { get; set; } = Array.Empty<ITaskItem> ();
+		public ITaskItem [] OutputCodesignItems { get; set; } = Array.Empty<ITaskItem> ();
+
+		public ITaskItem [] SkipCodesignItems { get; set; } = Array.Empty<ITaskItem> ();
 
 		public override bool Execute ()
 		{
@@ -64,7 +66,7 @@ namespace Xamarin.MacDev.Tasks {
 				// or a 'CodesignSigningKey' has been provided.
 				var requireCodeSigning = bundle.GetMetadata ("RequireCodeSigning");
 				var codesignSigningKey = bundle.GetMetadata ("CodesignSigningKey");
-				if (!string.Equals (requireCodeSigning, "true") && string.IsNullOrEmpty (codesignSigningKey))
+				if (!string.Equals (requireCodeSigning, "true") && string.IsNullOrEmpty (codesignSigningKey))
 					continue;
 
 				// Create a new item for the app bundle, and copy any metadata over.
@@ -135,6 +137,9 @@ namespace Xamarin.MacDev.Tasks {
 				output.Add (item);
 			}
 
+			// Remove any items we were asked to remove
+			RemoveFilesToNotSign (output, appBundlePath);
+
 			// We may be asked to sign the same item multiple times (in particular for universal .NET builds)
 			// Here we de-duplicate (based on itemspec). We also verify that the metadata is the same between
 			// all deduplicated items, and if not, we show a warning.
@@ -182,6 +187,48 @@ namespace Xamarin.MacDev.Tasks {
 					return "Contents";
 				default:
 					throw new InvalidOperationException (string.Format (MSBStrings.InvalidPlatform, Platform));
+				}
+			}
+		}
+
+		void RemoveFilesToNotSign (List<ITaskItem> output, string appBundlePath)
+		{
+			if (SkipCodesignItems.Length == 0)
+				return;
+
+			// Canonicalize the paths and split into files and directories
+			var canonicalizedItemsToSkip = SkipCodesignItems
+				.Select (v => Path.Combine (Path.GetDirectoryName (appBundlePath), v.ItemSpec))
+				.ToArray ();
+			var canonicalizedDirectoriesToSkip = canonicalizedItemsToSkip
+				.Where (v => Directory.Exists (v))
+				.Select (v => PathUtils.ResolveSymbolicLinks (v))
+				.Select (v => PathUtils.EnsureTrailingSlash (v))
+				.ToArray ();
+			var canonicalizedFilesToSkip = canonicalizedItemsToSkip
+				.Where (File.Exists)
+				.Select (PathUtils.ResolveSymbolicLinks)
+				.ToArray ();
+
+			for (var i = output.Count - 1; i >= 0; i--) {
+				var item = output [i];
+				var outputPath = Path.GetFullPath (item.ItemSpec); // item.ItemSpec is relative to the project directory
+				outputPath = PathUtils.ResolveSymbolicLinks (outputPath); // Canonicalize
+
+				if (canonicalizedFilesToSkip.Contains (outputPath)) {
+					Log.LogMessage (MessageImportance.Low, $"Not signing '{output [i].ItemSpec}' because it's in the list of files that skips signing");
+					output.RemoveAt (i);
+					continue;
+				}
+
+				if (!Directory.Exists (outputPath))
+					continue;
+
+				var matchingDirectory = canonicalizedDirectoriesToSkip.FirstOrDefault (v => outputPath.StartsWith (v, StringComparison.OrdinalIgnoreCase));
+				if (matchingDirectory is not null) {
+					Log.LogMessage (MessageImportance.Low, $"Not signing '{output [i].ItemSpec}' because it's in the list of directories that skips signing ({matchingDirectory})");
+					output.RemoveAt (i);
+					continue;
 				}
 			}
 		}
