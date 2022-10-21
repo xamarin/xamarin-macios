@@ -415,7 +415,7 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("ios16.0")]
 	[SupportedOSPlatform ("tvos16.0")]
 #else
-	[Watch (9, 0), TV (16, 0), Mac (10, 15), iOS (16, 0), MacCatalyst (16,0)]
+	[Watch (9, 0), TV (16, 0), Mac (10, 15), iOS (16, 0), MacCatalyst (16, 0)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVSampleCursorAudioDependencyInfo {

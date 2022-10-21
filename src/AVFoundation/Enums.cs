@@ -1242,7 +1242,7 @@ namespace AVFoundation {
 	[Introduced (PlatformName.MacCatalyst, 14, 0)]
 	[NoWatch]
 	[NoTV]
-	[iOS (13, 0), Mac (13,0)]
+	[iOS (13, 0), Mac (13, 0)]
 	[Native]
 	public enum AVCapturePhotoQualityPrioritization : long {
 		Speed = 1,

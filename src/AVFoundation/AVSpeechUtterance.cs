@@ -11,7 +11,8 @@ namespace AVFoundation {
 
 	public partial class AVSpeechUtterance {
 
-		public AVSpeechUtterance (string speechString, bool isSsmlRepresentation = false) : base (NSObjectFlag.Empty) {
+		public AVSpeechUtterance (string speechString, bool isSsmlRepresentation = false) : base (NSObjectFlag.Empty)
+		{
 			if (isSsmlRepresentation) {
 #if IOS || __MACCATALYST__ || TVOS
 				if (SystemVersion.CheckiOS (16, 0)) {
