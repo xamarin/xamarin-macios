@@ -61,3 +61,12 @@
 !incorrect-protocol-member! AVAudio3DMixing::sourceMode is REQUIRED and should be abstract
 !extra-null-allowed! 'Foundation.NSNumber[] AVFoundation.AVVideoCompositionInstruction::get_RequiredSourceTrackIDs()' has a extraneous [NullAllowed] on return type
 !missing-field! AVPlayerItemTimeJumpedOriginatingParticipantKey not bound
+
+# removed on xcode 14.1
+!extra-enum-value! Managed value -11837 for AVError.DeviceIsNotAvailableInBackground not found in native headers
+!extra-enum-value! Managed value 1 for AVAudioSessionRouteSharingPolicy.LongForm is available for the current platform while the value in the native header is not
+
+# xtro complains but is not present in the headers or in the apple docs
+!missing-selector! +AVCaptureDevice::setUserAVCaptureDevice: not bound
+!missing-selector! +AVCaptureDevice::systemAVCaptureDevice not bound
+!missing-selector! +AVCaptureDevice::userAVCaptureDevice not bound

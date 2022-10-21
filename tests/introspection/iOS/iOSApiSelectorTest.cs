@@ -439,7 +439,32 @@ namespace Introspection {
 				}
 				break;
 #endif
-			break;
+			case "AVMutableCompositionTrack":
+				switch (name) {
+				case "insertTimeRange:ofAsset:atTime:completionHandler:":
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
+				break;
+			case "AVSampleBufferGeneratorBatch":
+				switch (name) {
+				case "createSampleBufferForRequest:addingToBatch:error:":
+				case "createSampleBufferForRequest:error:":
+				case "makeBatch":
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
+				break;
+			case "AVVideoCompositionRenderHint":
+				switch (name) {
+				case "determineValidityForAsset:timeRange:validationDelegate:completionHandler:":
+					if (TestRuntime.IsSimulatorOrDesktop)
+						return true;
+					break;
+				}
+				break;
 		}
 
 		switch (name) {
