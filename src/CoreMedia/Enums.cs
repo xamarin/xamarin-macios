@@ -86,6 +86,6 @@ namespace CoreMedia {
 		ForceKeyFrame,
 		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
-		HDR10PlusPerFrameData,
+		Hdr10PlusPerFrameData,
 	}
 }

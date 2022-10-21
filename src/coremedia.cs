@@ -179,7 +179,7 @@ namespace CoreMedia {
 
 		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
-		NSString HDR10PlusPerFrameDataKey { get; }
+		NSString Hdr10PlusPerFrameDataKey { get; }
 	}
 
 	[Watch (6,0)]
@@ -220,7 +220,7 @@ namespace CoreMedia {
 
 		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
 		[Field ("kCMSampleAttachmentKey_HDR10PlusPerFrameData")]
-		NSData HDR10PlusPerFrameData { get; set; } // it is a CFData, but that is a toll-free bridged
+		NSData Hdr10PlusPerFrameData { get; set; } // it is a CFData, but that is a toll-free bridged
 	}
 
 	[Internal]
