@@ -74,7 +74,7 @@ stages:
         vmImage: ${{ parameters.macPool }}
 
     variables:
-      PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+      PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
       GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
 
     steps:
