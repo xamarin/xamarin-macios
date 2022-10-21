@@ -115,12 +115,6 @@ steps:
         $configVars.Add("BuildPkgs", "True")
       }
 
-      # if we want to have device tests, we do need the pkgs so that we can fwd them to the device tests
-      if ($Env:TriggerDeviceTests -eq "True") {
-        $configVars.Add("BuildPkgs", "True")
-        $configVars.Add("RunDeviceTests", "True")
-      }
-
       if ($Env:SkipNugets -eq "True") {
         $configVars.Add("BuildNugets", "False")
       } else {
@@ -133,12 +127,6 @@ steps:
         $configVars.Add("SignPkgs", "True")
       }
 
-      if ($Env:SkipExternalTests -eq "True") {
-        $configVars.Add("RunExternalTests", "False")
-      } else {
-        $configVars.Add("RunExternalTests", "True")
-      }
-
       if ($Env:SkipPackagedXamarinMacTests -eq "True") {
         $configVars.Add("RunMacTests", "False")
       } else {
@@ -146,7 +134,6 @@ steps:
       }
 
       $configVars.Add("RunSampleTests", $Env:RunSampleTests)
-      $configVars.Add("RunInternalTests", $Env:RunInternalTests)
 
     } else {
       # set the defaults, all the things! o/
@@ -156,17 +143,8 @@ steps:
       $configVars.Add("SignPkgs", "True")
 
       # tests, run all of them, internal, external, mac but not sample tests
-      $configVars.Add("RunInternalTests", "True")
-      $configVars.Add("RunExternalTests", "True")
       $configVars.Add("RunMacTests", "True")
       $configVars.Add("RunSampleTests", "False")
-
-      # if a developer decided to trigger one without device tests, allow it
-      if ($Env:RUN_DEVICE_TESTS -eq "true") {
-        $configVars.Add("RunDeviceTests", "True")
-      } else {
-        $configVars.Add("RunDeviceTests", "False")
-      }
     }
     # write debugging and process of the vars
     foreach($key in $configVars.Keys) {
@@ -177,8 +155,6 @@ steps:
   name: configuration
   displayName: "Parse PR labels"
   timeoutInMinutes: 5
-  env:
-    RUN_DEVICE_TESTS: '${{ parameters.runDeviceTests }}'
 
 - ${{ if contains(variables['Build.DefinitionName'], 'private') }}:
   - task: PowerShell@2

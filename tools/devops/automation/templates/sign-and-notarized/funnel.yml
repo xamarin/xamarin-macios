@@ -127,7 +127,7 @@ jobs:
   variables:
     Parameters.outputStorageUri: ''
     NUGETS_PUBLISHED: $[ stageDependencies.sign_notarize_dotnet.sign_notarize_dotnet.outputs['nugetPublishing.NUGETS_PUBLISHED'] ] # not a typo, stage and job have the same name
-    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
+    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
 
   pool:
     vmImage: 'windows-latest'
@@ -148,8 +148,7 @@ jobs:
   - upload_azure_blob
   condition: succeededOrFailed()
   variables:
-    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
-    BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
+    PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
     TESTS_BOT: $[ stageDependencies.build_packages.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
     GIT_HASH: $[ stageDependencies.build_packages.build.outputs['fix_commit.GIT_HASH'] ]
   pool:
