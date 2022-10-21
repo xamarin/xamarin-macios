@@ -70,7 +70,7 @@ steps:
 
       # add a var with the change id, which can be later consumed by some of the old scripts from
       # jenkins
-      Write-Host "##vso[task.setvariable variable=pr-number;isOutput=true]$changeId"
+      Write-Host "##vso[task.setvariable variable=pr_number;isOutput=true]$changeId"
 
       $prInfo = Get-GitHubPRInfo -ChangeId $changeId
       Write-Host $prInfo
@@ -90,17 +90,14 @@ steps:
       $ref = $prInfo.base.ref
       $tags.Add("$ref")
 
-      Write-Host "##vso[task.setvariable variable=xharness-labels;isOutput=true]$xharnessLabels"
+      Write-Host "##vso[task.setvariable variable=xharness_labels;isOutput=true]$xharnessLabels"
 
       # set output variables based on the git labels
       $labelsOfInterest = @(
         "build-package",
-        "run-internal-tests",
         "skip-packages",
         "skip-nugets",
         "skip-signing",
-        "skip-external-tests",
-        "trigger-device-tests",
         "run-sample-tests",
         "skip-packaged-xamarin-mac-tests",
         "skip-api-comparison",
@@ -109,7 +106,9 @@ steps:
 
       foreach ($l in $labelsOfInterest) {
         $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
-        Write-Host "##vso[task.setvariable variable=$l;isOutput=true]$labelPresent"
+        # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
+        $lbl = $l.Replace('-', '_')
+        Write-Host "##vso[task.setvariable variable=$lbl;isOutput=true]$labelPresent"
       }
 
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
