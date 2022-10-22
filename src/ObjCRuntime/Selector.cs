@@ -41,10 +41,6 @@ namespace ObjCRuntime {
 		internal const string Retain = "retain";
 		internal const string Autorelease = "autorelease";
 		internal const string PerformSelectorOnMainThreadWithObjectWaitUntilDone = "performSelectorOnMainThread:withObject:waitUntilDone:";
-#if MONOMAC
-		internal const string DoesNotRecognizeSelector = "doesNotRecognizeSelector:";
-		internal const string PerformSelectorWithObjectAfterDelay = "performSelector:withObject:afterDelay:";
-#endif
 
 		NativeHandle handle;
 		string? name;
