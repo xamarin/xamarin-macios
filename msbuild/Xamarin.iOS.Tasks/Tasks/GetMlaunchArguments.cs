@@ -14,7 +14,7 @@ namespace Xamarin.iOS.Tasks {
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }
