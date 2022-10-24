@@ -23,7 +23,7 @@ namespace AVFoundation {
 #endif
 					InitializeHandle (_InitFromSsmlRepresentation (speechString), "initWithSSMLRepresentation:");
 				} else {
-					throw new PlatformNotSupportedException ("initWithSSMLRepresentation: is not supported in this version of the OS.");
+					throw new PlatformNotSupportedException ("'isSsmlRepresentation = true' is not supported in this version of the OS.");
 				}
 			} else {
 				InitializeHandle (_InitFromString (speechString), "initWithString:");
