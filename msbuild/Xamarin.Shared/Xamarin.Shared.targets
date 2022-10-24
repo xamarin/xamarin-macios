@@ -1788,9 +1788,10 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 		</PropertyGroup>
 		<ItemGroup>
 			<_UnpackLibraryResourceItems Include="@(ReferencePath);@(ReferenceDependencyPaths)">
-				<StampFile>%(Identity)</StampFile>
+				<StampFile>%(Identity).stamp</StampFile>
 			</_UnpackLibraryResourceItems>
 		</ItemGroup>
+		<MakeDir Directories="$(_StampDirectory)" />
 	</Target>
 
 	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources;_PrepareUnpackLibraryResources"
@@ -1806,6 +1807,9 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 			ReferencedLibraries="@(_UnpackLibraryResourceItems)">
 			<Output TaskParameter="BundleResourcesWithLogicalNames" ItemName="_BundleResourceWithLogicalName" />
 		</UnpackLibraryResources>
+		<ItemGroup>
+			<FileWrites Include="$(_StampDirectory)*.stamp" />
+		</ItemGroup>
 	</Target>
 
 	<Target Name="_ParseBundlerArguments">
