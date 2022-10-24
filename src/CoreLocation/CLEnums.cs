@@ -93,7 +93,8 @@ namespace CoreLocation {
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'AuthorizedAlways' instead.")]
 		Authorized,
 		AuthorizedAlways = Authorized,
-		AuthorizedWhenInUse			
+		[Deprecated (PlatformName.MacOSX, 13, 0)]
+		AuthorizedWhenInUse,
 	}
 
 	// NSInteger -> CLLocationManager.h
