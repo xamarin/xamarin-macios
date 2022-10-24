@@ -25,7 +25,7 @@ namespace Xamarin.MacDev.Tasks {
 			base.Cancel ();
 
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
 		public IEnumerable<ITaskItem> GetAdditionalItemsToBeCopied ()
