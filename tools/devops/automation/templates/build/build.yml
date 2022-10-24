@@ -90,9 +90,6 @@ steps:
     $xamTop = "$(Build.SourcesDirectory)/xamarin-macios/"
     Write-Host "##vso[task.setvariable variable=XAM_TOP]$xamTop"
 
-    $maccoreTop = "$(Build.SourcesDirectory)/maccore/"
-    Write-Host "##vso[task.setvariable variable=MACCORE_TOP]$maccoreTop"
-
     $buildReason = "$(Build.Reason)"
     $buildSourceBranchName = "$(Build.SourceBranchName)"
 
