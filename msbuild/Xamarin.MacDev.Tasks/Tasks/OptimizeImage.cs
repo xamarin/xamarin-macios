@@ -26,7 +26,7 @@ namespace Xamarin.MacDev.Tasks
 			base.Cancel ();
 
 			if (!string.IsNullOrEmpty(SessionId))
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }
