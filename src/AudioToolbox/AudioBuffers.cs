@@ -39,8 +39,7 @@ using System.Runtime.Versioning;
 using NativeHandle = System.IntPtr;
 #endif
 
-namespace AudioToolbox
-{
+namespace AudioToolbox {
 
 #if NET
 	[SupportedOSPlatform ("ios")]
@@ -49,8 +48,7 @@ namespace AudioToolbox
 	[SupportedOSPlatform ("tvos")]
 #endif
 	// CoreAudio.framework - CoreAudioTypes.h
-	public class AudioBuffers : IDisposable, INativeObject
-	{
+	public class AudioBuffers : IDisposable, INativeObject {
 		IntPtr address;
 		readonly bool owns;
 
@@ -85,8 +83,8 @@ namespace AudioToolbox
 			owns = true;
 
 			Marshal.WriteInt32 (address, 0, count);
-			AudioBuffer *ptr = (AudioBuffer *) (((byte *) address) + IntPtr.Size);
-			for (int i = 0; i < count; i++){
+			AudioBuffer* ptr = (AudioBuffer*) (((byte*) address) + IntPtr.Size);
+			for (int i = 0; i < count; i++) {
 				ptr->NumberChannels = 0;
 				ptr->DataByteSize = 0;
 				ptr->Data = IntPtr.Zero;
@@ -101,7 +99,7 @@ namespace AudioToolbox
 
 		public unsafe int Count {
 			get {
-				return *(int *) address;
+				return *(int*) address;
 			}
 		}
 
@@ -120,10 +118,10 @@ namespace AudioToolbox
 				// }
 				//
 				unsafe {
-					byte *baddress = (byte *) address;
-					
+					byte* baddress = (byte*) address;
+
 					var ptr = baddress + IntPtr.Size + index * sizeof (AudioBuffer);
-					return *(AudioBuffer *) ptr;
+					return *(AudioBuffer*) ptr;
 				}
 			}
 			set {
@@ -131,8 +129,8 @@ namespace AudioToolbox
 					throw new ArgumentOutOfRangeException (nameof (index));
 
 				unsafe {
-					byte *baddress = (byte *) address;
-					var ptr = (AudioBuffer *) (baddress + IntPtr.Size + index * sizeof (AudioBuffer));
+					byte* baddress = (byte*) address;
+					var ptr = (AudioBuffer*) (baddress + IntPtr.Size + index * sizeof (AudioBuffer));
 					*ptr = value;
 				}
 			}
@@ -153,8 +151,8 @@ namespace AudioToolbox
 				throw new ArgumentOutOfRangeException (nameof (index));
 
 			unsafe {
-				byte * baddress = (byte *) address;
-				var ptr = (IntPtr *)(baddress + IntPtr.Size + index * sizeof (AudioBuffer) + sizeof (int) + sizeof (int));
+				byte* baddress = (byte*) address;
+				var ptr = (IntPtr*) (baddress + IntPtr.Size + index * sizeof (AudioBuffer) + sizeof (int) + sizeof (int));
 				*ptr = data;
 			}
 		}
@@ -165,11 +163,11 @@ namespace AudioToolbox
 				throw new ArgumentOutOfRangeException (nameof (index));
 
 			unsafe {
-				byte *baddress = (byte *) address;
-				var ptr = (int *)(baddress + IntPtr.Size + index * sizeof (AudioBuffer) + sizeof (int));
+				byte* baddress = (byte*) address;
+				var ptr = (int*) (baddress + IntPtr.Size + index * sizeof (AudioBuffer) + sizeof (int));
 				*ptr = dataByteSize;
 				ptr++;
-				IntPtr *iptr = (IntPtr *) ptr;
+				IntPtr* iptr = (IntPtr*) ptr;
 				*iptr = data;
 			}
 		}

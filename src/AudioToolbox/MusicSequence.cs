@@ -47,8 +47,7 @@ namespace AudioToolbox {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	// MusicPlayer.h
-	public class MusicSequence : DisposableObject
-	{
+	public class MusicSequence : DisposableObject {
 #if !COREBUILD
 		[Preserve (Conditional = true)]
 		internal MusicSequence (NativeHandle handle, bool owns)
@@ -56,7 +55,7 @@ namespace AudioToolbox {
 		{
 		}
 
-		static Dictionary <IntPtr, MusicSequenceUserCallback> userCallbackHandles = new Dictionary <IntPtr, MusicSequenceUserCallback> (Runtime.IntPtrEqualityComparer);
+		static Dictionary<IntPtr, MusicSequenceUserCallback> userCallbackHandles = new Dictionary<IntPtr, MusicSequenceUserCallback> (Runtime.IntPtrEqualityComparer);
 
 		static MusicSequenceUserCallbackProxy userCallbackProxy = new MusicSequenceUserCallbackProxy (UserCallbackProxy);
 
@@ -65,7 +64,7 @@ namespace AudioToolbox {
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus DisposeMusicSequence (/* MusicSequence */ IntPtr inSequence);
-		
+
 		static IntPtr Create ()
 		{
 			NewMusicSequence (out var handle);
@@ -90,21 +89,21 @@ namespace AudioToolbox {
 				MusicSequenceSetUserCallback (Handle, null, IntPtr.Zero);
 
 				DisposeMusicSequence (Handle);
-				lock (sequenceMap){
+				lock (sequenceMap) {
 					sequenceMap.Remove (Handle);
 				}
 			}
 			base.Dispose (disposing);
 		}
 
-		static readonly Dictionary<IntPtr,WeakReference> sequenceMap = new Dictionary<IntPtr,WeakReference> (Runtime.IntPtrEqualityComparer);
-	       
+		static readonly Dictionary<IntPtr, WeakReference> sequenceMap = new Dictionary<IntPtr, WeakReference> (Runtime.IntPtrEqualityComparer);
+
 		internal static MusicSequence Lookup (IntPtr handle)
 		{
-			lock (sequenceMap){
+			lock (sequenceMap) {
 				if (sequenceMap.TryGetValue (handle, out var weakRef)) {
 					var target = weakRef.Target;
-					if (target is not null){
+					if (target is not null) {
 						return (MusicSequence) target;
 					}
 					sequenceMap.Remove (handle);
@@ -159,12 +158,12 @@ namespace AudioToolbox {
 			fps = (sbyte) ((resolution & 0xFF00) >> 8);
 			ticks = (byte) (resolution & 0x007F);
 		}
-		
+
 		public short SetSmpteResolution (sbyte fps, byte ticks)
 		{
 			// MusicSequenceSetSMPTEResolution is CF_INLINE -> can't be pinvoke'd (it's not part of the library)
 			if (fps > 0)
-				fps = (sbyte) -fps; 
+				fps = (sbyte) -fps;
 			return (short) ((fps << 8) + ticks);
 		}
 
@@ -186,7 +185,7 @@ namespace AudioToolbox {
 			else
 				return null;
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceGetTrackCount (/* MusicSequence */ IntPtr inSequence, /* UInt32* */ out int outNumberOfTracks);
 
@@ -201,7 +200,7 @@ namespace AudioToolbox {
 
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceGetIndTrack (/* MusicSequence */ IntPtr inSequence, /* Uint32 */ int inTrackIndex, /* MusicTrack* */ out IntPtr outTrack);
-			
+
 		public MusicTrack? GetTrack (int trackIndex)
 		{
 			if (MusicSequenceGetIndTrack (Handle, trackIndex, out var outTrack) == MusicPlayerStatus.Success)
@@ -253,7 +252,7 @@ namespace AudioToolbox {
 				return sec;
 			return 0;
 		}
-			
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceGetBeatsForSeconds (/* MusicSequence */ IntPtr inSequence, /* Float64 */ double inSeconds, /* MusicTimeStamp* */ out double outBeats);
 
@@ -292,7 +291,7 @@ namespace AudioToolbox {
 				userCallback (musicTrack, inEventTime, userEventData, inStartSliceBeat, inEndSliceBeat);
 			}
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceBeatsToBarBeatTime (/* MusicSequence */ IntPtr inSequence, /* MusicTimeStamp */ double inBeats, /* UInt32 */ int inSubbeatDivisor, out CABarBeatTime outBarBeatTime);
 
@@ -300,7 +299,7 @@ namespace AudioToolbox {
 		{
 			return MusicSequenceBeatsToBarBeatTime (Handle, beats, subbeatDivisor, out barBeatTime);
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceBarBeatTimeToBeats (/* MusicSequence */ IntPtr inSequence, CABarBeatTime inBarBeatTime, /* MusicTimeStamp*/ out double outBeats);
 		public MusicPlayerStatus BarBeatTimeToBeats (CABarBeatTime barBeatTime, out double beats)
@@ -323,22 +322,22 @@ namespace AudioToolbox {
 		{
 			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
-			
+
 			return MusicSequenceFileLoad (Handle, url.Handle, fileTypeId, loadFlags);
 		}
 
 		[DllImport (Constants.AudioToolboxLibrary)]
-		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceFileLoadData (/* MusicSequence */ IntPtr inSequence, /* CFDataRef */ IntPtr inData,  MusicSequenceFileTypeID inFileTypeHint, MusicSequenceLoadFlags inFlags);
+		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceFileLoadData (/* MusicSequence */ IntPtr inSequence, /* CFDataRef */ IntPtr inData, MusicSequenceFileTypeID inFileTypeHint, MusicSequenceLoadFlags inFlags);
 
 		public MusicPlayerStatus LoadData (NSData data, MusicSequenceFileTypeID fileTypeId, MusicSequenceLoadFlags loadFlags = 0)
 		{
 			if (data is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
-			
+
 			return MusicSequenceFileLoadData (Handle, data.Handle, fileTypeId, loadFlags);
 		}
-			
-			
+
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceFileCreate (/* MusicSequence */ IntPtr inSequence, /* CFURLRef */ IntPtr inFileRef, MusicSequenceFileTypeID inFileType, MusicSequenceFileFlags inFlags, /* SInt16 */ ushort resolution);
 
@@ -347,10 +346,10 @@ namespace AudioToolbox {
 		{
 			if (url is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (url));
-			
+
 			return MusicSequenceFileCreate (Handle, url.Handle, fileType, flags, resolution);
 		}
-		
+
 		[DllImport (Constants.AudioToolboxLibrary)]
 		extern static /* OSStatus */ MusicPlayerStatus MusicSequenceFileCreateData (/* MusicSequence */ IntPtr inSequence, MusicSequenceFileTypeID inFileType, MusicSequenceFileFlags inFlags, /* SInt16 */ ushort resolution, /* CFDataRef* */ out IntPtr outData);
 
@@ -366,8 +365,8 @@ namespace AudioToolbox {
 
 	// typedef UInt32 -> MusicPlayer.h
 	public enum MusicSequenceType : uint {
-		Beats = 0x62656174, 	// 'beat'
-		Seconds = 0x73656373,	// 'secs'
+		Beats = 0x62656174,     // 'beat'
+		Seconds = 0x73656373,   // 'secs'
 		Samples = 0x73616d70    // 'samp'
 	}
 }

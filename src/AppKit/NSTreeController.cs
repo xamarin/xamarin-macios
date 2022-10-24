@@ -28,18 +28,18 @@ using System;
 using Foundation;
 
 namespace AppKit {
-	
+
 	public partial class NSTreeController {
-		
+
 		// note: if needed override the protected Get|Set methods
-		public NSIndexPath SelectionIndexPath { 
+		public NSIndexPath SelectionIndexPath {
 			get { return GetSelectionIndexPath (); }
 			// ignore return value (bool)
-			set { SetSelectionIndexPath(value); }
+			set { SetSelectionIndexPath (value); }
 		}
-		
+
 		// note: if needed override the protected Get|Set methods
-		public NSIndexPath [] SelectionIndexPaths { 
+		public NSIndexPath [] SelectionIndexPaths {
 			get { return GetSelectionIndexPaths (); }
 			// ignore return value (bool)
 			set { SetSelectionIndexPaths (value); }
