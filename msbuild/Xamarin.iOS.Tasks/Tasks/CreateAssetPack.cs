@@ -15,7 +15,7 @@ namespace Xamarin.iOS.Tasks
 		public override void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 
 			base.Cancel ();
 		}
