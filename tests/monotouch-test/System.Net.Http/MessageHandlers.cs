@@ -758,5 +758,61 @@ namespace MonoTests.System.Net.Http
 				Assert.AreEqual (HttpStatusCode.Unauthorized, httpStatus, "Second status not ok");
 			}
 		}
+		class TestDelegateHandler : DelegatingHandler {
+			public bool FirstRequestCompleted { get; private set; } = false;
+			public bool SecondRequestCompleted { get; private set; } = false;
+			protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+			{
+				// test that we can perform a retry with the same request
+				var _ = await base.SendAsync(request, cancellationToken);
+				FirstRequestCompleted = true;
+				var response = await base.SendAsync(request, cancellationToken);
+				SecondRequestCompleted = true;
+				return response;
+			}
+		}
+
+		[TestCase]
+		public void GHIssue16339 ()
+		{
+			// test that we can perform two diff requests with the same managed HttpRequestMessage
+			bool done = false;
+			bool firstRequestCompleted = false;
+			bool secondRequestCompleted = false;
+			Exception ex = null;
+			var json = "{this:\"\", is:\"a\", test:2}";
+			
+			var request = new HttpRequestMessage
+			{
+				Method = HttpMethod.Post,
+				RequestUri = new (NetworkResources.Httpbin.PostUrl),
+				Content = new StringContent (json, Encoding.UTF8, "application/json")
+			};
+
+			TestRuntime.RunAsync (DateTime.Now.AddSeconds (30), async () =>
+			{
+				try {
+					using var delegatingHandler = new TestDelegateHandler {
+						InnerHandler = new NSUrlSessionHandler (),
+					};
+					using HttpClient client = new(delegatingHandler);
+					var _= await client.SendAsync(request);
+					firstRequestCompleted = delegatingHandler.FirstRequestCompleted;
+					secondRequestCompleted = delegatingHandler.SecondRequestCompleted;
+				} catch (Exception e) {
+					ex = e;
+				} finally {
+					done = true;
+				}
+			}, () => done);
+
+			if (!done) { // timeouts happen in the bots due to dns issues, connection issues etc.. we do not want to fail
+				Assert.Inconclusive ("Request timedout.");
+			} else {
+				Assert.IsNull (ex, "Exception");
+				Assert.IsTrue (firstRequestCompleted, "First request");
+				Assert.IsTrue (secondRequestCompleted, "Second request");
+			} 
+		}
 	}
 }
