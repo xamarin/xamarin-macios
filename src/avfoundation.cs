@@ -959,7 +959,7 @@ namespace AVFoundation {
 	delegate AVAudioEngineManualRenderingStatus AVAudioEngineManualRenderingBlock (/* AVAudioFrameCount = uint */ uint numberOfFrames, AudioBuffers outBuffer, [NullAllowed] /* OSStatus */ ref int outError);
 
 #if MONOMAC
-	delegate int AUMidiEventListBlock (long eventSampleTime, byte cable, MidiEventList arg2);
+	delegate int AUMidiEventListHandler (long eventSampleTime, byte cable, MidiEventList arg2);
 #endif
 
 	[Watch (3,0)]
@@ -1120,11 +1120,11 @@ namespace AVFoundation {
 #if MONOMAC
 		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("connectMIDI:toNodes:format:eventListBlock:")]
-		void ConnectMidi (AVAudioNode sourceNode, AVAudioNode[] destinationNodes, [NullAllowed] AVAudioFormat format, [NullAllowed] AUMidiEventListBlock tapHandler);
+		void ConnectMidi (AVAudioNode sourceNode, AVAudioNode[] destinationNodes, [NullAllowed] AVAudioFormat format, [NullAllowed] AUMidiEventListHandler tapHandler);
 
 		[Watch (9,0), TV (16,0), Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 		[Export ("connectMIDI:to:format:eventListBlock:")]
-		void ConnectMidi (AVAudioNode sourceNode, AVAudioNode destinationNode, [NullAllowed] AVAudioFormat format, [NullAllowed] AUMidiEventListBlock tapHandler);
+		void ConnectMidi (AVAudioNode sourceNode, AVAudioNode destinationNode, [NullAllowed] AVAudioFormat format, [NullAllowed] AUMidiEventListHandler tapHandler);
 #endif
 	}
 
@@ -8284,7 +8284,7 @@ namespace AVFoundation {
 	interface AVComposition_SynchronousAssetInterface
 	{
 		[Export ("metadataForFormat:")]
-		AVMetadataItem[] GetMetadataForFormat (string format);
+		AVMetadataItem[] GetMetadataForFormat (NSString format);
 
 		[Wrap ("GetMetadataForFormat (This, format.GetConstant ()!)")]
 		AVMetadataItem [] GetMetadata (AVMetadataFormat format);
@@ -14500,7 +14500,7 @@ namespace AVFoundation {
 	}
 
 	// the key could be used to create a strong dictionary, but apple does not provide the type that is stored in the dict, meaning
-	// we yet cannot do it (xcod14.1)
+	// we cannot do it yet (xcode14.1)
 	[Static]
 	[TV (16, 0), NoWatch, Mac (13, 0), iOS (16, 0), MacCatalyst (16,0)]
 	interface AVAudioSequencerInfoDictionaryKeys {
@@ -16713,7 +16713,7 @@ namespace AVFoundation {
 
 	[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[BaseType (typeof (AVMusicEvent), Name="AVMIDIMetaEvent")]
-	interface AVMIDIMetaEvent
+	interface AVMidiMetaEvent
 	{
 		[Export ("initWithType:data:")]
 		NativeHandle Constructor (AVMidiMetaEventType type, NSData data);
@@ -16966,7 +16966,7 @@ namespace AVFoundation {
 		AVSampleBufferGeneratorBatch MakeBatch ();
 	}
 
-	[TV (16,0), NoWatch, Mac (1,3), iOS (16,0), MacCatalyst (16,0)]
+	[TV (16,0), NoWatch, Mac (13,0), iOS (16,0), MacCatalyst (16,0)]
 	[Native, Flags]
 	public enum AVAssetTrackGroupOutputHandling : ulong
 	{
