@@ -1791,7 +1791,7 @@ Copyright (C) 2018 Microsoft. All rights reserved.
 				<StampFile>%(Identity).stamp</StampFile>
 			</_UnpackLibraryResourceItems>
 		</ItemGroup>
-		<MakeDir Directories="$(_StampDirectory)" />
+		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="$(_StampDirectory)" />
 	</Target>
 
 	<Target Name="_UnpackLibraryResources" Condition="'$(_CanOutputAppBundle)' == 'true'" DependsOnTargets="ResolveReferences;_CollectBundleResources;_PrepareUnpackLibraryResources"
