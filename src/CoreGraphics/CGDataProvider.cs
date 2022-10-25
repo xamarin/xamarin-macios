@@ -58,7 +58,7 @@ namespace CoreGraphics {
 		}
 #endif
 
-		[Preserve (Conditional=true)]
+		[Preserve (Conditional = true)]
 		internal CGDataProvider (NativeHandle handle, bool owns)
 			: base (handle, owns)
 		{
