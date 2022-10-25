@@ -30,10 +30,8 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 
-namespace ObjCRuntime
-{
-	class Stret
-	{
+namespace ObjCRuntime {
+	class Stret {
 		static bool IsHomogeneousAggregateSmallEnough_Armv7k (Type t, int members)
 		{
 			// https://github.com/llvm-mirror/clang/blob/82f6d5c9ae84c04d6e7b402f72c33638d1fb6bc8/lib/CodeGen/TargetInfo.cpp#L5516-L5519
@@ -142,7 +140,7 @@ namespace ObjCRuntime
 					case "System.nuint":
 					case "System.nint":
 						return false;
-					// floating-point types are stret
+						// floating-point types are stret
 					}
 				}
 			}
