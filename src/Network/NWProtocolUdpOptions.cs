@@ -27,16 +27,16 @@ namespace Network {
 	[SupportedOSPlatform ("ios12.0")]
 	[SupportedOSPlatform ("maccatalyst")]
 #else
-	[TV (12,0)]
-	[Mac (10,14)]
-	[iOS (12,0)]
-	[Watch (6,0)]
+	[TV (12, 0)]
+	[Mac (10, 14)]
+	[iOS (12, 0)]
+	[Watch (6, 0)]
 #endif
 	public class NWProtocolUdpOptions : NWProtocolOptions {
 		[Preserve (Conditional = true)]
-		internal NWProtocolUdpOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
+		internal NWProtocolUdpOptions (NativeHandle handle, bool owns) : base (handle, owns) { }
 
-		public NWProtocolUdpOptions () : this (nw_udp_create_options (), owns: true) {}
+		public NWProtocolUdpOptions () : this (nw_udp_create_options (), owns: true) { }
 
 		public void SetPreferNoChecksum (bool preferNoChecksum) => nw_udp_options_set_prefer_no_checksum (GetCheckedHandle (), preferNoChecksum);
 	}
