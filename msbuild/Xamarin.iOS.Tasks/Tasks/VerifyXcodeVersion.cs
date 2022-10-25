@@ -16,7 +16,7 @@ namespace Xamarin.iOS.Tasks {
 		async Threading.Task<bool> ExecuteAsync ()
 		{
 			try {
-				var connection = await BuildConnection.GetAsync (SessionId, BuildEngine4).ConfigureAwait (continueOnCapturedContext: false);
+				var connection = await BuildConnection.GetAsync (BuildEngine4).ConfigureAwait (continueOnCapturedContext: false);
 				var buildClient = connection.Client as BuildClient;
 
 				if (!connection.IsConnected || buildClient == null) {
