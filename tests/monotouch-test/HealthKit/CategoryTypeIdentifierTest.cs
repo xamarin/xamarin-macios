@@ -139,8 +139,7 @@ namespace MonoTouchFixtures.HealthKit {
 					using (var ct = HKCategoryType.Create (value)) {
 						Assert.That (ct.Handle, Is.Not.EqualTo (IntPtr.Zero), value.ToString ());
 					}
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 					failures.Add ($"{value} could not be created: {e}");
 				}
 			}

@@ -22,7 +22,7 @@ namespace Vision {
 			if (!(type == typeof (VNHumanBodyPoseObservationJointName) || type == typeof (VNHumanHandPoseObservationJointName)))
 				throw new InvalidOperationException ($"Only '{nameof (VNHumanBodyPoseObservationJointName)}' and '{nameof (VNHumanHandPoseObservationJointName)}' are supported.");
 
-			NSString[] keys = AvailableKeys;
+			NSString [] keys = AvailableKeys;
 			if (keys is null)
 				return null;
 
@@ -42,7 +42,7 @@ namespace Vision {
 			if (!(type == typeof (VNHumanBodyPoseObservationJointsGroupName) || type == typeof (VNHumanHandPoseObservationJointsGroupName)))
 				throw new InvalidOperationException ($"Only '{nameof (VNHumanBodyPoseObservationJointsGroupName)}' and '{nameof (VNHumanHandPoseObservationJointsGroupName)}' are supported.");
 
-			NSString[] keys = AvailableGroupKeys;
+			NSString [] keys = AvailableGroupKeys;
 			if (keys is null)
 				return null;
 

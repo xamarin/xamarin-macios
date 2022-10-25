@@ -23,7 +23,7 @@ using AVFoundation;
 namespace VideoToolbox {
 	public partial class VTPixelTransferProperties : DictionaryContainer {
 
-		public VTScalingMode ScalingMode { 
+		public VTScalingMode ScalingMode {
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.ScalingMode);
 
@@ -37,7 +37,7 @@ namespace VideoToolbox {
 					return VTScalingMode.Letterbox;
 				if (key == VTPixelTransferPropertyKeys.ScalingMode_Trim)
 					return VTScalingMode.Trim;
-				return VTScalingMode.Unset; 
+				return VTScalingMode.Unset;
 			}
 			set {
 				switch (value) {
@@ -60,7 +60,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTDownsamplingMode DownsamplingMode { 
+		public VTDownsamplingMode DownsamplingMode {
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DownsamplingMode);
 
@@ -70,7 +70,7 @@ namespace VideoToolbox {
 					return VTDownsamplingMode.Decimate;
 				if (key == VTPixelTransferPropertyKeys.DownsamplingMode_Average)
 					return VTDownsamplingMode.Average;
-				return VTDownsamplingMode.Unset; 
+				return VTDownsamplingMode.Unset;
 			}
 			set {
 				switch (value) {
@@ -93,9 +93,9 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 #endif
-		public VTColorPrimaries DestinationColorPrimaries { 
+		public VTColorPrimaries DestinationColorPrimaries {
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationColorPrimaries);
 
@@ -138,9 +138,9 @@ namespace VideoToolbox {
 		[SupportedOSPlatform ("maccatalyst")]
 		[SupportedOSPlatform ("macos")]
 #else
-		[iOS (10,0)]
+		[iOS (10, 0)]
 #endif
-		public VTTransferFunction DestinationTransferFunction { 
+		public VTTransferFunction DestinationTransferFunction {
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationTransferFunction);
 
@@ -172,7 +172,7 @@ namespace VideoToolbox {
 			}
 		}
 
-		public VTYCbCrMatrix DestinationYCbCrMatrix { 
+		public VTYCbCrMatrix DestinationYCbCrMatrix {
 			get {
 				var key = GetNSStringValue (VTPixelTransferPropertyKeys.DestinationYCbCrMatrix);
 
@@ -184,7 +184,7 @@ namespace VideoToolbox {
 					return VTYCbCrMatrix.ItuR6014;
 				if (key == CVImageBuffer.YCbCrMatrix_SMPTE_240M_1995)
 					return VTYCbCrMatrix.Smpte240M1955;
-				return VTYCbCrMatrix.Unset; 
+				return VTYCbCrMatrix.Unset;
 			}
 			set {
 				switch (value) {
