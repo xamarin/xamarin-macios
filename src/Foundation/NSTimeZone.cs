@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 namespace Foundation {
 
 	public partial class NSTimeZone {
-		
+
 		static ReadOnlyCollection<string> known_time_zone_names;
-		
+
 		// avoid exposing an array - it's too easy to break
 		public static ReadOnlyCollection<string> KnownTimeZoneNames {
 			get {
@@ -15,7 +15,7 @@ namespace Foundation {
 				return known_time_zone_names;
 			}
 		}
-		
+
 		public override string ToString ()
 		{
 			return Name;
