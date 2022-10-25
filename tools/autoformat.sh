@@ -64,6 +64,13 @@ dotnet format whitespace --folder "$SRC_DIR/src/CoreBluetooth/"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreData/"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreFoundation/"
 dotnet format whitespace --folder "$SRC_DIR/src/CoreGraphics/"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreHaptics"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreImage"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreLocation"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreML"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreMedia"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreMidi"
+dotnet format whitespace --folder "$SRC_DIR/src/CoreMotion"
 
 # dotnet format "$SRC_DIR/[...]"
 # add more projects here...
