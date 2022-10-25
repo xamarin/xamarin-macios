@@ -13,7 +13,7 @@ namespace Microsoft.Build.Tasks {
 			}
 
 			var client = BuildConnection
-				.GetAsync (SessionId, BuildEngine4)
+				.GetAsync (BuildEngine4)
 				.Result
 				.Client;
 
