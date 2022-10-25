@@ -17,23 +17,38 @@ namespace Cecil.Tests {
 	[TestFixture]
 	public class ApiCapitalizationTest {
 
-		bool IsObsolete (MethodDefinition method)
+		bool IsMethodObsolete (MethodDefinition method)
 		{
 			if (method == null)
 				return false;
 
-			if (method.HasCustomAttributes && method.CustomAttributes.Where ((v) => v.AttributeType.Name == "IsObsoleteAttribute").Any ())
+			if (method.HasCustomAttributes && method.CustomAttributes.Where ((m) => m.AttributeType.Name == "ObsoleteAttribute").Any ()) {
 				return true;
+			}
+
 
 			return false;
 		}
+
+		bool IsPropertyObsolete (PropertyDefinition property)
+		{
+			if (property == null)
+				return false;
+
+			if (property.HasCustomAttributes && property.CustomAttributes.Where ((p) => p.AttributeType.Name == "ObsoleteAttribute").Any ()) {
+				return true;
+			}
+
+			return false;
+		}
+
 
 		bool IsException (MethodDefinition m)
 		{
 			if (m == null)
 				return false;
 
-			if (m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsObsolete(m))
+			if (m.IsRemoveOn || m.IsAddOn || m.IsConstructor || m.IsSpecialName || IsMethodObsolete (m))
 				return true;
 
 			return false;
@@ -158,7 +173,7 @@ namespace Cecil.Tests {
 				var typeName = type.Name;
 				var c = type.Properties
 						.Where (p => p.GetMethod?.IsPublic == true || p.SetMethod?.IsPublic == true)
-						.Where (p => !Skip (type.Name, p.Name, allowedProperties))
+						.Where (p => !Skip (type.Name, p.Name, allowedProperties) && !IsPropertyObsolete (p))
 						.Select (p => p.Name);
 				return c;
 			};
