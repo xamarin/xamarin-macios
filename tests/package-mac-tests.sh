@@ -17,6 +17,8 @@ mkdir -p "$DIR"
 make test.config
 cat test.config
 INCLUDE_XAMARIN_LEGACY=$(grep ^INCLUDE_XAMARIN_LEGACY= test.config | sed 's/.*=//')
+INCLUDE_MAC=$(grep ^INCLUDE_MAC= test.config | sed 's/.*=//')
+INCLUDE_MACCATALYST=$(grep ^INCLUDE_MACCATALYST= test.config | sed 's/.*=//')
 XCODE_DEVELOPER_ROOT=$(grep ^XCODE_DEVELOPER_ROOT= test.config | sed 's/.*=//')
 MAC_DESTDIR=$(grep ^MAC_DESTDIR= test.config | sed 's/.*=//')
 export MD_APPLE_SDK_ROOT="$(dirname "$(dirname "$XCODE_DEVELOPER_ROOT")")"
@@ -39,8 +41,12 @@ TEST_SUITE_DEPENDENCIES+=(fsharplibrary)
 TEST_SUITE_DEPENDENCIES+=(BundledResources)
 
 for dep in "${TEST_SUITE_DEPENDENCIES[@]}"; do
-	make -C $dep/dotnet/macOS build
-	make -C $dep/dotnet/MacCatalyst build
+	if test -n "$INCLUDE_MAC"; then
+		make -C "$dep"/dotnet/macOS build
+	fi
+	if tets -n "$INCLUDE_MACCATALYST"; then
+		make -C "$dep"/dotnet/MacCatalyst build
+	fi
 done
 
 TEST_SUITES+=(build-dontlink)

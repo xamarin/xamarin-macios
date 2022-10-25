@@ -519,10 +519,10 @@
     <EmbeddedResource Include="Errors.resx">
       <Type>Resx</Type>
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <LastGenOutput>Errors.designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <ManifestResourceName>Xamarin.Bundler.Errors</ManifestResourceName>
-      <StronglyTypedFileName>Errors.Designer.cs</StronglyTypedFileName>
+      <StronglyTypedFileName>Errors.designer.cs</StronglyTypedFileName>
       <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
       <StronglyTypedNamespace>Xamarin.Bundler</StronglyTypedNamespace>
       <StronglyTypedClassName>Errors</StronglyTypedClassName>
