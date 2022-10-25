@@ -56,7 +56,8 @@ namespace CoreFoundation {
 		// CFMessagePortContext
 		[StructLayout (LayoutKind.Sequential)]
 		struct ContextProxy {
-			/* CFIndex */ nint version; // must be 0
+			/* CFIndex */
+			nint version; // must be 0
 			public /* void * */ IntPtr info;
 			public /* CFAllocatorRetainCallBack*/ Func<IntPtr, IntPtr> retain;
 			public /* CFAllocatorReleaseCallBack*/ Action<IntPtr> release;
@@ -69,11 +70,11 @@ namespace CoreFoundation {
 
 		delegate void CFMessagePortInvalidationCallBackProxy (/* CFMessagePortRef */ IntPtr messagePort, /* void * */ IntPtr info);
 
-		static Dictionary <IntPtr, CFMessagePortCallBack> outputHandles = new Dictionary <IntPtr, CFMessagePortCallBack> (Runtime.IntPtrEqualityComparer);
+		static Dictionary<IntPtr, CFMessagePortCallBack> outputHandles = new Dictionary<IntPtr, CFMessagePortCallBack> (Runtime.IntPtrEqualityComparer);
 
-		static Dictionary <IntPtr, Action?> invalidationHandles = new Dictionary <IntPtr, Action?> (Runtime.IntPtrEqualityComparer);
+		static Dictionary<IntPtr, Action?> invalidationHandles = new Dictionary<IntPtr, Action?> (Runtime.IntPtrEqualityComparer);
 
-		static Dictionary <IntPtr, CFMessagePortContext?> messagePortContexts = new Dictionary <IntPtr, CFMessagePortContext?> (Runtime.IntPtrEqualityComparer);
+		static Dictionary<IntPtr, CFMessagePortContext?> messagePortContexts = new Dictionary<IntPtr, CFMessagePortContext?> (Runtime.IntPtrEqualityComparer);
 
 		static CFMessagePortCallBackProxy messageOutputCallback = new CFMessagePortCallBackProxy (MessagePortCallback);
 
@@ -115,7 +116,7 @@ namespace CoreFoundation {
 
 				if (context.info == IntPtr.Zero)
 					return null;
-				
+
 				lock (messagePortContexts)
 					messagePortContexts.TryGetValue (context.info, out result);
 
@@ -217,10 +218,10 @@ namespace CoreFoundation {
 		{
 			if (callback is null)
 				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (callback));
-			
+
 			return CreateLocalPort (allocator, name, callback, context: null);
 		}
-		
+
 		internal static CFMessagePort? CreateLocalPort (CFAllocator? allocator, string? name, CFMessagePortCallBack callback, CFMessagePortContext? context)
 		{
 			var n = CFString.CreateNative (name);
@@ -239,7 +240,7 @@ namespace CoreFoundation {
 					contextProxy.release = ReleaseProxy;
 				if (context.CopyDescription is not null)
 					contextProxy.copyDescription = CopyDescriptionProxy;
-				contextProxy.info = (IntPtr)shortHandle;
+				contextProxy.info = (IntPtr) shortHandle;
 				lock (messagePortContexts)
 					messagePortContexts.Add (contextProxy.info, context);
 			}
@@ -255,7 +256,7 @@ namespace CoreFoundation {
 
 				lock (outputHandles)
 					outputHandles.Add (portHandle, callback);
-				
+
 				if (context is not null) {
 					lock (messagePortContexts) {
 						messagePortContexts.Remove (contextProxy.info);
@@ -265,7 +266,7 @@ namespace CoreFoundation {
 
 					result.contextHandle = contextProxy.info;
 				}
-			
+
 				return result;
 			} finally {
 				CFString.ReleaseNative (n);
@@ -287,7 +288,7 @@ namespace CoreFoundation {
 			lock (messagePortContexts) {
 				messagePortContexts.TryGetValue (info, out context);
 			}
-			
+
 			if (context?.Retain is not null)
 				result = context.Retain ();
 
@@ -331,7 +332,7 @@ namespace CoreFoundation {
 
 			if (callback is null)
 				return IntPtr.Zero;
-			
+
 			using (var managedData = Runtime.GetNSObject<NSData> (data)!) {
 				var result = callback.Invoke (msgid, managedData);
 				// System will release returned CFData
