@@ -10,7 +10,7 @@ namespace Microsoft.MaciOS.Nnyeah.Tests {
 
 	[TestFixture]
 	public class ConstructorTransformTests {
-		static ConstructorTransforms CreateTestTransform (TypeDefinition type) 
+		static ConstructorTransforms CreateTestTransform (TypeDefinition type)
 		{
 			var legacyPlatform = Compiler.XamarinPlatformLibraryPath (PlatformName.macOS);
 			var netPlatform = Compiler.MicrosoftPlatformLibraryPath (PlatformName.macOS);
@@ -42,7 +42,7 @@ public class Foo : NSObject {
 			CreateTestTransform (type).ReworkAsNeeded (type);
 
 			var ctor = type.GetConstructors ().First ();
-			Assert.AreEqual ("ObjCRuntime.NativeHandle", ctor.Parameters[0].ParameterType.FullName);
+			Assert.AreEqual ("ObjCRuntime.NativeHandle", ctor.Parameters [0].ParameterType.FullName);
 			Assert.AreEqual (ctor.FullName, "System.Void Foo::.ctor(ObjCRuntime.NativeHandle)");
 		}
 
@@ -58,8 +58,8 @@ public class Foo : NSObject {
 			CreateTestTransform (type).ReworkAsNeeded (type);
 
 			var ctor = type.GetConstructors ().First ();
-			Assert.AreEqual ("ObjCRuntime.NativeHandle", ctor.Parameters[0].ParameterType.FullName);
-			Assert.AreEqual ("System.Boolean", ctor.Parameters[1].ParameterType.FullName);
+			Assert.AreEqual ("ObjCRuntime.NativeHandle", ctor.Parameters [0].ParameterType.FullName);
+			Assert.AreEqual ("System.Boolean", ctor.Parameters [1].ParameterType.FullName);
 		}
 
 		// [Test] - https://github.com/xamarin/xamarin-macios/issues/15133
@@ -75,7 +75,7 @@ public class Foo : NSObject {
 			CreateTestTransform (type).ReworkAsNeeded (type);
 
 			var ctor = type.GetConstructors ().First ();
-			Assert.AreEqual ("ObjCRuntime.NativeHandle", ctor.Parameters[0].ParameterType.FullName);
+			Assert.AreEqual ("ObjCRuntime.NativeHandle", ctor.Parameters [0].ParameterType.FullName);
 		}
 
 		[Test]
@@ -93,8 +93,8 @@ public class Foo : BaseFoo {
 ");
 			CreateTestTransform (type).ReworkAsNeeded (type);
 
-			var ctor = type.GetConstructors().First();
-			Assert.AreEqual ("ObjCRuntime.NativeHandle", ctor.Parameters[0].ParameterType.FullName);
+			var ctor = type.GetConstructors ().First ();
+			Assert.AreEqual ("ObjCRuntime.NativeHandle", ctor.Parameters [0].ParameterType.FullName);
 		}
 
 		[Test]
@@ -110,7 +110,7 @@ public class Foo {
 			CreateTestTransform (type).ReworkAsNeeded (type);
 
 			var ctor = type.GetConstructors ().First ();
-			Assert.AreEqual ("System.IntPtr", ctor.Parameters[0].ParameterType.FullName);
+			Assert.AreEqual ("System.IntPtr", ctor.Parameters [0].ParameterType.FullName);
 		}
 
 		void AssertInstruction (Instruction instruction, string value)
