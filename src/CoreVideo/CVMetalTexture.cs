@@ -32,9 +32,9 @@ namespace CoreVideo {
 	[SupportedOSPlatform ("maccatalyst15.0")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (8,0)]
-	[Mac (12,0)]
-	[MacCatalyst (15,0)]
+	[iOS (8, 0)]
+	[Mac (12, 0)]
+	[MacCatalyst (15, 0)]
 #endif
 	public class CVMetalTexture : NativeObject {
 		[Preserve (Conditional = true)]
@@ -52,8 +52,8 @@ namespace CoreVideo {
 		extern static /* Boolean */ bool CVMetalTextureIsFlipped (/* CVMetalTextureRef __nonnull */ IntPtr image);
 
 		[DllImport (Constants.CoreVideoLibrary)]
-		extern static void CVMetalTextureGetCleanTexCoords (/* CVMetalTextureRef __nonnull */ IntPtr image, 
-			/* float[2] */ IntPtr lowerLeft, /* float[2] */ IntPtr lowerRight, /* float[2] */ IntPtr upperRight, 
+		extern static void CVMetalTextureGetCleanTexCoords (/* CVMetalTextureRef __nonnull */ IntPtr image,
+			/* float[2] */ IntPtr lowerLeft, /* float[2] */ IntPtr lowerRight, /* float[2] */ IntPtr upperRight,
 			/* float[2] */ IntPtr upperLeft);
 
 		public IMTLTexture? Texture {
@@ -61,7 +61,7 @@ namespace CoreVideo {
 				return Runtime.GetINativeObject<IMTLTexture> (CVMetalTextureGetTexture (Handle), owns: false);
 			}
 		}
-			
+
 		public bool IsFlipped {
 			get {
 				return CVMetalTextureIsFlipped (Handle);
@@ -76,7 +76,7 @@ namespace CoreVideo {
 			upperLeft = new float [2];
 
 			unsafe {
-				fixed (float *ll = &lowerLeft[0], lr = &lowerRight [0], ur = &upperRight [0], ul = &upperLeft[0]){
+				fixed (float* ll = &lowerLeft [0], lr = &lowerRight [0], ur = &upperRight [0], ul = &upperLeft [0]) {
 					CVMetalTextureGetCleanTexCoords (Handle, (IntPtr) ll, (IntPtr) lr, (IntPtr) ur, (IntPtr) ul);
 				}
 			}
