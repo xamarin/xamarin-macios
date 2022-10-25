@@ -69,12 +69,29 @@
 
   <ItemGroup>
     <EmbeddedResource Include="../../tools/mtouch/Errors.resx">
+
+    <!--
+
+      The Xamarin.MacDev.Tasks.sln solution is build with dotnet, while other
+      projects are still built with msbuild. This becomes a problem when
+      generating Errors.designer.cs, because depending on the runtime the
+      output is different.
+
+      This means that the Errors.designer.cs will sometimes randomly change
+      (depending on which project re-generated the file), leaving the file
+      modified in git. This is quite annoying, but it also breaks the api
+      comparison, which depends on the build not leaving modified files
+      behind. So for now, we generate Errors.designer.cs separately
+      for Xamarin.MacDev.Tasks.sln to not conflict with the mtouch version.
+
+    -->
+
       <Type>Resx</Type>
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>../../tools/mtouch/Errors.Designer.cs</LastGenOutput>
+      <LastGenOutput>Errors.designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <ManifestResourceName>Xamarin.Bundler.Errors</ManifestResourceName>
-      <StronglyTypedFileName>../../tools/mtouch/Errors.Designer.cs</StronglyTypedFileName>
+      <StronglyTypedFileName>Errors.designer.cs</StronglyTypedFileName>
       <StronglyTypedLanguage>CSharp</StronglyTypedLanguage>
       <StronglyTypedNamespace>Xamarin.Bundler</StronglyTypedNamespace>
       <StronglyTypedClassName>Errors</StronglyTypedClassName>
