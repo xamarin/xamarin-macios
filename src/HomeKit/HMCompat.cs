@@ -101,7 +101,6 @@ namespace HomeKit {
 
 	} /* class HMChipServiceHome */
 
-	[Obsolete ("This class is removed.")]
 	public partial class HMAccessorySetupManager {
 
 #pragma warning disable CS0618 // HMChipServiceTopology and HMErrorHandler is obsolete
@@ -113,21 +112,10 @@ namespace HomeKit {
 
 #if !XAMCORE_5_0
 #if __IOS__ && !__MACCATALYST__
-#if NET
-	[EditorBrowsable (EditorBrowsableState.Never)]
-	[Obsolete ("This class is removed.")]
-#endif
-	public unsafe partial class HMAccessorySetupManager : NSObject {
-		public override NativeHandle ClassHandle => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
-
-		public HMAccessorySetupManager () : base (NSObjectFlag.Empty) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
-		protected HMAccessorySetupManager (NSObjectFlag t) : base (t) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
-		protected internal HMAccessorySetupManager (NativeHandle handle) : base (handle) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
+	public unsafe partial class HMAccessorySetupManager {
 
 		public virtual void AddAndSetUpAccessories (HMMatterTopology topology, Action<NSError> completion) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual Task AddAndSetUpAccessoriesAsync (HMMatterTopology topology) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
-		public virtual void PerformAccessorySetup (HMAccessorySetupRequest request, Action<HMAccessorySetupResult, NSError> completion) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
-		public virtual Task<HMAccessorySetupResult> PerformAccessorySetupAsync (HMAccessorySetupRequest request) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual void PerformMatterEcosystemAccessorySetup (HMAccessorySetupRequest request, HMMatterTopology topology, Action<NSError> completion) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 		public virtual Task PerformMatterEcosystemAccessorySetupAsync (HMAccessorySetupRequest request, HMMatterTopology topology) => throw new InvalidOperationException (Constants.RemovedFromHomeKit);
 	}
