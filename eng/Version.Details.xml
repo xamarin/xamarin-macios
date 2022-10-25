@@ -8,18 +8,18 @@
       <Uri>https://github.com/dotnet/linker</Uri>
       <Sha>219e84c88def8276179f66282b2f7cb5f1d0d126</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.0-rtm.22480.10">
+    <Dependency Name="Microsoft.NETCore.App.Ref" Version="7.0.0">
       <Uri>https://github.com/dotnet/runtime</Uri>
-      <Sha>809b42196ea09700175785a25eace264995dde75</Sha>
+      <Sha>cd2d83798383716204eb580eb5c89ef5b73b8ec2</Sha>
     </Dependency>
     <!-- This is required for our test apps to build; in some cases Microsoft.AspNetCore.App is pulled in, and when building test apps the build needs to be able to resolve that -->
     <Dependency Name="Microsoft.AspNetCore.App.Ref" Version="7.0.0-rtm.22479.3" CoherentParentDependency="Microsoft.Dotnet.Sdk.Internal">
       <Uri>https://github.com/dotnet/aspnetcore</Uri>
       <Sha>02d62cfea1eaf37670d6f2f4bbceac3c24a357d0</Sha>
     </Dependency>
-    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.0-rtm.22476.2" CoherentParentDependency="Microsoft.NETCore.App.Ref">
+    <Dependency Name="Microsoft.NET.Workload.Emscripten.net7.Manifest-7.0.100" Version="7.0.0" CoherentParentDependency="Microsoft.NETCore.App.Ref">
       <Uri>https://github.com/dotnet/emsdk</Uri>
-      <Sha>77c2667993976295017e2759f075550bcf606fc1</Sha>
+      <Sha>6b7d1f47eaaa3f64c95e6f825c9e57debd4c0f31</Sha>
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
