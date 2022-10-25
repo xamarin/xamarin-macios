@@ -46,7 +46,7 @@ namespace Xamarin.MacDev.Tasks
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
 		IEnumerable<TaskItem> GetItemsFromNativeReference (string folderPath)
@@ -62,7 +62,7 @@ namespace Xamarin.MacDev.Tasks
 			if (PackagedFiles is not null) {
 				foreach (var package in PackagedFiles) {
 					var localRelativePath = GetLocalRelativePath (package.ItemSpec);
-					await taskRunner.GetFileAsync (localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
+					await taskRunner.GetFileAsync (this, localRelativePath).ConfigureAwait (continueOnCapturedContext: false);
 				}
 			}
 		}

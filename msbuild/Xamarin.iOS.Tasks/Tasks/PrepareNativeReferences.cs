@@ -22,7 +22,7 @@ namespace Xamarin.iOS.Tasks
 				var success = taskRunner.RunAsync (this).Result;
 
 				if (success && LinkWithAttributes != null)
-					taskRunner.GetFileAsync (LinkWithAttributes.ItemSpec).Wait ();
+					taskRunner.GetFileAsync (this, LinkWithAttributes.ItemSpec).Wait ();
 
 				return success;
 			} catch (Exception ex) {
@@ -51,7 +51,7 @@ namespace Xamarin.iOS.Tasks
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 
 		IEnumerable<TaskItem> GetItemsFromNativeReference (string folderPath)

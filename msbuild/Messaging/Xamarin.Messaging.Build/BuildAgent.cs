@@ -10,10 +10,10 @@ namespace Xamarin.Messaging.Build {
 
 		public BuildAgent (ITopicGenerator topicGenerator, string version = null, string versionInfo = null) : base (topicGenerator)
 		{
-			buildAgentInfo = new BuildAgentInfo ();
-
 			Version = string.IsNullOrEmpty (version) ? GetVersion () : version;
 			VersionInfo = string.IsNullOrEmpty (versionInfo) ? GetInformationalVersion () : versionInfo;
+
+			buildAgentInfo = new BuildAgentInfo (Version);
 		}
 
 		public override string Name => buildAgentInfo.Name;
@@ -21,6 +21,13 @@ namespace Xamarin.Messaging.Build {
 		public override string Version { get; }
 
 		public override string VersionInfo { get; }
+
+		protected override Task OnStartingAsync ()
+		{
+			topicGenerator.AddReplacement ("{AgentVersion}", Version);
+
+			return Task.CompletedTask;
+		}
 
 		protected override Task InitializeAsync ()
 		{
