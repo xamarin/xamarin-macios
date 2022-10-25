@@ -42,7 +42,7 @@ namespace Xamarin.iOS.Tasks {
 					yield return item;
 		}
 
-		public void Cancel () => BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+		public void Cancel () => BuildConnection.CancelAsync (BuildEngine4).Wait ();
 
 		IEnumerable<TaskItem> GetItemsFromNativeReference (string folderPath)
 		{
