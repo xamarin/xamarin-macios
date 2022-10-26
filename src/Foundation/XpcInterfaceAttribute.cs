@@ -25,14 +25,14 @@ using System;
 using ObjCRuntime;
 
 namespace Foundation {
-    /// <summary>
-    /// Specifies that the decorated interface (which must also be
-    /// decorated with <see cref="ProtocolAttribute" />) is intended
-    /// to be used with <see cref="NSXpcInterface" />. This enables
-    /// mmp optimizations required for the XPC subsystem to work properly.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Interface)]
-    public sealed class XpcInterfaceAttribute : Attribute {
-        public XpcInterfaceAttribute () {}
-    }
+	/// <summary>
+	/// Specifies that the decorated interface (which must also be
+	/// decorated with <see cref="ProtocolAttribute" />) is intended
+	/// to be used with <see cref="NSXpcInterface" />. This enables
+	/// mmp optimizations required for the XPC subsystem to work properly.
+	/// </summary>
+	[AttributeUsage (AttributeTargets.Interface)]
+	public sealed class XpcInterfaceAttribute : Attribute {
+		public XpcInterfaceAttribute () { }
+	}
 }
