@@ -12406,7 +12406,7 @@ namespace AVFoundation {
 		[Export ("translatesPlayerInterstitialEvents")]
 		bool TranslatesPlayerInterstitialEvents { get; set; }
 
-		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Watch (9, 0), TV (16, 0), NoMac, iOS (16, 0)]
 		[NullAllowed, Export ("nowPlayingInfo", ArgumentSemantic.Copy)]
 		NSDictionary WeakNowPlayingInfo { get; set; }
 	}
