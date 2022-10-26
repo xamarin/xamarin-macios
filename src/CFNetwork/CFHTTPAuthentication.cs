@@ -41,7 +41,7 @@ namespace CoreServices {
 		{
 		}
 
-		[DllImport (Constants.CFNetworkLibrary, EntryPoint="CFHTTPAuthenticationGetTypeID")]
+		[DllImport (Constants.CFNetworkLibrary, EntryPoint = "CFHTTPAuthenticationGetTypeID")]
 		public extern static /* CFTypeID */ nint GetTypeID ();
 
 		[DllImport (Constants.CFNetworkLibrary)]
