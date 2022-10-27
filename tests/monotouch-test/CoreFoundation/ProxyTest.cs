@@ -98,7 +98,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			});
 			listener_thread.IsBackground = true;
 			listener_thread.Start ();
-			listening.WaitOne ();
+			Assert.IsTrue (listening.WaitOne (TimeSpan.FromSeconds (15)));
 		}
 
 		[OneTimeTearDown]
