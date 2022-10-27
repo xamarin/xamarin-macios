@@ -1437,38 +1437,36 @@ namespace ObjCRuntime {
 				return null;
 
 			var obj = TryGetNSObject (ptr, evenInFinalizerQueue: false);
-			T? o;
 
-			if (obj is null) {
-				// Try to get the managed type that correspond to this exact native type
-				IntPtr p = Class.GetClassForObject (ptr);
-				// If unknown then we'll get the Class that Lookup to NSObject even if this is not NSObject.
-				// We can use this condition to fallback on the provided (generic argument) type
-				Type target_type;
-				if (p != NSObjectClass) {
-					target_type = Class.Lookup (p);
-					if (target_type == typeof(NSObject))
-						target_type = typeof(T);
-					else if (typeof (T).IsGenericType)
-						target_type = typeof(T);
-					else if (target_type.IsSubclassOf (typeof(T))) {
-						// do nothing, this is fine.
-					} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T)))) {
-						// If the instance itself claims it's an instance of the provided (generic argument) type,
-						// then we believe the instance. See bug #20692 for a test case.
-						target_type = typeof(T);
-					}
-				} else {
-					target_type = typeof(NSObject);
+			// First check if we got an object of the expected type
+			if (obj is T o)
+				return o;
+
+			// We either didn't find an object, or it was of the wrong type, so we need to create a new instance.
+
+			// Try to get the managed type that correspond to this exact native type
+			IntPtr p = Class.GetClassForObject (ptr);
+			// If unknown then we'll get the Class that Lookup to NSObject even if this is not NSObject.
+			// We can use this condition to fallback on the provided (generic argument) type
+			Type target_type;
+			if (p != NSObjectClass) {
+				target_type = Class.Lookup (p);
+				if (target_type == typeof(NSObject))
+					target_type = typeof(T);
+				else if (typeof (T).IsGenericType)
+					target_type = typeof(T);
+				else if (target_type.IsSubclassOf (typeof(T))) {
+					// do nothing, this is fine.
+				} else if (Messaging.bool_objc_msgSend_IntPtr (ptr, Selector.GetHandle ("isKindOfClass:"), Class.GetHandle (typeof (T)))) {
+					// If the instance itself claims it's an instance of the provided (generic argument) type,
+					// then we believe the instance. See bug #20692 for a test case.
+					target_type = typeof(T);
 				}
-				o = ConstructNSObject<T> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
 			} else {
-				o = obj as T;
-				if (o is null)
-					throw new InvalidCastException ($"Unable to cast object of type '{obj.GetType ().FullName}' to type '{typeof(T).FullName}'.");
+				target_type = typeof(NSObject);
 			}
 
-			return o;
+			return ConstructNSObject<T> (ptr, target_type, MissingCtorResolution.ThrowConstructor1NotFound);
 		}
 
 		static public T? GetNSObject<T> (IntPtr ptr, bool owns) where T : NSObject
