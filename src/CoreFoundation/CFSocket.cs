@@ -34,6 +34,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
+using System.Threading;
 
 using CoreFoundation;
 using Foundation;
@@ -184,7 +185,7 @@ namespace CoreFoundation {
 		{
 		}
 
-		internal static IPEndPoint EndPointFromAddressPtr (IntPtr address, bool owns)
+		internal static IPEndPoint? EndPointFromAddressPtr (IntPtr address, bool owns)
 		{
 			if (address == IntPtr.Zero)
 				return null;
@@ -238,38 +239,62 @@ namespace CoreFoundation {
 	{
 		nint Version; // CFIndex
 		public /* void*/ IntPtr Info;
+#if NET
+		unsafe delegate* unmanaged<IntPtr, IntPtr> Retain;
+		unsafe delegate* unmanaged<IntPtr, void> Release;
+#else
 		IntPtr Retain;
 		IntPtr Release;
+#endif
 		IntPtr CopyDescription;
 
-		public CFSocketContext (CFSocket socket) : this ()
+		public CFSocketContext (IntPtr info) : this ()
 		{
-			Info = (IntPtr) GCHandle.Alloc (socket);
+			Info = info;
+#if NET
+			unsafe {
+				Retain = &OnContextRetain;
+				Release = &OnContextRelease;
+			}
+#else
 			Retain = Marshal.GetFunctionPointerForDelegate (retainCallback);
 			Release = Marshal.GetFunctionPointerForDelegate (releaseCallback);
+#endif
 		}
 
+#if !NET
 		delegate IntPtr RetainCallback (IntPtr ptr);
 		static readonly RetainCallback retainCallback = OnContextRetain;
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (RetainCallback))]
+#endif
 		static IntPtr OnContextRetain (IntPtr ptr)
 		{
 			var gch = GCHandle.FromIntPtr (ptr);
-			var socket = (CFSocket) gch.Target;
-			socket.Retain ();
+			var socket = (CFSocket?) gch.Target;
+			socket?.RetainContext ();
 			return ptr;
 		}
 
+#if !NET
 		delegate void ReleaseCallback (IntPtr ptr);
 		static readonly ReleaseCallback releaseCallback = OnContextRelease;
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (ReleaseCallback))]
+#endif
 		static void OnContextRelease (IntPtr ptr)
 		{
 			var gch = GCHandle.FromIntPtr (ptr);
-			var socket = (CFSocket) gch.Target;
-			socket.Release ();
+			var socket = (CFSocket?) gch.Target;
+			socket?.ReleaseContext (gch);
 		}
 	}
 
@@ -280,23 +305,25 @@ namespace CoreFoundation {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	public class CFSocket : CFType {
-		GCHandle gch;
-		int retainCount = 1;
+		int contextRetainCount;
 
-		internal void Retain ()
+		internal void RetainContext ()
 		{
-			++retainCount;
+			Interlocked.Increment (ref contextRetainCount);
 		}
 
-		internal void Release ()
+		unsafe internal void ReleaseContext (GCHandle gch)
 		{
-			if (--retainCount == 0 && gch.IsAllocated) {
+			var postRC = Interlocked.Decrement (ref contextRetainCount);
+			if (postRC == 0 && gch.IsAllocated) {
 				gch.Free ();
 			}
 		}
 
 		protected override void Dispose (bool disposing)
 		{
+			if (Handle != NativeHandle.Zero)
+				CFSocketInvalidate (Handle);
 			base.Dispose (disposing);
 		}
 
@@ -310,8 +337,8 @@ namespace CoreFoundation {
 				return;
 			CFSocketCallBackType cbType = (CFSocketCallBackType) (ulong) type;
 
-			if (cbType == CFSocketCallBackType.AcceptCallBack && socket.AcceptEvent != null) {
-				var ep = CFSocketAddress.EndPointFromAddressPtr (address, false);
+			if (cbType == CFSocketCallBackType.AcceptCallBack && socket.AcceptEvent is not null) {
+				var ep = CFSocketAddress.EndPointFromAddressPtr (address, false)!;
 				var handle = new CFSocketNativeHandle (Marshal.ReadInt32 (data));
 				socket.OnAccepted (new CFSocketAcceptEventArgs (handle, ep));
 			} else if (cbType == CFSocketCallBackType.ConnectCallBack && socket.ConnectEvent != null) {
@@ -327,7 +354,7 @@ namespace CoreFoundation {
 			} else if (cbType == CFSocketCallBackType.DataCallBack && socket.DataEvent != null) {
 				using (var cfdata = new CFData (data, false)) {
 					if (cfdata.Length > 0) {
-						var ep = CFSocketAddress.EndPointFromAddressPtr (address, false);
+						var ep = CFSocketAddress.EndPointFromAddressPtr (address, false)!;
 						socket.OnData (new CFSocketDataEventArgs (ep, cfdata.GetBuffer ()));
 					}
 				}
@@ -341,14 +368,14 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static IntPtr CFSocketCreate (IntPtr allocator, int /*SInt32*/ family, int /*SInt32*/ type, int /*SInt32*/ proto,
+		unsafe extern static IntPtr CFSocketCreate (IntPtr allocator, int /*SInt32*/ family, int /*SInt32*/ type, int /*SInt32*/ proto,
 		                                     nuint /*CFOptionFlags*/ callBackTypes,
-		                                     CFSocketCallBack callout, ref CFSocketContext ctx);
+		                                     CFSocketCallBack callout, CFSocketContext* ctx);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static IntPtr CFSocketCreateWithNative (IntPtr allocator, CFSocketNativeHandle sock,
+		unsafe extern static IntPtr CFSocketCreateWithNative (IntPtr allocator, CFSocketNativeHandle sock,
                                                        nuint /*CFOptionFlags*/ callBackTypes,
-		                                               CFSocketCallBack callout, ref CFSocketContext ctx);
+		                                               CFSocketCallBack callout, CFSocketContext* ctx);
 
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static IntPtr CFSocketCreateRunLoopSource (IntPtr allocator, IntPtr socket, nint order);
@@ -370,60 +397,57 @@ namespace CoreFoundation {
 		{
 		}
 
+		unsafe delegate IntPtr CreateSocket (CFSocketContext* ctx);
+
 		const CFSocketCallBackType defaultCallbackTypes = CFSocketCallBackType.DataCallBack | CFSocketCallBackType.ConnectCallBack;
 		CFSocket (int family, int type, int proto, CFRunLoop loop)
 		{
-			var ctx = new CFSocketContext (this);
-			Initialize (
-				CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
-				loop,
-				ctx
-			);
+			unsafe {
+				Initialize (
+					loop,
+					(CFSocketContext* ctx) => CFSocketCreate (IntPtr.Zero, family, type, proto, (nuint) (ulong) defaultCallbackTypes, OnCallback, ctx)
+				);
+			}
 		}
 
 		CFSocket (CFSocketNativeHandle sock)
 		{
-			var ctx = new CFSocketContext (this);
-			Initialize (
-				CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx),
-				CFRunLoop.Current,
-				ctx
-			);
+			unsafe {
+				Initialize (
+					CFRunLoop.Current,
+					(CFSocketContext* ctx) => CFSocketCreateWithNative (IntPtr.Zero, sock, (nuint) (ulong) defaultCallbackTypes, OnCallback, ctx)
+				);
+			}
 		}
 
 		internal CFSocket (CFSocketSignature sig, double timeout)
 		{
-			var ctx = new CFSocketContext (this);
-			Initialize (
-				CFSocketCreateConnectedToSocketSignature (IntPtr.Zero, ref sig, (nuint) (ulong) defaultCallbackTypes, OnCallback, ref ctx, timeout),
-				CFRunLoop.Current,
-				ctx
-			);
-		}
-
-		void Initialize (IntPtr ptr, CFRunLoop runLoop, CFSocketContext ctx)
-		{
-			if (ptr == IntPtr.Zero)
-				throw new CFSocketException (CFSocketError.Error);
-
-			handle = ptr;
-			gch = GCHandle.FromIntPtr (ctx.Info);
-
-			using (var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true)) {
-				runLoop.AddSource (source, CFRunLoop.ModeDefault);
+			unsafe {
+				Initialize (
+					CFRunLoop.Current,
+					(CFSocketContext* ctx) => CFSocketCreateConnectedToSocketSignature (IntPtr.Zero, ref sig, (nuint) (ulong) defaultCallbackTypes, OnCallback, ctx, timeout)
+				);
 			}
 		}
 
-		[Preserve (Conditional = true)]
-		CFSocket (NativeHandle handle, bool owns)
-			: base (handle, owns)
+		void Initialize (CFRunLoop runLoop, CreateSocket createSocket)
 		{
-			gch = GCHandle.Alloc (this);
-
+			var gch = GCHandle.Alloc (this);
 			try {
-				var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true);
-				var loop = CFRunLoop.Current;
-				loop.AddSource (source, CFRunLoop.ModeDefault);
+				var ctx = new CFSocketContext ((IntPtr) gch);
+				IntPtr handle;
+				unsafe {
+					CFSocketContext* pctx = &ctx;
+					handle = createSocket (pctx);
+				}
+				if (handle == IntPtr.Zero)
+					throw new CFSocketException (CFSocketError.Error);
+
+				using (var source = new CFRunLoopSource (CFSocketCreateRunLoopSource (IntPtr.Zero, handle, 0), true)) {
+					runLoop.AddSource (source, CFRunLoop.ModeDefault);
+				}
+
+				this.Handle = handle;
 			} catch {
 				gch.Free ();
 				throw;
@@ -431,10 +455,10 @@ namespace CoreFoundation {
 		}
 
 		[DllImport (Constants.CoreFoundationLibrary)]
-		extern static IntPtr CFSocketCreateConnectedToSocketSignature (IntPtr allocator, ref CFSocketSignature signature,
+		unsafe extern static IntPtr CFSocketCreateConnectedToSocketSignature (IntPtr allocator, ref CFSocketSignature signature,
 		                                                               nuint /*CFOptionFlags*/ callBackTypes,
 		                                                               CFSocketCallBack callout,
-		                                                               ref CFSocketContext context, double timeout);
+		                                                               CFSocketContext* context, double timeout);
 
 		public static CFSocket CreateConnectedToSocketSignature (AddressFamily family, SocketType type,
 		                                                         ProtocolType proto, IPEndPoint endpoint,
@@ -479,9 +503,9 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFSocketCopyAddress (IntPtr socket);
 
-		public IPEndPoint Address {
+		public IPEndPoint? Address {
 			get {
-				var data = CFSocketCopyAddress (handle);
+				var data = CFSocketCopyAddress (Handle);
 				return CFSocketAddress.EndPointFromAddressPtr (data, true);
 			}
 		}
@@ -489,9 +513,9 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		static extern IntPtr CFSocketCopyPeerAddress (IntPtr socket);
 
-		public IPEndPoint RemoteAddress {
+		public IPEndPoint? RemoteAddress {
 			get {
-				var data = CFSocketCopyPeerAddress (handle);
+				var data = CFSocketCopyPeerAddress (Handle);
 				return CFSocketAddress.EndPointFromAddressPtr (data, true);
 			}
 		}
@@ -699,8 +723,7 @@ namespace CoreFoundation {
 
 		public void Invalidate ()
 		{
-			CFSocketInvalidate (handle);
-			Release ();
+			Dispose ();
 		}
 	}
 }
