@@ -49,8 +49,7 @@ namespace Introspection {
 				// we rather catch them all here *now* than trying to figure out how to replicate the specific conditions *later*
 				try {
 					RuntimeHelpers.RunClassConstructor (t.TypeHandle);
-				}
-				catch (TypeInitializationException e) {
+				} catch (TypeInitializationException e) {
 					issues.Add (t.FullName);
 					ReportError ($"{t.FullName} .cctor could not execute properly: {e}");
 				}
