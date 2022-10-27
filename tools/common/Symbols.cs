@@ -5,31 +5,28 @@ using System.IO;
 
 using Mono.Cecil;
 
-namespace Xamarin.Bundler
-{
-	public enum SymbolType
-	{
+namespace Xamarin.Bundler {
+	public enum SymbolType {
 		Function,
 		ObjectiveCClass,
 		Field,
 	}
 
-	public enum SymbolMode
-	{
+	public enum SymbolMode {
 		Default,
 		Linker, // pass "-u symbol" to the native linker
 		Code, // generate code
 		Ignore, // do nothing and hope for the best
 	}
 
-	public class Symbol
-	{
+	public class Symbol {
 		public SymbolType Type;
 		public bool Ignore;
+		public Abi? ValidAbis;
 
 		static string ObjectiveCPrefix {
 			get {
-				return Driver.SupportsModernObjectiveC ? "OBJC_CLASS_$_" : ".objc_class_name_";
+				return "OBJC_CLASS_$_";
 			}
 		}
 
@@ -40,7 +37,7 @@ namespace Xamarin.Bundler
 					return name;
 				if (ObjectiveCName != null)
 					return ObjectiveCPrefix + ObjectiveCName;
-				throw ErrorHelper.CreateError (99, $"Internal error: symbol without a name (type: {Type}). Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"symbol without a name (type: {Type})");
 			}
 			set {
 				name = value;
@@ -54,8 +51,6 @@ namespace Xamarin.Bundler
 
 		public string Prefix {
 			get {
-				if (ObjectiveCName != null && !Driver.SupportsModernObjectiveC)
-					return string.Empty;
 				return "_";
 			}
 		}
@@ -77,8 +72,7 @@ namespace Xamarin.Bundler
 		}
 	}
 
-	public class Symbols : IEnumerable<Symbol>
-	{
+	public class Symbols : IEnumerable<Symbol> {
 		Dictionary<string, Symbol> store = new Dictionary<string, Symbol> (StringComparer.Ordinal);
 
 		public int Count {
@@ -173,7 +167,7 @@ namespace Xamarin.Bundler
 						var asm = line.Substring (1);
 						Assembly assembly;
 						if (!target.Assemblies.TryGetValue (Assembly.GetIdentity (asm), out assembly))
-							throw ErrorHelper.CreateError (99, $"Internal error: serialized assembly {asm} for symbol {current.Name}, but no such assembly loaded. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).");
+							throw ErrorHelper.CreateError (99, Errors.MX0099, $"serialized assembly {asm} for symbol {current.Name}, but no such assembly loaded");
 						current.AddAssembly (assembly.AssemblyDefinition);
 					} else {
 						var eq = line.IndexOf ('=');

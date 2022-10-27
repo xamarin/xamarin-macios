@@ -10,29 +10,11 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using AudioToolbox;
-using CoreFoundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.AudioToolbox;
-using MonoTouch.CoreFoundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AudioToolbox {
 
@@ -45,7 +27,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetName ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			Assert.Throws<ArgumentNullException> (delegate { SoundBank.GetName (null); }, "null");
 
@@ -58,9 +40,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetName_DLS_SimOnly ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Use local file system (need a smaller sample)");
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertNotDevice ("Use local file system (need a smaller sample)");
 
 			using (NSUrl url = new NSUrl (local_dls)) {
 				Assert.That (SoundBank.GetName (url), Is.EqualTo ("QuickTime Music Synthesizer  "), "Name");
@@ -71,8 +52,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetInstrumentInfo ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			Assert.Throws<ArgumentNullException> (delegate { SoundBank.GetInstrumentInfo (null); }, "null");
 
@@ -85,9 +66,8 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void GetInstrumentInfo_DLS_SimOnly ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			if (Runtime.Arch == Arch.DEVICE)
-				Assert.Ignore ("Use local file system (need a smaller sample)");
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertNotDevice ("Use local file system (need a smaller sample)");
 
 			using (NSUrl url = new NSUrl (local_dls)) {
 				var info = SoundBank.GetInstrumentInfo (url);

@@ -30,25 +30,42 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Runtime.Versioning;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace CoreFoundation {
 
-	public delegate void DispatchIOHandler (DispatchData data, int error);
+	public delegate void DispatchIOHandler (DispatchData? data, int error);
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class DispatchIO : DispatchObject {
 		[Preserve (Conditional = true)]
-		internal DispatchIO (IntPtr handle, bool owns) : base (handle, owns)
+		internal DispatchIO (NativeHandle handle, bool owns) : base (handle, owns)
 		{
 		}
+
+#if !NET
 		[Preserve (Conditional = true)]
-		internal DispatchIO (IntPtr handle) : this (handle, false)
+		internal DispatchIO (NativeHandle handle) : this (handle, false)
 		{
 		}
+#endif
 
 		delegate void DispatchReadWrite (IntPtr block, IntPtr dispatchData, int error);
 		static DispatchReadWrite static_DispatchReadWriteHandler = Trampoline_DispatchReadWriteHandler;
@@ -57,7 +74,7 @@ namespace CoreFoundation {
 		static void Trampoline_DispatchReadWriteHandler (IntPtr block, IntPtr dispatchData, int error)
 		{
 			var del = BlockLiteral.GetTarget<DispatchIOHandler> (block);
-			if (del != null) {
+			if (del is not null) {
 				var dd = dispatchData == IntPtr.Zero ? null : new DispatchData (dispatchData, owns: false);
 				del (dd, error);
 			}
@@ -72,10 +89,10 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void Read (int fd, nuint size, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
-			if (dispatchQueue == null)
-				throw new ArgumentNullException (nameof (dispatchQueue));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
+			if (dispatchQueue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);
@@ -89,12 +106,12 @@ namespace CoreFoundation {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static void Write (int fd, DispatchData dispatchData, DispatchQueue dispatchQueue, DispatchIOHandler handler)
 		{
-			if (dispatchData == null)
-				throw new ArgumentNullException (nameof (dispatchData));
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
-			if (dispatchQueue == null)
-				throw new ArgumentNullException (nameof (dispatchQueue));
+			if (dispatchData is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchData));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
+			if (dispatchQueue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (dispatchQueue));
 
 			BlockLiteral block_handler = new BlockLiteral ();
 			block_handler.SetupBlockUnsafe (static_DispatchReadWriteHandler, handler);

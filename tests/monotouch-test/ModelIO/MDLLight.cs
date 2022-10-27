@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLLight Unit Tests
 //
 // Authors:
@@ -10,7 +10,6 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 #if !MONOMAC
@@ -21,18 +20,13 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#if !__TVOS__
-using MonoTouch.MultipeerConnectivity;
-#endif
-using MonoTouch.UIKit;
-using MonoTouch.ModelIO;
-using MonoTouch.ObjCRuntime;
-#endif
-using OpenTK;
 using NUnit.Framework;
+
+#if NET
+using System.Numerics;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.ModelIO {
 
@@ -40,25 +34,11 @@ namespace MonoTouchFixtures.ModelIO {
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
 	public class MDLLightTest {
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			if (!TestRuntime.CheckXcodeVersion (7, 0))
 				Assert.Ignore ("Requires iOS 9.0+ or macOS 10.11+");
-
-			if (
-#if !MONOMAC
-				Runtime.Arch == Arch.SIMULATOR && 
-#endif
-				IntPtr.Size == 4) {
-				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
-				// when resizing the cache of method selectors for a type. So here we call all selectors we can
-				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).
-				using (var obj = new MDLLight ()) {
-					obj.GetIrradiance (Vector3.Zero);
-					obj.GetIrradiance (Vector3.Zero, CGColorSpace.CreateGenericRgb ());
-				}
-			}
 		}
 
 		[Test]
@@ -66,28 +46,12 @@ namespace MonoTouchFixtures.ModelIO {
 		{
 			using (var obj = new MDLLight ()) {
 				var color = obj.GetIrradiance (new Vector3 (1, 2, 3));
-#if MONOMAC
 				Assert.IsNotNull (color, "color 1");
-#else
-				if (Runtime.Arch == Arch.SIMULATOR && Environment.OSVersion.Version.Major < 15) {
-					Assert.IsNull (color, "color 1");
-				} else {
-					Assert.IsNotNull (color, "color 1");
-				}
-#endif
 			}
 
 			using (var obj = new MDLLight ()) {
 				var color = obj.GetIrradiance (new Vector3 (1, 2, 3), CGColorSpace.CreateGenericRgb ());
-#if MONOMAC
 				Assert.IsNotNull (color, "color 2");
-#else
-				if (Runtime.Arch == Arch.SIMULATOR && Environment.OSVersion.Version.Major < 15) {
-					Assert.IsNull (color, "color 2");
-				} else {
-					Assert.IsNotNull (color, "color 2");
-				}
-#endif
 			}
 		}
 	}

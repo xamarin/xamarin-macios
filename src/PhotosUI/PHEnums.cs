@@ -4,7 +4,7 @@ using ObjCRuntime;
 
 namespace PhotosUI {
 
-	[Mac (10,12, onlyOn64: true)]
+	[Mac (10,12)]
 	[TV (10,0)]
 	[iOS (9,1)]
 	[Native]
@@ -16,13 +16,15 @@ namespace PhotosUI {
 	}
 
 #if MONOMAC
-	[Mac (10,12, onlyOn64: true)]
+	[NoiOS][NoTV][NoMacCatalyst]
+	[Mac (10,12)]
 	[Native]
 	public enum PHLivePhotoViewContentMode : long {
 		AspectFit,
 		AspectFill,
 	}
 #else
+	[NoMac]
 	[TV (10,0)]
 	[iOS (9,1)]
 	[Native]
@@ -34,7 +36,7 @@ namespace PhotosUI {
 	}
 #endif
 	[NoiOS][NoTV][NoWatch]
-	[Mac (10,14, onlyOn64: true)]
+	[Mac (10,14)]
 	public enum PHProjectCategory {
 		[Field ("PHProjectCategoryBook")]
 		Book,
@@ -50,8 +52,18 @@ namespace PhotosUI {
 		WallDecor,
 		[Field ("PHProjectCategoryOther")]
 		Other,
-		[Mac (10,14,2, onlyOn64: true)]
+		[Mac (10,14,2)]
 		[Field ("PHProjectCategoryUndefined")]
 		Undefined,
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[Native]
+	public enum PHPickerConfigurationAssetRepresentationMode : long
+	{
+		Automatic = 0,
+		Current = 1,
+		Compatible = 2,
 	}
 }

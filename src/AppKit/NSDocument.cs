@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.Collections.Generic;
 
@@ -5,21 +6,21 @@ using Foundation;
 using ObjCRuntime;
 
 namespace AppKit {
-		
+
 	public partial class NSDocument {
 		public delegate void DuplicateCallback (NSDocument document, bool didDuplicate);
 
 		[Register ("__NSDocumentDuplicateCallback")]
 		internal class Callback : NSObject {
 			DuplicateCallback callback;
-			
+
 			public Callback (DuplicateCallback callback)
 			{
 				this.callback = callback;
 				IsDirectBinding = false;
 				DangerousRetain ();
 			}
-			
+
 			[Export ("document:didDuplicate:contextInfo:")]
 			void SelectorCallback (NSDocument source, bool didDuplicate, IntPtr contextInfo)
 			{
@@ -30,7 +31,7 @@ namespace AppKit {
 				}
 			}
 		}
-		
+
 		public void DuplicateDocument (DuplicateCallback callback)
 		{
 			if (callback == null) {
@@ -41,3 +42,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

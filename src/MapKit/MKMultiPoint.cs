@@ -1,10 +1,11 @@
 #if !WATCH
-#if XAMCORE_2_0 || !MONOMAC
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using CoreLocation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace MapKit {
 
@@ -32,5 +33,4 @@ namespace MapKit {
 		}
 	}
 }
-#endif
 #endif // !WATCH

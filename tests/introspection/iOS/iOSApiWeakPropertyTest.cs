@@ -1,11 +1,7 @@
-﻿using System;
+using System;
 using System.Reflection;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 
@@ -53,6 +49,8 @@ namespace Introspection {
 			case "UIViewControllerPreviewingWrapper":
 				return property.Name == "WeakDelegate";
 #endif
+			case "CHHapticPatternDefinition":
+				return property.Name == "WeakParameterCurve" || property.Name == "WeakParameterCurveControlPoints";
 			}
 			return base.Skip (property);
 		}

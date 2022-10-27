@@ -1,0 +1,195 @@
+# blocks the application
+System.Threading.Tasks.Tests.YieldAwaitableTests.RunAsyncYieldAwaiterTests_Negative
+System.Threading.Tasks.Tests.YieldAwaitableTests.RunAsyncYieldAwaiterTests 
+System.Threading.Tasks.Tests.YieldAwaitableTests.AsyncMethod_Yields_ReturnsToDefaultTaskScheduler 
+System.Threading.Tasks.Tests.YieldAwaitableTests.AsyncMethod_Yields_ReturnsToCorrectTaskScheduler 
+System.Threading.Tasks.Tests.YieldAwaitableTests.AsyncMethod_Yields_ReturnsToCorrectSynchronizationContext 
+TaskCoverage.Coverage.TaskWait_MaxInt32 
+TaskCoverage.Coverage.TaskContinuation 
+TaskCoverage.Coverage.TaskWaitWithCTS 
+TaskCoverage.Coverage.TaskWaitAny_WhenAny 
+TaskCoverage.Coverage.CancellationTokenRegitration 
+TaskCoverage.Coverage.TaskAwaiter 
+TaskCoverage.Coverage.TaskConfigurableAwaiter 
+TaskCoverage.Coverage.FromAsync 
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest0_Cto
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest0_Ctor_Negative
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest1_Wait
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest1_Wait_NegativeCases
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest1_WaitAsync
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest1_WaitAsync_NegativeCases
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest2_Release
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest2_Release_NegativeCases
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest4_Dispose
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest5_CurrentCount
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest7_AvailableWaitHandle
+System.Threading.Tests.AsyncLocalTests.CaptureAndRestoreNullAsyncLocals
+System.Threading.Tests.AsyncLocalTests.AsyncMethodNotifications
+System.Threading.Tests.BarrierTests.RemovingWaitingParticipants
+System.Threading.Tasks.Tests.TaskAwaiterTests.Await_TaskCompletesOnNonDefaultSyncCtx_ContinuesOnDefaultSyncCtx
+System.Threading.Tasks.Tests.TaskAwaiterTests.Await_TaskCompletesOnNonDefaultScheduler_ContinuesOnDefaultScheduler
+System.Threading.Tasks.Tests.YieldAwaitableTests.AsyncMethod_Yields_ReturnsToCorrectTaskScheduler
+
+# Assembly:  [monotouch_corlib_xunit-test, Version=0.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756]
+#   Exception messages: Assert.Contains() Failure
+# Not found: ConcurrentExclusiveTaskScheduler { Id = 2, MaximumConcurrencyLevel = 8 }
+# In value:  TaskScheduler[] [ThreadPoolTaskScheduler { Id = 1, MaximumConcurrencyLevel = 2147483647 }]  
+System.Threading.Tasks.Tests.TaskSchedulerTests.GetTaskSchedulersForDebugger_DebuggerAttached_ReturnsAllSchedulers
+
+# System.InvalidOperationException : No data found for System.Tests.GuidTests.Parse_Invalid_NetcoreApp
+System.Tests.GuidTests.Parse_Invalid_NetcoreApp
+
+#  Exception messages: Assert.Equal() Failure
+# Expected: 252
+#Actual:   248  
+System.IO.Tests.File_Exists.DirectoryLongerThanMaxDirectoryAsPath_DoesntThrow
+
+#  Exception messages: Assert.True() Failure
+# Expected: True
+# Actual:   False   Exception stack traces:   at System.IO.Tests.FileInfo_Exists.CaseInsensitivity
+System.IO.Tests.FileInfo_Exists.CaseInsensitivity
+
+# Exception messages: System.BadImageFormatException : Cannot box IsByRefLike type 'System.ReadOnlySpan`1'  
+System.Reflection.Tests.ModuleTest.CustomAttributes
+System.Reflection.Tests.ModuleTest.CustomAttributes
+
+# True
+# Actual:   False   Exception stack traces:   at System.IO.Tests.DirectoryInfo_Exists.CaseInsensitivity ()
+System.IO.Tests.DirectoryInfo_Exists.CaseInsensitivity 
+
+# Exception messages: System.InvalidOperationException : No data found for System.Reflection.Tests.ModuleTests.ResolveField  
+System.Reflection.Tests.ModuleTests.ResolveField
+
+# System.InvalidOperationException : No data found for System.Reflection.Tests.ModuleTests.ResolveMethod
+System.Reflection.Tests.ModuleTests.ResolveMethod
+
+# blocks testing app
+System.IO.Tests.TextReaderTests.NotEndOfStream
+System.IO.Tests.TextReaderTests.ReadToEndAsync
+System.IO.Tests.TextReaderTests.TestRead
+System.IO.Tests.TextReaderTests.ReadZeroCharacters
+System.IO.Tests.TextReaderTests.ArgumentNullOnNullArray
+System.IO.Tests.TextReaderTests.ArgumentOutOfRangeOnInvalidOffset
+System.IO.Tests.TextReaderTests.ArgumentOutOfRangeOnNegativCount
+System.IO.Tests.TextReaderTests.ArgumentExceptionOffsetAndCount
+System.IO.Tests.TextReaderTests.EmptyInput
+System.IO.Tests.TextReaderTests.ReadCharArr
+System.IO.Tests.TextReaderTests.ReadBlockCharArr
+System.IO.Tests.TextReaderTests.ReadBlockAsyncCharArr
+System.IO.Tests.TextReaderTests.ReadAsync
+System.IO.Tests.TextReaderTests.ReadLines
+System.IO.Tests.TextReaderTests.ReadLines2
+System.IO.Tests.TextReaderTests.ReadLineAsyncContinuousNewLinesAndTabs
+System.IO.Tests.TextReaderTests.ReadSpan
+System.IO.Tests.TextReaderTests.ReadBlockSpan
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.NullEncodingAsync
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.TaskAlreadyCanceledAsync
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.InvalidPathAsync
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.NullLinesAsync
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.EmptyStringCreatesFileAsync
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.ValidWriteAsync(size: 0)
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.ValidWriteAsync(size: 100)
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.OverwriteAsync
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.OpenFile_ThrowsIOExceptionAsync
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.Read_FileNotFound
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.WriteToReadOnlyFile
+System.IO.Tests.File_ReadWriteAllLines_Enumerable_EncodedAsync.DisposingEnumeratorClosesFileAsync
+System.IO.Tests.BufferedStream_StreamAsync.ConcurrentOperationsAreSerialized
+System.IO.Tests.BufferedStream_StreamAsync.UnderlyingStreamThrowsExceptions
+System.IO.Tests.BufferedStream_StreamAsync.CopyToTest_RequiresFlushingOfWrites(copyAsynchronously: False)
+System.IO.Tests.BufferedStream_StreamAsync.CopyToTest_RequiresFlushingOfWrites(copyAsynchronously: True)
+System.IO.Tests.BufferedStream_StreamMethods.ReadByte_ThenRead_EndOfStreamCorrectlyFound
+System.IO.Tests.BufferedStream_StreamMethods.MemoryStreamSeekStress
+System.IO.Tests.BufferedStream_StreamMethods.MemoryStreamSeekStressWithInitialBuffer
+System.IO.Tests.BufferedStream_StreamMethods.MemoryStreamStress
+System.IO.Tests.BufferedStream_StreamMethods.FlushAsyncTest
+System.IO.Tests.BufferedStream_StreamMethods.ArgumentValidation
+System.IO.Tests.BufferedStream_StreamMethods.CreateWaitHandleTest
+System.IO.Tests.BufferedStream_StreamMethods.Synchronized_NewObject
+System.IO.Tests.BufferedStream_TestLeaveOpen.StreamReaderTest
+System.IO.Tests.BufferedStream_TestLeaveOpen.BinaryReaderTest
+System.IO.Tests.BufferedStream_TestLeaveOpen.StreamWriterTest
+System.IO.Tests.BufferedStream_TestLeaveOpen.BinaryWriterTest
+System.Runtime.CompilerServices.Tests.ConfiguredCancelableAsyncEnumerableTests.CanBeEnumeratedWithStandardPattern
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.InvalidPathAsync
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.NullLinesAsync
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.EmptyStringCreatesFileAsync
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.ValidWriteAsync(size: 0)
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.ValidWriteAsync(size: 100)
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.OverwriteAsync
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.OpenFile_ThrowsIOExceptionAsync
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.Read_FileNotFound
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.WriteToReadOnlyFile
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.DisposingEnumeratorClosesFileAsync
+System.IO.Tests.File_ReadWriteAllLines_EnumerableAsync.TaskAlreadyCanceledAsync
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_SetStateMachine_InvalidArgument_ThrowsException
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_Start_ExecutionContextChangesInMoveNextDontFlowOut
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_Start_ExecutionContextChangesInMoveNextDontFlowOut
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_UsedWithAsyncMethod_CompletesSuccessfully(yields: 0)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_UsedWithAsyncMethod_CompletesSuccessfully(yields: 1)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_UsedWithAsyncMethod_CompletesSuccessfully(yields: 2)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.NonGeneric_UsedWithAsyncMethod_CompletesSuccessfully(yields: 10)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully(yields: 0)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully(yields: 1)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully(yields: 2)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.Generic_UsedWithAsyncMethod_CompletesSuccessfully(yields: 10)
+System.Threading.Tasks.Tests.AsyncValueTaskMethodBuilderTests.AwaitTasksAndValueTasks_InTaskAndValueTaskMethods
+System.IO.Tests.BufferedStreamFlushTests.ShouldNotFlushUnderlyingStreamIfReadOnly(underlyingCanSeek: True)
+System.IO.Tests.BufferedStreamFlushTests.ShouldNotFlushUnderlyingStreamIfReadOnly(underlyingCanSeek: False)
+System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: True, underlyingCanSeek: True)
+System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: True, underlyingCanSeek: False)
+System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: False, underlyingCanSeek: True)
+System.IO.Tests.BufferedStreamFlushTests.ShouldAlwaysFlushUnderlyingStreamIfWritable(underlyingCanRead: False, underlyingCanSeek: False)
+# mono issue: https://github.com/mono/mono/issues/14666 
+KLASS:System.Threading.ThreadPools.Tests.ThreadPoolTests
+KLASS:System.IO.Tests.File_AppendAllTextAsync
+KLASS:System.IO.Tests.File_AppendAllTextAsync_Encoded
+KLASS:System.IO.Tests.File_AppendAllLinesAsync
+KLASS:System.IO.Tests.File_AppendAllLinesAsync_Encoded
+KLASS:System.Threading.Tasks.Tests.ValueTaskTests
+KLASS:System.IO.Tests.StreamCopyToTests
+KLASS:System.Threading.Tasks.Sources.Tests.ManualResetValueTaskSourceTests
+KLASS:System.IO.Tests.File_ReadWriteAllBytesAsync
+KLASS:System.IO.Tests.File_ReadWriteAllTextAsync
+KLASS:System.IO.Tests.File_ReadWriteAllText_EncodedAsync
+
+# tests do crash do to memory issues
+KLASS:System.IO.Tests.FileInfo_CopyTo_str_b
+KLASS:System.IO.Tests.File_Copy_str_str_b
+KLASS:System.IO.Tests.FileInfo_CopyTo_str
+KLASS:System.IO.Tests.File_Copy_str_str
+KLASS:System.Reflection.Tests.MemberInfoNetCoreAppTests
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+SplitInThreeSegments
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+SegmentPerChar
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+SingleSegment
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+Memory
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+String
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsChar+Array
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsByte+SplitInThreeSegments
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsByte+SegmentPerByte
+KLASS:System.Memory.Tests.ReadOnlySequenceTestsByte+SingleSegment
+
+
+# produces malloc errors on 
+# malloc: *** mach_vm_map(size=1048576) failed (error code=3)
+KLASS:System.IO.Tests.UmaTests.UmaReadWrite
+
+# Assembly:  [xammac_net_4_5_corlib_xunit-test, Version=0.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756]
+# Exception messages: Timed out after 60000ms waiting for remote process 14855
+System.IO.Tests.Directory_SetCurrentDirectory+Directory_SetCurrentDirectory_SymLink.SetToPathContainingSymLink
+
+# Exception messages: System.InvalidOperationException : No data found for System.IO.Tests.File_Exists.UncPathWithoutShareNameAsPath_ReturnsFalse   Exception stack traces: 
+# Execution time: 0
+System.IO.Tests.File_Exists.UncPathWithoutShareNameAsPath_ReturnsFalse
+
+# Expected: True
+# Actual:   False)
+System.IO.Tests.FileInfo_Exists.UnsharedFileExists
+
+# Exception messages: Timed out after 60000ms waiting for remote process 14899
+Expected: True
+Actual:   False   Exception stack traces:   at System.Diagnostics.RemoteExecutorTestBase+RemoteInvokeHandle.Dispose (System.Boolean disposing) [0x0002d] in /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/src/Xamarin.Mac/external/corefx/src/CoreFx.Private.TestUtilities/src/System/Diagnostics/RemoteExecutorTestBase.cs:241 
+System.IO.Tests.FileInfo_Exists.UnsharedFileExists
+
+# https://github.com/xamarin/maccore/issues/2296
+KLASS:System.Tests.DateTimeTests

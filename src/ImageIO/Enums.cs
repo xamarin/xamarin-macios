@@ -5,6 +5,7 @@
 //	Sebastien Pouliot  <sebastien@xamarin.com>
 //
 // Copyright 2013-2016, Xamarin Inc.
+// Copyright 2020, Microsoft Corp.
 //
 
 using System;
@@ -59,5 +60,23 @@ namespace ImageIO {
 		Up = 0x20,
 		Average = 0x40,
 		Paeth = 0x80
+	}
+
+	[Mac (10, 15), iOS (13, 0), TV (13, 0), Watch (6, 0)]
+	public enum CGImageAnimationStatus
+	{
+		Ok = 0,
+		ParameterError = -22140,
+		CorruptInputImage = -22141,
+		UnsupportedFormat = -22142,
+		IncompleteInputImage = -22143,
+		AllocationFailure = -22144,
+	}
+
+	// Yes, no [Native] here
+	[Mac (11,0), iOS (14,1), TV (14,2), Watch (7,1)]
+	public enum CGImagePropertyTgaCompression : uint {
+		None = 0,
+		Rle,
 	}
 }

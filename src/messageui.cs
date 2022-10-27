@@ -22,7 +22,7 @@ namespace MessageUI {
 		[Static, Export ("canSendMail")]
 		bool CanSendMail { get; }
 
-		[Export ("mailComposeDelegate", ArgumentSemantic.Assign)][NullAllowed]
+		[Export ("mailComposeDelegate", ArgumentSemantic.Weak)][NullAllowed]
 		NSObject WeakMailComposeDelegate { get; set; }
 
 		[Wrap ("WeakMailComposeDelegate")]
@@ -61,7 +61,7 @@ namespace MessageUI {
 	[Protocol]
 	interface MFMailComposeViewControllerDelegate {
 		[Export ("mailComposeController:didFinishWithResult:error:")]
-		void Finished (MFMailComposeViewController controller, MFMailComposeResult result, NSError error);
+		void Finished (MFMailComposeViewController controller, MFMailComposeResult result, [NullAllowed] NSError error);
 	}	
 
 	interface MFMessageAvailabilityChangedEventArgs {
@@ -71,16 +71,18 @@ namespace MessageUI {
 	
 	[BaseType (typeof (UINavigationController))]
 	interface MFMessageComposeViewController : UIAppearance {
-		[Export ("messageComposeDelegate", ArgumentSemantic.Assign), NullAllowed]
+		[Export ("messageComposeDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakMessageComposeDelegate { get; set; }
 		
 		[Wrap ("WeakMessageComposeDelegate")]
 		[Protocolize]
 		MFMessageComposeViewControllerDelegate MessageComposeDelegate { get; set;  }
 
+		[NullAllowed]
 		[Export ("recipients", ArgumentSemantic.Copy)]
 		string [] Recipients { get; set;  }
 		
+		[NullAllowed]
 		[Export ("body", ArgumentSemantic.Copy)]
 		string Body { get; set;  }
 		
@@ -101,10 +103,12 @@ namespace MessageUI {
 		bool IsSupportedAttachment (string uti);
 
 		[iOS (7,0)]
+		[NullAllowed]
 		[Export ("subject", ArgumentSemantic.Copy)]
 		string Subject { get; set; }
 
 		[iOS (7,0)]
+		[return: NullAllowed]
 		[Export ("attachments")]
 		NSDictionary[] GetAttachments ();
 
@@ -118,7 +122,7 @@ namespace MessageUI {
 
 		[iOS (7,0)]
 		[Export ("addAttachmentData:typeIdentifier:filename:")]
-		bool AddAttachment (NSData attachmentData, string uti, [NullAllowed] string filename);
+		bool AddAttachment (NSData attachmentData, string uti, string filename);
 
 		[iOS (7,0)]
 		[Export ("disableUserAttachments")]

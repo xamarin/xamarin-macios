@@ -1,4 +1,6 @@
-### Fixed in XAMCORE_4_0
-!extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerDidPauseLocationUpdates: found
-!extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerDidResumeLocationUpdates: found
-!extra-protocol-member! unexpected selector CLLocationManagerDelegate::locationManagerShouldDisplayHeadingCalibration: found
+# Added but deprecated, so there is not point to add them
+!missing-protocol-member! CLLocationManagerDelegate::locationManager:didRangeBeacons:inRegion: not found
+!missing-protocol-member! CLLocationManagerDelegate::locationManager:rangingBeaconsDidFailForRegion:withError: not found
+!missing-selector! CLBeaconRegion::initWithUUID:identifier: not bound
+
+# Fixed in .NET

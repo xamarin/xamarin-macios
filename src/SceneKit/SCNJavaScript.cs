@@ -7,7 +7,7 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 
 using System;
 using System.Runtime.InteropServices;
@@ -15,10 +15,19 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using JavaScriptCore;
 
+#nullable enable
+
 namespace SceneKit
 {
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
+#endif
 	public static class SCNJavaScript
 	{
 		[DllImport (Constants.SceneKitLibrary)]
@@ -26,8 +35,8 @@ namespace SceneKit
 
 		public static void ExportModule (JSContext context)
 		{
-			if (context == null)
-				throw new ArgumentNullException ("context");
+			if (context is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (context));
 
 			SCNExportJavaScriptModule (context.Handle);
 		}

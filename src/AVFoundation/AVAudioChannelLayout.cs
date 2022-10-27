@@ -4,6 +4,13 @@
 // Authors:
 //   Miguel de Icaza (miguel@xamarin.com)
 //
+
+// 'AVAudioChannelLayout' defines operator == or operator != but does not override Object.Equals(object o)
+#pragma warning disable 0660
+// 'AVAudioChannelLayout' defines operator == or operator != but does not override Object.GetHashCode()
+#pragma warning disable 0661
+// In both of these cases, the NSObject Equals/GetHashCode implementation works fine, so we can ignore these warnings.
+
 using Foundation;
 using ObjCRuntime;
 using AudioToolbox;
@@ -12,12 +19,11 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVAudioChannelLayout {
-		[ThreadStatic] 
-		static IntPtr handleToLayout;
-
-		static IntPtr CreateLayoutPtr (AudioChannelLayout layout)
+		static IntPtr CreateLayoutPtr (AudioChannelLayout layout, out IntPtr handleToLayout)
 		{
 			int size;
 			handleToLayout = layout.ToBlock (out size);
@@ -25,41 +31,30 @@ namespace AVFoundation {
 		}
 
 		[DesignatedInitializer]
-		public AVAudioChannelLayout (AudioChannelLayout layout) : this ((nint) CreateLayoutPtr (layout))
+		public AVAudioChannelLayout (AudioChannelLayout layout)
+#if NET
+			: this (CreateLayoutPtr (layout, out var handleToLayout))
+#else
+			: this ((nint) CreateLayoutPtr (layout, out var handleToLayout))
+#endif
 		{
 			Marshal.FreeHGlobal (handleToLayout);
 		}
 
-		public AudioChannelLayout Layout {
+		public AudioChannelLayout? Layout {
 			get {
 				return AudioChannelLayout.FromHandle (_Layout);
 			}
-		}
-		
-		public override bool Equals (object  obj)
-		{
-			if (this == null){
-				return (obj == null);
-			}
-			if (!(obj is NSObject))
-				return false;
-			return IsEqual ((NSObject)obj);
 		}
 
 		public static bool operator == (AVAudioChannelLayout a, AVAudioChannelLayout b)
 		{
 			return a.Equals (b);
 		}
-		
+
 		public static bool operator != (AVAudioChannelLayout a, AVAudioChannelLayout b)
 		{
 			return !a.Equals (b);
 		}
-
-		public override int GetHashCode ()
-		{
-			return (int) ChannelCount;
-		}
-		
 	}
 }

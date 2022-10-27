@@ -1,32 +1,32 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015 Xamarin Inc. All rights reserved.
 
 #if !__WATCHOS__
 
 using System;
 using Foundation;
+using ObjCRuntime;
 
-#if XAMCORE_2_0
 using Metal;
 using MetalPerformanceShaders;
-#else
-using MonoTouch.Metal;
-using MonoTouch.MetalPerformanceShaders;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class KernelTest {
 
 		IMTLDevice device;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			TestRuntime.AssertXcodeVersion (7, 0);
+
+			if (Runtime.Arch == Arch.SIMULATOR)
+				Assert.Inconclusive ("Metal Performance Shaders is not supported in the simulator");
 #else
 			TestRuntime.AssertXcodeVersion (9, 0);
 #endif
@@ -53,13 +53,13 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 			
 			var r = MPSKernel.RectNoClip;
 			var o = r.Origin;
-			Assert.That (o.X, Is.EqualTo (0), "X");
-			Assert.That (o.Y, Is.EqualTo (0), "Y");
-			Assert.That (o.Z, Is.EqualTo (0), "Z");
+			Assert.That (o.X, Is.EqualTo ((nint) 0), "X");
+			Assert.That (o.Y, Is.EqualTo ((nint) 0), "Y");
+			Assert.That (o.Z, Is.EqualTo ((nint) 0), "Z");
 			var s = r.Size;
-			Assert.That (s.Depth, Is.EqualTo (-1), "Depth");
-			Assert.That (s.Height, Is.EqualTo (-1), "Height");
-			Assert.That (s.Width, Is.EqualTo (-1), "Width");
+			Assert.That (s.Depth, Is.EqualTo ((nint) (-1)), "Depth");
+			Assert.That (s.Height, Is.EqualTo ((nint) (-1)), "Height");
+			Assert.That (s.Width, Is.EqualTo ((nint) (-1)), "Width");
 		}
 
 		[Test]
@@ -73,7 +73,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 			var kernel = new MPSKernel (MTLDevice.SystemDefault);
 			var kernel2 = kernel.CopyWithZone (NSZone.Default, MTLDevice.SystemDefault);
-			Assert.That (kernel2.RetainCount, Is.EqualTo (1));
+			Assert.That (kernel2.RetainCount, Is.EqualTo ((nuint) 1));
 		}
 
 		[Test]
@@ -87,7 +87,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 			var layer = new MPSRnnImageInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.Create (1, 1));
 			var layer2 = layer.Copy (NSZone.Default, MTLDevice.SystemDefault);
-			Assert.That (layer2.RetainCount, Is.EqualTo (1));
+			Assert.That (layer2.RetainCount, Is.EqualTo ((nuint) 1));
 		}
 
 		[Test]
@@ -101,7 +101,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 
 			var layer = new MPSRnnMatrixInferenceLayer (MTLDevice.SystemDefault, MPSRnnSingleGateDescriptor.Create (1, 1));
 			var layer2 = layer.Copy (NSZone.Default, MTLDevice.SystemDefault);
-			Assert.That (layer2.RetainCount, Is.EqualTo (1));
+			Assert.That (layer2.RetainCount, Is.EqualTo ((nuint) 1));
 		}
 
 		[Test]

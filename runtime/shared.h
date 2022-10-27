@@ -12,6 +12,9 @@
 #define __SHARED_H__
 
 #include <stdbool.h>
+#include <stdatomic.h>
+
+#include "xamarin/mono-runtime.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -20,7 +23,6 @@ extern "C" {
 typedef void (init_cocoa_func) (void);
 void xamarin_initialize_cocoa_threads (init_cocoa_func *func);
 
-void xamarin_install_nsautoreleasepool_hooks ();
 id xamarin_init_nsthread (id obj, bool is_direct, id target, SEL sel, id arg);
 void xamarin_insert_dllmap ();
 
@@ -36,7 +38,7 @@ struct Xamarin_block_descriptor {
     void (*dispose_helper)(void *src);             // IFF (1<<25)
     // required ABI.2010.3.16
     const char *signature;                         // IFF (1<<30)
-    volatile int ref_count;
+    int _Atomic ref_count;
     // variable-length string
 };
 
@@ -46,8 +48,8 @@ struct Block_literal {
 	int reserved;
 	void (*invoke)(void *, ...);
 	struct Xamarin_block_descriptor *descriptor;
-	void *local_handle;
-	void *global_handle;
+	GCHandle local_handle;
+	GCHandle global_handle;
 };
 
 struct Xamarin_block_descriptor *  xamarin_get_block_descriptor ();

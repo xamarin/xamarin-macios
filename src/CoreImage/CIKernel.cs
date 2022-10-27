@@ -1,4 +1,4 @@
-﻿// 
+// 
 // CIKernel.cs: CoreImgage CIKernel class
 //
 // Authors:
@@ -11,6 +11,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
+
+#nullable enable
 
 namespace CoreImage {
 	
@@ -28,8 +30,8 @@ namespace CoreImage {
 
 		public void SetRegionOfInterest (CIKernelRoiHandler handler)
 		{
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 
 			roiHandler = handler;
 
@@ -45,4 +47,3 @@ namespace CoreImage {
 	}
 	#endif
 }
-

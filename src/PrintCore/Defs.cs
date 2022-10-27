@@ -6,6 +6,9 @@
 //
 // Copyright 2016 Microsoft Inc
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -15,6 +18,7 @@ using Foundation;
 
 using PMObject=System.IntPtr;
 using OSStatus=System.Int32;
+using System.Runtime.Versioning;
 
 namespace PrintCore {
 
@@ -160,6 +164,9 @@ namespace PrintCore {
 		ReverseLandscape = 4
 	}
 	
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct PMResolution {
 		double hRes, vRes;
@@ -177,6 +184,9 @@ namespace PrintCore {
 		}
 	}
 		
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct PMRect {
 		internal double top, left, bottom, right;
@@ -200,6 +210,9 @@ namespace PrintCore {
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct PMPaperMargins {
 		PMRect Rect;

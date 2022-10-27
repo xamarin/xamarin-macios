@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for EKUIBundle
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if HAS_EVENTKITUI
 
 using System;
 using EventKitUI;
@@ -31,4 +31,4 @@ namespace MonoTouchFixtures.EventKitUI {
 		}
 	}
 }
-#endif
+#endif // HAS_EVENTKITUI

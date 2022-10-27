@@ -10,6 +10,7 @@
     <RootNamespace>testgenerator</RootNamespace>
     <AssemblyName>testgenerator</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

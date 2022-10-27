@@ -6,10 +6,22 @@
 //
 // Copyright 2015 Xamarin, Inc.
 
-
+#if !NET
 using System;
 
 namespace Foundation {
+
+#if MONOMAC
+	public partial class NSError {
+
+		// removed in Xcode 11 GM
+		[Obsolete ("This API has been removed.")]
+		public static NSError GetFileProviderErrorForOutOfDateItem (FileProvider.INSFileProviderItem updatedVersion)
+		{
+			return null;
+		}
+	}
+#endif
 
 #if !XAMCORE_3_0
 	public partial class NSOperation {
@@ -20,20 +32,26 @@ namespace Foundation {
 			WaitUntilFinished ();
 		}
 	}
+
+	public partial class NSNetService {
+
+		[Obsolete ("This constructor does not create a valid instance of the type")]
+		public NSNetService ()
+		{
+		}
+	}
 #endif
 
-#if !XAMCORE_4_0 && (XAMCORE_2_0 || !MONOMAC) && !WATCH
+#if !WATCH
 	public partial class NSUserActivity {
 
 		[Obsolete ("Use the constructor that allows you to set an activity type.")]
 		public NSUserActivity ()
-#if XAMCORE_2_0
 			: this (String.Empty)
-#else
-			: this (NSString.Empty)
-#endif
 		{
 		}
 	}
 #endif
 }
+
+#endif // !NET

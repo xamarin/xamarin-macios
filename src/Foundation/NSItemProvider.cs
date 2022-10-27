@@ -5,10 +5,10 @@ using ObjCRuntime;
 
 namespace Foundation 
 {
-#if (MONOMAC || IOS) && XAMCORE_2_0 // Only 64-bit on mac
+#if MONOMAC || IOS
 	public partial class NSItemProvider
 	{
-#if !XAMCORE_4_0 && MONOMAC
+#if !NET && MONOMAC
 		[Obsolete ("Use RegisterCloudKitShare (CloudKitRegistrationPreparationAction) instead.")]
 		public virtual void RegisterCloudKitShare (Action<CloudKitRegistrationPreparationHandler> preparationHandler)
 		{
@@ -29,7 +29,17 @@ namespace Foundation
 		}
 #endif
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		public NSProgress LoadObject<T> (Action<T, NSError> completionHandler) where T: NSObject, INSItemProviderReading
 		{
 			return LoadObject (new Class (typeof (T)), (rv, err) =>
@@ -41,7 +51,17 @@ namespace Foundation
 			});
 		}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		public Task<T> LoadObjectAsync<T> () where T: NSObject, INSItemProviderReading
 		{
 			var rv = LoadObjectAsync (new Class (typeof (T)));
@@ -54,7 +74,17 @@ namespace Foundation
 			});
 		}
 
-		[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[Watch (4,0)]
+		[TV (11,0)]
+		[Mac (10,13)]
+		[iOS (11,0)]
+#endif
 		public Task<T> LoadObjectAsync<T> (out NSProgress result) where T: NSObject, INSItemProviderReading
 		{
 			var rv = LoadObjectAsync (new Class (typeof (T)), out result);
@@ -67,5 +97,5 @@ namespace Foundation
 			});
 		}
 	}
-#endif // (MONOMAC || IOS) && XAMCORE_2_0
+#endif // MONOMAC || IOS
 }

@@ -11,12 +11,17 @@ using System;
 using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
+using UniformTypeIdentifiers;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface CSIndexExtensionRequestHandler : NSExtensionRequestHandling, CSSearchableIndexDelegate {
 
@@ -24,12 +29,12 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface CSPerson : NSSecureCoding, NSCopying {
 
 		[Export ("initWithDisplayName:handles:handleIdentifier:")]
-		IntPtr Constructor ([NullAllowed] string displayName, string [] handles, NSString handleIdentifier);
+		NativeHandle Constructor ([NullAllowed] string displayName, string [] handles, NSString handleIdentifier);
 
 		[NullAllowed]
 		[Export ("displayName")]
@@ -48,7 +53,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableIndex {
 
@@ -64,12 +69,11 @@ namespace CoreSpotlight {
 		CSSearchableIndex DefaultSearchableIndex { get; }
 
 		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("initWithName:protectionClass:")]
-		IntPtr Constructor (string name, [NullAllowed] NSString protectionClass);
-#endif
+		NativeHandle Constructor (string name, [NullAllowed] NSString protectionClass);
 
 		[Export ("indexSearchableItems:completionHandler:")]
 		[Async]
@@ -92,7 +96,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[Category]
 	[BaseType (typeof (CSSearchableIndex))]
 	interface CSSearchableIndex_CSOptionalBatchingExtension {
@@ -111,7 +115,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[Protocol, Model]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableIndexDelegate {
@@ -143,7 +147,7 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableItem : NSSecureCoding, NSCopying {
 
@@ -162,7 +166,7 @@ namespace CoreSpotlight {
 		NSString QueryString { get; }
 
 		[Export ("initWithUniqueIdentifier:domainIdentifier:attributeSet:")]
-		IntPtr Constructor ([NullAllowed] string uniqueIdentifier, [NullAllowed] string domainIdentifier, CSSearchableItemAttributeSet attributeSet);
+		NativeHandle Constructor ([NullAllowed] string uniqueIdentifier, [NullAllowed] string domainIdentifier, CSSearchableItemAttributeSet attributeSet);
 
 		[Export ("uniqueIdentifier")]
 		string UniqueIdentifier { get; set; }
@@ -181,13 +185,13 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSString))]
 	// hack: it seems that generator.cs can't track NSCoding correctly ? maybe because the type is named NSString2 at that time
 	interface CSLocalizedString : NSCoding {
 
 		[Export ("initWithLocalizedStrings:")]
-		IntPtr Constructor (NSDictionary localizedStrings);
+		NativeHandle Constructor (NSDictionary localizedStrings);
 
 		[Export ("localizedString")]
 		string GetLocalizedString ();
@@ -195,17 +199,17 @@ namespace CoreSpotlight {
 
 	[NoTV] // CS_TVOS_UNAVAILABLE
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSInvalidArgumentException Reason: You must call -[CSCustomAttributeKey initWithKeyName...]
 	interface CSCustomAttributeKey : NSCopying, NSSecureCoding {
 
 		[Export ("initWithKeyName:")]
-		IntPtr Constructor (string keyName);
+		NativeHandle Constructor (string keyName);
 
 		[DesignatedInitializer]
 		[Export ("initWithKeyName:searchable:searchableByDefault:unique:multiValued:")]
-		IntPtr Constructor (string keyName, bool searchable, bool searchableByDefault, bool unique, bool multiValued);
+		NativeHandle Constructor (string keyName, bool searchable, bool searchableByDefault, bool unique, bool multiValued);
 
 		[Export ("keyName")]
 		string KeyName { get; }
@@ -223,11 +227,9 @@ namespace CoreSpotlight {
 		bool MultiValued { [Bind ("isMultiValued")] get; }
 	}
 
-#if XAMCORE_4_0
-	[NoTV]
-#endif
+	[TV (9,0)] // Headers don't say, documentation says no, however everything works just fine in Xcode (and no warnings).
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
 	[Static]
 	interface CSMailboxKey {
@@ -253,12 +255,19 @@ namespace CoreSpotlight {
 
 	[NoTV]
 	[iOS (9,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface CSSearchableItemAttributeSet : NSCopying, NSSecureCoding {
 
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use '.ctor(UTType)' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use '.ctor(UTType)' instead.")]
 		[Export ("initWithItemContentType:")]
-		IntPtr Constructor (string itemContentType);
+		NativeHandle Constructor (string itemContentType);
+
+		[iOS (14,0)][Mac (11,0)]
+		[MacCatalyst (14,0)]
+		[Export ("initWithContentType:")]
+		NativeHandle Constructor (UTType contentType);
 
 		// FIXME: Should we keep all the following Categories inline? or should we make them actual [Category] interfaces
 		// There are no methods on any of the following categories, just properties
@@ -847,7 +856,6 @@ namespace CoreSpotlight {
 		[Export ("instantMessageAddresses")]
 		string [] InstantMessageAddresses { get; set; }
 
-		[NullAllowed]
 		[Export ("likelyJunk", ArgumentSemantic.Strong)]
 		NSNumber LikelyJunk { [Bind ("isLikelyJunk")] get; set; }
 
@@ -978,6 +986,21 @@ namespace CoreSpotlight {
 		[NullAllowed, Export ("supportsNavigation", ArgumentSemantic.Strong)]
 		NSNumber SupportsNavigation { get; set; }
 
+		[NoTV, NoMac, iOS (15,0), MacCatalyst (15,0)]
+		[Field ("CSActionIdentifier")]
+		NSString ActionIdentifier { get; }
+
+		[NoTV, NoMac, iOS (15,0)]
+		[NoMacCatalyst]
+		[Export ("actionIdentifiers", ArgumentSemantic.Copy)]
+		string[] ActionIdentifiers { get; set; }
+
+		[NullAllowed]
+		[NoTV, NoMac, iOS (15,0)]
+		[NoMacCatalyst]
+		[Export ("sharedItemContentType", ArgumentSemantic.Copy)]
+		UTType SharedItemContentType { get; set; }
+
 		// CSContainment
 
 		[NullAllowed, Export ("containerTitle")]
@@ -1005,47 +1028,51 @@ namespace CoreSpotlight {
 
 		// CSSearchableItemAttributeSet_CSGeneral
 
-		[iOS (11,0), NoTV, Mac (10, 11)]
+		[iOS (11,0), NoTV]
 		[NullAllowed, Export ("userCreated", ArgumentSemantic.Strong)]
 		[Internal] // We would like to use [BindAs (typeof (bool?))]
 		NSNumber _IsUserCreated { [Bind ("isUserCreated")] get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("userOwned", ArgumentSemantic.Strong)]
 		[Internal] // We would like to use[BindAs (typeof (bool?))]
 		NSNumber _IsUserOwned { [Bind ("isUserOwned")] get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("userCurated", ArgumentSemantic.Strong)]
 		[Internal] // We would like to use [BindAs (typeof (bool?))]
 		NSNumber _IsUserCurated { [Bind ("isUserCurated")] get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("rankingHint", ArgumentSemantic.Strong)]
 		NSNumber RankingHint { get; set; }
+		
+		[NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("darkThumbnailURL", ArgumentSemantic.Strong)]
+		NSUrl DarkThumbnailUrl { get; set; }
 
 		// CSSearchableItemAttributeSet_CSItemProvider
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("providerDataTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderDataTypeIdentifiers { get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("providerFileTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderFileTypeIdentifiers { get; set; }
 
-		[iOS (11, 0), NoTV, Mac (10, 11)]
+		[iOS (11, 0), NoTV]
 		[NullAllowed, Export ("providerInPlaceFileTypeIdentifiers", ArgumentSemantic.Copy)]
 		string[] ProviderInPlaceFileTypeIdentifiers { get; set; }
 	}
 
 	[NoTV][iOS (10,0)]
-	[Mac (10,13, onlyOn64: true)]
+	[Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CSSearchQuery {
 		[Export ("initWithQueryString:attributes:")]
-		IntPtr Constructor (string queryString, [NullAllowed] string[] attributes);
+		NativeHandle Constructor (string queryString, [NullAllowed] string[] attributes);
 
 		[Export ("cancelled")]
 		bool Cancelled { [Bind ("isCancelled")] get; }
@@ -1068,5 +1095,14 @@ namespace CoreSpotlight {
 		[Export ("cancel")]
 		void Cancel ();
 	}
-}
 
+	[Abstract]
+	[NoTV, Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	interface CSImportExtension : NSExtensionRequestHandling
+	{
+		[Export ("updateAttributes:forFileAtURL:error:")]
+		bool Update (CSSearchableItemAttributeSet attributes, NSUrl contentUrl, [NullAllowed] out NSError error);
+	}
+
+}

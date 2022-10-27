@@ -4,17 +4,12 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using CoreLocation;
 using MapKit;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreLocation;
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
 	
@@ -24,14 +19,13 @@ namespace MonoTouchFixtures.MapKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromPoints_Null ()
 		{
-			MKPolygon.FromPoints (null);
+			Assert.Throws<ArgumentNullException> (() => MKPolygon.FromPoints (null));
 		}
 
 		[Test]
@@ -75,10 +69,9 @@ namespace MonoTouchFixtures.MapKit {
 		}
 		
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromCoordinates_Null ()
 		{
-			MKPolygon.FromCoordinates (null);
+			Assert.Throws<ArgumentNullException> (() => MKPolygon.FromCoordinates (null));
 		}
 
 		[Test]
@@ -113,7 +106,11 @@ namespace MonoTouchFixtures.MapKit {
 			try {
 				pg.Coordinate = new CLLocationCoordinate2D (10, 20);
 			}
+#if NET
+			catch (ObjCException mte) {
+#else
 			catch (MonoTouchException mte) {
+#endif
 				Assert.True (mte.Message.Contains ("unrecognized selector sent to instance"));
 			}
 			catch {

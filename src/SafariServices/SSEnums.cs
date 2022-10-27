@@ -5,15 +5,20 @@
 //   Sebastien Pouliot  <sebastien@xamarin.com>
 //
 // Copyright 2013-2014, 2016 Xamarin Inc.
+// Copyright 2019 Microsoft Corporation
 //
 
+using System;
+
+using Foundation;
 using ObjCRuntime;
 
 namespace SafariServices {
 
 	// NSInteger -> SSReadingList.h
 	[NoMac][iOS (7,0)]
-	[Native]
+	[MacCatalyst (14,0)]
+	[Native ("SSReadingListErrorCode")]
 	[ErrorDomain ("SSReadingListErrorDomain")]
 	public enum SSReadingListError : long {
 		UrlSchemeNotAllowed = 1
@@ -22,6 +27,8 @@ namespace SafariServices {
 	[NoMac]
 	[iOS (9,0)]
 	[Deprecated (PlatformName.iOS, 10,0, message: "Use 'SFErrorCode' enum.")]
+	[MacCatalyst (13,4)]
+	[Deprecated (PlatformName.MacCatalyst, 13,4, message: "Use 'SFErrorCode' enum.")]
 	[Native]
 	[ErrorDomain ("SFContentBlockerErrorDomain")]
 	public enum SFContentBlockerErrorCode : long {
@@ -32,6 +39,7 @@ namespace SafariServices {
 	}
 
 	[iOS (10,0)]
+	[Introduced (PlatformName.MacCatalyst, 13,4)]
 	[Native]
 	[ErrorDomain ("SFErrorDomain")]
 	public enum SFErrorCode : long
@@ -60,13 +68,16 @@ namespace SafariServices {
 		CanceledLogin = 1,
 	}
 
+#if !NET
+	[Obsolete ("Enum not used by any API.")]
 	[NoiOS]
-	[Mac (10,12,4, onlyOn64: true)]
+	[Mac (10,12,4)]
 	[Native]
 	public enum SFSafariServicesVersion : long {
 		V10_0,
 		V10_1,
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		V11_0,
 	}
+#endif
 }

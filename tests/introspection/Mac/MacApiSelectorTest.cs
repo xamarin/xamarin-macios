@@ -11,16 +11,12 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 using Xamarin.Tests;
+using Xamarin.Utils;
 
 namespace Introspection {
 	
@@ -113,6 +109,17 @@ namespace Introspection {
 			case "MonoMac.Growl":
 			case "Growl":
 				return true;
+			case "QTKit":
+				// QTKit is gone in 10.15.
+				if (Mac.CheckSystemVersion (10, 15))
+					return true;
+				break;
+#if !NET
+			case "Chip":
+				// The Chip framework is not stable, it's been added and removed and added and removed a few times already, so just skip verifying the entire framework.
+				// This is legacy Xamarin only, because we removed the framework for .NET.
+				return true;
+#endif
 			}
 
 			return base.Skip (type);
@@ -144,7 +151,7 @@ namespace Introspection {
 				// The header declares this on an NSObject category but 
 				// it doesn't even respondsToSelector on NSView/NSCell...
 				return true;
-#if !XAMCORE_4_0
+#if !NET
 			case "xamarinselector:removed:":
 				return true;
 #endif
@@ -155,11 +162,6 @@ namespace Introspection {
 				// compat.
 				return true;
 #endif
-			case "waitUntilExit":
-				// category, NSTask won't respond -> @interface NSTask (NSTaskConveniences)
-				if (type.Name == "NSTask")
-					return true;
-				break;
 			case "readInBackgroundAndNotifyForModes:":
 			case "readInBackgroundAndNotify":
 			case "readToEndOfFileInBackgroundAndNotifyForModes:":
@@ -191,8 +193,11 @@ namespace Introspection {
 					if (!Mac.CheckSystemVersion (10, 9))
 						return true;
 					break;
-				case "MPSImageDescriptor":
-					if (!Mac.CheckSystemVersion (10, 14)) // Likely to be fixed when we do MPS binding
+				case "SFSafariPage":
+				case "SFSafariTab":
+				case "SFSafariToolbarItem":
+				case "SFSafariWindow":
+					if (!Mac.CheckSystemVersion (10, 15))
 						return true;
 					break;
 				}
@@ -203,6 +208,54 @@ namespace Introspection {
 			case "newWindowForTab:": // "This method can be implemented in the responder chain", optional but not protocol directly on NSResponder
 				switch (type.Name) {
 				case "NSViewController":
+					return true;
+				}
+				break;
+			case "startup:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipDeviceController":
+					return true;
+				}
+				break;
+			case "readAttributeFabricIdWithResponseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipGeneralCommissioning":
+					return true;
+				}
+				break;
+			case "removeAllFabrics:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "removeFabric:nodeId:vendorId:responseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "setFabric:responseHandler:": // tested on mac os x with a swift project, selector does respond
+				switch (type.Name) {
+				case "ChipOperationalCredentials":
+					return true;
+				}
+				break;
+			case "loadedTimeRanges":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
+			case "URLAsset":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
+					return true;
+				}
+				break;
+			case "options":
+				switch (type.Name) {
+				case "AVAssetDownloadTask":
 					return true;
 				}
 				break;
@@ -345,6 +398,10 @@ namespace Introspection {
 						if (Mac.CheckSystemVersion (10, 13))
 							return true;
 						break;
+					case "progress":
+						if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
+							return true;
+						break;
 					}
 					break;
 				case "NSUrlSessionConfiguration":
@@ -374,8 +431,15 @@ namespace Introspection {
 						return true;
 					}
 					break;
-
-#if !XAMCORE_3_0		// These should be not be marked [Abstract] but can't fix w/o breaking change...
+#if !NET // NSMenuView does not exist in .NET
+				case "NSMenuView":
+					switch (selectorName) {
+					case "menuBarHeight":
+						return TestRuntime.IsVM; // skip on vms due to hadware problems
+					}
+					break;
+#endif // !NET
+#if !NET		// These should be not be marked [Abstract] but can't fix w/o breaking change...
 				case "NSScrollView":
 				case "NSTextView":
 					switch (selectorName) {
@@ -402,7 +466,7 @@ namespace Introspection {
 #endif
 				case "NSMenuDelegate":
 					switch (selectorName) {
-#if !XAMCORE_3_0
+#if !NET
 					case "menu:willHighlightItem:":
 						return true; // bound
 #endif
@@ -575,7 +639,7 @@ namespace Introspection {
 					break;
 				case "PdfView":
 					switch (selectorName) {
-#if !XAMCORE_3_0					
+#if !NET
 					case "menu:willHighlightItem:":
 						return true;
 #endif
@@ -635,6 +699,74 @@ namespace Introspection {
 					if (selectorName == "UUID" && Mac.CheckSystemVersion (10, 13)) // UUID removed from headers in 10.13
 						return true;
 					break;
+				}
+				break;
+			case "ImageCaptureCore":
+				switch (type.Name) {
+				case "ICDevice":
+					switch (selectorName) {
+					case "buttonPressed":
+						// It's just gone! https://github.com/xamarin/maccore/issues/1796
+						if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15))
+							return true;
+						break;
+					}
+					break;
+				}
+				break;
+			case "Photos":
+				switch (type.Name) {
+				case "PHAsset":
+					switch (selectorName) {
+					case "isSyncFailureHidden":
+						// It's just gone! https://github.com/xamarin/maccore/issues/1797
+						if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15))
+							return true;
+						break;
+					}
+					break;
+				}
+				break;
+			case "AVFoundation":
+				switch (type.Name) {
+				case "AVCaptureDevice":
+					switch (selectorName) {
+					// macOS 11.0 / AVCaptureDeviceTransportControls category selectors don't respond anymore
+					case "setTransportControlsPlaybackMode:speed:":
+					case "transportControlsPlaybackMode":
+					case "transportControlsSpeed":
+					case "transportControlsSupported":
+						return true;
+					}
+					break;
+				case "AVCapturePhoto":
+					switch (selectorName) {
+					case "fileDataRepresentationWithReplacementMetadata:replacementEmbeddedThumbnailPhotoFormat:replacementEmbeddedThumbnailPixelBuffer:replacementDepthData:":
+						// This method was mistakenly bound in macOS.
+						return true;
+					}
+					break;
+				case "AVSpeechSynthesisVoice":
+					switch (selectorName) {
+					case "gender":
+						// Selector not there: https://github.com/xamarin/maccore/issues/1949
+						return true;
+					}
+					break;
+				break;
+				}
+				break;
+			case "Metal":
+				switch (type.Name) {
+				case "MTLCounterSampleBufferDescriptor":
+				case "MTLRasterizationRateMapDescriptor":
+				case "MTLTileRenderPipelineDescriptor":
+				case "MTLHeapDescriptor":
+				case "MTLRasterizationRateLayerDescriptor":
+				case "MTLLinkedFunctions":
+					// This whole type is implemented using a different (internal) type,
+					// and it's the internal type who knows how to respond to the selectors.
+					return true;
 				}
 				break;
 			}
@@ -1043,6 +1175,9 @@ namespace Introspection {
 			case "cancelPendingPrerolls":                   // 10.8+
 			case "masterClock":                             // 10.8+
 			case "setMasterClock:":				// 10.8+
+			// AVUrlAsset
+			case "contentKeySession:didProvideContentKey:": // fails because it is in-lined via protocol AVContentKeyRecipient
+				return true;
 			// NSDateComponents
 			case "isLeapMonth":				// 10.8+
 			case "setLeapMonth:":				// 10.8+
@@ -1093,10 +1228,6 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 8))
 					return true;
 				break;
-			case "initWithString:":
-				if (declaredType.Name == "NSTextStorage")
-					return true;
-				break;
 			}
 
 			switch (declaredType.Name) {
@@ -1127,10 +1258,15 @@ namespace Introspection {
 				case "taskDescription":
 				case "setTaskDescription:":
 				case "taskIdentifier":
+					if (!Mac.CheckSystemVersion (10, 11))
+						return true;
+					break;
 				case "priority":
 				case "setPriority:":
 					if (!Mac.CheckSystemVersion (10, 11))
 						return true;
+					if (Mac.CheckSystemVersion (10, 15))
+						return true; // it works fine at both build time and runtime, so this is probably a weird implementation detail where reflection doesn't find the methods.
 					break;
 				}
 				break;
@@ -1200,17 +1336,10 @@ namespace Introspection {
 			// QTMovie
 			case "movieWithTimeRange:error:":
 			case "initWithQuickTimeMedia:error:":
-			// NSAppleEventDescriptor
-			case "initListDescriptor":
-			case "initRecordDescriptor":
 			// NSAnimation
 			case "initWithDuration:animationCurve:":
 				return true;
 #endif
-			// NSImage
-			case "initWithDataIgnoringOrientation:":
-				var mi = m as MethodInfo;
-				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
 			default:
 				return base.SkipInit (selector, m);
 			}

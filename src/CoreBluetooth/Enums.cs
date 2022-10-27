@@ -11,6 +11,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreBluetooth {
 
 	[Mac (10,13)]
@@ -40,7 +42,6 @@ namespace CoreBluetooth {
 	}
 
 	// NSInteger -> CBPeripheralManager.h
-	[iOS (6, 0)]
 	[Deprecated (PlatformName.iOS, 10, 0, message: "Use 'CBManagerState' instead.")]
 	[NoWatch]
 	[Native]
@@ -64,7 +65,7 @@ namespace CoreBluetooth {
 		Disconnecting,
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	// NSInteger -> CBPeripheralManager.h
 	[Watch (4,0)]
 	[Native]
@@ -74,7 +75,7 @@ namespace CoreBluetooth {
 		Denied,
 		Authorized,
 	}
-#endif
+#endif // !NET
 
 	// NSUInteger -> CBCharacteristic.h
 	[Watch (4,0)]
@@ -110,14 +111,13 @@ namespace CoreBluetooth {
 		PeripheralDisconnected,
 		UUIDNotAllowed,
 		AlreadyAdvertising,
-		[iOS (7,1)][Mac (10,13)]
 		ConnectionFailed,
-		[iOS (9,0)][Mac (10,13)]
 		ConnectionLimitReached,
-		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		UnknownDevice,
-		[iOS (12,0)][TV (12,0)][Mac (10,14)][Watch (5,0)]
 		OperationNotSupported,
+		PeerRemovedPairingInformation,
+		EncryptionTimedOut,
+		TooManyLEPairedDevices = 16,
 	}
 
 	[Watch (4,0)]
@@ -171,5 +171,27 @@ namespace CoreBluetooth {
 		Low = 0,
 		Medium,
 		High
+	}
+
+	[iOS (13,0), TV (13,0), Watch (6,0), Mac (10,15)]
+	[Native]
+	public enum CBConnectionEvent : long {
+		Disconnected = 0,
+		Connected = 1,
+	}
+
+	[Flags, iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+	[Native]
+	public enum CBCentralManagerFeature : ulong {
+		ExtendedScanAndConnect = 1uL << 0,
+	}
+
+	[iOS (13,0), TV (13,0), Watch (6,0), Mac (10,15)]
+	[Native]
+	public enum CBManagerAuthorization : long {
+		NotDetermined = 0,
+		Restricted,
+		Denied,
+		AllowedAlways,
 	}
 }

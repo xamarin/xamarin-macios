@@ -1,22 +1,17 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
-#if XAMCORE_2_0
-using CoreFoundation;
 using Foundation;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-#endif
 
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
-	public class AA_NSStreamTest 
+	[Preserve (AllMembers = true)]
+	public class NSStreamTest 
 	{
 		[Test]
 		public void BoundPairTest ()
@@ -29,7 +24,7 @@ namespace MonoTouchFixtures.Foundation {
 			write.Open ();
 
 			var send = Encoding.ASCII.GetBytes ("hello, world");
-			var n = send.Length;
+			nint n = send.Length;
 
 			Assert.AreEqual (n, write.Write (send));
 			var result = new byte [n+10];
@@ -80,9 +75,9 @@ namespace MonoTouchFixtures.Foundation {
 			read.Open ();
 			write.Open ();
 			var send = new byte[] { 1, 2, 3, 4, 5 };
-			Assert.AreEqual (5, write.Write (send));
+			Assert.AreEqual ((nint) 5, write.Write (send));
 			var result = new byte [5];
-			Assert.AreEqual (5, read.Read (result,5));
+			Assert.AreEqual ((nint) 5, read.Read (result,5));
 			for (int i = 0; i < 5; i++)
 				Assert.AreEqual (send [i] * 10, result [i]);
 			listenThread.Join ();
@@ -110,9 +105,9 @@ namespace MonoTouchFixtures.Foundation {
 			read.Open ();
 			write.Open ();
 			var send = new byte[] { 1, 2, 3, 4, 5 };
-			Assert.AreEqual (5, write.Write (send));
+			Assert.AreEqual ((nint) 5, write.Write (send), "Write");
 			var result = new byte [5];
-			Assert.AreEqual (5, read.Read (result,5));
+			Assert.AreEqual ((nint) 5, read.Read (result,5), "Read");
 			for (int i = 0; i < 5; i++)
 				Assert.AreEqual (send [i] * 10, result [i]);
 			listenThread.Join ();
@@ -137,4 +132,3 @@ namespace MonoTouchFixtures.Foundation {
 #endif // !__WATCHOS__
 	}
 }
-

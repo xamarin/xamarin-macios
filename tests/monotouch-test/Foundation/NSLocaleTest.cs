@@ -1,15 +1,6 @@
 using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {

@@ -1,5 +1,7 @@
-#if XAMCORE_2_0 && !COREBUILD
+#if !COREBUILD
 using System;
+
+#nullable enable
 
 namespace Metal {
 	public partial class MTLRenderPassDescriptor {

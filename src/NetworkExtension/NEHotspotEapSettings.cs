@@ -1,4 +1,4 @@
-﻿//
+//
 // NEHotspotEapSettings.cs
 //
 // Authors:
@@ -7,7 +7,9 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && !MONOMAC
+#nullable enable
+
+#if !MONOMAC
 using System;
 using Foundation;
 
@@ -16,11 +18,11 @@ namespace NetworkExtension {
 
 		public NEHotspotConfigurationEapType [] SupportedEapTypes {
 			get {
-				return NSArray.EnumsFromHandle<NEHotspotConfigurationEapType> (_SupportedEapTypes);
+				return NSArray.EnumsFromHandle<NEHotspotConfigurationEapType> (_SupportedEapTypes)!;
 			}
 			set {
-				if (value == null)
-					throw new ArgumentNullException (nameof (value));
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 
 				var ret = NSArray.From (value, value.Length);
 				_SupportedEapTypes = ret.Handle;

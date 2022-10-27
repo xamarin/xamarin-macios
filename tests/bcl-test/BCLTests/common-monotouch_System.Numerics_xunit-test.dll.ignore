@@ -1,7 +1,0 @@
-## DEVICE FAILURES
-
-System.Numerics.Tests.GenericVectorTests.GreaterThanAllSingle
-System.Numerics.Tests.GenericVectorTests.ConditionalSelectSingle
-System.Numerics.Tests.GenericVectorTests.LessThanAllSingle
-System.Numerics.Tests.GenericVectorTests.GreaterThanOrEqualAllSingle
-System.Numerics.Tests.GenericVectorTests.LessThanOrEqualAllSingle

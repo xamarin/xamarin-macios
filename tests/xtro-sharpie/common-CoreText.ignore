@@ -49,7 +49,6 @@
 !missing-field! kCTFontLicenseNameKey not bound
 !missing-field! kCTFontLicenseURLNameKey not bound
 !missing-field! kCTFontMacintoshEncodingsAttribute not bound
-!missing-field! kCTFontManagerErrorFontURLsKey not bound
 !missing-field! kCTFontManagerRegisteredFontsChangedNotification not bound
 !missing-field! kCTFontManufacturerNameKey not bound
 !missing-field! kCTFontMatrixAttribute not bound
@@ -102,16 +101,16 @@
 !missing-field! kCTUnderlineStyleAttributeName not bound
 !missing-field! kCTVerticalFormsAttributeName not bound
 !missing-field! kCTWritingDirectionAttributeName not bound
+!missing-field! kCTFontOpticalSizeAttribute not bound
+!missing-field! kCTFontVariationAxesAttribute not bound
 !missing-pinvoke! CTFontCollectionGetTypeID is not bound
 !missing-pinvoke! CTFontDescriptorCreateCopyWithFamily is not bound
 !missing-pinvoke! CTFontDescriptorCreateCopyWithSymbolicTraits is not bound
 !missing-pinvoke! CTFontDescriptorGetTypeID is not bound
 !missing-pinvoke! CTFontManagerCopyAvailableFontFamilyNames is not bound
 !missing-pinvoke! CTFontManagerCopyAvailablePostScriptNames is not bound
-!missing-pinvoke! CTFontManagerCreateFontDescriptorFromData is not bound
 !missing-pinvoke! CTFrameGetTypeID is not bound
 !missing-pinvoke! CTFramesetterGetTypeID is not bound
-!missing-pinvoke! CTGetCoreTextVersion is not bound
 !missing-pinvoke! CTGlyphInfoGetTypeID is not bound
 !missing-pinvoke! CTLineGetTypeID is not bound
 !missing-pinvoke! CTParagraphStyleGetTypeID is not bound
@@ -132,5 +131,8 @@
 !missing-pinvoke! CTTextTabGetTypeID is not bound
 !missing-pinvoke! CTTypesetterGetTypeID is not bound
 
-## Manually bound field
-!missing-field! kCTCharacterShapeAttributeName not bound
+## part of an unnamed enum inside CTStringAttributes.h
+!extra-enum-value! Managed value 2 for CTWritingDirection.Override not found in native headers
+
+!missing-pinvoke! CTFontCollectionCopyFontAttribute is not bound
+!missing-pinvoke! CTFontCollectionCopyFontAttributes is not bound

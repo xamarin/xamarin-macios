@@ -8,25 +8,9 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 using NUnit.Framework;
 
@@ -50,6 +34,9 @@ namespace LinkSdk.Aot {
 	}
 	
 	interface IAotTest {
+	}
+
+	interface IExpectException {
 	}
 	
 	[TestFixture]
@@ -271,8 +258,6 @@ namespace LinkSdk.Aot {
 		public void Continuation_2337 ()
 		{
 			InnerTestB<string> ();
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
 		}
 		
 		// https://bugzilla.xamarin.com/show_bug.cgi?id=3902
@@ -336,10 +321,6 @@ namespace LinkSdk.Aot {
 			// query is ok
 			foreach (var result in results)
 				Assert.NotNull (result);
-			// accessing elements throws with:
-			// Attempting to JIT compile method 'System.Linq.Enumerable:<ToLookup`2>m__5A<MonoTouchFixtures.AotBugsTest/Section, int> (MonoTouchFixtures.AotBugsTest/Section)' while running with --aot-only.
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
 		}
 
 		[Test]
@@ -389,8 +370,6 @@ namespace LinkSdk.Aot {
 			OverrideGeneric g = new OverrideGeneric ();
 			// Attempting to JIT compile method 'MonoTouchFixtures.AotBugsTest/OverrideGeneric:MakeCollectionOfInputs<double> (double,double,double)' while running with --aot-only.
 			g.MakeCollectionOfInputs<double> (1.0, 2.0, 3.0);
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
 		}
 		
 		public sealed class NewDictionary<TKey, TValue> {
@@ -414,8 +393,6 @@ namespace LinkSdk.Aot {
 		{
 			// Attempting to JIT compile method 'MonoTouchFixtures.AotBugsTest/NewDictionary`2<string, string>:ForEach<System.Collections.Generic.KeyValuePair`2<string, string>> (System.Collections.Generic.IEnumerable`1<System.Collections.Generic.KeyValuePair`2<string, string>>,System.Action`1<System.Collections.Generic.KeyValuePair`2<string, string>>)' while running with --aot-only.
 			new NewDictionary<string, string> (null);
-			if (Runtime.Arch == Arch.SIMULATOR)
-				Assert.Inconclusive ("only fails on devices");
 		}
 		
 		public class Enumbers<T> {
@@ -431,12 +408,11 @@ namespace LinkSdk.Aot {
 		}
 
 		[Test]
-		[ExpectedException (typeof (NullReferenceException))]
 		public void AsEnumerable_4114 ()
 		{
 			Enumbers<string> e = new Enumbers<string> ();
 			//  Attempting to JIT compile method 'System.Collections.Generic.List`1<System.Collections.Generic.KeyValuePair`2<string, string>>:ToArray ()' while running with --aot-only.
-			e.Enumerate (null);
+			Assert.Throws<NullReferenceException> (() => e.Enumerate (null));
 		}
 
 		static object mInstance = null;
@@ -483,6 +459,9 @@ namespace LinkSdk.Aot {
 		}
 
 		[Test]
+#if NET
+		[Ignore ("MulticastDelegate.BeginInvoke isn't supported in .NET (https://github.com/dotnet/runtime/issues/16312)")]
+#endif
 		public void Bug5354 ()
 		{
 			Action<string> testAction = (string s) => { s.ToString (); };
@@ -600,8 +579,8 @@ namespace LinkSdk.Aot {
 		[Test]
 		public void Bug26245 ()
 		{
-			var c = new Collection<PointF> ();
-			c.Add (new PointF (50, 50)); // crashed under ARM64
+			var c = new Collection<CGPoint> ();
+			c.Add (new CGPoint (50, 50)); // crashed under ARM64
 			Assert.That (c.Count, Is.EqualTo (1));
 		}
 

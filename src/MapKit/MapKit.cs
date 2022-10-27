@@ -7,7 +7,7 @@
 // Copyright 2009 Novell, Inc.
 // Copyright 2014-2015 Xamarin Inc.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using System.Runtime.InteropServices;
 using CoreGraphics;
@@ -15,10 +15,18 @@ using CoreLocation;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace MapKit {
 
 #if !WATCH
 	// MKTileOverlay.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKTileOverlayPath
 	{
@@ -31,6 +39,12 @@ namespace MapKit {
 
 	// MKGeometry.h
 	// note: CLLocationDegrees is double - see CLLocation.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKCoordinateSpan {
 		public /* CLLocationDegrees */ double LatitudeDelta;
@@ -50,8 +64,15 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Mac (10,9)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
-	[Mac (10,9, onlyOn64 : true)]
 	public struct MKCoordinateRegion {
 		public CLLocationCoordinate2D Center;
 		public MKCoordinateSpan Span;
@@ -77,8 +98,15 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Mac (10,9)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
-	[Mac (10,9, onlyOn64 : true)]
 	public struct MKMapPoint {
 		public double X, Y;
 
@@ -106,7 +134,7 @@ namespace MapKit {
 			return a.X != b.X || a.Y != b.Y;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is MKMapPoint){
 				var omap = (MKMapPoint) other;
@@ -129,6 +157,12 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct MKMapSize {
 		public double Width, Height;
@@ -140,7 +174,14 @@ namespace MapKit {
 			Height = height;
 		}
 
+#if NET
+		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#else
 		[TV (9,2)]
+#endif
 		public static MKMapSize World { get { return new MKMapSize (0x10000000, 0x10000000); }}
 		
 		// MKMapSizeEqualToSize
@@ -154,7 +195,7 @@ namespace MapKit {
 			return a.Width != b.Width || a.Height != b.Height;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is MKMapSize) {
 				var omap = (MKMapSize) other;
@@ -177,10 +218,24 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Mac (10,9)]
+#endif
 	[StructLayout (LayoutKind.Sequential)]
-	[Mac (10,9, onlyOn64 : true)]
 	public struct MKMapRect {
+#if NET
+		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
 		[TV (9,2)]
+#endif
 		public static readonly MKMapRect Null = new MKMapRect (double.PositiveInfinity, double.PositiveInfinity, 0, 0);
 
 		public MKMapPoint Origin;
@@ -271,7 +326,14 @@ namespace MapKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("tvos9.2")]
+		[SupportedOSPlatform ("macos10.9")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
 		[TV (9,2)]
+#endif
 		public MKMapRect World {
 			get {
 				return new MKMapRect (0, 0, 0x10000000, 0x10000000);
@@ -289,7 +351,7 @@ namespace MapKit {
 			return a.Origin != b.Origin || a.Size != b.Size;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (other is MKMapRect) {
 				var omap = (MKMapRect) other;
@@ -311,7 +373,8 @@ namespace MapKit {
 		}
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapRectContainsPoint")]
-		static extern bool MKMapRectContainsPoint (MKMapRect rect, MKMapPoint point);
+		[return: MarshalAs (UnmanagedType.I1)]
+ 		static extern bool MKMapRectContainsPoint (MKMapRect rect, MKMapPoint point);
 		
 		public bool Contains (MKMapPoint point)
 		{
@@ -319,6 +382,7 @@ namespace MapKit {
 		}
 
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapRectContainsRect")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool MKMapRectContainsRect (MKMapRect rect1, MKMapRect rect2);
 		
 		public bool Contains (MKMapRect rect)
@@ -333,6 +397,7 @@ namespace MapKit {
 		static public extern MKMapRect Intersection (MKMapRect rect1, MKMapRect rect2);
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapRectIntersectsRect")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static public extern bool Intersects (MKMapRect rect1, MKMapRect rect2);
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapRectInset")]
@@ -362,6 +427,7 @@ namespace MapKit {
 		}
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapRectSpans180thMeridian")]
+		[return: MarshalAs (UnmanagedType.I1)]
 		static extern bool MKMapRectSpans180thMeridian (MKMapRect rect);
 		
 		public bool Spans180thMeridian {
@@ -378,7 +444,14 @@ namespace MapKit {
 	}
 
 	// MKGeometry.h
-	[Mac (10,9, onlyOn64 : true)]
+#if NET
+	[SupportedOSPlatform ("macos10.9")]
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Mac (10,9)]
+#endif
 	public static class MKGeometry {
 		
 		[DllImport (Constants.MapKitLibrary, EntryPoint="MKMapPointsPerMeterAtLatitude")]
@@ -394,22 +467,5 @@ namespace MapKit {
 #if COREBUILD
 	public partial class MKMapLaunchOptions :NSObject {
 	}
-#elif !XAMCORE_2_0
-	public partial class MKLocalSearch {
-
-		[Obsolete ("This will not work on iOS8+")]
-		public MKLocalSearch ()
-		{
-		}
-	}
-
-	public partial class MKTileOverlayRenderer {
-
-		[Obsolete ("This will not work on iOS8+")]
-		public MKTileOverlayRenderer ()
-		{
-		}
-	}
 #endif
 }
-#endif

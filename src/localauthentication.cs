@@ -10,9 +10,9 @@ namespace LocalAuthentication {
 	public enum LABiometryType : long {
 		None,
 		TouchId,
-		[NoMac]
+		[Mac (10,15)]
 		FaceId,
-#if !XAMCORE_4_0
+#if !NET
 		[NoMac]
 		[Obsolete ("Use 'FaceId' instead.")]
 		TypeFaceId = FaceId,
@@ -22,15 +22,15 @@ namespace LocalAuthentication {
 	[iOS (8,0), Mac (10,10)]
 	delegate void LAContextReplyHandler (bool success, NSError error);
 
-	[iOS (8,0), Mac (10,10, onlyOn64 : true)] // ".objc_class_name_LAContext", referenced from: '' not found
+	[iOS (8,0), Mac (10,10)] // ".objc_class_name_LAContext", referenced from: '' not found
 	[BaseType (typeof (NSObject))]
 	interface LAContext {
 		[NullAllowed] // by default this property is null
 		[Export ("localizedFallbackTitle")]
 		string LocalizedFallbackTitle { get; set; }
 
-#if !XAMCORE_4_0
-		[iOS (8,3), Mac (10,10)]
+#if !NET
+		[iOS (8,3)]
 		[Field ("LAErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
@@ -70,20 +70,20 @@ namespace LocalAuthentication {
 		[NullAllowed, Export ("localizedCancelTitle")]
 		string LocalizedCancelTitle { get; set; }
 
-		[iOS (9,0)][Mac (10,12,4, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,12,4)]
 		[Field ("LATouchIDAuthenticationMaximumAllowableReuseDuration")]
 		double /* NSTimeInterval */ TouchIdAuthenticationMaximumAllowableReuseDuration { get; }
 
-		[iOS (9,0)][Mac (10,12,4, onlyOn64 : true)]
+		[iOS (9,0)][Mac (10,12,4)]
 		[Export ("touchIDAuthenticationAllowableReuseDuration")]
 		double /* NSTimeInterval */ TouchIdAuthenticationAllowableReuseDuration { get; set; }
 
-#if !MONOMAC
-		[Availability (Introduced = Platform.iOS_8_3, Deprecated = Platform.iOS_9_0)]
+		[iOS (8, 3), Deprecated (PlatformName.iOS, 9, 0)]
+		[Mac (10, 10, 3), Deprecated (PlatformName.MacOSX, 10, 11)]
 		[NullAllowed]
 		[Export ("maxBiometryFailures")]
 		NSNumber MaxBiometryFailures { get; set; }
-#endif
+
 		[NoWatch, NoTV, Mac (10, 13), iOS (11, 0)]
 		[Export ("localizedReason")]
 		string LocalizedReason { get; set; }

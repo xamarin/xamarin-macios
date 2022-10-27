@@ -63,7 +63,10 @@ namespace CoreLocation {
 
 		// ios7
 		RangingFailure,
-		RangingUnavailable
+		RangingUnavailable,
+
+		// ios14
+		PromptDeclined = 18,
 	}
 
 	// untyped enum -> CLLocationManager.h
@@ -99,4 +102,12 @@ namespace CoreLocation {
 		[iOS (12,0)][TV (12,0)][Watch (5,0)][Mac (10,14)]
 		Airborne,
 	}
+
+	[Native]
+	[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+	public enum CLAccuracyAuthorization : long {
+		FullAccuracy,
+		ReducedAccuracy,
+	}
+
 }

@@ -16,10 +16,9 @@
 //   Aaron Bockover <abock@xamarin.com>
 //   Miguel de Icaza <miguel@xamarin.com>
 //
+// Copyright 2020 Microsoft Corp. All Rights Reserved.
 // Copyright 2013 Xamarin, Inc. All rights reserved.
 //
-
-#if XAMCORE_2_0
 
 <#@ template language="C#v3.5" #>
 <#@ import namespace="System" #>
@@ -30,10 +29,9 @@ using System.Drawing;
 #endif
 using System.Globalization;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
+
 using Foundation;
 using ObjCRuntime;
-#endif
 
 namespace CoreGraphics
 {
@@ -46,13 +44,14 @@ namespace CoreGraphics
 	}) {
 #>
 	[Serializable]
-	public struct <#= type.Name #> : IEquatable<<#= type.Name #>>
+	public partial struct <#= type.Name #> : IEquatable<<#= type.Name #>>
 	{
 		public static readonly <#= type.Name #> Empty;
 
 		public static bool operator == (<#= type.Name #> l, <#= type.Name #> r)
 		{
-			return l.<#= type.X_Width #> == r.<#= type.X_Width #> && l.<#= type.Y_Height #> == r.<#= type.Y_Height #>;
+			// the following version of Equals cannot be removed by the linker, while == can be
+			return l.Equals (r);
 		}
 
 		public static bool operator != (<#= type.Name #> l, <#= type.Name #> r)
@@ -164,10 +163,10 @@ namespace CoreGraphics
 			this.<#= type.Y_Height #> = <#= type.ArgName #>.<#= type.Y_Height #>;
 		}
 
-#if XAMCORE_2_0 && !COREBUILD
+#if !COREBUILD
 		public static bool TryParse (NSDictionary dictionaryRepresentation, out <#= type.Name #> <#= type.ArgName #>)
 		{
-			if (dictionaryRepresentation == null){
+			if (dictionaryRepresentation is null) {
 			   	<#= type.ArgName #> = Empty;
 				return false;
 			}
@@ -190,31 +189,35 @@ namespace CoreGraphics
 <# } #>
 		public override bool Equals (object obj)
 		{
-			if (obj is <#= type.Name #>) {
-				return this == (<#= type.Name #>)obj;
-			}
-
-			return false;
+			return (obj is <#= type.Name #> t) && Equals (t);
 		}
 
 <# if (type.Name == "CGPoint") { #>
 		public bool Equals (CGPoint point)
 		{
-			return this == point;
+			return point.<#= type.X_Width #> == <#= type.X_Width #> && point.<#= type.Y_Height #> == <#= type.Y_Height #>;
 		}
 <# } else { #>
 		public bool Equals (CGSize size)
 		{
-			return this == size;
+			return size.<#= type.X_Width #> == <#= type.X_Width #> && size.<#= type.Y_Height #> == <#= type.Y_Height #>;
 		}
 <# } #>
 
+#if !NET
 		public override int GetHashCode ()
 		{
 			var hash = 23;
 			hash = hash * 31 + <#= type.X_Width #>.GetHashCode ();
 			hash = hash * 31 + <#= type.Y_Height #>.GetHashCode ();
 			return hash;
+		}
+#endif
+
+		public void Deconstruct (out nfloat <#= type.X_Width #>, out nfloat <#= type.Y_Height #>)
+		{
+			<#= type.X_Width #> = <#= ucfirst (type.X_Width) #>;
+			<#= type.Y_Height #> = <#= ucfirst (type.Y_Height) #>;
 		}
 
 <# if (type.Name == "CGSize") { #>
@@ -243,6 +246,7 @@ namespace CoreGraphics
 		}
 
 <# } #>
+#if !NET
 		public override string ToString ()
 		{
 			return String.Format ("{{<#= ucfirst (type.X_Width) #>={0}, <#= ucfirst (type.Y_Height) #>={1}}}",
@@ -250,12 +254,13 @@ namespace CoreGraphics
 				<#= type.Y_Height #>.ToString (CultureInfo.CurrentCulture)
 			);
 		}
+#endif
 	}
 
 <# } #>
 
 	[Serializable]
-	public struct CGRect : IEquatable<CGRect>
+	public partial struct CGRect : IEquatable<CGRect>
 	{
 		[Field ("CGRectZero", "CoreGraphics")] // unused but helps xtro
 		public static readonly CGRect Empty;
@@ -274,11 +279,8 @@ namespace CoreGraphics
 
 		public static bool operator == (CGRect left, CGRect right)
 		{
-			return
-				left.X == right.X &&
-				left.Y == right.Y &&
-				left.Width == right.Width &&
-				left.Height == right.Height;
+			// the following version of Equals cannot be removed by the linker, while == can be
+			return left.Equals (right);
 		}
 
 		public static bool operator != (CGRect left, CGRect right)
@@ -548,18 +550,19 @@ namespace CoreGraphics
 
 		public override bool Equals (object obj)
 		{
-			if (obj is CGRect) {
-				return this == (CGRect)obj;
-			}
-
-			return false;
+			return (obj is CGRect rect) && Equals (rect);
 		}
 
 		public bool Equals (CGRect rect)
 		{
-			return this == rect;
+			return
+				x == rect.x &&
+				y == rect.y &&
+				width == rect.width &&
+				height == rect.height;
 		}
 
+#if !NET
 		public override int GetHashCode ()
 		{
 			var hash = 23;
@@ -575,11 +578,26 @@ namespace CoreGraphics
 			return String.Format ("{{X={0},Y={1},Width={2},Height={3}}}",
 				x, y, width, height);
 		}
+#endif
 
-#if XAMCORE_2_0 && !COREBUILD
+		public void Deconstruct (out nfloat x, out nfloat y, out nfloat width, out nfloat height)
+		{
+			x = X;
+			y = Y;
+			width = Width;
+			height = Height;
+		}
+
+		public void Deconstruct (out CGPoint location, out CGSize size)
+		{
+			location = Location;
+			size = Size;
+		}
+
+#if !COREBUILD
 		public static bool TryParse (NSDictionary dictionaryRepresentation, out CGRect rect)
 		{
-			if (dictionaryRepresentation == null){
+			if (dictionaryRepresentation is null) {
 			   	rect = Empty;
 				return false;
 			}
@@ -593,7 +611,7 @@ namespace CoreGraphics
 #endif
 	}
 
-#if XAMCORE_2_0 && !COREBUILD
+#if !COREBUILD
 	internal static class NativeDrawingMethods {
 #if MONOMAC
 		internal const string CG = Constants.ApplicationServicesCoreGraphicsLibrary;
@@ -601,10 +619,13 @@ namespace CoreGraphics
 		internal const string CG = Constants.CoreGraphicsLibrary;
 #endif
 		[DllImport (CG)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal extern static bool CGRectMakeWithDictionaryRepresentation (IntPtr dict, out CGRect rect);
 		[DllImport (CG)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal extern static bool CGPointMakeWithDictionaryRepresentation (IntPtr dict, out CGPoint point);
 		[DllImport (CG)]
+		[return: MarshalAs (UnmanagedType.I1)]
 		internal extern static bool CGSizeMakeWithDictionaryRepresentation (IntPtr dict, out CGSize point);
 
 		[DllImport (CG)]
@@ -616,5 +637,3 @@ namespace CoreGraphics
 	}
 #endif
 }
-
-#endif

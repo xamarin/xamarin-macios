@@ -20,22 +20,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
-using Foundation;
-using ObjCRuntime;
+#nullable enable
 
+#if !NET && WATCH // This empty partial class was accidentally included in our watchOS bindings.
 namespace AVFoundation {
-
 	public partial class AVAssetImageGenerator {
-
-#if !XAMCORE_2_0
-		// compatibility method
-		[Obsolete ("Use the overload that takes 'NSValue[]' instead.")]
-		public virtual void GenerateCGImagesAsynchronously (NSValue cmTimesRequestedTimes, AVAssetImageGeneratorCompletionHandler handler)
-		{
-			NSValue[] values = new NSValue[] { cmTimesRequestedTimes };
-			GenerateCGImagesAsynchronously (values, handler);
-		}
-#endif
 	}
 }
+#endif

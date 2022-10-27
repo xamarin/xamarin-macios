@@ -1,0 +1,13 @@
+## available in headers but not used in any (available) API
+!missing-enum! CMAttitudeReferenceFrame not bound
+!missing-enum! CMFallDetectionEventUserResolution not bound
+!missing-enum! CMMotionActivityConfidence not bound
+
+## available in headers but do not make much sense for macOS
+!missing-selector! CMAmbientPressureData::pressure not bound
+!missing-selector! CMAmbientPressureData::temperature not bound
+!missing-selector! CMRecordedRotationRateData::startDate not bound
+!missing-selector! CMRotationRateData::rotationRate not bound
+!missing-type! CMAmbientPressureData not bound
+!missing-type! CMRecordedRotationRateData not bound
+!missing-type! CMRotationRateData not bound

@@ -1,0 +1,9 @@
+# device failures:
+
+# Expected: 0
+# Actual:   -1 
+System.IO.Tests.FileInfo_Exists.TrueForNonRegularFile
+System.IO.Tests.DirectoryInfo_Exists.FalseForNonRegularFile
+
+# Exception messages: System.NullReferenceException : Object reference not set to an instance of an object
+System.Threading.Tasks.Tests.TaskSchedulerTests.GetScheduledTasksForDebugger_DebuggerAttached_ReturnsTasksFromCustomSchedulers

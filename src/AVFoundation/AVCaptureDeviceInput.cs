@@ -34,30 +34,14 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVCaptureDeviceInput {
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'FromDevice (AVCaptureDevice, out NSError)' instead.")]
-		static public AVCaptureDeviceInput FromDevice (AVCaptureDevice device, IntPtr handle)
+		static public AVCaptureDeviceInput? FromDevice (AVCaptureDevice device)
 		{
-			NSError error;
-			return FromDevice (device, out error);
+			return FromDevice (device, out var error);
 		}
-#endif
-
-		static public AVCaptureDeviceInput FromDevice (AVCaptureDevice device)
-		{
-			NSError error;
-			return FromDevice (device, out error);
-		}
-
-#if !XAMCORE_2_0
-		static NSError globalerr;
-		[Obsolete ("Use 'AVCaptureDeviceInput (AVCaptureDevice, out NSError)' instead.")]
-		public AVCaptureDeviceInput (AVCaptureDevice device, IntPtr handle) : this (device, out globalerr)
-		{
-		}
-#endif
 	}
 }
 

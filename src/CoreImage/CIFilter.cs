@@ -108,6 +108,7 @@
 //
 using System;
 using System.Diagnostics;
+using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
@@ -115,9 +116,19 @@ using CoreGraphics;
 using UIKit;
 #endif
 
+#nullable enable
+
 namespace CoreImage {
 	public partial class CIFilter {
+
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (8,0)]
+#endif
 		protected CIFilter () : base ()
 		{
 		}
@@ -132,86 +143,122 @@ namespace CoreImage {
 			return _FilterNamesInCategories (categories);
 		}
 
-		public NSObject this [NSString key] {
+		public NSObject? this [NSString key] {
 			get {
-				return ValueForKey (key);
+				return ValueForKey (key.GetHandle ());
 			}
 			set {
-				SetValueForKey (value, key);
+				SetValueForKey (value, key.GetHandle ());
 			}
 		}
 
-		internal NSObject ValueForKey (string key)
+		internal NSObject? ValueForKey (string key)
 		{
-			using (var nskey = new NSString (key))
-				return ValueForKey (nskey);
+			var ptr = CFString.CreateNative (key);
+			var value = ValueForKey (ptr);
+			CFString.ReleaseNative (ptr);
+			return value;
 		}
 
-		internal void SetValue (string key, NSObject value)
+		internal void SetValue (string key, NSObject? value)
 		{
-			using (var nskey = new NSString (key)){
-				SetValueForKey (value, nskey);
-			}
+			SetHandle (key, value.GetHandle ());
 		}
 		
 		internal static IntPtr CreateFilter (string name)
 		{
-			using (var nsname = new NSString (name))
-				return ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle ("filterWithName:"), nsname.Handle);
+			var ptr = CFString.CreateNative (name);
+			var result = ObjCRuntime.Messaging.IntPtr_objc_msgSend_IntPtr (class_ptr, Selector.GetHandle ("filterWithName:"), ptr);
+			CFString.ReleaseNative (ptr);
+			return result;
 		}
 
 		// helper methods
 		internal void SetFloat (string key, float value)
 		{
-			using (var nskey = new NSString (key))
-				SetValueForKey (new NSNumber (value), nskey);
+			using (var n = new NSNumber (value))
+				SetHandle (key, n.Handle);
 		}
 
 		internal void SetInt (string key, int value)
 		{
-			using (var nskey = new NSString (key))
-				SetValueForKey (new NSNumber (value), nskey);
+			using (var n = new NSNumber (value))
+				SetHandle (key, n.Handle);
+		}
+
+		internal void SetNInt (string key, nint value)
+		{
+			using (var n = new NSNumber (value))
+				SetHandle (key, n.Handle);
+		}
+
+		internal void SetNUInt (string key, nuint value)
+		{
+			using (var n = new NSNumber (value))
+				SetHandle (key, n.Handle);
 		}
 
 		internal void SetBool (string key, bool value)
 		{
-			using (var nskey = new NSString (key))
-				SetValueForKey (new NSNumber (value ? 1 : 0), nskey);
+			using (var n = new NSNumber (value ? 1 : 0))
+				SetHandle (key, n.Handle);
+		}
+
+		internal void SetString (string key, string value)
+		{
+			var ptr = CFString.CreateNative (value);
+			SetHandle (key, ptr);
+			CFString.ReleaseNative (ptr);
+		}
+
+		internal void SetValue (string key, CGPoint value)
+		{
+			using (var nsv = new CIVector (value.X, value.Y))
+				SetHandle (key, nsv.Handle);
+		}
+
+		internal void SetValue (string key, CGRect value)
+		{
+			using (var nsv = new CIVector (value.X, value.Y, value.Width, value.Height))
+				SetHandle (key, nsv.Handle);
+		}
+
+		internal T? Get<T> (string key) where T : class
+		{
+			var ptr = CFString.CreateNative (key);
+			var value = ValueForKey (key) as T;
+			CFString.ReleaseNative (ptr);
+			return value;
 		}
 
 		internal float GetFloat (string key)
 		{
-			using (var nskey = new NSString (key)){
-				var v = ValueForKey (nskey);
-				if (v is NSNumber)
-					return (v as NSNumber).FloatValue;
-				return 0;
-			}
+			return Get<NSNumber> (key)?.FloatValue ?? default (float);
 		}
 
 		internal int GetInt (string key)
 		{
-			using (var nskey = new NSString (key)){
-				var v = ValueForKey (nskey);
-				if (v is NSNumber)
-					return (v as NSNumber).Int32Value;
-				return 0;
-			}
+			return Get<NSNumber> (key)?.Int32Value ?? default (int);
+		}
+
+		internal nint GetNInt (string key)
+		{
+			return Get<NSNumber> (key)?.NIntValue ?? default (nint);
+		}
+
+		internal nuint GetNUInt (string key)
+		{
+			return Get<NSNumber> (key)?.NUIntValue ?? default (nuint);
 		}
 
 		internal bool GetBool (string key)
 		{
-			using (var nskey = new NSString (key)){
-				var v = ValueForKey (nskey);
-				if (v is NSNumber)
-					return (v as NSNumber).BoolValue;
-				return false;
-			}
+			return Get<NSNumber> (key)?.BoolValue ?? default (bool);
 		}
 
 		internal void SetHandle (string key, IntPtr handle)
 		{
-			var nsname = NSString.CreateNative (key);
+			var nsname = CFString.CreateNative (key);
 			
 			if (IsDirectBinding) {
 				Messaging.void_objc_msgSend_IntPtr_IntPtr (
@@ -220,12 +267,12 @@ namespace CoreImage {
 				Messaging.void_objc_msgSendSuper_IntPtr_IntPtr (
 					this.SuperHandle, Selector.GetHandle ("setValue:forKey:"), handle, nsname);
 			}
-			NSString.ReleaseNative (nsname);
+			CFString.ReleaseNative (nsname);
 		}
 
 		internal IntPtr GetHandle (string key)
 		{
-			var nsname = NSString.CreateNative (key);
+			var nsname = CFString.CreateNative (key);
 			IntPtr ret;
 			
 			if (IsDirectBinding) 
@@ -233,51 +280,36 @@ namespace CoreImage {
 			else
 				ret = Messaging.IntPtr_objc_msgSendSuper_IntPtr (SuperHandle, Selector.GetHandle ("valueForKey:"), nsname);
 			
-			NSString.ReleaseNative (nsname);
+			CFString.ReleaseNative (nsname);
 			return ret;
 		}
 		
-		
-		internal CIVector GetVector (string key)
+		internal CGPoint GetPoint (string key)
 		{
-			return ValueForKey (key) as CIVector;
+			var v = Get<CIVector> (key);
+			return v is not null ? new CGPoint (v.X, v.Y) : default (CGPoint);
 		}
 
-		internal CIColor GetColor (string key)
+		internal CGRect GetRect (string key)
 		{
-			return ValueForKey (key) as CIColor;
-		}
-		
-		internal CIImage GetInputImage ()
-		{
-			return ValueForKey (CIFilterInputKey.Image) as CIImage;
-		}
-
-		internal void SetInputImage (CIImage value)
-		{
-			SetValueForKey (value, CIFilterInputKey.Image);
-		}
-
-		internal CIImage GetImage (string key)
-		{
-			using (var nsstr = new NSString (key))
-				return ValueForKey (nsstr) as CIImage;
+			var v = Get<CIVector> (key);
+			return v is not null ? new CGRect (v.X, v.Y, v.Z, v.W) : default (CGRect);
 		}
 
 #if MONOMAC
-		public virtual CIImage OutputImage {
+		public virtual CIImage? OutputImage {
 			get { return ValueForKey (CIFilterOutputKey.Image) as CIImage; }
 		}
 #endif
 
 		// Calls the selName selector for cases where we do not have an instance created
-		static internal string GetFilterName (IntPtr filterHandle)
+		static internal string? GetFilterName (IntPtr filterHandle)
 		{
-			return NSString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend (filterHandle, Selector.GetHandle ("name")));
+			return CFString.FromHandle (ObjCRuntime.Messaging.IntPtr_objc_msgSend (filterHandle, Selector.GetHandle ("name")));
 		}
 
 		// TODO could be generated too
-		internal static CIFilter FromName (string filterName, IntPtr handle)
+		internal static CIFilter FromName (string? filterName, IntPtr handle)
 		{
 			switch (filterName){
 			case "CIAdditionCompositing":
@@ -444,6 +476,8 @@ namespace CoreImage {
 				return new CIMaximumComponent (handle);
 			case "CIMinimumComponent":
 				return new CIMinimumComponent (handle);
+			case "CIPersonSegmentation":
+				return new CIPersonSegmentation (handle);
 			case "CIPerspectiveTile":
 				return new CIPerspectiveTile (handle);
 			case "CIPerspectiveTransform":
@@ -496,6 +530,16 @@ namespace CoreImage {
 				return new CIConvolution9Horizontal (handle);
 			case "CIConvolution9Vertical":
 				return new CIConvolution9Vertical (handle);
+			case "CIConvolutionRGB3X3":
+				return new CIConvolutionRGB3X3 (handle);
+			case "CIConvolutionRGB5X5":
+				return new CIConvolutionRGB5X5 (handle);
+			case "CIConvolutionRGB7X7":
+				return new CIConvolutionRGB7X7 (handle);
+			case "CIConvolutionRGB9Horizontal":
+				return new CIConvolutionRGB9Horizontal (handle);
+			case "CIConvolutionRGB9Vertical":
+				return new CIConvolutionRGB9Vertical (handle);
 			case "CILinearToSRGBToneCurve":
 				return new CILinearToSRGBToneCurve (handle);
 			case "CIPerspectiveTransformWithExtent":
@@ -542,12 +586,16 @@ namespace CoreImage {
 				return new CILinearBurnBlendMode (handle);
 			case "CILinearDodgeBlendMode":
 				return new CILinearDodgeBlendMode (handle);
+			case "CILinearLightBlendMode":
+				return new CILinearLightBlendMode (handle);
 			case "CIPerspectiveCorrection":
 				return new CIPerspectiveCorrection (handle);
 			case "CIPinLightBlendMode":
 				return new CIPinLightBlendMode (handle);
 			case "CISubtractBlendMode":
 				return new CISubtractBlendMode (handle);
+			case "CIVividLightBlendMode":
+				return new CIVividLightBlendMode (handle);
 			case "CIAccordionFoldTransition":
 				return new CIAccordionFoldTransition (handle);
 			case "CIAreaAverage":
@@ -673,32 +721,35 @@ namespace CoreImage {
 			}
 		}
 
+#if !NET
 		// not every CIFilter supports inputImage, i.e.
 		// NSUnknownKeyException [<CICheckerboardGenerator 0x1648cb20> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputImage.
 		// and those will crash (on devices) if the property is called - and that includes displaying it in the debugger
-		public CIImage Image {
+		[Obsolete ("Use 'InputImage' instead. If not available then the filter does not support it.")]
+		public CIImage? Image {
 			get {
-				return SupportsInputImage ? GetInputImage () : null;
+				return SupportsInputImage ? ValueForKey (CIFilterInputKey.Image) as CIImage : null;
 			}
 			set {
 				if (!SupportsInputImage)
-					throw new ArgumentException ("inputImage is not supported by this filter");
-				SetInputImage (value);
+					ObjCRuntime.ThrowHelper.ThrowArgumentException ("inputImage is not supported by this filter");
+				SetValueForKey (value, CIFilterInputKey.Image.GetHandle ());
 			}
 		}
+
+		bool? supportsInputImage;
 
 		bool SupportsInputImage {
 			get {
-				foreach (var key in InputKeys) {
-					if (key == "inputImage")
-						return true;
-				}
-				return false;
+				if (!supportsInputImage.HasValue)
+					supportsInputImage = Array.IndexOf (InputKeys, "inputImage") >= 0;
+				return supportsInputImage.Value;
 			}
 		}
+#endif
 	}
 
-#if MONOMAC && !XAMCORE_3_0
+#if MONOMAC && !XAMCORE_3_0 && !NET
 	[Obsolete ("This type has been renamed to CICmykHalftone.")]
 	public class CICMYKHalftone : CICmykHalftone {
 		public CICMYKHalftone () {}

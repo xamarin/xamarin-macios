@@ -1,0 +1,8 @@
+!missing-selector! SCNProgram::geometryShader not bound
+!missing-selector! SCNProgram::setGeometryShader: not bound
+!missing-selector! SCNProgram::setTessellationControlShader: not bound
+!missing-selector! SCNProgram::setTessellationEvaluationShader: not bound
+!missing-selector! SCNProgram::tessellationControlShader not bound
+!missing-selector! SCNProgram::tessellationEvaluationShader not bound
+!missing-pinvoke! SCNMatrix4FromGLKMatrix4 is not bound
+!missing-pinvoke! SCNMatrix4ToGLKMatrix4 is not bound

@@ -2,19 +2,10 @@
 
 #if !__WATCHOS__
 
-using System;
-using System.Drawing;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using AudioToolbox;
 using CoreFoundation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaPlayer;
-using MonoTouch.AudioToolbox;
-using MonoTouch.CoreFoundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {
@@ -26,11 +17,7 @@ namespace MonoTouchFixtures.AudioToolbox {
 		[Test]
 		public void ReadTest ()
 		{
-#if MONOMAC
 			var path = NSBundle.MainBundle.PathForResource ("1", "caf", "AudioToolbox");
-#else
-			var path = Path.GetFullPath (Path.Combine ("AudioToolbox", "1.caf"));
-#endif
 			var af = AudioFile.Open (CFUrl.FromFile (path), AudioFilePermission.Read, AudioFileType.CAF);
 		
 			int len;

@@ -8,6 +8,7 @@
     <RootNamespace>XM45Library</RootNamespace>
     <AssemblyName>%NAME%</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

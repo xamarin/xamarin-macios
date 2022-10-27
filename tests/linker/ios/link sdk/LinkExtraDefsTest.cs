@@ -9,11 +9,7 @@
 
 using System;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace LinkSdk {
@@ -33,28 +29,28 @@ namespace LinkSdk {
 		[Test]
 		public void Corlib ()
 		{
-			Type t = Type.GetType ("System.Security.PermissionSet, mscorlib");
+			Type t = Type.GetType ("System.Security.PermissionSet, " + typeof (int).Assembly.GetName ().Name);
 			Assert.NotNull (t, "System.Security.PermissionSet");
 		}
 
 		[Test]
 		public void System ()
 		{
+#if NET
+			Type t = Type.GetType ("System.Net.Mime.ContentType, System.Net.Mail");
+#else
 			Type t = Type.GetType ("System.Net.Mime.ContentType, System");
+#endif
 			Assert.NotNull (t, "System.Net.Mime.ContentType");
 			// we asked for ParseValue to be preserved
 			Assert.NotNull (t.GetMethod ("ParseValue", BindingFlags.Instance | BindingFlags.NonPublic), "Parse");
 		}
 
-#if !__WATCHOS__
+#if !__WATCHOS__ && !__MACOS__
 		[Test]
 		public void MonoTouch ()
 		{
-#if XAMCORE_2_0
 			Type t = Type.GetType ("CoreBluetooth.CBUUID, " + typeof(NSObject).Assembly.ToString ());
-#else
-			Type t = Type.GetType ("MonoTouch.CoreBluetooth.CBUUID, monotouch, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
-#endif
 			Assert.NotNull (t, "[MonoTouch.]CoreBluetooth.CBUUID");
 			// check (generated) fields since we instructed the linker to keep them
 			var f = t.GetFields (BindingFlags.NonPublic | BindingFlags.Static);

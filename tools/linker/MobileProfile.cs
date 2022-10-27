@@ -13,6 +13,7 @@ namespace Xamarin.Linker {
 			"System.Core",
 			"System.Data",
 			"System.Data.Services.Client",
+			"System.Data.DataSetExtensions",
 			"System.IdentityModel",
 			"System.IO.Compression.FileSystem",
 			"System.IO.Compression",
@@ -43,6 +44,8 @@ namespace Xamarin.Linker {
 			"Mono.Security",
 			"OpenTK",
 			"OpenTK-1.0",
+			"MonoTouch.Dialog-1",
+			"MonoTouch.NUnitLite",
 			// Facades assemblies (PCL)
 			"Microsoft.Win32.Primitives",
 			"Microsoft.Win32.Registry.AccessControl",

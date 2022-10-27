@@ -9,6 +9,7 @@
 #if MONOMAC
 
 using System;
+using ObjCRuntime;
 
 namespace Foundation
 {
@@ -39,14 +40,12 @@ namespace Foundation
 				return FromUInt64 ((ulong)value);
 			} else if (value is bool) {
 				return FromBoolean ((bool)value);
-#if XAMCORE_2_0
 			} else if (value is nint) {
 				return FromNInt ((nint) value);
 			} else if (value is nuint) {
 				return FromNUInt ((nuint) value);
 			} else if (value is nfloat) {
 				return FromNFloat ((nfloat) value);
-#endif
 			}
 
 			return null;

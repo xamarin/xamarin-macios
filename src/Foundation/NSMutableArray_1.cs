@@ -22,15 +22,24 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Collections.Generic;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSMutableArray", SkipRegistration = true)]
 	public sealed partial class NSMutableArray<TValue> : NSMutableArray, IEnumerable<TValue>
 		where TValue : class, INativeObject
@@ -44,7 +53,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSMutableArray (IntPtr handle)
+		internal NSMutableArray (NativeHandle handle)
 			: base (handle)
 		{
 		}
@@ -166,7 +175,7 @@ namespace Foundation {
 			if (index < 0)
 				throw new IndexOutOfRangeException (nameof (index));
 
-			if ((nuint) index >= Count)
+			if ((nuint) index > Count)
 				throw new IndexOutOfRangeException (nameof (index));
 		}
 
@@ -191,5 +200,3 @@ namespace Foundation {
 #endregion
 	}
 }
-
-#endif // XAMCORE_2_0

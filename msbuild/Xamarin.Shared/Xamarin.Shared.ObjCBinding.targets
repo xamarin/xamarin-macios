@@ -1,0 +1,149 @@
+<!--
+***********************************************************************************************
+Xamarin.Shared.ObjCBinding.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+This file imports the version- and platform-specific targets for the project importing
+this file. This file also defines targets to produce an error if the specified targets
+file does not exist, but the project is built anyway (command-line or IDE build).
+
+Copyright (C) 2020 Microsoft. All rights reserved.
+***********************************************************************************************
+-->
+
+<!-- This file is shared between Xamarin.iOS and Xamarin.Mac, but only included for binding projects -->
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- Add our own pre-build steps -->
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
+		<BuildDependsOn>
+			BuildOnlySettings;
+			_CreateGeneratedSourcesDir;
+			_CreateEmbeddedResources;
+			$(BuildDependsOn)
+		</BuildDependsOn>
+	</PropertyGroup>
+
+	<!-- Add our own Clean steps -->
+	<PropertyGroup Condition="'$(UsingAppleNETSdk)' != 'true'">
+		<CleanDependsOn>
+			_CleanGeneratedSources;
+			$(CleanDependsOn)
+		</CleanDependsOn>
+	</PropertyGroup>
+
+	<!-- Create a directory to contain the generated sources -->
+	<Target Name="_CreateGeneratedSourcesDir">
+		<MakeDir Directories="$(GeneratedSourcesDir)" />
+	</Target>
+
+	<!-- Clean the generated sources -->
+	<Target Name="_CleanGeneratedSources">
+		<RemoveDir Directories="$(GeneratedSourcesDir)" Condition="Exists ('$(GeneratedSourcesDir)')" />
+	</Target>
+
+	<Target Name="_CollectGeneratedSources"
+		DependsOnTargets="_GenerateBindings;_CompressNativeFrameworkResources"
+		Condition="'$(DesignTimeBuild)' != 'true'"
+	>
+
+		<ReadLinesFromFile File="$(_GeneratedSourcesFileList)" >
+			<Output TaskParameter="Lines" ItemName="Compile" />
+		</ReadLinesFromFile>
+
+		<ItemGroup>
+			<Compile Include="@(ObjcBindingCoreSource)" />
+
+			<EmbeddedResource Include="@(ObjcBindingNativeLibrary)">
+				<Type>Non-Resx</Type>
+				<WithCulture>false</WithCulture>
+			</EmbeddedResource>
+		</ItemGroup>
+	</Target>
+
+	<!--
+
+		We can't just use @(_NativeFramework) as the input to the
+		_CompressNativeFrameworkResources task, because _NativeFramework is a
+		list of directories, and MSBuild doesn't do dependency checks
+		correctly when inputs are directories. So instead get all the files
+		from every framework, and use that as the inputs.
+
+		Additionally we add two metadatas on each file:
+
+		* The path to the framework the file belongs to
+		* The path to the zip file where the compressed directory will be stored
+
+		Then when we compress the frameworks in
+		_CompressNativeFrameworkResources, we use the zip file metadata as the
+		output, which means MSBuild will batch the call to
+		_CompressNativeFrameworkResources, and call
+		_CompressNativeFrameworkResources once for each zip file, passing in
+		only the inputs that correspond to that zip file. This effectively
+		means that _CompressNativeFrameworkResources will be called once for
+		each framework we want to compress, which is exactly what we want.
+
+	-->
+	<Target Name="_CollectNativeFrameworkResources" Returns="@(_NativeFrameworkResource)" DependsOnTargets="_PrepareNativeReferences">
+		<ItemGroup>
+			<_NativeFrameworkResource Include="%(_NativeFramework.Identity)\**\*.*" Condition="'%(_NativeFramework.Identity)' != ''">
+				<FrameworkPath>%(_NativeFramework.Identity)</FrameworkPath>
+				<ZipFile>$(IntermediateOutputPath)%(_NativeFramework.Filename)%(_NativeFramework.Extension)</ZipFile>
+			</_NativeFrameworkResource>
+			<_NativeFrameworkResource Include="%(ObjCBindingNativeFramework.Identity)\**\*.*" Condition="'%(ObjCBindingNativeFramework.Identity)' != ''">
+				<FrameworkPath>%(ObjCBindingNativeFramework.Identity)</FrameworkPath>
+				<ZipFile>$(IntermediateOutputPath)%(ObjCBindingNativeFramework.Filename)%(ObjCBindingNativeFramework.Extension)</ZipFile>
+			</_NativeFrameworkResource>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_CreateEmbeddedResources" DependsOnTargets="_CollectBundleResources">
+		<CreateEmbeddedResources 
+			SessionId="$(BuildSessionId)" 
+			BundleResources="@(_BundleResourceWithLogicalName)" 
+			Prefix="$(_EmbeddedResourcePrefix)">
+			
+			<Output ItemName="EmbeddedResource" TaskParameter="EmbeddedResources" />
+		</CreateEmbeddedResources>
+	</Target>
+
+	<Target Name="_CompressNativeFrameworkResources" Inputs="@(_NativeFrameworkResource)" Outputs="%(_NativeFrameworkResource.ZipFile)" DependsOnTargets="_CollectNativeFrameworkResources">
+		<Delete SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Files="%(_NativeFrameworkResource.ZipFile)" />
+
+		<Zip
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			ToolExe="$(ZipExe)"
+			ToolPath="$(ZipPath)"
+			Recursive="true"
+			Symlinks="true"
+			Sources="%(_NativeFrameworkResource.FrameworkPath)"
+			OutputFile="%(_NativeFrameworkResource.ZipFile)"
+			WorkingDirectory="%(_NativeFrameworkResource.FrameworkPath)" >
+		</Zip>
+
+		<ItemGroup>
+			<EmbeddedResource Include="%(_NativeFrameworkResource.ZipFile)">
+				<Type>Non-Resx</Type>
+				<WithCulture>false</WithCulture>
+			</EmbeddedResource>
+		</ItemGroup>
+	</Target>
+
+	<Target Name="_PrepareNativeReferences" Condition="'$(DesignTimeBuild)' != 'true'">
+		<PrepareNativeReferences
+			Condition="'$(IsMacEnabled)' == 'true'"
+			SessionId="$(BuildSessionId)"
+			IntermediateOutputPath="$(IntermediateOutputPath)"
+			NativeReferences="@(NativeReference)"
+		>
+			<Output ItemName="EmbeddedResource" TaskParameter="EmbeddedResources" Condition="'$(NoBindingEmbedding)' != 'true'"/>
+			<Output ItemName="_NativeFramework" TaskParameter="NativeFrameworks" Condition="'$(NoBindingEmbedding)' != 'true'"/>
+			<Output ItemName="Compile" TaskParameter="LinkWithAttributes" />
+		</PrepareNativeReferences>
+	</Target>
+</Project>

@@ -29,7 +29,10 @@
 using System;
 
 using ObjCRuntime;
-#if MONOMAC || (IOS && XAMCORE_2_0)
+
+#nullable enable
+
+#if MONOMAC || IOS
 
 namespace PdfKit {
 
@@ -75,7 +78,8 @@ namespace PdfKit {
 	public enum PdfMarkupType : long {
 		Highlight = 0,
 		StrikeOut = 1,
-		Underline = 2
+		Underline = 2,
+		Redact    = 3,
 	}
 
 	[iOS (11,0)]
@@ -100,7 +104,12 @@ namespace PdfKit {
 		Underline = 4
 	}
 
-	[iOS (11,0)]
+#if NET
+	[NoiOS]
+#elif IOS
+	[Obsolete (Constants.UnavailableOniOS)]
+#endif
+	[Unavailable (PlatformName.MacCatalyst)]
 	[Native]
 	public enum PdfPrintScalingMode : long {
 		None      = 0,
@@ -148,7 +157,9 @@ namespace PdfKit {
 		TextFieldArea  = 1 << 5,
 		IconArea       = 1 << 6,
 		PopupArea      = 1 << 7,
-		ImageArea      = 1 << 8
+		ImageArea      = 1 << 8,
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0)]
+		AnyArea = Int64.MaxValue,
 	}
 
 	[Mac (10,13)]

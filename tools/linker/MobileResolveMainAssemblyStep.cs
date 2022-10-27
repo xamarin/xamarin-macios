@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015 Xamarin Inc. All rights reserved.
 
 using System;
 
@@ -7,7 +7,7 @@ using Mono.Linker.Steps;
 using Xamarin.Tuner;
 
 namespace Xamarin.Linker.Steps {
-	
+
 	public class MobileResolveMainAssemblyStep : ResolveFromAssemblyStep {
 
 		AssemblyDefinition assembly;
@@ -57,4 +57,3 @@ namespace Xamarin.Linker.Steps {
 		}
 	}
 }
-

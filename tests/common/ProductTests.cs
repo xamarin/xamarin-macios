@@ -49,6 +49,7 @@ namespace Xamarin.Tests
 		[TestCase (Profile.tvOS, MachO.LoadCommands.MintvOS, MachO.Platform.TvOS, true)]
 		public void MinOSVersion (Profile profile, MachO.LoadCommands load_command, MachO.Platform platform, bool device = false)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			if (device)
 				Configuration.AssertDeviceAvailable ();
 
@@ -70,6 +71,10 @@ namespace Xamarin.Tests
 			foreach (var machoFile in machoFiles) {
 				var fatfile = MachO.Read (machoFile);
 				foreach (var slice in fatfile) {
+					if (slice.IsDynamicLibrary && slice.Architecture == MachO.Architectures.x86_64 && slice.Parent != null && slice.Parent.size < 10240 /* this is the dummy x86_64 slice to appease Apple's notarization tooling */)
+						continue;
+					else if (!slice.IsDynamicLibrary && slice.Architecture == MachO.Architectures.x86_64 && slice.Filename == "x86-64-slice.o" /* a static version of the x86_64 dummy slice */)
+						continue;
 					var any_load_command = false;
 					foreach (var lc in slice.load_commands) {
 
@@ -103,11 +108,15 @@ namespace Xamarin.Tests
 						Version version;
 						Version alternate_version = null;
 						Version mono_native_compat_version;
+						Version alternate_mono_native_compat_version = null;
 						Version mono_native_unified_version;
 						Version alternate_mono_native_unified_version = null;
 						switch (load_command) {
 						case MachO.LoadCommands.MinMacOSX:
 							version = SdkVersions.MinOSXVersion;
+							if (slice.Architecture == MachO.Architectures.ARM64) {
+								alternate_version = new Version (11, 0, 0);
+							}
 							mono_native_compat_version = SdkVersions.MinOSXVersion;
 							mono_native_unified_version = new Version (10, 12, 0);
 							break;
@@ -119,19 +128,22 @@ namespace Xamarin.Tests
 								alternate_version = new Version (8, 0, 0); // some iOS dylibs also have min OS 8.0 (if they're used as frameworks as well).
 							} else if (slice.Architecture == MachO.Architectures.ARM64) {
 								alternate_version = new Version (7, 0, 0); // our arm64 slices has min iOS 7.0.
+							} else if (slice.IsDynamicLibrary && !device) {
+								version = new Version (8, 0, 0);
+								alternate_version = new Version (7, 0, 0);
 							}
-							mono_native_compat_version = SdkVersions.MiniOSVersion;
+							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);
+							alternate_mono_native_compat_version = new Version (7, 0, 0); // Xcode 12.4 built binaries
 							break;
 						case MachO.LoadCommands.MintvOS:
 							version = SdkVersions.MinTVOSVersion;
-							mono_native_compat_version = SdkVersions.MinTVOSVersion;
+							mono_native_compat_version = version;
 							mono_native_unified_version = new Version (10, 0, 0);
 							break;
 						case MachO.LoadCommands.MinwatchOS:
 							version = SdkVersions.MinWatchOSVersion;
-							if (device)
-								alternate_version = new Version (5, 1, 0); // arm64_32 has min OS 5.1
+							alternate_version = new Version (5, 1, 0); // arm64_32 has min OS 5.1
 							mono_native_compat_version = SdkVersions.MinWatchOSVersion;
 							mono_native_unified_version = new Version (5, 0, 0);
 							if (device)
@@ -148,11 +160,13 @@ namespace Xamarin.Tests
 							alternate_version = version;
 						if (alternate_mono_native_unified_version == null)
 							alternate_mono_native_unified_version = mono_native_unified_version;
+						if (alternate_mono_native_compat_version == null)
+							alternate_mono_native_compat_version = mono_native_compat_version;
 
 						switch (Path.GetFileName (machoFile)) {
 						case "libmono-native-compat.dylib":
 						case "libmono-native-compat.a":
-							if (mono_native_compat_version != lc_min_version)
+							if (mono_native_compat_version != lc_min_version && alternate_mono_native_compat_version != lc_min_version)
 								failed.Add ($"Unexpected minOS version (expected {mono_native_compat_version}, found {lc_min_version}) in {machoFile} ({slice.Filename}).");
 							break;
 						case "libmono-native-unified.dylib":
@@ -183,4 +197,3 @@ namespace Xamarin.Tests
 			}
 	}
 }
-

@@ -10,13 +10,8 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
@@ -99,7 +94,7 @@ namespace MonoTouchFixtures.Foundation {
 	
 		}
 
-#if XAMCORE_2_0 && __IOS__
+#if __IOS__
 		[Test]
 		public void TargetedNotificationsTest ()
 		{

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xtro-sanity", "xtro-sanity\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "u2todo", "u2todo\u2todo.csproj", "{244C7FD0-39C9-49F7-8D88-A954EA8DFFF6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "u2ignore", "u2ignore\u2ignore.csproj", "{8038D233-1BAB-4228-A694-EA190928CA4A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,5 +33,9 @@ Global
 		{244C7FD0-39C9-49F7-8D88-A954EA8DFFF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{244C7FD0-39C9-49F7-8D88-A954EA8DFFF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{244C7FD0-39C9-49F7-8D88-A954EA8DFFF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8038D233-1BAB-4228-A694-EA190928CA4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8038D233-1BAB-4228-A694-EA190928CA4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8038D233-1BAB-4228-A694-EA190928CA4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8038D233-1BAB-4228-A694-EA190928CA4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

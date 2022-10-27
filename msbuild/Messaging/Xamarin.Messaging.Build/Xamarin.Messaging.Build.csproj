@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>Build</AssemblyName>
+    <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
+    <NoWarn>$(NoWarn);MSB3277</NoWarn> <!-- warning MSB3277: Found conflicts between different versions of "System.IO.Compression" that could not be resolved. -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <MonoMSBuildBinPath>/Library/Frameworks/Mono.framework/Versions/6.12.0/lib/mono/msbuild/Current/bin</MonoMSBuildBinPath>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Messaging">
+    <AgentId>Build</AgentId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IO.Abstractions" Version="6.0.27" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.4" />
+    <PackageReference Include="GitInfo" Version="2.2.0" />
+    <!-- We only include build assets to get targets related to agent generation, the assemblies come from Xamarin.iOS.Tasks -->
+    <PackageReference Include="Xamarin.Messaging.Core" Version="$(MessagingVersion)" IncludeAssets="build" />
+  </ItemGroup>
+
+  <ItemGroup>
+      <Reference Include="Microsoft.Build">
+          <HintPath>$(MonoMSBuildBinPath)/Microsoft.Build.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Build.Framework">
+          <HintPath>$(MonoMSBuildBinPath)/Microsoft.Build.Framework.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Build.Tasks.Core">
+          <HintPath>$(MonoMSBuildBinPath)/Microsoft.Build.Tasks.Core.dll</HintPath>
+      </Reference>
+      <Reference Include="Microsoft.Build.Utilities.Core">
+          <HintPath>$(MonoMSBuildBinPath)/Microsoft.Build.Utilities.Core.dll</HintPath>
+      </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The iOS.Tasks assembly was ILRepacked to include MacDev.Tasks, if we use the references from the project we'get both and the types will collide -->
+    <!-- We still need the project reference to mantain the build order dependency, but we add a reference to the assembly explicitly -->
+    <ProjectReference Include="..\..\Xamarin.iOS.Tasks\Xamarin.iOS.Tasks.csproj">
+      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
+      <Private>False</Private>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Xamarin.iOS.Tasks">
+      <HintPath>..\..\Xamarin.iOS.Tasks\bin\$(Configuration)\netstandard2.0\Xamarin.iOS.Tasks.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

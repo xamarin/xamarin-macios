@@ -1,4 +1,4 @@
-﻿//
+//
 // This file contains a generic version of NSOrderedSet
 //
 // Authors:
@@ -7,15 +7,24 @@
 // Copyright 2015, Xamarin Inc.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Collections.Generic;
 using System.Collections;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register ("NSOrderedSet", SkipRegistration = true)]
 	public sealed partial class NSOrderedSet<TKey> : NSOrderedSet, IEnumerable<TKey>
 		where TKey : class, INativeObject {
@@ -28,7 +37,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSOrderedSet (IntPtr handle) : base (handle)
+		internal NSOrderedSet (NativeHandle handle) : base (handle)
 		{
 		}
 
@@ -196,5 +205,3 @@ namespace Foundation {
 		}
 	}
 }
-
-#endif // XAMCORE_2_0

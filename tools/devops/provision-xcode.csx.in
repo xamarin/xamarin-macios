@@ -1,0 +1,34 @@
+#load "provision-shared.csx"
+
+// Provision Xcode
+//
+// Overrides:
+// * The current commit can be overridden by setting the PROVISION_FROM_COMMIT variable.
+
+void ListXcodes ()
+{
+	Console.WriteLine ($"Xcodes:");
+	var lines = Exec ("bash", "-c", "ls -lad /Applications/Xcode*");
+	foreach (var line in lines)
+		Console.WriteLine ($"\t{line}");
+}
+
+if (string.IsNullOrEmpty (provision_from_commit)) {
+	Console.Error.WriteLine ($"Either BUILD_SOURCEVERSION or PROVISION_FROM_COMMIT must be set.");
+	Environment.Exit (1);
+	return 1;
+}
+
+ListXcodes ();
+
+// Provision Xcode
+Console.WriteLine ($"Provisioning Xcode from {provision_from_commit}...");
+
+// Let's turn symlink into an actual path
+var reqXcode = Path.GetDirectoryName (Path.GetDirectoryName ("@XCODE_ROOT_PATH@"));
+RemoveXcodeSymlinks (reqXcode);
+
+// Provision Xcode using the xip name declared in Make.config
+Xcode ("@XCODE_XIP_NAME@").XcodeSelect (allowUntrusted: true);
+
+LogInstalledXcodes ();

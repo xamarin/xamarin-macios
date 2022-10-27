@@ -1,13 +1,8 @@
-﻿using System;
+using System;
 using System.Threading;
 
-#if __UNIFIED__
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 
@@ -70,6 +65,23 @@ namespace Xamarin.Tests
 
 			using (var main_thread_tester = new MainThreadTest ()) {
 				main_thread_tester.CallAssertMainThreadBlockReleaseCallback ();
+			}
+		}
+
+		[Test]
+		public void MainThreadDeallocationTestQOS ()
+		{
+#if OPTIMIZEALL
+			if (!TestRuntime.IsLinkAll)
+				Assert.Ignore ("This test must be processed by the linker if all optimizations are turned on.");
+#endif
+
+			ObjCBlockTester.CallAssertMainThreadBlockReleaseQOS ((callback) => {
+				callback (42);
+			});
+
+			using (var main_thread_tester = new MainThreadTest ()) {
+				main_thread_tester.CallAssertMainThreadBlockReleaseCallbackQOS ();
 			}
 		}
 

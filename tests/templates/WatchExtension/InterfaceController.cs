@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using System.Threading;
 
 using WatchKit;
 using Foundation;
 
-using NUnit.Framework.Internal.Filters;
 using MonoTouch.NUnit.UI;
 
 public static partial class TestLoader
@@ -70,16 +68,19 @@ namespace monotouchtestWatchKitExtension
 
 		void LoadTests ()
 		{
+			var excludeCategories = new [] {
+				"MobileNotWorking",
+				"NotOnMac",
+				"NotWorking",
+				"ValueAdd",
+				"CAS",
+				"InetAccess",
+				"NotWorkingLinqInterpreter",
+				"RequiresBSDSockets",
+				"BitcodeNotSupported",
+			};
 			runner = new WatchOSRunner ();
-			var categoryFilter = new NotFilter (new CategoryExpression ("MobileNotWorking,NotOnMac,NotWorking,ValueAdd,CAS,InetAccess,NotWorkingLinqInterpreter,RequiresBSDSockets,BitcodeNotSupported").Filter);
-			if (!string.IsNullOrEmpty (Environment.GetEnvironmentVariable ("NUNIT_FILTER_START"))) {
-				var firstChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_START") [0];
-				var lastChar = Environment.GetEnvironmentVariable ("NUNIT_FILTER_END") [0];
-				var nameFilter = new NameStartsWithFilter () { FirstChar = firstChar, LastChar = lastChar };
-				runner.Filter = new AndFilter (categoryFilter, nameFilter);
-			} else {
-				runner.Filter = categoryFilter;
-			}
+			runner.ExcludedCategories = new HashSet<string> (excludeCategories);
 			runner.Add (GetType ().Assembly);
 			TestLoader.AddTestAssemblies (runner);
 			ThreadPool.QueueUserWorkItem ((v) =>
@@ -105,15 +106,23 @@ namespace monotouchtestWatchKitExtension
 			}
 			running = true;
 			cmdRun.SetEnabled (false);
-			lblStatus.SetText ("Running");
-			BeginInvokeOnMainThread (() => {
+			lblStatus.SetText ("Running in background");
+
+			var timer = NSTimer.CreateRepeatingScheduledTimer (TimeSpan.FromSeconds (1), (v) => RenderResults ());
+			var runnerThread = new Thread (() => {
 				runner.Run ();
 
-				cmdRun.SetEnabled (true);
-				lblStatus.SetText ("Done");
-				running = false;
-				RenderResults ();
-			});
+				InvokeOnMainThread (() => {
+					cmdRun.SetEnabled (true);
+					lblStatus.SetText ("Done");
+					running = false;
+					timer.Dispose ();
+					RenderResults ();
+				});
+			}) {
+				IsBackground = true,
+			};
+			runnerThread.Start ();
 		}
 
 		void RenderResults ()
@@ -143,37 +152,5 @@ namespace monotouchtestWatchKitExtension
 		{
 			RunTests ();
 		}
-	}
-}
-
-class NameStartsWithFilter : NUnit.Framework.Internal.TestFilter
-{
-	public char FirstChar;
-	public char LastChar;
-
-	public override bool Match (NUnit.Framework.Api.ITest test)
-	{
-		if (test is NUnit.Framework.Internal.TestAssembly)
-			return true;
-
-		var method = test as NUnit.Framework.Internal.TestMethod;
-		if (method != null)
-			return Match (method.Parent);
-		
-		var name = !string.IsNullOrEmpty (test.Name) ? test.Name : test.FullName;
-		bool rv;
-		if (string.IsNullOrEmpty (name)) {
-			rv = true;
-		} else {
-			var z = Char.ToUpperInvariant (name [0]);
-			rv = z >= Char.ToUpperInvariant (FirstChar) && z <= Char.ToUpperInvariant (LastChar);
-		}
-
-		return rv;
-	}
-
-	public override bool Pass (NUnit.Framework.Api.ITest test)
-	{
-		return Match (test);
 	}
 }

@@ -8,24 +8,13 @@
 // Copyright 2012-2014 Xamarin Inc All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using CoreMedia;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.UIKit;
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
 	
@@ -51,7 +40,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void HostTimeClock ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var clock = CMClock.HostTimeClock) {
 				Assert.That (clock.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
@@ -60,5 +49,3 @@ namespace MonoTouchFixtures.CoreMedia {
 		}
 	}
 }
-
-#endif // !__WATCHOS__

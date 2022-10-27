@@ -1,0 +1,111 @@
+<!--
+***********************************************************************************************
+Xamarin.ImplicitFacade.targets
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (c) 2017, 2020 Microsoft Corp. (www.microsoft.com)
+***********************************************************************************************
+-->
+
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!-- Support for netstandard
+		 This logic is a modified copy of the logic in Microsoft.NETFramework.CurrentVersion.targets.
+		 XI/XM Mobile/XM Modern builds do not import Microsoft.NETFramework.CurrentVersion.targets,
+		 since their TVI is not NETFramework. However it is needed to successfully consume netstandard
+		 nuget packages.
+	-->
+
+	<!-- Implicitly references all portable design-time facades if the user is referencing a System.Runtime-based portable library -->
+	<PropertyGroup>
+		<ImplicitlyExpandDesignTimeFacades>true</ImplicitlyExpandDesignTimeFacades>
+		<CheckForSystemRuntimeDependency>true</CheckForSystemRuntimeDependency>
+
+		<ResolveReferencesDependsOn>
+			$(ResolveReferencesDependsOn);
+			ImplicitlyExpandDesignTimeFacades
+		</ResolveReferencesDependsOn>
+
+		<ImplicitlyExpandDesignTimeFacadesDependsOn>
+			$(ImplicitlyExpandDesignTimeFacadesDependsOn);
+			GetReferenceAssemblyPaths
+		</ImplicitlyExpandDesignTimeFacadesDependsOn>
+
+		<_NETBuildExtensionsTaskAssembly>$(MSBuildExtensionsPath)\Microsoft\Microsoft.NET.Build.Extensions\tools\net472\Microsoft.NET.Build.Extensions.Tasks.dll</_NETBuildExtensionsTaskAssembly>
+	</PropertyGroup>
+
+	<!-- Implicitly references all portable design-time facades if the user is referencing a System.Runtime-based portable library -->
+
+	<UsingTask
+		TaskName="GetDependsOnNETStandard"
+		Condition="Exists('$(_NETBuildExtensionsTaskAssembly)')"
+		AssemblyFile="$(_NETBuildExtensionsTaskAssembly)" />
+
+	<Target Name="ImplicitlyExpandDesignTimeFacades" DependsOnTargets="$(ImplicitlyExpandDesignTimeFacadesDependsOn)">
+		<ItemGroup>
+			<_Xamarin_CandidateNETStandardReferences Include="@(Reference);@(_ResolvedProjectReferencePaths)" />
+			<_Xamarin_InboxNETStandardFolders Include="$(TargetFrameworkDirectory)" />
+		</ItemGroup>
+
+		<PropertyGroup>
+			<!-- Does one of our dependencies reference a System.Runtime-based portable library? -->
+			<_HasReferenceToSystemRuntime Condition="'$(DependsOnSystemRuntime)' == 'true'">true</_HasReferenceToSystemRuntime>
+			<_HasReferenceToSystemRuntime Condition="'%(_ResolvedProjectReferencePaths.TargetPlatformIdentifier)' == 'Portable'">true</_HasReferenceToSystemRuntime>
+			<_HasReferenceToSystemRuntime Condition="'%(ReferenceDependencyPaths.Filename)' == 'System.Runtime'">true</_HasReferenceToSystemRuntime>
+
+			<_Xamarin_NETStandardInbox Condition="'$(_Xamarin_NETStandardInbox)' == '' and Exists('%(_Xamarin_InboxNETStandardFolders.Identity)\netstandard.dll')">true</_Xamarin_NETStandardInbox>
+
+			<!--
+				This is `true` if any of the references depends on `netstandard`.
+
+				In cases where `ResolveAssemblyReference` task does get run, it populates `$(_DependsOnNETStandard)` property, so we don't
+				need to check this again.
+			-->
+			<_Xamarin_DependsOnNETStandard Condition="'$(_Xamarin_DependsOnNETStandard)' == ''">$(_DependsOnNETStandard)</_Xamarin_DependsOnNETStandard>
+		</PropertyGroup>
+
+		<!--
+		     Facades are expanded if we have a reference that depends on System.Runtime .
+
+		     XI, XM/Mobile and XM/Modern projects have `$(TargetFrameworkIdentifier) != .NETFramework`, so Microsoft.NET.Build.Extensions
+		     (which provides support for ns 2.0 projects) doesn't get imported. And netstandard.dll reference, even if required, doesn't
+		     get added.
+
+		     So, we need to check if any references depend on `netstandard`. And if so, expand the facades, which include netstandard.dll .
+
+		     If $(_HasReferenceToSystemRuntime) is true, then the facades are going to be expanded anyway, so don't run this.
+		-->
+		<GetDependsOnNETStandard
+			Condition="'$(_HasReferenceToSystemRuntime)' != 'true' and '$(_Xamarin_DependsOnNETStandard)' == '' and '@(_Xamarin_CandidateNETStandardReferences)' != ''
+				and Exists('$(_NETBuildExtensionsTaskAssembly)')"
+			References="@(_Xamarin_CandidateNETStandardReferences)">
+			<Output TaskParameter="DependsOnNETStandard" PropertyName="_Xamarin_DependsOnNETStandard" />
+		</GetDependsOnNETStandard>
+
+		<ItemGroup Condition="'$(_HasReferenceToSystemRuntime)' == 'true' or ('$(_Xamarin_NETStandardInbox)' == 'true' and '$(_Xamarin_DependsOnNETStandard)' == 'true')">
+			<_DesignTimeFacadeAssemblies Include="%(DesignTimeFacadeDirectories.Identity)*.dll"/>
+
+			<_DesignTimeFacadeAssemblies_Names Include="@(_DesignTimeFacadeAssemblies->'%(FileName)')">
+				<OriginalIdentity>%(_DesignTimeFacadeAssemblies.Identity)</OriginalIdentity>
+			</_DesignTimeFacadeAssemblies_Names>
+
+			<_ReferencePath_Names Include="@(ReferencePath->'%(FileName)')">
+				<OriginalIdentity>%(ReferencePath.Identity)</OriginalIdentity>
+			</_ReferencePath_Names>
+
+			<_DesignTimeFacadeAssemblies_Names Remove="@(_ReferencePath_Names)"/>
+
+			<ReferencePath Include="@(_DesignTimeFacadeAssemblies_Names->'%(OriginalIdentity)')">
+				<WinMDFile>false</WinMDFile>
+				<CopyLocal>false</CopyLocal>
+				<ResolvedFrom>ImplicitlyExpandDesignTimeFacades</ResolvedFrom>
+			</ReferencePath>
+			<_ResolveAssemblyReferenceResolvedFiles Include="@(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
+		</ItemGroup>
+
+		<Message Importance="Low" Text="Including @(ReferencePath)" Condition="'%(ReferencePath.ResolvedFrom)' == 'ImplicitlyExpandDesignTimeFacades'" />
+	</Target>
+</Project>

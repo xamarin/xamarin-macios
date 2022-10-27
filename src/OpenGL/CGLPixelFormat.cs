@@ -25,52 +25,52 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+
+using CoreFoundation;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace OpenGL {
-	[Deprecated (PlatformName.MacOSX, 10, 14, message : "Use 'Metal' Framework instead.")]
-	public class CGLPixelFormat : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		public CGLPixelFormat (IntPtr handle)
+#if NET
+	[SupportedOSPlatform ("macos")]
+	[UnsupportedOSPlatform ("macos10.14")]
+#if MONOMAC
+	[Obsolete ("Starting with macos10.14 use 'Metal' Framework instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+	[Deprecated (PlatformName.MacOSX, 10, 14, message: "Use 'Metal' Framework instead.")]
+#endif
+	public class CGLPixelFormat : NativeObject {
+#if !NET
+		public CGLPixelFormat (NativeHandle handle)
+			: base (handle, false, verify: true)
 		{
-			if (handle == IntPtr.Zero)
-				throw new Exception ("Invalid parameters to context creation");
+		}
+#endif
 
-			CGLRetainPixelFormat (handle);
-			this.handle = handle;
+		protected internal override void Retain ()
+		{
+			CGLRetainPixelFormat (GetCheckedHandle ());
 		}
 
-		internal CGLPixelFormat ()
+		protected internal override void Release ()
 		{
+			CGLReleasePixelFormat (GetCheckedHandle ());
 		}
 
 		[Preserve (Conditional=true)]
-		internal CGLPixelFormat (IntPtr handle, bool owns)
+		internal CGLPixelFormat (NativeHandle handle, bool owns)
+			: base (handle, owns)
 		{
-			if (!owns)
-				CGLRetainPixelFormat (handle);
-
-			this.handle = handle;
-		}
-
-		~CGLPixelFormat ()
-		{
-			Dispose (false);
-		}
-
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
 		}
 
 		[DllImport (Constants.OpenGLLibrary)]
@@ -79,25 +79,17 @@ namespace OpenGL {
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static void CGLReleasePixelFormat (IntPtr handle);
 
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CGLReleasePixelFormat (handle);
-				handle = IntPtr.Zero;
-			}
-		}
-
 		[DllImport (Constants.OpenGLLibrary)]
 		extern static CGLErrorCode CGLChoosePixelFormat (CGLPixelFormatAttribute[] attributes, out IntPtr /* CGLPixelFormatObj* */ pix, out int /* GLint* */ npix);
 		public CGLPixelFormat (CGLPixelFormatAttribute[] attributes, out int npix)
+			: base (Create (attributes, out npix), true)
 		{
-			Initialize (attributes, out npix);
 		}
 
-		void Initialize (CGLPixelFormatAttribute[] attributes, out int npix)
+		static IntPtr Create (CGLPixelFormatAttribute[] attributes, out int npix)
 		{
-			if (attributes == null)
-				throw new ArgumentNullException ("attributes");
+			if (attributes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (attributes));
 			IntPtr pixelFormatOut;
 			var marshalAttribs = new CGLPixelFormatAttribute [attributes.Length + 1];
 
@@ -109,13 +101,12 @@ namespace OpenGL {
 				throw new Exception ("CGLChoosePixelFormat returned: " + ret);
 			}
 
-			this.handle = pixelFormatOut;
+			return pixelFormatOut;
 		}
 
 		public CGLPixelFormat (params object [] attributes)
+			: base (Create (ConvertToAttributes (attributes), out _), true)
 		{
-			int ignored;
-			Initialize (ConvertToAttributes (attributes), out ignored);
 		}
 
 		public CGLPixelFormat (out int npix, params object [] attributes) : this (ConvertToAttributes (attributes), out npix)

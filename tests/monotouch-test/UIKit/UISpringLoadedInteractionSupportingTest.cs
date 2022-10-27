@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for UISpringLoadedInteractionSupportingTest
 //
 // Authors:
@@ -11,17 +11,12 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using UIKit;
+#if HAS_INTENTUI
 using IntentsUI;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
@@ -100,6 +95,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.IsTrue (tableView.SpringLoaded);
 		}
 
+#if HAS_INTENTUI
 		[Test]
 		public void INUIAddVoiceShortcutButtonTest ()
 		{
@@ -109,6 +105,7 @@ namespace MonoTouchFixtures.UIKit {
 			shortcutButton.SpringLoaded = true;
 			Assert.IsTrue (shortcutButton.SpringLoaded);
 		}
+#endif
 	}
 }
 

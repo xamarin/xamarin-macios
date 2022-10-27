@@ -2,9 +2,12 @@
 
 using System;
 using System.Runtime.InteropServices;
+
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace TVServices {
 
@@ -35,17 +38,5 @@ namespace TVServices {
 		UserInterfaceStyleDark = (2 << 8),
 		ScreenScale1x = (1 << 12),
 		ScreenScale2x = (2 << 12),
-	}
-
-	static public class TVContentItemImageShapeExtensions {
-
-		[DllImport (Constants.TVServicesLibrary)]
-		static extern CGSize TVTopShelfImageSizeForShape (/* TVContentItemImageShape */ nint shape,
-			/* TVTopShelfContentStyle */ nint style);
-
-		static public CGSize GetSize (this TVContentItemImageShape self, TVTopShelfContentStyle style)
-		{
-			return TVTopShelfImageSizeForShape ((nint) (int) self, (nint) (int) style);
-		}
 	}
 }

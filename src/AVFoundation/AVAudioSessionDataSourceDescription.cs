@@ -6,13 +6,16 @@
 using Foundation;
 using ObjCRuntime;
 using System;
-#if XAMCORE_2_0 && !MONOMAC
+
+#nullable enable
+
+#if !MONOMAC
 
 namespace AVFoundation {
 	public enum AVAudioDataSourceLocation {
 		Unknown, Upper, Lower
 	}
-	
+
 	public enum AVAudioDataSourceOrientation {
 		Unknown, Top, Bottom, Front, Back, Left, Right
 	}
@@ -20,9 +23,9 @@ namespace AVFoundation {
 	public enum AVAudioDataSourcePolarPattern {
 		Unknown, Omnidirectional, Cardioid, Subcardioid
 	}
-	
+
 	public partial class AVAudioSessionDataSourceDescription {
-		static internal AVAudioDataSourceLocation ToLocation (NSString l)
+		static internal AVAudioDataSourceLocation ToLocation (NSString? l)
 		{
 			if (l == AVAudioSession.LocationLower_)
 				return AVAudioDataSourceLocation.Lower;
@@ -32,7 +35,7 @@ namespace AVFoundation {
 				return AVAudioDataSourceLocation.Unknown;
 		}
 
-		static internal AVAudioDataSourceOrientation ToOrientation (NSString o)
+		static internal AVAudioDataSourceOrientation ToOrientation (NSString? o)
 		{
 			if (o == AVAudioSession.OrientationTop_)
 				return AVAudioDataSourceOrientation.Top;
@@ -44,8 +47,8 @@ namespace AVFoundation {
 				return AVAudioDataSourceOrientation.Back;
 			return AVAudioDataSourceOrientation.Unknown;
 		}
-		
-		static internal AVAudioDataSourcePolarPattern ToPolarPattern (NSString p)
+
+		static internal AVAudioDataSourcePolarPattern ToPolarPattern (NSString? p)
 		{
 			if (p == AVAudioSession.PolarPatternOmnidirectional_)
 				return AVAudioDataSourcePolarPattern.Omnidirectional;
@@ -55,10 +58,10 @@ namespace AVFoundation {
 				return AVAudioDataSourcePolarPattern.Subcardioid;
 			return AVAudioDataSourcePolarPattern.Unknown;
 		}
-		
-		static internal NSString ToToken (AVAudioDataSourcePolarPattern p)
+
+		static internal NSString? ToToken (AVAudioDataSourcePolarPattern p)
 		{
-			switch (p){
+			switch (p) {
 			case AVAudioDataSourcePolarPattern.Omnidirectional:
 				return AVAudioSession.PolarPatternOmnidirectional_;
 			case AVAudioDataSourcePolarPattern.Cardioid:
@@ -69,7 +72,7 @@ namespace AVFoundation {
 				return null;
 			}
 		}
-		
+
 		public AVAudioDataSourceLocation Location {
 			get {
 				return ToLocation (Location_);
@@ -83,9 +86,12 @@ namespace AVFoundation {
 		}
 
 #if !WATCH
-		public AVAudioDataSourcePolarPattern []SupportedPolarPatterns {
+		public AVAudioDataSourcePolarPattern []? SupportedPolarPatterns {
 			get {
 				var x = SupportedPolarPatterns_;
+				if (x is null)
+					return null;
+
 				int n = x.Length;
 				var r = new AVAudioDataSourcePolarPattern [n];
 				for (int i = 0; i < n; i++)
@@ -105,7 +111,7 @@ namespace AVFoundation {
 				return ToPolarPattern (PreferredPolarPattern_);
 			}
 		}
-		
+
 		public bool SetPreferredPolarPattern (AVAudioDataSourcePolarPattern pattern, out NSError outError)
 		{
 			return SetPreferredPolarPattern_ (ToToken (pattern), out outError);

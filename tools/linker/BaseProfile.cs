@@ -9,11 +9,6 @@ namespace Xamarin.Linker {
 	public abstract class BaseProfile : Profile {
 
 		// return assembly name without extension (.dll)
-		public abstract string ProductAssembly { get ; }
-
-		public virtual string GetNamespace (string nspace)
-		{
-			return nspace;
-		}
+		public abstract string ProductAssembly { get; }
 	}
 }

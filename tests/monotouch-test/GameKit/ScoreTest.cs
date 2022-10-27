@@ -12,7 +12,6 @@
 using System;
 using System.IO;
 using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -21,22 +20,8 @@ using AppKit;
 using UIKit;
 #endif
 using GameKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GameKit {
 
@@ -60,15 +45,15 @@ namespace MonoTouchFixtures.GameKit {
 
 				// this is a new API in iOS8 (it was private before that) and returned an empty instance like:
 				// "<<GKPlayer: 0x81254e60>(playerID:(null) alias:(null) name:(null) status:(null))>"
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false)) {
 					Assert.Null (s.Player, "Player");
 				}
 
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false)) {
 					Assert.That (s.LeaderboardIdentifier, Is.EqualTo ("category-or-identifier"), "LeaderboardIdentifier");
 				}
 
-				Assert.That (s.RetainCount, Is.EqualTo ((nint) 1), "RetainCount");
+				Assert.That (s.RetainCount, Is.EqualTo ((nuint) 1), "RetainCount");
 			}
 		}
 	}

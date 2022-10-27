@@ -3,13 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using MonoTouch.NUnit.UI;
 
 namespace LinkAll
@@ -33,6 +28,10 @@ namespace LinkAll
 		//
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
+#if __MACCATALYST__
+			// Debug spew to track down https://github.com/xamarin/maccore/issues/2414
+			Console.WriteLine ("AppDelegate.FinishedLaunching");
+#endif
 			// create a new window instance based on the screen size
 			window = new UIWindow (UIScreen.MainScreen.Bounds);
 			runner = new TouchRunner (window);
@@ -47,6 +46,11 @@ namespace LinkAll
 			window.MakeKeyAndVisible ();
 			
 			return true;
+		}
+
+		static void Main (string[] args)
+		{
+			UIApplication.Main (args, null, typeof (AppDelegate));
 		}
 	}
 }

@@ -1,3 +1,4 @@
+#if !NET
 using System;
 using PlatformArchitecture = ObjCRuntime.PlatformArchitecture;
 using PlatformName = ObjCRuntime.PlatformName;
@@ -14,6 +15,7 @@ sealed class MacAttribute : ObjCRuntime.IntroducedAttribute
 	{
 	}
 
+	[Obsolete ("Use the overload that takes '(major, minor)', since macOS is always 64-bit.")]
 	public MacAttribute (byte major, byte minor, bool onlyOn64 = false)
 		: base (PlatformName.MacOSX, (int)major, (int)minor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 	{
@@ -32,6 +34,7 @@ sealed class MacAttribute : ObjCRuntime.IntroducedAttribute
 	{
 	}
 
+	[Obsolete ("Use the overload that takes '(major, minor, subminor)', since macOS is always 64-bit.")]
 	public MacAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
 		: base (PlatformName.MacOSX, (int)major, (int)minor, (int)subminor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 	{
@@ -52,6 +55,7 @@ sealed class iOSAttribute : ObjCRuntime.IntroducedAttribute
 	{
 	}
 
+	[Obsolete ("Use the overload that takes '(major, minor)', since iOS is always 64-bit.")]
 	public iOSAttribute (byte major, byte minor, bool onlyOn64 = false)
 		: base (PlatformName.iOS, (int)major, (int)minor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 	{
@@ -62,6 +66,7 @@ sealed class iOSAttribute : ObjCRuntime.IntroducedAttribute
 	{
 	}
 
+	[Obsolete ("Use the overload that takes '(major, minor, subminor)', since iOS is always 64-bit.")]
 	public iOSAttribute (byte major, byte minor, byte subminor, bool onlyOn64)
 		: base (PlatformName.iOS, (int)major, (int)minor, (int)subminor, onlyOn64 ? PlatformArchitecture.Arch64 : PlatformArchitecture.All)
 	{
@@ -163,3 +168,4 @@ public class AvailabilityAttribute : Attribute
 	}
 }
 #endif
+#endif // !NET

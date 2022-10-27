@@ -26,15 +26,19 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
+using ObjCRuntime;
 
 namespace CoreFoundation {
 
 	class CFDataBuffer : IDisposable {
 		byte[] buffer;
-		CFData data;
+		CFData? data;
 
 		public unsafe CFDataBuffer (byte[] buffer)
 		{
@@ -70,7 +74,7 @@ namespace CoreFoundation {
 		}
 
 		public IntPtr Handle {
-			get { return data.Handle; }
+			get { return data.GetHandle (); }
 		}
 
 		public byte[] Data {
@@ -83,11 +87,10 @@ namespace CoreFoundation {
 
 		protected virtual void Dispose (bool disposing)
 		{
-			if (data != null) {
+			if (data is not null) {
 				data.Dispose ();
 				data = null;
 			}
 		}
 	}
 }
-

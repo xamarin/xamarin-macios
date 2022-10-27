@@ -1,0 +1,566 @@
+﻿#  Exception messages: System.PlatformNotSupportedException : Operation is not supported on this platform.
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.CreateClientStreamFromStringHandle_Valid
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InOutPipeDirection_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.ValidConstructors
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidPipeHandle_Throws
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ValidWriteAsync_ValidReadAsync_APM
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadFromPipeWithClosedPartner_ReadNoBytes
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadWithZeroLengthBuffer_Nop
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadWithNegativeCount_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadWithNullBuffer_Throws_ArgumentNullException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadOnDisposedReadablePipe_Throws_ObjectDisposedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadPipeUnsupportedMembers_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ValidWrite_ValidRead
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.CopyToAsync_InvalidArgs_Throws
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ValidWriteAsync_ValidReadAsync
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadWithNegativeOffset_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ReadWithOutOfBoundsArray_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.ValidWriteByte_ValidReadByte
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerIn_ClientOut.WriteToReadOnlyPipe_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ValidWriteAsync_ValidReadAsync
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadFromPipeWithClosedPartner_ReadNoBytes
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadWithNegativeOffset_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.WriteToReadOnlyPipe_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ValidWriteAsync_ValidReadAsync_APM
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ValidWrite_ValidRead
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.CopyToAsync_InvalidArgs_Throws
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ValidWriteByte_ValidReadByte
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadWithZeroLengthBuffer_Nop
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadWithNegativeCount_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadWithOutOfBoundsArray_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadPipeUnsupportedMembers_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadOnDisposedReadablePipe_Throws_ObjectDisposedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Read_ServerOut_ClientIn.ReadWithNullBuffer_Throws_ArgumentNullException
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.PipeTransmissionMode_Returns_Byte
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.ClonedClient_ActsAsOriginalClient
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.DisposeLocalCopyOfClientHandle_BeforeServerRead
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.ReadModeToByte_Accepted(serverDirection: Out, clientDirection: In)
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.ReadModeToByte_Accepted(serverDirection: In, clientDirection: Out)
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.ClonedServer_ActsAsOriginalServer
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.InvalidReadMode_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.MessageReadMode_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Specific.OSX_BufferSizeNotSupported
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WritePipeUnsupportedMembers_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.ValidFlush_DoesntThrow
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteWithOutOfBoundsArray_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteToDisposedWriteablePipe_Throws_ObjectDisposedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteToPipeWithClosedPartner_Throws_IOException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteWithNegativeOffset_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteWithNegativeCount_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteZeroLengthBuffer_Nop
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.ReadOnWriteOnlyPipe_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerIn_ClientOut.WriteWithNullBuffer_Throws_ArgumentNullException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteToDisposedWriteablePipe_Throws_ObjectDisposedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.ValidFlush_DoesntThrow
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteWithNegativeCount_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WritePipeUnsupportedMembers_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteWithNegativeOffset_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteZeroLengthBuffer_Nop
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.ReadOnWriteOnlyPipe_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteWithOutOfBoundsArray_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteToPipeWithClosedPartner_Throws_IOException
+System.IO.Pipes.Tests.AnonymousPipeTest_Write_ServerOut_ClientIn.WriteWithNullBuffer_Throws_ArgumentNullException
+System.IO.Pipes.Tests.TestPipeStream.TestCheckReadWrite
+System.IO.Pipes.Tests.TestPipeStream.TestCheckPipePropertyOperations_Unix
+System.IO.Pipes.Tests.TestPipeStream.TestInitializeHandle
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.NullParameters_Throws_ArgumentNullException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.CreateClientStreamFromStringHandle_Valid
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.InvalidStringParameters_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.InvalidPipeHandle_Throws_ArgumentException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.InOutPipeDirection_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InOutPipeDirection_Throws_NotSupportedException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.ServerBadInheritabilityThrows
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidBufferSize_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidPipeDirection_Throws_ArgumentOutOfRangeException
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidPipeHandle_Throws
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.ValidConstructors
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.InvalidStringParameters_Throws_ArgumentException(handle: "abc")
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateClient.InvalidStringParameters_Throws_ArgumentException(handle: "-1")
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidBufferSize_Throws_ArgumentOutOfRangeException(direction: InOut, bufferSize: -500)
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidBufferSize_Throws_ArgumentOutOfRangeException(direction: In, bufferSize: -500)
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.InvalidBufferSize_Throws_ArgumentOutOfRangeException(direction: Out, bufferSize: -500)
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.ServerBadInheritabilityThrows(direction: In, inheritability: 999)
+System.IO.Pipes.Tests.AnonymousPipeTest_CreateServer.ServerBadInheritabilityThrows(direction: Out, inheritability: 999)
+
+# System.NotImplementedException
+System.Linq.Expressions.Tests.ParameterTests.CanUseAsLambdaByRefParameter_String(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.CanWriteToRefParameter(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.CanUseAsLambdaByRefParameter(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.CanUseAsLambdaByRefParameter_Bool(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.CanUseAsLambdaByRefParameter_Char(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.CanReadFromRefParameter(useInterpreter: True)
+System.Linq.Expressions.Tests.SwitchTests.JumpBetweenCases(useIntepreter: True)
+System.Linq.Expressions.Tests.SwitchTests.NoDefaultOrCasesSwitchWithSideEffect(useInterpreter: True)
+System.Linq.Expressions.Tests.ParameterTests.ReadAndWriteRefParameters
+System.Linq.Expressions.Tests.SwitchTests.DefaultOnlySwitchWithSideEffect(useInterpreter: True)
+System.Linq.Expressions.Tests.Compiler_Tests.CallCompiledLambdaWithTypeMissing(useInterpreter: True)
+System.Linq.Expressions.Tests.NewWithByRefParameterTests.CreateByRefAliasingCompiled
+System.Linq.Expressions.Tests.NewWithByRefParameterTests.CreateByRefThrowing(useInterpreter: True)
+System.Linq.Expressions.Tests.NewWithByRefParameterTests.CreateByRefReferencingReadonly(useInterpreter: True)
+System.Linq.Expressions.Tests.NewWithByRefParameterTests.CreateByRef(useInterpreter: True)
+System.Linq.Expressions.Tests.NewWithByRefParameterTests.CreateOut(useInterpreter: True)
+System.Linq.Expressions.Tests.InvocationTests.InvokeByRefLambda(useInterpreter: True)
+System.Linq.Expressions.Tests.ConvertTests.CustomConversionNotStandardNameFromLiftedByRef(useInterpreter: True)
+System.Linq.Expressions.Tests.ConvertTests.CustomConversionNotStandardNameFromByRef(useInterpreter: True)
+System.Linq.Expressions.Tests.OpAssign.ConvertOpWriteByRefParameterOverloadedOperator(useInterpreter: True)
+System.Dynamic.Tests.DynamicObjectTests.ByRefInvoke
+
+
+#  System.PlatformNotSupportedException : Operation is not supported on this platform. 
+System.Linq.Expressions.Tests.NewTests.GlobalMethodInMembers
+System.Linq.Expressions.Tests.NewTests.GlobalFieldInMembers
+System.Linq.Expressions.Tests.MemberBindTests.GlobalMethod
+System.Linq.Expressions.Tests.ListBindTests.GlobalMethod
+System.Linq.Expressions.Tests.InvocationTests.InvokePrivateDelegate(useInterpreter: True)
+System.Linq.Expressions.Tests.InvocationTests.InvokePrivateDelegateTypeLambda(useInterpreter: True)
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(int), typeof(System.Int32&), typeof(string)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.Int32&)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(string), typeof(System.Double*), typeof(int)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.String*)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.Int32*)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(int), typeof(System.String*), typeof(double)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeAction(typeArgs: [typeof(System.String*), typeof(System.String*), typeof(System.String*), typeof(System.String*), typeof(System.String*), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.Int32*)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(int), typeof(System.Int32&), typeof(string)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(string), typeof(System.Double*), typeof(int)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.Int32&)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(int), typeof(System.String*), typeof(double)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.String*), typeof(System.String*), typeof(System.String*), typeof(System.String*), typeof(System.String*), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), typeof(System.Collections.Generic.List<int>), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.String*)])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), typeof(System.Int32*), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), typeof(System.Double&), ...])
+System.Linq.Expressions.Tests.GetDelegateTypeTests.CantBeFunc(typeArgs: [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), ...])
+System.Linq.Expressions.Tests.ConstantTests.CheckTypeConstantTest(useInterpreter: True)
+System.Linq.Expressions.Tests.ConstantTests.CheckMethodInfoConstantTest(useInterpreter: True)
+System.Linq.Expressions.Tests.CastTests.CanCastEnumTypeToUnderlyingType
+System.Linq.Expressions.Tests.CastTests.CannotCastWrongUnderlyingTypeEnumChecked
+System.Linq.Expressions.Tests.CastTests.CannotCastWrongUnderlyingTypeEnum
+System.Linq.Expressions.Tests.CastTests.CanCastUnderlyingTypeToEnumTypeChecked
+System.Linq.Expressions.Tests.CastTests.CanCastUnderlyingTypeToEnumType
+System.Linq.Expressions.Tests.CastTests.CannotCastReferenceToWrongUnderlyingTypeEnumChecked
+System.Linq.Expressions.Tests.CastTests.CanCastReferenceToUnderlyingTypeToEnumTypeChecked
+System.Linq.Expressions.Tests.CastTests.CannotCastReferenceToWrongUnderlyingTypeEnum
+System.Linq.Expressions.Tests.CastTests.CanCastEnumTypeToUnderlyingTypeChecked
+System.Linq.Expressions.Tests.CastTests.CanCastReferenceToUnderlyingTypeToEnumType
+System.Linq.Expressions.Tests.BinaryLogicalTests.Method_FalseOperatorIncorrectMethod_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_TrueOperatorIncorrectMethod_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.Method_ParamsDontMatchOperator_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_VoidReturnType_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_NotStatic_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_TrueOperatorIncorrectMethod_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_ReturnTypeNotEqualToParameterTypes_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlsoGlobalMethod
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_ParamsDontMatchOperator_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_NoTrueFalseOperator_ThrowsArgumentException(name: "op_False")
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_NoTrueFalseOperator_ThrowsArgumentException(name: "op_True")
+System.Linq.Expressions.Tests.BinaryLogicalTests.Method_NoTrueFalseOperator_ThrowsArgumentException(name: "op_True")
+System.Linq.Expressions.Tests.BinaryLogicalTests.Method_NoTrueFalseOperator_ThrowsArgumentException(name: "op_False")
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_NoTrueFalseOperator_ThrowsArgumentException(name: "op_False")
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_NoTrueFalseOperator_ThrowsArgumentException(name: "op_True")
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_ExpressionDoesntMatchMethodParameters_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 3)
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 1)
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 0)
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 0)
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 3)
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_DoesntHaveTwoParameters_ThrowsInvalidOperationException(parameterCount: 1)
+System.Linq.Expressions.Tests.BinaryLogicalTests.Method_TrueOperatorIncorrectMethod_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_ReturnTypeNotEqualToParameterTypes_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.AndAlso_NoMethod_ExpressionDoesntMatchMethodParameters_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_VoidReturnType_ThrowsArgumentException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_ParamsDontMatchOperator_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElse_NoMethod_NotStatic_ThrowsInvalidOperationException
+System.Linq.Expressions.Tests.OpAssign.MethodNoConvertOpWriteByRefParameter
+System.Linq.Expressions.Tests.BinaryLogicalTests.OrElseGlobalMethod
+
+#  System.ArgumentException : Missing parameter does not have a default value.
+System.Linq.Expressions.Tests.Compiler_Tests.CallCompiledLambdaWithTypeMissing
+
+# Expected: 2147483648
+# Actual:   0   Exception stack traces:   at System.Linq.Expressions.Tests.ConvertTests.VerifyNullableFloatToNullableUInt (System.Nullable`1[T] value, System.Boolean useInterpreter) [0x00035] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/Convert/ConvertTests.cs:11802 
+#  at System.Linq.Expressions.Tests.ConvertTests.ConvertNullableFloatToNullableUIntTest (System.Boolean useInterpreter) [0x000a7] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/Convert/ConvertTests.cs:3359 
+#  at (wrapper managed-to-native) System.Reflection.MonoMethod.InternalInvoke(System.Reflection.MonoMethod,object,object[],System.Exception&)
+System.Linq.Expressions.Tests.ConvertTests.ConvertNullableFloatToNullableUIntTest(useInterpreter: True)
+System.Linq.Expressions.Tests.ConvertTests.ConvertFloatToNullableUIntTest(useInterpreter: True)
+System.Linq.Expressions.Tests.ConvertTests.ConvertFloatToUIntTest(useInterpreter: True)
+System.Linq.Expressions.Tests.ConvertTests.ConvertNullableFloatToUIntTest(useInterpreter: True)
+
+# Exception messages: Assert.NotNull() Failure   Exception stack traces:   at System.Linq.Expressions.Tests.CompilerTests.VerifyEmitConstantsToIL (System.Linq.Expressions.Expression e, System.Int32 expectedCount, System.Object expectedValue) [0x0001c] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/CompilerTests.cs:437 
+#  at System.Linq.Expressions.Tests.CompilerTests.VerifyEmitConstantsToIL[T] (T value, System.Int32 expectedCount) [0x00000] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/CompilerTests.cs:429 
+#  at System.Linq.Expressions.Tests.CompilerTests.VerifyEmitConstantsToIL[T] (T value) [0x00000] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/CompilerTests.cs:424 
+#  at System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_NonNullableValueTypes () [0x00000] in /Users/builder/jenkins/workspace/archive-mono/2018-08/ios/release/external/corefx/src/System.Linq.Expressions/tests/CompilerTests.cs:57 
+#  at (wrapper managed-to-native) System.Reflection.MonoMethod.InternalInvoke(System.Reflection.MonoMethod,object,object[],System.Exception&)
+#  at System.Reflection.MonoMethod.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0003b] in /Users/mandel/Xamarin/xamarin-macios/master/xamarin-macios/external/mono/mcs/class/corlib/System.Reflection/MonoMethod.cs:305 
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_NonNullableValueTypes
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_ShareReferences
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_ReferenceTypes
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_NullableValueTypes
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_LiftedToClosure
+System.Linq.Expressions.Tests.CompilerTests.EmitConstantsToIL_Enums
+
+#  Exception messages: Assert.Throws() Failure
+# Expected: typeof(System.InvalidCastException)
+# Actual:   typeof(System.NotImplementedException): byref delegate
+System.Dynamic.Tests.DynamicObjectTests.ByRefMismatch
+
+## DEVICE FAILURES
+
+# System.NullReferenceException : Object reference not set to an instance of an object
+System.Linq.Tests.LegacyTests.ThenByTests.ThenBy1
+System.Linq.Tests.LegacyTests.ThenByTests.ThenBy2
+System.Linq.Tests.LegacyTests.ThenByTests.SecondaryKeysAreUnique
+System.Linq.Tests.UnionTests.CommonElementsShared
+System.Linq.Tests.UnionTests.Union1
+System.Linq.Tests.ThenByDescendingTests.AscendingKeyThenDescendingKey
+System.Linq.Tests.ThenByDescendingTests.ThenByDescending2
+System.Linq.Tests.ThenByDescendingTests.ThenByDescending1
+System.Linq.Tests.TakeLastTests.TakeLast
+System.Linq.Tests.SumTests.Sum20
+System.Linq.Tests.SumTests.Sum12
+System.Linq.Tests.SumTests.Sum4
+System.Linq.Tests.SumTests.SumOfLong_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum18
+System.Linq.Tests.SumTests.Sum5
+System.Linq.Tests.SumTests.Sum17
+System.Linq.Tests.SumTests.SumOfFloat_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum15
+System.Linq.Tests.SumTests.SumOfNullableOfFloat_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum8
+System.Linq.Tests.SumTests.Sum9
+System.Linq.Tests.SumTests.Sum3
+System.Linq.Tests.SumTests.Sum7
+System.Linq.Tests.SumTests.SumOfDouble_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum16
+System.Linq.Tests.SumTests.Sum2
+System.Linq.Tests.SumTests.Sum10
+System.Linq.Tests.SumTests.SumOfNullableOfDouble_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum6
+System.Linq.Tests.SumTests.SumOfNullableOfDecimal_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.SumOfNullableOfInt_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.SumOfDecimal_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.SumOfNullableOfLong_SourceIsEmptyCollection_ZeroReturned
+System.Linq.Tests.SumTests.Sum14
+System.Linq.Tests.QueryableTests.MatchSequencePattern
+System.Linq.Tests.OrderByDescendingTests.FirstAndLastAreDuplicatesCustomComparer
+System.Linq.Tests.OrderByDescendingTests.OrderByDescending2
+System.Linq.Tests.OrderByDescendingTests.KeySelectorCalled
+System.Linq.Tests.OrderByDescendingTests.FirstAndLastAreDuplicatesNullPassedAsComparer
+System.Linq.Tests.MinTests.EmptyDoubleWithSelector
+System.Linq.Tests.MinTests.NullableDecimalMinimumRepeated
+System.Linq.Tests.MinTests.DecimalMinimumRepeated
+System.Linq.Tests.MinTests.MinNullableSingleWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.SingleMinimumRepeated
+System.Linq.Tests.MinTests.EmptyInt32WithSelector
+System.Linq.Tests.MinTests.MinNullableDecimalWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.StringMinimumRepeated
+System.Linq.Tests.MinTests.MinNullableDoubleWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptyInt64Source
+System.Linq.Tests.MinTests.EmptyNullableInt64Source
+System.Linq.Tests.MinTests.NullableSingleMinimumRepated
+System.Linq.Tests.MinTests.Min2
+System.Linq.Tests.MinTests.NullableInt64MinimumRepeated
+System.Linq.Tests.MinTests.MinDecimalWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.MinNullableInt64WithSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptySingle
+System.Linq.Tests.MinTests.EmptyDoubleSource
+System.Linq.Tests.MinTests.EmptySingleWithSelector
+System.Linq.Tests.MinTests.EmptyInt64WithSelector
+System.Linq.Tests.MinTests.MinInt32WithSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptyNullableInt32Source
+System.Linq.Tests.MinTests.NullableDoubleMinimumRepeated
+System.Linq.Tests.MinTests.MinDoubleWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.Int64MinimumRepeated
+System.Linq.Tests.MinTests.DoubleMinimumRepeated
+System.Linq.Tests.MinTests.EmptyNullableDecimalSource
+System.Linq.Tests.MinTests.EmptyBooleanSource
+System.Linq.Tests.MinTests.MinInt64WithSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptyNullableDoubleSource
+System.Linq.Tests.MinTests.EmptyNullableSingleSource
+System.Linq.Tests.MinTests.EmptyDecimalWithSelector
+System.Linq.Tests.MinTests.Min1
+System.Linq.Tests.MinTests.EmptyDateTimeWithSelector
+System.Linq.Tests.MinTests.MinSingleWithSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptyDateTimeSource
+System.Linq.Tests.MinTests.NullableInt32MinimumRepeated
+System.Linq.Tests.MinTests.EmptyDecimalSource
+System.Linq.Tests.MinTests.Int32MinimumRepeated
+System.Linq.Tests.MinTests.MinNullableInt32WithSelectorAccessingProperty
+System.Linq.Tests.MinTests.MinStringWitSelectorAccessingProperty
+System.Linq.Tests.MinTests.EmptyStringSource
+System.Linq.Tests.MinTests.EmptyInt32Source
+System.Linq.Tests.MaxTests.MaxNullableInt32WithSelectorAccessingField
+System.Linq.Tests.MaxTests.MaxNullableDecimalWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.EmptyDouble
+System.Linq.Tests.MaxTests.EmptySingleWithSelector
+System.Linq.Tests.MaxTests.Int64MaxRepeated
+System.Linq.Tests.MaxTests.MaxDoubleWithSelectorAccessingField
+System.Linq.Tests.MaxTests.DecimalMaximumRepeated
+System.Linq.Tests.MaxTests.EmptyNullableInt64WithSelector
+System.Linq.Tests.MaxTests.Max2
+System.Linq.Tests.MaxTests.EmptyDecimalWithSelector
+System.Linq.Tests.MaxTests.EmptyDecimal
+System.Linq.Tests.MaxTests.EmptyInt32
+System.Linq.Tests.MaxTests.MaxNullableSingleWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.MaxStringWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.EmptyNullableDecimal
+System.Linq.Tests.MaxTests.MaxSingleWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.Single_MaxRepeated
+System.Linq.Tests.MaxTests.Int32MaxRepeated
+System.Linq.Tests.MaxTests.EmptyDoubleWithSelector
+System.Linq.Tests.MaxTests.Max1
+System.Linq.Tests.MaxTests.MaxDecimalWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.EmptyNullableInt64
+System.Linq.Tests.MaxTests.EmptyNullableDouble
+System.Linq.Tests.MaxTests.EmptyNullableInt32
+System.Linq.Tests.MaxTests.EmptyString
+System.Linq.Tests.MaxTests.StringMaximumRepeated
+System.Linq.Tests.MaxTests.EmptyNullableSingleWithSelector
+System.Linq.Tests.MaxTests.EmptyNullableSingle
+System.Linq.Tests.MaxTests.EmptyInt64WithSelector
+System.Linq.Tests.MaxTests.EmptyNullableDoubleWithSelector
+System.Linq.Tests.MaxTests.DoubleMaximumRepeated
+System.Linq.Tests.MaxTests.NullableSingleMaxRepeated
+System.Linq.Tests.MaxTests.MaxInt32WithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.MaxNullableDoubleWithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.EmptyBoolean
+System.Linq.Tests.MaxTests.EmptyNullableDecimalWithSelector
+System.Linq.Tests.MaxTests.NullableInt32MaxRepeated
+System.Linq.Tests.MaxTests.NullableDecimalMaximumRepeated
+System.Linq.Tests.MaxTests.EmptyInt64
+System.Linq.Tests.MaxTests.MaxInt64WithSelectorAccessingProperty
+System.Linq.Tests.MaxTests.MaxNullableInt64WithSelectorAccessingField
+System.Linq.Tests.MaxTests.EmptyDateTime
+System.Linq.Tests.MaxTests.EmptyNullableDateTimeWithSelector
+System.Linq.Tests.MaxTests.NullableInt64MaximumRepeated
+System.Linq.Tests.MaxTests.EmptySingle
+System.Linq.Tests.LongCountTests.MultipleElements
+System.Linq.Tests.LongCountTests.EmptySourceWithPredicate
+System.Linq.Tests.LongCountTests.LongCount1
+System.Linq.Tests.LongCountTests.EmptySource
+System.Linq.Tests.LongCountTests.LongCount2
+System.Linq.Tests.LongCountTests.PredicateTrueFirstAndLast
+System.Linq.Tests.JoinTests.Join1
+System.Linq.Tests.JoinTests.SelectorsReturnNull
+System.Linq.Tests.JoinTests.FirstOuterMatchesLastInnerLastOuterMatchesFirstInnerSameNumberElements
+System.Linq.Tests.IntersectTests.BothEmpty
+System.Linq.Tests.IntersectTests.Intersect1
+System.Linq.Tests.GroupJoinTests.GroupJoin1
+System.Linq.Tests.GroupJoinTests.OuterEmptyInnerNonEmpty
+System.Linq.Tests.GroupByTests.NullComparer
+System.Linq.Tests.GroupByTests.GroupBy5
+System.Linq.Tests.GroupByTests.AllElementsSameKeyResultSelectorUsed
+System.Linq.Tests.GroupByTests.SingleNonNullElement
+System.Linq.Tests.GroupByTests.NullComparerResultSelectorUsed
+System.Linq.Tests.GroupByTests.EmptySourceWithResultSelector
+System.Linq.Tests.GroupByTests.GroupBy3
+System.Linq.Tests.GroupByTests.DuplicateKeysCustomComparer
+System.Linq.Tests.GroupByTests.GroupBy6
+System.Linq.Tests.GroupByTests.GroupBy1
+System.Linq.Tests.GroupByTests.GroupBy7
+System.Linq.Tests.GroupByTests.GroupBy8
+System.Linq.Tests.DefaultIfEmptyTests.DefaultIfEmpty1
+System.Linq.Tests.DefaultIfEmptyTests.EmptyNullableSourceNoDefaultPassed
+System.Linq.Tests.DefaultIfEmptyTests.SeveralElementsNoDefaultPassed
+System.Linq.Tests.DefaultIfEmptyTests.EmptyNonNullableSourceNoDefaultPassed
+System.Linq.Tests.AverageTests.Average9
+System.Linq.Tests.AverageTests.Average13
+System.Linq.Tests.AverageTests.Average3
+System.Linq.Tests.AverageTests.Average10
+System.Linq.Tests.AverageTests.MultipleIntSouce
+System.Linq.Tests.AverageTests.MultipleDoubleFromSelector
+System.Linq.Tests.AverageTests.Average19
+System.Linq.Tests.AverageTests.Average2
+System.Linq.Tests.AverageTests.MultipleNullableFloatSource
+System.Linq.Tests.AverageTests.MultipleNullableDoubleSource
+System.Linq.Tests.AverageTests.MultipleDecimalFromSelector
+System.Linq.Tests.AverageTests.Average14
+System.Linq.Tests.AverageTests.NullableFloatFromSelector
+System.Linq.Tests.AverageTests.Average17
+System.Linq.Tests.AverageTests.MultipleDoubleValues
+System.Linq.Tests.AverageTests.Average1
+System.Linq.Tests.AverageTests.Average8
+System.Linq.Tests.AverageTests.NullableLongFromSelector
+System.Linq.Tests.AverageTests.Average12
+System.Linq.Tests.AverageTests.NullableDecimalFromSelector
+System.Linq.Tests.AverageTests.Average4
+System.Linq.Tests.AverageTests.MultipleIntFromSelector
+System.Linq.Tests.AverageTests.Average15
+System.Linq.Tests.AverageTests.Average16
+System.Linq.Tests.AverageTests.Average6
+System.Linq.Tests.AverageTests.MultipleNullableeDecimalSource
+System.Linq.Tests.AverageTests.Average7
+System.Linq.Tests.AverageTests.MultipleLongValues
+System.Linq.Tests.AverageTests.NullableDoubleFromSelector
+System.Linq.Tests.AverageTests.Average5
+System.Linq.Tests.AverageTests.Average18
+System.Linq.Tests.AverageTests.MultipleNullableLongSource
+System.Linq.Tests.AverageTests.MultipleFloatValues
+System.Linq.Tests.AverageTests.Average11
+System.Linq.Tests.AverageTests.MultipleDecimalValues
+System.Linq.Tests.AverageTests.MultipleNullableIntSource
+System.Linq.Tests.AverageTests.MultipleLongFromSelector
+System.Linq.Tests.AverageTests.Average20
+System.Linq.Tests.AverageTests.NullableIntFromSelector
+System.Linq.Tests.AverageTests.MultipleFloatFromSelector
+System.Linq.Tests.AggregateTests.MultipleElementsSeedResultSelector
+System.Linq.Tests.AggregateTests.Aggregate3
+System.Linq.Expressions.Tests.UnaryPlusNullableTests.CheckUnaryArithmeticUnaryPlusNullableDecimalTest(useInterpreter: True)
+System.Linq.Expressions.Tests.UnaryPlusTests.CheckUnaryArithmeticUnaryPlusDecimalTest(useInterpreter: True)
+System.Linq.Expressions.Tests.PreIncrementAssignTests.IncorrectMethodParameterCount
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: null, result: null, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.IncorrectMethodParameterCount
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: null, result: null, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostIncrementAssignTests.IncorrectMethodParameterCount
+System.Linq.Expressions.Tests.PostDecrementAssignTests.IncorrectMethodParameterCount
+System.Linq.Expressions.Tests.PostDecrementAssignTests.OverflowingValuesThrow(value: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: null, result: null, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: -1, result: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 1, result: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 79228162514264337593543950334, result: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: -79228162514264337593543950334, result: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.AssignsCorrectValues(type: typeof(decimal?), value: 0, result: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: -1, _: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 79228162514264337593543950334, _: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: -79228162514264337593543950334, _: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 79228162514264337593543950334, _: 79228162514264337593543950333, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 1, _: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: 0, _: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: null, _: null, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 1, _: 0, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal?), value: -79228162514264337593543950334, _: -79228162514264337593543950335, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: -1, _: -2, useInterpreter: False)
+System.Linq.Expressions.Tests.PostDecrementAssignTests.ReturnsCorrectValues(type: typeof(decimal), value: 0, _: -1, useInterpreter: False)
+System.Linq.Expressions.Tests.PreDecrementAssignTests.OverflowingValuesThrow(value: -79228162514264337593543950335, useInterpreter: False)
+
+# typeof(Microsoft.CSharp.RuntimeBinder.RuntimeBinderException): Cannot apply indexing with [] to an expression of type 'System.Collections.Generic.List<int>'
+System.Dynamic.Tests.SetIndexBinderTests.IndexErrorIsNotBindingError
+System.Dynamic.Tests.SetIndexBinderTests.ListIndexing
+System.Dynamic.Tests.GetIndexBinderTests.IndexErrorIsNotBindingError
+System.Dynamic.Tests.GetIndexBinderTests.ListIndexing
+
+# fail only on 32b devices, to be finxed in mono: https://github.com/mono/mono/issues/15262
+Platform32:System.Linq.Expressions.Tests.NewArrayListTests.CheckShortArrayListTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.NewArrayListTests.CheckSByteArrayListTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryAddTests.CheckShortAddTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryDivideTests.CheckShortDivideTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryMultiplyTests.CheckShortMultiplyTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryPowerTests.CheckSBytePowerTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryPowerTests.CheckShortPowerTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryShiftTests.CheckSByteShiftTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryShiftTests.CheckShortShiftTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinarySubtractTests.CheckShortSubtractTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryAndTests.CheckShortAndTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryAndTests.CheckSByteAndTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryExclusiveOrTests.CheckShortExclusiveOrTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryExclusiveOrTests.CheckSByteExclusiveOrTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryOrTests.CheckSByteOrTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.BinaryOrTests.CheckShortOrTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConstantTests.CheckShortConstantTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConstantTests.CheckSByteConstantTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableFloatToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertIntToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertShortToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableByteToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertSByteToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertIntToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableLongToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertEnumLongToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableCharToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertFloatToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertDecimalToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableIntToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableUShortToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableDoubleToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableULongToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertShortToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableULongToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertFloatToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableSByteToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableShortToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableDoubleToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertLongToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertCharToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableUIntToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertEnumToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableUShortToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertCharToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertEnumToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableEnumToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableSByteToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertDecimalToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertULongToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertDoubleToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableCharToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableUIntToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableIntToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableEnumLongToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableShortToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableFloatToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableEnumToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertSByteToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertUShortToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertLongToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertULongToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertByteToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertUIntToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertDoubleToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableDecimalToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertUIntToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableEnumLongToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableLongToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertNullableDecimalToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertUShortToSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.ConvertTests.ConvertEnumLongToShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.LambdaAddTests.LambdaAddShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.LambdaDivideTests.LambdaDivideShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.LambdaIdentityTests.CheckLambdaIdentitySByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.LambdaIdentityTests.CheckLambdaIdentityShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.LambdaModuloTests.LambdaModuloShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.LambdaMultiplyTests.LambdaMultiplyShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.LambdaSubtractTests.LambdaSubtractShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.LambdaUnaryNotTests.CheckLambdaUnaryNotShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.LambdaUnaryNotTests.CheckLambdaUnaryNotSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.Compiler_Tests.ConvertUnsignedToSigned(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.TernaryTests.CheckTernarySByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.TernaryTests.CheckTernaryShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.UnaryArithmeticNegateTests.CheckUnaryArithmeticNegateShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.UnaryBitwiseNotTests.CheckUnaryBitwiseNotSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.UnaryBitwiseNotTests.CheckUnaryBitwiseNotShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.UnaryDecrementTests.CheckUnaryDecrementShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.UnaryIncrementTests.CheckUnaryIncrementShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.OnesComplementTests.CheckUnaryArithmeticOnesComplementShortTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.OnesComplementTests.CheckUnaryArithmeticOnesComplementSByteTest(useInterpreter: True)
+Platform32:System.Linq.Expressions.Tests.UnaryPlusTests.CheckUnaryArithmeticUnaryPlusShortTest(useInterpreter: True)
+
+# ignore failing test, mono issue: https://github.com/mono/mono/issues/19308
+System.Linq.Expressions.Tests.BinaryPowerTests.CheckDecimalPowerTest(useInterpreter: True)

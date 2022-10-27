@@ -13,3 +13,19 @@
 
 # Deprecated in iOS 6.0 but we have same C# signature as a method that was deprecated in iOS 8.0
 !deprecated-attribute-wrong! AVAudioRecorderDelegate::audioRecorderEndInterruption:withFlags: has 8.0 not 6.0 on [Deprecated] attribute
+!missing-protocol! AVVideoCompositionInstruction not bound
+!incorrect-protocol-member! AVAssetResourceLoaderDelegate::resourceLoader:shouldWaitForLoadingOfRequestedResource: is OPTIONAL and should NOT be abstract
+!unknown-native-enum! AVAudioSessionFlags bound
+!missing-protocol-conformance! AVVideoCompositionInstruction should conform to AVVideoCompositionInstruction
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found
+!missing-protocol-member! AVAudioRecorderDelegate::audioRecorderEndInterruption:withOptions: not found
+!missing-field! AVCoreAnimationBeginTimeAtZero not bound
+!missing-field! AVVideoTransferFunction_ITU_R_2100_HLG not bound
+!missing-field! AVVideoTransferFunction_SMPTE_ST_2084_PQ not bound
+!missing-selector! AVVideoComposition::sourceTrackIDForFrameTiming not bound
+!incorrect-protocol-member! AVAudio3DMixing::pointSourceInHeadMode is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::setPointSourceInHeadMode: is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::setSourceMode: is REQUIRED and should be abstract
+!incorrect-protocol-member! AVAudio3DMixing::sourceMode is REQUIRED and should be abstract
+!extra-null-allowed! 'Foundation.NSNumber[] AVFoundation.AVVideoCompositionInstruction::get_RequiredSourceTrackIDs()' has a extraneous [NullAllowed] on return type
+!missing-field! AVPlayerItemTimeJumpedOriginatingParticipantKey not bound

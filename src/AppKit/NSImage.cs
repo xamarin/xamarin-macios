@@ -22,6 +22,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 
 using Foundation;
@@ -62,7 +64,7 @@ namespace AppKit {
 		}
 
 		// note: if needed override the protected Get|Set methods
-		public string Name { 
+		public string Name {
 			get { return GetName (); }
 			// ignore return value (bool)
 			set { SetName (value); }
@@ -70,7 +72,7 @@ namespace AppKit {
 
 		public static NSImage ImageNamed (NSImageName name)
 		{
-			return ImageNamed (name.GetConstant ()); 
+			return ImageNamed (name.GetConstant ());
 		}
 	}
 
@@ -84,3 +86,4 @@ namespace AppKit {
 		}
 	}
 }
+#endif // !__MACCATALYST__

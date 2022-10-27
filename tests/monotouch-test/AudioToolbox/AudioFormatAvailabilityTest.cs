@@ -9,13 +9,8 @@
 
 #if !__WATCHOS__
 
-#if XAMCORE_2_0
 using Foundation;
 using AudioToolbox;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.AudioToolbox;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {

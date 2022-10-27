@@ -1,0 +1,14 @@
+<linker>
+    <!-- see LinkExtraDefsTest unit tests -->
+	<assembly fullname="mscorlib">
+		<type fullname="System.Security.PermissionSet" />
+    </assembly>
+	<assembly fullname="System">
+		<type fullname="System.Net.Mime.ContentType" >
+			<method name="ParseValue" />
+		</type>
+    </assembly>
+	<assembly fullname="Xamarin.MacCatalyst">
+		<type fullname="CoreBluetooth.CBUUID" preserve="field" />
+    </assembly>
+</linker>

@@ -1,10 +1,8 @@
-## typedef is used + untyped enum in GKPeerPickerController.h: typedef NSUInteger GKPeerPickerConnectionType
+## .NET - not exposed in any API (and now excluded in Xcode11)
 !unknown-native-enum! GKPeerPickerConnectionType bound
 
-## all members are not available so the protocol is empty
-## however this is confusing because some protocols have no members (so it can't just be ignored)
-## 36619511 Is GKSavedGameListener available on tvOS? (https://trello.com/c/9q0MT7SY)
-!missing-protocol! GKSavedGameListener not bound
-
-## GKSavedGameListener is not available on tvOS (see missing-protocol above)
-!missing-protocol-conformance! GKLocalPlayer should conform to GKSavedGameListener (defined in 'GKSavedGame' category)
+# API removed by Apple, marked as deprecated
+!unknown-native-enum! GKAuthenticationType bound
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindHostedPlayers: is OPTIONAL and should NOT be abstract
+!incorrect-protocol-member! GKMatchmakerViewControllerDelegate::matchmakerViewController:didFindMatch: is OPTIONAL and should NOT be abstract
+!missing-selector! GKVoiceChat::playerVoiceChatStateDidChangeHandler not bound

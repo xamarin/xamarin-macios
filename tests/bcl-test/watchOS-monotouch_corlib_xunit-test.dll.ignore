@@ -1,0 +1,25 @@
+# blocks watch test app
+System.IO.Tests.FileInfo_CopyTo_str_b
+System.IO.Tests.File_Copy_str_str_b
+System.IO.Tests.FileInfo_CopyTo_str
+System.IO.Tests.File_Copy_str_str
+System.Reflection.Tests.MemberInfoNetCoreAppTests
+System.Memory.Tests.ReadOnlySequenceTestsChar+SplitInThreeSegments
+System.Memory.Tests.ReadOnlySequenceTestsChar+SegmentPerChar
+System.Memory.Tests.ReadOnlySequenceTestsChar+SingleSegment
+System.Memory.Tests.ReadOnlySequenceTestsChar+Memory
+System.Memory.Tests.ReadOnlySequenceTestsChar+String
+System.Memory.Tests.ReadOnlySequenceTestsChar+Array
+System.Memory.Tests.ReadOnlySequenceTestsByte+SplitInThreeSegments
+System.Memory.Tests.ReadOnlySequenceTestsByte+SegmentPerByte
+System.Memory.Tests.ReadOnlySequenceTestsByte+SingleSegment
+
+
+# produces malloc errors 
+# malloc: *** mach_vm_map(size=1048576) failed (error code=3)
+System.IO.Tests.UmaTests.UmaReadWrite
+
+
+# Expected: typeof(System.ArgumentException)
+# Actual:   typeof(System.MissingMethodException): Method not found: System.TimeSpan System.TimeSpan.Divide(double)
+System.Tests.TimeSpanTests

@@ -12,15 +12,9 @@ using System.Reflection;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using ObjCRuntime;
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 
 namespace Introspection {
 	
@@ -115,15 +109,6 @@ namespace Introspection {
 
 			switch (encodedType) {
 			case 'c': // char, used for C# bool
-#if !XAMCORE_2_0
-				switch (type.FullName) {
-				// looks like it returns a bool even if documented as a void
-				// UIPrintInteractionController 'instance Void Present(Boolean, MonoTouch.UIKit.UIPrintInteractionCompletionHandler)' selector: presentAnimated:completionHandler:
-				// update: documentation (and header) mistake that Apple corrected (IIRC I filled that issue)
-				case "System.Void":
-					return CurrentType.Name == "UIPrintInteractionController";
-				}
-#endif
 				break;
 			// float (32 bits)
 			case 'f':
@@ -179,7 +164,7 @@ namespace Introspection {
 
 		protected override void CheckManagedMemberSignatures (MethodBase m, Type t, ref int n)
 		{
-#if !XAMCORE_4_0 // let's review the tests exceptions if we break things
+#if !XAMCORE_5_0 // let's review the tests exceptions if we break things
 			switch (m.Name) {
 			case "get_Source":
 			case "set_Source":
@@ -196,14 +181,18 @@ namespace Introspection {
 				if (t.Name == "UISearchDisplayController")
 					return;
 				break;
+#endif // !XAMCORE_5_0
+#if !NET
 			case "get_ImagePickerControllerDelegate":
 			case "set_ImagePickerControllerDelegate":
 			case "get_NavigationControllerDelegate":
 			case "set_NavigationControllerDelegate":
-				// fixed in XAMCORE_4_0 - alternative are the Weak* delegates
+				// fixed in NET - alternative are the Weak* delegates
 				if (t.Name == "UIImagePickerController")
 					return;
 				break;
+#endif
+#if !XAMCORE_5_0 // let's review the tests exceptions if we break things
 			case "get_Model":
 			case "set_Model":
 				// UIPickerViewModel is our own creation and we did not make an interface out of it
@@ -229,6 +218,8 @@ namespace Introspection {
 			case "AccommodatePresentedSubitemDeletion":
 			case "SavePresentedItemChanges":
 				return m.DeclaringType.Name == "UIDocument";
+			case "PostNotification": // completion handler is not always called
+				return m.DeclaringType.Name == "ICNotificationManager";
 			}
 			return base.IgnoreAsync (m);
 		}

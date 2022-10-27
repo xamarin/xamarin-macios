@@ -12,7 +12,7 @@ using Foundation;
 using ObjCRuntime;
 
 namespace WatchKit {
-	[iOS (8,2)]
+	[NoiOS]
 	[Native]
 	public enum WKInterfaceMapPinColor : long {
 		Red,
@@ -20,7 +20,8 @@ namespace WatchKit {
 		Purple
 	}
 
-	[iOS (8,2)]
+	[NoiOS]
+	[Deprecated (PlatformName.WatchOS, 7,0)]
 	[Native]
 	public enum WKMenuItemIcon : long {
 		Accept,
@@ -41,14 +42,14 @@ namespace WatchKit {
 		Trash
 	}
 		
-	[iOS (8,2)]
+	[NoiOS]
 	[Native]
 	public enum WKUserNotificationInterfaceType : long {
 		Default,
 		Custom
 	}
 
-	[iOS (8,2)]
+	[NoiOS]
 	[Native]
 	public enum WKTextInputMode : long {
 		Plain,
@@ -56,8 +57,8 @@ namespace WatchKit {
 		AllowAnimatedEmoji
 	}
 
-	[iOS (8,2)]
-	[Native]
+	[NoiOS]
+	[Native ("WatchKitErrorCode")]
 	[ErrorDomain ("WatchKitErrorDomain")]
 	public enum WKErrorCode : long {
 		None = 0,
@@ -80,7 +81,13 @@ namespace WatchKit {
 		Retry,
 		Start,
 		Stop,
-		Click
+		Click,
+		[Watch (7,0)]
+		NavigationLeftTurn,
+		[Watch (7,0)]
+		NavigationRightTurn,
+		[Watch (7,0)]
+		NavigationGenericManeuver,
 	}
 
 	[NoiOS]

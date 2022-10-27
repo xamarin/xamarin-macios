@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace LinkSdk {

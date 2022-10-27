@@ -1,4 +1,4 @@
-﻿// INGetCarPowerLevelStatusIntentResponse.cs
+// INGetCarPowerLevelStatusIntentResponse.cs
 //
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
@@ -6,7 +6,8 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && (IOS || TVOS)
+#if IOS && !TVOS
+#if !(NET && __MACOS__)
 
 using Foundation;
 using Intents;
@@ -29,4 +30,5 @@ namespace Intents {
 	}
 }
 
+#endif // !(NET && __MACOS__)
 #endif

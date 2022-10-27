@@ -14,23 +14,25 @@ using ObjCRuntime;
 using Foundation;
 using CoreFoundation;
 
+#nullable enable
+
 namespace GameKit {
 
-#if !MONOMAC
-
 	// NSUInteger -> GKPeerPickerController.h
-#if XAMCORE_4_0
-	[NoTV] // preserve binary compatibility with existing/shipping code
-#endif
+	[NoMac]
 	[NoWatch]
-	[Native]
+#if NET
+	[NoTV]
+#endif
 	[Deprecated (PlatformName.iOS, 7, 0)]
+	[Native]
 	public enum GKPeerPickerConnectionType : ulong {
 		Online = 1 << 0,
 		Nearby = 1 << 1
 	}
 
 	// untyped enum -> GKPublicConstants.h
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 7, 0)]
 	[ErrorDomain ("GKVoiceChatServiceErrorDomain")]
 	public enum GKVoiceChatServiceError {
@@ -52,7 +54,6 @@ namespace GameKit {
 		OutOfMemory = 32015,
 		InvalidParameter = 32016
 	}
-#endif
 
 	// untyped enum -> GKPublicConstants.h
 	[Deprecated (PlatformName.iOS, 7, 0)]
@@ -79,7 +80,8 @@ namespace GameKit {
 		Unavailable,
 		Connected,   
 		Disconnected,
-		Connecting,  
+		Connecting,
+		ConnectedRelay = 5,
 	}
 
 	// NSInteger -> GKLeaderboard.h
@@ -95,7 +97,7 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKError.h
-	[Native]
+	[Native ("GKErrorCode")]
 	[ErrorDomain ("GKErrorDomain")]
 	public enum GKError : long {
 		None = 0,
@@ -109,10 +111,8 @@ namespace GameKit {
 		InvalidPlayer,
 		ScoreNotSet,
 		ParentalControlsBlocked,
-#if !MONOMAC
 		PlayerStatusExceedsMaximumLength,
 		PlayerStatusInvalid,
-#endif
 		MatchRequestInvalid = 13,
 		Underage,
 		GameUnrecognized,
@@ -125,26 +125,40 @@ namespace GameKit {
 		TurnBasedInvalidParticipant,
 		TurnBasedInvalidTurn,
 		TurnBasedInvalidState,
-#if MONOMAC
+#if MONOMAC && !NET
+		[Obsolete ("This value was re-used on macOS only and removed later.")]
 		Offline = 25,
-#else
+#endif
 		InvitationsDisabled = 25, // iOS 7.0
 		PlayerPhotoFailure = 26,  // iOS 8.0
 		UbiquityContainerUnavailable = 27, // iOS 8.0
-#endif
 		MatchNotConnected = 28,
 		GameSessionRequestInvalid = 29,
+		RestrictedToAutomatch = 30,
+		ApiNotAvailable = 31,
+		NotAuthorized = 32,
+		ConnectionTimeout = 33,
+		ApiObsolete = 34,
+
+		FriendListDescriptionMissing = 100,
+		FriendListRestricted = 101,
+		FriendListDenied = 102,
+		FriendRequestNotAvailable = 103,
 	}
 
+	[iOS (10,0)]
+	[Mac (10,12)]
+	[TV (10,0)]
 	[Native]
-	[iOS (10,0)][Mac (10,12)][TV (10,0)]
 	public enum GKConnectionState : long {
 		NotConnected,
 		Connected,
 	}
 
+	[iOS (10,0)]
+	[Mac (10,12)]
+	[TV (10,0)]
 	[Native]
-	[iOS (10,0)][Mac (10,12)][TV (10,0)]
 	public enum GKTransportType : long {
 		Unreliable,
 		Reliable,
@@ -154,7 +168,7 @@ namespace GameKit {
 	[Deprecated (PlatformName.TvOS, 12,0)]
 	[Deprecated (PlatformName.iOS, 12,0)]
 	[Native]
-#if WATCH && !XAMCORE_4_0
+#if WATCH
 	// removed in Xcode 10 but a breaking change (for us) to remove
 	[Obsolete ("Not used in watchOS.")]
 #else
@@ -230,7 +244,7 @@ namespace GameKit {
 	}
 
 	// NSInteger -> GKChallenge.h
-	[iOS (6,0)][Mac (10,9)]
+	[Mac (10,9)]
 	[Native]
 	public enum GKChallengeState : long	{
 		Invalid = 0,
@@ -247,6 +261,18 @@ namespace GameKit {
 		Leaderboards ,
 		Achievements,
 		Challenges,
+		[iOS (14,0)]
+		[TV (14,0)]
+		LocalPlayerProfile = 3,
+		[iOS (14,0)]
+		[TV (14,0)]
+		Dashboard = 4,
+		[iOS (15,0)]
+		[Mac (12,0)]
+		[MacCatalyst (15,0)]
+		[TV (15,0)]
+		[NoWatch]
+		LocalPlayerFriendsList = 5,
 	}
 
 	// NSInteger -> GKMatchmaker.h
@@ -291,11 +317,68 @@ namespace GameKit {
 		NoAnswer = 5,
 	}
 
-	[Mac (10,13,4), TV (11,3), iOS (11,3)]
+#if !NET
+	[iOS (11,3)][Deprecated (PlatformName.iOS, 14,0, message: "Do not use; this API was removed.")]
+	[Mac (10,13,4)][Deprecated (PlatformName.MacOSX, 11,0, message: "Do not use; this API was removed.")]
+	[TV (11,3)][Deprecated (PlatformName.TvOS, 14,0, message: "Do not use; this API was removed.")]
 	[Native]
 	public enum GKAuthenticationType : ulong {
 		WithoutUI = 0,
 		GreenBuddyUI = 1,
 		AuthKitInvocation = 2,
+	}
+#endif
+
+	[TV (14,0)]
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[NoWatch]
+	[Native]
+	public enum GKAccessPointLocation : long
+	{
+		TopLeading,
+		TopTrailing,
+		BottomLeading,
+		BottomTrailing,
+	}
+
+	[TV (14,0)]
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[Watch (7,0)]
+	[Native]
+	public enum GKLeaderboardType : long
+	{
+		Classic,
+		Recurring,
+	}
+
+	[TV (14,0)]
+	[Mac (11,0)]
+	[iOS (14,0)]
+	[NoWatch]
+	[Native]
+	public enum GKMatchmakingMode : long
+	{
+		Default = 0,
+		NearbyOnly = 1,
+		AutomatchOnly = 2,
+		[TV (15,0)]
+		[Mac (12,0)]
+		[iOS (15,0)]
+		[MacCatalyst (15,0)]
+		InviteOnly = 3,
+	}
+
+	[Watch (7,4)]
+	[TV (14,5)]
+	[Mac (11,3)]
+	[iOS (14,5)]
+	[Native]
+	public enum GKFriendsAuthorizationStatus : long {
+		NotDetermined = 0,
+		Restricted,
+		Denied,
+		Authorized,
 	}
 }

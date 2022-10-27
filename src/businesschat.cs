@@ -18,19 +18,23 @@ using UIControl = AppKit.NSControl;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace BusinessChat {
 
-	[Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+	[Mac (10,13,4), iOS (11,3)]
 	[BaseType (typeof(UIControl))]
 	[DisableDefaultCtor]
 	interface BCChatButton {
 		[Export ("initWithStyle:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (BCChatButtonStyle style);
+		NativeHandle Constructor (BCChatButtonStyle style);
 	}
 
 
-	[Mac (10,13,4, onlyOn64: true), iOS (11,3)]
+	[Mac (10,13,4), iOS (11,3)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface BCChatAction {

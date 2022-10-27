@@ -23,28 +23,11 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using Foundation;
-using ObjCRuntime;
-using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+#nullable enable
 
+#if !NET && WATCH // This empty partial class was accidentally included in our watchOS bindings.
 namespace AVFoundation {
-
 	public partial class AVMetadataItemFilter {
-#if !XAMCORE_2_0
-		[Obsolete ("Please use the static ForSharing factory method as this type is not meant to be created directly")]
-		[CompilerGenerated]
-		[EditorBrowsable (EditorBrowsableState.Never)]
-		[Export ("init")]
-		public AVMetadataItemFilter () : base (NSObjectFlag.Empty)
-		{
-			if (IsDirectBinding) {
-				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSend (this.Handle, Selector.GetHandle ("init"));
-			} else {
-				Handle = ObjCRuntime.Messaging.IntPtr_objc_msgSendSuper (this.SuperHandle, Selector.GetHandle ("init"));
-			}
-		}
-#endif
 	}
 }
+#endif

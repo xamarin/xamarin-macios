@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CGColorConversionInfo
 //
 // Authors:
@@ -8,23 +8,20 @@
 //
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
+
+#if NET
+using GColorConversionInfoTriple = CoreGraphics.CGColorConversionInfoTriple;
+#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class ColorConversionInfoTest {
 
 		[Test]
@@ -153,6 +150,39 @@ namespace MonoTouchFixtures.CoreGraphics {
 				Assert.Throws<Exception> (() => new CGColorConversionInfo (from, to));
 			}
 		}
+
+		[Test]
+		public void CGColorSpace_CGColorSpace_NSDictionary ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			using (var from = CGColorSpace.CreateGenericGray ())
+			using (var to = CGColorSpace.CreateGenericRgb ()) {
+				using (var converter = new CGColorConversionInfo (from, to, (NSDictionary)null)) {
+					Assert.That (converter.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle - null");
+				}
+				using (var d = new NSDictionary ())
+				using (var converter = new CGColorConversionInfo (from, to, d)) {
+					Assert.That (converter.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+				}
+			}
+		}
+
+		[Test]
+		public void CGColorSpace_CGColorSpace_CGColorConversionOptions ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			using (var from = CGColorSpace.CreateGenericGray ())
+			using (var to = CGColorSpace.CreateGenericRgb ()) {
+				using (var converter = new CGColorConversionInfo (from, to, (CGColorConversionOptions)null)) {
+					Assert.That (converter.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle-null");
+				}
+
+				var o = new CGColorConversionOptions ();
+				o.BlackPointCompensation = true;
+				using (var converter = new CGColorConversionInfo (from, to, o)) {
+					Assert.That (converter.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+				}
+			}
+		}
 	}
 }
-

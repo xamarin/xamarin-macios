@@ -10,16 +10,11 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using SpriteKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.SpriteKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.SpriteKit {
 
@@ -35,10 +30,10 @@ namespace MonoTouchFixtures.SpriteKit {
 		[Test]
 		public void Empty ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 9, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.WatchOS, 3, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 9, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.WatchOS, 3, 0, throwIfOtherPlatform: false);
 
 			using (var atlas = new SKTextureAtlas ()) {
 				Assert.That (atlas.TextureNames, Is.Empty, "TextureNames");

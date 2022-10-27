@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AD1B78C3-6A36-40D0-B45D-246504A39D64}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Xharness.Tests</RootNamespace>
+    <AssemblyName>Xharness.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <PackageReference Include="Moq" Version="4.13.0.0" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Jenkins\ErrorKnowledgeBaseTests.cs" />
+    <Compile Include="TestImporter\Templates\Tests\PListExtensionsTests.cs" />
+    <Compile Include="TestImporter\Tests\ProjectDefinitionTests.cs" />
+    <Compile Include="Tests\BCLTestImportTargetFactoryTest.cs" />
+    <Compile Include="TestImporter\Xamarin\Tests\TestAssemblyDefinitionTest.cs" />
+    <Compile Include="Tests\AppRunnerTests.cs" />
+    <Compile Include="TestImporter\Xamarin\Tests\ProjectFilterTest.cs" />
+    <Compile Include="TestImporter\Xamarin\Tests\AssemblyLocatorTest.cs" />
+    <Compile Include="TestImporter\Xamarin\Tests\XamariniOSTemplateTest.cs" />
+    <Compile Include="Jenkins\ITestTaskExtensionsTests.cs" />
+    <Compile Include="Tests\TestTargetExtensionsTests.cs" />
+    <Compile Include="Tests\TestPlatformExtensionsTests.cs" />
+    <Compile Include="Jenkins\MarkdownReportWriterTests.cs" />
+    <Compile Include="Tests\MacFlavorsExtensionsTests.cs" />
+    <Compile Include="Jenkins\MakeTestTaskEnumerableTests.cs" />
+    <Compile Include="Jenkins\NUnitTestTasksEnumerableTests.cs" />
+    <Compile Include="Jenkins\JenkinsDeviceLoadterTests.cs" />
+    <Compile Include="Jenkins\ResourceManagerTests.cs" />
+    <Compile Include="Jenkins\PeriodicCommandTests.cs" />
+    <Compile Include="Jenkins\TestSelectionTests.cs" />
+    <Compile Include="Jenkins\TestSelectorTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <EmbeddedResource Include="Samples\TestProject\Info.plist">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Include="Samples\TestProject\SystemXunit.csproj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Samples\NUnitV2Sample.xml" />
+    <EmbeddedResource Include="Samples\NUnitV3Sample.xml" />
+    <EmbeddedResource Include="Samples\TouchUnitSample.xml" />
+    <EmbeddedResource Include="Samples\xUnitSample.xml" />
+    <EmbeddedResource Include="Samples\devices.xml" />
+    <EmbeddedResource Include="Samples\simulators.xml" />
+    <EmbeddedResource Include="Samples\run-log.txt" />
+    <EmbeddedResource Include="Samples\NUnitV3SampleSuccess.xml" />
+    <EmbeddedResource Include="Samples\NUnitV3SampleFailure.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\xharness.csproj">
+      <Project>{e1f53f80-8399-499b-8017-c414b9cd263b}</Project>
+      <Name>xharness</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

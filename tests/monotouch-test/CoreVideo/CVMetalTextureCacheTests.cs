@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CVMetalTextureCache
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 && !__WATCHOS__ && !MONOMAC
+#if !__WATCHOS__ && !MONOMAC
 
 using System;
 using Foundation;

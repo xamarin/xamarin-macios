@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for DispatchBlock
 //
 // Authors:
@@ -8,19 +8,12 @@
 //
 
 using System;
-using System.Net;
-using System.Threading;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation
 {
@@ -32,8 +25,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[SetUp]
 		public void SetUp ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 		}
 
 		[Test]
@@ -106,11 +99,11 @@ namespace MonoTouchFixtures.CoreFoundation
 			using (var db = new DispatchBlock (callback)) {
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (0.1)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (0.1)));
 					Assert.AreNotEqual (0, rv, "Timed Out");
 
 					queue.DispatchAsync (db);
-					rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out 2");
 					Assert.IsTrue (called, "Called");
 				}
@@ -127,11 +120,11 @@ namespace MonoTouchFixtures.CoreFoundation
 			using (var db = new DispatchBlock (callback)) {
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
-					var rv = db.Wait (TimeSpan.FromSeconds (0.1));
+					var rv = (int) db.Wait (TimeSpan.FromSeconds (0.1));
 					Assert.AreNotEqual (0, rv, "Timed Out");
 
 					queue.DispatchAsync (db);
-					rv = db.Wait (TimeSpan.FromSeconds (5));
+					rv = (int) db.Wait (TimeSpan.FromSeconds (5));
 					Assert.AreEqual (0, rv, "Timed Out 2");
 					Assert.IsTrue (called, "Called");
 				}
@@ -144,10 +137,10 @@ namespace MonoTouchFixtures.CoreFoundation
 			var called = false;
 			var callback = new Action (() => called = true);
 			using (var db = new DispatchBlock (callback)) {
-				Assert.AreEqual (0, db.TestCancel (), "TestCancel 1");
+				Assert.AreEqual ((nint) 0, db.TestCancel (), "TestCancel 1");
 				Assert.IsFalse (db.Cancelled, "Cancelled 1");
 				db.Cancel ();
-				Assert.AreNotEqual (0, db.TestCancel (), "TestCancel 2");
+				Assert.AreNotEqual ((nint) 0, db.TestCancel (), "TestCancel 2");
 				Assert.IsTrue (db.Cancelled, "Cancelled 2");
 			}
 		}
@@ -176,7 +169,7 @@ namespace MonoTouchFixtures.CoreFoundation
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
 					queue.DispatchAsync (db);
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out A");
 					Assert.IsTrue (called, "Called A");
 				}
@@ -188,7 +181,7 @@ namespace MonoTouchFixtures.CoreFoundation
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
 					queue.DispatchAsync (db);
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out " + flags);
 					Assert.IsTrue (called, "Called " + flags);
 				}
@@ -200,7 +193,7 @@ namespace MonoTouchFixtures.CoreFoundation
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
 					queue.DispatchAsync (db);
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out " + flags);
 					Assert.IsTrue (called, "Called " + flags);
 				}
@@ -213,7 +206,7 @@ namespace MonoTouchFixtures.CoreFoundation
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
 					queue.DispatchAsync (db);
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out " + flags);
 					Assert.IsTrue (called, "Called " + flags);
 				}
@@ -225,7 +218,7 @@ namespace MonoTouchFixtures.CoreFoundation
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
 					queue.DispatchAsync (db);
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out Background 8" + flags);
 					Assert.IsTrue (called, "Called Background 8" + flags);
 				}
@@ -256,7 +249,7 @@ namespace MonoTouchFixtures.CoreFoundation
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
 					queue.DispatchAsync (db);
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out A");
 					Assert.IsTrue (called, "Called A");
 				}
@@ -268,7 +261,7 @@ namespace MonoTouchFixtures.CoreFoundation
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
 					queue.DispatchAsync (db);
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out " + flags);
 					Assert.IsTrue (called, "Called " + flags);
 				}
@@ -280,7 +273,7 @@ namespace MonoTouchFixtures.CoreFoundation
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
 					queue.DispatchAsync (db);
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out " + flags);
 					Assert.IsTrue (called, "Called " + flags);
 				}
@@ -293,7 +286,7 @@ namespace MonoTouchFixtures.CoreFoundation
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
 					queue.DispatchAsync (db);
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out " + flags);
 					Assert.IsTrue (called, "Called " + flags);
 				}
@@ -305,7 +298,7 @@ namespace MonoTouchFixtures.CoreFoundation
 				using (var queue = new DispatchQueue ("Background")) {
 					queue.Activate ();
 					queue.DispatchAsync (db);
-					var rv = db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+					var rv = (int) db.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 					Assert.AreEqual (0, rv, "Timed Out Background 8" + flags);
 					Assert.IsTrue (called, "Called Background 8" + flags);
 				}
@@ -318,7 +311,7 @@ namespace MonoTouchFixtures.CoreFoundation
 					using (var queue = new DispatchQueue ("Background")) {
 						queue.Activate ();
 						queue.DispatchAsync (db2);
-						var rv = db2.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
+						var rv = (int) db2.Wait (new DispatchTime (DispatchTime.Now, TimeSpan.FromSeconds (5)));
 						Assert.AreEqual (0, rv, "Timed Out Background DB" + flags);
 						Assert.IsTrue (called, "Called Background DB" + flags);
 					}

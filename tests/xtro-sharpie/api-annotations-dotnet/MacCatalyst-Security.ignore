@@ -1,0 +1,99 @@
+# deprecated
+
+# follow the macOS pattern that ignores all of the following ones
+!missing-enum! AuthorizationContextFlags not bound
+!missing-enum! AuthorizationResult not bound
+!missing-enum! SecCSDigestAlgorithm not bound
+!missing-enum! SecCSFlags not bound
+!missing-enum! SecCodeSignatureFlags not bound
+!missing-enum! SecCodeStatus not bound
+!missing-enum! SecRequirementType not bound
+!missing-enum! SessionAttributeBits not bound
+!missing-enum! SessionCreationFlags not bound
+!missing-enum! _SecureDownloadTrustCallbackResult not bound
+!missing-field! kSecCFErrorArchitecture not bound
+!missing-field! kSecCFErrorGuestAttributes not bound
+!missing-field! kSecCFErrorInfoPlist not bound
+!missing-field! kSecCFErrorPath not bound
+!missing-field! kSecCFErrorPattern not bound
+!missing-field! kSecCFErrorRequirementSyntax not bound
+!missing-field! kSecCFErrorResourceAdded not bound
+!missing-field! kSecCFErrorResourceAltered not bound
+!missing-field! kSecCFErrorResourceMissing not bound
+!missing-field! kSecCFErrorResourceSeal not bound
+!missing-field! kSecCFErrorResourceSideband not bound
+!missing-field! kSecCodeAttributeArchitecture not bound
+!missing-field! kSecCodeAttributeBundleVersion not bound
+!missing-field! kSecCodeAttributeSubarchitecture not bound
+!missing-field! kSecCodeAttributeUniversalFileOffset not bound
+!missing-field! kSecCodeInfoCMS not bound
+!missing-field! kSecCodeInfoCdHashes not bound
+!missing-field! kSecCodeInfoCertificates not bound
+!missing-field! kSecCodeInfoChangedFiles not bound
+!missing-field! kSecCodeInfoDesignatedRequirement not bound
+!missing-field! kSecCodeInfoDigestAlgorithm not bound
+!missing-field! kSecCodeInfoDigestAlgorithms not bound
+!missing-field! kSecCodeInfoEntitlements not bound
+!missing-field! kSecCodeInfoEntitlementsDict not bound
+!missing-field! kSecCodeInfoFlags not bound
+!missing-field! kSecCodeInfoFormat not bound
+!missing-field! kSecCodeInfoIdentifier not bound
+!missing-field! kSecCodeInfoImplicitDesignatedRequirement not bound
+!missing-field! kSecCodeInfoMainExecutable not bound
+!missing-field! kSecCodeInfoPList not bound
+!missing-field! kSecCodeInfoPlatformIdentifier not bound
+!missing-field! kSecCodeInfoRequirementData not bound
+!missing-field! kSecCodeInfoRequirements not bound
+!missing-field! kSecCodeInfoRuntimeVersion not bound
+!missing-field! kSecCodeInfoSource not bound
+!missing-field! kSecCodeInfoStatus not bound
+!missing-field! kSecCodeInfoTeamIdentifier not bound
+!missing-field! kSecCodeInfoTime not bound
+!missing-field! kSecCodeInfoTimestamp not bound
+!missing-field! kSecCodeInfoTrust not bound
+!missing-field! kSecCodeInfoUnique not bound
+!missing-field! kSecGuestAttributeArchitecture not bound
+!missing-field! kSecGuestAttributeAudit not bound
+!missing-field! kSecGuestAttributeCanonical not bound
+!missing-field! kSecGuestAttributeDynamicCode not bound
+!missing-field! kSecGuestAttributeDynamicCodeInfoPlist not bound
+!missing-field! kSecGuestAttributeHash not bound
+!missing-field! kSecGuestAttributeMachPort not bound
+!missing-field! kSecGuestAttributePid not bound
+!missing-field! kSecGuestAttributeSubarchitecture not bound
+!missing-pinvoke! AuthorizationCopyInfo is not bound
+!missing-pinvoke! AuthorizationCopyRights is not bound
+!missing-pinvoke! AuthorizationCopyRightsAsync is not bound
+!missing-pinvoke! AuthorizationCreateFromExternalForm is not bound
+!missing-pinvoke! AuthorizationFreeItemSet is not bound
+!missing-pinvoke! AuthorizationMakeExternalForm is not bound
+!missing-pinvoke! AuthorizationPluginCreate is not bound
+!missing-pinvoke! SecCodeCheckValidity is not bound
+!missing-pinvoke! SecCodeCheckValidityWithErrors is not bound
+!missing-pinvoke! SecCodeCopyDesignatedRequirement is not bound
+!missing-pinvoke! SecCodeCopyHost is not bound
+!missing-pinvoke! SecCodeCopyPath is not bound
+!missing-pinvoke! SecCodeCopySelf is not bound
+!missing-pinvoke! SecCodeCopySigningInformation is not bound
+!missing-pinvoke! SecCodeCopyStaticCode is not bound
+!missing-pinvoke! SecCodeGetTypeID is not bound
+!missing-pinvoke! SecCodeMapMemory is not bound
+!missing-pinvoke! SecRequirementCopyData is not bound
+!missing-pinvoke! SecRequirementCopyString is not bound
+!missing-pinvoke! SecRequirementCreateWithData is not bound
+!missing-pinvoke! SecRequirementCreateWithString is not bound
+!missing-pinvoke! SecRequirementCreateWithStringAndErrors is not bound
+!missing-pinvoke! SecRequirementGetTypeID is not bound
+!missing-pinvoke! SecStaticCodeCheckValidity is not bound
+!missing-pinvoke! SecStaticCodeCheckValidityWithErrors is not bound
+!missing-pinvoke! SecStaticCodeCreateWithPath is not bound
+!missing-pinvoke! SecStaticCodeCreateWithPathAndAttributes is not bound
+!missing-pinvoke! SecStaticCodeGetTypeID is not bound
+!missing-pinvoke! SessionCreate is not bound
+!missing-pinvoke! SessionGetInfo is not bound
+
+# Only shown MacCatalyst and there is not public documentation about them.
+
+# Deprecated and not used in MacCatalyst
+!unknown-pinvoke! AuthorizationExecuteWithPrivileges bound
+!unknown-pinvoke! SecCertificateCopySerialNumber bound

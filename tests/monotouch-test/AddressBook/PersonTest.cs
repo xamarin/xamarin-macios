@@ -10,18 +10,12 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using AddressBook;
 using ObjCRuntime;
-#else
-using MonoTouch.AddressBook;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AddressBook {
 	
@@ -29,6 +23,13 @@ namespace MonoTouchFixtures.AddressBook {
 	[Preserve (AllMembers = true)]
 	public class PersonTest {
 		
+		[SetUp]
+		public void Setup ()
+		{
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+		}
+
 		[Test]
 		public void UpdateAddressLine ()
 		{

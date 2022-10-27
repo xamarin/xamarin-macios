@@ -1,6 +1,5 @@
 using System;
 
-#if __UNIFIED__
 using ObjCRuntime;
 using Foundation;
 #if __MACOS__
@@ -8,17 +7,9 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-#if !__WATCHOS__
-using System.Drawing;
-#endif
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 
 namespace Bindings.Test {
-#if __UNIFIED__ && FRAMEWORK_TEST
+#if FRAMEWORK_TEST
 	[BaseType (typeof (NSObject))]
 	public interface FrameworkTest
 	{
@@ -143,6 +134,25 @@ namespace Bindings.Test {
 
 		[Export ("V")]
 		void V ();
+
+		[Static]
+		[Export ("staticV")]
+		void StaticV ();
+
+		[Export ("getEmptyString")]
+		string GetEmptyString ();
+
+		[Export ("getShortString")]
+		string GetShortString ();
+
+		[Export ("getLongString")]
+		string GetLongString ();
+
+		[Export ("someObject")]
+		NSObject SomeObject { get; set; }
+
+		[Export ("someArray")]
+		NSObject[] SomeArray { get; set; }
 
 		[Export ("F")]
 		float F ();
@@ -302,6 +312,9 @@ namespace Bindings.Test {
 	{
 		[Export ("idAsIntPtr:")]
 		void IdAsIntPtr (IntPtr p1);
+
+		[Export ("methodEncodings:obj2:obj3:obj4:obj5:obj6:obj7:")]
+		void GetMethodEncodings (ref NSObject obj1, ref NSObject obj2, ref NSObject obj3, ref NSObject obj4, ref NSObject obj5, ref NSObject obj6, ref NSObject obj7);
 	}
 
 	[Protocol]
@@ -376,11 +389,18 @@ namespace Bindings.Test {
 		[Export ("callAssertMainThreadBlockRelease:")]
 		void CallAssertMainThreadBlockRelease (OuterBlock completionHandler);
 
+		[Static]
+		[Export ("callAssertMainThreadBlockReleaseQOS:")]
+		void CallAssertMainThreadBlockReleaseQOS (OuterBlock completionHandler);
+
 		[Export ("assertMainThreadBlockReleaseCallback:")]
 		void AssertMainThreadBlockReleaseCallback (InnerBlock completionHandler);
 
 		[Export ("callAssertMainThreadBlockReleaseCallback")]
 		void CallAssertMainThreadBlockReleaseCallback ();
+
+		[Export ("callAssertMainThreadBlockReleaseCallbackQOS")]
+		void CallAssertMainThreadBlockReleaseCallbackQOS ();
 
 		[Export ("testFreedBlocks")]
 		void TestFreedBlocks ();
@@ -439,5 +459,3 @@ namespace Bindings.Test {
 	}
 	interface IProtocolWithBlockProperties { }
 }
-
-

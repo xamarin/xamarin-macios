@@ -33,18 +33,14 @@ using System.IO;
 using System.Collections.Generic;
 using System.Net;
 
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 using CoreFoundation;
 using CF=CoreFoundation;
-#elif XAMCORE_2_0
+#else
 using CoreServices;
 using CoreFoundation;
 using CF=CoreFoundation;
-#else
-using MonoTouch.CoreServices;
-using MonoTouch.CoreFoundation;
-using CF=MonoTouch.CoreFoundation;
 #endif
 
 namespace System.Net.Http
@@ -194,7 +190,10 @@ namespace System.Net.Http
 			return req;
 		}
 
-		protected internal override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
+#if !NET
+		internal
+#endif
+		protected override async Task<HttpResponseMessage> SendAsync (HttpRequestMessage request, CancellationToken cancellationToken)
 		{
 			return await SendAsync (request, cancellationToken, true).ConfigureAwait (false);
 		}
@@ -245,11 +244,7 @@ namespace System.Net.Http
 			// Always schedule stream events handling on main-loop. Due to ConfigureAwait (false) we may end up
 			// on any thread-pool thread which may not have run-loop running
 			//
-#if XAMCORE_2_0
 			stream.EnableEvents (CF.CFRunLoop.Main, CF.CFRunLoop.ModeCommon);
-#else
-			stream.EnableEvents (CF.CFRunLoop.Main, CF.CFRunLoop.CFRunLoopCommonModes);
-#endif
 
 			stream.Open ();
 
@@ -299,7 +294,8 @@ namespace System.Net.Http
 			if (!streamBuckets.TryGetValue (stream.Handle, out bucket))
 				return;
 
-			bucket.Response.TrySetException (stream.GetError ());
+			var ex = stream.GetError ();
+			bucket.Response.TrySetException (new HttpRequestException (ex.FailureReason, ex));
 			CloseStream (stream);
 		}
 
@@ -357,7 +353,7 @@ namespace System.Net.Http
 					var key = entry.Key.ToString ();
 					var value = entry.Value == null ? string.Empty : entry.Value.ToString ();
 					HttpHeaders item_headers;
-					if (HttpHeaders.GetKnownHeaderKind (key) == Headers.HttpHeaderKind.Content) {
+					if (IsContentHeader (key)) {
 						item_headers = response_msg.Content.Headers;
 					} else {
 						item_headers = response_msg.Headers;
@@ -380,6 +376,16 @@ namespace System.Net.Http
 
 		void AddCookie (string value, Uri uri, string header)
 		{
+#if NET
+			// .NET: CookieCollection.CookieCutter is internal to mscorlib:
+			// https://github.com/microsoft/referencesource/blob/a7bd3242bd7732dec4aebb21fbc0f6de61c2545e/System/net/System/Net/cookiecontainer.cs#L632
+			// https://github.com/xamarin/xamarin-macios/issues/8072
+			// so use the public CookieContainer.SetCookies instead.
+			try {
+				cookies.SetCookies (uri, value);
+			} catch {
+			}
+#else
 			CookieCollection cookies1 = null;
 			try {
 				cookies1 = cookies.CookieCutter (uri, header, value, false);
@@ -388,6 +394,27 @@ namespace System.Net.Http
 
 			if (cookies1 != null && cookies1.Count != 0) 
 				cookies.Add (cookies1);
+#endif
+		}
+
+		static bool IsContentHeader (string header)
+		{
+			// The headers here which have HttpHeaderType.Content: https://github.com/dotnet/runtime/blob/e9853d4baa4c9510dc62ed5852f8381141f3c87e/src/libraries/System.Net.Http/src/System/Net/Http/Headers/KnownHeaders.cs#L15-L101
+			switch (header) {
+			case "Allow":
+			case "ContentDisposition":
+			case "ContentEncoding":
+			case "ContentLanguage":
+			case "ContentLength":
+			case "ContentLocation":
+			case "ContentMD5":
+			case "ContentRange":
+			case "ContentType":
+			case "Expires":
+			case "LastModified":
+				return true;
+			}
+			return false;
 		}
 	}
 }

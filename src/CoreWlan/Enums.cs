@@ -1,12 +1,18 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
+// Copyright 2019 Microsoft Corporation
 
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 using System;
+#if NET
+#endif
 
 namespace CoreWlan {
+
+	[NoMacCatalyst]
 	[Native]
+	[ErrorDomain ("CWErrorDomain")] // enum named `CWErr` in headers
 	public enum CWStatus : long {
 		Ok = 0,
 		EAPOL = 1,
@@ -44,6 +50,7 @@ namespace CoreWlan {
 		Status = -3931,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWPhyMode : ulong {
 		None = 0,
@@ -52,8 +59,10 @@ namespace CoreWlan {
 		G = 3,
 		N = 4,
 		AC = 5,
+		AX = 6,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWInterfaceMode : ulong {
 		None = 0,
@@ -62,6 +71,7 @@ namespace CoreWlan {
 		HostAP = 3,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWSecurity : ulong {
 		None = 0,
@@ -75,9 +85,17 @@ namespace CoreWlan {
 		WPAEnterpriseMixed = 8,
 		WPA2Enterprise = 9,
 		Enterprise = 10,
-		Unknown = int.MaxValue,
+		[Mac (10,15)]
+		Wpa3Personal = 11,
+		[Mac (10,15)]
+		Wpa3Enterprise = 12,
+		[Mac (10,15)]
+		Wpa3Transition = 13,
+		Unknown = long.MaxValue,
 	}
 
+	[NoMacCatalyst]
+	[Deprecated (PlatformName.MacOSX, 11,0)]
 	[Native]
 	public enum CWIbssModeSecurity : ulong {
 		None = 0,
@@ -85,6 +103,7 @@ namespace CoreWlan {
 		WEP104 = 2,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWChannelWidth : ulong {
 		Unknown = 0,
@@ -94,6 +113,7 @@ namespace CoreWlan {
 		OneHundredSixtyMHz = 4,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWChannelBand : ulong {
 		Unknown = 0,
@@ -101,6 +121,7 @@ namespace CoreWlan {
 		FiveGHz = 2,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWCipherKeyFlags : ulong {
 		None = 0,
@@ -110,6 +131,7 @@ namespace CoreWlan {
 		Rx = 1 << 4,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWKeychainDomain : ulong {
 		None = 0,
@@ -117,6 +139,7 @@ namespace CoreWlan {
 		System = 2,
 	}
 
+	[NoMacCatalyst]
 	[Native]
 	public enum CWEventType : long {
 		None = 0,
@@ -128,12 +151,12 @@ namespace CoreWlan {
 		LinkQualityDidChange = 6,
 		ModeDidChange = 7,
 		ScanCacheUpdated = 8,
+
+		[Deprecated (PlatformName.MacOSX, 11,0)]
 		VirtualInterfaceStateChanged = 9,
+
+		[Deprecated (PlatformName.MacOSX, 11,0)]
 		RangingReportEvent = 10,
-#if XAMCORE_2_0
 		Unknown = long.MaxValue
-#else
-		Unknown = int.MaxValue
-#endif
 	}
 }

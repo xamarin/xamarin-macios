@@ -1,0 +1,59 @@
+<Project>
+  <!-- Extensions for signing nested .zip files for https://github.com/xamarin/yaml-templates/blob/e0f3cdce6210e05495188def8c695372b64ada1d/sign-artifacts/steps/v2-SignFiles.proj -->
+  <Target Name="_UnzipNestedZips"
+      BeforeTargets="_CalculateItemsToSign">
+    <PropertyGroup>
+      <_NestedZipExtractionDir>$(_WorkingDir)nested\</_NestedZipExtractionDir>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_NestedBrokerZip Include="$(_WorkingDir)**\Broker.zip" />
+      <_NestedBuildZip Include="$(_WorkingDir)**\Build.zip" />
+      <_NestediOSAppZip Include="$(_WorkingDir)**\Xamarin.PreBuilt.iOS.app.zip" />
+    </ItemGroup>
+
+    <RemoveDir Directories="$(_NestedZipExtractionDir)" />
+    <Unzip
+        SourceFiles="@(_NestedBrokerZip)"
+        DestinationFolder="@(_NestedBrokerZip -> '$(_NestedZipExtractionDir)%(Filename)')"
+        Condition="'@(_NestedBrokerZip->Count())' != '0'"
+    />
+    <Delete Files="@(_NestedBrokerZip)" Condition="'@(_NestedBrokerZip->Count())' != '0'" />
+
+    <Unzip
+        SourceFiles="@(_NestedBuildZip)"
+        DestinationFolder="@(_NestedBuildZip -> '$(_NestedZipExtractionDir)%(Filename)')"
+        Condition="'@(_NestedBuildZip->Count())' != '0'"
+    />
+    <Delete Files="@(_NestedBuildZip)" Condition="'@(_NestedBuildZip->Count())' != '0'" />
+
+    <Unzip
+        SourceFiles="@(_NestediOSAppZip)"
+        DestinationFolder="@(_NestediOSAppZip -> '$(_NestedZipExtractionDir)%(Filename)')"
+        Condition="'@(_NestediOSAppZip->Count())' != '0'"
+    />
+    <Delete Files="@(_NestediOSAppZip)" Condition="'@(_NestediOSAppZip->Count())' != '0'" />
+  </Target>
+
+  <Target Name="_ZipNestedZips"
+      DependsOnTargets="_UnzipNestedZips"
+      AfterTargets="SignFiles" >
+    <ZipDirectory
+        SourceDirectory="@(_NestedBrokerZip -> '$(_NestedZipExtractionDir)%(Filename)')"
+        DestinationFile="@(_NestedBrokerZip)"
+        Condition="'@(_NestedBrokerZip->Count())' != '0'"
+    />
+    <ZipDirectory
+        SourceDirectory="@(_NestedBuildZip -> '$(_NestedZipExtractionDir)%(Filename)')"
+        DestinationFile="@(_NestedBuildZip)"
+        Condition="'@(_NestedBuildZip->Count())' != '0'"
+    />
+    <ZipDirectory
+        SourceDirectory="@(_NestediOSAppZip -> '$(_NestedZipExtractionDir)%(Filename)')"
+        DestinationFile="@(_NestediOSAppZip)"
+        Condition="'@(_NestediOSAppZip->Count())' != '0'"
+    />
+    <RemoveDir Directories="$(_NestedZipExtractionDir)" />
+  </Target>
+
+</Project>

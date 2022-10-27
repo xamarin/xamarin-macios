@@ -1,2 +1,0 @@
-all check:
-	shellcheck *.sh

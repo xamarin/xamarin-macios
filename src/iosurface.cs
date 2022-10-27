@@ -8,9 +8,14 @@
 //
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace IOSurface {
 
@@ -123,10 +128,10 @@ namespace IOSurface {
 	interface IOSurface : NSSecureCoding
 	{
 		[Internal, Export ("initWithProperties:")]
-		IntPtr Constructor (NSDictionary properties);
+		NativeHandle Constructor (NSDictionary properties);
 
-		[Wrap ("this (properties == null ? null : properties.Dictionary)")]
-		IntPtr Constructor (IOSurfaceOptions properties);
+		[Wrap ("this (properties.GetDictionary ()!)")]
+		NativeHandle Constructor (IOSurfaceOptions properties);
 	
 		[Internal, Export ("lockWithOptions:seed:")]
 		int _Lock (IOSurfaceLockOptions options, IntPtr seedPtr);
@@ -198,8 +203,13 @@ namespace IOSurface {
 		[Export ("removeAttachmentForKey:")]
 		void RemoveAttachment (NSString key);
 	
-		[NullAllowed, Export ("allAttachments")]
-		NSDictionary<NSString, NSObject> AllAttachments { get; set; }
+		[Export ("allAttachments")]
+		NSDictionary<NSString, NSObject> AllAttachments { 
+			// in ObjC it's not defined as a `@property` and the getter can return null but the setter does not accept it
+			[return: MaybeNull]
+			get;
+			set;
+		}
 	
 		[Export ("removeAllAttachments")]
 		void RemoveAllAttachments ();

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -8,7 +9,8 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "ios-samples"; // monotouch-samples redirects to ios-samples
 		const string CATEGORY = "iossamples"; // categories can't contain dashes
-		const string HASH = "1d0f3270c394e9c15c014813e804972b17ce3e48";
+		const string HASH = "0a6947d766ad71a711b62e10c2eee08b411057e4";
+		const string DEFAULT_BRANCH = "main";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj
@@ -44,7 +46,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
@@ -54,6 +56,7 @@ namespace Samples {
 		const string REPO = "mac-ios-samples";
 		const string CATEGORY = "maciossamples"; // categories can't contain dashes
 		const string HASH = "2ab4faf9254cecdf5766af573e508f9ac8691663";
+		const string DEFAULT_BRANCH = "main";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj
@@ -65,7 +68,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
@@ -75,13 +78,17 @@ namespace Samples {
 		const string REPO = "mac-samples";
 		const string CATEGORY = "macsamples"; // categories can't contain dashes
 		const string HASH = "6f905972c98e64759ff84a25e4e2b42366fa197b";
+		const string DEFAULT_BRANCH = "main";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+			// Known failures
+			{ "QTRecorder/QTRecorder.csproj", new SampleTest { KnownFailure = "The sample uses deprecated QTKit types (and .xib fails building)." } },
+			{ "StillMotion/StillMotion/StillMotion.csproj", new SampleTest { KnownFailure = "The sample uses deprecated QTKit types (and .xib fails building)." } },
 		};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
@@ -90,7 +97,8 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "mobile-samples";
 		const string CATEGORY = "mobilesamples"; // categories can't contain dashes
-		const string HASH = "45182f311db77bb05971a22d58edfdef44a4b657";
+		const string HASH = "257f7fe81e70b412d6a6b42e97019ecc2c46ed40";
+		const string DEFAULT_BRANCH = "master";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj
@@ -115,7 +123,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
@@ -124,7 +132,8 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "prebuilt-apps";
 		const string CATEGORY = "prebuiltapps"; // categories can't contain dashes
-		const string HASH = "40da1283722df96e81efb5c62364d05e5bd3dd76";
+		const string HASH = "f111672bc6915ceb402abb47dedfe3480e111720";
+		const string DEFAULT_BRANCH = "master";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Known failures
@@ -133,7 +142,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
@@ -142,16 +151,21 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "xamarin-forms-samples";
 		const string CATEGORY = "xamarinformssamples"; // categories can't contain dashes
-		const string HASH = "206f4c3a2be1e988eda2ad9130a37019c60f1c7e";
+		const string HASH = "d196d3f7ba418d06ef799074eb4f6120e26a9cf4";
+		const string DEFAULT_BRANCH = "master";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+				// avoid building unneeded projects since they require a lot of nuget packages (and cause a lot of unrelated/network build issues)
+				{ "WebServices/TodoREST/iOS/TodoREST.iOS.csproj", new SampleTest { Solution = "WebServices/TodoREST/TodoREST.sln", RemoveProjects = new [] { "TodoAPI", "TodoREST.Droid" } } },
+				{ "WorkingWithMaps/iOS/WorkingWithMaps.iOS.csproj", new SampleTest { Solution = "WorkingWithMaps/WorkingWithMaps.sln", RemoveProjects = new [] { "WorkingWithMaps.Android", "WorkingWithMaps.UWP" } } },
 				// Build solution instead of csproj.
 				{ "WebServices/TodoWCF/iOS/TodoWCF.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "WebServices/TodoWCF/TodoWCF.sln" } },
 			};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			// Samples.XamarinFormsTester.BuildSample(MarkupExtensions.iOS: Debug|iPhone) needs some extra time 10 minutes
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, TimeSpan.FromMinutes (10));
 		}
 	}
 
@@ -160,7 +174,8 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "xamarin-forms-book-samples";
 		const string CATEGORY = "xamarinformsbookssamples"; // categories can't contain dashes
-		const string HASH = "79f51213ed742878333e072fdc74c2ee894c0130";
+		const string HASH = "c215bab3324d77e13bd80a0c20e60786d2bd344b";
+		const string DEFAULT_BRANCH = "master";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj,
@@ -171,40 +186,12 @@ namespace Samples {
 				{ "Chapter27/StepSliderDemo/StepSliderDemo/StepSliderDemo.iOS/StepSliderDemo.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Chapter27/StepSliderDemo/StepSliderDemo.sln" } },
 				{ "Chapter28/MapDemos/MapDemos/MapDemos.iOS/MapDemos.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Chapter28/MapDemos/MapDemos.sln" } },
 				{ "Chapter28/WhereAmI/WhereAmI/WhereAmI.iOS/WhereAmI.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Chapter28/WhereAmI/WhereAmI.sln" } },
-
-				// Known failures
-				{ "Chapter02/FS/Greetings/Greetings.iOS/Greetings.iOS.fsproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter02/FS/Hello/Hello.iOS/Hello.iOS.fsproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter03/FS/Baskervilles/Baskervilles/Baskervilles.iOS/Baskervilles.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter03/FS/NamedFontSizes/NamedFontSizes/NamedFontSizes.iOS/NamedFontSizes.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter03/FS/VariableFormPara/VariableFormattedParagraph/VariableFormattedParagraph.iOS/VariableFormattedParagraph.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter03/FS/VariableFormText/VariableFormattedText/VariableFormattedText.iOS/VariableFormattedText.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/BlackCat/BlackCat/BlackCat.iOS/BlackCat.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/ColorBlocks/ColorBlocks/ColorBlocks.iOS/ColorBlocks.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/ColorList/ColorList/ColorList.iOS/ColorList.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/ColorLoop/ColorLoop/ColorLoop.iOS/ColorLoop.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/FramedText/FramedText/FramedText.iOS/FramedText.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/ReflectedColors/ReflectedColors/ReflectedColors.iOS/ReflectedColors.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/SizedBoxView/SizedBoxView/SizedBoxView.iOS/SizedBoxView.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter04/FS/VerticalOptionsDemo/VerticalOptionsDemo/VerticalOptionsDemo.iOS/VerticalOptionsDemo.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/EmpiricalFontSize/EmpiricalFontSize/EmpiricalFontSize.iOS/EmpiricalFontSize.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/EstimatedFontSize/EstimatedFontSize/EstimatedFontSize.iOS/EstimatedFontSize.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/FitToSizeClock/FitToSizeClock/FitToSizeClock.iOS/FitToSizeClock.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/FontSizes/FontSizes/FontSizes.iOS/FontSizes.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/MetricalBoxView/MetricalBoxView/MetricalBoxView.iOS/MetricalBoxView.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter05/FS/WhatSize/WhatSize/WhatSize.iOS/WhatSize.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter06/FS/ButtonLambdas/ButtonLambdas/ButtonLambdas.iOS/ButtonLambdas.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter06/FS/ButtonLogger/ButtonLogger/ButtonLogger.iOS/ButtonLogger.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter06/FS/PersistentKeypad/PersistentKeypad/PersistentKeypad.iOS/PersistentKeypad.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter06/FS/SimplestKeypad/SimplestKeypad/SimplestKeypad.iOS/SimplestKeypad.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter06/FS/TwoButtons/TwoButtons/TwoButtons.iOS/TwoButtons.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter07/FS/CodePlusXaml/CodePlusXaml/CodePlusXaml.iOS/CodePlusXaml.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-				{ "Chapter08/FS/XamlKeypad/XamlKeypad/XamlKeypad.iOS/XamlKeypad.iOS.csproj", new SampleTest { KnownFailure = "https://github.com/xamarin/xamarin-forms-book-samples/pull/55 and https://github.com/xamarin/xamarin-forms-book-samples/pull/56" } },
-			};
+		};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			// Samples.XamarinFormsBooksTester.BuildSample(FormattedTextToggle.iOS: Release|iPhone) needs some extra time 10 minutes
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, TimeSpan.FromMinutes (10));
 		}
 	}
 
@@ -214,6 +201,7 @@ namespace Samples {
 		const string REPO = "embedded-frameworks";
 		const string CATEGORY = "embeddedframeworks"; // categories can't contain dashes
 		const string HASH = "faaad6f9dcda53b2c49cec567eca769cb534307f";
+		const string DEFAULT_BRANCH = "main";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Known failures
@@ -222,8 +210,45 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
+	[Category (CATEGORY)]
+	public class XappyTester : SampleTester {
+		const string ORG = "davidortinau";
+		const string REPO = "Xappy";
+		const string CATEGORY = "davidortinauxappy"; // categories can't contain dashes
+		const string HASH = "46e5897bac974e000fcc7e1d10d01ab8d3072eb2";
+		const string DEFAULT_BRANCH = "master";
+
+		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+			{ "Xappy/Xappy.iOS/Xappy.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln", RemoveProjects = new [] { "Xappy.Android", "Xappy.UWP" } } },
+		};
+
+		static IEnumerable<SampleTestData> GetSampleData ()
+		{
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
+		}
+	}
+
+	[Category (CATEGORY)]
+	public class SmartHotelTester : SampleTester {
+		const string ORG = "microsoft";
+		const string REPO = "SmartHotel360-Mobile";
+		const string CATEGORY = "microsoftsmarthotel"; // categories can't contain dashes
+		const string HASH = "4004b32c955f8340a0306bad2b180ecf5adaf117";
+		const string DEFAULT_BRANCH = "master";
+
+		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+			// Override CodesignKey key
+			{ "Source/SmartHotel.Clients/SmartHotel.Clients.iOS/SmartHotel.Clients.iOS.csproj", new SampleTest { CodesignKey = "iPhone Developer" } },
+			{ "Source/SmartHotel.Clients.Maintenance/SmartHotel.Clients.Maintenance.iOS/SmartHotel.Clients.Maintenance.iOS.csproj", new SampleTest { CodesignKey = "iPhone Developer" } },
+		};
+
+		static IEnumerable<SampleTestData> GetSampleData ()
+		{
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, timeout: TimeSpan.FromMinutes (10));
+		}
+	}
 }

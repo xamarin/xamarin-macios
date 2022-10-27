@@ -6,7 +6,7 @@
 //
 // Copyright 2012-2013 Xamarin Inc
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -14,14 +14,26 @@ using Accounts;
 
 #if !MONOMAC
 using UIKit;
+using SocialImage = UIKit.UIImage;
+using SocialTextView = UIKit.UITextView;
+using SocialTextViewDelegate = UIKit.UITextViewDelegate;
+using SocialView = UIKit.UIView;
+using SocialViewController = UIKit.UIViewController;
 #endif
 #if MONOMAC
 using AppKit;
+using SocialImage = AppKit.NSImage;
+using SocialTextView = AppKit.NSTextView;
+using SocialTextViewDelegate = AppKit.NSTextViewDelegate;
+using SocialView = AppKit.NSView;
+using SocialViewController = AppKit.NSViewController;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Social {
-	[iOS (6,0)]
-	[Mac (10,8, onlyOn64 : true)]
 	[Static]
 	interface SLServiceType {
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use Facebook SDK instead.")]
@@ -46,24 +58,23 @@ namespace Social {
 		[Mac (10,9)]
 		NSString TencentWeibo { get; }
 
-#if MONOMAC
 		[Deprecated (PlatformName.MacOSX, 10, 13, message: "Use LinkedIn SDK instead.")]
 		[Field ("SLServiceTypeLinkedIn")]
+		[NoiOS][NoMacCatalyst]
 		[Mac (10,9)]
 		NSString LinkedIn { get; }
-#endif
 	}
 	
-	[iOS (6,0)]
 	[BaseType (typeof (NSObject))]
 	// init -> Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: SLRequestMultiPart must be obtained through!
 	[DisableDefaultCtor]
-	[Mac (10,8, onlyOn64 : true)]
 	interface SLRequest {
 		[Static]
 		[Export ("requestForServiceType:requestMethod:URL:parameters:")]
 		SLRequest Create (NSString serviceType, SLRequestMethod requestMethod, NSUrl url, [NullAllowed] NSDictionary parameters);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use the non-Apple SDK relating to your account type instead.")]
 		[Export ("account", ArgumentSemantic.Retain), NullAllowed]
 		ACAccount Account { get; set;  }
 
@@ -92,14 +103,13 @@ namespace Social {
 		void PerformRequest (Action<NSData,NSHttpUrlResponse,NSError> handler);
 	}
 
-#if !MONOMAC
-	[iOS (6,0)]
-	[BaseType (typeof (UIViewController))]
+	[NoMac]
+	[BaseType (typeof (SocialViewController))]
 	[DisableDefaultCtor] // see note on 'composeViewControllerForServiceType:'
 	interface SLComposeViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("serviceType")]
 		NSString ServiceType { get;  }
@@ -120,7 +130,7 @@ namespace Social {
 		bool SetInitialText (string text);
 
 		[Export ("addImage:")]
-		bool AddImage (UIImage image);
+		bool AddImage (SocialImage image);
 
 		[Export ("removeAllImages")]
 		bool RemoveAllImages ();
@@ -131,38 +141,20 @@ namespace Social {
 		[Export ("removeAllURLs")]
 		bool RemoveAllUrls ();
 	}
-#endif
 
-	[Mac (10,10, onlyOn64 : true)]
+	[Mac (10,10)]
 	[iOS (8,0)]
-#if MONOMAC
-	[BaseType (typeof (NSViewController))]
-#else
-	[BaseType (typeof (UIViewController))]
-#endif
-#if XAMCORE_2_0
-	#if MONOMAC
-	interface SLComposeServiceViewController : NSTextViewDelegate {
-	#else
-	interface SLComposeServiceViewController : UITextViewDelegate {
-	#endif
-#else
-	interface SLComposeServiceViewController {
-#endif
+	[BaseType (typeof (SocialViewController))]
+	interface SLComposeServiceViewController : SocialTextViewDelegate {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("presentationAnimationDidFinish")]
 		void PresentationAnimationDidFinish ();
 
-#if !MONOMAC
 		[Export ("textView")]
-		UITextView TextView { get; }
-#else
-		[Export ("textView")]
-		NSTextView TextView { get; }
-#endif
+		SocialTextView TextView { get; }
 
 		[Export ("contentText")]
 		string ContentText { get; }
@@ -190,30 +182,34 @@ namespace Social {
 		[Export ("charactersRemaining", ArgumentSemantic.Strong)]
 		NSNumber CharactersRemaining { get; set; }
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("configurationItems")]
 		SLComposeSheetConfigurationItem [] GetConfigurationItems ();
 
+		[NoMac]
 		[Export ("reloadConfigurationItems")]
 		void ReloadConfigurationItems ();
 
+		[NoMac]
 		[Export ("pushConfigurationViewController:")]
-		void PushConfigurationViewController (UIViewController viewController);
+		void PushConfigurationViewController (SocialViewController viewController);
 
+		[NoMac]
 		[Export ("popConfigurationViewController")]
 		void PopConfigurationViewController ();
 
+		[NoMac]
 		[Export ("loadPreviewView")]
-		UIView LoadPreviewView();
+		SocialView LoadPreviewView();
 
+		[NoMac]
 		[NullAllowed] // by default this property is null
 		[Export ("autoCompletionViewController", ArgumentSemantic.Strong)]
-		UIViewController AutoCompletionViewController { get; set; }
-#endif
+		SocialViewController AutoCompletionViewController { get; set; }
 	}
 
 
-#if !MONOMAC
+	[NoMac]
 	[iOS (8,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // designated
@@ -221,7 +217,7 @@ namespace Social {
 
 		[DesignatedInitializer]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[NullAllowed] // by default this property is null
 		[Export ("title")]
@@ -237,6 +233,4 @@ namespace Social {
 		[Export ("tapHandler", ArgumentSemantic.Copy)]
 		Action TapHandler { get; set; }
 	}
-#endif
 }
-#endif

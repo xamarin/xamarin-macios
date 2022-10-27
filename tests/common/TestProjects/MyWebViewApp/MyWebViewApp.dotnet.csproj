@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-ios</TargetFramework>
+    <RuntimeIdentifier>iossimulator-x64</RuntimeIdentifier>
+    <OutputType>Exe</OutputType>
+    <SupportedOSPlatformVersion>10.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Web.Services" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Views\RazorView.cs">
+      <DependentUpon>RazorView.cshtml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <PropertyGroup>
+    <DefaultItemExcludes>$(DefaultItemExcludes);Views\RazorView.cs</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Views\RazorView.cshtml">
+      <Generator>RazorTemplatePreprocessor</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MyDocumentPickerExtension\MyDocumentPickerExtension.dotnet.csproj">
+      <Name>MyDocumentPickerExtension</Name>
+      <IsAppExtension>True</IsAppExtension>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -12,19 +12,20 @@ using NUnit.Framework;
 using Xamarin.Tests;
 
 namespace Xamarin.Linker {
-
-	public abstract class BaseProfile {
-
-		protected abstract bool IsSdk (string assemblyName);
-	}
-
 	public class ProfilePoker : MobileProfile {
 
 		static ProfilePoker p = new ProfilePoker ();
 
+		public override string ProductAssembly => throw new NotImplementedException ();
+
 		public static bool IsWellKnownSdk (string assemblyName)
 		{
 			return p.IsSdk (assemblyName);
+		}
+
+		protected override bool IsProduct (string assemblyName)
+		{
+			throw new NotImplementedException ();
 		}
 	}
 
@@ -59,12 +60,9 @@ namespace Xamarin.Linker {
 					break;
 				case "Newtonsoft.Json":
 				case "Xamarin.iOS.Tasks":
-				case "Xamarin.iOS.Tasks.Core":
 				case "Xamarin.ObjcBinding.Tasks":
 				case "Xamarin.MacDev":
 				case "Xamarin.MacDev.Tasks":
-				case "Xamarin.MacDev.Tasks.Core":
-				case "Xamarin.Analysis.Tasks":
 					// other stuff that is not part of the SDK but shipped in the same 2.1 directory
 					failed_bcl.Add (aname);
 					break;
@@ -224,7 +222,7 @@ namespace Xamarin.Linker {
 			rv.AddRange (Directory.GetFiles (watchOSPath, "*.dll", SearchOption.TopDirectoryOnly).
 				Select ((v) => v.Substring (watchOSPath.Length)).ToArray ());
 			rv.Remove ("Xamarin.WatchOS.dll");
-			rv.Add (Path.Combine ("..", "..", "32bits", "Xamarin.WatchOS.dll"));
+			rv.Add (Path.Combine ("..", "..", "32bits", "watchOS", "Xamarin.WatchOS.dll"));
 			return rv.ToArray ();
 		}
 
@@ -296,15 +294,25 @@ namespace Xamarin.Linker {
 				"LLVM failed for 'WebClient.<UploadStringAsync>b__179_0': non-finally/catch/fault clause.",
 				"LLVM failed for '<DownloadBitsAsync>d__150.MoveNext': non-finally/catch/fault clause.",
 				"LLVM failed for '<UploadBitsAsync>d__152.MoveNext': non-finally/catch/fault clause.",
-				"LLVM failed for '<>c__DisplayClass164_1.<OpenReadAsync>b__0': non-finally/catch/fault clause.",
-				"LLVM failed for '<>c__DisplayClass167_1.<OpenWriteAsync>b__0': non-finally/catch/fault clause.",
+				"LLVM failed for '<>c__DisplayClass164_0.<OpenReadAsync>b__0': non-finally/catch/fault clause.",
+				"LLVM failed for '<>c__DisplayClass167_0.<OpenWriteAsync>b__0': non-finally/catch/fault clause.",
 				"LLVM failed for '<WaitForWriteTaskAsync>d__55.MoveNext': non-finally/catch/fault clause.",
 				"LLVM failed for '<SendFrameFallbackAsync>d__56.MoveNext': non-finally/catch/fault clause.",
 				"LLVM failed for '<ReceiveAsyncPrivate>d__61`2.MoveNext': non-finally/catch/fault clause.",
 				"LLVM failed for '<ReceiveAsyncPrivate>d__61`2.MoveNext': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.Read': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.Write': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.BeginRead': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.EndRead': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.BeginWrite': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.EndWrite': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.ReadAsync': non-finally/catch/fault clause.",
+				"LLVM failed for 'NetworkStream.WriteAsync': non-finally/catch/fault clause.",
 			}) },
 			{ "System.Core.dll", new Tuple<int, string[]> (0, new string [] {
 				"LLVM failed for 'EnterTryCatchFinallyInstruction.Run': non-finally/catch/fault clause.",
+			}) },
+			{ "System.Net.Http.dll", new Tuple<int, string[]> (0, new string [] {
 			}) },
 			{ "mscorlib.dll", new Tuple<int, string[]> (0, new string [] {
 				"LLVM failed for 'Console.Write': opcode arglist",
@@ -321,32 +329,34 @@ namespace Xamarin.Linker {
 			// Run LLVM on every assembly we ship in watchOS, using the arguments we usually use when done from mtouch.
 			var aot_compiler = Path.Combine (Configuration.BinDirXI, "armv7k-unknown-darwin-mono-sgen");
 			var tmpdir = Cache.CreateTemporaryDirectory ();
-			var llvm_path = Path.Combine (Configuration.SdkRootXI, "LLVM36", "bin");
+			var llvm_path = Path.Combine (Configuration.SdkRootXI, "LLVM", "bin");
 			var env = new Dictionary<string, string> {
 				{ "MONO_PATH", watchOSPath }
 			};
 			var arch = "armv7k";
 			var arch_dir = Path.Combine (tmpdir, arch);
 			Directory.CreateDirectory (arch_dir);
-			var args = new StringBuilder ();
-			args.Append ("--debug ");
-			args.Append ("--llvm ");
-			args.Append ("-O=float32 ");
-			args.Append ($"--aot=mtriple={arch}-ios");
-			args.Append ($",data-outfile={Path.Combine (arch_dir, Path.GetFileNameWithoutExtension (asm) + ".aotdata." + arch)}");
-			args.Append ($",static,asmonly,direct-icalls,llvmonly,nodebug,dwarfdebug,direct-pinvoke");
-			args.Append ($",msym-dir={Path.Combine (arch_dir, Path.GetFileNameWithoutExtension (asm) + ".mSYM")}");
-			args.Append ($",llvm-path={llvm_path}");
-			args.Append ($",llvm-outfile={Path.Combine (arch_dir, Path.GetFileName (asm) + ".bc")} ");
-			args.Append (Path.Combine (watchOSPath, asm));
+			var args = new List<string> ();
+			args.Add ("--debug");
+			args.Add ("--llvm");
+			args.Add ("-O=float32");
+			args.Add ($"--aot=mtriple={arch}-ios" +
+				$",data-outfile={Path.Combine (arch_dir, Path.GetFileNameWithoutExtension (asm) + ".aotdata." + arch)}" +
+				$",static,asmonly,direct-icalls,llvmonly,nodebug,dwarfdebug,direct-pinvoke" +
+				$",msym-dir={Path.Combine (arch_dir, Path.GetFileNameWithoutExtension (asm) + ".mSYM")}" +
+				$",llvm-path={llvm_path}" +
+				$",llvm-outfile={Path.Combine (arch_dir, Path.GetFileName (asm) + ".bc")}");
+			args.Add (Path.Combine (watchOSPath, asm));
 
 			StringBuilder output = new StringBuilder ();
-			var rv = ExecutionHelper.Execute (aot_compiler, args.ToString (), stdout: output, stderr: output, environmentVariables: env, timeout: TimeSpan.FromMinutes (5));
+			var rv = ExecutionHelper.Execute (aot_compiler, args, stdout: output, stderr: output, environmentVariables: env, timeout: TimeSpan.FromMinutes (5));
 			var llvm_failed = output.ToString ().Split ('\n').Where ((v) => v.Contains ("LLVM failed"));
 			Console.WriteLine (output);
 
 			int expected_exit_code = 0;
 			if (known_llvm_failures.TryGetValue (asm, out var known_failures)) {
+				expected_exit_code = known_failures.Item1;
+				Assert.AreEqual (expected_exit_code, rv, "AOT compilation");
 				if (known_failures.Item2 != null) {
 					// Check if there are known failures for failures we've fixed
 					var known_inexistent_failures = known_failures.Item2.Where ((v) => !llvm_failed.Contains (v));
@@ -354,11 +364,10 @@ namespace Xamarin.Linker {
 					// Filter the known failures from the failed llvm lines.
 					llvm_failed = llvm_failed.Where ((v) => !known_failures.Item2.Contains (v));
 				}
-				expected_exit_code = known_failures.Item1;
 			}
 
-			Assert.IsEmpty (string.Join ("\n", llvm_failed), "LLVM failed");
 			Assert.AreEqual (expected_exit_code, rv, "AOT compilation");
+			Assert.IsEmpty (string.Join ("\n", llvm_failed), "LLVM failed");
 		}
 	}
 }

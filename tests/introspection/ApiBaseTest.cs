@@ -29,20 +29,10 @@ using Xamarin.Utils;
 using System.Linq;
 using Xamarin.Tests;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if MONOTOUCH
 using UIKit;
-#endif
-#else
-#if MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 #endif
 
 namespace Introspection {
@@ -184,6 +174,24 @@ namespace Introspection {
 			return property != null && SkipDueToAttribute (property);
 		}
 
+		protected bool SkipDueToRejectedTypes (Type type)
+		{
+			switch (type.FullName) {
+			case "UIKit.DeprecatedWebView+_DeprecatedWebViewDelegate":
+			case "UIKit.DeprecatedWebView+DeprecatedWebViewAppearance":
+				return true;
+			case "UIKit.IDeprecatedWebViewDelegate":
+			case "UIKit.DeprecatedWebView":
+			case "UIKit.DeprecatedWebViewDelegate":
+			case "UIKit.DeprecatedWebViewDelegate_Extensions":
+			case "UIKit.DeprecatedWebViewDelegateWrapper":
+			case "UIKit.DeprecatedWebViewNavigationType":
+				return true;
+			default:
+				return false;
+			}
+		}
+
 		/// <summary>
 		/// Gets the assembly on which the test fixture will reflect the NSObject-derived types.
 		/// The default implementation returns the assembly where NSObject is defined, e.g.
@@ -230,6 +238,9 @@ namespace Introspection {
 			case "CoreMidi":
 				// generated code uses CoreMIDI correctly
 				libname = "CoreMIDI";
+				break;
+			case "Phase":
+				libname = "PHASE";
 				break;
 			default:
 				if (requiresFullPath && (Path.GetDirectoryName (libname).Length == 0))

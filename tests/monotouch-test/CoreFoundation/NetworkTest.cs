@@ -11,18 +11,15 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 // Mac tries to use CFNetwork Namespace instead of Class for calls without this:
 #if !__WATCHOS__
 using PlatformCFNetwork = CoreFoundation.CFNetwork;
 #endif
+using MonoTests.System.Net.Http;
+
 
 namespace MonoTouchFixtures.CoreFoundation {
 	
@@ -64,12 +61,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 		public void Bug_7923 ()
 		{
 			// Bug #7923 - crash when proxy is in effect.
-			var uri = new Uri ("http://www.google.com");
+			var uri = NetworkResources.MicrosoftUri;
 
 			if (PlatformCFNetwork.GetProxiesForUri (uri, settings).Length <= 1)
 				Assert.Ignore ("Only run when proxy is configured.");
 
-			var req = new HttpWebRequest (uri);
+			var req = WebRequest.CreateHttp (uri);
 			using (var rsp = req.GetResponse ())
 				using (var str = new StreamReader (rsp.GetResponseStream ()))
 					Console.WriteLine (str.ReadToEnd ());

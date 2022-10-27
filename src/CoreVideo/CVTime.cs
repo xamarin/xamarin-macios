@@ -30,10 +30,19 @@ using System.Runtime.InteropServices;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreVideo {
 
 	// CVBase.h
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
+#endif
 	public struct CVTime {
 
 		public /* int64_t */ long TimeValue;
@@ -45,18 +54,18 @@ namespace CoreVideo {
 #if !COREBUILD
 		public static CVTime ZeroTime {
 			get {
-				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"), typeof (CVTime));
+				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVZeroTime"), typeof (CVTime))!;
 			}
 		}
 
 		public static CVTime IndefiniteTime {
 			get {
-				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVIndefiniteTime"), typeof (CVTime));
+				return (CVTime) Marshal.PtrToStructure (Dlfcn.GetIndirect (Libraries.CoreVideo.Handle, "kCVIndefiniteTime"), typeof (CVTime))!;
 			}
 		}
 #endif
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
 			if (!(other is CVTime))
 				return false;
@@ -74,21 +83,13 @@ namespace CoreVideo {
 		// CVHostTime.h
 
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVGetCurrentHostTime")]
-#if XAMCORE_2_0
 		public static extern /* uint64_t */ ulong GetCurrentHostTime ();
-#else
-		public static extern /* uint64_t */ long GetCurrentHostTime ();
-#endif
 
 
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVGetHostClockFrequency")]
 		public static extern /* double */ double GetHostClockFrequency ();
 
 		[DllImport (Constants.CoreVideoLibrary, EntryPoint = "CVGetHostClockMinimumTimeDelta")]
-#if XAMCORE_2_0
 		public static extern /* uint32_t */ uint GetHostClockMinimumTimeDelta ();
-#else
-		public static extern /* uint32_t */ int GetHostClockMinimumTimeDelta ();
-#endif
 	}
 }

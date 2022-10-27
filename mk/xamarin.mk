@@ -1,11 +1,24 @@
+
+ifneq ($(MONO_BUILD_FROM_SOURCE),)
+# The mono hash/branch + some other variables are specified in mono.mk, which is included from Make.config.
+# Here we only keep what makes sense to disable when not building from source.
+MONO_VERSION   := $(shell cd $(MONO_PATH) 2> /dev/null && git rev-parse HEAD 2> /dev/null)
+MONO_BRANCH    := $(shell cd $(MONO_PATH) 2> /dev/null && git symbolic-ref --short HEAD 2> /dev/null)
+endif
+
 ifdef ENABLE_XAMARIN
-NEEDED_MACCORE_VERSION := 34725fe136aee39a9f9984bbb508b6670654f7b3
-NEEDED_MACCORE_BRANCH := master
+NEEDED_MACCORE_VERSION := 9a347bd708eb0ef975cf52cefdb23cb3a83d2690
+NEEDED_MACCORE_BRANCH := main
 
 MACCORE_DIRECTORY := maccore
 MACCORE_MODULE    := git@github.com:xamarin/maccore.git
 MACCORE_VERSION   := $(shell cd $(MACCORE_PATH) 2> /dev/null && git rev-parse HEAD 2> /dev/null)
 MACCORE_BRANCH    := $(shell cd $(MACCORE_PATH) 2> /dev/null && git symbolic-ref --short HEAD 2> /dev/null)
+endif
+
+# Available versions can be seen here:
+# https://dev.azure.com/dnceng/public/_artifacts/feed/dotnet-eng/NuGet/Microsoft.Tools.Mlaunch/versions
+MLAUNCH_NUGET_VERSION=1.0.1
 
 define CheckVersionTemplate
 check-$(1)::
@@ -77,11 +90,18 @@ DEPENDENCY_DIRECTORIES += $($(2)_PATH)
 
 endef
 
+ifneq ($(MONO_BUILD_FROM_SOURCE),)
+$(MONO_PATH):
+	$(Q) git clone --recursive $(MONO_MODULE) $(MONO_PATH)
+	$(Q) $(MAKE) reset-mono
+
+$(eval $(call CheckVersionTemplate,mono,MONO))
+endif
+
+ifdef ENABLE_XAMARIN
 $(MACCORE_PATH):
 	$(Q) git clone --recursive $(MACCORE_MODULE) $(MACCORE_PATH)
 	$(Q) $(MAKE) reset-maccore
 
 $(eval $(call CheckVersionTemplate,maccore,MACCORE))
--include $(MACCORE_PATH)/mk/versions.mk
-$(MACCORE_PATH)/mk/versions.mk: | $(MACCORE_PATH)
 endif

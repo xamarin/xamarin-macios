@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 using Xamarin.Utils;
 
@@ -25,6 +25,18 @@ namespace Xamarin.Tests.Utils {
 			// with major, minor and build
 			v = StringUtils.ParseVersion ("10.13.2");
 			Assert.That (v.ToString (), Is.EqualTo ("10.13.2"), "10.13.2");
+		}
+
+		[Test]
+		public void QuoteForProcess ()
+		{
+			Assert.That (StringUtils.QuoteForProcess ("a"), Is.EqualTo ("a"), "normal");
+			Assert.That (StringUtils.QuoteForProcess ("😁"), Is.EqualTo ("😁"), "😁");
+			Assert.That (StringUtils.QuoteForProcess ("b b"), Is.EqualTo ("\"b b\""), "space");
+			Assert.That (StringUtils.QuoteForProcess ("'"), Is.EqualTo ("\"'\""), "single quote");
+			Assert.That (StringUtils.QuoteForProcess ("\\"), Is.EqualTo ("\"\\\\\""), "backslash");
+			Assert.That (StringUtils.QuoteForProcess ("\""), Is.EqualTo ("\"\\\"\""), "double quote");
+			Assert.That (StringUtils.QuoteForProcess (@"C:\double "" quote\single ' quote\space here\"), Is.EqualTo (@"""C:\\double \"" quote\\single ' quote\\space here\\"""), "windows path");
 		}
 	}
 }

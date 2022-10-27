@@ -1,3 +1,0 @@
-# Make OOM on the 32b simulator
-System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest8_ConcWaitAndRelease(initial: 0, maximum: 1000, waitThreads: 50, releaseThreads: 25, succeededWait: 25, failedWait: 25, finalCount: 0, timeout: 500)
-System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest8_ConcWaitAndRelease(initial: 5, maximum: 1000, waitThreads: 50, releaseThreads: 50, succeededWait: 50, failedWait: 0, finalCount: 5, timeout: 1000)

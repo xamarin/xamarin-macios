@@ -13,13 +13,14 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\product.snk</AssemblyOriginatorKeyFile>
     <IntermediateOutputPath>build\IDE\obj\macOS-mobile\$(Configuration)</IntermediateOutputPath>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>build\IDE\bin\macOS-mobile\Debug</OutputPath>
-    <DefineConstants>DEBUG;MONOMAC;XAMCORE_2_0;NO_SYSTEM_DRAWING</DefineConstants>
+    <DefineConstants>DEBUG;MONOMAC;NO_SYSTEM_DRAWING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -29,7 +30,7 @@
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>build\IDE\bin\macOS-mobile\Release</OutputPath>
-    <DefineConstants>MONOMAC;XAMCORE_2_0;NO_SYSTEM_DRAWING</DefineConstants>
+    <DefineConstants>MONOMAC;NO_SYSTEM_DRAWING</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>

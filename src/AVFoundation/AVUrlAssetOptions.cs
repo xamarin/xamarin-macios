@@ -25,18 +25,25 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !WATCH
-
 using System;
 
 using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
-	public class AVUrlAssetOptions : DictionaryContainer
-	{
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Watch (6, 0)]
+#endif
+	public class AVUrlAssetOptions : DictionaryContainer {
 #if !COREBUILD
 		public AVUrlAssetOptions ()
 			: base (new NSMutableDictionary ())
@@ -47,7 +54,7 @@ namespace AVFoundation {
 			: base (dictionary)
 		{
 		}
-
+#if !WATCH
 		public bool? PreferPreciseDurationAndTiming {
 			set {
 				SetBooleanValue (AVUrlAsset.PreferPreciseDurationAndTimingKey, value);
@@ -66,7 +73,6 @@ namespace AVFoundation {
 			}
 		}
 #endif
+#endif
 	}
 }
-
-#endif

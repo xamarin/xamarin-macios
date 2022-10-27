@@ -1,13 +1,12 @@
-﻿//
+//
 // IdentityLookupUI C# bindings
 //
 // Authors:
 //	Alex Soto  <alexsoto@microsoft.com>
 //
-// Copyright 2018 Microsoft Corporation.
+// Copyright 2018-2019 Microsoft Corporation.
 //
 
-#if XAMCORE_2_0
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -38,4 +37,3 @@ namespace IdentityLookupUI {
 		ILClassificationResponse GetClassificationResponse (ILClassificationRequest request);
 	}
 }
-#endif

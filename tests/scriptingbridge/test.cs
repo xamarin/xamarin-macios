@@ -1,13 +1,7 @@
 using System;
 using Finder;
-#if XAMCORE_2_0
 using AppKit;
 using ScriptingBridge;
-#else
-using nuint = System.Int32;
-using MonoMac.AppKit;
-using MonoMac.ScriptingBridge;
-#endif
 
 namespace ScriptingBridge.Tests
 {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>AppWithXCAssets</ApplicationTitle>
+		<ApplicationId>com.xamarin.appwithxcassets</ApplicationId>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+
+		<BundleResource Update="$(_ResourcePrefix)/B.otf" RegisterFont="true" />
+
+		<PartialAppManifest Include="../shared.plist" />
+
+		<!-- ImageAssets: included by default (each platform has a Resources/Images.xcassets directory) -->
+		<!-- InterfaceDefinition: included by default (each platform has a separate storyboard) -->
+		<SceneKitAsset Include="../*.scnassets/*" />
+		<Collada Include="../*.dae" />
+		<AtlasTexture Include="../*.atlas/**/*" />
+		<CoreMLModel Include="../*.mlmodel" />
+
+		<!-- This is just pure evil 😈 -->
+		<BundleResource Include="../arm64.txt" Condition="$(RuntimeIdentifier.EndsWith('-arm64'))" />
+		<BundleResource Include="../arm.txt" Condition="$(RuntimeIdentifier.EndsWith('-arm'))" />
+		<BundleResource Include="../x64.txt" Condition="$(RuntimeIdentifier.EndsWith('-x64'))" />
+	</ItemGroup>
+</Project>
+
+

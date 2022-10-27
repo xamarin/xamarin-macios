@@ -22,7 +22,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-#if XAMCORE_2_0
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using CoreFoundation;
@@ -33,9 +35,6 @@ namespace IOSurface {
 
 		// kern_return_t
 		// See bug #59201 [iOS (10,0)]
-		[iOS (11, 0)]
-		[Mac (10, 12)]
-		[TV (11, 0)]
 		public int Lock (IOSurfaceLockOptions options, ref int seed)
 		{
 			unsafe {
@@ -47,9 +46,6 @@ namespace IOSurface {
 
 		// kern_return_t
 		// See bug #59201 [iOS (10,0)]
-		[iOS (11, 0)]
-		[Mac (10, 12)]
-		[TV (11, 0)]
 		public int Lock (IOSurfaceLockOptions options)
 		{
 			return _Lock (options, IntPtr.Zero);
@@ -57,9 +53,6 @@ namespace IOSurface {
 		
 		// kern_return_t
 		// See bug #59201 [iOS (10,0)]
-		[iOS (11, 0)]
-		[Mac (10, 12)]
-		[TV (11, 0)]
 		public int Unlock (IOSurfaceLockOptions options, ref int seed)
 		{
 			unsafe {
@@ -71,9 +64,6 @@ namespace IOSurface {
 
 		// kern_return_t
 		// See bug #59201 [iOS (10,0)]
-		[iOS (11, 0)]
-		[Mac (10, 12)]
-		[TV (11, 0)]
 		public int Unlock (IOSurfaceLockOptions options)
 		{
 			return _Unlock (options, IntPtr.Zero);
@@ -81,8 +71,6 @@ namespace IOSurface {
 
 #if !MONOMAC
 		// kern_return_t
-		[iOS (11, 0)]
-		[TV (11, 0)]
 		public int SetPurgeable (IOSurfacePurgeabilityState newState, ref IOSurfacePurgeabilityState oldState)
 		{
 			unsafe {
@@ -92,8 +80,6 @@ namespace IOSurface {
 			}
 		}
 
-		[iOS (11, 0)]
-		[TV (11, 0)]
 		public int SetPurgeable (IOSurfacePurgeabilityState newState)
 		{
 			return _SetPurgeable (newState, IntPtr.Zero);
@@ -101,4 +87,3 @@ namespace IOSurface {
 #endif
 	}
 }
-#endif

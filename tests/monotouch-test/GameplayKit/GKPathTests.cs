@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for GKPath
 //
 // Authors:
@@ -11,16 +11,15 @@
 #if !__WATCHOS__
 
 using System;
-using OpenTK;
 
-#if XAMCORE_2_0
 using Foundation;
 using GameplayKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameplayKit;
-#endif
 using NUnit.Framework;
+#if NET
+using System.Numerics;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.GamePlayKit {
 

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CMBlockBuffer
 //
 // Authors:
@@ -7,30 +7,12 @@
 // Copyright 2014 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__
-
 using System;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
-#else
-using MonoTouch.CoreMedia;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreMedia {
 
@@ -48,16 +30,14 @@ namespace MonoTouchFixtures.CoreMedia {
 			}
 		}
 
-#if XAMCORE_2_0
 		[Test]
 		public void CMBlockBufferCustomBlockSource ()
 		{
-			var type = Type.GetType ("CoreMedia.CMCustomBlockAllocator/CMBlockBufferCustomBlockSource, " + typeof (NSObject).Assembly.GetName ().Name);
+			var type = Type.GetType ("CoreMedia.CMCustomBlockAllocator+CMBlockBufferCustomBlockSource, " + typeof (NSObject).Assembly.GetName ().Name);
 			Assert.NotNull (type, "CMBlockBufferCustomBlockSource");
 			// it's 28 (not 32) bytes when executed on 64bits iOS, which implies it's packed to 4 bytes
 			Assert.That (Marshal.SizeOf (type), Is.EqualTo (4 + 3 * IntPtr.Size), "Size");
 		}
-#endif
 
 		[Test]
 		public void AppendMemoryBlockTest()
@@ -343,5 +323,3 @@ namespace MonoTouchFixtures.CoreMedia {
 		}
 	}
 }
-
-#endif // !__WATCHOS__

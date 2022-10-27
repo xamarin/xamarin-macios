@@ -1,4 +1,4 @@
-﻿// 
+// 
 // SKFieldNode.cs: SKFieldNode class
 //
 // Authors:
@@ -10,6 +10,8 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace SpriteKit {
 #if !XAMCORE_3_0 && !MONOMAC
@@ -23,4 +25,3 @@ namespace SpriteKit {
 	}
 #endif
 }
-

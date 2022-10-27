@@ -25,12 +25,14 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
 using System;
 using System.Runtime.InteropServices;
 using Foundation;
 using ModelIO;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace GLKit {
 
@@ -123,22 +125,39 @@ namespace GLKit {
 	}
 
 	// glVertexAttribPointer structure values, again, problems with definitions being in different namespaces
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+	[UnsupportedOSPlatform ("tvos12.0")]
+	[UnsupportedOSPlatform ("macos10.14")]
+	[UnsupportedOSPlatform ("ios12.0")]
+#if TVOS
+	[Obsolete ("Starting with tvos12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif MONOMAC
+	[Obsolete ("Starting with macos10.14 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+	[Obsolete ("Starting with ios12.0 use 'Metal' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.TvOS, 12,0, message: "Use 'Metal' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,14, message: "Use 'Metal' instead.")]
-	[iOS (9,0)][Mac (10,11)]
-	[StructLayout(LayoutKind.Sequential)]
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
+	[StructLayout (LayoutKind.Sequential)]
 	public struct GLKVertexAttributeParameters {
 		public uint Type;
 		public uint Size;
+		[MarshalAs (UnmanagedType.I1)]
 		public bool Normalized;
 
 #if !COREBUILD
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		[DllImport (Constants.GLKitLibrary, EntryPoint = "GLKVertexAttributeParametersFromModelIO")]
 		extern static GLKVertexAttributeParameters FromVertexFormat_ (nuint vertexFormat);
 
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		public static GLKVertexAttributeParameters FromVertexFormat (MDLVertexFormat vertexFormat)
 		{
 			return FromVertexFormat_ ((nuint) (ulong) vertexFormat);
@@ -146,5 +165,3 @@ namespace GLKit {
 #endif
 	}
 }
-#endif
-

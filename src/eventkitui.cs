@@ -15,12 +15,16 @@ using UIKit;
 using EventKit;
 using System;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace EventKitUI {
 	[BaseType (typeof (UIViewController), Delegates = new string [] { "WeakDelegate"}, Events=new Type [] {typeof (EKEventViewDelegate)})]
 	interface EKEventViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[NullAllowed] // by default this property is null
 		[Export ("event")]
@@ -53,11 +57,11 @@ namespace EventKitUI {
 	interface EKEventEditViewController : UIAppearance {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("initWithRootViewController:")]
 		[PostGet ("ViewControllers")] // that will PostGet TopViewController and VisibleViewController too
-		IntPtr Constructor (UIViewController rootViewController);
+		NativeHandle Constructor (UIViewController rootViewController);
 
 		[Export ("editViewDelegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakEditViewDelegate { get; set; }
@@ -69,10 +73,10 @@ namespace EventKitUI {
 		[Export ("eventStore")]
 		EKEventStore EventStore { get; set;  }
 
+		[NullAllowed]
 		[Export ("event")]
 		EKEvent Event { get; set;  }
 
-		[iOS (6,0)]
 		[Export ("cancelEditing")]
 		void CancelEditing ();
 	}
@@ -95,14 +99,13 @@ namespace EventKitUI {
 	interface EKCalendarChooser {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[Export ("initWithSelectionStyle:displayStyle:eventStore:")]
-		IntPtr Constructor (EKCalendarChooserSelectionStyle selectionStyle, EKCalendarChooserDisplayStyle displayStyle, EKEventStore eventStore);
+		NativeHandle Constructor (EKCalendarChooserSelectionStyle selectionStyle, EKCalendarChooserDisplayStyle displayStyle, EKEventStore eventStore);
 
-		[iOS (6,0)]
 		[Export ("initWithSelectionStyle:displayStyle:entityType:eventStore:")]
-		IntPtr Constructor (EKCalendarChooserSelectionStyle selectionStyle, EKCalendarChooserDisplayStyle displayStyle, EKEntityType entityType, EKEventStore eventStore);
+		NativeHandle Constructor (EKCalendarChooserSelectionStyle selectionStyle, EKCalendarChooserDisplayStyle displayStyle, EKEntityType entityType, EKEventStore eventStore);
 
 		[Export ("selectionStyle")]
 		EKCalendarChooserSelectionStyle SelectionStyle { get; 

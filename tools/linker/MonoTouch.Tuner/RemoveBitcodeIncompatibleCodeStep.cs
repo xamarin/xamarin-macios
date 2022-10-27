@@ -57,9 +57,9 @@ namespace MonoTouch.Tuner {
 					string msg;
 					PropertyDefinition property;
 					if (method.IsSpecialName && ((property = method.GetPropertyByAccessor ()) != null)) {
-						msg = $"The property {method.DeclaringType.FullName}.{property.Name} contains a '{eh.HandlerType}' exception clause, which is currently not supported when compiling for bitcode. This property will throw an exception if called.";
+						msg = String.Format (Errors.MT2105_E, method.DeclaringType.FullName, property.Name, eh.HandlerType);
 					} else {
-						msg = $"The method {method.DeclaringType.FullName}.{method.Name} contains a '{eh.HandlerType}' exception clause, which is currently not supported when compiling for bitcode. This method will throw an exception if called.";
+						msg = String.Format (Errors.MT2105_F, method.DeclaringType.FullName, method.Name, eh.HandlerType);
 					}
 					DerivedLinkContext.Exceptions.Add (ErrorHelper.CreateWarning (Options.Application, 2105, method, msg));
 					break;
@@ -72,8 +72,7 @@ namespace MonoTouch.Tuner {
 			var il = body.GetILProcessor ();
 			il.Emit (OpCodes.Ldstr, "This method contains IL not supported when compiled to bitcode.");
 			if (nse_ctor_def == null) {
-				var corlib = context.GetAssembly ("mscorlib");
-				var nse = corlib.MainModule.GetType ("System", "NotSupportedException");
+				var nse = DerivedLinkContext.Corlib.MainModule.GetType ("System", "NotSupportedException");
 				foreach (var ctor in nse.GetConstructors ()) {
 					if (!ctor.HasParameters)
 						continue;

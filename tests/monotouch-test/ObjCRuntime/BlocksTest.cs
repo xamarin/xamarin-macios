@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for Blocks
 //
 // Authors:
@@ -12,15 +12,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -43,7 +41,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				Assert.Ignore ("This test requires the dynamic registrar to be available.");
 
 			using (var obj = new TestClass ()) {
-				TestClass.OnCallback = ((IntPtr blockArgument, IntPtr self, IntPtr argument) => 
+				TestClass.OnCallback = ((IntPtr blockArgument, NativeHandle self, IntPtr argument) => 
 					{
 						Assert.AreNotEqual (IntPtr.Zero, blockArgument, "block");
 						Assert.AreEqual (obj.Handle, self, "self");
@@ -55,14 +53,14 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		class TestClass : NSObject {
 			[MonoPInvokeCallback (typeof (TestBlockCallbackDelegate))]
-			static void TestBlockCallback (IntPtr block, IntPtr self, IntPtr argument)
+			static void TestBlockCallback (IntPtr block, NativeHandle self, IntPtr argument)
 			{
 				OnCallback (block, self, argument);
 			}
 
 			static TestBlockCallbackDelegate callback = new TestBlockCallbackDelegate (TestBlockCallback);
 
-			public delegate void TestBlockCallbackDelegate (IntPtr block, IntPtr self, IntPtr argument);
+			public delegate void TestBlockCallbackDelegate (IntPtr block, NativeHandle self, IntPtr argument);
 			public static TestBlockCallbackDelegate OnCallback;
 
 			static TestClass ()
@@ -75,7 +73,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 		}
 
-#if !DEVICE && !MONOMAC // some of these tests cause the AOT compiler to assert
+#if !DEVICE && !MONOMAC && !AOT // some of these tests cause the AOT compiler to assert
 		// No MonoPInvokeCallback
 		static void InvalidTrampoline1 () { }
 
@@ -104,7 +102,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 			Assert.Throws<ArgumentNullException> (() => block.SetupBlock (null, userDelegate), "null trampoline");
 
-#if !DEVICE && !MONOMAC
+#if !DEVICE && !MONOMAC && !AOT && !__MACCATALYST__
 			if (Runtime.Arch == Arch.SIMULATOR) {
 				// These checks only occur in the simulator
 				Assert.Throws<ArgumentException> (() => block.SetupBlock ((Action) InvalidBlockTrampolines, userDelegate), "instance trampoline");

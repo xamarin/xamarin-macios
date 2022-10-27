@@ -22,9 +22,13 @@ SOFTWARE.
 */
 #endregion
 
+#nullable enable
+#pragma warning disable CS3021 // Type or member does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute
+
 using System;
 using System.Runtime.InteropServices;
 
+#if !NET
 namespace OpenTK
 {
     /// <summary>Represents a 2D vector using two double-precision floating-point numbers.</summary>
@@ -1002,3 +1006,4 @@ namespace OpenTK
         #endregion
     }
 }
+#endif // !NET

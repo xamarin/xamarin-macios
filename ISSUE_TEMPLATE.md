@@ -19,20 +19,24 @@ For support requests use https://www.xamarin.com/support
 ### Environment
 
 <!--
-1.
-Visual Studio: Help > About Microsoft Visual Studio > Copy Info [button]
-Visual Studio for Mac: Visual Studio > About Visual Studio > Show Details > Copy Information [button]
+1. How to get version information: https://github.com/xamarin/xamarin-macios/wiki/Diagnosis#version-information
 2. Paste into the code block below (between ```)
 -->
 
+<details>
+<summary>Version information</summary>
+
 ```
 ```
+
+</details>
 
 ### Build Logs
 
 <!--
-1. Place cursor below this comment block.
-2. Attach build log or link to gist (https://gist.github.com/) of the log.
+1. How to get a build log: https://github.com/xamarin/xamarin-macios/wiki/Diagnosis#build-logs
+2. Place the cursor below this comment block.
+3. Drag and drop the build log.
 -->
 
 ### Example Project (If Possible)

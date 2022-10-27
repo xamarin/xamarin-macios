@@ -25,18 +25,19 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !MONOMAC
-
 using System;
 
 using ObjCRuntime;
 using Foundation;
-using UIKit;
 using CoreGraphics;
+
+#if !MONOMAC
+using UIKit;
+#endif
 
 namespace Foundation {
 
-#if !COREBUILD
+#if !MONOMAC && !COREBUILD
 	public partial class NSAttributedString {
 		static NSDictionary ignore;
 
@@ -56,7 +57,7 @@ namespace Foundation {
 		// use the best selector based on the OS version
 		public NSAttributedString (NSUrl url, NSDictionary options, out NSDictionary resultDocumentAttributes, ref NSError error)
 		{
-			if (UIDevice.CurrentDevice.CheckSystemVersion (9,0))
+			if (SystemVersion.CheckiOS (9,0))
 				Handle = InitWithURL (url, options, out resultDocumentAttributes, ref error);
 			else
 				Handle = InitWithFileURL (url, options, out resultDocumentAttributes, ref error);
@@ -70,7 +71,7 @@ namespace Foundation {
 #endif
 	
 	public partial class NSAttributedStringDocumentAttributes : DictionaryContainer {
-#if !COREBUILD
+#if !MONOMAC && !COREBUILD
 		public NSAttributedStringDocumentAttributes () : base (new NSMutableDictionary ()) {}
 		public NSAttributedStringDocumentAttributes (NSDictionary dictionary) : base (dictionary) {}
 
@@ -277,7 +278,30 @@ namespace Foundation {
 			}
 		}
 #endif
+#if !COREBUILD && !TVOS && !WATCH
+		// documentation is unclear if an NSString or an NSUrl should be used...
+		// but providing an `NSString` throws a `NSInvalidArgumentException Reason: (null) is not a file URL`
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[Mac (10, 15)]
+		[iOS (13, 0)]
+#endif
+		public NSUrl ReadAccessUrl {
+			get {
+				Dictionary.TryGetValue (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey, out var value);
+				return value as NSUrl;
+			}
+			set {
+				if (value == null)
+					RemoveValue (NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey);
+				else
+					Dictionary [NSAttributedStringDocumentReadingOptionKeys.ReadAccessUrlKey] = value;
+			}
+		}
+#endif
 	}
 }
-
-#endif // !MONOMAC

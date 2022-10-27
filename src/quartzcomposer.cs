@@ -32,8 +32,13 @@ using CoreAnimation;
 using CoreImage;
 using CoreVideo;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace QuartzComposer {
 
+	[Deprecated (PlatformName.MacOSX, 10,15)]
 	[BaseType (typeof (NSObject))]
 	interface QCComposition : NSCopying {
 		[Static]
@@ -183,16 +188,17 @@ namespace QuartzComposer {
 		QCCompositionLayer Create (QCComposition composition);
 
 		[Export ("initWithFile:")]
-		IntPtr Constructor (string path);
+		NativeHandle Constructor (string path);
 
 		[Export ("initWithComposition:")]
-		IntPtr Constructor (QCComposition composition);
+		NativeHandle Constructor (QCComposition composition);
 
 		[Export ("composition")]
 		QCComposition Composition { get; }
 
 	}
 
+	[Deprecated (PlatformName.MacOSX, 10,15)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // crash when used (e.g. description) meant to be used thru sharedCompositionRepository
 	interface QCCompositionRepository {

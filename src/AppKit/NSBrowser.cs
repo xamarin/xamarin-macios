@@ -21,17 +21,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 
 namespace AppKit {
-	
+
 	public partial class NSBrowser {
-		
+
 		// note: if needed override the protected Get|Set methods
-		public string Path { 
+		public string Path {
 			get { return GetPath (); }
 			// ignore return value (bool)
 			set { SetPath (value); }
 		}
 	}
 }
+#endif // !__MACCATALYST__

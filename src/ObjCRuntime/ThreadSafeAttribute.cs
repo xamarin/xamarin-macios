@@ -28,10 +28,7 @@ using System;
 
 namespace ObjCRuntime {
 
-#if XAMCORE_2_0
-	sealed
-#endif
-	public class ThreadSafeAttribute : Attribute {
+	public sealed class ThreadSafeAttribute : Attribute {
 	
 		public ThreadSafeAttribute ()
 		{

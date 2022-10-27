@@ -3,7 +3,7 @@
 // adapted from xtouch/tools/mtouch/Touch.Tuner/ManualMarkStep.cs
 
 using System;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using Mono.Cecil;
 using Mono.Linker;
 using Xamarin.Bundler;
@@ -17,10 +17,6 @@ namespace MonoMac.Tuner {
 	// XML definition files have their limits, i.e. they are good to keep stuff around unconditionnally
 	// e.g. we do not want to force all/most Socket code around (non-network apps) because some types have unmanaged representation
 	public class MonoMacMarkStep : CoreMarkStep {
-		
-		public static bool IsClassic { get { return Driver.IsClassic; } }
-		public static bool IsUnified { get { return Driver.IsUnified; } }
-
 		List<Exception> Exceptions = new List<Exception> ();
 
 		public override void Process (LinkContext context)
@@ -62,10 +58,10 @@ namespace MonoMac.Tuner {
 				ProcessXamarinMac (type);
 				break;
 			}
-			
+
 			return type;
 		}
-		
+
 		// FIXME: we could be more precise (per field) but that would require a lot more maintenance for a very small gain
 		void ProcessSystem (TypeDefinition type)
 		{
@@ -81,7 +77,7 @@ namespace MonoMac.Tuner {
 
 					// FIXME: this is the non-MOBILE version
 					if (true) { // Mono.Tuner.Profile.Current is MobileProfile)
-						// limited machine.config support
+								// limited machine.config support
 						WebRequestConfiguration ();
 					}
 					break;
@@ -89,14 +85,14 @@ namespace MonoMac.Tuner {
 				break;
 			}
 		}
-		
+
 		void WebRequestConfiguration ()
 		{
 			// MarkMethods is used because the default .ctor is needed by Activation.Create
 			MarkMethods (GetType ("System.Configuration", "System.Configuration.ExeConfigurationHost"));
-			
+
 			AssemblyDefinition system = GetAssembly ("System");
-			
+
 			// types we could directly infer from machine.config
 			MarkMethods (GetType (system, "System.Net.Configuration.DefaultProxySection"));
 			MarkMethods (GetType (system, "System.Net.Configuration.NetSectionGroup"));
@@ -105,7 +101,7 @@ namespace MonoMac.Tuner {
 			MarkMethods (GetType (system, "System.Net.HttpRequestCreator"));
 			MarkMethods (GetType (system, "System.Net.FileWebRequestCreator"));
 			MarkMethods (GetType (system, "System.Net.FtpWebRequestCreator"));
-			
+
 			// types we cannot find (statiscally or using machine.config)
 			MarkMethods (GetType (system, "System.ComponentModel.BooleanConverter"));
 			MarkMethods (GetType (system, "System.ComponentModel.CollectionConverter"));

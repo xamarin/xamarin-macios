@@ -1,4 +1,4 @@
-﻿//
+//
 // VSAccountManager extensions & syntax sugar
 //
 // Authors:
@@ -7,7 +7,9 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !MONOMAC
+#nullable enable
+
+#if !MONOMAC && !__MACCATALYST__
 
 using System;
 using System.Threading.Tasks;
@@ -18,18 +20,18 @@ namespace VideoSubscriberAccount {
 
 		public void CheckAccessStatus (VSAccountManagerAccessOptions accessOptions, Action<VSAccountAccessStatus, NSError> completionHandler)
 		{
-			if (accessOptions == null)
-				throw new ArgumentNullException (nameof (accessOptions));
-			if (completionHandler == null)
-				throw new ArgumentNullException (nameof (completionHandler));
+			if (accessOptions is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (accessOptions));
+			if (completionHandler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (completionHandler));
 
 			CheckAccessStatus (accessOptions.Dictionary, completionHandler);
 		}
 
 		public Task<VSAccountAccessStatus> CheckAccessStatusAsync (VSAccountManagerAccessOptions accessOptions)
 		{
-			if (accessOptions == null)
-				throw new ArgumentNullException (nameof (accessOptions));
+			if (accessOptions is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (accessOptions));
 
 			return CheckAccessStatusAsync (accessOptions.Dictionary);
 		}

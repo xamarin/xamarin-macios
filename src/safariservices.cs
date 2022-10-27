@@ -6,6 +6,8 @@
 //   Sebastien Pouliot  <sebastien@xamarin.com>
 //
 // Copyright 2013 Xamarin Inc.
+// Copyright 2019 Microsoft Corporation
+//
 
 using System;
 
@@ -13,14 +15,27 @@ using Foundation;
 using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
+using NSRunningApplication = System.Object;
+using NSImage = UIKit.UIImage;
+using NSViewController = UIKit.UIViewController;
 #else
 using AppKit;
+using UIImage = AppKit.NSImage;
+using UIEventAttribution = Foundation.NSObject;
+using UIColor = AppKit.NSColor;
+using UIActivity = Foundation.NSObject;
+using UIViewController = AppKit.NSViewController;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace SafariServices {
 	delegate void SFExtensionValidationHandler (bool shouldHide, NSString text);
 
-	[Mac (10,12, onlyOn64: true)][iOS (10,0)]
+	[Mac (10,12)][iOS (10,0)]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[BaseType (typeof(NSObject))]
 	interface SFContentBlockerState
 	{
@@ -28,7 +43,8 @@ namespace SafariServices {
 		bool Enabled { [Bind ("isEnabled")] get; }
 	}
 
-	[iOS (9,0)][Mac (10,12, onlyOn64: true)]
+	[iOS (9,0)][Mac (10,12)]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[BaseType (typeof (NSObject))]
 	interface SFContentBlockerManager {
 		[Async]
@@ -41,8 +57,9 @@ namespace SafariServices {
 		void GetStateOfContentBlocker (string identifier, Action<SFContentBlockerState, NSError> completionHandler);
 	}
 
-#if !MONOMAC
+	[NoMac]
 	[iOS (7,0)]
+	[Introduced (PlatformName.MacCatalyst, 13, 4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // NSGenericException Misuse of SSReadingList interface. Use class method defaultReadingList.
 	partial interface SSReadingList {
@@ -53,38 +70,39 @@ namespace SafariServices {
 
 		[Static, Export ("supportsURL:")]
 		// Apple says it's __nonnull so let's be safe and maintain compatibility with our current behaviour
-		[PreSnippet ("if (url == null) return false;")]
+		[PreSnippet ("if (url is null) return false;", Optimizable = true)]
 		bool SupportsUrl ([NullAllowed] NSUrl url);
 
 		[Export ("addReadingListItemWithURL:title:previewText:error:")]
 		bool Add (NSUrl url, [NullAllowed] string title, [NullAllowed] string previewText, out NSError error);
 
-#if !XAMCORE_4_0
+#if !NET
 		[Field ("SSReadingListErrorDomain")]
 		NSString ErrorDomain { get; }
 #endif
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[BaseType (typeof (UIViewController))]
 	[DisableDefaultCtor] // NSGenericException Reason: Misuse of SFSafariViewController interface. Use initWithURL:entersReaderIfAvailable:
 	interface SFSafariViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[iOS (11,0)]
 		[Export ("initWithURL:configuration:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url, SFSafariViewControllerConfiguration configuration);
+		NativeHandle Constructor (NSUrl url, SFSafariViewControllerConfiguration configuration);
 
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use '.ctor (NSUrl, SFSafariViewControllerConfiguration)' instead.")]
 		[DesignatedInitializer]
 		[Export ("initWithURL:entersReaderIfAvailable:")]
-		IntPtr Constructor (NSUrl url, bool entersReaderIfAvailable);
+		NativeHandle Constructor (NSUrl url, bool entersReaderIfAvailable);
 
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[NullAllowed] // by default this property is null
 		[Export ("delegate", ArgumentSemantic.Assign)]
@@ -111,8 +129,14 @@ namespace SafariServices {
 		[iOS (11,0)]
 		[Export ("dismissButtonStyle", ArgumentSemantic.Assign)]
 		SFSafariViewControllerDismissButtonStyle DismissButtonStyle { get; set; }
+
+		[iOS (15,0), MacCatalyst (15,0)]
+		[Static]
+		[Export ("prewarmConnectionsToURLs:")]
+		SFSafariViewControllerPrewarmingToken PrewarmConnections (NSUrl[] urls);
 	}
 
+	[NoMac]
 	[iOS (9,0)]
 	[Model]
 	[BaseType (typeof (NSObject))]
@@ -134,8 +158,13 @@ namespace SafariServices {
 		[iOS (11,0)]
 		[Export ("safariViewController:initialLoadDidRedirectToURL:")]
 		void InitialLoadDidRedirectToUrl (SFSafariViewController controller, NSUrl url);
+
+		[iOS (14,0)]
+		[Export ("safariViewControllerWillOpenInBrowser:")]
+		void WillOpenInBrowser (SFSafariViewController controller);
 	}
 
+	[NoMac]
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	interface SFSafariViewControllerConfiguration : NSCopying {
@@ -144,18 +173,30 @@ namespace SafariServices {
 
 		[Export ("barCollapsingEnabled")]
 		bool BarCollapsingEnabled { get; set; }
+
+		[NullAllowed]
+		[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
+		[Export ("activityButton", ArgumentSemantic.Copy)]
+		SFSafariViewControllerActivityButton ActivityButton { get; set; }
+
+		[NullAllowed]
+		[NoWatch, NoTV, iOS (15,2), MacCatalyst (15,2), NoMac]
+		[Export ("eventAttribution", ArgumentSemantic.Copy)]
+		UIEventAttribution EventAttribution { get; set; }
 	}
 
+	[NoMac]
 	[iOS (11,0)]
 	delegate void SFAuthenticationCompletionHandler ([NullAllowed] NSUrl callbackUrl, [NullAllowed] NSError error);
 
+	[NoMac]
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[Deprecated (PlatformName.iOS, 12,0, message: "Use 'ASWebAuthenticationSession' instead.")]
 	interface SFAuthenticationSession {
 		[Export ("initWithURL:callbackURLScheme:completionHandler:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] string callbackUrlScheme, SFAuthenticationCompletionHandler completionHandler);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] string callbackUrlScheme, SFAuthenticationCompletionHandler completionHandler);
 
 		[Export ("start")]
 		bool Start ();
@@ -163,8 +204,9 @@ namespace SafariServices {
 		[Export ("cancel")]
 		void Cancel ();
 	}
-#else
-	[Mac (10,12, onlyOn64: true)]
+
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariApplication
@@ -174,7 +216,7 @@ namespace SafariServices {
 		void GetActiveWindow (Action<SFSafariWindow> completionHandler);
 
 		[Static][Async]
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Export ("getAllWindowsWithCompletionHandler:")]
 		void GetAllWindows (Action<SFSafariWindow []> completionHandler);
 
@@ -190,23 +232,24 @@ namespace SafariServices {
 		[Export ("showPreferencesForExtensionWithIdentifier:completionHandler:")]
 		void ShowPreferencesForExtension (string identifier, [NullAllowed] Action<NSError> completionHandler);
 
-		[Mac (10,12,4, onlyOn64 : true)]
+		[Mac (10,12,4)]
 		[Advice ("Unavailable to extensions.")]
 		[Static][Async]
 		[Export ("dispatchMessageWithName:toExtensionWithIdentifier:userInfo:completionHandler:")]
 		void DispatchMessage (string messageName, string identifier, [NullAllowed] NSDictionary<NSString, NSObject> userInfo, [NullAllowed] Action<NSError> completionHandler);
 
-		[Mac (10,13, onlyOn64 : true)]
+		[Mac (10,13)]
 		[Static]
 		[Async]
 		[Export ("getHostApplicationWithCompletionHandler:")]
 		void GetHostApplication (Action<NSRunningApplication> completionHandler);
 	}
 
-	[Mac (10,12, onlyOn64 : true)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariPage : NSSecureCoding
+	interface SFSafariPage : NSSecureCoding, NSCopying
 	{
 		[Export ("dispatchMessageToScriptWithName:userInfo:")]
 		void DispatchMessageToScript (string messageName, [NullAllowed] NSDictionary userInfo);
@@ -218,18 +261,19 @@ namespace SafariServices {
 		[Export ("getPagePropertiesWithCompletionHandler:")]
 		void GetPageProperties (Action<SFSafariPageProperties> completionHandler);
 
-		[Mac (10,14,4, onlyOn64 : true)]
+		[Mac (10,14,4)]
 		[Async]
 		[Export ("getContainingTabWithCompletionHandler:")]
 		void GetContainingTab (Action<SFSafariTab> completionHandler);
 
-		[Mac (10,14,4, onlyOn64 : true)]
+		[Mac (10,14,4)]
 		[Async]
 		[Export ("getScreenshotOfVisibleAreaWithCompletionHandler:")]
 		void GetScreenshotOfVisibleArea (Action<NSImage> completionHandler);
 	}
 
-	[Mac (10,12, onlyOn64 : true)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,12)]
 	[Protocol]
 	interface SFSafariExtensionHandling
 	{
@@ -263,12 +307,21 @@ namespace SafariServices {
 		[Export ("messageReceivedFromContainingAppWithName:userInfo:")]
 		void MessageReceivedFromContainingApp (string messageName, [NullAllowed] NSDictionary<NSString, NSObject> userInfo);
 
-		[Mac (10,13,4, onlyOn64: true)]
+		[Mac (10,13,4)]
 		[Export ("additionalRequestHeadersForURL:completionHandler:")]
 		void AdditionalRequestHeaders (NSUrl url, Action<NSDictionary<NSString, NSString>> completionHandler);
+
+		[Mac (10,15)]
+		[Export ("contentBlockerWithIdentifier:blockedResourcesWithURLs:onPage:")]
+		void ContentBlocker (string contentBlockerIdentifier, NSUrl[] urls, SFSafariPage page);
+
+		[Mac (10,15)]
+		[Export ("page:willNavigateToURL:")]
+		void WillNavigate (SFSafariPage page, [NullAllowed] NSUrl url);
 	}
 
-	[Mac (10,14,4, onlyOn64: true)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,14,4)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface SFSafariExtension {
@@ -278,13 +331,16 @@ namespace SafariServices {
 		void GetBaseUri (Action<NSUrl> completionHandler);
 	}
 
-	[Mac (10,12, onlyOn64: true)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface SFSafariPageProperties
 	{
+		[NullAllowed]
 		[Export ("url")]
 		NSUrl Url { get; }
 
+		[NullAllowed]
 		[Export ("title")]
 		string Title { get; }
 
@@ -295,10 +351,11 @@ namespace SafariServices {
 		bool Active { [Bind ("isActive")] get; }
 	}
 
-	[Mac (10,12, onlyOn64: true)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariTab : NSSecureCoding
+	interface SFSafariTab : NSSecureCoding, NSCopying
 	{
 		[Async]
 		[Export ("getActivePageWithCompletionHandler:")]
@@ -308,7 +365,7 @@ namespace SafariServices {
 		[Export ("getPagesWithCompletionHandler:")]
 		void GetPages (Action<SFSafariPage[]> completionHandler);
 
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Async]
 		[Export ("getContainingWindowWithCompletionHandler:")]
 		void GetContainingWindow (Action<SFSafariWindow> completionHandler);
@@ -317,55 +374,57 @@ namespace SafariServices {
 		[Export ("activateWithCompletionHandler:")]
 		void Activate ([NullAllowed] Action completionHandler);
 
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Export ("navigateToURL:")]
 		void NavigateTo (NSUrl url);
 
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Export ("close")]
 		void Close ();
 	}
 
-	[Mac (10,12, onlyOn64: true)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariToolbarItem : NSSecureCoding
+	interface SFSafariToolbarItem : NSSecureCoding, NSCopying
 	{
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'SetEnabled (bool)' or 'SetBadgeText' instead.")]
 		[Export ("setEnabled:withBadgeText:")]
 		void SetEnabled (bool enabled, [NullAllowed] string badgeText);
 
-		[Mac (10,12,4, onlyOn64: true)]
+		[Mac (10,12,4)]
 		[Export ("setEnabled:")]
 		void SetEnabled (bool enabled);
 
-		[Mac (10,12,4, onlyOn64: true)]
+		[Mac (10,12,4)]
 		[Export ("setBadgeText:")]
 		void SetBadgeText ([NullAllowed] string badgeText);
 
-		[Mac (10,12,4, onlyOn64: true)]
+		[Mac (10,12,4)]
 		[Export ("setImage:")]
 		void SetImage ([NullAllowed] NSImage image);
 
-		[Mac (10,13, onlyOn64: true)]
+		[Mac (10,13)]
 		[Export ("setLabel:")]
 		void SetLabel ([NullAllowed] string label);
 
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Export ("showPopover")]
 		void ShowPopover ();
 	}
 
-	[Mac (10,12, onlyOn64: true)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface SFSafariWindow : NSSecureCoding
+	interface SFSafariWindow : NSSecureCoding, NSCopying
 	{
 		[Async]
 		[Export ("getActiveTabWithCompletionHandler:")]
 		void GetActiveTab (Action<SFSafariTab> completionHandler);
 
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Async]
 		[Export ("getAllTabsWithCompletionHandler:")]
 		void GetAllTabs (Action<SFSafariTab []> completionHandler);
@@ -378,24 +437,26 @@ namespace SafariServices {
 		[Export ("getToolbarItemWithCompletionHandler:")]
 		void GetToolbarItem (Action<SFSafariToolbarItem> completionHandler);
 
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Export ("close")]
 		void Close ();
 	}
 
-	[Mac (10,12, onlyOn64: true)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,12)]
 	[BaseType (typeof(NSViewController))]
 	interface SFSafariExtensionViewController
 	{
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 
-		[Mac (10,14,4, onlyOn64: true)]
+		[Mac (10,14,4)]
 		[Export ("dismissPopover")]
 		void DismissPopover ();
 	}
 
-	[Mac (10,12, onlyOn64: true)]
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface SFSafariExtensionHandler : NSExtensionRequestHandling, SFSafariExtensionHandling
 	{
@@ -418,5 +479,56 @@ namespace SafariServices {
 // 		[Export ("enabled")]
 // 		bool Enabled { [Bind ("isEnabled")] get; }
 // 	}
-#endif
+
+	[NoiOS][NoTV][NoWatch][NoMacCatalyst]
+	[Mac (10,15)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFUniversalLink {
+
+		[Export ("initWithWebpageURL:")]
+		NativeHandle Constructor (NSUrl url);
+
+		[Export ("webpageURL")]
+		NSUrl WebpageUrl { get; }
+
+		[Export ("applicationURL")]
+		NSUrl ApplicationUrl { get; }
+
+		[Export ("enabled")]
+		bool Enabled { [Bind ("isEnabled")] get; set; }
+	}
+
+	[Static]
+	[iOS (15,0), Mac (11,0), MacCatalyst (15,0), NoTV, NoWatch]
+	[DisableDefaultCtor]
+	interface SFExtension {
+		[Field ("SFExtensionMessageKey")]
+		NSString MessageKey { get; }
+	}
+
+	[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariViewControllerActivityButton : NSCopying, NSSecureCoding
+	{
+		[Export ("initWithTemplateImage:extensionIdentifier:")]
+		[DesignatedInitializer]
+		NativeHandle Constructor (UIImage templateImage, string extensionIdentifier);
+
+		[NullAllowed, Export ("templateImage", ArgumentSemantic.Copy)]
+		UIImage TemplateImage { get; }
+
+		[NullAllowed, Export ("extensionIdentifier")]
+		string ExtensionIdentifier { get; }
+	}
+
+	[iOS (15,0), MacCatalyst (15,0), NoMac, NoTV, NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface SFSafariViewControllerPrewarmingToken /* Privately conforms to NSCoding and NSSecureCoding */
+	{
+		[Export ("invalidate")]
+		void Invalidate ();
+	}
 }

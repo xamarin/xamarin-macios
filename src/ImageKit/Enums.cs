@@ -26,6 +26,9 @@
 //
 // Enums.cs: Enums for ImageKit
 //
+
+#nullable enable
+
 using System;
 
 using ObjCRuntime;
@@ -34,6 +37,7 @@ namespace ImageKit {
 
 	[Native]
 	public enum IKCameraDeviceViewDisplayMode : long {
+		None = -1,
 		Table = 0,
 		Icon  = 1
 	};
@@ -89,6 +93,7 @@ namespace ImageKit {
 	
 	[Native]
 	public enum IKScannerDeviceViewDisplayMode : long {
+		None     = -1,
 		Simple   = 0,
 		Advanced = 1
 	};

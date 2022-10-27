@@ -4,11 +4,8 @@ using System.IO;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
+using ObjCRuntime;
 using NUnit.Framework;
 
 namespace LinkSdk.Serialization {

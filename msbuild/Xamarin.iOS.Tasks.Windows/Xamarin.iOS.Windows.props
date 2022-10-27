@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+***********************************************************************************************
+Xamarin.iOS.Windows.props
+
+WARNING:  DO NOT MODIFY this file unless you are knowledgeable about MSBuild and have
+  created a backup copy.  Incorrect changes to this file will make it
+  impossible to load or build your projects from the command-line or the IDE.
+
+Copyright (C) 2010-2011 Novell. All rights reserved.
+Copyright (C) 2011-2013 Xamarin. All rights reserved.
+***********************************************************************************************
+-->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<!-- $(CoreiOSSdkDirectory) is defined in Microsoft.iOS.Sdk.targets, from Microsoft.iOS.Sdk package -->
+		<CoreiOSSdkDirectory Condition=" '$(CoreiOSSdkDirectory)' == '' and '$(UsingAppleNETSdk)' != 'true' ">$(MSBuildThisFileDirectory)</CoreiOSSdkDirectory>
+		<!-- Property originally defined in Xamarin.Messaging.Build.targets, from Xamarin.Messaging.Build.Client package -->
+		<MessagingBuildClientAssemblyFile>$(CoreiOSSdkDirectory)Xamarin.iOS.Tasks.dll</MessagingBuildClientAssemblyFile>
+		<MessagingAgentsDirectory>$(MSBuildThisFileDirectory)</MessagingAgentsDirectory>
+	</PropertyGroup>
+</Project>

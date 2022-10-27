@@ -1,10 +1,6 @@
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoMac.Foundation;
-#endif
 
 namespace warnaserrorTests {
 

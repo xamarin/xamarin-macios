@@ -1,0 +1,13 @@
+## SKStoreProductViewController is not in tvOS and the only member of the delegate is not either
+## but the delegate itself is not marked (so it's reported as missing)
+!missing-protocol! SKStoreProductViewControllerDelegate not bound
+
+## SKCloudServiceSetupViewController is not in tvOS and the only member of the delegate is not either
+## but the delegate itself is not marked (so it's reported as missing)
+!missing-field! SKCloudServiceSetupActionSubscribe not bound
+!missing-field! SKCloudServiceSetupOptionsActionKey not bound
+!missing-field! SKCloudServiceSetupOptionsITunesItemIdentifierKey not bound
+!missing-field! SKCloudServiceSetupOptionsAffiliateTokenKey not bound
+!missing-field! SKCloudServiceSetupOptionsCampaignTokenKey not bound
+!missing-field! SKCloudServiceSetupOptionsMessageIdentifierKey not bound
+!missing-protocol! SKCloudServiceSetupViewControllerDelegate not bound

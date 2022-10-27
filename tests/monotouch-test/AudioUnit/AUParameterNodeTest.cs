@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AUParameterNode
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__ && XAMCORE_2_0
+#if !__WATCHOS__
 
 using System;
 using System.Threading;
@@ -34,25 +34,32 @@ namespace monotouchtest {
 
 			using (var parameter = CreateAUParameter ()) {
 				using (var tree = AUParameterTree.CreateTree (new AUParameterNode[] { parameter })) {
+					Exception ex = null;
 					var recordingObserver = tree.CreateTokenByAddingParameterRecordingObserver ((nint numberOfEvents, ref AURecordedParameterEvent events) => {
-						Assert.True (numberOfEvents == 1,
-							$"Number of events was wrong. Expected {1} but was {numberOfEvents}");
+						try {
+							Assert.True (numberOfEvents == 1,
+								$"Number of events was wrong. Expected {1} but was {numberOfEvents}");
 
-						Assert.True (events.Address == address,
-							$"Address was wrong. Expected {address} but was {events.Address}");
+							Assert.True (events.Address == address,
+								$"Address was wrong. Expected {address} but was {events.Address}");
 
-						Assert.True (events.Value == newValue,
-							$"Value was wrong. Expected {newValue} but was {events.Value}");
+							Assert.True (events.Value == newValue,
+								$"Value was wrong. Expected {newValue} but was {events.Value}");
 
-						recordingObserverInvoked = true;
-						completion.Set ();
+							recordingObserverInvoked = true;
+						} catch (Exception e) {
+							ex = e;
+						} finally {
+							completion.Set ();
+						}
 					});
 
 					Assert.True (recordingObserver.ObserverToken != IntPtr.Zero, "TokenByAddingParameterRecordingObserver return zero pointer for recording observer.");
 					parameter.Value = newValue;
 
 					completion.WaitOne (TimeSpan.FromSeconds (1));
-					Assert.True (recordingObserverInvoked, "Recording observer was not invoked when paramter value was changed.");
+					Assert.IsNull (ex, "Exceptions");
+					Assert.True (recordingObserverInvoked, "Recording observer was not invoked when parameter value was changed.");
 				}
 			}
 		}
@@ -150,7 +157,7 @@ namespace monotouchtest {
 		// Reason: ImplementorDisplayNameWithLengthCallback never invoked when user requests truncated version of node's name.
 		// Objc/Swift code demosntrates the same behavior.
 		// Waiting for comments/fix from Apple.
-		[Test, Ignore]
+		[Test, Ignore ("ImplementorDisplayNameWithLengthCallback never invoked when user requests truncated version of node's name.")]
 		public void ImplementorDisplayNameWithLengthCallback ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
@@ -163,7 +170,7 @@ namespace monotouchtest {
 
 			using (var parameter = CreateAUParameter ()) {
 				parameter.ImplementorDisplayNameWithLengthCallback = new AUImplementorDisplayNameWithLengthCallback ((node, desiredLength) => {
-					Assert.True (length == desiredLength, "Passed length value is incorrect.");
+					Assert.AreEqual ((nint) length, (nint) desiredLength, "Passed length value is incorrect.");
 					Assert.True (node.Identifier == parameter.Identifier,
 						$"Passed AUParameterNode was incorrect. Expected {parameter.Identifier} but was {node.Identifier}");
 
@@ -184,4 +191,4 @@ namespace monotouchtest {
 	}
 }
 
-#endif // !__WATCHOS__ && XAMCORE_2_0
+#endif // !__WATCHOS__

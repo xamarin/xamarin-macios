@@ -9,16 +9,9 @@
 
 #if !__WATCHOS__
 
-using System;
-#if XAMCORE_2_0
+using System.Collections.Generic;
 using Foundation;
 using AudioToolbox;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MediaPlayer;
-using MonoTouch.AudioToolbox;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.AudioToolbox {
@@ -27,27 +20,38 @@ namespace MonoTouchFixtures.AudioToolbox {
 	[Preserve (AllMembers = true)]
 	public class AudioQueueTest
 	{
-#if !MONOMAC // HardwareCodecPolicy and SetChannelAssignments are iOS only
+#if !MONOMAC && !__MACCATALYST__ // HardwareCodecPolicy and SetChannelAssignments are iOS only
 		[Test]
 		public void Properties ()
 		{
 			TestRuntime.RequestMicrophonePermission ();
 
 			var b = new InputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
-			b.HardwareCodecPolicy = AudioQueueHardwareCodecPolicy.PreferHardware;
+			
+			b.HardwareCodecPolicy = AudioQueueHardwareCodecPolicy.UseSoftwareOnly;
 
-			Assert.That (b.HardwareCodecPolicy, Is.EqualTo (AudioQueueHardwareCodecPolicy.PreferHardware), "#1");
+			Assert.That (b.HardwareCodecPolicy, Is.EqualTo (AudioQueueHardwareCodecPolicy.UseSoftwareOnly), "#1");
 		}
 
 		[Test]
 		public void ChannelAssignments ()
 		{
 			var aq = new OutputAudioQueue (AudioStreamBasicDescription.CreateLinearPCM ());
+			
+			var route = global::AVFoundation.AVAudioSession.SharedInstance ().CurrentRoute;
+			var outputs = route.Outputs;
+			if (outputs.Length > 0) {
+				var port = outputs [0];
+				var assignments = new List<AudioQueueChannelAssignment> ();
+				var id = port.UID;
+				for (int i = 0; i < aq.AudioStreamDescription.ChannelsPerFrame; i++) {
+					assignments.Add (new AudioQueueChannelAssignment (id, (uint) i));
+				}
+				Assert.AreEqual (AudioQueueStatus.Ok, aq.SetChannelAssignments (assignments.ToArray ()));
+			} else {
+				Assert.Ignore ("No outputs in the current route ({0})", route.Description);
+			}
 
-			Assert.AreEqual (AudioQueueStatus.Ok, aq.SetChannelAssignments (
-					new AudioQueueChannelAssignment ("11", 0),
-					new AudioQueueChannelAssignment ("22", 1)
-				));
 		}
 #endif
 		

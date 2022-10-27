@@ -7,12 +7,11 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__
+#if !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__
 
 using System;
 using System.IO;
 using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -21,12 +20,8 @@ using AppKit;
 using UIKit;
 #endif
 using GameKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GameKit {
 
@@ -37,7 +32,12 @@ namespace MonoTouchFixtures.GameKit {
 		[Test]
 		public void DefaultCtor ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+#if MONOMAC
+			// fails when executed under BigSur - this has been deprecated for a while (even if it remains working elsewhere)
+			if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 11, 0))
+				Assert.Inconclusive ("'LeaderboardViewControllerTest' the native 'init' method returned nil.");
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
+#endif
 			using (var vc = new GKLeaderboardViewController ()) {
 				Assert.Null (vc.Category, "Category");
 				Assert.Null (vc.Delegate, "Delegate");
@@ -47,4 +47,4 @@ namespace MonoTouchFixtures.GameKit {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__

@@ -1,4 +1,4 @@
-﻿#region --- License ---
+#region --- License ---
 /*
  * Copyright 2014 Xamarin Inc
  *
@@ -29,15 +29,29 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
+using System.Runtime.Versioning;
 
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using MathHelper = global::CoreGraphics.MathHelper;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using MathHelper = global::OpenTK.MathHelper;
+#endif
+
 #if MONOMAC
+#if NET
+using pfloat = System.Runtime.InteropServices.NFloat;
+#else
 using pfloat = System.nfloat;
+#endif
 #else
 using pfloat = System.Single;
 #endif
+
+#nullable enable
        
 namespace SceneKit
 {
@@ -47,6 +61,12 @@ namespace SceneKit
     /// <remarks>
     /// The Vector3 structure is suitable for interoperation with unmanaged code requiring three consecutive floats.
     /// </remarks>
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct SCNVector3 : IEquatable<SCNVector3>
@@ -119,87 +139,6 @@ namespace SceneKit
         #region Public Members
 
         #region Instance
-
-#if !XAMCORE_2_0
-        #region public void Add()
-
-        /// <summary>Add the Vector passed as parameter to this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [Obsolete("Use static Add() method instead.")]
-        public void Add(SCNVector3 right)
-        {
-            this.X += right.X;
-            this.Y += right.Y;
-            this.Z += right.Z;
-        }
-
-        /// <summary>Add the Vector passed as parameter to this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [CLSCompliant(false)]
-        [Obsolete("Use static Add() method instead.")]
-        public void Add(ref SCNVector3 right)
-        {
-            this.X += right.X;
-            this.Y += right.Y;
-            this.Z += right.Z;
-        }
-
-        #endregion public void Add()
-
-        #region public void Sub()
-
-        /// <summary>Subtract the Vector passed as parameter from this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [Obsolete("Use static Subtract() method instead.")]
-        public void Sub(SCNVector3 right)
-        {
-            this.X -= right.X;
-            this.Y -= right.Y;
-            this.Z -= right.Z;
-        }
-
-        /// <summary>Subtract the Vector passed as parameter from this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [CLSCompliant(false)]
-        [Obsolete("Use static Subtract() method instead.")]
-        public void Sub(ref SCNVector3 right)
-        {
-            this.X -= right.X;
-            this.Y -= right.Y;
-            this.Z -= right.Z;
-        }
-
-        #endregion public void Sub()
-
-        #region public void Mult()
-
-        /// <summary>Multiply this instance by a scalar.</summary>
-        /// <param name="f">Scalar operand.</param>
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Mult(pfloat f)
-        {
-            this.X *= f;
-            this.Y *= f;
-            this.Z *= f;
-        }
-
-        #endregion public void Mult()
-
-        #region public void Div()
-
-        /// <summary>Divide this instance by a scalar.</summary>
-        /// <param name="f">Scalar operand.</param>
-        [Obsolete("Use static Divide() method instead.")]
-        public void Div(pfloat f)
-        {
-            pfloat mult = 1.0f / f;
-            this.X *= mult;
-            this.Y *= mult;
-            this.Z *= mult;
-        }
-
-        #endregion public void Div()
-#endif
 
         #region public pfloat Length
 
@@ -283,53 +222,12 @@ namespace SceneKit
         public void NormalizeFast()
         {
 	    pfloat scale = (pfloat)MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z);
-            X *= scale;
+     	    X *= scale;
             Y *= scale;
             Z *= scale;
         }
 
         #endregion
-
-#if !XAMCORE_2_0
-        #region public void Scale()
-
-        /// <summary>
-        /// Scales the current SCNVector3 by the given amounts.
-        /// </summary>
-        /// <param name="sx">The scale of the X component.</param>
-        /// <param name="sy">The scale of the Y component.</param>
-        /// <param name="sz">The scale of the Z component.</param>
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Scale(pfloat sx, pfloat sy, pfloat sz)
-        {
-            this.X = X * sx;
-            this.Y = Y * sy;
-            this.Z = Z * sz;
-        }
-
-        /// <summary>Scales this instance by the given parameter.</summary>
-        /// <param name="scale">The scaling of the individual components.</param>
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Scale(SCNVector3 scale)
-        {
-            this.X *= scale.X;
-            this.Y *= scale.Y;
-            this.Z *= scale.Z;
-        }
-
-        /// <summary>Scales this instance by the given parameter.</summary>
-        /// <param name="scale">The scaling of the individual components.</param>
-        [CLSCompliant(false)]
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Scale(ref SCNVector3 scale)
-        {
-            this.X *= scale.X;
-            this.Y *= scale.Y;
-            this.Z *= scale.Z;
-        }
-
-        #endregion public void Scale()
-#endif
 
         #endregion
 
@@ -366,113 +264,6 @@ namespace SceneKit
         /// Defines the size of the SCNVector3 struct in bytes.
         /// </summary>
         public static readonly int SizeInBytes = Marshal.SizeOf(new SCNVector3());
-
-        #endregion
-
-        #region Obsolete
-
-#if !XAMCORE_2_0
-        #region Sub
-
-        /// <summary>
-        /// Subtract one Vector from another
-        /// </summary>
-        /// <param name="a">First operand</param>
-        /// <param name="b">Second operand</param>
-        /// <returns>Result of subtraction</returns>
-        [Obsolete("Use static Subtract() method instead.")]
-        public static SCNVector3 Sub(SCNVector3 a, SCNVector3 b)
-        {
-            a.X -= b.X;
-            a.Y -= b.Y;
-            a.Z -= b.Z;
-            return a;
-        }
-
-        /// <summary>
-        /// Subtract one Vector from another
-        /// </summary>
-        /// <param name="a">First operand</param>
-        /// <param name="b">Second operand</param>
-        /// <param name="result">Result of subtraction</param>
-        [Obsolete("Use static Subtract() method instead.")]
-        public static void Sub(ref SCNVector3 a, ref SCNVector3 b, out SCNVector3 result)
-        {
-            result.X = a.X - b.X;
-            result.Y = a.Y - b.Y;
-            result.Z = a.Z - b.Z;
-        }
-
-        #endregion
-
-        #region Mult
-
-        /// <summary>
-        /// Multiply a vector and a scalar
-        /// </summary>
-        /// <param name="a">Vector operand</param>
-        /// <param name="f">Scalar operand</param>
-        /// <returns>Result of the multiplication</returns>
-        [Obsolete("Use static Multiply() method instead.")]
-        public static SCNVector3 Mult(SCNVector3 a, pfloat f)
-        {
-            a.X *= f;
-            a.Y *= f;
-            a.Z *= f;
-            return a;
-        }
-
-        /// <summary>
-        /// Multiply a vector and a scalar
-        /// </summary>
-        /// <param name="a">Vector operand</param>
-        /// <param name="f">Scalar operand</param>
-        /// <param name="result">Result of the multiplication</param>
-        [Obsolete("Use static Multiply() method instead.")]
-        public static void Mult(ref SCNVector3 a, pfloat f, out SCNVector3 result)
-        {
-            result.X = a.X * f;
-            result.Y = a.Y * f;
-            result.Z = a.Z * f;
-        }
-
-        #endregion
-
-        #region Div
-
-        /// <summary>
-        /// Divide a vector by a scalar
-        /// </summary>
-        /// <param name="a">Vector operand</param>
-        /// <param name="f">Scalar operand</param>
-        /// <returns>Result of the division</returns>
-        [Obsolete("Use static Divide() method instead.")]
-        public static SCNVector3 Div(SCNVector3 a, pfloat f)
-        {
-            pfloat mult = 1.0f / f;
-            a.X *= mult;
-            a.Y *= mult;
-            a.Z *= mult;
-            return a;
-        }
-
-        /// <summary>
-        /// Divide a vector by a scalar
-        /// </summary>
-        /// <param name="a">Vector operand</param>
-        /// <param name="f">Scalar operand</param>
-        /// <param name="result">Result of the division</param>
-        [Obsolete("Use static Divide() method instead.")]
-        public static void Div(ref SCNVector3 a, pfloat f, out SCNVector3 result)
-        {
-            pfloat mult = 1.0f / f;
-            result.X = a.X * mult;
-            result.Y = a.Y * mult;
-            result.Z = a.Z * mult;
-        }
-
-        #endregion
-#endif // !XAMCORE_2_0
 
         #endregion
 
@@ -796,7 +587,7 @@ namespace SceneKit
         public static SCNVector3 NormalizeFast(SCNVector3 vec)
         {
             pfloat scale = (pfloat)MathHelper.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z);
-            vec.X *= scale;
+     	    vec.X *= scale;
             vec.Y *= scale;
             vec.Z *= scale;
             return vec;
@@ -949,29 +740,53 @@ namespace SceneKit
 
         #region Transform
 
+#if NET
+        /// <summary>Transform a direction vector by the given Matrix
+        /// Assumes the matrix has a right-most column of (0,0,0,1), that is the translation part is ignored.
+        /// </summary>
+        /// <param name="vec">The column vector to transform</param>
+#else
         /// <summary>Transform a direction vector by the given Matrix
         /// Assumes the matrix has a bottom row of (0,0,0,1), that is the translation part is ignored.
         /// </summary>
-        /// <param name="vec">The vector to transform</param>
+        /// <param name="vec">The row vector to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <returns>The transformed vector</returns>
         public static SCNVector3 TransformVector(SCNVector3 vec, SCNMatrix4 mat)
         {
-            SCNVector3 v;
-            v.X = SCNVector3.Dot(vec, new SCNVector3(mat.Column0));
-            v.Y = SCNVector3.Dot(vec, new SCNVector3(mat.Column1));
-            v.Z = SCNVector3.Dot(vec, new SCNVector3(mat.Column2));
+            TransformVector (ref vec, ref mat, out var v);
             return v;
         }
 
+#if NET
+        /// <summary>Transform a direction vector by the given Matrix
+        /// Assumes the matrix has a right-most column of (0,0,0,1), that is the translation part is ignored.
+        /// </summary>
+        /// <param name="vec">The column vector to transform</param>
+#else
         /// <summary>Transform a direction vector by the given Matrix
         /// Assumes the matrix has a bottom row of (0,0,0,1), that is the translation part is ignored.
         /// </summary>
-        /// <param name="vec">The vector to transform</param>
+        /// <param name="vec">The row vector to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <param name="result">The transformed vector</param>
         public static void TransformVector(ref SCNVector3 vec, ref SCNMatrix4 mat, out SCNVector3 result)
         {
+#if NET
+            result.X = vec.X * mat.Row0.X +
+                       vec.Y * mat.Row0.Y +
+                       vec.Z * mat.Row0.Z;
+
+            result.Y = vec.X * mat.Row1.X +
+                       vec.Y * mat.Row1.Y +
+                       vec.Z * mat.Row1.Z;
+
+            result.Z = vec.X * mat.Row2.X +
+                       vec.Y * mat.Row2.Y +
+                       vec.Z * mat.Row2.Z;
+#else
             result.X = vec.X * mat.Row0.X +
                        vec.Y * mat.Row1.X +
                        vec.Z * mat.Row2.X;
@@ -983,6 +798,7 @@ namespace SceneKit
             result.Z = vec.X * mat.Row0.Z +
                        vec.Y * mat.Row1.Z +
                        vec.Z * mat.Row2.Z;
+#endif
         }
 
         /// <summary>Transform a Normal by the given Matrix</summary>
@@ -990,7 +806,11 @@ namespace SceneKit
         /// This calculates the inverse of the given matrix, use TransformNormalInverse if you
         /// already have the inverse to avoid this extra calculation
         /// </remarks>
-        /// <param name="norm">The normal to transform</param>
+#if NET
+        /// <param name="norm">The column-based normal to transform</param>
+#else
+        /// <param name="norm">The row-based normal to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <returns>The transformed normal</returns>
         public static SCNVector3 TransformNormal(SCNVector3 norm, SCNMatrix4 mat)
@@ -1004,7 +824,11 @@ namespace SceneKit
         /// This calculates the inverse of the given matrix, use TransformNormalInverse if you
         /// already have the inverse to avoid this extra calculation
         /// </remarks>
-        /// <param name="norm">The normal to transform</param>
+#if NET
+        /// <param name="norm">The column-based normal to transform</param>
+#else
+        /// <param name="norm">The row-based normal to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <param name="result">The transformed normal</param>
         public static void TransformNormal(ref SCNVector3 norm, ref SCNMatrix4 mat, out SCNVector3 result)
@@ -1018,15 +842,16 @@ namespace SceneKit
         /// This version doesn't calculate the inverse matrix.
         /// Use this version if you already have the inverse of the desired transform to hand
         /// </remarks>
-        /// <param name="norm">The normal to transform</param>
+#if NET
+        /// <param name="norm">The column-based normal to transform</param>
+#else
+        /// <param name="norm">The row-based normal to transform</param>
+#endif
         /// <param name="invMat">The inverse of the desired transformation</param>
         /// <returns>The transformed normal</returns>
         public static SCNVector3 TransformNormalInverse(SCNVector3 norm, SCNMatrix4 invMat)
         {
-            SCNVector3 n;
-            n.X = SCNVector3.Dot(norm, new SCNVector3(invMat.Row0));
-            n.Y = SCNVector3.Dot(norm, new SCNVector3(invMat.Row1));
-            n.Z = SCNVector3.Dot(norm, new SCNVector3(invMat.Row2));
+        	TransformNormalInverse (ref norm, ref invMat, out var n);
             return n;
         }
 
@@ -1035,11 +860,28 @@ namespace SceneKit
         /// This version doesn't calculate the inverse matrix.
         /// Use this version if you already have the inverse of the desired transform to hand
         /// </remarks>
-        /// <param name="norm">The normal to transform</param>
+#if NET
+        /// <param name="norm">The column-based normal to transform</param>
+#else
+        /// <param name="norm">The row-based normal to transform</param>
+#endif
         /// <param name="invMat">The inverse of the desired transformation</param>
         /// <param name="result">The transformed normal</param>
         public static void TransformNormalInverse(ref SCNVector3 norm, ref SCNMatrix4 invMat, out SCNVector3 result)
         {
+#if NET
+            result.X = norm.X * invMat.Column0.X +
+                       norm.Y * invMat.Column0.Y +
+                       norm.Z * invMat.Column0.Z;
+
+            result.Y = norm.X * invMat.Column1.X +
+                       norm.Y * invMat.Column1.Y +
+                       norm.Z * invMat.Column1.Z;
+
+            result.Z = norm.X * invMat.Column2.X +
+                       norm.Y * invMat.Column2.Y +
+                       norm.Z * invMat.Column2.Z;
+#else
             result.X = norm.X * invMat.Row0.X +
                        norm.Y * invMat.Row0.Y +
                        norm.Z * invMat.Row0.Z;
@@ -1051,27 +893,49 @@ namespace SceneKit
             result.Z = norm.X * invMat.Row2.X +
                        norm.Y * invMat.Row2.Y +
                        norm.Z * invMat.Row2.Z;
+#endif
         }
 
         /// <summary>Transform a Position by the given Matrix</summary>
-        /// <param name="pos">The position to transform</param>
+#if NET
+        /// <param name="pos">The column-based position to transform</param>
+#else
+        /// <param name="pos">The row-based position to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <returns>The transformed position</returns>
         public static SCNVector3 TransformPosition(SCNVector3 pos, SCNMatrix4 mat)
         {
-            SCNVector3 p;
-            p.X = SCNVector3.Dot(pos, new SCNVector3(mat.Column0)) + mat.Row3.X;
-            p.Y = SCNVector3.Dot(pos, new SCNVector3(mat.Column1)) + mat.Row3.Y;
-            p.Z = SCNVector3.Dot(pos, new SCNVector3(mat.Column2)) + mat.Row3.Z;
+            TransformPosition (ref pos, ref mat, out var p);
             return p;
         }
 
         /// <summary>Transform a Position by the given Matrix</summary>
-        /// <param name="pos">The position to transform</param>
+#if NET
+        /// <param name="pos">The column-based position to transform</param>
+#else
+        /// <param name="pos">The row-based position to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <param name="result">The transformed position</param>
         public static void TransformPosition(ref SCNVector3 pos, ref SCNMatrix4 mat, out SCNVector3 result)
         {
+#if NET
+            result.X = mat.Row0.X * pos.X +
+                       mat.Row0.Y * pos.Y +
+                       mat.Row0.Z * pos.Z +
+                       mat.Row0.W;
+
+            result.Y = mat.Row1.X * pos.X +
+                       mat.Row1.Y * pos.Y +
+                       mat.Row1.Z * pos.Z +
+                       mat.Row1.W;
+
+            result.Z = mat.Row2.X * pos.X +
+                       mat.Row2.Y * pos.Y +
+                       mat.Row2.Z * pos.Z +
+                       mat.Row2.W;
+#else
             result.X = pos.X * mat.Row0.X +
                        pos.Y * mat.Row1.X +
                        pos.Z * mat.Row2.X +
@@ -1086,25 +950,29 @@ namespace SceneKit
                        pos.Y * mat.Row1.Z +
                        pos.Z * mat.Row2.Z +
                        mat.Row3.Z;
+#endif
         }
 
         /// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The vector to transform</param>
+#if NET
+        /// <param name="vec">The column vector to transform</param>
+#else
+        /// <param name="vec">The row vector to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <returns>The transformed vector</returns>
         public static SCNVector4 Transform(SCNVector3 vec, SCNMatrix4 mat)
         {
             SCNVector4 v4 = new SCNVector4(vec.X, vec.Y, vec.Z, 1.0f);
-            SCNVector4 result;
-            result.X = SCNVector4.Dot(v4, mat.Column0);
-            result.Y = SCNVector4.Dot(v4, mat.Column1);
-            result.Z = SCNVector4.Dot(v4, mat.Column2);
-            result.W = SCNVector4.Dot(v4, mat.Column3);
-            return result;
+            return SCNVector4.Transform (v4, mat);
         }
 
         /// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The vector to transform</param>
+#if NET
+        /// <param name="vec">The column vector to transform</param>
+#else
+        /// <param name="vec">The row vector to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <param name="result">The transformed vector</param>
         public static void Transform(ref SCNVector3 vec, ref SCNMatrix4 mat, out SCNVector4 result)
@@ -1323,7 +1191,7 @@ namespace SceneKit
         /// </summary>
         /// <param name="obj">The object to compare to.</param>
         /// <returns>True if the instances are equal; false otherwise.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals (object? obj)
         {
             if (!(obj is SCNVector3))
                 return false;

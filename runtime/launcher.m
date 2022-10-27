@@ -42,21 +42,24 @@ redirect_io (int from_fd, const char *to_path)
 		return -1;
 	}
 
-	return 0;
+	return fd;
 }
 
 static void
 init_logdir (void)
 {
+	// If redirected we will not be closing the returned file descriptors anywhere.
+	// That's "by design" so they will keep logging as long as the app is alive.
+	static int redirected_stdout = -1;
+	static int redirected_stderr = -1;
 	const char *env;
-	size_t dirlen;
-	char *path;
 
 	if ((env = getenv ("MONOMAC_LOGDIR")) != NULL && *env) {
+		NSString *logdir = [NSString stringWithUTF8String: env];
 		// Redirect stdout/err to log files...
 		NSError *error = nil;
 		if (![[NSFileManager defaultManager] 
-				createDirectoryAtPath: [NSString stringWithUTF8String: env] 
+				createDirectoryAtPath: logdir
 				withIntermediateDirectories: YES 
 				attributes: @{ NSFilePosixPermissions: [NSNumber numberWithInt: 0755] } 
 				error: &error]) {
@@ -64,22 +67,15 @@ init_logdir (void)
 			return;
 		}
 
-		dirlen = strlen (env);
-		path = (char *) malloc (dirlen + 12);
-		strcpy (path, env);
+		NSString *out = [logdir stringByAppendingPathComponent: @"stdout.log"];
+		redirected_stdout = redirect_io (STDOUT_FILENO, [out UTF8String]);
+		if (redirected_stdout == -1)
+			fprintf (stderr, PRODUCT ": Could not redirect %s to `%s': %s\n", "stdout", [out UTF8String], strerror (errno));
 
-		if (path[dirlen - 1] != '/')
-			path[dirlen++] = '/';
-
-		strcpy (path + dirlen, "stdout.log");
-		if (redirect_io (STDOUT_FILENO, path) == -1)
-			fprintf (stderr, PRODUCT ": Could not redirect stdout to `%s': %s\n", path, strerror (errno));
-
-		strcpy (path + dirlen, "stderr.log");
-		if (redirect_io (STDERR_FILENO, path) == -1)
-			fprintf (stderr, PRODUCT ": Could not redirect stderr to `%s': %s\n", path, strerror (errno));
-
-		free (path);
+		NSString *err = [logdir stringByAppendingPathComponent: @"stderr.log"];
+		redirected_stderr = redirect_io (STDERR_FILENO, [err UTF8String]);
+		if (redirected_stderr == -1)
+			fprintf (stderr, PRODUCT ": Could not redirect %s to `%s': %s\n", "stderr", [err UTF8String], strerror (errno));
 	}
 }
 
@@ -137,7 +133,6 @@ get_mono_env_options (int *count)
 	unsigned char *start, *inptr;
 	char *value, **argv;
 	int i, n = 0;
-	size_t size;
 
 	if (env == NULL) {
 		*count = 0;
@@ -147,7 +142,7 @@ get_mono_env_options (int *count)
 	inptr = (unsigned char *) env;
 
 	while (*inptr) {
-		while (isblank ((int) *inptr))
+		while (isblank ((int) *inptr & 0xff))
 			inptr++;
 
 		if (*inptr == '\0')
@@ -160,15 +155,10 @@ get_mono_env_options (int *count)
 			value = decode_qstring (&inptr, *start);
 			break;
 		default:
-			while (*inptr && !isblank ((int) *inptr))
+			while (*inptr && !isblank ((int) *inptr & 0xff))
 				inptr++;
 
-			// Note: Mac OS X <= 10.6.8 do not have strndup()
-			//value = strndup ((char *) start, (size_t) (inptr - start));
-			size = (size_t) (inptr - start);
-			value = (char *) malloc (size + 1);
-			memcpy (value, start, size);
-			value[size] = '\0';
+			value = strndup ((char *) start, (size_t) (inptr - start));
 			break;
 		}
 
@@ -195,7 +185,7 @@ get_mono_env_options (int *count)
 	if (n == 0)
 		return NULL;
 
-	argv = (char **) malloc (sizeof (char *) * (n + 1));
+	argv = (char **) malloc (sizeof (char *) * ((unsigned long) n + 1));
 	i = 0;
 
 	while (list != NULL) {
@@ -239,7 +229,7 @@ exit_with_message (const char *reason, const char *argv0, bool request_mono)
 	[alert release];
 	
 	if (request_mono && answer == NSAlertFirstButtonReturn) {
-		NSString *mono_download_url = @"http://www.mono-project.com/download/stable/";
+		NSString *mono_download_url = @"https://www.mono-project.com/download/stable/";
 		CFURLRef url = CFURLCreateWithString (NULL, (CFStringRef) mono_download_url, NULL);
 		LSOpenCFURLRef (url, NULL);
 		CFRelease (url);
@@ -284,23 +274,12 @@ check_mono_version (const char *version, const char *req_version)
 static int
 push_env (const char *variable, NSString *str_value)
 {
-	const char *value = [str_value UTF8String];
-	size_t len = strlen (value);
 	const char *current;
-	int rv;
 	
-	if ((current = getenv (variable)) && *current) {
-		char *buf = (char *) malloc (len + strlen (current) + 2);
-		memcpy (buf, value, len);
-		buf[len] = ':';
-		strcpy (buf + len + 1, current);
-		rv = setenv (variable, buf, 1);
-		free (buf);
-	} else {
-		rv = setenv (variable, value, 1);
-	}
+	if ((current = getenv (variable)) && *current)
+		str_value = [str_value stringByAppendingFormat: @":%s", current];
 	
-	return rv;
+	return setenv (variable, [str_value UTF8String], 1);
 }
 #endif
 
@@ -315,12 +294,13 @@ update_environment (xamarin_initialize_data *data)
 	NSString *monobundle_dir;
 
 	if (data->launch_mode == XamarinLaunchModeEmbedded) {
-		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current/MonoBundle"];
+		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current"];
 		res_dir = [data->app_dir stringByAppendingPathComponent: @"Versions/Current/Resources"];
 	} else {
-		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MonoBundle"];
+		monobundle_dir = [data->app_dir stringByAppendingPathComponent: @"Contents"];
 		res_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/Resources"];
 	}
+	monobundle_dir = [monobundle_dir stringByAppendingPathComponent: xamarin_custom_bundle_name];
 
 #ifdef DYNAMIC_MONO_RUNTIME
 	NSString *bin_dir = [data->app_dir stringByAppendingPathComponent: @"Contents/MacOS"];
@@ -335,10 +315,11 @@ update_environment (xamarin_initialize_data *data)
 	push_env ("PKG_CONFIG_PATH", [res_dir stringByAppendingPathComponent: @"/lib/pkgconfig"]);
 	push_env ("PKG_CONFIG_PATH", [res_dir stringByAppendingPathComponent: @"/share/pkgconfig"]);
 	
-	
 	push_env ("MONO_GAC_PREFIX", res_dir);
 	push_env ("PATH", bin_dir);
-	
+
+	push_env ("MONO_PATH", monobundle_dir);
+
 	data->requires_relaunch = true;
 #else
 	// disable /dev/shm since Apple refuse applications that uses it in the Mac App Store
@@ -362,11 +343,18 @@ update_environment (xamarin_initialize_data *data)
 		}
 	}
 #endif
-	if (xamarin_disable_lldb_attach) {
-		// Unfortunately the only place to set debug_options.no_gdb_backtrace is in mini_parse_debug_option
-		// So route through MONO_DEBUG
-		setenv ("MONO_DEBUG", "no-gdb-backtrace", 0);
+	const char *mono_debug = NULL;
+	// Unfortunately the only place to set debug_options.no_gdb_backtrace is in mini_parse_debug_option
+	// So route through MONO_DEBUG
+	if (xamarin_disable_lldb_attach && xamarin_disable_omit_fp) {
+		mono_debug = "no-gdb-backtrace,disable-omit-fp";
+	} else if (xamarin_disable_lldb_attach) {
+		mono_debug = "no-gdb-backtrace";
+	} else if (xamarin_disable_omit_fp) {
+		mono_debug = "disable_omit_fp";
 	}
+	if (mono_debug != NULL)
+		setenv ("MONO_DEBUG", mono_debug, 0);
 
 #ifndef DYNAMIC_MONO_RUNTIME
 	setenv ("MONO_CFG_DIR", [monobundle_dir UTF8String], 0);
@@ -464,10 +452,17 @@ app_initialize (xamarin_initialize_data *data)
 	if (data->launch_mode == XamarinLaunchModeApp) {
 		NSString *exeName = NULL;
 		NSString *exePath;
-		if (plist != NULL)
-			exeName = (NSString *) [plist objectForKey:@"MonoBundleExecutable"];
-		else
-			fprintf (stderr, PRODUCT ": Could not find Info.plist in the bundle.\n");
+
+		if (xamarin_executable_name != NULL) {
+			exeName = [NSString stringWithUTF8String: xamarin_executable_name];
+		}
+
+		if (exeName == NULL) {
+			if (plist != NULL)
+				exeName = (NSString *) [plist objectForKey:@"MonoBundleExecutable"];
+			else
+				fprintf (stderr, PRODUCT ": Could not find Info.plist in the bundle.\n");
+		}
 
 		if (exeName == NULL)
 			exeName = [[NSString stringWithUTF8String: data->basename] stringByAppendingString: @".exe"];
@@ -555,13 +550,15 @@ run_application_init (xamarin_initialize_data *data)
 
 	MonoImage *image = mono_assembly_get_image (assembly);
 
+	xamarin_mono_object_release (&assembly);
+
 	MonoClass *app_class = mono_class_from_name (image, "AppKit", "NSApplication");
 	if (!app_class)
 		xamarin_assertion_message ("Fatal error: failed to load the NSApplication class");
 
 	MonoMethod *initialize = mono_class_get_method_from_name (app_class, "Init", 0);
 	if (!initialize)
-		xamarin_assertion_message ("Fatal error: failed to load the NSApplication.Init method");
+		xamarin_assertion_message ("Fatal error: failed to load the %s.%s method", "NSApplication", "Init");
 
 	mono_runtime_invoke (initialize, NULL, NULL, NULL);
 }
@@ -611,7 +608,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		if (xamarin_mac_modern)
 			new_argc += 1;
 
-		char **new_argv = (char **) malloc (sizeof (char *) * (new_argc + 1 /* null terminated */));
+		char **new_argv = (char **) malloc (sizeof (char *) * ((unsigned long) new_argc + 1 /* null terminated */));
 		const char **ptr = (const char **) new_argv;
 		// binary
 		*ptr++ = argv [0];
@@ -669,6 +666,7 @@ int xamarin_main (int argc, char **argv, enum XamarinLaunchMode launch_mode)
 		}
 
 		free (new_argv);
+		free (env_argv);
 	}
 
 	return rv;

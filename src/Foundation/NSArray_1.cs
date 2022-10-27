@@ -1,4 +1,4 @@
-﻿//
+//
 // This file contains a generic version of NSArray
 //
 // Authors:
@@ -7,16 +7,25 @@
 // Copyright 2015, Xamarin Inc.
 //
 
-#if XAMCORE_2_0
-
 using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Foundation {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	[Register (SkipRegistration = true)]
 	public sealed partial class NSArray<TKey> : NSArray, IEnumerable<TKey> 
 		where TKey : class, INativeObject {
@@ -29,7 +38,7 @@ namespace Foundation {
 		{
 		}
 
-		internal NSArray (IntPtr handle) : base (handle)
+		internal NSArray (NativeHandle handle) : base (handle)
 		{
 		}
 
@@ -80,6 +89,10 @@ namespace Foundation {
 				return GetItem<TKey> ((nuint)idx);
 			}
 		}
+
+		public new TKey[] ToArray ()
+		{
+			return base.ToArray<TKey> ();
+		}
 	}
 }
-#endif // XAMCORE_2_0

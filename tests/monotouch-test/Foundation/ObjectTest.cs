@@ -12,39 +12,36 @@ using System.Drawing;
 using System.Reflection;
 using System.Threading;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
 using Security;
 #if MONOMAC
 using AppKit;
+#if NET
+using PlatformException=ObjCRuntime.ObjCException;
+#else
 using PlatformException = Foundation.ObjCException;
+#endif
 using UIView = AppKit.NSView;
 #else
 using UIKit;
+#if NET
+using PlatformException=ObjCRuntime.ObjCException;
+#else
 using PlatformException=Foundation.MonoTouchException;
 #endif
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using PlatformException=MonoTouch.Foundation.MonoTouchException;
-using MonoTouch.Security;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
-#if XAMCORE_2_0
 using RectangleF=CoreGraphics.CGRect;
 using SizeF=CoreGraphics.CGSize;
 using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 namespace MonoTouchFixtures.Foundation {
 	
 	[TestFixture]
@@ -53,12 +50,8 @@ namespace MonoTouchFixtures.Foundation {
 		
 		bool GetIsDirectBinding (NSObject obj)
 		{
-#if XAMCORE_2_0
-			int flags = (byte) typeof (NSObject).GetField ("flags", BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
+			var flags = TestRuntime.GetFlags (obj);
 			return (flags & 4) == 4;
-#else
-			return (bool) typeof (NSObject).GetField ("IsDirectBinding", BindingFlags.Instance | BindingFlags.GetField | BindingFlags.NonPublic).GetValue (obj);
-#endif
 		}
 		
 		class MyObject : NSObject {
@@ -86,14 +79,14 @@ namespace MonoTouchFixtures.Foundation {
 			Class c = new Class ("NSObject");
 			Assert.That (c.Name, Is.EqualTo ("NSObject"), "Name");
 			Assert.That (c.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
-			Assert.That (c.SuperClass, Is.EqualTo (IntPtr.Zero), "SuperClass");
+			Assert.That (c.SuperClass, Is.EqualTo (NativeHandle.Zero), "SuperClass");
 		}
 
 		[Test]
 		public void FromObject_INativeObject ()
 		{
 			// https://bugzilla.xamarin.com/show_bug.cgi?id=8458
-			using (CGPath p = CGPath.FromRect (new RectangleF (1, 2, 3, 4))) {
+			using (CGPath p = CGPath.FromRect (new CGRect (1, 2, 3, 4))) {
 				Assert.IsNotNull (NSObject.FromObject (p), "CGPath");
 			}
 			using (CGColor c = new CGColor (CGColorSpace.CreateDeviceRGB (), new nfloat [] { 0.1f, 0.2f, 0.3f, 1.0f })) {
@@ -101,7 +94,7 @@ namespace MonoTouchFixtures.Foundation {
 			}
 			var hasSecAccessControl = TestRuntime.CheckXcodeVersion (6, 0);
 #if __MACOS__
-			if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
+			if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10))
 				hasSecAccessControl = false;
 #endif
 			if (hasSecAccessControl) {
@@ -114,7 +107,7 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void FromObject_Handle ()
 		{
-			using (CGPath p = CGPath.FromRect (new RectangleF (1, 2, 3, 4))) {
+			using (CGPath p = CGPath.FromRect (new CGRect (1, 2, 3, 4))) {
 				Assert.IsNotNull (NSObject.FromObject (p.Handle), "CGPath");
 			}
 			using (CGColor c = new CGColor (CGColorSpace.CreateDeviceRGB (), new nfloat [] { 0.1f, 0.2f, 0.3f, 1.0f })) {
@@ -195,18 +188,6 @@ namespace MonoTouchFixtures.Foundation {
 			IntPtr nscoding = Runtime.GetProtocol ("NSCoding");
 			Assert.That (nscoding, Is.Not.EqualTo (IntPtr.Zero), "NSCoding");
 
-#if !XAMCORE_2_0
-			// NSObject does not conform to NSCoding
-			using (var o = new NSObject ()) {
-				Assert.False (o.ConformsToProtocol (nscoding), "NSObject/NSCoding");
-				using (var c = new NSCoder ()) {
-					Assert.Throws<InvalidOperationException> (delegate {
-						o.EncodeTo (c);
-					}, "NSObject/!NSCoding");
-				}
-			}
-#endif
-
 			// NSNumber conforms to NSCoding
 			using (var n = new NSNumber (-1)) {
 				Assert.True (n.ConformsToProtocol (nscoding), "NSNumber/NSCoding");
@@ -217,20 +198,6 @@ namespace MonoTouchFixtures.Foundation {
 				}
 			}
 		}
-
-#if !XAMCORE_2_0
-		[Test]
-		public void CtorNSCoder ()
-		{
-			// NSObject does NOT conform but (funnily enough) does not have a .ctor(NSCoder) like every other
-			// type that subclass it. We'll use NSKeyedUnarchiver as it also does not conform to NSCoding
-			using (var c = new NSCoder ()) {
-				Assert.Throws<InvalidOperationException> (delegate {
-					new NSKeyedUnarchiver (c);
-				}, "NSObject/!NSCoding");
-			}
-		}
-#endif
 
 		[Test]
 		public void Equality ()
@@ -313,11 +280,16 @@ namespace MonoTouchFixtures.Foundation {
 				using (var observer = o.AddObserver ("frame", NSKeyValueObservingOptions.OldNew, change => {
 					var old = ((NSValue) change.OldValue).CGRectValue;
 					var @new = ((NSValue) change.NewValue).CGRectValue;
+#if NET
+					Assert.AreEqual ("{{0, 0}, {0, 0}}", old.ToString (), "#old");
+					Assert.AreEqual ("{{0, 0}, {123, 234}}", @new.ToString (), "#new");
+#else
 					Assert.AreEqual ("{X=0,Y=0,Width=0,Height=0}", old.ToString (), "#old");
 					Assert.AreEqual ("{X=0,Y=0,Width=123,Height=234}", @new.ToString (), "#new");
+#endif
 					observed = true;
 				})) {
-					o.Frame = new RectangleF (0, 0, 123, 234);
+					o.Frame = new CGRect (0, 0, 123, 234);
 				}
 			}
 			Assert.IsTrue (observed, "observed");

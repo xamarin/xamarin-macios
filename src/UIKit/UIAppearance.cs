@@ -15,12 +15,12 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
-namespace UIKit {
-	public partial class UIAppearance {
-#if !XAMCORE_2_0
-		public readonly static IntPtr SelectorAppearance = Selector.GetHandle ("appearance");
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
+namespace UIKit {
+	public partial class UIAppearance {
 		public override bool Equals (object other)
 		{
 			UIAppearance ao = other as UIAppearance;
@@ -31,7 +31,7 @@ namespace UIKit {
 
 		public override int GetHashCode ()
 		{
-			return (int) Handle;
+			return ((IntPtr) Handle).ToInt32 ();
 		}
 
 		public static bool operator == (UIAppearance a, UIAppearance b)
@@ -49,15 +49,15 @@ namespace UIKit {
 			return !(a == b);
 		}
 
-		static IntPtr[] TypesToPointers (Type[] whenFoundIn)
+		static NativeHandle[] TypesToPointers (Type[] whenFoundIn)
 		{
 #if TVOS
-			IntPtr [] ptrs = new IntPtr [whenFoundIn.Length];
+			var ptrs = new NativeHandle [whenFoundIn.Length];
 #else
 			if (whenFoundIn.Length > 4)
 				throw new ArgumentException ("Only 4 parameters supported currently");
 
-			IntPtr [] ptrs = new IntPtr [5]; // creating an array of 5 when we support only 4 ensures that the last one is IntPtr.Zero.
+			var ptrs = new NativeHandle [5]; // creating an array of 5 when we support only 4 ensures that the last one is IntPtr.Zero.
 #endif
 			for (int i = 0; i < whenFoundIn.Length; i++){
 				if (whenFoundIn [i] == null)
@@ -66,7 +66,7 @@ namespace UIKit {
 					throw new ArgumentException (String.Format ("Type {0} does not derive from NSObject", whenFoundIn [i]));
 
 				var classHandle = Class.GetHandle (whenFoundIn [i]);
-				if (classHandle == IntPtr.Zero)
+				if (classHandle == NativeHandle.Zero)
 					throw new ArgumentException (string.Format ("Could not find the Objective-C class for {0}", whenFoundIn[i].FullName));
 
 				ptrs [i] = classHandle;
@@ -108,7 +108,7 @@ namespace UIKit {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public static IntPtr GetAppearance (IntPtr class_ptr, params Type [] whenFoundIn)
 		{
-			IntPtr[] ptrs = TypesToPointers (whenFoundIn);
+			var ptrs = TypesToPointers (whenFoundIn);
 
 			if (Runtime.IsARM64CallingConvention) {
 				// The native function takes a variable number of arguments ('appearanceWhenContainedIn:'), terminated with a nil value.
@@ -129,8 +129,13 @@ namespace UIKit {
 					ptrs [1], // the rest is on the stack. This is where iOS/ARM64 expects the first varargs arguments.
 					ptrs [2], ptrs [3], ptrs [4], IntPtr.Zero);
 			} else {
+#if NET
+				return Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn),
+					ptrs [0], ptrs [1], ptrs [2], ptrs [3], ptrs [4]);
+#else
 				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceWhenContainedIn), 
 					ptrs [0], ptrs [1], ptrs [2], ptrs [3], ptrs [4]);
+#endif
 			}
 		}
 
@@ -140,7 +145,7 @@ namespace UIKit {
 			if (traits == null)
 				throw new ArgumentNullException ("traits");
 
-			IntPtr[] ptrs = TypesToPointers (whenFoundIn);
+			var ptrs = TypesToPointers (whenFoundIn);
 
 			if (Runtime.IsARM64CallingConvention) {
 				// The native function takes a variable number of arguments ('appearanceWhenContainedIn:'), terminated with a nil value.
@@ -161,7 +166,11 @@ namespace UIKit {
 					ptrs [1], // the rest is on the stack. This is where iOS/ARM64 expects the first varargs arguments.
 					ptrs [2], ptrs [3], ptrs [4], IntPtr.Zero);
 			} else {
+#if NET
+				return Messaging.NativeHandle_objc_msgSend_NativeHandle_NativeHandle_NativeHandle_NativeHandle_NativeHandle (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn),
+#else
 				return Messaging.IntPtr_objc_msgSend_IntPtr_IntPtr_IntPtr_IntPtr_IntPtr (class_ptr, Selector.GetHandle (UIAppearance.selAppearanceForTraitCollectionWhenContainedIn), 
+#endif
 													 traits.Handle, ptrs [0], ptrs [1], ptrs [2], ptrs [3]);
 			}
 		}

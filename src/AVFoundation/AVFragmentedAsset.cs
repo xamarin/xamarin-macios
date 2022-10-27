@@ -1,9 +1,11 @@
-﻿//
+//
 // Copyright 2015 Xamarin Inc
 //
 
 using System;
 using Foundation;
+
+#nullable enable
 
 namespace AVFoundation {
 #if MONOMAC && !XAMCORE_3_0

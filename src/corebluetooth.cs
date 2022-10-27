@@ -7,10 +7,16 @@
 //
 // Copyright 2011-2013 Xamarin Inc
 //
+using System.ComponentModel;
+
 using ObjCRuntime;
 using Foundation;
 using System;
 using CoreFoundation;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace CoreBluetooth {
 
@@ -29,10 +35,9 @@ namespace CoreBluetooth {
 		[Export ("OptionShowPowerAlertKey")]
 		bool ShowPowerAlert { get; set; }
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("OptionRestoreIdentifierKey")]
 		string RestoreIdentifier { get; set; }
-#endif
 	}
 
 	[Watch (4,0)]
@@ -43,6 +48,74 @@ namespace CoreBluetooth {
 	interface CBManager {
 		[Export ("state", ArgumentSemantic.Assign)]
 		CBManagerState State { get; }
+
+		[Internal]
+		[iOS (13,0), Watch (6,0)]
+		[NoTV][NoMac]
+		[Export ("authorization", ArgumentSemantic.Assign)]
+		CBManagerAuthorization _IAuthorization { get; }
+
+		[Internal]
+		[iOS (13,1), Watch (6,1)]
+		[NoTV][NoMac]
+		[Static]
+		[Export ("authorization", ArgumentSemantic.Assign)]
+		CBManagerAuthorization _SAuthorization { get; }
+
+		[TV (13,0), Mac (10, 15)]
+		[NoiOS][NoWatch]
+		[Static]
+		[Export ("authorization", ArgumentSemantic.Assign)]
+		CBManagerAuthorization Authorization { get; }
+	}
+
+	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+	[StrongDictionary ("CBConnectionEventMatchingOptionsKeys")]
+	interface CBConnectionEventMatchingOptions {
+		NSUuid [] PeripheralUuids { get; set; }
+		CBUUID [] ServiceUuids { get; set;}
+	}
+
+	[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+	[Static]
+	[Internal]
+	interface CBConnectionEventMatchingOptionsKeys {
+		[Field ("CBConnectionEventMatchingOptionPeripheralUUIDs")]
+		NSString PeripheralUuidsKey { get; }
+		[Field ("CBConnectionEventMatchingOptionServiceUUIDs")]
+		NSString ServiceUuidsKey { get; }
+	}
+
+	[StrongDictionary ("CBConnectPeripheralOptionsKeys")]
+	interface CBConnectPeripheralOptions {
+		[Mac (10,13)] 
+		bool NotifyOnConnection { get; set; }
+		bool NotifyOnDisconnection { get; set; }
+		[Mac (10,13)]
+		bool NotifyOnNotification { get; set; }
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		bool EnableTransportBridging { get; set; }
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		bool RequiresAncs { get; set; }
+	}
+
+	[Static]
+	[Internal]
+	interface CBConnectPeripheralOptionsKeys {
+		[Mac (10,13)] 
+		[Field ("CBConnectPeripheralOptionNotifyOnConnectionKey")]
+		NSString NotifyOnConnectionKey { get; }
+		[Field ("CBConnectPeripheralOptionNotifyOnDisconnectionKey")]
+		NSString NotifyOnDisconnectionKey { get; }
+		[Mac (10,13)]
+		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
+		NSString NotifyOnNotificationKey { get; }
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[Field ("CBConnectPeripheralOptionEnableTransportBridgingKey")]
+		NSString EnableTransportBridgingKey { get; }
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[Field ("CBConnectPeripheralOptionRequiresANCS")]
+		NSString RequiresAncsKey {get; }
 	}
 
 	[Watch (4,0)]
@@ -57,34 +130,19 @@ namespace CoreBluetooth {
 		[Protocolize]
 		CBCentralManagerDelegate Delegate { get; set; }
 		
-		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		[Export ("initWithDelegate:queue:")]
 		[PostGet ("WeakDelegate")]
-		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue);
+		NativeHandle Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue);
 
 		[DesignatedInitializer]
 		[iOS (7,0), Mac (10,9)]
 		[Export ("initWithDelegate:queue:options:")]
 		[PostGet ("WeakDelegate")]
-		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
 
 		[iOS (7,0), Mac (10,9)]
-		[Wrap ("this (centralDelegate, queue, options == null ? null : options.Dictionary)")]
-		IntPtr Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, CBCentralInitOptions options);
-
-		[NoTV]
-		[NoWatch]
-		[Availability (Obsoleted = Platform.iOS_9_0)]
-		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
-		[Export ("retrievePeripherals:"), Internal]
-		void RetrievePeripherals (NSArray peripheralUUIDs);
-
-		[NoTV]
-		[NoWatch]
-		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
-		[Export ("retrieveConnectedPeripherals")]
-		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0, Message = "Use 'RetrievePeripheralsWithIdentifiers' instead.")]
-		void RetrieveConnectedPeripherals ();
+		[Wrap ("this (centralDelegate, queue, options.GetDictionary ())")]
+		NativeHandle Constructor ([NullAllowed, Protocolize] CBCentralManagerDelegate centralDelegate, [NullAllowed] DispatchQueue queue, CBCentralInitOptions options);
 
 		[Export ("scanForPeripheralsWithServices:options:"), Internal]
 		void ScanForPeripherals ([NullAllowed] NSArray serviceUUIDs, [NullAllowed] NSDictionary options);
@@ -92,8 +150,12 @@ namespace CoreBluetooth {
 		[Export ("stopScan")]
 		void StopScan ();
 
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("connectPeripheral:options:")]
 		void ConnectPeripheral (CBPeripheral peripheral, [NullAllowed] NSDictionary options);
+
+		[Wrap ("ConnectPeripheral (peripheral, options.GetDictionary ())")]
+		void ConnectPeripheral (CBPeripheral peripheral, [NullAllowed] CBConnectPeripheralOptions options);
 
 		[Export ("cancelPeripheralConnection:")]
 		void CancelPeripheralConnection (CBPeripheral peripheral);
@@ -101,18 +163,21 @@ namespace CoreBluetooth {
 		[Field ("CBCentralManagerScanOptionAllowDuplicatesKey")]
 		NSString ScanOptionAllowDuplicatesKey { get; }
 
+#if !NET
+		[Obsolete ("Use 'CBConnectPeripheralOptions' instead.")]
 		[Field ("CBConnectPeripheralOptionNotifyOnDisconnectionKey")]
 		NSString OptionNotifyOnDisconnectionKey { get; }
 
+		[Obsolete ("Use 'CBConnectPeripheralOptions' instead.")]
 		[Mac (10,13)]
-		[iOS (6,0)]
 		[Field ("CBConnectPeripheralOptionNotifyOnConnectionKey")]
 		NSString OptionNotifyOnConnectionKey { get; }
 
+		[Obsolete ("Use 'CBConnectPeripheralOptions' instead.")]
 		[Mac (10,13)]
-		[iOS (6,0)]
 		[Field ("CBConnectPeripheralOptionNotifyOnNotificationKey")]
 		NSString OptionNotifyOnNotificationKey { get; }
+#endif
 
 		[Mac (10,14)]
 		[iOS (11,2)][TV (11,2)][Watch (4,2)]
@@ -159,6 +224,20 @@ namespace CoreBluetooth {
 		[Mac (10,13)]
 		[Export ("isScanning")]
 		bool IsScanning { get; }
+
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[Static]
+		[Export ("supportsFeatures:")]
+		bool SupportsFeatures (CBCentralManagerFeature features);
+
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[Export ("registerForConnectionEventsWithOptions:")]
+		void RegisterForConnectionEvents ([NullAllowed] NSDictionary options);
+
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[Wrap ("RegisterForConnectionEvents (options.GetDictionary ())")]
+		void RegisterForConnectionEvents ([NullAllowed] CBConnectionEventMatchingOptions options);
 	}
 
 	[Watch (4,0)]
@@ -166,12 +245,7 @@ namespace CoreBluetooth {
 	interface AdvertisementData {
 		string LocalName { get; set; }
 		NSData ManufacturerData { get; set; }
-		
-#if XAMCORE_2_0
 		NSDictionary <CBUUID, NSData> ServiceData { get; set; }
-#else
-		NSDictionary ServiceData { get; set; }
-#endif
 		CBUUID [] ServiceUuids { get; set; }
 		CBUUID [] OverflowServiceUuids { get; set; }
 		NSNumber TxPowerLevel { get; set; }
@@ -250,17 +324,27 @@ namespace CoreBluetooth {
 		[Export ("centralManagerDidUpdateState:")]
 		void UpdatedState (CBCentralManager central);
 
+#if !NET
 		[NoTV]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)] // Available in iOS 5.0 through iOS 8.4. Deprecated in iOS 7.0.
+		// Available in iOS 5.0 through iOS 8.4. Deprecated in iOS 7.0.
+		[Deprecated (PlatformName.iOS, 7, 0)]
+		[Obsoleted (PlatformName.iOS, 8, 4)]
+		[NoMacCatalyst]
 		[Export ("centralManager:didRetrievePeripherals:"), EventArgs ("CBPeripherals")]
 		void RetrievedPeripherals (CBCentralManager central, CBPeripheral [] peripherals);
+#endif
 
+#if !NET
 		[NoTV]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)] // Available in iOS 5.0 through iOS 8.4. Deprecated in iOS 7.0.
+		// Available in iOS 5.0 through iOS 8.4. Deprecated in iOS 7.0.
+		[Deprecated (PlatformName.iOS, 7, 0)]
+		[Obsoleted (PlatformName.iOS, 8, 4)]
+		[NoMacCatalyst]
 		[Export ("centralManager:didRetrieveConnectedPeripherals:"), EventArgs ("CBPeripherals")]
 		void RetrievedConnectedPeripherals (CBCentralManager central, CBPeripheral [] peripherals);
+#endif
 
 		[Export ("centralManager:didDiscoverPeripheral:advertisementData:RSSI:"), EventArgs ("CBDiscoveredPeripheral")]
 		void DiscoveredPeripheral (CBCentralManager central, CBPeripheral peripheral, NSDictionary advertisementData, NSNumber RSSI);
@@ -269,13 +353,21 @@ namespace CoreBluetooth {
 		void ConnectedPeripheral (CBCentralManager central, CBPeripheral peripheral);
 
 		[Export ("centralManager:didFailToConnectPeripheral:error:"), EventArgs ("CBPeripheralError")]
-		void FailedToConnectPeripheral (CBCentralManager central, CBPeripheral peripheral, NSError error);
+		void FailedToConnectPeripheral (CBCentralManager central, CBPeripheral peripheral, [NullAllowed] NSError error);
 
 		[Export ("centralManager:didDisconnectPeripheral:error:"), EventArgs ("CBPeripheralError")]
-		void DisconnectedPeripheral (CBCentralManager central, CBPeripheral peripheral, NSError error);
+		void DisconnectedPeripheral (CBCentralManager central, CBPeripheral peripheral, [NullAllowed] NSError error);
 		
 		[Export ("centralManager:willRestoreState:"), EventArgs ("CBWillRestore")]
 		void WillRestoreState (CBCentralManager central, NSDictionary dict);
+
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[Export ("centralManager:connectionEventDidOccur:forPeripheral:"), EventArgs ("CBPeripheralConnectionEvent")]
+		void ConnectionEventDidOccur (CBCentralManager central, CBConnectionEvent connectionEvent, CBPeripheral peripheral);
+
+		[iOS (13,0), TV (13,0), Watch (6,0), NoMac]
+		[Export ("centralManager:didUpdateANCSAuthorizationForPeripheral:"), EventArgs ("CBAncsAuthorizationUpdate")]
+		void DidUpdateAncsAuthorization (CBCentralManager central, CBPeripheral peripheral);
 	}
 
 	[Watch (4,0)]
@@ -296,7 +388,7 @@ namespace CoreBluetooth {
 		[Field ("CBAdvertisementDataServiceDataKey")]
 		NSString DataServiceDataKey { get; }
 
-		[iOS (6,0), Mac (10,9)]
+		[Mac (10,9)]
 		[Field ("CBAdvertisementDataOverflowServiceUUIDsKey")]
 		NSString DataOverflowServiceUUIDsKey { get; }
 
@@ -318,9 +410,11 @@ namespace CoreBluetooth {
 		[Export ("properties")]
 		CBCharacteristicProperties Properties { get; [NotImplemented ("Not available on CBCharacteristic, only available on CBMutableCharacteristic")] set; }
 
+		[NullAllowed]
 		[Export ("value", ArgumentSemantic.Retain)]
 		NSData Value { get; [NotImplemented ("Not available on CBCharacteristic, only available on CBMutableCharacteristic")] set;  }
 
+		[NullAllowed]
 		[Export ("descriptors", ArgumentSemantic.Retain)]
 		CBDescriptor [] Descriptors { get; [NotImplemented ("Not available on CBCharacteristic, only available on CBMutableCharacteristic")] set; }
 
@@ -332,17 +426,13 @@ namespace CoreBluetooth {
 		[Export ("isNotifying")]
 		bool IsNotifying { get;  }
 
+		[NullAllowed]
 		[Export ("service", ArgumentSemantic.Weak)]
 		CBService Service { get; }
-
-#if !XAMCORE_2_0
-		[iOS (7,0), Export ("subscribedCentrals"), Mac (10,9)]
-		CBCentral [] SubscribedCentrals { get; }
-#endif
 	}
 
 	[Watch (4,0)]
-	[iOS (6, 0), Mac (10,9)]
+	[Mac (10,9)]
 	[BaseType (typeof (CBCharacteristic))]
 	[DisableDefaultCtor]
 	interface CBMutableCharacteristic {
@@ -353,7 +443,7 @@ namespace CoreBluetooth {
 		[Export ("initWithType:properties:value:permissions:")]
 		[PostGet ("UUID")]
 		[PostGet ("Value")]
-		IntPtr Constructor (CBUUID uuid, CBCharacteristicProperties properties, [NullAllowed] NSData value, CBAttributePermissions permissions);
+		NativeHandle Constructor (CBUUID uuid, CBCharacteristicProperties properties, [NullAllowed] NSData value, CBAttributePermissions permissions);
 
 		[Export ("permissions", ArgumentSemantic.Assign)]
 		CBAttributePermissions Permissions { get; set; }
@@ -372,10 +462,9 @@ namespace CoreBluetooth {
 		[Override]
 		CBDescriptor [] Descriptors { get; set; }
 
-#if XAMCORE_2_0
-		[iOS (7,0), Export ("subscribedCentrals"), Mac (10,9)]
+		[iOS (7,0), Export ("subscribedCentrals")]
+		[NullAllowed]
 		CBCentral [] SubscribedCentrals { get; }
-#endif
 	}
 
 	[Watch (4,0)]
@@ -384,14 +473,16 @@ namespace CoreBluetooth {
 	interface CBDescriptor {
 		
 		[Export ("value", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSObject Value { get;  }
 
+		[NullAllowed]
 		[Export ("characteristic", ArgumentSemantic.Weak)]
 		CBCharacteristic Characteristic { get; }
 	}
 
 	[Watch (4,0)]
-	[iOS (6, 0), Mac (10,9)]
+	[Mac (10,9)]
 	[BaseType (typeof (CBDescriptor))]
 	[DisableDefaultCtor]
 	interface CBMutableDescriptor {
@@ -401,7 +492,7 @@ namespace CoreBluetooth {
 		[Export ("initWithType:value:")]
 		[PostGet ("UUID")]
 		[PostGet ("Value")]
-		IntPtr Constructor (CBUUID uuid, NSObject descriptorValue);
+		NativeHandle Constructor (CBUUID uuid, [NullAllowed] NSObject descriptorValue);
 	}
 
 	[Watch (4,0)]
@@ -410,22 +501,27 @@ namespace CoreBluetooth {
 	interface CBPeripheral : NSCopying {
 		[Export ("name", ArgumentSemantic.Retain)]
 		[DisableZeroCopy]
+		[NullAllowed]
 		string Name { get;  }
 
 		[Deprecated (PlatformName.iOS, 8,0)]
 		[Deprecated (PlatformName.MacOSX, 10,13)]
 		[NoWatch]
 		[Export ("RSSI", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		NSNumber RSSI { get;  }
 
+#if !NET
 		[NoTV]
 		[NoWatch]
-		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
+		[Obsoleted (PlatformName.iOS, 9, 0)]
 		[Export ("isConnected")]
-		[Mac (10, 7, onlyOn64: true)] // Was removed from 32-bit in 10.13 unannounced
 		bool IsConnected { get;  }
+#endif
 
 		[Export ("services", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		CBService [] Services { get;  }
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
@@ -469,23 +565,21 @@ namespace CoreBluetooth {
 		[Export ("maximumWriteValueLengthForType:")]
 		nuint GetMaximumWriteValueLength (CBCharacteristicWriteType type);
 
-#if !XAMCORE_2_0
-		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
-		[Export ("UUID")]
-		System.IntPtr UUID { get; }
-#endif
-
 		[iOS (7,0), Mac (10,9)]
 		[Export ("state")]
 		CBPeripheralState State { get; }
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("canSendWriteWithoutResponse")]
 		bool CanSendWriteWithoutResponse { get; }
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("openL2CAPChannel:")]
 		void OpenL2CapChannel (ushort psm);
+
+		[iOS (13, 0), TV (13,0), Watch (6,0), NoMac]
+		[Export ("ancsAuthorized")]
+		bool AncsAuthorized { get; }
 	}
 
 	[Watch (4,0)]
@@ -496,53 +590,55 @@ namespace CoreBluetooth {
 		[Deprecated (PlatformName.MacOSX, 10, 13, message : "Use 'RssiRead' instead.")]
 		[Deprecated (PlatformName.iOS, 8, 0, message : "Use 'RssiRead' instead.")]
 		[Export ("peripheralDidUpdateRSSI:error:"), EventArgs ("NSError", true)]
-		void RssiUpdated (CBPeripheral peripheral, NSError error);
+		void RssiUpdated (CBPeripheral peripheral, [NullAllowed] NSError error);
 
 		[iOS (8,0)]
 		[Mac (10,13)]
 		[Export ("peripheral:didReadRSSI:error:"), EventArgs ("CBRssi")]
-		void RssiRead (CBPeripheral peripheral, NSNumber rssi, NSError error);
+		void RssiRead (CBPeripheral peripheral, NSNumber rssi, [NullAllowed] NSError error);
 
 		// FIXME: TYPO: missing 's' (plural)
 		[Export ("peripheral:didDiscoverServices:"), EventArgs ("NSError", true)]
-		void DiscoveredService (CBPeripheral peripheral, NSError error);
+		void DiscoveredService (CBPeripheral peripheral, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didDiscoverIncludedServicesForService:error:"), EventArgs ("CBService")]
-		void DiscoveredIncludedService  (CBPeripheral peripheral, CBService service, NSError error);
+		void DiscoveredIncludedService  (CBPeripheral peripheral, CBService service, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didDiscoverCharacteristicsForService:error:"), EventArgs ("CBService")]
-#if XAMCORE_2_0
-		// FIXME: TYPO: missing 's' (plural)
-		void DiscoveredCharacteristic (CBPeripheral peripheral, CBService service, NSError error);
+#if NET
+		void DiscoveredCharacteristics (CBPeripheral peripheral, CBService service, [NullAllowed] NSError error);
 #else
-		void DiscoverCharacteristic (CBPeripheral peripheral, CBService service, NSError error);
+		void DiscoveredCharacteristic (CBPeripheral peripheral, CBService service, [NullAllowed] NSError error);
 #endif
 		
 		[Export ("peripheral:didUpdateValueForCharacteristic:error:"), EventArgs ("CBCharacteristic")]
-		void UpdatedCharacterteristicValue (CBPeripheral peripheral, CBCharacteristic characteristic, NSError error);
+		void UpdatedCharacterteristicValue (CBPeripheral peripheral, CBCharacteristic characteristic, [NullAllowed] NSError error);
 		 
 		[Export ("peripheral:didWriteValueForCharacteristic:error:"), EventArgs ("CBCharacteristic")]
-		void WroteCharacteristicValue (CBPeripheral peripheral, CBCharacteristic characteristic, NSError error);
+		void WroteCharacteristicValue (CBPeripheral peripheral, CBCharacteristic characteristic, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didUpdateNotificationStateForCharacteristic:error:"), EventArgs ("CBCharacteristic")]
-		void UpdatedNotificationState (CBPeripheral peripheral, CBCharacteristic characteristic, NSError error);
+		void UpdatedNotificationState (CBPeripheral peripheral, CBCharacteristic characteristic, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didDiscoverDescriptorsForCharacteristic:error:"), EventArgs ("CBCharacteristic")]
-		void DiscoveredDescriptor (CBPeripheral peripheral, CBCharacteristic characteristic, NSError error);
+		void DiscoveredDescriptor (CBPeripheral peripheral, CBCharacteristic characteristic, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didUpdateValueForDescriptor:error:"), EventArgs ("CBDescriptor")]
-		void UpdatedValue (CBPeripheral peripheral, CBDescriptor descriptor, NSError error);
+		void UpdatedValue (CBPeripheral peripheral, CBDescriptor descriptor, [NullAllowed] NSError error);
 
 		[Export ("peripheral:didWriteValueForDescriptor:error:"), EventArgs ("CBDescriptor")]
-		void WroteDescriptorValue (CBPeripheral peripheral, CBDescriptor descriptor, NSError error);
+		void WroteDescriptorValue (CBPeripheral peripheral, CBDescriptor descriptor, [NullAllowed] NSError error);
 
+#if !NET
 		[NoTV]
 		[NoWatch]
-		[Availability (Introduced = Platform.iOS_6_0, Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_8_4)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
+		[Obsoleted (PlatformName.iOS, 8, 4)]
+		[NoMacCatalyst]
 		[Export ("peripheralDidInvalidateServices:")]
 		void InvalidatedService (CBPeripheral peripheral);	
+#endif // !NET
 
-		[iOS (6, 0)]
 		[Export ("peripheralDidUpdateName:")]
 		void UpdatedName (CBPeripheral peripheral);
 
@@ -564,27 +660,30 @@ namespace CoreBluetooth {
 	[BaseType (typeof (CBAttribute))]
 	[DisableDefaultCtor] // crash (at dispose time) on OSX
 	interface CBService {
-		[iOS (6,0), Mac (10,9)]
+		[Mac (10,9)]
 		[Export ("isPrimary")]
-#if XAMCORE_4_0
+#if NET
 		bool Primary { get; }
 #else
 		bool Primary { get; [NotImplemented ("Not available on 'CBService', only available on 'CBMutableService'.")] set; }
 #endif
 
 		[Export ("includedServices", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		CBService [] IncludedServices { get; [NotImplemented ("Not available on 'CBService', only available on CBMutableService.")] set;  }
 
 		[Export ("characteristics", ArgumentSemantic.Retain)]
+		[NullAllowed]
 		CBCharacteristic [] Characteristics { get; [NotImplemented ("Not available on 'CBService', only available on CBMutableService.")] set;  }
 
+		[NullAllowed]
 		[Export ("peripheral", ArgumentSemantic.Weak)]
 		CBPeripheral Peripheral { get; }
 
 	}
 		
 	[Watch (4,0)]
-	[iOS (6, 0), Mac(10,9)]
+	[Mac(10,9)]
 	[BaseType (typeof (CBService))]
 	[DisableDefaultCtor]
 	interface CBMutableService {
@@ -593,14 +692,16 @@ namespace CoreBluetooth {
 		[DesignatedInitializer]
 		[Export ("initWithType:primary:")]
 		[PostGet ("UUID")]
-		IntPtr Constructor (CBUUID uuid, bool primary);
+		NativeHandle Constructor (CBUUID uuid, bool primary);
 
 		[Export ("includedServices", ArgumentSemantic.Retain)]
 		[Override]
+		[NullAllowed]
 		CBService[] IncludedServices { get; set; }  // TODO: check array type
 
 		[Export ("characteristics", ArgumentSemantic.Retain)]
 		[Override]
+		[NullAllowed]
 		CBCharacteristic[] Characteristics { get; set; }	// TODO: check array type
 	}
 
@@ -620,7 +721,6 @@ namespace CoreBluetooth {
 		[Export ("UUIDWithData:")]
 		CBUUID FromData (NSData theData);
 
-		[Availability (Deprecated = Platform.iOS_9_0)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Deprecated (PlatformName.iOS, 9, 0)]
 		[NoWatch]
@@ -633,7 +733,7 @@ namespace CoreBluetooth {
 		[Export ("UUIDWithNSUUID:")]
 		CBUUID FromNSUuid (NSUuid theUUID);
 
-#if !XAMCORE_3_0
+#if !XAMCORE_3_0 && !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Obsoleted (PlatformName.iOS, 9, 0)]
 		[Field ("CBUUIDGenericAccessProfileString")]
@@ -643,7 +743,7 @@ namespace CoreBluetooth {
 		[Obsoleted (PlatformName.iOS, 9, 0)]
 		[Field ("CBUUIDGenericAttributeProfileString")]
 		NSString GenericAttributeProfileString { get; }
-#endif
+#endif // !XAMCORE_3_0 && !NET
 
 		[Field ("CBUUIDCharacteristicExtendedPropertiesString")]
 		NSString CharacteristicExtendedPropertiesString { get; }
@@ -663,14 +763,15 @@ namespace CoreBluetooth {
 		[Field ("CBUUIDCharacteristicAggregateFormatString")]
 		NSString CharacteristicAggregateFormatString { get; }
 
-#if MONOMAC
 		[Internal]
 		[Field ("CBUUIDValidRangeString")]
 		[Introduced (PlatformName.MacOSX, 10, 12)]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Obsoleted (PlatformName.MacOSX, 10, 13)]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		NSString CBUUIDValidRangeString { get; }
 
+#if MONOMAC && !NET
 		[Internal]
 		[Mac (10,13)]
 		[Field ("CBUUIDCharacteristicValidRangeString")]
@@ -678,6 +779,9 @@ namespace CoreBluetooth {
 #else
 		[iOS (10,0)]
 		[TV (10,0)]
+		[Watch (4,0)]
+		[Mac (10,13)]
+		[MacCatalyst (13,0)]
 		[Field ("CBUUIDCharacteristicValidRangeString")]
 		NSString CharacteristicValidRangeString { get; }
 #endif
@@ -688,7 +792,7 @@ namespace CoreBluetooth {
 		[Field ("CBUUIDL2CAPPSMCharacteristicString")]
 		NSString L2CapPsmCharacteristicString { get; }
 
-#if !XAMCORE_3_0
+#if !XAMCORE_3_0 && !NET
 		[Deprecated (PlatformName.iOS, 7, 0)]
 		[Obsoleted (PlatformName.iOS, 9, 0)]
 		[Field ("CBUUIDDeviceNameString")]
@@ -718,7 +822,7 @@ namespace CoreBluetooth {
 		[Obsoleted (PlatformName.iOS, 9, 0)]
 		[Field ("CBUUIDServiceChangedString")]
 		NSString ServiceChangedString { get; }
-#endif // !XAMCORE_3_0
+#endif // !XAMCORE_3_0 && !NET
 
 		[iOS (7,1)][Mac (10,10)]
 		[Export ("UUIDString")]
@@ -726,7 +830,7 @@ namespace CoreBluetooth {
 	}
 		
 	[Watch (4,0)]
-	[iOS (6,0), Mac(10,9)]
+	[Mac(10,9)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CBATTRequest {
@@ -740,29 +844,19 @@ namespace CoreBluetooth {
 		nint Offset { get; }
 
 		[Export ("value", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSData Value { get; set; }		
 	}
 
 	[Mac (10,9)]
 	[Watch (4,0)]
-	[iOS (6,0)]
 	[BaseType (typeof (CBPeer))]
 	// `delloc` a default instance crash applications and a default instance, without the ability to change the UUID, does not make sense
 	[DisableDefaultCtor]
 	interface CBCentral : NSCopying {
-#if !XAMCORE_2_0
-		[Export ("UUID")]
-		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
-		IntPtr UUID { get; }
-#endif
-
-#if MONOMAC
-		// Introduced with iOS7, but does not have NS_AVAILABLE
-		// Moved to a new base class, CBPeer, in iOS 8.
-		[iOS (7,0)]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[Export ("identifier")]
 		NSUuid Identifier { get; }
-#endif
 
 		// Introduced with iOS7, but does not have NS_AVAILABLE
 		[iOS (7,0)]
@@ -771,28 +865,27 @@ namespace CoreBluetooth {
 	}
 
 	[Watch (4,0)]
-	[iOS (6, 0), Mac(10,9)]
+	[Mac(10,9)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (CBManager), Delegates=new[] { "WeakDelegate" }, Events=new[] { typeof (CBPeripheralManagerDelegate) })]
 	interface CBPeripheralManager {
 
-		[Mac (10,9, onlyOn64: true)]  // Was removed from 32-bit in 10.13 unannounced
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[NoTV]
 		[NoWatch]
 		[Export ("initWithDelegate:queue:")]
 		[PostGet ("WeakDelegate")]
-		IntPtr Constructor ([Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue);
+		NativeHandle Constructor ([NullAllowed][Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue);
 
 		[NoTV]
 		[NoWatch]
 		[DesignatedInitializer]
-		[iOS (7,0),Mac (10,9)]
+		[iOS (7,0)]
 		[Export ("initWithDelegate:queue:options:")]
 		[PostGet ("WeakDelegate")]
-		IntPtr Constructor ([Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor ([NullAllowed][Protocolize] CBPeripheralManagerDelegate peripheralDelegate, [NullAllowed] DispatchQueue queue, [NullAllowed] NSDictionary options);
 
 		[NullAllowed]
 		[Wrap ("WeakDelegate")]
@@ -821,7 +914,7 @@ namespace CoreBluetooth {
 		[Export ("startAdvertising:")]
 		void StartAdvertising ([NullAllowed] NSDictionary options);
 
-		[Wrap ("StartAdvertising (options == null ? null : options.Dictionary)")]
+		[Wrap ("StartAdvertising (options.GetDictionary ())")]
 		void StartAdvertising ([NullAllowed] StartAdvertisingOptions options);
 
 		[Export ("stopAdvertising")]
@@ -833,11 +926,11 @@ namespace CoreBluetooth {
 		[Export ("updateValue:forCharacteristic:onSubscribedCentrals:")]
 		bool UpdateValue (NSData value, CBMutableCharacteristic characteristic, [NullAllowed] CBCentral[] subscribedCentrals);
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("publishL2CAPChannelWithEncryption:")]
 		void PublishL2CapChannel (bool encryptionRequired);
 
-		[iOS (11,0)][TV (11,0)][Mac (10,13, onlyOn64: true)]
+		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("unpublishL2CAPChannel:")]
 		void UnpublishL2CapChannel (ushort psm);
 
@@ -857,16 +950,19 @@ namespace CoreBluetooth {
 		[iOS (7,0)]
 		NSString RestoredStateAdvertisementDataKey { get; }
 
-#if !MONOMAC || !XAMCORE_4_0
+#if !NET
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'CBManager.Authorization' instead.")]
+		[Deprecated (PlatformName.TvOS, 13, 0, message: "Use 'CBManager.Authorization' instead.")]
+		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'CBManager.Authorization' instead.")]
 		[iOS (7,0)]
 		[Static]
 		[Export ("authorizationStatus")]
 		CBPeripheralManagerAuthorizationStatus AuthorizationStatus { get; }
-#endif
+#endif // !NET
 	}
 
 	[Watch (4,0)]
-	[iOS (6, 0), Mac(10,9)]
+	[Mac(10,9)]
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
@@ -879,10 +975,10 @@ namespace CoreBluetooth {
 		void WillRestoreState (CBPeripheralManager peripheral, NSDictionary dict);
 
 		[Export ("peripheralManagerDidStartAdvertising:error:"), EventArgs ("NSError", true)]
-		void AdvertisingStarted (CBPeripheralManager peripheral, NSError error);
+		void AdvertisingStarted (CBPeripheralManager peripheral, [NullAllowed] NSError error);
 
 		[Export ("peripheralManager:didAddService:error:"), EventArgs ("CBPeripheralManagerService")]
-		void ServiceAdded (CBPeripheralManager peripheral, CBService service, NSError error);
+		void ServiceAdded (CBPeripheralManager peripheral, CBService service, [NullAllowed] NSError error);
 
 		[Export ("peripheralManager:central:didSubscribeToCharacteristic:"), EventArgs ("CBPeripheralManagerSubscription")]
 		void CharacteristicSubscribed (CBPeripheralManager peripheral, CBCentral central, CBCharacteristic characteristic);
@@ -921,13 +1017,16 @@ namespace CoreBluetooth {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // CBPeer.h: - (instancetype)init NS_UNAVAILABLE;
 	interface CBPeer : NSCopying {
+#if !NET
 		[Internal]
 		[NoTV]
 		[NoWatch]
 		[NoMac]
-		[Availability (Deprecated = Platform.iOS_7_0, Obsoleted = Platform.iOS_9_0)]
+		[Deprecated (PlatformName.iOS, 7, 0)]
+		[Obsoleted (PlatformName.iOS, 9, 0)]
 		[Export ("UUID")]
 		IntPtr _UUID { get;  }
+#endif
 	
 		[iOS (7, 0)]
 		[Export ("identifier")]
@@ -938,19 +1037,16 @@ namespace CoreBluetooth {
 	[Watch (4,0)][iOS (11,0)][TV (11,0)][Mac (10,13)]
 	[BaseType (typeof (NSObject), Name = "CBL2CAPChannel")]
 	interface CBL2CapChannel {
-		[Mac (10,13, onlyOn64: true)]
+
 		[Export ("peer")]
 		CBPeer Peer { get; }
 
-		[Mac (10,13, onlyOn64: true)]
 		[Export ("inputStream")]
 		NSInputStream InputStream { get; }
 
-		[Mac (10,13, onlyOn64: true)]
 		[Export ("outputStream")]
 		NSOutputStream OutputStream { get; }
 
-		[Mac (10,13, onlyOn64: true)]
 		[Export ("PSM")]
 		/* uint16_t */ ushort Psm { get; }
 	}

@@ -1,6 +1,8 @@
 using System;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Accounts {
 
 	// untyped enum -> ACError.h
@@ -21,7 +23,7 @@ namespace Accounts {
 		StoreCredentialFailed,
 		RemoveCredentialFailed,
 		UpdatingNonexistentAccount,
-		InvalidClientBundleID,		// in the header file, but not in the API diff
+		InvalidClientBundleID,      // in the header file, but not in the API diff
 		DeniedByPlugin,
 		CoreDataSaveFailed,
 		FailedSerializingAccountInfo,

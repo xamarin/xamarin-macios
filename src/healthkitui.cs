@@ -7,6 +7,10 @@ using HealthKit;
 using ObjCRuntime;
 using UIKit;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace HealthKitUI {
 
 	[iOS (9,3), Watch (2,2)]
@@ -17,7 +21,7 @@ namespace HealthKitUI {
 		// inlined from UIView
 		[DesignatedInitializer]
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[NullAllowed, Export ("activitySummary", ArgumentSemantic.Strong)]
 		HKActivitySummary ActivitySummary { get; set; }

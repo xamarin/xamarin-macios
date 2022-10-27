@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using NUnit.Framework;
 
 using InstallSources;
@@ -19,10 +19,11 @@ namespace InstallSourcesTests
 			monoPath = "/Users/test/xamarin-macios/external/mono/";
 			installDir = "/Users/test/xamarin-macios/_ios-build//Library/Frameworks/Xamarin.iOS.framework/Versions/git";
 			destinationDir = "/Users/test/xamarin-macios/_ios-build/Library/Frameworks/Xamarin.iOS.framework/Versions/git";
-			mangler = new MonoPathMangler { 
+			mangler = new MonoPathMangler {
 				InstallDir = installDir,
 				MonoSourcePath = monoPath,
 				DestinationDir = destinationDir,
+				XamarinSourcePath = "/Users/test/xamarin-macios/src",
 			};
 		}
 

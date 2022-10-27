@@ -29,3 +29,44 @@
 !incorrect-protocol-member! MTLArgumentEncoder::newArgumentEncoderForBufferAtIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffer:atIndex: is REQUIRED and should be abstract
 !incorrect-protocol-member! MTLArgumentEncoder::setIndirectCommandBuffers:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newSharedTextureWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setRenderPipelineState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputePipelineState::supportIndirectCommandBuffers is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setComputePipelineState:atIndex: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLArgumentEncoder::setComputePipelineStates:withRange: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::executeCommandsInBuffer:indirectBuffer:indirectBufferOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::isShareable is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLTexture::newSharedTextureHandle is REQUIRED and should be abstract
+
+# Selectors missing reported by introspection: https://github.com/xamarin/maccore/issues/1978
+
+# new methods added to a protocol, they will be abstract in XAMCORE_4
+!incorrect-protocol-member! MTLDevice::newBinaryArchiveWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newDynamicLibrary:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newDynamicLibraryWithURL:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsCounterSampling: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsDynamicLibraries is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::supportsPullModelInterpolation is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::installName is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newFunctionWithDescriptor:completionHandler: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::newFunctionWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLLibrary::type is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::resolveCounters:inRange:destinationBuffer:destinationOffset: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLBlitCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::blitCommandEncoderWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::computeCommandEncoderWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::errorOptions is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandBuffer::logs is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLCommandQueue::commandBufferWithDescriptor: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLComputeCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::counterSets is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::newCounterSampleBufferWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLDevice::sampleTimestamps:gpuTimestamp: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLRenderCommandEncoder::sampleCountersInBuffer:atSampleIndex:withBarrier: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectComputeCommand::setImageblockWidth:height: is REQUIRED and should be abstract
+
+## added (catch up to iOS) in tvOS 14.5 but can't be made abstract without breaking changes
+!incorrect-protocol-member! MTLBinaryArchive::addTileRenderPipelineFunctionsWithDescriptor:error: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::drawIndexedPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:controlPointIndexBuffer:controlPointIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::drawPatches:patchStart:patchCount:patchIndexBuffer:patchIndexBufferOffset:instanceCount:baseInstance:tessellationFactorBuffer:tessellationFactorBufferOffset:tessellationFactorBufferInstanceStride: is REQUIRED and should be abstract
+!incorrect-protocol-member! MTLIndirectRenderCommand::setRenderPipelineState: is REQUIRED and should be abstract

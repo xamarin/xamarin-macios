@@ -21,12 +21,11 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 
 	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.Common.targets" />
 
-	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.AppExtension.Common.props" 
-			Condition="'$(_XamarinAppExtensionCommonPropsHasBeenImported)' != 'true'" />
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Mac.AppExtension.Common.props" />
 
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets" 
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.targets')"/>
-	
+  
 	<!-- Override GetTargetPath, Build, and Rebuild -->
 	<Target Name="GetBundleTargetPath" DependsOnTargets="_GenerateBundleName;$(GetTargetPathDependsOn)" Outputs="@(_AppExtensionBundlePath)" />
 	<Target Name="Build"   Condition="'$(_InvalidConfigurationWarning)' != 'true'" DependsOnTargets="_EnabledLocalSigning;_GenerateBundleName;$(BuildDependsOn)" Outputs="$(_AppExtensionBundlePath)" />
@@ -34,29 +33,8 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 
 	<Target Name="_EnabledLocalSigning" DependsOnTargets="_DetectSigningIdentity">
 		<PropertyGroup>
-			<EnableCodeSigning Condition="'$(EnableCodeSigning)' != 'true'">true</EnableCodeSigning>
-			<_CodeSigningKey Condition="'$(_CodeSigningKey)' == ''">-</_CodeSigningKey>
-			<CodeSignEntitlements Condition="'$(CodeSignEntitlements)' == ''">Entitlements.plist</CodeSignEntitlements>
+			<CodesignEntitlements Condition="'$(CodesignEntitlements)' == ''">Entitlements.plist</CodesignEntitlements>
 		</PropertyGroup>
-	</Target>
-
-	<Target Name="_GenerateBundleName" DependsOnTargets="_DetectSigningIdentity">
-		<PropertyGroup>
-			<AppBundleDir Condition="'$(AppBundleDir)' == ''">$(OutputPath)$(DeviceSpecificOutputPath)$(_AppBundleName).appex</AppBundleDir>
-			<_AppBundlePath>$(AppBundleDir)\</_AppBundlePath>
-
-			<_AppResourcesPath>$(_AppBundlePath)Contents\Resources\</_AppResourcesPath>
-
-			<!-- needed for GetTargetPath/Build/Rebuild task outputs -->
-			<_AppExtensionBundlePath>$(MSBuildProjectDirectory)\$(AppBundleDir)</_AppExtensionBundlePath>
-		</PropertyGroup>
-		<ItemGroup>
-			<_AppExtensionBundlePath Include="$(MSBuildProjectDirectory)\$(AppBundleDir)">
-				<!-- We need this metadata to fix the source in VS -->
-				<BuildSessionId>$(BuildSessionId)</BuildSessionId>
-				<BuildServerPath>..\..\$(BuildAppName)\$(BuildSessionId)\$(AppBundleDir)</BuildServerPath>
-			</_AppExtensionBundlePath>
-		</ItemGroup>
 	</Target>
 
 	<Target Name="CreateIpa"/>

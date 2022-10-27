@@ -35,6 +35,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -71,14 +74,6 @@ namespace CoreMidi {
 		IDNotUnique = -10843,
 		NotPermitted = -10844
 	}
-
-#if !MONOMAC || !XAMCORE_4_0
-	// NSUInteger -> MIDINetworkSession.h
-	[Native]
-	public enum MidiNetworkConnectionPolicy : ulong {
-		NoOne, HostsInContactsList, Anyone
-	}
-#endif
 
 	[Flags]
 	// SInt32 - MIDIServices.h
@@ -142,7 +137,7 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiDeviceRef MIDIGetDevice (nint /* ItemCount = unsigned long */ item);
 
-		public static MidiDevice GetDevice (nint deviceIndex)
+		public static MidiDevice? GetDevice (nint deviceIndex)
 		{
 			var h = MIDIGetDevice (deviceIndex);
 			if (h == MidiObject.InvalidRef)
@@ -150,7 +145,7 @@ namespace CoreMidi {
 			return new MidiDevice (h);
 		}
 
-		public static MidiDevice GetExternalDevice (nint deviceIndex)
+		public static MidiDevice? GetExternalDevice (nint deviceIndex)
 		{
 			var h = MIDIGetExternalDevice (deviceIndex);
 			if (h == MidiObject.InvalidRef)
@@ -159,19 +154,16 @@ namespace CoreMidi {
 		}
 #endif // !COREBUILD
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiObject
-#if !XAMCORE_2_0
-  #if !COREBUILD
-	: IDisposable, INativeObject
-  #else
-	: INativeObject
-  #endif
-#else
-  #if !COREBUILD
+ #if !COREBUILD
 	: IDisposable
   #endif
-#endif
 	{
 #if !COREBUILD
 		internal const MidiObjectRef InvalidRef = 0;
@@ -225,6 +217,7 @@ namespace CoreMidi {
 		internal static IntPtr kMIDIDriverPropertyUsesSerial;
 		internal static IntPtr kMIDIPropertyFactoryPatchNameFile;
 		internal static IntPtr kMIDIPropertyUserPatchNameFile;
+		internal static IntPtr kMIDIPropertyNameConfigurationDictionary;
 
 		static MidiObject ()
 		{
@@ -276,17 +269,12 @@ namespace CoreMidi {
 			kMIDIDriverPropertyUsesSerial = Dlfcn.GetIntPtr (midiLibrary, "kMIDIDriverPropertyUsesSerial");
 			kMIDIPropertyFactoryPatchNameFile = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyFactoryPatchNameFile");
 			kMIDIPropertyUserPatchNameFile = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyUserPatchNameFile");
+			kMIDIPropertyNameConfigurationDictionary = Dlfcn.GetIntPtr (midiLibrary, "kMIDIPropertyNameConfigurationDictionary");
 		}
 	
-#if XAMCORE_2_0
 		public MidiObjectRef Handle {
 			get { return handle; }
 		}
-#else
-		public IntPtr Handle {
-			get { return (IntPtr) handle; }
-		}
-#endif
 
 		internal MidiObjectRef MidiHandle {
 			get { return handle; }
@@ -318,14 +306,14 @@ namespace CoreMidi {
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */  MIDIObjectGetDictionaryProperty (MidiObjectRef obj, IntPtr str, out IntPtr dict);
-		internal NSDictionary GetDictionary (IntPtr property)
+		internal NSDictionary? GetDictionary (IntPtr property)
 		{
 			IntPtr val;
 			int code;
 			
 			code = MIDIObjectGetDictionaryProperty (handle, property, out val);
 			if (code == 0) {
-				var dict = (NSDictionary) Runtime.GetNSObject (val);
+				var dict = Runtime.GetNSObject (val) as NSDictionary;
 				if (val != IntPtr.Zero)
 					CFObject.CFRelease (val);
 				return dict;
@@ -343,14 +331,14 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIObjectGetDataProperty (MidiObjectRef obj, IntPtr str, out IntPtr data);
 		
-		public NSData GetData (IntPtr property)
+		public NSData? GetData (IntPtr property)
 		{
 			IntPtr val;
 			int code;
 			
 			code = MIDIObjectGetDataProperty (handle, property, out val);
 			if (code == 0) {
-				var data = (NSData) Runtime.GetNSObject (val);
+				var data = Runtime.GetNSObject (val) as NSData;
 				if (val != IntPtr.Zero)
 					CFObject.CFRelease (val);
 				return data;
@@ -363,22 +351,22 @@ namespace CoreMidi {
 
 		public void SetData (IntPtr property, NSData data)
 		{
-			if (data == null)
-				throw new ArgumentNullException ("data");
+			if (data is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (data));
 			MIDIObjectSetDataProperty (handle, property, data.Handle);
 		}
 		
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIObjectGetStringProperty (MidiObjectRef obj, IntPtr str, out IntPtr data);
 		
-		public string GetString (IntPtr property)
+		public string? GetString (IntPtr property)
 		{
 			IntPtr val;
 			int code;
 			
 			code = MIDIObjectGetStringProperty (handle, property, out val);
 			if (code == 0){
-				var ret = NSString.FromHandle (val);
+				var ret = CFString.FromHandle (val);
 				if (val != IntPtr.Zero)
 					CFObject.CFRelease (val);
 				return ret;
@@ -391,8 +379,8 @@ namespace CoreMidi {
 
 		public void SetString (IntPtr property, string value)
 		{
-			if (value == null)
-				throw new ArgumentNullException ("value");
+			if (value is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 			using (var nsval = new NSString (value)){
 				MIDIObjectSetDictionaryProperty (handle, property, nsval.Handle);
 			}
@@ -410,24 +398,16 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIObjectGetProperties (MidiObjectRef obj, out IntPtr dict, [MarshalAs (UnmanagedType.U1)] bool deep);
 		
-		public NSDictionary GetDictionaryProperties (bool deep)
+		public NSDictionary? GetDictionaryProperties (bool deep)
 		{
 			IntPtr val;
 			if (MIDIObjectGetProperties (handle, out val, deep) != 0 || val == IntPtr.Zero)
 				return null;
-			var value = (NSDictionary) Runtime.GetNSObject (val);
+			var value = Runtime.GetNSObject (val) as NSDictionary;
 			CFObject.CFRelease (val);
 			return value;
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("Use the (int) overload instead.")]
-		public MidiObject (IntPtr handle)
-			: this ((int) handle, true)
-		{
-		}
-#endif
-			
 		public MidiObject (MidiObjectRef handle)
 		: this (handle, true)
 		{
@@ -459,11 +439,7 @@ namespace CoreMidi {
 			GC.SuppressFinalize (this);
 		}
 		
-#if XAMCORE_2_0
 		protected virtual void Dispose (bool disposing)
-#else
-		public virtual void Dispose (bool disposing)
-#endif
 		{
 			DisposeHandle ();
 		}
@@ -471,7 +447,7 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDIObjectFindByUniqueID (int /* MIDIUniqueID = SInt32 */ uniqueId, out MidiObjectRef obj, out MidiObjectType objectType);
 
-		static internal MidiObject MidiObjectFromType (MidiObjectType type, MidiObjectRef handle)
+		static internal MidiObject? MidiObjectFromType (MidiObjectType type, MidiObjectRef handle)
 		{
 			if (handle == MidiObject.InvalidRef)
 				return null;
@@ -497,7 +473,7 @@ namespace CoreMidi {
 			}
 		}
 
-		static public MidiError FindByUniqueId (int uniqueId, out MidiObject result)
+		static public MidiError FindByUniqueId (int uniqueId, out MidiObject? result)
 		{
 			MidiObjectRef handle;
 			MidiObjectType type;
@@ -512,6 +488,11 @@ namespace CoreMidi {
 #endif // !COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiException : Exception {
 		internal MidiException (MidiError code) : base (code == MidiError.NotPermitted ? "NotPermitted, does your app Info.plist include the 'audio' key in the UIBackgroundModes section?" : code.ToString ())
 		{
@@ -522,15 +503,39 @@ namespace CoreMidi {
 	}
 	
 	delegate void MidiNotifyProc (IntPtr message, IntPtr context);
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiClient : MidiObject {
 #if !COREBUILD
 		[DllImport (Constants.CoreMidiLibrary)]
+#if NET
+		unsafe extern static int /* OSStatus = SInt32 */ MIDIClientCreate (IntPtr str, delegate* unmanaged<IntPtr, IntPtr, void> callback, IntPtr context, out MidiObjectRef handle);
+#else
 		extern static int /* OSStatus = SInt32 */ MIDIClientCreate (IntPtr str, MidiNotifyProc callback, IntPtr context, out MidiObjectRef handle);
+#endif
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIClientDispose (MidiObjectRef handle);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDISourceCreate (MidiObjectRef handle, IntPtr name, out MidiObjectRef endpoint);
 			
@@ -551,7 +556,14 @@ namespace CoreMidi {
 		{
 			using (var nsstr = new NSString (name)){
 				gch = GCHandle.Alloc (this);
-				int code = MIDIClientCreate (nsstr.Handle, ClientCallback, GCHandle.ToIntPtr (gch), out handle);
+#if NET
+				int code = 0;
+				unsafe {
+					code = MIDIClientCreate (nsstr.Handle, &ClientCallback, GCHandle.ToIntPtr (gch), out handle);
+				}
+#else
+				int code = MIDIClientCreate (nsstr.Handle, static_MidiNotifyProc, GCHandle.ToIntPtr (gch), out handle);
+#endif
 				if (code != 0){
 					gch.Free ();
 					handle = MidiObject.InvalidRef;
@@ -567,25 +579,22 @@ namespace CoreMidi {
 			return Name;
 		}
 
-#if !XAMCORE_2_0
-		[Obsolete ("It is better to use 'CreateVirtualSource (string name, out MidiError statusCode)' to flag errors.")]
-		public MidiEndpoint CreateVirtualSource (string name)
-		{
-			using (var nsstr = new NSString (name)){
-				MidiObjectRef ret;
-				var code = MIDISourceCreate (handle, nsstr.Handle, out ret);
-				if (code != 0){
-					if (code == (int)MidiError.NotPermitted){
-						Console.WriteLine ("Does your Info.plist contain a UIBackgroundModes to contain the key 'audio'?");
-					}
-					return null;
-				}
-				return new MidiEndpoint (ret, true);
-			}			
-		}
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
-
-		public MidiEndpoint CreateVirtualSource (string name, out MidiError statusCode)
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
+		public MidiEndpoint? CreateVirtualSource (string name, out MidiError statusCode)
 		{
 			using (var nsstr = new NSString (name)){
 				MidiObjectRef ret;
@@ -599,7 +608,22 @@ namespace CoreMidi {
 			}			
 		}
 
-		public MidiEndpoint CreateVirtualDestination (string name, out MidiError status)
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
+		public MidiEndpoint? CreateVirtualDestination (string name, out MidiError status)
 		{
 			var m = new MidiEndpoint (this, name, out status);
 			if (status == MidiError.Ok)
@@ -619,67 +643,80 @@ namespace CoreMidi {
 			return new MidiPort (this, name, false);
 		}
 
-		public event EventHandler SetupChanged;
-		public event EventHandler<ObjectAddedOrRemovedEventArgs> ObjectAdded;
-		public event EventHandler<ObjectAddedOrRemovedEventArgs> ObjectRemoved;
-		public event EventHandler<ObjectPropertyChangedEventArgs> PropertyChanged;
-		public event EventHandler ThruConnectionsChanged;
-		public event EventHandler SerialPortOwnerChanged;
-		public event EventHandler<IOErrorEventArgs> IOError;
-		
+		public event EventHandler? SetupChanged;
+		public event EventHandler<ObjectAddedOrRemovedEventArgs>? ObjectAdded;
+		public event EventHandler<ObjectAddedOrRemovedEventArgs>? ObjectRemoved;
+		public event EventHandler<ObjectPropertyChangedEventArgs>? PropertyChanged;
+		public event EventHandler? ThruConnectionsChanged;
+		public event EventHandler? SerialPortOwnerChanged;
+		public event EventHandler<IOErrorEventArgs>? IOError;
+#if !NET
+		static MidiNotifyProc? _static_MidiNotifyProc;
+		static MidiNotifyProc static_MidiNotifyProc {
+			get {
+				if (_static_MidiNotifyProc is null)
+					_static_MidiNotifyProc = new MidiNotifyProc (ClientCallback);
+				return _static_MidiNotifyProc;
+			}
+		}
+#endif
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (MidiNotifyProc))]
 #endif
+#endif // if NET
 		static void ClientCallback (IntPtr message, IntPtr context)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
-			MidiClient client = (MidiClient) gch.Target;
+			MidiClient? client = gch.Target as MidiClient;
 
 			var id = (MidiNotificationMessageId) Marshal.ReadInt32 (message); // SInt32
 			switch (id){
 			case MidiNotificationMessageId.SetupChanged:
-				var esc = client.SetupChanged;
-				if (esc != null)
+				var esc = client?.SetupChanged;
+				if (esc is not null)
 					esc (client, EventArgs.Empty);
 				break;
 			case MidiNotificationMessageId.ObjectAdded:
-				var eoa = client.ObjectAdded;
-				if (eoa != null){
-					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification));
+				var eoa = client?.ObjectAdded;
+				if (eoa is not null){
+					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification))!;
 					eoa (client, new ObjectAddedOrRemovedEventArgs (MidiObjectFromType (data.ParentType, data.Parent),
 											MidiObjectFromType (data.ChildType, data.Child)));
 				}
 				break;
 			case MidiNotificationMessageId.ObjectRemoved:
-				var eor = client.ObjectRemoved;
-				if (eor != null){
-					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification));
+				var eor = client?.ObjectRemoved;
+				if (eor is not null){
+					var data = (MidiObjectAddRemoveNotification) Marshal.PtrToStructure (message, typeof (MidiObjectAddRemoveNotification))!;
 					eor (client, new ObjectAddedOrRemovedEventArgs (MidiObjectFromType (data.ParentType, data.Parent),
 											MidiObjectFromType (data.ChildType, data.Child)));
 				}
 				break;
 			case MidiNotificationMessageId.PropertyChanged:
-				var epc = client.PropertyChanged;
-				if (epc != null){
-					var data = (MidiObjectPropertyChangeNotification) Marshal.PtrToStructure (message, typeof (MidiObjectPropertyChangeNotification));
+				var epc = client?.PropertyChanged;
+				if (epc is not null){
+					var data = (MidiObjectPropertyChangeNotification) Marshal.PtrToStructure (message, typeof (MidiObjectPropertyChangeNotification))!;
 					epc (client, new ObjectPropertyChangedEventArgs (
-						     MidiObjectFromType (data.ObjectType, data.ObjectHandle), NSString.FromHandle (data.PropertyName)));
+						     MidiObjectFromType (data.ObjectType, data.ObjectHandle), CFString.FromHandle (data.PropertyName)));
 				}
 				break;
 			case MidiNotificationMessageId.ThruConnectionsChanged:
-				var e = client.ThruConnectionsChanged;
-				if (e != null)
+				var e = client?.ThruConnectionsChanged;
+				if (e is not null)
 					e (client, EventArgs.Empty);
 				break;
 			case MidiNotificationMessageId.SerialPortOwnerChanged:
-				e = client.SerialPortOwnerChanged;
-				if (e != null)
+				e = client?.SerialPortOwnerChanged;
+				if (e is not null)
 					e (client, EventArgs.Empty);
 				break;
 			case MidiNotificationMessageId.IOError:
-				var eio = client.IOError;
-				if (eio != null){
-					var data = (MidiIOErrorNotification) Marshal.PtrToStructure (message, typeof (MidiIOErrorNotification));
+				var eio = client?.IOError;
+				if (eio is not null){
+					var data = (MidiIOErrorNotification) Marshal.PtrToStructure (message, typeof (MidiIOErrorNotification))!;
 					eio (client, new IOErrorEventArgs (new MidiDevice (data.DeviceRef), data.ErrorCode));
 				}
 				break;
@@ -689,11 +726,7 @@ namespace CoreMidi {
 			}
 		}
 
-#if XAMCORE_2_0
 		protected override void Dispose (bool disposing)
-#else
-		public override void Dispose (bool disposing)
-#endif
 		{
 			SetupChanged = null;
 			ObjectAdded = null;
@@ -739,6 +772,11 @@ namespace CoreMidi {
 	// We do not pack this structure since we do not really actually marshal it,
 	// we manually encode it and decode it using Marshal.{Read|Write}
 	//
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiPacket
 #if !COREBUILD
 		: IDisposable
@@ -747,7 +785,7 @@ namespace CoreMidi {
 #if !COREBUILD
 		public long TimeStamp;
 		IntPtr byteptr;
-		byte [] bytes;
+		byte [] bytes = Array.Empty<byte> ();
 		int    start;
 		public ushort Length;
 
@@ -768,8 +806,8 @@ namespace CoreMidi {
 		
 		MidiPacket (long timestamp, byte [] bytes, int start, int length, bool check)
 		{
-			if (bytes == null)
-				throw new ArgumentNullException ("bytes");
+			if (bytes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			if (length > UInt16.MaxValue)
 				throw new ArgumentException ("length is bigger than 64k");
 			
@@ -813,7 +851,7 @@ namespace CoreMidi {
 
 		public IntPtr Bytes {
 			get {
-				if (bytes == null)
+				if (bytes is null)
 					return byteptr;
 				unsafe {
 					fixed (byte *p = &bytes [start]){
@@ -828,15 +866,17 @@ namespace CoreMidi {
 			/*
 			 * IMPORTANT:
 			 *     On Intel and PowerPC, MIDIPacket is unaligned.
-			 *     On ARM, MIDIPacket must be 4-byte aligned.
+			 *     On ARM/ARM64, MIDIPacket must be 4-byte aligned.
 			 */
-#if !MONOMAC
-			if (ObjCRuntime.Runtime.Arch == ObjCRuntime.Arch.DEVICE) {
+			var aligned = Runtime.IsARM64CallingConvention;
+#if !MONOMAC && !__MACCATALYST__
+			aligned |= ObjCRuntime.Runtime.Arch == ObjCRuntime.Arch.DEVICE;
+#endif
+			if (aligned) {
 				// align to 4 bytes.
 				payload_length += 10;
 				return ((payload_length + 3) & (~3));
 			}
-#endif
 			return 10 + payload_length;
 		}
 
@@ -883,7 +923,7 @@ namespace CoreMidi {
 			return packets;
 		}
 
-		internal static IntPtr CreatePacketList (MidiPacket [] packets)
+		internal unsafe static IntPtr CreatePacketList (MidiPacket [] packets)
 		{
 			// calculate the total size of the data.
 			int size = 4;
@@ -895,16 +935,18 @@ namespace CoreMidi {
 			Marshal.WriteInt32 (buffer, 0, packets.Length);
 			int dest = 4;
 			for (int i = 0; i < packets.Length; i++) {
-				Marshal.WriteInt64 (buffer, dest, packets [i].TimeStamp);
+				var packet = packets [i];
+				var packet_size = packet.Length;
+				Marshal.WriteInt64 (buffer, dest, packet.TimeStamp);
 				dest += 8;
-				Marshal.WriteInt16 (buffer, dest, (short) packets [i].Length);
+				Marshal.WriteInt16 (buffer, dest, (short) packet_size);
 				dest += 2;
-				if (packets [i].ByteArray == null) {
-					Runtime.memcpy (buffer + dest, packets [i].BytePointer, packets [i].Length);
+				if (packet.ByteArray is null) {
+					Buffer.MemoryCopy ((void*) packet.BytePointer, (void*) (buffer + dest), packet_size, packet_size);
 				} else {
-					Marshal.Copy (packets [i].ByteArray, packets [i].start, buffer + dest, packets [i].Length);
+					Marshal.Copy (packet.ByteArray, packet.start, buffer + dest, packet_size);
 				}
-				dest += GetPacketLength (packets [i].Length) - 10;
+				dest += GetPacketLength (packet_size) - 10;
 			}
 			return buffer;
 		}
@@ -912,12 +954,37 @@ namespace CoreMidi {
 	}
 
 	delegate void MidiReadProc (IntPtr packetList, IntPtr context, IntPtr srcPtr);
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiPort : MidiObject {
 #if !COREBUILD
+
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
+#if NET
+		[DllImport (Constants.CoreMidiLibrary)]
+		extern unsafe static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> readProc, IntPtr context, MidiPortRef* midiPort);
+#else
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIInputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, MidiReadProc readProc, IntPtr context, out MidiPortRef midiPort);
-
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIOutputPortCreate (MidiClientRef client, IntPtr /* CFStringRef */ portName, out MidiPortRef midiPort);
 
@@ -933,10 +1000,19 @@ namespace CoreMidi {
 				GCHandle gch = GCHandle.Alloc (this);
 				int code;
 				
-				if (input)
-					code = MIDIInputPortCreate (client.handle, nsstr.Handle, Read, GCHandle.ToIntPtr (gch), out handle);
-				else
+				if (input) {
+#if NET
+					unsafe {
+						MidiPortRef tempHandle;
+						code = MIDIInputPortCreate (client.handle, nsstr.Handle, &Read, GCHandle.ToIntPtr (gch), &tempHandle);
+						handle = tempHandle;
+					}
+#else
+					code = MIDIInputPortCreate (client.handle, nsstr.Handle, static_MidiReadProc, GCHandle.ToIntPtr (gch), out handle);
+#endif
+				} else {
 					code = MIDIOutputPortCreate (client.handle, nsstr.Handle, out handle);
+				}
 				
 				if (code != 0){
 					gch.Free ();
@@ -963,30 +1039,40 @@ namespace CoreMidi {
 				gch.Free ();
 		}
 
-#if XAMCORE_2_0
 		protected override void Dispose (bool disposing)
-#else
-		public override void Dispose (bool disposing)
-#endif
 		{
 			MessageReceived = null;
 			base.Dispose (disposing);
 		}
 		
-		public event EventHandler<MidiPacketsEventArgs> MessageReceived;
+		public event EventHandler<MidiPacketsEventArgs>? MessageReceived;
 		
+#if !NET
+		static MidiReadProc? _static_MidiReadProc;
+		static MidiReadProc static_MidiReadProc {
+			get {
+				if (_static_MidiReadProc is null)
+					_static_MidiReadProc = new MidiReadProc (Read);
+				return _static_MidiReadProc;
+			}
+		}
+#endif
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (MidiReadProc))]
 #endif
+#endif // if NET
 		static void Read (IntPtr packetList, IntPtr context, IntPtr srcPtr)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
-			MidiPort port = (MidiPort) gch.Target;
 
-			var e = port.MessageReceived;
-			if (e != null) {
-				using (var args = new MidiPacketsEventArgs (packetList)) {
-					e (port, args);
+			if (gch.Target is MidiPort port) {
+				var e = port.MessageReceived;
+				if (e is not null) {
+					using (var args = new MidiPacketsEventArgs (packetList))
+						e (port, args);
 				}
 			}
 		}
@@ -999,15 +1085,15 @@ namespace CoreMidi {
 
 		public MidiError ConnectSource (MidiEndpoint endpoint)
 		{
-			if (endpoint == null)
-				throw new ArgumentNullException ("endpoint");
+			if (endpoint is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			return (MidiError) MIDIPortConnectSource (handle, endpoint.handle, GCHandle.ToIntPtr (gch));
 		}
 
 		public MidiError Disconnect (MidiEndpoint endpoint)
 		{
-			if (endpoint == null)
-				throw new ArgumentNullException ("endpoint");
+			if (endpoint is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
 			return (MidiError) MIDIPortDisconnectSource (handle, endpoint.handle);
 		}
 		
@@ -1016,15 +1102,45 @@ namespace CoreMidi {
 			return (input ? "[input:" : "[output:") + Client + ":" + PortName + "]";
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDISend (MidiPortRef port, MidiEndpointRef endpoint, IntPtr packets);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		public MidiError Send (MidiEndpoint endpoint, MidiPacket [] packets)
 		{
-			if (endpoint == null)
-				throw new ArgumentNullException ("endpoint");
-			if (packets == null)
-				throw new ArgumentNullException ("packets");
+			if (endpoint is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (endpoint));
+			if (packets is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (packets));
 			var p = MidiPacket.CreatePacketList (packets);
 			var code = MIDISend (handle, endpoint.handle, p);
 			Marshal.FreeHGlobal (p);
@@ -1033,6 +1149,11 @@ namespace CoreMidi {
 #endif // !COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiEntity : MidiObject {
 #if !COREBUILD
 		internal MidiEntity (MidiEntityRef handle) : base (handle)
@@ -1049,7 +1170,7 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiEndpointRef MIDIEntityGetSource (MidiEntityRef entity, nint idx);
 		
-		public MidiEndpoint GetDestination (nint idx)
+		public MidiEndpoint? GetDestination (nint idx)
 		{
 			var dest = MIDIEntityGetDestination (handle, idx);
 			if (dest == MidiObject.InvalidRef)
@@ -1057,7 +1178,7 @@ namespace CoreMidi {
 			return new MidiEndpoint (dest, false);
 		}
 
-		public MidiEndpoint GetSource (nint idx)
+		public MidiEndpoint? GetSource (nint idx)
 		{
 			var dest = MIDIEntityGetSource (handle, idx);
 			if (dest == MidiObject.InvalidRef)
@@ -1086,7 +1207,7 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIEntityGetDevice (MidiEntityRef handle, out MidiDeviceRef devRef);
 
-		public MidiDevice Device {
+		public MidiDevice? Device {
 			get {
 				MidiEntityRef res;
 				if (MIDIEntityGetDevice (handle, out res) == 0)
@@ -1122,11 +1243,13 @@ namespace CoreMidi {
 			}
 		}
 
-		public NSData ConnectionUniqueIDData {
+		public NSData? ConnectionUniqueIDData {
 			get {
 				return GetData (kMIDIPropertyConnectionUniqueID);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetData (kMIDIPropertyConnectionUniqueID, value);
 			}
 		}
@@ -1140,20 +1263,24 @@ namespace CoreMidi {
 			}
 		}
 
-		public string DisplayName {
+		public string? DisplayName {
 			get {
 				return GetString (kMIDIPropertyDisplayName);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyDisplayName, value);
 			}
 		}
 
-		public string DriverOwner {
+		public string? DriverOwner {
 			get {
 				return GetString (kMIDIPropertyDriverOwner);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyDriverOwner, value);
 			}
 		}
@@ -1167,7 +1294,6 @@ namespace CoreMidi {
 			}
 		}
 
-#if XAMCORE_2_0
 		public bool IsBroadcast {
 			get {
 				return GetInt (kMIDIPropertyIsBroadcast) != 0;
@@ -1176,16 +1302,6 @@ namespace CoreMidi {
 				SetInt (kMIDIPropertyIsBroadcast, value ? 1 : 0);
 			}
 		}
-#else
-		public int IsBroadcast {
-			get {
-				return GetInt (kMIDIPropertyIsBroadcast);
-			}
-			set {
-				SetInt (kMIDIPropertyIsBroadcast, value);
-			}
-		}
-#endif
 
 		public bool IsDrumMachine {
 			get {
@@ -1250,29 +1366,35 @@ namespace CoreMidi {
 			}
 		}
 
-		public string Model {
+		public string? Model {
 			get {
 				return GetString (kMIDIPropertyModel);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyModel, value);
 			}
 		}
 
-		public string Name {
+		public string? Name {
 			get {
 				return GetString (kMIDIPropertyName);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyName, value);
 			}
 		}
 
-		public NSDictionary NameConfiguration {
+		public NSDictionary? NameConfiguration {
 			get {
 				return GetDictionary (kMIDIPropertyNameConfiguration);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetDictionary (kMIDIPropertyNameConfiguration, value);
 			}
 		}
@@ -1441,6 +1563,11 @@ namespace CoreMidi {
 #endif // !COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiDevice : MidiObject {
 #if !COREBUILD
 		[DllImport (Constants.CoreMidiLibrary)]
@@ -1449,11 +1576,25 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiEntityRef MIDIDeviceGetEntity (MidiDeviceRef handle, nint item);
 
-		[NoiOS]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
-		extern static int MIDIDeviceAddEntity (MidiDeviceRef device, /* CFString */ IntPtr name, bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntityRef newEntity);
+		extern static int MIDIDeviceAddEntity (MidiDeviceRef device, /* CFString */ IntPtr name, [MarshalAs (UnmanagedType.U1)] bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntityRef newEntity);
 
-		public MidiEntity GetEntity (nint entityIndex)
+		public MidiEntity? GetEntity (nint entityIndex)
 		{
 			if (handle == MidiObject.InvalidRef)
 				throw new ObjectDisposedException ("handle");
@@ -1463,7 +1604,17 @@ namespace CoreMidi {
 			return new MidiEntity (h);
 		}
 
-		[NoiOS]
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+#endif
 		public int Add (string name, bool embedded, nuint numSourceEndpoints, nuint numDestinationEndpoints, MidiEntity newEntity)
 		{
 			if (handle == MidiObject.InvalidRef)
@@ -1479,20 +1630,24 @@ namespace CoreMidi {
 			}
 		}
 			
-		public string Image {
+		public string? Image {
 			get {
 				return GetString (kMIDIPropertyImage);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyImage, value);
 			}
 		}
 
-		public string DriverDeviceEditorApp {
+		public string? DriverDeviceEditorApp {
 			get {
 				return GetString (kMIDIPropertyDriverDeviceEditorApp);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyDriverDeviceEditorApp, value);
 			}
 		}
@@ -1524,24 +1679,46 @@ namespace CoreMidi {
 			}
 		}
 
-		public string FactoryPatchNameFile {
+		public string? FactoryPatchNameFile {
 			get {
 				return GetString (kMIDIPropertyFactoryPatchNameFile);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyFactoryPatchNameFile, value);
 			}
 		}
 
-		public string UserPatchNameFile {
+		public string? UserPatchNameFile {
 			get {
 				return GetString (kMIDIPropertyUserPatchNameFile);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyUserPatchNameFile, value);
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[Mac (10,15)]
+		[iOS (13,0)]
+#endif
+		public string? NameConfigurationDictionary {
+			get {
+				return GetString (kMIDIPropertyNameConfigurationDictionary);
+			}
+			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
+				SetString (kMIDIPropertyNameConfigurationDictionary, value);
+			}
+		}
 
 		public int AdvanceScheduleTimeMuSec {
 			get {
@@ -1570,11 +1747,13 @@ namespace CoreMidi {
 			}
 		}
 
-		public NSData ConnectionUniqueIDData {
+		public NSData? ConnectionUniqueIDData {
 			get {
 				return GetData (kMIDIPropertyConnectionUniqueID);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetData (kMIDIPropertyConnectionUniqueID, value);
 			}
 		}
@@ -1588,20 +1767,24 @@ namespace CoreMidi {
 			}
 		}
 
-		public string DisplayName {
+		public string? DisplayName {
 			get {
 				return GetString (kMIDIPropertyDisplayName);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyDisplayName, value);
 			}
 		}
 
-		public string DriverOwner {
+		public string? DriverOwner {
 			get {
 				return GetString (kMIDIPropertyDriverOwner);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyDriverOwner, value);
 			}
 		}
@@ -1645,11 +1828,13 @@ namespace CoreMidi {
 			}
 		}
 
-		public string Manufacturer {
+		public string? Manufacturer {
 			get {
 				return GetString (kMIDIPropertyManufacturer);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyManufacturer, value);
 			}
 		}
@@ -1687,29 +1872,35 @@ namespace CoreMidi {
 			}
 		}
 
-		public string Model {
+		public string? Model {
 			get {
 				return GetString (kMIDIPropertyModel);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyModel, value);
 			}
 		}
 
-		public string Name {
+		public string? Name {
 			get {
 				return GetString (kMIDIPropertyName);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyName, value);
 			}
 		}
 
-		public NSDictionary NameConfiguration {
+		public NSDictionary? NameConfiguration {
 			get {
 				return GetDictionary (kMIDIPropertyNameConfiguration);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetDictionary (kMIDIPropertyNameConfiguration, value);
 			}
 		}
@@ -1886,6 +2077,11 @@ namespace CoreMidi {
 #endif // !COREBUILD
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiDeviceList : MidiObject {
 
 #if !COREBUILD
@@ -1916,7 +2112,7 @@ namespace CoreMidi {
 			return MIDIDeviceListGetNumberOfDevices (handle);
 		}
 
-		public MidiDevice Get (nuint index)
+		public MidiDevice? Get (nuint index)
 		{
 			if (handle == MidiObject.InvalidRef)
 				throw new ObjectDisposedException ("handle");
@@ -1944,7 +2140,12 @@ namespace CoreMidi {
 
 #endif // !COREBUILD
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiEndpoint : MidiObject {
 #if !COREBUILD
 		GCHandle gch;
@@ -1952,12 +2153,47 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIEndpointDispose (MidiEndpointRef handle);
 		
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
+#if NET
+		[DllImport (Constants.CoreMidiLibrary)]
+		extern unsafe static MidiError /* OSStatus = SInt32 */ MIDIDestinationCreate (MidiClientRef client, IntPtr /* CFStringRef */ name, delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> readProc, IntPtr context, MidiEndpointRef* midiEndpoint);
+#else
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDIDestinationCreate (MidiClientRef client, IntPtr /* CFStringRef */ name, MidiReadProc readProc, IntPtr context, out MidiEndpointRef midiEndpoint);
+#endif
 
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIFlushOutput (MidiEndpointRef handle);
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static MidiError /* OSStatus = SInt32 */ MIDIReceived (MidiEndpointRef handle, IntPtr /* MIDIPacketList* */ packetList);
 		
@@ -1995,7 +2231,7 @@ namespace CoreMidi {
 			EndpointName = endpointName;
 		}
 
-		public static MidiEndpoint GetSource (nint sourceIndex)
+		public static MidiEndpoint? GetSource (nint sourceIndex)
 		{
 			var h = MIDIGetSource (sourceIndex);
 			if (h == MidiObject.InvalidRef)
@@ -2003,7 +2239,7 @@ namespace CoreMidi {
 			return new MidiEndpoint (h, "Source" + sourceIndex, false);
 		}
 
-		public static MidiEndpoint GetDestination (nint destinationIndex)
+		public static MidiEndpoint? GetDestination (nint destinationIndex)
 		{
 			var h = MIDIGetDestination (destinationIndex);
 			if (h == MidiObject.InvalidRef)
@@ -2015,35 +2251,53 @@ namespace CoreMidi {
 		{
 			using (var nsstr = new NSString (name)){
 				GCHandle gch = GCHandle.Alloc (this);
-				
-				code = MIDIDestinationCreate (client.handle, nsstr.Handle, Read, GCHandle.ToIntPtr (gch), out handle);
+#if NET
+				unsafe {
+					MidiEndpointRef tempHandle;
+					code = MIDIDestinationCreate (client.handle, nsstr.Handle, &Read, GCHandle.ToIntPtr (gch), &tempHandle);
+					handle = tempHandle;
+				}
+#else				
+				code = MIDIDestinationCreate (client.handle, nsstr.Handle, static_MidiReadProc, GCHandle.ToIntPtr (gch), out handle);
+#endif
 				EndpointName = name;
 			}
 		}
 
-#if XAMCORE_2_0
 		protected override void Dispose (bool disposing)
-#else
-		public override void Dispose (bool disposing)
-#endif
 		{
 			MessageReceived = null;
 			base.Dispose (disposing);
 		}
 		
-		public event EventHandler<MidiPacketsEventArgs> MessageReceived;
+		public event EventHandler<MidiPacketsEventArgs>? MessageReceived;
+#if !NET
+		static MidiReadProc? _static_MidiReadProc;
+		static MidiReadProc static_MidiReadProc {
+			get {
+				if (_static_MidiReadProc is null)
+					_static_MidiReadProc = new MidiReadProc (Read);
+				return _static_MidiReadProc;
+			}
+		}
+#endif
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (MidiReadProc))]
 #endif
+#endif // if NET
 		static void Read (IntPtr packetList, IntPtr context, IntPtr srcPtr)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (context);
-			MidiEndpoint port = (MidiEndpoint) gch.Target;
 
-			var e = port.MessageReceived;
-			if (e != null)
-				e (port, new MidiPacketsEventArgs (packetList));
+			if (gch.Target is MidiEndpoint port) {
+				var e = port.MessageReceived;
+				if (e is not null)
+					e (port, new MidiPacketsEventArgs (packetList));
+			}
 		}
 
 		public void FlushOutput ()
@@ -2051,10 +2305,25 @@ namespace CoreMidi {
 			MIDIFlushOutput (handle);
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos11.0")]
+		[UnsupportedOSPlatform ("ios14.0")]
+#if MONOMAC
+		[Obsolete ("Starting with macos11.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#elif IOS
+		[Obsolete ("Starting with ios14.0.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
+		[Deprecated (PlatformName.iOS, 14,0)]
+		[Deprecated (PlatformName.MacOSX, 11,0)]
+#endif
 		public MidiError Received (MidiPacket [] packets)
 		{
-			if (packets == null)
-				throw new ArgumentNullException ("packets");
+			if (packets is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (packets));
 
 			var block = MidiPacket.CreatePacketList (packets);
 			var code = MIDIReceived (handle, block);
@@ -2065,7 +2334,7 @@ namespace CoreMidi {
 		[DllImport (Constants.CoreMidiLibrary)]
 		extern static int /* OSStatus = SInt32 */ MIDIEndpointGetEntity (MidiEndpointRef endpoint, out MidiEntityRef entity);
 		
-		public MidiEntity Entity {
+		public MidiEntity? Entity {
 			get {
 				MidiEntityRef entity;
 				var code = MIDIEndpointGetEntity (handle, out entity);
@@ -2078,7 +2347,7 @@ namespace CoreMidi {
 		public bool IsNetworkSession {
 			get {
 				using (var dict =  GetDictionaryProperties (true)){
-					if (dict == null)
+					if (dict is null)
 						return false;
 					
 					using (var key = new NSString ("apple.midirtp.session"))
@@ -2105,29 +2374,35 @@ namespace CoreMidi {
 			}
 		}
 
-		public NSData ConnectionUniqueIDData {
+		public NSData? ConnectionUniqueIDData {
 			get {
 				return GetData (kMIDIPropertyConnectionUniqueID);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetData (kMIDIPropertyConnectionUniqueID, value);
 			}
 		}
 
-		public string DisplayName {
+		public string? DisplayName {
 			get {
 				return GetString (kMIDIPropertyDisplayName);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyDisplayName, value);
 			}
 		}
 
-		public string DriverOwner {
+		public string? DriverOwner {
 			get {
 				return GetString (kMIDIPropertyDriverOwner);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyDriverOwner, value);
 			}
 		}
@@ -2141,7 +2416,6 @@ namespace CoreMidi {
 			}
 		}
 
-#if XAMCORE_2_0
 		public bool IsBroadcast {
 			get {
 				return GetInt (kMIDIPropertyIsBroadcast) != 0;
@@ -2150,22 +2424,14 @@ namespace CoreMidi {
 				SetInt (kMIDIPropertyIsBroadcast, value ? 1 : 0);
 			}
 		}
-#else
-		public int IsBroadcast {
-			get {
-				return GetInt (kMIDIPropertyIsBroadcast);
-			}
-			set {
-				SetInt (kMIDIPropertyIsBroadcast, value);
-			}
-		}
-#endif
 
-		public string Manufacturer {
+		public string? Manufacturer {
 			get {
 				return GetString (kMIDIPropertyManufacturer);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyManufacturer, value);
 			}
 		}
@@ -2185,20 +2451,24 @@ namespace CoreMidi {
 			}
 		}
 
-		public string Name {
+		public string? Name {
 			get {
 				return GetString (kMIDIPropertyName);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetString (kMIDIPropertyName, value);
 			}
 		}
 
-		public NSDictionary NameConfiguration {
+		public NSDictionary? NameConfiguration {
 			get {
 				return GetDictionary (kMIDIPropertyNameConfiguration);
 			}
 			set {
+				if (value is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (value));
 				SetDictionary (kMIDIPropertyNameConfiguration, value);
 			}
 		}
@@ -2257,26 +2527,41 @@ namespace CoreMidi {
 	//
 	// The notification EventArgs
 	//
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class ObjectAddedOrRemovedEventArgs : EventArgs {
-		public ObjectAddedOrRemovedEventArgs (MidiObject parent, MidiObject child)
+		public ObjectAddedOrRemovedEventArgs (MidiObject? parent, MidiObject? child)
 		{
 			Parent = parent;
 			Child = child;
 		}
-		public MidiObject Parent { get; private set; }
-		public MidiObject Child { get; private set; }
+		public MidiObject? Parent { get; private set; }
+		public MidiObject? Child { get; private set; }
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class ObjectPropertyChangedEventArgs : EventArgs {
-		public ObjectPropertyChangedEventArgs (MidiObject midiObject, string propertyName)
+		public ObjectPropertyChangedEventArgs (MidiObject? midiObject, string? propertyName)
 		{
 			MidiObject = midiObject;
 			PropertyName = propertyName;
 		}
-		public MidiObject MidiObject { get; private set; }
-		public string PropertyName { get; private set; }
+		public MidiObject? MidiObject { get; private set; }
+		public string? PropertyName { get; private set; }
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class IOErrorEventArgs : EventArgs {
 		public IOErrorEventArgs (MidiDevice device, int errorCode)
 		{
@@ -2287,6 +2572,11 @@ namespace CoreMidi {
 		public int ErrorCode { get; set; }
 	}
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MidiPacketsEventArgs : EventArgs
 #if !COREBUILD
 		, IDisposable
@@ -2294,7 +2584,7 @@ namespace CoreMidi {
 		{
 #if !COREBUILD
 		IntPtr packetList;
-		MidiPacket [] list;
+		MidiPacket []? list;
 
 		internal MidiPacketsEventArgs (IntPtr packetList)
 		{
@@ -2314,7 +2604,7 @@ namespace CoreMidi {
 
 		public MidiPacket [] Packets {
 			get {
-				if (list == null)
+				if (list is null)
 					list = MidiPacket.ReadPacketList (packetList);
 				return list;
 			}
@@ -2330,7 +2620,7 @@ namespace CoreMidi {
 		{
 			// The list of packets may have pointers into packetList, make sure
 			// we invalidate those pointers.
-			if (list != null) {
+			if (list is not null) {
 				foreach (var packet in list)
 					packet.Dispose ();
 			}

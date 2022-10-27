@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,9 +15,11 @@ namespace Extrospection {
 		{
 		}
 
-		public void Execute (string pchFile, IEnumerable<string> assemblyNames)
+		public void Execute (string pchFile, IEnumerable<string> assemblyNames, string outputDirectory = "")
 		{
 			var managed_reader = new AssemblyReader () {
+				new MapNamesVisitor (), // must come first to map managed and native names.
+				new ReleaseAttributeCheck (),
 				new DesignatedInitializerCheck (),
 				new DllImportCheck (),
 				new EnumCheck (),
@@ -28,20 +30,26 @@ namespace Extrospection {
 				new SimdCheck (),
 				new RequiresSuperCheck (),
 				new DeprecatedCheck (),
+				new NullabilityCheck (),
+				new UIAppearanceCheck (),
 //				new ListNative (), // for debug
 			};
 			foreach (var assemblyName in assemblyNames) {
 				var name = Path.GetFileNameWithoutExtension (assemblyName);
 				if (name.EndsWith (".iOS", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.iOS;
-				else if (name.EndsWith (".Mac", StringComparison.Ordinal))
+				else if (name.EndsWith (".Mac", StringComparison.Ordinal) || name.EndsWith (".macOS", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.macOS;
 				else if (name.EndsWith (".WatchOS", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.watchOS;
-				else if (name.EndsWith (".TVOS", StringComparison.Ordinal))
+				else if (name.EndsWith (".TVOS", StringComparison.Ordinal) || name.EndsWith (".tvOS", StringComparison.Ordinal))
 					Helpers.Platform = Platforms.tvOS;
+				else if (name.EndsWith (".MacCatalyst", StringComparison.Ordinal))
+					Helpers.Platform = Platforms.MacCatalyst;
+				Helpers.IsDotNet = assemblyName.Contains ("/runtimes/");
 				managed_reader.Load (assemblyName);
 			}
+			managed_reader.Process ();
 
 			var reader = new AstReader ();
 			foreach (var v in managed_reader) {
@@ -54,23 +62,36 @@ namespace Extrospection {
 
 			managed_reader.End ();
 
-			Log.Save ();
+			Log.Save (outputDirectory);
 		}
 	}
 
 	class AssemblyReader : IEnumerable<BaseVisitor> {
 
+		HashSet<AssemblyDefinition> assemblies = new HashSet<AssemblyDefinition> ();
+		DefaultAssemblyResolver resolver = new DefaultAssemblyResolver ();
+
 		public void Load (string filename)
 		{
-			var ad = AssemblyDefinition.ReadAssembly (filename);
-			foreach (var v in Visitors) {
-				v.VisitManagedAssembly (ad);
-				foreach (var module in ad.Modules) {
-					v.VisitManagedModule (module);
-					if (!module.HasTypes)
-						continue;
-					foreach (var td in module.Types)
-						ProcessType (v, td);
+			resolver.AddSearchDirectory (Path.GetDirectoryName (filename));
+			ReaderParameters rp = new ReaderParameters () {
+				AssemblyResolver = resolver
+			};
+			assemblies.Add (AssemblyDefinition.ReadAssembly (filename, rp));
+		}
+
+		public void Process ()
+		{
+			foreach (var ad in assemblies) {
+				foreach (var v in Visitors) {
+					v.VisitManagedAssembly (ad);
+					foreach (var module in ad.Modules) {
+						v.VisitManagedModule (module);
+						if (!module.HasTypes)
+							continue;
+						foreach (var td in module.Types)
+							ProcessType (v, td);
+					}
 				}
 			}
 		}

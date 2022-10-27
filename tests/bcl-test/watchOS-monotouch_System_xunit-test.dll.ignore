@@ -1,0 +1,24 @@
+# System.Net.FtpWebRequestCreator is not supported on the current platform.
+System.Net.Tests.FtpWebRequestTest.Ctor_VerifyDefaults_Success
+
+# System.PlatformNotSupportedException, mono issue: https://github.com/mono/mono/issues/15265
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: null)
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=utf-8")
+System.Net.Tests.TaskWebClientTest.DownloadString_Success(contentType: "text/html; charset=us-ascii")
+System.Net.Tests.TaskWebClientTest.DownloadData_LargeData_Success
+System.Net.Tests.TaskWebClientTest.OpenRead_Success
+System.Net.Tests.TaskWebClientTest.DownloadFile_Success
+System.Net.Tests.TaskWebClientTest.DownloadData_Success
+System.Net.Tests.WebClientTest.DefaultCtor_PropertiesReturnExpectedValues
+System.Net.Tests.WebClientTest.ConcurrentOperations_Throw
+System.Net.Tests.WebClientTest.Proxy_Roundtrips
+System.Net.Tests.WebClientTest.RequestHeaders_SpecialHeaders_RequestSucceeds
+System.Net.Tests.WebClientTest.ResponseHeaders_ContainsHeadersAfterOperation
+System.Net.Tests.SyncWebClientTest.DownloadData_LargeData_Success
+System.Net.Tests.SyncWebClientTest.OpenRead_Success
+System.Net.Tests.SyncWebClientTest.DownloadString_Success(contentType: null)
+System.Net.Tests.SyncWebClientTest.DownloadString_Success(contentType: "text/html; charset=us-ascii")
+System.Net.Tests.SyncWebClientTest.DownloadString_Success(contentType: "text/html; charset=utf-8")
+System.Net.Tests.SyncWebClientTest.DownloadFile_Success
+System.Net.Tests.SyncWebClientTest.DownloadData_Success
+System.Net.WebSockets.Tests.WebSocketTests.ReceiveAsync_ServerSplitHeader_ValidDataReceived

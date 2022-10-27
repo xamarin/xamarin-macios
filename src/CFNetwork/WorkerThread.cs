@@ -26,6 +26,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !NET
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -35,11 +38,7 @@ using System.Diagnostics;
 using Foundation;
 using CoreFoundation;
 
-#if XAMCORE_2_0
 using CFRunLoopModeString = global::Foundation.NSString;
-#else
-using CFRunLoopModeString = global::System.String;
-#endif
 
 namespace CFNetwork {
 
@@ -63,7 +62,7 @@ namespace CFNetwork {
 		}
 
 		[Conditional ("DEBUG")]
-		static void Log (string message, params object[] args)
+		static void Log (string message, params object [] args)
 		{
 			Debug.WriteLine (string.Format (message, args), "WorkerThread");
 		}
@@ -136,7 +135,7 @@ namespace CFNetwork {
 		}
 
 		public async Task<T> Post<T> (Func<CancellationToken, T> callback,
-		                              CancellationToken cancellationToken)
+									  CancellationToken cancellationToken)
 		{
 			var ev = new Event ();
 			ev.Callback = c => callback (c);
@@ -149,9 +148,9 @@ namespace CFNetwork {
 			try {
 				var result = await ev.Tcs.Task;
 				if (result != null)
-					return (T)result;
+					return (T) result;
 				else
-					return default(T);
+					return default (T);
 			} finally {
 				ev.Cts.Dispose ();
 			}
@@ -238,4 +237,4 @@ namespace CFNetwork {
 		}
 	}
 }
-
+#endif // !NET

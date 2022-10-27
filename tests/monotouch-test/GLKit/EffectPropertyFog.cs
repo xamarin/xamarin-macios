@@ -1,19 +1,14 @@
 // Copyright 2012 Xamarin Inc. All rights reserved
 
-#if !__WATCHOS__
+#if HAS_GLKIT
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using GLKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GLKit;
-#endif
-using OpenTK;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.GLKit {
 	
@@ -24,15 +19,23 @@ namespace MonoTouchFixtures.GLKit {
 		[Test]
 		public void Properties ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var fog = new GLKEffectPropertyFog ();
+#if NET
+			Assert.That (fog.Color.ToString (), Is.EqualTo ("<0, 0, 0, 0>"), "Color");
+#else
 			Assert.That (fog.Color.ToString (), Is.EqualTo ("(0, 0, 0, 0)"), "Color");
+#endif
 			
 			fog = new GLKBaseEffect ().Fog;
+#if NET
+			Assert.That (fog.Color.ToString (), Is.EqualTo ("<0, 0, 0, 0>"), "Color");
+#else
 			Assert.That (fog.Color.ToString (), Is.EqualTo ("(0, 0, 0, 0)"), "Color");
+#endif
 		}
 	}
 }
 
-#endif // !__WATCHOS__
+#endif // HAS_GLKIT

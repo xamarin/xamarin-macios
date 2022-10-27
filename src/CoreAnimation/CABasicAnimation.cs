@@ -7,11 +7,13 @@ using AppKit;
 #endif
 using CoreGraphics;
 
+#nullable enable
+
 namespace CoreAnimation {
 	public partial class CABasicAnimation {
 		public T GetFromAs <T> () where T : class, INativeObject
 		{
-			return Runtime.GetINativeObject<T> (_From, false);
+			return Runtime.GetINativeObject<T> (_From, false)!;
 		}
 
 		public void SetFrom (INativeObject value)
@@ -21,7 +23,7 @@ namespace CoreAnimation {
 
 		public T GetToAs <T> () where T : class, INativeObject
 		{
-			return Runtime.GetINativeObject<T> (_To, false);
+			return Runtime.GetINativeObject<T> (_To, false)!;
 		}
 
 		public void SetTo (INativeObject value)
@@ -31,7 +33,7 @@ namespace CoreAnimation {
 
 		public T GetByAs <T> () where T : class, INativeObject
 		{
-			return Runtime.GetINativeObject<T> (_By, false);
+			return Runtime.GetINativeObject<T> (_By, false)!;
 		}
 
 		public void SetBy (INativeObject value)

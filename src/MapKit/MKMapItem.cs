@@ -5,11 +5,14 @@
 // Copyright 2011-2014 Xamarin Inc.
 //
 
-#if !TVOS && (XAMCORE_2_0 || !MONOMAC)
+#if !TVOS
+
 
 using Foundation;
 using CoreLocation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace MapKit {
 
@@ -17,10 +20,25 @@ namespace MapKit {
 	// to replace NSString fields
 	public enum MKDirectionsMode {
 		Driving, Walking, Transit,
-		[iOS (10,0)][NoTV][Watch (3,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[UnsupportedOSPlatform ("tvos")]
+#else
+		[iOS (10,0)]
+		[NoTV]
+		[Watch (3,0)]
+		[Mac (10,12)]
+#endif
 		Default
 	}
-	
+
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+#endif
 	public class MKLaunchOptions
 	{
 		public MKDirectionsMode? DirectionsMode { get; set; }
@@ -34,11 +52,18 @@ namespace MapKit {
 #endif
 
 #if !WATCH // The corresponding key (MKLaunchOptionsCameraKey) is allowed in WatchOS, but there's no MKMapCamera type.
+
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+#else
 		[iOS (7,0)]
-		public MKMapCamera Camera { get; set; }
+#endif
+		public MKMapCamera? Camera { get; set; }
 #endif
 
-		internal NSDictionary ToDictionary ()
+		internal NSDictionary? ToDictionary ()
 		{
 			int n = 0;
 			if (DirectionsMode.HasValue) n++;
@@ -49,7 +74,7 @@ namespace MapKit {
 			if (MapSpan.HasValue) n++;
 #if !WATCH
 			if (ShowTraffic.HasValue) n++;
-			if (Camera != null) n++;
+			if (Camera is not null) n++;
 #endif
 			if (n == 0)
 				return null;
@@ -100,7 +125,7 @@ namespace MapKit {
 			}
 #endif
 #if !WATCH // MKLaunchOptionsCameraKey is allowed in WatchOS, but there's no MKMapCamera type.
-			if (Camera != null) {
+			if (Camera is not null) {
 				keys [i] = MKMapItem.MKLaunchOptionsCameraKey;
 				values [i++] = Camera;
 			}
@@ -108,16 +133,16 @@ namespace MapKit {
 			return NSDictionary.FromObjectsAndKeys (values, keys);
 		}
 	}
-	
+
 	public partial class MKMapItem {
-		public void OpenInMaps (MKLaunchOptions launchOptions = null)
+		public void OpenInMaps (MKLaunchOptions? launchOptions = null)
 		{
-			_OpenInMaps (launchOptions != null ? launchOptions.ToDictionary () : null);
+			_OpenInMaps (launchOptions?.ToDictionary ());
 		}
 
-		public static bool OpenMaps (MKMapItem [] mapItems = null, MKLaunchOptions launchOptions = null)
+		public static bool OpenMaps (MKMapItem [] mapItems, MKLaunchOptions? launchOptions = null)
 		{
-			return _OpenMaps (mapItems, launchOptions != null ? launchOptions.ToDictionary () : null);
+			return _OpenMaps (mapItems, launchOptions?.ToDictionary ());
 		}
 	}
 	

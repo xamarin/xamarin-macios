@@ -1,6 +1,8 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 
-#if !XAMCORE_3_0 && XAMCORE_2_0
+#nullable enable
+
+#if !XAMCORE_3_0
 
 using System;
 

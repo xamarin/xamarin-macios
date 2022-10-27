@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json.schemastore.org/component-detection-manifest.json",
+  "Registrations": [
+    {
+      "Component": {
+        "Type": "git",
+        "Git": {
+          "RepositoryUrl": "https://github.com/spouliot/Touch.Unit.git",
+          "CommitHash": "89afaf7e05a942c87231cf5601b3a5b59640e218"
+        }
+      },
+      "DevelopmentDependency": true
+    },
+    {
+      "Component": {
+        "Type": "git",
+        "Git": {
+          "RepositoryUrl": "https://github.com/xamarin/Xamarin.MacDev",
+          "CommitHash": "7ea83265099f904eaeb487a7b6a579e9e77d9433"
+        }
+      },
+      "DevelopmentDependency": false
+    },
+    {
+      "Component": {
+        "Type": "git",
+        "Git": {
+          "RepositoryUrl": "https://github.com/mono/guiunit.git",
+          "CommitHash": "9affe4813987b009022ab7b10e55f81f4a37344c"
+        }
+      },
+      "DevelopmentDependency": true
+    },
+    {
+      "Component": {
+        "Type": "git",
+        "Git": {
+          "RepositoryUrl": "https://github.com/xamarin/macios-binaries",
+          "CommitHash": "d33e206ce7978d2ec0019989a1add727c87ea1cf"
+        }
+      },
+      "DevelopmentDependency": false
+    },
+    {
+      "Component": {
+        "Type": "git",
+        "Git": {
+          "RepositoryUrl": "https://github.com/mono/opentk.git",
+          "CommitHash": "396bc90c7ac2e7ce442840a5e8bd91e5e79b381e"
+        }
+      },
+      "DevelopmentDependency": false
+    },
+    {
+      "Component": {
+        "Type": "git",
+        "Git": {
+          "RepositoryUrl": "https://github.com/mono/mono",
+          "CommitHash": "8c085a99b32e99ae2f0a6b3de61541fefb4d3389"
+        }
+      },
+      "DevelopmentDependency": false
+    }
+  ]
+}

@@ -26,6 +26,8 @@
 //
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -36,19 +38,27 @@ using ObjCRuntime;
 namespace CoreMedia {
 
 	// Convenience structure
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Watch (6,0)]
+#endif
 	public struct TextMarkupColor
 	{
 		public TextMarkupColor (float red, float green, float blue, float alpha)
 			: this ()
 		{
 			if (red < 0 || red > 1.0)
-				throw new ArgumentOutOfRangeException ("red");
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (red), "Not between 0.0 and 1.0");
 			if (green < 0 || green > 1.0)
-				throw new ArgumentOutOfRangeException ("green");
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (green), "Not between 0.0 and 1.0");
 			if (blue < 0 || blue > 1.0)
-				throw new ArgumentOutOfRangeException ("blue");
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (blue), "Not between 0.0 and 1.0");
 			if (alpha < 0 || alpha > 1.0)
-				throw new ArgumentOutOfRangeException ("alpha");
+				ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (alpha), "Not between 0.0 and 1.0");
 
 			Red = red;
 			Green = green;
@@ -62,7 +72,14 @@ namespace CoreMedia {
 		public float Alpha { get; private set; }
 	}
 
-	[iOS (6,0)]
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[Watch (6,0)]
+#endif
 	public class CMTextMarkupAttributes : DictionaryContainer
 	{
 		public CMTextMarkupAttributes ()
@@ -78,13 +95,13 @@ namespace CoreMedia {
 		public TextMarkupColor? ForegroundColor {
 			get {
 				var array = GetArray<NSNumber> (CMTextMarkupAttributesKeys.ForegroundColorARGB);
-				if (array == null)
+				if (array is null)
 					return null;
 
 				return new TextMarkupColor (array [1].FloatValue, array [2].FloatValue, array [3].FloatValue, array [0].FloatValue);
 			}
 			set {
-				if (value != null) {
+				if (value is not null) {
 					var v = value.Value;
 					SetArrayValue (CMTextMarkupAttributesKeys.ForegroundColorARGB, new [] {
 						NSNumber.FromFloat (v.Alpha),
@@ -101,13 +118,13 @@ namespace CoreMedia {
 		public TextMarkupColor? BackgroundColor {
 			get {
 				var array = GetArray<NSNumber> (CMTextMarkupAttributesKeys.BackgroundColorARGB);
-				if (array == null)
+				if (array is null)
 					return null;
 
 				return new TextMarkupColor (array [1].FloatValue, array [2].FloatValue, array [3].FloatValue, array [0].FloatValue);
 			}
 			set {
-				if (value != null) {
+				if (value is not null) {
 					var v = value.Value;
 					SetArrayValue (CMTextMarkupAttributesKeys.BackgroundColorARGB, new [] {
 						NSNumber.FromFloat (v.Alpha),
@@ -148,7 +165,7 @@ namespace CoreMedia {
 			}
 		}
 
-		public string FontFamilyName {
+		public string? FontFamilyName {
 			get {
 				return GetStringValue (CMTextMarkupAttributesKeys.FontFamilyName);
 			}
@@ -163,7 +180,7 @@ namespace CoreMedia {
 			}
 			set {
 				if (value < 0)
-					throw new ArgumentOutOfRangeException ("value");
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), "Negative");
 
 				SetNumberValue (CMTextMarkupAttributesKeys.RelativeFontSize, value);
 			}
@@ -175,7 +192,7 @@ namespace CoreMedia {
 			}
 			set {
 				if (value < 0)
-					throw new ArgumentOutOfRangeException("value");
+					ObjCRuntime.ThrowHelper.ThrowArgumentOutOfRangeException (nameof (value), "Negative");
 
 				SetNumberValue (CMTextMarkupAttributesKeys.BaseFontSizePercentageRelativeToVideoHeight, value);
 			}

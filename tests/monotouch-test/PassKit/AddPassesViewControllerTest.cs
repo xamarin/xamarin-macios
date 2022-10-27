@@ -10,17 +10,12 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using PassKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.PassKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.PassKit {
 	
@@ -47,7 +42,7 @@ namespace MonoTouchFixtures.PassKit {
 		public void InitWithNibNameTest ()
 		{
 			// initWithNibName:bundle: returns nil in iOS 6
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			if (UIDevice.CurrentDevice.UserInterfaceIdiom != UIUserInterfaceIdiom.Phone)
 				Assert.Inconclusive ("PassKit does not work on iPads");

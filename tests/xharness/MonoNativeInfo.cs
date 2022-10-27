@@ -1,4 +1,4 @@
-﻿//
+//
 // MonoNativeInfo.cs
 //
 // Author:
@@ -27,83 +27,39 @@ using System;
 using System.IO;
 using System.Xml;
 
-using Xamarin;
+using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
+using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 
-namespace xharness
-{
-	public enum MonoNativeFlavor
-	{
+namespace Xharness {
+	public enum MonoNativeFlavor {
 		None,
 		Compat,
 		Unified,
 	}
 
-	public enum MonoNativeLinkMode
-	{
+	public enum MonoNativeLinkMode {
 		None,
 		Static,
 		Dynamic,
 		Symlink,
 	}
 
-	public static class MonoNativeHelper
-	{
-		public static void AddProjectDefines (
-			XmlDocument project, MonoNativeFlavor flavor, MonoNativeLinkMode link,
-			string platform, string config)
-		{
-			AddProjectDefines (project, flavor, platform, config);
-			AddProjectDefines (project, link, platform, config);
-		}
-
-		public static void AddProjectDefines (
-			XmlDocument project, MonoNativeFlavor flavor,
-			string platform = null, string config = null)
-		{
-			switch (flavor) {
-			case MonoNativeFlavor.Compat:
-				if (platform != null)
-					project.AddAdditionalDefines ("MONO_NATIVE_COMPAT", platform, config);
-				else
-					project.AddAdditionalDefines ("MONO_NATIVE_COMPAT");
-				break;
-			case MonoNativeFlavor.Unified:
-				if (platform != null)
-					project.AddAdditionalDefines ("MONO_NATIVE_UNIFIED", platform, config);
-				else
-					project.AddAdditionalDefines ("MONO_NATIVE_UNIFIED");
-				break;
-			default:
-				throw new Exception ($"Unknown MonoNativeFlavor: {flavor}");
-			}
-		}
-
-		public static void AddProjectDefines (
-			XmlDocument project, MonoNativeLinkMode link,
-			string platform, string config)
+	public static class MonoNativeHelper {
+		public static void AddProjectDefines (XmlDocument project, MonoNativeLinkMode link)
 		{
 			switch (link) {
 			case MonoNativeLinkMode.Static:
-				project.AddAdditionalDefines ("MONO_NATIVE_STATIC", platform, config);
-				project.RemoveDefines ("MONO_NATIVE_DYNAMIC; MONO_NATIVE_SYMLINK", platform, config);
+				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_STATIC");
 				break;
 			case MonoNativeLinkMode.Dynamic:
-				project.AddAdditionalDefines ("MONO_NATIVE_DYNAMIC", platform, config);
-				project.RemoveDefines ("MONO_NATIVE_STATIC; MONO_NATIVE_SYMLINK", platform, config);
+				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_DYNAMIC");
 				break;
 			case MonoNativeLinkMode.Symlink:
-				project.AddAdditionalDefines ("MONO_NATIVE_SYMLINK", platform, config);
-				project.RemoveDefines ("MONO_NATIVE_MONO_NATIVE_STATIC; MONO_NATIVE_DYNAMIC", platform, config);
+				project.AddTopLevelProperty ("MonoNativeMode", "MONO_NATIVE_SYMLINK");
 				break;
 			default:
 				throw new Exception ($"Unknown MonoNativeLinkMode: {link}");
 			}
-		}
-
-		public static void RemoveSymlinkMode (XmlDocument project)
-		{
-			AddProjectDefines (project, MonoNativeLinkMode.Static, "iPhone", "Debug");
-			AddProjectDefines (project, MonoNativeLinkMode.Static, "iPhoneSimulator", "Debug");
 		}
 
 		public static string GetMinimumOSVersion (DevicePlatform platform, MonoNativeFlavor flavor)
@@ -112,11 +68,13 @@ namespace xharness
 			case MonoNativeFlavor.Compat:
 				switch (platform) {
 				case DevicePlatform.iOS:
-					return "8.0";
+					return Xamarin.SdkVersions.MiniOS;
 				case DevicePlatform.tvOS:
-					return "9.0";
+					return Xamarin.SdkVersions.MinTVOS;
 				case DevicePlatform.watchOS:
-					return "2.0";
+					return Xamarin.SdkVersions.MinWatchOS;
+				case DevicePlatform.macOS:
+					return Xamarin.SdkVersions.MinOSX;
 				default:
 					throw new Exception ($"Unknown DevicePlatform: {platform}");
 				}
@@ -128,6 +86,8 @@ namespace xharness
 					return "10.1"; // Can't use 10.0 due to http://openradar.appspot.com/radar?id=4966840983879680.
 				case DevicePlatform.watchOS:
 					return "4.0";
+				case DevicePlatform.macOS:
+					return "10.12";
 				default:
 					throw new Exception ($"Unknown DevicePlatform: {platform}");
 				}
@@ -137,22 +97,25 @@ namespace xharness
 		}
 	}
 
-	public class MonoNativeInfo
-	{
-		public Harness Harness { get; }
+	public class MonoNativeInfo {
+		Action<int, string> log;
 		public MonoNativeFlavor Flavor { get; }
+		public DevicePlatform DevicePlatform { get; set; }
+		string rootDirectory;
 
-		public MonoNativeInfo (Harness harness, MonoNativeFlavor flavor)
+		public MonoNativeInfo (DevicePlatform platform, MonoNativeFlavor flavor, string rootDirectory, Action<int, string> logAction = null)
 		{
-			Harness = harness;
-			Flavor = flavor;
+			DevicePlatform = platform;
+			this.log = logAction;
+			this.rootDirectory = rootDirectory ?? throw new ArgumentNullException (nameof (rootDirectory));
+			this.Flavor = flavor;
 		}
 
-		string NativeFlavorSuffix => Flavor == MonoNativeFlavor.Compat ? "-compat" : "-unified";
-		public virtual string FlavorSuffix => NativeFlavorSuffix;
-		public string ProjectName => "mono-native" + NativeFlavorSuffix;
-		public string ProjectPath => Path.Combine (Harness.RootDirectory, "mono-native", "mono-native" + FlavorSuffix + ".csproj");
-		public string TemplatePath => Path.Combine (Harness.RootDirectory, "mono-native", "mono-native" + (Harness.Mac ? "-mac" : string.Empty) + ".csproj.template");
+		public string FlavorSuffix => Flavor == MonoNativeFlavor.Compat ? "-compat" : "-unified";
+		public string ProjectName => "mono-native" + FlavorSuffix;
+		public string ProjectPath => Path.Combine (rootDirectory, "mono-native", DevicePlatform.ToString (), FlavorSuffix.TrimStart ('-'), TemplateName + FlavorSuffix + ".csproj");
+		string TemplateName => "mono-native";
+		public string TemplatePath => Path.Combine (rootDirectory, "mono-native", DevicePlatform.ToString (), TemplateName + ".csproj.template");
 
 		public void Convert ()
 		{
@@ -160,58 +123,35 @@ namespace xharness
 
 			var xml = File.ReadAllText (TemplatePath);
 			inputProject.LoadXmlWithoutNetworkAccess (xml);
-			inputProject.SetOutputPath ("bin\\$(Platform)\\$(Configuration)" + FlavorSuffix);
-			inputProject.SetIntermediateOutputPath ("obj\\$(Platform)\\$(Configuration)" + FlavorSuffix);
 			inputProject.SetAssemblyName (inputProject.GetAssemblyName () + FlavorSuffix);
+			inputProject.AddAdditionalDefines (Flavor == MonoNativeFlavor.Compat ? "MONO_NATIVE_COMPAT" : "MONO_NATIVE_UNIFIED");
+			inputProject.ResolveAllPaths (TemplatePath);
 
-			AddProjectDefines (inputProject);
+			var template_info_plist = inputProject.GetInfoPListInclude ().Replace ('\\', '/');
+			var target_info_plist = Path.Combine (Path.GetDirectoryName (ProjectPath), "Info" + FlavorSuffix + ".plist");
+			SetInfoPListMinimumOSVersion (template_info_plist, target_info_plist);
+			inputProject.FixInfoPListInclude (FlavorSuffix, newName: target_info_plist);
 
-			Convert (inputProject);
-
-			Harness.Save (inputProject, ProjectPath);
+			inputProject.Save (ProjectPath, log);
 		}
 
-		protected virtual void Convert (XmlDocument inputProject)
+		public XmlDocument SetInfoPListMinimumOSVersion (string template_plist, string target_plist)
 		{
+			var template_info_plist = template_plist;
+			var info_plist = new XmlDocument ();
+			info_plist.LoadWithoutNetworkAccess (template_info_plist);
+			SetInfoPListMinimumOSVersion (info_plist, MonoNativeHelper.GetMinimumOSVersion (DevicePlatform, Flavor));
+			info_plist.Save (target_plist, log);
+			return info_plist;
 		}
 
-		public void AddProjectDefines (XmlDocument project)
+		public virtual void SetInfoPListMinimumOSVersion (XmlDocument info_plist, string version)
 		{
-			MonoNativeHelper.AddProjectDefines (project, Flavor);
-		}
-	}
-
-	public class MacMonoNativeInfo : MonoNativeInfo
-	{
-		public MacFlavors MacFlavor { get; set; }
-
-		public override string FlavorSuffix => base.FlavorSuffix + (MacFlavor == MacFlavors.Full ? "-full" : "-modern");
-
-		public MacMonoNativeInfo (Harness harness, MonoNativeFlavor flavor, MacFlavors macFlavor)
-			: base (harness, flavor)
-		{
-			if (macFlavor == MacFlavors.All)
-				throw new ArgumentException ("Each target must be a specific flavor");
-
-			MacFlavor = macFlavor;
-		}
-
-		protected override void Convert (XmlDocument inputProject)
-		{
-			switch (MacFlavor) {
-			case MacFlavors.Modern:
-				inputProject.SetTargetFrameworkIdentifier ("Xamarin.Mac");
-				inputProject.SetTargetFrameworkVersion ("v2.0");
-				inputProject.RemoveNode ("UseXamMacFullFramework");
-				inputProject.AddAdditionalDefines ("MOBILE;XAMMAC");
-				inputProject.AddReference ("Mono.Security");
-				break;
-			case MacFlavors.Full:
-				inputProject.AddAdditionalDefines ("XAMMAC_4_5");
-				break;
+			if (DevicePlatform == DevicePlatform.macOS) {
+				info_plist.SetMinimummacOSVersion (version);
+			} else {
+				info_plist.SetMinimumOSVersion (version);
 			}
-
-			base.Convert (inputProject);
 		}
 	}
 }

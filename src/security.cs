@@ -35,13 +35,15 @@ namespace Security {
 			
 		[Field ("kSecPolicyAppleIPsec")]
 		NSString AppleIPsec { get; }
-#if MONOMAC
+
+		[NoiOS][NoWatch][NoTV][NoMacCatalyst]
 		[Field ("kSecPolicyApplePKINITClient")]
 		NSString ApplePKINITClient { get; }
 			
+		[NoiOS][NoWatch][NoTV][NoMacCatalyst]
 		[Field ("kSecPolicyApplePKINITServer")]
 		NSString ApplePKINITServer { get; }
-#endif	
+
 		[Field ("kSecPolicyAppleCodeSigning")]
 		NSString AppleCodeSigning { get; }
 
@@ -59,7 +61,7 @@ namespace Security {
 		[Field ("kSecPolicyAppleRevocation")]
 		NSString AppleRevocation { get; }
 
-		[iOS (7,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Field ("kSecPolicyApplePassbookSigning")]
 		NSString ApplePassbookSigning { get; }
 
@@ -84,13 +86,15 @@ namespace Security {
 		[Field ("kSecPolicyRevocationFlags")]
 		NSString RevocationFlags { get; }
 
-		[iOS (7,0)][Mac (10,9)]
+		[Mac (10,9)]
 		[Field ("kSecPolicyTeamIdentifier")]
 		NSString TeamIdentifier { get; }
 	}
 	
 	[Static]
-	[iOS (8,0), NoMac, NoWatch]
+	[iOS (8,0), NoWatch]
+	[Mac (11,0)]
+	[Introduced (PlatformName.MacCatalyst, 14,0)]
 	[NoTV] // removed in tvOS 10
 	interface SecSharedCredential {
 		[Field ("kSecSharedPassword")]
@@ -640,10 +644,8 @@ namespace Security {
 		IntPtr Identity { get; }
 	}
 
-#if XAMCORE_2_0
 	// Technically the type could be static but Apple might had non static members in future releases and break out API
 	[DisableDefaultCtor] // not required, nor useful
-#endif
 	[Partial]
 	interface SecImportExport {
 		[Field ("kSecImportExportPassphrase")]
@@ -718,19 +720,25 @@ namespace Security {
 		[Field ("kSecValuePersistentRef")]
 		IntPtr ValuePersistentRef { get; }
 
-		[NoWatch, NoTV, NoiOS]
 		[Field ("kSecUseItemList")]
 		IntPtr UseItemList { get; }
 
-#if !MONOMAC || !XAMCORE_2_0 // Don't break compat API
-		[iOS (8,0)]
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		[Field ("kSecUseDataProtectionKeychain")]
+		IntPtr UseDataProtectionKeychain { get; }
+
+		[Deprecated (PlatformName.MacOSX, 11,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.iOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.TvOS, 14,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[Deprecated (PlatformName.WatchOS, 7,0, message: "Use 'LAContext.InteractionNotAllowed' instead.")]
+		[iOS (8,0)][Mac (10,10)]
 		[Field ("kSecUseOperationPrompt")]
 		IntPtr UseOperationPrompt { get; }
 
-		[Availability (Introduced = Platform.iOS_8_0, Deprecated = Platform.iOS_9_0)]
+		[iOS (8, 0), Deprecated (PlatformName.iOS, 9, 0)]
+		[Mac (10, 10), Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Field ("kSecUseNoAuthenticationUI")]
 		IntPtr UseNoAuthenticationUI { get; }
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Field ("kSecUseAuthenticationUI")]
@@ -1097,8 +1105,8 @@ namespace Security {
 		NSData SharedInfo { get; set; }
 	}
 
-#if IOS
-	[iOS (8,0)][NoTV][NoWatch][NoMac]
+	[iOS (8,0)][NoTV][NoWatch]
+	[Mac (11,0)][MacCatalyst (13,1)]
 	[Internal][Static]
 	interface SecSharedCredentialKeys {
 		[Field ("kSecAttrServer")]
@@ -1107,6 +1115,7 @@ namespace Security {
 		[Field ("kSecAttrAccount")]
 		NSString AccountKey { get; }
 
+		[MacCatalyst (14,0)]
 		[Field ("kSecSharedPassword")]
 		NSString PasswordKey { get; }
 
@@ -1114,7 +1123,8 @@ namespace Security {
 		NSString PortKey { get; }
 	}
 
-	[iOS (8,0)][NoTV][NoWatch][NoMac]
+	[iOS (8,0)][NoTV][NoWatch]
+	[Mac (11,0)]
 	[StrongDictionary ("SecSharedCredentialKeys")]
 	interface SecSharedCredentialInfo {
 
@@ -1126,8 +1136,6 @@ namespace Security {
 
 		int Port { get; set; }
 	}
-
-#endif
 
 	delegate void SecProtocolVerifyComplete (bool complete);
 

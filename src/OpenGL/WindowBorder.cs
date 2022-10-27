@@ -1,4 +1,6 @@
-#if OPENTK_DLL || !XAMCORE_2_0
+#nullable enable
+
+#if OPENTK_DLL
 
 using System;
 using System.Collections.Generic;
@@ -26,4 +28,4 @@ namespace OpenTK
 	}
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL

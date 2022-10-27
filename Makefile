@@ -3,121 +3,16 @@ SUBDIRS=builds runtime fsharp src msbuild tools
 include $(TOP)/Make.config
 include $(TOP)/mk/versions.mk
 
-MONO_VERSION="`grep AC_INIT $(MONO_PATH)/configure.ac | sed -e 's/.*\[//' -e 's/\].*//'`"
-
-#
-# Xamarin.iOS
-#
-
-IOS_DIRECTORIES += \
-	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions \
-	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX) \
-	$(IOS_DESTDIR)/Developer/MonoTouch \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono \
-
-IOS_TARGETS += \
-	$(IOS_INSTALL_DIRECTORIES) \
-	$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr/bin \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/2.1 \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/Xamarin.iOS \
-	$(IOS_DESTDIR)/Developer/MonoTouch/updateinfo \
-	$(IOS_DESTDIR)/Developer/MonoTouch/Version \
-	$(IOS_DESTDIR)/Developer/MonoTouch/usr/share \
-	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo \
-	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version \
-	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo \
-	$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist \
-
-$(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current: | $(IOS_DESTDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions
-	$(Q_LN) ln -hfs $(IOS_INSTALL_VERSION) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/usr/bin: | $(IOS_DESTDIR)/Developer/MonoTouch/usr
-	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/bin) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/2.1: | $(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono
-	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/2.1) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono/Xamarin.iOS: | $(IOS_DESTDIR)/Developer/MonoTouch/usr/lib/mono
-	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/lib/mono/Xamarin.iOS) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/updateinfo: | $(IOS_DESTDIR)/Developer/MonoTouch
-	$(Q_LN) ln -fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/updateinfo) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/Version: | $(IOS_DESTDIR)/Developer/MonoTouch
-	$(Q_LN) ln -fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/Version) $@
-
-$(IOS_DESTDIR)/Developer/MonoTouch/usr/share: | $(IOS_DESTDIR)/Developer/MonoTouch/usr
-	$(Q_LN) ln -Fs $(abspath $(IOS_TARGETDIR)/Library/Frameworks/Xamarin.iOS.framework/Versions/Current/share) $@
-
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/buildinfo: Make.config.inc .git/index | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
-	$(Q_GEN) echo "Version: $(IOS_PACKAGE_VERSION)" > $@
-	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
-	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
-	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@
-
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Version: Make.config.inc | $(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)
-	$(Q) echo $(IOS_PACKAGE_VERSION) > $@
-
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/updateinfo: Make.config.inc
-	$(Q) echo "4569c276-1397-4adb-9485-82a7696df22e $(IOS_PACKAGE_UPDATE_ID)" > $@
-
-$(IOS_DESTDIR)/$(MONOTOUCH_PREFIX)/Versions.plist: Versions-ios.plist.in Makefile $(TOP)/Make.config versions-check.csharp
-	$(Q) ./versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
-	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(MONO_VERSION)/g" $< > $@
-
-ifdef INCLUDE_IOS
-TARGETS += $(IOS_TARGETS)
-DIRECTORIES += $(IOS_DIRECTORIES)
-endif
-
-#
-# Xamarin.Mac
-#
-
-MAC_DIRECTORIES += \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions \
-	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR) \
-
-MAC_TARGETS += \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current \
-	$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Commands \
-	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo \
-	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version \
-	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo \
-	$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist \
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions/Current: | $(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Versions
-	$(Q_LN) ln -hfs $(MAC_INSTALL_VERSION) $@
-
-$(MAC_DESTDIR)$(MAC_FRAMEWORK_DIR)/Commands:
-	$(Q_LN) ln -hfs $(MAC_TARGETDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/bin $@
-
-$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/buildinfo: Make.config.inc .git/index | $(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)
-	$(Q_GEN) echo "Version: $(MAC_PACKAGE_VERSION)" > $@
-	$(Q) echo "Hash: $(shell git log --oneline -1 --pretty=%h)" >> $@
-	$(Q) echo "Branch: $(CURRENT_BRANCH)" >> $@
-	$(Q) echo "Build date: $(shell date '+%Y-%m-%d %H:%M:%S%z')" >> $@
-
-$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/updateinfo: Make.config.inc
-	$(Q) echo "0ab364ff-c0e9-43a8-8747-3afb02dc7731 $(MAC_PACKAGE_UPDATE_ID)" > $@
-
-$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Version: Make.config.inc
-	$(Q) echo $(MAC_PACKAGE_VERSION) > $@
-
-$(MAC_DESTDIR)/$(MAC_FRAMEWORK_CURRENT_DIR)/Versions.plist: Versions-mac.plist.in Makefile $(TOP)/Make.config versions-check.csharp
-	$(Q) ./versions-check.csharp $< "$(MIN_IOS_SDK_VERSION)" "$(IOS_SDK_VERSION)" "$(MIN_TVOS_SDK_VERSION)" "$(TVOS_SDK_VERSION)" "$(MIN_WATCH_OS_VERSION)" "$(WATCH_SDK_VERSION)" "$(MIN_OSX_SDK_VERSION)" "$(OSX_SDK_VERSION)"
-	$(Q_GEN) sed -e 's/@XCODE_VERSION@/$(XCODE_VERSION)/g' -e "s/@MONO_VERSION@/$(MONO_VERSION)/g" -e "s/@MIN_XM_MONO_VERSION@/$(MIN_XM_MONO_VERSION)/g" $< > $@
-
-ifdef INCLUDE_MAC
-TARGETS += $(MAC_TARGETS)
-DIRECTORIES += $(MAC_DIRECTORIES)
+ifdef ENABLE_DOTNET
+SUBDIRS += dotnet
 endif
 
 #
 # Common
 #
+
+all-local:: check-system
+install-local::
 
 .PHONY: world
 world: check-system
@@ -127,6 +22,8 @@ world: check-system
 
 .PHONY: check-system
 check-system:
+ifdef INCLUDE_MAC
+ifdef INCLUDE_IOS
 	@if [[ "x$(IOS_COMMIT_DISTANCE)" != "x$(MAC_COMMIT_DISTANCE)" ]]; then \
 		echo "$(COLOR_RED)*** The commit distance for Xamarin.iOS ($(IOS_COMMIT_DISTANCE)) and Xamarin.Mac ($(MAC_COMMIT_DISTANCE)) are different.$(COLOR_CLEAR)"; \
 		echo "$(COLOR_RED)*** To fix this problem, bump the revision (the third number) for both $(COLOR_GRAY)IOS_PACKAGE_NUMBER$(COLOR_RED) and $(COLOR_GRAY)MAC_PACKAGE_NUMBER$(COLOR_RED) in Make.versions.$(COLOR_CLEAR)"; \
@@ -138,16 +35,26 @@ check-system:
 		echo "$(COLOR_RED)*** Once fixed, you need to commit the changes for them to pass this check.$(COLOR_CLEAR)"; \
 		exit 1; \
 	fi
+endif
+endif
 	@./system-dependencies.sh
-	@echo "Building Xamarin.iOS $(IOS_PACKAGE_VERSION) and Xamarin.Mac $(MAC_PACKAGE_VERSION)"
+	$(Q) $(MAKE) show-versions
 
-$(DIRECTORIES):
-	$(Q) mkdir -p $@
-
-$(TARGETS): | check-system
-
-all-local:: $(TARGETS)
-install-local:: $(TARGETS)
+show-versions:
+	@echo "Building:"
+ifdef INCLUDE_XAMARIN_LEGACY
+	@echo "    The legacy package(s):"
+ifdef INCLUDE_IOS
+	@echo "        Xamarin.iOS $(IOS_PACKAGE_VERSION)"
+endif
+ifdef INCLUDE_MAC
+	@echo "        Xamarin.Mac $(MAC_PACKAGE_VERSION)"
+endif
+endif
+ifdef ENABLE_DOTNET
+	@echo "    The .NET NuGet(s):"
+	@$(foreach platform,$(DOTNET_PLATFORMS),echo "        Microsoft.$(platform) $($(shell echo $(platform) | tr 'a-z' 'A-Z')_NUGET_VERSION_FULL)";)
+endif
 
 check-permissions:
 ifdef INCLUDE_MAC
@@ -158,6 +65,15 @@ ifdef INCLUDE_IOS
 	@UNREADABLE=`find $(IOS_DESTDIR) ! -perm -0644`; if ! test -z "$$UNREADABLE"; then echo "There are files with invalid permissions (all installed files at least be readable by everybody, and writable by owner: 0644): "; find $(IOS_DESTDIR) ! -perm -0644 | xargs ls -la; exit 1; fi
 	@echo Validated file permissions for Xamarin.iOS.
 endif
+
+all-local:: global.json
+
+# This tells NuGet to use the exact same dotnet version we've configured in Make.config
+global.json: $(TOP)/dotnet.config Makefile $(TOP)/.git/HEAD $(TOP)/.git/index
+	$(Q_GEN) \
+		printf "{\n" > $@; \
+		printf "  \"sdk\": {\n    \"version\": \"$(DOTNET_VERSION)\"\n  }\n" >> $@; \
+		printf "}\n" >> $@
 
 install-hook::
 	@$(MAKE) check-permissions
@@ -189,13 +105,21 @@ else
 endif
 endif
 
-package:
-	mkdir -p ../package
-	$(MAKE) -C $(MACCORE_PATH) package
+.PHONY: package release
+package release:
+	$(Q) $(MAKE) -C $(TOP)/release release
 	# copy .pkg, .zip and *updateinfo to the packages directory to be uploaded to storage
-	$(CP) $(MACCORE_PATH)/release/*.pkg ../package
-	$(CP) $(MACCORE_PATH)/release/*.zip ../package
-	$(CP) $(MACCORE_PATH)/release/*updateinfo ../package
+	$(Q) mkdir -p ../package
+	$(Q) echo "Output from 'make release':"
+	$(Q) ls -la $(TOP)/release | sed 's/^/    /'
+	$(Q) if test -n "$$(shopt -s nullglob; echo $(TOP)/release/*.pkg)"; then $(CP) $(TOP)/release/*.pkg ../package; fi
+	$(Q) if test -n "$$(shopt -s nullglob; echo $(TOP)/release/*.zip)"; then $(CP) $(TOP)/release/*.zip ../package; fi
+	$(Q) if test -n "$$(shopt -s nullglob; echo $(TOP)/release/*updateinfo)"; then $(CP) $(TOP)/release/*updateinfo ../package; fi
+	$(Q) echo "Packages:"
+	$(Q) ls -la ../package | sed 's/^/    /'
+
+dotnet-install-system:
+	$(Q) $(MAKE) -C dotnet install-system
 
 install-system: install-system-ios install-system-mac
 	@# Clean up some old files
@@ -205,9 +129,6 @@ install-system: install-system-ios install-system-mac
 	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Xamarin.ObjcBinding.Tasks.dll
 	$(Q) rm -Rf /Library/Frameworks/Mono.framework/External/xbuild/Xamarin/Mac
 	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C msbuild V=$(V)
-ifdef ENABLE_XAMARIN
-	$(Q) $(MAKE) install-symlinks MAC_DESTDIR=/ MAC_INSTALL_VERSION=Current IOS_DESTDIR=/ IOS_INSTALL_VERSION=Current -C $(MACCORE_PATH) V=$(V)
-endif
 
 install-system-ios:
 ifdef INCLUDE_IOS
@@ -235,24 +156,45 @@ fix-install-permissions:
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.iOS.framework
 	sudo chown -R $(USER) /Library/Frameworks/Xamarin.Mac.framework
 
+fix-xcode-select:
+	sudo xcode-select -s $(XCODE_DEVELOPER_ROOT)
+
+fix-xcode-first-run:
+	$(XCODE_DEVELOPER_ROOT)/usr/bin/xcodebuild -runFirstLaunch
+
+install-dotnet:
+	@echo "Figuring out package link..."
+	@export PKG=$$(make -C builds print-dotnet-pkg-urls); \
+	echo "Downloading $$(basename $$PKG)..."; \
+	curl -LO "$$PKG"; \
+	echo "Installing $$(basename $$PKG)..."; \
+	time sudo installer -pkg "$$(basename $$PKG)" -target / -verbose -dumplog
+
 git-clean-all:
 	@echo "$(COLOR_RED)Cleaning and resetting all dependencies. This is a destructive operation.$(COLOR_CLEAR)"
 	@echo "$(COLOR_RED)You have 5 seconds to cancel (Ctrl-C) if you wish.$(COLOR_CLEAR)"
 	@sleep 5
 	@echo "Cleaning xamarin-macios..."
-	@git clean -xffdq
+	@git clean -xffdq -e external/mono
+	@test -d external/mono && echo "Cleaning mono..." && cd external/mono && git clean -xffdq && git submodule foreach -q --recursive 'git clean -xffdq && git reset --hard -q' || true
 	@git submodule foreach -q --recursive 'git clean -xffdq && git reset --hard -q'
 	@for dir in $(DEPENDENCY_DIRECTORIES); do if test -d $(CURDIR)/$$dir; then echo "Cleaning $$dir" && cd $(CURDIR)/$$dir && git clean -xffdq && git reset --hard -q && git submodule foreach -q --recursive 'git clean -xffdq'; else echo "Skipped  $$dir (does not exist)"; fi; done
-ifdef ENABLE_XAMARIN
-	@./configure --enable-xamarin
-	$(MAKE) reset
-	@echo "Done (Xamarin-specific build has been re-enabled)"
-else
-	@echo "Done"
-endif
 
-ifdef ENABLE_XAMARIN
-SUBDIRS += $(MACCORE_PATH)
-endif
+	@if [ -n "$(ENABLE_XAMARIN)" ] || [ -n "$(ENABLE_DOTNET)"]; then \
+		CONFIGURE_FLAGS=""; \
+		if [ -n "$(ENABLE_XAMARIN)" ]; then \
+			echo "Xamarin-specific build has been re-enabled"; \
+			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --enable-xamarin"; \
+		fi; \
+		if [ -n "$(ENABLE_DOTNET)" ]; then \
+			echo "Dotnet-specific build has been re-enabled"; \
+			CONFIGURE_FLAGS="$$CONFIGURE_FLAGS --enable-dotnet"; \
+		fi; \
+		./configure "$$CONFIGURE_FLAGS"; \
+		$(MAKE) reset; \
+		echo "Done"; \
+	else \
+		echo "Done"; \
+	fi; \
 
 SUBDIRS += tests

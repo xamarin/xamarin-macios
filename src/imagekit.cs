@@ -35,6 +35,10 @@ using ImageCaptureCore;
 using CoreGraphics;
 using CoreAnimation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ImageKit {
 
 	enum IKToolMode { // Constants introduced in 10.5 and 10.6
@@ -77,7 +81,7 @@ namespace ImageKit {
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKCameraDeviceViewDelegate)})]
 	interface IKCameraDeviceView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -154,6 +158,30 @@ namespace ImageKit {
 
 		[Export ("mode", ArgumentSemantic.Assign)]
 		IKCameraDeviceViewDisplayMode Mode { get; set; }
+
+		[Mac (12,0)]
+		[Export ("setCustomActionControl:")]
+		void SetCustomActionControl (NSSegmentedControl control);
+
+		[Mac (12,0)]
+		[Export ("setCustomDeleteControl:")]
+		void SetCustomDelete (NSSegmentedControl control);
+
+		[Mac (12,0)]
+		[Export ("setCustomIconSizeSlider:")]
+		void SetCustomIconSizeSlider (NSSlider slider);
+
+		[Mac (12,0)]
+		[Export ("setCustomModeControl:")]
+		void SetCustomModeControl (NSSegmentedControl control);
+
+		[Mac (12,0)]
+		[Export ("setCustomRotateControl:")]
+		void SetCustomRotateControl (NSSegmentedControl control);
+
+		[Mac (12,0)]
+		[Export ("setShowStatusInfoAsWindowSubtitle:")]
+		void SetShowStatusInfoAsWindowSubtitle (bool value);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -173,7 +201,7 @@ namespace ImageKit {
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKDeviceBrowserViewDelegate)})]
 	interface IKDeviceBrowserView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -271,7 +299,7 @@ namespace ImageKit {
 	[BaseType (typeof (NSView))]
 	interface IKFilterBrowserView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("setPreviewState:")]
 		void SetPreviewState (bool showPreview);
@@ -292,11 +320,7 @@ namespace ImageKit {
 		// just turns ugly). So rename this for new-style assemblies to ProvideFilterUIView.
 		[Abstract]
 		[Export ("provideViewForUIConfiguration:excludedKeys:")]
-#if XAMCORE_2_0
 		IKFilterUIView ProvideFilterUIView (NSDictionary configurationOptions, [NullAllowed] NSArray excludedKeys);
-#else
-		IKFilterUIView GetFilterUIView (NSDictionary configurationOptions, [NullAllowed] NSArray excludedKeys);
-#endif
 
 		//UIConfiguration keys for NSDictionary
 		[Field ("IKUISizeFlavor")]
@@ -321,10 +345,10 @@ namespace ImageKit {
 	[BaseType (typeof (NSView))]
 	interface IKFilterUIView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("initWithFrame:filter:")]
-		IntPtr Constructor (CGRect frame, CIFilter filter);
+		NativeHandle Constructor (CGRect frame, CIFilter filter);
 
 		[Export ("filter")]
 		CIFilter Filter { get; }
@@ -400,7 +424,7 @@ namespace ImageKit {
 	interface IKImageBrowserView : NSDraggingSource {
 		//@category IKImageBrowserView (IKMainMethods)
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		//Having a weak and strong datasource seems to work.
 		[Export ("dataSource", ArgumentSemantic.Assign), NullAllowed]
@@ -560,11 +584,7 @@ namespace ImageKit {
 
 		[Abstract]
 		[Export ("imageBrowser:itemAtIndex:")]
-#if XAMCORE_2_0
 		IIKImageBrowserItem GetItem (IKImageBrowserView aBrowser, nint index);
-#else
-		IKImageBrowserItem GetItem (IKImageBrowserView aBrowser, nint index);
-#endif
 
 		[Export ("imageBrowser:removeItemsAtIndexes:")]
 		void RemoveItems (IKImageBrowserView aBrowser, NSIndexSet indexes);
@@ -744,7 +764,7 @@ namespace ImageKit {
 	[BaseType (typeof (NSView))]
 	interface IKImageView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		//There is no protocol for this delegate.  used to respond to messages in the responder chain
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
@@ -786,7 +806,7 @@ namespace ImageKit {
 		[Export ("backgroundColor", ArgumentSemantic.Assign)]
 		NSColor BackgroundColor { get; set;  }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("setImage:imageProperties:")]
 		void SetImageimageProperties (CGImage image, NSDictionary metaData);
 #else
@@ -955,13 +975,17 @@ namespace ImageKit {
 		IKSaveOptionsDelegate Delegate { get; set; }
 
 		[Export ("initWithImageProperties:imageUTType:")]
-		IntPtr Constructor (NSDictionary imageProperties, string imageUTType);
+		NativeHandle Constructor (NSDictionary imageProperties, string imageUTType);
 
 		[Export ("addSaveOptionsAccessoryViewToSavePanel:")]
 		void AddSaveOptionsToPanel (NSSavePanel savePanel);
 
 		[Export ("addSaveOptionsToView:")]
 		void AddSaveOptionsToView (NSView view);
+
+		[Mac (11,3)]
+		[Export ("rememberLastSetting")]
+		bool RememberLastSetting { get; set; }
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -975,7 +999,7 @@ namespace ImageKit {
 	[BaseType (typeof (NSView), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] { typeof (IKScannerDeviceViewDelegate)})]
 	interface IKScannerDeviceView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frameRect);
+		NativeHandle Constructor (CGRect frameRect);
 
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
 		NSObject WeakDelegate { get; set; }

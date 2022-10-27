@@ -1,4 +1,4 @@
-﻿//
+//
 // The rule reports
 //
 // !missing-pinvoke!
@@ -64,7 +64,9 @@ namespace Extrospection {
 			
 			if (!dllimports.ContainsKey (name)) {
 				// if we find functions without matching DllImport then we report them
-				Log.On (framework).Add ($"!missing-pinvoke! {name} is not bound");
+				// but don't report deprecated functions
+				if (!decl.IsDeprecated ())
+					Log.On (framework).Add ($"!missing-pinvoke! {name} is not bound");
 				return;
 			}
 

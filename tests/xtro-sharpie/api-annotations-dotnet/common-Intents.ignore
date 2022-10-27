@@ -1,0 +1,15 @@
+## not exposed by our API (better use the OS version)
+!missing-field! IntentsVersionNumber not bound
+!missing-field! IntentsVersionString not bound
+
+## type is abstract and the selector are redefined in subclasses
+!missing-selector! +INIntentResolutionResult::needsValue not bound
+!missing-selector! +INIntentResolutionResult::notRequired not bound
+!missing-selector! +INIntentResolutionResult::unsupported not bound
+!missing-selector! +INIntentResolutionResult::confirmationRequiredWithItemToConfirm:forReason: not bound
+!missing-selector! +INIntentResolutionResult::unsupportedWithReason: not bound
+
+## Research required before we can bind the following ones
+!missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat: not bound
+!missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat:fromTable: not bound
+!missing-selector! +NSString::deferredLocalizedNSStringStringWithFormat:fromTable:arguments: not bound

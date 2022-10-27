@@ -11,6 +11,8 @@ using System;
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace WebKit
 {
 	[Mac (10, 10)]
@@ -30,7 +32,9 @@ namespace WebKit
 	[Native]
 	public enum WKNavigationActionPolicy : long {
 		Cancel,
-		Allow
+		Allow,
+		[Mac (11,3)][iOS (14,5)]
+		Download,
 	}
 
 	[Mac (10, 10)]
@@ -38,7 +42,9 @@ namespace WebKit
 	[Native]
 	public enum WKNavigationResponsePolicy : long {
 		Cancel,
-		Allow
+		Allow,
+		[Mac (11,3)][iOS (14,5)]
+		Download,
 	}
 
 	[Mac (10, 10)]
@@ -59,25 +65,29 @@ namespace WebKit
 		WebContentProcessTerminated,
 		WebViewInvalidated,
 		JavaScriptExceptionOccurred,
-		[iOS (9,0)][Mac (10,11, onlyOn64 : true)]
 		JavaScriptResultTypeIsUnsupported,
-		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
+		// Xcode 9
 		ContentRuleListStoreCompileFailed,
-		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
 		ContentRuleListStoreLookUpFailed,
-		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
 		ContentRuleListStoreRemoveFailed,
-		[iOS (11,0)][Mac (10,13, onlyOn64 : true)]
-		ContentRuleListStoreVersionMismatch
+		ContentRuleListStoreVersionMismatch,
+		// Xcode 11
+		AttributedStringContentFailedToLoad,
+		AttributedStringContentLoadTimedOut,
+		// Xcode 12
+		JavaScriptInvalidFrameTarget,
+		NavigationAppBoundDomain,
+		JavaScriptAppBoundDomain,
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
+#if NET
+	[NoMac]
+#endif
 	[iOS (8, 0)]
 	[Native]
 	public enum WKSelectionGranularity : long {
 		Dynamic, Character
 	}
-#endif
 
 	[iOS (10,0)][NoMac]
 	[Native]
@@ -92,24 +102,41 @@ namespace WebKit
 		FlightNumber = 1 << 5,
 		LookupSuggestion = 1 << 6,
 		SpotlightSuggestion = LookupSuggestion,
-#if XAMCORE_2_0
 		All = UInt64.MaxValue
-#else
-		All = UInt32.MaxValue
-#endif
 	}
 
-	[iOS (10,0)][Mac (10,12, onlyOn64: true)]
+	[iOS (10,0)][Mac (10,12)]
 	[Native]
 	[Flags]
 	public enum WKAudiovisualMediaTypes : ulong	{
 		None = 0,
 		Audio = 1 << 0,
 		Video = 1 << 1,
-#if XAMCORE_2_0
 		All = UInt64.MaxValue
-#else
-		All = UInt32.MaxValue
-#endif
 	}
+
+	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+	[Native]
+	public enum WKMediaCaptureState : long {
+		None,
+		Active,
+		Muted,
+	}
+
+	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+	[Native]
+	public enum WKMediaCaptureType : long {
+		Camera,
+		Microphone,
+		CameraAndMicrophone,
+	}
+
+	[Mac (12,0), iOS (15,0), NoTV, MacCatalyst (15,0)]
+	[Native]
+	public enum WKPermissionDecision : long {
+		Prompt,
+		Grant,
+		Deny,
+	}
+
 }

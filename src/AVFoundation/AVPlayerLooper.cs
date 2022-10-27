@@ -26,16 +26,18 @@ using AudioToolbox;
 using ObjCRuntime;
 using System;
 
+#nullable enable
+
 namespace AVFoundation {
 
 	public partial class AVPlayerLooper {
 
-#if !XAMCORE_4_0 // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
+#if !NET // This API got introduced in Xcode 8.0 binding but is not currently present nor in Xcode 8.3 or Xcode 9.0 needs research
 
 		bool loopingEnabled = true;
 
 		[Obsolete ("This selector does not exist in the header and was wrongly added.")]
-		public virtual bool LoopingEnabled { 
+		public virtual bool LoopingEnabled {
 			get {
 				return loopingEnabled;
 			}

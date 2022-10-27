@@ -1,0 +1,2 @@
+# This is only used as an output in a manual binding so it doesn't need the availability
+!missing-enum! EKAlarmType not bound

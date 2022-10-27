@@ -1,0 +1,63 @@
+# Make OOM on the 32b simulator
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest8_ConcWaitAndRelease(initial: 0, maximum: 1000, waitThreads: 50, releaseThreads: 25, succeededWait: 25, failedWait: 25, finalCount: 0, timeout: 500)
+System.Threading.Tests.SemaphoreSlimTests.RunSemaphoreSlimTest8_ConcWaitAndRelease(initial: 5, maximum: 1000, waitThreads: 50, releaseThreads: 50, succeededWait: 50, failedWait: 0, finalCount: 5, timeout: 1000)
+
+# fail on 32 simulator
+# Exception messages: System.MissingMethodException : Method not found: System.Runtime.CompilerServices.ConfiguredAsyncDisposable System.Threading.Tasks.TaskExtensions.ConfigureAwait(System.IAsyncDisposable,bool)
+System.Runtime.CompilerServices.Tests.ConfiguredAsyncDisposableTests.DisposeAsync_InvokesUnderlyingDisposeAsync(continueOnCapturedContext: True)
+System.Runtime.CompilerServices.Tests.ConfiguredAsyncDisposableTests.DisposeAsync_InvokesUnderlyingDisposeAsync(continueOnCapturedContext: False)
+System.Runtime.CompilerServices.Tests.ConfiguredAsyncDisposableTests.DisposeAsync_ContinuesOnCapturedContextIfExpected(continueOnCapturedContext: True)
+System.Runtime.CompilerServices.Tests.ConfiguredAsyncDisposableTests.DisposeAsync_ContinuesOnCapturedContextIfExpected(continueOnCapturedContext: False)
+System.Runtime.CompilerServices.Tests.ConfiguredCancelableAsyncEnumerableTests.Default_ConfigureAwait_WithCancellation_NoThrow
+System.Runtime.CompilerServices.Tests.ConfiguredCancelableAsyncEnumerableTests.Default_WithCancellation_ConfigureAwait_NoThrow
+System.Runtime.CompilerServices.Tests.ConfiguredCancelableAsyncEnumerableTests.ConfigureAwait_AwaitDisposeAsync_FlagsSetAppropriately(continueOnCapturedContext: True)
+System.Runtime.CompilerServices.Tests.ConfiguredCancelableAsyncEnumerableTests.ConfigureAwait_AwaitDisposeAsync_FlagsSetAppropriately(continueOnCapturedContext: False)
+System.Runtime.CompilerServices.Tests.ConfiguredCancelableAsyncEnumerableTests.WithCancellation_TokenPassedThrough
+System.Runtime.CompilerServices.Tests.ConfiguredCancelableAsyncEnumerableTests.Default_GetAsyncEnumerator_Throws
+System.Runtime.CompilerServices.Tests.ConfiguredCancelableAsyncEnumerableTests.ConfigureAwait_AwaitMoveNextAsync_FlagsSetAppropriately(continueOnCapturedContext: False)
+System.Runtime.CompilerServices.Tests.ConfiguredCancelableAsyncEnumerableTests.ConfigureAwait_AwaitMoveNextAsync_FlagsSetAppropriately(continueOnCapturedContext: True)
+
+# Expected: typeof(System.OverflowException)
+# Actual:   (No exception was thrown)
+System.Tests.DecimalTests.Remainder_Invalid(d1: 79228162514264337593543950335, d2: 0.1, exceptionType: typeof(System.OverflowException))
+
+# fails on 32b and crashes the test app. Issue https://github.com/xamarin/maccore/issues/1788
+Platform32:System.Threading.Tasks.Tests.ParallelForTests.RunSimpleParallelForeachAddTest_List(count: 16777216)
+
+# tests fail on 32b due to too much memory usage. Issue https://github.com/mono/mono/issues/16671
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_NoArgument_TrimAfterEachBulkAddOrRemove_TrimsToAtLeastCount(initialCount: 1000, numRemove: 400, numAdd: 5000, newCount: 85, newCapacity: 89)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_NoArgument_TrimAfterEachBulkAddOrRemove_TrimsToAtLeastCount(initialCount: 1000, numRemove: 400, numAdd: 500, newCount: 1, newCapacity: 3)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_NoArgument_TrimAfterEachBulkAddOrRemove_TrimsToAtLeastCount(initialCount: 1000, numRemove: 900, numAdd: 500, newCount: 85, newCapacity: 89)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_NoArgument_TrimAfterEachBulkAddOrRemove_TrimsToAtLeastCount(initialCount: 1000, numRemove: 900, numAdd: 5000, newCount: 85, newCapacity: 89)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_NoArgument_TrimAfterEachBulkAddOrRemove_TrimsToAtLeastCount(initialCount: 1000, numRemove: 400, numAdd: 500, newCount: 85, newCapacity: 89)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_WithArguments_OnDictionaryWithManyElementsRemoved_TrimsToAtLeastRequested(finalCount: 85)
+Platform32:System.Collections.Tests.Dictionary_Generic_Tests_string_string.TrimExcess_WithArguments_OnDictionaryWithManyElementsRemoved_TrimsToAtLeastRequested(finalCount: 89)
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.CreatingWithDifferentCapacityValues
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.RemoveTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.GettingByKeyTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.ValuesPropertyContainsAllValues
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.RemoveAtTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.PassingCapacityAndIEqualityComparer
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.KeysPropertyContainsAllKeys
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.ClearTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.ContainsTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.GettingByIndexTests
+Platform32:System.Collections.Specialized.Tests.OrderedDictionaryTests.CountTests
+Platform32:System.Text.Tests.StringBuilderTests.EnsureCapacity
+Platform32:System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestRemove1
+Platform32:System.Collections.Concurrent.Tests.ConcurrentDictionaryTests.TestRemove2
+
+# test fail because they try to create more threands than what the platform can handle. Mono issue: https://github.com/mono/mono/issues/16711 
+Platform32:System.Threading.Tasks.Tests.TaskRtTests_Core.RunLongRunningTaskTests
+Platform32:System.Threading.Tasks.Tests.TaskRtTests_Core.TestTaskTConstruction_tco
+Platform32:Test.TaskContinueWhenAnyTests.RunContinueWhenAnyTests
+
+# Test running out of memory
+Platform32:System.Collections.Tests.BitArray_OperatorsTests.Xor_Operator(l: [False, True, False, True, False, ...], r: [True, True, True, True, True, ...], expected: [True, False, True, False, True, ...])
+# Test fails because the threadpool cannot create more threads. Mono issue: https://github.com/mono/mono/issues/17588
+Platform32:System.Threading.Tasks.Tests.CancelWait.TaskCancelWaitTestCases.TaskCancelWait16
+# out of memory, filled in mono as https://github.com/mono/mono/issues/17480
+Platform32:System.Memory.Tests.ReadOnlySequenceTestsCommonChar.HelloWorldAcrossTwoBlocks
+
+# fails on 32b for an unknown reason, passed on 64
+Platform32:System.Collections.Concurrent.Tests.ConcurrentDictionary_NonGeneric_Tests.ICollection_NonGeneric_CopyTo_TwoDimensionArray_ThrowsException(count: 75)

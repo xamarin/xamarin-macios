@@ -14,14 +14,17 @@
     <AssemblyOriginatorKeyFile>..\..\product.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkIdentifier>Xamarin.iOS</TargetFrameworkIdentifier>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-unified</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0</DefineConstants>
+    <DefineConstants></DefineConstants>
+    <LangVersion>latest</LangVersion>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+    <RootTestsDirectory>..</RootTestsDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>True</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;DYNAMIC_REGISTRAR;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -29,16 +32,17 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <MtouchArch>i386, x86_64</MtouchArch>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.MacCatalyst'">iPhone Developer</CodesignKey>
+    <CodesignKey Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">Apple Development</CodesignKey>
     <MtouchLink>None</MtouchLink>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;DYNAMIC_REGISTRAR;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <MtouchLink>None</MtouchLink>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -98,7 +102,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
@@ -112,7 +116,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <MtouchArch>ARMv7</MtouchArch>
@@ -126,7 +130,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v</MtouchExtraArgs>
     <MtouchArch>ARM64</MtouchArch>
@@ -140,7 +144,7 @@
     <OutputPath>bin\iPhone\$(Configuration)-unified</OutputPath>
     <DefineConstants>MONOTOUCH;DEVICE;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>0</WarningLevel>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchExtraArgs>-v -v -v -v --bitcode:full</MtouchExtraArgs>
     <MtouchArch>ARMv7, ARM64</MtouchArch>
@@ -148,14 +152,26 @@
     <MtouchUseLlvm>true</MtouchUseLlvm>
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
   </PropertyGroup>
+  <PropertyGroup>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">$(RootTestsDirectory)\..\src\build\ios-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">$(RootTestsDirectory)\..\src\build\tvos-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.WatchOS'">$(RootTestsDirectory)\..\src\build\watchos-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.MacCatalyst'">$(RootTestsDirectory)\..\src\build\maccatalyst-defines.rsp</CompilerResponseFile>
+    <CompilerResponseFile Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">$(RootTestsDirectory)\..\src\build\macos-defines.rsp</CompilerResponseFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
-    <Reference Include="MonoTouch.NUnitLite" />
     <Reference Include="System.Net.Http" />
     <Reference Include="OpenTK-1.0" />
+    <Reference Include="System.Net" />
+    <PackageReference Include="MonoTouch.Dialog" Version="2.0.0-pre1" />
+    <ProjectReference Include="..\..\external\Touch.Unit\Touch.Client\iOS\Touch.Client-iOS.csproj">
+      <Project>{F611ED96-54B5-4975-99BB-12F50AF95936}</Project>
+      <Name>Touch.Client-iOS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist">
@@ -166,27 +182,27 @@
     <None Include="EmptyNib.xib" Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="obj\**">
+    <Compile Include="**\*.cs" Exclude="**\obj\**\*.cs">
       <Link>%(RecursiveDir)%(Filename).cs</Link>
     </Compile>
     <Compile Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <Compile Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestPoint.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPoint.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestPointF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestPointF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestPointF.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestRectangle.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestRectangle.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestRectangle.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestRectangleF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestRectangleF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestRectangleF.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSize.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestSize.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestSize.cs</Link>
     </Compile>
-    <Compile Include="..\..\external\mono\mcs\class\System.Drawing\Test\System.Drawing\TestSizeF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
+    <Compile Include="..\..\builds\mono-ios-sdk-destdir\ios-sources\mcs\class\System.Drawing\Test\System.Drawing\TestSizeF.cs" Condition="$(TargetFrameworkIdentifier) != 'Xamarin.WatchOS'">
       <Link>System.Drawing\TestSizeF.cs</Link>
     </Compile>
     <Compile Include="..\api-shared\ObjCRuntime\RegistrarTest.cs">
@@ -201,7 +217,17 @@
     <Compile Include="..\common\ConditionalCompilation.cs">
       <Link>ConditionalCompilation.cs</Link>
     </Compile>
+    <Compile Include="..\common\Extensions.cs">
+      <Link>Extensions.cs</Link>
+    </Compile>
+    <Compile Include="..\..\tools\common\ApplePlatform.cs">
+      <Link>ApplePlatform.cs</Link>
+    </Compile>
+    <Compile Include="SceneKit\SCNVector3Test.cs" />
+    <Compile Include="SceneKit\SCNVector4Test.cs" />
   </ItemGroup>
+  <Import Project="$(RootTestsDirectory)\ComputeRegistrarConstant.targets" />
+  <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <Folder Include="MapKit\" />
@@ -263,6 +289,7 @@
     <Folder Include="CoreMidi\" />
     <Folder Include="CoreAudioKit\" />
     <Folder Include="Messages\" />
+    <Folder Include="ClockKit\" />
     <Folder Include="CloudKit\" />
     <Folder Include="Intents\" />
     <Folder Include="System.Net.Http\" />
@@ -277,6 +304,10 @@
     <Folder Include="NaturalLanguage\" />
     <Folder Include="Vision\" />
     <Folder Include="Compression\" />
+    <Folder Include="BackgroundTasks\" />
+    <Folder Include="WebKit\" />
+    <Folder Include="NearbyInteraction\" />
+    <Folder Include="MetricKit\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AudioToolbox\1.caf" />
@@ -288,6 +319,8 @@
     <Content Include="LL-171A-B-B797E457-16AB-C708-1E0F-32C19DBD47B5.icc" />
     <Content Include="drum01.mp3" />
     <Content Include="Model3.arobject" />
+    <Content Include="access-denied.html" />
+    <Content Include="access-granted.html" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" Include="LaunchScreen.storyboard" />
@@ -297,7 +330,7 @@
       <Project>{676F527D-3352-42EA-9DE2-181C45003568}</Project>
       <Name>EmbeddedResources</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\tests\bindings-test\bindings-test.csproj">
+    <ProjectReference Include="..\..\tests\bindings-test\iOS\bindings-test.csproj">
       <Project>{D6667423-EDD8-4B50-9D98-1AC5D8A8A4EA}</Project>
       <Name>bindings-test</Name>
     </ProjectReference>
@@ -314,11 +347,18 @@
     <BundleResource Include="xamvideotest.mp4" />
     <BundleResource Include="CoreImage\xamarinmonkey.heic" />
     <BundleResource Include="Resources\Base.lproj\Localizable.strings" />
+    <BundleResource Include="Resources\metal-sample.metal" />
+    <BundleResource Include="Resources\fragmentShader.metal" />
     <BundleResource Include="uncompressed.txt" />
     <BundleResource Include="compressed_lze" />
     <BundleResource Include="compressed_lz4" />
     <BundleResource Include="compressed_lzma" />
     <BundleResource Include="compressed_zip" />
+    <BundleResource Include="example.pac" />
+    <BundleResource Include="Resources\square.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <Metal Include="Resources\metal-sample.metal" Condition="'$(Platform)' != 'iPhoneSimulator' " />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Security\openssl_crt.der">
@@ -347,8 +387,20 @@
     <GeneratedTestInput Include="..\..\tests\test-libraries\Makefile" />
     <GeneratedTestOutput Include="..\..\tests\test-libraries\TrampolineTest.generated.cs" />
     <GeneratedTestOutput Include="..\..\tests\test-libraries\RegistrarTest.generated.cs" />
+    <CustomMetalSmeltingInput Include="Resources\fragmentShader.metal" />
   </ItemGroup>
-  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)">
+  <Target Name="CustomMetalSmelting" Inputs="@(CustomMetalSmeltingInput)" Outputs="$(_AppBundlePath)\fragmentShader.metallib" Condition="'$(Platform)' != 'iPhoneSimulator' And '$(TargetFrameworkIdentifier)' != 'Xamarin.WatchOS'" DependsOnTargets="_GenerateBundleName;_DetectSdkLocations">
+    <PropertyGroup>
+        <_SmeltingSdk Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">iphoneos</_SmeltingSdk>
+        <_SmeltingSdk Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">appletvos</_SmeltingSdk>
+        <_SmeltingMinOS Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.iOS'">-mios-version-min=11.0</_SmeltingMinOS>
+        <_SmeltingMinOS Condition="'$(TargetFrameworkIdentifier)' == 'Xamarin.TVOS'">-mtvos-version-min=11.0</_SmeltingMinOS>
+    </PropertyGroup>
+    <MakeDir Directories="$(IntermediateOutputPath);$(AppBundleDir)" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metal -c @(CustomMetalSmeltingInput) -o $(IntermediateOutputPath)\fragmentShader.air $(_SmeltingMinOS)" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+    <Exec Command="xcrun -sdk $(_SmeltingSdk) metallib $(IntermediateOutputPath)\fragmentShader.air -o $(AppBundleDir)\fragmentShader.metallib" EnvironmentVariables="DEVELOPER_DIR=$(_SdkDevPath)" />
+  </Target>
+  <Target Name="BeforeBuild" Inputs="@(GeneratedTestInput)" Outputs="@(GeneratedTestOutput)" DependsOnTargets="CustomMetalSmelting" >
     <Exec Command="make -j8 -C $(TestLibrariesDirectory)" />
   </Target>
 </Project>

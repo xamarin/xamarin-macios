@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-maccatalyst</TargetFramework>
+  </PropertyGroup>
+
+  <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->
+  <Import Project="../shared.csproj" />
+
+  <ItemGroup>
+    <!-- this empty item group is here for xharness -->
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- This must be after the place where xharness injects the RuntimeIdentifier property -->
+    <DefineConstants Condition="'$(RuntimeIdentifier)' == 'maccatalyst-arm64'">$(DefineConstants);AOT</DefineConstants>
+  </PropertyGroup>
+</Project>

@@ -1,6 +1,6 @@
 // Copyright 2014-2016 Xamarin Inc. All rights reserved.
 
-#if !WATCH
+#if !NET
 
 using System;
 using System.ComponentModel;
@@ -9,19 +9,45 @@ using CoreMedia;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#nullable enable
+
 namespace AVFoundation {
-#if MONOMAC && XAMCORE_2_0 && !XAMCORE_4_0
+	public delegate int AVAudioSourceNodeRenderHandler (bool isSilence, AudioToolbox.AudioTimeStamp timestamp, uint frameCount, ref AudioToolbox.AudioBuffers outputData);
+
+	partial class AVAudioNode {
+		internal AVAudioNode () { }
+	}
+
+	partial class AVAudioSourceNode {
+		[Obsolete ("Use 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' instead.")]
+		public AVAudioSourceNode (AVAudioSourceNodeRenderHandler renderHandler)
+		{
+			throw new InvalidOperationException ("Do not use this constructor. Use the 'AVAudioSourceNode (AVAudioSourceNodeRenderHandler2)' constructor instead.");
+		}
+
+		[Obsolete ("Use 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' instead.")]
+		public AVAudioSourceNode (AVAudioFormat format, AVAudioSourceNodeRenderHandler renderHandler)
+		{
+			throw new InvalidOperationException ("Do not use this constructor. Use the 'AVAudioSourceNode (AVAudioFormat, AVAudioSourceNodeRenderHandler2)' constructor instead.");
+		}
+	}
+#if !WATCH
+#if MONOMAC
 	[Obsolete ("This API is not available on this platform.")]
 	public partial class AVCaptureDataOutputSynchronizer : NSObject
 	{
-		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (); } }
+		public override NativeHandle ClassHandle { get { throw new PlatformNotSupportedException (); } }
 
 		protected AVCaptureDataOutputSynchronizer (NSObjectFlag t) : base (t)
 		{
 			throw new PlatformNotSupportedException ();
 		}
 
-		protected internal AVCaptureDataOutputSynchronizer (IntPtr handle) : base (handle)
+		protected internal AVCaptureDataOutputSynchronizer (NativeHandle handle) : base (handle)
 		{
 			throw new PlatformNotSupportedException ();
 		}
@@ -81,30 +107,20 @@ namespace AVFoundation {
 			throw new PlatformNotSupportedException ();
 		}
 
-		protected internal AVCaptureDataOutputSynchronizerDelegate (IntPtr handle) : base (handle)
+		protected internal AVCaptureDataOutputSynchronizerDelegate (NativeHandle handle) : base (handle)
 		{
 			throw new PlatformNotSupportedException ();
 		}
 
 		public abstract void DidOutputSynchronizedDataCollection (AVCaptureDataOutputSynchronizer synchronizer, AVCaptureSynchronizedDataCollection synchronizedDataCollection);
 	}
-#endif // MONOMAC && !XAMCORE_4_0
-
-#if !XAMCORE_2_0
-	partial class AVAssetResourceLoadingDataRequest {
-
-		[Obsolete ("Type is not meant to be created by user code.")]
-		public AVAssetResourceLoadingDataRequest ()
-		{
-		}
-	}
-#endif
+#endif // MONOMAC
 
 #if !XAMCORE_3_0
 	partial class AVAsset {
 
 		[Obsolete ("Use 'GetChapterMetadataGroups'.")]
-		public virtual AVMetadataItem[] ChapterMetadataGroups (NSLocale forLocale, AVMetadataItem[] commonKeys)
+		public virtual AVMetadataItem []? ChapterMetadataGroups (NSLocale forLocale, AVMetadataItem [] commonKeys)
 		{
 			return null;
 		}
@@ -113,7 +129,7 @@ namespace AVFoundation {
 	partial class AVAssetTrack {
 
 		[Obsolete ("Use 'GetAssociatedTracks'.")]
-		public virtual NSString GetAssociatedTracksOfType (NSString avAssetTrackTrackAssociationType)
+		public virtual NSString? GetAssociatedTracksOfType (NSString avAssetTrackTrackAssociationType)
 		{
 			return null;
 		}
@@ -122,7 +138,7 @@ namespace AVFoundation {
 	partial class AVMutableCompositionTrack {
 
 		[Obsolete ("Use 'InsertTimeRanges' overload accepting an 'NSValue' array.")]
-		public virtual bool InsertTimeRanges (NSValue cmTimeRanges, AVAssetTrack[] tracks, CMTime startTime, out NSError error)
+		public virtual bool InsertTimeRanges (NSValue cmTimeRanges, AVAssetTrack [] tracks, CMTime startTime, out NSError error)
 		{
 			return InsertTimeRanges (new NSValue [] { cmTimeRanges }, tracks, startTime, out error);
 		}
@@ -146,7 +162,6 @@ namespace AVFoundation {
 	}
 #endif
 
-#if !XAMCORE_4_0
 	partial class AVCaptureInputPort {
 
 		[Obsolete ("Valid instance of this type cannot be directly created.")]
@@ -154,7 +169,7 @@ namespace AVFoundation {
 		{
 		}
 	}
-	
+
 	partial class AVAudioChannelLayout {
 
 		[Obsolete ("Valid instance of this type cannot be directly created.")]
@@ -179,9 +194,8 @@ namespace AVFoundation {
 		}
 	}
 
-#if !MONOMAC
-	partial class AVSampleBufferAudioRenderer
-	{
+#if !MONOMAC && !__MACCATALYST__
+	partial class AVSampleBufferAudioRenderer {
 		[Obsolete ("This API is not available on this platform.")]
 		public virtual string AudioOutputDeviceUniqueId {
 			get { throw new NotImplementedException (); }
@@ -191,8 +205,7 @@ namespace AVFoundation {
 #endif
 
 #if !IOS
-	partial class AVContentKeyRequest
-	{
+	partial class AVContentKeyRequest {
 		[Obsolete ("This API is not available on this platform.")]
 		public virtual void RespondByRequestingPersistableContentKeyRequest ()
 		{
@@ -218,7 +231,8 @@ namespace AVFoundation {
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVAssetDownloadDelegate (IntPtr handle)
+		protected internal AVAssetDownloadDelegate (NativeHandle handle)
+			: base (handle)
 		{
 			throw new NotImplementedException ();
 		}
@@ -298,7 +312,7 @@ namespace AVFoundation {
 	[Deprecated (PlatformName.TvOS, 10, 0, PlatformArchitecture.None)]
 	public class AVAssetDownloadTask : NSUrlSessionTask {
 
-		public override IntPtr ClassHandle {
+		public override NativeHandle ClassHandle {
 			get {
 				throw new NotImplementedException ();
 			}
@@ -353,7 +367,7 @@ namespace AVFoundation {
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVAssetDownloadTask (IntPtr handle)
+		protected internal AVAssetDownloadTask (NativeHandle handle)
 		{
 			throw new NotImplementedException ();
 		}
@@ -369,14 +383,14 @@ namespace AVFoundation {
 			}
 		}
 
-		public override IntPtr ClassHandle {
+		public override NativeHandle ClassHandle {
 			get {
 				throw new NotImplementedException ();
 			}
 		}
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
-		protected internal AVAssetDownloadUrlSession (IntPtr handle) : base (handle)
+		protected internal AVAssetDownloadUrlSession (NativeHandle handle) : base (handle)
 		{
 			throw new NotImplementedException ();
 		}
@@ -418,22 +432,22 @@ namespace AVFoundation {
 			throw new NotImplementedException ();
 		}
 
-		public override NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, NSUrlSessionResponse completionHandler)
+		public override NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, NSUrlSessionResponse? completionHandler)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse completionHandler)
+		public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse? completionHandler)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotImplementedException ();
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotImplementedException ();
 		}
@@ -453,7 +467,7 @@ namespace AVFoundation {
 			throw new NotImplementedException ();
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotImplementedException ();
 		}
@@ -505,7 +519,101 @@ namespace AVFoundation {
 	}
 
 #endif // TVOS
-#endif // !XAMCORE_4_0
+#endif // !WATCH
+
+#if IOS // includes __MACCATALYST__
+	public partial class AVCaptureManualExposureBracketedStillImageSettings {
+		[Obsolete ("Use the static 'Create' method to create a working instance of this type.")]
+		public AVCaptureManualExposureBracketedStillImageSettings () : base (NSObjectFlag.Empty)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+
+	public partial class AVCaptureAutoExposureBracketedStillImageSettings {
+		[Obsolete ("Use the static 'Create' method to create a working instance of this type.")]
+		public AVCaptureAutoExposureBracketedStillImageSettings () : base (NSObjectFlag.Empty)
+		{
+			throw new NotImplementedException ();
+		}
+	}
+#endif
+
+	// "compatibility shim" in xcode 12.5 were removed in xcode 13
+	public partial class AVPlayerInterstitialEventController {
+
+		[Obsolete ("Use 'GetInterstitialEventController' instead.")]
+		public static AVPlayerInterstitialEventController GetPlayerInterstitialEventController (AVPlayer primaryPlayer)
+		{
+			return GetInterstitialEventController (primaryPlayer);
+		}
+
+		[Obsolete ("Use 'Events' instead.")]
+		public virtual AVPlayerInterstitialEvent []? InterstitialEvents {
+			get { return Events; }
+			set { Events = value; }
+		}
+	}
+
+	public partial class AVPlayerInterstitialEvent {
+
+		[Obsolete ("Use 'TemplateItems' instead.")]
+		public virtual AVPlayerItem [] InterstitialTemplateItems {
+			get { return TemplateItems; }
+		}
+	}
+
+#nullable enable
+	[Obsolete ("Removed in Xcode 13.")]
+	[Deprecated (PlatformName.TvOS, 15, 0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.MacOSX, 12, 0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.iOS, 15, 0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.MacCatalyst, 15, 0, PlatformArchitecture.All)]
+	[Deprecated (PlatformName.WatchOS, 8, 0, PlatformArchitecture.All)]
+	public partial class AVPlayerInterstitialEventObserver : NSObject {
+
+		public virtual AVPlayerInterstitialEvent [] InterstitialEvents => throw new NotImplementedException ();
+
+		public override NativeHandle ClassHandle => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected AVPlayerInterstitialEventObserver (NSObjectFlag t) : base (t) => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		[EditorBrowsable (EditorBrowsableState.Advanced)]
+		protected internal AVPlayerInterstitialEventObserver (NativeHandle handle) : base (handle) => throw new NotImplementedException ();
+
+		[DesignatedInitializer]
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public AVPlayerInterstitialEventObserver (AVPlayer primaryPlayer) : base (NSObjectFlag.Empty) => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVPlayerInterstitialEvent? CurrentEvent => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVPlayerInterstitialEvent [] Events => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVQueuePlayer? InterstitialPlayer => throw new NotImplementedException ();
+
+		[BindingImpl (BindingImplOptions.Optimizable)]
+		public virtual AVPlayer? PrimaryPlayer => throw new NotImplementedException ();
+
+		public static NSString CurrentEventDidChangeNotification => throw new NotImplementedException ();
+		public static NSString EventsDidChangeNotification => throw new NotImplementedException ();
+
+		//
+		// Notifications
+		//
+		public static partial class Notifications {
+			public static NSObject ObserveCurrentEventDidChange (EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+			public static NSObject ObserveCurrentEventDidChange (NSObject objectToObserve, EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+			public static NSObject ObserveEventsDidChange (EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+			public static NSObject ObserveEventsDidChange (NSObject objectToObserve, EventHandler<NSNotificationEventArgs> handler) => throw new NotImplementedException ();
+		}
+	} /* class AVPlayerInterstitialEventObserver */
+#nullable disable
 }
 
-#endif
+#endif // !NET

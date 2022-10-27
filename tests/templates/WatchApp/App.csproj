@@ -12,6 +12,7 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>App</AssemblyName>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-watchos-app</IntermediateOutputPath>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-watchos-app</OutputPath>

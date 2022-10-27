@@ -1,13 +1,9 @@
 using System;
 using NUnit.Framework;
-#if XAMCORE_2_0
 using Foundation;
 using CloudKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CloudKit;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CloudKit
 {
@@ -23,7 +19,7 @@ namespace MonoTouchFixtures.CloudKit
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 			q = new CKQuery ("Foo", NSPredicate.FromFormat ("email = '@xamarin'"));
 			op = new CKQueryOperation (q);
 		}

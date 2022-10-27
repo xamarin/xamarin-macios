@@ -6,7 +6,6 @@
 //
 // Copyrigh 2014, Xamarin Inc.
 //
-#if XAMCORE_2_0 || !MONOMAC
 
 using System;
 using System.ComponentModel;
@@ -14,6 +13,8 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace Metal {
 
@@ -106,4 +107,3 @@ namespace Metal {
 	}
 #endif
 }
-#endif

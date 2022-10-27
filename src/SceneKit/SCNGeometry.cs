@@ -11,6 +11,8 @@ using System;
 using CoreGraphics;
 using Foundation;
 
+#nullable enable
+
 namespace SceneKit {
 	public partial class SCNGeometry {
 #if !XAMCORE_3_0

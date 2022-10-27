@@ -26,6 +26,7 @@
 //
 
 using System;
+using CoreFoundation;
 using CoreText;
 using ObjCRuntime;
 #if !MONOMAC
@@ -37,7 +38,7 @@ namespace Foundation {
 
 		public string Value {
 			get {
-				return NSString.FromHandle (LowLevelValue);
+				return CFString.FromHandle (LowLevelValue);
 			}
 		}
 
@@ -46,6 +47,17 @@ namespace Foundation {
 			return Runtime.GetNSObject<NSDictionary> (LowLevelGetAttributes (location, out effectiveRange));
 		}
 		
+#if NET
+		public IntPtr LowLevelGetAttributes (nint location, out NSRange effectiveRange)
+		{
+			unsafe {
+				fixed (NSRange *effectiveRangePtr = &effectiveRange) {
+					return LowLevelGetAttributes (location, (IntPtr) effectiveRangePtr);
+				}
+			}
+		}
+#endif
+
 		public NSAttributedString (string str, CTStringAttributes attributes)
 			: this (str, attributes != null ? attributes.Dictionary : null)
 		{

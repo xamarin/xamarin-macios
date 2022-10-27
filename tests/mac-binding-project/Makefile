@@ -1,7 +1,6 @@
 TOP=../..
 include $(TOP)/Make.config
 
-export MD_APPLE_SDK_ROOT=$(shell dirname `dirname $(XCODE_DEVELOPER_ROOT)`)
 export TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
@@ -14,17 +13,17 @@ bin:
 	$(Q) mkdir -p bin
 
 bin/SimpleClassDylib.dylib:  bin
-	$(Q) xcrun clang -shared ../common/mac/SimpleClass.m -o bin/SimpleClassDylib.dylib -std=gnu99 -mmacosx-version-min=10.9 -framework Cocoa -lSystem
+	$(Q) xcrun clang -shared ../common/mac/SimpleClass.m -o bin/SimpleClassDylib.dylib -std=gnu99 -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -framework Cocoa -lSystem
 
 bin/SimpleClass\ Dylib.dylib: bin/SimpleClassDylib.dylib
 	$(Q) cp bin/SimpleClassDylib.dylib bin/SimpleClass\ Dylib.dylib
 
 bin/SimpleClass.%.a: ../common/mac/SimpleClass.m bin
-	$(Q) clang -c $< -o bin/SimpleClass.$*.o -std=gnu99 -mmacosx-version-min=10.9 -arch $*
+	$(Q) clang -c $< -o bin/SimpleClass.$*.o -std=gnu99 -mmacosx-version-min=$(MIN_MACOS_SDK_VERSION) -arch $*
 	$(Q) xcrun ar -rcs $@ bin/SimpleClass.$*.o
 
-bin/SimpleClassStatic.a: bin bin/SimpleClass.i386.a bin/SimpleClass.x86_64.a
-	$(Q) lipo -create bin/SimpleClass.i386.a bin/SimpleClass.x86_64.a -output $@
+bin/SimpleClassStatic.a: bin/SimpleClass.x86_64.a | bin
+	$(Q) $(CP) $< $@
 
 bin/Mobile-dynamic/MobileBinding.dll: bin/SimpleClassDylib.dylib
 	$(Q) $(SYSTEM_XIBUILD) -- $(XBUILD_VERBOSITY) MobileBinding/MobileBinding_dynamic.csproj

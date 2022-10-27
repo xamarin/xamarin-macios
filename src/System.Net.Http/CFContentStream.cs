@@ -32,15 +32,12 @@ using System.IO;
 using System.Net;
 using System.Runtime.ExceptionServices;
 
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 using CoreFoundation;
-#elif XAMCORE_2_0 || SYSTEM_NET_HTTP
+#else
 using CoreServices;
 using CoreFoundation;
-#else
-using MonoTouch.CoreServices;
-using MonoTouch.CoreFoundation;
 #endif
 
 namespace System.Net.Http
@@ -125,7 +122,7 @@ namespace System.Net.Http
 			data_event.Set ();
 		}
 
-		protected internal override async Task SerializeToStreamAsync (Stream stream, TransportContext context)
+		protected override async Task SerializeToStreamAsync (Stream stream, TransportContext context)
 		{
 			while (data_event.WaitOne ()) {
 				data_mutex.WaitOne ();
@@ -147,7 +144,10 @@ namespace System.Net.Http
 			}
 		}
 
-		protected internal override bool TryComputeLength (out long length)
+#if !NET
+		internal
+#endif
+		protected override bool TryComputeLength (out long length)
 		{
 			length = 0;
 			return false;

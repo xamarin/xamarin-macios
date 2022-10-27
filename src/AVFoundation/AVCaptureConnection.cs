@@ -33,40 +33,17 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AVFoundation {
+#if !NET
 	public partial class AVCaptureConnection {
-
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		public bool SupportsVideoMinFrameDuration {
-			get {
-				if (RespondsToSelector (new Selector ("isVideoMinFrameDurationSupported")))
-					return _SupportsVideoMinFrameDuration;
-				return false;
-			}
-		}
-
-		[Deprecated (PlatformName.iOS, 7, 0)]
-		public bool SupportsVideoMaxFrameDuration {
-			get {
-#if !MONOMAC
-				if (RespondsToSelector (new Selector ("isVideoMaxFrameDurationSupported")))
-					return _SupportsVideoMaxFrameDuration;
-#endif
-				return false;
-			}
-		}
-
-#if !XAMCORE_2_0
-		[Advice ("Use InputPorts")]
-		public AVCaptureInputPort [] inputPorts { 
-			get { return InputPorts; }
-		}
-#endif
 		[Obsolete ("Use AvailableAudioChannels property instead.")]
-		public virtual AVCaptureAudioChannel AudioChannels { 
+		public virtual AVCaptureAudioChannel AudioChannels {
 			get { throw new NotSupportedException ("Use AvailableAudioChannels property instead."); }
 		}
 	}
+#endif
 }
 
 #endif // !TVOS

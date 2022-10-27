@@ -1,4 +1,4 @@
-﻿//
+//
 // MDLTexture Unit Tests
 //
 // Authors:
@@ -10,24 +10,20 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if !__TVOS__
 using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-#if !__TVOS__
-using MonoTouch.MultipeerConnectivity;
-#endif
-using MonoTouch.UIKit;
-using MonoTouch.ModelIO;
-using MonoTouch.ObjCRuntime;
-#endif
-using OpenTK;
 using NUnit.Framework;
+
+#if NET
+using System.Numerics;
+using Vector2i = global::CoreGraphics.NVector2i;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.ModelIO {
 
@@ -35,36 +31,10 @@ namespace MonoTouchFixtures.ModelIO {
 	// we want the test to be available if we use the linker
 	[Preserve (AllMembers = true)]
 	public class MDLTextureTest {
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);
-
-			if (
-#if !MONOMAC
-				Runtime.Arch == Arch.SIMULATOR && 
-#endif
-				IntPtr.Size == 4) {
-				// There's a bug in the i386 version of objc_msgSend where it doesn't preserve SIMD arguments
-				// when resizing the cache of method selectors for a type. So here we call all selectors we can
-				// find, so that the subsequent tests don't end up producing any cache resize (radar #21630410).
-				object dummy;
-				using (var obj = new MDLTexture (null, true, null, Vector2i.Zero, 12, 2, MDLTextureChannelEncoding.Float16, false)) {
-					dummy = obj.ChannelCount;
-					dummy = obj.ChannelEncoding;
-					dummy = obj.Dimensions;
-					dummy = obj.IsCube;
-					dummy = obj.MipLevelCount;
-					dummy = obj.Name;
-					dummy = obj.RowStride;
-					obj.GetTexelDataWithBottomLeftOrigin ();
-					obj.GetTexelDataWithBottomLeftOrigin (1, false);
-					obj.GetTexelDataWithTopLeftOrigin ();
-					obj.GetTexelDataWithTopLeftOrigin (1, false);
-				}
-				using (var obj = new MDLTexture ()) {
-				}
-			}
 		}
 
 		[Test]
@@ -88,11 +58,11 @@ namespace MonoTouchFixtures.ModelIO {
 						Assert.IsNull (txt, "Is Null"); // this is probably because the arguments to CreateIrradianceTextureCube are invalid, but I haven't been able to figure out valid values.
 					} else {
 						Assert.IsNotNull (txt, "Ain't Null");
-						Assert.AreEqual (4, txt.ChannelCount, "ChannelCount");
+						Assert.AreEqual ((nuint) 4, txt.ChannelCount, "ChannelCount");
 						Assert.AreEqual (MDLTextureChannelEncoding.UInt8, txt.ChannelEncoding, "ChannelEncoding");
 						Assert.AreEqual (new Vector2i (3, 18), txt.Dimensions, "Dimensions");
-						Assert.AreEqual (2, txt.MipLevelCount, "MipLevelCount");
-						Assert.AreEqual (12, txt.RowStride, "RowStride");
+						Assert.AreEqual ((nuint) 2, txt.MipLevelCount, "MipLevelCount");
+						Assert.AreEqual ((nint) 12, txt.RowStride, "RowStride");
 					}
 				}
 			}
@@ -109,11 +79,11 @@ namespace MonoTouchFixtures.ModelIO {
 						Assert.IsNull (txt, "Is Null"); // this is probably because the arguments to CreateIrradianceTextureCube are invalid, but I haven't been able to figure out valid values.
 					} else {
 						Assert.IsNotNull (txt, "Ain't Null");
-						Assert.AreEqual (4, txt.ChannelCount, "ChannelCount");
+						Assert.AreEqual ((nuint) 4, txt.ChannelCount, "ChannelCount");
 						Assert.AreEqual (MDLTextureChannelEncoding.UInt8, txt.ChannelEncoding, "ChannelEncoding");
 						Assert.AreEqual (new Vector2i (3, 18), txt.Dimensions, "Dimensions");
-						Assert.AreEqual (1, txt.MipLevelCount, "MipLevelCount");
-						Assert.AreEqual (12, txt.RowStride, "RowStride");
+						Assert.AreEqual ((nuint) 1, txt.MipLevelCount, "MipLevelCount");
+						Assert.AreEqual ((nint) 12, txt.RowStride, "RowStride");
 					}
 				}
 			}

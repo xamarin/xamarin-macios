@@ -1,17 +1,4 @@
-# Deprecated in iOS 9.0 (so watch 2.0) with an alternative (NSWritingDirectionFormatType in UIKit)
-# better not expose the deprecated enum since it's not available in tvOS either
-!missing-enum! NSTextWritingDirection not bound
-
-## deprecated in 9.0 but still visible (for watchOS) from `NSDeprecatedKitAdditions (NSAttributedString)`
-## not part of tvOS and we provide the replacement selector with the same managed API
-!missing-selector! NSAttributedString::initWithFileURL:options:documentAttributes:error: not bound
-
-## UITraitCollection is not available on watchOS
-!missing-selector! +UIColor::colorNamed:inBundle:compatibleWithTraitCollection: not bound
-
 ## lack of availabilty macros on NSItemProvder.PreferredPresentationStyle - intro says they are not available
-!missing-selector! NSItemProvider::preferredPresentationStyle not bound
-!missing-selector! NSItemProvider::setPreferredPresentationStyle: not bound
 ## and that also means the (enum/returned) type is unused
 !missing-enum! UIPreferredPresentationStyle not bound
 
@@ -30,3 +17,22 @@
 ## not supported as per introspection, rdar filled: 42851110
 !missing-protocol-conformance! NSAttributedString should conform to NSItemProviderReading (defined in 'NSAttributedString_ItemProvider' category)
 !missing-protocol-conformance! NSAttributedString should conform to NSItemProviderWriting (defined in 'NSAttributedString_ItemProvider' category)
+
+# Xcode 11
+
+## Not really useful to have them exposed
+!missing-pinvoke! UIFontWeightForImageSymbolWeight is not bound
+!missing-pinvoke! UIImageSymbolWeightForFontWeight is not bound
+
+# Initial result from new rule extra-null-allowed
+!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSData,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
+!extra-null-allowed! 'System.Void Foundation.NSAttributedString::.ctor(Foundation.NSUrl,Foundation.NSDictionary,Foundation.NSDictionary&,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #1
+!extra-null-allowed! 'System.Void UIKit.UIBezierPath::set_CGPath(CoreGraphics.CGPath)' has a extraneous [NullAllowed] on parameter #0
+
+# Initial result from new rule missing-null-allowed
+!missing-null-allowed! 'Foundation.NSData Foundation.NSAttributedString::GetDataFromRange(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSFileWrapper Foundation.NSAttributedString::GetFileWrapperFromRange(Foundation.NSRange,Foundation.NSDictionary,Foundation.NSError&)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'Foundation.NSObject UIKit.UIFontDescriptor::GetObject(Foundation.NSString)' is missing an [NullAllowed] on return type
+!missing-null-allowed! 'UIKit.UIFontDescriptor UIKit.UIFontDescriptor::CreateWithTraits(UIKit.UIFontDescriptorSymbolicTraits)' is missing an [NullAllowed] on return type
+
+!unknown-field! UIUserNotificationActionResponseTypedTextKey bound

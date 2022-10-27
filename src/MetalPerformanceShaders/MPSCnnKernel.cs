@@ -1,4 +1,5 @@
-﻿#if XAMCORE_2_0 || !MONOMAC
+#nullable enable
+
 using System;
 using Metal;
 using Foundation;
@@ -28,4 +29,3 @@ namespace MetalPerformanceShaders {
 		}
 	}
 }
-#endif

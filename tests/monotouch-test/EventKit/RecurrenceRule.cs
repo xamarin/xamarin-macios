@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for EKRecurrenceRule
 //
 // Authors:
@@ -10,16 +10,11 @@
 #if !__TVOS__
 
 using System;
-#if XAMCORE_2_0
 using EventKit;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.EventKit;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.EventKit {
 
@@ -30,7 +25,7 @@ namespace MonoTouchFixtures.EventKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 		}
 
 		[Test]
@@ -40,8 +35,12 @@ namespace MonoTouchFixtures.EventKit {
 				Assert.AreEqual ("gregorian", rule.CalendarIdentifier, "CalendarIdentifier");
 				Assert.IsNull (rule.RecurrenceEnd, "RecurrenceEnd");
 				Assert.AreEqual (EKRecurrenceFrequency.Weekly, rule.Frequency, "Frequency");
-				Assert.AreEqual (1, rule.Interval, "Interval");
+				Assert.AreEqual ((nint) 1, rule.Interval, "Interval");
+#if NET
+				Assert.AreEqual (EKWeekday.Monday, rule.FirstDayOfTheWeek, "FirstDayOfTheWeek");
+#else
 				Assert.AreEqual (EKDay.Monday, rule.FirstDayOfTheWeek, "FirstDayOfTheWeek");
+#endif
 				Assert.IsNull (rule.DaysOfTheWeek, "DaysOfTheWeek");
 				Assert.IsNull (rule.DaysOfTheMonth, "DaysOfTheMonth");
 				Assert.IsNull (rule.DaysOfTheYear, "DaysOfTheYear");

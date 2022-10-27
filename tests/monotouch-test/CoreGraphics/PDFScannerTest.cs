@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CGPDFScanner
 //
 // Authors:
@@ -8,26 +8,12 @@
 //
 
 using System;
-#if XAMCORE_2_0
+using System.Runtime.InteropServices;
+
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 
@@ -38,7 +24,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 		int bt_count;
 		int do_checks;
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (Action<IntPtr,IntPtr>))]
+#endif
 		static void BT (IntPtr reserved, IntPtr info)
 		{
 			// sadly the parameters are always identical and we can't know the operator name
@@ -51,7 +41,11 @@ namespace MonoTouchFixtures.CoreGraphics {
 			(scanner.UserInfo as PDFScannerTest).bt_count++;
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof (Action<IntPtr,IntPtr>))]
+#endif
 		static void Do (IntPtr reserved, IntPtr info)
 		{
 			// sadly the parameters are always identical and we can't know the operator name
@@ -113,6 +107,13 @@ namespace MonoTouchFixtures.CoreGraphics {
 				table.SetCallback ("Do", delegate (CGPDFScanner scanner) {
 				// ... drill down to the image
 				});
+#elif NET
+				unsafe {
+					// BT == new paragraph
+					table.SetCallback ("BT", &BT);
+					// Do == the image is inside it
+					table.SetCallback ("Do", &Do);
+				}
 #else
 				// BT == new paragraph
 				table.SetCallback ("BT", BT);

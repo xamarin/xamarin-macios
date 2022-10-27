@@ -1,0 +1,3 @@
+# Xcode headers say `NSData* _Nullable` the but the web docs say `outData:(NSData *)data`
+# since this is an "out" variable that is NOT `NSData **`, let's leave this one here for now.
+!missing-null-allowed! 'System.Void ImageCaptureCore.ICCameraDevice::RequestSendPtpCommand(Foundation.NSData,Foundation.NSData,Foundation.NSObject,ObjCRuntime.Selector,System.IntPtr)' is missing an [NullAllowed] on parameter #1

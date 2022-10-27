@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-#if XAMCORE_2_0
 #if !__TVOS__
 using PassKit;
 #endif
@@ -20,13 +19,6 @@ using Metal;
 #endif
 using ObjCRuntime;
 using UIKit;
-#else
-using MonoTouch.PassKit;
-using MonoTouch.Foundation;
-using MonoTouch.Metal;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 
 using NUnit.Framework;
 
@@ -58,7 +50,7 @@ namespace Introspection {
 			case "Metal":
 			case "MonoTouch.Metal":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
+				if (TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 #if !__WATCHOS__
@@ -66,19 +58,26 @@ namespace Introspection {
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				// some devices don't support metal and that crash some API that does not check that, e.g. #33153
 				if (!TestRuntime.CheckXcodeVersion (7, 0) || (MTLDevice.SystemDefault == null))
 					return true;
 				break;
 #endif // !__WATCHOS__
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
 			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
 			case "DeviceCheck": // Only available on device
-				if (Runtime.Arch == Arch.SIMULATOR)
+			case "MLCompute": // Only available on device
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			}
@@ -134,7 +133,12 @@ namespace Introspection {
 				// and that new base class GKGameCenterViewController did not exists before 6.0
 				// which makes the type unusable in 5.x, ref: https://gist.github.com/spouliot/271b6230a3aa2b58bc6e
 				return !TestRuntime.CheckXcodeVersion (4, 5);
-
+#if __MACCATALYST__
+			// just like macOS the native 'init' method returned nil.
+			// Web docs mentions uthenticaing a local player is required and sample shows a null check after creating the vc
+			case "GKGameCenterViewController":
+				return true;
+#endif
 			// mistake - we should not have exposed those default ctor and now we must live with them
 			case "GCControllerElement":
 			case "GCControllerAxisInput":
@@ -157,19 +161,8 @@ namespace Introspection {
 
 			// Metal is not available on the (iOS8) simulator
 			case "CAMetalLayer":
-				return (Runtime.Arch == Arch.SIMULATOR);
+				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (11, 0);
 
-#if !XAMCORE_2_0
-			// from iOS8 (beta4) they do not return a valid handle
-			case "AVAssetResourceLoader":
-			case "AVAssetResourceLoadingRequest":
-			case "AVAssetResourceLoadingContentInformationRequest":
-				return true;
-			// Started with iOS8 on simulator (always) but it looks like it can happen on devices too
-			// NSInvalidArgumentException Use initWithAccessibilityContainer:
-			case "UIAccessibilityElement":
-				return TestRuntime.CheckXcodeVersion (6, 0);
-#endif
 			// in 8.2 beta 1 this crash the app (simulator) without giving any details in the logs
 			case "WKUserNotificationInterfaceController":
 				return true;
@@ -188,7 +181,7 @@ namespace Introspection {
 			// these work only on devices, so we skip the simulator
 			case "MTLHeapDescriptor":
 			case "MTLSharedEventListener":
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
 #if __WATCHOS__
 			// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
 			case "INRequestPaymentIntent":
@@ -214,11 +207,12 @@ namespace Introspection {
 				return true;
 			case "INBookRestaurantReservationIntentResponse": // iOS 11 beta 2: stack overflow in description. radar:32945914
 				return true;
-			case "IOSurface": // Only works on device
+			case "IOSurface": // Only works on device before Xcode 11
+				return !TestRuntime.CheckXcodeVersion (11, 0);
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
 			case "NEHotspotConfigurationManager":
 			case "NEHotspotHS20Settings":
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
 			// iOS 12
 			case "INGetAvailableRestaurantReservationBookingDefaultsIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetAvailableRestaurantReservationBookingDefaultsIntentResponse'. Please make sure that your intent definition file is valid.
 			case "INGetAvailableRestaurantReservationBookingsIntentResponse": // Objective-C exception thrown.  Name: NSInternalInconsistencyException Reason: Unable to initialize 'INGetAvailableRestaurantReservationBookingsIntentResponse'. Please make sure that your intent definition file is valid.
@@ -229,12 +223,37 @@ namespace Introspection {
 				// Doesn't exist in the simulator; aborts on device if the required entitlement isn't available.
 				return true;
 #endif
-				return Runtime.Arch == Arch.SIMULATOR;
+				return TestRuntime.IsSimulatorOrDesktop;
 			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
-				return Runtime.Arch == Arch.SIMULATOR;
-			default:
-				return base.Skip (type);
+				return TestRuntime.IsSimulatorOrDesktop;
+			case "ICNotificationManagerConfiguration": // This works on device but not on simulator, and docs explicitly says it is user creatable
+				return TestRuntime.IsSimulatorOrDesktop;
+			case "VNDocumentCameraViewController": // Name: NSGenericException Reason: Document camera is not available on simulator
+				return TestRuntime.IsSimulatorOrDesktop;
+			case "AVAudioRecorder": // Stopped working with Xcode 11.2 beta 2
+				return TestRuntime.CheckXcodeVersion (11, 2);
+			case "UIMenuController": // Stopped working with Xcode 11.3 beta 1
+				return TestRuntime.CheckXcodeVersion (11, 3);
+			case "THClient":
+				return TestRuntime.IsSimulatorOrDesktop;
+#if __TVOS__
+			case "MPSPredicate":
+				// the device .ctor ends up calling `initWithBuffer:offset:` and crash on older (non 4k AppleTV devices)
+				// MPSPredicate.mm:102: failed assertion `[MPSPredicate initWithBuffer:offset:] device: Apple A8 GPU does not support predication.'
+				return (TestRuntime.IsDevice && (UIScreen.MainScreen.NativeBounds.Width <= 1920));
+#endif
+#if __TVOS__ || __WATCHOS__
+			case "NSMetadataQuery":
+				// hangs on xcode 13 beta 1 on simulator
+				if (TestRuntime.CheckXcodeVersion (13, 0))
+					return true;
+				break;
+#endif
+			case "HMAccessorySetupManager":
+				// Selector fails submission test in Xcode 14.0 timeframe
+				return true;
 			}
+			return base.Skip (type);
 		}
 
 		static List<NSObject> do_not_dispose = new List<NSObject> ();
@@ -370,6 +389,16 @@ namespace Introspection {
 			// Xcode 9 Beta 1 to avoid crashes
 			case "CIImageAccumulator":
 				if (TestRuntime.CheckXcodeVersion (9, 0))
+					return;
+				break;
+			// crash with xcode 12 beta 2
+			case "AVMediaSelection":
+			case "AVMutableMediaSelection":
+			// crash with xcode 12 beta 3
+			case "GKTurnBasedMatch":
+			// crash with xcode 12 GM
+			case "CSLocalizedString":
+				if (TestRuntime.CheckXcodeVersion (12, 0))
 					return;
 				break;
 			default:

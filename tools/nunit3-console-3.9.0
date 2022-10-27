@@ -1,0 +1,10 @@
+#!/bin/bash -eu
+
+# This makes it so that stack traces have source code location
+if test -z "${MONO_ENV_OPTIONS:-}"; then
+	export MONO_ENV_OPTIONS=--debug
+fi
+
+TOP="$(cd "$(dirname "$0")/.." && pwd)"
+
+exec mono --debug "$TOP"/packages/nunit.consolerunner/3.9.0/tools/nunit3-console.exe "$@"

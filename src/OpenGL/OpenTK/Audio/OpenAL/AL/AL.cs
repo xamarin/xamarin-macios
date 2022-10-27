@@ -7,7 +7,10 @@
  * http://www.OpenTK.net */
 #endregion
 
-#if OPENTK_DLL || !XAMCORE_2_0
+#nullable enable
+#pragma warning disable CS3021 // Type or member does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute
+
+#if OPENTK_DLL
 
 using System;
 using System.Runtime.InteropServices;
@@ -499,7 +502,8 @@ namespace OpenTK.Audio.OpenAL
         [CLSCompliant(false)]
         public static void DeleteSources(uint[] sources)
         {
-            if (sources == null) throw new ArgumentNullException();
+            if (sources is null)
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sources));
             if (sources.Length == 0) throw new ArgumentOutOfRangeException();
             DeleteBuffers(sources.Length, ref sources[0]);
         }
@@ -508,7 +512,8 @@ namespace OpenTK.Audio.OpenAL
         /// <param name="sources">An array of source names identifying the sources to be deleted.</param>
         public static void DeleteSources(int[] sources)
         {
-            if (sources == null) throw new ArgumentNullException();
+            if (sources is null)
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sources));
             if (sources.Length == 0) throw new ArgumentOutOfRangeException();
             DeleteBuffers(sources.Length, ref sources[0]);
         }
@@ -1389,7 +1394,8 @@ namespace OpenTK.Audio.OpenAL
         [CLSCompliant(false)]
         public static void DeleteBuffers(uint[] buffers)
         {
-            if (buffers == null) throw new ArgumentNullException();
+            if (buffers is null)
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffers));
             if (buffers.Length == 0) throw new ArgumentOutOfRangeException();
             DeleteBuffers(buffers.Length, ref buffers[0]);
         }
@@ -1398,7 +1404,8 @@ namespace OpenTK.Audio.OpenAL
         /// <param name="buffers">Pointer to an array of buffer names identifying the buffers to be deleted.</param>
         public static void DeleteBuffers(int[] buffers)
         {
-            if (buffers == null) throw new ArgumentNullException();
+            if (buffers is null)
+                ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (buffers));
             if (buffers.Length == 0) throw new ArgumentOutOfRangeException();
             DeleteBuffers(buffers.Length, ref buffers[0]);
         }
@@ -1655,4 +1662,4 @@ namespace OpenTK.Audio.OpenAL
     }
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL

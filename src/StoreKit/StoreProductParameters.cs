@@ -25,7 +25,9 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if !MONOMAC
+#nullable enable
+
+#if !WATCH
 
 using System;
 
@@ -35,7 +37,6 @@ using ObjCRuntime;
 
 namespace StoreKit {
 
-	[iOS (6,0)]
 	public partial class StoreProductParameters : DictionaryContainer
 	{
 #if !COREBUILD
@@ -55,7 +56,7 @@ namespace StoreKit {
 			}
 		}
 
-		public string AffiliateToken {
+		public string? AffiliateToken {
 			get {
 				return GetStringValue (SKStoreProductParameterKey.AffiliateToken);
 			}
@@ -64,7 +65,7 @@ namespace StoreKit {
 			}
 		}
 
-		public string CampaignToken {
+		public string? CampaignToken {
 			get {
 				return GetStringValue (SKStoreProductParameterKey.CampaignToken);
 			}

@@ -1,24 +1,9 @@
 // Copyright 2011 Xamarin Inc. All rights reserved
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using Security;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.Security {
 	
@@ -73,7 +58,7 @@ namespace MonoTouchFixtures.Security {
 					break;
 				case "keyid":
 					Assert.That (x.Value, Is.TypeOf (typeof (NSMutableData)), "Keyid");
-					Assert.That ((x.Value as NSData).Length, Is.EqualTo (20), "keyid");
+					Assert.That ((x.Value as NSData).Length, Is.EqualTo ((nuint) 20), "keyid");
 					break;
 #endif
 				default:

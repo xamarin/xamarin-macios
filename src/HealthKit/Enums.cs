@@ -93,7 +93,15 @@ namespace HealthKit
 	[Native]
 	public enum HKQuantityAggregationStyle : long {
 		Cumulative = 0,
-		Discrete
+		[iOS (13, 0), Watch (6, 0)]
+		DiscreteArithmetic,
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'HKQuantityAggregationStyle.DiscreteArithmetic'.")]
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'HKQuantityAggregationStyle.DiscreteArithmetic'.")]
+		Discrete = DiscreteArithmetic,
+		[iOS (13, 0), Watch (6, 0)]
+		DiscreteTemporallyWeighted,
+		[iOS (13, 0), Watch (6, 0)]
+		DiscreteEquivalentContinuousLevel,
 	}
 
 	// NSInteger -> HKObjectType.h
@@ -129,7 +137,11 @@ namespace HealthKit
 		DiscreteAverage           = 1 << 1,
 		DiscreteMin               = 1 << 2,
 		DiscreteMax               = 1 << 3,
-		CumulativeSum             = 1 << 4
+		CumulativeSum             = 1 << 4,
+		[iOS (13, 0), Watch (6, 0)]
+		MostRecent                = 1 << 5,
+		[iOS (13, 0), Watch (6, 0)]
+		Duration                  = 1 << 6,
 	}
 
 	// NSInteger -> HKUnit.h
@@ -149,7 +161,9 @@ namespace HealthKit
 		Kilo,
 		Mega,
 		Giga,
-		Tera
+		Tera,
+		[iOS (13, 0), Watch (6, 0)]
+		Femto,
 	}
 
 	[Native]
@@ -251,6 +265,18 @@ namespace HealthKit
 		MixedCardio,
 		[iOS (11, 0), Watch (4, 0)]
 		HandCycling,
+		[iOS (13, 0), Watch (6, 0)]
+		DiscSports,
+		[iOS (13, 0), Watch (6, 0)]
+		FitnessGaming,
+		[iOS (14,0)][Watch (7,0)]
+		CardioDance = 77,
+		[iOS (14,0)][Watch (7,0)]
+		SocialDance = 78,
+		[iOS (14,0)][Watch (7,0)]
+		Pickleball = 79,
+		[iOS (14,0)][Watch (7,0)]
+		Cooldown = 80,
 		[iOS (8,2)]
 		Other = 3000
 	}
@@ -302,7 +328,9 @@ namespace HealthKit
 		Unspecified = 1,
 		Light,
 		Medium,
-		Heavy
+		Heavy,
+		[iOS (12,0)][Watch (5,0)]
+		None,
 	}
 
 	[Watch (2,0)]
@@ -311,8 +339,14 @@ namespace HealthKit
 	public enum HKCategoryValueOvulationTestResult : long {
 		NotApplicable = 0,
 		Negative = 1,
-		Positive,
-		Indeterminate
+		[iOS (13, 0), Watch (6, 0)]
+		LuteinizingHormoneSurge = 2,
+		[Deprecated (PlatformName.iOS, 13, 0, message: "Use 'HKCategoryValueOvulationTestResult.LuteinizingHormoneSurge' instead.")]
+		[Deprecated (PlatformName.WatchOS, 6, 0, message: "Use 'HKCategoryValueOvulationTestResult.LuteinizingHormoneSurge' instead.")]
+		Positive = LuteinizingHormoneSurge,
+		Indeterminate = 3,
+		[iOS (13, 0), Watch (6, 0)]
+		EstrogenSurge = 4,
 	}
 
 	[Watch (2,0)]
@@ -321,6 +355,13 @@ namespace HealthKit
 	public enum HKCategoryValueAppleStandHour : long {
 		Stood = 0,
 		Idle
+	}
+
+	[iOS (13,0)]
+	[Watch (6,0)]
+	[Native]
+	public enum HKCategoryValueAudioExposureEvent : long {
+		LoudEnvironment = 1,
 	}
 
 	[Watch (2,0)]
@@ -401,7 +442,7 @@ namespace HealthKit
 	public enum HKInsulinDeliveryReason : long {
 		Basal = 1,
 		Bolus,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Basal' instead.")]
 		Asal = Basal,
 		[Obsolete ("Use 'Bolus' instead.")]
@@ -414,7 +455,7 @@ namespace HealthKit
 	public enum HKBloodGlucoseMealTime : long {
 		Preprandial = 1,
 		Postprandial,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'Preprandial' instead.")]
 		Reprandial = Preprandial,
 		[Obsolete ("Use 'Postprandial' instead.")]
@@ -448,6 +489,12 @@ namespace HealthKit
 		Observation,
 		[Field ("HKFHIRResourceTypeProcedure")]
 		Procedure,
+		[iOS (14, 0)]
+		[Field ("HKFHIRResourceTypeMedicationRequest")]
+		MedicationRequest,
+		[iOS (14, 0)]
+		[Field ("HKFHIRResourceTypeCoverage")]
+		Coverage,
 	}
 
 	[Watch (5, 0), iOS (12, 0)]
@@ -467,6 +514,9 @@ namespace HealthKit
 		ProcedureRecord,
 		[Field ("HKClinicalTypeIdentifierVitalSignRecord")]
 		VitalSignRecord,
+		[Watch (7, 0), iOS (14, 0)]
+		[Field ("HKClinicalTypeIdentifierCoverageRecord")]
+		CoverageRecord,
 	}
 
 	[Watch (5,0), iOS (12,0)]
@@ -476,5 +526,90 @@ namespace HealthKit
 		Unknown = 0,
 		ShouldRequest,
 		Unnecessary,
+	}
+
+	[Watch (7,0), iOS (13,6)]
+	[Native]
+	public enum HKCategoryValueAppetiteChanges : long {
+		Unspecified = 0,
+		NoChange,
+		Decreased,
+		Increased,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKAppleEcgAlgorithmVersion : long {
+		Version1 = 1,
+		Version2 = 2,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKCategoryValueEnvironmentalAudioExposureEvent : long {
+		MomentaryLimit = 1,
+	}
+
+	[Watch (7,0), iOS (13,6)]
+	[Native]
+	public enum HKCategoryValuePresence : long {
+		Present = 0,
+		NotPresent,
+	}
+
+	[Watch (7,0), iOS (13,6)]
+	[Native]
+	public enum HKCategoryValueSeverity : long {
+		Unspecified = 0,
+		NotPresent,
+		Mild,
+		Moderate,
+		Severe,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKDevicePlacementSide : long {
+		Unknown = 0,
+		Left,
+		Right,
+		Central,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKElectrocardiogramClassification : long {
+		NotSet = 0,
+		SinusRhythm,
+		AtrialFibrillation,
+		InconclusiveLowHeartRate,
+		InconclusiveHighHeartRate,
+		InconclusivePoorReading,
+		InconclusiveOther,
+		Unrecognized = 100,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKElectrocardiogramLead : long {
+		AppleWatchSimilarToLeadI = 1,
+	}
+
+	[Watch (7,0), iOS (14,0)]
+	[Native]
+	public enum HKElectrocardiogramSymptomsStatus : long {
+		NotSet = 0,
+		None = 1,
+		Present = 2,
+	}
+
+	[NoWatch, iOS (14, 0)]
+	public enum HKFhirRelease {
+		[Field ("HKFHIRReleaseDSTU2")]
+		Dstu2,
+		[Field ("HKFHIRReleaseR4")]
+		R4,
+		[Field ("HKFHIRReleaseUnknown")]
+		Unknown,
 	}
 }

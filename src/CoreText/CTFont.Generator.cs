@@ -24,57 +24,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
-using ObjCRuntime;
+#nullable enable
+
 using CoreFoundation;
-using CoreGraphics;
-using Foundation;
 
 namespace CoreText {
-
-	public partial class CTFont : INativeObject, IDisposable {
-		internal IntPtr handle;
-
-		internal CTFont (IntPtr handle)
-			: this (handle, false)
-		{
-		}
-
-		internal CTFont (IntPtr handle, bool owns)
-		{
-			if (handle == IntPtr.Zero) {
-				GC.SuppressFinalize (this);
-				throw new ArgumentNullException ("handle");
-			}
-			this.handle = handle;
-			if (!owns)
-				CFObject.CFRetain (handle);
-		}
-
-		~CTFont ()
-		{
-			Dispose (false);
-		}
-		
-		public void Dispose ()
-		{
-			Dispose (true);
-			GC.SuppressFinalize (this);
-		}
-
-		public IntPtr Handle {
-			get { return handle; }
-		}
-		
-		protected virtual void Dispose (bool disposing)
-		{
-			if (handle != IntPtr.Zero){
-				CFObject.CFRelease (handle);
-				handle = IntPtr.Zero;
-			}
-		}
+	public partial class CTFont : NativeObject {
 	}
 }

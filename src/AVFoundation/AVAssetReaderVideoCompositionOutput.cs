@@ -25,38 +25,12 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using System;
-using Foundation;
-using ObjCRuntime;
-using CoreVideo;
 
+#nullable enable
+
+#if !NET && WATCH // This empty partial class was accidentally included in our watchOS bindings.
 namespace AVFoundation {
 	public partial class AVAssetReaderVideoCompositionOutput {
-#if !XAMCORE_2_0
-		[Advice ("Use overload with PixelBufferAttributes")]
-		public AVAssetReaderVideoCompositionOutput (AVAssetTrack [] videoTracks, AVVideoSettings videoSettings)
-		: this (videoTracks, videoSettings == null ? null : videoSettings.ToDictionary ())
-		{
-		}
-
-		[Advice ("Use 'Create' method or constructor.")]
-		public AVAssetReaderVideoCompositionOutput FromTracks (AVAssetTrack [] videoTracks, AVVideoSettings videoSettings)
-		{
-			return WeakFromTracks (videoTracks, videoSettings == null ? null : videoSettings.ToDictionary ());
-		}
-
-		[Advice ("Use UncompressedVideoSettings property")]		
-		public AVVideoSettings VideoSettings {
-			get {
-				var dict = WeakVideoSettings;
-				NSObject val;
-				if (dict.TryGetValue (CVPixelBuffer.PixelFormatTypeKey, out val) && val is NSNumber){
-					var number = val as NSNumber;
-					return new AVVideoSettings ((CVPixelFormatType) number.Int32Value);
-				}
-				return new AVVideoSettings ();
-			}
-		}
-#endif
 	}
 }
+#endif

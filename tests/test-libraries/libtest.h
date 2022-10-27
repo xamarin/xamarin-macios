@@ -8,6 +8,8 @@
 #import <ModelIO/ModelIO.h>
 #endif
 
+#import <SceneKit/SceneKit.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,6 +30,16 @@ void x_mdltransformcomponent_get_local_transform (id<MDLTransformComponent> self
 void x_mdltransform_create_global_transform (MDLObject *object, NSTimeInterval time, float* r0c0, float* r0c1, float* r0c2, float* r0c3, float* r1c0, float* r1c1, float* r1c2, float* r1c3, float* r2c0, float* r2c1, float* r2c2, float* r2c3, float* r3c0, float* r3c1, float* r3c2, float* r3c3);
 void x_mdltransform_get_rotation_matrix (MDLTransform *self, NSTimeInterval time, float* r0c0, float* r0c1, float* r0c2, float* r0c3, float* r1c0, float* r1c1, float* r1c2, float* r1c3, float* r2c0, float* r2c1, float* r2c2, float* r2c3, float* r3c0, float* r3c1, float* r3c2, float* r3c3);
 #endif
+
+#if TARGET_OS_OSX
+#define pfloat CGFloat
+#else
+#define pfloat float
+#endif
+
+SCNMatrix4 x_SCNMatrix4MakeTranslation (pfloat tx, pfloat ty, pfloat tz);
+SCNMatrix4 x_SCNMatrix4MakeScale (pfloat tx, pfloat ty, pfloat tz);
+SCNMatrix4 x_SCNMatrix4Translate (SCNMatrix4 m, pfloat tx, pfloat ty, pfloat tz);
 
 /*
  * Various structs used in ObjCRegistrarTest
@@ -75,9 +87,12 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 	@property char Pc4;
 	@property char Pc5;
 
+	@property (nonatomic, retain) NSObject* someObject;
+	@property (nonatomic, retain) NSArray* someArray;
 #include "libtest.properties.h"
 
 	-(void) V;
+	+(void) staticV;
 
 	-(float) F;
 	-(double) D;
@@ -152,6 +167,17 @@ typedef unsigned int (^RegistrarTestBlock) (unsigned int magic);
 @protocol ObjCProtocolTest
 @required
 	-(void) idAsIntPtr: (id)p1;
+
+@optional
+	-(void) methodEncodings:
+		(inout NSObject **) obj1P
+		obj2: (in NSObject **) obj2P
+		obj3: (out NSObject **) obj3P
+		obj4: (const NSObject **) obj4P
+		obj5: (bycopy NSObject **) obj5P
+		obj6: (byref NSObject **) obj6P
+		obj7: (oneway NSObject **) obj7P
+		;
 @end
 
 // We need this class so that the ObjCProtocolTest protocol
@@ -197,7 +223,9 @@ typedef void (^simple_callback)();
 typedef void (^innerBlock) (int magic_number);
 typedef void (^outerBlock) (innerBlock callback);
 +(void) callAssertMainThreadBlockRelease: (outerBlock) completionHandler;
++(void) callAssertMainThreadBlockReleaseQOS: (outerBlock) completionHandler;
 -(void) callAssertMainThreadBlockReleaseCallback;
+-(void) callAssertMainThreadBlockReleaseCallbackQOS;
 -(void) assertMainThreadBlockReleaseCallback: (innerBlock) completionHandler;
 
 -(void) testFreedBlocks;

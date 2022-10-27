@@ -6,15 +6,9 @@ using System;
 using System.Drawing;
 using System.IO;
 
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using CoreGraphics;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
-#endif
 
 using NUnit.Framework;
 
@@ -32,6 +26,13 @@ namespace MonoTouchFixtures.UIKit {
 				using (var cgimg = CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default)) {
 					using (var img = new UIImage (cgimg)) {
 						UIPasteboard.General.Images = new UIImage[] { img };
+						if (TestRuntime.CheckXcodeVersion (8, 0))
+							Assert.True (UIPasteboard.General.HasImages, "HasImages");
+
+						// https://github.com/xamarin/xamarin-macios/issues/6254
+						if (TestRuntime.CheckXcodeVersion (11, 0))
+							return;
+
 						Assert.AreEqual (1, UIPasteboard.General.Images.Length, "a - length");
 
 						UIPasteboard.General.Images = new UIImage[] { img, img };

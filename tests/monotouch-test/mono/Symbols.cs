@@ -2,14 +2,8 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 
@@ -22,8 +16,7 @@ namespace MonoTouchFixtures {
 		[Test]
 		public void FunctionNames ()
 		{
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Ignore ("This is a device-only test.");
+			TestRuntime.AssertDevice ();
 			
 			Collect ();
 			bool aot = symbols [1].Contains ("MonoTouchFixtures_Symbols_Collect");

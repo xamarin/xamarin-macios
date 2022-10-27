@@ -1,8 +1,4 @@
-﻿#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 class BUG33981_0 : NSObject {}
 class BUG33981_1 : NSObject {}

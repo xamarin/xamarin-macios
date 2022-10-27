@@ -5,6 +5,7 @@
 //	Sebastien Pouliot  <sebastien@xamarin.com>
 //
 // Copyright 2012-2013 Xamarin Inc.
+// Coyright 2019 Microsoft Corporation
 //
 
 using System;
@@ -13,32 +14,19 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
-#if XAMCORE_2_0
+
 using Foundation;
 #if MONOMAC
 using AppKit;
 #else
 using UIKit;
 #endif
+using CoreFoundation;
 using Security;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.Security;
-using MonoTouch.UIKit;
-#endif
-using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Security {
 	
@@ -89,13 +77,39 @@ namespace MonoTouchFixtures.Security {
 			// the system was able to construct the chain based on the single certificate
 			var expectedTrust = SecTrustResult.RecoverableTrustFailure;
 #if __MACOS__
-			if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
+			if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9))
 				expectedTrust = SecTrustResult.Unspecified;
 #endif
 			Assert.That (Evaluate (trust, true), Is.EqualTo (expectedTrust), "Evaluate");
 
+			using (var queue = new DispatchQueue ("TrustAsync")) {
+				bool assert = false; // we don't want to assert in another queue
+				bool called = false;
+				var err = trust.Evaluate (DispatchQueue.MainQueue, (t, result) => {
+					assert = t.Handle == trust.Handle && result == expectedTrust;
+					called = true;
+				});
+				Assert.That (err, Is.EqualTo (SecStatusCode.Success), "async1/err");
+				TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
+				Assert.True (assert, "async1");
+			}
+
+			if (TestRuntime.CheckXcodeVersion (11, 0)) {
+				using (var queue = new DispatchQueue ("TrustErrorAsync")) {
+					bool assert = false; // we don't want to assert in another queue
+					bool called = false;
+					var err = trust.Evaluate (DispatchQueue.MainQueue, (t, result, error) => {
+						assert = t.Handle == trust.Handle && !result && error != null;
+						called = true;
+					});
+					Assert.That (err, Is.EqualTo (SecStatusCode.Success), "async2/err");
+					TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, () => called);
+					Assert.True (assert, "async2");
+				}
+			}
+
 #if __MACOS__
-			var hasNetworkFetchAllowed = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9);
+			var hasNetworkFetchAllowed = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9);
 #else
 			var hasNetworkFetchAllowed = TestRuntime.CheckXcodeVersion (5, 0);
 #endif
@@ -135,11 +149,11 @@ namespace MonoTouchFixtures.Security {
 
 					var trust_result = SecTrustResult.Invalid;
 #if __MACOS__
-					if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 13)) {
+					if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 13)) {
 						trust_result = SecTrustResult.RecoverableTrustFailure;
-					} else if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
+					} else if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12)) {
 						trust_result = SecTrustResult.Invalid;
-					} else if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 8)) {
+					} else if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 8)) {
 						trust_result = SecTrustResult.RecoverableTrustFailure;
 					}
 #else
@@ -164,13 +178,13 @@ namespace MonoTouchFixtures.Security {
 				trust.SetVerifyDate (new DateTime (635108745218945450, DateTimeKind.Utc));
 				var expectedTrust = SecTrustResult.RecoverableTrustFailure;
 #if __MACOS__
-				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9))
 					expectedTrust = SecTrustResult.Unspecified;
 #endif
 				Assert.That (Evaluate (trust, true), Is.EqualTo (expectedTrust), "Evaluate");
 
 #if __MACOS__
-				var hasCreateRevocationPolicy = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9);
+				var hasCreateRevocationPolicy = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9);
 #else
 				var hasCreateRevocationPolicy = TestRuntime.CheckXcodeVersion (5, 0);
 #endif
@@ -197,13 +211,13 @@ namespace MonoTouchFixtures.Security {
 				// a host name is not meaningful for client certificates
 				var expectedTrust = SecTrustResult.RecoverableTrustFailure;
 #if __MACOS__
-				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9))
 					expectedTrust = SecTrustResult.Unspecified;
 #endif
 				Assert.That (Evaluate (trust, true), Is.EqualTo (expectedTrust), "Evaluate");
 
 #if __MACOS__
-				var hasGetResult = TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9);
+				var hasGetResult = TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9);
 #else
 				var hasGetResult = TestRuntime.CheckXcodeVersion (5, 0);
 #endif
@@ -235,7 +249,7 @@ namespace MonoTouchFixtures.Security {
 
 				var hasOCSPResponse = true;
 #if __MACOS__
-				if (!TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 9))
+				if (!TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 9))
 					hasOCSPResponse = false;
 #else
 				if (!TestRuntime.CheckXcodeVersion (5, 0))
@@ -282,6 +296,12 @@ namespace MonoTouchFixtures.Security {
 			using (SecKey pkey = trust.GetPublicKey ()) {
 				Assert.That (CFGetRetainCount (pkey.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(pkey)");
 			}
+			if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
+				using (SecKey key = trust.GetKey ()) {
+					Assert.That (key.BlockSize, Is.EqualTo (128), "BlockSize");
+					Assert.That (CFGetRetainCount (key.Handle), Is.GreaterThanOrEqualTo ((nint) 1), "RetainCount(key)");
+				}
+			}
 			if (TestRuntime.CheckXcodeVersion (10,0)) {
 				Assert.False (trust.Evaluate (out var error), "Evaluate");
 				Assert.NotNull (error, "error");
@@ -310,6 +330,7 @@ namespace MonoTouchFixtures.Security {
 			var ios9 = TestRuntime.CheckXcodeVersion (7, 0);
 			var ios10 = TestRuntime.CheckXcodeVersion (8, 0);
 			var ios11 = TestRuntime.CheckXcodeVersion (9, 0);
+			var ios13 = TestRuntime.CheckXcodeVersion (11, 0);
 			if (ios10)
 				trust_result = SecTrustResult.FatalTrustFailure;
 			// iOS9 is not fully happy with the basic constraints: `SecTrustEvaluate  [root AnchorTrusted BasicContraints]`
@@ -342,18 +363,22 @@ namespace MonoTouchFixtures.Security {
 				Assert.That (trust.GetCustomAnchorCertificates ().Length, Is.EqualTo (certs.Count), "GetCustomAnchorCertificates");
 
 #if __MACOS__
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 13)) {
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 15)) {
+					trust_result = SecTrustResult.RecoverableTrustFailure;
+				} else if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 13)) {
 					trust_result = SecTrustResult.Unspecified;
-				} else if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 12)) {
+				} else if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 12)) {
 					trust_result = SecTrustResult.Invalid;
-				} else if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 11)) {
+				} else if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 11)) {
 					trust_result = SecTrustResult.RecoverableTrustFailure;
 				} else {
 					trust_result = SecTrustResult.Unspecified;
 				}
 #else
 
-				if (ios11)
+				if (ios13)
+					trust_result = SecTrustResult.RecoverableTrustFailure;
+				else if (ios11)
 					trust_result = SecTrustResult.Unspecified;
 				else
 					trust_result = SecTrustResult.Invalid;
@@ -362,7 +387,28 @@ namespace MonoTouchFixtures.Security {
 				// since we modified the `trust` instance it's result was invalidated (marked as unspecified on iOS 11)
 				Assert.That (trust.GetTrustResult (), Is.EqualTo (trust_result), "GetTrustResult-2");
 			}
-			if (TestRuntime.CheckXcodeVersion (10,0)) {
+			if (TestRuntime.CheckXcodeVersion (12, 0)) {
+				// old certificate (built in our tests) was not quite up to spec and it eventually became important
+				Assert.False (trust.Evaluate (out var error), "Evaluate");
+				Assert.NotNull (error, "error");
+				// We have different error messages that all contain mail.google.com and some different text.
+				Assert.That (error.LocalizedDescription, Does.Contain ("mail.google.com"), "LocalizedDescription");
+			} else if (TestRuntime.CheckXcodeVersion (11, 0)) {
+				Assert.False (trust.Evaluate (out var error), "Evaluate");
+				Assert.NotNull (error, "error");
+				Assert.That (error.LocalizedDescription, Does.Contain ("\"mail.google.com\",\"Thawte SGC CA\",\"Class 3 Public Primary Certification Authority\" certificates do not meet pinning requirements"));
+				var underlyingError = (NSError) error.UserInfo [NSError.UnderlyingErrorKey];
+				// Error is:
+				// Certificate 0 “mail.google.com” has errors: Key size is not permitted for this use, SSL hostname does not match name(s) in certificate, Signature hash algorithm is not permitted for this use;Certificate 1 “Thawte SGC CA” has errors: Key size is not permitted for this use, Signature hash algorithm is not permitted for this use;Certificate 2 “Class 3 Public Primary Certification Authority” has errors: Key size is not permitted for this use;
+				// But the exact format can vary
+				// watchOS reports this:
+				// Certificate 0 “mail.google.com” has errors: Key size is not permitted for this use, Signature hash algorithm is not permitted for this use, SSL hostname does not match name(s) in certificate;Certificate 1 “Thawte SGC CA” has errors: Key size is not permitted for this use, Signature hash algorithm is not permitted for this use;Certificate 2 “Class 3 Public Primary Certification Authority” has errors: Key size is not permitted for this use;
+				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Certificate 0 “mail.google.com” has errors: "));
+				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Key size is not permitted for this use"));
+				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("SSL hostname does not match name(s) in certificate").Or.Contain ("Signature hash algorithm is not permitted for this use"));
+				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Certificate 1 “Thawte SGC CA” has errors: Key size is not permitted for this use"));
+				Assert.That (underlyingError.LocalizedDescription, Does.Contain ("Certificate 2 “Class 3 Public Primary Certification Authority” has errors:"));
+			} else if (TestRuntime.CheckXcodeVersion (10, 0)) {
 				Assert.True (trust.Evaluate (out var error), "Evaluate");
 				Assert.Null (error, "error");
 			}

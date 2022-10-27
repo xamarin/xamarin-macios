@@ -7,13 +7,15 @@
 // Copyright 2017 Microsoft Inc. All rights reserved.
 //
 
+#if !NET && IOS
 using System;
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.NVector3;
 
+#nullable enable
+
 namespace ARKit {
 
-#if !XAMCORE_4_0 && IOS
 	public partial class ARFaceGeometry {
 
 		[Obsolete ("Use the 'GetVertices' method instead.")]
@@ -25,5 +27,5 @@ namespace ARKit {
 		[Obsolete ("Use the 'GetTriangleIndices' method instead.")]
 		public virtual short TriangleIndices { get; }
 	}
-#endif
 }
+#endif

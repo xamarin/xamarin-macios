@@ -11,26 +11,9 @@
 using System;
 using CoreGraphics;
 using Foundation;
+using ObjCRuntime;
 
 namespace UIKit {
-
-#if !XAMCORE_2_0
-	public partial class UIPrintFormatter {
-
-		[Obsolete ("This cannot be directly created. Use UISimpleTextPrintFormatter instead.")]
-		public UIPrintFormatter (string text)
-		{
-		}
-
-		[Obsolete ("This cannot be directly created. Use UISimpleTextPrintFormatter instead.")]
-		public UIPrintFormatter (MonoTouch.Foundation.NSAttributedString attributedText)
-		{
-		}
-
-		[Obsolete ("This cannot be used directly. Use UISimpleTextPrintFormatter instead.")]
-		public virtual MonoTouch.Foundation.NSAttributedString AttributedText { get; set; }
-	}
-#endif
 
 #if !XAMCORE_3_0
 	public partial class UIAdaptivePresentationControllerDelegate {
@@ -41,17 +24,6 @@ namespace UIKit {
 			return null;
 		}
 	}
-
-#if !XAMCORE_2_0
-	public partial class  UIPopoverPresentationControllerDelegate {
-
-		[Obsolete ("Incorrect signature. Use the overload with a UITraitCollection parameter.")]
-		public override UIViewController GetAdaptivePresentationStyle (UIPresentationController controller, UIModalPresentationStyle style)
-		{
-			return null;
-		}
-	}
-#endif
 
 	public partial class UIAdaptivePresentationControllerDelegate_Extensions {
 
@@ -72,7 +44,7 @@ namespace UIKit {
 	}
 #endif
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 	public partial class UIPresentationController {
 
 		[Obsolete ("Removed in iOS10. Use '.ctor (UIViewController,UIViewController)'.")]
@@ -89,11 +61,19 @@ namespace UIKit {
 			return GetLocationInCoordinateSpace ((IUICoordinateSpace) coordinateSpace);
 		}
 	}
+
+	public partial class UIMarkupTextPrintFormatter {
+
+		[Obsolete ("Use '.ctor(string)' instead.")]
+		public UIMarkupTextPrintFormatter ()
+		{
+		}
+	}
 #endif
 
 #endif
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 	public partial class UICollectionViewFocusUpdateContext {
 		[Obsolete ("This cannot be directly created.")]
 		public UICollectionViewFocusUpdateContext () { }

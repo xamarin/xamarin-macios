@@ -1,16 +1,13 @@
-﻿// Copyright 2017 Microsoft Inc. All rights reserved.
+// Copyright 2017 Microsoft Inc. All rights reserved.
 
 #if !__WATCHOS__
 
 using System;
+using Foundation;
+using ObjCRuntime;
 
-#if XAMCORE_2_0
 using Metal;
 using MetalPerformanceShaders;
-#else
-using MonoTouch.Metal;
-using MonoTouch.MetalPerformanceShaders;
-#endif
 
 using NUnit.Framework;
 
@@ -18,17 +15,22 @@ namespace MonoTouchFixtures.MetalPerformanceShaders
 {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MPSImageHistogramSpecificationTest
 	{
 		IMTLDevice device;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
-#if !MONOMAC
+#if !MONOMAC && !__MACCATALYST__
 			TestRuntime.AssertXcodeVersion (7, 0);
+
+			if (Runtime.Arch == Arch.SIMULATOR)
+				Assert.Inconclusive ("Metal Performance Shaders is not supported in the simulator");
 #else
 			TestRuntime.AssertXcodeVersion (9, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 #endif
 
 			device = MTLDevice.SystemDefault;

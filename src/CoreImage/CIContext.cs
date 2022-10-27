@@ -24,15 +24,28 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+using System;
+
 using Foundation;
 using CoreGraphics;
 using CoreFoundation;
 using ObjCRuntime;
 #if !MONOMAC
 using Metal;
+#endif
+#if HAS_OPENGLES
 using OpenGLES;
 #endif
+
+#nullable enable
+
 namespace CoreImage {
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#endif
 	public class CIContextOptions : DictionaryContainer {
 
 		public CIContextOptions ()
@@ -44,7 +57,7 @@ namespace CoreImage {
 		{
 		}
 
-		public CGColorSpace OutputColorSpace {
+		public CGColorSpace? OutputColorSpace {
 			get {
 				return GetNativeValue<CGColorSpace> (CIContext.OutputColorSpace);
 			}
@@ -53,7 +66,7 @@ namespace CoreImage {
 			}
 		}
 
-		public CGColorSpace WorkingColorSpace {
+		public CGColorSpace? WorkingColorSpace {
 			get {
 				return GetNativeValue<CGColorSpace> (CIContext._WorkingColorSpace);
 			}
@@ -81,7 +94,14 @@ namespace CoreImage {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("ios")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[Mac (10,12)]
+#endif
 		public bool? PriorityRequestLow {
 			get {
 				return GetBoolValue (CIContext.PriorityRequestLow);
@@ -100,7 +120,14 @@ namespace CoreImage {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios7.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (7,0)]
+#endif
 		public bool? OutputPremultiplied {
 			get {
 				return GetBoolValue (CIContext.OutputPremultiplied);
@@ -110,7 +137,15 @@ namespace CoreImage {
 			}
 		}
 
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+#endif
 		public bool? CacheIntermediates {
 			get {
 				return GetBoolValue (CIContext.CacheIntermediates);
@@ -119,38 +154,83 @@ namespace CoreImage {
 				SetBooleanValue (CIContext.CacheIntermediates, value);
 			}
 		}
+
+#if NET
+		[SupportedOSPlatform ("ios13.0")]
+		[SupportedOSPlatform ("tvos13.0")]
+		[SupportedOSPlatform ("macos10.15")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (13,0)]
+		[TV (13,0)]
+		[Mac (10,15)]
+#endif
+		public bool? AllowLowPower {
+			get {
+				return GetBoolValue (CIContext.AllowLowPower);
+			}
+			set {
+				SetBooleanValue (CIContext.AllowLowPower, value);
+			}
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios14.0")]
+		[SupportedOSPlatform ("tvos14.0")]
+		[SupportedOSPlatform ("macos11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
+#endif
+		public string? Name {
+			get {
+				return GetStringValue (CIContext.Name);
+			}
+			set {
+				SetStringValue (CIContext.Name, value);
+			}
+		}
 	}
-	
+
 	public partial class CIContext {
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (8,0)]
+#endif
 		public CIContext (CIContextOptions options) :
 			this (options?.Dictionary)
 		{
 		}
 
-		public static CIContext FromContext (CGContext ctx, CIContextOptions options)
+		public static CIContext FromContext (CGContext ctx, CIContextOptions? options)
 		{
 			return FromContext (ctx, options?.Dictionary);
 		}
 		
 		public static CIContext FromContext (CGContext ctx)
 		{
-			return FromContext (ctx, (CIContextOptions) null);
+			return FromContext (ctx, (NSDictionary?) null);
 		}
 
-#if !MONOMAC
-		public static CIContext FromContext (EAGLContext eaglContext, CIContextOptions options)
+#if HAS_OPENGLES
+		public static CIContext FromContext (EAGLContext eaglContext, CIContextOptions? options)
 		{
-			if (options == null)
+			if (options is null)
 				return FromContext (eaglContext);
 
 			return FromContext (eaglContext, options.Dictionary);
 		}
 
-		public static CIContext FromMetalDevice (IMTLDevice device, CIContextOptions options)
+		public static CIContext FromMetalDevice (IMTLDevice device, CIContextOptions? options)
 		{
-			if (options == null)
+			if (options is null)
 				return FromMetalDevice (device);
 
 			return FromMetalDevice (device, options.Dictionary);
@@ -158,18 +238,27 @@ namespace CoreImage {
 #endif
 
 #if MONOMAC
+#if NET
+		[UnsupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("macos")]
+		[UnsupportedOSPlatform ("macos10.11")]
+#if MONOMAC
+		[Obsolete ("Starting with macos10.11.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
+#endif
+#else
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
-		public CGLayer CreateCGLayer (CGSize size)
+#endif
+		public CGLayer? CreateCGLayer (CGSize size)
 		{
 			return CreateCGLayer (size, null);
 		}
 #else
-		public static CIContext FromOptions (CIContextOptions options)
+		public static CIContext FromOptions (CIContextOptions? options)
 		{
 			return FromOptions (options?.Dictionary);
 		}
 		
-		public CGImage CreateCGImage (CIImage image, CGRect fromRect, CIFormat ciImageFormat, CGColorSpace colorSpace)
+		public CGImage? CreateCGImage (CIImage image, CGRect fromRect, CIFormat ciImageFormat, CGColorSpace? colorSpace)
 		{
 			return CreateCGImage (image, fromRect, CIImage.CIFormatToInt (ciImageFormat), colorSpace);
 		}
