@@ -122,12 +122,6 @@ steps:
         $configVars.Add("SignPkgs", "True")
       }
 
-      if ($Env:SkipPackagedXamarinMacTests -eq "True") {
-        $configVars.Add("RunMacTests", "False")
-      } else {
-        $configVars.Add("RunMacTests", "True")
-      }
-
       $configVars.Add("RunSampleTests", $Env:RunSampleTests)
 
     } else {
@@ -138,7 +132,6 @@ steps:
       $configVars.Add("SignPkgs", "True")
 
       # tests, run all of them, internal, external, mac but not sample tests
-      $configVars.Add("RunMacTests", "True")
       $configVars.Add("RunSampleTests", "False")
     }
     # write debugging and process of the vars
