@@ -169,12 +169,21 @@ LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
+# We use a different versioning for stable releases (which is determined by the NUGET_PRERELEASE_IDENTIFIER variable being empty):
+# We reset the commit distance (to the commits since NUGET_PRERELEASE_IDENTIFIER changed - which must have changed for a branch to become a stable branch)
+# We use the commit distance as the third number in the version, instead of the fourth.
+ifeq ($(NUGET_PRERELEASE_IDENTIFIER),)
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).$(NUGET_STABLE_COMMIT_DISTANCE)))
+else
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_MSI_VERSION:=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr a-z A-Z)_NUGET_COMMIT_DISTANCE)))
+endif
+
 $(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 	$(Q) rm -f $@.tmp
 	$(Q_GEN) ./generate-vs-workload.csharp \
-		$(foreach platform,$(DOTNET_PLATFORMS),--platform $(platform) $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_COMMIT_DISTANCE)) \
+		$(foreach platform,$(DOTNET_PLATFORMS),--platform $(platform) $($(platform)_MSI_VERSION)) \
 		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--windows-platform $(platform)) \
-		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION_NO_METADATA)=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_COMMIT_DISTANCE)) \
+		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION_NO_METADATA)=$($(platform)_MSI_VERSION)) \
 		--shorten Microsoft.MacCatalyst.Runtime.maccatalyst=Microsoft.MacCatalyst.Runtime \
 		--shorten Microsoft.NET.Sdk.MacCatalyst.Manifest=Microsoft.MacCatalyst.Manifest \
 		--shorten Microsoft.tvOS.Runtime.tvossimulator=Microsoft.tvOS.Runtime \
