@@ -160,7 +160,7 @@ public partial class Generator {
 				continue;
 			if (AttributeManager.HasAttribute<StaticAttribute> (p))
 				continue;
-			
+
 			print ("");
 
 			// an export will be present (only) if it's defined in a protocol
@@ -225,7 +225,7 @@ public partial class Generator {
 				PrintFilterExport (p, export, setter: true);
 				GenerateFilterSetter (ptype, name);
 			}
-			
+
 			indent--;
 			print ("}");
 		}
@@ -375,7 +375,7 @@ public partial class Generator {
 		case "MLModel":
 		case "NSAttributedString":
 		case "NSData":
-		// NSNumber should not be added - it should be bound as a int or a float
+			// NSNumber should not be added - it should be bound as a int or a float
 			print ("SetValue (\"{0}\", value);", propertyName);
 			break;
 		case "string":

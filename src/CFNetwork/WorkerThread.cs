@@ -62,7 +62,7 @@ namespace CFNetwork {
 		}
 
 		[Conditional ("DEBUG")]
-		static void Log (string message, params object[] args)
+		static void Log (string message, params object [] args)
 		{
 			Debug.WriteLine (string.Format (message, args), "WorkerThread");
 		}
@@ -135,7 +135,7 @@ namespace CFNetwork {
 		}
 
 		public async Task<T> Post<T> (Func<CancellationToken, T> callback,
-		                              CancellationToken cancellationToken)
+									  CancellationToken cancellationToken)
 		{
 			var ev = new Event ();
 			ev.Callback = c => callback (c);
@@ -148,9 +148,9 @@ namespace CFNetwork {
 			try {
 				var result = await ev.Tcs.Task;
 				if (result != null)
-					return (T)result;
+					return (T) result;
 				else
-					return default(T);
+					return default (T);
 			} finally {
 				ev.Cts.Dispose ();
 			}
