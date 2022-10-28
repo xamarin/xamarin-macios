@@ -2444,6 +2444,7 @@ namespace NetworkExtension {
 
 	[NoWatch, NoTV, NoiOS, Mac (13,0)]
 	[BaseType (typeof (NEPacketTunnelProvider))]
+	[DisableDefaultCtor]
 	interface NEEthernetTunnelProvider
 	{
 	}

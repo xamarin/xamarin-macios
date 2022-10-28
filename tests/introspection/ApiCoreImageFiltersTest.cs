@@ -561,6 +561,7 @@ namespace Introspection {
 						switch (key) {
 						case "outputImageNonMPS":
 						case "outputData":
+						case "outputImageMPS":
 							// no doc for argument
 							continue;
 						}

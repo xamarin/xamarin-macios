@@ -3551,7 +3551,11 @@ namespace HealthKit {
 	[Mac (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HKSeriesBuilder : NSSecureCoding {
+	interface HKSeriesBuilder 
+#if !MONOMAC
+		: NSSecureCoding
+#endif
+{
 		[Export ("discard")]
 		void Discard ();
 	}
