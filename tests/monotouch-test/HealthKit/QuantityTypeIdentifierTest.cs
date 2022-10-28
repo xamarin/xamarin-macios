@@ -104,7 +104,11 @@ namespace MonoTouchFixtures.HealthKit {
 				case HKQuantityTypeIdentifier.RunningPower:
 				case HKQuantityTypeIdentifier.RunningSpeed:
 				case HKQuantityTypeIdentifier.AtrialFibrillationBurden:
-					if (!TestRuntime.CheckXcodeVersion (14, 0))
+				case HKQuantityTypeIdentifier.AppleSleepingWristTemperature:
+				case HKQuantityTypeIdentifier.UnderwaterDepth:
+				case HKQuantityTypeIdentifier.WaterTemperature:
+				// These are all available in iOS 16.0, but lets bump to 14.1 to test only on macOS 13
+					if (!TestRuntime.CheckXcodeVersion (14, 1))
 						continue;
 					break;
 				}
