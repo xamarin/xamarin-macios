@@ -142,6 +142,23 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
+		public void GetNSObject_T_SameHandleDifferentInstances ()
+		{
+			using var a = new NSDictionary<NSString, NSObject> ();
+			using var b = new NSDictionary<NSString, NSString> ();
+			using var c = new NSDictionary ();
+
+			if (a.Handle != b.Handle || a.Handle != c.Handle)
+				Assert.Ignore ("The dictionaries are actually different");
+
+			var handle = a.Handle;
+
+			Assert.DoesNotThrow (() => Runtime.GetNSObject<NSDictionary> (handle), "A");
+			Assert.DoesNotThrow (() => Runtime.GetNSObject<NSDictionary<NSString, NSObject>> (handle), "B");
+			Assert.DoesNotThrow (() => Runtime.GetNSObject<NSDictionary<NSString, NSString>> (handle), "C");
+		}
+
+		[Test]
 		public void UsableUntilDead ()
 		{
 			// The test can be inconclusive once in a while.
