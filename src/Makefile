@@ -87,8 +87,6 @@ DOTNET_GENERATOR_FLAGS=$(GENERATOR_FLAGS) -compiler=$(abspath $(DOTNET_COMPILER)
 DOTNET_GENERATOR=$(DOTNET_BUILD_DIR)/bgen/bgen
 DOTNET_BINDING_ATTRIBUTES=$(DOTNET_BUILD_DIR)/Xamarin.Apple.BindingAttributes.dll
 
-include $(TOP)/opentk/Makefile.include
-
 #
 # Specific warnings that we want reported as errors by generator
 # It takes a comma separated list, but an empty list means
@@ -111,8 +109,8 @@ IOS_WARNINGS_THAT_YOU_SHOULD_FIX=108
 # this is due to deprecated APIs used in the generated code.
 WARNINGS_TO_IGNORE=BI1234
 
-include ./OpenGLES/Makefile-1.0.include
 include ./Makefile.generator
+include ./opentk.mk
 
 include ./generator-diff.mk
 
