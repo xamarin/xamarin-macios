@@ -7,8 +7,7 @@ using ObjCRuntime;
 using PlatformName = ObjCRuntime.PlatformName;
 #endif
 
-public class AttributeManager
-{
+public class AttributeManager {
 	public BindingTouch BindingTouch;
 	TypeManager TypeManager { get { return BindingTouch.TypeManager; } }
 
@@ -281,7 +280,7 @@ public class AttributeManager
 
 	static IEnumerable<System.Attribute> ConvertOldAttributes (CustomAttributeData attribute)
 	{
- 		switch (attribute.GetAttributeType ().Namespace) {
+		switch (attribute.GetAttributeType ().Namespace) {
 		case null: // Root namespace such as PlatformAvailabilityShadow.cs
 		case "MonoTouch.ObjCRuntime":
 		case "ObjCRuntime":
@@ -384,7 +383,7 @@ public class AttributeManager
 	}
 #endif
 
-	IEnumerable<T> CreateAttributeInstance <T> (CustomAttributeData attribute, ICustomAttributeProvider provider) where T : System.Attribute
+	IEnumerable<T> CreateAttributeInstance<T> (CustomAttributeData attribute, ICustomAttributeProvider provider) where T : System.Attribute
 	{
 		var convertedAttributes = ConvertOldAttributes (attribute);
 		if (convertedAttributes.Any ())
@@ -587,8 +586,7 @@ public class AttributeManager
 	}
 }
 
-public static class AttributeConversionManager
-{
+public static class AttributeConversionManager {
 	public static System.Attribute ConvertPlatformAttribute (CustomAttributeData attribute, PlatformName platform)
 	{
 		var constructorArguments = new object [attribute.ConstructorArguments.Count];
@@ -598,7 +596,7 @@ public static class AttributeConversionManager
 		Func<string> createErrorMessage = () => {
 			var b = new System.Text.StringBuilder (" Types { ");
 			for (int i = 0; i < constructorArguments.Length; ++i)
-				b.Append (constructorArguments[i].GetType ().ToString () + " ");
+				b.Append (constructorArguments [i].GetType ().ToString () + " ");
 			b.Append ("}");
 			return b.ToString ();
 		};
@@ -611,7 +609,7 @@ public static class AttributeConversionManager
 		switch (attribute.ConstructorArguments.Count) {
 		case 2:
 			if (constructorArguments [0].GetType () == typeof (byte) &&
-			    constructorArguments [1].GetType () == typeof (byte)) {
+				constructorArguments [1].GetType () == typeof (byte)) {
 #if NET
 				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (string) };
@@ -624,8 +622,8 @@ public static class AttributeConversionManager
 			throw new NotImplementedException (unknownFormatError ());
 		case 3:
 			if (constructorArguments [0].GetType () == typeof (byte) &&
-			    constructorArguments [1].GetType () == typeof (byte) &&
-			    constructorArguments [2].GetType () == typeof (byte)) {
+				constructorArguments [1].GetType () == typeof (byte) &&
+				constructorArguments [2].GetType () == typeof (byte)) {
 #if NET
 				ctorValues = new object [] { (byte) platform, (int) (byte) constructorArguments [0], (int) (byte) constructorArguments [1], (int) (byte) constructorArguments [2], null };
 				ctorTypes = new System.Type [] { AttributeFactory.PlatformEnum, typeof (int), typeof (int), typeof (int), typeof (string) };
@@ -675,8 +673,7 @@ public static class AttributeConversionManager
 		return AttributeFactory.CreateNewAttribute (AttributeFactory.IntroducedAttributeType, ctorTypes, ctorValues);
 	}
 
-	struct ParsedAvailabilityInfo
-	{
+	struct ParsedAvailabilityInfo {
 		public PlatformName Platform;
 		public int Major;
 		public int Minor;
@@ -719,8 +716,7 @@ public static class AttributeConversionManager
 			throw new NotImplementedException ($"Unknown version format \"{enumName}\" in DetermineOldAvailabilityVersion. Are there two values | togeather?");
 
 		string [] enumParts = enumName.Split (new char [] { '_' });
-		switch (enumParts.Count ())
-		{
+		switch (enumParts.Count ()) {
 		case 1:
 			if (enumName == "None")
 				return new ParsedAvailabilityInfo (PlatformName.None);
@@ -753,7 +749,7 @@ public static class AttributeConversionManager
 	{
 		string message = null;
 		if (attribute.NamedArguments.Any (x => x.MemberName == "Message"))
-			message = (string)attribute.NamedArguments.First (x => x.MemberName == "Message").TypedValue.Value;
+			message = (string) attribute.NamedArguments.First (x => x.MemberName == "Message").TypedValue.Value;
 
 		foreach (var arg in attribute.NamedArguments) {
 			switch (arg.MemberName) {
@@ -787,8 +783,7 @@ public static class AttributeConversionManager
 }
 
 
-static class AttributeFactory
-{
+static class AttributeFactory {
 	public static System.Type PlatformEnum = typeof (PlatformName);
 #if !NET
 	public static System.Type PlatformArch = typeof (PlatformArchitecture);
@@ -855,7 +850,7 @@ static class AttributeFactory
 	public static System.Attribute CreateUnavailableAttribute (PlatformName platformName, string message = null)
 	{
 #if NET
-		var ctorValues = new object [] { (byte)platformName, message };
+		var ctorValues = new object [] { (byte) platformName, message };
 		var ctorTypes = new System.Type [] { PlatformEnum, typeof (string) };
 #else
 		var ctorValues = new object [] { (byte)platformName, (byte) 0xff, message };
@@ -865,16 +860,14 @@ static class AttributeFactory
 	}
 }
 
-public static class EnumerableExtensions
-{
+public static class EnumerableExtensions {
 	public static IEnumerable<T> Yield<T> (this T item)
 	{
 		yield return item;
 	}
 }
 
-public static class CustomAttributeDataExtensions
-{
+public static class CustomAttributeDataExtensions {
 #if !NET
 	static Type roCustomAttributeDataType;
 	static PropertyInfo attributeTypeProperty;
