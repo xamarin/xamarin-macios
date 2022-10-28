@@ -1260,7 +1260,7 @@ namespace HealthKit {
 		[Static]
 		[Export ("documentTypeForIdentifier:")]
 		[return: NullAllowed]
-		HKDocumentType _GetDocumentType ([NullAllowed] NSString hkDocumentTypeIdentifier);
+		HKDocumentType _GetDocumentType (NSString hkDocumentTypeIdentifier);
 
 		[Static, Export ("workoutType")]
 #if NET
@@ -2285,6 +2285,18 @@ namespace HealthKit {
 		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0), NoTV]
 		[Field ("HKQuantityTypeIdentifierAtrialFibrillationBurden")]
 		AtrialFibrillationBurden,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKQuantityTypeIdentifierAppleSleepingWristTemperature")]
+		AppleSleepingWristTemperature,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKQuantityTypeIdentifierUnderwaterDepth")]
+		UnderwaterDepth,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKQuantityTypeIdentifierWaterTemperature")]
+		WaterTemperature,
 	}
 
 	[Watch (2,0)]
@@ -2558,6 +2570,22 @@ namespace HealthKit {
 		[Watch (8, 0), iOS (15, 0)]
 		[Field ("HKCategoryTypeIdentifierProgesteroneTestResult")]
 		ProgesteroneTestResult,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKCategoryTypeIdentifierInfrequentMenstrualCycles")]
+		InfrequentMenstrualCycles,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKCategoryTypeIdentifierIrregularMenstrualCycles")]
+		IrregularMenstrualCycles,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKCategoryTypeIdentifierPersistentIntermenstrualBleeding")]
+		PersistentIntermenstrualBleeding,
+
+		[Watch (9, 0), MacCatalyst (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Field ("HKCategoryTypeIdentifierProlongedMenstrualPeriods")]
+		ProlongedMenstrualPeriods,
 	}
 
 	[Watch (2,0)]
@@ -3523,7 +3551,11 @@ namespace HealthKit {
 	[Mac (13,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
-	interface HKSeriesBuilder : NSSecureCoding {
+	interface HKSeriesBuilder 
+#if !MONOMAC
+		: NSSecureCoding
+#endif
+{
 		[Export ("discard")]
 		void Discard ();
 	}

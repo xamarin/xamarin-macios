@@ -11625,10 +11625,6 @@ namespace AppKit {
 		[Field ("NSPasteboardTypeFileURL")]
 		NSString NSPasteboardTypeFileUrl { get; }
 
-		[Mac (13,0)]
-		[Field ("NSPasteboardTypeCollaborationMetadata")]
-		NSString NSPasteboardTypeCollaborationMetadata { get; }
-
 		[Mac (10,12)]
 		[Export ("prepareForNewContentsWithOptions:")]
 		nint PrepareForNewContents (NSPasteboardContentsOptions options);
