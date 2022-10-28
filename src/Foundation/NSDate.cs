@@ -38,11 +38,12 @@ namespace Foundation {
 		const double NANOSECS_PER_MILLISEC = 1000000.0;
 		const long NSDATE_TICKS = 631139040000000000; // for 32 bit devices
 
-		private static readonly NSCalendar calendar = new NSCalendar (NSCalendarType.Gregorian) { TimeZone = NSTimeZone.FromName ("UTC") };
-		private static readonly ThreadLocal<NSDateComponents> threadComponents = new ThreadLocal<NSDateComponents> (() => new NSDateComponents ());
+		static readonly NSCalendar calendar = new NSCalendar (NSCalendarType.Gregorian) { TimeZone = NSTimeZone.FromName ("UTC") };
+		static readonly ThreadLocal<NSDateComponents> threadComponents = new ThreadLocal<NSDateComponents> (() => new NSDateComponents ());
 
 		// now explicit since data can be lost for small/large values of DateTime
-		public static explicit operator DateTime (NSDate d) {
+		public static explicit operator DateTime (NSDate d)
+		{
 			double secs = d.SecondsSinceReferenceDate;
 
 			// Apple's implementation of DateTime differs between 32 bit and 64 bit devices
@@ -58,8 +59,9 @@ namespace Foundation {
 				throw new ArgumentOutOfRangeException (nameof (d), d, $"{nameof (d)} is outside the range of NSDate {secs} seconds");
 
 			// For 64 bit, convert to components representation since we cannot rely on secondsSinceReferenceDate
-			using (NSDateComponents calComponents = calendar.Components (NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day | NSCalendarUnit.Hour |
-				NSCalendarUnit.Minute | NSCalendarUnit.Second | NSCalendarUnit.Nanosecond | NSCalendarUnit.Calendar, d)) {
+			var units = NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day | NSCalendarUnit.Hour |
+				NSCalendarUnit.Minute | NSCalendarUnit.Second | NSCalendarUnit.Nanosecond | NSCalendarUnit.Calendar;
+			using (NSDateComponents calComponents = calendar.Components (units, d)) {
 				var retDate = new DateTime ((int) calComponents.Year, (int) calComponents.Month, (int) calComponents.Day, (int) calComponents.Hour,
 					(int) calComponents.Minute, (int) (calComponents.Second), Convert.ToInt32 (calComponents.Nanosecond / NANOSECS_PER_MILLISEC), DateTimeKind.Utc);
 
@@ -68,7 +70,8 @@ namespace Foundation {
 		}
 
 		// now explicit since data can be lost for DateTimeKind.Unspecified
-		public static explicit operator NSDate (DateTime dt) {
+		public static explicit operator NSDate (DateTime dt)
+		{
 			if (dt.Kind == DateTimeKind.Unspecified)
 				throw new ArgumentException ("DateTimeKind.Unspecified cannot be safely converted");
 
