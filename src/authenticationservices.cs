@@ -1564,6 +1564,7 @@ namespace AuthenticationServices {
 	[NoWatch, NoTV, NoiOS, NoMacCatalyst, Mac (13,0)]
 	[Protocol]
 	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
 	interface ASAuthorizationProviderExtensionRegistrationHandler
 	{
 		[Async]

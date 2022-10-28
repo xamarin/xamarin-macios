@@ -348,6 +348,18 @@ partial class TestRuntime
 #else
 				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
 #endif
+			case 1:
+#if __WATCHOS__
+				return CheckWatchOSSystemVersion (9, 1);
+#elif __TVOS__
+				return ChecktvOSSystemVersion (16, 1);
+#elif __IOS__
+				return CheckiOSSystemVersion (16, 1);
+#elif MONOMAC
+				return CheckMacSystemVersion (13, 0);
+#else
+				throw new NotImplementedException ($"Missing platform case for Xcode {major}.{minor}");
+#endif
 			default:
 				throw new NotImplementedException ($"Missing version logic for checking for Xcode {major}.{minor}");
 			}
