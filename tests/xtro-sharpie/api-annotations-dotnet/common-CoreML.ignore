@@ -1,0 +1,5 @@
+## no generator support for NSFastEnumeration / https://bugzilla.xamarin.com/show_bug.cgi?id=4391
+!missing-protocol-conformance! MLDictionaryFeatureProvider should conform to NSFastEnumeration
+
+## managed version bound using another method
+!missing-selector! MLDictionaryFeatureProvider::objectForKeyedSubscript: not bound

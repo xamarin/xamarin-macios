@@ -27,6 +27,7 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !NET
 using System;
 using System.IO;
 using System.Net;
@@ -45,7 +46,7 @@ namespace CFNetwork {
 		TaskCompletionSource<object> openTcs;
 		CancellationTokenSource cts;
 
-		byte[] buffer;
+		byte [] buffer;
 		bool canWrite;
 		bool open, completed, closed;
 		int start, position;
@@ -172,3 +173,4 @@ namespace CFNetwork {
 		}
 	}
 }
+#endif // !NET

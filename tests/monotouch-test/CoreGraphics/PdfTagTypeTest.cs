@@ -1,4 +1,4 @@
-﻿using CoreGraphics;
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using NUnit.Framework;

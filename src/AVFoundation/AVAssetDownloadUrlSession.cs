@@ -1,4 +1,4 @@
-﻿// 
+// 
 // AVAssetDownloadTask.cs: AVAssetDownloadTask class
 //
 // Authors:
@@ -10,6 +10,8 @@
 using System;
 using Foundation;
 using ObjCRuntime;
+
+#nullable enable
 
 namespace AVFoundation {
 #if !MONOMAC
@@ -26,7 +28,7 @@ namespace AVFoundation {
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the overload with a 'INSUrlSessionDelegate' parameter.")]
 		public new static NSUrlSession FromConfiguration (NSUrlSessionConfiguration configuration, NSUrlSessionDelegate sessionDelegate, NSOperationQueue delegateQueue)
 		{
@@ -84,12 +86,12 @@ namespace AVFoundation {
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-		public override NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, NSUrlSessionResponse completionHandler)
+		public override NSUrlSessionDataTask CreateDataTask (NSUrlRequest request, NSUrlSessionResponse? completionHandler)
 		{
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-		public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse completionHandler)
+		public override NSUrlSessionDataTask CreateDataTask (NSUrl url, NSUrlSessionResponse? completionHandler)
 		{
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
@@ -104,21 +106,21 @@ namespace AVFoundation {
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrlRequest request, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTask (NSUrl url, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 
-		public override NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlDownloadSessionResponse completionHandler)
+		public override NSUrlSessionDownloadTask CreateDownloadTaskFromResumeData (NSData resumeData, NSUrlDownloadSessionResponse? completionHandler)
 		{
 			throw new NotSupportedException ("NS_UNAVAILABLE");
 		}
 	}
-	#endif
+#endif
 }
 #endif

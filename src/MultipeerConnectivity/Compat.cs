@@ -6,7 +6,9 @@
 //
 // Copyright 2015 Xamarin Inc.
 //
-#if XAMCORE_2_0 || !MONOMAC // MultipeerConnectivity is 64-bit only on OS X
+
+#nullable enable
+
 using System;
 
 namespace MultipeerConnectivity {
@@ -29,4 +31,3 @@ namespace MultipeerConnectivity {
 	}
 #endif
 }
-#endif

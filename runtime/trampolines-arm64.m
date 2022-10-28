@@ -40,8 +40,8 @@ dump_state (struct XamarinCallState *state, const char *prefix)
 #define dump_state(...)
 #endif
 
-static size_t 
-param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *target, size_t total_size, guint32 *exception_gchandle)
+static int
+param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *target, size_t total_size, GCHandle *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
 	char type = *type_ptr;
@@ -105,7 +105,7 @@ param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *targ
 
 		if (target == NULL) {
 			LOGZ (" not reading, since target is NULL.\n");
-			return size;
+			return (int) size;
 		}
 
 		switch (size) {
@@ -130,13 +130,13 @@ param_read_primitive (struct ParamIterator *it, const char *type_ptr, void *targ
 			return 0;
 		}
 
-		return size;
+		return (int) size;
 	}
 	}
 }
 
 static void
-param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, guint32 *exception_gchandle)
+param_iter_next (enum IteratorAction action, void *context, const char *type, size_t size, void *target, GCHandle *exception_gchandle)
 {
 	// COOP: does not access managed memory: any mode.
 	struct ParamIterator *it = (struct ParamIterator *) context;
@@ -159,7 +159,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 
 	char struct_name [5]; // we don't care about structs with more than 4 fields.
 	xamarin_collapse_struct_name (type, struct_name, sizeof (struct_name), exception_gchandle);
-	if (*exception_gchandle != 0)
+	if (*exception_gchandle != INVALID_GCHANDLE)
 		return;
 
 	if (size > 16 && strcmp (struct_name, "dddd") && strcmp (struct_name, "ddd")) {
@@ -182,8 +182,8 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 	const char *t = struct_name;
 	uint8_t *targ = (uint8_t *) target;
 	do {
-		size_t c = param_read_primitive (it, t, targ, size, exception_gchandle);
-		if (*exception_gchandle != 0)
+		int c = param_read_primitive (it, t, targ, size, exception_gchandle);
+		if (*exception_gchandle != INVALID_GCHANDLE)
 			return;
 		if (targ != NULL)
 			targ += c;
@@ -191,7 +191,7 @@ param_iter_next (enum IteratorAction action, void *context, const char *type, si
 }
 
 static void
-marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle)
+marshal_return_value (void *context, const char *type, size_t size, void *vvalue, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, GCHandle *exception_gchandle)
 {
 	// COOP: accessing managed memory (as input), so must be in unsafe mode.
 	MONO_ASSERT_GC_UNSAFE;
@@ -221,7 +221,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 		 */
 
 		xamarin_collapse_struct_name (type, struct_name, sizeof (struct_name), exception_gchandle);
-		if (*exception_gchandle != 0)
+		if (*exception_gchandle != INVALID_GCHANDLE)
 			return;
 
 		if ((size == 32 && !strncmp (struct_name, "dddd", 4)) ||
@@ -230,7 +230,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 			(size == 8 && !strncmp (struct_name, "d", 1))) {
 			LOGZ ("        marshalling as %i doubles (struct name: %s)\n", (int) size / 8, struct_name);
 			double* ptr = (double *) mono_object_unbox (value);
-			for (unsigned long i = 0; i < size / 8; i++) {
+			for (int i = 0; i < size / 8; i++) {
 				LOGZ ("        #%i: %f\n", i, ptr [i]);
 				it->q [i].d = ptr [i];
 			}
@@ -240,7 +240,7 @@ marshal_return_value (void *context, const char *type, size_t size, void *vvalue
 				   (size == 4 && !strncmp (struct_name, "f", 1))) {
 			LOGZ ("        marshalling as %i floats (struct name: %s)\n", (int) size / 4, struct_name);
 			float* ptr = (float *) mono_object_unbox (value);
-			for (unsigned long i = 0; i < size / 4; i++) {
+			for (int i = 0; i < size / 4; i++) {
 				LOGZ ("        #%i: %f\n", i, ptr [i]);
 				it->q [i].f.f1 = ptr [i];
 			}

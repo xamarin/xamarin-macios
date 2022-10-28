@@ -9,13 +9,8 @@
  *
  */
 using System;
-#if !XAMCORE_2_0
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
 using Foundation;
 using ObjCRuntime;
-#endif
 
 namespace Test {
 	[BaseType (typeof (NSObject), Delegates=new string [] {"WeakDelegate"}, Events=new Type [] {typeof (SharedDelegate)})]

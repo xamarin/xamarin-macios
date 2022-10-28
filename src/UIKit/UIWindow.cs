@@ -17,18 +17,7 @@ using Foundation;
 
 namespace UIKit {
 	public partial class UIWindow {
-#if !XAMCORE_2_0
-		// we already have a UIWindowLevel static class for the constants
-		[Obsolete ("Use UIWindowLevel.Normal")]
-		public const float LevelNormal = 0f;
-
-		[Obsolete ("Use UIWindowLevel.Alert")]
-		public const float LevelAlert = 100f;
-
-		[Obsolete ("Use UIWindowLevel.StatusBar")]
-		public const float LevelStatusBar = 1000f;
-#endif
-#if !XAMCORE_4_0
+#if !NET
 		// duplicates from UIKeyboard without a [Notification]
 
 		public static NSString KeyboardDidChangeFrameNotification {

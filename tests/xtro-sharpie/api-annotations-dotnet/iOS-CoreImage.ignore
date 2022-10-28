@@ -1,0 +1,3 @@
+## OSX-only API, rdar #22524785
+## see https://trello.com/c/kpksFWto/6-22524785-coreimage-headers-discrepancies
+!missing-selector! CIKernel::setROISelector: not bound

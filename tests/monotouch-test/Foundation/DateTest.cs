@@ -8,14 +8,8 @@
 //
 
 using System;
-using System.Net;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
@@ -55,15 +49,14 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void OutLimits ()
 		{
-#if XAMCORE_2_0
-			Assert.Throws<ArgumentOutOfRangeException> (() => { var tmp = (DateTime) NSDate.FromTimeIntervalSinceReferenceDate (-63114076801); }, "-63114076801");
+			Assert.Throws<ArgumentOutOfRangeException> (() => { var tmp = (DateTime) NSDate.DistantPast; }, "distant past");
+			Assert.Throws<ArgumentOutOfRangeException> (() => { var tmp = (DateTime) NSDate.FromTimeIntervalSinceReferenceDate (-63113904001); }, "-63113904001");
 
 			Assert.Throws<ArgumentOutOfRangeException> (() => { var tmp = (DateTime) NSDate.FromTimeIntervalSinceReferenceDate (252423993600); }, "252423993600");
 
 			// [Min|Max]Value are DateTimeKind.Unspecified
 			Assert.Throws<ArgumentException> (() => { var tmp = (NSDate) DateTime.MinValue; }, "MinValue");
 			Assert.Throws<ArgumentException> (() => { var tmp = (NSDate) DateTime.MaxValue; }, "MaxValue");
-#endif
 		}
 
 		[Test]

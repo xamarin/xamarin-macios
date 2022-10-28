@@ -36,15 +36,30 @@ using CoreML;
 using CoreVideo;
 using ImageIO;
 using IOSurface;
-#if !MONOMAC || XAMCORE_2_0
 using Metal;
+#if HAS_OPENGLES
+using OpenGLES;
 #endif
 #if !MONOMAC
-using OpenGLES;
 using UIKit;
 #else
 using AppKit;
 using ImageKit;
+#endif
+
+
+#if !MONOMAC
+using Color = UIKit.UIColor;
+using NSImageRep = Foundation.NSObject;
+using NSCompositingOperation = Foundation.NSObject;
+using IKFilterUIView = Foundation.NSObject;
+#else
+using Color = AppKit.NSColor;
+using UIImage = AppKit.NSImage;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace CoreImage {
@@ -84,25 +99,25 @@ namespace CoreImage {
 
 		[DesignatedInitializer]
 		[Export ("initWithCGColor:")]
-		IntPtr Constructor (CGColor c);
+		NativeHandle Constructor (CGColor c);
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("initWithRed:green:blue:")]
-		IntPtr Constructor (nfloat red, nfloat green, nfloat blue);
+		NativeHandle Constructor (nfloat red, nfloat green, nfloat blue);
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("initWithRed:green:blue:colorSpace:")]
-		IntPtr Constructor (nfloat red, nfloat green, nfloat blue, CGColorSpace colorSpace);
+		NativeHandle Constructor (nfloat red, nfloat green, nfloat blue, CGColorSpace colorSpace);
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("initWithRed:green:blue:alpha:")]
-		IntPtr Constructor (nfloat red, nfloat green, nfloat blue, nfloat alpha);
+		NativeHandle Constructor (nfloat red, nfloat green, nfloat blue, nfloat alpha);
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("initWithRed:green:blue:alpha:colorSpace:")]
-		IntPtr Constructor (nfloat red, nfloat green, nfloat blue, nfloat alpha, CGColorSpace colorSpace);
+		NativeHandle Constructor (nfloat red, nfloat green, nfloat blue, nfloat alpha, CGColorSpace colorSpace);
 
 		[Export ("numberOfComponents")]
 		nint NumberOfComponents { get; }
@@ -192,13 +207,8 @@ namespace CoreImage {
 		[Export ("stringRepresentation")]
 		string StringRepresentation ();
 
-#if !MONOMAC
 		[Export ("initWithColor:")]
-		IntPtr Constructor (UIColor color);
-#else
-		[Export ("initWithColor:")]
-		IntPtr Constructor (NSColor color);
-#endif
+		NativeHandle Constructor (Color color);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -207,27 +217,23 @@ namespace CoreImage {
 		// marked iOS5 but it's not working in iOS8.0
 		[iOS (9,0)]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
-#if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
 		[Export ("contextWithMTLDevice:")]
 		CIContext FromMetalDevice (IMTLDevice device);
 
-#if XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Internal] // This overload is needed for our strong dictionary support (but only for Unified, since for Classic the generic version is transformed to this signature)
 		[Static]
 		[Export ("contextWithMTLDevice:options:")]
 		CIContext FromMetalDevice (IMTLDevice device, [NullAllowed] NSDictionary options);
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
 		[Export ("contextWithMTLDevice:options:")]
 		CIContext FromMetalDevice (IMTLDevice device, [NullAllowed] NSDictionary<NSString, NSObject> options);
-#endif
 
 		[iOS (9,0)]
 		[Internal, Static]
@@ -241,18 +247,20 @@ namespace CoreImage {
 		[iOS (9,0)] // documented as earlier but missing
 		[Internal]
 		[Export ("initWithOptions:")]
-		IntPtr Constructor ([NullAllowed] NSDictionary options);
+		NativeHandle Constructor ([NullAllowed] NSDictionary options);
 
 		[Static]
 		[Export ("context")]
 		CIContext Create ();
 
-#if !MONOMAC
+#if HAS_OPENGLES
+		[NoMac][NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:")]
 		CIContext FromContext (EAGLContext eaglContext);
 
+		[NoMac][NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:options:")]
@@ -274,19 +282,17 @@ namespace CoreImage {
 		[Export ("render:toIOSurface:bounds:colorSpace:")]
 		void Render (CIImage image, IOSurface.IOSurface surface, CGRect bounds, [NullAllowed] CGColorSpace colorSpace);
 
-#if !MONOMAC
+		[NoMac]
 		[Export ("inputImageMaximumSize")]
 		CGSize InputImageMaximumSize { get; }
 
+		[NoMac]
 		[Export ("outputImageMaximumSize")]
 		CGSize OutputImageMaximumSize { get; }
-#endif
 
-#if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("render:toMTLTexture:commandBuffer:bounds:colorSpace:")]
-		void Render (CIImage image, IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer, CGRect bounds, [NullAllowed] CGColorSpace colorSpace);
-#endif
+		void Render (CIImage image, IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer, CGRect bounds, CGColorSpace colorSpace);
 
 		[Deprecated (PlatformName.iOS, 6, 0, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 8, message : "Use 'DrawImage (image, CGRect, CGRect)' instead.")]
@@ -298,22 +304,25 @@ namespace CoreImage {
 
 		[Export ("createCGImage:fromRect:")]
 		[return: Release ()]
+		[return: NullAllowed]
 		CGImage CreateCGImage (CIImage image, CGRect fromRectangle);
 
 		[Export ("createCGImage:fromRect:format:colorSpace:")]
 		[return: Release ()]
+		[return: NullAllowed]
 		CGImage CreateCGImage (CIImage image, CGRect fromRect, int /* CIFormat = int */ ciImageFormat, [NullAllowed] CGColorSpace colorSpace);
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Export ("createCGImage:fromRect:format:colorSpace:deferred:")]
+		[return: Release]
 		[return: NullAllowed]
 		CGImage CreateCGImage (CIImage image, CGRect fromRect, CIFormat format, [NullAllowed] CGColorSpace colorSpace, bool deferred);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Internal, Export ("createCGLayerWithSize:info:")]
+		[return: NullAllowed]
 		CGLayer CreateCGLayer (CGSize size, [NullAllowed] NSDictionary info);
-#endif
 
 		[Export ("render:toBitmap:rowBytes:bounds:format:colorSpace:")]
 		void RenderToBitmap (CIImage image, IntPtr bitmapPtr, nint bytesPerRow, CGRect bounds, int /* CIFormat = int */ bitmapFormat, [NullAllowed] CGColorSpace colorSpace);
@@ -321,10 +330,9 @@ namespace CoreImage {
 		//[Export ("render:toIOSurface:bounds:colorSpace:")]
 		//void RendertoIOSurfaceboundscolorSpace (CIImage im, IOSurfaceRef surface, CGRect r, CGColorSpaceRef cs, );
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("reclaimResources")]
 		void ReclaimResources ();
-#endif
 
 		[iOS (10,0)]
 		[TV (10,0)]
@@ -358,22 +366,28 @@ namespace CoreImage {
 		[Field ("kCIContextAllowLowPower")]
 		NSString AllowLowPower { get; }
 
+		[iOS (14,0)][TV (14,0)][Mac (11,0)]
+		[Internal]
+		[Field ("kCIContextName")]
+		NSString Name { get; }
 
-#if MONOMAC
 		[Mac(10,11)]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("offlineGPUCount")]
 		[Static]
 		int OfflineGPUCount { get; }
 
 		[Mac(10,11)]
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("contextForOfflineGPUAtIndex:")]
 		[Static]
+		[return: NullAllowed]
 		CIContext FromOfflineGpu (int gpuIndex);
-#endif
 
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("workingColorSpace")]
+		[NullAllowed]
 		CGColorSpace WorkingColorSpace { get; }
 
 		[iOS (10,0)][Mac (10,12)]
@@ -413,7 +427,7 @@ namespace CoreImage {
 		NSData GetTiffRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("GetTiffRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetTiffRepresentation (This, image, format, colorSpace, options.GetDictionary ()!)")]
 		[return: NullAllowed]
 		NSData GetTiffRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
 
@@ -423,7 +437,7 @@ namespace CoreImage {
 		NSData GetJpegRepresentation (CIImage image, CGColorSpace colorSpace, NSDictionary options);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("GetJpegRepresentation (This, image, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetJpegRepresentation (This, image, colorSpace, options.GetDictionary ()!)")]
 		[return: NullAllowed]
 		NSData GetJpegRepresentation (CIImage image, CGColorSpace colorSpace, CIImageRepresentationOptions options);
 
@@ -433,9 +447,19 @@ namespace CoreImage {
 		NSData GetHeifRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("GetHeifRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetHeifRepresentation (This, image, format, colorSpace, options.GetDictionary ()!)")]
 		[return: NullAllowed]
 		NSData GetHeifRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+		[Export ("HEIF10RepresentationOfImage:colorSpace:options:error:")]
+		[return: NullAllowed]
+		NSData GetHeif10Representation (CIImage image, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+		[Wrap ("GetHeif10Representation (This, image, colorSpace, options.GetDictionary ()!, out error)")]
+		[return: NullAllowed]
+		NSData GetHeif10Representation (CIImage image, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("PNGRepresentationOfImage:format:colorSpace:options:")]
@@ -443,7 +467,7 @@ namespace CoreImage {
 		NSData GetPngRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, NSDictionary options);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("GetPngRepresentation (This, image, format, colorSpace, options?.Dictionary)")]
+		[Wrap ("GetPngRepresentation (This, image, format, colorSpace, options.GetDictionary ()!)")]
 		[return: NullAllowed]
 		NSData GetPngRepresentation (CIImage image, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options);
 
@@ -452,7 +476,7 @@ namespace CoreImage {
 		bool WriteTiffRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, out NSError error);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("WriteTiffRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteTiffRepresentation (This, image, url, format, colorSpace, options.GetDictionary ()!, out error)")]
 		bool WriteTiffRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, out NSError error);
 
 		[iOS (10,0)][Mac (10,12)]
@@ -460,7 +484,7 @@ namespace CoreImage {
 		bool WriteJpegRepresentation (CIImage image, NSUrl url, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
 		[iOS (10,0)][Mac (10,12)]
-		[Wrap ("WriteJpegRepresentation (This, image, url, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteJpegRepresentation (This, image, url, colorSpace, options.GetDictionary ()!, out error)")]
 		bool WriteJpegRepresentation (CIImage image, NSUrl url, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13,4)]
@@ -468,15 +492,23 @@ namespace CoreImage {
 		bool WriteHeifRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("WriteHeifRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WriteHeifRepresentation (This, image, url, format, colorSpace, options.GetDictionary ()!, out error)")]
 		bool WriteHeifRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+		[Export ("writeHEIF10RepresentationOfImage:toURL:colorSpace:options:error:")]
+		bool WriteHeif10Representation (CIImage image, NSUrl url, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+		[Wrap ("WriteHeif10Representation (This, image, url, colorSpace, options.GetDictionary ()!, out error)")]
+		bool WriteHeif10Representation (CIImage image, NSUrl url, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
 		[Export ("writePNGRepresentationOfImage:toURL:format:colorSpace:options:error:")]
 		bool WritePngRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, NSDictionary options, [NullAllowed] out NSError error);
 
 		[iOS (11,0)][TV (11,0)][Mac (10,13)]
-		[Wrap ("WritePngRepresentation (This, image, url, format, colorSpace, options?.Dictionary, out error)")]
+		[Wrap ("WritePngRepresentation (This, image, url, format, colorSpace, options.GetDictionary ()!, out error)")]
 		bool WritePngRepresentation (CIImage image, NSUrl url, CIFormat format, CGColorSpace colorSpace, CIImageRepresentationOptions options, [NullAllowed] out NSError error);
 	}
 
@@ -507,6 +539,11 @@ namespace CoreImage {
 		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:orientation:options:")]
 		[return: NullAllowed]
 		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, [NullAllowed] CIImage hairSemanticSegmentation, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[Export ("depthBlurEffectFilterForImage:disparityImage:portraitEffectsMatte:hairSemanticSegmentation:glassesMatte:gainMap:orientation:options:")]
+		[return: NullAllowed]
+		CIFilter GetDepthBlurEffectFilter (CIImage image, CIImage disparityImage, [NullAllowed] CIImage portraitEffectsMatte, [NullAllowed] CIImage hairSemanticSegmentation, [NullAllowed] CIImage glassesMatte, [NullAllowed] CIImage gainMap, CGImagePropertyOrientation orientation, [NullAllowed] NSDictionary options);
 	}
 
 	[BaseType (typeof (NSObject))]
@@ -533,11 +570,13 @@ namespace CoreImage {
 
 		[Static]
 		[Export ("filterWithName:")]
+		[return: NullAllowed]
 		CIFilter FromName (string name);
 
 		[iOS (8,0), Mac (10,10)]
 		[Static]
 		[Export ("filterWithName:withInputParameters:")]
+		[return: NullAllowed]
 		CIFilter GetFilter (string name, [NullAllowed] NSDictionary inputParameters);
 
 		[Static]
@@ -551,6 +590,7 @@ namespace CoreImage {
 		[iOS(9,0)]
 		[Static]
 		[Export ("localizedNameForFilterName:")]
+		[return: NullAllowed]
 		string FilterLocalizedName (string filterName);
 
 		[iOS(9,0)]
@@ -561,22 +601,24 @@ namespace CoreImage {
 		[iOS(9,0)]
 		[Static]
 		[Export ("localizedDescriptionForFilterName:")]
+		[return: NullAllowed]
 		string FilterLocalizedDescription (string filterName);
 
 		[iOS(9,0)]
 		[Static]
 		[Export ("localizedReferenceDocumentationForFilterName:")]
+		[return: NullAllowed]
 		NSUrl FilterLocalizedReferenceDocumentation (string filterName);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Static]
 		[Export ("registerFilterName:constructor:classAttributes:")]
 		void RegisterFilterName (string name, NSObject constructorObject, NSDictionary classAttributes);
 #else
-		[iOS(9,0)]
+		[iOS(9,0)][Mac (10,4)][MacCatalyst (13,1)][TV (9,0)][NoWatch]
 		[Static]
 		[Export ("registerFilterName:constructor:classAttributes:")]
-#if XAMCORE_4_0
+#if NET
 		void RegisterFilterName (string name, ICIFilterConstructor constructorObject, NSDictionary<NSString, NSObject> classAttributes);
 #else
 		[Advice ("The 'constructorObject' argument must implement 'ICIFilterConstructor'.")]
@@ -584,70 +626,273 @@ namespace CoreImage {
 #endif
 #endif
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("apply:arguments:options:")]
+		[return: NullAllowed]
 		CIImage Apply (CIKernel k, [NullAllowed] NSArray args, [NullAllowed] NSDictionary options);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("viewForUIConfiguration:excludedKeys:")]
 		IKFilterUIView GetFilterUIView (NSDictionary configurationOptions, [NullAllowed] NSArray excludedKeys);
 
-#else
 		// added in 10.10 but it was already accessible in a different way before (manual bindings)
+		[NoMac]
 		[Export ("outputImage")]
+		[NullAllowed]
 		CIImage OutputImage { get; }
 
+		[NoMac]
 		[Export ("serializedXMPFromFilters:inputImageExtent:"), Static]
+		[return: NullAllowed]
 		NSData SerializedXMP (CIFilter[] filters, CGRect extent); 
 
+		[NoMac]
 		[Export ("filterArrayFromSerializedXMP:inputImageExtent:error:"), Static]
 		CIFilter[] FromSerializedXMP (NSData xmpData, CGRect extent, out NSError error);
-#endif
 
 		[Export ("setValue:forKey:"), Internal]
-		void SetValueForKey ([NullAllowed] NSObject value, NSString key);
+		void SetValueForKey ([NullAllowed] NSObject value, IntPtr key);
 
 		[Export ("valueForKey:"), Internal]
-		NSObject ValueForKey (NSString key);
+		[return: NullAllowed]
+		NSObject ValueForKey (IntPtr key);
 
 		// CIRAWFilter (CIFilter)
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Static]
 		[Export ("filterWithImageURL:options:")]
 		CIFilter CreateRawFilter (NSUrl url, NSDictionary options);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Static]
-		[Wrap ("CreateRawFilter (url, options?.Dictionary)")]
+		[Wrap ("CreateRawFilter (url, options.GetDictionary ()!)")]
 		CIFilter CreateRawFilter (NSUrl url, CIRawFilterOptions options);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Static]
 		[Export ("filterWithImageData:options:")]
 		CIFilter CreateRawFilter (NSData data, NSDictionary options);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)]
 		[TV (10,0)]
 		[Static]
-		[Wrap ("CreateRawFilter (data, options?.Dictionary)")]
+		[Wrap ("CreateRawFilter (data, options.GetDictionary ()!)")]
 		CIFilter CreateRawFilter (NSData data, CIRawFilterOptions options);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Static]
 		[Export ("filterWithCVPixelBuffer:properties:options:")]
 		CIFilter CreateRawFilter (CVPixelBuffer pixelBuffer, NSDictionary properties, NSDictionary options);
 
+		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
 		[Static]
-		[Wrap ("CreateRawFilter (pixelBuffer, properties, options?.Dictionary)")]
+		[Wrap ("CreateRawFilter (pixelBuffer, properties, options.GetDictionary ()!)")]
 		CIFilter CreateRawFilter (CVPixelBuffer pixelBuffer, NSDictionary properties, CIRawFilterOptions options);
 	}
 
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+	[NativeName ("CIRAWDecoderVersion")]
+	public enum CIRawDecoderVersion : long {
+		
+		[Field ("CIRAWDecoderVersionNone")]
+		VersionNone,
+
+		[Field ("CIRAWDecoderVersion8")]
+		Version8,
+
+		[Field ("CIRAWDecoderVersion8DNG")]
+		Version8Dng,
+
+		[Field ("CIRAWDecoderVersion7")]
+		Version7,
+
+		[Field ("CIRAWDecoderVersion7DNG")]
+		Version7Dng,
+
+		[Field ("CIRAWDecoderVersion6")]
+		Version6,
+
+		[Field ("CIRAWDecoderVersion6DNG")]
+		Version6Dng,
+	}
+
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+	[BaseType (typeof(CIFilter), Name="CIRAWFilter")]
+	interface CIRawFilter : CIFilterProtocol
+	{
+		[Static]
+		[Export ("supportedCameraModels")]
+		string[] SupportedCameraModels { get; }
+
+		[Export ("supportedDecoderVersions")]
+		string[] SupportedDecoderVersions { get; }
+
+		[Export ("nativeSize")]
+		CGSize NativeSize { get; }
+
+		[Export ("properties")]
+		NSDictionary Properties { get; }
+
+		[Export ("orientation", ArgumentSemantic.Assign)]
+		CGImagePropertyOrientation Orientation { get; set; }
+
+		[Export ("draftModeEnabled")]
+		bool DraftModeEnabled { [Bind ("isDraftModeEnabled")] get; set; }
+
+		[Export ("decoderVersion", ArgumentSemantic.Retain)]
+		string DecoderVersion { get; set; }
+
+		[Export ("scaleFactor")]
+		float ScaleFactor { get; set; }
+
+		[Export ("exposure")]
+		float Exposure { get; set; }
+
+		[Export ("baselineExposure")]
+		float BaselineExposure { get; set; }
+
+		[Export ("shadowBias")]
+		float ShadowBias { get; set; }
+
+		[Export ("boostAmount")]
+		float BoostAmount { get; set; }
+
+		[Export ("boostShadowAmount")]
+		float BoostShadowAmount { get; set; }
+
+		[Export ("gamutMappingEnabled")]
+		bool GamutMappingEnabled { [Bind ("isGamutMappingEnabled")] get; set; }
+
+		[Export ("lensCorrectionSupported")]
+		bool LensCorrectionSupported { [Bind ("isLensCorrectionSupported")] get; }
+
+		[Export ("lensCorrectionEnabled")]
+		bool LensCorrectionEnabled { [Bind ("isLensCorrectionEnabled")] get; set; }
+
+		[Export ("luminanceNoiseReductionSupported")]
+		bool LuminanceNoiseReductionSupported { [Bind ("isLuminanceNoiseReductionSupported")] get; }
+
+		[Export ("luminanceNoiseReductionAmount")]
+		float LuminanceNoiseReductionAmount { get; set; }
+
+		[Export ("colorNoiseReductionSupported")]
+		bool ColorNoiseReductionSupported { [Bind ("isColorNoiseReductionSupported")] get; }
+
+		[Export ("colorNoiseReductionAmount")]
+		float ColorNoiseReductionAmount { get; set; }
+
+		[Export ("sharpnessSupported")]
+		bool SharpnessSupported { [Bind ("isSharpnessSupported")] get; }
+
+		[Export ("sharpnessAmount")]
+		float SharpnessAmount { get; set; }
+
+		[Export ("contrastSupported")]
+		bool ContrastSupported { [Bind ("isContrastSupported")] get; }
+
+		[Export ("contrastAmount")]
+		float ContrastAmount { get; set; }
+
+		[Export ("detailSupported")]
+		bool DetailSupported { [Bind ("isDetailSupported")] get; }
+
+		[Export ("detailAmount")]
+		float DetailAmount { get; set; }
+
+		[Export ("moireReductionSupported")]
+		bool MoireReductionSupported { [Bind ("isMoireReductionSupported")] get; }
+
+		[Export ("moireReductionAmount")]
+		float MoireReductionAmount { get; set; }
+
+		[Export ("localToneMapSupported")]
+		bool LocalToneMapSupported { [Bind ("isLocalToneMapSupported")] get; }
+
+		[Export ("localToneMapAmount")]
+		float LocalToneMapAmount { get; set; }
+
+		[Export ("extendedDynamicRangeAmount")]
+		float ExtendedDynamicRangeAmount { get; set; }
+
+		[Export ("neutralChromaticity", ArgumentSemantic.Assign)]
+		CGPoint NeutralChromaticity { get; set; }
+
+		[Export ("neutralLocation", ArgumentSemantic.Assign)]
+		CGPoint NeutralLocation { get; set; }
+
+		[Export ("neutralTemperature")]
+		float NeutralTemperature { get; set; }
+
+		[Export ("neutralTint")]
+		float NeutralTint { get; set; }
+
+		[NullAllowed, Export ("linearSpaceFilter", ArgumentSemantic.Retain)]
+		CIFilter LinearSpaceFilter { get; set; }
+
+		[NullAllowed, Export ("previewImage")]
+		CIImage PreviewImage { get; }
+
+		[NullAllowed, Export ("portraitEffectsMatte")]
+		CIImage PortraitEffectsMatte { get; }
+
+		[NullAllowed, Export ("semanticSegmentationSkinMatte")]
+		CIImage SemanticSegmentationSkinMatte { get; }
+
+		[NullAllowed, Export ("semanticSegmentationHairMatte")]
+		CIImage SemanticSegmentationHairMatte { get; }
+
+		[NullAllowed, Export ("semanticSegmentationGlassesMatte")]
+		CIImage SemanticSegmentationGlassesMatte { get; }
+
+		[NullAllowed, Export ("semanticSegmentationSkyMatte")]
+		CIImage SemanticSegmentationSkyMatte { get; }
+
+		[NullAllowed, Export ("semanticSegmentationTeethMatte")]
+		CIImage SemanticSegmentationTeethMatte { get; }
+
+		[Static]
+		[Export ("filterWithImageURL:")]
+		[return: NullAllowed]
+		CIRawFilter Create (NSUrl url);
+
+		[Static]
+		[Export ("filterWithImageData:identifierHint:")]
+		[return: NullAllowed]
+		CIRawFilter Create (NSData data, [NullAllowed] string identifierHint);
+
+		[Static]
+		[Export ("filterWithCVPixelBuffer:properties:")]
+		[return: NullAllowed]
+		CIRawFilter Create (CVPixelBuffer buffer, NSDictionary properties);
+	}
+
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 	[TV (10,0)]
 	[Static]
 	[Internal]
@@ -760,6 +1005,11 @@ namespace CoreImage {
 		[Field ("kCIInputEnableEDRModeKey")]
 		NSString EnableEdrModeKey { get; }
 
+		[iOS (14,3), TV (14,3), Mac (11,1)]
+		[MacCatalyst (14,3)]
+		[Field ("kCIInputLocalToneMapAmountKey")]
+		NSString InputLocalToneMapAmountKey { get; }
+
 		[iOS (10,0)]
 		[Field ("kCIOutputNativeSizeKey")]
 		NSString OutputNativeSizeKey { get; }
@@ -769,6 +1019,9 @@ namespace CoreImage {
 		NSString ActiveKeysKey { get; }
 	}
 
+	[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
+	[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'CIRawFilter' instead.")]
+	[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'CIRawFilter' instead.")]
 	[TV (10,0)]
 	[StrongDictionary ("CIRawFilterKeys")]
 	interface CIRawFilterOptions {
@@ -1174,6 +1427,8 @@ namespace CoreImage {
 		[return: NullAllowed]
 		CIFilter FilterWithName (string name);
 	}
+
+	interface ICIFilterConstructor {}
 	
 	[Static]
 	[iOS (9,0)]
@@ -1191,7 +1446,7 @@ namespace CoreImage {
 		NSString Development  { get; }
 	}
 
-#if MONOMAC
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[Static]
 	interface CIFilterApply {
 		[Field ("kCIApplyOptionExtent", "+CoreImage")]
@@ -1206,9 +1461,8 @@ namespace CoreImage {
 		[Field ("kCIApplyOptionColorSpace", "+CoreImage")]
 		NSString OptionColorSpace  { get; }
 	}
-#endif
 	
-#if MONOMAC
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface CIFilterGenerator : CIFilterConstructor, NSSecureCoding, NSCopying {
@@ -1217,19 +1471,20 @@ namespace CoreImage {
 
 		[Static]
 		[Export ("filterGeneratorWithContentsOfURL:")]
+		[return: NullAllowed]
 		CIFilterGenerator FromUrl (NSUrl aURL);
 
 		[Export ("initWithContentsOfURL:")]
-		IntPtr Constructor (NSUrl aURL);
+		NativeHandle Constructor (NSUrl aURL);
 
 		[Export ("connectObject:withKey:toObject:withKey:")]
-		void ConnectObject (NSObject sourceObject, string withSourceKey, NSObject targetObject, string targetKey);
+		void ConnectObject (NSObject sourceObject, [NullAllowed] string withSourceKey, NSObject targetObject, string targetKey);
 
 		[Export ("disconnectObject:withKey:toObject:withKey:")]
 		void DisconnectObject (NSObject sourceObject, string sourceKey, NSObject targetObject, string targetKey);
 
 		[Export ("exportKey:fromObject:withName:")]
-		void ExportKey (string key, NSObject targetObject, string exportedKeyName);
+		void ExportKey (string key, NSObject targetObject, [NullAllowed] string exportedKeyName);
 
 		[Export ("removeExportedKey:")]
 		void RemoveExportedKey (string exportedKeyName);
@@ -1263,7 +1518,6 @@ namespace CoreImage {
 		NSString ExportedKeyName { get; }
 	}
 
-#endif
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	[iOS(9,0)]
@@ -1273,7 +1527,7 @@ namespace CoreImage {
 		CIFilterShape FromRect (CGRect rect);
 
 		[Export ("initWithRect:")]
-		IntPtr Constructor (CGRect rect);
+		NativeHandle Constructor (CGRect rect);
 
 		[Export ("transformBy:interior:")]
 		CIFilterShape Transform (CGAffineTransform transformation, bool interiorFlag);
@@ -1328,6 +1582,12 @@ namespace CoreImage {
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		bool AuxiliarySemanticSegmentationTeethMatte { get; set; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		bool AuxiliarySemanticSegmentationGlassesMatte { get; set; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		bool ToneMapHdrToSdr { get; set; }
 	}
 
 	[Internal]
@@ -1370,6 +1630,22 @@ namespace CoreImage {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageAuxiliarySemanticSegmentationTeethMatte")]
 		NSString AuxiliarySemanticSegmentationTeethMatteKey { get; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
+		[Field ("kCIImageAuxiliarySemanticSegmentationGlassesMatte")]
+		NSString AuxiliarySemanticSegmentationGlassesMatteKey { get; }
+
+		[iOS (14,3), TV (14,3), Mac (11,1)]
+		[MacCatalyst (14,3)]
+		[Field ("kCIImageAuxiliarySemanticSegmentationSkyMatte")]
+		NSString AuxiliarySemanticSegmentationSkyMatteKey { get; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
+		[Field ("kCIImageToneMapHDRtoSDR")]
+		NSString ToneMapHdrToSdrKey { get; }
+
 	}
 	
 	[BaseType (typeof (NSObject))]
@@ -1385,7 +1661,7 @@ namespace CoreImage {
 		CIImage FromCGImage (CGImage image, [NullAllowed] NSDictionary d);
 
 		[Static]
-		[Wrap ("FromCGImage (image, options?.Dictionary)")]
+		[Wrap ("FromCGImage (image, options.GetDictionary ())")]
 		CIImage FromCGImage (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
@@ -1396,28 +1672,24 @@ namespace CoreImage {
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Static]
-		[Wrap ("FromCGImageSource (source, index, options?.Dictionary)")]
+		[Wrap ("FromCGImageSource (source, index, options.GetDictionary ())")]
 		CIImage FromCGImageSource (CGImageSource source, nuint index, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Static]
 		[Export ("imageWithCGLayer:")]
 		CIImage FromLayer (CGLayer layer);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11)]
 		[Static]
 		[Export ("imageWithCGLayer:options:")]
-		CIImage FromLayer (CGLayer layer, NSDictionary options);
-#endif
+		CIImage FromLayer (CGLayer layer, [NullAllowed] NSDictionary options);
 
 		[Static]
 		[Export ("imageWithBitmapData:bytesPerRow:size:format:colorSpace:")]
-#if XAMCORE_2_0
 		[Internal] // there's a CIFormat enum that maps to the kCIFormatARGB8, kCIFormatRGBA16, kCIFormatRGBAf, kCIFormatRGBAh constants
-#else
-		[Obsolete ("Use the overload acceping a 'CIFormat' enum instead of an 'int'.")]
-#endif
 		CIImage FromData (NSData bitmapData, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
 		[Deprecated (PlatformName.iOS, 12, 0)]
@@ -1428,49 +1700,54 @@ namespace CoreImage {
 
 		[Static]
 		[Export ("imageWithContentsOfURL:")]
+		[return: NullAllowed]
 		CIImage FromUrl (NSUrl url);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithContentsOfURL:options:")]
+		[return: NullAllowed]
 		CIImage FromUrl (NSUrl url, [NullAllowed] NSDictionary d);
 
 		[Static]
-		[Wrap ("FromUrl (url, options?.Dictionary)")]
+		[Wrap ("FromUrl (url, options.GetDictionary ())")]
+		[return: NullAllowed]
 		CIImage FromUrl (NSUrl url, [NullAllowed] CIImageInitializationOptions options);
 
 		[Static]
 		[Export ("imageWithData:")]
+		[return: NullAllowed]
 		CIImage FromData (NSData data);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithData:options:")]
+		[return: NullAllowed]
 		CIImage FromData (NSData data, [NullAllowed] NSDictionary d);
 
 		[Static]
-		[Wrap ("FromData (data, options?.Dictionary)")]
-		CIImage FromData (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
+		[Wrap ("FromData (data, options.GetDictionary ())")]
+		[return: NullAllowed]
+		CIImage FromData (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata? options);
 
 		[Static]
 		[iOS(9,0)]
 		[Export ("imageWithCVImageBuffer:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithCVImageBuffer:options:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
-#if XAMCORE_2_0
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[iOS(9,0)]
 		[Internal] // This overload is needed for our strong dictionary support (but only for Unified, since for Classic the generic version is transformed to this signature)
 		[Export ("imageWithCVImageBuffer:options:")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
-#endif
+
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[iOS(9,0)]
@@ -1479,23 +1756,25 @@ namespace CoreImage {
 #endif
 
 		[Static][iOS(9,0)]
-		[Wrap ("FromImageBuffer (imageBuffer, options?.Dictionary)")]
+		[Wrap ("FromImageBuffer (imageBuffer, options.GetDictionary ())")]
 		CIImage FromImageBuffer (CVImageBuffer imageBuffer, CIImageInitializationOptions options);
 		
-#if !MONOMAC
+		[NoMac]
 		[Static]
 		[Export ("imageWithCVPixelBuffer:")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer);
 
+		[NoMac]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithCVPixelBuffer:options:")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
 
+		[NoMac]
 		[Static]
-		[Wrap ("FromImageBuffer (buffer, options?.Dictionary)")]
+		[Wrap ("FromImageBuffer (buffer, options.GetDictionary ())")]
 		CIImage FromImageBuffer (CVPixelBuffer buffer, [NullAllowed] CIImageInitializationOptions options);
-#endif
+
 		[iOS (11,0)]
 		[TV (11,0)]
 		[Mac (10,13)]
@@ -1509,14 +1788,14 @@ namespace CoreImage {
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Static]
 		[Export ("imageWithIOSurface:options:")]
-		CIImage FromSurface (IOSurface.IOSurface surface, NSDictionary options);
+		CIImage FromSurface (IOSurface.IOSurface surface, [NullAllowed] NSDictionary options);
 
 		[iOS (11,0)]
 		[TV (11,0)]
 		[Mac (10,13)]
 		[Static]
-		[Wrap ("FromSurface (surface, options?.Dictionary)")]
-		CIImage FromSurface (IOSurface.IOSurface surface, CIImageInitializationOptions options);
+		[Wrap ("FromSurface (surface, options.GetDictionary ())")]
+		CIImage FromSurface (IOSurface.IOSurface surface, CIImageInitializationOptions? options);
 
 		[Static]
 		[Export ("imageWithColor:")]
@@ -1527,138 +1806,142 @@ namespace CoreImage {
 		CIImage EmptyImage { get; }
 		
 		[Export ("initWithCGImage:")]
-		IntPtr Constructor (CGImage image);
+		NativeHandle Constructor (CGImage image);
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithCGImage:options:")]
-		IntPtr Constructor (CGImage image, [NullAllowed] NSDictionary d);
+		NativeHandle Constructor (CGImage image, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (image, options?.Dictionary)")]
-		IntPtr Constructor (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
+		[Wrap ("this (image, options.GetDictionary ())")]
+		NativeHandle Constructor (CGImage image, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithCGImageSource:index:options:")]
-		IntPtr Constructor (CGImageSource source, nuint index, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (CGImageSource source, nuint index, [NullAllowed] NSDictionary options);
 
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
-		[Wrap ("this (source, index, options?.Dictionary)")]
-		IntPtr Constructor (CGImageSource source, nuint index, CIImageInitializationOptionsWithMetadata options);
+		[Wrap ("this (source, index, options.GetDictionary ())")]
+		NativeHandle Constructor (CGImageSource source, nuint index, CIImageInitializationOptionsWithMetadata options);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CIImage (CGImage)' instead.")]
 		[Export ("initWithCGLayer:")]
-		IntPtr Constructor (CGLayer layer);
+		NativeHandle Constructor (CGLayer layer);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Deprecated (PlatformName.MacOSX, 10, 11, message: "Use 'CIImage (CGImage)' instead.")]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("initWithCGLayer:options:")]
-		IntPtr Constructor (CGLayer layer, [NullAllowed] NSDictionary d);
+		NativeHandle Constructor (CGLayer layer, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (layer, options?.Dictionary)")]
-		IntPtr Constructor (CGLayer layer, [NullAllowed] CIImageInitializationOptions options);
-#endif
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		[Wrap ("this (layer, options.GetDictionary ())")]
+		NativeHandle Constructor (CGLayer layer, [NullAllowed] CIImageInitializationOptions options);
 
 		[Export ("initWithData:")]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("initWithData:options:")]
-		IntPtr Constructor (NSData data, [NullAllowed] NSDictionary d);
+		NativeHandle Constructor (NSData data, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (data, options?.Dictionary)")]
-		IntPtr Constructor (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
+		[Wrap ("this (data, options.GetDictionary ())")]
+		NativeHandle Constructor (NSData data, [NullAllowed] CIImageInitializationOptionsWithMetadata options);
 
 		[Export ("initWithBitmapData:bytesPerRow:size:format:colorSpace:")]
-		IntPtr Constructor (NSData d, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
+		NativeHandle Constructor (NSData d, nint bytesPerRow, CGSize size, int /* CIFormat = int */ pixelFormat, [NullAllowed] CGColorSpace colorSpace);
 
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Export ("initWithTexture:size:flipped:colorSpace:")]
-		IntPtr Constructor (int /* unsigned int */ glTextureName, CGSize size, bool flipped, [NullAllowed] CGColorSpace colorSpace);
+		NativeHandle Constructor (int /* unsigned int */ glTextureName, CGSize size, bool flipped, [NullAllowed] CGColorSpace colorSpace);
 
 		[Export ("initWithContentsOfURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("initWithContentsOfURL:options:")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] NSDictionary d);
+		NativeHandle Constructor (NSUrl url, [NullAllowed] NSDictionary d);
 
-		[Wrap ("this (url, options?.Dictionary)")]
-		IntPtr Constructor (NSUrl url, [NullAllowed] CIImageInitializationOptions options);
+		[Wrap ("this (url, options.GetDictionary ())")]
+		NativeHandle Constructor (NSUrl url, [NullAllowed] CIImageInitializationOptions options);
 
 		[iOS (11,0)] // IOSurface was not exposed before Xcode 9
 		[TV (11,0)]
 		[Mac (10,13)]
 		[Export ("initWithIOSurface:")]
-		IntPtr Constructor (IOSurface.IOSurface surface);
+		NativeHandle Constructor (IOSurface.IOSurface surface);
 		
 		[iOS (11,0)] // IOSurface was not exposed before Xcode 9
 		[TV (11,0)]
 		[Mac (10,13)]
 		[Export ("initWithIOSurface:options:")]
-		IntPtr Constructor (IOSurface.IOSurface surface, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (IOSurface.IOSurface surface, [NullAllowed] NSDictionary options);
 
 		[iOS (11,0)] // IOSurface was not exposed before Xcode 9
 		[TV (11,0)]
 		[Mac (10,13)]
-		[Wrap ("this (surface, options?.Dictionary)")]
-		IntPtr Constructor (IOSurface.IOSurface surface, [NullAllowed] CIImageInitializationOptions options);
+		[Wrap ("this (surface, options.GetDictionary ())")]
+		NativeHandle Constructor (IOSurface.IOSurface surface, [NullAllowed] CIImageInitializationOptions options);
 
 		[iOS(9,0)]
 		[Export ("initWithCVImageBuffer:")]
-		IntPtr Constructor (CVImageBuffer imageBuffer);
+		NativeHandle Constructor (CVImageBuffer imageBuffer);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Export ("initWithCVImageBuffer:options:")]
-		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
+		NativeHandle Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #else
 		[iOS(9,0)]
+		[Mac (10,4)]
+		[MacCatalyst (13,1)]
+		[TV (9,0)]
 		[Export ("initWithCVImageBuffer:options:")]
-		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary<NSString, NSObject> dict);
+		NativeHandle Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary<NSString, NSObject> dict);
 
-#if XAMCORE_2_0
 		[iOS(9,0)]
+		[Mac (10,4)]
+		[MacCatalyst (13,1)]
+		[TV (9,0)]
 		[Internal] // This overload is needed for our strong dictionary support (but only for Unified, since for Classic the generic version is transformed to this signature)
 		[Sealed]
 		[Export ("initWithCVImageBuffer:options:")]
-		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
-#endif
+		NativeHandle Constructor (CVImageBuffer imageBuffer, [NullAllowed] NSDictionary dict);
 #endif
 
 		[iOS(9,0)]
-		[Wrap ("this (imageBuffer, options?.Dictionary)")]
-		IntPtr Constructor (CVImageBuffer imageBuffer, [NullAllowed] CIImageInitializationOptions options);
+		[Wrap ("this (imageBuffer, options.GetDictionary ())")]
+		NativeHandle Constructor (CVImageBuffer imageBuffer, [NullAllowed] CIImageInitializationOptions options);
 
 		[Mac (10,11)]
 		[Export ("initWithCVPixelBuffer:")]
-		IntPtr Constructor (CVPixelBuffer buffer);
+		NativeHandle Constructor (CVPixelBuffer buffer);
 
 		[Mac (10,11)]
 		[Export ("initWithCVPixelBuffer:options:")]
-		IntPtr Constructor (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
+		NativeHandle Constructor (CVPixelBuffer buffer, [NullAllowed] NSDictionary dict);
 
 		[Mac (10,11)]
-		[Wrap ("this (buffer, options?.Dictionary)")]
-		IntPtr Constructor (CVPixelBuffer buffer, [NullAllowed] CIImageInitializationOptions options);
+		[Wrap ("this (buffer, options.GetDictionary ())")]
+		NativeHandle Constructor (CVPixelBuffer buffer, [NullAllowed] CIImageInitializationOptions options);
 
 		[Export ("initWithColor:")]
-		IntPtr Constructor (CIColor color);
+		NativeHandle Constructor (CIColor color);
 
-#if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Export ("initWithMTLTexture:options:")]
-		IntPtr Constructor (IMTLTexture texture, [NullAllowed] NSDictionary options);
-#endif
+		NativeHandle Constructor (IMTLTexture texture, [NullAllowed] NSDictionary options);
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("initWithBitmapImageRep:")]
-		IntPtr Constructor (NSImageRep imageRep);
+		NativeHandle Constructor (NSImageRep imageRep);
 		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("drawAtPoint:fromRect:operation:fraction:")]
 		void Draw (CGPoint point, CGRect srcRect, NSCompositingOperation op, nfloat delta);
 
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("drawInRect:fromRect:operation:fraction:")]
 		void Draw (CGRect dstRect, CGRect srcRect, NSCompositingOperation op, nfloat delta);
-#endif
 
 		[Export ("imageByApplyingTransform:")]
 		CIImage ImageByApplyingTransform (CGAffineTransform matrix);
@@ -1679,10 +1962,10 @@ namespace CoreImage {
 		[Wrap ("WeakProperties")]
 		CoreGraphics.CGImageProperties Properties { get; }
 
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("definition")]
 		CIFilterShape Definition { get; }
-#endif
+
 		[iOS (10,0)]
 		[Field ("kCIFormatRGBA16")]
 		int FormatRGBA16 { get; } /* CIFormat = int */
@@ -1787,17 +2070,18 @@ namespace CoreImage {
 		[Field ("kCIFormatLAf")]
 		int FormatLAf { get; }
 
-#if !MONOMAC
 		// UIKit extensions
+		[NoMac]
 		[Export ("initWithImage:")]
-		IntPtr Constructor (UIImage image);
+		NativeHandle Constructor (UIImage image);
 
+		[NoMac]
 		[Export ("initWithImage:options:")]
-		IntPtr Constructor (UIImage image, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (UIImage image, [NullAllowed] NSDictionary options);
 
-		[Wrap ("this (image, options?.Dictionary)")]
-		IntPtr Constructor (UIImage image, [NullAllowed] CIImageInitializationOptions options);
-#endif
+		[NoMac]
+		[Wrap ("this (image, options.GetDictionary ())")]
+		NativeHandle Constructor (UIImage image, [NullAllowed] CIImageInitializationOptions options);
 	
 		[Field ("kCIImageAutoAdjustFeatures"), Internal]
 		NSString AutoAdjustFeaturesKey { get; }
@@ -1880,14 +2164,13 @@ namespace CoreImage {
 		[iOS (9,0)]
 		[Internal]
 		[Export ("initWithImageProvider:size::format:colorSpace:options:")]
-		IntPtr Constructor (ICIImageProvider provider, nuint width, nuint height, int f, [NullAllowed] CGColorSpace colorSpace, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (ICIImageProvider provider, nuint width, nuint height, int f, [NullAllowed] CGColorSpace colorSpace, [NullAllowed] NSDictionary options);
 
-#if !MONOMAC || XAMCORE_2_0
 		[iOS (9,0)][Mac (10,11)]
 		[Static]
 		[Export ("imageWithMTLTexture:options:")]
+		[return: NullAllowed]
 		CIImage FromMetalTexture (IMTLTexture texture, [NullAllowed] NSDictionary<NSString, NSObject> options);
-#endif
 
 		[iOS (10,0)][Mac (10,12)]
 		[TV (10,0)]
@@ -1975,11 +2258,11 @@ namespace CoreImage {
 
 		[TV (12,0), iOS (12,0), Mac (10, 14)]
 		[Export ("initWithPortaitEffectsMatte:options:")] // selector typo, rdar filled 42894821
-		IntPtr Constructor (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (AVPortraitEffectsMatte matte, [NullAllowed] NSDictionary options);
 
-		[TV (11,0), iOS (11,0), Mac (10, 14)]
+		[TV (12,0), iOS (12,0), Mac (10, 14)]
 		[Export ("initWithPortaitEffectsMatte:")] // selector typo, rdar filled 42894821
-		IntPtr Constructor (AVPortraitEffectsMatte matte);
+		NativeHandle Constructor (AVPortraitEffectsMatte matte);
 
 		[TV (12,0), iOS (12,0), Mac (10, 14)]
 		[Static]
@@ -2001,11 +2284,11 @@ namespace CoreImage {
 
 		[TV (13,0), iOS (13,0), Mac (10,15)]
 		[Export ("initWithSemanticSegmentationMatte:options:")]
-		IntPtr Constructor (AVSemanticSegmentationMatte matte, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (AVSemanticSegmentationMatte matte, [NullAllowed] NSDictionary options);
 
 		[TV (13,0), iOS (13,0), Mac (10,15)]
 		[Export ("initWithSemanticSegmentationMatte:")]
-		IntPtr Constructor (AVSemanticSegmentationMatte matte);
+		NativeHandle Constructor (AVSemanticSegmentationMatte matte);
 
 		[TV (13,0), iOS (13,0), Mac (10,15)]
 		[Static]
@@ -2023,11 +2306,11 @@ namespace CoreImage {
 
 		[TV (11, 0), iOS (11, 0), Mac (10,13)]
 		[Export ("initWithDepthData:options:")]
-		IntPtr Constructor (AVDepthData data, [NullAllowed] NSDictionary options);
+		NativeHandle Constructor (AVDepthData data, [NullAllowed] NSDictionary options);
 
 		[TV (11, 0), iOS (11, 0), Mac (10,13)]
 		[Export ("initWithDepthData:")]
-		IntPtr Constructor (AVDepthData data);
+		NativeHandle Constructor (AVDepthData data);
 
 		[TV (11, 0), iOS (11, 0), Mac (10,13)]
 		[Static]
@@ -2119,13 +2402,11 @@ namespace CoreImage {
 		[NullAllowed, Export ("pixelBuffer")]
 		CVPixelBuffer PixelBuffer { get; }
 
-#if !MONOMAC || XAMCORE_2_0
 		[Abstract]
 		[NullAllowed, Export ("metalTexture")]
 		IMTLTexture MetalTexture { get; }
-#endif
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but it was added in Xcode9
 #endif
 		[iOS (11,0)]
@@ -2160,7 +2441,6 @@ namespace CoreImage {
 		[NullAllowed, Export ("pixelBuffer")]
 		CVPixelBuffer PixelBuffer { get; }
 
-#if !MONOMAC || XAMCORE_2_0
 		[Abstract]
 		[NullAllowed, Export ("metalTexture")]
 		IMTLTexture MetalTexture { get; }
@@ -2168,9 +2448,8 @@ namespace CoreImage {
 		[Abstract]
 		[NullAllowed, Export ("metalCommandBuffer")]
 		IMTLCommandBuffer MetalCommandBuffer { get; }
-#endif
 
-#if XAMCORE_4_0
+#if NET
 		[Abstract] // @required but it was added in Xcode9
 #endif
 		[iOS (11,0)]
@@ -2214,23 +2493,23 @@ namespace CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // avoid crashes
 	interface CIKernel {
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'FromProgramSingle'.")] // better API
-		[Static, Export ("kernelWithString:")]
-		CIKernel FromProgram (string coreImageShaderProgram);
 
-		[Obsolete ("Use 'FromProgramMultiple'.")] // better API
-		[Static, Export ("kernelsWithString:")]
-		CIKernel [] FromPrograms (string coreImageShaderProgram);
-#endif
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+		[Static]
+		[Export ("kernelsWithMetalString:error:")]
+		[return: NullAllowed]
+		CIKernel[] FromMetalSource (string source, [NullAllowed] out NSError error);
+
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static, Export ("kernelsWithString:")]
+		[return: NullAllowed]
 		CIKernel [] FromProgramMultiple (string coreImageShaderProgram);
 
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[Static, Export ("kernelWithString:")]
+		[return: NullAllowed]
 		CIKernel FromProgramSingle (string coreImageShaderProgram);
 
 		[iOS (11,0)]
@@ -2249,15 +2528,24 @@ namespace CoreImage {
 		[return: NullAllowed]
 		CIKernel FromFunction (string name, NSData data, CIFormat format, [NullAllowed] out NSError error);
 
+		[iOS (14,0)]
+		[TV (14,0)]
+		[Mac (11,0)]
+		[MacCatalyst (14,0)]
+		[Static]
+		[Export ("kernelNamesFromMetalLibraryData:")]
+		string[] GetKernelNamesFromMetalLibrary (NSData data);
+
 		[Export ("name")]
 		string Name { get; }
 
-#if MONOMAC
+ 		[NoiOS][NoWatch][NoTV][Mac (10,4)][MacCatalyst (13,1)]
 		[Export ("setROISelector:")]
 		void SetRegionOfInterestSelector (Selector aMethod);
-#endif
-		[iOS (8,0), Mac (10,11)]
+
+		[Mac (10,11)]
 		[Export ("applyWithExtent:roiCallback:arguments:")]
+		[return: NullAllowed]
 		CIImage ApplyWithExtent (CGRect extent, CIKernelRoiCallback callback, [NullAllowed] NSObject [] args);
 	}
 
@@ -2266,6 +2554,7 @@ namespace CoreImage {
 	[DisableDefaultCtor] // returns a nil handle -> instances of this type are returned from `kernel[s]WithString:`
 	interface CIColorKernel {
 		[Export ("applyWithExtent:arguments:")]
+		[return: NullAllowed]
 		CIImage ApplyWithExtent (CGRect extent, [NullAllowed] NSObject [] args);
 
 		// Note: the API is supported in iOS 8, but with iOS 9, they guarantee
@@ -2273,6 +2562,7 @@ namespace CoreImage {
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[New, Static, Export ("kernelWithString:")]
+		[return: NullAllowed]
 		CIColorKernel FromProgramSingle (string coreImageShaderProgram);
 	}
 
@@ -2281,6 +2571,7 @@ namespace CoreImage {
 	[DisableDefaultCtor] // returns a nil handle -> instances of this type are returned from `kernel[s]WithString:`
 	interface CIWarpKernel {
 		[Export ("applyWithExtent:roiCallback:inputImage:arguments:")]
+		[return: NullAllowed]
 		CIImage ApplyWithExtent (CGRect extent, CIKernelRoiCallback callback, CIImage image, [NullAllowed] NSObject [] args);
 
 		// Note: the API is supported in iOS 8, but with iOS 9, they guarantee
@@ -2288,6 +2579,7 @@ namespace CoreImage {
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Deprecated (PlatformName.MacOSX, 10, 14)]
 		[New, Static, Export ("kernelWithString:")]
+		[return: NullAllowed]
 		CIWarpKernel FromProgramSingle (string coreImageShaderProgram);
 	}
 
@@ -2295,39 +2587,41 @@ namespace CoreImage {
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // does not work in iOS 11 beta 4
 	interface CIImageAccumulator {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("The default initializer does not work in recent iOS version (11b4).")]
 		[Export ("init")]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 #endif
 
 		[Static]
 		[Export ("imageAccumulatorWithExtent:format:")]
+		[return: NullAllowed]
 		CIImageAccumulator FromRectangle (CGRect rect, CIFormat format);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use the overload acceping a 'CIFormat' enum instead of an 'int'.")]
 		[Static]
 		[Wrap ("FromRectangle (rect, (CIFormat) ciImageFormat)")]
+		[return: NullAllowed]
 		CIImageAccumulator FromRectangle (CGRect rect, int ciImageFormat);
 #endif
 
-		[iOS (9,0)]
 		[Static]
 		[Export ("imageAccumulatorWithExtent:format:colorSpace:")]
+		[return: NullAllowed]
 		CIImageAccumulator FromRectangle (CGRect extent, CIFormat format, CGColorSpace colorSpace);
 		
 		[Export ("initWithExtent:format:")]
-		IntPtr Constructor (CGRect rectangle, CIFormat format);
+		NativeHandle Constructor (CGRect rectangle, CIFormat format);
 
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use the overload acceping a 'CIFormat' enum instead of an 'int'.")]
 		[Wrap ("this (rectangle, (CIFormat) ciImageFormat)")]
-		IntPtr Constructor (CGRect rectangle, int ciImageFormat);
+		NativeHandle Constructor (CGRect rectangle, int ciImageFormat);
 #endif
 
 		[Export ("initWithExtent:format:colorSpace:")]
-		IntPtr Constructor (CGRect extent, CIFormat format, CGColorSpace colorSpace);
+		NativeHandle Constructor (CGRect extent, CIFormat format, CGColorSpace colorSpace);
 		
 		[Export ("extent")]
 		CGRect Extent { get; }
@@ -2346,7 +2640,7 @@ namespace CoreImage {
 		CIImage Image { get; set; }
 	}
 
-#if MONOMAC
+	[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 	[BaseType (typeof (NSObject))]
 	interface CIPlugIn {
 		[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'LoadNonExecutablePlugIns' for non-executable plugins instead.")]
@@ -2368,7 +2662,6 @@ namespace CoreImage {
 		[Export ("loadPlugIn:allowNonExecutable:")]
 		void LoadPlugIn (NSUrl pluginUrl, bool allowNonExecutable);
 	}
-#endif
 
 	[iOS (9,0)]
 	[BaseType (typeof (NSObject))]
@@ -2379,14 +2672,14 @@ namespace CoreImage {
 
 		[Internal, Static]
 		[Export ("samplerWithImage:options:")]
-		CISampler FromImage (CIImage sourceImag, NSDictionary options);
+		CISampler FromImage (CIImage sourceImag, [NullAllowed] NSDictionary options);
 
 		[Export ("initWithImage:")]
-		IntPtr Constructor (CIImage sourceImage);
+		NativeHandle Constructor (CIImage sourceImage);
 
 		[DesignatedInitializer]
 		[Internal, Export ("initWithImage:options:")]
-		NSObject Constructor (CIImage image, NSDictionary options);
+		NSObject Constructor (CIImage image, [NullAllowed] NSDictionary options);
 
 		[Export ("definition")]
 		CIFilterShape Definition { get; }
@@ -2442,19 +2735,20 @@ namespace CoreImage {
 		[Export ("vectorWithX:Y:Z:W:")]
 		CIVector Create (nfloat x, nfloat y, nfloat z, nfloat w);
 
-#if !MONOMAC
+		[NoMac]
 		[Static]
 		[Export ("vectorWithCGPoint:")]
 		CIVector Create (CGPoint point);
 
+		[NoMac]
 		[Static]
 		[Export ("vectorWithCGRect:")]
 		CIVector Create (CGRect point);
 
+		[NoMac]
 		[Static]
 		[Export ("vectorWithCGAffineTransform:")]
 		CIVector Create (CGAffineTransform affineTransform);
-#endif
 
 		[Static]
 		[Export ("vectorWithString:")]
@@ -2462,31 +2756,31 @@ namespace CoreImage {
 
 		[Mac (10,9)]
 		[Export ("initWithCGPoint:")]
-		IntPtr Constructor (CGPoint p);
+		NativeHandle Constructor (CGPoint p);
 
 		[Mac (10,9)]
 		[Export ("initWithCGRect:")]
-		IntPtr Constructor (CGRect r);
+		NativeHandle Constructor (CGRect r);
 
 		[Mac (10,9)]
 		[Export ("initWithCGAffineTransform:")]
-		IntPtr Constructor (CGAffineTransform r);
+		NativeHandle Constructor (CGAffineTransform r);
 		
 		
 		[Export ("initWithX:")]
-		IntPtr Constructor(nfloat x);
+		NativeHandle Constructor(nfloat x);
 
 		[Export ("initWithX:Y:")]
-		IntPtr Constructor (nfloat x, nfloat y);
+		NativeHandle Constructor (nfloat x, nfloat y);
 
 		[Export ("initWithX:Y:Z:")]
-		IntPtr Constructor (nfloat x, nfloat y, nfloat z);
+		NativeHandle Constructor (nfloat x, nfloat y, nfloat z);
 
 		[Export ("initWithX:Y:Z:W:")]
-		IntPtr Constructor (nfloat x, nfloat y, nfloat z, nfloat w);
+		NativeHandle Constructor (nfloat x, nfloat y, nfloat z, nfloat w);
 
 		[Export ("initWithString:")]
-		IntPtr Constructor (string representation);
+		NativeHandle Constructor (string representation);
 
 		[Export ("valueAtIndex:"), Internal]
 		nfloat ValueAtIndex (nint index);
@@ -2527,7 +2821,8 @@ namespace CoreImage {
 	[DisableDefaultCtor]
 	interface CIDetector {
 		[Static, Export ("detectorOfType:context:options:"), Internal]
-		CIDetector FromType ([NullAllowed] NSString detectorType, [NullAllowed] CIContext context, [NullAllowed] NSDictionary options);
+		[return: NullAllowed]
+		CIDetector FromType (NSString detectorType, [NullAllowed] CIContext context, [NullAllowed] NSDictionary options);
 
 		[Export ("featuresInImage:")]
 		CIFeature [] FeaturesInImage (CIImage image);
@@ -2722,6 +3017,7 @@ namespace CoreImage {
 		CGPoint BottomRight { get; }
 
 		[Export ("messageString")]
+		[NullAllowed]
 		string MessageString { get; }
 
 		[iOS (11,0)]
@@ -2751,6 +3047,7 @@ namespace CoreImage {
 		CGPoint BottomRight { get; }
 
 		[Export ("subFeatures")]
+		[NullAllowed]
 		CIFeature[] SubFeatures { get; }
 	}
 
@@ -2797,7 +3094,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIAccordionFoldTransition : CIAccordionFoldTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'FoldCount' instead.")]
 		[CoreImageFilterProperty ("inputNumberOfFolds")]
 		int NumberOfFolds { get; set; }
@@ -2826,7 +3123,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIAffineFilter : CIFilterProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[NoMac]
 		[Obsolete ("Not every subclass expose this property.")]
 		[CoreImageFilterProperty ("inputTransform")]
@@ -2855,6 +3152,14 @@ namespace CoreImage {
 		CGAffineTransform Transform { get; set; }
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIAreaAverage")]
+	interface CIAreaAverageProtocol : CIFilterProtocol {
+	}
+
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIReductionFilter))]
@@ -2863,25 +3168,53 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("outputImageNonMPS")]
 		CIImage OutputImageNonMps { get; }
 
-#if MONOMAC
+		[iOS (13,4)]
 		[CoreImageFilterProperty ("outputImageMPS")]
 		CIImage OutputImageMps { get; }
-#endif
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIAreaReductionFilter")]
+	interface CIAreaReductionFilterProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("extent", ArgumentSemantic.Assign)]
+		CGRect InputExtent { get; set; }
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIAreaHistogram")]
+	interface CIAreaHistogramProtocol : CIAreaReductionFilterProtocol {
+
+		[Abstract]
+		[Export ("scale")]
+		float Scale { get; set; }
+
+		[Abstract]
+		[Export ("count")]
+		nint InputCount { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (8,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIAreaHistogram {
+	interface CIAreaHistogram : CIAreaHistogramProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
+#if !NET
+		[Obsolete ("Use 'InputCount' instead.")]
 		[CoreImageFilterProperty ("inputCount")]
 		float Count { get; set; }
-
-		[CoreImageFilterProperty ("inputScale")]
-		float Scale { get; set; }
+#endif
 
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
@@ -2889,10 +3222,10 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("outputImageNonMPS")]
 		CIImage OutputImageNonMps { get; }
 
-#if MONOMAC
+		[Mac (10, 5)]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[CoreImageFilterProperty ("outputImageMPS")]
 		CIImage OutputImageMps { get; }
-#endif
 
 		[CoreImageFilterProperty ("outputData")]
 		NSData OutputData { get; }
@@ -2911,28 +3244,60 @@ namespace CoreImage {
 		CIVector Extent { get; set; }
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIAreaMaximum")]
+	interface CIAreaMaximumProtocol : CIAreaReductionFilterProtocol {
+	}
+
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
 	[iOS (9,0)]
 	[BaseType (typeof (CIReductionFilter))]
-	interface CIAreaMaximum {
+	interface CIAreaMaximum : CIAreaMaximumProtocol {
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIAreaMaximumAlpha")]
+	interface CIAreaMaximumAlphaProtocol : CIAreaReductionFilterProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIReductionFilter))]
-	interface CIAreaMaximumAlpha {
+	interface CIAreaMaximumAlpha : CIAreaMaximumAlphaProtocol {
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIAreaMinimum")]
+	interface CIAreaMinimumProtocol : CIAreaReductionFilterProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIReductionFilter))]
-	interface CIAreaMinimum {
+	interface CIAreaMinimum : CIAreaReductionFilterProtocol {
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIAreaMinimumAlpha")]
+	interface CIAreaMinimumAlphaProtocol : CIAreaReductionFilterProtocol {
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIReductionFilter))]
-	interface CIAreaMinimumAlpha {
+	interface CIAreaMinimumAlpha : CIAreaReductionFilterProtocol {
 	}
 
 	[CoreImageFilter (StringCtorVisibility = MethodAttributes.Public)]
@@ -2949,7 +3314,7 @@ namespace CoreImage {
 	[BaseType (typeof (CICodeGenerator))]
 	interface CIAztecCodeGenerator : CIAztecCodeGeneratorProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCompactStyle' instead.")]
 		[CoreImageFilterProperty ("inputCompactStyle")]
 		bool CompactStyle { get; set; }
@@ -2994,7 +3359,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIBlendFilter))]
 	interface CIBlendWithMask : CIBlendWithMaskProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// renamed for API compatibility
 		[Obsolete ("Use 'MaskImage' instead.")]
 		[CoreImageFilterProperty ("inputMaskImage")]
@@ -3024,43 +3389,109 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputRadius")]
 		float Radius { get; set; }
 
-		[CoreImageFilterProperty ("inputCenter")]
-		CIVector Center { get; set; }
-	}
-
-	[CoreImageFilter]
-	[BaseType (typeof (CIDistortionFilter ))]
-	interface CIBumpDistortion {
-
-		[CoreImageFilterProperty ("inputScale")]
-		float Scale { get; set; }
-	}
-
-	[CoreImageFilter]
-	[BaseType (typeof (CIDistortionFilter))]
-	interface CIBumpDistortionLinear {
-
-		[CoreImageFilterProperty ("inputAngle")]
-		float Angle { get; set; }
-
-		[CoreImageFilterProperty ("inputScale")]
-		float Scale { get; set; }
-	}
-
-	[CoreImageFilter]
-	[BaseType (typeof (CIFilter))]
-	interface CICheckerboardGenerator : CICheckerboardGeneratorProtocol {
-
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
 #endif
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIBumpDistortion")]
+	interface CIBumpDistortionProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+
+		[Abstract]
+		[Export ("scale")]
+		float Scale { get; set; }
+	}
+
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
-	interface CICircleSplashDistortion {
+	interface CIBumpDistortion : CIBumpDistortionProtocol {
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIBumpDistortionLinear")]
+	interface CIBumpDistortionLinearProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+
+		[Abstract]
+		[Export ("angle")]
+		float Angle { get; set; }
+
+		[Abstract]
+		[Export ("scale")]
+		float Scale { get; set; }
+	}
+
+	[CoreImageFilter]
+	[BaseType (typeof (CIDistortionFilter))]
+	interface CIBumpDistortionLinear : CIBumpDistortionLinearProtocol {
+	}
+
+	[CoreImageFilter]
+	[BaseType (typeof (CIFilter))]
+	interface CICheckerboardGenerator : CICheckerboardGeneratorProtocol {
+
+#if !NET
+		[Obsolete ("Use 'InputCenter' instead.")]
+		[CoreImageFilterProperty ("inputCenter")]
+		CIVector Center { get; set; }
+#endif
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CICircleSplashDistortion")]
+	interface CICircleSplashDistortionProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+	}
+
+	[CoreImageFilter]
+	[BaseType (typeof (CIDistortionFilter))]
+	interface CICircleSplashDistortion : CICircleSplashDistortionProtocol {
 	}
 
 	[CoreImageFilter (IntPtrCtorVisibility = MethodAttributes.Family)] // was already protected in classic
@@ -3071,7 +3502,7 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputSharpness")]
 		float Sharpness { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3089,22 +3520,40 @@ namespace CoreImage {
 	interface CICircularScreen : CICircularScreenProtocol {
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CICircularWrap")]
+	interface CICircularWrapProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+
+		[Abstract]
+		[Export ("angle")]
+		float Angle { get; set; }
+	}
+
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CICircularWrap {
+	interface CICircularWrap : CICircularWrapProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
-		[CoreImageFilterProperty ("inputRadius")]
-		float Radius { get; set; }
-
-		[CoreImageFilterProperty ("inputAngle")]
-		float Angle { get; set; }
-
+#if !NET
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 	}
 
 	[CoreImageFilter]
@@ -3112,7 +3561,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter), Name="CICMYKHalftone")]
 	interface CICmykHalftone : CICmykHalftoneProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// renamed for API compatibility
 		[Obsolete ("Use 'Sharpness' instead.")]
 		[CoreImageFilterProperty ("inputSharpness")]
@@ -3162,7 +3611,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIColorClamp : CIColorClampProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// here the prefix was not removed, edited to keep API compatibility
 		[Obsolete ("Use 'MinComponents' instead.")]
 		[CoreImageFilterProperty ("inputMinComponents")]
@@ -3236,11 +3685,19 @@ namespace CoreImage {
 	interface CIColorPosterize : CIColorPosterizeProtocol {
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIColumnAverage")]
+	interface CIColumnAverageProtocol : CIAreaReductionFilterProtocol {
+	}
+
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[Mac (10,9)]
 	[BaseType (typeof (CIReductionFilter))]
-	interface CIColumnAverage {
+	interface CIColumnAverage : CIColumnAverageProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3343,7 +3800,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CICrystallize : CICrystallizeProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3370,7 +3827,7 @@ namespace CoreImage {
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIDisintegrateWithMaskTransition : CIDisintegrateWithMaskTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'MaskImage' instead.")]
 		[CoreImageFilterProperty ("inputMaskImage")]
 		CIImage Mask { get; set; }
@@ -3381,19 +3838,30 @@ namespace CoreImage {
 #endif
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIDisplacementDistortion")]
+	interface CIDisplacementDistortionProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("displacementImage", ArgumentSemantic.Retain)]
+		CIImage DisplacementImage { get; set; }
+
+		[Abstract]
+		[Export ("scale")]
+		float Scale { get; set; }
+	}
+
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIDisplacementDistortion {
-
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
-		[CoreImageFilterProperty ("inputDisplacementImage")]
-		CIImage DisplacementImage { get; set; }
-
-		[CoreImageFilterProperty ("inputScale")]
-		float Scale { get; set; }
+	interface CIDisplacementDistortion : CIDisplacementDistortionProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3413,31 +3881,56 @@ namespace CoreImage {
 	interface CIDotScreen : CIDotScreenProtocol {
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIDroste")]
+	interface CIDrosteProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("insetPoint0", ArgumentSemantic.Assign)]
+		CGPoint InputInsetPoint0 { get; set; }
+
+		[Abstract]
+		[Export ("insetPoint1", ArgumentSemantic.Assign)]
+		CGPoint InputInsetPoint1 { get; set; }
+
+		[Abstract]
+		[Export ("strands")]
+		float Strands { get; set; }
+
+		[Abstract]
+		[Export ("periodicity")]
+		float Periodicity { get; set; }
+
+		[Abstract]
+		[Export ("rotation")]
+		float Rotation { get; set; }
+
+		[Abstract]
+		[Export ("zoom")]
+		float Zoom { get; set; }
+	}
+
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIDroste {
+	interface CIDroste : CIDrosteProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
-		[CoreImageFilterProperty ("inputStrands")]
-		float Strands { get; set; }
-
+#if !NET
+		[Obsolete ("use 'InputInsetPoint0' instead.")]
 		[CoreImageFilterProperty ("inputInsetPoint0")]
 		CIVector InsetPoint0 { get; set; }
 
-		[CoreImageFilterProperty ("inputRotation")]
-		float Rotation { get; set; }
-
+		[Obsolete ("use 'InputInsetPoint0' instead.")]
 		[CoreImageFilterProperty ("inputInsetPoint1")]
 		CIVector InsetPoint1 { get; set; }
-
-		[CoreImageFilterProperty ("inputZoom")]
-		float Zoom { get; set; }
-
-		[CoreImageFilterProperty ("inputPeriodicity")]
-		float Periodicity { get; set; }
+#endif
 	}
 
 	[CoreImageFilter]
@@ -3460,7 +3953,7 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputAngle")]
 		float Angle { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3497,7 +3990,7 @@ namespace CoreImage {
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIFlashTransition : CIFlashTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// for some reason we prefixed all Striation* with Max - API compatibility
 		[Obsolete ("Use 'StriationContrast' instead.")]
 		[CoreImageFilterProperty ("inputStriationContrast")]
@@ -3547,50 +4040,91 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIGaussianGradient : CIGaussianGradientProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
 #endif
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIGlassDistortion")]
+	interface CIGlassDistortionProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[NullAllowed, Export ("textureImage", ArgumentSemantic.Retain)]
+		CIImage Texture { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("scale")]
+		float Scale { get; set; }
+	}
+
 	[CoreImageFilter]
 	[iOS (8,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIGlassDistortion {
+	interface CIGlassDistortion : CIGlassDistortionProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
+#if !NET
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
+	}
 
-		[CoreImageFilterProperty ("inputScale")]
-		float Scale { get; set; }
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIGlassLozenge")]
+	interface CIGlassLozengeProtocol : CIFilterProtocol {
 
-		[CoreImageFilterProperty ("inputTexture")]
-		CIImage Texture { get; set; }
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("point0", ArgumentSemantic.Assign)]
+		CGPoint InputPoint0 { get; set; }
+
+		[Abstract]
+		[Export ("point1", ArgumentSemantic.Assign)]
+		CGPoint InputPoint1 { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+
+		[Abstract]
+		[Export ("refraction")]
+		float Refraction { get; set; }
 	}
 
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIGlassLozenge {
+	interface CIGlassLozenge : CIGlassLozengeProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
+#if !NET
+		[Obsolete ("Use 'InputPoint1' instead.")]
 		[CoreImageFilterProperty ("inputPoint1")]
 		CIVector Point1 { get; set; }
 
+		[Obsolete ("Use 'InputPoint0' instead.")]
 		[CoreImageFilterProperty ("inputPoint0")]
 		CIVector Point0 { get; set; }
-
-		[CoreImageFilterProperty ("inputRadius")]
-		float Radius { get; set; }
-
-		[CoreImageFilterProperty ("inputRefraction")]
-		float Refraction { get; set; }
+#endif
 	}
 
 	[CoreImageFilter]
@@ -3624,7 +4158,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIHexagonalPixellate : CIHexagonalPixellateProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3636,28 +4170,72 @@ namespace CoreImage {
 	interface CIHighlightShadowAdjust : CIHighlightShadowAdjustProtocol {
 	}
 
-	[CoreImageFilter]
-	[iOS (8,0)]
-	// incorrect version string for OSX: '10.?' Double-check documentation
-	[BaseType (typeof (CIFilter))]
-	interface CIHistogramDisplayFilter {
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIHistogramDisplay")]
+	interface CIHistogramDisplayProtocol : CIFilterProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 
-		[CoreImageFilterProperty ("inputHeight")]
+		[Abstract]
+		[Export ("height")]
 		float Height { get; set; }
 
-		[CoreImageFilterProperty ("inputHighLimit")]
+		[Abstract]
+		[Export ("highLimit")]
 		float HighLimit { get; set; }
 
-		[CoreImageFilterProperty ("inputLowLimit")]
+		[Abstract]
+		[Export ("lowLimit")]
 		float LowLimit { get; set; }
 	}
 
 	[CoreImageFilter]
+	[iOS (8,0)]
+	// incorrect version string for OSX: '10.?' Double-check documentation
+	[BaseType (typeof (CIFilter))]
+	interface CIHistogramDisplayFilter : CIHistogramDisplayProtocol {
+
+		// [CoreImageFilterProperty ("inputImage")]
+		// CIImage InputImage { get; set; }
+
+		// [CoreImageFilterProperty ("inputHeight")]
+		// float Height { get; set; }
+
+		// [CoreImageFilterProperty ("inputHighLimit")]
+		// float HighLimit { get; set; }
+
+		// [CoreImageFilterProperty ("inputLowLimit")]
+		// float LowLimit { get; set; }
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIHoleDistortion")]
+	interface CIHoleDistortionProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+	}
+
+	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
-	interface CIHoleDistortion {
+	interface CIHoleDistortion : CIHoleDistortionProtocol {
 	}
 
 	[CoreImageFilter]
@@ -3675,7 +4253,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIKaleidoscope : CIKaleidoscopeProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCount' instead.")]
 		[CoreImageFilterProperty ("inputCount")]
 		float Count { get; set; }
@@ -3696,7 +4274,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CILenticularHaloGenerator : CILenticularHaloGeneratorProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -3708,22 +4286,40 @@ namespace CoreImage {
 	interface CILightenBlendMode {
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CILightTunnel")]
+	interface CILightTunnelProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("rotation")]
+		float Rotation { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+	}
+
 	[CoreImageFilter]
 	[Mac (10,11)]
 	[BaseType (typeof (CIFilter))]
-	interface CILightTunnel {
+	interface CILightTunnel : CILightTunnelProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
-		[CoreImageFilterProperty ("inputRotation")]
-		float Rotation { get; set; }
-
-		[CoreImageFilterProperty ("inputRadius")]
-		float Radius { get; set; }
-
+#if !NET
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
+#endif
 	}
 
 	[CoreImageFilter]
@@ -3744,7 +4340,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CILinearGradient : CILinearGradientProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputPoint1' instead.")]
 		[CoreImageFilterProperty ("inputPoint1")]
 		CIVector Point1 { get; set; }
@@ -3813,7 +4409,7 @@ namespace CoreImage {
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIModTransition : CIModTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
 #endif
@@ -3857,7 +4453,7 @@ namespace CoreImage {
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIPageCurlTransition : CIPageCurlTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
 #endif
@@ -3868,7 +4464,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIPageCurlWithShadowTransition : CIPageCurlWithShadowTransitionProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// prefixed for API compatibility
 		[Obsolete ("Use 'Time' instead.")]
 		[CoreImageFilterProperty ("inputTime")]
@@ -3895,7 +4491,7 @@ namespace CoreImage {
 	[Mac (10,11)]
 	[BaseType (typeof (CICodeGenerator), Name="CIPDF417BarcodeGenerator")]
 	interface CIPdf417BarcodeGenerator : CIPdf417BarcodeGeneratorProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCorrectionLevel' instead.")]
 		[CoreImageFilterProperty ("inputCorrectionLevel")]
 		int CorrectionLevel { get; set; }
@@ -3935,7 +4531,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIPerspectiveTile : CIPerspectiveTileProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputBottomLeft' instead.")]
 		[CoreImageFilterProperty ("inputBottomLeft")]
 		CIVector BottomLeft { get; set; }
@@ -3957,7 +4553,7 @@ namespace CoreImage {
 	[CoreImageFilter (DefaultCtorVisibility = MethodAttributes.Public, StringCtorVisibility = MethodAttributes.Public)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPerspectiveTransform : CIPerspectiveTransformProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputBottomLeft' instead.")]
 		[CoreImageFilterProperty ("inputBottomLeft")]
 		CIVector BottomLeft { get; set; }
@@ -3983,7 +4579,7 @@ namespace CoreImage {
 	[Mac (10,11)]
 	[BaseType (typeof (CIPerspectiveTransform))]
 	interface CIPerspectiveTransformWithExtent : CIPerspectiveTransformWithExtentProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
@@ -4054,12 +4650,36 @@ namespace CoreImage {
 	interface CIPhotoEffectTransfer {
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIPinchDistortion")]
+	interface CIPinchDistortionProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+
+		[Abstract]
+		[Export ("scale")]
+		float Scale { get; set; }
+	}
+
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
-	interface CIPinchDistortion {
+	interface CIPinchDistortion : CIPinchDistortionProtocol {
 
-		[CoreImageFilterProperty ("inputScale")]
-		float Scale { get; set; }
+		// [CoreImageFilterProperty ("inputScale")]
+		// float Scale { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4072,7 +4692,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIPixellate : CIPixellateProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4083,7 +4703,7 @@ namespace CoreImage {
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CIPointillize : CIPointillizeProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4104,7 +4724,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIRadialGradient : CIRadialGradientProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4120,7 +4740,7 @@ namespace CoreImage {
 	[iOS (9,0)]
 	[BaseType (typeof (CITransitionFilter))]
 	interface CIRippleTransition : CIRippleTransitionProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
@@ -4131,16 +4751,24 @@ namespace CoreImage {
 #endif
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIRowAverage")]
+	interface CIRowAverageProtocol : CIAreaReductionFilterProtocol {
+	}
+
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIRowAverage {
+	interface CIRowAverage : CIRowAverageProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
+#if !NET
+		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
+#endif
 	}
 
 	[CoreImageFilter]
@@ -4183,7 +4811,7 @@ namespace CoreImage {
 	[Mac (10,11)]
 	[BaseType (typeof (CILinearGradient))]
 	interface CISmoothLinearGradient : CISmoothLinearGradientProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputPoint1' instead.")]
 		[CoreImageFilterProperty ("inputPoint1")]
 		CIVector Point1 { get; set; }
@@ -4241,7 +4869,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIStarShineGenerator : CIStarShineGeneratorProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4253,28 +4881,46 @@ namespace CoreImage {
 	interface CIStraightenFilter : CIStraightenProtocol {
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIStretchCrop")]
+	interface CIStretchCropProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("size", ArgumentSemantic.Assign)]
+		CGPoint InputSize { get; set; }
+
+		[Abstract]
+		[Export ("cropAmount")]
+		float CropAmount { get; set; }
+
+		[Abstract]
+		[Export ("centerStretchAmount")]
+		float CenterStretchAmount { get; set; }
+	}
+
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CIStretchCrop {
+	interface CIStretchCrop : CIStretchCropProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
-		[CoreImageFilterProperty ("inputCropAmount")]
-		float CropAmount { get; set; }
-
-		[CoreImageFilterProperty ("inputCenterStretchAmount")]
-		float CenterStretchAmount { get; set; }
-
+#if !NET
+		[Obsolete ("Use 'InputSize' instead.")]
 		[CoreImageFilterProperty ("inputSize")]
 		CIVector Size { get; set; }
+#endif
 	}
 
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIStripesGenerator : CIStripesGeneratorProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4316,7 +4962,7 @@ namespace CoreImage {
 	[CoreImageFilter]
 	[BaseType (typeof (CIFilter))]
 	interface CIToneCurve : CIToneCurveProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputPoint0' instead.")]
 		[CoreImageFilterProperty ("inputPoint0")]
 		CIVector Point0 { get; set; }
@@ -4339,32 +4985,51 @@ namespace CoreImage {
 #endif
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CITorusLensDistortion")]
+	interface CITorusLensDistortionProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+
+		[Abstract]
+		[Export ("width")]
+		float Width { get; set; }
+
+		[Abstract]
+		[Export ("refraction")]
+		float Refraction { get; set; }
+	}
+
 	[CoreImageFilter]
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CITorusLensDistortion {
+	interface CITorusLensDistortion : CITorusLensDistortionProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
-		[CoreImageFilterProperty ("inputRefraction")]
-		float Refraction { get; set; }
-
-		[CoreImageFilterProperty ("inputRadius")]
-		float  Radius { get; set; }
-
+#if !NET
+		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
-
-		[CoreImageFilterProperty ("inputWidth")]
-		float Width { get; set; }
+#endif
 	}
 
 	[CoreImageFilter]
 	[Mac (10,11)]
 	[BaseType (typeof (CIFilter))]
 	interface CITriangleKaleidoscope : CITriangleKaleidoscopeProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputPoint' instead.")]
 		[CoreImageFilterProperty ("inputPoint")]
 		CIVector Point { get; set; }
@@ -4382,12 +5047,36 @@ namespace CoreImage {
 	interface CITwelvefoldReflectedTile : CITwelvefoldReflectedTileProtocol {
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CITwirlDistortion")]
+	interface CITwirlDistortionProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+
+		[Abstract]
+		[Export ("angle")]
+		float Angle { get; set; }
+	}
+
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
-	interface CITwirlDistortion {
+	interface CITwirlDistortion : CITwirlDistortionProtocol {
 
-		[CoreImageFilterProperty ("inputAngle")]
-		float Angle { get; set; }
+		// [CoreImageFilterProperty ("inputAngle")]
+		// float Angle { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4412,19 +5101,43 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIVignetteEffect : CIVignetteEffectProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
 #endif
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIVortexDistortion")]
+	interface CIVortexDistortionProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("center", ArgumentSemantic.Assign)]
+		CGPoint InputCenter { get; set; }
+
+		[Abstract]
+		[Export ("radius")]
+		float Radius { get; set; }
+
+		[Abstract]
+		[Export ("angle")]
+		float Angle { get; set; }
+	}
+
 	[CoreImageFilter]
 	[BaseType (typeof (CIDistortionFilter))]
-	interface CIVortexDistortion {
+	interface CIVortexDistortion : CIVortexDistortionProtocol {
 
-		[CoreImageFilterProperty ("inputAngle")]
-		float Angle { get; set; }
+		// [CoreImageFilterProperty ("inputAngle")]
+		// float Angle { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4436,7 +5149,7 @@ namespace CoreImage {
 	[iOS (8,3)]
 	[BaseType (typeof (CIFilter))]
 	interface CIZoomBlur : CIZoomBlurProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4448,7 +5161,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIDepthOfField : CIDepthOfFieldProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		// renamed 1 vs 0 for API compatibility
 		[Obsolete ("Use 'InputPoint0' instead.")]
 		[CoreImageFilterProperty ("inputPoint0")]
@@ -4465,7 +5178,7 @@ namespace CoreImage {
 	[iOS (9,0)]
 	[BaseType (typeof (CIFilter))]
 	interface CISunbeamsGenerator : CISunbeamsGeneratorProtocol {
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputCenter' instead.")]
 		[CoreImageFilterProperty ("inputCenter")]
 		CIVector Center { get; set; }
@@ -4513,24 +5226,28 @@ namespace CoreImage {
 	interface CIHueSaturationValueGradient : CIHueSaturationValueGradientProtocol {
 	}
 
-	[CoreImageFilter]
-	[iOS (10,0)]
-	[Mac (10,12)]
-	[TV (10,0)]
-	[BaseType (typeof (CIFilter))]
-	interface CINinePartStretched {
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CINinePartStretched")]
+	interface CINinePartStretchedProtocol : CIFilterProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
 		CIImage InputImage { get; set; }
 
-		[CoreImageFilterProperty ("inputGrowAmount")]
-		CIVector GrowAmount { get; set; }
+		[Abstract]
+		[Export ("breakpoint0", ArgumentSemantic.Assign)]
+		CGPoint InputBreakpoint0 { get; set; }
 
-		[CoreImageFilterProperty ("inputBreakpoint0")]
-		CIVector Breakpoint0 { get; set; }
+		[Abstract]
+		[Export ("breakpoint1", ArgumentSemantic.Assign)]
+		CGPoint InputBreakpoint1 { get; set; }
 
-		[CoreImageFilterProperty ("inputBreakpoint1")]
-		CIVector Breakpoint1 { get; set; }
+		[Abstract]
+		[Export ("growAmount", ArgumentSemantic.Assign)]
+		CGPoint InputGrowAmount { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4538,22 +5255,74 @@ namespace CoreImage {
 	[Mac (10,12)]
 	[TV (10,0)]
 	[BaseType (typeof (CIFilter))]
-	interface CINinePartTiled {
+	interface CINinePartStretched : CINinePartStretchedProtocol {
 
-		[CoreImageFilterProperty ("inputImage")]
-		CIImage InputImage { get; set; }
-
+#if !NET
+		[Obsolete ("Use 'InputGrowAmount' instead.")]
 		[CoreImageFilterProperty ("inputGrowAmount")]
 		CIVector GrowAmount { get; set; }
 
+		[Obsolete ("Use 'InputBreakpoint0' instead.")]
 		[CoreImageFilterProperty ("inputBreakpoint0")]
 		CIVector Breakpoint0 { get; set; }
 
-		[CoreImageFilterProperty ("inputFlipYTiles")]
-		bool FlipYTiles { get; set; }
-
+		[Obsolete ("Use 'InputBreakpoint1' instead.")]
 		[CoreImageFilterProperty ("inputBreakpoint1")]
 		CIVector Breakpoint1 { get; set; }
+#endif
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CINinePartTiled")]
+	interface CINinePartTiledProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+
+		[Abstract]
+		[Export ("breakpoint0", ArgumentSemantic.Assign)]
+		CGPoint InputBreakpoint0 { get; set; }
+
+
+		[Abstract]
+		[Export ("breakpoint1", ArgumentSemantic.Assign)]
+		CGPoint InputBreakpoint1 { get; set; }
+
+
+		[Abstract]
+		[Export ("growAmount", ArgumentSemantic.Assign)]
+		CGPoint InputGrowAmount { get; set; }
+
+		[Abstract]
+		[Export ("flipYTiles")]
+		bool FlipYTiles { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (10,0)]
+	[Mac (10,12)]
+	[TV (10,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CINinePartTiled : CINinePartTiledProtocol {
+
+#if !NET
+		[Obsolete ("Use 'InputGrowAmount' instead.")]
+		[CoreImageFilterProperty ("inputGrowAmount")]
+		CIVector GrowAmount { get; set; }
+
+		[Obsolete ("Use 'InputBreakpoint0' instead.")]
+		[CoreImageFilterProperty ("inputBreakpoint0")]
+		CIVector Breakpoint0 { get; set; }
+
+		[Obsolete ("Use 'InputBreakpoint1' instead.")]
+		[CoreImageFilterProperty ("inputBreakpoint1")]
+		CIVector Breakpoint1 { get; set; }
+#endif
 	}
 
 	[CoreImageFilter]
@@ -4572,12 +5341,20 @@ namespace CoreImage {
 	interface CIXRay : CIXRayProtocol {
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIAreaMinMaxRed")]
+	interface CIAreaMinMaxRedProtocol : CIAreaReductionFilterProtocol {
+	}
+
 	[CoreImageFilter]
 	[iOS (11,0)]
 	[Mac (10,13)]
 	[TV (11,0)]
 	[BaseType (typeof (CIAreaMaximum))]
-	interface CIAreaMinMaxRed {
+	interface CIAreaMinMaxRed : CIAreaMinMaxRedProtocol {
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
 	}
@@ -4633,7 +5410,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIBicubicScaleTransform : CIBicubicScaleTransformProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'ParameterB' instead.")]
 		[CoreImageFilterProperty ("inputB")]
 		float B { get; set; }
@@ -4732,6 +5509,16 @@ namespace CoreImage {
 
 		[CoreImageFilterProperty ("inputAuxDataMetadata")]
 		CGImageMetadata AuxDataMetadata { get; set; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
+		[CoreImageFilterProperty ("inputGainMap")]
+		CIImage GainMap { get; set; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
+		[CoreImageFilterProperty ("inputGlassesImage")]
+		CIImage GlassesImage { get; set; }
 	}
 
 	[CoreImageFilter]
@@ -4859,7 +5646,7 @@ namespace CoreImage {
 		CIQRCodeErrorCorrectionLevel ErrorCorrectionLevel { get; }
 
 		[Export ("initWithPayload:symbolVersion:maskPattern:errorCorrectionLevel:")]
-		IntPtr Constructor (NSData errorCorrectedPayload, nint symbolVersion, byte maskPattern, CIQRCodeErrorCorrectionLevel errorCorrectionLevel);
+		NativeHandle Constructor (NSData errorCorrectedPayload, nint symbolVersion, byte maskPattern, CIQRCodeErrorCorrectionLevel errorCorrectionLevel);
 
 		[Static]
 		[Export ("descriptorWithPayload:symbolVersion:maskPattern:errorCorrectionLevel:")]
@@ -4886,7 +5673,7 @@ namespace CoreImage {
 		nint DataCodewordCount { get; }
 
 		[Export ("initWithPayload:isCompact:layerCount:dataCodewordCount:")]
-		IntPtr Constructor (NSData errorCorrectedPayload, bool isCompact, nint layerCount, nint dataCodewordCount);
+		NativeHandle Constructor (NSData errorCorrectedPayload, bool isCompact, nint layerCount, nint dataCodewordCount);
 
 		[Static]
 		[Export ("descriptorWithPayload:isCompact:layerCount:dataCodewordCount:")]
@@ -4913,7 +5700,7 @@ namespace CoreImage {
 		nint ColumnCount { get; }
 
 		[Export ("initWithPayload:isCompact:rowCount:columnCount:")]
-		IntPtr Constructor (NSData errorCorrectedPayload, bool isCompact, nint rowCount, nint columnCount);
+		NativeHandle Constructor (NSData errorCorrectedPayload, bool isCompact, nint rowCount, nint columnCount);
 
 		[Static]
 		[Export ("descriptorWithPayload:isCompact:rowCount:columnCount:")]
@@ -4940,7 +5727,7 @@ namespace CoreImage {
 		CIDataMatrixCodeEccVersion EccVersion { get; }
 
 		[Export ("initWithPayload:rowCount:columnCount:eccVersion:")]
-		IntPtr Constructor (NSData errorCorrectedPayload, nint rowCount, nint columnCount, CIDataMatrixCodeEccVersion eccVersion);
+		NativeHandle Constructor (NSData errorCorrectedPayload, nint rowCount, nint columnCount, CIDataMatrixCodeEccVersion eccVersion);
 
 		[Static]
 		[Export ("descriptorWithPayload:rowCount:columnCount:eccVersion:")]
@@ -5146,24 +5933,22 @@ namespace CoreImage {
 	interface CIRenderDestination {
 
 		[Export ("initWithPixelBuffer:")]
-		IntPtr Constructor (CVPixelBuffer pixelBuffer);
+		NativeHandle Constructor (CVPixelBuffer pixelBuffer);
 
 		[Export ("initWithIOSurface:")]
-		IntPtr Constructor (IOSurface.IOSurface surface);
+		NativeHandle Constructor (IOSurface.IOSurface surface);
 
-#if XAMCORE_2_0
 		[Export ("initWithMTLTexture:commandBuffer:")]
-		IntPtr Constructor (IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer);
+		NativeHandle Constructor (IMTLTexture texture, [NullAllowed] IMTLCommandBuffer commandBuffer);
 
 		[Export ("initWithWidth:height:pixelFormat:commandBuffer:mtlTextureProvider:")]
-		IntPtr Constructor (nuint width, nuint height, MTLPixelFormat pixelFormat, [NullAllowed] IMTLCommandBuffer commandBuffer, Func<IMTLTexture> block);
-#endif
+		NativeHandle Constructor (nuint width, nuint height, MTLPixelFormat pixelFormat, [NullAllowed] IMTLCommandBuffer commandBuffer, [NullAllowed] Func<IMTLTexture> block);
 
 		[Export ("initWithGLTexture:target:width:height:")]
-		IntPtr Constructor (uint texture, uint target, nuint width, nuint height);
+		NativeHandle Constructor (uint texture, uint target, nuint width, nuint height);
 
 		[Export ("initWithBitmapData:width:height:bytesPerRow:format:")]
-		IntPtr Constructor (IntPtr data, nuint width, nuint height, nuint bytesPerRow, CIFormat format);
+		NativeHandle Constructor (IntPtr data, nuint width, nuint height, nuint bytesPerRow, CIFormat format);
 
 		[Export ("width")]
 		nuint Width { get; }
@@ -5286,6 +6071,16 @@ namespace CoreImage {
 		[iOS (13,0)][TV (13,0)][Mac (10,15)]
 		[Field ("kCIImageRepresentationSemanticSegmentationTeethMatteImage")]
 		NSString SemanticSegmentationTeethMatteImageKey { get; }
+
+		[iOS (14,1)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
+		[Field ("kCIImageRepresentationSemanticSegmentationGlassesMatteImage")]
+		NSString SemanticSegmentationGlassesMatteImage { get; }
+
+		[iOS (14,3), TV (14,3), Mac (11,1)]
+		[MacCatalyst (14,3)]
+		[Field ("kCIImageRepresentationSemanticSegmentationSkyMatteImage")]
+		NSString SemanticSegmentationSkyMatteImage { get; }
 	}
 
 	[iOS (11,0)]
@@ -5321,20 +6116,27 @@ namespace CoreImage {
 		CIImage SemanticSegmentationTeethMatteImage { get; set; }
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIAreaMinMax")]
+	interface CIAreaMinMaxProtocol : CIAreaReductionFilterProtocol {
+	}
+
 	[CoreImageFilter]
 	[iOS (12,0)]
 	[TV (12,0)]
 	[Mac (10,14)]
 	[BaseType (typeof (CIReductionFilter))]
-	interface CIAreaMinMax {
+	interface CIAreaMinMax : CIAreaReductionFilterProtocol {
 
 		[CoreImageFilterProperty ("outputImageNonMPS")]
 		CIImage OutputImageNonMps { get; }
 
-#if MONOMAC
+		[iOS (13,4)]
 		[CoreImageFilterProperty ("outputImageMPS")]
 		CIImage OutputImageMps { get; }
-#endif
 	}
 
 	[CoreImageFilter]
@@ -5445,24 +6247,46 @@ namespace CoreImage {
 	interface CIDocumentEnhancer : CIDocumentEnhancerProtocol {
 	}
 
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name = "CIKMeans")]
+	interface CIKMeansProtocol : CIAreaReductionFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputMeans", ArgumentSemantic.Retain)]
+		CIImage Means { get; set; }
+
+		[Abstract]
+		[Export ("count")]
+		nint InputCount { get; set; }
+
+		[Abstract]
+		[Export ("passes")]
+		float InputPasses { get; set; }
+
+		[Abstract]
+		[Export ("perceptual")]
+		bool Perceptual { get; set; }
+	}
+
 	[CoreImageFilter]
 	[iOS (13,0)]
 	[TV (13,0)]
 	[Mac (10,15)]
 	[BaseType (typeof (CIReductionFilter))]
-	interface CIKMeans {
+	interface CIKMeans : CIKMeansProtocol {
 
-		[CoreImageFilterProperty ("inputMeans")]
-		CIImage Means { get; set; }
-
+#if !NET
+		[Obsolete ("Use 'InputCount' instead.")]
 		[CoreImageFilterProperty ("inputCount")]
 		float Count { get; set; }
 
+		[Obsolete ("Use 'InputPasses' instead.")]
 		[CoreImageFilterProperty ("inputPasses")]
 		int Passes { get; set; }
-
-		[CoreImageFilterProperty ("inputPerceptual")]
-		bool Perceptual { get; set; }
+#endif
 	}
 
 	[CoreImageFilter]
@@ -5473,7 +6297,7 @@ namespace CoreImage {
 	[Abstract]
 	interface CIMorphologyRectangle {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputHeight' instead.")]
 		[CoreImageFilterProperty ("inputHeight")]
 		int Height { get; set; }
@@ -5533,7 +6357,7 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("inputFocalLength")]
 		float FocalLength { get; set; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputTopRight' instead.")]
 		[CoreImageFilterProperty ("inputTopRight")]
 		CIVector TopRight { get; set; }
@@ -5633,7 +6457,7 @@ namespace CoreImage {
 	[BaseType (typeof (CIFilter))]
 	interface CIRoundedRectangleGenerator : CIRoundedRectangleGeneratorProtocol {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'InputExtent' instead.")]
 		[CoreImageFilterProperty ("inputExtent")]
 		CIVector Extent { get; set; }
@@ -8611,6 +9435,219 @@ namespace CoreImage {
 		[Abstract]
 		[Export ("amount")]
 		float Amount { get; set; }
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIColorAbsoluteDifference")]
+	interface CIColorAbsoluteDifferenceProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("inputImage2")]
+		CIImage Image2 { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIColorAbsoluteDifference : CIColorAbsoluteDifferenceProtocol {
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIColorThreshold")]
+	interface CIColorThresholdProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("threshold")]
+		float Threshold { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIColorThreshold : CIColorThresholdProtocol {
+	}
+
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[Protocol (Name="CIColorThresholdOtsu")]
+	interface CIColorThresholdOtsuProtocol : CIFilterProtocol {
+
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (14,0)]
+	[TV (14,0)]
+	[Mac (11,0)]
+	[MacCatalyst (14,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIColorThresholdOtsu : CIColorThresholdOtsuProtocol {
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvolutionRGB3X3 : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputWeights")]
+		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
+		[CoreImageFilterProperty ("inputBias")]
+		float Bias { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvolutionRGB5X5 : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputWeights")]
+		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
+		[CoreImageFilterProperty ("inputBias")]
+		float Bias { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvolutionRGB7X7 : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputWeights")]
+		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
+		[CoreImageFilterProperty ("inputBias")]
+		float Bias { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvolutionRGB9Horizontal : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputWeights")]
+		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
+		[CoreImageFilterProperty ("inputBias")]
+		float Bias { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIConvolutionRGB9Vertical : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputWeights")]
+		CIVector Weights { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+
+		[CoreImageFilterProperty ("inputBias")]
+		float Bias { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CILinearLightBlendMode : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputBackgroundImage")]
+		CIImage BackgroundImage { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIPersonSegmentation : CIPersonSegmentationProtocol {
+	}
+
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+	[Protocol (Name="CIPersonSegmentation")]
+	interface CIPersonSegmentationProtocol : CIFilterProtocol {
+		
+		[Abstract]
+		[NullAllowed, Export ("inputImage", ArgumentSemantic.Retain)]
+		CIImage InputImage { get; set; }
+
+		[Abstract]
+		[Export ("qualityLevel")]
+		nuint QualityLevel { get; set; }
+	}
+
+	[CoreImageFilter]
+	[iOS (15,0)]
+	[TV (15,0)]
+	[Mac (12,0)]
+	[MacCatalyst (15,0)]
+	[BaseType (typeof (CIFilter))]
+	interface CIVividLightBlendMode : CIFilterProtocol {
+
+		[CoreImageFilterProperty ("inputBackgroundImage")]
+		CIImage BackgroundImage { get; set; }
+
+		[CoreImageFilterProperty ("inputImage")]
+		CIImage InputImage { get; set; }
 	}
 #endregion
 }

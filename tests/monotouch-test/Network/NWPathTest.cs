@@ -2,19 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-#if XAMCORE_2_0
 using CoreFoundation;
 using Foundation;
 using Network;
 using ObjCRuntime;
-using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
-
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 
@@ -31,7 +22,7 @@ namespace MonoTouchFixtures.Network {
 		List<NWInterface> interfaces = new List<NWInterface> ();
 		NWConnection connection;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
@@ -46,7 +37,11 @@ namespace MonoTouchFixtures.Network {
 			{
 				using (var protocolStack = parameters.ProtocolStack) {
 					var ipOptions = protocolStack.InternetProtocol;
+#if NET
+					ipOptions.SetVersion (NWIPVersion.Version4);
+#else
 					ipOptions.IPSetVersion (NWIPVersion.Version4);
+#endif
 				}
 				connection = new NWConnection (endpoint, parameters);
 				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
@@ -56,7 +51,7 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void Dispose()
 		{
 			connection?.Cancel ();
@@ -117,7 +112,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void HasIPV4PropertyTest ()
 		{
-#if !MONOMAC	
+#if !MONOMAC && !__MACCATALYST__
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.False (path.HasIPV4, "By default the interface does not support IPV4 on the simulator"); 
 			else
@@ -135,7 +130,7 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void HasDnsPropertyTest ()
 		{
-#if !MONOMAC	
+#if !MONOMAC && !__MACCATALYST__
 			if (Runtime.Arch != Arch.DEVICE)
 				Assert.False (path.HasDns,  "By default the interface does not support DNS on the simulator");
 			else
@@ -167,19 +162,50 @@ namespace MonoTouchFixtures.Network {
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
 
-			Assert.Throws<ArgumentNullException> (() => { path.EnumerateGateways (null); });
+			Assert.Throws<ArgumentNullException> (() => { path.EnumerateGateways ((Func<NWEndpoint, bool>) null); });
 		}
 
 		[Test]
 		public void EnumerateGatewayTest ()
 		{
-			TestRuntime.AssertXcodeVersion (11, 0);
-			var e = new AutoResetEvent (false);
-			path.EnumerateGateways ((endPoint) => {
-				Assert.IsNotNull (endPoint);
-				e.Set ();
-			});
-			e.WaitOne (10000);
+			var e1 = new ManualResetEvent (false);
+			var e2 = new ManualResetEvent (false);
+			var monitor = new NWPathMonitor ();
+			try {
+				monitor.SetQueue (DispatchQueue.DefaultGlobalQueue);
+				monitor.Start ();
+				monitor.SnapshotHandler += path =>
+				{
+					path.EnumerateGateways (gateway =>
+					{
+						e1.Set ();
+						return true;
+					});
+
+					path.EnumerateInterfaces (@interface =>
+					{
+						e2.Set ();
+						return true;
+					});
+				};
+				TestRuntime.RunAsync (TimeSpan.FromSeconds (5),
+						() => { },
+						() => WaitHandle.WaitAll (new WaitHandle [] { e1, e2 }, 0));
+				var rv = WaitHandle.WaitAll (new WaitHandle [] { e1, e2 }, 10000);
+				if (!rv)
+					TestRuntime.IgnoreInCI ("This test doesn't seem to be working on the bots, uncommon network setup?");
+				Assert.IsTrue (rv, "Called back");
+			} finally {
+				monitor.Cancel ();
+				monitor.Dispose ();
+			}
+		}
+
+		[Test]
+		public void GetUnsatisfiedReason ()
+		{
+			TestRuntime.AssertXcodeVersion (12,2);
+			Assert.That (path.GetUnsatisfiedReason (), Is.EqualTo (NWPathUnsatisfiedReason.NotAvailable));
 		}
 	}
 }

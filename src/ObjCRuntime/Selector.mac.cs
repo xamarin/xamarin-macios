@@ -28,25 +28,15 @@ using System;
 using System.Runtime.InteropServices;
 
 namespace ObjCRuntime {
-#if !XAMCORE_2_0
-	[StructLayout(LayoutKind.Sequential)]
-#endif
 	public partial class Selector {
-#if !XAMCORE_2_0
-		public static readonly IntPtr Init = Selector.GetHandle ("init");
-		public static readonly IntPtr InitWithCoder = Selector.GetHandle ("initWithCoder:");
-#else
 		internal static readonly IntPtr Init = Selector.GetHandle ("init");
 		internal static readonly IntPtr InitWithCoder = Selector.GetHandle ("initWithCoder:");
-#endif
 
 		internal static IntPtr AllocHandle = Selector.GetHandle (Alloc);
 		internal static IntPtr ReleaseHandle = Selector.GetHandle (Release);
 		internal static IntPtr RetainHandle = Selector.GetHandle (Retain);
 		internal static IntPtr AutoreleaseHandle = Selector.GetHandle (Autorelease);
-		internal static IntPtr DoesNotRecognizeSelectorHandle = Selector.GetHandle (DoesNotRecognizeSelector);
 		internal static IntPtr PerformSelectorOnMainThreadWithObjectWaitUntilDoneHandle = GetHandle (PerformSelectorOnMainThreadWithObjectWaitUntilDone);
-		internal static IntPtr PerformSelectorWithObjectAfterDelayHandle = GetHandle (PerformSelectorWithObjectAfterDelay);
 	}
 }
 

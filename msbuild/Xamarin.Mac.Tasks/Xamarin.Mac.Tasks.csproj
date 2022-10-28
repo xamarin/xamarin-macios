@@ -1,163 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C8D98DC1-5122-4B10-A152-17196C7BD9AC}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Xamarin.Mac.Tasks</RootNamespace>
-    <AssemblyName>Xamarin.Mac.Tasks</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>../../product.snk</AssemblyOriginatorKeyFile>
+    <NoWarn>$(NoWarn);8002</NoWarn> <!-- Referenced projects aren't signed: this doesn't matter, because we use ILMerge to merge into a single assembly which we sign -->
+    <LangVersion>latest</LangVersion>
+    <WarningsAsErrors>Nullable</WarningsAsErrors>
+    <NoWarn>$(NoWarn);NU1603</NoWarn> <!-- Xamarin.Messaging.Build.Common 1.6.24 depends on Merq (>= 1.1.0) but Merq 1.1.0 was not found. An approximate best match of Merq 1.1.4 was resolved. -->
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Microsoft.Build.Framework" HintPath="$(MSBuildBinPath)\Microsoft.Build.Framework.dll" />
-    <Reference Include="Microsoft.Build" HintPath="$(MSBuildBinPath)\Microsoft.Build.dll" />
-    <Reference Include="Microsoft.Build.Utilities.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Utilities.Core.dll" />
-    <Reference Include="Microsoft.Build.Tasks.Core" HintPath="$(MSBuildBinPath)\Microsoft.Build.Tasks.Core.dll" />
+    <PackageReference Include="Xamarin.Messaging.Build.Client" Version="$(MessagingVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tasks\ALToolUpload.cs" />
-    <Compile Include="Tasks\ALToolValidate.cs" />
-    <Compile Include="Tasks\ACTool.cs" />
-    <Compile Include="Tasks\BTouch.cs" />
-    <Compile Include="Tasks\CreateBindingResourcePackage.cs" />
-    <Compile Include="Tasks\CodesignVerify.cs" />
-    <Compile Include="Tasks\CompileAppManifest.cs" />
-    <Compile Include="Tasks\CompileEntitlements.cs" />
-    <Compile Include="Tasks\CompileSceneKitAssets.cs" />
-    <Compile Include="Tasks\CreateEmbeddedResources.cs" />
-    <Compile Include="Tasks\DetectSdkLocations.cs" />
-    <Compile Include="Tasks\DetectSigningIdentity.cs" />
-    <Compile Include="Tasks\EmbedProvisionProfile.cs" />
-    <Compile Include="Tasks\IBTool.cs" />
-    <Compile Include="Tasks\Metal.cs" />
-    <Compile Include="Tasks\MetalLib.cs" />
-    <Compile Include="Tasks\Mmp.cs" />
-    <Compile Include="Tasks\ScnTool.cs" />
-    <Compile Include="Tasks\TextureAtlas.cs" />
-    <Compile Include="Tasks\PrepareNativeReferences.cs" />
-    <Compile Include="Tasks\Archive.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj">
-      <Project>{CC3D9353-20C4-467A-8522-A9DED6F0C753}</Project>
-      <Name>Xamarin.MacDev</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Xamarin.Mac.Tasks.Core\Xamarin.Mac.Tasks.Core.csproj">
-      <Project>{af1ac7c3-f6dd-4e46-b897-9dbb90b158ec}</Project>
-      <Name>Xamarin.Mac.Tasks.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj">
-      <Project>{534D7C5A-0E1C-4C58-9E48-21B1A98919EB}</Project>
-      <Name>Xamarin.MacDev.Tasks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Xamarin.MacDev.Tasks.Core\Xamarin.MacDev.Tasks.Core.csproj">
-      <Project>{7B095849-6FDB-4BD2-9B59-569D81A1A809}</Project>
-      <Name>Xamarin.MacDev.Tasks.Core</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\external\Xamarin.MacDev\Xamarin.MacDev\Xamarin.MacDev.csproj" />
+    <ProjectReference Include="..\Xamarin.MacDev.Tasks\Xamarin.MacDev.Tasks.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Xamarin.Mac.Common.ImplicitFacade.msbuild.targets">
+    <None Include="*.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Xamarin.Mac.Common.ImplicitFacade.xbuild.targets">
+    <None Include="*.props">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Xamarin.Mac.XM45.xbuild.targets">
+    <None Include="../Xamarin.Shared/*.targets">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Xamarin.Mac.msbuild.targets">
+    <None Include="../Xamarin.Shared/*.props">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Xamarin.Mac.xbuild.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.TargetFrameworkFix.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.Common.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.CSharp.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.FSharp.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.Common.props">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.ObjCBinding.Common.props">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.ObjCBinding.Common.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.ObjCBinding.CSharp.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.ObjCBinding.CSharp.props">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.AppExtension.Common.props">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.AppExtension.CSharp.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Xamarin.Mac.AppExtension.Common.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="../Xamarin.Shared/Xamarin.Shared.targets">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
+    <Compile Include="../Versions.mac.g.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\..\packages\ILRepack.2.0.13\build\ILRepack.props" Condition="Exists('..\..\packages\ILRepack.2.0.13\build\ILRepack.props')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <Target Name="ILRepack" AfterTargets="CoreCompile" DependsOnTargets="CoreCompile" Inputs="@(IntermediateAssembly -&gt; '%(FullPath)')" Outputs="$(IntermediateOutputPath)ilrepack.txt" Returns="@(MergedAssemblies)" Condition="Exists(@(IntermediateAssembly -&gt; '%(FullPath)')) And '$(ILRepack)' != 'false'">
-    <GetReferenceAssemblyPaths BypassFrameworkInstallChecks="False" TargetFrameworkMoniker="$(TargetFrameworkMoniker)">
-      <Output TaskParameter="FullFrameworkReferenceAssemblyPaths" PropertyName="FullFrameworkReferenceAssemblyPaths" />
-    </GetReferenceAssemblyPaths>
-    <ItemGroup>
-      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::new('%(FileName)').StartsWith('Xamarin')) And '%(Extension)' == '.dll'" />
-      <MergedAssemblies Include="@(ReferenceCopyLocalPaths)" Condition="$([System.String]::new('%(FileName)').StartsWith('Mono')) And '%(Extension)' == '.dll'" />
-      <ReferenceCopyLocalDirs Include="@(ReferenceCopyLocalPaths -&gt; '%(RootDir)%(Directory)')" />
-      <ReferenceCopyLocalPaths Remove="@(MergedAssemblies)" />
-      <LibDir Include="@(ReferenceCopyLocalDirs -&gt; Distinct())" />
-    </ItemGroup>
-    <PropertyGroup>
-      <ILRepackArgs Condition="'$(AssemblyOriginatorKeyFile)' != ''">/keyfile:"$(AssemblyOriginatorKeyFile)"</ILRepackArgs>
-    </PropertyGroup>
-    <Exec Command="&quot;$(ILRepack)&quot; @(LibDir -&gt; '/lib:&quot;%(Identity).&quot;', ' ') $(ILRepackArgs) /out:&quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot; &quot;@(IntermediateAssembly -&gt; '%(FullPath)')&quot; @(MergedAssemblies -&gt; '&quot;%(FullPath)&quot;', ' ')" WorkingDirectory="$(MSBuildProjectDirectory)\$(OutputPath)" StandardErrorImportance="high" StandardOutputImportance="low" ConsoleToMSBuild="true" ContinueOnError="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="ILRepackOutput" />
-      <Output TaskParameter="ExitCode" PropertyName="ExitCode" />
-    </Exec>
-    <Message Importance="high" Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0'" />
-    <Delete Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' != '0'" />
-    <Touch AlwaysCreate="true" Files="$(IntermediateOutputPath)ilrepack.txt" Condition="'$(ExitCode)' == '0'" />
-    <Error Text="$(ILRepackOutput)" Condition="'$(ExitCode)' != '0' And '$(ContinueOnError)' != 'true'" />
-    <Delete Files="@(MergedAssemblies -&gt; '$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" Condition="Exists('$(MSBuildProjectDirectory)\$(OutputPath)%(Filename)%(Extension)')" />
+
+  <Import Project="$(MSBuildThisFileDirectory)..\ILMerge.targets" />
+
+  <Target Name="BuildGeneratedVersionsFile" Inputs="../../Make.config.inc;../Makefile" Outputs="../Versions.mac.g.cs" BeforeTargets="BeforeBuild">
+    <Exec Command="make -C .. Versions.mac.g.cs" />
   </Target>
 </Project>

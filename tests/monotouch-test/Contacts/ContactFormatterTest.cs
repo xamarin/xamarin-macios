@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CNContactFormatter
 //
 // Authors:
@@ -8,19 +8,10 @@
 //
 
 #if !__TVOS__
-#if XAMCORE_2_0 // The Contacts framework is Unified only
 
 using System;
-#if XAMCORE_2_0
 using Contacts;
 using Foundation;
-using ObjCRuntime;
-#else
-using MonoTouch.Contacts;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Contacts {
@@ -59,5 +50,4 @@ namespace MonoTouchFixtures.Contacts {
 	}
 }
 
-#endif // XAMCORE_2_0
 #endif // !__TVOS__

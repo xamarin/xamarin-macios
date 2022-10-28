@@ -2,18 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-#if XAMCORE_2_0
+
 using CoreFoundation;
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
 
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
@@ -34,7 +26,7 @@ namespace MonoTouchFixtures.Network {
  		NWConnection connection;
 
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (10, 0);
@@ -56,7 +48,7 @@ namespace MonoTouchFixtures.Network {
  			}
  		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void Dispose()
 		{
 			connection?.Dispose ();
@@ -201,6 +193,21 @@ namespace MonoTouchFixtures.Network {
 				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
 			}
 		}
+
+#if MONOMAC
+		[Test]
+		public void CreateCustomIP ()
+		{
+			TestRuntime.AssertXcodeVersion (11, 0);
+			byte ipVersion = 10;
+			var setUpProtocol = CreateConfigureProtocolHandler ();
+			using (var parameters = NWParameters.CreateCustomIP (ipVersion, setUpProtocol))
+			using (var endpoint = NWEndpoint.Create ("wwww.google.com", "80")) {
+				configureEvent.WaitOne ();
+				Assert.True (protocolConfigured, "Protocol configure handler was not called.");
+			}
+		}
+#endif
 
 		[Test]
 		public void MultiPathServicePropertyTest ()
@@ -385,6 +392,32 @@ namespace MonoTouchFixtures.Network {
 				Assert.True (parameters.ProhibitConstrained, "New value was not stored.");
 			}
 		}
+
+		[Test]
+		public void AttributionPropertyTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			using (var parameters = new NWParameters ()) {
+				Assert.DoesNotThrow (() => {
+					parameters.Attribution = NWParametersAttribution.Developer;
+				});
+				Assert.AreEqual (NWParametersAttribution.Developer, parameters.Attribution);
+			}
+		}
+
+		[Test]
+		public void SetPrivacyContextTest ()
+		{
+			TestRuntime.AssertDevice ();
+			TestRuntime.AssertXcodeVersion (13, 0);
+			using (var privacy = NWPrivacyContext.Default)
+			using (var parameters = new NWParameters ()) {
+				Assert.DoesNotThrow (() => {
+					parameters.SetPrivacyContext (privacy);
+				});
+			}
+		}
+
 	}
 }
 #endif

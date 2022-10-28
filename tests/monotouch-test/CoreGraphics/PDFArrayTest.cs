@@ -8,24 +8,10 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#endif
+using ObjCRuntime;
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 	
@@ -33,6 +19,7 @@ namespace MonoTouchFixtures.CoreGraphics {
 	[Preserve (AllMembers = true)]
 	public class PDFArrayTest {
 		
+#if !NET
 		[Test]
 		public void InvalidHandle ()
 		{
@@ -70,5 +57,6 @@ namespace MonoTouchFixtures.CoreGraphics {
 			Assert.False (array.GetString (0, out str), "GetString");
 			Assert.Null (str, "string");
 		}
+#endif // !NET
 	}
 }

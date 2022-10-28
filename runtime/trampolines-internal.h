@@ -43,12 +43,12 @@ enum IteratorAction {
 
 // type: pass NULL to start iterating.
 // target: can be null if not interested in the value.
-typedef void (*iterator_func) (enum IteratorAction action, void *context, const char *type, size_t size, void *target, guint32 *exception_gchandle);
-typedef void (*marshal_return_value_func) (void *context, const char *type, size_t size, void *value, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, guint32 *exception_gchandle);
+typedef void (*iterator_func) (enum IteratorAction action, void *context, const char *type, size_t size, void *target, GCHandle *exception_gchandle);
+typedef void (*marshal_return_value_func) (void *context, const char *type, size_t size, void *value, MonoType *mtype, bool retain, MonoMethod *method, MethodDescription *desc, GCHandle *exception_gchandle);
 
 void xamarin_invoke_trampoline (enum TrampolineType type, id self, SEL sel, iterator_func iterator, marshal_return_value_func marshal_return_value, void *context);
 
-unsigned long xamarin_get_frame_length (id self, SEL sel);
+int xamarin_get_frame_length (id self, SEL sel);
 const char * xamarin_skip_type_name (const char *ptr);
 
 #ifdef __cplusplus

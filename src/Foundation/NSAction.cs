@@ -185,4 +185,3 @@ namespace Foundation {
 	}
 #endif // !COREBUILD
 }
-

@@ -7,20 +7,14 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if !XAMCORE_3_0 && !MONOMAC
 
 using System;
 using System.Drawing;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using MapKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 
@@ -89,4 +83,4 @@ namespace MonoTouchFixtures.MapKit {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !XAMCORE_3_0 && !MONOMAC

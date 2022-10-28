@@ -5,13 +5,8 @@
 using System;
 using System.Drawing;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
@@ -133,7 +128,11 @@ namespace MonoTouchFixtures.UIKit {
 		{
 			using (MyView v = new MyView ("note"))
 			using (var b = new UIBarButtonItem (v)) {
-				b.SetTitleTextAttributes (null, UIControlState.Disabled);
+#if XAMCORE_3_0
+				b.SetTitleTextAttributes ((UIStringAttributes) null, UIControlState.Disabled);
+#else
+				b.SetTitleTextAttributes ((UITextAttributes) null, UIControlState.Disabled);
+#endif
 			}
 		}
 #endif

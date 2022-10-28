@@ -10,13 +10,8 @@
 #if !MONOMAC
 using System;
 using System.Linq;
-#if XAMCORE_2_0
 using Foundation;
 using CoreData;
-#else
-using MonoTouch.CoreData;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreData {
@@ -25,7 +20,7 @@ namespace MonoTouchFixtures.CoreData {
 	[Preserve (AllMembers = true)]
 	public class FetchedResultsControllerTest {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Cache ()
 		{
 			// null -> delete all cache
@@ -125,7 +120,11 @@ namespace MonoTouchFixtures.CoreData {
 						var storeUrl = new NSUrl (storePath, false);
 						NSError error;
 
+#if NET
+						if (PersistentStoreCoordinator.AddPersistentStore (NSPersistentStoreCoordinator.SQLiteStoreType, null, storeUrl, null, out error) is null) {
+#else
 						if (PersistentStoreCoordinator.AddPersistentStoreWithType (NSPersistentStoreCoordinator.SQLiteStoreType, null, storeUrl, null, out error) == null) {
+#endif
 							Assert.Fail ("Unresolved error " + error + ", " + error.UserInfo);
 						}
 					}
@@ -155,7 +154,7 @@ namespace MonoTouchFixtures.CoreData {
 						}
 
 						var sections = fetchedResultsController.Sections;
-						Assert.That (sections [0].GetType ().FullName, Is.StringEnding ("CoreData.NSFetchedResultsSectionInfoWrapper"), "Wrapper");
+						Assert.That (sections [0].GetType ().FullName, Does.EndWith ("CoreData.NSFetchedResultsSectionInfoWrapper"), "Wrapper");
 					}
 				}
 			}

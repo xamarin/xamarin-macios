@@ -12,10 +12,11 @@ using System.ComponentModel;
 using ObjCRuntime;
 using Foundation;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace Contacts {
-
-#if XAMCORE_2_0 // The Contacts framework uses generics heavily, which is only supported in Unified (for now at least)
 
 	interface ICNKeyDescriptor {}
 
@@ -297,7 +298,7 @@ namespace Contacts {
 		[DesignatedInitializer]
 		[Export ("initWithKeysToFetch:")]
 		[Protected] // we cannot use ICNKeyDescriptor as Apple (and others) can adopt it from categories
-		IntPtr Constructor (NSArray keysToFetch);
+		NativeHandle Constructor (NSArray keysToFetch);
 
 		[NullAllowed]
 		[Export ("predicate", ArgumentSemantic.Copy)]
@@ -328,10 +329,12 @@ namespace Contacts {
 		ICNKeyDescriptor GetDescriptorForRequiredKeys (CNContactFormatterStyle style);
 
 		[Static]
+		[return: NullAllowed]
 		[Export ("stringFromContact:style:")]
 		string GetStringFrom (CNContact contact, CNContactFormatterStyle style);
 
 		[Static]
+		[return: NullAllowed]
 		[Export ("attributedStringFromContact:style:defaultAttributes:")]
 		NSAttributedString GetAttributedStringFrom (CNContact contact, CNContactFormatterStyle style, [NullAllowed] NSDictionary attributes);
 
@@ -346,14 +349,26 @@ namespace Contacts {
 		[Export ("style")]
 		CNContactFormatterStyle Style { get; set; }
 
+		[return: NullAllowed]
 		[Export ("stringFromContact:")]
 		string GetString (CNContact contact);
 
+		[return: NullAllowed]
 		[Export ("attributedStringFromContact:defaultAttributes:")]
 		NSAttributedString GetAttributedString (CNContact contact, [NullAllowed] NSDictionary attributes);
 
 		[Field ("CNContactPropertyAttribute")]
 		NSString ContactPropertyAttribute { get; }
+
+		[Static]
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[Export ("descriptorForRequiredKeysForDelimiter")]
+		ICNKeyDescriptor RequiredKeysForDelimiter { get; }
+
+		[Static]
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[Export ("descriptorForRequiredKeysForNameOrder")]
+		ICNKeyDescriptor RequiredKeysForNameOrder { get; }
 	}
 
 	[iOS (9,0), Mac (10,11)]
@@ -388,7 +403,7 @@ namespace Contacts {
 		CNContactRelation FromName (string name);
 
 		[Export ("initWithName:")]
-		IntPtr Constructor (string name);
+		NativeHandle Constructor (string name);
 
 		[Export ("name")]
 		string Name { get; }
@@ -1246,10 +1261,20 @@ namespace Contacts {
 		[Field ("CNLabelContactRelationSonInLawOrBrotherInLaw")]
 		NSString SonInLawOrBrotherInLaw { get; }
 
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[MacCatalyst (14,0)]
+		[Field ("CNLabelContactRelationGranddaughterOrNiece")]
+		NSString GranddaughterOrNiece { get; }
+
+		[iOS (14, 0), Mac (11, 0), Watch (7, 0)]
+		[MacCatalyst (14,0)]
+		[Field ("CNLabelContactRelationGrandsonOrNephew")]
+		NSString GrandsonOrNephew { get; }
+
 	}
 
 	delegate void CNContactStoreRequestAccessHandler (bool granted, NSError error);
-#if !XAMCORE_4_0
+#if !NET
 	delegate void CNContactStoreEnumerateContactsHandler (CNContact contact, bool stop);
 #endif
 	delegate void CNContactStoreListContactsHandler (CNContact contact, ref bool stop);
@@ -1432,6 +1457,7 @@ namespace Contacts {
 		[Export ("includeGroupChanges")]
 		bool IncludeGroupChanges { get; set; }
 
+		[NullAllowed]
 		[Export ("excludedTransactionAuthors", ArgumentSemantic.Copy)]
 		string[] ExcludedTransactionAuthors { get; set; }
 	}
@@ -1486,12 +1512,12 @@ namespace Contacts {
 		CNFetchResult<NSEnumerator<CNChangeHistoryEvent>> GetEnumeratorForChangeHistory (CNChangeHistoryFetchRequest request, [NullAllowed] out NSError error);
 
 
-#if !XAMCORE_4_0 && !WATCH
+#if !NET && !WATCH
 		[Obsolete ("Use the overload that takes 'CNContactStoreListContactsHandler' instead.")]
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, out NSError error, CNContactStoreEnumerateContactsHandler handler);
 
-		[Sealed] // We will introduce breaking changes anyways if XAMCORE_4_0 happens
+		[Sealed]
 #endif
 		[Export ("enumerateContactsWithFetchRequest:error:usingBlock:")]
 		bool EnumerateContacts (CNContactFetchRequest fetchRequest, [NullAllowed] out NSError error, CNContactStoreListContactsHandler handler);
@@ -1510,6 +1536,7 @@ namespace Contacts {
 		bool ExecuteSaveRequest (CNSaveRequest saveRequest, [NullAllowed] out NSError error);
 #endif
 		[Watch (6, 0), Mac (10, 15), iOS (13, 0)]
+		[NullAllowed]
 		[Export ("currentHistoryToken", ArgumentSemantic.Copy)]
 		NSData CurrentHistoryToken { get; }
 
@@ -1547,15 +1574,17 @@ namespace Contacts {
 		ICNKeyDescriptor GetDescriptorFromRequiredKeys ();
 
 		[Static]
+		[return: NullAllowed]
 		[Export ("dataWithContacts:error:")]
 		NSData GetDataFromContacts (CNContact [] contacts, out NSError error);
 
 		[Static]
+		[return: NullAllowed]
 		[Export ("contactsWithData:error:")]
 		CNContact [] GetContactsFromData (NSData data, out NSError error);
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (9,0), Mac (10,11)]
 	[Category (allowStaticMembers: true)]
 	[BaseType (typeof (CNContainer))]
@@ -1593,26 +1622,26 @@ namespace Contacts {
 
 #region comes from CNContainer (Predicates) Category
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForContainersWithIdentifiers:")]
 #else
-		[Wrap ("(null as CNContainer).GetPredicateForContainers (identifiers)")]
+		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainers (null!, identifiers)")]
 #endif
 		NSPredicate CreatePredicateForContainers (string [] identifiers);
 
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForContainerOfContactWithIdentifier:")]
 #else
-		[Wrap ("(null as CNContainer).GetPredicateForContainerOfContact (contactIdentifier)")]
+		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainerOfContact (null!, contactIdentifier)")]
 #endif
 		NSPredicate CreatePredicateForContainerOfContact (string contactIdentifier);
 
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForContainerOfGroupWithIdentifier:")]
 #else
-		[Wrap ("(null as CNContainer).GetPredicateForContainerOfGroup (groupIdentifier)")]
+		[Wrap ("CNContainer_PredicatesExtension.GetPredicateForContainerOfGroup (null!, groupIdentifier)")]
 #endif
 		NSPredicate CreatePredicateForContainerOfGroup (string groupIdentifier);
 #endregion
@@ -1651,7 +1680,7 @@ namespace Contacts {
 		NSString KeyPaths { get; }
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (9,0), Mac (10,11)]
 	[Category (allowStaticMembers: true)]
 	[BaseType (typeof (CNGroup))]
@@ -1687,27 +1716,27 @@ namespace Contacts {
 
 #region comes from CNGroup (Predicates) Category
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForGroupsWithIdentifiers:")]
 #else
-		[Wrap ("(null as CNGroup).GetPredicateForGroups (identifiers)")]
+		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForGroups (null!, identifiers)")]
 #endif
 		NSPredicate CreatePredicateForGroups (string [] identifiers);
 
 		[NoiOS][NoWatch]
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForSubgroupsInGroupWithIdentifier:")]
 #else
-		[Wrap ("(null as CNGroup).GetPredicateForSubgroupsInGroup (parentGroupIdentifier)")]
+		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForSubgroupsInGroup (null!, parentGroupIdentifier)")]
 #endif
 		NSPredicate CreatePredicateForSubgroupsInGroup (string parentGroupIdentifier);
 
 		[Static]
-#if XAMCORE_4_0
+#if NET
 		[Export ("predicateForGroupsInContainerWithIdentifier:")]
 #else
-		[Wrap ("(null as CNGroup).GetPredicateForGroupsInContainer (containerIdentifier)")]
+		[Wrap ("CNGroup_PredicatesExtension.GetPredicateForGroupsInContainer (null!, containerIdentifier)")]
 #endif
 		NSPredicate CreatePredicateForGroupsInContainer (string containerIdentifier);
 #endregion
@@ -1730,7 +1759,7 @@ namespace Contacts {
 	interface CNInstantMessageAddress : NSCopying, NSSecureCoding, INSCopying, INSSecureCoding {
 
 		[Export ("initWithUsername:service:")]
-		IntPtr Constructor (string username, string service);
+		NativeHandle Constructor (string username, string service);
 
 		[Export ("username")]
 		string Username { get; }
@@ -1816,7 +1845,7 @@ namespace Contacts {
 		ValueType FromLabel ([NullAllowed] string label, ValueType value);
 
 		[Export ("initWithLabel:value:")]
-		IntPtr Constructor ([NullAllowed] string label, ValueType value);
+		NativeHandle Constructor ([NullAllowed] string label, ValueType value);
 
 		[Export ("labeledValueBySettingLabel:")]
 		ValueType GetLabeledValue ([NullAllowed] string label);
@@ -2039,7 +2068,7 @@ namespace Contacts {
 		CNPhoneNumber PhoneNumberWithStringValue (string stringValue);
 
 		[Export ("initWithStringValue:")]
-		IntPtr Constructor (string stringValue);
+		NativeHandle Constructor (string stringValue);
 
 		[Export ("stringValue")]
 		string StringValue { get; }
@@ -2052,6 +2081,11 @@ namespace Contacts {
 
 		[Field ("CNLabelPhoneNumberiPhone")]
 		NSString iPhone { get; }
+
+		[Watch (7,2), Mac (11,1), iOS (14,3)]
+		[MacCatalyst (14,3)]
+		[Field ("CNLabelPhoneNumberAppleWatch")]
+		NSString AppleWatch { get; }
 
 		[Field ("CNLabelPhoneNumberMobile")]
 		NSString Mobile { get; }
@@ -2109,11 +2143,11 @@ namespace Contacts {
 		string LocalizeProperty (NSString property);
 
 		[Static]
-		[Wrap ("LocalizeProperty (option.GetConstant ())")]
+		[Wrap ("LocalizeProperty (option.GetConstant ()!)")]
 		string LocalizeProperty (CNPostalAddressKeyOption option);
 	}
 
-#if !XAMCORE_4_0
+#if !NET
 	[iOS (9,0), Mac (10,11)]
 	[Static]
 	[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -2239,6 +2273,14 @@ namespace Contacts {
 
 		[Export ("removeMember:fromGroup:")]
 		void RemoveMember (CNContact contact, CNGroup group);
+
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("transactionAuthor")]
+		string TransactionAuthor { get; set; }
+
+		[Mac (12, 3), iOS (15,4), MacCatalyst (15,4)]
+		[Export ("shouldRefetchContacts")]
+		bool ShouldRefetchContacts { get; set; }
 	}
 #endif // !WATCH
 
@@ -2259,7 +2301,7 @@ namespace Contacts {
 		string Service { get; }
 
 		[Export ("initWithUrlString:username:userIdentifier:service:")]
-		IntPtr Constructor ([NullAllowed] string url, [NullAllowed] string username, [NullAllowed] string userIdentifier, [NullAllowed] string service);
+		NativeHandle Constructor ([NullAllowed] string url, [NullAllowed] string username, [NullAllowed] string userIdentifier, [NullAllowed] string service);
 
 		[Static]
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
@@ -2267,7 +2309,7 @@ namespace Contacts {
 		string LocalizeProperty (NSString key);
 
 		[Static]
-		[Wrap ("LocalizeProperty (key.GetConstant ())")]
+		[Wrap ("LocalizeProperty (key.GetConstant ()!)")]
 		string LocalizeProperty (CNPostalAddressKeyOption key);
 
 		[Static]
@@ -2325,7 +2367,4 @@ namespace Contacts {
 		[Field ("CNSocialProfileServiceGameCenter")]
 		NSString GameCenter { get; }
 	}
-#endif // XAMCORE_2_0
 }
-
-

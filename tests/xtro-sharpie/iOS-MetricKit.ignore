@@ -1,2 +1,2 @@
-# os_log_create and friends are not bound.
-!missing-selector! +MXMetricManager::makeLogHandleWithCategory: not bound
+# Added for xamcore 4.0
+!incorrect-protocol-member! MXMetricManagerSubscriber::didReceiveMetricPayloads: is OPTIONAL and should NOT be abstract

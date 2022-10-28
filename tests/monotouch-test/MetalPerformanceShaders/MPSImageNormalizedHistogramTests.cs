@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MPSImageNormalizedHistogram
 //
 // Authors:
@@ -12,22 +12,26 @@
 
 using System;
 
+using Foundation;
 using Metal;
 using MetalPerformanceShaders;
 using ObjCRuntime;
 
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MPSImageNormalizedHistogramTests {
 		IMTLDevice device;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (10, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
@@ -49,7 +53,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 			catch (Exception ex) {
 				// This test fails on 10.13 bots but not on a local computer with 10.13. Must work on 10.14+.
 				// there is no a good way to tell if MPSImageNormalizedHistogram will work or not...
-				if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 14))
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 14))
 					Assert.Fail (ex.Message);
 				Assert.Inconclusive ("In 10.13 this can fail in some hardware.");
 			}
@@ -59,12 +63,12 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 			Asserts.AreEqual (info, rv, "HistogramInfo");
 
 			Assert.IsTrue (obj.ZeroHistogram, "ZeroHistogram");
-			Assert.AreEqual (3072, obj.GetHistogramSize (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
+			Assert.AreEqual ((nuint) 3072, obj.GetHistogramSize (MTLPixelFormat.RGBA16Sint), "HistogramSizeForSourceFormat");
 
 			var crs = obj.ClipRectSource;
-			Assert.AreEqual (0, crs.Origin.X, "ClipRectSource.Origin.X");
-			Assert.AreEqual (0, crs.Origin.Y, "ClipRectSource.Origin.Y");
-			Assert.AreEqual (0, crs.Origin.Z, "ClipRectSource.Origin.Z");
+			Assert.AreEqual ((nint) 0, crs.Origin.X, "ClipRectSource.Origin.X");
+			Assert.AreEqual ((nint) 0, crs.Origin.Y, "ClipRectSource.Origin.Y");
+			Assert.AreEqual ((nint) 0, crs.Origin.Z, "ClipRectSource.Origin.Z");
 			Assert.AreEqual (nuint.MaxValue, (nuint) crs.Size.Depth, "ClipRectSource.Size.Depth");
 			Assert.AreEqual (nuint.MaxValue, (nuint) crs.Size.Height, "ClipRectSource.Size.Height");
 			Assert.AreEqual (nuint.MaxValue, (nuint) crs.Size.Width, "ClipRectSource.Size.Width");

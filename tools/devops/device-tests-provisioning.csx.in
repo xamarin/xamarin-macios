@@ -1,0 +1,21 @@
+#r "_provisionator/provisionator.dll"
+
+using System.IO;
+using System.Reflection;
+using System.Linq;
+
+using static Xamarin.Provisioning.ProvisioningScript;
+
+// Provision Xcode using the xip name declared in Make.config
+Xcode ("@XCODE_XIP_NAME@").XcodeSelect (allowUntrusted: true);
+
+Item ("@MONO_PACKAGE@");
+
+// provisionator knows how to deal with this items
+if (!string.IsNullOrEmpty ("@INCLUDE_XAMARIN_LEGACY@")) {
+	if (!string.IsNullOrEmpty ("@INCLUDE_IOS@"))
+		Item ("@XI_PACKAGE@");
+}
+Item ("@MIN_SHARPIE_URL@");
+
+BrewPackages ("p7zip");

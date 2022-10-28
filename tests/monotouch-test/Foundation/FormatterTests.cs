@@ -1,5 +1,5 @@
-﻿using System.Drawing;
-#if XAMCORE_2_0
+using System;
+using System.Drawing;
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -7,21 +7,8 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation
 {
@@ -35,7 +22,7 @@ namespace MonoTouchFixtures.Foundation
 		void RequiresIos8 ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			if (dateComponentsFormatter == null)
 				dateComponentsFormatter = new NSDateComponentsFormatter ();
@@ -82,7 +69,7 @@ namespace MonoTouchFixtures.Foundation
 			Assert.IsTrue (dateComponentsFormatter.AllowsFractionalUnits, "AllowsFractionalUnits");
 
 			dateComponentsFormatter.MaximumUnitCount = 50;
-			Assert.AreEqual (50, dateComponentsFormatter.MaximumUnitCount, "MaximumUnitCount");
+			Assert.AreEqual ((nint) 50, dateComponentsFormatter.MaximumUnitCount, "MaximumUnitCount");
 
 			dateComponentsFormatter.CollapsesLargestUnit = true;
 			Assert.IsTrue (dateComponentsFormatter.CollapsesLargestUnit, "CollapsesLargestUnit");

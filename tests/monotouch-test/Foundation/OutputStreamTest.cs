@@ -10,17 +10,14 @@
 using System;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class OutputStreamTest {
 
 		[Test]

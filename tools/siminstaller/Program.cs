@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
-using System.IO;
 using System.Text;
 using System.Threading;
 using System.Xml;
-
 using Mono.Options;
 
 namespace xsiminstaller {
@@ -45,16 +44,14 @@ namespace xsiminstaller {
 				var error = new StringBuilder ();
 				var outputDone = new ManualResetEvent (false);
 				var errorDone = new ManualResetEvent (false);
-				p.OutputDataReceived += (sender, args) =>
-				{
+				p.OutputDataReceived += (sender, args) => {
 					if (args.Data == null) {
 						outputDone.Set ();
 					} else {
 						output.AppendLine (args.Data);
 					}
 				};
-				p.ErrorDataReceived += (sender, args) =>
-				{
+				p.ErrorDataReceived += (sender, args) => {
 					if (args.Data == null) {
 						errorDone.Set ();
 					} else {
@@ -78,10 +75,12 @@ namespace xsiminstaller {
 		public static int Main (string [] args)
 		{
 			var exit_code = 0;
-			string xcode_app = null;
+			string? xcode_app = null;
 			var install = new List<string> ();
 			var only_check = false;
 			var force = false;
+			var printHelp = false;
+
 			var os = new OptionSet {
 				{ "xcode=", "The Xcode.app to use", (v) => xcode_app = v },
 				{ "install=", "ID of simulator to install. Can be repeated multiple times.", (v) => install.Add (v) },
@@ -90,14 +89,22 @@ namespace xsiminstaller {
 				{ "f|force", "Install again even if already installed.", (v) => force = true },
 				{ "v|verbose", "Increase verbosity", (v) => verbose++ },
 				{ "q|quiet", "Decrease verbosity", (v) => verbose-- },
+				{ "h|help", "Print this help message", (v) => printHelp = true },
 			};
 
 			var others = os.Parse (args);
-			if (others.Count () > 0) {
+			if (others.Any ()) {
 				Console.WriteLine ("Unexpected arguments:");
 				foreach (var arg in others)
 					Console.WriteLine ("\t{0}", arg);
+				Console.WriteLine ("Expected arguments are:");
+				os.WriteOptionDescriptions (Console.Out);
 				return 1;
+			}
+
+			if (printHelp) {
+				os.WriteOptionDescriptions (Console.Out);
+				return 0;
 			}
 
 			if (string.IsNullOrEmpty (xcode_app)) {
@@ -159,7 +166,7 @@ namespace xsiminstaller {
 					return 1;
 				}
 			}
- 			if (!TryExecuteAndCapture ("plutil", $"-convert xml1 -o - '{tmpfile}'", out var xml))
+			if (!TryExecuteAndCapture ("plutil", $"-convert xml1 -o - '{tmpfile}'", out var xml))
 				return 1;
 
 			var doc = new XmlDocument ();
@@ -171,7 +178,7 @@ namespace xsiminstaller {
 				var versionNode = downloadable.SelectSingleNode ("key[text()='version']/following-sibling::string");
 				var sourceNode = downloadable.SelectSingleNode ("key[text()='source']/following-sibling::string");
 				var identifierNode = downloadable.SelectSingleNode ("key[text()='identifier']/following-sibling::string");
-				var fileSizeNode = downloadable.SelectSingleNode ("key[text()='fileSize']/following-sibling::integer");
+				var fileSizeNode = downloadable.SelectSingleNode ("key[text()='fileSize']/following-sibling::integer|key[text()='fileSize']/following-sibling::real");
 				var installPrefixNode = downloadable.SelectSingleNode ("key[text()='userInfo']/following-sibling::dict/key[text()='InstallPrefix']/following-sibling::string");
 
 				var version = versionNode.InnerText;
@@ -191,7 +198,8 @@ namespace xsiminstaller {
 				var name = Replace (nameNode.InnerText, dict);
 				var source = Replace (sourceNode.InnerText, dict);
 				var installPrefix = Replace (installPrefixNode.InnerText, dict);
-				var fileSize = long.Parse (fileSizeNode.InnerText);
+				double.TryParse (fileSizeNode?.InnerText, out var parsedFileSize);
+				var fileSize = (long) parsedFileSize;
 
 				var installed = false;
 				var updateAvailable = false;
@@ -260,19 +268,14 @@ namespace xsiminstaller {
 			}
 
 			if (install.Count > 0) {
-				if (only_check) {
-					foreach (var sim in install)
-						Console.WriteLine ($"{sim} (unknown)");
-				} else {
-					Console.WriteLine ("Unknown simulators: {0}", string.Join (", ", install));
-				}
+				Console.WriteLine ("Unknown simulators: {0}", string.Join (", ", install));
 				return 1;
 			}
 
 			return exit_code;
 		}
 
-		static bool IsInstalled (string identifier, out Version installedVersion)
+		static bool IsInstalled (string identifier, out Version? installedVersion)
 		{
 			if (TryExecuteAndCapture ($"pkgutil", $"--pkg-info {identifier}", out var pkgInfo, out _)) {
 				var lines = pkgInfo.Split ('\n');
@@ -302,7 +305,7 @@ namespace xsiminstaller {
 			if (download) {
 				var downloadDone = new ManualResetEvent (false);
 				var wc = new WebClient ();
-				long lastProgress =  0;
+				long lastProgress = 0;
 				var watch = Stopwatch.StartNew ();
 				wc.DownloadProgressChanged += (sender, progress_args) => {
 					var progress = progress_args.BytesReceived * 100 / fileSize;

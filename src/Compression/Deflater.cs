@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Buffers;
 using System.Diagnostics;
@@ -10,11 +12,9 @@ using System.Security;
 
 using ObjCRuntime;
 
-namespace Compression
-{
+namespace Compression {
 
-	internal sealed class Deflater : IDisposable
-	{
+	internal sealed class Deflater : IDisposable {
 		private CompressionStreamStruct _compression_struct;
 		private bool _finished; // Whether the end of the stream has been reached
 		private MemoryHandle _inputBufferHandle;
@@ -63,7 +63,7 @@ namespace Compression
 		{
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
-			if (_inputBufferHandle.Pointer != null)
+			if (_inputBufferHandle.Pointer is not null)
 				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
 			if (0 == inputBuffer.Length) {
@@ -73,18 +73,18 @@ namespace Compression
 			lock (SyncLock) {
 				_inputBufferHandle = inputBuffer.Pin ();
 
-				_compression_struct.Source = (IntPtr)_inputBufferHandle.Pointer;
+				_compression_struct.Source = (IntPtr) _inputBufferHandle.Pointer;
 				_compression_struct.SourceSize = inputBuffer.Length;
 			}
 		}
 
 		internal unsafe void SetInput (byte* inputBufferPtr, int count)
 		{
-			if (! NeedsInput ())
+			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
-			if (inputBufferPtr == null)
-				throw new ArgumentNullException ( nameof (inputBufferPtr));
-			if (_inputBufferHandle.Pointer != null)
+			if (inputBufferPtr is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputBufferPtr));
+			if (_inputBufferHandle.Pointer is not null)
 				throw new InvalidOperationException ("Unexpected input buffer handler found.");
 
 			if (count == 0) {
@@ -92,21 +92,20 @@ namespace Compression
 			}
 
 			lock (SyncLock) {
-				_compression_struct.Source = (IntPtr)inputBufferPtr;
+				_compression_struct.Source = (IntPtr) inputBufferPtr;
 				_compression_struct.SourceSize = count;
 			}
 		}
 
-		internal int GetDeflateOutput (byte[] outputBuffer)
+		internal int GetDeflateOutput (byte [] outputBuffer)
 		{
-			if (outputBuffer == null) 
-				throw new ArgumentNullException (nameof (outputBuffer));
+			if (outputBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (NeedsInput ())
 				throw new InvalidOperationException ("GetDeflateOutput should only be called after providing input");
 
 			try {
-				int bytesRead;
-				ReadDeflateOutput (outputBuffer, StreamFlag.Continue, out bytesRead);
+				ReadDeflateOutput (outputBuffer, StreamFlag.Continue, out var bytesRead);
 				return bytesRead;
 			} finally {
 				// Before returning, make sure to release input buffer if necessary:
@@ -116,20 +115,23 @@ namespace Compression
 			}
 		}
 
-		private unsafe CompressionStatus ReadDeflateOutput (byte[] outputBuffer, StreamFlag flushCode, out int bytesRead)
+		private unsafe CompressionStatus ReadDeflateOutput (byte [] outputBuffer, StreamFlag flushCode, out int bytesRead)
 		{
-			if (outputBuffer?.Length < 0)
+			if (outputBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
+
+			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("outputbuffer length must be bigger than 0");
 			lock (SyncLock) {
-				fixed (byte* bufPtr = &outputBuffer[0]) {
-					_compression_struct.Destination = (IntPtr)bufPtr;
+				fixed (byte* bufPtr = &outputBuffer [0]) {
+					_compression_struct.Destination = (IntPtr) bufPtr;
 					_compression_struct.DestinationSize = outputBuffer.Length;
 
 					var readStatus = CompressionStreamStruct.compression_stream_process (ref _compression_struct, flushCode);
 					switch (readStatus) {
 					case CompressionStatus.Ok:
 					case CompressionStatus.End:
-						bytesRead = outputBuffer.Length - (int)_compression_struct.DestinationSize;
+						bytesRead = outputBuffer.Length - (int) _compression_struct.DestinationSize;
 						break;
 					default:
 						bytesRead = 0;
@@ -141,29 +143,29 @@ namespace Compression
 			}
 		}
 
-		internal bool Finish (byte[] outputBuffer, out int bytesRead)
+		internal bool Finish (byte [] outputBuffer, out int bytesRead)
 		{
-			if (outputBuffer == null)
-				throw new ArgumentNullException (nameof (outputBuffer));
+			if (outputBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("Can't pass in an empty output buffer!");
 
-			var errC = ReadDeflateOutput (outputBuffer, StreamFlag.Finalize , out bytesRead);
+			var errC = ReadDeflateOutput (outputBuffer, StreamFlag.Finalize, out bytesRead);
 			return errC == CompressionStatus.End;
 		}
 
 		/// <summary>
 		/// Returns true if there was something to flush. Otherwise False.
 		/// </summary>
-		internal unsafe bool Flush (byte[] outputBuffer, out int bytesRead)
+		internal unsafe bool Flush (byte [] outputBuffer, out int bytesRead)
 		{
-			if (outputBuffer == null)
-				throw new ArgumentNullException (nameof (outputBuffer));
+			if (outputBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (outputBuffer));
 			if (outputBuffer.Length < 0)
 				throw new ArgumentException ("Can't pass in an empty output buffer!");
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
-			if (_inputBufferHandle.Pointer != null)
+			if (_inputBufferHandle.Pointer is not null)
 				throw new InvalidOperationException ("InputHandler should not be set");
 
 			// Note: we require that NeedsInput() == true, i.e. that 0 == _zlibStream.AvailIn.
@@ -189,7 +191,7 @@ namespace Compression
 		{
 			_finished = false;
 			_compression_struct = new CompressionStreamStruct ();
-			
+
 			var status = CompressionStreamStruct.compression_stream_init (ref _compression_struct, StreamOperation.Encode, algorithm);
 			if (status != CompressionStatus.Ok)
 				throw new InvalidOperationException (status.ToString ());

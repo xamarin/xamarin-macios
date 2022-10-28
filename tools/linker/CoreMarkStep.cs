@@ -239,8 +239,8 @@ namespace Xamarin.Linker.Steps {
 		{
 			if (processing_generated_dispose) {
 				switch (instruction.OpCode.OperandType) {
-					case OperandType.InlineField:
-					case OperandType.InlineTok:
+				case OperandType.InlineField:
+				case OperandType.InlineTok:
 					if (SkipField (instruction.Operand as FieldDefinition))
 						return;
 					break;
@@ -254,7 +254,7 @@ namespace Xamarin.Linker.Steps {
 			var method = base.MarkMethod (reference);
 			if (method == null)
 				return null;
-			
+
 			var t = method.DeclaringType;
 
 			// We have special processing that prevents protocol interfaces from being marked if they're
@@ -286,7 +286,7 @@ namespace Xamarin.Linker.Steps {
 							isProtocolImplementation = true;
 							break;
 						}
-						
+
 					}
 					if (isProtocolImplementation) {
 						MarkType (r.InterfaceType);
@@ -325,8 +325,11 @@ namespace Xamarin.Linker.Steps {
 				// If we're using the dynamic registrar, we need to mark interfaces that represent protocols
 				// even if it doesn't look like the interfaces are used, since we need them at runtime.
 				var isProtocol = type.IsNSObject (LinkContext) && resolvedInterfaceType.HasCustomAttribute (LinkContext, Namespaces.Foundation, "ProtocolAttribute");
-				if (isProtocol)
-					return true;
+				if (isProtocol) {
+					// return true only if not already marked (same check as `base` would do)
+					// otherwise we can enqueue something everytime and never get an empty queue
+					return !Annotations.IsMarked (iface);
+				}
 			}
 
 			return base.ShouldMarkInterfaceImplementation (type, iface, resolvedInterfaceType);

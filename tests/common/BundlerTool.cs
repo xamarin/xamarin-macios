@@ -256,23 +256,18 @@ namespace Xamarin.Tests
 			} else if (!string.IsNullOrEmpty (TargetFramework)) {
 				sb.Add ("--target-framework");
 				sb.Add (TargetFramework);
-			} else if (!NoPlatformAssemblyReference) {
-				// make the implicit default the way tests have been running until now, and at the same time the very minimum to make apps build.
+			} else {
 				switch (Profile) {
 				case Profile.iOS:
-					sb.Add ($"-r:" + Configuration.XamarinIOSDll);
-					break;
 				case Profile.tvOS:
 				case Profile.watchOS:
-					sb.Add ("--target-framework");
-					sb.Add (Configuration.GetTargetFramework (Profile));
-					sb.Add ("-r:" + Configuration.GetBaseLibrary (Profile));
-					break;
 				case Profile.macOSFull:
 				case Profile.macOSMobile:
 				case Profile.macOSSystem:
 					sb.Add ("--target-framework");
 					sb.Add (Configuration.GetTargetFramework (Profile));
+					if (!NoPlatformAssemblyReference)
+						sb.Add ("-r:" + Configuration.GetBaseLibrary (Profile));
 					break;
 				default:
 					throw new NotImplementedException ();
@@ -331,7 +326,7 @@ namespace Xamarin.Tests
 			if (rv == 0)
 				return;
 			var errors = Messages.Where ((v) => v.IsError).ToList ();
-			Assert.Fail ($"Expected execution to succeed, but exit code was {rv}, and there were {errors.Count} error(s): {message}\n\t" +
+			Assert.Fail ($"Expected execution to succeed, but exit code was {rv}, and there were {errors.Count} error(s).\nCommand: {ToolPath} {StringUtils.FormatArguments (ToolArguments)}\nMessage: {message}\n\t" +
 				     string.Join ("\n\t", errors.Select ((v) => v.ToString ())));
 		}
 
@@ -340,9 +335,9 @@ namespace Xamarin.Tests
 			Assert.AreEqual (1, Execute (), message);
 		}
 
-		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true);
+		public abstract void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null);
 
-		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null, bool use_csc = true)
+		public static string CreateCode (string code, string usings, string extraCode)
 		{
 			if (code == null)
 				code = "public class TestApp { static void Main () { System.Console.WriteLine (typeof (ObjCRuntime.Runtime).ToString ()); } }";
@@ -350,8 +345,12 @@ namespace Xamarin.Tests
 				code = usings + "\n" + code;
 			if (extraCode != null)
 				code += extraCode;
+			return code;
+		}
 
-			return CompileTestAppCode ("exe", targetDirectory, code, extraArgs, profile, appName, use_csc);
+		public static string CompileTestAppExecutable (string targetDirectory, string code = null, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", string extraCode = null, string usings = null)
+		{
+			return CompileTestAppCode ("exe", targetDirectory, CreateCode (code, usings, extraCode), extraArgs, profile, appName);
 		}
 
 		public static string CompileTestAppLibrary (string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp")
@@ -359,7 +358,7 @@ namespace Xamarin.Tests
 			return CompileTestAppCode ("library", targetDirectory, code, extraArgs, profile, appName);
 		}
 
-		public static string CompileTestAppCode (string target, string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp", bool use_csc = true)
+		public static string CompileTestAppCode (string target, string targetDirectory, string code, IList<string> extraArgs = null, Profile profile = Profile.iOS, string appName = "testApp")
 		{
 			var ext = target == "exe" ? "exe" : "dll";
 			var cs = Path.Combine (targetDirectory, "testApp.cs");
@@ -370,7 +369,7 @@ namespace Xamarin.Tests
 
 			string output;
 			var args = new List<string> ();
-			string fileName = Configuration.GetCompiler (profile, args, use_csc);
+			string fileName = Configuration.GetCompiler (profile, args);
 			args.Add ("/noconfig");
 			args.Add ($"/t:{target}");
 			args.Add ("/nologo");

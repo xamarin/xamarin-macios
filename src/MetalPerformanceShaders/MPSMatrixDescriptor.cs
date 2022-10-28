@@ -1,4 +1,4 @@
-﻿#if (XAMCORE_2_0 && !MONOMAC) && !XAMCORE_4_0
+#if !MONOMAC && !NET && !__MACCATALYST__
 using System;
 using Metal;
 using Foundation;

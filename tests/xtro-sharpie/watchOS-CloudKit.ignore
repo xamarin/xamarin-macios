@@ -1,51 +1,6 @@
-## Types (and members) added and deprecated in the same version (iOS headers are already cleaned in most cases)
-!missing-type! CKDiscoverAllContactsOperation not bound
-!missing-selector! CKDiscoverAllContactsOperation::discoverAllContactsCompletionBlock not bound
-!missing-selector! CKDiscoverAllContactsOperation::setDiscoverAllContactsCompletionBlock: not bound
-!missing-type! CKDiscoverUserInfosOperation not bound
-!missing-selector! CKDiscoverUserInfosOperation::discoverUserInfosCompletionBlock not bound
-!missing-selector! CKDiscoverUserInfosOperation::emailAddresses not bound
-!missing-selector! CKDiscoverUserInfosOperation::initWithEmailAddresses:userRecordIDs: not bound
-!missing-selector! CKDiscoverUserInfosOperation::setDiscoverUserInfosCompletionBlock: not bound
-!missing-selector! CKDiscoverUserInfosOperation::setEmailAddresses: not bound
-!missing-selector! CKDiscoverUserInfosOperation::setUserRecordIDs: not bound
-!missing-selector! CKDiscoverUserInfosOperation::userRecordIDs not bound
-!missing-type! CKDiscoveredUserInfo not bound
-!missing-selector! CKDiscoveredUserInfo::firstName not bound
-!missing-selector! CKDiscoveredUserInfo::lastName not bound
-!missing-selector! CKDiscoveredUserInfo::userRecordID not bound
-!missing-type! CKFetchRecordChangesOperation not bound
-!missing-selector! CKFetchRecordChangesOperation::desiredKeys not bound
-!missing-selector! CKFetchRecordChangesOperation::fetchRecordChangesCompletionBlock not bound
-!missing-selector! CKFetchRecordChangesOperation::initWithRecordZoneID:previousServerChangeToken: not bound
-!missing-selector! CKFetchRecordChangesOperation::moreComing not bound
-!missing-selector! CKFetchRecordChangesOperation::previousServerChangeToken not bound
-!missing-selector! CKFetchRecordChangesOperation::recordChangedBlock not bound
-!missing-selector! CKFetchRecordChangesOperation::recordWithIDWasDeletedBlock not bound
-!missing-selector! CKFetchRecordChangesOperation::recordZoneID not bound
-!missing-selector! CKFetchRecordChangesOperation::resultsLimit not bound
-!missing-selector! CKFetchRecordChangesOperation::setDesiredKeys: not bound
-!missing-selector! CKFetchRecordChangesOperation::setFetchRecordChangesCompletionBlock: not bound
-!missing-selector! CKFetchRecordChangesOperation::setPreviousServerChangeToken: not bound
-!missing-selector! CKFetchRecordChangesOperation::setRecordChangedBlock: not bound
-!missing-selector! CKFetchRecordChangesOperation::setRecordWithIDWasDeletedBlock: not bound
-!missing-selector! CKFetchRecordChangesOperation::setRecordZoneID: not bound
-!missing-selector! CKFetchRecordChangesOperation::setResultsLimit: not bound
-!missing-selector! CKContainer::discoverAllContactUserInfosWithCompletionHandler: not bound
-!missing-selector! CKContainer::discoverUserInfoWithEmailAddress:completionHandler: not bound
-!missing-selector! CKContainer::discoverUserInfoWithUserRecordID:completionHandler: not bound
-!missing-field! CKOwnerDefaultName not bound
-
 ## some `init` do not work on watchOS (only) and we provide compatibility stubs for them to ease code sharing
-!missing-selector! CKDiscoverAllContactsOperation::init not bound
-!missing-selector! CKDiscoverUserInfosOperation::init not bound
-!missing-selector! CKFetchRecordChangesOperation::init not bound
 !missing-selector! CKFetchRecordsOperation::init not bound
 !missing-selector! CKFetchRecordZonesOperation::init not bound
-!missing-selector! CKModifyBadgeOperation::init not bound
 !missing-selector! CKModifyRecordsOperation::init not bound
 !missing-selector! CKModifyRecordZonesOperation::init not bound
 !missing-selector! CKQueryOperation::init not bound
-
-## Types (and members) added and deprecated in the same version (watchOS 6,0)
-!missing-selector! CKSubscription::recordType not bound

@@ -130,7 +130,7 @@ namespace Registrar {
 
 		protected override bool IsSimulatorOrDesktop {
 			get {
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 				return true;
 #else
 				return Runtime.Arch == Arch.SIMULATOR;
@@ -141,6 +141,12 @@ namespace Registrar {
 		protected override bool Is64Bits {
 			get {
 				return IntPtr.Size == 8;
+			}
+		}
+
+		protected override bool IsARM64 {
+			get {
+				return Runtime.IsARM64CallingConvention;
 			}
 		}
 
@@ -191,11 +197,6 @@ namespace Registrar {
 		protected override int GetValueTypeSize (Type type)
 		{
 			return Marshal.SizeOf (type);
-		}
-
-		protected override bool IsCorlibType (Type type)
-		{
-			return type.Assembly == typeof(object).Assembly;
 		}
 
 		protected override IEnumerable<MethodBase> CollectConstructors (Type type)
@@ -305,12 +306,6 @@ namespace Registrar {
 				if (pmAttrib != null)
 					yield return pmAttrib;
 			}
-		}
-
-		protected override List<AvailabilityBaseAttribute> GetAvailabilityAttributes (Type obj)
-		{
-			// No need to implement this until GetSDKVersion is implemented.
-			return null;
 		}
 
 		protected override Version GetSDKVersion ()
@@ -689,7 +684,7 @@ namespace Registrar {
 
 		protected override void ReportError (int code, string message, params object[] args)
 		{
-			Console.WriteLine (message, args);
+			Runtime.NSLog (String.Format (message, args));
 		}
 
 		Class.objc_attribute_prop [] GetPropertyAttributes (ObjCProperty property, out int count, bool isProtocol)
@@ -738,7 +733,7 @@ namespace Registrar {
 #else
 						const string msg = "Detected a protocol ({0}) inheriting from the JSExport protocol while using the dynamic registrar. It is not possible to export protocols to JavaScriptCore dynamically; the static registrar must be used (add '--registrar:static' to the additional mtouch arguments in the project's iOS Build options to select the static registrar).";
 #endif
-						ErrorHelper.Warning (4147, msg, GetTypeFullName (type.Type));
+						ErrorHelper.Show (ErrorHelper.CreateWarning (4147, msg, GetTypeFullName (type.Type)));
 					}
 					Protocol.protocol_addProtocol (protocol, proto.Handle);
 				}
@@ -865,7 +860,7 @@ namespace Registrar {
 			} else {
 				try {
 					var nsobj = Runtime.GetNSObject (obj, Runtime.MissingCtorResolution.ThrowConstructor1NotFound, true);
-					mthis = ObjectWrapper.Convert (nsobj);
+					mthis = Runtime.AllocGCHandle (nsobj);
 					if (res.Method.ContainsGenericParameters) {
 						res.WriteUnmanagedDescription (desc, Runtime.FindClosedMethod (nsobj.GetType (), res.Method));
 						return;
@@ -939,7 +934,9 @@ namespace Registrar {
 					UnlockRegistrar ();
 			}
 
-			throw ErrorHelper.CreateError (4143, "The ObjectiveC class '{0}' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).", Marshal.PtrToStringAuto (Class.class_getName (original_class)));
+			if (throw_on_error)
+				throw ErrorHelper.CreateError (4143, "The ObjectiveC class '{0}' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).", Marshal.PtrToStringAuto (Class.class_getName (original_class)));
+			return null;
 		}
 
 		bool RegisterMethod (ObjCMethod method)
@@ -1008,6 +1005,12 @@ namespace Registrar {
 				break;
 			case Trampoline.SetGCHandle:
 				tramp = Method.SetGCHandleTrampoline;
+				break;
+			case Trampoline.GetFlags:
+				tramp = Method.GetFlagsTrampoline;
+				break;
+			case Trampoline.SetFlags:
+				tramp = Method.SetFlagsTrampoline;
 				break;
 			default:
 				throw ErrorHelper.CreateError (4144, "Cannot register the method '{0}.{1}' since it does not have an associated trampoline. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new", method.DeclaringType.Type.FullName, method.Name);
@@ -1136,4 +1139,3 @@ namespace Registrar {
 		}
 	}
 }
-

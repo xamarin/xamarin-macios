@@ -10,13 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using GameKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GameKit {
@@ -28,6 +23,7 @@ namespace MonoTouchFixtures.GameKit {
 		[Test]
 		public void Show_NSAction_Null ()
 		{
+			TestRuntime.IgnoreOnMacCatalyst ("https://github.com/xamarin/maccore/issues/2346");
 			// Once upon a time (circa 2012) using null for the action would have crashed the application
 			// but it's not the case anymore (in 2015 / iOS9) and the header files says it's nullable
 			GKNotificationBanner.Show ("title", "message", null);

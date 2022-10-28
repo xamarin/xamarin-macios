@@ -4,6 +4,7 @@
 !unknown-pinvoke! class_addMethod bound
 !unknown-pinvoke! class_addProperty bound
 !unknown-pinvoke! class_addProtocol bound
+!unknown-pinvoke! class_getInstanceMethod bound
 !unknown-pinvoke! class_getInstanceVariable bound
 !unknown-pinvoke! class_getMethodImplementation bound
 !unknown-pinvoke! class_getName bound
@@ -12,7 +13,6 @@
 !unknown-pinvoke! dlerror bound
 !unknown-pinvoke! dlopen bound
 !unknown-pinvoke! dlsym bound
-!unknown-pinvoke! memcpy bound
 !unknown-pinvoke! NXGetLocalArchInfo bound
 !unknown-pinvoke! objc_allocateClassPair bound
 !unknown-pinvoke! objc_allocateProtocol bound
@@ -36,8 +36,6 @@
 !unknown-pinvoke! objc_msgSendSuper_stret bound
 
 ## only on iOS and macOS
-!unknown-pinvoke! object_getInstanceVariable bound
-!unknown-pinvoke! object_setInstanceVariable bound
 
 ## present in <os/log.h>
 !unknown-pinvoke! os_log_create bound

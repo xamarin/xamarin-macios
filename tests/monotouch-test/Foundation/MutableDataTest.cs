@@ -8,28 +8,13 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.Foundation {
 
@@ -79,7 +64,7 @@ namespace MonoTouchFixtures.Foundation {
 				} catch (Exception ex) {
 					// Verify that the exception is an OOM (i.e. native code failed to init the object).
 					Assert.AreSame (typeof (Exception), ex.GetType (), "exception type");
-					Assert.That (ex.Message, Is.StringStarting ("Could not initialize an instance of the type 'Foundation.NSMutableData': the native 'initWithCapacity:' method returned nil."), "OOM");
+					Assert.That (ex.Message, Does.StartWith ("Could not initialize an instance of the type 'Foundation.NSMutableData': the native 'initWithCapacity:' method returned nil."), "OOM");
 				}
 			}
 

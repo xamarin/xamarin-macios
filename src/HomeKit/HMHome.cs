@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -6,13 +8,11 @@ using Foundation;
 
 namespace HomeKit {
 
-	[iOS (8,0)]
-	[TV (10,0)]
 	public partial class HMHome
 	{
-		public HMService [] GetServices (HMServiceType serviceTypes) 
+		public HMService []? GetServices (HMServiceType serviceTypes)
 		{
-			var arr = new List<NSString> ();
+			var arr = new ServiceTypeList<NSString> ();
 
 			if ((serviceTypes & HMServiceType.LightBulb) == HMServiceType.LightBulb)			
 				arr.Add (HMServiceType.LightBulb.GetConstant ());
@@ -82,9 +82,20 @@ namespace HomeKit {
 			return GetServices (arr.ToArray ());
 		}
 
+		class ServiceTypeList<T> : List<T> {
+			public new void Add (T? item)
+			{
+				if (item is not null)
+					base.Add (item);
+			}
+		}
+
+#if !NET
 		[NoTV]
 		[NoWatch]
-		[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
+#if (WATCH || TVOS)
+		[Obsolete ("This API is not available on this platform.")]
+#endif // WATCH || TVOS
 		[Obsoleted (PlatformName.iOS, 9,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
 		public virtual void RemoveUser (HMUser user, Action<NSError> completion) {
 			throw new NotSupportedException ();
@@ -92,10 +103,13 @@ namespace HomeKit {
 
 		[NoTV]
 		[NoWatch]
-		[Introduced (PlatformName.iOS, 8,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
+#if (WATCH || TVOS)
+		[Obsolete ("This API is not available on this platform.")]
+#endif // WATCH || TVOS
 		[Obsoleted (PlatformName.iOS, 9,0, PlatformArchitecture.All, message: "This API in now prohibited on iOS. Use 'ManageUsers' instead.")]
 		public virtual Task RemoveUserAsync (HMUser user) {
 			throw new NotSupportedException ();
 		}
+#endif
 	}
 }

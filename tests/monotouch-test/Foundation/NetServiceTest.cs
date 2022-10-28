@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSNetService
 //
 // Authors:
@@ -10,16 +10,11 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 
@@ -42,7 +37,7 @@ namespace MonoTouchFixtures.Foundation {
 			                                  1234)) {
 				Assert.That (ns.Domain, Is.EqualTo ("d"), "Domain");
 				Assert.That (ns.Type, Is.EqualTo ("_test._tcp"), "Type");
-				Assert.That (ns.Port, Is.EqualTo (1234), "Port");
+				Assert.That (ns.Port, Is.EqualTo ((nint) 1234), "Port");
 				NSInputStream input;
 				NSOutputStream output;
 				Assert.True (ns.GetStreams (out input, out output), "GetStreams");

@@ -25,45 +25,6 @@ using System.Net;
 
 namespace Foundation {
 	public partial class NSHttpCookie {
-
-#if !XAMCORE_2_0
-		// sadly they were not readonly
-		public static NSString KeyName;
-		public static NSString KeyValue;
-		public static NSString KeyOriginURL;
-		public static NSString KeyVersion;
-		public static NSString KeyDomain;
-		public static NSString KeyPath;
-		public static NSString KeySecure;
-		public static NSString KeyExpires;
-		public static NSString KeyComment;
-		public static NSString KeyCommentURL;
-		public static NSString KeyDiscard;
-		public static NSString KeyMaximumAge;
-		public static NSString KeyPort;
-
-		static NSHttpCookie ()
-		{
-			var handle = Libraries.Foundation.Handle;
-			if (handle == IntPtr.Zero)
-				return;
-
-			KeyName = Dlfcn.GetStringConstant (handle, "NSHTTPCookieName");
-			KeyValue = Dlfcn.GetStringConstant (handle, "NSHTTPCookieValue");
-			KeyOriginURL = Dlfcn.GetStringConstant (handle, "NSHTTPCookieOriginURL");
-			KeyVersion = Dlfcn.GetStringConstant (handle, "NSHTTPCookieVersion");
-			KeyDomain = Dlfcn.GetStringConstant (handle, "NSHTTPCookieDomain");
-			KeyPath = Dlfcn.GetStringConstant (handle, "NSHTTPCookiePath");
-			KeySecure = Dlfcn.GetStringConstant (handle, "NSHTTPCookieSecure");
-			KeyExpires = Dlfcn.GetStringConstant (handle, "NSHTTPCookieExpires");
-			KeyComment = Dlfcn.GetStringConstant (handle, "NSHTTPCookieComment");
-			KeyCommentURL = Dlfcn.GetStringConstant (handle, "NSHTTPCookieCommentURL");
-			KeyDiscard = Dlfcn.GetStringConstant (handle, "NSHTTPCookieDiscard");
-			KeyMaximumAge = Dlfcn.GetStringConstant (handle, "NSHTTPCookieMaximumAge");
-			KeyPort = Dlfcn.GetStringConstant (handle, "NSHTTPCookiePort");
-		}
-#endif
-		
 		// same order as System.Net.Cookie
 		// http://msdn.microsoft.com/en-us/library/a18ka3h2.aspx
 		public NSHttpCookie (string name, string value) : this (name, value, null, null)
@@ -118,11 +79,7 @@ namespace Foundation {
 				if (!String.IsNullOrEmpty (comment))
 					properties.Add (NSHttpCookie.KeyComment, new NSString (comment));
 				if (!String.IsNullOrEmpty (commentUrl))
-#if XAMCORE_2_0
 					properties.Add (NSHttpCookie.KeyCommentUrl, new NSString (commentUrl));
-#else
-					properties.Add (NSHttpCookie.KeyCommentURL, new NSString (commentUrl));
-#endif
 				if (discard.HasValue)
 					properties.Add (NSHttpCookie.KeyDiscard, new NSString (discard.Value ? "TRUE" : "FALSE"));
 				if (expires.HasValue && expires.Value != DateTime.MinValue)

@@ -1,16 +1,9 @@
 #if !__WATCHOS__
-using System;
 using System.Threading;
-#if XAMCORE_2_0
+
 using Foundation;
 using Network;
-using ObjCRuntime;
 using CoreFoundation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.CoreFoundation;
-#endif
 
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
@@ -41,7 +34,7 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
@@ -58,14 +51,18 @@ namespace MonoTouchFixtures.Network {
 				stack = parameters.ProtocolStack;
 				using (var ipOptions = stack.InternetProtocol) {
 					if (ipOptions != null) {
+#if NET
+						ipOptions.SetVersion (NWIPVersion.Version4);
+#else
 						ipOptions.IPSetVersion (NWIPVersion.Version4);
+#endif
 						stack.PrependApplicationProtocol (ipOptions);
 					}
 				}
 			}
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void Dispose()
 		{
 			connection?.Dispose ();
@@ -103,6 +100,13 @@ namespace MonoTouchFixtures.Network {
 
 		[Test]
 		public void SetIPLocalAddressPreference () => Assert.DoesNotThrow (() => options.SetIPLocalAddressPreference (NWIPLocalAddressPreference.Temporary));
+
+		[Test]
+		public void DisableMulticastLoopbackTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			Assert.DoesNotThrow (() => options.DisableMulticastLoopback (false));
+		}
 	}
 }
 #endif

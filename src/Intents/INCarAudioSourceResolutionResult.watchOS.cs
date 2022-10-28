@@ -1,4 +1,4 @@
-#if __WATCHOS__ && !XAMCORE_4_0
+#if __WATCHOS__ && !NET
 
 using System;
 using System.Drawing;
@@ -20,37 +20,37 @@ using CoreFoundation;
 
 namespace Intents {
 	[Register("INCarAudioSourceResolutionResult", true)]
-	[Obsolete ("This class is not available on watchOS")]
+	[Obsolete (Constants.UnavailableOnWatchOS)]
 	public unsafe partial class INCarAudioSourceResolutionResult : INIntentResolutionResult {
-		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException ("This class is not supported on watchOS"); } }
+		public override IntPtr ClassHandle { get { throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS); } }
 
 		protected INCarAudioSourceResolutionResult (NSObjectFlag t) : base (t)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		protected internal INCarAudioSourceResolutionResult (IntPtr handle) : base (handle)
 		{
-			throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+			throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 		}
 
 		public new static INCarAudioSourceResolutionResult NeedsValue {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 
 		public new static INCarAudioSourceResolutionResult NotRequired {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 
 		public new static INCarAudioSourceResolutionResult Unsupported {
 			get {
-				throw new PlatformNotSupportedException ("This class is not supported on watchOS");
+				throw new PlatformNotSupportedException (Constants.UnavailableOnWatchOS);
 			}
 		}
 	} /* class INCarAudioSourceResolutionResult */
 }
-#endif // __WATCHOS__ && !XAMCORE_4_0
+#endif // __WATCHOS__ && !NET

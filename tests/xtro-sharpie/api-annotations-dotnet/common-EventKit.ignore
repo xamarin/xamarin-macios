@@ -1,0 +1,2 @@
+## extra value so the enum is easier to create
+!extra-enum-value! Managed value 0 for EKWeekday.NotSet not found in native headers

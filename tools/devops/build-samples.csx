@@ -24,7 +24,7 @@ using Xamarin.Provisioning.Model;
 var commit = Environment.GetEnvironmentVariable ("BUILD_SOURCEVERSION");
 var provision_from_commit = Environment.GetEnvironmentVariable ("PROVISION_FROM_COMMIT") ?? commit;
 
-string FindVariable (string variable)
+string FindVariable (string variable, bool throwIfNotFound = true)
 {
 	var value = FindConfigurationVariable (variable, provision_from_commit);
 	if (!string.IsNullOrEmpty (value))
@@ -32,15 +32,18 @@ string FindVariable (string variable)
 
 	switch (variable) {
 	case "XI_PACKAGE":
-		value = GetManifest (provision_from_commit).Where ((v) => v.Contains ("xamarin.ios-") && v.EndsWith (".pkg", StringComparison.Ordinal)).FirstOrDefault ();
+		value = GetManifest (provision_from_commit).Where ((v) => v.Contains ("notarized/xamarin.ios-") && v.EndsWith (".pkg", StringComparison.Ordinal)).FirstOrDefault ();
 		break;
 	case "XM_PACKAGE":
-		value = GetManifest (provision_from_commit).Where ((v) => v.Contains ("xamarin.mac-") && v.EndsWith (".pkg", StringComparison.Ordinal)).FirstOrDefault ();
+		value = GetManifest (provision_from_commit).Where ((v) => v.Contains ("notarized/xamarin.mac-") && v.EndsWith (".pkg", StringComparison.Ordinal)).FirstOrDefault ();
 		break;
 	}
 
 	if (!string.IsNullOrEmpty (value))
 		return value;
+
+	if (!throwIfNotFound)
+		return null;
 
 	throw new Exception ($"Could not find {variable} in environment nor in the commit's ({commit}) manifest.");
 }
@@ -53,8 +56,10 @@ if (string.IsNullOrEmpty (provision_from_commit)) {
 Console.WriteLine ($"Provisioning from {provision_from_commit}...");
 
 InstallPackage ("Mono", FindVariable ("MIN_MONO_URL"));
-InstallPackage ("Xamarin.iOS", FindVariable ("XI_PACKAGE"));
-InstallPackage ("Xamarin.Mac", FindVariable ("XM_PACKAGE"));
+if (FindVariable ("INCLUDE_IOS", false) == "1")
+	InstallPackage ("Xamarin.iOS", FindVariable ("XI_PACKAGE"));
+if (FindVariable ("INCLUDE_MAC", false) == "1")
+	InstallPackage ("Xamarin.Mac", FindVariable ("XM_PACKAGE"));
 InstallPackage ("Objective-Sharpie", FindVariable ("MIN_SHARPIE_URL"));
 
 // Provisioning profiles

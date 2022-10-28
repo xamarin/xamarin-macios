@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CVPixelBuffer
 //
 // Authors:
@@ -12,17 +12,10 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using CoreVideo;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.CoreVideo;
 
-using nint = System.Int32;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.CoreVideo {

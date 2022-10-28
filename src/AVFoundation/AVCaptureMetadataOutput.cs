@@ -23,13 +23,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if XAMCORE_2_0 && IOS
+#if IOS
 using Foundation;
 using ObjCRuntime;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+
+#nullable enable
 
 namespace AVFoundation {
 

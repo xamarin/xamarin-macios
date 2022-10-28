@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for DispatchQueue
 //
 // Authors:
@@ -9,7 +9,6 @@
 
 using System;
 using System.IO;
-#if XAMCORE_2_0
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -18,25 +17,8 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-using System.Drawing;
-using System.Threading;
-
-#if XAMCORE_2_0
-using RectangleF = CoreGraphics.CGRect;
-using SizeF = CoreGraphics.CGSize;
-using PointF = CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation
 {
@@ -105,8 +87,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchSync ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var queue = new DispatchQueue ("DispatchSync")) {
 				var called = false;
@@ -124,8 +106,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchBarrierSync ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var queue = new DispatchQueue ("DispatchBarrierSync")) {
 				var called = false;
@@ -143,8 +125,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchAsync ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var queue = new DispatchQueue ("DispatchAsync")) {
 				var called = false;
@@ -165,8 +147,8 @@ namespace MonoTouchFixtures.CoreFoundation
 		[Test]
 		public void DispatchBarrierAsync ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			using (var queue = new DispatchQueue ("DispatchBarrierAsync")) {
 				var called = false;

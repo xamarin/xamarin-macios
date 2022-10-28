@@ -24,6 +24,8 @@ using System;
 
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreData {
 
 	// NUInteger -> NSEntityMapping.h
@@ -69,17 +71,6 @@ namespace CoreData {
 		NSCountResultType = 0x04
 	}
 
-#if !XAMCORE_2_0
-	// NUInteger -> NSKeyValueObserving.h in Foundation.framework (and it already exists there)
-	[Native]
-	public enum NSKeyValueSetMutationKind : ulong {
-		Union = 1,
-		Minus = 2,
-		Intersect = 3,
-		NSKeyValueSet = 4 // misnamed
-	}
-#endif
-
 	// NUInteger -> NSRelationshipDescription.h
 	[Native]
 	public enum NSDeleteRule : ulong {
@@ -94,6 +85,8 @@ namespace CoreData {
 	public enum NSPersistentStoreRequestType : ulong {
 		Fetch = 1,
 		Save,
+		[iOS (13,0)][TV (13,0)][Watch (6,0)][Mac (10,15)]
+		BatchInsert = 5,
 		BatchUpdate = 6,
 		BatchDelete = 7
 	}
@@ -237,4 +230,20 @@ namespace CoreData {
 		DryRun = 1 << 1,
 		PrintSchema = 1 << 2,
 	}
+
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum NSPersistentCloudKitContainerEventResultType : long {
+		Events = 0,
+		CountEvents,
+	}
+
+	[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+	[Native]
+	public enum NSPersistentCloudKitContainerEventType : long {
+		Setup,
+		Import,
+		Export, 
+	}
+
 }

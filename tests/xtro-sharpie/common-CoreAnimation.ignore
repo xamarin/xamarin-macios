@@ -9,6 +9,10 @@
 !unknown-field! kCAEmitterBehaviorValueOverLife bound
 !unknown-field! kCAEmitterBehaviorWave bound
 
+## helpers built from existing (native) values
+!extra-enum-value! Managed value 12 for CAEdgeAntialiasingMask.TopBottomEdges not found in native headers
+!extra-enum-value! Managed value 15 for CAEdgeAntialiasingMask.All not found in native headers
+!extra-enum-value! Managed value 3 for CAEdgeAntialiasingMask.LeftRightEdges not found in native headers
 
 ## unsorted
 

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSUrlSessionTaskTransactionMetrics
 //
 // Authors:
@@ -7,8 +7,6 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-using System;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -16,11 +14,6 @@ using AppKit;
 using UIKit;
 #endif
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Foundation {
@@ -64,7 +57,7 @@ namespace MonoTouchFixtures.Foundation {
 					Assert.Null (sttm.ResponseEndDate, "ResponseEndDate");
 					Assert.Null (sttm.ResponseStartDate, "ResponseStartDate");
 				}
-				Assert.False (sttm.ReusedConnection, "ReusedConnection");
+				Assert.That (sttm.ReusedConnection, Is.EqualTo (true).Or.EqualTo (false), "ReusedConnection");
 				Assert.Null (sttm.SecureConnectionEndDate, "SecureConnectionEndDate");
 				Assert.Null (sttm.SecureConnectionStartDate, "SecureConnectionStartDate");
 			}

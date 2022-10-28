@@ -1,0 +1,9 @@
+<!-- All msbuild target logic needs to be inside a project tag -->
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<XmlLinkerFile>$(MSBuildThisFileDirectory)nunit.framework.xml</XmlLinkerFile>
+	    <MonoBundlingExtraArgs>--xml=$(XmlLinkerFile) $(MonoBundlingExtraArgs)</MonoBundlingExtraArgs>
+	    <MtouchExtraArgs>--xml=$(XmlLinkerFile) --dlsym:+nunit.framework.dll $(MtouchExtraArgs)</MtouchExtraArgs>
+	</PropertyGroup>
+</Project>

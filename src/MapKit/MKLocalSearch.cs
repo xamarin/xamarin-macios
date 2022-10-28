@@ -26,12 +26,13 @@
 #pragma warning disable 414
 
 #if !WATCH // doesn't show up in watch headers
-#if XAMCORE_2_0 || !MONOMAC
 
 using System;
 using System.Threading.Tasks;
 using System.Threading;
 using Foundation;
+
+#nullable enable
 
 namespace MapKit {
 	public partial class MKLocalSearch {
@@ -49,7 +50,7 @@ namespace MapKit {
 					if (token.IsCancellationRequested) {
 						tcs.TrySetCanceled ();
 					} else {
-						if (error != null)
+						if (error is not null)
 							tcs.SetException (new NSErrorException(error));
 						else
 							tcs.SetResult (response);
@@ -61,5 +62,4 @@ namespace MapKit {
 		}
 	}
 }
-#endif
 #endif // !WATCH

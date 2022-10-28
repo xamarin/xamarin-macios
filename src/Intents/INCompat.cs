@@ -1,6 +1,6 @@
 // Compatibility stubs
 
-#if XAMCORE_2_0 && IOS
+#if IOS
 
 using System;
 using Foundation;
@@ -8,7 +8,7 @@ using ObjCRuntime;
 
 namespace Intents {
 
-#if !XAMCORE_4_0
+#if !NET
 	public partial class INRideDriver {
 
 		[Obsolete ("This constructor does not create a valid instance of the type")]

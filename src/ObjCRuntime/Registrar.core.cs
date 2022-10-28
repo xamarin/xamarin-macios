@@ -1,3 +1,4 @@
+using System.Text;
 
 namespace Registrar {
 	abstract partial class Registrar {
@@ -11,6 +12,39 @@ namespace Registrar {
 			if (first >= 'a' && first <= 'z')
 				first = (char) (first - 32 /* 'a' - 'A' */);
 			return "set" + ((char) first).ToString () + getterSelector.Substring (1) + ":";
+		}
+
+		public static string SanitizeObjectiveCName (string name)
+		{
+			StringBuilder sb = null;
+
+			for (int i = 0; i < name.Length; i++) {
+				var ch = name [i];
+				switch (ch) {
+				case '.':
+				case '+':
+				case '/':
+				case '`':
+				case '@':
+				case '<':
+				case '>':
+				case '$':
+				case '-':
+					if (sb == null)
+						sb = new StringBuilder (name, 0, i, name.Length);
+					sb.Append ('_');
+					break;
+				default:
+					if (sb != null)
+						sb.Append (ch);
+					break;
+				}
+			}
+
+			if (sb != null)
+				return sb.ToString ();
+
+			return name;
 		}
 	}
 }

@@ -41,7 +41,6 @@ namespace Foundation {
 		private static readonly NSCalendar calendar = new NSCalendar (NSCalendarType.Gregorian) { TimeZone = NSTimeZone.FromName ("UTC") };
 		private static readonly ThreadLocal<NSDateComponents> threadComponents = new ThreadLocal<NSDateComponents> (() => new NSDateComponents ());
 
-#if XAMCORE_2_0
 		// now explicit since data can be lost for small/large values of DateTime
 		public static explicit operator DateTime (NSDate d) {
 			double secs = d.SecondsSinceReferenceDate;
@@ -95,6 +94,5 @@ namespace Foundation {
 
 			return retDate;
 		}
-#endif
 	}
 }

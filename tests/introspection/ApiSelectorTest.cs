@@ -23,15 +23,11 @@ using System;
 using System.Reflection;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Introspection {
@@ -52,16 +48,18 @@ namespace Introspection {
 				if (ca is ModelAttribute)
 					return true;
 			}
+
+			switch (type.FullName) {
+			case "MetalPerformanceShaders.MPSCommandBuffer":
+				// The reflectable type metadata contains no selectors.
+				return true;
+			}
+
 			return SkipDueToAttribute (type);
 		}
 
 		protected virtual bool Skip (Type type, string selectorName)
 		{
-#if !XAMCORE_2_0
-			// old binding mistake
-			if (selectorName == "subscribedCentrals")
-				return true;
-#else
 			// The MapKit types/selectors are optional protocol members pulled in from MKAnnotation/MKOverlay.
 			// These concrete (wrapper) subclasses do not implement all of those optional members, but we
 			// still need to provide a binding for them, so that user subclasses can implement those members.
@@ -114,7 +112,6 @@ namespace Introspection {
 			case "GKPolygonObstacle":
 			case "GKComponent":
 			case "GKGraphNode":
-			case "WKPreferences":
 			case "WKUserContentController":
 			case "WKProcessPool":
 			case "WKWebViewConfiguration":
@@ -129,6 +126,8 @@ namespace Introspection {
 			// iOS 10 beta 2
 			case "GKBehavior":
 			case "MDLTransform":
+			// UISceneActivationRequestOptions started conforming to NSCopying oin Xcode 13
+			case "UISceneActivationRequestOptions":
 				switch (selectorName) {
 				case "copyWithZone:":
 					return true;
@@ -175,12 +174,12 @@ namespace Introspection {
 					return !TestRuntime.CheckXcodeVersion (9, 0);
 				}
 				break;
-#if !XAMCORE_4_0
+#if !NET
 			case "NSUrl":
 			case "ARQuickLookPreviewItem":
 				switch (selectorName) {
 				case "previewItemTitle":
-					// 'previewItemTitle' is inlined from the QLPreviewItem protocol and should be optional (fixed in XAMCORE_4_0)
+					// 'previewItemTitle' is inlined from the QLPreviewItem protocol and should be optional (fixed in .NET)
 					return true;
 				}
 				break;
@@ -196,12 +195,43 @@ namespace Introspection {
 			case "NEHotspotEapSettings": // Wireless Accessory Configuration is not supported in the simulator.
 			case "NEHotspotConfigurationManager":
 			case "NEHotspotHS20Settings":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
+			case "ARBodyTrackingConfiguration":
+			case "ARGeoTrackingConfiguration":
+			switch (selectorName) {
+				case "supportsAppClipCodeTracking": // Only available on device
+					return TestRuntime.IsSimulatorOrDesktop;
+				}
+				break;
+			case "CSImportExtension":
+				switch (selectorName) {
+				case "beginRequestWithExtensionContext:": 
+				case "updateAttributes:forFileAtURL:error:":
+					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
+						return true;
+					break;
+				}
+				break;
+			case "HKQuery":
+				switch (selectorName) {
+				case "predicateForVerifiableClinicalRecordsWithRelevantDateWithinDateInterval:": // not available in the sim
+					if (TestRuntime.IsSimulatorOrDesktop) // not available in the sim
+						return true;
+					break;
+				}
+				break;
 #endif
+			case "WKPreferences":
+				switch (selectorName) {
+				case "encodeWithCoder:": // from iOS 10
+					return true;
+				case "textInteractionEnabled": // xcode 13 renamed this to `isTextInteractionEnabled` but does not respond to the old one
+					return true;
+				}
+				break;
 			}
-#endif
 			// This ctors needs to be manually bound
 			switch (type.Name) {
 			case "AVCaptureVideoPreviewLayer":
@@ -245,10 +275,30 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "NSOperationQueue":
+				switch (selectorName) {
+				case "progress":
+					// The "progress" property comes from the NSProgressReporting protocol, where it was introduced a long time ago.
+					// Then NSOperationQueue started implementing the NSProgressReporting, but only in iOS 13, which means that
+					// this selector does not exist on earlier iOS versions, even to the managed property (from the protocol) claims so.
+					if (!TestRuntime.CheckXcodeVersion (11, 0))
+						return true;
+					break;
+				}
+				break;
 			case "NSImage":
 				switch (selectorName) {
 				case "initByReferencingFile:":
 					return true;
+				}
+				break;
+
+			case "OSLogMessageComponent":
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
 				}
 				break;
 			// Conform to SKWarpable
@@ -303,6 +353,14 @@ namespace Introspection {
 				switch (selectorName) {
 				case "initWithColumns:rows:sourcePositions:destPositions:":
 					return true;
+				}
+				break;
+			case "SKNode":
+				switch (selectorName) {
+				case "focusItemContainer":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
 				}
 				break;
 			case "INPriceRange":
@@ -491,6 +549,114 @@ namespace Introspection {
 				case "setTileFunction:":
 				case "maxTotalThreadsPerThreadgroup":
 				case "setMaxTotalThreadsPerThreadgroup:":
+				case "binaryArchives":
+				case "setBinaryArchives:":
+					return true;
+				}
+				break;
+			case "MTLBlitPassDescriptor":
+				switch (selectorName) {
+				case "sampleBufferAttachments":
+					return true;
+				}
+				break;
+			case "MTLBlitPassSampleBufferAttachmentDescriptor":
+				switch (selectorName) {
+				case "endOfEncoderSampleIndex":
+				case "setEndOfEncoderSampleIndex:":
+				case "sampleBuffer":
+				case "setSampleBuffer:":
+				case "startOfEncoderSampleIndex":
+				case "setStartOfEncoderSampleIndex:":
+					return true;
+				}
+				break;
+			case "MTLComputePassDescriptor":
+				switch (selectorName) {
+				case "dispatchType":
+				case "setDispatchType:":
+				case "sampleBufferAttachments":
+					return true;
+				}
+				break;
+			case "MTLComputePassSampleBufferAttachmentDescriptor": 
+				switch (selectorName) {
+				case "sampleBuffer":
+				case "setSampleBuffer:":
+				case "startOfEncoderSampleIndex":
+				case "setStartOfEncoderSampleIndex:":
+				case "endOfEncoderSampleIndex":
+				case "setEndOfEncoderSampleIndex:":
+					return true;
+				}
+				break;
+			case "MTLCounterSampleBufferDescriptor":
+				switch (selectorName) {
+				case "counterSet":
+				case "setCounterSet:":
+				case "label":
+				case "setLabel:":
+				case "sampleCount":
+				case "setSampleCount:":
+				case "storageMode":
+				case "setStorageMode:":
+					return true;
+				}
+				break;
+			case "MTLLinkedFunctions":
+				switch (selectorName) {
+				case "binaryFunctions":
+				case "setBinaryFunctions:":
+				case "functions":
+				case "setFunctions:":
+				case "groups":
+				case "setGroups:":
+					return true;
+				}
+				break;
+			case "MTLRenderPassSampleBufferAttachmentDescriptor":
+				switch (selectorName) {
+				case "endOfFragmentSampleIndex":
+				case "setEndOfFragmentSampleIndex:":
+				case "endOfVertexSampleIndex":
+				case "setEndOfVertexSampleIndex:":
+				case "sampleBuffer":
+				case "setSampleBuffer:":
+				case "startOfFragmentSampleIndex":
+				case "setStartOfFragmentSampleIndex:":
+				case "startOfVertexSampleIndex":
+				case "setStartOfVertexSampleIndex:":
+					return true;
+				}
+				break;
+			case "MTLIntersectionFunctionTableDescriptor":
+				switch (selectorName) {
+				case "functionCount":
+				case "setFunctionCount:":
+					return true;
+				}
+				break;
+			case "MTLResourceStatePassDescriptor":
+				switch (selectorName) {
+				case "sampleBufferAttachments":
+					return true;
+				}
+				break;
+			case "MTLResourceStatePassSampleBufferAttachmentDescriptor":
+				switch (selectorName) {
+				case "endOfEncoderSampleIndex":
+				case "setEndOfEncoderSampleIndex:":
+				case "sampleBuffer":
+				case "setSampleBuffer:":
+				case "startOfEncoderSampleIndex":
+				case "setStartOfEncoderSampleIndex:":
+					return true;
+				}
+				break;
+			case "MTLVisibleFunctionTableDescriptor":
+				switch (selectorName) {
+				case "functionCount":
+				case "setFunctionCount:":
 					return true;
 				}
 				break;
@@ -498,6 +664,16 @@ namespace Introspection {
 				switch (selectorName) {
 				case "isLoopingEnabled":
 					return true;
+				}
+				break;
+			case "NSMenu":
+				switch (selectorName) {
+				case "appearance":
+				case "setAppearance:":
+				case "effectiveAppearance":
+					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
+						return true;
+					break;
 				}
 				break;
 			case "NSQueryGenerationToken": // A test was added in monotouch tests to ensure the selector works
@@ -610,6 +786,13 @@ namespace Introspection {
 					return true;
 				}
 				break;
+			case "CPMessageListItem":
+				switch (selectorName) {
+				case "initWithConversationIdentifier:text:leadingConfiguration:trailingConfiguration:detailText:trailingText:":
+				case "initWithFullName:phoneOrEmailAddress:leadingConfiguration:trailingConfiguration:detailText:trailingText:":
+					return true;
+				}
+				break;
 			case "VNFaceLandmarkRegion":
 			case "VNFaceLandmarks":
 			case "PHLivePhoto":
@@ -619,6 +802,12 @@ namespace Introspection {
 				case "requestRevision":
 					// Conformance added in Xcode 11
 					if (!TestRuntime.CheckXcodeVersion (11, 0))
+						return true;
+					break;
+				case "objectWithItemProviderData:typeIdentifier:error:":
+				case "readableTypeIdentifiersForItemProvider":
+					// Conformance added in Xcode 12
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
 						return true;
 					break;
 				}
@@ -642,6 +831,17 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "MLDictionaryFeatureProvider":
+			case "MLMultiArray":
+			case "MLFeatureValue":
+			case "MLSequence":
+				switch (selectorName) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch))
+						return true;
+					break;
+				}
+				break;
 			case "BGTaskScheduler":
 				switch (selectorName) {
 				case "sharedScheduler":
@@ -655,7 +855,7 @@ namespace Introspection {
 				case "defaultBody2DSkeletonDefinition":
 				case "defaultBody3DSkeletonDefinition":
 					// This selector does not exist in the simulator
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					break;
 				}
@@ -669,6 +869,99 @@ namespace Introspection {
 					break;
 				}
 				break;
+			case "MTLCommandBufferDescriptor":
+				switch (selectorName) {
+				case "errorOptions":
+				case "setErrorOptions:":
+				case "retainedReferences":
+				case "setRetainedReferences:":
+					// iOS 15 sim (and macOS 12) fails, API added in 14.0
+					if (TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
+				}
+				break;
+			case "NSTask":
+				// category, NSTask won't respond -> @interface NSTask (NSTaskConveniences)
+				if (selectorName == "waitUntilExit")
+					return true;
+				break;
+			case "NSTextStorage":
+				switch (selectorName) {
+				// declared in a superclass, and implemented in a concrete subclass, so it doesn't show up during inspection of NSTextStorage itself.
+				case "initWithString:":
+					return true;
+				}
+				break;
+			case "MPSGraphCompilationDescriptor":
+				// Runtime lookup doesn't work, but executing it works fine.
+				return true;
+			case "MPSImageDescriptor":
+				switch (selectorName) {
+				case "copyWithZone:":
+					if (!TestRuntime.CheckXcodeVersion (10, 0))
+						return true;
+					break;
+				}
+				break;
+			case "UIControl":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "contextMenuInteraction:configurationForMenuAtLocation:":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+			case "UISceneConnectionOptions":
+#if __MACCATALYST__
+				switch (selectorName) {
+				case "shortcutItem":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+#endif
+				break;
+#if NET
+			// Incorrect attributes in inlined protocol selectors - https://github.com/xamarin/xamarin-macios/issues/14802
+			case "NSTextAttachment":
+				switch (selectorName) {
+				case "attachmentBoundsForAttributes:location:textContainer:proposedLineFragment:position:":
+				case "imageForBounds:attributes:location:textContainer:":
+				case "viewProviderForParentView:location:textContainer:":
+					return true;
+				}
+				break;
+			// Incorrect attributes in get/set selectors - https://github.com/xamarin/xamarin-macios/issues/14802
+			case "CBManager":
+				switch (selectorName) {
+				case "authorization":
+				case "authorizations":
+					return true;
+				}
+				break;
+			case "NEAppProxyFlow":
+				switch (selectorName) {
+				case "networkInterface":
+				case "setNetworkInterface:":
+					return true;
+				}
+				break;
+			case "WKPreferences":
+				switch (selectorName) {
+				case "setTextInteractionEnabled:":
+					return true;
+				}
+				break;
+			case "MidiCISession":
+				switch (selectorName) {
+				case "midiDestination":
+					return true;
+				}
+				break;
+#endif
 			}
 
 			// old binding mistake
@@ -764,7 +1057,11 @@ namespace Introspection {
 			var fi = type.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 			if (fi == null)
 				return IntPtr.Zero; // e.g. *Delegate
+#if NET
+			return (NativeHandle) fi.GetValue (null);
+#else
 			return (IntPtr) fi.GetValue (null);
+#endif
 		}
 
 		[Test]
@@ -816,7 +1113,7 @@ namespace Introspection {
 				bool result = bool_objc_msgSend_IntPtr (class_ptr, responds_handle, Selector.GetHandle (name));
 				bool response = CheckResponse (result, t, m, ref name);
 				if (!response)
-					ReportError ("Selector not found for {0}", name);
+					ReportError ("Selector not found for {0} in {1} on {2}", name, m, t.FullName);
 				n++;
 			}
 		}
@@ -879,6 +1176,9 @@ namespace Introspection {
 			case "initWithUUID:identifier:":
 			case "initWithUUID:major:identifier:":
 			case "initWithUUID:major:minor:identifier:":
+			// Intents
+			case "initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isMe:suggestionType:":
+			case "initWithPersonHandle:nameComponents:displayName:image:contactIdentifier:customIdentifier:isContactSuggestion:suggestionType:":
 			// NEHotspotConfiguration
 			case "initWithSSID:":
 			case "initWithSSID:passphrase:isWEP:":
@@ -889,8 +1189,23 @@ namespace Introspection {
 			case "initWithMinCenterCoordinateDistance:":
 			case "initExcludingCategories:":
 			case "initIncludingCategories:":
+			// Vision
+			case "initWithCenter:diameter:":
+			case "initWithCenter:radius:":
+			case "initWithR:theta:":
+			// NSImage
+			case "initWithDataIgnoringOrientation:":
 				var mi = m as MethodInfo;
 				return mi != null && !mi.IsPublic && mi.ReturnType.Name == "IntPtr";
+			// NSAppleEventDescriptor
+			case "initListDescriptor":
+			case "initRecordDescriptor":
+			// SCContentFilter
+			case "initWithDisplay:excludingApplications:exceptingWindows:":
+			case "initWithDisplay:excludingWindows:":
+			case "initWithDisplay:includingApplications:exceptingWindows:":
+			case "initWithDisplay:includingWindows:":
+				return true;
 			default:
 				return false;
 			}
@@ -930,7 +1245,7 @@ namespace Introspection {
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 				if (fi == null)
 					continue; // e.g. *Delegate
-				IntPtr class_ptr = (IntPtr) fi.GetValue (null);
+				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 				
 				foreach (var m in t.GetMethods (BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static)) {
 					if (SkipDueToAttribute (m))

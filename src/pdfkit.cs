@@ -26,7 +26,6 @@
 //
 // PdfKit.cs: Bindings for the PdfKit API
 //
-#if MONOMAC || (IOS && XAMCORE_2_0)
 
 using System;
 #if MONOMAC
@@ -50,6 +49,10 @@ using NSPrintOperation = Foundation.NSObject;
 using Foundation;
 using ObjCRuntime;
 using CoreGraphics;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 // Verify/Test Delegate Models
 // Check for missing NullAllowed on all object properties
@@ -317,6 +320,20 @@ namespace PdfKit {
 		Push,
 	}
 
+	[Native]
+	[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+	public enum PdfAccessPermissions : ulong
+	{
+		LowQualityPrinting = (1uL << 0),
+		HighQualityPrinting = (1uL << 1),
+		DocumentChanges = (1uL << 2),
+		DocumentAssembly = (1uL << 3),
+		ContentCopying = (1uL << 4),
+		ContentAccessibility = (1uL << 5),
+		Commenting = (1uL << 6),
+		FormFieldEntry = (1uL << 7),
+	}
+
 	[Mac (10,13)]
 	[iOS (11,0)]
 	[Static]
@@ -411,6 +428,10 @@ namespace PdfKit {
 
 		[Field ("PDFDocumentUserPasswordOption", "+PDFKit")]
 		NSString UserPasswordKey { get; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Field ("PDFDocumentAccessPermissionsOption", "+PDFKit")]
+		NSString AccessPermissionsKey { get; }
 	}
 
 	[Mac (10,13)]
@@ -420,6 +441,9 @@ namespace PdfKit {
 
 		string OwnerPassword { get; set; }
 		string UserPassword { get; set; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		string AccessPermissions { get; set; }
 	}
 
 	[Mac (10,13)]
@@ -454,9 +478,7 @@ namespace PdfKit {
 
 	[iOS (11,0)]
 	[BaseType (typeof (NSObject), Name = "PDFAction")]
-#if XAMCORE_2_0
 	[Abstract]
-#endif
 	interface PdfAction : NSCopying {
 		//This is an abstract superclass with no public init - should it have a private constructor??
 		//As it is, I can create instances, that segfault when you access the type method.
@@ -472,7 +494,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithDestination:")]
-		IntPtr Constructor (PdfDestination destination);
+		NativeHandle Constructor (PdfDestination destination);
 
 		[Export ("destination")]
 		PdfDestination Destination { get; set; }
@@ -484,7 +506,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithName:")]
-		IntPtr Constructor (PdfActionNamedName name);
+		NativeHandle Constructor (PdfActionNamedName name);
 
 		[Export ("name")]
 		PdfActionNamedName Name { get; set; }
@@ -496,7 +518,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithPageIndex:atPoint:fileURL:")]
-		IntPtr Constructor (nint pageIndex, CGPoint point, NSUrl fileUrl);
+		NativeHandle Constructor (nint pageIndex, CGPoint point, NSUrl fileUrl);
 
 		[Export ("pageIndex")]
 		nint PageIndex { get; set; }
@@ -515,7 +537,7 @@ namespace PdfKit {
 		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
 		[Export ("init")]
 		[DesignatedInitializer]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 		
 		//NSArray of NSString
 		[Export ("fields"), NullAllowed]
@@ -531,7 +553,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("URL"), NullAllowed]
 		NSUrl Url { get; set; }
@@ -544,26 +566,30 @@ namespace PdfKit {
 		[Mac (10,13)]
 		[Export ("initWithBounds:forType:withProperties:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGRect bounds, NSString annotationType, [NullAllowed] NSDictionary properties);
+		NativeHandle Constructor (CGRect bounds, NSString annotationType, [NullAllowed] NSDictionary properties);
 
 		[Mac (10,13)]
-		[Wrap ("this (bounds, annotationType.GetConstant (), properties)")]
-		IntPtr Constructor (CGRect bounds, PdfAnnotationKey annotationType, [NullAllowed] NSDictionary properties);
+		[Wrap ("this (bounds, annotationType.GetConstant ()!, properties)")]
+		NativeHandle Constructor (CGRect bounds, PdfAnnotationKey annotationType, [NullAllowed] NSDictionary properties);
 
 		[Deprecated (PlatformName.iOS, 11, 0, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10, 12, message: "Use '.ctor (CGRect, PDFAnnotationKey, NSDictionary)' instead.")]
+		[NoMacCatalyst]
 		[Export ("initWithBounds:")]
-		IntPtr Constructor (CGRect bounds);
+		NativeHandle Constructor (CGRect bounds);
 
 		[Export ("page")]
+		[NullAllowed]
 		PdfPage Page { get; set; }
 
-#if XAMCORE_4_0
+#if NET
 		[Protected]
 		[Export ("type")]
+		[NullAllowed]
 		NSString Type { get; set; }
 #else
 		[Export ("type")]
+		[NullAllowed]
 		string Type { get; set; }
 #endif
 
@@ -571,12 +597,15 @@ namespace PdfKit {
 		CGRect Bounds { get; set; }
 		
 		[Export ("modificationDate")]
+		[NullAllowed]
 		NSDate ModificationDate { get; set; }
 
 		[Export ("userName")]
+		[NullAllowed]
 		string UserName { get; set; }
 
 		[Export ("popup")]
+		[NullAllowed]
 #if MONOMAC
 		PdfAnnotationPopup Popup { get; set; }
 #else
@@ -590,26 +619,32 @@ namespace PdfKit {
 		bool ShouldPrint { get; set; }
 
 		[Export ("border")]
+		[NullAllowed]
 		PdfBorder Border { get; set; }
 
 		[Export ("color")]
 		NSColor Color { get; set; }
 
+		[NoiOS]
+		[NullAllowed]
 		[Deprecated (PlatformName.MacOSX, 10, 13)]
 		[Export ("mouseUpAction")]
 		PdfAction MouseUpAction { get; set; }
 
 		[Export ("contents")]
+		[NullAllowed]
 		string Contents { get; set; }
 		
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("toolTip")]
+		[NullAllowed]
 		string ToolTip { get; }
 
 		[Export ("hasAppearanceStream")]
 		bool HasAppearanceStream { get; }
 
+		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("removeAllAppearanceStreams")]
 		void RemoveAllAppearanceStreams ();
@@ -648,7 +683,7 @@ namespace PdfKit {
 		bool SetValue (bool boolean, NSString key);
 
 		[Mac (10,12)]
-		[Wrap ("SetValue (boolean, key.GetConstant ())")]
+		[Wrap ("SetValue (boolean, key.GetConstant ()!)")]
 		bool SetValue (bool boolean, PdfAnnotationKey key);
 
 		[Protected]
@@ -657,7 +692,7 @@ namespace PdfKit {
 		bool SetValue (CGRect rect, NSString key);
 
 		[Mac (10,12)]
-		[Wrap ("SetValue (rect, key.GetConstant ())")]
+		[Wrap ("SetValue (rect, key.GetConstant ()!)")]
 		bool SetValue (CGRect rect, PdfAnnotationKey key);
 
 		[Mac (10,13)]
@@ -670,7 +705,7 @@ namespace PdfKit {
 		void RemoveValue (NSString key);
 
 		[Mac (10,12)]
-		[Wrap ("RemoveValue (key.GetConstant ())")]
+		[Wrap ("RemoveValue (key.GetConstant ()!)")]
 		void RemoveValue (PdfAnnotationKey key);
 
 		// PDFAnnotation (PDFAnnotationUtilities) Category
@@ -926,7 +961,7 @@ namespace PdfKit {
 		[Export ("paths")]
 		NSBezierPath [] Paths { get; }
 
-#if !XAMCORE_4_0
+#if !NET
 		[Export ("addBezierPath:")]
 		void AddBezierPathpath (NSBezierPath path);
 
@@ -980,11 +1015,7 @@ namespace PdfKit {
 	[BaseType (typeof (PdfAnnotation), Name = "PDFAnnotationMarkup")]
 	interface PdfAnnotationMarkup {
 		[Export ("quadrilateralPoints", ArgumentSemantic.Assign), NullAllowed]
-#if XAMCORE_2_0
 		NSArray WeakQuadrilateralPoints { get; set; }
-#else
-		NSArray QuadrilateralPoints { get; set; }
-#endif
 
 		[Export ("markupType")]
 		PdfMarkupType MarkupType { get; set; }
@@ -1067,11 +1098,7 @@ namespace PdfKit {
 		nfloat LineWidth { get; set; }
 
 		[Export ("dashPattern", ArgumentSemantic.Assign), NullAllowed]
-#if XAMCORE_2_0
 		NSArray WeakDashPattern { get; set; }
-#else
-		NSArray DashPattern { get; set; }
-#endif
 
 		[Mac (10,13)]
 		[Export ("borderKeyValues", ArgumentSemantic.Copy)]
@@ -1091,9 +1118,10 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithPage:atPoint:")]
-		IntPtr Constructor (PdfPage page, CGPoint point);
+		NativeHandle Constructor (PdfPage page, CGPoint point);
 
 		[Export ("page")]
+		[NullAllowed]
 		PdfPage Page { get; }
 
 		[Export ("point")]
@@ -1153,45 +1181,62 @@ namespace PdfKit {
 		[Notification]
 		NSString DidEndPageWriteNotification { get; }
 
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Field ("PDFDocumentFoundSelectionKey")]
+		NSString FoundSelectionKey { get; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Field ("PDFDocumentPageIndexKey")]
+		NSString PageIndexKey { get; }
+
 		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
 		[Export ("init")]
 		[DesignatedInitializer]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("initWithURL:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("initWithData:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSData data);
+		NativeHandle Constructor (NSData data);
 
 		[Export ("documentURL")]
+		[NullAllowed]
 		NSUrl DocumentUrl { get; }
 
 		[Export ("documentRef")]
+		[NullAllowed]
 		CGPDFDocument Document { get; }
 
 		[Advice ("Use the strongly typed '[Get|Set]DocumentAttributes' instead.")]
 		[Export ("documentAttributes", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSDictionary DocumentAttributes { get; set; }
+
+		[iOS (15,0), Mac (12,0), MacCatalyst (15,0)]
+		[Export ("accessPermissions")]
+		PdfAccessPermissions AccessPermissions { get; }
 
 		[Wrap ("new PdfDocumentAttributes (DocumentAttributes)")]
 		PdfDocumentAttributes GetDocumentAttributes ();
 
-		[Wrap ("DocumentAttributes = attributes?.Dictionary")]
-		void SetDocumentAttributes (PdfDocumentAttributes attributes);
+		[Wrap ("DocumentAttributes = attributes?.GetDictionary ()")]
+		void SetDocumentAttributes ([NullAllowed] PdfDocumentAttributes attributes);
 
-#if XAMCORE_4_0 || IOS
+#if NET || IOS
 		[Export ("majorVersion")]
 		nint MajorVersion { get; }
 
 		[Export ("minorVersion")]
 		nint MinorVersion { get; }
 #else
+		[NoiOS]
 		[Export ("majorVersion")]
 		int MajorVersion { get; } /* int, not NSInteger */
 
+		[NoiOS]
 		[Export ("minorVersion")]
 		int MinorVersion { get; } /* int, not NSInteger */
 #endif
@@ -1235,6 +1280,7 @@ namespace PdfKit {
 		PdfDocumentPermissions PermissionsStatus { get; }
 
 		[Export ("string")]
+		[NullAllowed]
 		string Text { get; }
 		
 		[Export ("delegate", ArgumentSemantic.Assign), NullAllowed]
@@ -1245,29 +1291,31 @@ namespace PdfKit {
 		PdfDocumentDelegate Delegate { get; set; }
 		
 		[Export ("dataRepresentation")]
+		[return: NullAllowed]
 		NSData GetDataRepresentation ();
 
 		[Export ("dataRepresentationWithOptions:")]
+		[return: NullAllowed]
 		NSData GetDataRepresentation (NSDictionary options);
 
 		[Export ("writeToFile:")]
 		bool Write (string path);
 
 		[Export ("writeToFile:withOptions:")]
-		bool Write (string path, NSDictionary options);
+		bool Write (string path, [NullAllowed] NSDictionary options);
 
 		[Mac (10,13)]
-		[Wrap ("Write (path, options.Dictionary)")]
+		[Wrap ("Write (path, options.GetDictionary ()!)")]
 		bool Write (string path, PdfDocumentWriteOptions options);
 
 		[Export ("writeToURL:")]
 		bool Write (NSUrl url);
 
 		[Export ("writeToURL:withOptions:")]
-		bool Write (NSUrl url, NSDictionary options);
+		bool Write (NSUrl url, [NullAllowed] NSDictionary options);
 
 		[Mac (10,13)]
-		[Wrap ("Write (url, options?.Dictionary)")]
+		[Wrap ("Write (url, options.GetDictionary ()!)")]
 		bool Write (NSUrl url, PdfDocumentWriteOptions options);
 
 		[NullAllowed]
@@ -1275,12 +1323,14 @@ namespace PdfKit {
 		PdfOutline OutlineRoot { get; set; }
 
 		[Export ("outlineItemForSelection:")]
+		[return: NullAllowed]
 		PdfOutline OutlineItem (PdfSelection selection);
 
 		[Export ("pageCount")]
 		nint PageCount { get; }
 
 		[Export ("pageAtIndex:")]
+		[return: NullAllowed]
 		PdfPage GetPage (nint index);
 
 		[Export ("indexForPage:")]
@@ -1302,7 +1352,7 @@ namespace PdfKit {
 		Type PageType { get; }
 
 		[Export ("findString:withOptions:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use 'Find (string, NSStringCompareOptions)' instead.")]
 		PdfSelection [] Find (string text, nint options);
 
@@ -1311,31 +1361,37 @@ namespace PdfKit {
 		PdfSelection [] Find (string text, NSStringCompareOptions compareOptions);
 
 		[Export ("beginFindString:withOptions:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use 'FindAsync (string, NSStringCompareOptions)' instead.")]
+		[return: NullAllowed]
 		void FindAsync (string text, nint options);
 
 		[Wrap ("FindAsync (text: text, options: (nint) (int) compareOptions)", IsVirtual = true)]
 #endif
+		[return: NullAllowed]
 		void FindAsync (string text, NSStringCompareOptions compareOptions);
 
 		[Export ("beginFindStrings:withOptions:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use 'FindAsync (string [], NSStringCompareOptions)' instead.")]
+		[return: NullAllowed]
 		void FindAsync (string [] text, nint options);
 
 		[Wrap ("FindAsync (text: text, options: (nint) (int) compareOptions)", IsVirtual = true)]
 #endif
+		[return: NullAllowed]
 		void FindAsync (string [] text, NSStringCompareOptions compareOptions);
 
 		[Export ("findString:fromSelection:withOptions:")]
-#if MONOMAC && !XAMCORE_4_0
+#if MONOMAC && !NET
 		[Obsolete ("Use 'Find (string, PdfSelection, NSStringCompareOptions)' instead.")]
-		PdfSelection Find (string text, PdfSelection selection, nint options);
+		[return: NullAllowed]
+		PdfSelection Find (string text, [NullAllowed] PdfSelection selection, nint options);
 
 		[Wrap ("Find (text: text, selection: selection, options: (nint) (int) compareOptions)", IsVirtual = true)]
 #endif
-		PdfSelection Find (string text, PdfSelection selection, NSStringCompareOptions compareOptions);
+		[return: NullAllowed]
+		PdfSelection Find (string text, [NullAllowed] PdfSelection selection, NSStringCompareOptions compareOptions);
 
 		[Export ("isFinding")]
 		bool IsFinding { get; }
@@ -1344,12 +1400,15 @@ namespace PdfKit {
 		void CancelFind ();
 
 		[Export ("selectionForEntireDocument")]
+		[return: NullAllowed]
 		PdfSelection SelectEntireDocument ();
 
 		[Export ("selectionFromPage:atPoint:toPage:atPoint:")]
+		[return: NullAllowed]
 		PdfSelection GetSelection (PdfPage startPage, CGPoint startPoint, PdfPage endPage, CGPoint endPoint);
 
 		[Export ("selectionFromPage:atCharacterIndex:toPage:atCharacterIndex:")]
+		[return: NullAllowed]
 		PdfSelection GetSelection (PdfPage startPage, nint startCharIndex, PdfPage endPage, nint endCharIndex);
 
 		[NoiOS]
@@ -1388,7 +1447,7 @@ namespace PdfKit {
 		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10,12, message: "Use 'GetClassForAnnotationType' instead.")]
 		[Export ("classForAnnotationClass:"), DelegateName ("ClassForAnnotationClassDelegate"), DefaultValue (null)]
-#if XAMCORE_4_0
+#if NET
 		Class GetClassForAnnotationClass (Class sender);
 #else
 		Class ClassForAnnotationClass (Class sender);
@@ -1415,9 +1474,10 @@ namespace PdfKit {
 		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
 		[Export ("init")]
 		[DesignatedInitializer]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[Export ("document")]
+		[NullAllowed]
 		PdfDocument Document { get; }
 
 		[Export ("parent"), NullAllowed]
@@ -1440,6 +1500,7 @@ namespace PdfKit {
 		void RemoveFromParent ();
 
 		[Export ("label")]
+		[NullAllowed]
 		string Label { get; set; }
 
 		[Export ("isOpen")]
@@ -1461,11 +1522,11 @@ namespace PdfKit {
 		// - (instancetype)init NS_DESIGNATED_INITIALIZER;
 		[Export ("init")]
 		[DesignatedInitializer]
-		IntPtr Constructor ();
+		NativeHandle Constructor ();
 
 		[DesignatedInitializer]
 		[Export ("initWithImage:")]
-		IntPtr Constructor (NSImage image);
+		NativeHandle Constructor (NSImage image);
 
 		[Export ("document"), NullAllowed]
 		PdfDocument Document { get; }
@@ -1534,9 +1595,11 @@ namespace PdfKit {
 		nint CharacterCount { get; }
 
 		[Export ("string")]
+		[NullAllowed]
 		string Text { get; }
 
 		[Export ("attributedString")]
+		[NullAllowed]
 		NSAttributedString AttributedString { get; }
 
 		[Export ("characterBoundsAtIndex:")]
@@ -1576,7 +1639,7 @@ namespace PdfKit {
 
 		[DesignatedInitializer]
 		[Export ("initWithDocument:")]
-		IntPtr Constructor (PdfDocument document);
+		NativeHandle Constructor (PdfDocument document);
 
 		[Export ("pages")]
 		PdfPage [] Pages { get; }
@@ -1630,7 +1693,7 @@ namespace PdfKit {
 	interface PdfThumbnailView : NSCoding {
 
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Field ("PDFThumbnailViewDocumentEditedNotification", "+PDFKit")]
 		[Notification]
@@ -1657,9 +1720,11 @@ namespace PdfKit {
 
 		[NoiOS]
 		[Export ("labelFont")]
+		[NullAllowed]
 		NSFont LabelFont { get; set; }
 
 		[Export ("backgroundColor", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSColor BackgroundColor { get; set; }
 
 		[NoiOS]
@@ -1684,7 +1749,7 @@ namespace PdfKit {
 #endif
 	{
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect frame);
+		NativeHandle Constructor (CGRect frame);
 
 		[Export ("document"), NullAllowed]
 		PdfDocument Document { get; set; }
@@ -1694,45 +1759,47 @@ namespace PdfKit {
 	
 		//Verify
 		[Export ("goToFirstPage:")]
-		void GoToFirstPage (NSObject sender);
+		void GoToFirstPage ([NullAllowed] NSObject sender);
 
 		[Export ("canGoToLastPage")]
 		bool CanGoToLastPage { get; }
 
 		[Export ("goToLastPage:")]
-		void GoToLastPage (NSObject sender);
+		void GoToLastPage ([NullAllowed] NSObject sender);
 
 		[Export ("canGoToNextPage")]
 		bool CanGoToNextPage { get; }
 
 		[Export ("goToNextPage:")]
-		void GoToNextPage (NSObject sender);
+		void GoToNextPage ([NullAllowed] NSObject sender);
 
 		[Export ("canGoToPreviousPage")]
 		bool CanGoToPreviousPage { get; }
 
 		[Export ("goToPreviousPage:")]
-		void GoToPreviousPage (NSObject sender);
+		void GoToPreviousPage ([NullAllowed] NSObject sender);
 
 		[Export ("canGoBack")]
 		bool CanGoBack { get; }
 
 		[Export ("goBack:")]
-		void GoBack (NSObject sender);
+		void GoBack ([NullAllowed] NSObject sender);
 
 		[Export ("canGoForward")]
 		bool CanGoForward { get; }
 
 		[Export ("goForward:")]
-		void GoForward (NSObject sender);
+		void GoForward ([NullAllowed] NSObject sender);
 
 		[Export ("currentPage")]
+		[NullAllowed]
 		PdfPage CurrentPage { get; }
 
 		[Export ("goToPage:")]
 		void GoToPage (PdfPage page);
 
 		[Export ("currentDestination")]
+		[NullAllowed]
 		PdfDestination CurrentDestination { get; }
 
 		[Export ("goToDestination:")]
@@ -1778,6 +1845,7 @@ namespace PdfKit {
 		[Export ("greekingThreshold")]
 		nfloat GreekingThreshold { get; set; }
 
+		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("takeBackgroundColorFrom:")]
 		void TakeBackgroundColor (NSObject sender);
@@ -1819,13 +1887,13 @@ namespace PdfKit {
 		nfloat MaxScaleFactor { get; set; }
 
 		[Export ("zoomIn:")]
-		void ZoomIn (NSObject sender);
+		void ZoomIn ([NullAllowed] NSObject sender);
 
 		[Export ("canZoomIn")]
 		bool CanZoomIn { get; }
 
 		[Export ("zoomOut:")]
-		void ZoomOut (NSObject sender);
+		void ZoomOut ([NullAllowed] NSObject sender);
 
 		[Export ("canZoomOut")]
 		bool CanZoomOut { get; }
@@ -1852,10 +1920,11 @@ namespace PdfKit {
 		void PerformAction (PdfAction action);
 
 		[Export ("currentSelection")]
+		[NullAllowed]
 		PdfSelection CurrentSelection { get; set; }
 
 		[Export ("setCurrentSelection:animate:")]
-		void SetCurrentSelection (PdfSelection selection, bool animate);
+		void SetCurrentSelection ([NullAllowed] PdfSelection selection, bool animate);
 
 		[Export ("clearSelection")]
 		void ClearSelection ();
@@ -1864,11 +1933,13 @@ namespace PdfKit {
 		void SelectAll ([NullAllowed] NSObject sender);
 
 		[Export ("scrollSelectionToVisible:")]
-		void ScrollSelectionToVisible (NSObject sender);
+		void ScrollSelectionToVisible ([NullAllowed] NSObject sender);
 	
 		[Export ("highlightedSelections")]
+		[NullAllowed]
 		PdfSelection [] HighlightedSelections { get; set; }
 
+		[NoiOS]
 		[Deprecated (PlatformName.MacOSX, 10, 12)]
 		[Export ("takePasswordFrom:")]
 		void TakePasswordFrom (NSObject sender);
@@ -1903,6 +1974,7 @@ namespace PdfKit {
 		void Print (NSPrintInfo printInfo, bool doRotate, PdfPrintScalingMode scaleMode);
 
 		[Export ("pageForPoint:nearest:")]
+		[return: NullAllowed]
 		PdfPage GetPage (CGPoint point, bool nearest);
 
 		[Export ("convertPoint:toPage:")]
@@ -1918,6 +1990,7 @@ namespace PdfKit {
 		CGRect ConvertRectangleFromPage (CGRect rect, PdfPage page);
 
 		[Export ("documentView")]
+		[NullAllowed]
 		NSView DocumentView { get; }
 
 		[Export ("layoutDocumentView")]
@@ -2046,4 +2119,3 @@ namespace PdfKit {
 	}
 
 }
-#endif // MONOMAC || (IOS && XAMCORE_2_0)

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MDLAnimatedValueTypes
 //
 // Authors:
@@ -12,7 +12,6 @@
 
 using System;
 using System.Linq;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 #if !MONOMAC
@@ -23,27 +22,34 @@ using MultipeerConnectivity;
 #endif
 using ModelIO;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-#if !__TVOS__
-using MonoTouch.MultipeerConnectivity;
-#endif
-using MonoTouch.UIKit;
-using MonoTouch.ModelIO;
-using MonoTouch.ObjCRuntime;
-#endif
-using OpenTK;
 using NUnit.Framework;
+using System.Runtime.InteropServices;
+
+#if NET
+using System.Numerics;
+using Vector2d = global::CoreGraphics.NVector2d;
+using Vector3d = global::CoreGraphics.NVector3d;
+using Vector4d = global::CoreGraphics.NVector4d;
+using Matrix4d = global::CoreGraphics.NMatrix4d;
+using Quaterniond = global::CoreGraphics.NQuaterniond;
+using Matrix4 = global::System.Numerics.Matrix4x4;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.ModelIO {
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class A_MDLAnimatedValueTypesTests {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
+#if MONOMAC
+			// ModelIO seems to be broken in Xcode 12.2 Beta 3 so disabling for now.
+			if (TestRuntime.CheckExactXcodeVersion (12, 2, beta: 3))
+				Assert.Inconclusive ("ModelIO is not working in Xcode 12.2 Beta 3");
+#endif
 			TestRuntime.AssertXcodeVersion (9, 0);
 		}
 
@@ -504,6 +510,23 @@ namespace MonoTouchFixtures.ModelIO {
 				var arrd = animatedQuat.GetQuaterniondValues (20);
 				Asserts.AreEqual (TestMatrices.QuaterniondArray, arrd, "C2");
 			} 
+		}
+
+		[Test]
+		public unsafe void OpenTKSizeOfTests ()
+		{
+			Assert.AreEqual (sizeof (Matrix4), Marshal.SizeOf (typeof (Matrix4)));
+			Assert.AreEqual (sizeof (Matrix4d), Marshal.SizeOf (typeof (Matrix4d)));
+
+			Assert.AreEqual (sizeof (Quaternion), Marshal.SizeOf (typeof (Quaternion)));
+			Assert.AreEqual (sizeof (Quaterniond), Marshal.SizeOf (typeof (Quaterniond)));
+
+			Assert.AreEqual (sizeof (Vector2), Marshal.SizeOf (typeof (Vector2)));
+			Assert.AreEqual (sizeof (Vector3), Marshal.SizeOf (typeof (Vector3)));
+			Assert.AreEqual (sizeof (Vector4), Marshal.SizeOf (typeof (Vector4)));
+			Assert.AreEqual (sizeof (Vector2d), Marshal.SizeOf (typeof (Vector2d)));
+			Assert.AreEqual (sizeof (Vector3d), Marshal.SizeOf (typeof (Vector3d)));
+			Assert.AreEqual (sizeof (Vector4d), Marshal.SizeOf (typeof (Vector4d)));
 		}
 
 	}

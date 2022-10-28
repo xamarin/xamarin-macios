@@ -9,14 +9,17 @@ using System.Security.Cryptography.X509Certificates;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using AudioToolbox;
 using AudioUnit;
 using CoreMedia;
 using CoreFoundation;
 using CoreGraphics;
 using CoreText;
+#if NET
+using CFNetwork;
+#else
 using CoreServices;
+#endif
 using CoreVideo;
 using Foundation;
 using ImageIO;
@@ -27,22 +30,9 @@ using Security;
 using VideoToolbox;
 using UIKit;
 using Network;
-#else
-using MonoTouch.AudioToolbox;
-using MonoTouch.CoreMedia;
-using MonoTouch.CoreFoundation;
-using MonoTouch.CoreGraphics;
-using MonoTouch.CoreServices;
-using MonoTouch.CoreText;
-using MonoTouch.CoreVideo;
-using MonoTouch.Foundation;
-using MonoTouch.ImageIO;
-using MonoTouch.SystemConfiguration;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Security;
-using MonoTouch.VideoToolbox;
-using MonoTouch.UIKit;
-using MonoTouch.Network;
+
+#if NET
+using GColorConversionInfoTriple = CoreGraphics.CGColorConversionInfoTriple;
 #endif
 
 namespace Introspection {
@@ -151,10 +141,16 @@ namespace Introspection {
 
 			public AttachableNativeObject (INativeObject obj)
 			{
+				if (obj == null)
+					throw new ArgumentNullException ("obj");
 				nativeObj = obj;
 			}
 
+#if NET
+			public NativeHandle Handle
+#else
 			public IntPtr Handle
+#endif
 			{
 				get { return nativeObj.Handle; }
 			}
@@ -191,6 +187,7 @@ namespace Introspection {
 			case "AudioFile": // does crash the tests
 			case "CFHTTPAuthentication":
 			case "CFHTTPStream":
+			case "CFType":
 			case "SystemSound": // does crash the tests
 			case "MusicPlayer": // does crash the tests
 			case "MusicTrack": // does crash the tests
@@ -243,6 +240,20 @@ namespace Introspection {
 			case "CGColorConverter":
 			case "OSLog": // c api, no need to check
 				return true;
+			case "SecIdentity": // hangs with xcode12.5 beta 2 while loading p12 file
+			case "SecIdentity2": // same (dupe logic)
+			case "Authorization":
+				return true;
+			case "VTCompressionSession":
+			case "VTSession":
+			case "VTFrameSilo":
+			case "VTMultiPassStorage":
+#if __TVOS__
+				// Causes a crash in a background thread.
+				if (Runtime.Arch == Arch.DEVICE)
+					return true;
+#endif
+				return false;
 			default:
  				return false;
 			}
@@ -259,6 +270,8 @@ namespace Introspection {
 			switch (t.Name) {
 			case "CFAllocator":
 				return CFAllocator.SystemDefault;
+			case "CFArray":
+				return Runtime.GetINativeObject<CFArray> (new NSArray ().Handle, false);
 			case "CFBundle":
 				var bundles = CFBundle.GetAll ();
 				if (bundles.Length > 0)
@@ -311,7 +324,11 @@ namespace Introspection {
 					return new CGDataConsumer (destData);
 				}
 			case "CGDataProvider":
+#if __MACCATALYST__
+				filename = Path.Combine ("Contents", "Resources", "xamarin1.png");
+#else
 				filename = "xamarin1.png";
+#endif
 				return new CGDataProvider (filename);
 			case "CGFont":
 				return CGFont.CreateWithFontName ("Courier New");
@@ -368,6 +385,12 @@ namespace Introspection {
 						ForegroundColorFromContext =  true,
 						Font = new CTFont ("ArialMT", 24)
 					}));
+#if __MACCATALYST__ || __MACOS__
+			case "CGEvent":
+				return new CGEvent ((CGEventSource) null);
+			case "CGEventSource":
+				return new CGEventSource (CGEventSourceStateID.CombinedSession);
+#endif
 			case "CGImageDestination":
 				var storage = new NSMutableData ();
 				return CGImageDestination.Create (new CGDataConsumer (storage), "public.png", 1);
@@ -376,7 +399,11 @@ namespace Introspection {
 				using (var value = new NSString ("value"))
 					return new CGImageMetadataTag (CGImageMetadataTagNamespaces.Exif, CGImageMetadataTagPrefixes.Exif, name, CGImageMetadataType.Default, value);
 			case "CGImageSource":
+#if __MACCATALYST__
+				filename = Path.Combine ("Contents", "Resources", "xamarin1.png");
+#else
 				filename = "xamarin1.png";
+#endif
 				return CGImageSource.FromUrl (NSUrl.FromFilename (filename));
 			case "SecPolicy":
 				return SecPolicy.CreateSslPolicy (false, null);
@@ -386,7 +413,7 @@ namespace Introspection {
 					var result = SecImportExport.ImportPkcs12 (farscape_pfx, options, out array);
 					if (result != SecStatusCode.Success)
 						throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0} due to {1}.", t.Name, result));
-					return new SecIdentity (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle));
+					return Runtime.GetINativeObject<SecIdentity> (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle), false);
 				}
 			case "SecTrust":
 				X509Certificate x = new X509Certificate (mail_google_com);
@@ -419,23 +446,19 @@ namespace Introspection {
 				CGColor[] cArray = { UIColor.Black.CGColor, UIColor.Clear.CGColor, UIColor.Blue.CGColor };
 				return new CGGradient (null, cArray);
 			case "CGImage":
+#if __MACCATALYST__
+				filename = Path.Combine ("Contents", "Resources", "xamarin1.png");
+#else
 				filename = "xamarin1.png";
+#endif
 				using (var dp = new CGDataProvider (filename))
 					return CGImage.FromPNG (dp, null, false, CGColorRenderingIntent.Default);
 			case "CGColor":
 				return UIColor.Black.CGColor;
 			case "CMClock":
-				CMClockError ce;
-				CMClock clock = CMClock.CreateAudioClock (out ce);
-				if (ce == CMClockError.None)
-					return clock;
-				throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0}.", t.Name));
+				return CMClock.HostTimeClock;
 			case "CMTimebase":
-				clock = CMClock.CreateAudioClock (out ce);
-				if (ce == CMClockError.None) {
-					return new CMTimebase (clock);
-				}
-				throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0}.", t.Name));
+				return new CMTimebase (CMClock.HostTimeClock);
 			case "CVPixelBufferPool":
 				return new CVPixelBufferPool (
 					new CVPixelBufferPoolSettings (),
@@ -457,7 +480,7 @@ namespace Introspection {
 					var result = SecImportExport.ImportPkcs12 (farscape_pfx, options, out array);
 					if (result != SecStatusCode.Success)
 						throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0} due to {1}.", t.Name, result));
-					return new SecIdentity2 (new SecIdentity (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle)));
+					return new SecIdentity2 (Runtime.GetINativeObject<SecIdentity> (array [0].LowlevelObjectForKey (SecImportExport.Identity.Handle), false));
 				}
 				
 			case "SecKey":
@@ -471,6 +494,10 @@ namespace Introspection {
 				}
 			case "SecAccessControl":
 				return new SecAccessControl (SecAccessible.WhenPasscodeSetThisDeviceOnly);
+#if __MACCATALYST__
+			case "Authorization":
+				return Security.Authorization.Create (AuthorizationFlags.Defaults);
+#endif
 			default:
 				throw new InvalidOperationException (string.Format ("Could not create the new instance for type {0}.", t.Name));
 			}
@@ -547,8 +574,11 @@ namespace Introspection {
 					&& !t.IsSubclassOf (DispatchSourceType) && !t.IsInterface && !t.IsAbstract);
 			foreach (var t in types) {
 				if (Skip (t))
-					continue; 
-				var obj = new AttachableNativeObject (GetINativeInstance (t));
+					continue;
+				var n = GetINativeInstance (t);
+				if (n == null)
+					Assert.Fail ("Could not create instance of '{0}'.", t);
+				var obj = new AttachableNativeObject (n);
 				Assert.That (obj.Handle, Is.Not.EqualTo (IntPtr.Zero), t.Name + ".Handle");
 				using (var attch = new CFString ("myAttch")) {
 					CMAttachmentMode otherMode;

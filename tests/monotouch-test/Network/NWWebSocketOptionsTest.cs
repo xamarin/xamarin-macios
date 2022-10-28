@@ -1,19 +1,9 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
-using System.Collections.Generic;
-using System.Threading;
-#if XAMCORE_2_0
+
 using CoreFoundation;
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
 
 using NUnit.Framework;
 
@@ -25,7 +15,7 @@ namespace MonoTouchFixtures.Network {
 
 		NWWebSocketOptions options;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]
@@ -78,7 +68,7 @@ namespace MonoTouchFixtures.Network {
 		public void TestMaxMessageSize ()
 		{
 			var defaultValue = options.MaximumMessageSize;
-			Assert.AreEqual (defaultValue, 0, "defaultValue");
+			Assert.AreEqual (defaultValue, (nuint) 0, "defaultValue");
 			nuint newValue = 40;
 			options.MaximumMessageSize = newValue;
 			Assert.AreEqual (newValue, options.MaximumMessageSize, "new value");

@@ -1,0 +1,2 @@
+## protectionClass is a `NSFileProtectionType` which is not available on macOS
+!missing-selector! CSSearchableIndex::initWithName:protectionClass: not bound

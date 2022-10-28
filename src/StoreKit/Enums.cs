@@ -1,3 +1,4 @@
+using Foundation;
 using ObjCRuntime;
 using System;
 
@@ -5,6 +6,7 @@ namespace StoreKit {
 
 	// typedef NSInteger SKPaymentTransactionState;
 	// StoreKit.framework/Headers/SKPaymentTransaction.h
+	[Watch (6, 2)]
 	[Native]
 	public enum SKPaymentTransactionState : long {
 		Purchasing,
@@ -17,7 +19,7 @@ namespace StoreKit {
 	// untyped enum and not used in API - so it _could_ be an `int`
 	// OTOH it's meant to be used with NSError.Code which is an NSInteger/nint
 	// StoreKit.framework/Headers/SKError.h
-	[Native]
+	[Native ("SKErrorCode")]
 	[ErrorDomain ("SKErrorDomain")]
 	public enum SKError : long {
 		Unknown,
@@ -31,7 +33,7 @@ namespace StoreKit {
 		CloudServiceNetworkConnectionFailed,
 		// iOS 10.3
 		CloudServiceRevoked,
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'SKError.CloudServiceRevoked' instead.")]
 		Revoked = CloudServiceRevoked,
 #endif
@@ -42,16 +44,26 @@ namespace StoreKit {
 		InvalidSignature,
 		MissingOfferParams,
 		InvalidOfferPrice,
+		OverlayCancelled = 15,
+
+		// iOS 14
+		OverlayInvalidConfiguration = 16,
+		OverlayTimeout = 17,
+		IneligibleForOffer = 18,
+		UnsupportedPlatform = 19,
+		// iOS 14.5
+		OverlayPresentedInBackgroundScene = 20,
 	}
 
 	// typedef NSInteger SKDownloadState;
-	// StoreKit.framework/Headers/SKDownload.h 
+	// StoreKit.framework/Headers/SKDownload.h
+	[Watch (6, 2)]
 	[Native]
 	public enum SKDownloadState : long {
 		Waiting, Active, Paused, Finished, Failed, Cancelled
 	}
 
-#if !MONOMAC || !XAMCORE_4_0
+	[Watch (7,0)]
 	[iOS (9,3)]
 	[Native]
 	public enum SKCloudServiceAuthorizationStatus : long {
@@ -61,6 +73,7 @@ namespace StoreKit {
 		Authorized
 	}
 
+	[Watch (7,0)]
 	[iOS (9,3)]
 	[Native]
 	public enum SKCloudServiceCapability : ulong {
@@ -71,15 +84,15 @@ namespace StoreKit {
 		AddToCloudMusicLibrary = 1 << 8
 	}
 
-	[iOS (11,0)][TV (11,0)][NoMac]
+	[iOS (11,0)][TV (11,0)][Mac (11,0)][NoWatch]
 	[Native]
 	public enum SKProductStorePromotionVisibility : long {
 		Default,
 		Show,
 		Hide,
 	}
-#endif
-	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+
+	[Watch (6, 2), iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
 	public enum SKProductPeriodUnit : ulong {
 		Day,
@@ -88,11 +101,19 @@ namespace StoreKit {
 		Year,
 	}
 
-	[iOS (11,2), TV (11,2), Mac (10,13,2)]
+	[Watch (6, 2), iOS (11,2), TV (11,2), Mac (10,13,2)]
 	[Native]
 	public enum SKProductDiscountPaymentMode : ulong {
 		PayAsYouGo,
 		PayUpFront,
 		FreeTrial,
+	}
+
+	[NoWatch, NoTV, NoMac, iOS (14,0)]
+	[MacCatalyst (14,0)]
+	[Native]
+	public enum SKOverlayPosition : long {
+		SKOverlayPositionBottom = 0,
+		Raised = 1,
 	}
 }

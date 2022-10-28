@@ -2,13 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 [assembly: Preserve (typeof (NSExpression), AllMembers = true)]
 
@@ -45,8 +42,8 @@ namespace MonoTouchFixtures.Foundation
 			}
 		}
 
-		[TestCase ("Foo", Result = "Foo")]
-		[TestCase (null, Result = null)]
+		[TestCase ("Foo", ExpectedResult = "Foo")]
+		[TestCase (null, ExpectedResult = null)]
 		public object FromConstant (object input)
 		{
 			NSObject value = null;
@@ -231,7 +228,7 @@ namespace MonoTouchFixtures.Foundation
 		public void AnyKeyPropertiesTest ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			var availableProperties = new List<string> { };
 			using (var expression = NSExpression.FromAnyKey ()) {

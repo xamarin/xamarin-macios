@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for GKOctree
 //
 // Authors:
@@ -8,14 +8,19 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if !__WATCHOS__ && XAMCORE_2_0
+#if !__WATCHOS__
 
 using System;
-using OpenTK;
 using NUnit.Framework;
 
 using Foundation;
 using GameplayKit;
+
+#if NET
+using System.Numerics;
+#else
+using OpenTK;
+#endif
 
 namespace MonoTouchFixtures.GamePlayKit {
 	[TestFixture]

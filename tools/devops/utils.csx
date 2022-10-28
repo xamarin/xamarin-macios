@@ -34,22 +34,32 @@ string DownloadWithGithubAuth (string uri)
 string manifest_url = null;
 string GetManifestUrl (string hash)
 {
-	if (manifest_url == null) {
-		var url = $"https://api.github.com/repos/xamarin/xamarin-macios/statuses/{hash}";
-		var json = JToken.Parse (DownloadWithGithubAuth (url));
-		var value = (JValue) ((JArray) json).Where ((v) => v ["context"].ToString () == "manifest").Select ((v) => v ["target_url"]).FirstOrDefault ();
-		manifest_url = (string) value?.Value;
-		if (manifest_url == null)
-			throw new Exception ($"Could not find the manifest for {hash}. Is the commit already built by CI?");
+	var page = 1;
+	var hasContent = true;
+	while (manifest_url == null && hasContent) {
+		var url = $"https://api.github.com/repos/xamarin/xamarin-macios/statuses/{hash}?page={page}";
+		var json = (JArray) JToken.Parse (DownloadWithGithubAuth (url));
+		hasContent &= json.HasValues;
+		if (hasContent) {
+			manifest_url = (string) ((JValue) json.Where ((v) => v ["context"].ToString () == "vsts-devdiv artifacts").Select ((v) => v ["target_url"]).FirstOrDefault ())?.Value;
+		}
+		page++;
 	}
+
+	if (manifest_url == null)
+		throw new Exception ($"Could not find the manifest for {hash}. Is the commit already built by CI?");
 	return manifest_url;
 }
 
 string[] manifest = null;
 string[] GetManifest (string hash)
 {
-	if (manifest == null)
-		manifest = ReadAllText (GetManifestUrl (hash)).Split ('\n');
+	// The manifest is gone but we can fake it until we make it using the "vsts-devdiv artifacts"
+	if (manifest == null) {
+		var artifactsUrl = GetManifestUrl (hash);
+		var artifactsjson = (JArray) JToken.Parse (DownloadWithGithubAuth (artifactsUrl));
+		manifest = artifactsjson.Select ((v) => (string) v ["url"])?.ToArray ();
+	}
 	return manifest;
 }
 

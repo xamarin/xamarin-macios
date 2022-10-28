@@ -1,12 +1,13 @@
+#nullable enable
+
 using System;
 using System.Threading.Tasks;
+
 using ObjCRuntime;
 using Foundation;
 
 namespace HomeKit {
 
-	[TV (10,0)]
-	[iOS (8,0)]
 	public partial class HMService {
 
 #if !WATCH && !TVOS

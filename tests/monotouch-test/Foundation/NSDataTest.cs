@@ -11,7 +11,6 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 #if MONOMAC
@@ -19,21 +18,9 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 using MonoTests.System.Net.Http;
 
 namespace MonoTouchFixtures.Foundation {
@@ -46,7 +33,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void ConstructorTest ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			var bytes = Marshal.AllocHGlobal (1);
 			var deallocated = false;
@@ -85,12 +72,13 @@ namespace MonoTouchFixtures.Foundation {
 		public void FromFile ()
 		{
 			Assert.Null (NSData.FromFile ("does not exists"), "unexisting");
-#if MONOMAC // Info.Plist isn't there to load from the same location on mac
-			if (!TestRuntime.IsLinkAll)
-				Assert.NotNull (NSData.FromFile (NSBundle.MainBundle.PathForResource ("runtime-options", "plist")), "runtime-options.plist");
+#if MONOMAC || __MACCATALYST__
+			// Info.Plist isn't there to load from the same location on mac
+			var plistPath = Path.Combine (NSBundle.MainBundle.BundlePath, "Contents", "Info.plist");
 #else
-			Assert.NotNull (NSData.FromFile ("Info.plist"), "Info.plist");
+			var plistPath = Path.Combine (NSBundle.MainBundle.BundlePath, "Info.plist");
 #endif
+			Assert.NotNull (NSData.FromFile (plistPath), "Info.plist");
 		}
 
 		[Test]
@@ -156,6 +144,9 @@ namespace MonoTouchFixtures.Foundation {
 				Assert.Ignore ("NSData.FromUrl doesn't seem to work in watchOS");
 			}
 #endif
+			// Https seems broken on our macOS 10.9 bot, so skip this test.
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
+
 			// we have network issues, try several urls, if one works, be happy, else fail
 			for (var i = 0; i < NetworkResources.RobotsUrls.Length; i++) {
 				NSError error;
@@ -175,7 +166,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64_Short ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var data = NSData.FromArray (new byte [1] { 42 })) {
 				string s1 = data.GetBase64EncodedString (NSDataBase64EncodingOptions.EndLineWithCarriageReturn);
@@ -196,7 +187,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64_Long ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			byte[] array = new byte [60];
 			using (var data = NSData.FromArray (array)) {
@@ -331,23 +322,23 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Assert.Throws<ArgumentNullException> (() => NSData.FromString (null), "1-null");
 			var d = NSData.FromString (String.Empty);
-			Assert.That (d.Length, Is.EqualTo (0), "1-empty");
+			Assert.That (d.Length, Is.EqualTo ((nuint) 0), "1-empty");
 
 			Assert.Throws<ArgumentNullException> (() => NSData.FromString (null, NSStringEncoding.Unicode), "2-null");
 			d = NSData.FromString (String.Empty, NSStringEncoding.Unicode);
-			Assert.That (d.Length, Is.EqualTo (2), "2-empty"); // 0xfffe unicode header
+			Assert.That (d.Length, Is.EqualTo ((nuint) 2), "2-empty"); // 0xfffe unicode header
 
 			// not sure it was a good choice to throw here (but breaking it would be worse)
 			Assert.Throws<ArgumentNullException> (() => d = ((NSData) (string) null), "as-null");
 			d = (NSData) String.Empty;
-			Assert.That (d.Length, Is.EqualTo (0), "as-empty");
+			Assert.That (d.Length, Is.EqualTo ((nuint) 0), "as-empty");
 		}
 
 		[Test]
 		public void Base64String ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var d = new NSData ("WGFtYXJpbg==", NSDataBase64DecodingOptions.IgnoreUnknownCharacters)) {
 				Assert.That (d.ToString (), Is.EqualTo ("Xamarin"));
@@ -358,7 +349,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void Base64Data ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			using (var b = NSData.FromString ("WGFtYXJpbg=="))
 			using (var d = new NSData (b, NSDataBase64DecodingOptions.IgnoreUnknownCharacters)) {

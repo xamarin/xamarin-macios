@@ -6,15 +6,19 @@
 //
 // Copyright 2013, Xamarin Inc
 //
+
+#nullable enable
+
 #if !WATCH
 using System;
-using System.Runtime.InteropServices;
-using System.Collections;
 
-using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 using CoreText;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace UIKit {
 	public class UIFontFeature : INativeObject {
@@ -24,9 +28,9 @@ namespace UIKit {
 
 		// To easily implement ToString
 		FontFeatureGroup fontFeature;
-		object fontFeatureValue;  
+		object? fontFeatureValue;  
 
-		IntPtr INativeObject.Handle {
+		NativeHandle INativeObject.Handle {
 			get {
 				return dictionary.Handle;
 			}
@@ -43,11 +47,11 @@ namespace UIKit {
 		internal UIFontFeature (NSDictionary dict)
 		{
 			dictionary = dict;
-			NSNumber v = dict [UIFontDescriptor.UIFontFeatureTypeIdentifierKey] as NSNumber;
-			fontFeature = (FontFeatureGroup) (v == null ? -1 : v.Int32Value);
+			var v = dict [UIFontDescriptor.UIFontFeatureTypeIdentifierKey] as NSNumber;
+			fontFeature = (FontFeatureGroup) (v is null ? -1 : v.Int32Value);
 			
 			v = dict [UIFontDescriptor.UIFontFeatureSelectorIdentifierKey] as NSNumber;
-			int n = v == null ? 0 : v.Int32Value;
+			int n = v is null ? 0 : v.Int32Value;
 			
 			switch (fontFeature){
 			case FontFeatureGroup.AllTypographicFeatures:
@@ -165,7 +169,7 @@ namespace UIKit {
 				fontFeatureValue = (CTFontFeatureCJKRomanSpacing.Selector) n;
 				break;
 			}
-			if (v == null)
+			if (v is null)
 				fontFeatureValue = "InvalidKeyFound";
 		}
 		
@@ -175,7 +179,7 @@ namespace UIKit {
 			}
 		}
 		
-		public object FontFeatureValue {
+		public object? FontFeatureValue {
 			get {
 				return fontFeatureValue;
 			}

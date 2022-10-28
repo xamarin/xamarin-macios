@@ -21,6 +21,7 @@ using TextAttributes = UIKit.UITextAttributes;
 
 namespace UIKit {
 	public partial class UIBarItem {
+
 		public void SetTitleTextAttributes (TextAttributes attributes, UIControlState state)
 		{
 			using (var dict = attributes == null ? null : attributes.Dictionary)

@@ -13,14 +13,13 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace MonoTouchFixtures.ObjCRuntime {
 	
@@ -60,7 +59,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		{
 			Assert.DoesNotThrow (() => new Class (typeof (NSObject)), "NSObject");
 			if (Runtime.DynamicRegistrationSupported) {
-				Assert.AreEqual (IntPtr.Zero, new Class (typeof (string)).Handle, "string");
+				Assert.AreEqual (NativeHandle.Zero, new Class (typeof (string)).Handle, "string");
 			} else {
 				try {
 					new Class (typeof (string));
@@ -74,9 +73,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		[Test]
 		public void GetHandle ()
 		{
-			Assert.AreNotEqual (IntPtr.Zero, Class.GetHandle (typeof (NSObject)), "NSObject");
+			Assert.AreNotEqual (NativeHandle.Zero, Class.GetHandle (typeof (NSObject)), "NSObject");
 			if (Runtime.DynamicRegistrationSupported) {
-				Assert.AreEqual (IntPtr.Zero, Class.GetHandle (typeof (string)), "string 1");
+				Assert.AreEqual (NativeHandle.Zero, Class.GetHandle (typeof (string)), "string 1");
 			} else {
 				try {
 					Class.GetHandle (typeof (string));
@@ -85,9 +84,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 					Assert.AreEqual ("Can't register the class System.String when the dynamic registrar has been linked away.", e.Message, "exc message");
 				}
 			}
-			Assert.AreEqual (IntPtr.Zero, Class.GetHandle (typeof (NSObject).MakeByRefType ()), "NSObject&");
-			Assert.AreEqual (IntPtr.Zero, Class.GetHandle (typeof (NSObject).MakeArrayType ()), "NSObject[]");
-			Assert.AreEqual (IntPtr.Zero, Class.GetHandle (typeof (NSObject).MakePointerType ()), "NSObject*");
+			Assert.AreEqual (NativeHandle.Zero, Class.GetHandle (typeof (NSObject).MakeByRefType ()), "NSObject&");
+			Assert.AreEqual (NativeHandle.Zero, Class.GetHandle (typeof (NSObject).MakeArrayType ()), "NSObject[]");
+			Assert.AreEqual (NativeHandle.Zero, Class.GetHandle (typeof (NSObject).MakePointerType ()), "NSObject*");
 		}
 
 		[Test]
@@ -103,7 +102,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				if (Runtime.DynamicRegistrationSupported) {
 					Assert.AreEqual ("The ObjectiveC class 'NSProxy' could not be registered, it does not seem to derive from any known ObjectiveC class (including NSObject).", e.Message, "NSProxy exception message");
 				} else {
-					Assert.That (e.Message, Is.StringMatching ("Can't lookup the Objective-C class 0x.* w"), "NSProxy exception message 2");
+					Assert.That (e.Message, Does.Match ("Can't lookup the Objective-C class 0x.* w"), "NSProxy exception message 2");
 				}
 			}
 			Assert.Throws<ArgumentException> (() => new Class ("InexistentClass"), "inexistent");
@@ -144,7 +143,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		[Register ("Inexistent", true)]
 		public class InexistentClass : NSObject {
-			public override IntPtr ClassHandle {
+			public override NativeHandle ClassHandle {
 				get {
 					return Class.GetHandle (GetType ().Name);
 				}

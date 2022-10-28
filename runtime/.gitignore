@@ -11,3 +11,4 @@ tvextension-main.m
 bindings-generated.m
 *.dylib
 *.o
+coreclrhost.h

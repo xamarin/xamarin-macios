@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<!--
+
+	This file contains a list of app bundles contained with the package we're
+	creating.
+
+	Here we define an empty array of app bundles, because we don't have any
+	app bundles in the package, nor do we want pkgbuild to guess. The Sdk
+	package ships mlaunch.app, which pkgbuild thinks is an app bundle, but we
+	want to treat it as a flat directory, so that macOS doesn't get confused
+	with multiple versions of mlaunch.app living in different places in the
+	file system.
+
+-->
+<array />
+</plist>

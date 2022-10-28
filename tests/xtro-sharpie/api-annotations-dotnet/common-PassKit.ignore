@@ -1,0 +1,8 @@
+# By default these are null
+!extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_CountryCode(System.String)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_CurrencyCode(System.String)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_MerchantIdentifier(System.String)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_PaymentSummaryItems(PassKit.PKPaymentSummaryItem[])' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_SupportedNetworks(Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void PassKit.PKPaymentSummaryItem::set_Amount(Foundation.NSDecimalNumber)' has a extraneous [NullAllowed] on parameter #0
+!extra-null-allowed! 'System.Void PassKit.PKPaymentSummaryItem::set_Label(System.String)' has a extraneous [NullAllowed] on parameter #0

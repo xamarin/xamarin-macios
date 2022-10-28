@@ -88,8 +88,10 @@ namespace OpenTK.Platform.MacOS.Carbon
         }
 
         [DllImport(appServices)]
+		[return: MarshalAs (UnmanagedType.I1)]
         internal unsafe static extern bool CFNumberGetValue (IntPtr number, CFNumberType theType, int* valuePtr);
         [DllImport(appServices)]
+		[return: MarshalAs (UnmanagedType.I1)]
         internal unsafe static extern bool CFNumberGetValue(IntPtr number, CFNumberType theType, double* valuePtr);
 
         internal enum CFNumberType

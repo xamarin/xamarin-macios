@@ -11,15 +11,15 @@ namespace LocalAuthentication {
 		[Mac (10,12,2)]
 		DeviceOwnerAuthenticationWithBiometrics = 1,
 		DeviceOwnerAuthentication = 2,
-		[NoiOS][Mac (10,15)][Introduced (PlatformName.UIKitForMac, 13,0)]
+		[NoiOS][Mac (10,15)]
 		DeviceOwnerAuthenticationWithWatch = 3,
-		[NoiOS][Mac (10,15)][Introduced (PlatformName.UIKitForMac, 13,0)]
+		[NoiOS][Mac (10,15)]
 		OwnerAuthenticationWithBiometricsOrWatch = 4,
 	}
 
 	[iOS (8,0)]
 	[Mac (10, 10)]
-	[Native]
+	[Native ("LAError")]
 	[ErrorDomain ("LAErrorDomain")]
 	public enum LAStatus : long {
 		Success = 0,
@@ -33,26 +33,36 @@ namespace LocalAuthentication {
 		SystemCancel         = -4,	    
 		/// Authentication could not start, because passcode is not set on the device.
 		PasscodeNotSet       = -5,
+
+#if !NET
 		/// Authentication could not start, because Touch ID is not available on the device.
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'BiometryNotAvailable' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'BiometryNotAvailable' instead.")]
-		TouchIDNotAvailable  = -6,	    
+		TouchIDNotAvailable  = BiometryNotAvailable,
 
 		/// Authentication could not start, because Touch ID has no enrolled fingers.
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'BiometryNotEnrolled' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'BiometryNotEnrolled' instead.")]
-		TouchIDNotEnrolled   = -7,
+		TouchIDNotEnrolled   = BiometryNotEnrolled,
 
 		[Deprecated (PlatformName.iOS, 11,0, message: "Use 'BiometryLockout' instead.")]
 		[Deprecated (PlatformName.MacOSX, 10,13, message: "Use 'BiometryLockout' instead.")]
-		TouchIDLockout       = -8,
+		TouchIDLockout       = BiometryLockout,
+#endif
 		AppCancel            = -9,
 		InvalidContext       = -10,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
 		WatchNotAvailable    = -11,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		BiometryNotPaired    = -12,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		BiometryDisconnected = -13,
+		[NoiOS, NoTV, NoWatch, NoMacCatalyst]
+		InvalidDimension     = -14,
 
-		BiometryNotAvailable = TouchIDNotAvailable,
-		BiometryNotEnrolled = TouchIDNotEnrolled,
-		BiometryLockout = TouchIDLockout,
+		BiometryNotAvailable = -6,
+		BiometryNotEnrolled = -7,
+		BiometryLockout = -8,
 
 		NotInteractive       = -1004,
 	}
@@ -60,7 +70,9 @@ namespace LocalAuthentication {
 	[iOS (9,0), Mac (10,11), Watch (3,0), TV (11,0)]
 	[Native]
 	public enum LACredentialType : long {
-		ApplicationPassword = 0
+		ApplicationPassword = 0,
+		[iOS (13,4), Mac (10,15,4), NoWatch, NoTV]
+		SmartCardPin = -3,
 	}
 
 	[iOS (9,0)]

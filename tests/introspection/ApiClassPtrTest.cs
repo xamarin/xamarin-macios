@@ -1,4 +1,4 @@
-﻿//
+//
 // Test fixture for class_ptr introspection tests
 //
 // Authors:
@@ -14,15 +14,11 @@ using NUnit.Framework;
 using Xamarin.Utils;
 using System.Runtime.CompilerServices;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Introspection {
@@ -38,6 +34,11 @@ namespace Introspection {
 				if (ca is ModelAttribute)
 					return true;
 			}
+
+			// skip types that we renamed / rewrite since they won't behave correctly (by design)
+			if (SkipDueToRejectedTypes (type))
+				return true;
+
 			return SkipDueToAttribute (type);
 		}
 
@@ -85,7 +86,7 @@ namespace Introspection {
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 				if (fi == null)
 					continue;			
-				IntPtr class_ptr = (IntPtr) fi.GetValue (null);
+				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 				IntPtr register_class_ptr = GetClassPtrFromRegister (t);
 
 				Assert.AreEqual (class_ptr, register_class_ptr, "class_ptr and RegisterAttribute are different: " + t.Name);
@@ -102,7 +103,7 @@ namespace Introspection {
 				FieldInfo fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
 				if (fi == null)
 					continue;
-				IntPtr class_ptr = (IntPtr)fi.GetValue (null);
+				IntPtr class_ptr = (IntPtr) (NativeHandle) fi.GetValue (null);
 
 				var extendedType = GetExtendedType (t);
 				IntPtr extended_class_ptr;
@@ -116,4 +117,3 @@ namespace Introspection {
 		}
 	}
 }
-

@@ -1,7 +1,4 @@
-namespace Xamarin.MacDev.Tasks
-{
-	public class GenerateBundleName : GenerateBundleNameTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class GenerateBundleName : GenerateBundleNameTaskBase {
 	}
 }
-

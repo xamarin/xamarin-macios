@@ -27,21 +27,21 @@ using System.Text;
 using NUnit.Framework;
 using System.Linq;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace Introspection {
 
 	public abstract class ApiSignatureTest : ApiBaseTest {
-
+#if NET
+		const string NFloatTypeName = "System.Runtime.InteropServices.NFloat";
+#else
+		const string NFloatTypeName = "System.nfloat";
+#endif
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		// note: the returned string is not ours to free
 		static extern IntPtr objc_getClass (string name);
@@ -215,7 +215,7 @@ namespace Introspection {
 				FieldInfo fi = null;
 				if (!static_type)
 					fi = t.GetField ("class_ptr", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static);
-				IntPtr class_ptr = fi == null ? IntPtr.Zero : (IntPtr) fi.GetValue (null);
+				IntPtr class_ptr = fi == null ? IntPtr.Zero : (IntPtr) (NativeHandle) fi.GetValue (null);
 
 				foreach (MethodBase m in t.GetMethods (Flags)) 
 					CheckMemberSignature (m, t, class_ptr, ref n);
@@ -409,21 +409,12 @@ namespace Introspection {
 			// NSValue 'static MonoTouch.Foundation.NSValue FromCMTime(CMTime)' selector: valueWithCMTime: == @32@0:4{?=qiIq}8
 			case "?":
 				return type.IsValueType; // || (type.FullName == "System.IntPtr");
-#if XAMCORE_2_0
 			case "CGRect":
 				return type.FullName == "CoreGraphics.CGRect";
 			case "CGSize":
 				return type.FullName == "CoreGraphics.CGSize";
 			case "CGPoint":
 				return type.FullName == "CoreGraphics.CGPoint";
-#else
-			case "CGRect":
-				return type.FullName == "System.Drawing.RectangleF";
-			case "CGSize":
-				return type.FullName == "System.Drawing.SizeF";
-			case "CGPoint":
-				return type.FullName == "System.Drawing.PointF";
-#endif
 			case "opaqueCMFormatDescription":
 				switch (type.Name) {
 				case "CMFormatDescription":
@@ -541,18 +532,8 @@ namespace Introspection {
 			case "AudioChannelLayout":
 				// this is actually an `nint` used as a pointer (to get a unique signature for the .ctor)
 				// there's custom code in src/AVFoundation/AVAudioChannelLayout.cs to deal with this
-#if XAMCORE_2_0
 				structName = "nint";
-#else
-				structName = "Int32";
-#endif
 				break;
-#if !XAMCORE_2_0
-			// in compat it's a class (instead of a struct) hence this hack
-			case "AudioComponentDescription":
-				structName = "AudioComponentDescriptionNative";
-				break;
-#endif
 			}
 			return type.Name == structName;
 		}
@@ -689,7 +670,7 @@ namespace Introspection {
 				switch (type.FullName) {
 				case "System.Double":
 					return true;
-				case "System.nfloat":
+				case NFloatTypeName:
 					return IntPtr.Size == 8;
 				default:
 					return false;
@@ -698,7 +679,7 @@ namespace Introspection {
 				switch (type.FullName) {
 				case "System.Single":
 					return true;
-				case "System.nfloat":
+				case NFloatTypeName:
 					return IntPtr.Size == 4;
 				default:
 					return false;
@@ -807,9 +788,7 @@ namespace Introspection {
 			return false;
 		}
 
-#if XAMCORE_2_0
 		[Test]
-#endif
 		public void ManagedSignature ()
 		{
 			int n = 0;
@@ -886,6 +865,7 @@ namespace Introspection {
 				case "AdviceAttribute":
 				case "ObsoletedAttribute":
 				case "DeprecatedAttribute":
+				case "UnsupportedOSPlatformAttribute":
 					return true;
 				}
 			}
@@ -991,6 +971,8 @@ namespace Introspection {
 			case "Register":
 			case "SignalEnumerator":
 				return m.DeclaringType.Name == "NSFileProviderManager";
+			case "Synchronize": // comes from a protocol implementation
+				return m.DeclaringType.Name == "NSTextContentManager";
 			}
 			return false;
 		}

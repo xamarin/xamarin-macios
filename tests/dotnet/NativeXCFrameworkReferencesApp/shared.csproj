@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>NativeFrameworkReferences</ApplicationTitle>
+		<ApplicationId>com.xamarin.nativeframeworkreferences</ApplicationId>
+		<ApplicationVersion>1.0</ApplicationVersion>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+
+	<ItemGroup>
+		<NativeReference Include="..\..\..\test-libraries\.libs\XTest.xcframework" Kind="Framework" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+</Project>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<!-- Use single-project MSBuild properties to generate the application manifest by default -->
+		<GenerateApplicationManifest Condition="'$(GenerateApplicationManifest)' == ''">true</GenerateApplicationManifest>
+		
+		<HotRestartSignedAppOutputDir>$(TEMP)\Xamarin\HotRestart\Signing\$(_AppBundleName)$(AppBundleExtension)\out\</HotRestartSignedAppOutputDir>
+		<HotRestartPayloadDir>$(HotRestartSignedAppOutputDir)Payload\</HotRestartPayloadDir>
+		<HotRestartSignedAppDir>$(HotRestartPayloadDir)$(_AppBundleName).app\</HotRestartSignedAppDir>
+		<HotRestartContentDir>$(HotRestartSignedAppOutputDir)$(_AppBundleName).content\</HotRestartContentDir>
+		<HotRestartAppContentDir>$(HotRestartSignedAppDir)$(_AppBundleName).content\</HotRestartAppContentDir>
+		<HotRestartContentStampDir>$(HotRestartSignedAppOutputDir)$(_AppBundleName).stamp\</HotRestartContentStampDir>
+		<HotRestartIPAPath>$(HotRestartSignedAppOutputDir)$(_AppBundleName).ipa</HotRestartIPAPath>
+
+		<UnpackHotRestartFrameworks Condition="'$(UnpackHotRestartFrameworks)' == ''">true</UnpackHotRestartFrameworks>
+
+		<_IsHotRestartDefined>$([System.Text.RegularExpressions.Regex]::IsMatch('$(DefineConstants.Trim())', '(^|;)HOTRESTART($|;)'))</_IsHotRestartDefined>
+		<DefineConstants Condition="!$(_IsHotRestartDefined) And '$(IsHotRestartBuild)' == 'true'">HOTRESTART;$(DefineConstants)</DefineConstants>
+	</PropertyGroup>
+</Project>

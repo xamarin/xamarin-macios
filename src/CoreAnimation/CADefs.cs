@@ -36,17 +36,27 @@ using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
+#nullable enable
+
 namespace CoreAnimation {
 
 	partial class CAAnimation {
-		[DllImport(Constants.QuartzLibrary, EntryPoint="CACurrentMediaTime")]
+		[DllImport (Constants.QuartzLibrary, EntryPoint="CACurrentMediaTime")]
 		public extern static /* CFTimeInterval */ double CurrentMediaTime ();
 	}
 
 	public partial class CAGradientLayer {
+#if NET
+		CGColor CreateColor (NativeHandle p)
+#else
 		public CGColor CreateColor (IntPtr p)
+#endif
 		{
-			return new CGColor (p);
+			return new CGColor (p, false);
 		}
 		
 		public CGColor [] Colors {
@@ -55,12 +65,12 @@ namespace CoreAnimation {
 			}
 
 			set {
-				if (value == null) {
+				if (value is null) {
 					_Colors = IntPtr.Zero;
 					return;
 				}
 
-				IntPtr [] ptrs = new IntPtr [value.Length];
+				var ptrs = new NativeHandle [value.Length];
 				for (int i = 0; i < ptrs.Length; i++)
 					ptrs [i] = value [i].Handle;
 				
@@ -71,7 +81,6 @@ namespace CoreAnimation {
 		}
 	}
 
-#if XAMCORE_2_0
 	public partial class CAKeyFrameAnimation {
 
 		// For compatibility, as we told users to explicitly use this method before, or get a warning
@@ -80,25 +89,4 @@ namespace CoreAnimation {
 			return FromKeyPath (path);
 		}
 	}
-#else
-	// CoreAudioClock.h (inside AudioToolbox)
-	// It was a confusion between CA (CoreAudio) and CA (CoreAnimation)
-	[StructLayout (LayoutKind.Sequential)]
-	public struct CABarBeatTime {
-		public /* SInt32 */ int Bar;
-		public /* UInt16 */ ushort Beat;
-		public /* UInt16 */ ushort Subbeat;
-		public /* UInt16 */ ushort SubbeatDivisor;
-		public /* UInt16 */ ushort Reserved;
-	}
-
-	public partial class CAKeyFrameAnimation {
-
-		[Obsolete ("This method in the future will return a 'CAKeyFrameAnimation', update your source, or use 'GetFromKeyPath' to avoid this warning for now.")]
-		public static CAPropertyAnimation FromKeyPath (string path)
-		{
-			return GetFromKeyPath (path);
-		}
-	}
-#endif
 }

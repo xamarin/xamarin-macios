@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 
 using ObjCRuntime;
@@ -87,5 +87,3 @@ namespace Bug27430
 		void SomeFakeDelegateMethod (UIViewController @switch, IFooTestDelegate @delegate);
 	}
 }
-
-

@@ -1,6 +1,5 @@
 using System;
 
-#if __UNIFIED__
 using ObjCRuntime;
 using Foundation;
 #if __MACOS__
@@ -8,17 +7,9 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-#if !__WATCHOS__
-using System.Drawing;
-#endif
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 
 namespace Bindings.Test {
-#if __UNIFIED__ && FRAMEWORK_TEST
+#if FRAMEWORK_TEST
 	[BaseType (typeof (NSObject))]
 	public interface FrameworkTest
 	{
@@ -143,6 +134,25 @@ namespace Bindings.Test {
 
 		[Export ("V")]
 		void V ();
+
+		[Static]
+		[Export ("staticV")]
+		void StaticV ();
+
+		[Export ("getEmptyString")]
+		string GetEmptyString ();
+
+		[Export ("getShortString")]
+		string GetShortString ();
+
+		[Export ("getLongString")]
+		string GetLongString ();
+
+		[Export ("someObject")]
+		NSObject SomeObject { get; set; }
+
+		[Export ("someArray")]
+		NSObject[] SomeArray { get; set; }
 
 		[Export ("F")]
 		float F ();
@@ -449,5 +459,3 @@ namespace Bindings.Test {
 	}
 	interface IProtocolWithBlockProperties { }
 }
-
-

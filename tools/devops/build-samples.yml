@@ -3,7 +3,8 @@
 
 variables:
   azure_build_url: '$(System.CollectionUri)/$(System.TeamProject)/_build/results?buildId=$(Build.BuildId)'
-  macOSVersion: 'Hosted Mac Internal Mojave'
+  azpPoolName: 'Azure Pipelines'
+  macOSVersion: 'internal-macos-11'
   debug_filter: '^.*Debug.*$'
   release_filter: '^.*Release.*$'
   iphone_filter: '^iPhone$'
@@ -13,14 +14,39 @@ variables:
   name_filter_gr: '^[G-Rg-r].*$'
   name_filter_rest: '^[^A-Ra-r].*$'
 
+resources:
+  repositories:
+  - repository: xamarin-macios-data
+    type: github
+    name: xamarin/xamarin-macios-data
+    ref: refs/heads/main
+    endpoint: xamarin
+  - repository: maccore
+    type: github
+    name: xamarin/maccore
+    ref: refs/heads/main
+    endpoint: xamarin
+
+###
+### Tell GitHub we're starting working on this commit
+###
+
 jobs:
 - job: ReportStartToGitHub
   displayName: Set pending GitHub status
   pool:
-    name: '$(macOSVersion)'
+    name: '$(azpPoolName)'
+    vmImage: '$(macOSVersion)'
   steps:
   - bash: ./jenkins/add-commit-status.sh "--token=$(github-pat)" "--hash=$BUILD_SOURCEVERSION" "--state=pending" --target-url="$AZURE_BUILD_URL" --description="$BUILD_DEFINITIONNAME" --context="$BUILD_DEFINITIONNAME"
     displayName: Set pending GitHub status
+
+###
+### Run the sample tests.
+###
+### They're split over multiple bots to make them run faster (and not hit the
+### max job time duration for a single job).
+###
 
 - job: macOS
   dependsOn: ReportStartToGitHub
@@ -69,36 +95,46 @@ jobs:
         TEST_CONFIG_FILTER_EXPRESSION: $(release_filter)
 
   pool:
-    name: '$(macOSVersion)'
+    name: '$(azpPoolName)'
+    vmImage: '$(macOSVersion)'
 
   steps:
   - checkout: self
+    path: s/xamarin-macios
+  - checkout: xamarin-macios-data
+    persistCredentials: true
+  - checkout: maccore
     persistCredentials: true
 
-  - bash: ./tools/devops/system-info.sh
+  - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info
 
-  - bash: ./tools/devops/fetch-maccore.sh
-    displayName: Fetch maccore
+  - bash: ./xamarin-macios/tools/devops/fetch-maccore.sh
+    displayName: Fetch correct maccore hash
+
+  - bash: |
+      echo "Requested Xcode $XCODE_URL"
+      make -C $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/ provision-xcode.csx
+    displayName: 'Generate Xcode provisioning csx file'
 
   - task: provisionator@2
     displayName: Xcode
     inputs:
       provisionator_uri: '$(provisionator-uri)'
       github_token: '$(github-pat)'
-      provisioning_script: $(System.DefaultWorkingDirectory)/tools/devops/provision-xcode.csx
+      provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/provision-xcode.csx
 
   - task: provisionator@2
     displayName: Provision XI/XM/Mono/Objective-Sharpie
     inputs:
       provisionator_uri: '$(provisionator-uri)'
       github_token: '$(github-pat)'
-      provisioning_script: $(System.DefaultWorkingDirectory)/tools/devops/build-samples.csx
+      provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/build-samples.csx
 
-  - bash: ./tools/devops/system-info.sh
+  - bash: ./xamarin-macios/tools/devops/system-info.sh
     displayName: System Info post provisioning
 
-  - bash: ./tools/devops/build-samples.sh
+  - bash: ./xamarin-macios/tools/devops/build-samples.sh
     displayName: Run tests
 
   - task: PublishTestResults@2
@@ -111,17 +147,64 @@ jobs:
       publishRunAttachments: true
       mergeTestResults: true
 
+  - bash: ./xamarin-macios/tools/devops/prepare-performance-data.sh
+    displayName: Prepare performance data
+    condition: always()
+
+  - publish: logs
+    displayName: 'Upload perf data'
+    condition: always()
+    artifact: logs-$(System.JobId)
+
   - bash: echo "##vso[task.setvariable variable=JobStatus;isOutput=true]$AGENT_JOBSTATUS"
     name: ExportedVariables
     displayName: Export status
     condition: always()
 
+###
+### Push performance data to the xamarin-macios-data repository
+###
+
+- job: PublishPerformanceData
+  displayName: Publish Performance Data
+  condition: always()
+  dependsOn: macOS
+  pool:
+    name: '$(azpPoolName)'
+    vmImage: '$(macOSVersion)'
+  steps:
+  - checkout: self
+    path: s/xamarin-macios
+  - checkout: xamarin-macios-data
+    persistCredentials: true
+
+  - task: DownloadPipelineArtifact@2
+    displayName: Download performance data
+    inputs:
+      source: current
+      path: logs
+
+  - bash: ./xamarin-macios/tools/devops/push-performance-data.sh
+    displayName: Publish perf data
+
+  - bash: echo "##vso[task.setvariable variable=JobStatus;isOutput=true]$AGENT_JOBSTATUS"
+    name: ExportedVariables
+    displayName: Export status
+    condition: always()
+
+###
+### Report final results to GitHub
+###
+
 - job: ReportResultsToGitHub
   displayName: Report status/results to GitHub
-  dependsOn: macOS
+  dependsOn:
+  - PublishPerformanceData
+  - macOS
   condition: always()
   pool:
-    name: '$(macOSVersion)'
+    name: '$(azpPoolName)'
+    vmImage: '$(macOSVersion)'
   variables:
     jobResultDebugiPhoneAF: $[ dependencies.macOS.outputs['Debug_iPhone_AF.ExportedVariables.JobStatus'] ]
     jobResultDebugiPhoneGR: $[ dependencies.macOS.outputs['Debug_iPhone_GR.ExportedVariables.JobStatus'] ]
@@ -133,6 +216,7 @@ jobs:
     jobResultReleaseiPhoneSimulator: $[ dependencies.macOS.outputs['Release_iPhoneSimulator.ExportedVariables.JobStatus'] ]
     jobResultDebugMac: $[ dependencies.macOS.outputs['Debug_Mac.ExportedVariables.JobStatus'] ]
     jobResultReleaseMac: $[ dependencies.macOS.outputs['Release_Mac.ExportedVariables.JobStatus'] ]
+    jobResultPublishPerformanceData: $[ dependencies.PublishPerformanceData.outputs['ExportedVariables.JobStatus'] ]
   steps:
   - bash: |
       ./tools/devops/build-samples-report-to-github.sh "$(github-pat)" \
@@ -141,6 +225,7 @@ jobs:
         "Release_iPhone_AF" "Release_iPhone_GR" "Release_iPhone_SZ" \
         "Release_iPhoneSimulator" \
         "Debug_Mac" \
-        "Release_Mac"
+        "Release_Mac" \
+        "PublishPerformanceData"
     displayName: Report results to GitHub as comment / status
     condition: always()

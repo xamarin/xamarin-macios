@@ -15,11 +15,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 
@@ -110,6 +106,7 @@ namespace LinkAll.Attributes {
 	public class CustomTypeO {
 	}
 
+#if !NET
 	[FileIOPermission (SecurityAction.LinkDemand, AllLocalFiles = FileIOPermissionAccess.AllAccess)]
 	public class SecurityDeclarationDecoratedUserCode {
 
@@ -119,6 +116,7 @@ namespace LinkAll.Attributes {
 			return true;
 		}
 	}
+#endif
 
 	[TestFixture]
 	// we want the tests to be available because we use the linker
@@ -126,7 +124,11 @@ namespace LinkAll.Attributes {
 	public class AttributeTest {
 		
 		// Good enough to fool linker to abort the tracking
+#if NET
+		static string mscorlib = "System.Private.CoreLib";
+#else
 		static string mscorlib = "mscorlib";
+#endif
 
 		[Test]
 		public void DebugAssemblyAttributes ()
@@ -222,6 +224,7 @@ namespace LinkAll.Attributes {
 			//Assert.NotNull (Type.GetType ("LinkAll.Attributes.CustomTypeO"), "CustomTypeO");
 		}
 
+#if !NET
 		[Test]
 		public void SecurityDeclaration ()
 		{
@@ -232,5 +235,6 @@ namespace LinkAll.Attributes {
 			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAttribute, " + mscorlib), "FileIOPermissionAttribute");
 			Assert.Null (Type.GetType ("System.Security.Permissions.FileIOPermissionAccess, " + mscorlib), "FileIOPermissionAccess");
 		}
+#endif
 	}
 }

@@ -9,8 +9,8 @@ static class C {
 	enum Architecture
 	{
 		None = 0,
-		Sim32 = 1,
-		Sim64 = 2,
+		X86 = 1,
+		X64 = 2,
 		Arm32 = 4,
 		Armv7k = 8,
 		// Arm64 is never stret
@@ -89,16 +89,16 @@ static class C {
 		new BindAsData { Managed = "CLLocationCoordinate2D", Native = "CLLocationCoordinate2D", ManagedNewExpression = "new CLLocationCoordinate2D (11, 12)", Map = ".CoordinateValue", MapFrom = "FromMKCoordinate", MinMacOSVersion = new Version (10, 9) },
 		new BindAsData { Managed = "SCNVector3", Native = "SCNVector3", ManagedNewExpression = "new SCNVector3 (13, 14, 15)", Map = ".Vector3Value", MapFrom = "FromVector", MinMacOSVersion = new Version (10, 8), MinXcodeVersion = new Version (8, 0) },
 		new BindAsData { Managed = "SCNVector4", Native = "SCNVector4", ManagedNewExpression = "new SCNVector4 (16, 17, 18, 19)", Map = ".Vector4Value", MapFrom = "FromVector", MinMacOSVersion = new Version (10, 8), MinXcodeVersion = new Version (8, 0) },
-		new BindAsData { Managed = "CGPoint", Native = "CGPoint", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGPoint (19, 20)", Map = ".CGPointValue", MapFrom = "FromCGPoint" },
-		new BindAsData { Managed = "CGSize", Native = "CGSize", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGSize (21, 22)", Map = ".CGSizeValue", MapFrom = "FromCGSize" },
-		new BindAsData { Managed = "CGRect", Native = "CGRect", ManagedCondition = "XAMCORE_2_0 && !__MACOS__", ManagedNewExpression = "new CGRect (23, 24, 25, 26)", Map = ".CGRectValue", MapFrom = "FromCGRect" },
+		new BindAsData { Managed = "CGPoint", Native = "CGPoint", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGPoint (19, 20)", Map = ".CGPointValue", MapFrom = "FromCGPoint" },
+		new BindAsData { Managed = "CGSize", Native = "CGSize", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGSize (21, 22)", Map = ".CGSizeValue", MapFrom = "FromCGSize" },
+		new BindAsData { Managed = "CGRect", Native = "CGRect", ManagedCondition = "!__MACOS__", ManagedNewExpression = "new CGRect (23, 24, 25, 26)", Map = ".CGRectValue", MapFrom = "FromCGRect" },
 		new BindAsData { Managed = "UIEdgeInsets", Native = "UIEdgeInsets", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new UIEdgeInsets (27, 28, 29, 30)", Map = ".UIEdgeInsetsValue", MapFrom = "FromUIEdgeInsets" },
 		new BindAsData { Managed = "UIOffset", Native = "UIOffset", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new UIOffset (31, 32)", Map = ".UIOffsetValue", MapFrom = "FromUIOffset" },
 		new BindAsData { Managed = "MKCoordinateSpan", Native = "MKCoordinateSpan", ManagedCondition = "HAVE_MAPKIT", ManagedNewExpression = "new MKCoordinateSpan (33, 34)", Map = ".CoordinateSpanValue", MapFrom = "FromMKCoordinateSpan", MinMacOSVersion = new Version (10, 9) },
 		new BindAsData { Managed = "CMTimeRange", Native = "CMTimeRange", ManagedCondition = "HAVE_COREMEDIA", ManagedNewExpression = "new CMTimeRange { Duration = new CMTime (37, 38), Start = new CMTime (39, 40) }", Map = ".CMTimeRangeValue", MapFrom = "FromCMTimeRange"  },
 		new BindAsData { Managed = "CMTime", Native = "CMTime", ManagedCondition = "HAVE_COREMEDIA",  ManagedNewExpression = "new CMTime (35, 36)", Map = ".CMTimeValue", MapFrom = "FromCMTime"  },
 		new BindAsData { Managed = "CMTimeMapping", Native = "CMTimeMapping", ManagedCondition = "HAVE_COREMEDIA", ManagedNewExpression = "new CMTimeMapping { Source = new CMTimeRange { Duration = new CMTime (42, 43), Start = new CMTime (44, 45) } }", Map = ".CMTimeMappingValue", MapFrom = "FromCMTimeMapping"  },
-		new BindAsData { Managed = "CATransform3D", Native = "CATransform3D", ManagedCondition = "HAVE_COREANIMATION", ManagedNewExpression = "new CATransform3D { m11 = 41 }", Map = ".CATransform3DValue", MapFrom = "FromCATransform3D"  },
+		new BindAsData { Managed = "CATransform3D", Native = "CATransform3D", ManagedCondition = "HAVE_COREANIMATION", ManagedNewExpression = "new CATransform3D { M11 = 41 }", Map = ".CATransform3DValue", MapFrom = "FromCATransform3D"  },
 		new BindAsData { Managed = "NSDirectionalEdgeInsets", Native = "NSDirectionalEdgeInsets", ManagedCondition = "HAVE_UIKIT", ManagedNewExpression = "new NSDirectionalEdgeInsets (42, 43, 44, 45)", Map = ".DirectionalEdgeInsetsValue", MapFrom = "FromDirectionalEdgeInsets", MinXcodeVersion = new Version (9, 0) },
 	};
 
@@ -327,10 +327,6 @@ static class C {
 	static void WriteFrameworkDefines (StringBuilder w)
 	{
 		w.AppendLine (@"
-#if __UNIFIED__
-#define XAMCORE_2_0
-#endif
-
 #if __IOS__ || __MACOS__ || __TVOS__
 #define HAVE_COREANIMATION
 #endif
@@ -343,9 +339,8 @@ static class C {
 #define HAVE_UIKIT
 #endif
 
-#if XAMCORE_2_0
 #define HAVE_MAPKIT
-#endif");
+");
 		
 	}
 
@@ -356,7 +351,6 @@ static class C {
 		w.AppendLine (@"
 using System;
 
-#if __UNIFIED__
 using AVFoundation;
 #if HAVE_COREANIMATION
 using CoreAnimation;
@@ -375,14 +369,6 @@ using SceneKit;
 using Security;
 #if HAVE_UIKIT
 using UIKit;
-#endif
-#else
-#if !__WATCHOS__
-using System.Drawing;
-#endif
-using MonoTouch.ObjCRuntime;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 
 namespace Bindings.Test {
@@ -739,10 +725,6 @@ namespace Bindings.Test {
 		w.AppendLine (@"using System;
 using System.Runtime.InteropServices;
 
-#if !__UNIFIED__
-using nint=System.Int32;
-#endif
-
 namespace Bindings.Test
 {
 ");
@@ -777,7 +759,7 @@ namespace Bindings.Test
 			w.AppendLine ();
 		}
 		if (v.MinMacOSVersion != null) {
-			w.AppendLine ($"\t\t\tTestRuntime.AssertSystemVersion (PlatformName.MacOSX, {v.MinMacOSVersion.Major}, {v.MinMacOSVersion.Minor}, throwIfOtherPlatform: false);");
+			w.AppendLine ($"\t\t\tTestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, {v.MinMacOSVersion.Major}, {v.MinMacOSVersion.Minor}, throwIfOtherPlatform: false);");
 			w.AppendLine ();
 		}
 	}
@@ -789,7 +771,6 @@ namespace Bindings.Test
 		WriteFrameworkDefines (w);
 		w.AppendLine (@"
 using System;
-#if XAMCORE_2_0
 using AVFoundation;
 #if HAVE_COREANIMATION
 using CoreAnimation;
@@ -810,22 +791,18 @@ using Security;
 using UIKit;
 #endif
 using MonoTouchException=ObjCRuntime.RuntimeException;
-#if __MACOS__
+#if NET
+using NativeException=ObjCRuntime.ObjCException;
+#elif __MACOS__
 using NativeException=Foundation.ObjCException;
 #else
 using NativeException=Foundation.MonoTouchException;
-#endif
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouchException=MonoTouch.RuntimeException;
-using NativeException=MonoTouch.Foundation.MonoTouchException;
 #endif
 using NUnit.Framework;
 using Bindings.Test;
 
 using XamarinTests.ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -1086,7 +1063,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t\tvalue = new {v.Managed} [] {{ {v.ManagedNewExpression} }};");
 			w.AppendLine ($"\t\t\t\tobj.{v.Managed}Array = value;");
 			w.AppendLine ($"\t\t\t\tarray = Runtime.GetNSObject<NSArray> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle (\"get{v.Managed}Array\")));");
-			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value.Length, array.Count, \"getter B\");");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual ((nuint) value.Length, array.Count, \"getter B\");");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value [0], {v.FromNSNumberCastExpression}array.GetItem<NSNumber> (0){v.Map}, \"getter B element\");");
 			w.AppendLine ();
 
@@ -1256,7 +1233,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t\tvalue = new {v.Managed} [] {{ {v.ManagedNewExpression} }};");
 			w.AppendLine ($"\t\t\t\tobj.{v.Managed}Array = value;");
 			w.AppendLine ($"\t\t\t\tarray = Runtime.GetNSObject<NSArray> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle (\"get{v.Managed}Array\")));");
-			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value.Length, array.Count, \"getter B\");");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual ((nuint) value.Length, array.Count, \"getter B\");");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value [0], array.GetItem<NSValue> (0){v.Map}, \"getter B element\");");
 			w.AppendLine ($"\t\t\t}}");
 			w.AppendLine ("\t\t}");
@@ -1422,7 +1399,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			w.AppendLine ($"\t\t\t\tvalue = new {v.Managed} [] {{ {v.ManagedNewExpression} }};");
 			w.AppendLine ($"\t\t\t\tobj.PSmart{v.Managed}Properties = value;");
 			w.AppendLine ($"\t\t\t\tarray = Runtime.GetNSObject<NSArray> (Messaging.IntPtr_objc_msgSend (obj.Handle, Selector.GetHandle (\"getSmart{v.Managed}Values\")));");
-			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value.Length, array.Count, \"getter B\");");
+			w.AppendLine ($"\t\t\t\tAssert.AreEqual ((nuint) value.Length, array.Count, \"getter B\");");
 			w.AppendLine ($"\t\t\t\tAssert.AreEqual (value [0], {v.Managed}Extensions.GetValue (array.GetItem<NSString> (0)), \"getter B element\");");
 			w.AppendLine ($"\t\t\t}}");
 			w.AppendLine ("\t\t}");
@@ -1448,18 +1425,13 @@ namespace MonoTouchFixtures.ObjCRuntime {
 using System;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 using Bindings.Test;
 
 using XamarinTests.ObjCRuntime;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -1657,10 +1629,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				w.Append ("TrampolineTest.IsArm32 || ");
 			if ((stret & Architecture.Armv7k) == Architecture.Armv7k)
 				w.Append ("TrampolineTest.IsArmv7k || ");
-			if ((stret & Architecture.Sim32) == Architecture.Sim32)
-				w.Append ("TrampolineTest.IsSim32 || ");
-			if ((stret & Architecture.Sim64) == Architecture.Sim64)
-				w.Append ("TrampolineTest.IsSim64 || ");
+			if ((stret & Architecture.X86) == Architecture.X86)
+				w.Append ("TrampolineTest.IsX86 || ");
+			if ((stret & Architecture.X64) == Architecture.X64)
+				w.Append ("TrampolineTest.IsX64 || ");
 			w.Length -= 4;
 			w.AppendLine (") {");
 		}

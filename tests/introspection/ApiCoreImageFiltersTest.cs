@@ -29,21 +29,11 @@ using System.Text;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using CoreImage;
 using Foundation;
 using ObjCRuntime;
 #if !MONOMAC
 using UIKit;
-#endif
-#elif MONOMAC
-using MonoMac.CoreImage;
-using MonoMac.Foundation;
-#else
-using MonoTouch.CoreImage;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
 #endif
 
 namespace Introspection {
@@ -55,7 +45,7 @@ namespace Introspection {
 
 		static Type CIFilterType = typeof (CIFilter);
 
-#if true
+#if false
 		static TextWriter BindingOutput;
 #else
 		static TextWriter BindingOutput = Console.Out;
@@ -69,6 +59,8 @@ namespace Introspection {
 		protected virtual bool Skip (string nativeName)
 		{
 			switch (nativeName) {
+			case "CIRawFilter":
+				return true;
 			// Both reported in radar #21548819
 			//  NSUnknownKeyException [<CIDepthOfField 0x158586970> valueForUndefinedKey:]: this class is not key value coding-compliant for the key inputPoint2.
 			case "CIDepthOfField":
@@ -85,6 +77,7 @@ namespace Introspection {
 		// this test checks that all native filters have a managed peer, i.e. against missing filters
 		public void CheckNativeFilters ()
 		{
+			Errors = 0;
 			List<string> filters = new List<string> ();
 			int n = 0;
 			string qname = CIFilterType.AssemblyQualifiedName;
@@ -107,6 +100,7 @@ namespace Introspection {
 		// this test checks that all managed filters have a native peer, i.e. against extra filters
 		public void CheckManagedFilters ()
 		{
+			Errors = 0;
 			ContinueOnFailure = true;
 			List<string> filters = new List<string> (CIFilter.FilterNamesInCategories (null));
 			var superFilters = new List<string> ();
@@ -194,17 +188,24 @@ namespace Introspection {
 				var key = k.ToString ();
 				if (key.StartsWith ("CIAttribute", StringComparison.Ordinal))
 					continue;
+#if !NET
 				// CIFilter defines it for all filters
 				if (key == "inputImage")
 					continue;
+#endif
 				
 				writer.WriteLine ();
 				var dict = attributes [k] as NSDictionary;
 				var type = dict [(NSString) "CIAttributeClass"];
 				writer.WriteLine ($"\t[CoreImageFilterProperty (\"{key}\")]");
 
+#if NET
+				// by default we drop the "input" prefix, but keep the "output" prefix to avoid confusion, except for 'inputImage'
+				if (key.StartsWith ("input", StringComparison.Ordinal) && key != "inputImage")
+#else
 				// by default we drop the "input" prefix, but keep the "output" prefix to avoid confusion
 				if (key.StartsWith ("input", StringComparison.Ordinal))
+#endif
 					key = Char.ToUpperInvariant (key [5]) + key.Substring (6);
 
 				writer.WriteLine ("\t/* REMOVE-ME");
@@ -220,6 +221,7 @@ namespace Introspection {
 		[Test]
 		public void Protocols ()
 		{
+			Errors = 0;
 			var to_confirm_manually = new StringBuilder ();
 			ContinueOnFailure = true;
 			var nspace = CIFilterType.Namespace;
@@ -373,6 +375,7 @@ namespace Introspection {
 		[Test]
 		public void Keys ()
 		{
+			Errors = 0;
 			ContinueOnFailure = true;
 			var nspace = CIFilterType.Namespace;
 			var types = CIFilterType.Assembly.GetTypes ();
@@ -437,6 +440,13 @@ namespace Introspection {
 								break;
 							}
 							break;
+						case "CIGlassDistortion":
+							switch (key) {
+							case "textureImage":
+								key = "texture";
+								break;
+							}
+							break;
 						}
 						// 'input' is implied (generally) and explicit (in a few cases)
 						if (!key.StartsWith ("input", StringComparison.Ordinal))
@@ -461,6 +471,23 @@ namespace Introspection {
 							break;
 						case "inputUCR":
 							cap = "UnderColorRemoval";
+							break;
+						}
+						break;
+					case "CIAccordionFoldTransition":
+						switch (key) {
+						case "inputNumberOfFolds":
+							cap = "FoldCount";
+							break;
+						}
+						break;
+					case "CIBicubicScaleTransform":
+						switch (key) {
+						case "inputB":
+							cap = "ParameterB";
+							break;
+						case "inputC":
+							cap = "ParameterC";
 							break;
 						}
 						break;
@@ -513,6 +540,17 @@ namespace Introspection {
 						switch (key) {
 						case "outputImageV1":
 							// existed briefly in macOS 10.11, but neither before nor after.
+							continue;
+						}
+						break;
+					case "CIAreaAverage":
+					case "CIAreaHistogram":
+					case "CIAreaMinMax":
+						switch (key) {
+						case "outputImageMPS":
+						case "outputImageMPS:":
+						case "outputImageNonMPS:":
+							// no doc for argument
 							continue;
 						}
 						break;

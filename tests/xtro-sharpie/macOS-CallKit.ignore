@@ -1,0 +1,2 @@
+# contains references to AVAudioSession, which does not exist on macOS (https://github.com/xamarin/maccore/issues/2257)
+# deprecated before we added the bindings for it

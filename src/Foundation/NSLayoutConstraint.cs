@@ -109,6 +109,41 @@ namespace UIKit
 		{
 			return NSLayoutConstraint.Create (view1, attribute1, relation, null, NSLayoutAttribute.NoAttribute, 1.0f, 0f);
 		}
+
+		// This solves the duplicate selector export problem while not breaking the API.
+		public static NSLayoutConstraint Create (NSObject view1, NSLayoutAttribute attribute1, NSLayoutRelation relation, 
+				NSObject view2, NSLayoutAttribute attribute2, nfloat multiplier, nfloat constant)
+		{
+			return Create ((INativeObject) view1, attribute1, relation, view2, attribute2, multiplier, constant);
+		}
+
+#if !MONOMAC || NET
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst13.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[iOS (10, 0)]
+#endif
+		public NSLayoutAnchor<AnchorType> FirstAnchor<AnchorType> () where AnchorType : NSObject
+		{
+			return Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_FirstAnchor ());
+		}
+
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("maccatalyst13.0")]
+		[SupportedOSPlatform ("tvos")]
+		[SupportedOSPlatform ("macos")]
+#else
+		[iOS (10, 0)]
+#endif
+		public NSLayoutAnchor<AnchorType> SecondAnchor<AnchorType> () where AnchorType : NSObject
+		{
+			return Runtime.GetNSObject<NSLayoutAnchor<AnchorType>> (_SecondAnchor ());
+		}
+#endif // !MONOMAC || NET
 	}
 }
 

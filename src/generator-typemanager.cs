@@ -1,7 +1,6 @@
 
 using System;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
+using System.Reflection;
 
 public class TypeManager {
 	BindingTouch BindingTouch;
@@ -10,6 +9,7 @@ public class TypeManager {
 	public Type System_Attribute;
 	public Type System_Boolean;
 	public Type System_Byte;
+	public Type System_Char;
 	public Type System_Delegate;
 	public Type System_Double;
 	public Type System_Float;
@@ -24,6 +24,7 @@ public class TypeManager {
 	public Type System_UInt16;
 	public Type System_UInt32;
 	public Type System_UInt64;
+	public Type System_UIntPtr;
 	public Type System_Void;
 
 	public Type System_nint;
@@ -115,25 +116,6 @@ public class TypeManager {
 	Assembly api_assembly;
 	Assembly corlib_assembly;
 	Assembly platform_assembly;
-	Assembly system_assembly;
-	Assembly binding_assembly;
-
-	public Assembly CorlibAssembly {
-		get { return corlib_assembly; }
-	}
-
-	public Assembly PlatformAssembly {
-		get { return platform_assembly; }
-		set { platform_assembly = value; }
-	}
-
-	public Assembly SystemAssembly {
-		get { return system_assembly; }
-	}
-
-	public Assembly BindingAssembly {
-		get { return binding_assembly; }
-	}
 
 	Type Lookup (Assembly assembly, string @namespace, string @typename, bool inexistentOK = false)
 	{
@@ -147,7 +129,7 @@ public class TypeManager {
 
 		var rv = assembly.GetType (fullname);
 		if (rv == null && !inexistentOK)
-			throw new BindingException (1052, true, "Internal error: Could not find the type {0} in the assembly {1}. Please file a bug report (https://github.com/xamarin/xamarin-macios/issues/new) with a test case.", fullname, assembly);
+			throw new BindingException (1052, true, fullname, assembly);
 		return rv;
 	}
 
@@ -157,7 +139,7 @@ public class TypeManager {
 			return null;
 
 		var gt = type.GetGenericTypeDefinition ();
-		if (gt.Assembly != CorlibAssembly)
+		if (gt.IsNested)
 			return null;
 
 		if (gt.Namespace != "System")
@@ -179,20 +161,19 @@ public class TypeManager {
 		return type.GetEnumUnderlyingType ();
 	}
 
-	public void Initialize (BindingTouch binding_touch, Assembly api, Assembly corlib, Assembly platform, Assembly system, Assembly binding)
+	public void Initialize (BindingTouch binding_touch, Assembly api, Assembly corlib, Assembly platform)
 	{
 		BindingTouch = binding_touch;
 
 		api_assembly = api;
 		corlib_assembly = corlib;
 		platform_assembly = platform;
-		system_assembly = system;
-		binding_assembly = binding;
 
 		/* corlib */
 		System_Attribute = Lookup (corlib_assembly, "System", "Attribute");
 		System_Boolean = Lookup (corlib_assembly, "System", "Boolean");
 		System_Byte = Lookup (corlib_assembly, "System", "Byte");
+		System_Char = Lookup (corlib_assembly, "System", "Char");
 		System_Delegate = Lookup (corlib_assembly, "System", "Delegate");
 		System_Double = Lookup (corlib_assembly, "System", "Double");
 		System_Float = Lookup (corlib_assembly, "System", "Single");
@@ -207,11 +188,19 @@ public class TypeManager {
 		System_UInt16 = Lookup (corlib_assembly, "System", "UInt16");
 		System_UInt32 = Lookup (corlib_assembly, "System", "UInt32");
 		System_UInt64 = Lookup (corlib_assembly, "System", "UInt64");
+		System_UIntPtr = Lookup (corlib_assembly, "System", "UIntPtr");
 		System_Void = Lookup (corlib_assembly, "System", "Void");
 
+#if NET
+		System_nint = Lookup (corlib_assembly, "System", "IntPtr");
+		System_nuint = Lookup (corlib_assembly, "System", "UIntPtr");
+		var interop_assembly = binding_touch.universe.LoadFromAssemblyName ("System.Runtime.InteropServices");
+		System_nfloat = Lookup (interop_assembly, "System.Runtime.InteropServices", "NFloat");
+#else
 		System_nint = Lookup (platform_assembly, "System", "nint");
 		System_nuint = Lookup (platform_assembly, "System", "nuint");
 		System_nfloat = Lookup (platform_assembly, "System", "nfloat");
+#endif
 
 		/* fundamental */
 		NSObject = Lookup (platform_assembly, "Foundation", "NSObject");

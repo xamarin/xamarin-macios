@@ -3,6 +3,10 @@ using ObjCRuntime;
 
 namespace MobileCoreServices {
 
+	[Deprecated (PlatformName.iOS, 14, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+	[Deprecated (PlatformName.TvOS, 14, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+	[Deprecated (PlatformName.WatchOS, 7, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
+	[Deprecated (PlatformName.MacOSX, 11, 0, message : "Use the 'UniformTypeIdentifiers.UTType' API instead.")]
 	[Partial]
 	interface UTType {
 		[Field ("kUTTypeItem", "+CoreServices")]
@@ -474,20 +478,18 @@ namespace MobileCoreServices {
 		[Field ("kUTTagClassMIMEType", "+CoreServices")]
 		NSString TagClassMIMEType { get; }
 		
-#if MONOMAC
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("kUTTagClassNSPboardType", "+CoreServices")]
 		NSString TagClassNSPboardType { get; }
 		
+		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Field ("kUTTagClassOSType", "+CoreServices")]
 		NSString TagClassOSType { get; }
-#endif
 
 		[Mac(10,11), iOS (9,0)]
 		[Field ("kUTTypeSwiftSource", "+CoreServices")]
 		NSString SwiftSource { get; }
 
-// exclude from MonoMac classic
-#if (XAMCORE_2_0 || !MONOMAC)
 		[NoWatch]
 		[iOS (9,0)][Mac(10,11)]
 		[Field ("kUTTypeAlembic", "ModelIO")]
@@ -514,11 +516,15 @@ namespace MobileCoreServices {
 		[Field ("kUTTypeUniversalSceneDescription", "ModelIO")]
 		NSString UniversalSceneDescription { get; }
 
+		[NoWatch]
+		[iOS (15,0), Mac(12,0), TV (15,0), MacCatalyst (15,0)]
+		[Field ("kUTTypeUniversalSceneDescriptionMobile", "ModelIO")]
+		NSString UniversalSceneDescriptionMobile { get; }
+
 		[Watch (2,2)]
 		[iOS (9,1)][TV (9,0)]
 		[NoMac]
 		[Field ("kUTTypeLivePhoto", "+CoreServices")]
 		NSString LivePhoto { get; }
-#endif
 	}
 }

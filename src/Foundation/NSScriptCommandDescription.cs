@@ -6,7 +6,7 @@ using ObjCRuntime;
 
 namespace Foundation {
 
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 
 	// The kyes are not found in any of the public headers from apple. That is the reason
 	// to use this technique.
@@ -26,15 +26,6 @@ namespace Foundation {
 
 		NSScriptCommandDescriptionDictionary description = null;
 
-		static string ToFourCCString (int value)
-		{
-			return new string (new char [] {
-				(char) (byte) (value >> 24),
-				(char) (byte) (value >> 16),
-				(char) (byte) (value >> 8),
-				(char) (byte) value });
-		}
-		
 		static int ToIntValue (string fourCC)
 		{
 			if (fourCC.Length != 4)
@@ -91,11 +82,11 @@ namespace Foundation {
 		}
 
 		public string AppleEventClassCode {
-			get { return ToFourCCString (FCCAppleEventClassCode); }
+			get { return Runtime.ToFourCCString (FCCAppleEventClassCode); }
 		}
 
 		public string AppleEventCode {
-			get { return ToFourCCString (FCCAppleEventCode); }
+			get { return Runtime.ToFourCCString (FCCAppleEventCode); }
 		}
 
 		public string GetTypeForArgument (string name)
@@ -115,7 +106,7 @@ namespace Foundation {
 				throw new ArgumentNullException (name);
 
 			using (var nsName = new NSString (name)) {
-				return ToFourCCString (FCCAppleEventCodeForArgument (nsName));
+				return Runtime.ToFourCCString (FCCAppleEventCodeForArgument (nsName));
 			}
 		}
 		
@@ -127,7 +118,7 @@ namespace Foundation {
 		}
 
 		public string AppleEventCodeForReturnType {
-			get { return ToFourCCString (FCCAppleEventCodeForReturnType); }
+			get { return Runtime.ToFourCCString (FCCAppleEventCodeForReturnType); }
 		}
 
 		public NSScriptCommand CreateCommand ()

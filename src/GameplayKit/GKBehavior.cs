@@ -1,4 +1,4 @@
-﻿//
+//
 // GKBehavior.cs: Implements some nicer methods for GKBehavior
 //
 // Authors:
@@ -6,7 +6,9 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
+#nullable enable
+
 using System;
 using Foundation;
 
@@ -18,9 +20,11 @@ namespace GameplayKit {
 		}
 
 		public NSNumber this [GKGoal goal] {
-			get { return ObjectForKeyedSubscript (goal); }
+			// The docs show that ObjectForKeyedSubscript should return 0.0 if the GKGoal is not
+			// available but actually returns null: https://developer.apple.com/documentation/gameplaykit/gkbehavior/1388723-objectforkeyedsubscript?language=objc
+			// radar filed here: https://feedbackassistant.apple.com/feedback/9979863
+			get { return ObjectForKeyedSubscript (goal) ?? throw new ArgumentOutOfRangeException (nameof (goal)); }
 			set { SetObject (value, goal); }
 		}
 	}
 }
-#endif

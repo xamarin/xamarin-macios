@@ -5,7 +5,7 @@
 //   Aaron Bockover (abock@xamarin.com)
 //
 // Copyright 2013 Xamarin, Inc.
-#if XAMCORE_2_0 || !MONOMAC // MultipeerConnectivity is 64-bit only on OS X
+
 using System;
 
 using Foundation;
@@ -13,8 +13,13 @@ using ObjCRuntime;
 using Security;
 #if MONOMAC
 using AppKit;
+using UIViewController = AppKit.NSViewController;
 #else
 using UIKit;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace MultipeerConnectivity {
@@ -27,7 +32,7 @@ namespace MultipeerConnectivity {
 
 		[DesignatedInitializer]
 		[Export ("initWithDisplayName:")]
-		IntPtr Constructor (string myDisplayName);
+		NativeHandle Constructor (string myDisplayName);
 
 		[Export ("displayName")]
 		string DisplayName { get; }
@@ -42,7 +47,7 @@ namespace MultipeerConnectivity {
 	partial interface MCSession {
 
 		[Export ("initWithPeer:")]
-		IntPtr Constructor (MCPeerID myPeerID);
+		NativeHandle Constructor (MCPeerID myPeerID);
 
 		// Note: it should be a constructor but it's use of an NSArray of different types makes it hard to provide a 
 		// nice binding, i.e. the first item of NSArray must be an SecIdentity followed by (0...) SecCertificate
@@ -60,9 +65,11 @@ namespace MultipeerConnectivity {
 		MCPeerID [] ConnectedPeers { get; }
 
 		[Async]
+		[return: NullAllowed]
 		[Export ("sendResourceAtURL:withName:toPeer:withCompletionHandler:")]
 		NSProgress SendResource (NSUrl resourceUrl, string resourceName, MCPeerID peerID, [NullAllowed] Action<NSError> completionHandler);
 
+		[return: NullAllowed]
 		[Export ("startStreamWithName:toPeer:error:")]
 		NSOutputStream StartStream (string streamName, MCPeerID peerID, out NSError error);
 
@@ -77,6 +84,7 @@ namespace MultipeerConnectivity {
 		MCPeerID MyPeerID { get; }
 
 		// we use NSArray because, when non-null, it contains a SecIdentity followed by 0..n SecCertificate - none are NSObject
+		[NullAllowed]
 		[Export ("securityIdentity")]
 		NSArray SecurityIdentity { get; }
 
@@ -142,7 +150,7 @@ namespace MultipeerConnectivity {
 
 		[DesignatedInitializer]
 		[Export ("initWithPeer:discoveryInfo:serviceType:")]
-		IntPtr Constructor (MCPeerID myPeerID, [NullAllowed] NSDictionary info, string serviceType);
+		NativeHandle Constructor (MCPeerID myPeerID, [NullAllowed] NSDictionary info, string serviceType);
 
 		[Export ("startAdvertisingPeer")]
 		void StartAdvertisingPeer ();
@@ -160,6 +168,7 @@ namespace MultipeerConnectivity {
 		[Export ("myPeerID")]
 		MCPeerID MyPeerID { get; }
 
+		[NullAllowed]
 		[Export ("discoveryInfo")]
 		NSDictionary DiscoveryInfo { get; }
 
@@ -176,9 +185,7 @@ namespace MultipeerConnectivity {
 	[Protocol]
 	partial interface MCNearbyServiceAdvertiserDelegate {
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("advertiser:didReceiveInvitationFromPeer:withContext:invitationHandler:")]
 		void DidReceiveInvitationFromPeer (MCNearbyServiceAdvertiser advertiser, MCPeerID peerID, [NullAllowed] NSData context, MCNearbyServiceAdvertiserInvitationHandler invitationHandler);
 
@@ -194,7 +201,7 @@ namespace MultipeerConnectivity {
 
 		[DesignatedInitializer]
 		[Export ("initWithPeer:serviceType:")]
-		IntPtr Constructor (MCPeerID myPeerID, string serviceType);
+		NativeHandle Constructor (MCPeerID myPeerID, string serviceType);
 
 		[Export ("startBrowsingForPeers")]
 		void StartBrowsingForPeers ();
@@ -226,47 +233,36 @@ namespace MultipeerConnectivity {
 	[Protocol]
 	partial interface MCNearbyServiceBrowserDelegate {
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
-		[Mac (10,9)]
 		[Export ("browser:foundPeer:withDiscoveryInfo:")]
 		void FoundPeer (MCNearbyServiceBrowser browser, MCPeerID peerID, [NullAllowed] NSDictionary info);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
-		[Mac (10,9)]
 		[Export ("browser:lostPeer:")]
 		void LostPeer (MCNearbyServiceBrowser browser, MCPeerID peerID);
 
-		[Mac (10,9)]
 		[Export ("browser:didNotStartBrowsingForPeers:")]
 		void DidNotStartBrowsingForPeers (MCNearbyServiceBrowser browser, NSError error);
 	}
 
 	interface IMCNearbyServiceBrowserDelegate {}
 
-#if MONOMAC
 	[Mac (10,10)]
-	[BaseType (typeof (NSViewController))]
-#else
 	[TV (10,0)]
 	[iOS (7,0)]
 	[BaseType (typeof (UIViewController))]
-#endif
 	[DisableDefaultCtor] // NSInvalidArgumentException -[MCPeerPickerViewController initWithNibName:bundle:]: unrecognized selector sent to instance 0x15517b90
 	partial interface MCBrowserViewController : MCNearbyServiceBrowserDelegate {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[DesignatedInitializer]
 		[Export ("initWithBrowser:session:")]
-		IntPtr Constructor (MCNearbyServiceBrowser browser, MCSession session);
+		NativeHandle Constructor (MCNearbyServiceBrowser browser, MCSession session);
 
 		[Export ("initWithServiceType:session:")]
-		IntPtr Constructor (string serviceType, MCSession session);
+		NativeHandle Constructor (string serviceType, MCSession session);
 
 		[Export ("delegate", ArgumentSemantic.Weak), NullAllowed]
 		NSObject WeakDelegate { get; set; }
@@ -281,6 +277,9 @@ namespace MultipeerConnectivity {
 		[Export ("maximumNumberOfPeers", ArgumentSemantic.Assign)]
 		nuint MaximumNumberOfPeers { get; set; }
 
+#if !MONOMAC
+		[NullAllowed]
+#endif
 		[Export ("browser")]
 		MCNearbyServiceBrowser Browser { get; }
 
@@ -295,15 +294,11 @@ namespace MultipeerConnectivity {
 	[Protocol]
 	partial interface MCBrowserViewControllerDelegate {
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("browserViewControllerWasCancelled:")]
 		void WasCancelled (MCBrowserViewController browserViewController);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("browserViewControllerDidFinish:")]
 		void DidFinish (MCBrowserViewController browserViewController);
 
@@ -321,8 +316,9 @@ namespace MultipeerConnectivity {
 
 		[DesignatedInitializer]
 		[Export ("initWithServiceType:discoveryInfo:session:")]
-		IntPtr Constructor (string serviceType, [NullAllowed] NSDictionary info, MCSession session);
+		NativeHandle Constructor (string serviceType, [NullAllowed] NSDictionary info, MCSession session);
 
+		[NullAllowed]
 		[Export ("discoveryInfo")]
 		NSDictionary DiscoveryInfo { get; }
 
@@ -360,4 +356,3 @@ namespace MultipeerConnectivity {
 		void WillPresentInvitation (MCAdvertiserAssistant advertiserAssistant);
 	}
 }
-#endif

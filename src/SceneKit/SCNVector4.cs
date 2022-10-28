@@ -1,4 +1,4 @@
-﻿#region --- License ---
+#region --- License ---
 /*
  * Copyright 2014 Xamarin Inc, All Rights Reserved
  
@@ -27,17 +27,32 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
+using System.Runtime.Versioning;
 
+#if NET
+using Vector2 = global::System.Numerics.Vector2;
+using Vector3 = global::System.Numerics.Vector3;
+using Vector4 = global::System.Numerics.Vector4;
+using MathHelper = global::CoreGraphics.MathHelper;
+#else
 using Vector2 = global::OpenTK.Vector2;
 using Vector3 = global::OpenTK.Vector3;
 using Vector4 = global::OpenTK.Vector4;
 using Quaternion = global::OpenTK.Quaternion;
 using MathHelper = global::OpenTK.MathHelper;
+#endif
+
 #if MONOMAC
+#if NET
+using pfloat = System.Runtime.InteropServices.NFloat;
+#else
 using pfloat = System.nfloat;
+#endif
 #else
 using pfloat = System.Single;
 #endif
+
+#nullable enable
 
 namespace SceneKit
 {
@@ -45,6 +60,12 @@ namespace SceneKit
     /// <remarks>
     /// The Vector4 structure is suitable for interoperation with unmanaged code requiring four consecutive floats.
     /// </remarks>
+#if NET
+    [SupportedOSPlatform ("ios")]
+    [SupportedOSPlatform ("maccatalyst")]
+    [SupportedOSPlatform ("macos")]
+    [SupportedOSPlatform ("tvos")]
+#endif
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct SCNVector4 : IEquatable<SCNVector4>
@@ -74,42 +95,27 @@ namespace SceneKit
         /// <summary>
         /// Defines a unit-length SCNVector4 that points towards the X-axis.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNVector4 UnitX = new SCNVector4(1, 0, 0, 0);
+        public readonly static SCNVector4 UnitX = new SCNVector4(1, 0, 0, 0);
 
         /// <summary>
         /// Defines a unit-length SCNVector4 that points towards the Y-axis.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNVector4 UnitY = new SCNVector4(0, 1, 0, 0);
+        public readonly static SCNVector4 UnitY = new SCNVector4(0, 1, 0, 0);
 
         /// <summary>
         /// Defines a unit-length SCNVector4 that points towards the Z-axis.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNVector4 UnitZ = new SCNVector4(0, 0, 1, 0);
+        public readonly static SCNVector4 UnitZ = new SCNVector4(0, 0, 1, 0);
 
         /// <summary>
         /// Defines a unit-length SCNVector4 that points towards the W-axis.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNVector4 UnitW = new SCNVector4(0, 0, 0, 1);
+        public readonly static SCNVector4 UnitW = new SCNVector4(0, 0, 0, 1);
 
         /// <summary>
         /// Defines a zero-length SCNVector4.
         /// </summary>
-#if XAMCORE_2_0
-		readonly
-#endif
-        public static SCNVector4 Zero = new SCNVector4(0, 0, 0, 0);
+        public readonly static SCNVector4 Zero = new SCNVector4(0, 0, 0, 0);
 
         /// <summary>
         /// Defines an instance with all components set to 1.
@@ -212,93 +218,6 @@ namespace SceneKit
 
         #region Instance
 
-#if !XAMCORE_2_0
-        #region public void Add()
-
-        /// <summary>Add the Vector passed as parameter to this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [Obsolete("Use static Add() method instead.")]
-        public void Add(SCNVector4 right)
-        {
-            this.X += right.X;
-            this.Y += right.Y;
-            this.Z += right.Z;
-            this.W += right.W;
-        }
-
-        /// <summary>Add the Vector passed as parameter to this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [CLSCompliant(false)]
-        [Obsolete("Use static Add() method instead.")]
-        public void Add(ref SCNVector4 right)
-        {
-            this.X += right.X;
-            this.Y += right.Y;
-            this.Z += right.Z;
-            this.W += right.W;
-        }
-
-        #endregion public void Add()
-
-        #region public void Sub()
-
-        /// <summary>Subtract the Vector passed as parameter from this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [Obsolete("Use static Subtract() method instead.")]
-        public void Sub(SCNVector4 right)
-        {
-            this.X -= right.X;
-            this.Y -= right.Y;
-            this.Z -= right.Z;
-            this.W -= right.W;
-        }
-
-        /// <summary>Subtract the Vector passed as parameter from this instance.</summary>
-        /// <param name="right">Right operand. This parameter is only read from.</param>
-        [CLSCompliant(false)]
-        [Obsolete("Use static Subtract() method instead.")]
-        public void Sub(ref SCNVector4 right)
-        {
-            this.X -= right.X;
-            this.Y -= right.Y;
-            this.Z -= right.Z;
-            this.W -= right.W;
-        }
-
-        #endregion public void Sub()
-
-        #region public void Mult()
-
-        /// <summary>Multiply this instance by a scalar.</summary>
-        /// <param name="f">Scalar operand.</param>
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Mult(pfloat f)
-        {
-            this.X *= f;
-            this.Y *= f;
-            this.Z *= f;
-            this.W *= f;
-        }
-
-        #endregion public void Mult()
-
-        #region public void Div()
-
-        /// <summary>Divide this instance by a scalar.</summary>
-        /// <param name="f">Scalar operand.</param>
-        [Obsolete("Use static Divide() method instead.")]
-        public void Div(pfloat f)
-        {
-            pfloat mult = 1.0f / f;
-            this.X *= mult;
-            this.Y *= mult;
-            this.Z *= mult;
-            this.W *= mult;
-        }
-
-        #endregion public void Div()
-#endif // !XAMCORE_2_0
-
         #region public float Length
 
         /// <summary>
@@ -332,7 +251,7 @@ namespace SceneKit
             get
             {
                 return (pfloat)(1.0f / MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
-            }
+     	    }
         }
 
         #endregion
@@ -382,58 +301,13 @@ namespace SceneKit
         public void NormalizeFast()
         {
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(X * X + Y * Y + Z * Z + W * W));
-            X *= scale;
+     	    X *= scale;
             Y *= scale;
             Z *= scale;
             W *= scale;
         }
 
         #endregion
-
-#if !XAMCORE_2_0
-        #region public void Scale()
-
-        /// <summary>
-        /// Scales the current SCNVector4 by the given amounts.
-        /// </summary>
-        /// <param name="sx">The scale of the X component.</param>
-        /// <param name="sy">The scale of the Y component.</param>
-        /// <param name="sz">The scale of the Z component.</param>
-        /// <param name="sw">The scale of the Z component.</param>
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Scale(pfloat sx, pfloat sy, pfloat sz, pfloat sw)
-        {
-            this.X = X * sx;
-            this.Y = Y * sy;
-            this.Z = Z * sz;
-            this.W = W * sw;
-        }
-
-        /// <summary>Scales this instance by the given parameter.</summary>
-        /// <param name="scale">The scaling of the individual components.</param>
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Scale(SCNVector4 scale)
-        {
-            this.X *= scale.X;
-            this.Y *= scale.Y;
-            this.Z *= scale.Z;
-            this.W *= scale.W;
-        }
-
-        /// <summary>Scales this instance by the given parameter.</summary>
-        /// <param name="scale">The scaling of the individual components.</param>
-        [CLSCompliant(false)]
-        [Obsolete("Use static Multiply() method instead.")]
-        public void Scale(ref SCNVector4 scale)
-        {
-            this.X *= scale.X;
-            this.Y *= scale.Y;
-            this.Z *= scale.Z;
-            this.W *= scale.W;
-        }
-
-        #endregion public void Scale()
-#endif // !XAMCORE_2_0
 
         #endregion
 
@@ -857,7 +731,7 @@ namespace SceneKit
         public static void NormalizeFast(ref SCNVector4 vec, out SCNVector4 result)
         {
             pfloat scale = (pfloat)(MathHelper.InverseSqrtFast(vec.X * vec.X + vec.Y * vec.Y + vec.Z * vec.Z + vec.W * vec.W));
-            result.X = vec.X * scale;
+     	    result.X = vec.X * scale;
             result.Y = vec.Y * scale;
             result.Z = vec.Z * scale;
             result.W = vec.W * scale;
@@ -969,25 +843,50 @@ namespace SceneKit
         #region Transform
 
         /// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The vector to transform</param>
+#if NET
+        /// <param name="vec">The column vector to transform</param>
+#else
+        /// <param name="vec">The row vector to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <returns>The transformed vector</returns>
         public static SCNVector4 Transform(SCNVector4 vec, SCNMatrix4 mat)
         {
-            SCNVector4 result;
-            result.X = SCNVector4.Dot(vec, mat.Column0);
-            result.Y = SCNVector4.Dot(vec, mat.Column1);
-            result.Z = SCNVector4.Dot(vec, mat.Column2);
-            result.W = SCNVector4.Dot(vec, mat.Column3);
+            Transform(ref vec, ref mat, out var result);
             return result;
         }
 
-        /// <summary>Transform a Vector by the given Matrix</summary>
-        /// <param name="vec">The vector to transform</param>
+        /// <summary>Transform a Vector by the given Matrix.</summary>
+#if NET
+        /// <param name="vec">The column vector to transform</param>
+#else
+        /// <param name="vec">The row vector to transform</param>
+#endif
         /// <param name="mat">The desired transformation</param>
         /// <param name="result">The transformed vector</param>
         public static void Transform(ref SCNVector4 vec, ref SCNMatrix4 mat, out SCNVector4 result)
         {
+#if NET
+            result.X = vec.X * mat.Column0.X +
+                       vec.Y * mat.Column1.X +
+                       vec.Z * mat.Column2.X +
+                       vec.W * mat.Column3.X;
+
+            result.Y = vec.X * mat.Column0.Y +
+                       vec.Y * mat.Column1.Y +
+                       vec.Z * mat.Column2.Y +
+                       vec.W * mat.Column3.Y;
+
+            result.Z = vec.X * mat.Column0.Z +
+                       vec.Y * mat.Column1.Z +
+                       vec.Z * mat.Column2.Z +
+                       vec.W * mat.Column3.Z;
+
+            result.W = vec.X * mat.Column0.W +
+                       vec.Y * mat.Column1.W +
+                       vec.Z * mat.Column2.W +
+                       vec.W * mat.Column3.W;
+#else
             result.X = vec.X * mat.Row0.X +
                        vec.Y * mat.Row1.X +
                        vec.Z * mat.Row2.X +
@@ -1007,6 +906,7 @@ namespace SceneKit
                        vec.Y * mat.Row1.W +
                        vec.Z * mat.Row2.W +
                        vec.W * mat.Row3.W;
+#endif
         }
 
         #endregion
@@ -1204,7 +1104,7 @@ namespace SceneKit
         /// </summary>
         /// <param name="obj">The object to compare to.</param>
         /// <returns>True if the instances are equal; false otherwise.</returns>
-        public override bool Equals(object obj)
+        public override bool Equals (object? obj)
         {
             if (!(obj is SCNVector4))
                 return false;
@@ -1243,7 +1143,5 @@ namespace SceneKit
 	{
 		return new Vector4 ((float)source.X, (float)source.Y, (float)source.Z, (float)source.W);
 	}
-
-		
     }
 }

@@ -8,24 +8,9 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using CoreData;
 using Foundation;
-#else
-using MonoTouch.CoreData;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.CoreData {
 
@@ -47,7 +32,11 @@ namespace MonoTouchFixtures.CoreData {
 		public void IsConfiguration_Null ()
 		{
 			using (var moc = new NSManagedObjectModel()) {
+#if NET
+				Assert.IsFalse (moc.IsConfigurationCompatibleWithStoreMetadata (null, new NSDictionary ()), "IsConfiguration");
+#else
 				Assert.IsFalse (moc.IsConfiguration (null, new NSDictionary ()), "IsConfiguration");
+#endif
 				Default (moc);
 			}
 		}

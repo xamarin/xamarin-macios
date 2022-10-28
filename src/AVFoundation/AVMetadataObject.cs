@@ -23,13 +23,15 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-#if XAMCORE_2_0 && IOS
+#if IOS
 using Foundation;
 using ObjCRuntime;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+
+#nullable enable
 
 namespace AVFoundation {
 
@@ -40,11 +42,11 @@ namespace AVFoundation {
 			}
 		}
 
-		internal static AVMetadataObjectType ArrayToEnum (NSString[] arr)
+		internal static AVMetadataObjectType ArrayToEnum (NSString[]? arr)
 		{
 			AVMetadataObjectType rv = AVMetadataObjectType.None;
 
-			if (arr == null || arr.Length == 0)
+			if (arr is null || arr.Length == 0)
 				return rv;
 
 			foreach (var str in arr) {
@@ -54,7 +56,7 @@ namespace AVFoundation {
 			return rv;
 		}
 
-		internal static NSString[] EnumToArray (AVMetadataObjectType value)
+		internal static NSString[]? EnumToArray (AVMetadataObjectType value)
 		{
 			if (value == AVMetadataObjectType.None)
 				return null;
@@ -64,8 +66,11 @@ namespace AVFoundation {
 			var shifts = 0;
 
 			while (val != 0) {
-				if ((val & 0x1) == 0x1)
-					rv.Add (((AVMetadataObjectType) (0x1UL << shifts)).GetConstant ());
+				if ((val & 0x1) == 0x1) {
+					var constant = ((AVMetadataObjectType) (0x1UL << shifts)).GetConstant ();
+					if (constant is not null)
+						rv.Add (constant);
+				}
 				val >>= 1;
 				shifts++;
 			}

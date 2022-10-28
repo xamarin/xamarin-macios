@@ -3,25 +3,14 @@
 #if !MONOMAC
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
+using ObjCRuntime;
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
-
 
 namespace MonoTouchFixtures.UIKit {
 	
@@ -29,9 +18,20 @@ namespace MonoTouchFixtures.UIKit {
 	[Preserve (AllMembers = true)]
 	public class FontTest {
 		
+		void AssertNotBrokenFontWithSize ()
+		{
+#if __MACCATALYST__ || __MACOS__
+			if (TestRuntime.CheckXcodeVersion (11, 0) && !TestRuntime.CheckXcodeVersion (12, 0)) {
+				// Yep, GameKit breaks [UIKit fontWithSize] on macOS 10.15...
+				Assert.Ignore ("GameKit breaks UIKIt.FontWithSize on this OS version. Ref: https://github.com/xamarin/maccore/issues/2382");
+			}
+#endif
+		}
+
 		[Test]
 		public void WithSize ()
 		{
+			AssertNotBrokenFontWithSize ();
 			var f1 = UIFont.SystemFontOfSize (10).WithSize (20);
 			Assert.AreEqual (f1.PointSize, (nfloat) 20, "#size");
 		}
@@ -68,9 +68,9 @@ namespace MonoTouchFixtures.UIKit {
 				// IEquatable<NSObject> is only in unified - otherwise it would be the same call as above
 				Assert.True (f1.Equals (f2), "{0} Equals", api);
 			}
-			Assert.That (f1.Handle, Is.EqualTo (IntPtr.Zero), "{0} 1", api);
+			Assert.That (f1.Handle, Is.EqualTo (NativeHandle.Zero), "{0} 1", api);
 			// without our "fix" that would be the same managed instance (as f1) and the handle would be nil
-			Assert.That (f2.Handle, Is.Not.EqualTo (IntPtr.Zero), "{0} 2", api);
+			Assert.That (f2.Handle, Is.Not.EqualTo (NativeHandle.Zero), "{0} 2", api);
 		}
 
 		[Test]
@@ -98,10 +98,12 @@ namespace MonoTouchFixtures.UIKit {
 			f2 = UIFont.SystemFontOfSize (12);
 			SemiFactory_25511 (f1, f2, "SystemFontOfSize");
 
+#if !__MACCATALYST__ // https://github.com/xamarin/maccore/issues/2382
 			// instance
 			f1 = f2.WithSize (12);
 			f2 = f2.WithSize (12);
 			SemiFactory_25511 (f1, f2, "WithSize");
+#endif
 
 			if (!TestRuntime.CheckXcodeVersion (5, 0))
 				return;
@@ -171,6 +173,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.IsNotNull (UIFont.BoldSystemFontOfSize (-4), "BoldSystemFontOfSize");
 			Assert.IsNotNull (UIFont.ItalicSystemFontOfSize (-5), "ItalicSystemFontOfSize");
 
+			AssertNotBrokenFontWithSize ();
 			using (var font = UIFont.SystemFontOfSize (12)) {
 				Assert.IsNotNull (font.WithSize (-6), "WithSize");
 			}

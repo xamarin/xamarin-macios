@@ -1,16 +1,6 @@
 #if !__WATCHOS__
-using System;
-using System.Threading;
-#if XAMCORE_2_0
 using Foundation;
 using Network;
-using ObjCRuntime;
-using CoreFoundation;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.CoreFoundation;
-#endif
 
 using NUnit.Framework;
 
@@ -21,7 +11,7 @@ namespace MonoTouchFixtures.Network {
 	public class NWProtocolTlsOptionsTest {
 		NWProtocolTlsOptions options;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]
@@ -34,7 +24,14 @@ namespace MonoTouchFixtures.Network {
 		public void TearDown () => options.Dispose ();
 
 		[Test]
-		public void ProtocolOptionsTest () => Assert.NotNull (options.TlsProtocolOptions);
+		public void ProtocolOptionsTest ()
+		{
+#if NET
+			Assert.NotNull (options.ProtocolOptions);
+#else
+			Assert.NotNull (options.TlsProtocolOptions);
+#endif
+		}
 	}
 }
 #endif

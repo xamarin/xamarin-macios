@@ -1,5 +1,5 @@
 temp/
-diff/
+output/
 links/
 references/
 updated-references/
@@ -9,6 +9,8 @@ ios-*.md
 tvos-*.md
 watchos-*.md
 macos-*.md
+maccat-*.md
 xamarin-*.md
 *.stamp
+*.md.tmp
 bundle-*.zip

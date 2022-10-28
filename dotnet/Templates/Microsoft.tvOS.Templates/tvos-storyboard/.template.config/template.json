@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Microsoft",
+  "classifications": [ "tvOS", "Mobile" ],
+  "name": "tvOS Storyboard",
+  "description": "A tvOS Storyboard",
+  "tags": {
+    "language": "C#",
+    "type": "item"
+  },
+  "identity": "Microsoft.tvOS.Storyboard",
+  "shortName": "tvos-storyboard",
+  "sourceName": "Storyboard1",
+  "primaryOutputs": [
+    { "path": "Stortboard1.storyboard" }
+  ],
+  "defaultName": "Storyboard1"
+}

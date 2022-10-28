@@ -1,4 +1,4 @@
-﻿//
+//
 // GKComponentSystem.cs: Implements some nicer methods for GKComponentSystem
 //
 // Authors:
@@ -6,7 +6,9 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
-#if XAMCORE_2_0 // GKComponentSystem is a generic type, which we only support in Unified (for now at least)
+
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -19,7 +21,7 @@ namespace GameplayKit {
 		{
 		}
 
-		public Type ComponentType { 
+		public Type? ComponentType { 
 			get { return Class.Lookup (ComponentClass); }
 		}
 
@@ -28,4 +30,3 @@ namespace GameplayKit {
 		}
 	}
 }
-#endif

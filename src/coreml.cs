@@ -1,4 +1,4 @@
-﻿//
+//
 // CoreML C# bindings
 //
 // Authors:
@@ -6,8 +6,6 @@
 //
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
-
-#if XAMCORE_2_0
 
 using System;
 using ObjCRuntime;
@@ -26,6 +24,10 @@ using IMTLCommandBuffer = global::Foundation.NSObject; // Won't be used just to 
 using IMTLTexture = global::Foundation.NSObject; // Won't be used just to make compilation happy.
 using IMTLDevice = global::Foundation.NSObject;
 using VNImageCropAndScaleOption = global::System.nuint;
+#endif
+
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace CoreML {
@@ -51,19 +53,29 @@ namespace CoreML {
 		Generic = 0,
 		FeatureType = 1,
 		IO = 3,
-		[Watch (4,2), TV (11,2), Mac (10,13,2), iOS (11,2)]
 		CustomLayer = 4,
 		CustomModel = 5,
 		Update = 6,
 		Parameters = 7,
+		ModelDecryptionKeyFetch = 8,
+		ModelDecryption = 9,
+		ModelCollection = 10,
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[Native]
 	public enum MLMultiArrayDataType : long {
-		Double = 65536 | 64,
-		Float32 = 65536 | 32,
-		Int32 = 131072 | 32,
+		Double = 0x10000 | 64,
+		// added in xcode12 but it's the same a `Double` and can be used in earlier versions
+		Float64 = 0x10000 | 64,
+		Float32 = 0x10000 | 32,
+#if MONOMAC // macOS 12 Only
+		[Mac (12,0)][NoiOS][NoMacCatalyst][NoWatch][NoTV]
+		Float16 = 0x10000 | 16,
+#endif
+		// added in xcode12 but it's the same a `Float32` and can be used in earlier versions
+		Float = 0x10000 | 32,
+		Int32 = 0x20000 | 32,
 	}
 
 	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
@@ -111,13 +123,13 @@ namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
-	interface MLDictionaryFeatureProvider : MLFeatureProvider {
+	interface MLDictionaryFeatureProvider : MLFeatureProvider, NSSecureCoding {
 
 		[Export ("dictionary")]
 		NSDictionary<NSString, MLFeatureValue> Dictionary { get; }
 
 		[Export ("initWithDictionary:error:")]
-		IntPtr Constructor (NSDictionary<NSString, NSObject> dictionary, out NSError error);
+		NativeHandle Constructor (NSDictionary<NSString, NSObject> dictionary, out NSError error);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -170,7 +182,7 @@ namespace CoreML {
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[BaseType (typeof (NSObject))]
-	interface MLFeatureValue : NSCopying {
+	interface MLFeatureValue : NSCopying, NSSecureCoding {
 
 		[Export ("type")]
 		MLFeatureType Type { get; }
@@ -247,7 +259,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (url, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (url, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -259,7 +271,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (url, constraint, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (url, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -271,7 +283,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (image, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (image, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -283,7 +295,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (image, constraint, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (image, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -295,7 +307,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (url, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (url, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -307,7 +319,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (url, orientation, constraint, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (url, orientation, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (NSUrl url, CGImagePropertyOrientation orientation, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -319,7 +331,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (image, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (image, orientation, pixelsWide, pixelsHigh, pixelFormatType, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, nint pixelsWide, nint pixelsHigh, CVPixelFormatType pixelFormatType, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 
@@ -331,7 +343,7 @@ namespace CoreML {
 
 		[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 		[Static]
-		[Wrap ("Create (image, orientation, constraint, imageOptions?.Dictionary, out error)")]
+		[Wrap ("Create (image, orientation, constraint, imageOptions.GetDictionary (), out error)")]
 		[return: NullAllowed]
 		MLFeatureValue Create (CGImage image, CGImagePropertyOrientation orientation, MLImageConstraint constraint, [NullAllowed] MLFeatureValueImageOption imageOptions, [NullAllowed] out NSError error);
 	}
@@ -400,6 +412,12 @@ namespace CoreML {
 		[return: NullAllowed]
 		NSObject GetParameterValue (MLParameterKey key, [NullAllowed] out NSError error);
 
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Async]
+		[Export ("loadContentsOfURL:configuration:completionHandler:")]
+		void LoadContents (NSUrl url, MLModelConfiguration configuration, Action<MLModel, NSError> handler);
+
 		// Category MLModel (MLModelCompilation)
 
 		[Static]
@@ -430,6 +448,11 @@ namespace CoreML {
 
 		[Wrap ("_Metadata")]
 		MLModelMetadata Metadata { get; }
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
+		[NullAllowed, Export ("classLabels", ArgumentSemantic.Copy)]
+		NSObject[] ClassLabels { get; }
 
 		// From MLModelDescription (MLUpdateAdditions)
 
@@ -482,7 +505,7 @@ namespace CoreML {
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
 	[DisableDefaultCtor]
 	[BaseType (typeof (NSObject))]
-	interface MLMultiArray {
+	interface MLMultiArray : NSSecureCoding {
 
 		[Export ("dataPointer")]
 		IntPtr DataPointer { get; }
@@ -501,13 +524,22 @@ namespace CoreML {
 		[Export ("count")]
 		nint Count { get; }
 
+		[NullAllowed]
+		[NoWatch, NoTV, NoiOS, Mac (12,0)]
+		[Export ("pixelBuffer")]
+		CVPixelBuffer PixelBuffer { get; }
+
 		// From MLMultiArray (Creation) Category
 
 		[Export ("initWithShape:dataType:error:")]
-		IntPtr Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, out NSError error);
+		NativeHandle Constructor (NSNumber [] shape, MLMultiArrayDataType dataType, out NSError error);
 
 		[Export ("initWithDataPointer:shape:dataType:strides:deallocator:error:")]
-		IntPtr Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, Action<IntPtr> deallocator, out NSError error);
+		NativeHandle Constructor (IntPtr dataPointer, NSNumber [] shape, MLMultiArrayDataType dataType, NSNumber [] strides, [NullAllowed] Action<IntPtr> deallocator, out NSError error);
+
+		[NoWatch, NoTV, NoiOS, Mac (12,0)]
+		[Export ("initWithPixelBuffer:shape:")]
+		IntPtr Constructor (CVPixelBuffer pixelBuffer, NSNumber [] shape);
 
 		// From MLMultiArray (NSNumberDataAccess) Category
 
@@ -521,7 +553,7 @@ namespace CoreML {
 		[Export ("objectForKeyedSubscript:")]
 		[Internal]
 		// Bind 'key' as IntPtr to avoid multiple conversions (nint[] -> NSNumber[] -> NSArray)
-		NSNumber GetObject (IntPtr key);
+		NSNumber GetObjectInternal (IntPtr key);
 
 		[Export ("setObject:atIndexedSubscript:")]
 		void SetObject (NSNumber obj, nint idx);
@@ -533,7 +565,14 @@ namespace CoreML {
 		[Export ("setObject:forKeyedSubscript:")]
 		[Internal]
 		// Bind 'key' as IntPtr to avoid multiple conversions (nint[] -> NSNumber[] -> NSArray)
-		void SetObject (NSNumber obj, IntPtr key);
+		void SetObjectInternal (NSNumber obj, IntPtr key);
+
+		// @interface Concatenating (MLMultiArray)
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("multiArrayByConcatenatingMultiArrays:alongAxis:dataType:")]
+		MLMultiArray Concat (MLMultiArray[] multiArrays, nint axis, MLMultiArrayDataType dataType);
 	}
 
 	[Watch (4,0), TV (11,0), Mac (10,13), iOS (11,0)]
@@ -585,8 +624,18 @@ namespace CoreML {
 	[BaseType (typeof (NSObject))]
 	interface MLPredictionOptions {
 
+		[Deprecated (PlatformName.WatchOS, 8, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
+ 		[Deprecated (PlatformName.TvOS, 15, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
+ 		[Deprecated (PlatformName.iOS, 15, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
+ 		[Deprecated (PlatformName.MacCatalyst, 15, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
+ 		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'MLModelConfiguration.ComputeUnits' instead.")]
 		[Export ("usesCPUOnly")]
 		bool UsesCpuOnly { get; set; }
+
+		// Leaving it intentionally as NSDictionary to make it easier to use the lowlevel apis.
+		[NoWatch, NoTV, NoiOS, Mac (12,0)]
+		[Export ("outputBackings", ArgumentSemantic.Copy)]
+		NSDictionary OutputBackings { get; set; }
 	}
 
 	[NoWatch, TV (11,2), Mac (10,13,2), iOS (11,2)]
@@ -596,7 +645,7 @@ namespace CoreML {
 		// Must be manually inlined in classes implementing this protocol
 		//[Abstract]
 		//[Export ("initWithParameterDictionary:error:")]
-		//IntPtr Constructor (NSDictionary<NSString, NSObject> parameters, [NullAllowed] out NSError error);
+		//NativeHandle Constructor (NSDictionary<NSString, NSObject> parameters, [NullAllowed] out NSError error);
 
 		[Abstract]
 		[Export ("setWeightData:error:")]
@@ -624,10 +673,10 @@ namespace CoreML {
 		IMLFeatureProvider[] Array { get; }
 
 		[Export ("initWithFeatureProviderArray:")]
-		IntPtr Constructor (IMLFeatureProvider[] array);
+		NativeHandle Constructor (IMLFeatureProvider[] array);
 
 		[Export ("initWithDictionary:error:")]
-		IntPtr Constructor (NSDictionary<NSString, NSArray> dictionary, out NSError error);
+		NativeHandle Constructor (NSDictionary<NSString, NSArray> dictionary, out NSError error);
 	}
 
 	interface IMLBatchProvider {}
@@ -647,12 +696,16 @@ namespace CoreML {
 
 	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
+#if NET
+	[Protocol, Model]
+#else
 	[Protocol, Model (AutoGeneratedName = true)]
+#endif
 	interface MLCustomModel {
 
 		// [Abstract]
 		[Export ("initWithModelDescription:parameterDictionary:error:")]
-		IntPtr Constructor (MLModelDescription modelDescription, NSDictionary<NSString, NSObject> parameters, out NSError error);
+		NativeHandle Constructor (MLModelDescription modelDescription, NSDictionary<NSString, NSObject> parameters, out NSError error);
 
 		[Abstract]
 		[Export ("predictionFromFeatures:options:error:")]
@@ -712,7 +765,7 @@ namespace CoreML {
 	[Watch (5,0), TV (12,0), Mac (10,14), iOS (12,0)]
 	[BaseType (typeof(NSObject))]
 	[DisableDefaultCtor]
-	interface MLSequence {
+	interface MLSequence : NSSecureCoding {
 
 		[Export ("type")]
 		MLFeatureType Type { get; }
@@ -952,7 +1005,7 @@ namespace CoreML {
 	interface MLUpdateProgressHandlers {
 
 		[Export ("initForEvents:progressHandler:completionHandler:")]
-		IntPtr Constructor (MLUpdateProgressEvent interestedEvents, [NullAllowed] Action<MLUpdateContext> progressHandler, Action<MLUpdateContext> completionHandler);
+		NativeHandle Constructor (MLUpdateProgressEvent interestedEvents, [NullAllowed] Action<MLUpdateContext> progressHandler, Action<MLUpdateContext> completionHandler);
 	}
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
@@ -970,6 +1023,18 @@ namespace CoreML {
 		[return: NullAllowed]
 		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, [NullAllowed] MLModelConfiguration configuration, MLUpdateProgressHandlers progressHandlers, [NullAllowed] out NSError error);
 
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("updateTaskForModelAtURL:trainingData:completionHandler:error:")]
+		[return: NullAllowed]
+		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, Action<MLUpdateContext> completionHandler, [NullAllowed] out NSError error);
+
+		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Static]
+		[Export ("updateTaskForModelAtURL:trainingData:progressHandlers:error:")]
+		[return: NullAllowed]
+		MLUpdateTask Create (NSUrl modelUrl, IMLBatchProvider trainingData, MLUpdateProgressHandlers progressHandlers, [NullAllowed] out NSError error);
+
 		[Export ("resumeWithParameters:")]
 		void Resume (NSDictionary<MLParameterKey, NSObject> updateParameters);
 	}
@@ -984,5 +1049,52 @@ namespace CoreML {
 		[Export ("writeToURL:error:")]
 		bool Write (NSUrl url, [NullAllowed] out NSError error);
 	}
+
+	[Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
+	[NoTV][NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelCollection {
+
+		[Export ("identifier")]
+		string Identifier { get; }
+
+		[Export ("deploymentID")]
+		string DeploymentId { get; }
+
+		[Export ("entries", ArgumentSemantic.Copy)]
+		NSDictionary<NSString, MLModelCollectionEntry> Entries { get; }
+
+		[Static]
+		[Async]
+		[Export ("beginAccessingModelCollectionWithIdentifier:completionHandler:")]
+		NSProgress BeginAccessingModelCollection (string identifier, Action<MLModelCollection, NSError> completionHandler);
+
+		[Static]
+		[Async]
+		[Export ("endAccessingModelCollectionWithIdentifier:completionHandler:")]
+		void EndAccessingModelCollection (string identifier, Action<bool, NSError> completionHandler);
+
+		[Notification]
+		[Field ("MLModelCollectionDidChangeNotification")]
+		NSString DidChangeNotification { get; }
+	}
+
+	[Mac (11,0), iOS (14,0)]
+	[MacCatalyst (14,0)]
+	[NoTV][NoWatch]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface MLModelCollectionEntry {
+
+		[Export ("modelIdentifier")]
+		string ModelIdentifier { get; }
+
+		[Export ("modelURL")]
+		NSUrl ModelUrl { get; }
+
+		[Export ("isEqualToModelCollectionEntry:")]
+		bool IsEqual (MLModelCollectionEntry entry);
+	}
 }
-#endif // XAMCORE_2_0

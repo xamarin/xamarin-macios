@@ -1,7 +1,10 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29917.187
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xharness", "xharness.csproj", "{E1F53F80-8399-499B-8017-C414B9CD263B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Xharness.Tests", "Xharness.Tests\Xharness.Tests.csproj", "{AD1B78C3-6A36-40D0-B45D-246504A39D64}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,5 +16,15 @@ Global
 		{E1F53F80-8399-499B-8017-C414B9CD263B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E1F53F80-8399-499B-8017-C414B9CD263B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E1F53F80-8399-499B-8017-C414B9CD263B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD1B78C3-6A36-40D0-B45D-246504A39D64}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD1B78C3-6A36-40D0-B45D-246504A39D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD1B78C3-6A36-40D0-B45D-246504A39D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD1B78C3-6A36-40D0-B45D-246504A39D64}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1219B9C1-848A-4BC5-9231-5C0E7F9BCED0}
 	EndGlobalSection
 EndGlobal

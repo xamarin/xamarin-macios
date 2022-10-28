@@ -10,7 +10,6 @@ SOURCES = $(TEST_SRC) \
 # Everything that would invalidate a build
 ALL_SOURCE_FILES = $(TEST_SRC) $(SOURCES) $(EXTRA_FILES) Makefile
 
-export MD_APPLE_SDK_ROOT=$(shell dirname `dirname $(XCODE_DEVELOPER_ROOT)`)
 export TargetFrameworkFallbackSearchPaths=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild-frameworks
 export MSBuildExtensionsPathFallbackPathsOverride=$(MAC_DESTDIR)/Library/Frameworks/Mono.framework/External/xbuild
 export XamarinMacFrameworkRoot=$(MAC_DESTDIR)/Library/Frameworks/Xamarin.Mac.framework/Versions/Current
@@ -32,4 +31,4 @@ run run-test run-tests:: $(TESTDLL) $(EXTRA_DEPS)
 
 $(TESTDLL): $(ALL_SOURCE_FILES) 
 	$(Q) mkdir -p build
-	$(Q) $(SYSTEM_CSC) /debug $(SOURCES) -d:MMP_TEST -d:XAMCORE_2_0 -d:MONOMAC -t:library -r:nunit.framework -out:$(TESTDLL)
+	$(Q) $(SYSTEM_CSC) /debug $(SOURCES) -d:MMP_TEST -d:MONOMAC -t:library -r:nunit.framework -features:strict -out:$(TESTDLL)

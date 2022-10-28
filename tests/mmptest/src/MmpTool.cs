@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -37,6 +37,8 @@ namespace Xamarin
 				sb.Add ($"--output={OutputPath}");
 
 			switch (Profile) {
+			case Profile.None:
+				break;
 			case Profile.macOSMobile:
 				sb.Add ("--profile=Xamarin.Mac,Version=v2.0,Profile=Mobile");
 				break;
@@ -51,7 +53,7 @@ namespace Xamarin
 			}
 		}
 
-		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null, bool use_csc = true)
+		public override void CreateTemporaryApp (Profile profile, string appName = "testApp", string code = null, IList<string> extraArgs = null, string extraCode = null, string usings = null)
 		{
 			if (RootAssembly == null) {
 				OutputPath = CreateTemporaryDirectory ();
@@ -62,7 +64,7 @@ namespace Xamarin
 			ApplicationName = appName;
 			var app = Path.Combine (OutputPath, appName + ".app");
 			Directory.CreateDirectory (app);
-			RootAssembly = CompileTestAppExecutable (OutputPath, code, extraArgs, profile, appName, extraCode, usings, use_csc);
+			RootAssembly = CompileTestAppExecutable (OutputPath, code, extraArgs, profile, appName, extraCode, usings);
 		}
 
 		public override string GetAppAssembliesDirectory()

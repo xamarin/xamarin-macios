@@ -2,9 +2,7 @@
 // Copyright Microsoft Corp.
 using System;
 using System.Collections.Generic;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
-
+using System.Reflection;
 using Foundation;
 using ObjCRuntime;
 
@@ -63,14 +61,16 @@ public partial class Generator {
 		var intptrctor_visibility = filter.IntPtrCtorVisibility;
 		if (intptrctor_visibility == MethodAttributes.PrivateScope) {
 			// since it was not generated code we never fixed the .ctor(IntPtr) visibility for unified
-			if (XamcoreVersion >= 3) {
+			if (BindingTouch.IsDotNet) {
+				intptrctor_visibility = MethodAttributes.FamORAssem;
+			} else if (XamcoreVersion >= 3) {
 				intptrctor_visibility = MethodAttributes.FamORAssem;
 			} else {
 				intptrctor_visibility = MethodAttributes.Public;
 			}
 		}
 		print_generated_code ();
-		print ("{0}{1} (IntPtr handle) : base (handle)", GetVisibility (intptrctor_visibility), type_name);
+		print ("{0}{1} ({2} handle) : base (handle)", GetVisibility (intptrctor_visibility), type_name, NativeHandleType);
 		PrintEmptyBody ();
 
 		// NSObjectFlag constructor - always present (needed to implement NSCoder for subclasses)
@@ -86,14 +86,18 @@ public partial class Generator {
 		print ("public {0} (NSCoder coder) : base (NSObjectFlag.Empty)", type_name);
 		print ("{");
 		indent++;
-		print ("IntPtr h;");
+		print ("if (coder is null)");
+		indent++;
+		print ("throw new ArgumentNullException (nameof (coder));");
+		indent--;
+		print ("{0} h;", NativeHandleType);
 		print ("if (IsDirectBinding) {");
 		indent++;
-		print ("h = global::{0}.Messaging.IntPtr_objc_msgSend_IntPtr (this.Handle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);", ns.CoreObjCRuntime);
+		print ("h = global::ObjCRuntime.Messaging.{0}_objc_msgSend_{0} (this.Handle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);", NativeHandleType);
 		indent--;
 		print ("} else {");
 		indent++;
-		print ("h = global::{0}.Messaging.IntPtr_objc_msgSendSuper_IntPtr (this.SuperHandle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);", ns.CoreObjCRuntime);
+		print ("h = global::ObjCRuntime.Messaging.{0}_objc_msgSendSuper_{0} (this.SuperHandle, Selector.GetHandle (\"initWithCoder:\"), coder.Handle);", NativeHandleType);
 		indent--;
 		print ("}");
 		print ("InitializeHandle (h, \"initWithCoder:\");");
@@ -102,7 +106,7 @@ public partial class Generator {
 		print ("");
 
 		// string constructor
-		// default is protected (for abstract) but backward compatibility (XAMCORE_2_0) requires some hacks
+		// default is protected (for abstract)
 		v = GetVisibility (filter.StringCtorVisibility);
 		if (is_abstract && (v.Length == 0))
 			v = "protected ";
@@ -113,7 +117,7 @@ public partial class Generator {
 		}
 
 		// properties
-		GenerateProperties (type);
+		GenerateProperties (type, type);
 
 		// protocols
 		GenerateProtocolProperties (type, new HashSet<string> ());
@@ -142,26 +146,33 @@ public partial class Generator {
 
 			print ("");
 			print ($"// {pname} protocol members ");
-			GenerateProperties (i);
+			GenerateProperties (i, type, fromProtocol: true);
 
 			// also include base interfaces/protocols
 			GenerateProtocolProperties (i, processed);
 		}
 	}
 
-	void GenerateProperties (Type type)
+	void GenerateProperties (Type type, Type originalType = null, bool fromProtocol = false)
 	{
 		foreach (var p in type.GetProperties (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)) {
 			if (p.IsUnavailable (this))
 				continue;
 			if (AttributeManager.HasAttribute<StaticAttribute> (p))
 				continue;
-			
+
 			print ("");
-			PrintPropertyAttributes (p);
+
+			// an export will be present (only) if it's defined in a protocol
+			var export = AttributeManager.GetCustomAttribute<ExportAttribute> (p);
+
+			// this is a bit special since CoreImage filter protocols are much newer than the our generated, key-based bindings
+			// so we do not want to advertise the protocol versions since most properties would be incorrectly advertised
+			PrintPropertyAttributes (p, originalType, skipTypeInjection: export != null);
 			print_generated_code ();
 
 			var ptype = p.PropertyType.Name;
+			var nullable = false;
 			// keep C# names as they are reserved keywords (e.g. Boolean also exists in OpenGL for Mac)
 			switch (ptype) {
 			case "Boolean":
@@ -180,18 +191,24 @@ public partial class Generator {
 			case "CGImageMetadata":
 				ptype = "ImageIO.CGImageMetadata";
 				break;
+			case "CIVector":
+			case "CIColor":
+			case "CIImage":
+				// protocol-based bindings have annotations - but the older, key-based, versions did not
+				if (!fromProtocol)
+					nullable = true;
+				break;
 			}
-			print ("public {0} {1} {{", ptype, p.Name);
+			if (AttributeManager.HasAttribute<NullAllowedAttribute> (p))
+				nullable = true;
+			print ("public {0}{1} {2} {{", ptype, nullable ? "?" : "", p.Name);
 			indent++;
-
-			// an export will be present (only) if it's defined in a protocol
-			var export = AttributeManager.GetCustomAttribute<ExportAttribute> (p);
 
 			var name = AttributeManager.GetCustomAttribute<CoreImageFilterPropertyAttribute> (p)?.Name;
 			// we can skip the name when it's identical to a protocol selector
 			if (name == null) {
 				if (export == null)
-					throw new BindingException (1072, true, $"Missing [CoreImageFilterProperty] attribute on {0} property {1}", type.Name, p.Name);
+					throw new BindingException (1074, true, type.Name, p.Name);
 
 				var sel = export.Selector;
 				if (sel.StartsWith ("input", StringComparison.Ordinal))
@@ -208,7 +225,7 @@ public partial class Generator {
 				PrintFilterExport (p, export, setter: true);
 				GenerateFilterSetter (ptype, name);
 			}
-			
+
 			indent--;
 			print ("}");
 		}
@@ -249,20 +266,23 @@ public partial class Generator {
 			break;
 		// NSObject should not be added
 		// NSNumber should not be added - it should be bound as a float (common), int32 or bool
-		case "AVCameraCalibrationData":
 		case "CGColorSpace":
 		case "CGImage":
 		case "ImageIO.CGImageMetadata":
 		case "CIBarcodeDescriptor":
+			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false)!;", propertyType, propertyName);
+			break;
+		case "AVCameraCalibrationData":
 		case "MLModel":
 		case "NSAttributedString":
 		case "NSData":
-			print ("return Runtime.GetINativeObject <{0}> (GetHandle (\"{1}\"), false);", propertyType, propertyName);
+			print ("return Runtime.GetNSObject <{0}> (GetHandle (\"{1}\"), false)!;", propertyType, propertyName);
 			break;
 		case "CIColor":
 		case "CIImage":
 		case "CIVector":
-			print ($"return ValueForKey (\"{propertyName}\") as {propertyType};");
+			// `!` -> assume the method/property signature is correct (since it's based on headers)
+			print ($"return (ValueForKey (\"{propertyName}\") as {propertyType})!;");
 			break;
 		case "CGPoint":
 			print ("return GetPoint (\"{0}\");", propertyName);
@@ -276,19 +296,31 @@ public partial class Generator {
 		case "int":
 			print ("return GetInt (\"{0}\");", propertyName);
 			break;
+#if NET
+		case "IntPtr":
+#else
 		case "nint":
+#endif
 			print ("return GetNInt (\"{0}\");", propertyName);
+			break;
+#if NET
+		case "UIntPtr":
+#else
+		case "nuint":
+#endif
+			print ("return GetNUInt (\"{0}\");", propertyName);
 			break;
 		case "string":
 			// NSString should not be added - it should be bound as a string
-			print ("return (string) (ValueForKey (\"{0}\") as NSString);", propertyName);
+			print ($"var handle = GetHandle (\"{propertyName}\");");
+			print ("return CFString.FromHandle (handle)!;");
 			break;
 		case "CIVector[]":
 			print ($"var handle = GetHandle (\"{propertyName}\");");
-			print ("return NSArray.ArrayFromHandle<CIVector> (handle);");
+			print ("return CFArray.ArrayFromHandle<CIVector> (handle)!;");
 			break;
 		default:
-			throw new BindingException (1018, true, "Unimplemented CoreImage property type {0}", propertyType);
+			throw new BindingException (1075, true, propertyType);
 		}
 		indent--;
 		print ("}");
@@ -313,8 +345,19 @@ public partial class Generator {
 		case "int":
 			print ("SetInt (\"{0}\", value);", propertyName);
 			break;
+#if NET
+		case "IntPtr":
+#else
 		case "nint":
+#endif
 			print ("SetNInt (\"{0}\", value);", propertyName);
+			break;
+#if NET
+		case "UIntPtr":
+#else
+		case "nuint":
+#endif
+			print ("SetNUInt (\"{0}\", value);", propertyName);
 			break;
 		// NSObject should not be added
 		case "AVCameraCalibrationData":
@@ -332,32 +375,28 @@ public partial class Generator {
 		case "MLModel":
 		case "NSAttributedString":
 		case "NSData":
-		// NSNumber should not be added - it should be bound as a int or a float
+			// NSNumber should not be added - it should be bound as a int or a float
 			print ("SetValue (\"{0}\", value);", propertyName);
 			break;
 		case "string":
 			// NSString should not be added - it should be bound as a string
-			print ("using (var ns = new NSString (value))");
-			indent++;
-			print ("SetValue (\"{0}\", ns);", propertyName);
-			indent--;
+			print ($"SetString (\"{propertyName}\", value);");
 			break;
 		case "CIVector[]":
-			print ("if (value == null) {");
+			print ("if (value is null) {");
 			indent++;
 			print ($"SetHandle (\"{propertyName}\", IntPtr.Zero);");
 			indent--;
 			print ("} else {");
 			indent++;
-			print ("using (var array = NSArray.FromNSObjects (value))");
-			indent++;
-			print ($"SetHandle (\"{propertyName}\", array.GetHandle ());");
-			indent--;
+			print ("var ptr = CFArray.Create (value);");
+			print ($"SetHandle (\"{propertyName}\", ptr);");
+			print ($"CFObject.CFRelease (ptr);");
 			indent--;
 			print ("}");
 			break;
 		default:
-			throw new BindingException (1018, true, "Unimplemented CoreImage property type {0}", propertyType);
+			throw new BindingException (1075, true, propertyType);
 		}
 		indent--;
 		print ("}");

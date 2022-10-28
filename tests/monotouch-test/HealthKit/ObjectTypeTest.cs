@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for HKObjectType
 //
 // Authors:
@@ -7,26 +7,14 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !MONOMAC
+#if HAS_HEALTHKIT
 
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using HealthKit;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.HealthKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if !XAMCORE_2_0
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.HealthKit {
 
@@ -39,10 +27,14 @@ namespace MonoTouchFixtures.HealthKit {
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
 
+#if NET
+			using (var t = HKObjectType.WorkoutType) {
+#else
 			using (var t = HKObjectType.GetWorkoutType ()) {
+#endif
 				Assert.That (t.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
 			}
 		}
 	}
 }
-#endif // !__TVOS__
+#endif // HAS_HEALTHKIT

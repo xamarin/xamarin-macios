@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 #if !__WATCHOS__
@@ -15,25 +15,10 @@ using SpriteKit;
 #if !MONOMAC
 using UIKit;
 #endif
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.SpriteKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 using MonoTests.System.Net.Http;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.ObjCRuntime {
 
@@ -92,13 +77,12 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void RegisterAssembly_null ()
 		{
-			Runtime.RegisterAssembly (null);
+			Assert.Throws<ArgumentNullException> (() => Runtime.RegisterAssembly (null));
 		}
 
-#if !__WATCHOS__ && !__TVOS__ && !MONOMAC
+#if __IOS__ && !__MACCATALYST__
 		[Test]
 		public void StartWWAN ()
 		{
@@ -106,7 +90,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.Throws<ArgumentException> (delegate { Runtime.StartWWAN (new Uri ("ftp://www.xamarin.com")); }, "ftp");
 			Runtime.StartWWAN (new Uri ("http://www.xamarin.com"));
 		}
-#endif
+#endif // __IOS__ && !__MACCATALYST__
 
 		[Test]
 		public void GetNSObject_Subclass ()
@@ -123,11 +107,11 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void GetNSObject_Different_Class ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			IntPtr class_ptr = Class.GetHandle ("SKPhysicsBody");
-			SizeF size = new SizeF (3, 2);
-			using (var body = Runtime.GetNSObject<SKPhysicsBody> (Messaging.IntPtr_objc_msgSend_SizeF (class_ptr, Selector.GetHandle ("bodyWithRectangleOfSize:"), size))) {
+			var size = new CGSize (3, 2);
+			using (var body = Runtime.GetNSObject<SKPhysicsBody> (Messaging.IntPtr_objc_msgSend_CGSize (class_ptr, Selector.GetHandle ("bodyWithRectangleOfSize:"), size))) {
 				// This would normally return a PKPhysicsBody which is not a subclass but answers the same selectors
 				// as a SKPhysicsBody. That's an issue since we can't register PKPhysicsBody (Apple won't like it since
 				// it's a private type) and the non-generic version of GetNSObject (and bindings) would throw an 
@@ -142,7 +126,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public void GetNSObject_Posing_Class ()
 		{
 			TestRuntime.AssertXcodeVersion (5, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 
 			NSUrlSession session = NSUrlSession.SharedSession;
 			using (var request = new NSUrlRequest (new NSUrl (NetworkResources.MicrosoftUrl))) {
@@ -155,6 +139,23 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				using (var o = session.CreateDownloadTask (request)) {
 				}
 			}
+		}
+
+		[Test]
+		public void GetNSObject_T_SameHandleDifferentInstances ()
+		{
+			using var a = new NSDictionary<NSString, NSObject> ();
+			using var b = new NSDictionary<NSString, NSString> ();
+			using var c = new NSDictionary ();
+
+			if (a.Handle != b.Handle || a.Handle != c.Handle)
+				Assert.Ignore ("The dictionaries are actually different");
+
+			var handle = a.Handle;
+
+			Assert.DoesNotThrow (() => Runtime.GetNSObject<NSDictionary> (handle), "A");
+			Assert.DoesNotThrow (() => Runtime.GetNSObject<NSDictionary<NSString, NSObject>> (handle), "B");
+			Assert.DoesNotThrow (() => Runtime.GetNSObject<NSDictionary<NSString, NSString>> (handle), "C");
 		}
 
 		[Test]
@@ -498,11 +499,39 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			while ((long) obj.RetainCount > (long) count / 2 && iterations++ < max_iterations) {
 				Thread.Sleep (100);
 			}
-			Assert.That (obj.RetainCount, Is.Not.GreaterThan (count / 2), "RC. Iterations: " + iterations);
+			Assert.That (obj.RetainCount, Is.Not.GreaterThan ((nuint) (count / 2)), "RC. Iterations: " + iterations);
 
 			obj.Dispose ();
 		}
 
+		[Test]
+		public void NSAutoreleasePoolInThread ()
+		{
+			var count = 10;
+			var threads = new Thread [count];
+			var obj = new NSObject ();
+
+			for (int i = 0; i < count; i++) {
+				threads [i] = new Thread ((v) => {
+					obj.DangerousRetain ().DangerousAutorelease ();
+				}) {
+					Name = $"NSAutoreleasePoolInThread #{i}",
+					IsBackground = true,
+				};
+				threads [i].Start ();
+			}
+
+			for (var i = 0; i < count; i++) {
+				Assert.IsTrue (threads [i].Join (TimeSpan.FromSeconds (1)), $"Thread #{i}");
+			}
+
+			// Strangely enough there seems to be a race condition here, not all threads will necessarily
+			// have completed the autorelease by this point. Some should have though, so assert that the object
+			// was released on at least half the threads.
+			Assert.That ((int) obj.RetainCount, Is.LessThan (count / 2), "RC");
+
+			obj.Dispose ();
+		}
 
 		class ResurrectedObjectsDisposedTestClass : NSObject {
 			[Export ("invokeMe:wait:")]
@@ -515,7 +544,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Test]
-#if !MONOMAC // Failing with 10 broken
+#if !MONOMAC || NET // Failing with 10 broken in legacy Xamarin.Mac
 		[TestCase (typeof (NSObject))]
 #endif
 		[TestCase (typeof (ResurrectedObjectsDisposedTestClass))]
@@ -603,10 +632,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				} catch (RuntimeException mex) {
 					Assert.AreEqual (8029, mex.Code, "Exception code (A)");
 					var failure = mex.ToString ();
-					Assert.That (failure, Is.StringContaining ("Failed to marshal the Objective-C object"), "Failed to marshal (A)");
-					Assert.That (failure, Is.StringContaining ("Additional information:"), "Additional information: (A)");
-					Assert.That (failure, Is.StringContaining ("Selector: doSomethingElse:"), "Selector (A)");
-					Assert.That (failure, Is.StringContaining ("DoSomethingElse"), "DoSomethingElse (A)");
+					Assert.That (failure, Does.Contain ("Failed to marshal the Objective-C object"), "Failed to marshal (A)");
+					Assert.That (failure, Does.Contain ("Additional information:"), "Additional information: (A)");
+					Assert.That (failure, Does.Contain ("Selector: doSomethingElse:"), "Selector (A)");
+					Assert.That (failure, Does.Contain ("DoSomethingElse"), "DoSomethingElse (A)");
 				}
 
 				try {
@@ -615,10 +644,10 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				} catch (RuntimeException mex) {
 					Assert.That (mex.Code, Is.EqualTo (8034).Or.EqualTo (8027), "Exception code (B)");
 					var failure = mex.ToString ();
-					Assert.That (failure, Is.StringContaining ("Failed to marshal the Objective-C object"), "Failed to marshal (B)");
-					Assert.That (failure, Is.StringContaining ("Additional information:"), "Additional information: (B)");
-					Assert.That (failure, Is.StringContaining ("Selector: doSomething:"), "Selector (B)");
-					Assert.That (failure, Is.StringContaining ("DoSomething"), "DoSomething (B)");
+					Assert.That (failure, Does.Contain ("Failed to marshal the Objective-C object"), "Failed to marshal (B)");
+					Assert.That (failure, Does.Contain ("Additional information:"), "Additional information: (B)");
+					Assert.That (failure, Does.Contain ("Selector: doSomething:"), "Selector (B)");
+					Assert.That (failure, Does.Contain ("DoSomething"), "DoSomething (B)");
 				}
 			} finally {
 				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("release"));
@@ -636,11 +665,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				}
 			} catch (RuntimeException re) {
 				Assert.AreEqual (8029, re.Code, "Code");
-				Assert.AreEqual (@"Unable to marshal the array parameter #1 whose managed type is 'System.Int32[]' to managed.
+				string expectedExceptionMessage;
+				if (TestRuntime.IsCoreCLR) {
+					expectedExceptionMessage = @"Unable to marshal the array parameter #1 whose managed type is 'System.Int32[]' to managed.
+Additional information:
+	Selector: setIntArray:
+	Method: System.Void MonoTouchFixtures.ObjCRuntime.RuntimeTest+Dummy.SetIntArray (System.Int32[])
+";
+				} else {
+					expectedExceptionMessage = @"Unable to marshal the array parameter #1 whose managed type is 'System.Int32[]' to managed.
 Additional information:
 	Selector: setIntArray:
 	Method: MonoTouchFixtures.ObjCRuntime.RuntimeTest/Dummy:SetIntArray (int[])
-", re.Message, "Message");
+";
+				}
+				Assert.AreEqual (expectedExceptionMessage, re.Message, "Message");
 				var inner = (RuntimeException)re.InnerException;
 				Assert.AreEqual (8031, inner.Code, "Inner Code");
 				Assert.AreEqual ("Unable to convert from an NSArray to a managed array of System.Int32.", inner.Message, "Inner Message");
@@ -655,11 +694,21 @@ Additional information:
 				Assert.Fail ("An exception should have been thrown");
 			} catch (RuntimeException re) {
 				Assert.AreEqual (8033, re.Code, "Code");
-				Assert.AreEqual (@"Unable to marshal the return value of type 'System.Int32[]' to Objective-C.
+				string expectedExceptionMessage;
+				if (TestRuntime.IsCoreCLR) {
+					expectedExceptionMessage = @"Unable to marshal the return value of type 'System.Int32[]' to Objective-C.
+Additional information:
+	Selector: intArray
+	Method: System.Int32[] MonoTouchFixtures.ObjCRuntime.RuntimeTest+Dummy.GetIntArray ()
+";
+				} else {
+					expectedExceptionMessage = @"Unable to marshal the return value of type 'System.Int32[]' to Objective-C.
 Additional information:
 	Selector: intArray
 	Method: MonoTouchFixtures.ObjCRuntime.RuntimeTest/Dummy:GetIntArray ()
-", re.Message, "Message");
+";
+				}
+				Assert.AreEqual (expectedExceptionMessage, re.Message, "Message");
 				var inner = (RuntimeException) re.InnerException;
 				Assert.AreEqual (8032, inner.Code, "Inner Code");
 				Assert.AreEqual ("Unable to convert from a managed array of System.Int32 to an NSArray.", inner.Message, "Inner Message");
@@ -719,5 +768,181 @@ Additional information:
 				date = null;
 			}
 		}
+
+		[Test]
+		public void ToggleRef_NonToggledObjectsShouldBeCollected ()
+		{
+			// This test verifies that toggleable objects that aren't toggled aren't kept alive.
+			// We create a number of managed NSFileManager instance, get a native reference to each of them,
+			// and then we verify that the managed instance is collected.
+			var counter = 100;
+			var handles = new GCHandle [counter];
+			var pointers = new IntPtr [counter];
+
+			var t = new Thread (() =>
+			{
+				for (var i = 0; i < counter; i++) {
+					var obj = new NSFileManager ();
+					// do not toggle
+					obj.DangerousRetain (); // obtain a native reference
+					handles [i] = GCHandle.Alloc (obj, GCHandleType.Weak);
+					pointers [i] = obj.Handle;
+				}
+			}) {
+				IsBackground = true,
+				Name = "ToggleRef_NonToggledObjectsShouldBeCollected",
+			};
+			t.Start ();
+			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
+
+			var checkForCollectedManagedObjects = new Func<bool> (() =>
+			{
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+				for (var i = 0; i < counter; i++) {
+					if (handles [i].Target == null)
+						return true;
+				}
+				return false;
+			});
+
+			// Iterate over the runloop in case something has to happen on the main thread for the objects to be collected.
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (5), () => { }, checkForCollectedManagedObjects);
+
+			Assert.IsTrue (checkForCollectedManagedObjects (), "Any collected objects");
+
+			for (var i = 0; i < counter; i++) {
+				var obj = Runtime.GetNSObject (pointers [i]);
+				Assert.IsNotNull (obj, $"Object #{i} couldn't be resurrected");
+				obj.DangerousRelease (); // release the native reference
+				obj.Dispose ();
+				handles [i].Free ();
+			}
+		}
+
+		[Test]
+		public void ToggleRef_ToggledObjectsShouldNotBeCollected ()
+		{
+			// This test verifies that toggleable objects that are toggled are kept alive while the native peer is alive.
+			// We create a number of managed NSFileManager instance, get a native reference to each of them,
+			// and then we verify that the managed instance won't be collected.
+			//
+			// NSFileManager instances are toggled when the [Weak]Delegate property is set.
+			var del = new NSFileManagerDelegate ();
+			var counter = 100;
+			var handles = new GCHandle [counter];
+			var t = new Thread (() =>
+			{
+				for (var i = 0; i < counter; i++) {
+					var obj = new NSFileManager ();
+					obj.Delegate = del; // toggle
+					obj.DangerousRetain (); // obtain a native reference
+					handles [i] = GCHandle.Alloc (obj, GCHandleType.Weak);
+				}
+			}) {
+				IsBackground = true,
+				Name = "ToggleRef_ToggledObjectsShouldNotBeCollected",
+			};
+			t.Start ();
+			Assert.IsTrue (t.Join (TimeSpan.FromSeconds (10)), "Background thread completion");
+
+			TestRuntime.RunAsync (TimeSpan.FromSeconds (2), () => { }, () =>
+			{
+				// Iterate over the runloop a bit to make sure we're just not collecting because objects are queued on for things to happen on the main thread
+				GC.Collect ();
+				GC.WaitForPendingFinalizers ();
+				return false;
+			});
+
+			for (var i = 0; i < counter; i++) {
+				var obj = (NSFileManager) handles [i].Target;
+				Assert.IsNotNull (obj, $"Object #{i} was unexpectedly collected.");
+				obj.DangerousRelease (); // release the native reference
+				obj.Dispose ();
+				handles [i].Free ();
+			}
+		}
+
+		[Test]
+		public void CurrentDirectory ()
+		{
+			var expectedDirectory = (string) ((NSString) Environment.CurrentDirectory).ResolveSymlinksInPath ();
+
+#if NET || !MONOMAC
+			var actualDirectory = (string) ((NSString) NSBundle.MainBundle.BundlePath).ResolveSymlinksInPath ();
+#else
+			var actualDirectory = (string) ((NSString) NSBundle.MainBundle.ResourcePath).ResolveSymlinksInPath ();
+#endif
+			Assert.AreEqual (expectedDirectory, actualDirectory, "Current directory at launch");
+		}
+
+		[Test]
+		public void CurrentDomain_BaseDirectory_Test ()
+		{
+			Assert.That (AppDomain.CurrentDomain.BaseDirectory, Is.Not.Null.And.Not.Empty, "AppDomain.CurrentDomain.BaseDirectory");
+		}
+
+		[Test]
+		public void OriginalWorkingDirectoryTest ()
+		{
+			Assert.That (Runtime.OriginalWorkingDirectory, Is.Not.Null.And.Not.Empty, "OriginalWorkingDirectory");
+		}
+
+#if NET
+		[Test]
+		public void IntPtrCtor_1 ()
+		{
+			using var obj = Runtime.GetNSObject (IntPtrConstructor.New ());
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		[Test]
+		public void IntPtrCtor_2 ()
+		{
+			using var obj = Runtime.GetNSObject<IntPtrConstructor> (IntPtrConstructor.New ());
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		[Test]
+		public void IntPtrCtor_3 ()
+		{
+			using var obj = Runtime.GetINativeObject<IntPtrConstructor> (IntPtrConstructor.New (), false);
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		class IntPtrConstructor : NSObject {
+			IntPtrConstructor (IntPtr handle) : base (handle) {}
+
+			internal static IntPtr New ()
+			{
+				var class_handle = Class.GetHandle (typeof (IntPtrConstructor));
+				var handle = Messaging.IntPtr_objc_msgSend (Messaging.IntPtr_objc_msgSend (class_handle, Selector.GetHandle ("alloc")), Selector.GetHandle ("init"));
+				Messaging.void_objc_msgSend (handle, Selector.GetHandle ("autorelease"));
+				return handle;
+			}
+		}
+
+		[Test]
+		public void IntPtrBoolCtor_1 ()
+		{
+			using var obj = Runtime.GetINativeObject<IntPtrBoolConstructor> ((IntPtr) 1234, false);
+			Assert.IsNotNull (obj, "NotNull");
+			Assert.That (obj, Is.TypeOf<IntPtrBoolConstructor> (), "Type");
+			Assert.AreNotEqual (IntPtr.Zero, obj.Handle, "Handle");
+		}
+
+		class IntPtrBoolConstructor : DisposableObject {
+			IntPtrBoolConstructor (IntPtr handle, bool owns)
+				: base (handle, owns)
+			{
+			}
+		}
+#endif
 	}
 }

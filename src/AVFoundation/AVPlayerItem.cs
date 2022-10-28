@@ -5,13 +5,29 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 	public partial class AVPlayerItem {
 
-		[TV (11, 0), NoWatch, Mac (10, 13), iOS (11, 0)]
+#if NET
+		[SupportedOSPlatform ("tvos11.0")]
+		[SupportedOSPlatform ("macos10.13")]
+		[SupportedOSPlatform ("ios11.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+#else
+		[TV (11, 0)]
+		[NoWatch]
+		[Mac (10, 13)]
+		[iOS (11, 0)]
+#endif
 		public AVVideoApertureMode VideoApertureMode {
 			get { return AVVideoApertureModeExtensions.GetValue (_VideoApertureMode); }
-			set { _VideoApertureMode = value.GetConstant (); }
+			set {
+				var val = value.GetConstant ();
+				if (val is not null)
+					_VideoApertureMode = val;
+			}
 		}
 	}
 }

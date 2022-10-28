@@ -1,2 +1,5 @@
-## fixed for XAMCORE_4_0
+## fixed for .NET
 !incorrect-protocol-member! QLPreviewItem::previewItemTitle is OPTIONAL and should NOT be abstract
+
+## the pointer (ref) can't be `nil` but it UIView can be (documented as such) so assuming `ref UIView` to be nullable is actually fine
+!extra-null-allowed! 'CoreGraphics.CGRect QuickLook.QLPreviewControllerDelegate::FrameForPreviewItem(QuickLook.QLPreviewController,QuickLook.IQLPreviewItem,UIKit.UIView&)' has a extraneous [NullAllowed] on parameter #2

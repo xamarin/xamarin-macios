@@ -23,9 +23,13 @@ SOFTWARE.
  */
 #endregion
 
+#nullable enable
+#pragma warning disable CS3021 // Type or member does not need a CLSCompliant attribute because the assembly does not have a CLSCompliant attribute
+
 using System;
 using System.Runtime.InteropServices;
 
+#if !NET
 namespace OpenTK
 {
     // Todo: Remove this warning when the code goes public.
@@ -202,7 +206,8 @@ namespace OpenTK
         /// <param name="floatArray">The array of floats for the components of the matrix.</param>
         public Matrix2(float[] floatArray)
         {
-            if (floatArray == null || floatArray.GetLength(0) < 9) throw new MissingFieldException();
+            if (floatArray is null || floatArray.GetLength (0) < 9)
+                throw new MissingFieldException ();
 
             this.R0C0 = floatArray[0];
             this.R0C1 = floatArray[1];
@@ -584,3 +589,4 @@ namespace OpenTK
     }
     #pragma warning restore 3019
 }
+#endif // !NET

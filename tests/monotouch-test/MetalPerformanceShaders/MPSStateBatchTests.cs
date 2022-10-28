@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MPSStateBatch
 //
 // Authors:
@@ -20,16 +20,18 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MPSStateBatchTests {
 
 		IMTLDevice device;
 		NSArray<MPSState> cache;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (10, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
@@ -53,7 +55,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		public void MPSImageBatchResourceSizeTest ()
 		{
 			var size = MPSStateBatch.GetResourceSize (cache);
-			Assert.That (size, Is.GreaterThan (0), "idx");
+			Assert.That (size, Is.GreaterThan ((nuint) 0), "idx");
 		}
 	}
 }

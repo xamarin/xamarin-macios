@@ -31,13 +31,22 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreBluetooth {
 
 	//
 	// It's intentionally not called AdvertisementDataOptions because different options
 	// are valid in different contexts
 	//
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
+#endif
 	public class StartAdvertisingOptions : DictionaryContainer
 	{
 #if !COREBUILD
@@ -51,7 +60,7 @@ namespace CoreBluetooth {
 		{
 		}
 
-		public string LocalName {
+		public string? LocalName {
 			set {
 				SetStringValue (CBAdvertisement.DataLocalNameKey, value);
 			}
@@ -60,7 +69,7 @@ namespace CoreBluetooth {
 			}
 		}
 
-		public CBUUID[] ServicesUUID {
+		public CBUUID[]? ServicesUUID {
 			get {
 				return GetArray<CBUUID> (CBAdvertisement.DataServiceUUIDsKey);
 			}
@@ -71,4 +80,3 @@ namespace CoreBluetooth {
 #endif
 	}
 }
-

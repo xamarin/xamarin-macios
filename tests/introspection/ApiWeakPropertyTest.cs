@@ -5,16 +5,8 @@ using System.Reflection;
 
 using NUnit.Framework;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#elif MONOMAC
-using MonoMac.Foundation;
-using MonoMac.ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 
 namespace Introspection {
 	[Preserve (AllMembers = true)]
@@ -30,7 +22,7 @@ namespace Introspection {
 				case "LinkWithAttribute": // LinkWithAttribute.WeakFrameworks
 				return true;
 			}
-			return false;
+			return SkipDueToRejectedTypes (type);
 		}
 
 		/// <summary>

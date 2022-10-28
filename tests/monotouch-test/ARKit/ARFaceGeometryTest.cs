@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for ARFaceGeometry
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2017 Microsoft. All rights reserved.
 //
 
-#if XAMCORE_2_0 && __IOS__
+#if HAS_ARKIT
 
 using System;
 using System.Runtime.InteropServices;
@@ -16,9 +16,15 @@ using ARKit;
 using Foundation;
 using NUnit.Framework;
 using ObjCRuntime;
+using Xamarin.Utils;
 
+#if NET
+using VectorFloat2 = global::System.Numerics.Vector2;
+using VectorFloat3 = global::CoreGraphics.NVector3;
+#else
 using VectorFloat2 = global::OpenTK.Vector2;
 using VectorFloat3 = global::OpenTK.NVector3;
+#endif
 
 namespace MonoTouchFixtures.ARKit {
 
@@ -88,6 +94,8 @@ namespace MonoTouchFixtures.ARKit {
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (9, 0);
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
 		}
 
 		[Test]
@@ -117,4 +125,4 @@ namespace MonoTouchFixtures.ARKit {
 	}
 }
 
-#endif // XAMCORE_2_0 && __IOS__
+#endif // HAS_ARKIT

@@ -1,3 +1,0 @@
-
-# Initial result from new rule missing-release-attribute-on-return-value
-!missing-release-attribute-on-return-value! CoreAnimation.ICAMetalDrawable CoreAnimation.CAMetalLayer::CreateDrawable()'s selector's ('newDrawable') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.

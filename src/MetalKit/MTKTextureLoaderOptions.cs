@@ -1,4 +1,4 @@
-﻿//
+//
 // MTKTextureLoaderOptions.cs strong dictionary
 //
 // Authors:
@@ -6,7 +6,9 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
-#if XAMCORE_2_0 || !MONOMAC
+
+#nullable enable
+
 using System;
 using Foundation;
 using Metal;
@@ -14,13 +16,22 @@ using ObjCRuntime;
 
 namespace MetalKit {
 #if !COREBUILD
-	[iOS (9,0)][Mac (10,11)]
+
+#if NET
+	[SupportedOSPlatform ("ios9.0")]
+	[SupportedOSPlatform ("macos10.11")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#else
+	[iOS (9,0)]
+	[Mac (10,11)]
+#endif
 	public partial class MTKTextureLoaderOptions : DictionaryContainer {
 
 		public MTLTextureUsage? TextureUsage {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureUsageKey);
-				if (val != null)
+				if (val is not null)
 					return (MTLTextureUsage)(uint) val;
 				return null;
 			}
@@ -35,7 +46,7 @@ namespace MetalKit {
 		public MTLCpuCacheMode? TextureCpuCacheMode {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureCpuCacheModeKey);
-				if (val != null)
+				if (val is not null)
 					return (MTLCpuCacheMode)(uint) val;
 				return null;
 			}
@@ -47,11 +58,19 @@ namespace MetalKit {
 			}
 		}
 
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+#endif
 		public MTLStorageMode? TextureStorageMode {
 			get {
 				var val = GetNUIntValue (MTKTextureLoaderKeys.TextureStorageModeKey);
-				if (val != null)
+				if (val is not null)
 					return (MTLStorageMode)(uint) val;
 				return null;
 			}
@@ -63,11 +82,19 @@ namespace MetalKit {
 			}
 		}
 
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+#endif
 		public MTKTextureLoaderCubeLayout? CubeLayout {
 			get {
 				var val = GetNSStringValue (MTKTextureLoaderKeys.CubeLayoutKey);
-				if (val == null)
+				if (val is null)
 					return null;
 				return MTKTextureLoaderCubeLayoutExtensions.GetValue (val);
 			}
@@ -79,11 +106,19 @@ namespace MetalKit {
 			}
 		}
 
-		[iOS (10,0)][Mac (10,12)]
+#if NET
+		[SupportedOSPlatform ("ios10.0")]
+		[SupportedOSPlatform ("macos10.12")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
+		[iOS (10,0)]
+		[Mac (10,12)]
+#endif
 		public MTKTextureLoaderOrigin? Origin {
 			get {
 				var val = GetNSStringValue (MTKTextureLoaderKeys.OriginKey);
-				if (val == null)
+				if (val is null)
 					return null;
 				return MTKTextureLoaderOriginExtensions.GetValue (val);
 			}
@@ -97,4 +132,3 @@ namespace MetalKit {
 	}
 #endif
 }
-#endif

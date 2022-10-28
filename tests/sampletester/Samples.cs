@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using NUnit.Framework;
@@ -8,7 +9,8 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "ios-samples"; // monotouch-samples redirects to ios-samples
 		const string CATEGORY = "iossamples"; // categories can't contain dashes
-		const string HASH = "bffa511ecb8f74b2d4a42418a130d0c83c9723cf";
+		const string HASH = "0a6947d766ad71a711b62e10c2eee08b411057e4";
+		const string DEFAULT_BRANCH = "main";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj
@@ -44,7 +46,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
@@ -54,6 +56,7 @@ namespace Samples {
 		const string REPO = "mac-ios-samples";
 		const string CATEGORY = "maciossamples"; // categories can't contain dashes
 		const string HASH = "2ab4faf9254cecdf5766af573e508f9ac8691663";
+		const string DEFAULT_BRANCH = "main";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj
@@ -65,7 +68,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
@@ -75,13 +78,17 @@ namespace Samples {
 		const string REPO = "mac-samples";
 		const string CATEGORY = "macsamples"; // categories can't contain dashes
 		const string HASH = "6f905972c98e64759ff84a25e4e2b42366fa197b";
+		const string DEFAULT_BRANCH = "main";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+			// Known failures
+			{ "QTRecorder/QTRecorder.csproj", new SampleTest { KnownFailure = "The sample uses deprecated QTKit types (and .xib fails building)." } },
+			{ "StillMotion/StillMotion/StillMotion.csproj", new SampleTest { KnownFailure = "The sample uses deprecated QTKit types (and .xib fails building)." } },
 		};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
@@ -90,7 +97,8 @@ namespace Samples {
 		const string ORG = "xamarin";
 		const string REPO = "mobile-samples";
 		const string CATEGORY = "mobilesamples"; // categories can't contain dashes
-		const string HASH = "45182f311db77bb05971a22d58edfdef44a4b657";
+		const string HASH = "257f7fe81e70b412d6a6b42e97019ecc2c46ed40";
+		const string DEFAULT_BRANCH = "master";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj
@@ -115,7 +123,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
@@ -125,6 +133,7 @@ namespace Samples {
 		const string REPO = "prebuilt-apps";
 		const string CATEGORY = "prebuiltapps"; // categories can't contain dashes
 		const string HASH = "f111672bc6915ceb402abb47dedfe3480e111720";
+		const string DEFAULT_BRANCH = "master";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Known failures
@@ -133,7 +142,7 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
@@ -143,15 +152,20 @@ namespace Samples {
 		const string REPO = "xamarin-forms-samples";
 		const string CATEGORY = "xamarinformssamples"; // categories can't contain dashes
 		const string HASH = "d196d3f7ba418d06ef799074eb4f6120e26a9cf4";
+		const string DEFAULT_BRANCH = "master";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+				// avoid building unneeded projects since they require a lot of nuget packages (and cause a lot of unrelated/network build issues)
+				{ "WebServices/TodoREST/iOS/TodoREST.iOS.csproj", new SampleTest { Solution = "WebServices/TodoREST/TodoREST.sln", RemoveProjects = new [] { "TodoAPI", "TodoREST.Droid" } } },
+				{ "WorkingWithMaps/iOS/WorkingWithMaps.iOS.csproj", new SampleTest { Solution = "WorkingWithMaps/WorkingWithMaps.sln", RemoveProjects = new [] { "WorkingWithMaps.Android", "WorkingWithMaps.UWP" } } },
 				// Build solution instead of csproj.
 				{ "WebServices/TodoWCF/iOS/TodoWCF.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "WebServices/TodoWCF/TodoWCF.sln" } },
 			};
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			// Samples.XamarinFormsTester.BuildSample(MarkupExtensions.iOS: Debug|iPhone) needs some extra time 10 minutes
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, TimeSpan.FromMinutes (10));
 		}
 	}
 
@@ -161,6 +175,7 @@ namespace Samples {
 		const string REPO = "xamarin-forms-book-samples";
 		const string CATEGORY = "xamarinformsbookssamples"; // categories can't contain dashes
 		const string HASH = "c215bab3324d77e13bd80a0c20e60786d2bd344b";
+		const string DEFAULT_BRANCH = "master";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Build solution instead of csproj,
@@ -175,7 +190,8 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			// Samples.XamarinFormsBooksTester.BuildSample(FormattedTextToggle.iOS: Release|iPhone) needs some extra time 10 minutes
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, TimeSpan.FromMinutes (10));
 		}
 	}
 
@@ -185,6 +201,7 @@ namespace Samples {
 		const string REPO = "embedded-frameworks";
 		const string CATEGORY = "embeddedframeworks"; // categories can't contain dashes
 		const string HASH = "faaad6f9dcda53b2c49cec567eca769cb534307f";
+		const string DEFAULT_BRANCH = "main";
 
 		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
 				// Known failures
@@ -193,8 +210,45 @@ namespace Samples {
 
 		static IEnumerable<SampleTestData> GetSampleData ()
 		{
-			return GetSampleTestData (test_data, ORG, REPO, HASH);
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
 		}
 	}
 
+	[Category (CATEGORY)]
+	public class XappyTester : SampleTester {
+		const string ORG = "davidortinau";
+		const string REPO = "Xappy";
+		const string CATEGORY = "davidortinauxappy"; // categories can't contain dashes
+		const string HASH = "46e5897bac974e000fcc7e1d10d01ab8d3072eb2";
+		const string DEFAULT_BRANCH = "master";
+
+		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+			{ "Xappy/Xappy.iOS/Xappy.iOS.csproj", new SampleTest { BuildSolution = true, Solution = "Xappy.sln", RemoveProjects = new [] { "Xappy.Android", "Xappy.UWP" } } },
+		};
+
+		static IEnumerable<SampleTestData> GetSampleData ()
+		{
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, DefaultTimeout);
+		}
+	}
+
+	[Category (CATEGORY)]
+	public class SmartHotelTester : SampleTester {
+		const string ORG = "microsoft";
+		const string REPO = "SmartHotel360-Mobile";
+		const string CATEGORY = "microsoftsmarthotel"; // categories can't contain dashes
+		const string HASH = "4004b32c955f8340a0306bad2b180ecf5adaf117";
+		const string DEFAULT_BRANCH = "master";
+
+		static Dictionary<string, SampleTest> test_data = new Dictionary<string, SampleTest> {
+			// Override CodesignKey key
+			{ "Source/SmartHotel.Clients/SmartHotel.Clients.iOS/SmartHotel.Clients.iOS.csproj", new SampleTest { CodesignKey = "iPhone Developer" } },
+			{ "Source/SmartHotel.Clients.Maintenance/SmartHotel.Clients.Maintenance.iOS/SmartHotel.Clients.Maintenance.iOS.csproj", new SampleTest { CodesignKey = "iPhone Developer" } },
+		};
+
+		static IEnumerable<SampleTestData> GetSampleData ()
+		{
+			return GetSampleTestData (test_data, ORG, REPO, HASH, DEFAULT_BRANCH, timeout: TimeSpan.FromMinutes (10));
+		}
+	}
 }

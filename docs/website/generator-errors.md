@@ -4,9 +4,9 @@ title: "Xamarin.iOS/Xamarin.Mac binding errors"
 dateupdated: 2017-06-26
 ---
 
-[//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/master/docs/website/)
+[//]: # (The original file resides under https://github.com/xamarin/xamarin-macios/tree/main/docs/website/)
 [//]: # (This allows all contributors (including external) to submit, using a PR, updates to the documentation that match the tools changes)
-[//]: # (Modifications outside of xamarin-macios/master will be lost on future updates)
+[//]: # (Modifications outside of xamarin-macios/main will be lost on future updates)
 
 # BI0xxx: binding error messages
 
@@ -48,6 +48,12 @@ This usually indicates a bug in Xamarin.iOS/Xamarin.Mac; please [file a bug repo
 Xamarin.Mac does not support the Classic API anymore, because the Classic API is 32-bit only, and macOS 10.15+ does not support 32-bit applications.
 
 The project must be [migrated to a Unified project](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/unified/updating-mac-apps) in order to support 64-bit.
+
+### <a name='BI0088'/>BI0088: MonoTouch binding projects are not supported anymore. Please upgrade the binding project to a Xamarin.iOS (Unified) binding project.
+
+MonoTouch is not supported anymore, because it only supports 32-bit.
+
+The project must be [migrated to a Xamarin.iOS (Unified) project](https://docs.microsoft.com/en-us/xamarin/cross-platform/macios/unified/updating-ios-apps) in order to support 64-bit.
 
 ### <a name='BI0099'/>BI0099: Internal error *. Please file a bug report with a test case (https://github.com/xamarin/xamarin-macios/issues/new).
 

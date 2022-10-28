@@ -1,0 +1,36 @@
+<linker>
+  <assembly fullname="Microsoft.tvOS">
+    <!-- Foundation -->
+    <type fullname="Foundation.AdviceAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
+    <type fullname="Foundation.FieldAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
+    <type fullname="Foundation.NotImplementedAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
+
+    <!-- double-check when applied -->
+    <type fullname="Foundation.PreserveAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
+    <type fullname="Foundation.FieldAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
+
+    <!-- ObjCRuntime -->
+    <type fullname="ObjCRuntime.BindingImplAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
+    <type fullname="ObjCRuntime.DesignatedInitializerAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
+    <type fullname="ObjCRuntime.RequiresSuperAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
+    <type fullname="ObjCRuntime.ThreadSafeAttribute">
+      <attribute internal="RemoveAttributeInstances" />
+    </type>
+  </assembly>
+</linker>

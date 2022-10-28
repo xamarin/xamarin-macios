@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for WeakAttribute
 //
 // Authors:
@@ -8,21 +8,16 @@
 // Copyright 2018 Xamarin Inc. All rights reserved.
 //
 
+#if !NET // WeakAttribute is not supported in .NET
 using System;
 
-#if XAMCORE_2_0
 using Foundation;
 using SpriteKit;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-using MonoTouch.SpriteKit;
-using MonoTouch.ObjCRuntime;
-#endif
 
 using NUnit.Framework;
 using System.Threading;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures {
 
@@ -38,9 +33,9 @@ namespace MonoTouchFixtures {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.WatchOS, 3, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.WatchOS, 3, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 
 		[Test]
@@ -144,3 +139,4 @@ namespace MonoTouchFixtures {
 		public void RemoveStrongRef () => strong = null;
 	}
 }
+#endif // !NET

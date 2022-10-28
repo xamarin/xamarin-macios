@@ -29,10 +29,12 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
-namespace AppKit
-{
+namespace AppKit {
 	[Register ("__monomac_internal_ActionDispatcher")]
-	internal class ActionDispatcher : NSObject, INSMenuValidation // INSMenuValidation needed for using the Activated method of NSMenuItems if you want to be able to validate
+	internal class ActionDispatcher : NSObject
+#if !__MACCATALYST__
+		, INSMenuValidation // INSMenuValidation needed for using the Activated method of NSMenuItems if you want to be able to validate
+#endif
 	{
 		const string skey = "__monomac_internal_ActionDispatcher_activated:";
 		const string dkey = "__monomac_internal_ActionDispatcher_doubleActivated:";
@@ -40,7 +42,9 @@ namespace AppKit
 		public static Selector DoubleAction = new Selector (dkey);
 		public EventHandler Activated;
 		public EventHandler DoubleActivated;
+#if !__MACCATALYST__
 		public Func<NSMenuItem, bool> ValidateMenuItemFunc;
+#endif // !__MACCATALYST__
 
 		[Preserve, Export (skey)]
 		public void OnActivated (NSObject sender)
@@ -57,7 +61,7 @@ namespace AppKit
 			if (handler != null)
 				handler (sender, EventArgs.Empty);
 		}
-		
+
 		public ActionDispatcher (EventHandler handler)
 		{
 			IsDirectBinding = false;
@@ -72,7 +76,7 @@ namespace AppKit
 		public static NSObject SetupAction (NSObject target, EventHandler handler)
 		{
 			ActionDispatcher ctarget = target as ActionDispatcher;
-			if (ctarget == null){
+			if (ctarget == null) {
 				ctarget = new ActionDispatcher ();
 			}
 			ctarget.Activated += handler;
@@ -86,11 +90,11 @@ namespace AppKit
 				return;
 			ctarget.Activated -= handler;
 		}
-		
+
 		public static NSObject SetupDoubleAction (NSObject target, EventHandler doubleHandler)
 		{
 			ActionDispatcher ctarget = target as ActionDispatcher;
-			if (ctarget == null){
+			if (ctarget == null) {
 				ctarget = new ActionDispatcher ();
 			}
 			ctarget.DoubleActivated += doubleHandler;
@@ -105,6 +109,7 @@ namespace AppKit
 			ctarget.DoubleActivated -= doubleHandler;
 		}
 
+#if !__MACCATALYST__
 		public bool ValidateMenuItem (NSMenuItem menuItem)
 		{
 			if (ValidateMenuItemFunc != null)
@@ -112,6 +117,7 @@ namespace AppKit
 
 			return true;
 		}
+#endif // !__MACCATALYST__
 
 		[Preserve]
 		public bool WorksWhenModal {

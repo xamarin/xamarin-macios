@@ -9,23 +9,12 @@
 
 using System;
 using System.Net;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
+#if !NET
+using NativeHandle = System.IntPtr;
 #endif
 
 namespace MonoTouchFixtures.Foundation {
@@ -39,11 +28,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void NSDictionaryCtor ()
 		{
 			using (var props = new NSMutableDictionary ()) {
-#if XAMCORE_2_0
 				props.Add (NSHttpCookie.KeyOriginUrl, new NSString ("http://yodawg.com"));
-#else
-				props.Add (NSHttpCookie.KeyOriginURL, new NSString ("http://yodawg.com"));
-#endif
 				props.Add (NSHttpCookie.KeyName, new NSString ("iherd"));
 				props.Add (NSHttpCookie.KeyValue, new NSString ("ulikecookies"));
 				
@@ -67,11 +52,7 @@ namespace MonoTouchFixtures.Foundation {
 		public void CookieFromProperties ()
 		{
 			using (var props = new NSMutableDictionary ()) {
-#if XAMCORE_2_0
 				props.Add (NSHttpCookie.KeyOriginUrl, new NSString ("http://yodawg.com"));
-#else
-				props.Add (NSHttpCookie.KeyOriginURL, new NSString ("http://yodawg.com"));
-#endif
 				props.Add (NSHttpCookie.KeyName, new NSString ("iherd"));
 				props.Add (NSHttpCookie.KeyValue, new NSString ("ulikecookies"));
 				
@@ -129,7 +110,7 @@ namespace MonoTouchFixtures.Foundation {
 			// an invalid NSDictionary returns null from Objective-C but that
 			// results in an 'empty' instance inside MonoTouch
 			using (var cookie = new NSHttpCookie (new Cookie ())) {
-				Assert.That (cookie.Handle, Is.EqualTo (IntPtr.Zero), "ctor");
+				Assert.That (cookie.Handle, Is.EqualTo (NativeHandle.Zero), "ctor");
 			}
 		}
 

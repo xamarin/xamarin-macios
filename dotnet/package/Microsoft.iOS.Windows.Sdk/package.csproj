@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <_PlatformName>iOS</_PlatformName>
+    <IsWindowsPack>true</IsWindowsPack>
+  </PropertyGroup>
+
+  <Import Project="../microsoft.sdk.csproj" />
+</Project>

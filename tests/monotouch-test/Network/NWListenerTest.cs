@@ -1,19 +1,8 @@
 #if !__WATCHOS__
 using System;
-using System.Collections.Generic;
-using System.Threading;
-#if XAMCORE_2_0
-using CoreFoundation;
+
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
 
 using NUnit.Framework;
 
@@ -24,14 +13,19 @@ namespace MonoTouchFixtures.Network {
 
 		NWListener listener;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 		[SetUp]
 		public void SetUp ()
 		{
+#if NET
+			using (var tcpOptions = new NWProtocolTcpOptions ())
+			using (var tlsOptions = new NWProtocolTlsOptions ())
+#else
 			using (var tcpOptions = NWProtocolOptions.CreateTcp ())
 			using (var tlsOptions = NWProtocolOptions.CreateTls ())
+#endif
 			using (var parameters = NWParameters.CreateTcp ()) {
 				parameters.ProtocolStack.PrependApplicationProtocol (tlsOptions);
 				parameters.ProtocolStack.PrependApplicationProtocol (tcpOptions);
@@ -55,6 +49,17 @@ namespace MonoTouchFixtures.Network {
 			Assert.AreEqual (defaultValue, listener.ConnectionLimit);
 			listener.ConnectionLimit = 10;
 			Assert.AreEqual (10, listener.ConnectionLimit, "New value was not stored.");
+		}
+
+		[Test]
+		public void SetNewConnectionGroupHandlerTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+			Assert.DoesNotThrow (() => {
+				listener.SetNewConnectionHandler ((c) => {
+					Console.WriteLine ("New connection");
+				});
+			});
 		}
 	}
 }

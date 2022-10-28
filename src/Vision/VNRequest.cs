@@ -1,4 +1,4 @@
-﻿//
+//
 // VNRequest.cs
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2017 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0
+#nullable enable
 
 using System;
 using Foundation;
@@ -26,4 +26,3 @@ namespace Vision {
 		}
 	}
 }
-#endif

@@ -4,6 +4,3 @@
 !missing-selector! SFSafariExtensionState::isEnabled not bound
 !missing-type! SFSafariExtensionManager not bound
 !missing-type! SFSafariExtensionState not bound
-
-## it's present but it's unused and the [Obsolete] attribute skips it (so it's reported)
-!missing-enum! SFSafariServicesVersion not bound

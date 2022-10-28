@@ -1,4 +1,4 @@
-﻿//
+//
 // Port of mono's unit tests for WeakAttribute from:
 // https://github.com/mono/mono/blob/5bdaef7e5f6479cc4336bb809b419e85ad706dd7/mono/tests/weak-fields.cs
 //
@@ -10,15 +10,11 @@
 // Copyright 2018 Xamarin Inc. All rights reserved.
 //
 
+#if !NET // WeakAttribute is not supported in .NET
 using System;
 using System.Threading;
 
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 
@@ -146,3 +142,4 @@ namespace MonoTouchFixtures {
 		int x;
 	}
 }
+#endif // !NET

@@ -1,3 +1,6 @@
+all-package-references.csproj
+dotnet-install.sh
+BundledNETCorePlatformsPackageVersion.txt
 downloads
 .stamp*
 .deps.*.mk
@@ -26,3 +29,5 @@ mono-ios-sdk-destdir
 *.dylib
 *.o
 x86-64-slice*
+*.pkg
+

@@ -1,19 +1,6 @@
-﻿#if !__WATCHOS__
-using System;
-using System.Collections.Generic;
-using System.Threading;
-#if XAMCORE_2_0
-using CoreFoundation;
+#if !__WATCHOS__
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
 
 using NUnit.Framework;
 
@@ -23,7 +10,7 @@ namespace MonoTouchFixtures.Network {
 	[Preserve (AllMembers = true)]
 	public class NWProtocolDefinitionTest {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (10, 0);
 
 
@@ -31,28 +18,28 @@ namespace MonoTouchFixtures.Network {
 		[Test]
 		public void IPDefinitionTest ()
 		{
-			using (var definition = NWProtocolDefinition.IPDefinition)
+			using (var definition = NWProtocolDefinition.CreateIPDefinition ())
 				Assert.NotNull (definition);
 		}
 
 		[Test]
 		public void TcpDefinitionTest ()
 		{
-			using (var definition = NWProtocolDefinition.TcpDefinition)
+			using (var definition = NWProtocolDefinition.CreateTcpDefinition ())
 				Assert.NotNull (definition);
 		}
 
 		[Test]
 		public void TlsDefinitionTest ()
 		{
-			using (var definition = NWProtocolDefinition.TlsDefinition)
+			using (var definition = NWProtocolDefinition.CreateTlsDefinition ())
 				Assert.NotNull (definition);
 		}
 
 		[Test]
 		public void UdpDefinitionTest ()
 		{
-			using (var definition = NWProtocolDefinition.UdpDefinition)
+			using (var definition = NWProtocolDefinition.CreateUdpDefinition ())
 				Assert.NotNull (definition);
 		}
 
@@ -60,7 +47,7 @@ namespace MonoTouchFixtures.Network {
 		public void WebSocketDefinitionTest ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
-			using (var definition = NWProtocolDefinition.WebSocketDefinition)
+			using (var definition = NWProtocolDefinition.CreateWebSocketDefinition ())
 				Assert.NotNull (definition);
 		}
 	}

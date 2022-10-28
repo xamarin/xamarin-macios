@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for SCNAction
 //
 
@@ -7,6 +7,7 @@ using Foundation;
 using SceneKit;
 using ObjCRuntime;
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.SceneKit {
 
@@ -20,10 +21,10 @@ namespace MonoTouchFixtures.SceneKit {
 		public void SetUp ()
 		{
 			TestRuntime.AssertXcodeVersion (6, 0);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Test]
 		public void TimingFunction_5058 ()
 		{
@@ -49,7 +50,7 @@ namespace MonoTouchFixtures.SceneKit {
 			TestRuntime.AssertXcodeVersion (7, 0);
 			// https://github.com/xamarin/xamarin-macios/issues/5072
 			var a = new SCNAction ();
-#if !XAMCORE_4_0
+#if !NET
 			a.TimingFunction2 = (float f) => {
 				timeFunctionValue = f;
 				return timeFunctionValue;

@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests CFHTTPMessage
 //
 // Authors:
@@ -11,19 +11,13 @@
 
 using System;
 using System.Net;
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
-#elif XAMCORE_2_0
+#else
 using CoreServices;
 #endif
-#if XAMCORE_2_0
 using Foundation;
 using CoreFoundation;
-#else
-using MonoTouch.CoreServices;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 using System.Threading;
@@ -104,6 +98,9 @@ namespace MonoTouchFixtures.CoreServices {
 					}
 				}
 			}, () => done);
+			if (!done)
+				TestRuntime.IgnoreInCI ("Transient network failure - ignore in CI");
+			Assert.IsTrue (done, "Network request completed");
 			using (var auth = CFHTTPAuthentication.CreateFromResponse (response)) {
 				Assert.NotNull (auth, "Null Auth");
 				Assert.IsTrue (auth.IsValid, "Auth is valid");

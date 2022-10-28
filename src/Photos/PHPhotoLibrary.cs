@@ -1,4 +1,4 @@
-﻿//
+//
 // PHPhotoLibrary.cs: Provides a couple of overload methods
 //
 // Authors:
@@ -7,7 +7,7 @@
 // Copyright 2014 Xamarin Inc
 //
 
-#if !MONOMAC
+#nullable enable
 
 using ObjCRuntime;
 using Foundation;
@@ -42,12 +42,10 @@ namespace Photos
 
 		public void UnregisterChangeObserver (object registeredToken)
 		{
-			if (!(registeredToken is __phlib_observer))
+			if (registeredToken is __phlib_observer observer) 
+				UnregisterChangeObserver (observer);
+			else
 				throw new ArgumentException ("registeredToken should be a value returned by RegisterChangeObserver(PHChange)");
-			
-			UnregisterChangeObserver (registeredToken as __phlib_observer);
 		}
 	}
 }
-
-#endif

@@ -14,16 +14,13 @@ namespace Security {
 	public enum SslProtocol {
 		Unknown = 0,
 		Ssl_3_0 = 2,
-#if !XAMCORE_2_0
-		[Obsolete ("Use 'Ssl_3_0'.")]
-		Ssl3_0 = Ssl_3_0,
-#endif
 		Tls_1_0 = 4,
 		Tls_1_1 = 7, 
 		Tls_1_2 = 8, 
 		Dtls_1_0 = 9,
 		[iOS (11,0)][TV (11,0)][Watch (4,0)][Mac (10,13)]
 		Tls_1_3 = 10,
+		Dtls_1_2 = 11,
 		
 		/* Obsolete on iOS */
 		Ssl_2_0 = 1,          
@@ -34,6 +31,7 @@ namespace Security {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	// CF_ENUM(uint16_t, tls_protocol_version_t)
+	[NativeName ("tls_protocol_version_t")]
 	public enum TlsProtocolVersion : ushort {
 		Tls10 = 769,
 		Tls11 = 770,
@@ -45,6 +43,7 @@ namespace Security {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	// CF_ENUM(uint16_t, tls_ciphersuite_t)
+	[NativeName ("tls_ciphersuite_t")]
 	public enum TlsCipherSuite: ushort {
 		RsaWith3desEdeCbcSha = 10,
 		RsaWithAes128CbcSha = 47,
@@ -76,6 +75,7 @@ namespace Security {
 
 	[Watch (6,0), TV (13,0), Mac (10,15), iOS (13,0)]
 	// CF_ENUM(uint16_t, tls_ciphersuite_group_t)
+	[NativeName ("tls_ciphersuite_group_t")]
 	public enum TlsCipherSuiteGroup : ushort {
 		Default,
 		Compatibility,
@@ -162,14 +162,16 @@ namespace Security {
 		SslAtsLeafCertificateHashAlgorithmViolation = -9884,
 		SslAtsCertificateHashAlgorithmViolation     = -9885,
 		SslAtsCertificateTrustViolation             = -9886,
+		// xcode 12
+		SslEarlyDataRejected                        = -9890,
 	}
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
-	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
 	public enum SslSessionOption {
 		BreakOnServerAuth,
 		BreakOnCertRequested,
@@ -198,10 +200,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
-	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
 	public enum SslAuthenticate {
 		Never,
 		Always,
@@ -210,10 +212,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
-	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
 	public enum SslProtocolSide {
 		Server,
 		Client,
@@ -221,10 +223,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
-	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
 	public enum SslConnectionType {
 		Stream,
 		Datagram
@@ -232,10 +234,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
-	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
 	public enum SslSessionState {
 		Invalid = -1,
 		Idle,
@@ -247,10 +249,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
-	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
 	public enum SslSessionStrengthPolicy {
 		Default,
 		ATSv1,
@@ -259,10 +261,10 @@ namespace Security {
 
 	// Security.framework/Headers/SecureTransport.h
 	// untyped enum
-	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'Network.framework' instead.")]
-	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'Network.framework' instead.")]
+	[Deprecated (PlatformName.MacOSX, 10,15, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.iOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.TvOS, 13,0, message: Constants.UseNetworkInstead)]
+	[Deprecated (PlatformName.WatchOS, 6,0, message: Constants.UseNetworkInstead)]
 	public enum SslClientCertificateState {
 		None,
 		Requested,
@@ -270,13 +272,14 @@ namespace Security {
 		Rejected
 	}
 
+#if !NET
 	// Security.framework/Headers/CipherSuite.h
 	// 32 bits (uint32_t) on OSX, 16 bits (uint16_t) on iOS
 	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsCipherSuite' instead.")]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsCipherSuite' instead.")]
 	[Deprecated (PlatformName.TvOS, 13,0, message: "Use 'TlsCipherSuite' instead.")]
 	[Deprecated (PlatformName.WatchOS, 6,0, message: "Use 'TlsCipherSuite' instead.")]
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 	public enum SslCipherSuite : uint {
 #else
 	public enum SslCipherSuite : ushort {
@@ -438,6 +441,7 @@ namespace Security {
 		SSL_NO_SUCH_CIPHERSUITE       				= 0xFFFF,
 
 	}
+#endif // !NET
 
 	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'TlsCipherSuiteGroup' instead.")]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'TlsCipherSuiteGroup' instead.")]

@@ -1,13 +1,9 @@
-﻿using System;
-#if XAMCORE_2_0
+using System;
 using Foundation;
 using CoreMedia;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreMedia;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia
 {
@@ -20,10 +16,10 @@ namespace MonoTouchFixtures.CoreMedia
 		[Test]
 		public void RetainReleaseTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var clock = CMClock.HostTimeClock;
-			var timebase = new CMClockOrTimebase (clock.Handle);
+			var timebase = Runtime.GetINativeObject<CMClockOrTimebase> (clock.Handle, false);
 			// we should be able to dispose the clock and the timebase with no crashes.
 			Assert.AreEqual (clock.Handle, timebase.Handle);
 			clock.Dispose ();

@@ -28,9 +28,11 @@ using NSWindowController = Foundation.NSObject;
 using NSViewController = Foundation.NSObject;
 #endif
 
-namespace CoreAudioKit {
-#if XAMCORE_2_0 || !MONOMAC
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
+namespace CoreAudioKit {
 	[NoiOS]
 	[Mac (10,11)]
 	[Flags]
@@ -45,14 +47,14 @@ namespace CoreAudioKit {
 	interface AUViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
 	[iOS (11,0)][Mac (10,13)]
 	[BaseType (typeof (NSObject))]
 	interface AUAudioUnitViewConfiguration : NSSecureCoding {
 		[Export ("initWithWidth:height:hostHasController:")]
-		IntPtr Constructor (nfloat width, nfloat height, bool hostHasController);
+		NativeHandle Constructor (nfloat width, nfloat height, bool hostHasController);
 
 		[Export ("width")]
 		nfloat Width { get; }
@@ -98,10 +100,10 @@ namespace CoreAudioKit {
 		bool ShowsExpertParameters { get; set; }
 
 		[Export ("initWithAudioUnit:")]
-		IntPtr Constructor (AudioUnit.AudioUnit au);
+		NativeHandle Constructor (AudioUnit.AudioUnit au);
 
 		[Export ("initWithAudioUnit:displayFlags:")]
-		IntPtr Constructor (AudioUnit.AudioUnit au, AUGenericViewDisplayFlags inFlags);
+		NativeHandle Constructor (AudioUnit.AudioUnit au, AUGenericViewDisplayFlags inFlags);
 	}
 
 	[NoiOS]
@@ -124,7 +126,7 @@ namespace CoreAudioKit {
 	interface CABtleMidiWindowController {
 
 		[Export ("initWithWindow:")]
-		IntPtr Constructor ([NullAllowed] NSWindow window);
+		NativeHandle Constructor ([NullAllowed] NSWindow window);
 	}
 
 	[NoiOS]
@@ -133,7 +135,7 @@ namespace CoreAudioKit {
 	interface CAInterDeviceAudioViewController {
 
 		[Export ("initWithNibName:bundle:")]
-		IntPtr Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
+		NativeHandle Constructor ([NullAllowed] string nibNameOrNull, [NullAllowed] NSBundle nibBundleOrNull);
 	}
 
 	[NoiOS]
@@ -143,43 +145,45 @@ namespace CoreAudioKit {
 	interface CANetworkBrowserWindowController {
 
 		[Export ("initWithWindow:")]
-		IntPtr Constructor ([NullAllowed] NSWindow window);
+		NativeHandle Constructor ([NullAllowed] NSWindow window);
 
 		[Static]
 		[Export ("isAVBSupported")]
 		bool IsAvbSupported { get; }
 	}
-#endif
 
 #if !MONOMAC
 	[iOS (8,0)]
+	[NoMac]
 	// in iOS 8.3 (Xcode 6.3 SDK) the base type was changed from UIViewController to UITableViewController
 	[BaseType (typeof (UITableViewController), Name="CABTMIDICentralViewController")]
 	interface CABTMidiCentralViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 
 		[iOS (8,3)]
 		[Export ("initWithStyle:")]
-		IntPtr Constructor (UITableViewStyle withStyle);
+		NativeHandle Constructor (UITableViewStyle withStyle);
 	}
 
 	[iOS (8,0)]
+	[NoMac]
 	[BaseType (typeof (UIViewController), Name="CABTMIDILocalPeripheralViewController")]
 	interface CABTMidiLocalPeripheralViewController {
 		[Export ("initWithNibName:bundle:")]
 		[PostGet ("NibBundle")]
-		IntPtr Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
+		NativeHandle Constructor ([NullAllowed] string nibName, [NullAllowed] NSBundle bundle);
 	}
 
 	[iOS (8,0)]
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[BaseType (typeof (UIView))]
 	interface CAInterAppAudioSwitcherView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect bounds);
+		NativeHandle Constructor (CGRect bounds);
 		
 		[Export ("showingAppNames")]
 		bool ShowingAppNames { [Bind ("isShowingAppNames")] get; set; }
@@ -192,12 +196,13 @@ namespace CoreAudioKit {
 	}
 
 	[iOS (8,0)]
+	[NoMac]
 	[Deprecated (PlatformName.iOS, 13,0, message: "Use 'AudioUnit' instead.")]
-	[Unavailable (PlatformName.UIKitForMac)][Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[BaseType (typeof (UIView))]
 	interface CAInterAppAudioTransportView {
 		[Export ("initWithFrame:")]
-		IntPtr Constructor (CGRect bounds);
+		NativeHandle Constructor (CGRect bounds);
 		
 		[Export ("enabled")]
 		bool Enabled { [Bind ("isEnabled")] get; set; }
@@ -232,7 +237,7 @@ namespace CoreAudioKit {
 		UIColor RecordButtonColor { get; set; }
 
 		[Export ("setOutputAudioUnit:")]
-		void SetOutputAudioUnit ([NullAllowed] AudioUnit.AudioUnit audioUnit);
+		void SetOutputAudioUnit (AudioUnit.AudioUnit audioUnit);
 	}
 #endif
 }

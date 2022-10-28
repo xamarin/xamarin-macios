@@ -7,21 +7,15 @@
 // Copyright 2012 Xamarin Inc. All rights reserved.
 //
 
-#if !__TVOS__ && !__WATCHOS__ && !MONOMAC
+#if !__MACCATALYST__ && HAS_ADDRESSBOOK
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using AddressBook;
 using ObjCRuntime;
-#else
-using MonoTouch.AddressBook;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AddressBook {
 	
@@ -31,13 +25,20 @@ namespace MonoTouchFixtures.AddressBook {
 		
 		// very general ABSource related tests (works on both simulator and devices)
 		
+		[SetUp]
+		public void Setup ()
+		{
+			// The API here was introduced to Mac Catalyst later than for the other frameworks, so we have this additional check
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacCatalyst, 14, 0, throwIfOtherPlatform: false);
+		}
+
 		[Test]
 		public void GetAllSources ()
 		{
 			TestRuntime.CheckAddressBookPermission ();
 			ABAddressBook ab = new ABAddressBook ();
 			var sources = ab.GetAllSources ();
-			int value = Runtime.Arch == Arch.DEVICE || TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false) ? 0 : 1;
+			int value = Runtime.Arch == Arch.DEVICE || TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false) ? 0 : 1;
 			Assert.That (sources.Length, Is.GreaterThanOrEqualTo (value), "GetAllSources");
 		}
 		
@@ -61,4 +62,4 @@ namespace MonoTouchFixtures.AddressBook {
 	}
 }
 
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !__MACCATALYST__ && HAS_ADDRESSBOOK - Crashes with maccat

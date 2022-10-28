@@ -9,6 +9,8 @@
 
 using System;
 
+#nullable enable
+
 namespace SceneKit
 {
 	public partial class SCNPhysicsTest {

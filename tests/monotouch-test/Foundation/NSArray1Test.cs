@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for NSArray Generic support
 //
 // Authors:
@@ -7,8 +7,6 @@
 //
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
-
-#if XAMCORE_2_0
 
 using System;
 using System.Collections;
@@ -20,13 +18,14 @@ using Foundation;
 
 namespace MonoTouchFixtures.Foundation {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class NSArray1Test {
 		[Test]
 		public void Ctor ()
 		{
 			var arr = new NSArray<NSData> ();
 
-			Assert.AreEqual (0, arr.Count, "NSArray Count");
+			Assert.AreEqual ((nuint) 0, arr.Count, "NSArray Count");
 		}
 
 		[Test]
@@ -37,7 +36,7 @@ namespace MonoTouchFixtures.Foundation {
 			var str3 = (NSString) "3";
 
 			using (var arr = NSArray<NSString>.FromNSObjects (str1, str2, str3)) {
-				Assert.AreEqual (3, arr.Count, "NSArray Count");
+				Assert.AreEqual ((nuint) 3, arr.Count, "NSArray Count");
 				Assert.AreSame (str1, arr [0], "NSArray indexer");
 				Assert.AreSame (str2, arr [1], "NSArray indexer");
 				Assert.AreSame (str3, arr [2], "NSArray indexer");
@@ -52,7 +51,7 @@ namespace MonoTouchFixtures.Foundation {
 			var str3 = (NSString) "3";
 
 			using (var arr = NSArray<NSString>.FromNSObjects (3, str1, str2, str3)) {
-				Assert.AreEqual (3, arr.Count, "NSArray Count");
+				Assert.AreEqual ((nuint) 3, arr.Count, "NSArray Count");
 				Assert.AreSame (str1, arr [0], "NSArray indexer");
 				Assert.AreSame (str2, arr [1], "NSArray indexer");
 				Assert.AreSame (str3, arr [2], "NSArray indexer");
@@ -68,7 +67,7 @@ namespace MonoTouchFixtures.Foundation {
 				values [i] = (NSString) i.ToString ();
 
 			var st = NSArray<NSString>.FromNSObjects (values);
-			Assert.AreEqual (C, st.Count, "Count 1");
+			Assert.AreEqual ((nuint) C, st.Count, "Count 1");
 
 			var lst = new List<NSString> ();
 			foreach (NSString a in (IEnumerable) st) {
@@ -88,12 +87,35 @@ namespace MonoTouchFixtures.Foundation {
 			var str3 = (NSString) "3";
 
 			using (var arr = NSArray<NSString>.FromNSObjects (str1, str2, str3)) {
-				Assert.AreEqual (3, arr.Count, "NSArray Count");
+				Assert.AreEqual ((nuint) 3, arr.Count, "NSArray Count");
 				Assert.AreSame (str1, arr [0], "NSArray indexer");
 				Assert.IsNull (arr [1], "NSArray null indexer");
 				Assert.AreSame (str3, arr [2], "NSArray indexer");
 			}
 		}
+
+		[Test]
+		public void ToArray ()
+		{
+			using (var a = NSArray<NSString>.FromNSObjects ((NSString) "abc")) {
+				var arr = a.ToArray ();
+				NSString element = arr [0];
+				Assert.AreEqual (1, arr.Length, "Length");
+				Assert.AreEqual ("abc", arr [0].ToString (), "Value");
+				Assert.AreEqual ("abc", (string) element, "Value element");
+			}
+		}
+
+		[Test]
+		public void ToArray_T ()
+		{
+			using (var a = NSArray<NSString>.FromNSObjects ((NSString) "abc")) {
+				var arr = a.ToArray ();
+				NSString element = arr [0];
+				Assert.AreEqual (1, arr.Length, "Length");
+				Assert.AreEqual ("abc", arr [0].ToString (), "Value");
+				Assert.AreEqual ("abc", (string) element, "Value element");
+			}
+		}
 	}
 }
-#endif // XAMCORE_2_0

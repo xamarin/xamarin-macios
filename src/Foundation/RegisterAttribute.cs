@@ -25,21 +25,19 @@ using System;
 
 namespace Foundation {
 
-#if XAMCORE_2_0
 	[AttributeUsage (AttributeTargets.Class)]
-#else
-	[AttributeUsage (AttributeTargets.Method | AttributeTargets.Class)]
-#endif
 	public sealed class RegisterAttribute : Attribute {
 		string name;
 		bool is_wrapper;
 
-		public RegisterAttribute () {}
-		public RegisterAttribute (string name) {
+		public RegisterAttribute () { }
+		public RegisterAttribute (string name)
+		{
 			this.name = name;
 		}
 
-		public RegisterAttribute (string name, bool isWrapper) {
+		public RegisterAttribute (string name, bool isWrapper)
+		{
 			this.name = name;
 			this.is_wrapper = isWrapper;
 		}

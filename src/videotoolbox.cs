@@ -103,6 +103,11 @@ namespace VideoToolbox {
 		[Field ("kVTCompressionPropertyKey_ExpectedFrameRate")]
 		NSString ExpectedFrameRate { get; }
 
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Field ("kVTCompressionPropertyKey_BaseLayerFrameRateFraction")]
+		NSString BaseLayerFrameRateFraction { get; }
+
 		[Field ("kVTCompressionPropertyKey_ExpectedDuration")]
 		NSString ExpectedDuration { get; }
 
@@ -188,6 +193,47 @@ namespace VideoToolbox {
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Field ("kVTCompressionPropertyKey_UsingGPURegistryID")]
 		NSString UsingGpuRegistryId { get; }
+
+		[Watch (7, 0), TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
+		[Field ("kVTCompressionPropertyKey_HDRMetadataInsertionMode")]
+		NSString HdrMetadataInsertionMode { get; }
+
+		[TV (14, 0), Mac (11, 0), iOS (14, 0)]
+		[MacCatalyst (14,0)]
+		[Field ("kVTCompressionPropertyKey_PrioritizeEncodingSpeedOverQuality")]
+		NSString PrioritizeEncodingSpeedOverQuality { get; }
+
+		[iOS (14,1)]
+		[TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
+		[Field ("kVTCompressionPropertyKey_PreserveDynamicHDRMetadata")]
+		NSString PreserveDynamicHdrMetadata { get; }
+
+		[TV (14,5)][Mac (11,3)][iOS (14,5)]
+		[MacCatalyst (14,5)]
+		[Field ("kVTVideoEncoderSpecification_EnableLowLatencyRateControl")]
+		NSString EnableLowLatencyRateControl { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("kVTCompressionPropertyKey_BaseLayerBitRateFraction")]
+		NSString BaseLayerBitRateFraction { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("kVTCompressionPropertyKey_EnableLTR")]
+		NSString EnableLtr { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("kVTCompressionPropertyKey_MaxAllowedFrameQP")]
+		NSString MaxAllowedFrameQP { get; }
+
+		[TV (15, 0), Mac (12, 0), iOS (15, 0), MacCatalyst (15,0)]
+		[Field ("kVTCompressionPropertyKey_SupportsBaseFrameQP")]
+		NSString SupportsBaseFrameQP { get; }
+
+		[Watch (8,5), TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Field ("kVTCompressionPropertyKey_OutputBitDepth")]
+		NSString OutputBitDepth { get; }
 	}
 
 	[Mac (10,15), iOS (13,0), TV (13,0)]
@@ -317,6 +363,12 @@ namespace VideoToolbox {
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Export ("UsingGpuRegistryId")]
 		uint UsingGpuRegistryId { get; }
+
+		[iOS (14,1)]
+		[TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
+		[Export ("PreserveDynamicHdrMetadata")]
+		bool PreserveDynamicHdrMetadata { get; set; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -331,6 +383,10 @@ namespace VideoToolbox {
 		[Mac (10,13), iOS (11,0), TV (11,0)]
 		[Field ("kVTProfileLevel_HEVC_Main10_AutoLevel")]
 		NSString Hevc_Main10_AutoLevel { get; }
+
+		[TV (15,4), Mac (12,3), iOS (15,4), MacCatalyst (15,4)]
+		[Field ("kVTProfileLevel_HEVC_Main42210_AutoLevel")]
+		NSString Hevc_Main42210_AutoLevel { get; }
 
 		// H264
 
@@ -452,6 +508,14 @@ namespace VideoToolbox {
 		[Field ("kVTProfileLevel_H264_High_AutoLevel")]
 		[Mac (10,9)]
 		NSString H264_High_AutoLevel { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTProfileLevel_H264_ConstrainedBaseline_AutoLevel")]
+		NSString H264_ConstrainedBaseline_AutoLevel { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTProfileLevel_H264_ConstrainedHigh_AutoLevel")]
+		NSString H264_ConstrainedHigh_AutoLevel { get; }
 
 		// MP4V
 
@@ -576,6 +640,22 @@ namespace VideoToolbox {
 
 		[Field ("kVTEncodeFrameOptionKey_ForceKeyFrame")]
 		NSString ForceKeyFrame { get; } 
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTEncodeFrameOptionKey_AcknowledgedLTRTokens")]
+		NSString AcknowledgedLtrTokens { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTEncodeFrameOptionKey_BaseFrameQP")]
+		NSString BaseFrameQP { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTEncodeFrameOptionKey_ForceLTRRefresh")]
+		NSString ForceLtrRefresh { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTSampleAttachmentKey_RequireLTRAcknowledgementToken")]
+		NSString RequireLtrAcknowledgementToken { get; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -704,6 +784,12 @@ namespace VideoToolbox {
 
 		[Field ("kVTDecompressionPropertyKey_PixelTransferProperties")]
 		NSString PixelTransferProperties { get; }
+
+		[iOS (14,1)]
+		[TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
+		[Field ("kVTDecompressionPropertyKey_PropagatePerFrameHDRDisplayMetadata")]
+		NSString PropagatePerFrameHdrDisplayMetadata { get; }
 	}
 
 	[iOS (8,0), TV (10,2)]
@@ -785,6 +871,12 @@ namespace VideoToolbox {
 		[Mac (10,15), iOS (13,0), TV (13,0)]
 		[Export ("UsingGpuRegistryId")]
 		uint UsingGpuRegistryId { get; }
+
+		[iOS (14,1)]
+		[TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,1)]
+		[Export ("PropagatePerFrameHdrDisplayMetadata")]
+		bool PropagatePerFrameHhrDisplayMetadata { get; set; }
 	}
 
 	[Mac (10,9), iOS (8,0), TV (10,2)]
@@ -954,6 +1046,18 @@ namespace VideoToolbox {
 		[Mac (10,14,6), iOS (13,0), TV (13,0)]
 		[Field ("kVTVideoEncoderList_IsHardwareAccelerated")]
 		NSString IsHardwareAccelerated { get; }
+
+		[iOS (14,2)][TV (14,2)][Mac (11,0)]
+		[MacCatalyst (14,2)]
+		[Field ("kVTVideoEncoderList_SupportsFrameReordering")]
+		NSString SupportsFrameReordering { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("kVTVideoEncoderListOption_IncludeStandardDefinitionDVEncoders")]
+		NSString IncludeStandardDefinitionDVEncoders { get; }
+
+		// VTVideoEncoder.cs should be updated when new constants are added here
+		// some are missing https://github.com/xamarin/xamarin-macios/issues/9904
 	}
 
 	// VTMultiPassStorage.h

@@ -1,19 +1,10 @@
 #if !__WATCHOS__
 using System;
-using System.Collections.Generic;
 using System.Threading;
-#if XAMCORE_2_0
+
 using CoreFoundation;
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
 
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
@@ -44,7 +35,7 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init ()
 		{
 			TestRuntime.AssertXcodeVersion (11, 0);
@@ -59,7 +50,11 @@ namespace MonoTouchFixtures.Network {
 			{
 				using (var protocolStack = parameters.ProtocolStack) {
 					var ipOptions = protocolStack.InternetProtocol;
+#if NET
+					ipOptions.SetVersion (NWIPVersion.Version4);
+#else
 					ipOptions.IPSetVersion (NWIPVersion.Version4);
+#endif
 				}
 				connection = new NWConnection (endpoint, parameters);
 				connection.SetQueue (DispatchQueue.DefaultGlobalQueue); // important, else we will get blocked
@@ -74,7 +69,7 @@ namespace MonoTouchFixtures.Network {
 			}
 		}
 
-		[TestFixtureTearDown]
+		[OneTimeTearDown]
 		public void Dispose()
 		{
 			report?.Dispose ();
@@ -96,7 +91,7 @@ namespace MonoTouchFixtures.Network {
 		}
 
 		[Test]
-		public void TestPreviousAttemptCount () => Assert.AreNotEqual (-1, report.PreviousAttemptCount);
+		public void TestPreviousAttemptCount () => Assert.AreNotEqual (uint.MaxValue, report.PreviousAttemptCount);
 
 		[Test]
 		public void TestDuration () => Assert.IsTrue (report.Duration > TimeSpan.MinValue);
@@ -123,8 +118,14 @@ namespace MonoTouchFixtures.Network {
 		{
 			TestRuntime.IgnoreInCI ("CI bots might have proxies setup and will mean that the test will fail.");
 			Assert.IsNull (report.ProxyEndpoint);
-
 		}
+
+		[Test]
+		public void EnumerateResolutionReportsTest ()
+		{
+			TestRuntime.AssertXcodeVersion (13, 0);
+		}
+		
 	}
 }
 #endif

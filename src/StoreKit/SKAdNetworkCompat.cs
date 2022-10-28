@@ -7,12 +7,15 @@
 // Copyright 2018 Microsoft Corporation.
 //
 
+#nullable enable
+
 using System;
 using System.ComponentModel;
+
 using Foundation;
 using ObjCRuntime;
 
-#if TVOS && !XAMCORE_4_0
+#if TVOS && !NET
 namespace StoreKit {
 	[Obsolete ("Not usable from tvOS and will be removed in the future.")]
 	[Unavailable (PlatformName.TvOS)]
@@ -32,8 +35,7 @@ namespace StoreKit {
 		protected internal SKAdNetwork (IntPtr handle) : base (handle) { }
 
 		[Obsolete ("Throws a 'NotSupportedException'.")]
-		[Unavailable (PlatformName.TvOS)]
 		public static void RegisterAppForAdNetworkAttribution () => throw new NotSupportedException ();
 	}
 }
-#endif
+#endif // TVOS && !NET

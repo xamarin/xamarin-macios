@@ -7,7 +7,7 @@
 // Copyright 2017 Microsoft. All rights reserved.
 //
 
-#if XAMCORE_2_0 && !MONOMAC
+#if !MONOMAC
 
 using System;
 using System.Drawing;
@@ -56,4 +56,4 @@ namespace MonoTouchFixtures.UIKit {
 	}
 }
 
-#endif // XAMCORE_2_0
+#endif // !MONOMAC

@@ -7,16 +7,11 @@
 // Copyright 2012-2014 Xamarin Inc All rights reserved.
 //
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
 	
@@ -28,7 +23,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void DefaultValues ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var htc = CMClock.HostTimeClock;
 			using (var tb = new CMTimebase (htc)) {
@@ -49,7 +44,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void SetAnchorTime ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var tb = new CMTimebase (CMClock.HostTimeClock)) {
 				Assert.AreEqual (CMTimebaseError.None, tb.SetAnchorTime (new CMTime (1000000, 200), new CMTime (-1, -2)));
@@ -61,7 +56,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void AddTimer ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var tb = new CMTimebase (CMClock.HostTimeClock)) {
 				var timer = NSTimer.CreateRepeatingTimer (CMTimebase.VeryLongTimeInterval, delegate { });
@@ -77,7 +72,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void GetMasterTests ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var tb = new CMTimebase (CMClock.HostTimeClock)) {
 				var masterTB = tb.GetMasterTimebase ();
@@ -98,7 +93,7 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void CopyMasterTests ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			using (var tb = new CMTimebase (CMClock.HostTimeClock)) {
 				var masterTB = tb.CopyMasterTimebase ();
@@ -122,6 +117,53 @@ namespace MonoTouchFixtures.CoreMedia {
 				return;
 			Assert.AreNotEqual (IntPtr.Zero, o.Handle, "AssertNullOrValidHandle - " + description);
 		}
+
+		[Test]
+		public void CMClockConstructor ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			Assert.Throws<ArgumentNullException>(() => {
+				var timebase = new CMTimebase (null, (CMClock) null);
+			}, "Null clock");
+
+			// if it throws we fail the test
+			using var timebase = new CMTimebase (null, CMClock.HostTimeClock);
+			Assert.NotNull (timebase, "Not null");
+		}
+
+		[Test]
+		public void SourceClockProperty ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			using var timebase = new CMTimebase (null, CMClock.HostTimeClock);
+			Assert.NotNull (timebase.SourceClock, "not null source clock");
+			// set and if it throws we fail the test
+			timebase.SourceClock = CMClock.HostTimeClock;
+		}
+
+		[Test]
+		public void CMTimebaseConstructor ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			Assert.Throws<ArgumentNullException>(() => {
+				var timebase = new CMTimebase (null, (CMTimebase) null);
+			}, "Null clock");
+			
+			// if it throws we fail the test
+			using var mainTimebase = new CMTimebase (CMClock.HostTimeClock);
+			using var timebase = new CMTimebase (null, mainTimebase);
+		}
+
+		[Test]
+		public void SourceTimebaseProperty ()
+		{
+			TestRuntime.AssertXcodeVersion (13,0);
+			using var mainTimebase = new CMTimebase (CMClock.HostTimeClock);
+			using var timebase = new CMTimebase (null, mainTimebase);
+			Assert.NotNull (timebase.SourceTimebase, "Not null timebase");
+			// if we throw we fail test test
+			using var secondTimebase = new CMTimebase (CMClock.HostTimeClock);
+			timebase.SourceTimebase = secondTimebase;
+		}
 	}
 }
-

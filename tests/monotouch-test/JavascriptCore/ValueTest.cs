@@ -10,14 +10,8 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using JavaScriptCore;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.JavaScriptCore;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.JavascriptCore {
@@ -98,6 +92,21 @@ namespace MonoTouchFixtures.JavascriptCore {
 			}
 
 		}
+
+#if NET
+		[Test]
+		public void ToArray ()
+		{
+			TestRuntime.AssertXcodeVersion (11,0);
+
+			using var context = new JSContext ();
+			using var array = NSArray.FromStrings ("a", "b");
+			using var value = JSValue.From (array, context);
+			using var arr2 = value.ToArray ();
+			Assert.AreEqual ("a", arr2.GetItem<NSString> (0).ToString (), "a");
+			Assert.AreEqual ("b", arr2.GetItem<NSString> (1).ToString (), "a");
+		}
+#endif
 	}
 }
 

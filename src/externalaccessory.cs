@@ -12,6 +12,10 @@ using ObjCRuntime;
 using UIKit;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace ExternalAccessory {
 
 	[Mac (10, 13)][TV (10,0)]
@@ -110,6 +114,8 @@ namespace ExternalAccessory {
 		NSString BluetoothAccessoryPickerErrorDomain { get; }
 #endif
 
+		// [Introduced (PlatformName.MacCatalyst, 14, 0)]
+		[NoMacCatalyst] // selector does not respond
 		[NoMac]
 		[Export ("showBluetoothAccessoryPickerWithNameFilter:completion:")]
 		[Async]
@@ -122,17 +128,21 @@ namespace ExternalAccessory {
 	[DisableDefaultCtor]
 	interface EASession {
 		[Export ("initWithAccessory:forProtocol:")]
-		IntPtr Constructor (EAAccessory accessory, string protocol);
+		NativeHandle Constructor (EAAccessory accessory, string protocol);
 
+		[NullAllowed]
 		[Export ("accessory")]
 		EAAccessory Accessory { get; }
 
+		[NullAllowed]
 		[Export ("protocolString")]
 		string ProtocolString { get; }
 
+		[NullAllowed]
 		[Export ("inputStream")]
 		NSInputStream InputStream { get; }
 
+		[NullAllowed]
 		[Export ("outputStream")]
 		NSOutputStream OutputStream { get; }
 	}
@@ -174,17 +184,18 @@ namespace ExternalAccessory {
 #else
 	[BaseType (typeof (NSObject), Delegates=new string [] { "WeakDelegate" }, Events=new Type [] {typeof(EAWiFiUnconfiguredAccessoryBrowserDelegate)})]
 #endif
-#if XAMCORE_4_0
+#if NET
 	// There's a designated initializer, which leads to think that the default ctor
 	// should not be used (documentation says nothing).
 	[DisableDefaultCtor]
 #endif
 	interface EAWiFiUnconfiguredAccessoryBrowser {
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoTV]
 		[Export ("initWithDelegate:queue:")]
 		[DesignatedInitializer] // according to header comment (but not in attributes)
-		IntPtr Constructor ([NullAllowed] IEAWiFiUnconfiguredAccessoryBrowserDelegate accessoryBrowserDelegate, [NullAllowed] DispatchQueue queue);
+		NativeHandle Constructor ([NullAllowed] IEAWiFiUnconfiguredAccessoryBrowserDelegate accessoryBrowserDelegate, [NullAllowed] DispatchQueue queue);
 
 		[NoTV] // no member is available
 		[Export ("delegate", ArgumentSemantic.Weak)][NullAllowed]
@@ -198,17 +209,19 @@ namespace ExternalAccessory {
 		[Export ("unconfiguredAccessories", ArgumentSemantic.Copy)]
 		NSSet UnconfiguredAccessories { get; }
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoTV]
 		[Export ("startSearchingForUnconfiguredAccessoriesMatchingPredicate:")]
 		void StartSearchingForUnconfiguredAccessories ([NullAllowed] NSPredicate predicate);
 
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoTV]
 		[Export ("stopSearchingForUnconfiguredAccessories")]
 		void StopSearchingForUnconfiguredAccessories ();
 
 #if !MONOMAC
+		[MacCatalyst (14,0)] // the headers lie, not usable until at least Mac Catalyst 14.0
 		[NoTV]
-		[iOS (8,0)]
 		[Export ("configureAccessory:withConfigurationUIOnViewController:")]
 		void ConfigureAccessory (EAWiFiUnconfiguredAccessory accessory, UIViewController viewController);
 #endif
@@ -221,27 +234,19 @@ namespace ExternalAccessory {
 	[BaseType (typeof (NSObject))]
 	interface EAWiFiUnconfiguredAccessoryBrowserDelegate {
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("accessoryBrowser:didUpdateState:"), EventArgs ("EAWiFiUnconfiguredAccessory")]
 		void DidUpdateState(EAWiFiUnconfiguredAccessoryBrowser browser, EAWiFiUnconfiguredAccessoryBrowserState state);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("accessoryBrowser:didFindUnconfiguredAccessories:"), EventArgs ("EAWiFiUnconfiguredAccessoryBrowser")]
 		void DidFindUnconfiguredAccessories (EAWiFiUnconfiguredAccessoryBrowser browser, NSSet accessories);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("accessoryBrowser:didRemoveUnconfiguredAccessories:"), EventArgs ("EAWiFiUnconfiguredAccessoryBrowser")]
 		void DidRemoveUnconfiguredAccessories (EAWiFiUnconfiguredAccessoryBrowser browser, NSSet accessories);
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("accessoryBrowser:didFinishConfiguringAccessory:withStatus:"), EventArgs ("EAWiFiUnconfiguredAccessoryDidFinish")]
 		void DidFinishConfiguringAccessory (EAWiFiUnconfiguredAccessoryBrowser browser, EAWiFiUnconfiguredAccessory accessory, EAWiFiUnconfiguredAccessoryConfigurationStatus status);
 	}

@@ -17,7 +17,7 @@ E.g. parameters, environment, missing tools.
 
 <!--
  MT0xxx mtouch itself, e.g. parameters, environment (e.g. missing tools)
- https://github.com/xamarin/xamarin-macios/blob/master/tools/mtouch/error.cs
+ https://github.com/xamarin/xamarin-macios/blob/main/tools/mtouch/error.cs
 	-->
 
 <a name="MT0000" />
@@ -676,7 +676,7 @@ For further information see bug #[51634](https://bugzilla.xamarin.com/show_bug.c
 
 ### MT0112: Native code sharing has been disabled because *
 
-There are multiple reasons [native code sharing](https://github.com/xamarin/xamarin-macios/blob/master/docs/code-sharing-with-user-frameworks.md) can be disabled:
+There are multiple reasons [native code sharing](https://github.com/xamarin/xamarin-macios/blob/main/docs/code-sharing-with-user-frameworks.md) can be disabled:
 
 * because the container app's deployment target is earlier than iOS 8.0 (it's *)).
 
@@ -694,7 +694,7 @@ Native code sharing requires is not supported for projects that use custom xml d
 
 ### MT0113: Native code sharing has been disabled for the extension '*' because *.
 
-There are multiple reasons [native code sharing](https://github.com/xamarin/xamarin-macios/blob/master/docs/code-sharing-with-user-frameworks.md) can be disabled:
+There are multiple reasons [native code sharing](https://github.com/xamarin/xamarin-macios/blob/main/docs/code-sharing-with-user-frameworks.md) can be disabled:
 
 * because the bitcode options differ between the container app (\*) and the extension (\*).
 
@@ -1100,9 +1100,13 @@ This indicates a bug in Xamarin.iOS. Please file a new issue on [github](https:/
 
 Remove the directory `NOTICE` from the project.
 
+Earlier versions of our tools generated a NOTICE file.
+
 <a name="MT1017" />
 
 ### MT1017: Failed to create the NOTICE file: *.
+
+Earlier versions of our tools generated a NOTICE file.
 
 <a name="MT1018" />
 
@@ -1560,6 +1564,32 @@ Things to try to solve this:
 * Synchronize the device with iTunes (this will remove any crash reports from the device).
 
 <!--- 1407 used by mmp -->
+
+<!--- 1501 used by mmp -->
+
+<a name="MT1502" />
+
+#### MT1502: One or more reference(s) to type '{0}' already exists inside '{1}' before linking
+
+This warning might be reported when using `--warn-on-type-ref=X` if any loaded (unmodified) assembly has a type reference to the type `X`.
+
+This can be used along with `--warnaserror:1502` to ensure a reference to a specific type (e.g. `UIKit.UIWebView`) is not being used by any assembly used the application.
+
+Notes:
+* Custom attributes are encoded differently and not included inside an assembly type references metadata.
+* Assembly that define a type `X` do not have a reference (but the definition) of the type (and won't be reported).
+
+<a name="MT1503" />
+
+#### MT1503: One or more reference(s) to type '{0}' still exists inside '{1}' after linking
+
+This warning might be reported when using `--warn-on-type-ref=X` if any linked (modified) assembly has a type reference to the type `X`.
+
+This can be used along with `--warnaserror:1503` to ensure a reference to a specific type (e.g. `UIKit.UIWebView`) will not be part of (the managed side of) the application.
+
+Notes:
+* Custom attributes are encoded differently and not included inside an assembly type references metadata.
+* Assembly that define a type `X` do not have a reference (but the definition) of the type (and won't be reported).
 
 ### MT16xx: MachO
 
@@ -2977,6 +3007,8 @@ An error occurred when signing the application. Please review the build log to s
 <!-- 5310 is used by mmp -->
 <!-- 5311 is used by mmp -->
 <!-- 5312 is used by mmp -->
+<!-- 5313 is used by mmp -->
+<!-- 5314 is used by mmp -->
 
 ## MT6xxx: mtouch internal tools error messages
 

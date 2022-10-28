@@ -9,7 +9,7 @@
 
 using System;
 using System.IO;
-#if XAMCORE_2_0
+using CoreGraphics;
 using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
@@ -18,42 +18,15 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-using System.Drawing;
 using System.Threading;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreFoundation {
 	
 	[TestFixture]
 	[Preserve (AllMembers = true)]
 	public class DispatchTests {
-		
-		static bool RunningOnSnowLeopard {
-			get {
-#if !MONOMAC
-				if (Runtime.Arch == Arch.DEVICE)
-					return false;
-#endif
-				return !File.Exists ("/usr/lib/system/libsystem_kernel.dylib");
-			}
-		}
-
 #if !MONOMAC // UIKitThreadAccessException and NSStringDrawing.WeakDrawString don't exist on mac
 		[Test]
 		public void MainQueueDispatch ()
@@ -61,13 +34,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 #if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
-			if (RunningOnSnowLeopard)
-				Assert.Ignore ("this test crash when executed with the iOS simulator on Snow Leopard");
-
 			bool hit = false;
 			// We need to check the UIKitThreadAccessException, but there are very few API
 			// with that check on WatchOS. NSStringDrawing.WeakDrawString is one example, here we pass
-			// it null for the parameter so that it immediately returns with an ArgumentNullException
+			// it null for the parameter so that it immediately returns with a NullReferenceException
 			// instead of trying to load an image (which is not what we're testing). There
 			// is also a test to ensure UIKitThreadAccessException is thrown if not on
 			// the UI thread (so that we'll notice if the UIKitThreadAccessException is ever
@@ -81,7 +51,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Default);
 			defaultQ.DispatchAsync (delegate {	
 				try {
-					NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
 					queue_ex = e;
 				}
@@ -91,7 +61,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				mainQ.DispatchAsync (delegate {
 					mainQthread = Thread.CurrentThread;
 					try {
-						NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -106,7 +76,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		        NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
 		    }
 			Assert.IsNotNull (ex, "main ex");
-			Assert.That (ex.GetType (), Is.SameAs (typeof (ArgumentNullException)), "no thread check hit");
+			Assert.That (ex.GetType (), Is.SameAs (typeof (NullReferenceException)), "no thread check hit");
 			Assert.IsNotNull (queue_ex, "queue ex");
 			Assert.That (queue_ex.GetType (), Is.SameAs (typeof (UIKitThreadAccessException)), "thread check hit");
 			Assert.That (uiThread, Is.EqualTo (mainQthread), "mainq thread is equal to uithread");
@@ -119,13 +89,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 #if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
-			if (RunningOnSnowLeopard)
-				Assert.Ignore ("this test crash when executed with the iOS simulator on Snow Leopard");
-
 			bool hit = false;
 			// We need to check the UIKitThreadAccessException, but there are very few API
 			// with that check on WatchOS. NSStringDrawing.WeakDrawString is one example, here we pass
-			// it null for the parameter so that it immediately returns with an ArgumentNullException
+			// it null for the parameter so that it immediately returns with a NullReferenceException
 			// instead of trying to load an image (which is not what we're testing). There
 			// is also a test to ensure UIKitThreadAccessException is thrown if not on
 			// the UI thread (so that we'll notice if the UIKitThreadAccessException is ever
@@ -139,7 +106,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQualityOfService.Default);
 			defaultQ.DispatchAsync (delegate {	
 				try {
-					NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
 					queue_ex = e;
 				}
@@ -149,7 +116,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				mainQ.DispatchAsync (delegate {
 					mainQthread = Thread.CurrentThread;
 					try {
-						NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -164,7 +131,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		        NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
 		    }
 			Assert.IsNotNull (ex, "main ex");
-			Assert.That (ex.GetType (), Is.SameAs (typeof (ArgumentNullException)), "no thread check hit");
+			Assert.That (ex.GetType (), Is.SameAs (typeof (NullReferenceException)), "no thread check hit");
 			Assert.IsNotNull (queue_ex, "queue ex");
 			Assert.That (queue_ex.GetType (), Is.SameAs (typeof (UIKitThreadAccessException)), "thread check hit");
 			Assert.That (uiThread, Is.EqualTo (mainQthread), "mainq thread is equal to uithread");
@@ -183,12 +150,12 @@ namespace MonoTouchFixtures.CoreFoundation {
 		{
 			var qname = "com.apple.root.default-priority";
 #if __IOS__ 
-			if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 8, 0))
+			if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 8, 0))
 				qname = "com.apple.root.default-qos";
 #elif __WATCHOS__ || __TVOS__
 			qname = "com.apple.root.default-qos";
 #elif __MACOS__
-			if (TestRuntime.CheckSystemVersion (PlatformName.MacOSX, 10, 10))
+			if (TestRuntime.CheckSystemVersion (ApplePlatform.MacOSX, 10, 10))
 				qname = "com.apple.root.default-qos";
 #endif
 			Assert.That (DispatchQueue.DefaultGlobalQueue.Label, Is.EqualTo (qname), "Default");
@@ -231,8 +198,6 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void Main ()
 		{
-			if (RunningOnSnowLeopard)
-				Assert.Ignore ("Shows corruption (missing first 4 chars) when executed the iOS simulator on Snow Leopard");
 			Assert.That (DispatchQueue.MainQueue.Label, Is.EqualTo ("com.apple.main-thread"), "Main");
 		}
 
@@ -248,7 +213,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 		[Test]
 		public void GetGlobalQueue_QualityOfService ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 10, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 10, throwIfOtherPlatform: false);
 
 			// values changes in OS versions (and even in arch) but we only want to make sure we get a valid string so the prefix is enough
 			Assert.True (DispatchQueue.GetGlobalQueue (DispatchQualityOfService.Default).Label.StartsWith ("com.apple.root."), "Default");
@@ -279,13 +244,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 #if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
-			if (RunningOnSnowLeopard)
-				Assert.Ignore ("this test crash when executed with the iOS simulator on Snow Leopard");
-
 			bool hit = false;
 			// We need to check the UIKitThreadAccessException, but there are very few API
 			// with that check on WatchOS. NSStringDrawing.WeakDrawString is one example, here we pass
-			// it null for the parameter so that it immediately returns with an ArgumentNullException
+			// it null for the parameter so that it immediately returns with a NullReferenceException
 			// instead of trying to load an image (which is not what we're testing). There
 			// is also a test to ensure UIKitThreadAccessException is thrown if not on
 			// the UI thread (so that we'll notice if the UIKitThreadAccessException is ever
@@ -299,7 +261,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQueuePriority.Default);
 			defaultQ.DispatchAfter (new DispatchTime (DispatchTime.Now, 1000), delegate {	
 				try {
-					NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
 					queue_ex = e;
 				}
@@ -309,7 +271,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				mainQ.DispatchAfter (DispatchTime.Now, delegate {
 					mainQthread = Thread.CurrentThread;
 					try {
-						NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -323,7 +285,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
 			}
 			Assert.IsNotNull (ex, "main ex");
-			Assert.That (ex.GetType (), Is.SameAs (typeof (ArgumentNullException)), "no thread check hit");
+			Assert.That (ex.GetType (), Is.SameAs (typeof (NullReferenceException)), "no thread check hit");
 			Assert.IsNotNull (queue_ex, "queue ex");
 			Assert.That (queue_ex.GetType (), Is.SameAs (typeof (UIKitThreadAccessException)), "thread check hit");
 			Assert.That (uiThread, Is.EqualTo (mainQthread), "mainq thread is equal to uithread");
@@ -336,13 +298,10 @@ namespace MonoTouchFixtures.CoreFoundation {
 #if !DEBUG || OPTIMIZEALL
 			Assert.Ignore ("UIKitThreadAccessException is not throw, by default, on release builds (removed by the linker)");
 #endif
-			if (RunningOnSnowLeopard)
-				Assert.Ignore ("this test crash when executed with the iOS simulator on Snow Leopard");
-
 			bool hit = false;
 			// We need to check the UIKitThreadAccessException, but there are very few API
 			// with that check on WatchOS. NSStringDrawing.WeakDrawString is one example, here we pass
-			// it null for the parameter so that it immediately returns with an ArgumentNullException
+			// it null for the parameter so that it immediately returns with a NullReferenceException
 			// instead of trying to load an image (which is not what we're testing). There
 			// is also a test to ensure UIKitThreadAccessException is thrown if not on
 			// the UI thread (so that we'll notice if the UIKitThreadAccessException is ever
@@ -356,7 +315,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 			var defaultQ = DispatchQueue.GetGlobalQueue (DispatchQualityOfService.Default);
 			defaultQ.DispatchAfter (new DispatchTime (DispatchTime.Now, 1000), delegate {	
 				try {
-					NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+					NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 				} catch (Exception e) {
 					queue_ex = e;
 				}
@@ -366,7 +325,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				mainQ.DispatchAfter (DispatchTime.Now, delegate {
 					mainQthread = Thread.CurrentThread;
 					try {
-						NSStringDrawing.WeakDrawString (null, PointF.Empty, null);
+						NSStringDrawing.WeakDrawString (null, CGPoint.Empty, null);
 					} catch (Exception e) {
 						ex = e;
 					} finally {
@@ -380,7 +339,7 @@ namespace MonoTouchFixtures.CoreFoundation {
 				NSRunLoop.Current.RunUntil (NSDate.FromTimeIntervalSinceNow (0.5));
 			}
 			Assert.IsNotNull (ex, "main ex");
-			Assert.That (ex.GetType (), Is.SameAs (typeof (ArgumentNullException)), "no thread check hit");
+			Assert.That (ex.GetType (), Is.SameAs (typeof (NullReferenceException)), "no thread check hit");
 			Assert.IsNotNull (queue_ex, "queue ex");
 			Assert.That (queue_ex.GetType (), Is.SameAs (typeof (UIKitThreadAccessException)), "thread check hit");
 			Assert.That (uiThread, Is.EqualTo (mainQthread), "mainq thread is equal to uithread");

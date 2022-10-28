@@ -16,6 +16,10 @@ using AppKit;
 using UIImage = AppKit.NSImage;
 #endif
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Photos
 {
 	[iOS (8,0)]
@@ -25,7 +29,7 @@ namespace Photos
 	interface PHAdjustmentData : NSCoding, NSSecureCoding {
 
 		[Export ("initWithFormatIdentifier:formatVersion:data:")]
-		IntPtr Constructor (string formatIdentifier, string formatVersion, NSData data);
+		NativeHandle Constructor (string formatIdentifier, string formatVersion, NSData data);
 
 		[Export ("formatIdentifier", ArgumentSemantic.Copy)]
 		string FormatIdentifier { get; }
@@ -59,12 +63,15 @@ namespace Photos
 		nuint PixelHeight { get; }
 
 		[Export ("creationDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate CreationDate { get; }
 
 		[Export ("modificationDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate ModificationDate { get; }
 
 		[Export ("location", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		CLLocation Location { get; }
 
 		[Export ("duration", ArgumentSemantic.Assign)]
@@ -83,6 +90,7 @@ namespace Photos
 
 		[Mac (10, 15)]
 		[Export ("burstIdentifier", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		string BurstIdentifier { get; }
 
 		[Mac (10, 15)]
@@ -112,6 +120,7 @@ namespace Photos
 
 		[Static]
 		[Export ("fetchKeyAssetsInAssetCollection:options:")]
+		[return: NullAllowed]
 		PHFetchResult FetchKeyAssets (PHAssetCollection assetCollection, [NullAllowed] PHFetchOptions options);
 
 		[Mac (10,15)]
@@ -126,10 +135,9 @@ namespace Photos
 
 		[Deprecated (PlatformName.TvOS, 11,0)]
 		[Deprecated (PlatformName.iOS, 11,0)]
-		[Unavailable (PlatformName.UIKitForMac)]
 		[NoMac]
 		[Static]
-		[Advice ("This API is not available when using UIKit on macOS.")]
+		[NoMacCatalyst]
 		[Export ("fetchAssetsWithALAssetURLs:options:")]
 		PHFetchResult FetchAssets (NSUrl[] assetUrls, [NullAllowed] PHFetchOptions options);
 
@@ -141,9 +149,15 @@ namespace Photos
 		[Export ("playbackStyle", ArgumentSemantic.Assign)]
 		PHAssetPlaybackStyle PlaybackStyle { get; }
 
+		[NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosError.IdentifierNotFound' instead.")]
 		[NoTV][NoiOS]
 		[Field ("PHLocalIdentifierNotFound")]
 		NSString LocalIdentifierNotFound { get; }
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[NullAllowed, Export ("adjustmentFormatIdentifier")]
+		string AdjustmentFormatIdentifier { get; }
 	}
 
 	[iOS (8,0)]
@@ -159,13 +173,16 @@ namespace Photos
 
 		[Static]
 		[Export ("creationRequestForAssetFromImageAtFileURL:")]
+		[return: NullAllowed]
 		PHAssetChangeRequest FromImage (NSUrl fileUrl);
 
 		[Static]
 		[Export ("creationRequestForAssetFromVideoAtFileURL:")]
+		[return: NullAllowed]
 		PHAssetChangeRequest FromVideo (NSUrl fileUrl);
 
 		[Export ("placeholderForCreatedAsset", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		PHObjectPlaceholder PlaceholderForCreatedAsset { get; }
 
 		[Static]
@@ -177,9 +194,11 @@ namespace Photos
 		PHAssetChangeRequest ChangeRequest (PHAsset asset);
 
 		[Export ("creationDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate CreationDate { get; set; }
 
 		[Export ("location", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		CLLocation Location { get; set; }
 
 		[Export ("favorite", ArgumentSemantic.Assign)]
@@ -330,10 +349,12 @@ namespace Photos
 
 		[Static]
 		[Export ("changeRequestForAssetCollection:")]
+		[return: NullAllowed]
 		PHAssetCollectionChangeRequest ChangeRequest (PHAssetCollection assetCollection);
 
 		[Static]
 		[Export ("changeRequestForAssetCollection:assets:")]
+		[return: NullAllowed]
 		PHAssetCollectionChangeRequest ChangeRequest (PHAssetCollection assetCollection, PHFetchResult assets);
 
 		[Export ("title", ArgumentSemantic.Strong)]
@@ -400,9 +421,11 @@ namespace Photos
 	interface PHChange {
 
 		[Export ("changeDetailsForObject:")]
-		PHObjectChangeDetails GetObjectChangeDetails ([NullAllowed] PHObject obj);
+		[return: NullAllowed]
+		PHObjectChangeDetails GetObjectChangeDetails (PHObject obj);
 
 		[Export ("changeDetailsForFetchResult:")]
+		[return: NullAllowed]
 		PHFetchResultChangeDetails GetFetchResultChangeDetails (PHFetchResult obj);
 	}
 
@@ -416,6 +439,7 @@ namespace Photos
 		NSObject ObjectBeforeChanges { get; }
 
 		[Export ("objectAfterChanges", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSObject ObjectAfterChanges { get; }
 
 		[Export ("assetContentChanged")]
@@ -453,18 +477,21 @@ namespace Photos
 		bool HasIncrementalChanges { get; }
 
 		[Export ("removedIndexes", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSIndexSet RemovedIndexes { get; }
 
 		[Export ("removedObjects", ArgumentSemantic.Strong)]
 		PHObject[] RemovedObjects { get; }
 
 		[Export ("insertedIndexes", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSIndexSet InsertedIndexes { get; }
 
 		[Export ("insertedObjects", ArgumentSemantic.Strong)]
 		PHObject[] InsertedObjects { get; }
 
 		[Export ("changedIndexes", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSIndexSet ChangedIndexes { get; }
 
 		[Export ("changedObjects", ArgumentSemantic.Strong)]
@@ -487,7 +514,7 @@ namespace Photos
 	[BaseType (typeof (PHObject))]
 	[DisableDefaultCtor] // not user createable (calling description fails, see below) must be fetched by API
 	// NSInternalInconsistencyException Reason: PHCollection has no identifier
-#if TVOS || XAMCORE_4_0
+#if TVOS || NET
 	[Abstract] // Acording to docs: The abstract superclass for Photos asset collections and collection lists.
 #endif
 	interface PHCollection {
@@ -500,6 +527,7 @@ namespace Photos
 
 		[Mac (10,15)]
 		[Export ("localizedTitle", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		string LocalizedTitle { get; }
 
 		[Export ("canPerformEditOperation:")]
@@ -530,12 +558,15 @@ namespace Photos
 		nuint EstimatedAssetCount { get; }
 
 		[Export ("startDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate StartDate { get; }
 
 		[Export ("endDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate EndDate { get; }
 
 		[Export ("approximateLocation", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		CLLocation ApproximateLocation { get; }
 
 		[Export ("localizedLocationNames", ArgumentSemantic.Strong)]
@@ -573,11 +604,11 @@ namespace Photos
 
 		[Static]
 		[Export ("transientAssetCollectionWithAssets:title:")]
-		PHAssetCollection GetTransientAssetCollection (PHAsset[] assets, string title);
+		PHAssetCollection GetTransientAssetCollection (PHAsset[] assets, [NullAllowed] string title);
 
 		[Static]
 		[Export ("transientAssetCollectionWithAssetFetchResult:title:")]
-		PHAssetCollection GetTransientAssetCollection (PHFetchResult fetchResult, string title);
+		PHAssetCollection GetTransientAssetCollection (PHFetchResult fetchResult, [NullAllowed] string title);
 	}
 
 	[iOS (8,0)]
@@ -593,9 +624,11 @@ namespace Photos
 		PHCollectionListSubtype CollectionListSubtype { get; }
 
 		[Export ("startDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate StartDate { get; }
 
 		[Export ("endDate", ArgumentSemantic.Strong)]
+		[NullAllowed]
 		NSDate EndDate { get; }
 
 		[Export ("localizedLocationNames", ArgumentSemantic.Strong)]
@@ -629,11 +662,11 @@ namespace Photos
 
 		[Static]
 		[Export ("transientCollectionListWithCollections:title:")]
-		PHCollectionList CreateTransientCollectionList (PHAssetCollection[] collections, string title);
+		PHCollectionList CreateTransientCollectionList (PHAssetCollection[] collections, [NullAllowed] string title);
 
 		[Static]
 		[Export ("transientCollectionListWithCollectionsFetchResult:title:")]
-		PHCollectionList CreateTransientCollectionList (PHFetchResult fetchResult, string title);
+		PHCollectionList CreateTransientCollectionList (PHFetchResult fetchResult, [NullAllowed] string title);
 	}
 
 	[iOS (8,0)]
@@ -658,11 +691,20 @@ namespace Photos
 
 		[Static]
 		[Export ("changeRequestForCollectionList:")]
+		[return: NullAllowed]
 		PHCollectionListChangeRequest ChangeRequest (PHCollectionList collectionList);
 
 		[Static]
 		[Export ("changeRequestForCollectionList:childCollections:")]
+		[return: NullAllowed]
 		PHCollectionListChangeRequest ChangeRequest (PHCollectionList collectionList, PHFetchResult childCollections);
+
+		[TV (14,2), Mac (11,0), iOS (14,2)]
+		[MacCatalyst (14,2)]
+		[Static]
+		[Export ("changeRequestForTopLevelCollectionListUserCollections:")]
+		[return: NullAllowed]
+		PHCollectionListChangeRequest ChangeRequestForTopLevelCollectionList (PHFetchResult childCollections);
 
 		[Export ("title", ArgumentSemantic.Strong)]
 		string Title { get; set; }
@@ -699,12 +741,15 @@ namespace Photos
 		PHAssetMediaSubtype MediaSubtypes { get; }
 
 		[Export ("creationDate", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSDate CreationDate { get; }
 
 		[Export ("location", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		CLLocation Location { get; }
 
 		[Export ("uniformTypeIdentifier")]
+		[NullAllowed]
 		string UniformTypeIdentifier { get; }
 
 		[NullAllowed]
@@ -712,6 +757,7 @@ namespace Photos
 		PHAdjustmentData AdjustmentData { get; }
 
 		[Export ("displaySizeImage", ArgumentSemantic.Strong)]
+		[NullAllowed]
 #if MONOMAC
 		NSImage DisplaySizeImage { get; }
 #else
@@ -719,12 +765,13 @@ namespace Photos
 #endif
 
 		[Export ("fullSizeImageURL", ArgumentSemantic.Copy)]
+		[NullAllowed]
 		NSUrl FullSizeImageUrl { get; }
 
 		[Export ("fullSizeImageOrientation")]
 		CoreImage.CIImageOrientation FullSizeImageOrientation { get; }
 
-		[Availability (Deprecated = Platform.iOS_9_0, Message="Use 'AudiovisualAsset' property instead.")]
+		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'AudiovisualAsset' property instead.")]
 		[NoMac]
 		[NullAllowed, Export ("avAsset", ArgumentSemantic.Strong)]
 		AVAsset AvAsset { get; }
@@ -750,10 +797,10 @@ namespace Photos
 	interface PHContentEditingOutput : NSCoding, NSSecureCoding {
 
 		[Export ("initWithContentEditingInput:")]
-		IntPtr Constructor (PHContentEditingInput contentEditingInput);
+		NativeHandle Constructor (PHContentEditingInput contentEditingInput);
 
 		[Export ("initWithPlaceholderForCreatedAsset:")]
-		IntPtr Constructor (PHObjectPlaceholder placeholderForCreatedAsset);
+		NativeHandle Constructor (PHObjectPlaceholder placeholderForCreatedAsset);
 
 		[NullAllowed] // by default this property is null
 		[Export ("adjustmentData", ArgumentSemantic.Strong)]
@@ -825,9 +872,11 @@ namespace Photos
 		nint IndexOf (NSObject id, NSRange range);
 
 		[Export ("firstObject")]
+		[NullAllowed]
 		NSObject firstObject { get; }
 
 		[Export ("lastObject")]
+		[NullAllowed]
 		NSObject LastObject { get; }
 
 		[Internal, Export ("objectsAtIndexes:")]
@@ -928,7 +977,7 @@ namespace Photos
 
 	delegate void PHImageManagerRequestPlayerHandler (AVPlayerItem playerItem, NSDictionary info);
 	delegate void PHImageManagerRequestExportHandler (AVAssetExportSession exportSession, NSDictionary info);
-#if XAMCORE_4_0
+#if NET
 	delegate void PHImageManagerRequestAVAssetHandler (AVAsset asset, AVAudioMix audioMix, NSDictionary info);
 #else
 	delegate void PHImageManagerRequestAvAssetHandler (AVAsset asset, AVAudioMix audioMix, NSDictionary info);
@@ -968,7 +1017,7 @@ namespace Photos
 
 		[Mac (10,15)]
 		[Export ("requestAVAssetForVideo:options:resultHandler:")]
-#if XAMCORE_4_0
+#if NET
 		int /* PHImageRequestID = int32_t */ RequestAVAsset (PHAsset asset, [NullAllowed] PHVideoRequestOptions options, PHImageManagerRequestAVAssetHandler resultHandler);
 #else
 		int /* PHImageRequestID = int32_t */ RequestAvAsset (PHAsset asset, [NullAllowed] PHVideoRequestOptions options, PHImageManagerRequestAvAssetHandler resultHandler);
@@ -1018,7 +1067,7 @@ namespace Photos
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor] // doc -> "abstract base class"
 	// throws "NSInternalInconsistencyException Reason: PHObject has no identifier"
-#if TVOS || XAMCORE_4_0
+#if TVOS || NET
 	[Abstract] // Acording to docs: The abstract base class for Photos model objects (assets and collections).
 #endif
 	interface PHObject : NSCopying {
@@ -1043,9 +1092,7 @@ namespace Photos
 	[BaseType (typeof (NSObject))]
 	interface PHPhotoLibraryChangeObserver {
 
-#if XAMCORE_2_0
 		[Abstract]
-#endif
 		[Export ("photoLibraryDidChange:")]
 		void PhotoLibraryDidChange (PHChange changeInstance);
 	}
@@ -1074,16 +1121,35 @@ namespace Photos
 		[Export ("sharedPhotoLibrary")]
 		PHPhotoLibrary SharedPhotoLibrary { get; }
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'GetAuthorizationStatus' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'GetAuthorizationStatus' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'GetAuthorizationStatus' instead.")]
 		[Static, Export ("authorizationStatus")]
 		PHAuthorizationStatus AuthorizationStatus { get; }
 
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
+		[Static]
+		[Export ("authorizationStatusForAccessLevel:")]
+		PHAuthorizationStatus GetAuthorizationStatus (PHAccessLevel accessLevel);
+
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'RequestAuthorization(PHAccessLevel, Action<PHAuthorizationStatus>)' overload instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'RequestAuthorization(PHAccessLevel, Action<PHAuthorizationStatus>)' overload instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'RequestAuthorization(PHAccessLevel, Action<PHAuthorizationStatus>)' overload instead.")]
 		[Static, Export ("requestAuthorization:")]
 		[Async]
 		void RequestAuthorization (Action<PHAuthorizationStatus> handler);
 
+		[TV (14,0), Mac (11,0), iOS (14,0)]
+		[MacCatalyst (14,0)]
+		[Static]
+		[Export ("requestAuthorizationForAccessLevel:handler:")]
+		[Async]
+		void RequestAuthorization (PHAccessLevel accessLevel, Action<PHAuthorizationStatus> handler);
+
 		// no [Async] since we're binding performChangesAndWait:error: too
 		[Export ("performChanges:completionHandler:")]
-		void PerformChanges (Action changeHandler, Action<bool, NSError> completionHandler);
+		void PerformChanges (Action changeHandler, [NullAllowed] Action<bool, NSError> completionHandler);
 
 		[Export ("performChangesAndWait:error:")]
 		bool PerformChangesAndWait (Action changeHandler, out NSError error);
@@ -1105,22 +1171,38 @@ namespace Photos
 		[TV (13,0), Mac (10,15), iOS (13,0)]
 		[Export ("unregisterAvailabilityObserver:")]
 		void Unregister (IPHPhotoLibraryAvailabilityObserver observer);
+
+		[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Field ("PHLocalIdentifiersErrorKey")]
+		NSString LocalIdentifiersErrorKey { get; }
 	}
 
 	[Mac (10,13)]
-	[NoTV][NoiOS]
+	[TV (15,0), iOS (15,0), MacCatalyst (15,0)]
 	[Category]
-	[Unavailable (PlatformName.UIKitForMac)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
 	[BaseType (typeof (PHPhotoLibrary))]
 	interface PHPhotoLibrary_CloudIdentifiers {
 
+		[Mac (12,0)]
+		[Export ("localIdentifierMappingsForCloudIdentifiers:")]
+		NSDictionary<PHCloudIdentifier, PHLocalIdentifierMapping> GetLocalIdentifierMappings (PHCloudIdentifier[] cloudIdentifiers);
+
+		[Mac (12,0)]
+		[Export ("cloudIdentifierMappingsForLocalIdentifiers:")]
+		NSDictionary<NSString, PHCloudIdentifierMapping> GetCloudIdentifierMappings (string[] localIdentifiers);
+
+		[NoTV][NoiOS][NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'localIdentifierMappingsForCloudIdentifiers:' instead.")]
 		[Export ("localIdentifiersForCloudIdentifiers:")]
 		string[] GetLocalIdentifiers (PHCloudIdentifier[] cloudIdentifiers);
 
+		[NoTV][NoiOS][NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'cloudIdentifierMappingsForCloudIdentifiers:' instead.")]
 		[Export ("cloudIdentifiersForLocalIdentifiers:")]
 		PHCloudIdentifier[] GetCloudIdentifiers (string[] localIdentifiers);
 
+		[NoTV][NoiOS][NoMacCatalyst]
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosError.IdentifierNotFound' instead.")]
 		[Field ("PHLocalIdentifierNotFound")]
 		NSString LocalIdentifierNotFound { get; }
 	}
@@ -1133,6 +1215,9 @@ namespace Photos
 	[Mac (10,12)]
 	[BaseType (typeof(NSObject))]
 	interface PHLivePhoto : NSSecureCoding, NSCopying
+#if IOS
+	, NSItemProviderReading
+#endif
 	{
 		[Export ("size")]
 		CGSize Size { get; }
@@ -1182,7 +1267,7 @@ namespace Photos
 		NSString CancelledKey { get; }
 	}
 
-#if XAMCORE_4_0
+#if NET
 	delegate CIImage PHLivePhotoFrameProcessingBlock (IPHLivePhotoFrame frame, ref NSError error);
 #else
 	delegate CIImage PHLivePhotoFrameProcessingBlock2 (IPHLivePhotoFrame frame, ref NSError error);
@@ -1196,7 +1281,7 @@ namespace Photos
 	interface PHLivePhotoEditingContext {
 		[Export ("initWithLivePhotoEditingInput:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (PHContentEditingInput livePhotoInput);
+		NativeHandle Constructor (PHContentEditingInput livePhotoInput);
 
 		[Export ("fullSizeImage")]
 		CIImage FullSizeImage { get; }
@@ -1208,7 +1293,7 @@ namespace Photos
 		CMTime PhotoTime { get; }
 
 		[NullAllowed, Export ("frameProcessor", ArgumentSemantic.Copy)]
-#if XAMCORE_4_0
+#if NET
 		PHLivePhotoFrameProcessingBlock FrameProcessor { get; set; }
 #else
 		PHLivePhotoFrameProcessingBlock2 FrameProcessor2 { get; set; }
@@ -1229,16 +1314,14 @@ namespace Photos
 		void PrepareLivePhotoForPlayback (CGSize targetSize, Action<PHLivePhoto, NSError> handler);
 
 		[Async]
-		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, (NSDictionary)options, handler)", IsVirtual = true)]
+		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, (options as NSDictionary), handler)", IsVirtual = true)]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<PHLivePhoto, NSError> handler);
 
-#if XAMCORE_2_0
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11,0)][TV (11,0)][Mac (10,12)]
+		[iOS (11,0)][TV (11,0)]
 		[Async]
-		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options?.Dictionary, handler)")]
+		[Wrap ("_PrepareLivePhotoForPlayback (targetSize, options.GetDictionary (), handler)")]
 		void PrepareLivePhotoForPlayback (CGSize targetSize, [NullAllowed] PHLivePhotoEditingOption options, Action<PHLivePhoto, NSError> handler);
-#endif
 
 		[Internal]
 		[Export ("saveLivePhotoToOutput:options:completionHandler:")]
@@ -1252,13 +1335,11 @@ namespace Photos
 		[Wrap ("_SaveLivePhoto (output, options, handler)", IsVirtual = true)]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] NSDictionary<NSString, NSObject> options, Action<bool, NSError> handler);
 
-#if XAMCORE_2_0
 		// the API existed earlier but the key needed to create the strong dictionary did not work
-		[iOS (11,0)][TV (11,0)][Mac (10,12)]
+		[iOS (11,0)][TV (11,0)]
 		[Async]
-		[Wrap ("_SaveLivePhoto (output, options?.Dictionary, handler)")]
+		[Wrap ("_SaveLivePhoto (output, options.GetDictionary (), handler)")]
 		void SaveLivePhoto (PHContentEditingOutput output, [NullAllowed] PHLivePhotoEditingOption options, Action<bool, NSError> handler);
-#endif
 
 		[Export ("cancel")]
 		void Cancel ();
@@ -1288,7 +1369,6 @@ namespace Photos
 		nfloat RenderScale { get; }
 	}
 
-#if XAMCORE_2_0 // fails to build with mac/classic
 	[iOS (11,0)]
 	[TV (11,0)]
 	[Mac (10,12)]
@@ -1305,12 +1385,10 @@ namespace Photos
 	interface PHLivePhotoEditingOption {
 		bool ShouldRenderAtPlaybackTime { get; }
 	}
-#endif
 
 	[Mac (10,13)]
 	[NoiOS][NoTV]
-	[Unavailable (PlatformName.UIKitForMac)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[BaseType (typeof (PHAssetCollection))]
 	interface PHProject {
 
@@ -1323,14 +1401,13 @@ namespace Photos
 	}
 
 	[Mac (10,13)]
-	[Unavailable (PlatformName.UIKitForMac)]
 	[NoiOS][NoTV]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[NoMacCatalyst]
 	[BaseType (typeof (PHChangeRequest))]
 	interface PHProjectChangeRequest {
 
 		[Export ("initWithProject:")]
-		IntPtr Constructor (PHProject project);
+		NativeHandle Constructor (PHProject project);
 
 		[Export ("title")]
 		string Title { get; set; }
@@ -1352,13 +1429,14 @@ namespace Photos
 	}
 
 	[Mac (10,13)]
-	[NoiOS][NoTV]
-	[Unavailable (PlatformName.UIKitForMac)]
-	[Advice ("This API is not available when using UIKit on macOS.")]
+	[TV (15,0)]
+	[iOS (15,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface PHCloudIdentifier : NSSecureCoding {
 
+		[Deprecated (PlatformName.MacOSX, 12, 0, message: "Use 'PHPhotosError.IdentifierNotFound' instead.")]
+		[NoTV, NoiOS, NoMacCatalyst]
 		[Static]
 		[Export ("notFoundIdentifier")]
 		PHCloudIdentifier NotFoundIdentifier { get; }
@@ -1367,6 +1445,30 @@ namespace Photos
 		string StringValue { get; }
 
 		[Export ("initWithStringValue:")]
-		IntPtr Constructor (string stringValue);
+		NativeHandle Constructor (string stringValue);
+	}
+
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PHCloudIdentifierMapping
+	{
+		[NullAllowed, Export ("cloudIdentifier")]
+		PHCloudIdentifier CloudIdentifier { get; }
+
+		[NullAllowed, Export ("error")]
+		NSError Error { get; }
+	}
+
+	[TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+	[BaseType (typeof (NSObject))]
+	[DisableDefaultCtor]
+	interface PHLocalIdentifierMapping
+	{
+		[NullAllowed, Export ("localIdentifier")]
+		string LocalIdentifier { get; }
+
+		[NullAllowed, Export ("error")]
+		NSError Error { get; }
 	}
 }

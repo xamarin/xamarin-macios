@@ -10,15 +10,9 @@
 #if !MONOMAC
 using System;
 using System.IO;
-#if XAMCORE_2_0
 using Foundation;
 using UIKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.UIKit {
@@ -27,18 +21,7 @@ namespace MonoTouchFixtures.UIKit {
 	[Preserve (AllMembers = true)]
 	public class DeviceTest {
 
-#if !XAMCORE_2_0
-		[Test]
-		public void CurrentDevice ()
-		{
-			UIDevice device = UIDevice.CurrentDevice;
-			// under iOS 5.1 some API (mobileDevice on client) stopped reporting the identifier
-			// this will warn us then this API "fails" too
-			Assert.NotNull (device.UniqueIdentifier, "UniqueIdentifier");
-		}
-#endif
-
-#if !__TVOS__ && !__WATCHOS__
+#if !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__
 		[Test]
 		public void Battery ()
 		{
@@ -61,7 +44,7 @@ namespace MonoTouchFixtures.UIKit {
 				device.BatteryMonitoringEnabled = false;
 			}
 		}
-#endif // !__TVOS__ && !__WATCHOS__
+#endif // !__TVOS__ && !__WATCHOS__ && !__MACCATALYST__
 	}
 }
 #endif

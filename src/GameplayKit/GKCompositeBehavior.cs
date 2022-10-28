@@ -1,4 +1,4 @@
-﻿//
+//
 // GKCompositeBehavior.cs: Implements some nicer methods for GKCompositeBehavior
 //
 // Authors:
@@ -7,14 +7,15 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
-#if XAMCORE_2_0 || !MONOMAC
+#nullable enable
+
 using System;
 using Foundation;
 
 namespace GameplayKit {
 	public partial class GKCompositeBehavior {
 
-		public GKBehavior this [nuint index] {
+		public new GKBehavior this [nuint index] {
 			get { return ObjectAtIndexedSubscript (index); }
 		}
 
@@ -24,4 +25,3 @@ namespace GameplayKit {
 		}
 	}
 }
-#endif

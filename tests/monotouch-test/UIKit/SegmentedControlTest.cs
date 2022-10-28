@@ -4,24 +4,11 @@
 
 using System;
 using System.Drawing;
-#if XAMCORE_2_0
+using System.IO;
+using CoreGraphics;
 using Foundation;
 using UIKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
 
 namespace MonoTouchFixtures.UIKit {
 	
@@ -32,7 +19,7 @@ namespace MonoTouchFixtures.UIKit {
 		[Test]
 		public void InitWithFrame ()
 		{
-			RectangleF frame = new RectangleF (10, 10, 100, 100);
+			var frame = new CGRect (10, 10, 100, 100);
 			using (UISegmentedControl sc = new UISegmentedControl (frame)) {
 				Assert.That (sc.Frame, Is.EqualTo (frame), "Frame");
 			}
@@ -63,9 +50,9 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.Throws<ArgumentException> (() => new UISegmentedControl ((object []) new [] { NSZone.Default }), "invalid type");
 
 			using (var ns = new NSString ("NSString"))
-			using (var img = UIImage.FromFile ("basn3p08.png"))
+			using (var img = UIImage.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png")))
 			using (UISegmentedControl sc = new UISegmentedControl ("string", ns, img)) {
-				Assert.That (sc.NumberOfSegments, Is.EqualTo (3), "NumberOfSegments");
+				Assert.That (sc.NumberOfSegments, Is.EqualTo ((nint) 3), "NumberOfSegments");
 			}
 		}
 
@@ -75,14 +62,14 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((NSArray) null), "null");
 
 			using (UISegmentedControl sc = new UISegmentedControl (new NSArray ())) {
-				Assert.That(sc.NumberOfSegments, Is.EqualTo (0), "Empty");
+				Assert.That(sc.NumberOfSegments, Is.EqualTo ((nint) 0), "Empty");
 			}
 
 			using (var ns = new NSString ("NSString"))
-			using (var img = UIImage.FromFile ("basn3p08.png"))
+			using (var img = UIImage.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png")))
 			using (var a = NSArray.FromObjects ("string", ns, img))
 			using (UISegmentedControl sc = new UISegmentedControl (a)) {
-				Assert.That (sc.NumberOfSegments, Is.EqualTo (3), "NumberOfSegments");
+				Assert.That (sc.NumberOfSegments, Is.EqualTo ((nint) 3), "NumberOfSegments");
 			}
 		}
 
@@ -94,7 +81,7 @@ namespace MonoTouchFixtures.UIKit {
 
 			using (var ns = new NSString ("NSString"))
 			using (UISegmentedControl sc = new UISegmentedControl (ns)) {
-				Assert.That (sc.NumberOfSegments, Is.EqualTo (1), "NumberOfSegments");
+				Assert.That (sc.NumberOfSegments, Is.EqualTo ((nint) 1), "NumberOfSegments");
 			}
 		}
 
@@ -105,7 +92,7 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((string[]) null), "null array");
 
 			using (UISegmentedControl sc = new UISegmentedControl ("one", "two")) {
-				Assert.That (sc.NumberOfSegments, Is.EqualTo (2), "NumberOfSegments");
+				Assert.That (sc.NumberOfSegments, Is.EqualTo ((nint) 2), "NumberOfSegments");
 			}
 		}
 
@@ -115,9 +102,9 @@ namespace MonoTouchFixtures.UIKit {
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((UIImage) null), "null");
 			Assert.Throws<ArgumentNullException> (() => new UISegmentedControl ((UIImage[]) null), "null array");
 
-			using (var img = UIImage.FromFile ("basn3p08.png"))
+			using (var img = UIImage.FromFile (Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png")))
 			using (UISegmentedControl sc = new UISegmentedControl (img)) {
-				Assert.That (sc.NumberOfSegments, Is.EqualTo (1), "NumberOfSegments");
+				Assert.That (sc.NumberOfSegments, Is.EqualTo ((nint) 1), "NumberOfSegments");
 			}
 		}
 	}

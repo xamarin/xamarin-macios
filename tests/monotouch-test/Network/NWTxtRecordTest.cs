@@ -1,19 +1,9 @@
-﻿#if !__WATCHOS__
-using System;
+#if !__WATCHOS__
 using System.Collections.Generic;
 using System.Threading;
-#if XAMCORE_2_0
-using CoreFoundation;
+
 using Foundation;
 using Network;
-using ObjCRuntime;
-using Security;
-#else
-using MonoTouch.CoreFoundation;
-using MonoTouch.Foundation;
-using MonoTouch.Network;
-using MonoTouch.Security;
-#endif
 
 using NUnit.Framework;
 
@@ -26,7 +16,7 @@ namespace MonoTouchFixtures.Network
 		NWTxtRecord record;
 		string randomKey = "MyData";
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Init () => TestRuntime.AssertXcodeVersion (11, 0);
 
 
@@ -126,18 +116,22 @@ namespace MonoTouchFixtures.Network
 				record.Add (key, key);
 			}
 			// apply and ensure that we do get all the keys
+#if !NET
 			var keyCount = 0;
 			record.Apply ((k, r, v) => {
 				keyCount++;
 				Assert.IsTrue (keys.Contains (k), k);
 			});
+#endif
 			var keyCount2 = 0;
 			record.Apply ((k, r, v) => {
 				keyCount2++;
 				Assert.IsTrue (keys.Contains (k), k);
 				return true;
 			});
+#if !NET
 			Assert.AreEqual (keys.Count, keyCount, "keycount");
+#endif
 			Assert.AreEqual (keys.Count, keyCount2, "keycount2");
 		}
 

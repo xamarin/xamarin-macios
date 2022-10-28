@@ -1,15 +1,11 @@
-﻿// Tests to ensure consistency of our handlers across updates
+// Tests to ensure consistency of our handlers across updates
 //
 // Copyright 2016 Xamarin Inc.
 
 using System;
 using System.Net;
 using System.Net.Http;
-#if XAMCORE_2_0
 using Foundation;
-#else
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
 
 namespace LinkSdk.Net.Http {

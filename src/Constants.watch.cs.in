@@ -4,69 +4,17 @@ namespace ObjCRuntime {
 		internal const string Revision = "@REVISION@";
 		public const string SdkVersion = "@WATCH_SDK_VERSION@";
 
-		public const string libSystemLibrary = "/usr/lib/libSystem.dylib";
-		public const string libcLibrary = "/usr/lib/libc.dylib";
-		public const string ObjectiveCLibrary = "/usr/lib/libobjc.dylib";
-#if !XAMCORE_4_0
-		public const string libdispatchLibrary = "/usr/lib/system/libdispatch.dylib";
-#endif
-		
 		// WatchOS 2.0
 		public const string CFNetworkLibrary = "/System/Library/Frameworks/CFNetwork.framework/CFNetwork";
-		public const string ClockKitLibrary = "/System/Library/Frameworks/ClockKit.framework/ClockKit";
-		public const string ContactsLibrary = "/System/Library/Frameworks/Contacts.framework/Contacts";
-		public const string CoreDataLibrary = "/System/Library/Frameworks/CoreData.framework/CoreData";
-		public const string CoreFoundationLibrary = "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation";
-		public const string CoreGraphicsLibrary = "/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics";
-		public const string CoreLocationLibrary = "/System/Library/Frameworks/CoreLocation.framework/CoreLocation";
-		public const string CoreMotionLibrary = "/System/Library/Frameworks/CoreMotion.framework/CoreMotion";
 		internal const string CoreServicesLibrary = "/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices";
-		public const string CoreTextLibrary = "/System/Library/Frameworks/CoreText.framework/CoreText";
-		public const string EventKitLibrary = "/System/Library/Frameworks/EventKit.framework/EventKit";
-		public const string FoundationLibrary = "/System/Library/Frameworks/Foundation.framework/Foundation";
-		public const string HealthKitLibrary = "/System/Library/Frameworks/HealthKit.framework/HealthKit";
-		public const string HomeKitLibrary = "/System/Library/Frameworks/HomeKit.framework/HomeKit";
-		public const string ImageIOLibrary = "/System/Library/Frameworks/ImageIO.framework/ImageIO";
-		public const string MapKitLibrary = "/System/Library/Frameworks/MapKit.framework/MapKit";
-		public const string MobileCoreServicesLibrary = "/System/Library/Frameworks/MobileCoreServices.framework/MobileCoreServices";
-		public const string PassKitLibrary = "/System/Library/Frameworks/PassKit.framework/PassKit";
-		public const string SecurityLibrary = "/System/Library/Frameworks/Security.framework/Security";
-		public const string UIKitLibrary = "/System/Library/Frameworks/UIKit.framework/UIKit";
-		public const string WatchConnectivityLibrary = "/System/Library/Frameworks/WatchConnectivity.framework/WatchConnectivity";
-		public const string WatchKitLibrary = "/System/Library/Frameworks/WatchKit.framework/WatchKit";
 		public const string libcompressionLibrary = "/usr/lib/libcompression.dylib";
-#if !XAMCORE_4_0
-		public const string libcompression = "/usr/lib/libcompression.dylib";
-#endif
-
-		// WatchOS 3.0
-		public const string AVFoundationLibrary = "/System/Library/Frameworks/AVFoundation.framework/AVFoundation";
-		public const string CloudKitLibrary = "/System/Library/Frameworks/CloudKit.framework/CloudKit";
-		public const string GameKitLibrary = "/System/Library/Frameworks/GameKit.framework/GameKit";
-		public const string SceneKitLibrary = "/System/Library/Frameworks/SceneKit.framework/SceneKit";
-		public const string SpriteKitLibrary = "/System/Library/Frameworks/SpriteKit.framework/SpriteKit";
-		public const string UserNotificationsLibrary = "/System/Library/Frameworks/UserNotifications.framework/UserNotifications";
 
 		// WatchOS 3.2
-		public const string IntentsLibrary = "/System/Library/Frameworks/Intents.framework/Intents";
+		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
 
 		// WatchOS 4.0
-		public const string AccelerateImageLibrary = "/System/Library/Frameworks/Accelerate.framework/Frameworks/vImage.framework/vImage";
-		public const string CoreBluetoothLibrary = "/System/Library/Frameworks/CoreBluetooth.framework/CoreBluetooth";
-		public const string CoreMLLibrary = "/System/Library/Frameworks/CoreML.framework/CoreML";	
-		public const string CoreVideoLibrary = "/System/Library/Frameworks/CoreVideo.framework/CoreVideo";
+#if !NET
 		public const string VisionLibrary = "/System/Library/Frameworks/Vision.framework/Vision";
-
-		// WatchOS 5
-		public const string NaturalLanguageLibrary = "/System/Library/Frameworks/NaturalLanguage.framework/NaturalLanguage";
-		public const string MediaPlayerLibrary = "/System/Library/Frameworks/MediaPlayer.framework/MediaPlayer";
-
-		// WatchOS 6
-		public const string AuthenticationServicesLibrary = "/System/Library/Frameworks/AuthenticationServices.framework/AuthenticationServices";
-		public const string NetworkLibrary = "/System/Library/Frameworks/Network.framework/Network";
-		public const string PushKitLibrary = "/System/Library/Frameworks/PushKit.framework/PushKit";
-		public const string SoundAnalysisLibrary = "/System/Library/Frameworks/SoundAnalysis.framework/SoundAnalysis";
-		public const string CoreMediaLibrary = "/System/Library/Frameworks/CoreMedia.framework/CoreMedia";
-
+#endif
 	}
 }

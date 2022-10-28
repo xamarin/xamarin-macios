@@ -19,13 +19,7 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	<Import Project="$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props"
 			Condition="Exists('$(MSBuildThisFileDirectory)$(MSBuildThisFileName).Before.props')"/>
 
-	<!-- This is used to determine whether Xamarin.Mac.Common.targets needs to import
-         Xamarin.Mac.Common.props itself, or whether it has been imported previously,
-         e.g. by the project itself. -->
-	<PropertyGroup>
-		<_XamarinCommonPropsHasBeenImported>true</_XamarinCommonPropsHasBeenImported>
-	</PropertyGroup>
-
+	<Import Project="$(MSBuildThisFileDirectory)Xamarin.Shared.props" />
 
 	<!-- Story-time! MigrateToNewXMIdentifier is special because it un-does a lie we started telling from the 
 	beginning of Full (called Xamarin.Mac 4.5 back then). Back then, we released Modern (called Mobile) and 
@@ -41,9 +35,6 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' == ''">true</IsXBuild>
-		<IsXBuild Condition="'$(MSBuildRuntimeVersion)' != ''">false</IsXBuild>
-
 		<!-- Opt-in to filter out assemblies denied loading by mono, to avoid bundling them.
 		     This should only be for non-Modern profiles, since people who are recompiling for
 		     Modern aren't shipping windows bits.
@@ -51,78 +42,21 @@ Copyright (C) 2013-2014 Xamarin. All rights reserved.
 		<FilterDeniedAssemblies Condition="'$(TargetFrameworkIdentifier)' != 'Xamarin.Mac'">true</FilterDeniedAssemblies>
 	</PropertyGroup>
 
-	<!-- When looking for related files to copy, look for Mono debugging files as well -->
 	<PropertyGroup>
-		<AllowedReferenceRelatedFileExtensions>
-			$(AllowedReferenceRelatedFileExtensions);
-			.dll.mdb;
-			.exe.mdb;
-			.pdb
-		</AllowedReferenceRelatedFileExtensions>
-	</PropertyGroup>
-
-	<PropertyGroup>
-		<EnableCodeSigning Condition="'$(EnableCodeSigning)' == ''">false</EnableCodeSigning>
-		<CodeSigningKey Condition="'$(CodeSigningKey)' == ''"></CodeSigningKey>
-		<CodeSignProvision Condition="'$(CodeSignProvision)' == ''"></CodeSignProvision>
-		<CodeSignEntitlements Condition="'$(CodeSignEntitlements)' == ''"></CodeSignEntitlements>
-		<CodeSignResourceRules Condition="'$(CodeSignResourceRules)' == ''"></CodeSignResourceRules>
-		<CodeSignExtraArgs Condition="'$(CodeSignExtraArgs)' == ''"></CodeSignExtraArgs>
-		<CreatePackage Condition="'$(CreatePackage)' == ''">false</CreatePackage>
 		<HttpClientHandler Condition="'$(HttpClientHandler)' == ''">HttpClientHandler</HttpClientHandler>
-		<EnablePackageSigning Condition="'$(EnablePackageSigning)' == ''">false</EnablePackageSigning>
-		<PackageSigningKey Condition="'$(PackageSigningKey)' == ''"></PackageSigningKey>
-		<ProductDefinition Condition="'$(ProductDefinition)' == ''"></ProductDefinition>
-		<PackagingExtraArgs Condition="'$(PackagingExtraArgs)' == ''"></PackagingExtraArgs>
 		<I18n Condition="'$(I18n)' == ''"></I18n>
 		<IncludeMonoRuntime Condition="'$(IncludeMonoRuntime)' == ''">true</IncludeMonoRuntime>
-		<MonoBundlingExtraArgs Condition="'$(MonoBundlingExtraArgs)' == ''"></MonoBundlingExtraArgs>
-		<LinkMode Condition="'$(LinkMode)' == ''">None</LinkMode>
-		<XamMacArch Condition="'$(XamMacArch)' == ''">x86_64</XamMacArch>
-		<MonoMacResourcePrefix Condition="'$(MonoMacResourcePrefix)' == ''">Resources</MonoMacResourcePrefix>
-		<XamMacResourcePrefix Condition="'$(XamMacResourcePrefix)' == ''">$(MonoMacResourcePrefix)</XamMacResourcePrefix>
-		<IsAppExtension Condition="'$(IsAppExtension)' == ''">False</IsAppExtension>
-		<EnableSGenConc Condition="'$(EnableSGenConc)' == ''">false</EnableSGenConc>
-		<AotScope Condition="'$(AotScope)' == ''">None</AotScope>
-		<ArchiveOnBuild Condition="'$(ArchiveOnBuild)' == ''">False</ArchiveOnBuild>
+		<Profiling Condition="'$(Profiling)' == '' And '$(MtouchProfiling)' != ''">$(MtouchProfiling)</Profiling>
+		<Profiling Condition="'$(Profiling)' == ''">False</Profiling>
 	</PropertyGroup>
-
-	<PropertyGroup>
-		<IsMacEnabled>true</IsMacEnabled>
-	</PropertyGroup>
-
-	<PropertyGroup Condition="'$(XamarinMacFrameworkRoot)' == ''">
-		<XamarinMacFrameworkRoot>/Library/Frameworks/Xamarin.Mac.framework/Versions/Current</XamarinMacFrameworkRoot>
-	</PropertyGroup>
-
-	<Choose>
-		<When Condition=" '$(TargetFrameworkIdentifier)' == 'Xamarin.Mac'">
-			<PropertyGroup>
-				<TargetFrameworkName>Modern</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/Xamarin.Mac</MacBclPath>
-			</PropertyGroup>
-		</When>
-		<When Condition=" '$(TargetFrameworkIdentifier)' != 'Xamarin.Mac' And '$(UseXamMacFullFramework)' == 'true'">
-			<PropertyGroup>
-				<TargetFrameworkName>Full</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<TargetFrameworkName>System</TargetFrameworkName>
-				<MacBclPath>$(XamarinMacFrameworkRoot)/lib/mono/4.5</MacBclPath>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
 
 	<PropertyGroup Condition="'$(TargetFrameworkName)' == 'Full'">
-		<AssemblySearchPaths>$(XamarinMacFrameworkRoot)/lib/reference/full;$(XamarinMacFrameworkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
+		<AssemblySearchPaths>$(_XamarinSdkRoot)/lib/reference/full;$(_XamarinSdkRoot)/lib/mono;$(AssemblySearchPaths)</AssemblySearchPaths>
 		<ImplicitlyExpandNETStandardFacades>False</ImplicitlyExpandNETStandardFacades>
 	</PropertyGroup>
 
 	<!-- Do not resolve from the GAC in Modern or Full unless allow-unsafe-gac-resolution is passed in -->
-	<PropertyGroup Condition="'$(TargetFrameworkName)' != 'System' And !$(MonoBundlingExtraArgs.Contains('--allow-unsafe-gac-resolution'))" >
+	<PropertyGroup Condition="'$(TargetFrameworkName)' != 'System' And !$(_BundlerArguments.Contains('--allow-unsafe-gac-resolution'))" >
 		<AssemblySearchPaths>$([System.String]::Copy('$(AssemblySearchPaths)').Replace('{GAC}',''))</AssemblySearchPaths>
 		<AssemblySearchPaths Condition="'$(MSBuildRuntimeVersion)' != ''">$(AssemblySearchPaths.Split(';'))</AssemblySearchPaths>
 	</PropertyGroup>

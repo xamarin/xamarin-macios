@@ -1,4 +1,4 @@
-﻿#if !MONOMAC
+#nullable enable
 
 using ObjCRuntime;
 using Foundation;
@@ -37,5 +37,3 @@ namespace Photos
 		}
 	}
 }
-
-#endif

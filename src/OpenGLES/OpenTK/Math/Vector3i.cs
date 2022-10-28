@@ -1,4 +1,4 @@
-﻿#region --- License ---
+#region --- License ---
 /*
 Copyright (c) 2006 - 2008 The Open Toolkit library.
 
@@ -25,6 +25,8 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Xml.Serialization;
+
+#if !NET
 namespace OpenTK
 {
     /// <summary>
@@ -436,3 +438,4 @@ namespace OpenTK
         #endregion
     }
 }
+#endif // !NET

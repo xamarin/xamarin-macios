@@ -8,7 +8,7 @@ using ObjCRuntime;
 namespace Foundation {
 	public partial class NSBundle : NSObject {
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use 'GetLocalizedString' instead.")]
 		public virtual string LocalizedString (string key, string value, string table)
 		{

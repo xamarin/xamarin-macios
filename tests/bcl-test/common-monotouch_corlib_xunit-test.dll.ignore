@@ -424,3 +424,17 @@ Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeMe
 # random OOMs
 Platform32:System.Collections.Tests.HashtableTests.Ctor_Int_Int_GenerateNewPrime
 Platform32:System.Tests.BitConverterTests.ToString_ByteArrayTooLong_Throws
+# device failures, reported at: https://github.com/mono/mono/issues/17375
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeMethod
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeField
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeEvent
+Platform32:System.Reflection.Tests.RuntimeReflectionExtensionsTests.GetRuntimeProperty
+
+# 32bits device failures / https://github.com/mono/mono/issues/18616
+Platform32:System.Tests.ConvertToBooleanTests.FromDouble
+Platform32:System.Tests.ConvertToBooleanTests.FromSingle
+Platform32:System.Tests.BitConverterArray.ConvertFromFloat(num: 0, expected: [1, 0, 0, 0])
+Platform32:System.Tests.BitConverterSpan.ConvertFromFloat(num: 0, expected: [1, 0, 0, 0])
+
+# https://github.com/xamarin/maccore/issues/2296
+KLASS:System.Tests.DateTimeTests

@@ -10,18 +10,12 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreLocation;
 using MapKit;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreLocation;
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
 	
@@ -32,9 +26,9 @@ namespace MonoTouchFixtures.MapKit {
 		[Test]
 		public void Default ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 6, 1, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.TvOS, 9, 2, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 6, 1, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.TVOS, 9, 2, throwIfOtherPlatform: false);
 
 			using (var lsr = new MKLocalSearchRequest ()) {
 				Assert.Null (lsr.NaturalLanguageQuery, "NaturalLanguageQuery");

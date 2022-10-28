@@ -1,3 +1,3 @@
-# Fixed in XAMCORE_4_0
+# Fixed in .NET
 !incorrect-protocol-member! QLPreviewItem::previewItemURL is REQUIRED and should be abstract
 !incorrect-protocol-member! QLPreviewingController::preparePreviewOfSearchableItemWithIdentifier:queryString:completionHandler: is OPTIONAL and should NOT be abstract

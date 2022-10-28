@@ -13,17 +13,19 @@ using System.Runtime.InteropServices;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace SceneKit
 {
 	public partial class SCNPhysicsShape
 	{
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNMatrix4 [] transforms)
 		{
-			if (shapes == null)
-				throw new ArgumentNullException ("shapes");
+			if (shapes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (shapes));
 
-			if (transforms == null)
-				throw new ArgumentNullException ("transforms");
+			if (transforms is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (transforms));
 
 			var t = new NSValue [transforms.Length];
 			for (var i = 0; i < t.Length; i++)
@@ -32,15 +34,15 @@ namespace SceneKit
 			return Create (shapes, t);
 		}
 
-#if !XAMCORE_4_0
+#if !NET
 		[Obsolete ("Use the 'Create' method that takes a 'SCNMatrix4 []'.")]
 		public static SCNPhysicsShape Create (SCNPhysicsShape [] shapes, SCNVector3 [] transforms)
 		{
-			if (shapes == null)
-				throw new ArgumentNullException ("shapes");
+			if (shapes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (shapes));
 
-			if (transforms == null)
-				throw new ArgumentNullException ("transforms");
+			if (transforms is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentException (nameof (transforms));
 
 			var t = new NSValue [transforms.Length];
 			for (var i = 0; i < t.Length; i++)
@@ -62,9 +64,9 @@ namespace SceneKit
 			}.ToDictionary ());
 		}
 
-		public static SCNPhysicsShape Create (SCNGeometry geometry, SCNPhysicsShapeOptions options)
+		public static SCNPhysicsShape Create (SCNGeometry geometry, SCNPhysicsShapeOptions? options)
 		{
-			return Create (geometry, options.ToDictionary ());
+			return Create (geometry, options?.ToDictionary ());
 		}
 
 		public static SCNPhysicsShape Create (SCNNode node,
@@ -79,32 +81,30 @@ namespace SceneKit
 			}.ToDictionary ());
 		}
 
-		public static SCNPhysicsShape Create (SCNNode node, SCNPhysicsShapeOptions options)
+		public static SCNPhysicsShape Create (SCNNode node, SCNPhysicsShapeOptions? options)
 		{
-			return Create (node, options.ToDictionary ());
+			return Create (node, options?.ToDictionary ());
 		}
 
-		public SCNPhysicsShapeOptions Options {
+		public SCNPhysicsShapeOptions? Options {
 			get {
 				var o = _Options;
-				if (o == null)
+				if (o is null)
 					return null;
 				return new SCNPhysicsShapeOptions (o);
 			}
 		}
 	}
 
+#if NET
+	[SupportedOSPlatform ("macos10.10")]
+	[SupportedOSPlatform ("ios8.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Mac (10, 10)]
 	[iOS (8, 0)]
-	public enum SCNPhysicsShapeType
-	{
-		ConvexHull,
-		BoundingBox,
-		ConcavePolyhedron
-	}
-
-	[Mac (10, 10)]
-	[iOS (8, 0)]
+#endif
 	public class SCNPhysicsShapeOptions
 	{
 		public SCNPhysicsShapeType? ShapeType { get; set; }
@@ -116,7 +116,7 @@ namespace SceneKit
 		internal SCNPhysicsShapeOptions (NSDictionary source)
 		{
 			var ret = source [SCNPhysicsShapeOptionsKeys.Type] as NSString;
-			if (ret != null){
+			if (ret is not null){
 				if (ret == SCNPhysicsShapeOptionsTypes.BoundingBox)
 					ShapeType = SCNPhysicsShapeType.BoundingBox;
 				else if (ret == SCNPhysicsShapeOptionsTypes.ConcavePolyhedron)
@@ -125,14 +125,14 @@ namespace SceneKit
 					ShapeType = SCNPhysicsShapeType.ConvexHull;
 			}
 			var bret = source [SCNPhysicsShapeOptionsKeys.KeepAsCompound] as NSNumber;
-			if (bret != null)
+			if (bret is not null)
 				KeepAsCompound = bret.Int32Value != 0;
 			var nret = source [SCNPhysicsShapeOptionsKeys.Scale] as NSValue;
-			if (nret != null)
+			if (nret is not null)
 				Scale = nret.Vector3Value;
 		}
 		
-		public NSDictionary ToDictionary ()
+		public NSDictionary? ToDictionary ()
 		{
 			var n = 0;
 			if (ShapeType.HasValue) n++;

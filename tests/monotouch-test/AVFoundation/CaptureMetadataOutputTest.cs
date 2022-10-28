@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AVMetadataObject
 //
 // Authors:
@@ -10,32 +10,13 @@
 #if !__TVOS__ && !__WATCHOS__ && !MONOMAC
 
 using System;
-using System.Drawing;
-using System.IO;
 using System.Reflection;
-using System.Threading;
-#if XAMCORE_2_0
+using CoreGraphics;
 using Foundation;
 using AVFoundation;
-using CoreMedia;
 using ObjCRuntime;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVFoundation {
 
@@ -47,7 +28,6 @@ namespace MonoTouchFixtures.AVFoundation {
 		public void Defaults ()
 		{
 			using (var obj = new AVCaptureMetadataOutput ()) {
-#if XAMCORE_2_0
 				Assert.AreEqual (AVMetadataObjectType.None, obj.AvailableMetadataObjectTypes, "AvailableMetadataObjectTypes");
 				Assert.AreEqual (AVMetadataObjectType.None, obj.MetadataObjectTypes, "MetadataObjectTypes");
 
@@ -55,26 +35,16 @@ namespace MonoTouchFixtures.AVFoundation {
 				Assert.AreEqual (0, obj.WeakAvailableMetadataObjectTypes.Length, "WeakAvailableMetadataObjectTypes#");
 				Assert.IsNotNull (obj.WeakMetadataObjectTypes, "WeakMetadataObjectTypes");
 				Assert.AreEqual (0, obj.WeakMetadataObjectTypes.Length, "WeakMetadataObjectTypes#");
-#else
-				Assert.IsNotNull (obj.AvailableMetadataObjectTypes, "AvailableMetadataObjectTypes");
-				Assert.AreEqual (0, obj.AvailableMetadataObjectTypes.Length, "AvailableMetadataObjectTypes#");
-				Assert.IsNotNull (obj.MetadataObjectTypes, "MetadataObjectTypes");
-				Assert.AreEqual (0, obj.MetadataObjectTypes.Length, "MetadataObjectTypes#");
-#endif
-				if (TestRuntime.CheckSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false))
-					Assert.AreEqual (new RectangleF (0, 0, 1, 1), obj.RectOfInterest, "RectOfInterest");
+				if (TestRuntime.CheckSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false))
+					Assert.AreEqual (new CGRect (0, 0, 1, 1), obj.RectOfInterest, "RectOfInterest");
 
-#if XAMCORE_2_0
+#if !__MACCATALYST__ // https://github.com/xamarin/maccore/issues/2345
 				obj.WeakMetadataObjectTypes = null;
 				Assert.AreEqual (AVMetadataObjectType.None, obj.MetadataObjectTypes, "MetadataObjectTypes");
 				obj.MetadataObjectTypes = AVMetadataObjectType.None;
 				Assert.AreEqual (AVMetadataObjectType.None, obj.MetadataObjectTypes, "MetadataObjectTypes");
-#else
-				obj.MetadataObjectTypes = null;
-				Assert.IsNotNull (obj.MetadataObjectTypes, "MetadataObjectTypes");
-				Assert.AreEqual (0, obj.MetadataObjectTypes.Length, "MetadataObjectTypes#");
-#endif
 				obj.SetDelegate (null, null);
+#endif // !__MACCATALYST__
 			}
 		}
 
@@ -118,19 +88,15 @@ namespace MonoTouchFixtures.AVFoundation {
 			}
 		}
 
-#if XAMCORE_2_0
 		[Test]
 		public void MetadataObjectTypesTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-
-			if (Runtime.Arch != Arch.DEVICE)
-				Assert.Ignore ("This test only runs on device (requires camera access)");
-
-			TestRuntime.RequestCameraPermission (AVMediaType.Video, true);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertDevice ("This test only runs on device (requires camera access)");
+			TestRuntime.RequestCameraPermission (AVMediaTypes.Video.GetConstant (), true);
 
 			using (var captureSession = new AVCaptureSession ()) {
-				using (var videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaType.Video)) {
+				using (var videoDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Video.GetConstant ())) {
 
 					NSError error;
 					using (var videoInput = new AVCaptureDeviceInput (videoDevice, out error)) {
@@ -144,6 +110,19 @@ namespace MonoTouchFixtures.AVFoundation {
 
 							AVMetadataObjectType all = AVMetadataObjectType.None;
 							foreach (AVMetadataObjectType val in Enum.GetValues (typeof (AVMetadataObjectType))) {
+								switch (val) {
+								case AVMetadataObjectType.CatBody:
+								case AVMetadataObjectType.DogBody:
+								case AVMetadataObjectType.HumanBody:
+								case AVMetadataObjectType.SalientObject:
+									// fail *and crash* on iOS 8 (at least on 32bits devices)
+									if (!TestRuntime.CheckXcodeVersion (11, 0))
+										continue;
+									// xcode 12 beta 1 on device
+									if (TestRuntime.IsDevice && TestRuntime.CheckXcodeVersion (12, 0))
+										continue;
+									break;
+								}
 								metadataOutput.MetadataObjectTypes = val;
 								all |= val;
 								Assert.AreEqual (val, metadataOutput.MetadataObjectTypes, val.ToString ());
@@ -155,7 +134,6 @@ namespace MonoTouchFixtures.AVFoundation {
 				}
 			}
 		}
-#endif
 	}
 }
 

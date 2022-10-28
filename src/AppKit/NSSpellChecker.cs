@@ -21,17 +21,20 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#if !__MACCATALYST__
+
 using System;
 
 namespace AppKit {
-	
+
 	public partial class NSSpellChecker {
-		
+
 		// note: if needed override the protected Get|Set methods
-		public string Language { 
+		public string Language {
 			get { return GetLanguage (); }
 			// ignore return value (bool)
 			set { SetLanguage (value); }
 		}
 	}
 }
+#endif // !__MACCATALYST__

@@ -80,6 +80,7 @@ namespace EventKit {
 		SourceMismatch,
 		NotificationCollectionMismatch,
 		NotificationSavedWithoutCollection,
+		ReminderAlarmContainsEmailOrUrl,
 	}
 
 	// untyped enum -> EKTypes.h
@@ -119,21 +120,8 @@ namespace EventKit {
 		ThisEvent, FutureEvents
 	}
 
-	// note: old binding mistakes - they should have been in EventKitUI (not EventKit)
-#if !XAMCORE_2_0
-	// untyped enum -> EKEventViewController.h
-	public enum EKEventViewAction {
-		Done, Responded, Deleted
-	}
-
-	// untyped enum -> EKEventEditViewController.h
-	public enum EKEventEditViewAction {
-		Canceled, Saved, Deleted
-	}
-#endif
-
 	// NSUInteger -> EKTypes.h
-	[Native]
+	[Native ("EKCalendarEventAvailabilityMask")]
 	[Flags]
 	public enum EKCalendarEventAvailability : ulong {
 		None = 0,

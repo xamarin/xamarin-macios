@@ -8,11 +8,7 @@ using CoreFoundation;
 using Foundation;
 using ObjCRuntime;
 
-#if XAMCORE_2_0
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
@@ -25,20 +21,33 @@ namespace MonoTouchFixtures.Metal {
 			TestRuntime.AssertXcodeVersion (9, 0);
 		}
 
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 		[Test]
 		public void GetAllDevicesTest ()
 		{
+#if __MACCATALYST__
+			TestRuntime.AssertXcodeVersion (13, 0);
+#endif 
 			NSObject refObj = new NSObject();
-			var devices = MTLDevice.GetAllDevices(ref refObj, (IMTLDevice device, NSString notifyName) => { });
+			var devices = MTLDevice.GetAllDevices();
+
+			// It's possible to run on a system that does not support metal,
+			// in which case we'll get an empty array of devices.
+			Assert.IsNotNull (devices, "MTLDevices.GetAllDevices not null");
+		}
+#endif
+		
+#if __MACOS__
+		[Test]
+		public void GetAllDevicesTestOutObserver ()
+		{
+			var devices = MTLDevice.GetAllDevices ((IMTLDevice device, NSString notifyName) => { }, out var observer);
 
 			// It's possible to run on a system that does not support metal,
 			// in which case we'll get an empty array of devices.
 			Assert.IsNotNull (devices, "MTLDevices.GetAllDevices not null");
 
-			Assert.DoesNotThrow (() => {
-				MTLDevice.RemoveObserver (refObj);
-			});
+			MTLDevice.RemoveObserver (observer);
 		}
 #endif
 
@@ -81,15 +90,27 @@ namespace MonoTouchFixtures.Metal {
 			bool freed;
 			byte [] buffer_bytes;
 
-#if __MACOS__
+			// some older hardware won't have a default
+			if (device == null)
+				Assert.Inconclusive ("Metal is not supported");
+
+			// Apple claims that "Indirect command buffers" are available with MTLGPUFamilyCommon2, but it crashes on at least one machine.
+			// Log what the current device supports, just to have it in the log.
+			foreach (MTLFeatureSet fs in Enum.GetValues (typeof (MTLFeatureSet))) {
+				Console.WriteLine ($"This device supports feature set: {fs}: {device.SupportsFeatureSet (fs)}");
+			}
+			if (TestRuntime.CheckXcodeVersion (11, 0)) {
+				foreach (MTLGpuFamily gf in Enum.GetValues (typeof (MTLGpuFamily))) {
+					Console.WriteLine ($"This device supports Gpu family: {gf}: {device.SupportsFamily (gf)}");
+				}
+			}
+
+
 			string metal_code = File.ReadAllText (Path.Combine (NSBundle.MainBundle.ResourcePath, "metal-sample.metal"));
 			string metallib_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "default.metallib");
 			string fragmentshader_path = Path.Combine (NSBundle.MainBundle.ResourcePath, "fragmentShader.metallib");
-#else
-			string metal_code = File.ReadAllText (Path.Combine (NSBundle.MainBundle.BundlePath, "metal-sample.metal"));
-			string metallib_path = Path.Combine (NSBundle.MainBundle.BundlePath, "default.metallib");
-			string fragmentshader_path = Path.Combine (NSBundle.MainBundle.BundlePath, "fragmentShader.metallib");
 
+#if !__MACOS__ && !__MACCATALYST__
 			if (Runtime.Arch == Arch.SIMULATOR)
 				Assert.Ignore ("Metal isn't available in the simulator");
 #endif
@@ -266,19 +287,28 @@ namespace MonoTouchFixtures.Metal {
 			var url = "file://" + metallib_path;
 			url = url.Replace (" ", "%20"); // url encode!
 			using (var library = device.CreateLibrary (new NSUrl (url), out var error)) {
+#if NET
+				// Looks like creating a library with a url always fails: https://forums.developer.apple.com/thread/110416
+				Assert.IsNotNull (library, "CreateLibrary (NSUrl, NSError): Null");
+				Assert.IsNull (error, "CreateLibrary (NSUrl, NSError): NonNull error");
+#else
 				// Looks like creating a library with a url always fails: https://forums.developer.apple.com/thread/110416
 				Assert.IsNull (library, "CreateLibrary (NSUrl, NSError): Null");
 				Assert.IsNotNull (error, "CreateLibrary (NSUrl, NSError): NonNull error");
+#endif
 			}
 
 			using (var library = device.CreateArgumentEncoder (new MTLArgumentDescriptor [] { new MTLArgumentDescriptor () { DataType = MTLDataType.Int } })) {
 				Assert.IsNotNull (library, "CreateArgumentEncoder (MTLArgumentDescriptor[]): NonNull");
 			}
 
-			if (TestRuntime.CheckXcodeVersion (10, 0)) {
+			// Apple's charts say that "Indirect command buffers" are supported with MTLGpuFamilyCommon2
+			var supportsIndirectCommandBuffers = TestRuntime.CheckXcodeVersion (11, 0) && device.SupportsFamily (MTLGpuFamily.Common2);
 #if __MACOS__
-				if (device.SupportsFeatureSet (MTLFeatureSet.macOS_GPUFamily2_v1))
+			// but something's not quite right somewhere, so on macOS verify that the device supports a bit more than what Apple says.
+			supportsIndirectCommandBuffers &= device.SupportsFeatureSet (MTLFeatureSet.macOS_GPUFamily2_v1);
 #endif
+			if (supportsIndirectCommandBuffers) {
 				using (var descriptor = new MTLIndirectCommandBufferDescriptor ()) {
 					using (var library = device.CreateIndirectCommandBuffer (descriptor, 1, MTLResourceOptions.CpuCacheModeDefault)) {
 						Assert.IsNotNull (library, "CreateIndirectCommandBuffer: NonNull");
@@ -328,14 +358,16 @@ namespace MonoTouchFixtures.Metal {
 				}
 			}
 
-			using (var library = device.CreateLibrary (fragmentshader_path, out var error))
-			using (var func = library.CreateFunction ("fragmentShader2")) {
-				using (var enc = func.CreateArgumentEncoder (0)) {
-					Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint): NonNull");
-				}
-				using (var enc = func.CreateArgumentEncoder (0, out var reflection)) {
-					Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull");
-					Assert.IsNotNull (reflection, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull reflection");
+			using (var library = device.CreateLibrary (fragmentshader_path, out var error)) {
+				Assert.IsNull (error, "MTLFunction.CreateArgumentEncoder: library creation failure");
+				using (var func = library.CreateFunction ("fragmentShader2")) {
+					using (var enc = func.CreateArgumentEncoder (0)) {
+						Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint): NonNull");
+					}
+					using (var enc = func.CreateArgumentEncoder (0, out var reflection)) {
+						Assert.IsNotNull (enc, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull");
+						Assert.IsNotNull (reflection, "MTLFunction.CreateArgumentEncoder (nuint, MTLArgument): NonNull reflection");
+					}
 				}
 			}
 
@@ -367,7 +399,7 @@ namespace MonoTouchFixtures.Metal {
 
 			using (var hd = new MTLHeapDescriptor ()) {
 				hd.CpuCacheMode = MTLCpuCacheMode.DefaultCache;
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 				hd.StorageMode = MTLStorageMode.Private;
 #else
 				hd.StorageMode = MTLStorageMode.Shared;
@@ -377,7 +409,7 @@ namespace MonoTouchFixtures.Metal {
 					hd.Size = sa.Size;
 
 					using (var heap = device.CreateHeap (hd)) {
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 						txt.StorageMode = MTLStorageMode.Private;
 #endif
 						using (var texture = heap.CreateTexture (txt)) {

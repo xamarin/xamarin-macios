@@ -10,7 +10,8 @@
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <AssemblyName>Container</AssemblyName>
     <IntermediateOutputPath>obj\$(Platform)\$(Configuration)-watchos</IntermediateOutputPath>
-    <DefineConstants>XAMCORE_2_0;XAMCORE_3_0;</DefineConstants>
+    <DefineConstants>XAMCORE_3_0;</DefineConstants>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|iPhoneSimulator' ">
     <DebugSymbols>true</DebugSymbols>
@@ -97,6 +98,7 @@
       <Project>{34A6793F-37B2-4A7F-9286-7BDF52F412F3}</Project>
       <Name>%WATCHAPP_NAME%</Name>
       <IsWatchApp>True</IsWatchApp>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

@@ -6,7 +6,9 @@
 //
 // Copyright 2012-2013 Xamarin Inc
 //
-#if XAMCORE_2_0 || !MONOMAC
+
+#nullable enable
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -30,8 +32,9 @@ namespace Social {
 			case SLServiceKind.LinkedIn:
 				return SLServiceType.LinkedIn;
 #endif
+			default:
+				throw new ArgumentOutOfRangeException (nameof (kind));
 			}
-			return null;
 		}
 		
 		public static SLRequest Create (SLServiceKind serviceKind, SLRequestMethod method, NSUrl url, NSDictionary parameters)
@@ -40,4 +43,3 @@ namespace Social {
 		}
 	}
 }
-#endif

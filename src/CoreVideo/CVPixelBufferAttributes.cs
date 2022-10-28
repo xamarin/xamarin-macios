@@ -30,9 +30,18 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace CoreVideo {
 
+#if NET
+	[SupportedOSPlatform ("ios")]
+	[SupportedOSPlatform ("maccatalyst")]
+	[SupportedOSPlatform ("macos")]
+	[SupportedOSPlatform ("tvos")]
+#else
 	[Watch (4,0)]
+#endif
 	public class CVPixelBufferAttributes : DictionaryContainer
 	{
 #if !COREBUILD
@@ -54,13 +63,6 @@ namespace CoreVideo {
 			Height = height;
 		}
 
-#if !XAMCORE_2_0
-		public CVPixelBufferAttributes (CVPixelFormatType pixelFormatType, System.Drawing.Size size)
-			: this (pixelFormatType, size.Width, size.Height)
-		{
-		}
-#endif
-
 		public CVPixelFormatType? PixelFormatType {
 			set {
 				SetNumberValue (CVPixelBuffer.PixelFormatTypeKey, (uint?)value);
@@ -70,7 +72,7 @@ namespace CoreVideo {
 			}
 		} 
 
-		public CFAllocator MemoryAllocator {
+		public CFAllocator? MemoryAllocator {
 			get {
 				return GetNativeValue<CFAllocator> (CVPixelBuffer.MemoryAllocatorKey);
 			}
@@ -179,7 +181,7 @@ namespace CoreVideo {
 		}
 
 		// TODO: kCVPixelBufferIOSurfacePropertiesKey
-#if !MONOMAC || !XAMCORE_2_0
+#if !MONOMAC
 		// The presence of the IOSurfacePropertiesKey mandates the allocation via IOSurfaceProperty
 		public bool? AllocateWithIOSurface {
 			set {
@@ -189,11 +191,12 @@ namespace CoreVideo {
 					RemoveValue (CVPixelBuffer.IOSurfacePropertiesKey);
 			}
 			get {
-				return GetNSDictionary (CVPixelBuffer.IOSurfacePropertiesKey) != null;
+				return GetNSDictionary (CVPixelBuffer.IOSurfacePropertiesKey) is not null;
 			}
 		}
 
 #if !WATCH
+#if !__MACCATALYST__
 		public bool? OpenGLESCompatibility {
 			set {
 				SetBooleanValue (CVPixelBuffer.OpenGLESCompatibilityKey, value);
@@ -202,8 +205,16 @@ namespace CoreVideo {
 				return GetBoolValue (CVPixelBuffer.OpenGLESCompatibilityKey);
 			}
 		}
+#endif
 
+#if NET
+		[SupportedOSPlatform ("ios8.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+		[UnsupportedOSPlatform ("macos")]
+#else
 		[iOS (8,0)]
+#endif
 		public bool? MetalCompatibility {
 			set {
 				SetBooleanValue (CVPixelBuffer.MetalCompatibilityKey, value);
@@ -217,4 +228,3 @@ namespace CoreVideo {
 #endif
 	}
 }
-

@@ -11,19 +11,12 @@
 #if !__TVOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
 using EventKit;
-#else
-using MonoTouch.CoreGraphics;
-using MonoTouch.EventKit;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.EventKit {
 	
@@ -33,12 +26,12 @@ namespace MonoTouchFixtures.EventKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 		}
 
 		void RequestPermission ()
 		{
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 			TestRuntime.RequestEventStorePermission (EKEntityType.Event, true);
 			TestRuntime.RequestEventStorePermission (EKEntityType.Reminder, true);
 #endif
@@ -51,7 +44,7 @@ namespace MonoTouchFixtures.EventKit {
 			RequestPermission ();
 
 			EKEventStore store = new EKEventStore ();
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			var c = EKCalendar.Create (EKEntityType.Event, store);
 #else
 			var c = EKCalendar.FromEventStore (store);
@@ -84,12 +77,15 @@ namespace MonoTouchFixtures.EventKit {
 
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
 			Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
 #else
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
-			Assert.Null (c.Title, "Title");
+			if (TestRuntime.CheckXcodeVersion (13, 2))
+				Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
+			else
+				Assert.Null (c.Title, "Title");
 #endif
 			Assert.That (c.Type, Is.EqualTo (EKCalendarType.Local), "Type");
 		}
@@ -123,12 +119,15 @@ namespace MonoTouchFixtures.EventKit {
 #endif
 			Assert.Null (c.Source, "Source");
 			Assert.False (c.Subscribed, "Subscribed");
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.Busy | EKCalendarEventAvailability.Free), "SupportedEventAvailabilities");
 			Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
 #else
 			Assert.That (c.SupportedEventAvailabilities, Is.EqualTo (EKCalendarEventAvailability.None), "SupportedEventAvailabilities");
-			Assert.Null (c.Title, "Title");
+			if (TestRuntime.CheckXcodeVersion (13, 2))
+				Assert.That (c.Title, Is.EqualTo (string.Empty), "Title");
+			else
+				Assert.Null (c.Title, "Title");
 #endif
 			Assert.That (c.Type, Is.EqualTo (EKCalendarType.Local), "Type");
 			Assert.AreEqual (EKEntityMask.Reminder, c.AllowedEntityTypes, "AllowedEntityTypes");
@@ -141,7 +140,7 @@ namespace MonoTouchFixtures.EventKit {
 			RequestPermission ();
 
 			EKEventStore store = new EKEventStore ();
-#if MONOMAC
+#if MONOMAC || __MACCATALYST__
 			var c = EKCalendar.Create (EKEntityType.Event, store);
 #else
 			var c = EKCalendar.FromEventStore (store);
@@ -151,13 +150,12 @@ namespace MonoTouchFixtures.EventKit {
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void FromEventStore_Null ()
 		{
-#if MONOMAC
-			EKCalendar.Create (EKEntityType.Event, null);
+#if MONOMAC || __MACCATALYST__
+			Assert.Throws<ArgumentNullException> (() => EKCalendar.Create (EKEntityType.Event, null));
 #else
-			EKCalendar.FromEventStore (null);
+			Assert.Throws<ArgumentNullException> (() => EKCalendar.FromEventStore (null));
 #endif
 		}
 	}

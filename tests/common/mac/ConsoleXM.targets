@@ -1,8 +1,19 @@
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	
-	<Target Name="AfterBuild" Inputs="$(ProjectDir)/../../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/libxammac.dylib;$(ProjectDir)/../../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/x86_64/full/Xamarin.Mac.dll"
+	<PropertyGroup>
+		<!-- First use MAC_DESTDIR as the root if that's set -->
+		<libxammac_path Condition="'$(MAC_DESTDIR)' != ''">$(MAC_DESTDIR)Library/Frameworks/Xamarin.Mac.framework/Versions/Current/SDKs/Xamarin.macOS.sdk/lib/libxammac.dylib</libxammac_path>
+		<xammac_dll_path Condition="'$(MAC_DESTDIR)' != ''">$(MAC_DESTDIR)Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/full/Xamarin.Mac.dll</xammac_dll_path>
+		<!-- If told to use the system file, use that -->
+		<libxammac_path Condition="'$(TESTS_USE_SYSTEM)' != ''">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/SDKs/Xamarin.macOS.sdk/lib/libxammac.dylib</libxammac_path>
+		<xammac_dll_path Condition="'$(TESTS_USE_SYSTEM)' != ''">/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/full/Xamarin.Mac.dll</xammac_dll_path>
+		<!-- Otherwise default to what we build locally -->
+		<libxammac_path Condition="!Exists('$(libxammac_path)')">$(ProjectDir)/../../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/SDKs/Xamarin.macOS.sdk/lib/libxammac.dylib</libxammac_path>
+		<xammac_dll_path Condition="!Exists('$(xammac_dll_path)')">$(ProjectDir)/../../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/64bits/full/Xamarin.Mac.dll</xammac_dll_path>
+	</PropertyGroup>
+	<Target Name="AfterBuild"
+		Inputs="$(libxammac_path);$(xammac_dll_path)"
 		Outputs="$(OutputPath)/Stuff/libxammac.dylib;$(OutputPath)/Stuff/Xamarin.Mac.dll">
-	    <Copy SourceFiles="$(ProjectDir)/../../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/libxammac.dylib" DestinationFiles="$(OutputPath)/Stuff/libxammac.dylib" />
-	    <Copy SourceFiles="$(ProjectDir)/../../../_mac-build/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/x86_64/full/Xamarin.Mac.dll" DestinationFiles="$(OutputPath)/Stuff/Xamarin.Mac.dll" />
+	    <Copy SourceFiles="$(libxammac_path)" DestinationFiles="$(OutputPath)/Stuff/libxammac.dylib" />
+	    <Copy SourceFiles="$(xammac_dll_path)" DestinationFiles="$(OutputPath)/Stuff/Xamarin.Mac.dll" />
 	</Target>
 </Project>

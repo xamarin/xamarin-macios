@@ -7,7 +7,9 @@
  * http://www.OpenTK.net */
 #endregion
 
-#if OPENTK_DLL || !XAMCORE_2_0
+#nullable enable
+
+#if OPENTK_DLL
 
 using System;
 
@@ -136,4 +138,4 @@ namespace OpenTK.Audio.OpenAL
     }
 }
 
-#endif // !XAMCORE_2_0
+#endif // OPENTK_DLL

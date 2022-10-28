@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec /Library/Frameworks/Mono.framework/Commands/mono64 --debug @MONOTOUCH_PREFIX@/lib/mtouch/mtouch.exe "$@"

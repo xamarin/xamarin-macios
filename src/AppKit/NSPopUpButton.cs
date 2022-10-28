@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#if !__MACCATALYST__
+
 using System;
 using ObjCRuntime;
 using Foundation;
@@ -33,9 +36,9 @@ namespace AppKit {
 
 	public partial class NSPopUpButton {
 		public new NSPopUpButtonCell Cell {
-			get { return (NSPopUpButtonCell)base.Cell; }
+			get { return (NSPopUpButtonCell) base.Cell; }
 			set { base.Cell = value; }
 		}
 	}
 }
-
+#endif // !__MACCATALYST__

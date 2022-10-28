@@ -37,3 +37,8 @@
 !missing-release-attribute-on-return-value! CoreData.NSManagedObjectContext CoreData.NSPersistentContainer::get_NewBackgroundContext()'s selector's ('newBackgroundContext') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! CoreData.NSManagedObjectID CoreData.NSIncrementalStore::NewObjectIdFor(CoreData.NSEntityDescription,Foundation.NSObject)'s selector's ('newObjectIDForEntity:referenceObject:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
 !missing-release-attribute-on-return-value! Foundation.NSObject CoreData.NSIncrementalStore::NewValue(CoreData.NSRelationshipDescription,CoreData.NSManagedObjectID,CoreData.NSManagedObjectContext,Foundation.NSError&)'s selector's ('newValueForRelationship:forObjectWithID:withContext:error:') Objective-C method family ('new') indicates that the native method returns a retained object, and as such a '[return: Release]' attribute is required.
+
+# by-ref argument, cannot be null
+!extra-null-allowed! 'System.Boolean CoreData.NSManagedObject::ValidateValue(Foundation.NSObject&,System.String,Foundation.NSError&)' has a extraneous [NullAllowed] on parameter #0
+
+# waiting for changes in foundation which are not trivial

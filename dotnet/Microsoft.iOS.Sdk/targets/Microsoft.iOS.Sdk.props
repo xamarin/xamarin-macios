@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <_PlatformName>iOS</_PlatformName>
+    <!-- Used by Microsoft.iOS.Windows.Sdk -->
+    <CoreiOSSdkDirectory>$(MSBuildThisFileDirectory)..\tools\msbuild\iOS\</CoreiOSSdkDirectory>
+  </PropertyGroup>
+
+  <Import Project="Xamarin.Shared.Sdk.props" />
+</Project>

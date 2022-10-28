@@ -22,6 +22,9 @@ namespace AdSupport {
 		[Static]
 		ASIdentifierManager SharedManager { get; }
 
+		[Deprecated (PlatformName.iOS, 14, 0, message: "Use 'ATTrackingManager.AppTrackingTransparency' instead.")]
+		[Deprecated (PlatformName.MacOSX, 11, 0, message: "Use 'ATTrackingManager.AppTrackingTransparency' instead.")]
+		[Deprecated (PlatformName.TvOS, 14, 0, message: "Use 'ATTrackingManager.AppTrackingTransparency' instead.")]
 		[Export ("advertisingTrackingEnabled")]
 		bool IsAdvertisingTrackingEnabled { [Bind ("isAdvertisingTrackingEnabled")] get; }
 
@@ -29,6 +32,7 @@ namespace AdSupport {
 		NSUuid AdvertisingIdentifier { get; }
 
 		[NoTV][NoiOS]
+		[NoMac] // unclear when that was changed (xcode 12 GM allowed it)
 		[Export ("clearAdvertisingIdentifier")]
 		void ClearAdvertisingIdentifier ();
 	}

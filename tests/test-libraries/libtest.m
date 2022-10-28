@@ -250,6 +250,24 @@ x_mdltransform_get_rotation_matrix (MDLTransform *self, NSTimeInterval time,
 }
 #endif // !TARGET_OS_WATCH
 
+SCNMatrix4
+x_SCNMatrix4MakeTranslation (pfloat tx, pfloat ty, pfloat tz)
+{
+	return SCNMatrix4MakeTranslation (tx, ty, tz);
+}
+
+SCNMatrix4
+x_SCNMatrix4MakeScale (pfloat tx, pfloat ty, pfloat tz)
+{
+	return SCNMatrix4MakeScale (tx, ty, tz);
+}
+
+SCNMatrix4
+x_SCNMatrix4Translate (SCNMatrix4 m, pfloat tx, pfloat ty, pfloat tz)
+{
+	return SCNMatrix4Translate (m, tx, ty, tz);
+}
+
 @interface UltimateMachine : NSObject {
 
 }
@@ -301,6 +319,38 @@ static UltimateMachine *shared;
 }
 	-(void) V
 	{
+	}
+
+	+(void) staticV
+	{
+	}
+
+	-(NSString *) getEmptyString
+	{
+		return [NSString string];
+	}
+
+	-(NSString *) getShortString
+	{
+		return @"this is a short string";
+	}
+
+	-(NSString *) getLongString
+	{
+		return @"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times"
+				"this is a much much much longer string that repeats a few times";
 	}
 
 	-(float) F
@@ -983,7 +1033,7 @@ static void block_called ()
 
 -(void) testString: (int) action a:(NSString **) refValue b:(NSString **) outValue
 {
-	NSString *obj = NULL;
+	NSString *obj __attribute__((unused)) = NULL;
 
 	// We should never get null pointers.
 	assert (refValue != NULL);
@@ -1016,7 +1066,7 @@ static void block_called ()
 
 -(void) testInt: (int) action a:(int32_t *) refValue b:(int32_t *) outValue
 {
-	NSString *obj = NULL;
+	NSString *obj __attribute__((unused)) = NULL;
 
 	// We should never get null pointers.
 	assert (refValue != NULL);

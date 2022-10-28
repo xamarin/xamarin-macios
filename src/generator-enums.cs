@@ -2,12 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
+using System.Reflection;
+using System.Text;
 using Foundation;
 using ObjCRuntime;
-using System.IO;
 
 public partial class Generator {
 
@@ -41,6 +41,12 @@ public partial class Generator {
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
 	}
 
+	void CopyNativeName (ICustomAttributeProvider provider)
+	{
+		foreach (var oa in AttributeManager.GetCustomAttributes<NativeNameAttribute> (provider))
+			print ("[NativeName (\"{0}\")]", oa.NativeName);
+	}
+
 	// caller already:
 	//	- setup the header and namespace
 	//	- call/emit PrintPlatformAttributes on the type
@@ -51,25 +57,49 @@ public partial class Generator {
 
 		var native = AttributeManager.GetCustomAttribute<NativeAttribute> (type);
 		if (native != null) {
-			if (String.IsNullOrEmpty (native.NativeName))
-				print ("[Native]");
-			else
-				print ("[Native (\"{0}\")]", native.NativeName);
+			var sb = new StringBuilder ();
+			sb.Append ("[Native");
+			var hasNativeName = !string.IsNullOrEmpty (native.NativeName);
+			var hasConvertToManaged = !string.IsNullOrEmpty (native.ConvertToManaged);
+			var hasConvertToNative = !string.IsNullOrEmpty (native.ConvertToNative);
+			if (hasNativeName || hasConvertToManaged || hasConvertToNative) {
+				sb.Append (" (");
+				if (hasNativeName)
+					sb.Append ('"').Append (native.NativeName).Append ('"');
+				if (hasConvertToManaged) {
+					if (hasNativeName)
+						sb.Append (", ");
+					sb.Append ("ConvertToManaged = \"");
+					sb.Append (native.ConvertToManaged);
+					sb.Append ('"');
+				}
+				if (hasConvertToNative) {
+					if (hasNativeName || hasConvertToManaged)
+						sb.Append (", ");
+					sb.Append ("ConvertToNative = \"");
+					sb.Append (native.ConvertToNative);
+					sb.Append ('"');
+				}
+				sb.Append (")");
+			}
+			sb.Append ("]");
+			print (sb.ToString ());
 		}
 		CopyObsolete (type);
+		CopyNativeName (type);
 
 		var unique_constants = new HashSet<string> ();
 		var fields = new Dictionary<FieldInfo, FieldAttribute> ();
 		Tuple<FieldInfo, FieldAttribute> null_field = null;
 		Tuple<FieldInfo, FieldAttribute> default_symbol = null;
 		var underlying_type = GetCSharpTypeName (TypeManager.GetUnderlyingEnumType (type));
-		print ("public enum {0} : {1} {{", type.Name, underlying_type);
+		print ("{0} enum {1} : {2} {{", AttributeManager.HasAttribute<InternalAttribute> (type) ? "internal" : "public", type.Name, underlying_type);
 		indent++;
 		foreach (var f in type.GetFields ()) {
 			// skip value__ field 
 			if (f.IsSpecialName)
 				continue;
-			PrintPlatformAttributes (f);
+			PrintPlatformAttributes (f, is_enum: true);
 			CopyObsolete (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
 			var fa = AttributeManager.GetCustomAttribute<FieldAttribute> (f);
@@ -80,14 +110,14 @@ public partial class Generator {
 			if (fa.SymbolName == null)
 				null_field = new Tuple<FieldInfo, FieldAttribute> (f, fa);
 			else if (unique_constants.Contains (fa.SymbolName))
-				throw new BindingException (1046, true, $"The [Field] constant {fa.SymbolName} cannot only be used once inside enum {type.Name}.");
+				throw new BindingException (1046, true, fa.SymbolName, type.Name);
 			else {
 				fields.Add (f, fa);
 				unique_constants.Add (fa.SymbolName);
 			}
 			if (AttributeManager.GetCustomAttribute<DefaultEnumValueAttribute> (f) != null) {
 				if (default_symbol != null)
-					throw new BindingException (1045, true, $"Only a single [DefaultEnumValue] attribute can be used inside enum {type.Name}.");
+					throw new BindingException (1045, true, type.Name);
 				default_symbol = new Tuple<FieldInfo, FieldAttribute> (f, fa);
 			}
 		}
@@ -114,12 +144,12 @@ public partial class Generator {
 		if (error != null) {
 			// this attribute is important for our tests
 			print ("[Field (\"{0}\", \"{1}\")]", error.ErrorDomain, library_name);
-			print ("static NSString _domain;");
+			print ("static NSString? _domain;");
 			print ("");
-			print ("public static NSString GetDomain (this {0} self)", type.Name);
+			print ("public static NSString? GetDomain (this {0} self)", type.Name);
 			print ("{");
 			indent++;
-			print ("if (_domain == null)");
+			print ("if (_domain is null)");
 			indent++;
 			print ("_domain = Dlfcn.GetStringConstant (Libraries.{0}.Handle, \"{1}\");", library_name, error.ErrorDomain);
 			indent--;
@@ -160,8 +190,8 @@ public partial class Generator {
 				print ("}");
 				print ("");
 			}
-			
-			print ("public static NSString GetConstant (this {0} self)", type.Name);
+
+			print ("public static NSString? GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
 			print ("IntPtr ptr = IntPtr.Zero;");
@@ -182,19 +212,20 @@ public partial class Generator {
 				}
 				print ("}");
 			}
-			print ("return (NSString) Runtime.GetNSObject (ptr);");
+			print ("return (NSString?) Runtime.GetNSObject (ptr);");
 			indent--;
 			print ("}");
-			
+
 			print ("");
-			
-			print ("public static {0} GetValue (NSString constant)", type.Name);
+
+			var nullable = null_field != null;
+			print ("public static {0} GetValue (NSString{1} constant)", type.Name, nullable ? "?" : "");
 			print ("{");
 			indent++;
-			print ("if (constant == null)");
+			print ("if (constant is null)");
 			indent++;
 			// if we do not have a enum value that maps to a null field then we throw
-			if (null_field == null)
+			if (!nullable)
 				print ("throw new ArgumentNullException (nameof (constant));");
 			else
 				print ("return {0}.{1};", type.Name, null_field.Item1.Name);
@@ -207,13 +238,13 @@ public partial class Generator {
 			}
 			// if there's no default then we throw on unknown constants
 			if (default_symbol == null)
-				print ("throw new NotSupportedException (constant + \" has no associated enum value in \" + nameof ({0}) + \" on this platform.\");", type.Name);
+				print ("throw new NotSupportedException ($\"{constant} has no associated enum value on this platform.\");");
 			else
 				print ("return {0}.{1};", type.Name, default_symbol.Item1.Name);
 			indent--;
 			print ("}");
 		}
-			
+
 		if ((fields.Count > 0) || (error != null) || (null_field != null)) {
 			indent--;
 			print ("}");

@@ -8,22 +8,11 @@ namespace MonoTouch.Tuner {
 
 		protected override bool IsProduct (string assemblyName)
 		{
-			switch (assemblyName) {
-			case "MonoTouch.Dialog-1":
-			case "MonoTouch.NUnitLite":
-				return true;
-			default:
-				return assemblyName == product_assembly;
-			}
+			return assemblyName == product_assembly;
 		}
 
-		public override string ProductAssembly { 
+		public override string ProductAssembly {
 			get { return product_assembly; }
-		}
-
-		public override string GetNamespace (string nspace)
-		{
-			return nspace;
 		}
 
 		public void SetProductAssembly (string assembly)

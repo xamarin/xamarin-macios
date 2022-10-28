@@ -1,8 +1,5 @@
 using System;
-#if BGENERATOR
-using IKVM.Reflection;
-using Type = IKVM.Reflection.Type;
-#endif
+
 namespace ObjCRuntime {
 	//
 	// BindAsAttribute

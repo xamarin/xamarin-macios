@@ -7,8 +7,6 @@
 // Copyright 2013 Xamarin Inc. All rights reserved.
 //
 
-using System;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -16,11 +14,6 @@ using AppKit;
 using UIKit;
 #endif
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 using MonoTests.System.Net.Http;
 

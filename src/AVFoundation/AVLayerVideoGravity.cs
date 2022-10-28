@@ -33,17 +33,17 @@ using Foundation;
 using CoreFoundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 	// Convenience enum for native strings - AVAnimation.h
-	public enum AVLayerVideoGravity
-	{
-		ResizeAspect ,
+	public enum AVLayerVideoGravity {
+		ResizeAspect,
 		ResizeAspectFill,
 		Resize
 	}
 
-	partial class AVPlayerLayer
-	{
+	partial class AVPlayerLayer {
 		static internal AVLayerVideoGravity KeyToEnum (NSString key, bool clamp = true)
 		{
 			if (key == AVPlayerLayer.GravityResize)
@@ -57,7 +57,7 @@ namespace AVFoundation {
 			return (AVLayerVideoGravity) (-1);
 		}
 
-		static internal NSString EnumToKey (AVLayerVideoGravity vg)
+		static internal NSString EnumToKey (AVLayerVideoGravity? vg)
 		{
 			switch (vg) {
 			case AVLayerVideoGravity.ResizeAspect:
@@ -67,19 +67,13 @@ namespace AVFoundation {
 			case AVLayerVideoGravity.Resize:
 				return AVPlayerLayer.GravityResize;
 			default:
-				return null;
+				return null!;
 			}
 		}
-		
-		
+
+
 		// Should be VideoGravity only but previous binding was wrong
-		public AVLayerVideoGravity 
-#if XAMCORE_2_0
-			VideoGravity
-#else
-			LayerVideoGravity
-#endif
-		{
+		public AVLayerVideoGravity VideoGravity {
 			set {
 				WeakVideoGravity = EnumToKey (value);
 			}
@@ -90,16 +84,9 @@ namespace AVFoundation {
 	}
 
 #if !TVOS
-	partial class AVCaptureVideoPreviewLayer
-	{
+	partial class AVCaptureVideoPreviewLayer {
 		// Should be VideoGravity only but previous binding was wrong
-		public AVLayerVideoGravity 
-#if XAMCORE_2_0
-			VideoGravity
-#else
-			LayerVideoGravity
-#endif
-		{
+		public AVLayerVideoGravity VideoGravity {
 			set {
 				WeakVideoGravity = AVPlayerLayer.EnumToKey (value);
 			}
@@ -110,11 +97,10 @@ namespace AVFoundation {
 	}
 #endif
 
-	partial class AVPlayer
-	{
+	partial class AVPlayer {
 		public AVLayerVideoGravity? ExternalPlaybackVideoGravity {
 			set {
-				WeakExternalPlaybackVideoGravity = value.HasValue ? AVPlayerLayer.EnumToKey (value.Value) : null;
+				WeakExternalPlaybackVideoGravity = AVPlayerLayer.EnumToKey (value);
 			}
 			get {
 				var r = AVPlayerLayer.KeyToEnum (WeakExternalPlaybackVideoGravity, false);

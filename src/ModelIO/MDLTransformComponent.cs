@@ -1,6 +1,8 @@
-#if XAMCORE_2_0 && !XAMCORE_4_0
+#if !NET
 using OpenTK;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
+
+#nullable enable
 
 namespace ModelIO {
 	public partial class MDLTransformComponent_Extensions {

@@ -1,5 +1,6 @@
-#if XAMCORE_2_0 || !MONOMAC
 // Copyright 2015 Xamarin Inc. All rights reserved.
+
+#nullable enable
 
 using System;
 using System.Runtime.InteropServices;
@@ -36,4 +37,3 @@ namespace MetalPerformanceShaders {
 		}
 	}
 }
-#endif

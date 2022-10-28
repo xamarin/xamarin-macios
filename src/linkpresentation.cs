@@ -19,10 +19,15 @@ using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace LinkPresentation {
 
 	[ErrorDomain ("LPErrorDomain")]
 	[Mac (10,15), iOS (13,0)]
+	[TV (14,0)]
 	[Native]
 	public enum LPErrorCode : long {
 		Unknown = 1,
@@ -32,6 +37,7 @@ namespace LinkPresentation {
 	}
 
 	[Mac (10,15), iOS (13,0)]
+	[TV (14,0)]
 	[BaseType (typeof (NSObject))]
 	interface LPLinkMetadata : NSCopying, NSSecureCoding {
 
@@ -58,30 +64,37 @@ namespace LinkPresentation {
 	}
 
 	[Mac (10,15), iOS (13,0)]
+	[TV (14,0)]
 	[BaseType (typeof (UIView))]
 	interface LPLinkView {
 
 		[Export ("initWithFrame:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (CGRect rect);
+		NativeHandle Constructor (CGRect rect);
 
 		[Export ("initWithURL:")]
-		IntPtr Constructor (NSUrl url);
+		NativeHandle Constructor (NSUrl url);
 
 		[Export ("initWithMetadata:")]
-		IntPtr Constructor (LPLinkMetadata metadata);
+		NativeHandle Constructor (LPLinkMetadata metadata);
 
 		[Export ("metadata", ArgumentSemantic.Copy)]
 		LPLinkMetadata Metadata { get; set; }
 	}
 
 	[Mac (10,15), iOS (13,0)]
+	[NoTV]
 	[BaseType (typeof (NSObject))]
 	interface LPMetadataProvider {
 
 		[Async]
 		[Export ("startFetchingMetadataForURL:completionHandler:")]
 		void StartFetchingMetadata (NSUrl url, Action<LPLinkMetadata, NSError> completionHandler);
+
+		[Async]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Export ("startFetchingMetadataForRequest:completionHandler:")]
+		void StartFetchingMetadata (NSUrlRequest request, Action<LPLinkMetadata, NSError> completionHandler);
 
 		[Export ("cancel")]
 		void Cancel ();

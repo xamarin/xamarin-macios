@@ -47,27 +47,17 @@ namespace UIKit {
 	}
 	
 	public partial class UIControl {
-#if XAMCORE_2_0
-		static ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets = new
-			ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> ();
-#else
-		Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> targets;
-#endif
-		
+		static ConditionalWeakTable<UIControl,Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>>> allTargets;
 		public void AddTarget (EventHandler notification, UIControlEvent events)
 		{
-#if XAMCORE_2_0
+			if (allTargets == null)
+				allTargets = new ();
+
 			var targets = allTargets.GetValue (this, k =>
 			{
 				MarkDirty ();
 				return new Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> ();
 			});
-#else
-			if (targets == null) {
-				targets = new Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> ();
-				MarkDirty ();
-			}
-#endif
 
 			Dictionary<UIControlEvent, UIControlEventProxy> t;
 			if (!targets.TryGetValue (notification, out t)) {
@@ -88,7 +78,6 @@ namespace UIKit {
 
 		public void RemoveTarget (EventHandler notification, UIControlEvent events)
 		{
-#if XAMCORE_2_0
 			Dictionary<EventHandler, Dictionary<UIControlEvent, UIControlEventProxy>> targets;
 
 			if (allTargets == null)
@@ -96,10 +85,6 @@ namespace UIKit {
 
 			if (!allTargets.TryGetValue (this, out targets))
 				return;
-#else
-			if (targets == null)
-				return;
-#endif
 
 			Dictionary<UIControlEvent, UIControlEventProxy> t;
 			if (!targets.TryGetValue (notification, out t))
@@ -210,7 +195,13 @@ namespace UIKit {
 			}
 		}
 
+#if NET
+		[SupportedOSPlatform ("ios9.0")]
+		[SupportedOSPlatform ("maccatalyst")]
+		[SupportedOSPlatform ("tvos")]
+#else
 		[iOS (9,0)]
+#endif
 		public event EventHandler PrimaryActionTriggered {
 			add {
 				AddTarget (value, UIControlEvent.PrimaryActionTriggered);

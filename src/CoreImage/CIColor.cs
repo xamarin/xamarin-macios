@@ -15,6 +15,8 @@ using CoreGraphics;
 using UIKit;
 #endif
 
+#nullable enable
+
 namespace CoreImage {
 	public partial class CIColor {
 

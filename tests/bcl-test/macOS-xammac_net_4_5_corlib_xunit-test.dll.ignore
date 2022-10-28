@@ -190,3 +190,6 @@ System.IO.Tests.FileInfo_Exists.UnsharedFileExists
 Expected: True
 Actual:   False   Exception stack traces:   at System.Diagnostics.RemoteExecutorTestBase+RemoteInvokeHandle.Dispose (System.Boolean disposing) [0x0002d] in /Library/Frameworks/Xamarin.Mac.framework/Versions/Current/src/Xamarin.Mac/external/corefx/src/CoreFx.Private.TestUtilities/src/System/Diagnostics/RemoteExecutorTestBase.cs:241 
 System.IO.Tests.FileInfo_Exists.UnsharedFileExists
+
+# https://github.com/xamarin/maccore/issues/2296
+KLASS:System.Tests.DateTimeTests

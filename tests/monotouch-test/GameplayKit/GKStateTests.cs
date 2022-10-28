@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for GKState
 //
 // Authors:
@@ -11,17 +11,10 @@
 #if !__WATCHOS__
 
 using System;
-using OpenTK;
 
-#if XAMCORE_2_0
 using Foundation;
 using GameplayKit;
 using ObjCRuntime;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.GameplayKit;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.GameplayKit {
@@ -30,7 +23,7 @@ namespace MonoTouchFixtures.GameplayKit {
 	[Preserve (AllMembers = true)]
 	public class GKStateTests {
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Setup ()
 		{
 			TestRuntime.AssertXcodeVersion (7, 0);

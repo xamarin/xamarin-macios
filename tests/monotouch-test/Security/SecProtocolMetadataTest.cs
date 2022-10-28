@@ -1,4 +1,4 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -58,10 +58,17 @@ namespace MonoTouchFixtures.Security {
 				// Wait until the connection is ready.
 				Assert.True (ready.WaitOne (TimeSpan.FromSeconds (10)), "Connection is ready");
 
+#if NET
+				using (var m = connection.GetProtocolMetadata<NWTlsMetadata> (NWProtocolDefinition.CreateTlsDefinition ())) {
+					var s = m.SecProtocolMetadata;
+#else
 				using (var m = connection.GetProtocolMetadata (NWProtocolDefinition.TlsDefinition)) {
 					var s = m.TlsSecProtocolMetadata;
+#endif
 					Assert.False (s.EarlyDataAccepted, "EarlyDataAccepted");
+#if !NET
 					Assert.That (s.NegotiatedCipherSuite, Is.Not.EqualTo (SslCipherSuite.SSL_NULL_WITH_NULL_NULL), "NegotiatedCipherSuite");
+#endif
 					Assert.Null (s.NegotiatedProtocol, "NegotiatedProtocol");
 					Assert.That (s.NegotiatedProtocolVersion, Is.EqualTo (SslProtocol.Tls_1_2).Or.EqualTo (SslProtocol.Tls_1_3), "NegotiatedProtocolVersion");
 					Assert.NotNull (s.PeerPublicKey, "PeerPublicKey");
@@ -71,10 +78,10 @@ namespace MonoTouchFixtures.Security {
 
 					if (TestRuntime.CheckXcodeVersion (11, 0)) {
 						using (var d = s.CreateSecret ("Xamarin", 128)) {
-							Assert.That (d.Size, Is.EqualTo (128), "CreateSecret-1");
+							Assert.That (d.Size, Is.EqualTo ((nuint) 128), "CreateSecret-1");
 						}
 						using (var d = s.CreateSecret ("Microsoft", new byte [1], 256)) {
-							Assert.That (d.Size, Is.EqualTo (256), "CreateSecret-2");
+							Assert.That (d.Size, Is.EqualTo ((nuint) 256), "CreateSecret-2");
 						}
 
 						Assert.That (s.NegotiatedTlsProtocolVersion, Is.EqualTo (TlsProtocolVersion.Tls12).Or.EqualTo (TlsProtocolVersion.Tls13), "NegotiatedTlsProtocolVersion");

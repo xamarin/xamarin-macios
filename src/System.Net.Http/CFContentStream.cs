@@ -32,15 +32,12 @@ using System.IO;
 using System.Net;
 using System.Runtime.ExceptionServices;
 
-#if XAMCORE_4_0
+#if NET
 using CFNetwork;
 using CoreFoundation;
-#elif XAMCORE_2_0 || SYSTEM_NET_HTTP
+#else
 using CoreServices;
 using CoreFoundation;
-#else
-using MonoTouch.CoreServices;
-using MonoTouch.CoreFoundation;
 #endif
 
 namespace System.Net.Http
@@ -147,7 +144,10 @@ namespace System.Net.Http
 			}
 		}
 
-		protected internal override bool TryComputeLength (out long length)
+#if !NET
+		internal
+#endif
+		protected override bool TryComputeLength (out long length)
 		{
 			length = 0;
 			return false;

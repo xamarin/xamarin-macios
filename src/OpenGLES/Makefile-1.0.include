@@ -34,12 +34,12 @@ OPENTK_1_0_CSC_FLAGS = -warn:0 -unsafe -target:library -noconfig -publicsign -de
 # Xamarin.iOS
 
 $(IOS_BUILD_DIR)/reference/OpenTK-1.0%dll $(IOS_BUILD_DIR)/reference/OpenTK-1.0%pdb: $(IOS_BUILD_DIR)/reference/Xamarin.iOS.dll $(OPENTK_1_0_DEPENDENCIES) $(IOS_BUILD_DIR)/reference/OpenTK-1.0.dll.config
-	$(call Q_PROF_CSC,ios/unified) $(IOS_CSC) -nologo $(OPENTK_1_0_CSC_FLAGS) -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0
+	$(call Q_PROF_CSC,ios/unified) $(IOS_CSC) -nologo $(OPENTK_1_0_CSC_FLAGS) -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0 @$(BUILD_DIR)/ios-defines.rsp
 
 # Xamarin.TVOS
 
 $(TVOS_BUILD_DIR)/reference/OpenTK-1.0%dll $(TVOS_BUILD_DIR)/reference/OpenTK-1.0%pdb: $(TVOS_BUILD_DIR)/reference/Xamarin.TVOS.dll $(OPENTK_1_0_DEPENDENCIES) $(TVOS_BUILD_DIR)/reference/OpenTK-1.0.dll.config
-	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo $(OPENTK_1_0_CSC_FLAGS) -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:TVOS
+	$(call Q_PROF_CSC,tvos) $(TV_CSC) -nologo $(OPENTK_1_0_CSC_FLAGS) -out:$(basename $@).dll -r:$< -D:XAMCORE_2_0 -D:XAMCORE_3_0 -D:TVOS @$(BUILD_DIR)/tvos-defines.rsp
 
 # common targets
 

@@ -1,3 +1,4 @@
+#if !__MACCATALYST__
 using System;
 using System.Text;
 using Foundation;
@@ -14,7 +15,7 @@ namespace AppKit {
 
 		public static NSColor FromRgb (byte red, byte green, byte blue)
 		{
-			return FromRgba (red/255.0f, green/255.0f, blue/255.0f, 1.0f);
+			return FromRgba (red / 255.0f, green / 255.0f, blue / 255.0f, 1.0f);
 		}
 
 		public static NSColor FromRgb (int red, int green, int blue)
@@ -24,7 +25,7 @@ namespace AppKit {
 
 		public static NSColor FromRgba (byte red, byte green, byte blue, byte alpha)
 		{
-			return FromRgba (red/255.0f, green/255.0f, blue/255.0f, alpha/255.0f);
+			return FromRgba (red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
 		}
 
 		public static NSColor FromRgba (int red, int green, int blue, int alpha)
@@ -64,7 +65,7 @@ namespace AppKit {
 
 		public static NSColor FromDeviceRgb (byte red, byte green, byte blue)
 		{
-			return FromDeviceRgba (red/255.0f, green/255.0f, blue/255.0f, 1.0f);
+			return FromDeviceRgba (red / 255.0f, green / 255.0f, blue / 255.0f, 1.0f);
 		}
 
 		public static NSColor FromDeviceRgb (int red, int green, int blue)
@@ -74,7 +75,7 @@ namespace AppKit {
 
 		public static NSColor FromDeviceRgba (byte red, byte green, byte blue, byte alpha)
 		{
-			return FromDeviceRgba (red/255.0f, green/255.0f, blue/255.0f, alpha/255.0f);
+			return FromDeviceRgba (red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
 		}
 
 		public static NSColor FromDeviceRgba (int red, int green, int blue, int alpha)
@@ -139,7 +140,7 @@ namespace AppKit {
 
 		public static NSColor FromCalibratedRgb (byte red, byte green, byte blue)
 		{
-			return FromCalibratedRgba (red/255.0f, green/255.0f, blue/255.0f, 1.0f);
+			return FromCalibratedRgba (red / 255.0f, green / 255.0f, blue / 255.0f, 1.0f);
 		}
 
 		public static NSColor FromCalibratedRgb (int red, int green, int blue)
@@ -149,7 +150,7 @@ namespace AppKit {
 
 		public static NSColor FromCalibratedRgba (byte red, byte green, byte blue, byte alpha)
 		{
-			return FromCalibratedRgba (red/255.0f, green/255.0f, blue/255.0f, alpha/255.0f);
+			return FromCalibratedRgba (red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
 		}
 
 		public static NSColor FromCalibratedRgba (int red, int green, int blue, int alpha)
@@ -187,38 +188,19 @@ namespace AppKit {
 			if (components == null)
 				throw new ArgumentNullException ("components");
 
-			var pNativeFloatArray = IntPtr.Zero;
-			
-			try {
-				pNativeFloatArray = Marshal.AllocHGlobal (components.Length * IntPtr.Size);
-#if XAMCORE_2_0
-				nfloat.CopyArray (components, 0, pNativeFloatArray, components.Length);
-#else
-				Marshal.Copy (components, 0, pNativeFloatArray, components.Length);
-#endif
-				return _FromColorSpace (space, pNativeFloatArray, components.Length);
-			} finally {
-				Marshal.FreeHGlobal (pNativeFloatArray);
+			unsafe {
+				fixed (nfloat* componentsptr = &components [0]) {
+					return _FromColorSpace (space, (IntPtr) componentsptr, components.Length);
+				}
 			}
 		}
 
 		public void GetComponents (out nfloat [] components)
 		{
-			var pNativeFloatArray = IntPtr.Zero;
-
-			try {
-				var count = (int)ComponentCount;
-			 	components = new nfloat [count];
-				pNativeFloatArray = Marshal.AllocHGlobal (count * IntPtr.Size);
-				_GetComponents (pNativeFloatArray);
-
-#if XAMCORE_2_0
-				nfloat.CopyArray (pNativeFloatArray, components, 0, count);
-#else
-				Marshal.Copy (pNativeFloatArray, components, 0, count);
-#endif
-			} finally {
-				Marshal.FreeHGlobal (pNativeFloatArray);
+			components = new nfloat [(int) ComponentCount];
+			unsafe {
+				fixed (nfloat* componentsptr = &components [0])
+					_GetComponents ((IntPtr) componentsptr);
 			}
 		}
 
@@ -227,33 +209,25 @@ namespace AppKit {
 			try {
 				string name = this.ColorSpaceName;
 				if (name == "NSNamedColorSpace")
-					return this.LocalizedCatalogNameComponent +"/" + this.LocalizedColorNameComponent;
+					return this.LocalizedCatalogNameComponent + "/" + this.LocalizedColorNameComponent;
 				if (name == "NSPatternColorSpace")
 					return "Pattern Color: " + this.PatternImage.Name;
-				
+
 				StringBuilder sb = new StringBuilder (this.ColorSpace.LocalizedName);
-				nfloat[] components;
+				nfloat [] components;
 				this.GetComponents (out components);
 				if (components.Length > 0)
 					sb.Append ("(" + components [0]);
 				for (int i = 1; i < components.Length; i++)
 					sb.Append ("," + components [i]);
 				sb.Append (")");
-				
+
 				return sb.ToString ();
 			} catch {
 				//fallback to base method if we have an unexpected condition.
 				return base.ToString ();
 			}
 		}
-
-		[Obsolete ("Use 'UnderPageBackgroundColor' instead.")]
-		public static NSColor UnderPageBackground {
-			get {
-				return UnderPageBackgroundColor;
-			}
-		}
-
 	}
 }
-
+#endif // !__MACCATALYST__

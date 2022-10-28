@@ -7,6 +7,8 @@
 // Copyrigh 2019 Microsoft Inc
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.CompilerServices;
@@ -17,22 +19,30 @@ using CoreFoundation;
 using OS_nw_protocol_options=System.IntPtr;
 using nw_ws_request_t=System.IntPtr;
 
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
+
 namespace Network {
 
-	// this maps to `nw_ws_version_t` in Network.framework/Headers/ws_options.h (and not the enum from NetworkExtension)
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
-	public enum NWWebSocketVersion {
-		Invalid = 0,
-		Version13 = 1,
-	}
-
-	[TV (13,0), Mac (10,15), iOS (13,0), Watch (6,0)]
+#if NET
+	[SupportedOSPlatform ("tvos13.0")]
+	[SupportedOSPlatform ("macos10.15")]
+	[SupportedOSPlatform ("ios13.0")]
+	[SupportedOSPlatform ("maccatalyst")]
+#else
+	[TV (13,0)]
+	[Mac (10,15)]
+	[iOS (13,0)]
+	[Watch (6,0)]
+#endif
 	public class NWWebSocketOptions : NWProtocolOptions {
 		bool autoReplyPing = false;
 		bool skipHandShake = false;
-		nuint maximumMessageSize = (nuint) 0;
+		nuint maximumMessageSize;
 
-		internal NWWebSocketOptions (IntPtr handle, bool owns) : base (handle, owns) {}
+		[Preserve (Conditional = true)]
+		internal NWWebSocketOptions (NativeHandle handle, bool owns) : base (handle, owns) {}
 
 		[DllImport (Constants.NetworkLibrary)]
 		extern static IntPtr nw_ws_create_options (NWWebSocketVersion version);
@@ -44,8 +54,8 @@ namespace Network {
 
 		public void SetHeader (string header, string value) 
 		{
-			if (header == null)
-				throw new ArgumentNullException (header);
+			if (header is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (header));
 			nw_ws_options_add_additional_header (GetCheckedHandle(), header, value); 
 		}
 
@@ -54,13 +64,13 @@ namespace Network {
 
 		public void AddSubprotocol (string subprotocol)
 		{
-			if (subprotocol == null)
-				throw new ArgumentNullException (nameof (subprotocol));
+			if (subprotocol is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (subprotocol));
 			nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocol);
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ws_options_set_auto_reply_ping (OS_nw_protocol_options options, bool auto_reply_ping);
+		static extern void nw_ws_options_set_auto_reply_ping (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool auto_reply_ping);
 
 		public bool AutoReplyPing {
 			get { return autoReplyPing;}
@@ -82,7 +92,7 @@ namespace Network {
 		}
 
 		[DllImport (Constants.NetworkLibrary)]
-		static extern void nw_ws_options_set_skip_handshake (OS_nw_protocol_options options, bool skip_handshake);
+		static extern void nw_ws_options_set_skip_handshake (OS_nw_protocol_options options, [MarshalAs (UnmanagedType.I1)] bool skip_handshake);
 
 		public bool SkipHandShake {
 			get { return skipHandShake; }
@@ -102,7 +112,7 @@ namespace Network {
 		static void TrampolineClientRequestHandler (IntPtr block, nw_ws_request_t request)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWWebSocketRequest>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwRequest = new NWWebSocketRequest (request, owns: true);
 				del (nwRequest);
 			}
@@ -111,10 +121,10 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetClientRequestHandler (DispatchQueue queue, Action<NWWebSocketRequest> handler)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (handler));
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
 				block_handler.SetupBlockUnsafe (static_ClientRequestHandler, handler);

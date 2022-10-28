@@ -10,19 +10,19 @@
 using ObjCRuntime;
 using Foundation;
 using CoreGraphics;
+using CoreFoundation;
 using CoreLocation;
 using UIKit;
 using MediaPlayer;
 
+#nullable enable
+
 namespace AssetsLibrary {
 
-	// internally used (not exposed by ObjC)
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
-	public enum ALAssetType {
-		Video, Photo, Unknown
-	}
-
-	[Deprecated (PlatformName.iOS, 9, 0, message : "Use the 'Photos' API instead.")]
+#if !NET
+	[Deprecated (PlatformName.iOS, 9, 0, message: "Use the 'Photos' API instead.")]
+	// dotnet deprecation is handled by partial class in assetslibrary.cs
+#endif
 	public partial class ALAsset {
 		public ALAssetType AssetType {
 			get {
@@ -45,19 +45,15 @@ namespace AssetsLibrary {
 			get {
 				// note: this can return an NSString like: ALErrorInvalidProperty
 				// which causes an InvalidCastException with a normal cast
-				NSNumber n = ValueForProperty (_PropertyDuration) as NSNumber;
-				return n == null ? double.NaN : n.DoubleValue;
+				var n = ValueForProperty (_PropertyDuration) as NSNumber;
+				return n?.DoubleValue ?? double.NaN;
 			}
 		}
 
 		public ALAssetOrientation Orientation {
 			get {
 				NSNumber n = (NSNumber) ValueForProperty (_PropertyOrientation);
-#if XAMCORE_2_0
-				return (ALAssetOrientation) (int)n.NIntValue;
-#else
-				return (ALAssetOrientation) (int)n.IntValue;
-#endif
+				return (ALAssetOrientation) (int) n.NIntValue;
 			}
 		}
 
@@ -70,7 +66,7 @@ namespace AssetsLibrary {
 		public string [] Representations {
 			get {
 				var k = ValueForProperty (_PropertyRepresentations);
-				return NSArray.StringArrayFromHandle (k.Handle);
+				return CFArray.StringArrayFromHandle (k.Handle)!;
 			}
 		}
 
@@ -80,16 +76,13 @@ namespace AssetsLibrary {
 			}
 		}
 
-		public NSUrl AssetUrl {
+		public NSUrl? AssetUrl {
 			get {
 				// do not show an ArgumentNullException inside the
 				// debugger for releases before 6.0
-				if (_PropertyAssetURL == null)
-					return null;
-				return (NSUrl) ValueForProperty (_PropertyAssetURL);
+				return _PropertyAssetURL is not null ? (NSUrl) ValueForProperty (_PropertyAssetURL) : null;
 			}
 		}
 	}
 
 }
-

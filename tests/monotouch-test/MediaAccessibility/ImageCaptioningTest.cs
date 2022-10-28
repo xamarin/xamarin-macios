@@ -1,4 +1,4 @@
-﻿//
+//
 // MAImageCaptioning Unit Tests
 //
 // Authors:
@@ -32,7 +32,12 @@ namespace MonoTouchFixtures.MediaAccessibility {
 			using (NSUrl url = new NSUrl (NetworkResources.MicrosoftUrl)) {
 				var s = MAImageCaptioning.GetCaption (url, out var e);
 				Assert.Null (s, "remote / return value");
-				Assert.Null (e, "remote / no error"); // weird should be an "image on disk"
+				if (e != null && e.Description.Contains ("Invalid url:")) {
+					Assert.Fail ("Ignore this failure when network is down"); // could not connect to the network, fail and add a nice reason
+				} else {
+					Assert.Null (e, "remote / no error"); // weird should be an "image on disk"
+
+				}
 			}
 			string file = Path.Combine (NSBundle.MainBundle.ResourcePath, "basn3p08.png");
 			file = file.Replace (" ", "%20");
@@ -68,7 +73,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 
 			var temp = String.Empty;
 			using (NSUrl url = new NSUrl (NSBundle.MainBundle.ResourceUrl.AbsoluteString + "basn3p08.png")) {
-#if __MACOS__
+#if __MACOS__ || __MACCATALYST__
 				var read_only = false;
 #else
 				var read_only = Runtime.Arch == Arch.DEVICE;
@@ -78,7 +83,7 @@ namespace MonoTouchFixtures.MediaAccessibility {
 					Assert.NotNull (e, "ro / set / no error"); // weird, it can't be saved back to the file metadata
 
 					var s = MAImageCaptioning.GetCaption (url, out e);
-					Assert.Null (s, "ro / roundtrip"); // not very surprising since Set can't save it
+					Assert.Null (s, "ro / roundtrip 1"); // not very surprising since Set can't save it
 					Assert.Null (e, "ro / get / no error");
 
 					Assert.False (MAImageCaptioning.SetCaption (url, "xamarin", out e), "Set 2");
@@ -90,13 +95,27 @@ namespace MonoTouchFixtures.MediaAccessibility {
 					Assert.Null (e, "ro / set / no error"); // weird, it can't be saved back to the file metadata
 
 					var s = MAImageCaptioning.GetCaption (url, out e);
-					Assert.Null (s, "ro / roundtrip"); // not very surprising since Set can't save it
+					if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
+						Assert.AreEqual ("xamarin", s, "ro / roundtrip 2");
+					} else {
+						Assert.Null (s, "ro / roundtrip 3"); // not very surprising since Set can't save it
+					}
 					Assert.Null (e, "ro / get / no error");
 
 					Assert.True (MAImageCaptioning.SetCaption (url, "xamarin", out e), "Set 2");
 					s = MAImageCaptioning.GetCaption (url, out e);
-					Assert.Null (s, "ro / back to original");
+					if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
+						Assert.AreEqual ("xamarin", s, "ro / back to original");
+					} else {
+						Assert.Null (s, "ro / back to original");
+					}
 					Assert.Null (e, "ro / get back / no error");
+
+					// Restore original value
+					Assert.True (MAImageCaptioning.SetCaption (url, null, out e), "Set 2");
+					s = MAImageCaptioning.GetCaption (url, out e);
+					Assert.Null (s, "ro / back to null");
+					Assert.Null (e, "ro / get back null / no error");
 				}
 
 				// 2nd try with a read/write copy
@@ -108,12 +127,20 @@ namespace MonoTouchFixtures.MediaAccessibility {
 				Assert.Null (e, "rw / set / no error"); // weird, it can't be saved back to the file metadata
 
 				var s = MAImageCaptioning.GetCaption (rw_url, out e);
-				Assert.Null (s, "rw / roundtrip"); // :(
+				if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
+					Assert.AreEqual ("xamarin", s, "rw / roundtrip"); // :)
+				} else {
+					Assert.Null (s, "rw / roundtrip"); // :(
+				}
 				Assert.Null (e, "rw / get / no error");
 
 				Assert.True (MAImageCaptioning.SetCaption (rw_url, "xamarin", out e), "Set 2");
 				s = MAImageCaptioning.GetCaption (rw_url, out e);
-				Assert.Null (s, "rw / back to original");
+				if (TestRuntime.CheckXcodeVersion (12, TestRuntime.MinorXcode12APIMismatch)) {
+					Assert.AreEqual ("xamarin", s, "rw / back to original");
+				} else {
+					Assert.Null (s, "rw / back to original");
+				}
 				Assert.Null (e, "rw / get back / no error");
 			}
 		}

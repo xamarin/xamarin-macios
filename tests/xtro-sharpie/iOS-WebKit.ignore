@@ -1,5 +1,0 @@
-# Moved into a *deprecated* category that is now visible from iOS (but were only on macOS before)
-!missing-selector! WKPreferences::javaEnabled not bound
-!missing-selector! WKPreferences::plugInsEnabled not bound
-!missing-selector! WKPreferences::setJavaEnabled: not bound
-!missing-selector! WKPreferences::setPlugInsEnabled: not bound

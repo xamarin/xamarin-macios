@@ -8,18 +8,11 @@
 //
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 using WatchConnectivity;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using MonoTouch.WatchConnectivity;
 #endif
 using NUnit.Framework;
 
@@ -39,13 +32,24 @@ namespace Introspection {
 		protected override bool Skip (Type type)
 		{
 			switch (type.Namespace) {
+			case "Chip":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
-				if (Runtime.Arch == Arch.SIMULATOR)
+			case "MLCompute":
+			case "MediaSetup":
+			case "Phase":
+			case "ThreadNetwork":
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
 			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
@@ -57,7 +61,7 @@ namespace Introspection {
 			case "PKPushCredentials":
 			case "PKPushPayload":
 			case "PKPushRegistry":
-				if (Runtime.Arch != Arch.DEVICE)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 
 				// Requires iOS 8.2 or later in 32-bit mode
@@ -65,14 +69,25 @@ namespace Introspection {
 					return true;
 
 				break;
+			case "MTLCounter":
+			case "MTLCounterSampleBuffer":
+			case "MTLCounterSet":
 			case "MTLFence":
 			case "MTLHeap":
+			case "MTLSharedTextureHandle":
 			case "RPSystemBroadcastPickerView": // Symbol not available in simulator
-				if (Runtime.Arch != Arch.DEVICE)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 
 				// Requires iOS 10
 				if (!TestRuntime.CheckXcodeVersion (8, 0))
+					return true;
+				break;
+			case "CAMetalLayer":
+			case "MTLFunctionConstantValues":
+			case "MTLHeapDescriptor":
+				// Symbol not available in simulator - but works on BigSur (others might too)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 			case "CMMovementDisorderManager":
@@ -82,7 +97,7 @@ namespace Introspection {
 				// but that web page doesn't explain anything (it's mostly empty, so this is probably just lagging documentation)
 				// I also tried enabling every entitlement in Xcode, but it still didn't work.
 				return true;
-#if __WATCHOS__ && !XAMCORE_4_0
+#if __WATCHOS__ && !NET
 			case "INCarAirCirculationModeResolutionResult":
 			case "INCarAudioSourceResolutionResult":
 			case "INCarDefrosterResolutionResult":
@@ -90,7 +105,7 @@ namespace Introspection {
 			case "INRadioTypeResolutionResult":
 			case "INRelativeSettingResolutionResult":
 			case "INRelativeReferenceResolutionResult":
-				// These were bound by mistake, and they're gone in XAMCORE_4_0.
+				// These were bound by mistake, and they're gone in NET.
 				return true;
 #endif
 			case "SNClassificationResult": // Class is not being created properly
@@ -124,25 +139,22 @@ namespace Introspection {
 			case "MonoTouch.CoreAudioKit":
 			case "CoreAudioKit":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
+				if (TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
 
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 			case "WatchConnectivity":
 			case "MonoTouch.WatchConnectivity":
 				if (!WCSession.IsSupported)
 					return true;
 				break;
-#endif // !__TVOS__
+#endif // HAS_WATCHCONNECTIVITY
 			}
 
 			switch (type.Name) {
 			case "CAMetalLayer":
-				// that one still does not work with iOS9 beta 4
-				if (Runtime.Arch == Arch.SIMULATOR)
-					return true;
-				break;
+				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (11, 0);
 #if !XAMCORE_3_0
 				// mistake (base type) fixed by a breaking change
 			case "MFMailComposeViewControllerDelegate":
@@ -165,9 +177,41 @@ namespace Introspection {
 				break;
 #endif
 			case "UIAccessibilityElement":
+				if (protocolName == "UIResponderStandardEditActions" && !TestRuntime.CheckXcodeVersion (11, 0))
+					return true;
 				if (protocolName == "UIUserActivityRestoring")
 					return true;
 				break;
+			case "ARImageAnchor":
+				// both type and protocol were added in iOS 11.3 but the conformance, for that type, started with iOS 12.0
+				if (protocolName == "ARTrackable")
+					return !TestRuntime.CheckXcodeVersion (10,0);
+				break;
+			case "PHLivePhoto":
+				if (protocolName == "NSItemProviderReading")
+					return !TestRuntime.CheckXcodeVersion (12,0);
+				break;
+#if __MACCATALYST__
+			case "BCChatButton":
+			case "PKAddPassButton":
+			case "PKPaymentButton":
+			case "UIButton":
+			case "UIControl":
+			case "UISegmentedControl":
+			case "UITextField":
+			case "UIDatePicker":
+			case "UIPageControl":
+			case "UIRefreshControl":
+			case "UISearchTextField":
+			case "UISlider":
+			case "UIStepper":
+			case "UISwitch":
+			case "ASAuthorizationAppleIdButton":
+			case "INUIAddVoiceShortcutButton":
+				if (protocolName == "UIContextMenuInteractionDelegate")
+					return !TestRuntime.CheckXcodeVersion (12, 0);
+				break;
+#endif
 			}
 
 			switch (protocolName) {
@@ -201,18 +245,6 @@ namespace Introspection {
 				case "HMEvent":
 				case "HMEventTrigger":
 				case "HMLocationEvent":
-				// new PassKit for payment also *privately* conforms to NSCoding
-				case "PKPayment":
-				case "PKPaymentSummaryItem":
-				case "PKShippingMethod":
-				case "PKPaymentRequest":
-				case "PKPaymentToken":
-				case "PKLabeledValue":
-				case "PKPaymentAuthorizationResult":
-				case "PKPaymentRequestShippingMethodUpdate":
-				case "PKPaymentRequestUpdate":
-				case "PKPaymentRequestPaymentMethodUpdate":
-				case "PKPaymentRequestShippingContactUpdate":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -262,8 +294,6 @@ namespace Introspection {
 				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
 				// iOS 11.3
-				case "PKSuicaPassProperties": // Conformance not in headers
-				case "PKTransitPassProperties": // Conformance not in headers
 				case "ARReferenceImage": // Conformance removed from headers in Xcode 9.3 Beta 4
 				case "NKAssetDownload":
 				case "NKIssue":
@@ -280,11 +310,7 @@ namespace Introspection {
 				case "ARDirectionalLightEstimate":
 				case "ARFrame":
 				case "ARLightEstimate":
-				case "ASCredentialProviderExtensionContext":
 				case "ILClassificationUIExtensionContext": // Conformance not in headers
-				// iOS 12.2
-				case "PKDisbursementRequest":
-				case "PKDisbursementVoucher":
 					return true;
 				// iOS 13 beta 1 (to be reviewed)
 				case "LAContext":
@@ -315,6 +341,11 @@ namespace Introspection {
 				case "HKAudiogramSensitivityPoint": // Conformance not in headers
 				case "HMAccessoryOwnershipToken": // Conformance not in headers
 				case "HMAddAccessoryRequest": // Conformance not in headers
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -396,6 +427,41 @@ namespace Introspection {
 				case "TVTopShelfSectionedItem":
 					return true;
 #endif
+				// Xcode 12 beta 2
+				case "MSServiceAccount":
+				case "SRAmbientLightSample":
+				case "SRApplicationUsage":
+				case "SRDeviceUsageReport":
+				case "SRKeyboardMetrics":
+				case "SRKeyboardProbabilityMetric`1":
+				case "SRMessagesUsageReport":
+				case "SRNotificationUsage":
+				case "SRPhoneUsageReport":
+				case "SRVisit":
+				case "SRWebUsage":
+					return true;
+				// Xcode 12 beta 6
+				case "CPButton": // conformance not in headers
+				case "CPContactCallButton": // conformance not in headers
+				case "CPContactDirectionsButton": // conformance not in headers
+				case "CPContactMessageButton": // conformance not in headers
+				case "CPMessageListItem": // Conformance not in headers
+				case "CPMessageListItemLeadingConfiguration": // conformance not in headers
+				case "CPMessageListItemTrailingConfiguration": // conformance not in headers
+				case "CPTextButton": // conformance not in headers
+				case "CPListImageRowItem": // conformance not in headers
+				case "CPListItem": // conformance not in headers
+					return true;
+				// Xcode 13
+				case "ARDepthData":
+				case "ARSkeletonDefinition": // device only
+				case "ARVideoFormat": // device only
+				case "NSMergePolicy":
+				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
+				case "SRTextInputSession": // conformance not in headers
+				case "UISheetPresentationControllerDetent": // Conformance not in headers
+				case "UIWindowSceneActivationConfiguration": // Conformance not in headers
+					return true;
 				}
 				break;
 			case "NSSecureCoding":
@@ -420,18 +486,6 @@ namespace Introspection {
 				case "HMEventTrigger":
 				case "HMLocationEvent":
 					return true;
-				// new PassKit for payment also *privately* conforms to NSCoding
-				case "PKPayment":
-				case "PKPaymentSummaryItem":
-				case "PKShippingMethod":
-				case "PKPaymentRequest":
-				case "PKPaymentToken":
-				case "PKLabeledValue":
-				case "PKPaymentAuthorizationResult":
-				case "PKPaymentRequestShippingMethodUpdate":
-				case "PKPaymentRequestUpdate":
-				case "PKPaymentRequestPaymentMethodUpdate":
-				case "PKPaymentRequestShippingContactUpdate":
 				// iOS9
 				case "UIFont":
 				case "AVAssetTrackSegment":
@@ -490,8 +544,6 @@ namespace Introspection {
 				case "UIDocumentBrowserAction": // Conformance not in headers
 					return true;
 				// iOS 11.3
-				case "PKSuicaPassProperties": // Conformance not in headers
-				case "PKTransitPassProperties": // Conformance not in headers
 				case "ARReferenceImage": // Conformance removed from headers in Xcode 9.3 Beta 4
 				case "NKAssetDownload":
 				case "NKIssue":
@@ -505,11 +557,7 @@ namespace Introspection {
 				case "HMAccessControl":
 					return true;
 				// Xcode 10
-				case "ASCredentialProviderExtensionContext":
 				case "ILClassificationUIExtensionContext": // Conformance not in headers
-				// iOS 12.2
-				case "PKDisbursementRequest":
-				case "PKDisbursementVoucher":
 					return true;
 				// iOS 13 beta 1 (to be reviewed)
 				case "LAContext":
@@ -543,6 +591,11 @@ namespace Introspection {
 				case "HKAudiogramSensitivityPoint":  // Conformance not in headers
 				case "HMAccessoryOwnershipToken":  // Conformance not in headers
 				case "HMAddAccessoryRequest":  // Conformance not in headers
+				case "OSLogEntry":
+				case "OSLogEntryActivity":
+				case "OSLogEntryBoundary":
+				case "OSLogEntryLog":
+				case "OSLogEntrySignpost":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTemplate":
@@ -624,6 +677,39 @@ namespace Introspection {
 				case "TVTopShelfSectionedItem":
 					return true;
 #endif
+				// Xcode 12 beta 2
+				case "MSServiceAccount":
+				case "SRAmbientLightSample":
+				case "SRApplicationUsage":
+				case "SRDeviceUsageReport":
+				case "SRKeyboardMetrics":
+				case "SRKeyboardProbabilityMetric`1":
+				case "SRMessagesUsageReport":
+				case "SRNotificationUsage":
+				case "SRPhoneUsageReport":
+				case "SRVisit":
+				case "SRWebUsage":
+					return true;
+				// Xcode 12 beta 6
+				case "CPButton": // conformance not in headers
+				case "CPContactCallButton": // conformance not in headers
+				case "CPContactDirectionsButton": // conformance not in headers
+				case "CPContactMessageButton": // conformance not in headers
+				case "CPMessageListItemLeadingConfiguration": // conformance not in headers
+				case "CPMessageListItemTrailingConfiguration": // conformance not in headers
+				case "CPTextButton": // conformance not in headers
+				case "CPListImageRowItem": // conformance not in headers
+					return true;
+				// Xcode 13
+				case "ARDepthData":
+				case "ARSkeletonDefinition": // device only
+				case "ARVideoFormat": // device only
+				case "NSMergePolicy":
+				case "SFSafariViewControllerPrewarmingToken": // conformance not in headers
+				case "SRTextInputSession": // conformance not in headers
+				case "UISheetPresentationControllerDetent": // conformance not in headers
+				case "CAConstraintLayoutManager": // Not declared in header file
+					return true;
 				}
 				break;
 			case "NSCopying":
@@ -634,10 +720,6 @@ namespace Introspection {
 				case "MPMediaItemCollection":
 				case "MPMediaEntity":
 					return true; // skip
-					// new PassKit for payment also *privately* conforms to NSCoding
-				case "PKPaymentSummaryItem":
-				case "PKShippingMethod":
-					return true; // skip
 				// iOS9
 				case "ACAccount":
 				case "HKCategorySample":
@@ -646,7 +728,6 @@ namespace Introspection {
 				case "HKQuantitySample":
 				case "HKSample":
 				case "HKWorkout":
-				case "PKPaymentMethod":
 				// iOS 10
 				case "CXCallDirectoryExtensionContext":
 				case "HKDocumentSample":
@@ -658,7 +739,6 @@ namespace Introspection {
 				case "ACAccountCredential": // b2: Conformance not in headers
 				case "ILMessageFilterExtensionContext": // b2: Conformance not in headers
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
-				case "NSFileProviderDomain": // Conformance not in headers
 				case "FPUIActionExtensionContext": // Conformance not in headers
 				case "CXCall": // Conformance not in headers
 				case "UIDocumentBrowserAction": // Conformance not in headers
@@ -667,16 +747,14 @@ namespace Introspection {
 				case "ARDirectionalLightEstimate":
 					return true;
 				// iOS 11.3
-				case "PKSuicaPassProperties": // Conformance not in headers
-				case "PKTransitPassProperties": // Conformance not in headers
 				case "WKPreferences": // Conformance not in headers
+				case "QLPreviewSceneActivationConfiguration":
 					return true;
 #if __WATCHOS__
 				case "CLKComplicationTimelineEntry":
 					return true;
 #endif
 				// Xcode 10
-				case "ASCredentialProviderExtensionContext":
 				case "ILClassificationUIExtensionContext": // Conformance not in headers
 					return true;
 				// iOS 12.2
@@ -694,6 +772,29 @@ namespace Introspection {
 				case "HKDiscreteQuantitySample": // Conformance not in headers
 				case "HKAudiogramSample": // Conformance not in headers
 				case "UIImage": // only complains on tvOS beta 6
+				case "HMAccessoryOwnershipToken":
+					return true;
+				// Xcode 12 beta 2
+				case "HKElectrocardiogram": // Conformance not in headers
+					return true;
+#if __MACCATALYST__
+				// Conformance not in headers
+				case "EKCalendar":
+				case "EKCalendarItem":
+				case "EKEvent":
+				case "EKObject":
+				case "EKReminder":
+				case "EKSource":
+					return true;
+#endif
+				// Xcode 13
+				case "PHCloudIdentifier":
+				case "PHCloudIdentifierMapping":
+				case "NSEntityMapping":
+				case "NSMappingModel":
+				case "NSMergePolicy":
+				case "NSPropertyMapping":
+				case "UIWindowSceneActivationConfiguration":
 					return true;
 				}
 				break;
@@ -709,6 +810,25 @@ namespace Introspection {
 				case "HMCharacteristicEvent": // Selectors not available on 32 bit
 				// iOS 13 beta 1 (to be reviewed)
 				case "UIKeyCommand":
+					return true;
+#if __MACCATALYST__
+				// Conformance not in headers
+				case "EKAlarm":
+				case "EKCalendar":
+				case "EKCalendarItem":
+				case "EKEvent":
+				case "EKObject":
+				case "EKParticipant":
+				case "EKRecurrenceRule":
+				case "EKReminder":
+				case "EKSource":
+				case "EKStructuredLocation":
+					return true;
+#endif
+				// Xcode 13
+				case "NSMergePolicy":
+				case "UNNotificationSettings":
+				case "UIWindowSceneActivationConfiguration":
 					return true;
 				}
 				break;
@@ -915,6 +1035,10 @@ namespace Introspection {
 				case "PKPaymentButton":
 				case "PKAddPassButton":
 				case "INUIAddVoiceShortcutButton":
+					return true;
+				// xcode 12 beta 1
+				case "UIBarButtonItem":
+				case "MKUserTrackingBarButtonItem":
 					return true;
 				}
 				break;

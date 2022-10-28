@@ -21,6 +21,7 @@
 		<_DebugFileExt Condition="'$(_DebugFileExt)' == ''">.mdb</_DebugFileExt>
 
 		<!-- Enable nuget package conflict resolution -->
+		<!-- This must be set before importing Microsoft.CSharp.targets -->
 		<ResolveAssemblyConflicts>true</ResolveAssemblyConflicts>
 	</PropertyGroup>
 

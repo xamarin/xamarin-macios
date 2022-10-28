@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for AVPlayerItemVideoOutput
 //
 // Authors:
@@ -10,17 +10,12 @@
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using AVFoundation;
 using CoreVideo;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch.AVFoundation;
-using MonoTouch.CoreVideo;
-using MonoTouch.Foundation;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.AVFoundation {
 
@@ -31,7 +26,7 @@ namespace MonoTouchFixtures.AVFoundation {
 		[Test]
 		public void Ctor_CVPixelBufferAttributes ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 8, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 8, throwIfOtherPlatform: false);
 
 			var attributes = new CVPixelBufferAttributes () {
 				PixelFormatType = CVPixelFormatType.CV32BGRA

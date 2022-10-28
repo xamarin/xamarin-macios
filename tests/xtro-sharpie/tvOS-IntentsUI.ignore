@@ -1,0 +1,5 @@
+# fails on intro rdar: https://github.com/xamarin/maccore/issues/2286
+!missing-selector! +INImage::imageSizeForIntentResponse: not bound
+!missing-selector! +INImage::imageWithCGImage: not bound
+!missing-selector! +INImage::imageWithUIImage: not bound
+!missing-selector! INImage::fetchUIImageWithCompletion: not bound

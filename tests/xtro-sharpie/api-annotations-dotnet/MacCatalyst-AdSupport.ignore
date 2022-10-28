@@ -1,0 +1,2 @@
+## weird case, it was available on macOS (xcode12 GM) but later removed so it's not in iOS, tvOS or macOS
+## there's no annotation specific for Catalyst but it does not make sense to have it

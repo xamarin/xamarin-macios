@@ -10,18 +10,11 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
 using UIKit;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 using WatchConnectivity;
-#endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using MonoTouch.WatchConnectivity;
 #endif
 using NUnit.Framework;
 
@@ -44,30 +37,40 @@ namespace Introspection {
 			// they don't answer on the simulator (Apple implementation does not work) but fine on devices
 			case "GameController":
 			case "MonoTouch.GameController":
-				return Runtime.Arch == Arch.SIMULATOR;
+			case "MLCompute": // xcode 12 beta 3
+				return TestRuntime.IsSimulatorOrDesktop;
 
 			case "CoreAudioKit":
 			case "MonoTouch.CoreAudioKit":
 			case "Metal":
 			case "MonoTouch.Metal":
 				// they works with iOS9 beta 4 (but won't work on older simulators)
-				if ((Runtime.Arch == Arch.SIMULATOR) && !TestRuntime.CheckXcodeVersion (7, 0))
+				if (TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (7, 0))
 					return true;
 				break;
+			case "Chip":
 			case "MetalKit":
 			case "MonoTouch.MetalKit":
 			case "MetalPerformanceShaders":
 			case "MonoTouch.MetalPerformanceShaders":
-				if (Runtime.Arch == Arch.SIMULATOR)
+			case "Phase":
+			case "ThreadNetwork":
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
 			// Xcode 9
 			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
 			case "DeviceCheck":
-				if (Runtime.Arch == Arch.SIMULATOR)
+				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 
@@ -77,13 +80,18 @@ namespace Introspection {
 //				if (Runtime.Arch == Arch.DEVICE)
 //					return true;
 //				break;
-#if !__TVOS__
+#if HAS_WATCHCONNECTIVITY
 			case "WatchConnectivity":
 			case "MonoTouch.WatchConnectivity":
 				if (!WCSession.IsSupported)
 					return true;
 				break;
-#endif // !__TVOS__
+#endif // HAS_WATCHCONNECTIVITY
+			case "ShazamKit":
+				// ShazamKit is not fully supported in the simulator
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
 			}
 
 			switch (type.Name) {
@@ -97,13 +105,19 @@ namespace Introspection {
 
 			// Metal is not available on the simulator
 			case "CAMetalLayer":
+				return TestRuntime.IsSimulatorOrDesktop && !TestRuntime.CheckXcodeVersion (11, 0);
 			case "SKRenderer":
-				return (Runtime.Arch == Arch.SIMULATOR);
+				return TestRuntime.IsSimulatorOrDesktop;
 
 			// iOS 10 - this type can only be instantiated on devices, but the selectors are forwarded
 			//  to a MTLHeapDescriptorInternal and don't respond - so we'll add unit tests for them
 			case "MTLHeapDescriptor":
-				return Runtime.Arch == Arch.DEVICE;
+			case "MTLLinkedFunctions":
+			case "MTLRenderPipelineDescriptor":
+			case "MTLTileRenderPipelineDescriptor":
+			case "MTLRasterizationRateLayerDescriptor":
+			case "MTLRasterizationRateMapDescriptor":
+				return TestRuntime.IsSimulatorOrDesktop;
 #if __WATCHOS__
 				// The following watchOS 3.2 Beta 2 types Fails, but they can be created we verified using an ObjC app, we will revisit before stable
 			case "INPersonResolutionResult":
@@ -163,6 +177,13 @@ namespace Introspection {
 			var declaredType = method.DeclaringType;
 
 			switch (declaredType.Name) {
+			case "AVUrlAsset":
+				switch (name) {
+				// fails because it is in-lined via protocol AVContentKeyRecipient
+				case "contentKeySession:didProvideContentKey:":
+					return true;
+				}
+				break;
 			case "NSNull":
 				switch (name) {
 				// conformance to CAAction started with iOS8
@@ -263,14 +284,14 @@ namespace Introspection {
 				case "shouldUpdateFocusInContext:":
 				case "updateFocusIfNeeded":
 				case "canBecomeFocused":
-#if !__TVOS__
+#if !__TVOS__ && !__MACCATALYST__
 				case "preferredFocusedView":
 #endif
 					int major = declaredType.Name == "SKNode" ? 8 : 9;
 					if (!TestRuntime.CheckXcodeVersion (major, 0))
 						return true;
 					break;
-#if __TVOS__
+#if __TVOS__ || __MACCATALYST__
 				case "preferredFocusedView":
 					return true;
 #endif
@@ -279,7 +300,7 @@ namespace Introspection {
 			case "CIContext":
 				switch (name) {
 				case "render:toIOSurface:bounds:colorSpace:":
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
@@ -294,7 +315,7 @@ namespace Introspection {
 					if (TestRuntime.CheckXcodeVersion (11, 0))
 						break;
 					// did not work on simulator before iOS 13 (shortcut logic)
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					// was a private framework (on iOS) before Xcode 9.0 (shortcut logic)
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
@@ -305,7 +326,7 @@ namespace Introspection {
 			case "CIRenderDestination":
 				switch (name) {
 				case "initWithIOSurface:":
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
@@ -319,7 +340,7 @@ namespace Introspection {
 				case "texImageIOSurface:target:internalFormat:width:height:format:type:plane:":
 				case "setTessellator:":
 				case "tessellator":
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return !TestRuntime.CheckXcodeVersion (11, 0);
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
 						return true;
@@ -349,9 +370,72 @@ namespace Introspection {
 					break;
 				}
 				break;
-			}
+#if __TVOS__ || __MACCATALYST__
+			// broken with Xcode 12 beta 1
+			case "CKDiscoveredUserInfo":
+				switch (name) {
+				case "copyWithZone:":
+				case "encodeWithCoder:":
+					if (TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+			case "CKSubscription":
+				switch (name) {
+				case "setZoneID:":
+					if (TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+#endif
+#if __IOS__
+			// broken with Xcode 12 beta 1
+			case "ARBodyTrackingConfiguration":
+			case "ARImageTrackingConfiguration":
+			case "ARObjectScanningConfiguration":
+			case "ARWorldTrackingConfiguration":
+				switch (name) {
+				case "isAutoFocusEnabled":
+				case "setAutoFocusEnabled:":
+					if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+			case "ARReferenceImage":
+				switch (name) {
+				case "copyWithZone:":
+					if (TestRuntime.IsSimulatorOrDesktop && TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+			// ARImageAnchor was added in iOS 11.3 but the conformance to ARTrackable, where `isTracked` comes from, started with iOS 12.0
+			case "ARImageAnchor":
+				switch (name) {
+				case "isTracked":
+					if (!TestRuntime.CheckXcodeVersion (10,0))
+						return true;
+					break;
+				}
+				break;
+#endif
+#if __WATCHOS__
+			case "INUserContext":
+				switch (name) {
+				case "encodeWithCoder:":
+					if (!TestRuntime.CheckXcodeVersion (12, 0))
+						return true;
+					break;
+				}
+				break;
+#endif
+			break;
+		}
 
-			switch (name) {
+		switch (name) {
 			// UIResponderStandardEditActions - stuffed inside UIResponder
 			case "cut:":
 			case "copy:":
@@ -359,6 +443,10 @@ namespace Introspection {
 			case "delete:":
 			case "select:":
 			case "selectAll:":
+			case "pasteAndGo:":
+			case "pasteAndMatchStyle:":
+			case "pasteAndSearch:":
+			case "print:":
 			// A subclass of UIResponder typically implements this method...
 			case "toggleBoldface:":
 			case "toggleItalics:":
@@ -374,29 +462,6 @@ namespace Introspection {
 				if (declaredType.Name == "UIResponder")
 					return true;
 				break;
-#if !XAMCORE_2_0
-			case "enableInputClicksWhenVisible":
-				// defined in UIInputViewAudioFeedback protocol
-				// meant to be added (not part of iOS) in custom UIView and defined (by default) by MonoTouch
-				if (declaredType.Name == "UIView")
-					return true;
-				break;
-			case "subtitle":
-				// exists because of MKAnnotation protocol
-				if (declaredType.Name == "MKPlacemark")
-					return true;
-				break;
-			case "setCoordinate:":
-				// exists because of MKAnnotation protocol
-				if (declaredType.Name == "MKShape" || declaredType.Name == "MKPlacemark")
-					return true;
-				break;
-			case "intersectsMapRect:":
-				// optional method of a protocol MKTileOverlay implements.
-				if (declaredType.Name == "MKTileOverlay")
-					return true;
-				break;
-#endif
 			case "autocapitalizationType":
 			case "setAutocapitalizationType:":
 			case "autocorrectionType":
@@ -711,7 +776,7 @@ namespace Introspection {
 
 			// on iOS8.0 this does not work on the simulator (but works on devices)
 			case "language":
-				if (declaredType.Name == "AVSpeechSynthesisVoice" && TestRuntime.CheckXcodeVersion (6, 0) && Runtime.Arch == Arch.SIMULATOR)
+				if (declaredType.Name == "AVSpeechSynthesisVoice" && TestRuntime.CheckXcodeVersion (6, 0) && TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
 
@@ -736,7 +801,7 @@ namespace Introspection {
 				switch (declaredType.Name) {
 				case "SCNRenderer":
 				case "SCNView":
-					return Runtime.Arch == Arch.SIMULATOR;
+					return TestRuntime.IsSimulatorOrDesktop;
 				}
 				break;
 
@@ -749,7 +814,6 @@ namespace Introspection {
 				}
 				break;
 
-#if XAMCORE_2_0
 			// some types adopted NS[Secure]Coding after the type was added
 			// and for unified that's something we generate automatically (so we can't put [iOS] on them)
 			case "encodeWithCoder:":
@@ -776,15 +840,6 @@ namespace Introspection {
 #endif
 				}
 				break;
-#else
-			// that was a binding mistake - the API should not have been exposed (not in the header file)
-			// we'll ignore them for compat - but won't provide them in the new assemblies
-			case "backgroundImageForBarMetrics:":
-			case "setBackgroundImage:forBarMetrics:":
-				if (declaredType.Name == "UISearchBar" && TestRuntime.CheckXcodeVersion (6, 0))
-					return true;
-				break;
-#endif
 			case "mutableCopyWithZone:":
 				switch (declaredType.Name) {
 				case "HMLocationEvent":
@@ -814,10 +869,20 @@ namespace Introspection {
 					if (TestRuntime.CheckXcodeVersion (11, 0))
 						break;
 					// did not work on simulator before iOS 13 (shortcut logic)
-					if (Runtime.Arch == Arch.SIMULATOR)
+					if (TestRuntime.IsSimulatorOrDesktop)
 						return true;
 					// was a private framework (on iOS) before Xcode 9.0 (shortcut logic)
 					if (!TestRuntime.CheckXcodeVersion (9, 0))
+						return true;
+					break;
+				}
+				break;
+			case "objectWithItemProviderData:typeIdentifier:error:":
+			case "readableTypeIdentifiersForItemProvider":
+				switch (declaredType.Name) {
+				case "PHLivePhoto":
+					// not yet conforming to NSItemProviderReading
+					if (!TestRuntime.CheckXcodeVersion (10,0))
 						return true;
 					break;
 				}

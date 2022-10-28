@@ -16,6 +16,7 @@ namespace PhotosUI {
 	}
 
 #if MONOMAC
+	[NoiOS][NoTV][NoMacCatalyst]
 	[Mac (10,12)]
 	[Native]
 	public enum PHLivePhotoViewContentMode : long {
@@ -23,6 +24,7 @@ namespace PhotosUI {
 		AspectFill,
 	}
 #else
+	[NoMac]
 	[TV (10,0)]
 	[iOS (9,1)]
 	[Native]
@@ -53,5 +55,15 @@ namespace PhotosUI {
 		[Mac (10,14,2)]
 		[Field ("PHProjectCategoryUndefined")]
 		Undefined,
+	}
+
+	[NoWatch, NoTV, NoMac]
+	[iOS (14,0)]
+	[Native]
+	public enum PHPickerConfigurationAssetRepresentationMode : long
+	{
+		Automatic = 0,
+		Current = 1,
+		Compatible = 2,
 	}
 }

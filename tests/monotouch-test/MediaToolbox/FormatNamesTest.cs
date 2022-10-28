@@ -1,20 +1,13 @@
-﻿
+
 #if !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using CoreMedia;
 using Foundation;
 #if !MONOMAC
 using UIKit;
 #endif
 using MediaToolbox;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.MediaToolbox;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.MediaToolbox {

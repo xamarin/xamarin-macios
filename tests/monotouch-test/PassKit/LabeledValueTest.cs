@@ -1,13 +1,8 @@
-﻿#if __IOS__
+#if __IOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using PassKit;
-#else
-using MonoTouch.Foundation;
-using MonoTouch.PassKit;
-#endif
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.PassKit {

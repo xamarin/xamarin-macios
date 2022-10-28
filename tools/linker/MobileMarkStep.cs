@@ -28,26 +28,6 @@ namespace Xamarin.Linker.Steps {
 			}
 		}
 
-		public override void Process (LinkContext context)
-		{
-			base.Process (context);
-
-			// deal with [TypeForwardedTo] pseudo-attributes
-			foreach (AssemblyDefinition assembly in _context.GetAssemblies ()) {
-				if (!assembly.MainModule.HasExportedTypes)
-					continue;
-
-				foreach (var exported in assembly.MainModule.ExportedTypes) {
-					if (!exported.IsForwarder)
-						continue;
-					var type = exported.Resolve ();
-					if (!Annotations.IsMarked (type))
-						continue;
-					Annotations.Mark (exported);
-				}
-			}
-		}
-
 		protected AssemblyDefinition GetAssembly (string assemblyName)
 		{
 			AssemblyDefinition ad;
@@ -271,8 +251,8 @@ namespace Xamarin.Linker.Steps {
 			switch (type.Namespace) {
 			case "System.Runtime.CompilerServices":
 				switch (type.Name) {
-					case "AsyncTaskMethodBuilder":
-					case "AsyncTaskMethodBuilder`1":
+				case "AsyncTaskMethodBuilder":
+				case "AsyncTaskMethodBuilder`1":
 					if (DebugBuild) {
 						MarkNamedMethod (type, "SetNotificationForWaitCompletion");
 						MarkNamedMethod (type, "get_ObjectIdForDebugger");
@@ -282,7 +262,7 @@ namespace Xamarin.Linker.Steps {
 				break;
 			case "System.Threading.Tasks":
 				switch (type.Name) {
-					case "Task":
+				case "Task":
 					if (DebugBuild)
 						MarkNamedMethod (type, "NotifyDebuggerOfWaitCompletion");
 					break;

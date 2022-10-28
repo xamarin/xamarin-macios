@@ -19,13 +19,15 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#if XAMCORE_2_0
-
 using System;
 
 using AppKit;
 using Foundation;
 using ObjCRuntime;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace MediaLibrary {
 	[Static]
@@ -427,7 +429,7 @@ namespace MediaLibrary {
 	{
 		[Export ("initWithOptions:")]
 		[DesignatedInitializer]
-		IntPtr Constructor (NSDictionary<NSString, NSObject> options);
+		NativeHandle Constructor (NSDictionary<NSString, NSObject> options);
 
 		[NullAllowed, Export ("mediaSources", ArgumentSemantic.Copy)]
 		NSDictionary<NSString, MLMediaSource> MediaSources { get; }
@@ -652,4 +654,3 @@ namespace MediaLibrary {
 		NSString MediaObjectProtectedKey { get; }
 	}
 }
-#endif

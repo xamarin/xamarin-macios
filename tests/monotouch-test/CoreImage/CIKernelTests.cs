@@ -1,10 +1,8 @@
-﻿#if !__WATCHOS__
+#if !__WATCHOS__
 
 using System;
-using System.Drawing;
 using System.Threading;
 
-#if XAMCORE_2_0
 using Foundation;
 using CoreImage;
 using CoreGraphics;
@@ -16,24 +14,8 @@ using PlatformImage = AppKit.NSImage;
 using UIKit;
 using PlatformImage = UIKit.UIImage;
 #endif
-#else
-using MonoTouch.CoreImage;
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreImage
 {
@@ -60,11 +42,7 @@ namespace MonoTouchFixtures.CoreImage
 			public MyCustomFilter (CustomerFilterType type)
 			{
 				Type = type;
-#if XAMCORE_2_0
 				kernel = CIKernel.FromProgramSingle (GetKernelString ());
-#else
-				kernel = CIKernel.FromProgram (GetKernelString ());
-#endif
 				Assert.IsNotNull (kernel, $"Kernel: {Type}");
 			}
 
@@ -107,7 +85,7 @@ namespace MonoTouchFixtures.CoreImage
 				case CustomerFilterType.NoOpColorWithParam:
 					return new NSObject[] { MyImage, new NSNumber(5) };
 				case CustomerFilterType.ColorPositionKernel:
-					RectangleF dod = MyImage.Extent;
+					var dod = MyImage.Extent;
 					double radius = 0.5 * Math.Sqrt (Math.Pow (dod.Width, 2) + Math.Pow (dod.Height, 2));
 					CIVector centerOffset = new CIVector ((float)(dod.Size.Width * .5), (float)(dod.Size.Height * .5));
 					return new NSObject[] { MyImage, centerOffset, new NSNumber (radius) };
@@ -145,8 +123,8 @@ namespace MonoTouchFixtures.CoreImage
 		[Test]
 		public void CIKernel_BasicTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			Exception ex = null;
 			var t = new Thread (() => {
@@ -197,15 +175,11 @@ namespace MonoTouchFixtures.CoreImage
 		[Test]
 		public void CIKernel_TestFromPrograms ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 8, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 8, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			CIKernel[] kernels = 
-#if XAMCORE_2_0
 				CIKernel.FromProgramMultiple (
-#else
-				CIKernel.FromPrograms (
-#endif
 					NoOpColorKernel + "\n" + NoOpWithParamColorKernel + "\n" + PositionColorKernel + "\n" + NoOpWarpKernel);
 			Assert.AreEqual (4, kernels.Length, "CIKernel_TestFromPrograms did not get back the right number of programs");
 			foreach (CIKernel kernel in kernels)

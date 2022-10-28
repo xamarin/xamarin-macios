@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+
+		<ApplicationTitle>MySimpleAppWithSatelliteReference</ApplicationTitle>
+		<ApplicationId>com.xamarin.mysimpleappwithsatellite</ApplicationId>
+		<ApplicationVersion>3.14</ApplicationVersion>
+	</PropertyGroup>
+
+	<Import Project="../../common/shared-dotnet.csproj" />
+	<ItemGroup>
+		<ProjectReference Include="..\..\MySatelliteAssembliesLibrary\$(_PlatformName)\MySatelliteAssembliesLibrary.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Include="../*.cs" />
+	</ItemGroup>
+</Project>

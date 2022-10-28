@@ -24,7 +24,7 @@ namespace MonoTouch.Tuner {
 	public partial class MonoTouchManifestResolver : MonoTouchResolver {
 
 		internal List<Exception> list = new List<Exception> ();
-		
+
 		public override AssemblyDefinition Load (string file)
 		{
 			if (EnableRepl && Profile.IsSdkAssembly (Path.GetFileNameWithoutExtension (file))) {
@@ -45,7 +45,7 @@ namespace MonoTouch.Tuner {
 		{
 			if (fullName == null)
 				throw new ArgumentNullException (nameof (fullName));
-			
+
 			return self.Resolve (AssemblyNameReference.Parse (fullName), defaults);
 		}
 	}
@@ -72,7 +72,7 @@ namespace MonoTouch.Tuner {
 			if (cache.TryGetValue (aname, out assembly))
 				return assembly;
 
-			if (EnableRepl) {
+			if (EnableRepl && FrameworkDirectory != null) {
 				var replDir = Path.Combine (FrameworkDirectory, "repl");
 				if (Directory.Exists (replDir)) {
 					assembly = SearchDirectory (aname, replDir);
@@ -81,8 +81,8 @@ namespace MonoTouch.Tuner {
 				}
 			}
 
-			var facadeDir = Path.Combine (FrameworkDirectory, "Facades");
-			if (Directory.Exists (facadeDir)) {
+			if (FrameworkDirectory != null) {
+				var facadeDir = Path.Combine (FrameworkDirectory, "Facades");
 				assembly = SearchDirectory (aname, facadeDir);
 				if (assembly != null)
 					return assembly;

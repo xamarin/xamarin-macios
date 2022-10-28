@@ -36,6 +36,19 @@
 			<string>13.0</string>
 			<string>13.1</string>
 			<string>13.2</string>
+			<string>13.3</string>
+			<string>13.4</string>
+			<string>13.5</string>
+			<string>13.6</string>
+			<string>14.0</string>
+			<string>14.1</string>
+			<string>14.2</string>
+			<string>14.3</string>
+			<string>14.4</string>
+			<string>14.5</string>
+			<string>15.0</string>
+			<string>15.2</string>
+			<string>15.4</string>
 		</array>
 		<key>tvOS</key>
 		<array>
@@ -57,10 +70,19 @@
 			<string>12.4</string>
 			<string>13.0</string>
 			<string>13.2</string>
+			<string>13.3</string>
+			<string>13.4</string>
+			<string>14.0</string>
+			<string>14.2</string>
+			<string>14.3</string>
+			<string>14.4</string>
+			<string>14.5</string>
+			<string>15.0</string>
+			<string>15.2</string>
+			<string>15.4</string>
 		</array>
 		<key>watchOS</key>
 		<array>
-			<string>1.0</string>
 			<string>2.0</string>
 			<string>2.1</string>
 			<string>2.2</string>
@@ -77,7 +99,58 @@
 			<string>5.3</string>
 			<string>6.0</string>
 			<string>6.1</string>
+			<string>6.2</string>
+			<string>7.0</string>
+			<string>7.1</string>
+			<string>7.2</string>
+			<string>7.3</string>
+			<string>7.4</string>
+			<string>8.0</string>
+			<string>8.3</string>
+			<string>8.5</string>
 		</array>
+		<key>MacCatalyst</key>
+		<array>
+			<string>13.1</string>
+			<string>13.2</string>
+			<string>13.3</string>
+			<string>13.4</string>
+			<string>13.5</string>
+			<string>14.2</string>
+			<string>14.3</string>
+			<string>14.4</string>
+			<string>14.5</string>
+			<string>15.0</string>
+			<string>15.2</string>
+			<string>15.4</string>
+		</array>
+	</dict>
+	<key>MacCatalystVersionMap</key>
+	<dict>
+		<key>13.1</key>
+		<string>10.15</string>
+		<key>13.2</key>
+		<string>10.15.1</string>
+		<key>13.3</key>
+		<string>10.15.2</string>
+		<key>13.4</key>
+		<string>10.15.4</string>
+		<key>13.5</key>
+		<string>10.15.5</string>
+		<key>14.2</key>
+		<string>11.0</string>
+		<key>14.3</key>
+		<string>11.1</string>
+		<key>14.4</key>
+		<string>11.1</string>
+		<key>14.5</key>
+		<string>11.3</string>
+		<key>15.0</key>
+		<string>12.0</string>
+		<key>15.2</key>
+		<string>12.1</string>
+		<key>15.4</key>
+		<string>12.3</string>
 	</dict>
 	<key>RecommendedXcodeVersion</key>
 	<string>@XCODE_VERSION@</string>
@@ -127,6 +200,8 @@
 			<string>10.0</string>
 			<key>com.apple.usernotifications.service</key>
 			<string>10.0</string>
+			<key>com.apple.authentication-services-credential-provider-ui</key>
+			<string>12.0</string>
 		</dict>
 		<key>tvOS</key>
 		<dict>
@@ -157,6 +232,7 @@
 		<string>sgen-concurrent</string> <!-- this means stable support for the concurrent GC -->
 		<string>arm64_32</string>
 		<string>altool</string>
+		<string>maccatalyst</string>
 	</array>
 	<key>Optimizations</key>
 	<dict>

@@ -2,17 +2,15 @@
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
 
 using NUnit.Framework;
 
 namespace MonoTouchFixtures.Metal {
 	
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MTLAttributeDescriptorTest {
 		MTLAttributeDescriptor descriptor = null;
 		
@@ -43,7 +41,7 @@ namespace MonoTouchFixtures.Metal {
 		{
 			uint offset = 0; // must be 0, other value will crash the test.
 			descriptor.Offset = offset;
-			Assert.AreEqual (offset, descriptor.Offset);
+			Assert.AreEqual ((nuint) offset, descriptor.Offset);
 		}
 
 		[Test]
@@ -51,7 +49,7 @@ namespace MonoTouchFixtures.Metal {
 		{
 			uint index = 0; // must be 0, other value will crash the test.
 			descriptor.BufferIndex = index;
-			Assert.AreEqual (index, descriptor.BufferIndex);
+			Assert.AreEqual ((nuint) index, descriptor.BufferIndex);
 		}
 	}
 }

@@ -8,7 +8,6 @@
 //
 using System;
 using System.Collections.Generic;
-#if XAMCORE_2_0
 using Foundation;
 using CoreMedia;
 using AVFoundation;
@@ -18,14 +17,8 @@ using AppKit;
 #else
 using UIKit;
 #endif
-#else
-using MonoTouch.Foundation;
-using MonoTouch.CoreMedia;
-using MonoTouch.AVFoundation;
-using MonoTouch.UIKit;
-using nuint = global::System.UInt32;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.CoreMedia {
 	
@@ -51,11 +44,11 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void Video ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 
 			CMFormatDescriptionError fde;
 
-			var auth = AVCaptureDevice.GetAuthorizationStatus (AVMediaType.Video);
+			var auth = AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ());
 			switch (auth) {
 			case AVAuthorizationStatus.Restricted:
 			case AVAuthorizationStatus.Denied:
@@ -70,7 +63,9 @@ namespace MonoTouchFixtures.CoreMedia {
 //				Assert.That (fde, Is.EqualTo (CMFormatDescriptionError.InvalidParameter), "CMFormatDescriptionError (authorized)");
 
 				using (var captureSession = new AVCaptureSession ()) {
-					using (var videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaType.Video)) {
+					using (var videoDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Video.GetConstant ())) {
+						if (videoDevice == null)
+							Assert.Inconclusive ("Failed to create a video device for testing");
 						NSError error;
 						using (var videoInput = new AVCaptureDeviceInput (videoDevice, out error)) {
 							// this seems to initialize something.
@@ -87,11 +82,11 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void RefcountTest ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
 			
 			// Bug #27205
 
-			var auth = AVCaptureDevice.GetAuthorizationStatus (AVMediaType.Video);
+			var auth = AVCaptureDevice.GetAuthorizationStatus (AVMediaTypes.Video.GetConstant ());
 			switch (auth) {
 			case AVAuthorizationStatus.Restricted:
 			case AVAuthorizationStatus.Denied:
@@ -101,7 +96,9 @@ namespace MonoTouchFixtures.CoreMedia {
 			}
 
 			using (var captureSession = new AVCaptureSession ()) {
-				using (var videoDevice = AVCaptureDevice.DefaultDeviceWithMediaType (AVMediaType.Video)) {
+				using (var videoDevice = AVCaptureDevice.GetDefaultDevice (AVMediaTypes.Video.GetConstant ())) {
+					if (videoDevice == null)
+						Assert.Inconclusive ("Failed to create a video device for testing");
 					foreach (var format in videoDevice.Formats) {
 						for (int i = 0; i < 10; i++) {
 							using (var f = format.FormatDescription) {
@@ -189,14 +186,8 @@ namespace MonoTouchFixtures.CoreMedia {
 		[Test]
 		public void VideoFormatDescriptionConstructors ()
 		{
-#if __UNIFIED__
 			using (var obj = new CMVideoFormatDescription (CMVideoCodecType.H264, new CMVideoDimensions (960, 540))) {
 			}
-#else
-			using (var obj = new CMVideoFormatDescription (CMVideoCodecType.H264, new System.Drawing.Size (960, 540))) {
-			}
-#endif
 		}
 	}
 }
-

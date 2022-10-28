@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CGFont
 //
 // Authors:
@@ -8,9 +8,7 @@
 //
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using Foundation;
 using CoreGraphics;
 using ObjCRuntime;
@@ -18,12 +16,6 @@ using ObjCRuntime;
 using AppKit;
 #else
 using UIKit;
-#endif
-#else
-using MonoTouch;
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.UIKit;
 #endif
 using NUnit.Framework;
 

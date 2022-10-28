@@ -1,19 +1,22 @@
-﻿
+
 #if !__WATCHOS__
 
 using System;
 
-#if XAMCORE_2_0
+using Foundation;
 using Metal;
-#else
-using MonoTouch.Metal;
-#endif
+using ObjCRuntime;
 
 using NUnit.Framework;
+
+#if !NET
+using NativeHandle = System.IntPtr;
+#endif
 
 namespace MonoTouchFixtures.Metal {
 	
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class DeviceTest {
 		
 		[Test]
@@ -27,14 +30,14 @@ namespace MonoTouchFixtures.Metal {
 				Assert.Inconclusive ("Metal is not supported");
 
 			// if we get an instance it must be valid, i.e. not an empty wrapper
-			Assert.That (d.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle");
+			Assert.That (d.Handle, Is.Not.EqualTo (NativeHandle.Zero), "Handle");
 
 			// and if we ask again we need to get a valid instance again
 			d.Dispose ();
-			Assert.That (d.Handle, Is.EqualTo (IntPtr.Zero), "Disposed");
+			Assert.That (d.Handle, Is.EqualTo (NativeHandle.Zero), "Disposed");
 
 			d = MTLDevice.SystemDefault;
-			Assert.That (d.Handle, Is.Not.EqualTo (IntPtr.Zero), "Handle-2");
+			Assert.That (d.Handle, Is.Not.EqualTo (NativeHandle.Zero), "Handle-2");
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿// Copyright 2015 Xamarin Inc. All rights reserved.
+// Copyright 2015 Xamarin Inc. All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -12,19 +12,20 @@ using NUnit.Framework;
 using Xamarin.Tests;
 
 namespace Xamarin.Linker {
-
-	public abstract class BaseProfile {
-
-		protected abstract bool IsSdk (string assemblyName);
-	}
-
 	public class ProfilePoker : MobileProfile {
 
 		static ProfilePoker p = new ProfilePoker ();
 
+		public override string ProductAssembly => throw new NotImplementedException ();
+
 		public static bool IsWellKnownSdk (string assemblyName)
 		{
 			return p.IsSdk (assemblyName);
+		}
+
+		protected override bool IsProduct (string assemblyName)
+		{
+			throw new NotImplementedException ();
 		}
 	}
 
@@ -59,12 +60,9 @@ namespace Xamarin.Linker {
 					break;
 				case "Newtonsoft.Json":
 				case "Xamarin.iOS.Tasks":
-				case "Xamarin.iOS.Tasks.Core":
 				case "Xamarin.ObjcBinding.Tasks":
 				case "Xamarin.MacDev":
 				case "Xamarin.MacDev.Tasks":
-				case "Xamarin.MacDev.Tasks.Core":
-				case "Xamarin.Analysis.Tasks":
 					// other stuff that is not part of the SDK but shipped in the same 2.1 directory
 					failed_bcl.Add (aname);
 					break;
@@ -224,7 +222,7 @@ namespace Xamarin.Linker {
 			rv.AddRange (Directory.GetFiles (watchOSPath, "*.dll", SearchOption.TopDirectoryOnly).
 				Select ((v) => v.Substring (watchOSPath.Length)).ToArray ());
 			rv.Remove ("Xamarin.WatchOS.dll");
-			rv.Add (Path.Combine ("..", "..", "32bits", "Xamarin.WatchOS.dll"));
+			rv.Add (Path.Combine ("..", "..", "32bits", "watchOS", "Xamarin.WatchOS.dll"));
 			return rv.ToArray ();
 		}
 
@@ -315,9 +313,6 @@ namespace Xamarin.Linker {
 				"LLVM failed for 'EnterTryCatchFinallyInstruction.Run': non-finally/catch/fault clause.",
 			}) },
 			{ "System.Net.Http.dll", new Tuple<int, string[]> (0, new string [] {
-				"LLVM failed for 'HttpContent.CopyToAsync': non-finally/catch/fault clause.",
-				"LLVM failed for 'HttpContent.LoadIntoBufferAsync': non-finally/catch/fault clause.",
-				"LLVM failed for '<CopyToAsyncCore>d__47.MoveNext': non-finally/catch/fault clause.",
 			}) },
 			{ "mscorlib.dll", new Tuple<int, string[]> (0, new string [] {
 				"LLVM failed for 'Console.Write': opcode arglist",

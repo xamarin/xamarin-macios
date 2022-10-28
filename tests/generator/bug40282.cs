@@ -16,4 +16,3 @@ namespace bug40282 {
 		void FooService (int service, int session);
 	}
 }
-

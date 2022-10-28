@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for MPSImageBatch
 //
 // Authors:
@@ -20,16 +20,18 @@ using NUnit.Framework;
 
 namespace MonoTouchFixtures.MetalPerformanceShaders {
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class MPSImageBatchTests {
 
 		IMTLDevice device;
 		NSArray<MPSImage> cache;
 
-		[TestFixtureSetUp]
+		[OneTimeSetUp]
 		public void Metal ()
 		{
 			TestRuntime.AssertDevice ();
 			TestRuntime.AssertXcodeVersion (10, 0);
+			TestRuntime.AssertNotVirtualMachine ();
 
 			device = MTLDevice.SystemDefault;
 			// some older hardware won't have a default
@@ -52,7 +54,7 @@ namespace MonoTouchFixtures.MetalPerformanceShaders {
 		public void MPSImageBatchResourceSizeTest ()
 		{
 			var size = MPSImageBatch.GetResourceSize (cache);
-			Assert.That (size, Is.GreaterThan (0), "idx");
+			Assert.That (size, Is.GreaterThan ((nuint) 0), "idx");
 		}
 
 		// TODO: Enable once'MPSImageBatch.Iterate' is enabled, rdar://47282304.

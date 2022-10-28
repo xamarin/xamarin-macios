@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-#if XAMCORE_2_0
 using Foundation;
 #if MONOMAC
 using AppKit;
@@ -13,28 +12,12 @@ using ObjCRuntime;
 #if !__WATCHOS__
 using CoreText;
 #endif
-#else
-using MonoTouch;
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-using MonoTouch.UIKit;
-using MonoTouch.CoreText;
-#endif
-
-#if XAMCORE_2_0
-using RectangleF=CoreGraphics.CGRect;
-using SizeF=CoreGraphics.CGSize;
-using PointF=CoreGraphics.CGPoint;
-#else
-using nfloat=global::System.Single;
-using nint=global::System.Int32;
-using nuint=global::System.UInt32;
-#endif
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.Foundation {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class AttributedStringTest {
 
 		CGColor red, yellow;
@@ -102,8 +85,8 @@ namespace MonoTouchFixtures.Foundation {
 		[Test]
 		public void UIKitAttachmentConveniences_New ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.iOS, 7, 0, throwIfOtherPlatform: false);
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 11, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.iOS, 7, 0, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 11, throwIfOtherPlatform: false);
 
 			// so we added custom code calling the (old) category helper - but we had to pick a different name
 			using (var ta = new NSTextAttachment (null, null))
@@ -139,9 +122,9 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			using (var s1 = new NSAttributedString ("string")) {
 				using (var copy = s1.MutableCopy ())
-					Assert.That (copy.RetainCount, Is.EqualTo ((nint) 1), "Copy retaincount 1");
+					Assert.That (copy.RetainCount, Is.EqualTo ((nuint) 1), "Copy retaincount 1");
 				using (var copy = ((INSMutableCopying) s1).MutableCopy (NSZone.Default))
-					Assert.That (copy.RetainCount, Is.EqualTo ((nint) 1), "Copy retaincount 2");
+					Assert.That (copy.RetainCount, Is.EqualTo ((nuint) 1), "Copy retaincount 2");
 			}
 		}
 
@@ -163,5 +146,61 @@ namespace MonoTouchFixtures.Foundation {
 			}
 		}
 #endif // !__WATCHOS__
+
+#if NET // this test crashes in legacy Xamarin
+		[Test]
+		public void LowLevelGetAttributesOverrideTest ()
+		{
+			using var storage = new MyTextStorage ("Hello World");
+			using var container = new NSTextContainer {
+				Size = new CGSize (100, float.MaxValue),
+				WidthTracksTextView = true
+			};
+			using var layoutManager = new NSLayoutManager ();
+			layoutManager.AddTextContainer (container);
+			storage.AddLayoutManager (layoutManager);
+			layoutManager.EnsureLayoutForCharacterRange (new NSRange (0, 1));
+			Assert.That (storage.LowLevelGetAttributes_Called, Is.GreaterThan (0), "LowLevelGetAttributes #called");
+			Assert.That (storage.LowLevelValue_Called, Is.GreaterThan (0), "LowLevelValue #called");
+		}
+
+		public class MyTextStorage : NSTextStorage {
+			string text;
+			NSString nsString;
+			IntPtr stringPtr;
+			NSDictionary attributes;
+			IntPtr attributesPtr;
+			public int LowLevelGetAttributes_Called;
+			public int LowLevelValue_Called;
+
+			public MyTextStorage (string text)
+			{
+				this.text = text ?? "";
+				nsString = (NSString) (this.text);
+				stringPtr = nsString.Handle;
+				attributes = new ();
+				attributesPtr = attributes.Handle;
+			}
+
+			public override IntPtr LowLevelValue {
+				get {
+					LowLevelValue_Called++;
+					return stringPtr;
+				}
+			}
+
+			public override IntPtr LowLevelGetAttributes (nint location, IntPtr effectiveRangePtr)
+			{
+				LowLevelGetAttributes_Called++;
+				if (effectiveRangePtr != IntPtr.Zero) {
+					unsafe {
+						NSRange *effectiveRange = (NSRange *) effectiveRangePtr;
+						*effectiveRange = new NSRange (location, 1);
+					}
+				}
+				return attributesPtr;
+			}
+		}
+#endif // NET
 	}
 }

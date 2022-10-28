@@ -1,4 +1,5 @@
-#if XAMCORE_2_0 || !MONOMAC
+#nullable enable
+
 namespace ModelIO {
 	public partial class MDLAsset {
 		public MDLMaterialProperty this [nuint index] {
@@ -14,4 +15,3 @@ namespace ModelIO {
 		}
 	}
 }
-#endif

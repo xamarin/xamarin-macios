@@ -1,13 +1,8 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
-#if XAMCORE_2_0
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.Foundation;
-#endif
 
 using NUnit.Framework;
 
@@ -69,4 +64,3 @@ namespace MonoTouchFixtures {
 		}
 	}
 }
-

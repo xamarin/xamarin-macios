@@ -1,4 +1,4 @@
-﻿//
+//
 // Unit tests for CGColorConversionInfo
 //
 // Authors:
@@ -8,23 +8,20 @@
 //
 
 using System;
-using System.IO;
 using System.Runtime.InteropServices;
-#if XAMCORE_2_0
 using CoreGraphics;
 using Foundation;
 using ObjCRuntime;
-#else
-using MonoTouch;
-using MonoTouch.CoreGraphics;
-using MonoTouch.Foundation;
-using MonoTouch.ObjCRuntime;
-#endif
 using NUnit.Framework;
+
+#if NET
+using GColorConversionInfoTriple = CoreGraphics.CGColorConversionInfoTriple;
+#endif
 
 namespace MonoTouchFixtures.CoreGraphics {
 
 	[TestFixture]
+	[Preserve (AllMembers = true)]
 	public class ColorConversionInfoTest {
 
 		[Test]
@@ -189,4 +186,3 @@ namespace MonoTouchFixtures.CoreGraphics {
 		}
 	}
 }
-

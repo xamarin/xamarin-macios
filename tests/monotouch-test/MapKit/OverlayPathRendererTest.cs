@@ -10,18 +10,12 @@
 #if !__TVOS__ && !__WATCHOS__
 
 using System;
-#if XAMCORE_2_0
 using Foundation;
 using CoreLocation;
 using MapKit;
 using ObjCRuntime;
-#else
-using MonoTouch.CoreLocation;
-using MonoTouch.Foundation;
-using MonoTouch.MapKit;
-using MonoTouch.UIKit;
-#endif
 using NUnit.Framework;
+using Xamarin.Utils;
 
 namespace MonoTouchFixtures.MapKit {
 
@@ -31,7 +25,7 @@ namespace MonoTouchFixtures.MapKit {
 		[SetUp]
 		public void Setup ()
 		{
-			TestRuntime.AssertSystemVersion (PlatformName.MacOSX, 10, 9, throwIfOtherPlatform: false);
+			TestRuntime.AssertSystemVersion (ApplePlatform.MacOSX, 10, 9, throwIfOtherPlatform: false);
 		}
 
 		[Test]
