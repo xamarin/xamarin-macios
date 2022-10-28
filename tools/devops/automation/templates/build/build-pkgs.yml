@@ -139,7 +139,7 @@ steps:
 
       name: macTestPkg
       displayName: 'Package macOS tests'
-      condition: and(succeeded(), contains(variables['configuration.RunMacTests'], 'True'))
+      condition: and(succeeded(), contains(variables['RUN_MAC_TESTS'], 'true'))
       continueOnError: true # not a terrible blocking issue
       timeoutInMinutes: 60
 

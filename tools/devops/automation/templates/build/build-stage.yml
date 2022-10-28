@@ -107,13 +107,11 @@ jobs:
     # skip-nugets
     # skip-signing
     # run-sample-tests
-    # skip-packaged-xamarin-mac-tests
     BuildPackage: $[ dependencies.configure.outputs['labels.build_package'] ]
     SkipPackages: $[ dependencies.configure.outputs['labels.skip_packages'] ]
     SkipNugets: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
     SkipSigning: $[ dependencies.configure.outputs['labels.skip_signing'] ]
     RunSampleTests: $[ dependencies.configure.outputs['labels.run_sample_tests'] ]
-    SkipPackagedXamarinMacTests: $[ dependencies.configure.outputs['labels.skip_packaged_xamarin_mac_tests'] ]
     SkipApiComparison: $[ dependencies.configure.outputs['labels.skip_api_comparison'] ]
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
     PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
@@ -121,6 +119,7 @@ jobs:
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
     BUILD_REVISION: $[ variables['Build.SourceVersion'] ]
     XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness_labels'] ]
+    RUN_MAC_TESTS: $[ dependencies.configure.outputs['decisions.RUN_MAC_TESTS'] ]
   pool:
     name: $(AgentPoolComputed)
     demands:

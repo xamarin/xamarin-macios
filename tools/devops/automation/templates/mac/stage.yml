@@ -36,9 +36,7 @@ stages:
   displayName: ${{ parameters.displayName }}
   dependsOn:
   - build_packages
-  # we need to have the pkgs built and the device sets to be ran, that is decided via the labels or type of build during the build_packages stage
-  condition: succeeded()
-
+  condition: and(succeeded(), eq(dependencies.build_packages.outputs['configure.decisions.RUN_MAC_TESTS'], 'true'))
   variables:
     GITHUB_FAILURE_COMMENT_FILE: $(System.DefaultWorkingDirectory)/github-comment-file.md
 
