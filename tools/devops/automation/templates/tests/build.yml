@@ -161,6 +161,8 @@ steps:
   inputs:
     provisioning_script: $(System.DefaultWorkingDirectory)/xamarin-macios/tools/devops/device-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
+  env:
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
   continueOnError: true
 
@@ -174,6 +176,8 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
+  env:
+    AUTH_TOKEN_GITHUB_COM: ${{ parameters.gitHubToken }}
   timeoutInMinutes: 250
   continueOnError: true
 
