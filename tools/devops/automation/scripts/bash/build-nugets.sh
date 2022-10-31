@@ -6,7 +6,7 @@ if test -z "$XAM_TOP"; then
     exit 1
 fi
 
-cd $XAM_TOP
+cd "$XAM_TOP"
 
 DOTNET_NUPKG_DIR=$(make -C tools/devops print-abspath-variable VARIABLE=DOTNET_NUPKG_DIR | grep "^DOTNET_NUPKG_DIR=" | sed -e 's/^DOTNET_NUPKG_DIR=//')
 
