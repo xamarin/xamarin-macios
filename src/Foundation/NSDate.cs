@@ -32,38 +32,34 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace Foundation {
 
 	public partial class NSDate {
 		const double NANOSECS_PER_MILLISEC = 1000000.0;
-		const long NSDATE_TICKS = 631139040000000000; // for 32 bit devices
 
 		static readonly NSCalendar calendar = new NSCalendar (NSCalendarType.Gregorian) { TimeZone = NSTimeZone.FromName ("UTC") };
-		static readonly ThreadLocal<NSDateComponents> threadComponents = new ThreadLocal<NSDateComponents> (() => new NSDateComponents ());
 
 		// now explicit since data can be lost for small/large values of DateTime
 		public static explicit operator DateTime (NSDate d)
 		{
 			double secs = d.SecondsSinceReferenceDate;
-
-			// Apple's implementation of DateTime differs between 32 bit and 64 bit devices
-			// 32 and 64 bit devices represent 1/1/1 12:00 as -63113904000 and -63114076800, respectively
-			if (IntPtr.Size == 4) {
-				if ((secs < -63113904000) || (secs > 252423993599))
-					throw new ArgumentOutOfRangeException (nameof (d), d, $"{nameof (d)} is outside the range of NSDate {secs} seconds");
-
-				return new DateTime ((long) (secs * TimeSpan.TicksPerSecond + NSDATE_TICKS), DateTimeKind.Utc);
-			}
-
 			if ((secs < -63114076800) || (secs > 252423993599.9994)) // we round to the nearest .001 in the conversion from ns to ms
 				throw new ArgumentOutOfRangeException (nameof (d), d, $"{nameof (d)} is outside the range of NSDate {secs} seconds");
 
 			// For 64 bit, convert to components representation since we cannot rely on secondsSinceReferenceDate
 			var units = NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day | NSCalendarUnit.Hour |
 				NSCalendarUnit.Minute | NSCalendarUnit.Second | NSCalendarUnit.Nanosecond | NSCalendarUnit.Calendar;
-			using (NSDateComponents calComponents = calendar.Components (units, d)) {
-				var retDate = new DateTime ((int) calComponents.Year, (int) calComponents.Month, (int) calComponents.Day, (int) calComponents.Hour,
-					(int) calComponents.Minute, (int) (calComponents.Second), Convert.ToInt32 (calComponents.Nanosecond / NANOSECS_PER_MILLISEC), DateTimeKind.Utc);
+			using (var calComponents = calendar.Components (units, d)) {
+				var retDate = new DateTime (
+					(int) calComponents.Year,
+					(int) calComponents.Month,
+					(int) calComponents.Day,
+					(int) calComponents.Hour,
+					(int) calComponents.Minute,
+					(int) calComponents.Second,
+					Convert.ToInt32 (calComponents.Nanosecond / NANOSECS_PER_MILLISEC), DateTimeKind.Utc);
 
 				return retDate;
 			}
@@ -77,22 +73,18 @@ namespace Foundation {
 
 			var dtUnv = dt.ToUniversalTime ();
 
-			// Apple's implementation of DateTime differs between 32 bit and 64 bit devices
-			// 32 and 64 bit devices represent 1/1/1 12:00 as -63113904000 and -63114076800, respectively
-			if (IntPtr.Size == 4)
-				return FromTimeIntervalSinceReferenceDate ((dtUnv.Ticks - NSDATE_TICKS) / (double) TimeSpan.TicksPerSecond);
-
 			// For 64 bit, convert to components representation since we cannot rely on secondsSinceReferenceDate
-			threadComponents.Value.Day = dtUnv.Day;
-			threadComponents.Value.Month = dtUnv.Month;
-			threadComponents.Value.Year = dtUnv.Year;
-			threadComponents.Value.Hour = dtUnv.Hour;
-			threadComponents.Value.Minute = dtUnv.Minute;
-			threadComponents.Value.Second = dtUnv.Second;
-			threadComponents.Value.Nanosecond = (int) (dtUnv.Millisecond * NANOSECS_PER_MILLISEC);
+			var dateComponents = new NSDateComponents ();
+			dateComponents.Day = dtUnv.Day;
+			dateComponents.Month = dtUnv.Month;
+			dateComponents.Year = dtUnv.Year;
+			dateComponents.Hour = dtUnv.Hour;
+			dateComponents.Minute = dtUnv.Minute;
+			dateComponents.Second = dtUnv.Second;
+			dateComponents.Nanosecond = (int) (dtUnv.Millisecond * NANOSECS_PER_MILLISEC);
 
-			var retDate = calendar.DateFromComponents (threadComponents.Value);
-			if (retDate == null)
+			var retDate = calendar.DateFromComponents (dateComponents);
+			if (retDate is null)
 				throw new ArgumentOutOfRangeException (nameof (dt), dt, $"{nameof (dt)} is outside the range of NSDate");
 
 			return retDate;
