@@ -118,7 +118,8 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/provision-brew-packages.csx
     provisioning_extra_args: '-vvvv'
-    github_token: $(Github.Token)
+  env:
+    AUTH_TOKEN_GITHUB_COM: $(GitHub.Token)
   timeoutInMinutes: 30
   enabled: false
 
@@ -152,7 +153,8 @@ steps:
   inputs:
     provisioning_script: $(Build.SourcesDirectory)/xamarin-macios/tools/devops/mac-tests-provisioning.csx
     provisioning_extra_args: '-vvvv'
-    github_token: $(Github.Token)
+  env:
+    AUTH_TOKEN_GITHUB_COM: $(GitHub.Token)
   timeoutInMinutes: 250
 
 # Executed ONLY if we want to clear the provisionator cache.
