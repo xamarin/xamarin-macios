@@ -356,7 +356,7 @@ namespace Photos
 	[NoMacCatalyst]
 	[Mac (10,12)]
 	[NoiOS][NoTV]
-	[Native]
+	[Native ("PHLivePhotoEditingErrorCode")]
 	[ErrorDomain ("PHLivePhotoEditingErrorDomain")]
 	public enum PHLivePhotoEditingError : long {
 		[Deprecated (PlatformName.MacOSX, 10, 15, message: "Use 'PHPhotosError.InternalError' instead.")]

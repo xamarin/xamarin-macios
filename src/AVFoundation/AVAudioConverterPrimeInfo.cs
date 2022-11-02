@@ -27,6 +27,8 @@ using System.Runtime.InteropServices;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if NET
@@ -35,8 +37,8 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("maccatalyst")]
 	[SupportedOSPlatform ("tvos")]
 #else
-	[iOS (9,0)]
-	[Mac (10,11)]
+	[iOS (9, 0)]
+	[Mac (10, 11)]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
 	public struct AVAudioConverterPrimeInfo {
@@ -64,12 +66,12 @@ namespace AVFoundation {
 			return !left.Equals (right);
 		}
 
-		public override bool Equals (object obj)
+		public override bool Equals (object? obj)
 		{
 			if (!(obj is AVAudioConverterPrimeInfo))
 				return false;
 
-			return this.Equals ((AVAudioConverterPrimeInfo)obj);
+			return this.Equals ((AVAudioConverterPrimeInfo) obj);
 		}
 
 		public bool Equals (AVAudioConverterPrimeInfo other)

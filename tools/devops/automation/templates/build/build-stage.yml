@@ -33,6 +33,12 @@ parameters:
   type: string
   default: automatic
 
+- name: isPR
+  type: boolean
+
+- name: xcodeChannel
+  type: string
+
 jobs:
 - job: configure
   displayName: 'Configure build'
@@ -45,6 +51,9 @@ jobs:
 
   steps:
   - template: ../common/configure.yml
+    parameters: 
+      uploadArtifacts: true
+      enableDotnet: ${{ parameters.enableDotnet }}
 
 - ${{ if eq(parameters.pool, 'automatic') }}:
   - job: AgentPoolSelector       # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
@@ -74,6 +83,17 @@ jobs:
   displayName: 'Build packages'
   timeoutInMinutes: 1000
   variables:
+    DOTNET_PLATFORMS: $[ dependencies.configure.outputs['configure_platforms.DOTNET_PLATFORMS'] ]
+    ENABLE_DOTNET: $[ dependencies.configure.outputs['configure_platforms.ENABLE_DOTNET'] ]
+    INCLUDE_DOTNET_IOS: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_IOS'] ]
+    INCLUDE_DOTNET_MACCATALYST: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACCATALYST'] ]
+    INCLUDE_DOTNET_MACOS: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_MACOS'] ]
+    INCLUDE_DOTNET_TVOS: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_DOTNET_TVOS'] ]
+    INCLUDE_LEGACY_IOS: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_IOS'] ]
+    INCLUDE_LEGACY_MAC: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_MAC'] ]
+    INCLUDE_LEGACY_TVOS: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_TVOS'] ]
+    INCLUDE_LEGACY_WATCH: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_LEGACY_WATCH'] ]
+    INCLUDE_XAMARIN_LEGACY: $[ dependencies.configure.outputs['configure_platforms.INCLUDE_XAMARIN_LEGACY'] ]
     ${{ if eq(parameters.pool, 'automatic') }}:
       AgentPoolComputed: $[ dependencies.AgentPoolSelector.outputs['setAgentPool.AgentPoolComputed'] ]
     ${{ if eq(parameters.pool, 'ci') }}:
@@ -83,41 +103,36 @@ jobs:
     # add all the variables that have been parsed by the configuration step. Could we have a less verbose way??
     #
     # build-package
-    # run-internal-tests
     # skip-packages
     # skip-nugets
     # skip-signing
-    # skip-external-tests
-    # trigger-device-tests
     # run-sample-tests
-    # skip-packaged-xamarin-mac-tests
-    BuildPackage: $[ dependencies.configure.outputs['labels.build-package'] ]
-    RunInternalTests: $[ dependencies.configure.outputs['labels.run-internal-tests'] ]
-    SkipPackages: $[ dependencies.configure.outputs['labels.skip-packages'] ]
-    SkipNugets: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
-    SkipSigning: $[ dependencies.configure.outputs['labels.skip-signing'] ]
-    SkipExternalTests: $[ dependencies.configure.outputs['labels.skip-external-tests'] ]
-    TriggerDeviceTests: $[ dependencies.configure.outputs['labels.trigger-device-tests'] ]
-    RunSampleTests: $[ dependencies.configure.outputs['labels.run-sample-tests'] ]
-    SkipPackagedXamarinMacTests: $[ dependencies.configure.outputs['labels.skip-packaged-xamarin-mac-tests'] ]
-    SkipPublicJenkins: $[ dependencies.configure.outputs['labels.skip-public-jenkins'] ]
-    SkipApiComparison: $[ dependencies.configure.outputs['labels.skip-api-comparison'] ]
+    BuildPackage: $[ dependencies.configure.outputs['labels.build_package'] ]
+    SkipPackages: $[ dependencies.configure.outputs['labels.skip_packages'] ]
+    SkipNugets: $[ dependencies.configure.outputs['labels.skip_nugets'] ]
+    SkipSigning: $[ dependencies.configure.outputs['labels.skip_signing'] ]
+    RunSampleTests: $[ dependencies.configure.outputs['labels.run_sample_tests'] ]
+    SkipApiComparison: $[ dependencies.configure.outputs['labels.skip_api_comparison'] ]
     # old and ugly env var use by jenkins, we do have parts of the code that use it, contains the PR number
-    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
+    PR_ID: $[ dependencies.configure.outputs['labels.pr_number'] ]
     # set the branch variable name, this is required by jenkins and we have a lot of scripts that depend on it
     BRANCH_NAME: $[ replace(variables['Build.SourceBranch'], 'refs/heads/', '') ]
-    XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness-labels'] ]
+    BUILD_REVISION: $[ variables['Build.SourceVersion'] ]
+    XHARNESS_LABELS: $[ dependencies.configure.outputs['labels.xharness_labels'] ]
+    RUN_MAC_TESTS: $[ dependencies.configure.outputs['decisions.RUN_MAC_TESTS'] ]
   pool:
     name: $(AgentPoolComputed)
     demands:
     - Agent.OS -equals Darwin
     - macios_image -equals v2.1     # Big Sur image with Xcode 12.4 and 12.5 installed
+    - XcodeChannel -equals ${{ parameters.xcodeChannel }}
   workspace:
     clean: all
 
   steps:
-  - template: build.yml
+  - template: build-pkgs.yml
     parameters:
+      isPR: ${{ parameters.isPR }}
       runTests: ${{ parameters.runTests }}
       runDeviceTests: ${{ parameters.runDeviceTests }}
       vsdropsPrefix: ${{ parameters.vsdropsPrefix }}
@@ -126,51 +141,3 @@ jobs:
       xqaCertPass: ${{ parameters.xqaCertPass }}
       enableDotnet: ${{ parameters.enableDotnet }}
       skipESRP: ${{ parameters.skipESRP }}
-      enableAPIDiff: false # this step should never execute the api diff, that should be left for the parallel job
-
-# This job uploads the pkgs generated by the build step in the azure blob storage. This has to be done in a different job
-# because the azure blob storate tools DO NOT work on mac OS meaning that we need a bot running Windows. build uploads the contents
-# to the pipeline artefacts and we download and upload to azure in this job.
-- job: upload_azure_blob
-  displayName: 'Upload packages to Azure & SBOM'
-  timeoutInMinutes: 1000
-  dependsOn:
-  - configure
-  - build # can start as soon as the packages are available
-  condition: succeeded()
-
-  variables:
-    Parameters.outputStorageUri: ''
-    NUGETS_PUBLISHED: $[ dependencies.build.outputs['nugetPublishing.NUGETS_PUBLISHED'] ]
-    SKIP_NUGETS: $[ dependencies.configure.outputs['labels.skip-nugets'] ]
-
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: upload-azure.yml
-    parameters:
-      enableDotnet: ${{ parameters.enableDotnet }}
-      sbomFilter: '*.nupkg;*.pkg;*.msi'
-
-# Job that runs on a vm that downloads the artefacts information and adds a github comment pointing to the results of the build.
-- job: artifacts_github_comment
-  displayName: 'Publish GitHub Comment - Artifacts'
-  timeoutInMinutes: 1000
-  dependsOn:
-  - configure
-  - build
-  - upload_azure_blob
-  condition: succeededOrFailed()
-  variables:
-    BUILD_PACKAGE: $[ dependencies.configure.outputs['labels.build-package'] ]
-    TESTS_BOT: $[ dependencies.build.outputs['build.TESTS_BOT'] ]  # we build in a diff bot than the ones used for the comments
-    PR_ID: $[ dependencies.configure.outputs['labels.pr-number'] ]
-    GIT_HASH: $[ dependencies.build.outputs['fix_commit.GIT_HASH'] ]
-  pool:
-    vmImage: 'windows-latest'
-    workspace:
-      clean: all
-  steps:
-  - template: artifact-github-comment.yml

@@ -5644,7 +5644,11 @@ namespace Foundation
 		NSDictionary ToDictionary ();
 	
 		[Export ("volatileDomainNames")]
+#if XAMCORE_5_0
+		string [] VolatileDomainNames { get; }
+#else
 		string [] VolatileDomainNames ();
+#endif
 	
 		[Export ("volatileDomainForName:")]
 		NSDictionary GetVolatileDomain (string domainName);
@@ -5756,18 +5760,23 @@ namespace Foundation
 		NSUrl _FromStringRelative (string url, NSUrl relative);
 		
 		[Export ("absoluteString")]
+		[NullAllowed]
 		string AbsoluteString { get; }
 
 		[Export ("absoluteURL")]
+		[NullAllowed]
 		NSUrl AbsoluteUrl { get; }
 
 		[Export ("baseURL")]
+		[NullAllowed]
 		NSUrl BaseUrl { get; }
 
 		[Export ("fragment")]
+		[NullAllowed]
 		string Fragment { get; }
 
 		[Export ("host")]
+		[NullAllowed]
 		string Host { get; }
 
 		[Internal]
@@ -5785,42 +5794,54 @@ namespace Foundation
 		[Deprecated (PlatformName.WatchOS, 6,0, message: "Always return 'null'. Use and parse 'Path' instead.")]
 		[Deprecated (PlatformName.TvOS, 13,0, message: "Always return 'null'. Use and parse 'Path' instead.")]
 		[Export ("parameterString")]
+		[NullAllowed]
 		string ParameterString { get;}
 
 		[Export ("password")]
+		[NullAllowed]
 		string Password { get;}
 
 		[Export ("path")]
+		[NullAllowed]
 		string Path { get;}
 
 		[Export ("query")]
+		[NullAllowed]
 		string Query { get;}
 
 		[Export ("relativePath")]
+		[NullAllowed]
 		string RelativePath { get;}
 
 		[Export ("pathComponents")]
+		[NullAllowed]
 		string [] PathComponents { get; }
 
 		[Export ("lastPathComponent")]
+		[NullAllowed]
 		string LastPathComponent { get; }
 
 		[Export ("pathExtension")]
+		[NullAllowed]
 		string PathExtension { get; }
 
 		[Export ("relativeString")]
 		string RelativeString { get;}
 
 		[Export ("resourceSpecifier")]
+		[NullAllowed]
 		string ResourceSpecifier { get;}
 
 		[Export ("scheme")]
+		[NullAllowed]
 		string Scheme { get;}
 
 		[Export ("user")]
+		[NullAllowed]
 		string User { get;}
 
 		[Export ("standardizedURL")]
+		[NullAllowed]
 		NSUrl StandardizedUrl { get; }
 
 		[Export ("URLByAppendingPathComponent:isDirectory:")]
@@ -5867,6 +5888,7 @@ namespace Foundation
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
 		[Export ("URLFromPasteboard:")]
 		[Static]
+		[return: NullAllowed]
 		NSUrl FromPasteboard (NSPasteboard pasteboard);
 
 		[NoiOS][NoMacCatalyst][NoWatch][NoTV]
@@ -5886,9 +5908,11 @@ namespace Foundation
 		bool WriteBookmarkData (NSData data, NSUrl bookmarkFileUrl, NSUrlBookmarkCreationOptions options, out NSError error);
 
 		[Export("filePathURL")]
+		[NullAllowed]
 		NSUrl FilePathUrl { get; }
 
 		[Export("fileReferenceURL")]
+		[NullAllowed]
 		NSUrl FileReferenceUrl { get; }		
 
 		[Export ("getResourceValue:forKey:error:"), Internal]
@@ -6810,6 +6834,7 @@ namespace Foundation
 #if HAS_NEWSSTANDKIT
 		// Extension from iOS5, NewsstandKit
 		[Deprecated (PlatformName.iOS, 13,0, message: "Use Background Remote Notifications instead.")]
+		[NoTV][NoMac][NoMacCatalyst]
 		[NullAllowed]
 		[Export ("newsstandAssetDownload", ArgumentSemantic.Weak)]
 		NewsstandKit.NKAssetDownload NewsstandAssetDownload { get; }
@@ -10255,6 +10280,7 @@ namespace Foundation
 		CGSize PreferredPresentationSize {
 			get;
 #if !MONOMAC
+			[NoMac]
 			set;
 #endif
 		}
@@ -11993,8 +12019,7 @@ namespace Foundation
 		[Export ("performExpiringActivityWithReason:usingBlock:")]
 		void PerformExpiringActivity (string reason, Action<bool> block);
 
-		[NoMac]
-		[iOS (9,0)]
+		[iOS (9,0)][Mac (10,12)][MacCatalyst (13,1)]
 		[Export ("lowPowerModeEnabled")]
 		bool LowPowerModeEnabled { [Bind ("isLowPowerModeEnabled")] get; }
 

@@ -1,16 +1,25 @@
 # Perform gihub cleaning steps
 
-steps:
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: false
-  persistCredentials: true
-  path: s/xamarin-macios
+parameters:
+- name: commentToHide
+  type: string
+  default: '[comment]: <> (This is a comment added by Azure DevOps)'
 
+- name: checkoutCode
+  type: boolean
+  default: true
+
+steps:
+
+- ${{ if parameters.checkoutCode }}:
+  - template: checkout.yml
+    parameters:
+      isPR: false # always use the latests version of the script
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
     $comments = New-GitHubCommentsObject -Org "xamarin" -Repo "xamarin-macios" -Token $(GitHub.Token)
+    $ciComment = "${{ parameters.commentToHide }}"
 
     $prId = "$(Build.SourceBranch)".Replace("refs/pull/", "").Replace("/merge", "")
     $prComments = $comments.GetCommentsForPR($prId)
@@ -18,7 +27,7 @@ steps:
     $botComments = [System.Collections.ArrayList]@()
     foreach ($c in $prComments) {
       if ($c.Author -eq "vs-mobiletools-engineering-service2") {
-        if ($c.Body.Contains("[PR Build]") -or $c.Body.Contains("[CI Build]")) {
+        if ($c.Body.Contains($ciComment)) {
           $botComments.Add($c)
         }
       }

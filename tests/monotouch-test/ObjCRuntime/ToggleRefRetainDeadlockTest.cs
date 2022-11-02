@@ -68,9 +68,17 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Thread.Sleep (500);
 
 			done.Set ();
-			gcThread.Join ();
-			rrThread.Join ();
-			itThread.Join ();
+
+			// If there's a deadlock, we're going to want a native stack trace to debug, so just abort right away.
+			if (!gcThread.Join (TimeSpan.FromSeconds (30)))
+				abort ();
+			if (!rrThread.Join (TimeSpan.FromSeconds (30)))
+				abort ();
+			if (!itThread.Join (TimeSpan.FromSeconds (30)))
+				abort ();
 		}
+
+		[DllImport (Constants.libcLibrary)]
+		static extern void abort ();
 	}
 }

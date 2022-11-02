@@ -151,4 +151,3 @@
 !missing-type! NSOrderedCollectionDifference not bound
 !missing-type! NSPresentationIntent not bound
 !extra-enum-value! Managed value 2 for NSItemProviderRepresentationVisibility.Group is available for the current platform while the value in the native header is not
-!extra-enum-value! Managed value 23 for NSSearchPathDirectory.ApplicationScriptsDirectory is available for the current platform while the value in the native header is not

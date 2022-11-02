@@ -200,7 +200,7 @@ namespace CoreFoundation {
 			unsafe {
 				// this returns non-null only if the string can be represented as unicode
 				char* u = CFStringGetCharactersPtr (handle);
-				if (u == null) {
+				if (u is null) {
 					// alloc short string on the stack, otherwise use the heap
 					allocate_memory = l > 128;
 					// var m = allocate_memory ? (char*) Marshal.AllocHGlobal (l * 2) : stackalloc char [l];
@@ -235,7 +235,7 @@ namespace CoreFoundation {
 			if (x is null)
 				return null;
 
-			if (x.str == null)
+			if (x.str is null)
 				x.str = FromHandle (x.Handle);
 			
 			return x.str;
@@ -252,7 +252,7 @@ namespace CoreFoundation {
 
 		public int Length {
 			get {
-				if (str != null)
+				if (str is not null)
 					return str.Length;
 				else
 					return (int)CFStringGetLength (Handle);
@@ -265,7 +265,7 @@ namespace CoreFoundation {
 		
 		public char this [nint p] {
 			get {
-				if (str != null)
+				if (str is not null)
 					return str [(int) p];
 				else
 					return CFStringGetCharacterAtIndex (Handle, p);

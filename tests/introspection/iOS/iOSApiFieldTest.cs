@@ -51,6 +51,12 @@ namespace Introspection {
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
 				break;
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
 			case "Phase":
 			case "DeviceCheck": // Only available on device
 				if (TestRuntime.IsSimulatorOrDesktop)

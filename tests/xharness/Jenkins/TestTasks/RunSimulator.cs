@@ -67,7 +67,7 @@ namespace Xharness.Jenkins.TestTasks {
 				} else {
 					testTask.Device = testTask.Candidates.First ();
 					if (testTask.Platform == TestPlatform.watchOS)
-						testTask.CompanionDevice = simulators.FindCompanionDevice (simulatorLoadLog, testTask.Device);
+						testTask.CompanionDevice = await simulators.FindCompanionDevice (simulatorLoadLog, testTask.Device);
 				}
 			} catch (Exception e) {
 				testTask.ExecutionResult = TestExecutingResult.DeviceNotFound;

@@ -19,7 +19,7 @@ namespace LocalAuthentication {
 
 	[iOS (8,0)]
 	[Mac (10, 10)]
-	[Native]
+	[Native ("LAError")]
 	[ErrorDomain ("LAErrorDomain")]
 	public enum LAStatus : long {
 		Success = 0,

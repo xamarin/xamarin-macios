@@ -34,6 +34,8 @@ using System;
 using Foundation;
 using ObjCRuntime;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if NET
@@ -66,11 +68,11 @@ namespace AVFoundation {
 		public bool Status { get; private set; }
 	}
 
-	#pragma warning disable 672
+#pragma warning disable 672
 	sealed class InternalAVAudioPlayerDelegate : AVAudioPlayerDelegate {
-		internal EventHandler cbEndInterruption, cbBeginInterruption;
-		internal EventHandler<AVStatusEventArgs> cbFinishedPlaying;
-		internal EventHandler<AVErrorEventArgs> cbDecoderError;
+		internal EventHandler? cbEndInterruption, cbBeginInterruption;
+		internal EventHandler<AVStatusEventArgs>? cbFinishedPlaying;
+		internal EventHandler<AVErrorEventArgs?>? cbDecoderError;
 
 		public InternalAVAudioPlayerDelegate ()
 		{
@@ -80,41 +82,41 @@ namespace AVFoundation {
 		[Preserve (Conditional = true)]
 		public override void FinishedPlaying (AVAudioPlayer player, bool flag)
 		{
-			if (cbFinishedPlaying != null)
+			if (cbFinishedPlaying is not null)
 				cbFinishedPlaying (player, new AVStatusEventArgs (flag));
 			if (player.Handle == IntPtr.Zero)
 				throw new ObjectDisposedException ("player", "the player object was Dispose()d during the callback, this has corrupted the state of the program");
 		}
-	
+
 		[Preserve (Conditional = true)]
-		public override void DecoderError (AVAudioPlayer player, NSError  error)
+		public override void DecoderError (AVAudioPlayer player, NSError? error)
 		{
-			if (cbDecoderError != null)
-				cbDecoderError (player, new AVErrorEventArgs (error));
+			if (cbDecoderError is not null)
+				cbDecoderError (player, error is not null ? new AVErrorEventArgs (error) : null);
 		}
-#if !MONOMAC	
+#if !MONOMAC
 		[Preserve (Conditional = true)]
-		public override void BeginInterruption (AVAudioPlayer  player)
+		public override void BeginInterruption (AVAudioPlayer player)
 		{
-			if (cbBeginInterruption != null)
+			if (cbBeginInterruption is not null)
 				cbBeginInterruption (player, EventArgs.Empty);
 		}
-	
+
 		[Preserve (Conditional = true)]
 		public override void EndInterruption (AVAudioPlayer player)
 		{
-			if (cbEndInterruption != null)
+			if (cbEndInterruption is not null)
 				cbEndInterruption (player, EventArgs.Empty);
 		}
 #endif
 	}
-	#pragma warning restore 672
-	
+#pragma warning restore 672
+
 	public partial class AVAudioPlayer {
 		InternalAVAudioPlayerDelegate EnsureEventDelegate ()
 		{
 			var del = WeakDelegate as InternalAVAudioPlayerDelegate;
-			if (del == null){
+			if (del is null) {
 				del = new InternalAVAudioPlayerDelegate ();
 				WeakDelegate = del;
 			}
@@ -127,7 +129,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbFinishedPlaying -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbFinishedPlaying -= value;
 			}
 		}
 
@@ -137,7 +140,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbDecoderError -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbDecoderError -= value;
 			}
 		}
 
@@ -147,7 +151,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbBeginInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbBeginInterruption -= value;
 			}
 		}
 
@@ -157,18 +162,19 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbEndInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbEndInterruption -= value;
 			}
 		}
 	}
 
 #if !TVOS
 	internal class InternalAVAudioRecorderDelegate : AVAudioRecorderDelegate {
-		internal EventHandler cbEndInterruption, cbBeginInterruption;
-		internal EventHandler<AVStatusEventArgs> cbFinishedRecording;
-		internal EventHandler<AVErrorEventArgs> cbEncoderError;
+		internal EventHandler? cbEndInterruption, cbBeginInterruption;
+		internal EventHandler<AVStatusEventArgs>? cbFinishedRecording;
+		internal EventHandler<AVErrorEventArgs?>? cbEncoderError;
 
-		public InternalAVAudioRecorderDelegate ()	
+		public InternalAVAudioRecorderDelegate ()
 		{
 			IsDirectBinding = false;
 		}
@@ -176,28 +182,28 @@ namespace AVFoundation {
 		[Preserve (Conditional = true)]
 		public override void FinishedRecording (AVAudioRecorder recorder, bool flag)
 		{
-			if (cbFinishedRecording != null)
+			if (cbFinishedRecording is not null)
 				cbFinishedRecording (recorder, new AVStatusEventArgs (flag));
 		}
-	
+
 		[Preserve (Conditional = true)]
-		public override void EncoderError (AVAudioRecorder recorder, NSError error)
+		public override void EncoderError (AVAudioRecorder recorder, NSError? error)
 		{
-			if (cbEncoderError != null)
-				cbEncoderError (recorder, new AVErrorEventArgs (error));
+			if (cbEncoderError is not null)
+				cbEncoderError (recorder, error is not null ? new AVErrorEventArgs (error) : null);
 		}
-#if !MONOMAC	
+#if !MONOMAC
 		[Preserve (Conditional = true)]
-		public override void BeginInterruption (AVAudioRecorder  recorder)
+		public override void BeginInterruption (AVAudioRecorder recorder)
 		{
-			if (cbBeginInterruption != null)
+			if (cbBeginInterruption is not null)
 				cbBeginInterruption (recorder, EventArgs.Empty);
 		}
-	
+
 		[Preserve (Conditional = true)]
 		public override void EndInterruption (AVAudioRecorder recorder)
 		{
-			if (cbEndInterruption != null)
+			if (cbEndInterruption is not null)
 				cbEndInterruption (recorder, EventArgs.Empty);
 		}
 #endif
@@ -207,7 +213,7 @@ namespace AVFoundation {
 		InternalAVAudioRecorderDelegate EnsureEventDelegate ()
 		{
 			var del = WeakDelegate as InternalAVAudioRecorderDelegate;
-			if (del == null){
+			if (del is null) {
 				del = new InternalAVAudioRecorderDelegate ();
 				WeakDelegate = del;
 			}
@@ -220,7 +226,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbFinishedRecording -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbFinishedRecording -= value;
 			}
 		}
 
@@ -230,7 +237,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbEncoderError -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbEncoderError -= value;
 			}
 		}
 
@@ -240,7 +248,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbBeginInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbBeginInterruption -= value;
 			}
 		}
 
@@ -250,7 +259,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbEndInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbEndInterruption -= value;
 			}
 		}
 	}
@@ -298,52 +308,52 @@ namespace AVFoundation {
 
 		public string Category { get; private set; }
 	}
-	
+
 #if !MONOMAC && !TVOS
 	internal class InternalAVAudioSessionDelegate : AVAudioSessionDelegate {
-		internal EventHandler cbEndInterruption, cbBeginInterruption;
-		internal EventHandler<AVCategoryEventArgs> cbCategoryChanged;
-		internal EventHandler<AVStatusEventArgs> cbInputAvailabilityChanged;
-		internal EventHandler<AVSampleRateEventArgs> cbSampleRateChanged;
-		internal EventHandler<AVChannelsEventArgs> cbInputChanged;
-		internal EventHandler<AVChannelsEventArgs> cbOutputChanged;
+		internal EventHandler? cbEndInterruption, cbBeginInterruption;
+		internal EventHandler<AVCategoryEventArgs>? cbCategoryChanged;
+		internal EventHandler<AVStatusEventArgs>? cbInputAvailabilityChanged;
+		internal EventHandler<AVSampleRateEventArgs>? cbSampleRateChanged;
+		internal EventHandler<AVChannelsEventArgs>? cbInputChanged;
+		internal EventHandler<AVChannelsEventArgs>? cbOutputChanged;
 
 		AVAudioSession session;
-		
+
 		[Preserve (Conditional = true)]
 		public InternalAVAudioSessionDelegate (AVAudioSession session)
 		{
 			this.session = session;
 		}
-		
+
 		[Preserve (Conditional = true)]
 		public override void BeginInterruption ()
 		{
-			if (cbBeginInterruption != null)
+			if (cbBeginInterruption is not null)
 				cbBeginInterruption (session, EventArgs.Empty);
 		}
-	
+
 		[Preserve (Conditional = true)]
 		public override void EndInterruption ()
 		{
-			if (cbEndInterruption != null)
+			if (cbEndInterruption is not null)
 				cbEndInterruption (session, EventArgs.Empty);
 		}
 
 		[Preserve (Conditional = true)]
 		public override void InputIsAvailableChanged (bool isInputAvailable)
 		{
-			if (cbInputAvailabilityChanged != null)
+			if (cbInputAvailabilityChanged is not null)
 				cbInputAvailabilityChanged (session, new AVStatusEventArgs (isInputAvailable));
-		}		
-	
+		}
+
 	}
 
 	public partial class AVAudioSession {
 		InternalAVAudioSessionDelegate EnsureEventDelegate ()
 		{
 			var del = WeakDelegate as InternalAVAudioSessionDelegate;
-			if (del == null){
+			if (del is null) {
 				del = new InternalAVAudioSessionDelegate (this);
 				WeakDelegate = del;
 			}
@@ -360,14 +370,15 @@ namespace AVFoundation {
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveInterruption' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
 #endif
 		public event EventHandler BeginInterruption {
 			add {
 				EnsureEventDelegate ().cbBeginInterruption += value;
 			}
 			remove {
-				EnsureEventDelegate ().cbBeginInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbBeginInterruption -= value;
 			}
 		}
 
@@ -381,14 +392,15 @@ namespace AVFoundation {
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveInterruption' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveInterruption' instead.")]
 #endif
 		public event EventHandler EndInterruption {
 			add {
 				EnsureEventDelegate ().cbEndInterruption += value;
 			}
 			remove {
-				EnsureEventDelegate ().cbBeginInterruption -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbBeginInterruption -= value;
 			}
 		}
 
@@ -402,14 +414,15 @@ namespace AVFoundation {
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 #endif
 		public event EventHandler<AVCategoryEventArgs> CategoryChanged {
 			add {
 				EnsureEventDelegate ().cbCategoryChanged += value;
 			}
 			remove {
-				EnsureEventDelegate ().cbCategoryChanged -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbCategoryChanged -= value;
 			}
 		}
 
@@ -423,14 +436,15 @@ namespace AVFoundation {
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 #endif
 		public event EventHandler<AVStatusEventArgs> InputAvailabilityChanged {
 			add {
 				EnsureEventDelegate ().cbInputAvailabilityChanged += value;
 			}
 			remove {
-				EnsureEventDelegate ().cbInputAvailabilityChanged -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbInputAvailabilityChanged -= value;
 			}
 		}
 
@@ -444,7 +458,7 @@ namespace AVFoundation {
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 #endif
 		public event EventHandler<AVSampleRateEventArgs> SampleRateChanged {
 			add {
@@ -452,7 +466,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbSampleRateChanged -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbSampleRateChanged -= value;
 			}
 		}
 
@@ -466,7 +481,7 @@ namespace AVFoundation {
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 #endif
 		public event EventHandler<AVChannelsEventArgs> InputChannelsChanged {
 			add {
@@ -474,7 +489,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbInputChanged += value;
+				if (value is not null)
+					EnsureEventDelegate ().cbInputChanged += value;
 			}
 		}
 
@@ -488,7 +504,7 @@ namespace AVFoundation {
 		[Obsolete ("Starting with ios6.0 use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.", DiagnosticId = "BI1234", UrlFormat = "https://github.com/xamarin/xamarin-macios/wiki/Obsolete")]
 #endif
 #else
-		[Deprecated (PlatformName.iOS, 6,0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
+		[Deprecated (PlatformName.iOS, 6, 0, message: "Use 'AVAudioSession.Notification.ObserveAudioRouteChange' instead.")]
 #endif
 		public event EventHandler<AVChannelsEventArgs> OutputChannelsChanged {
 			add {
@@ -496,7 +512,8 @@ namespace AVFoundation {
 			}
 
 			remove {
-				EnsureEventDelegate ().cbOutputChanged -= value;
+				if (value is not null)
+					EnsureEventDelegate ().cbOutputChanged -= value;
 			}
 		}
 	}

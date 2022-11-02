@@ -3,6 +3,7 @@ using Microsoft.Build.Utilities;
 using System.IO;
 using System.IO.Compression;
 using Xamarin.iOS.Windows;
+using Xamarin.MacDev;
 
 namespace Xamarin.iOS.HotRestart.Tasks {
 	public class PrepareAppBundle : Task {
@@ -36,6 +37,10 @@ namespace Xamarin.iOS.HotRestart.Tasks {
 					"Xamarin.PreBuilt.iOS.app.zip");
 
 				ZipFile.ExtractToDirectory (preBuiltAppBundlePath, AppBundlePath);
+
+				// Ensure the archived-expanded-entitlements.xcent is empty. If there are any entitlements in that file, the new signature will be invalid
+				new PDictionary ().Save (Path.Combine (AppBundlePath, "archived-expanded-entitlements.xcent"));
+
 				File.WriteAllText (Path.Combine (AppBundlePath, "Extracted"), string.Empty);
 			}
 

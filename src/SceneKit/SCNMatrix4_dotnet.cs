@@ -1,7 +1,4 @@
 /*
- * This keeps the code of OpenTK's Matrix4 almost intact, except we replace the
- * Vector4 with a SCNVector4
- 
 Copyright (c) 2006 - 2008 The Open Toolkit library.
 Copyright (c) 2014 Xamarin Inc.  All rights reserved
 
@@ -52,28 +49,55 @@ using pfloat = System.Runtime.InteropServices.NFloat;
 
 namespace SceneKit {
 	/// <summary>
-	/// Represents a 4x4 Matrix
+	/// Represents a 4x4 matrix using a column-major memory layout.
 	/// </summary>
 	[Serializable]
 	public struct SCNMatrix4 : IEquatable<SCNMatrix4> {
 		#region Fields
 
+		/*
+		 * SCNMatrix4 is defined like this for iOS, tvOS and watchOS:
+		 *
+		 * 	typedef struct SCNMatrix4 {
+		 * 	    float m11, m12, m13, m14;
+		 * 	    float m21, m22, m23, m24;
+		 * 	    float m31, m32, m33, m34;
+		 * 	    float m41, m42, m43, m44;
+		 * 	} SCNMatrix4;
+		 *
+		 * and like this for macOS:
+		 *
+		 * 	struct CATransform3D
+		 * 	{
+		 * 	  CGFloat m11, m12, m13, m14;
+		 * 	  CGFloat m21, m22, m23, m24;
+		 * 	  CGFloat m31, m32, m33, m34;
+		 * 	  CGFloat m41, m42, m43, m44;
+		 * 	};
+		 * 	typedef CATransform3D SCNMatrix4;
+		 *
+		 * It's not obvious from this definitions whether the matrix is row-major or column-major, and neither the documentation
+		 * nor the headers are particularly helpful, but it's possible to do some math to figure it out. See this for more info:
+		 * https://github.com/xamarin/xamarin-macios/issues/15094#issuecomment-1139699662 (result: SCNMatrix4 is using a column-major layout)
+		 *
+		 **/
+
 		/// <summary>
 		/// Left-most column of the matrix
 		/// </summary>
-		public SCNVector4 Column0;
+		public SCNVector4 Column0; // m11, m12, m13, m14
 		/// <summary>
 		/// 2nd column of the matrix
 		/// </summary>
-		public SCNVector4 Column1;
+		public SCNVector4 Column1; // m21, m22, m23, m24
 		/// <summary>
 		/// 3rd column of the matrix
 		/// </summary>
-		public SCNVector4 Column2;
+		public SCNVector4 Column2; // m31, m32, m33, m34
 		/// <summary>
 		/// Right-most column of the matrix
 		/// </summary>
-		public SCNVector4 Column3;
+		public SCNVector4 Column3; // m41, m42, m43, m44
 
 		/// <summary>
 		/// The identity matrix
@@ -133,10 +157,10 @@ namespace SceneKit {
 #if !WATCH
 		public SCNMatrix4 (CoreAnimation.CATransform3D transform)
 		{
-			Column0 = new SCNVector4 ((pfloat) transform.M11, (pfloat) transform.M21, (pfloat) transform.M31, (pfloat) transform.M41);
-			Column1 = new SCNVector4 ((pfloat) transform.M12, (pfloat) transform.M22, (pfloat) transform.M32, (pfloat) transform.M42);
-			Column2 = new SCNVector4 ((pfloat) transform.M13, (pfloat) transform.M23, (pfloat) transform.M33, (pfloat) transform.M43);
-			Column3 = new SCNVector4 ((pfloat) transform.M14, (pfloat) transform.M24, (pfloat) transform.M34, (pfloat) transform.M44);
+			Column0 = new SCNVector4 ((pfloat) transform.M11, (pfloat) transform.M12, (pfloat) transform.M13, (pfloat) transform.M14);
+			Column1 = new SCNVector4 ((pfloat) transform.M21, (pfloat) transform.M22, (pfloat) transform.M23, (pfloat) transform.M24);
+			Column2 = new SCNVector4 ((pfloat) transform.M31, (pfloat) transform.M32, (pfloat) transform.M33, (pfloat) transform.M34);
+			Column3 = new SCNVector4 ((pfloat) transform.M41, (pfloat) transform.M42, (pfloat) transform.M43, (pfloat) transform.M44);
 		}
 #endif
 
@@ -167,10 +191,10 @@ namespace SceneKit {
 		public SCNVector4 Row0 {
 			get { return new SCNVector4 (Column0.X, Column1.X, Column2.X, Column3.X); }
 			set {
-				M11 = value.X;
-				M12 = value.Y;
-				M13 = value.Z;
-				M14 = value.W;
+				Column0.X = value.X;
+				Column1.X = value.Y;
+				Column2.X = value.Z;
+				Column3.X = value.W;
 			}
 		}
 
@@ -180,10 +204,10 @@ namespace SceneKit {
 		public SCNVector4 Row1 {
 			get { return new SCNVector4 (Column0.Y, Column1.Y, Column2.Y, Column3.Y); }
 			set {
-				M21 = value.X;
-				M22 = value.Y;
-				M23 = value.Z;
-				M24 = value.W;
+				Column0.Y = value.X;
+				Column1.Y = value.Y;
+				Column2.Y = value.Z;
+				Column3.Y = value.W;
 			}
 		}
 
@@ -193,10 +217,10 @@ namespace SceneKit {
 		public SCNVector4 Row2 {
 			get { return new SCNVector4 (Column0.Z, Column1.Z, Column2.Z, Column3.Z); }
 			set {
-				M31 = value.X;
-				M32 = value.Y;
-				M33 = value.Z;
-				M34 = value.W;
+				Column0.Z = value.X;
+				Column1.Z = value.Y;
+				Column2.Z = value.Z;
+				Column3.Z = value.W;
 			}
 		}
 
@@ -206,90 +230,90 @@ namespace SceneKit {
 		public SCNVector4 Row3 {
 			get { return new SCNVector4 (Column0.W, Column1.W, Column2.W, Column3.W); }
 			set {
-				M41 = value.X;
-				M42 = value.Y;
-				M43 = value.Z;
-				M44 = value.W;
+				Column0.W = value.X;
+				Column1.W = value.Y;
+				Column2.W = value.Z;
+				Column3.W = value.W;
 			}
 		}
 
 		/// <summary>
-		/// Gets or sets the value at row 1, column 1 of this instance.
+		/// Gets or sets the value at column 1, row 1 of this instance.
 		/// </summary>
 		public pfloat M11 { get { return Column0.X; } set { Column0.X = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 1, column 2 of this instance.
+		/// Gets or sets the value at column 1, row 2 of this instance.
 		/// </summary>
-		public pfloat M12 { get { return Column1.X; } set { Column1.X = value; } }
+		public pfloat M12 { get { return Column0.Y; } set { Column0.Y = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 1, column 3 of this instance.
+		/// Gets or sets the value at column 1, row 3 of this instance.
 		/// </summary>
-		public pfloat M13 { get { return Column2.X; } set { Column2.X = value; } }
+		public pfloat M13 { get { return Column0.Z; } set { Column0.Z = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 1, column 4 of this instance.
+		/// Gets or sets the value at column 1, row 4 of this instance.
 		/// </summary>
-		public pfloat M14 { get { return Column3.X; } set { Column3.X = value; } }
+		public pfloat M14 { get { return Column0.W; } set { Column0.W = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 2, column 1 of this instance.
+		/// Gets or sets the value at column 2, row 1 of this instance.
 		/// </summary>
-		public pfloat M21 { get { return Column0.Y; } set { Column0.Y = value; } }
+		public pfloat M21 { get { return Column1.X; } set { Column1.X = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 2, column 2 of this instance.
+		/// Gets or sets the value at column 2, row 2 of this instance.
 		/// </summary>
 		public pfloat M22 { get { return Column1.Y; } set { Column1.Y = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 2, column 3 of this instance.
+		/// Gets or sets the value at column 2, row 3 of this instance.
 		/// </summary>
-		public pfloat M23 { get { return Column2.Y; } set { Column2.Y = value; } }
+		public pfloat M23 { get { return Column1.Z; } set { Column1.Z = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 2, column 4 of this instance.
+		/// Gets or sets the value at column 2, row 4 of this instance.
 		/// </summary>
-		public pfloat M24 { get { return Column3.Y; } set { Column3.Y = value; } }
+		public pfloat M24 { get { return Column1.W; } set { Column1.W = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 3, column 1 of this instance.
+		/// Gets or sets the value at column 3, row 1 of this instance.
 		/// </summary>
-		public pfloat M31 { get { return Column0.Z; } set { Column0.Z = value; } }
+		public pfloat M31 { get { return Column2.X; } set { Column2.X = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 3, column 2 of this instance.
+		/// Gets or sets the value at column 3, row 2 of this instance.
 		/// </summary>
-		public pfloat M32 { get { return Column1.Z; } set { Column1.Z = value; } }
+		public pfloat M32 { get { return Column2.Y; } set { Column2.Y = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 3, column 3 of this instance.
+		/// Gets or sets the value at column 3, row 3 of this instance.
 		/// </summary>
 		public pfloat M33 { get { return Column2.Z; } set { Column2.Z = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 3, column 4 of this instance.
+		/// Gets or sets the value at column 3, row 4 of this instance.
 		/// </summary>
-		public pfloat M34 { get { return Column3.Z; } set { Column3.Z = value; } }
+		public pfloat M34 { get { return Column2.W; } set { Column2.W = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 4, column 1 of this instance.
+		/// Gets or sets the value at column 4, row 1 of this instance.
 		/// </summary>
-		public pfloat M41 { get { return Column0.W; } set { Column0.W = value; } }
+		public pfloat M41 { get { return Column3.X; } set { Column3.X = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 4, column 2 of this instance.
+		/// Gets or sets the value at column 4, row 2 of this instance.
 		/// </summary>
-		public pfloat M42 { get { return Column1.W; } set { Column1.W = value; } }
+		public pfloat M42 { get { return Column3.Y; } set { Column3.Y = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 4, column 3 of this instance.
+		/// Gets or sets the value at column 4, row 3 of this instance.
 		/// </summary>
-		public pfloat M43 { get { return Column2.W; } set { Column2.W = value; } }
+		public pfloat M43 { get { return Column3.Z; } set { Column3.Z = value; } }
 
 		/// <summary>
-		/// Gets or sets the value at row 4, column 4 of this instance.
+		/// Gets or sets the value at column 4, row 4 of this instance.
 		/// </summary>
 		public pfloat M44 { get { return Column3.W; } set { Column3.W = value; } }
 
@@ -358,44 +382,85 @@ namespace SceneKit {
 		/// <param name="result">A matrix instance.</param>
 		public static void CreateFromAxisAngle (SCNVector3 axis, pfloat angle, out SCNMatrix4 result)
 		{
-			pfloat cos = (float) System.Math.Cos (-angle);
-			pfloat sin = (float) System.Math.Sin (-angle);
-			pfloat t = 1.0f - cos;
-
 			axis.Normalize ();
 
-			result = new SCNMatrix4 (t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f,
-			                     t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
-			                     t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f,
-			                     0, 0, 0, 1);
+			CreateFromAxisAngle (axis.X, axis.Y, axis.Z, angle, out result);
 		}
 
 		public static void CreateFromAxisAngle (Vector3 axis, float angle, out SCNMatrix4 result)
 		{
-			pfloat cos = (float) System.Math.Cos (-angle);
-			pfloat sin = (float) System.Math.Sin (-angle);
-			pfloat t = 1.0f - cos;
-
 			axis = Vector3.Normalize (axis);
 
-			result = new SCNMatrix4 (t * axis.X * axis.X + cos, t * axis.X * axis.Y - sin * axis.Z, t * axis.X * axis.Z + sin * axis.Y, 0.0f,
-			                     t * axis.X * axis.Y + sin * axis.Z, t * axis.Y * axis.Y + cos, t * axis.Y * axis.Z - sin * axis.X, 0.0f,
-			                     t * axis.X * axis.Z - sin * axis.Y, t * axis.Y * axis.Z + sin * axis.X, t * axis.Z * axis.Z + cos, 0.0f,
-			                     0, 0, 0, 1);
+			CreateFromAxisAngle (axis.X, axis.Y, axis.Z, angle, out result);
 		}
 
 		public static void CreateFromAxisAngle (Vector3d axis, double angle, out SCNMatrix4 result)
 		{
-			double cos = System.Math.Cos (-angle);
-			double sin = System.Math.Sin (-angle);
-			double t = 1.0f - cos;
-
 			axis.Normalize ();
 
-			result = new SCNMatrix4 ((pfloat) (t * axis.X * axis.X + cos), (pfloat) (t * axis.X * axis.Y - sin * axis.Z), (pfloat) (t * axis.X * axis.Z + sin * axis.Y), (pfloat) (0.0f),
-			         (pfloat) ( t * axis.X * axis.Y + sin * axis.Z), (pfloat) (t * axis.Y * axis.Y + cos), (pfloat) (t * axis.Y * axis.Z - sin * axis.X), (pfloat) 0.0f,
-			         (pfloat) (t * axis.X * axis.Z - sin * axis.Y), (pfloat) (t * axis.Y * axis.Z + sin * axis.X), (pfloat) (t * axis.Z * axis.Z + cos), (pfloat) 0.0f,
-			         0, 0, 0, 1);
+			CreateFromAxisAngle (axis.X, axis.Y, axis.Z, angle, out result);
+		}
+
+		/// <summary>
+		/// Build a rotation matrix from the specified axis/angle rotation.
+		/// </summary>
+		/// <param name="x">The x part of the normalized axis to rotate about.</param>
+		/// <param name="y">The y part of the normalized axis to rotate about.</param>
+		/// <param name="z">The z part of the normalized axis to rotate about.</param>
+		/// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
+		/// <param name="result">A matrix instance.</param>
+		static void CreateFromAxisAngle (float x, float y, float z, float angle, out SCNMatrix4 result)
+		{
+			var cos = MathF.Cos (-angle);
+			var sin = MathF.Sin (-angle);
+			var t = 1.0f - cos;
+
+			var m11 = t * x * x + cos;
+			var m12 = t * x * y - sin * z;
+			var m13 = t * x * z + sin * y;
+			var m21 = t * x * y + sin * z;
+			var m22 = t * y * y + cos;
+			var m23 = t * y * z - sin * x;
+			var m31 = t * x * z - sin * y;
+			var m32 = t * y * z + sin * x;
+			var m33 = t * z * z + cos;
+
+			result = new SCNMatrix4 (
+				 m11,  m21,  m31, 0.0f,
+				 m12,  m22,  m32, 0.0f,
+				 m13,  m23,  m33, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f);
+		}
+
+		/// <summary>
+		/// Build a rotation matrix from the specified axis/angle rotation.
+		/// </summary>
+		/// <param name="x">The x part of the normalized axis to rotate about.</param>
+		/// <param name="y">The y part of the normalized axis to rotate about.</param>
+		/// <param name="z">The z part of the normalized axis to rotate about.</param>
+		/// <param name="angle">Angle in radians to rotate counter-clockwise (looking in the direction of the given axis).</param>
+		/// <param name="result">A matrix instance.</param>
+		static void CreateFromAxisAngle (double x, double y, double z, double angle, out SCNMatrix4 result)
+		{
+			var cos = Math.Cos (-angle);
+			var sin = Math.Sin (-angle);
+			var t = 1.0f - cos;
+
+			var m11 = (pfloat) (t * x * x + cos);
+			var m12 = (pfloat) (t * x * y - sin * z);
+			var m13 = (pfloat) (t * x * z + sin * y);
+			var m21 = (pfloat) (t * x * y + sin * z);
+			var m22 = (pfloat) (t * y * y + cos);
+			var m23 = (pfloat) (t * y * z - sin * x);
+			var m31 = (pfloat) (t * x * z - sin * y);
+			var m32 = (pfloat) (t * y * z + sin * x);
+			var m33 = (pfloat) (t * z * z + cos);
+
+			result = new SCNMatrix4 (
+				 m11,  m21,  m31, 0.0f,
+				 m12,  m22,  m32, 0.0f,
+				 m13,  m23,  m33, 0.0f,
+				0.0f, 0.0f, 0.0f, 1.0f);
 		}
 
 		/// <summary>
@@ -425,11 +490,11 @@ namespace SceneKit {
 			pfloat cos = (pfloat) System.Math.Cos (angle);
 			pfloat sin = (pfloat) System.Math.Sin (angle);
 
-			result = new SCNMatrix4 ();
-			result.Row0 = SCNVector4.UnitX;
-			result.Row1 = new SCNVector4 (0.0f, cos, sin, 0.0f);
-			result.Row2 = new SCNVector4 (0.0f, -sin, cos, 0.0f);
-			result.Row3 = SCNVector4.UnitW;
+			result = new SCNMatrix4 (
+				1,    0,    0,    0,
+				0,  cos, -sin,    0,
+				0,  sin,  cos,    0,
+				0,    0,    0,    1);
 		}
 
 		/// <summary>
@@ -454,11 +519,11 @@ namespace SceneKit {
 			pfloat cos = (pfloat) System.Math.Cos (angle);
 			pfloat sin = (pfloat) System.Math.Sin (angle);
 
-			result = new SCNMatrix4 ();
-			result.Row0 = new SCNVector4 (cos, 0.0f, -sin, 0.0f);
-			result.Row1 = SCNVector4.UnitY;
-			result.Row2 = new SCNVector4 (sin, 0.0f, cos, 0.0f);
-			result.Row3 = SCNVector4.UnitW;
+			result = new SCNMatrix4 (
+				 cos,    0,  sin,    0,
+				   0,    1,    0,    0,
+				-sin,    0,  cos,    0,
+				   0,    0,    0,    1);
 		}
 
 		/// <summary>
@@ -483,11 +548,11 @@ namespace SceneKit {
 			pfloat cos = (pfloat) System.Math.Cos (angle);
 			pfloat sin = (pfloat) System.Math.Sin (angle);
 
-			result = new SCNMatrix4 ();
-			result.Row0 = new SCNVector4 (cos, sin, 0.0f, 0.0f);
-			result.Row1 = new SCNVector4 (-sin, cos, 0.0f, 0.0f);
-			result.Row2 = SCNVector4.UnitZ;
-			result.Row3 = SCNVector4.UnitW;
+			result = new SCNMatrix4 (
+				 cos, -sin,    0,    0,
+				 sin,  cos,    0,    0,
+				   0,    0,    1,    0,
+				   0,    0,    0,    1);
 		}
 
 		/// <summary>
@@ -515,8 +580,11 @@ namespace SceneKit {
 		/// <param name="result">The resulting SCNMatrix4 instance.</param>
 		public static void CreateTranslation (pfloat x, pfloat y, pfloat z, out SCNMatrix4 result)
 		{
-			result = Identity;
-			result.Row3 = new SCNVector4 (x, y, z, 1);
+			result = new SCNMatrix4 (
+				1, 0, 0, x,
+				0, 1, 0, y,
+				0, 0, 1, z,
+				0, 0, 0, 1);
 		}
 
 		/// <summary>
@@ -526,8 +594,7 @@ namespace SceneKit {
 		/// <param name="result">The resulting SCNMatrix4 instance.</param>
 		public static void CreateTranslation (ref SCNVector3 vector, out SCNMatrix4 result)
 		{
-			result = Identity;
-			result.Row3 = new SCNVector4 (vector.X, vector.Y, vector.Z, 1);
+			CreateTranslation (vector.X, vector.Y, vector.Z, out result);
 		}
 
 		/// <summary>
@@ -743,10 +810,11 @@ namespace SceneKit {
 			pfloat c = -(zFar + zNear) / (zFar - zNear);
 			pfloat d = -(2.0f * zFar * zNear) / (zFar - zNear);
 
-			result = new SCNMatrix4 (x, 0, 0, 0,
-			                     0, y, 0, 0,
-			                     a, b, c, -1,
-			                     0, 0, d, 0);
+			result = new SCNMatrix4 (
+				x,  0,  a,  0,
+				0,  y,  b,  0,
+				0,  0,  c,  d,
+				0,  0, -1,  0);
 		}
 
 		/// <summary>
@@ -807,12 +875,11 @@ namespace SceneKit {
 		/// <returns>A scaling matrix</returns>
 		public static SCNMatrix4 Scale (pfloat x, pfloat y, pfloat z)
 		{
-			var result = new SCNMatrix4 ();
-			result.Row0 = SCNVector4.UnitX * x;
-			result.Row1 = SCNVector4.UnitY * y;
-			result.Row2 = SCNVector4.UnitZ * z;
-			result.Row3 = SCNVector4.UnitW;
-			return result;
+			return new SCNMatrix4 (
+				x, 0, 0, 0,
+				0, y, 0, 0,
+				0, 0, z, 0,
+				0, 0, 0, 1);
 		}
 
 		#endregion
@@ -865,10 +932,11 @@ namespace SceneKit {
 			SCNVector3 x = SCNVector3.Normalize (SCNVector3.Cross (up, z));
 			SCNVector3 y = SCNVector3.Normalize (SCNVector3.Cross (z, x));
 
-			SCNMatrix4 rot = new SCNMatrix4 (new SCNVector4 (x.X, y.X, z.X, 0.0f),
-			                             new SCNVector4 (x.Y, y.Y, z.Y, 0.0f),
-			                             new SCNVector4 (x.Z, y.Z, z.Z, 0.0f),
-			                             SCNVector4.UnitW);
+			SCNMatrix4 rot = new SCNMatrix4 (
+					 x.X,  x.Y,  x.Z, 0.0f,
+					 y.X,  y.Y,  y.Z, 0.0f,
+					 z.X,  z.Y,  z.Z, 0.0f,
+					0.0f, 0.0f, 0.0f, 1.0f);
 
 			SCNMatrix4 trans = SCNMatrix4.CreateTranslation (-eye);
 
@@ -898,43 +966,92 @@ namespace SceneKit {
 		#region Multiply Functions
 
 		/// <summary>
-		/// Multiplies two instances.
+		/// Combines two transformation matrices.
 		/// </summary>
-		/// <param name="left">The left operand of the multiplication.</param>
-		/// <param name="right">The right operand of the multiplication.</param>
-		/// <returns>A new instance that is the result of the multiplication</returns>
-		public static SCNMatrix4 Mult (SCNMatrix4 left, SCNMatrix4 right)
+#if XAMCORE_5_0
+		/// <remarks>
+		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (secondTransformation * firstTransformation).
+		/// </remarks>
+		/// <param name="firstTransformation">The first transformation of the combination.</param>
+		/// <param name="secondTransformation">The second transformation of the combination.</param>
+#else
+		/// <remarks>
+		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (right * left).
+		/// </remarks>
+		/// <param name="left">The first transformation of the combination.</param>
+		/// <param name="right">The second transformation of the combination.</param>
+#endif
+		/// <returns>A new instance that is the result of the combination</returns>
+#if XAMCORE_5_0
+		public static SCNMatrix4 Mult (SCNMatrix4 firstTransformation, SCNMatrix4 secondTransformation)
+#else
+		public static SCNMatrix4 Mult(SCNMatrix4 left, SCNMatrix4 right)
+#endif
 		{
 			SCNMatrix4 result;
-			Mult (ref left, ref right, out result);
+			// the matrices are reversed: https://github.com/xamarin/xamarin-macios/issues/15094#issuecomment-1139699662
+#if XAMCORE_5_0
+			MatrixMultiply (ref secondTransformation, ref firstTransformation, out result);
+#else
+			MatrixMultiply (ref right, ref left, out result);
+#endif
 			return result;
 		}
 
 		/// <summary>
-		/// Multiplies two instances.
+		/// Combines two transformation matrices.
 		/// </summary>
-		/// <param name="left">The left operand of the multiplication.</param>
-		/// <param name="right">The right operand of the multiplication.</param>
-		/// <param name="result">A new instance that is the result of the multiplication</param>
-		public static void Mult (ref SCNMatrix4 left, ref SCNMatrix4 right, out SCNMatrix4 result)
+#if XAMCORE_5_0
+		/// <remarks>
+		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (secondTransformation * firstTransformation).
+		/// </remarks>
+		/// <param name="firstTransformation">The first transformation of the combination.</param>
+		/// <param name="secondTransformation">The second transformation of the combination.</param>
+#else
+		/// <remarks>
+		/// Combining two transformation matrices means using matrix multiplication to multiply them in the reverse order (right * left).
+		/// </remarks>
+		/// <param name="left">The first transformation of the combination.</param>
+		/// <param name="right">The second transformation of the combination.</param>
+#endif
+		/// <param name="result">A new instance that is the result of the combination</param>
+#if XAMCORE_5_0
+		public static void Mult (ref SCNMatrix4 firstTransformation, ref SCNMatrix4 secondTransformation, out SCNMatrix4 result)
+#else
+		public static void Mult(ref SCNMatrix4 left, ref SCNMatrix4 right, out SCNMatrix4 result)
+#endif
 		{
-			result = new SCNMatrix4 (
-				left.M11 * right.M11 + left.M12 * right.M21 + left.M13 * right.M31 + left.M14 * right.M41,
-				left.M11 * right.M12 + left.M12 * right.M22 + left.M13 * right.M32 + left.M14 * right.M42,
-				left.M11 * right.M13 + left.M12 * right.M23 + left.M13 * right.M33 + left.M14 * right.M43,
-				left.M11 * right.M14 + left.M12 * right.M24 + left.M13 * right.M34 + left.M14 * right.M44,
-				left.M21 * right.M11 + left.M22 * right.M21 + left.M23 * right.M31 + left.M24 * right.M41,
-				left.M21 * right.M12 + left.M22 * right.M22 + left.M23 * right.M32 + left.M24 * right.M42,
-				left.M21 * right.M13 + left.M22 * right.M23 + left.M23 * right.M33 + left.M24 * right.M43,
-				left.M21 * right.M14 + left.M22 * right.M24 + left.M23 * right.M34 + left.M24 * right.M44,
-				left.M31 * right.M11 + left.M32 * right.M21 + left.M33 * right.M31 + left.M34 * right.M41,
-				left.M31 * right.M12 + left.M32 * right.M22 + left.M33 * right.M32 + left.M34 * right.M42,
-				left.M31 * right.M13 + left.M32 * right.M23 + left.M33 * right.M33 + left.M34 * right.M43,
-				left.M31 * right.M14 + left.M32 * right.M24 + left.M33 * right.M34 + left.M34 * right.M44,
-				left.M41 * right.M11 + left.M42 * right.M21 + left.M43 * right.M31 + left.M44 * right.M41,
-				left.M41 * right.M12 + left.M42 * right.M22 + left.M43 * right.M32 + left.M44 * right.M42,
-				left.M41 * right.M13 + left.M42 * right.M23 + left.M43 * right.M33 + left.M44 * right.M43,
-				left.M41 * right.M14 + left.M42 * right.M24 + left.M43 * right.M34 + left.M44 * right.M44);
+			// the matrices are reversed: https://github.com/xamarin/xamarin-macios/issues/15094#issuecomment-1139699662
+#if XAMCORE_5_0
+			MatrixMultiply (ref secondTransformation, ref firstTransformation, out result);
+#else
+			MatrixMultiply (ref right, ref left, out result);
+#endif
+		}
+
+		// Multiply two matrices in the order you'd expect (left * right).
+		static void MatrixMultiply (ref SCNMatrix4 left, ref SCNMatrix4 right, out SCNMatrix4 result)
+		{
+			result = new SCNMatrix4(
+				left.Column0.X * right.Column0.X + left.Column1.X * right.Column0.Y + left.Column2.X * right.Column0.Z + left.Column3.X * right.Column0.W,
+				left.Column0.X * right.Column1.X + left.Column1.X * right.Column1.Y + left.Column2.X * right.Column1.Z + left.Column3.X * right.Column1.W,
+				left.Column0.X * right.Column2.X + left.Column1.X * right.Column2.Y + left.Column2.X * right.Column2.Z + left.Column3.X * right.Column2.W,
+				left.Column0.X * right.Column3.X + left.Column1.X * right.Column3.Y + left.Column2.X * right.Column3.Z + left.Column3.X * right.Column3.W,
+
+				left.Column0.Y * right.Column0.X + left.Column1.Y * right.Column0.Y + left.Column2.Y * right.Column0.Z + left.Column3.Y * right.Column0.W,
+				left.Column0.Y * right.Column1.X + left.Column1.Y * right.Column1.Y + left.Column2.Y * right.Column1.Z + left.Column3.Y * right.Column1.W,
+				left.Column0.Y * right.Column2.X + left.Column1.Y * right.Column2.Y + left.Column2.Y * right.Column2.Z + left.Column3.Y * right.Column2.W,
+				left.Column0.Y * right.Column3.X + left.Column1.Y * right.Column3.Y + left.Column2.Y * right.Column3.Z + left.Column3.Y * right.Column3.W,
+
+				left.Column0.Z * right.Column0.X + left.Column1.Z * right.Column0.Y + left.Column2.Z * right.Column0.Z + left.Column3.Z * right.Column0.W,
+				left.Column0.Z * right.Column1.X + left.Column1.Z * right.Column1.Y + left.Column2.Z * right.Column1.Z + left.Column3.Z * right.Column1.W,
+				left.Column0.Z * right.Column2.X + left.Column1.Z * right.Column2.Y + left.Column2.Z * right.Column2.Z + left.Column3.Z * right.Column2.W,
+				left.Column0.Z * right.Column3.X + left.Column1.Z * right.Column3.Y + left.Column2.Z * right.Column3.Z + left.Column3.Z * right.Column3.W,
+
+				left.Column0.W * right.Column0.X + left.Column1.W * right.Column0.Y + left.Column2.W * right.Column0.Z + left.Column3.W * right.Column0.W,
+				left.Column0.W * right.Column1.X + left.Column1.W * right.Column1.Y + left.Column2.W * right.Column1.Z + left.Column3.W * right.Column1.W,
+				left.Column0.W * right.Column2.X + left.Column1.W * right.Column2.Y + left.Column2.W * right.Column2.Z + left.Column3.W * right.Column2.W,
+				left.Column0.W * right.Column3.X + left.Column1.W * right.Column3.Y + left.Column2.W * right.Column3.Z + left.Column3.W * right.Column3.W);
 		}
 
 		#endregion
@@ -1102,7 +1219,7 @@ namespace SceneKit {
 		#region public override string ToString()
 
 		/// <summary>
-		/// Returns a System.String that represents the current SCNMatrix44.
+		/// Returns a System.String that represents the current SCNMatrix4.
 		/// </summary>
 		/// <returns></returns>
 		public override string ToString ()

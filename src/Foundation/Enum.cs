@@ -81,13 +81,17 @@ namespace Foundation  {
 	[Native]
 	public enum NSBundleExecutableArchitecture : long {
 #else
+	[NoiOS][NoTV][NoMacCatalyst]
 	public enum NSBundleExecutableArchitecture {
 #endif
 		I386   = 0x00000007,
 		PPC    = 0x00000012,
 		X86_64 = 0x01000007,
 		PPC64  = 0x01000012,
-		[Watch (7,0), TV (14,0), Mac (11,0), iOS (14,0)]
+		[Mac (11,0)]
+#if !XAMCORE_3_0
+		[Watch (7,0), TV (14,0), iOS (14,0)]
+#endif
 		ARM64  = 0x0100000c,
 	}
 #endif
@@ -813,7 +817,7 @@ namespace Foundation  {
 	}
 
 	[Flags]
-	[Native]
+	[Native ("NSAttributedStringEnumerationOptions")]
 	public enum NSAttributedStringEnumeration : ulong {
 		None = 0,
 		Reverse = 1 << 1,

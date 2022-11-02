@@ -3,8 +3,7 @@ using Xamarin.MacDev.Tasks;
 using Xamarin.Messaging.Build.Client;
 
 namespace Xamarin.MacDev.Tasks {
-	public class ACTool : ACToolTaskBase, ICancelableTask
-	{
+	public class ACTool : ACToolTaskBase, ICancelableTask {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -16,7 +15,7 @@ namespace Xamarin.MacDev.Tasks {
 		public void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 		}
 	}
 }

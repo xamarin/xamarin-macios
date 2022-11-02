@@ -32,7 +32,7 @@ namespace Metal {
 #endif
 		public static MTLVertexDescriptor? FromModelIO (MDLVertexDescriptor descriptor)
 		{
-			if (descriptor == null)
+			if (descriptor is null)
 				throw new ArgumentException ("descriptor");
 			return Runtime.GetNSObject<MTLVertexDescriptor> (MTKMetalVertexDescriptorFromModelIO (descriptor.Handle));
 		}
@@ -62,7 +62,7 @@ namespace Metal {
 #endif
 		public static MTLVertexDescriptor? FromModelIO (MDLVertexDescriptor descriptor, out NSError? error)
 		{
-			if (descriptor == null)
+			if (descriptor is null)
 				throw new ArgumentException ("descriptor");
 			IntPtr err;
 			var vd = Runtime.GetNSObject<MTLVertexDescriptor> (MTKMetalVertexDescriptorFromModelIOWithError (descriptor.Handle, out err));

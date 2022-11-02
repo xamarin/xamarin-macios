@@ -23,6 +23,8 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
+#nullable enable
+
 #if !NET && WATCH // This empty partial class was accidentally included in our watchOS bindings.
 namespace AVFoundation {
 	public partial class AVMetadataItemFilter {

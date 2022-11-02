@@ -650,6 +650,7 @@ namespace AVFoundation {
 	[NoWatch]
 	[iOS (9, 0)]
 	[Native]
+	[NoMac]
 	public enum AVCaptureSessionInterruptionReason : long {
 		VideoDeviceNotAvailableInBackground = 1,
 		AudioDeviceInUseByAnotherClient = 2,

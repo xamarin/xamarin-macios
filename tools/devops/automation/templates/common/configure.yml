@@ -7,15 +7,24 @@ parameters:
   type: boolean
   default: false
 
+- name: uploadArtifacts
+  type: boolean
+  default: false
+
 steps:
-- checkout: self          # https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=schema#checkout
-  clean: true             # Executes: git clean -ffdx && git reset --hard HEAD
-  submodules: false
-  persistCredentials: true
-  path: s/xamarin-macios
+- template: checkout.yml
+  parameters:
+    isPR: false # always use the latests set of scripts merged with main
+
+- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-platforms.sh
+  name: configure_platforms
+  displayName: 'Configure platforms'
+  env:
+    ${{ if eq(parameters.enableDotnet, true) }}:
+      ENABLE_DOTNET: "True"
 
 - pwsh: |
-    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/tools/devops/automation/scripts/MaciosCI.psd1
+    Import-Module $Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin-macios/tools/devops/automation/scripts/MaciosCI.psd1
 
     # we are going to use a custom object to store all the configuration of the build, this later
     # will be uploaded as an artifact so that it can be easily shared with the cascade pipelines
@@ -61,7 +70,7 @@ steps:
 
       # add a var with the change id, which can be later consumed by some of the old scripts from
       # jenkins
-      Write-Host "##vso[task.setvariable variable=pr-number;isOutput=true]$changeId"
+      Write-Host "##vso[task.setvariable variable=pr_number;isOutput=true]$changeId"
 
       $prInfo = Get-GitHubPRInfo -ChangeId $changeId
       Write-Host $prInfo
@@ -81,39 +90,26 @@ steps:
       $ref = $prInfo.base.ref
       $tags.Add("$ref")
 
-      # decide if we add the run-dotnet-tests label (if not present) this is done only for main
-      # we can use $ref for that :)
-      $xharnessLabels = $tags -join ","
-      if ($Env:ENABLE_DOTNET -eq "True" -and -not ("run-dotnet-tests" -in $xharnessLabels)) {
-        Write-Host "Adding label run-dotnet-tests to xharness."
-        $tags.Add("run-dotnet-tests")
-        if ($xharnessLabels -eq "") {
-          $xharnessLabels = "run-dotnet-tests"
-        } else {
-          $xharnessLabels = @($xharnessLabels, "run-dotnet-tests") -join ","
-        }
-      }
-
-      Write-Host "##vso[task.setvariable variable=xharness-labels;isOutput=true]$xharnessLabels"
+      Write-Host "##vso[task.setvariable variable=xharness_labels;isOutput=true]$xharnessLabels"
 
       # set output variables based on the git labels
       $labelsOfInterest = @(
         "build-package",
-        "run-internal-tests",
         "skip-packages",
         "skip-nugets",
         "skip-signing",
-        "skip-external-tests",
-        "trigger-device-tests",
         "run-sample-tests",
-        "skip-packaged-xamarin-mac-tests",
-        "skip-public-jenkins",
-        "skip-api-comparison"
+        "skip-packaged-macos-tests",
+        "run-packaged-macos-tests",
+        "skip-api-comparison",
+        "skip-all-tests"
       )
 
       foreach ($l in $labelsOfInterest) {
         $labelPresent = 1 -eq ($prInfo.labels | Where-Object { $_.name -eq "$l"}).Count
-        Write-Host "##vso[task.setvariable variable=$l;isOutput=true]$labelPresent"
+        # We need to replace dashes with underscores, because bash can't access an environment variable with a dash in the name.
+        $lbl = $l.Replace('-', '_')
+        Write-Host "##vso[task.setvariable variable=$lbl;isOutput=true]$labelPresent"
       }
 
       Write-Host "##vso[task.setvariable variable=prBuild;isOutput=true]True"
@@ -146,61 +142,15 @@ steps:
   name: labels
   displayName: 'Configure build'
 
+- bash: ./xamarin-macios/tools/devops/automation/scripts/bash/configure-decisions.sh
+  name: decisions
+  displayName: 'Make decisions'
+
 # upload config to be consumed later
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish Artifact: configuration.json'
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
-    artifactName: build-configuration
-  continueOnError: true
-
-- bash: |
-    echo "current directory: $PWD"
-    make LocProject.json
-  displayName: 'Generate LocProject.json'
-  continueOnError: true
-  workingDirectory: $(Build.SourcesDirectory)\tools\devops 
-
-- task: PowerShell@2
-  displayName: "Update LocProject.json"
-  inputs:
-    targetType: 'filePath'
-    filePath: $(Build.SourcesDirectory)\tools\devops\automation\scripts\update-locproject.ps1
-    arguments: -SourcesDirectory "$(Build.SourcesDirectory)" -LocProjectPath "$(Build.SourcesDirectory)\Localize\LocProject.json"
-
-- powershell: |
-    git config user.email "valco@microsoft.com"
-    git config user.name "vs-mobiletools-engineering-service2"
-    git branch -d Localization
-    git push origin --delete Localization
-    git checkout -b Localization
-    git push origin Localization
-  displayName: "Create a new Localization branch from main"
-  condition: and(succeeded(), in(variables['build.reason'], 'Schedule'), eq(variables.isMain, 'True'))
-
-- task: OneLocBuild@2
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
-  continueOnError: true
-  env:
-    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-  inputs:
-    locProj: '$(Build.SourcesDirectory)\Localize\LocProject.json'
-    outDir: '$(Build.ArtifactStagingDirectory)'
-    ${{ if eq(variables['Build.Reason'], 'Schedule') }}:
-      isCreatePrSelected: true
-    ${{ if ne(variables['Build.Reason'], 'Schedule') }}:
-      isCreatePrSelected: false
-    packageSourceAuth: patAuth
-    patVariable: '$(OneLocBuild--PAT)'
-    isAutoCompletePrSelected: false
-    prSourceBranchPrefix: 'locfiles'
-    repoType: gitHub
-    gitHubPatVariable: '$(GitHub.Token)'
-
-- task: PublishBuildArtifacts@1
-  condition: and(succeeded(), eq(variables.isMain, 'True'))
-  continueOnError: true
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'localizationDrop'
-    publishLocation: 'Container'
+- ${{ if eq(parameters.uploadArtifacts, true) }}:
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish Artifact: configuration.json'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/configuration.json'
+      artifactName: build-configuration
+    continueOnError: true

@@ -41,6 +41,12 @@ public partial class Generator {
 			print ("[Obsolete (\"{0}\", {1})]", oa.Message, oa.IsError ? "true" : "false");
 	}
 
+	void CopyNativeName (ICustomAttributeProvider provider)
+	{
+		foreach (var oa in AttributeManager.GetCustomAttributes<NativeNameAttribute> (provider))
+			print ("[NativeName (\"{0}\")]", oa.NativeName);
+	}
+
 	// caller already:
 	//	- setup the header and namespace
 	//	- call/emit PrintPlatformAttributes on the type
@@ -56,7 +62,7 @@ public partial class Generator {
 			var hasNativeName = !string.IsNullOrEmpty (native.NativeName);
 			var hasConvertToManaged = !string.IsNullOrEmpty (native.ConvertToManaged);
 			var hasConvertToNative = !string.IsNullOrEmpty (native.ConvertToNative);
-			if (hasNativeName || hasConvertToManaged || hasConvertToNative ) {
+			if (hasNativeName || hasConvertToManaged || hasConvertToNative) {
 				sb.Append (" (");
 				if (hasNativeName)
 					sb.Append ('"').Append (native.NativeName).Append ('"');
@@ -80,6 +86,7 @@ public partial class Generator {
 			print (sb.ToString ());
 		}
 		CopyObsolete (type);
+		CopyNativeName (type);
 
 		var unique_constants = new HashSet<string> ();
 		var fields = new Dictionary<FieldInfo, FieldAttribute> ();
@@ -92,7 +99,7 @@ public partial class Generator {
 			// skip value__ field 
 			if (f.IsSpecialName)
 				continue;
-			PrintPlatformAttributes (f);
+			PrintPlatformAttributes (f, is_enum: true);
 			CopyObsolete (f);
 			print ("{0} = {1},", f.Name, f.GetRawConstantValue ());
 			var fa = AttributeManager.GetCustomAttribute<FieldAttribute> (f);
@@ -183,7 +190,7 @@ public partial class Generator {
 				print ("}");
 				print ("");
 			}
-			
+
 			print ("public static NSString? GetConstant (this {0} self)", type.Name);
 			print ("{");
 			indent++;
@@ -208,7 +215,7 @@ public partial class Generator {
 			print ("return (NSString?) Runtime.GetNSObject (ptr);");
 			indent--;
 			print ("}");
-			
+
 			print ("");
 
 			var nullable = null_field != null;
@@ -237,7 +244,7 @@ public partial class Generator {
 			indent--;
 			print ("}");
 		}
-			
+
 		if ((fields.Count > 0) || (error != null) || (null_field != null)) {
 			indent--;
 			print ("}");

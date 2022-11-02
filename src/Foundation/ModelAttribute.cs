@@ -27,7 +27,7 @@ namespace Foundation {
 	[AttributeUsage (AttributeTargets.Class | AttributeTargets.Interface)]
 	public sealed class ModelAttribute : Attribute {
 
-		public ModelAttribute () {}
+		public ModelAttribute () { }
 
 		public string Name { get; set; }
 #if !NET

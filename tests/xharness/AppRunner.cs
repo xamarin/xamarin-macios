@@ -30,7 +30,7 @@ namespace Xharness {
 		readonly IDeviceLogCapturerFactory deviceLogCapturerFactory;
 		readonly ITestReporterFactory testReporterFactory;
 		readonly IAppBundleInformationParser appBundleInformationParser;
-		
+
 		readonly RunMode runMode;
 		readonly bool isSimulator;
 		readonly TestTarget target;
@@ -52,7 +52,7 @@ namespace Xharness {
 			set => ensureCleanSimulatorState = value;
 		}
 
-		public AppBundleInformation AppInformation { get; private set;  }
+		public AppBundleInformation AppInformation { get; private set; }
 
 		bool IsExtension => AppInformation.Extension.HasValue;
 
@@ -314,7 +314,7 @@ namespace Xharness {
 				}
 			} else {
 				args.Add (isSimulator
-					? (MlaunchArgument) new LaunchSimulatorArgument (AppInformation.LaunchAppPath)
+					? (MlaunchArgument) new LaunchSimulatorAppArgument (AppInformation.LaunchAppPath)
 					: new LaunchDeviceArgument (AppInformation.LaunchAppPath));
 			}
 			if (!isSimulator)
@@ -324,12 +324,10 @@ namespace Xharness {
 				if (!await FindSimulatorAsync ())
 					return 1;
 
-				if (runMode != RunMode.WatchOS) {
-					var stdout_log = Logs.CreateFile ($"stdout-{Harness.Helpers.Timestamp}.log", "Standard output");
-					var stderr_log = Logs.CreateFile ($"stderr-{Harness.Helpers.Timestamp}.log", "Standard error");
-					args.Add (new SetStdoutArgument (stdout_log));
-					args.Add (new SetStderrArgument (stderr_log));
-				}
+				var stdout_log = Logs.CreateFile ($"stdout-{Harness.Helpers.Timestamp}.log", "Standard output");
+				var stderr_log = Logs.CreateFile ($"stderr-{Harness.Helpers.Timestamp}.log", "Standard error");
+				args.Add (new SetStdoutArgument (stdout_log));
+				args.Add (new SetStderrArgument (stderr_log));
 
 				var simulators = new [] { simulator, companionSimulator }.Where (s => s != null);
 				var systemLogs = new List<ICaptureLog> ();
@@ -361,6 +359,15 @@ namespace Xharness {
 					}
 				}
 
+				MainLog.WriteLine ("Enabling verbose logging");
+				foreach (var sim in simulators) {
+					var udid = sim.UDID;
+					await sim.Boot (MainLog, new CancellationToken ());
+					await processManager.ExecuteXcodeCommandAsync ("simctl", new string [] { "logverbose", udid, "enable" }, MainLog, TimeSpan.FromMinutes (5));
+					await sim.Shutdown (MainLog);
+				}
+				MainLog.WriteLine ("Enabled verbose logging");
+
 				args.Add (new SimulatorUDIDArgument (simulator.UDID));
 
 				await crashReporter.StartCaptureAsync ();
@@ -377,6 +384,12 @@ namespace Xharness {
 				foreach (var log in systemLogs)
 					log.StopCapture ();
 
+				MainLog.WriteLine ("Disabling verbose logging");
+				foreach (var sim in simulators) {
+					var udid = sim.UDID;
+					await processManager.ExecuteXcodeCommandAsync ("simctl", new string [] { "logverbose", udid, "disable" }, MainLog, TimeSpan.FromMinutes (5));
+				}
+				MainLog.WriteLine ("Disabledverbose logging");
 			} else {
 				MainLog.WriteLine ("*** Executing {0}/{1} on device '{2}' ***", AppInformation.AppName, runMode, deviceName);
 
@@ -402,7 +415,7 @@ namespace Xharness {
 						var tunnel = listenerFactory.TunnelBore.Create (deviceName, MainLog);
 						tunnel.Open (deviceName, tcpListener, testReporterTimeout, MainLog);
 						// wait until we started the tunnel
-						await tunnel.Started; 
+						await tunnel.Started;
 					}
 
 					// We need to check for MT1111 (which means that mlaunch won't wait for the app to exit).

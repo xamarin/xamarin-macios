@@ -267,6 +267,11 @@
 			<PublishTrimmed Condition="'$(PublishTrimmed)' == '' And '$(_MustTrim)' == 'true'">true</PublishTrimmed>
 		</PropertyGroup>
 		<Error Condition="'$(_MustTrim)' == 'true' And '$(PublishTrimmed)' != 'true'" Text="$(_PlatformName) projects must build with PublishTrimmed=true. Current value: $(PublishTrimmed)." />
+		<PropertyGroup Condition="'$(PublishTrimmed)' != '' And '$(IsMacEnabled)' != 'true'">
+			<_PreviousPublishTrimmedValue>$(PublishTrimmed)</_PreviousPublishTrimmedValue>
+			<PublishTrimmed />
+		</PropertyGroup>
+		<Warning Condition="'$(_PreviousPublishTrimmedValue)' != ''" Text="The linker has been disabled because there's no connection to a Mac." />
 	</Target>
 
 	<Target Name="_WarnRuntimeIdentifiersClash" Condition="'$(_RuntimeIdentifiersClashMessage)' != ''">
@@ -463,6 +468,7 @@
 			<_CustomLinkerOptions>
 				AreAnyAssembliesTrimmed=$(_AreAnyAssembliesTrimmed)
 				AssemblyName=$(AssemblyName).dll
+				@(_AotArguments -> 'AOTArgument=%(Identity)')
 				AOTCompiler=$(_AOTCompiler)
 				AOTOutputDirectory=$(_AOTOutputDirectory)
 				AppBundleManifestPath=$(_AppBundleManifestPath)
@@ -492,7 +498,8 @@
 				Platform=$(_PlatformName)
 				PlatformAssembly=$(_PlatformAssemblyName).dll
 				RelativeAppBundlePath=$(_RelativeAppBundlePath)
-				Registrar=$(_BundlerRegistrar)
+				Registrar=$(Registrar)
+				RequirePInvokeWrappers=$(_RequirePInvokeWrappers)
 				RuntimeConfigurationFile=$(_RuntimeConfigurationFile)
 				SdkDevPath=$(_SdkDevPath)
 				SdkRootDirectory=$(_XamarinSdkRootDirectory)
@@ -501,6 +508,7 @@
 				TargetFramework=$(_ComputedTargetFrameworkMoniker)
 				UseLlvm=$(MtouchUseLlvm)
 				Verbosity=$(_BundlerVerbosity)
+				XamarinNativeLibraryDirectory=$(_XamarinNativeLibraryDirectory)
 				XamarinRuntime=$(_XamarinRuntime)
 			</_CustomLinkerOptions>
 			<_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --custom-data "LinkerOptionsFile=$(_CustomLinkerOptionsFile)"</_ExtraTrimmerArgs>
@@ -646,8 +654,8 @@
 
 			<!-- Set TargetDirectory and SourceDirectory for all frameworks we have to publish -->
 			<_FrameworkToPublish Update="@(_FrameworkToPublish)">
-				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename).framework</TargetDirectory>
-				<SourceDirectory>%(RootDir)%(Directory)</SourceDirectory>
+				<TargetDirectory>$(_RelativePublishDir)$(_AppBundleFrameworksDir)\%(Filename)%(Extension).framework</TargetDirectory>
+				<SourceDirectory>%(RelativeDir)</SourceDirectory>
 			</_FrameworkToPublish>
 		</ItemGroup>
 
@@ -743,7 +751,11 @@
 			<_AssemblyDirsToCreate Include="@(_AssembliesToBeStripped->'%(OutputPath)%(Directory)'->Distinct())"/>
 		</ItemGroup>
 		<MakeDir SessionId="$(BuildSessionId)" Condition="'$(IsMacEnabled)' == 'true'" Directories="@(_AssemblyDirsToCreate)" />
-		<Xamarin.MacDev.Tasks.ILStrip Assemblies="@(_AssembliesToBeStripped)" SessionId="$(BuildSessionId)">
+		<Xamarin.MacDev.Tasks.ILStrip
+			Assemblies="@(_AssembliesToBeStripped)"
+			SessionId="$(BuildSessionId)"
+			Condition="'$(IsMacEnabled)' == 'true'"
+			>
 			<Output TaskParameter="StrippedAssemblies" ItemName="_StrippedAssemblies" />
 		</Xamarin.MacDev.Tasks.ILStrip>
 		<ItemGroup>
@@ -753,7 +765,7 @@
 	</Target>
 
 
-	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish">
+	<Target Name="_LoadLinkerOutput" DependsOnTargets="ComputeFilesToPublish" Condition="'$(IsMacEnabled)' == 'true'">
 		<!-- Load _MainFile -->
 		<ReadItemsFromFile SessionId="$(BuildSessionId)" File="$(_LinkerItemsDirectory)/_MainFile.items" Condition="Exists('$(_LinkerItemsDirectory)/_MainFile.items')">
 			<Output TaskParameter="Items" ItemName="_MainFile" />
@@ -810,7 +822,7 @@
 
 	<!-- Native code -->
 
-	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets">
+	<Target Name="_ComputeFrameworkVariables" DependsOnTargets="ResolveRuntimePackAssets;ResolveFrameworkReferences">
 		<PropertyGroup>
 			<_PackageIdInfix Condition="'$(UseMonoRuntime)' == 'true'">Mono.</_PackageIdInfix>
 
@@ -870,7 +882,7 @@
 			<!-- We need it for device builds for mobile platforms -->
 			<_RunAotCompiler Condition="'$(_SdkIsSimulator)' != 'true' And '$(_PlatformName)' != 'macOS' And '$(_PlatformName)' != 'MacCatalyst'">true</_RunAotCompiler>
 			<!-- We need it if the interpreter is enabled, no matter where -->
-			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != ''">true</_RunAotCompiler>
+			<_RunAotCompiler Condition="'$(MtouchInterpreter)' != '' And '$(_PlatformName)' != 'macOS'">true</_RunAotCompiler>
 			<!-- We need it for Mac Catalyst on arm64 -->
 			<_RunAotCompiler Condition="'$(RuntimeIdentifier)' == 'maccatalyst-arm64'">true</_RunAotCompiler>
 			<!-- We need it for iOS/tvOS simulator on arm64 -->
@@ -967,6 +979,7 @@
 		<FindAotCompiler
 			SessionId="$(BuildSessionId)"
 			Condition="'$(IsMacEnabled)' == 'true' And '$(_RunAotCompiler)' == 'true'"
+			KeepTemporaryOutput="$(FindAotCompilerKeepKeepTemporaryOutput)"
 			MonoAotCrossCompiler="@(MonoAotCrossCompiler)"
 			RuntimeIdentifier="$(RuntimeIdentifier)"
 			TargetFrameworkMoniker="$(_ComputedTargetFrameworkMoniker)"
@@ -1043,15 +1056,9 @@
 			<BTouchToolExe>bgen.dll</BTouchToolExe>
 			<BTouchToolPath>$(_XamarinSdkRootDirectory)\tools\lib\bgen</BTouchToolPath>
 			<BaseLibDllPath>$(_XamarinRefAssemblyPath)</BaseLibDllPath>
-			<BTouchCompiler>$(RoslynTargetsPath)/bincore/csc.dll</BTouchCompiler>
 			<_GeneratorAttributeAssembly>$(_XamarinSdkRootDirectory)/tools/lib/Xamarin.Apple.BindingAttributes.dll</_GeneratorAttributeAssembly>
-			<_DotNetCscCompiler>$(RoslynTargetsPath)/bincore/csc.dll</_DotNetCscCompiler>
+			<_DotNetCscCompiler>$(RoslynTargetsPath)\bincore\csc.dll</_DotNetCscCompiler>
 		</PropertyGroup>
-
-		<ItemGroup>
-			<_BTouchCompileCommand Include="$(DOTNET_HOST_PATH)" />
-			<_BTouchCompileCommand Include="$(RoslynTargetsPath)/bincore/csc.dll" />
-		</ItemGroup>
 	</Target>
 
 	<Target Name="_ComputeNativeExecutableInputs" DependsOnTargets="_ComputeVariables">
@@ -1296,7 +1303,7 @@
 		<ReadItemsFromFile
 			SessionId="$(BuildSessionId)"
 			File="%(_RidSpecificCodesignItemsPath.Identity)"
-			Condition="@(_RidSpecificCodesignItemsPath->Count()) &gt; 0"
+			Condition="@(_RidSpecificCodesignItemsPath->Count()) &gt; 0 And '$(IsMacEnabled)' == 'true'"
 		>
 			<Output TaskParameter="Items" ItemName="_RidSpecificCodesignItems" />
 		</ReadItemsFromFile>
@@ -1732,7 +1739,7 @@
 
 	<Target Name="_ValidateRuntimeIdentifier"
 		Condition="'$(RuntimeIdentifier)' != '' And '$(_RuntimeIdentifierValidation)' != 'false' And '$(_RuntimeIdentifierIsRequired)' == 'true'"
-		BeforeTargets="Restore;Build;ResolvedFrameworkReference;ResolveRuntimePackAssets;ProcessFrameworkReferences">
+		BeforeTargets="Build;ResolvedFrameworkReference;ResolveRuntimePackAssets">
 		<PropertyGroup>
 			<_IsValidRuntimeIdentifier Condition="@(_XamarinValidRuntimeIdentifier->WithMetadataValue('Platform', '$(_PlatformName)')->WithMetadataValue('Filename', '$(RuntimeIdentifier)')->Count()) &gt; 0">true</_IsValidRuntimeIdentifier>
 		</PropertyGroup>

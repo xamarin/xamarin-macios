@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#nullable enable
+
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -9,11 +11,9 @@ using System.Security;
 
 using ObjCRuntime;
 
-namespace Compression
-{
+namespace Compression {
 
-	internal sealed class Inflater : IDisposable
-	{
+	internal sealed class Inflater : IDisposable {
 		private CompressionStreamStruct _compression_struct;
 		private bool _finished; // Whether the end of the stream has been reached
 		private bool _shouldFinalize; // Whether we should end the stream
@@ -41,23 +41,21 @@ namespace Compression
 
 		public unsafe bool Inflate (out byte b)
 		{
-			fixed (byte* bufPtr = &b)
-			{
+			fixed (byte* bufPtr = &b) {
 				int bytesRead = InflateVerified (bufPtr, 1);
 				return bytesRead != 0;
 			}
 		}
 
-		public unsafe int Inflate (byte[] bytes, int offset, int length)
+		public unsafe int Inflate (byte [] bytes, int offset, int length)
 		{
-			if (bytes == null)
-				throw new ArgumentNullException (nameof (bytes));
+			if (bytes is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (bytes));
 			// If Inflate is called on an invalid or unready inflater, return 0 to indicate no bytes have been read.
 			if (length == 0)
 				return 0;
 
-			fixed (byte* bufPtr = bytes)
-			{
+			fixed (byte* bufPtr = bytes) {
 				return InflateVerified (bufPtr + offset, length);
 			}
 		}
@@ -68,8 +66,7 @@ namespace Compression
 			if (destination.Length == 0)
 				return 0;
 
-			fixed (byte* bufPtr = &MemoryMarshal.GetReference (destination))
-			{
+			fixed (byte* bufPtr = &MemoryMarshal.GetReference (destination!)) {
 				return InflateVerified (bufPtr, destination.Length);
 			}
 		}
@@ -78,16 +75,14 @@ namespace Compression
 		{
 			// State is valid; attempt inflation
 			try {
-				int bytesRead;
-				var errCode = ReadInflateOutput (bufPtr, length, out bytesRead);
+				var errCode = ReadInflateOutput (bufPtr, length, out var bytesRead);
 				if (errCode == CompressionStatus.End) {
 					_finished = true;
 				}
 				return bytesRead;
 			} finally {
 				// Before returning, make sure to release input buffer if necessary:
-				if (0 == _compression_struct.SourceSize && _inputBufferHandle.IsAllocated)
-				{
+				if (0 == _compression_struct.SourceSize && _inputBufferHandle.IsAllocated) {
 					DeallocateInputBufferHandle ();
 				}
 			}
@@ -95,10 +90,10 @@ namespace Compression
 
 		public bool NeedsInput () => _compression_struct.SourceSize == 0;
 
-		public void SetInput (byte[] inputBuffer, int startIndex, int count)
+		public void SetInput (byte [] inputBuffer, int startIndex, int count)
 		{
-			if (inputBuffer == null)
-				throw new ArgumentNullException (nameof (inputBuffer));
+			if (inputBuffer is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (inputBuffer));
 			if (!NeedsInput ())
 				throw new InvalidOperationException ("We have something left in previous input!");
 			if (_inputBufferHandle.IsAllocated)
@@ -113,10 +108,9 @@ namespace Compression
 			if (0 == count)
 				return;
 
-			lock (SyncLock)
-			{
+			lock (SyncLock) {
 				_inputBufferHandle = GCHandle.Alloc (inputBuffer, GCHandleType.Pinned);
-				_compression_struct.Source = _inputBufferHandle.AddrOfPinnedObject() + startIndex;
+				_compression_struct.Source = _inputBufferHandle.AddrOfPinnedObject () + startIndex;
 				_compression_struct.SourceSize = count;
 				_finished = false;
 			}
@@ -124,8 +118,7 @@ namespace Compression
 
 		private void Dispose (bool disposing)
 		{
-			if (!_isDisposed)
-			{
+			if (!_isDisposed) {
 				if (_inputBufferHandle.IsAllocated)
 					DeallocateInputBufferHandle ();
 
@@ -151,7 +144,7 @@ namespace Compression
 		private void InflateInit (CompressionAlgorithm algorithm)
 		{
 			_compression_struct = new CompressionStreamStruct ();
-			
+
 			var status = CompressionStreamStruct.compression_stream_init (ref _compression_struct, StreamOperation.Decode, algorithm);
 			if (status != CompressionStatus.Ok)
 				throw new InvalidOperationException (status.ToString ());
@@ -164,16 +157,15 @@ namespace Compression
 		/// </summary>
 		private unsafe CompressionStatus ReadInflateOutput (byte* bufPtr, int length, out int bytesRead)
 		{
-			lock (SyncLock)
-			{
-				_compression_struct.Destination = (IntPtr)bufPtr;
+			lock (SyncLock) {
+				_compression_struct.Destination = (IntPtr) bufPtr;
 				_compression_struct.DestinationSize = length;
 				// source is set in SetInput, nothing to be done
-				var readStatus = CompressionStreamStruct.compression_stream_process (ref _compression_struct, (_shouldFinalize)? StreamFlag.Finalize : StreamFlag.Continue);
+				var readStatus = CompressionStreamStruct.compression_stream_process (ref _compression_struct, (_shouldFinalize) ? StreamFlag.Finalize : StreamFlag.Continue);
 				switch (readStatus) {
 				case CompressionStatus.Ok:
 				case CompressionStatus.End:
-					bytesRead = length - (int)_compression_struct.DestinationSize;
+					bytesRead = length - (int) _compression_struct.DestinationSize;
 					break;
 				default:
 					bytesRead = 0;

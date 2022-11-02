@@ -1,22 +1,31 @@
 using System;
-using System.IO;
-using System.Reflection;
 using Mono.Options;
-using System.Collections.Generic;
-
-#nullable enable
 
 namespace Microsoft.MaciOS.Nnyeah {
-	class Program {
-		static void Main (string [] args)
+	public class Program {
+		static int Main (string [] args)
+		{
+			try {
+				return Main2 (args);
+			}
+			catch (ConversionException e) {
+				Console.Error.WriteLine (e.Message);
+				return 1;
+			} catch (Exception e) {
+				Console.Error.WriteLine (Errors.N0008);
+				Console.Error.WriteLine (e);
+				return 1;
+			}
+		}
+
+		static int Main2 (string [] args)
 		{
 			var doHelp = false;
 			string? infile = null, outfile = null;
 			var verbose = false;
 			var forceOverwrite = false;
 			var suppressWarnings = false;
-			var warnings = new List<string> ();
-			var transforms = new List<string> ();
+			string? xamarinAssembly = null, microsoftAssembly = null;
 
 			var options = new OptionSet () {
 				{ "h|?|help", o => doHelp = true },
@@ -25,6 +34,8 @@ namespace Microsoft.MaciOS.Nnyeah {
 				{ "v|verbose", o => verbose = true },
 				{ "f|force-overwrite", o => forceOverwrite = true },
 				{ "s|suppress-warnings", o => suppressWarnings = true },
+				{ "x|xamarin-assembly=", f => xamarinAssembly = f },
+				{ "m|microsoft-assembly=", f => microsoftAssembly = f },
 			};
 
 			try {
@@ -33,60 +44,32 @@ namespace Microsoft.MaciOS.Nnyeah {
 				doHelp = true;
 			}
 
-
-			if (doHelp || infile is null || outfile is null) {
-				PrintOptions (options, Console.Out);
-				Environment.Exit (0);
+			if (doHelp) {
+				options.WriteOptionDescriptions (Console.Out);
+				Console.Out.WriteLine (Errors.N0007);
+				return 0;
 			}
 
-			if (!File.Exists (infile)) {
-				Console.Error.WriteLine (Errors.E0001, infile);
-				Environment.Exit (1);
+			if (infile is null || outfile is null) {
+				throw new ConversionException (Errors.E0014);
 			}
 
-			if (File.Exists (outfile) && !forceOverwrite) {
-				Console.Error.WriteLine (Errors.E0002, outfile);
-				Environment.Exit (1);
+			// TODO - Long term this should default to files packaged within the tool but allow overrides
+			if (xamarinAssembly is null || microsoftAssembly is null) {
+				throw new ConversionException (Errors.E0015);
 			}
 
+			return AssemblyConverter.Convert (xamarinAssembly, microsoftAssembly!, infile!, outfile!, verbose, forceOverwrite, suppressWarnings);
+		}
+	}
 
-			using var stm = new FileStream (infile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-			var reworker = new Reworker (stm);
-
-			try {
-				reworker.Load ();
-			} catch (Exception e) {
-				Console.Error.WriteLine (Errors.E0003, infile, e.Message);
-				Environment.Exit (1);
-			}
-
-			reworker.WarningIssued += (s, e) => warnings.Add (e.HelpfulMessage ());
-			reworker.Transformed += (s, e) => warnings.Add (e.HelpfulMessage ());
-
-			if (reworker.NeedsReworking ()) {
-				try {
-					using var ostm = new FileStream (outfile, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
-					reworker.Rework (ostm);
-					if (verbose) {
-						transforms.ForEach (Console.WriteLine);
-					}
-					if (!suppressWarnings) {
-						warnings.ForEach (Console.WriteLine);
-					}
-				} catch (Exception e) {
-					Console.Error.Write (Errors.E0004, e.Message);
-					Environment.Exit (1);
-				}
-			} else {
-				if (verbose) {
-					Console.WriteLine (Errors.N0003);
-				}
-			}
+	public class ConversionException : Exception {
+		public ConversionException (string message) : base (message)
+		{
 		}
 
-		static void PrintOptions (OptionSet options, TextWriter writer)
+		public ConversionException (string message, params object? [] args) : base (string.Format (message, args))
 		{
-			options.WriteOptionDescriptions (writer);
 		}
 	}
 }

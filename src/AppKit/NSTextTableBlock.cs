@@ -10,11 +10,9 @@
 using System;
 
 
-namespace AppKit
-{
+namespace AppKit {
 #if !NET
-	public partial class NSTextTableBlock
-	{
+	public partial class NSTextTableBlock {
 		[Obsolete ("macOS 10.12 does not allow creation via this constructor")]
 		public NSTextTableBlock ()
 		{

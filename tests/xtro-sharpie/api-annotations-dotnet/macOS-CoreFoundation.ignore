@@ -46,3 +46,5 @@
 !unknown-pinvoke! _NSGetExecutablePath bound
 !missing-field! kCFUserNotificationAlertTopMostKey not bound
 !missing-field! kCFUserNotificationKeyboardTypesKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityForImportantUsageKey not bound
+!missing-field! kCFURLVolumeAvailableCapacityForOpportunisticUsageKey not bound

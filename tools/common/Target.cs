@@ -150,7 +150,7 @@ namespace Xamarin.Bundler {
 				return rv;
 
 			var errno = Marshal.GetLastWin32Error ();
-			if (warnIfNoSuchPathExists || (errno !=2))
+			if (warnIfNoSuchPathExists || (errno != 2))
 				ErrorHelper.Warning (54, Errors.MT0054, path, FileCopier.strerror (errno), errno);
 			return path;
 		}
@@ -183,7 +183,7 @@ namespace Xamarin.Bundler {
 			}
 
 			if (asm == null)
-				throw ErrorHelper.CreateError (99, Errors.MX0099, $"could not find the product assembly {Driver.GetProductAssembly(App)} in the list of assemblies referenced by the executable");
+				throw ErrorHelper.CreateError (99, Errors.MX0099, $"could not find the product assembly {Driver.GetProductAssembly (App)} in the list of assemblies referenced by the executable");
 
 			AssemblyDefinition productAssembly = asm.AssemblyDefinition;
 
@@ -344,7 +344,7 @@ namespace Xamarin.Bundler {
 				case ApplePlatform.iOS:
 				case ApplePlatform.TVOS:
 				case ApplePlatform.WatchOS:
-					has_dyn_msgSend = App.IsSimulatorBuild;
+					has_dyn_msgSend = App.IsSimulatorBuild || App.MarshalObjectiveCExceptions == MarshalObjectiveCExceptionMode.UnwindManagedCode;
 					break;
 				case ApplePlatform.MacCatalyst:
 				case ApplePlatform.MacOSX:
@@ -775,7 +775,11 @@ namespace Xamarin.Bundler {
 #if !NET
 				sw.WriteLine ("\tmono_ee_interp_init (NULL);");
 #endif
-				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
+				if ((abi & Abi.x86_64) == Abi.x86_64) {
+					sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP_ONLY);");
+				} else {
+					sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_INTERP);");
+				}
 			} else if (app.IsDeviceBuild) {
 				sw.WriteLine ("\tmono_jit_set_aot_mode (MONO_AOT_MODE_FULL);");
 			} else if (app.Platform == ApplePlatform.MacCatalyst && ((abi & Abi.ARM64) == Abi.ARM64)) {

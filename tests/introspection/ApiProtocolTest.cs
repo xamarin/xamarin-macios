@@ -485,7 +485,25 @@ namespace Introspection {
 					if (!TestRuntime.CheckXcodeVersion (11,0))
 						return true;
 					break;
+				case "VNRecognizedText":
+					// Conformance added in Xcode 13
+					if (!TestRuntime.CheckXcodeVersion (13, 0))
+						return true;
+					break;
 				}
+				break;
+			case "NSUserActivityRestoring":
+				return true;
+#if __MACCATALYST__
+			case "UIScrollViewDelegate":
+				// The headers say PKCanvasViewDelegate implements UIScrollViewDelegate
+				if (type.Name == "PKCanvasViewDelegate")
+					return true;
+				break;
+#endif
+			case "NSExtensionRequestHandling":
+				if (type.Name == "HMChipServiceRequestHandler") // Apple removed this class
+					return true;
 				break;
 			}
 			return false;
@@ -714,7 +732,9 @@ namespace Introspection {
 
 					if (t.IsPublic && !ConformTo (klass.Handle, protocol)) {
 						// note: some internal types, e.g. like UIAppearance subclasses, return false (and there's not much value in changing this)
-						list.Add ($"Type {t.FullName} (native: {klass.Name}) does not conform {protocolName}");
+						var msg = $"Type {t.FullName} (native: {klass.Name}) does not conform {protocolName}";
+						list.Add (msg);
+						ReportError (msg);
 					}
 				}
 			}

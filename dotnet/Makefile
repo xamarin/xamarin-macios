@@ -13,6 +13,11 @@ DOTNET_PLATFORMS_UPPERCASE:=$(shell echo $(DOTNET_PLATFORMS) | tr a-z A-Z)
 # Create variables prefixed with the correctly cased platform name from the upper-cased platform name. This makes some of the next sections somewhat simpler.
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(platform)_NUGET_VERSION_NO_METADATA:=$($(shell echo $(platform) | tr a-z A-Z)_NUGET_VERSION_NO_METADATA)))
 
+DOTNET_iOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
+DOTNET_tvOS_GLOBAL_USINGS=CoreGraphics Foundation UIKit
+DOTNET_MacCatalyst_GLOBAL_USINGS=CoreGraphics Foundation UIKit
+DOTNET_macOS_GLOBAL_USINGS=AppKit CoreGraphics Foundation
+
 define DefineTargets
 $(1)_NUGET_TARGETS = \
 	$(DOTNET_DESTDIR)/Microsoft.$(1).Sdk/data/UnixFilePermissions.xml \
@@ -42,8 +47,12 @@ $(1)_WINDOWS_NUGET_TARGETS = \
 endef
 $(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call DefineWindowsTargets,$(platform))))
 
+ifdef INCLUDE_HOTRESTART
+
 iOS_WINDOWS_NUGET_TARGETS += \
 	$(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip \
+
+endif
 
 DIRECTORIES += \
 	$(DOTNET_NUPKG_DIR) \
@@ -97,13 +106,38 @@ Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.Versions.props: targets/Microsoft.$1.S
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call VersionsTemplate,$(platform),$(shell echo $(platform) | tr a-z A-Z),$(DOTNET_$(shell echo $(platform) | tr a-z A-Z)_RUNTIME_IDENTIFIERS))))
 
+version-props: $(foreach platform,$(DOTNET_PLATFORMS),targets/Microsoft.$(platform).Sdk.Versions.props)
+
+define AutoImports
+Microsoft.$(1).Sdk/Sdk/AutoImport.props: targets/AutoImport.template.props Makefile
+	$(Q) rm -f $$@.tmp
+	$$(Q_GEN) sed \
+		-e "s/@PLATFORM@/$(1)/g" \
+		$$< > $$@.tmp
+	$(Q) mv $$@.tmp $$@
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call AutoImports,$(platform))))
+
 define DefaultItems
 Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.DefaultItems.props: targets/Microsoft.Sdk.DefaultItems.template.props Makefile
 	$$(Q_GEN) sed \
 		-e "s/@PLATFORM@/$1/g" \
+		-e "s/@TARGET_FRAMEWORK_VERSION@/$(subst net,,$(DOTNET_TFM))/g" \
 		$$< > $$@
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call DefaultItems,$(platform))))
+
+define ImplicitNamespaceImports
+Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props: targets/Microsoft.Sdk.ImplicitNamespaceImports.template.props Makefile
+	$$(Q_GEN) sed \
+		-e "s/@PLATFORM@/$1/g" \
+		-e "s/@TARGET_FRAMEWORK_VERSION@/$(subst net,,$(DOTNET_TFM))/g" \
+		-e "s/@GLOBAL_USINGS@/$(2)/g" \
+		$$< > $$@
+x:: Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props
+	cat Microsoft.$1.Sdk/targets/Microsoft.$1.Sdk.ImplicitNamespaceImports.props
+endef
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call ImplicitNamespaceImports,$(platform),$(foreach using,$(DOTNET_$(platform)_GLOBAL_USINGS),\n\t\t<Using Include=\"$(using)\" Platform=\"$(platform)\" \/>))))
 
 define SupportedTargetPlatforms
 Microsoft.$(1).Sdk/targets/Microsoft.$(1).Sdk.SupportedTargetPlatforms.props: $(TOP)/Versions-ios.plist.in $(TOP)/Versions-mac.plist.in Makefile ./generate-target-platforms.csharp Makefile
@@ -135,15 +169,17 @@ LOCAL_WORKLOAD_TARGETS += Workloads/Microsoft.NET.Sdk.$(1)/LICENSE
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call WorkloadTargets,$(platform),$(shell echo $(platform) | tr A-Z a-z),$($(platform)_NUGET_VERSION_NO_METADATA))))
 
-$(DOTNET_NUPKG_DIR)/vs-workload.props: Workloads/vs-workload.template.props
+$(DOTNET_NUPKG_DIR)/vs-workload.props: Makefile generate-vs-workload.csharp
 	$(Q) rm -f $@.tmp
-	$(Q_GEN) sed \
-		$(foreach platform,$(DOTNET_PLATFORMS_UPPERCASE),-e "s/@$(platform)_WORKLOAD_VERSION@/$($(platform)_NUGET_VERSION).$($(platform)_NUGET_COMMIT_DISTANCE)/g") \
-		-e "s/@PACK_VERSION_LONG@/$(IOS_NUGET_VERSION_NO_METADATA)/g" \
-		-e "s/@PACK_VERSION_SHORT@/$(IOS_NUGET_VERSION).$(IOS_NUGET_COMMIT_DISTANCE)/g" \
-		-e "s/@MACOS_PACK_VERSION_LONG@/$(MACOS_NUGET_VERSION_NO_METADATA)/g" \
-		-e "s/@MACOS_PACK_VERSION_SHORT@/$(MACOS_NUGET_VERSION).$(MACOS_NUGET_COMMIT_DISTANCE)/g" \
-		$< > $@.tmp
+	$(Q_GEN) ./generate-vs-workload.csharp \
+		$(foreach platform,$(DOTNET_PLATFORMS),--platform $(platform) $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_COMMIT_DISTANCE)) \
+		$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),--windows-platform $(platform)) \
+		$(foreach platform,$(DOTNET_PLATFORMS),--shorten $($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_VERSION_NO_METADATA)=$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_OS_VERSION).0.$($(shell echo $(platform) | tr '[:lower:]' '[:upper:]')_NUGET_COMMIT_DISTANCE)) \
+		--shorten Microsoft.MacCatalyst.Runtime.maccatalyst=Microsoft.MacCatalyst.Runtime \
+		--shorten Microsoft.NET.Sdk.MacCatalyst.Manifest=Microsoft.MacCatalyst.Manifest \
+		--shorten Microsoft.tvOS.Runtime.tvossimulator=Microsoft.tvOS.Runtime \
+		--tfm $(DOTNET_TFM) \
+		--output $@.tmp
 	$(Q) mv $@.tmp $@
 
 $(DOTNET_NUPKG_DIR)/SignList.xml: Workloads/SignList.xml
@@ -167,37 +203,37 @@ $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call NupkgDefinition,$(platform)
 
 # Create the nuget in a temporary directory (nupkgs/)
 define CreateNuGetTemplate
-nupkgs/$(1)$(4).$(2).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json .stamp-workaround-for-maccore-issue-2427
+nupkgs/$(1)$(4).$(2).nupkg: $(TEMPLATED_FILES) $(WORKLOAD_TARGETS) $(3) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) .stamp-workaround-for-maccore-issue-2427
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
 	$$(Q_PACK) $(DOTNET) pack package/$(1)/package.csproj -p:VersionBand=$(5) --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
 endef
 
 define CreateWindowsNuGetTemplate
-nupkgs/$(1).$(2).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) global.json .stamp-workaround-for-maccore-issue-2427
+nupkgs/$(1).$(2).nupkg: $(3) $(WORKLOAD_TARGETS) package/$(1)/package.csproj $(wildcard package/*.csproj) $(wildcard $(DOTNET_DESTDIR)/$(1)/* $(DOTNET_DESTDIR)/$(1)/*/* $(DOTNET_DESTDIR)/$(1)/*/*/* $(DOTNET_DESTDIR)/$(1)/*/*/*/*) .stamp-workaround-for-maccore-issue-2427
 	@# Delete any versions of the nuget we're building
 	$$(Q) rm -f nupkgs/$(1).*.nupkg
 	$$(Q_PACK) $(DOTNET) pack package/$(1)/package.csproj --output "$$(dir $$@)" $(DOTNET_PACK_VERBOSITY) "/bl:$$@.binlog"
 endef
 
 # Create the NuGet packaging targets. It's amazing what make allows you to do...
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Sdk,$($(platform)_NUGET_VERSION_NO_METADATA),$($(platform)_NUGET_TARGETS),,$(DOTNET_VERSION_BAND))))
-$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsNuGetTemplate,Microsoft.$(platform).Windows.Sdk,$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA),$($(platform)_WINDOWS_NUGET_TARGETS),,$(DOTNET_VERSION_BAND))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Ref,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Templates,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Sdk,$($(platform)_NUGET_VERSION_NO_METADATA),$($(platform)_NUGET_TARGETS),,$(DOTNET_MANIFEST_VERSION_BAND))))
+$(foreach platform,$(DOTNET_WINDOWS_PLATFORMS),$(eval $(call CreateWindowsNuGetTemplate,Microsoft.$(platform).Windows.Sdk,$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA),$($(platform)_WINDOWS_NUGET_TARGETS),,$(DOTNET_MANIFEST_VERSION_BAND))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Ref,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_MANIFEST_VERSION_BAND))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Templates,$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_MANIFEST_VERSION_BAND))))
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreateNuGetTemplate,Microsoft.NET.Sdk.$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),,.Manifest-$(MANIFEST_VERSION_BAND),$(MANIFEST_VERSION_BAND))))
-$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Runtime.$(rid),$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_VERSION_BAND)))))
+$(foreach platform,$(DOTNET_PLATFORMS),$(foreach rid,$(DOTNET_$(platform)_RUNTIME_IDENTIFIERS),$(eval $(call CreateNuGetTemplate,Microsoft.$(platform).Runtime.$(rid),$($(platform)_NUGET_VERSION_NO_METADATA),,,$(DOTNET_MANIFEST_VERSION_BAND)))))
 
 # Copy the nuget from the temporary directory into the final directory
 $(DOTNET_NUPKG_DIR)/%.nupkg: nupkgs/%.nupkg | $(DOTNET_NUPKG_DIR)
 	$(Q) $(CP) $< $@
 
 ifdef INCLUDE_IOS
-SDK_PACK_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA).nupkg
-SDK_PACKS_WINDOWS += $(SDK_PACK_IOS_WINDOWS)
+SDK_PACKS_IOS_WINDOWS = $(DOTNET_NUPKG_DIR)/$(IOS_WINDOWS_NUGET).Sdk.$(IOS_WINDOWS_NUGET_VERSION_NO_METADATA).nupkg
+SDK_PACKS_WINDOWS += $(SDK_PACKS_IOS_WINDOWS)
 endif
 
-pack-ios-windows: $(SDK_PACK_IOS_WINDOWS)
+pack-ios-windows: $(SDK_PACKS_IOS_WINDOWS)
 
 define PacksDefinitions
 RUNTIME_PACKS_$(1) = $$(foreach rid,$$(DOTNET_$(1)_RUNTIME_IDENTIFIERS),$(DOTNET_NUPKG_DIR)/$($(1)_NUGET).Runtime.$$(rid).$($(1)_NUGET_VERSION_NO_METADATA).nupkg)
@@ -260,13 +296,13 @@ define CreatePackage
 $(TMP_PKG_DIR)/Microsoft.$1.Workload.$2.pkg: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.NET.Sdk.$1.$2/
-	$$(Q) mkdir -p tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
-	$$(Q) $$(CP) -r Workloads/Microsoft.NET.Sdk.$1 tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
+	$$(Q) mkdir -p tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
+	$$(Q) $$(CP) -r Workloads/Microsoft.NET.Sdk.$1 tmpdir/Microsoft.NET.Sdk.$1.$2/usr/local/share/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
 	$$(Q_GEN) pkgbuild --quiet --version '$2' --root tmpdir/Microsoft.NET.Sdk.$1.$2 --component-plist PackageInfo.plist  --install-location / --identifier com.microsoft.net.$3.workload.pkg $$@.tmp
 	$$(Q) mv $$@.tmp $$@
 
 # The sdk package
-$(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg: $(REF_PACK_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg: $(SDK_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.$1.Sdk.$2/
 	$$(Q) mkdir -p tmpdir/Microsoft.$1.Sdk.$2/usr/local/share/dotnet/packs/Microsoft.$1.Sdk/$2/
@@ -275,7 +311,7 @@ $(TMP_PKG_DIR)/Microsoft.$1.Sdk.$2.pkg: $(REF_PACK_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) mv $$@.tmp $$@
 
 # The ref package
-$(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg: $(SDK_PACK_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Ref.$2.pkg: $(REF_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -f $$@
 	$$(Q) rm -rf tmpdir/Microsoft.$1.Ref.$2/
 	$$(Q) mkdir -p tmpdir/Microsoft.$1.Ref.$2/usr/local/share/dotnet/packs/Microsoft.$1.Ref/$2/
@@ -312,13 +348,13 @@ $(DOTNET_PKG_DIR)/%: $(TMP_PKG_DIR)/% | $(DOTNET_PKG_DIR)
 
 PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
 
-$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKs_$(4)) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
-	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
+	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
 	$$(Q) $(CP) $(TEMPLATE_PACKS_$(4)) $$@.tmpdir/dotnet/template-packs/$(subst +$(NUGET_BUILD_METADATA),,$(notdir $(TEMPLATE_PACKS_$(4))))
@@ -327,18 +363,27 @@ $(TMP_PKG_DIR)/Microsoft.$1.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $(WORKLOAD_TARG
 	$$(Q) echo Created $$@
 
 PACKAGE_TARGETS += $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.zip
+
+install-system-$(3): $(DOTNET_PKG_DIR)/Microsoft.$1.Bundle.$2.pkg
+	$(Q) echo "Installing $$<..."
+	$(Q) sudo installer -pkg "$$<" -target / $$(INSTALLER_VERBOSITY)
+	$(Q) echo "Installed $$<"
+	$(Q) echo "Execute this in the project directory to be built for NuGet to find the runtime packs:"
+	$(Q) echo "    nuget sources add -Name local-macios-packages -ConfigFile NuGet.config -Source file://$(abspath $(DOTNET_NUPKG_DIR))"
+
+INSTALL_SYSTEM_PACKAGE_TARGETS += install-system-$(3)
 endef
 $(foreach platform,$(DOTNET_PLATFORMS),$(eval $(call CreatePackage,$(platform),$($(platform)_NUGET_VERSION_NO_METADATA),$(shell echo $(platform) | tr A-Z a-z),$(shell echo $(platform) | tr a-z A-Z))))
 
 define CreateWindowsBundle
-$(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACK_$(4)) $(SDK_PACK_$(4)) $(SDK_PACK_$(4)_WINDOWS) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
+$(TMP_PKG_DIR)/Microsoft.$1.Windows.Bundle.$2.zip: $($(1)_NUGET_TARGETS) $($(1)_WINDOWS_NUGET_TARGETS) $(WORKLOAD_TARGETS) Makefile $(REF_PACKS_$(4)) $(SDK_PACKS_$(4)) $(SDK_PACKS_$(4)_WINDOWS) $(TEMPLATE_PACKS_$(4)) | $(TMP_PKG_DIR)
 	$$(Q) rm -rf $$@ $$@.tmpdir $$@.tmp
-	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
+	$$(Q) mkdir -p $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref
 	$$(Q) mkdir -p $$@.tmpdir/dotnet/template-packs
-	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_VERSION_BAND)/
+	$$(Q) $(CP) -r Workloads/Microsoft.NET.Sdk.$1 $$@.tmpdir/dotnet/sdk-manifests/$(DOTNET_MANIFEST_VERSION_BAND)/
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Windows.Sdk $$@.tmpdir/dotnet/packs/Microsoft.$1.Windows.Sdk/$2
 	$$(Q) $(CP) -r $(DOTNET_DESTDIR)/Microsoft.$1.Ref $$@.tmpdir/dotnet/packs/Microsoft.$1.Ref/$2
@@ -366,7 +411,7 @@ NUGET_SOURCES:=$(shell grep https://pkgs.dev.azure.com $(TOP)/NuGet.config | sed
 .stamp-install-workloads: Makefile $(WORKLOAD_TARGETS) $(RUNTIME_PACKS) $(REF_PACKS) $(SDK_PACKS) $(TEMPLATE_PACKS) $(WORKLOAD_PACKS)
 	$(Q) $(DOTNET) workload install --skip-manifest-update \
 		$(foreach source,$(NUGET_SOURCES),--source $(source)) \
-		--source $(DOTNET_NUPKG_DIR) --verbosity diag \
+		--source $(DOTNET_NUPKG_DIR) $(DOTNET_WORKLOAD_VERBOSITY) \
 		$(foreach platform,$(DOTNET_PLATFORMS),$(shell echo $(platform) | tr A-Z a-z))
 	$(Q) touch $@
 
@@ -390,25 +435,80 @@ TARGETS += $(WORKLOAD_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 msi: $(MSI_TARGETS)
 package: $(PACKAGE_TARGETS) $(MSI_TARGETS) $(WINDOWS_PACKAGE_TARGETS)
 
+# Helper targets for templates
+#
+# "make templates": only build the template nupkgs
+# "make install-templates": builds the template nupkgs, and install them into the current working copy's local .NET. This is typically needed to test templates in our own tests, or when using the templates from the command line with the local .NET.
+# "make install-templates-system": builds the template nupkgs, and installs them into the system's .NET. This is typically needed to test templates in VSMac.
+# On Windows: copy $(TOP)/_build/nupkg/*Template* to your windows machine, and "dotnet new --install template.nupkg" for each nupkg, then they'll show up in VS.
+#
+templates: $(TEMPLATE_PACKS)
+
+# We manually clean first, because the makefile dependencies aren't configured correctly for the templates (the templates contain file names with spaces, which is quite hard to get right in make without making the code unbeliavably complicated)
+install-templates:
+	$(Q) $(MAKE) clean-templates
+	$(Q) $(MAKE) $(TEMPLATE_PACKS) -j4
+	$(Q) for platform in $(DOTNET_PLATFORMS); do \
+		echo "Uninstalling: $$platform"; \
+		$(DOTNET) new --uninstall Microsoft.$$platform.Templates; \
+	done
+	$(Q) for nupkg in $(TEMPLATE_PACKS); do \
+		echo "Installing $$nupkg"; \
+		$(DOTNET) new --install $$nupkg; \
+	done
+
+# We need to run the system dotnet, and we can't run it from inside this working copy, because we have a top-level
+# NuGet.config / global.json which will want to use the local dotnet. So run dotnet from the HOME directory instead.
+# We manually clean first, because the makefile dependencies aren't configured correctly for the templates (the templates contain file names with spaces, which is quite hard to get right in make without making the code unbeliavably complicated)
+install-templates-system:
+	$(Q) $(MAKE) clean-templates
+	$(Q) $(MAKE) $(TEMPLATE_PACKS) -j4
+	$(Q) for platform in $(DOTNET_PLATFORMS); do \
+		echo "Uninstalling: $$platform"; \
+		cd $(HOME) && dotnet new --uninstall Microsoft.$$platform.Templates || true; \
+	done
+	$(Q) for nupkg in $(TEMPLATE_PACKS); do \
+		echo "Installing $$nupkg"; \
+		cd $(HOME) && dotnet new --install $(CURDIR)/$$nupkg; \
+	done
+
+clean-templates:
+	$(Q) rm -f -- $(TEMPLATE_PACKS)
+
+install-system:
+	@# We don't want to execute these in parallel
+	@for target in $(INSTALL_SYSTEM_PACKAGE_TARGETS); do \
+		$(MAKE) $$target; \
+	done
+
 ifdef ENABLE_DOTNET
 all-local:: $(TARGETS)
 endif
-
-# This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global.json: $(TOP)/global6.json
-	$(CP) $< $@
-
-$(TOP)/tests/dotnet/NuGet.config:
-	$(Q) $(MAKE) -C $(TOP)/tests/dotnet NuGet.config
 
 clean-local::
 	$(Q) rm -Rf $(DOTNET_NUPKG_DIR)
 	$(Q) git clean -xfdq
 
-.stamp-workaround-for-maccore-issue-2427: global.json $(TOP)/eng/Versions.props $(LOCAL_WORKLOAD_TARGETS)
+.stamp-workaround-for-maccore-issue-2427: $(TOP)/eng/Versions.props $(LOCAL_WORKLOAD_TARGETS)
 	$(Q) $(DOTNET) restore package/workaround-for-maccore-issue-2427/restore.csproj /bl:package/workaround-for-maccore-issue-2427/restore.binlog $(MSBUILD_VERBOSITY)
 	$(Q) touch $@
 
 $(DOTNET_DESTDIR)/Microsoft.iOS.Windows.Sdk/tools/msbuild/iOS/Xamarin.PreBuilt.iOS.app.zip: .stamp-install-workloads
 	$(Q) $(MAKE) -C $(TOP)/msbuild/Xamarin.HotRestart.PreBuilt all
 	$(Q) touch $@
+
+# We need to shut down the builder server, because:
+#   We're using parallel make, and parallel make will start a jobserver, managed by file descriptors, where these file descriptors must be closed in all subprocesses for make to realize it's done.
+#   'dotnet pack' might have started a build server
+#   The build server does not close any file descriptors it may have inherited when daemonizing itself.
+#   Thus the build server (which will still be alive after we're done building here) might have a file descriptor open which make is waiting for.
+#   The proper fix is to fix the build server to close its file descriptors.
+#   The intermediate working is to shut down the build server instead. An alternative solution would be to pass /p:UseSharedCompilation=false to 'dotnet pack' to disable the usage of the build server.
+#
+# The 'shutdown-build-server' is executed in a sub-make (and not as a dependency to the all-hook target),
+# to make sure it's executed after everything else is built in this file.
+all-hook::
+	$(Q) $(MAKE) shutdown-build-server
+
+shutdown-build-server:
+	$(Q) $(DOTNET) build-server shutdown

@@ -1,9 +1,7 @@
 using Xamarin.Messaging.Build.Client;
 
-namespace Xamarin.MacDev.Tasks
-{
-	public class ScnTool : ScnToolTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class ScnTool : ScnToolTaskBase {
 		public override bool Execute ()
 		{
 			if (ShouldExecuteRemotely ())
@@ -15,7 +13,7 @@ namespace Xamarin.MacDev.Tasks
 		public override void Cancel ()
 		{
 			if (ShouldExecuteRemotely ())
-				BuildConnection.CancelAsync (SessionId, BuildEngine4).Wait ();
+				BuildConnection.CancelAsync (BuildEngine4).Wait ();
 
 			base.Execute ();
 		}

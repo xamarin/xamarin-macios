@@ -13,6 +13,10 @@
 #include "bindings.h"
 #include <dlfcn.h>
 
+#if !TARGET_OS_OSX && !TARGET_OS_WATCH
+#include <UIKit/UIKit.h>
+#endif
+
 /*
  * Hand-written bindings to support ObjectiveC exceptions.
  * Reference:
@@ -112,3 +116,17 @@ xamarin_CGPoint__VNImagePointForFaceLandmarkPoint_Vector2_CGRect_nuint_nuint_str
 
 	return func (flp, faceBoundingBox, imageWidth, imageHeight);
 }
+
+/* UIKit bindings */
+#if !TARGET_OS_OSX && !TARGET_OS_WATCH
+int xamarin_UIApplicationMain (int argc, char * _Nullable argv[_Nonnull], NSString * _Nullable principalClassName, NSString * _Nullable delegateClassName, GCHandle *exception_gchandle)
+{
+	@try {
+		*exception_gchandle = INVALID_GCHANDLE;
+		return UIApplicationMain (argc, argv, principalClassName, delegateClassName);
+	} @catch (NSException *e) {
+		xamarin_process_nsexception_using_mode (e, false, exception_gchandle);
+		return 1;
+	}
+}
+#endif // !TARGET_OS_OSX

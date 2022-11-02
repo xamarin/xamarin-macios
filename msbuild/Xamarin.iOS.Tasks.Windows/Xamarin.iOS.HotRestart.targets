@@ -38,7 +38,7 @@
 		<CollectBundleResources
 			OptimizePropertyLists="$(OptimizePropertyLists)"
 			OptimizePNGs="$(OptimizePNGs)"
-			BundleResources="@(Content);@(BundleResource)"
+			BundleResources="@(Content);@(BundleResource);@(MauiAsset)"
 			ProjectDir="$(MSBuildProjectDirectory)"
 			ResourcePrefix="$(IPhoneResourcePrefix)">
 
@@ -163,9 +163,8 @@
 			<_FilesToHotRestartContent Include="@(_FilesToHotRestartContent -> '%(RootDir)%(Directory)%(Filename).pdb')"
 													 Condition="Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
 
-			<!-- TODO: We stopped filtering assemblies until we fix the net6 build -->
-			<!-- <_FilesToHotRestartContent Include="@(ReferenceCopyLocalPaths -> Distinct())" Condition="Exists('$(HotRestartAppBundlePath)\%(Filename)%(Extension)') == 'false'"/> -->
-			<_FilesToHotRestartContent Include="@(ReferenceCopyLocalPaths -> Distinct())"/>
+			<_FilesToHotRestartContent Include="@(ReferenceCopyLocalPaths -> Distinct())" 
+				Condition="Exists('$(HotRestartAppBundlePath)\%(Filename)%(Extension)') == 'false' And '%(Extension)' != '.a' And '%(Extension)' != '.dylib' And '%(Extension)' != '.dat'"/>
 		</ItemGroup>
 	</Target>
 
@@ -195,7 +194,7 @@
 			AppIdentifier="$(_AppIdentifier)"
 			BundleIdentifier="$(_BundleIdentifier)"
 			Entitlements="$(_HotRestartEntitlementsFile)"
-			CompiledEntitlements="$(DeviceSpecificIntermediateOutputPath)Entitlements.xcent"
+			CompiledEntitlements="$(HotRestartAppBundlePath)\Entitlements.plist"
 			IsAppExtension="$(IsAppExtension)"
 			ProvisioningProfile="$(_ProvisioningProfileId)"
 			SdkIsSimulator="False"

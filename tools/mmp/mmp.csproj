@@ -405,6 +405,9 @@
     <Compile Include="..\..\src\ObjCRuntime\LinkWithAttribute.cs">
       <Link>src\ObjCRuntime\LinkWithAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\..\src\ObjCRuntime\NativeNameAttribute.cs">
+      <Link>src\ObjCRuntime\NativeNameAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\src\ObjCRuntime\PlatformAvailability2.cs">
       <Link>src\ObjCRuntime\PlatformAvailability2.cs</Link>
     </Compile>
@@ -450,8 +453,8 @@
       <Link>tools\linker\CustomSymbolWriter.cs</Link>
     </Compile>
     <Compile Include="Target.mmp.cs" />
-    <Compile Include="..\mtouch\Errors.Designer.cs">
-      <Link>tools\mtouch\Errors.Designer.cs</Link>
+    <Compile Include="..\mtouch\Errors.designer.cs">
+      <Link>tools\mtouch\Errors.designer.cs</Link>
       <DependentUpon>Errors.resx</DependentUpon>
     </Compile>
     <Compile Include="..\linker\ScanTypeReferenceStep.cs">
@@ -499,7 +502,7 @@
     <EmbeddedResource Include="..\mtouch\Errors.resx">
       <Link>tools\mtouch\Errors.resx</Link>
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errors.Designer.cs</LastGenOutput>
+      <LastGenOutput>Errors.designer.cs</LastGenOutput>
       <CustomToolNamespace>Xamarin.Bundler</CustomToolNamespace>
       <ManifestResourceName>Xamarin.Bundler.Errors</ManifestResourceName>
     </EmbeddedResource>

@@ -5,4 +5,6 @@ if test -z "${MONO_ENV_OPTIONS:-}"; then
 	export MONO_ENV_OPTIONS=--debug
 fi
 
-exec mono --debug ~/.nuget/packages/nunit.consolerunner/3.11.1/tools/nunit3-console.exe "$@"
+TOP="$(cd "$(dirname "$0")/.." && pwd)"
+
+exec mono --debug "$TOP"/packages/nunit.consolerunner/3.11.1/tools/nunit3-console.exe "$@"

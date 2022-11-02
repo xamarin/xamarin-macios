@@ -237,7 +237,7 @@ namespace CoreFoundation {
 		                                         out CFWriteStream writeStream)
 		{
 			if (socket is null)
-				throw new ArgumentNullException (nameof (socket));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (socket));
 
 			IntPtr read, write;
 			CFStreamCreatePairWithSocket (IntPtr.Zero, socket.GetNative (), out read, out write);
@@ -496,7 +496,7 @@ namespace CoreFoundation {
 		public static CFHTTPStream CreateForHTTPRequest (CFHTTPMessage request)
 		{
 			if (request is null)
-				throw new ArgumentNullException (nameof (request));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (request));
 
 			var handle = CFReadStreamCreateForHTTPRequest (IntPtr.Zero, request.Handle);
 			return new CFHTTPStream (handle, true);
@@ -543,9 +543,9 @@ namespace CoreFoundation {
 		public static CFHTTPStream CreateForStreamedHTTPRequest (CFHTTPMessage request, CFReadStream body)
 		{
 			if (request is null)
-				throw new ArgumentNullException (nameof (request));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (request));
 			if (body is null)
-				throw new ArgumentNullException (nameof (body));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (body));
 
 			var handle = CFReadStreamCreateForStreamedHTTPRequest (IntPtr.Zero, request.Handle, body.Handle);
 			return new CFHTTPStream (handle, true);
@@ -554,9 +554,9 @@ namespace CoreFoundation {
 		public static CFHTTPStream CreateForStreamedHTTPRequest (CFHTTPMessage request, NSInputStream body)
 		{
 			if (request is null)
-				throw new ArgumentNullException (nameof (request));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (request));
 			if (body is null)
-				throw new ArgumentNullException (nameof (body));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (body));
 
 			var handle = CFReadStreamCreateForStreamedHTTPRequest (IntPtr.Zero, request.Handle, body.Handle);
 			return new CFHTTPStream (handle, true);
@@ -585,7 +585,7 @@ namespace CoreFoundation {
 		protected void CheckError ()
 		{
 			var exc = GetError ();
-			if (exc != null)
+			if (exc is not null)
 				throw exc;
 		}
 
@@ -688,35 +688,35 @@ namespace CoreFoundation {
 		protected virtual void OnOpenCompleted (StreamEventArgs args)
 		{
 			var e = OpenCompletedEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnHasBytesAvailableEvent (StreamEventArgs args)
 		{
 			var e = HasBytesAvailableEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnCanAcceptBytesEvent (StreamEventArgs args)
 		{
 			var e = CanAcceptBytesEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnErrorEvent (StreamEventArgs args)
 		{
 			var e = ErrorEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 
 		protected virtual void OnClosedEvent (StreamEventArgs args)
 		{
 			var e = ClosedEvent;
-			if (e != null)
+			if (e is not null)
 				e (this, args);
 		}
 

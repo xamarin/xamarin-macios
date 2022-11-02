@@ -1,9 +1,7 @@
 using Xamarin.Messaging.Build.Client;
 
-namespace Microsoft.Build.Tasks
-{
-	public class Delete : DeleteBase
-	{
+namespace Microsoft.Build.Tasks {
+	public class Delete : DeleteBase {
 		public override bool Execute ()
 		{
 			var result = base.Execute ();
@@ -13,7 +11,7 @@ namespace Microsoft.Build.Tasks
 			}
 
 			var client = BuildConnection
-				.GetAsync (SessionId, BuildEngine4)
+				.GetAsync (BuildEngine4)
 				.Result
 				.Client;
 

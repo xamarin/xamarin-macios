@@ -57,7 +57,9 @@ PowerShellVersion = '7.0.3'
 # RequiredAssemblies = @()
 
 # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-# ScriptsToProcess = @()
+ScriptsToProcess = @(
+               'Launch.ps1'
+)
 
 # Type files (.ps1xml) to be loaded when importing this module
 # TypesToProcess = @()
@@ -66,13 +68,13 @@ PowerShellVersion = '7.0.3'
 # FormatsToProcess = @()
 
 # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-NestedModules = @('APIDiff.psm1', 
+NestedModules = @(
                'Artifacts.psm1', 
                'GitHub.psm1', 
                'MLaunch.psm1', 
                'StaticPages.psm1', 
                'System.psm1', 
-               'TestResults.psm1', 
+               'TestResults.psm1',
                'VSTS.psm1')
 
 # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.

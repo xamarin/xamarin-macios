@@ -89,5 +89,10 @@ namespace Foundation {
 				return GetItem<TKey> ((nuint)idx);
 			}
 		}
+
+		public new TKey[] ToArray ()
+		{
+			return base.ToArray<TKey> ();
+		}
 	}
 }

@@ -9,3 +9,6 @@
 
 ## this API is to have cute Objective-C syntax for something that's (according to the docs) identical to what another method does (which we've bound).
 !missing-selector! AVCaptureSynchronizedDataCollection::objectForKeyedSubscript: not bound
+
+### deprecated in iOS8
+!missing-protocol-member! AVAudioPlayerDelegate::audioPlayerEndInterruption:withFlags: not found

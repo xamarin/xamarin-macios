@@ -11,7 +11,7 @@ namespace PdfKit {
 		public nfloat []? DashPattern {
 			get {
 				var arr = WeakDashPattern;
-				if (arr == null)
+				if (arr is null)
 					return null;
 				var rv = new nfloat [arr.Count];
 				for (uint i = 0; i < rv.Length; i++)
@@ -19,7 +19,7 @@ namespace PdfKit {
 				return rv;
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					WeakDashPattern = null;
 				} else {
 					var arr = new NSNumber [value.Length];
@@ -36,7 +36,7 @@ namespace PdfKit {
 		public CGPoint []? QuadrilateralPoints {
 			get {
 				var arr = WeakQuadrilateralPoints;
-				if (arr == null)
+				if (arr is null)
 					return null;
 				var rv = new CGPoint [arr.Count];
 				for (uint i = 0; i < rv.Length; i++)
@@ -44,7 +44,7 @@ namespace PdfKit {
 				return rv;
 			}
 			set {
-				if (value == null) {
+				if (value is null) {
 					WeakQuadrilateralPoints = null;
 				} else {
 					var arr = new NSValue [value.Length];

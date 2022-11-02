@@ -9,41 +9,47 @@
 //
 // Copyright 2014-2015 Xamarin
 //
+
+#nullable enable
+
 using System;
 using Foundation;
 namespace HealthKit
 {
+#pragma warning disable CS0618 // Type or member is obsolete
 	public partial class HKQuantityType {
-		public static HKQuantityType Create (HKQuantityTypeIdentifier kind)
+		public static HKQuantityType? Create (HKQuantityTypeIdentifier kind)
 		{
 			return HKObjectType.GetQuantityType (kind.GetConstant ());
 		}
 	}
 
 	public partial class HKCategoryType {
-		public static HKCategoryType Create (HKCategoryTypeIdentifier kind)
+		public static HKCategoryType? Create (HKCategoryTypeIdentifier kind)
 		{
 			return HKObjectType.GetCategoryType (kind.GetConstant ());
 		}
 	}
 
 	public partial class HKCharacteristicType {
-		public static HKCharacteristicType Create (HKCharacteristicTypeIdentifier kind)
+		public static HKCharacteristicType? Create (HKCharacteristicTypeIdentifier kind)
 		{
 			return HKObjectType.GetCharacteristicType (kind.GetConstant ());
 		}
 	}
 
 	public partial class HKCorrelationType {
-		public static HKCorrelationType Create (HKCorrelationTypeIdentifier kind)
+		public static HKCorrelationType? Create (HKCorrelationTypeIdentifier kind)
 		{
 			return HKObjectType.GetCorrelationType (kind.GetConstant ());
 		}
 	}
+#pragma warning restore CS0618 // Type or member is obsolete
+
 
 #if !WATCH
 	public partial class HKDocumentType {
-		public static HKDocumentType Create (HKDocumentTypeIdentifier kind)
+		public static HKDocumentType? Create (HKDocumentTypeIdentifier kind)
 		{
 			return HKObjectType._GetDocumentType (kind.GetConstant ());
 		}

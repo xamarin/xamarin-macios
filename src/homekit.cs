@@ -39,7 +39,7 @@ namespace HomeKit {
 		[Protocolize]
 		HMHomeManagerDelegate Delegate { get; set; }
 
-		[Export ("primaryHome", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("primaryHome", ArgumentSemantic.Retain)]
 		HMHome PrimaryHome { get; }
 
 		[Export ("homes", ArgumentSemantic.Copy)]
@@ -391,10 +391,10 @@ namespace HomeKit {
 		[Export ("properties", ArgumentSemantic.Copy)]
 		NSString [] Properties { get; }
 
-		[Export ("metadata", ArgumentSemantic.Retain)]
+		[NullAllowed, Export ("metadata", ArgumentSemantic.Retain)]
 		HMCharacteristicMetadata Metadata { get; }
 
-		[Export ("value", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("value", ArgumentSemantic.Copy)]
 		NSObject Value { get; }
 
 		[Export ("notificationEnabled")]
@@ -416,7 +416,7 @@ namespace HomeKit {
 		[NoWatch]
 		[Async]
 		[Export ("updateAuthorizationData:completionHandler:")]
-		void UpdateAuthorizationData (NSData data, Action<NSError> completion);
+		void UpdateAuthorizationData ([NullAllowed] NSData data, Action<NSError> completion);
 
 		[iOS (9,0)]
 		[Export ("localizedDescription")]
@@ -500,27 +500,27 @@ namespace HomeKit {
 	[BaseType (typeof (NSObject))]
 	partial interface HMCharacteristicMetadata {
 
-		[Export ("minimumValue")]
+		[NullAllowed, Export ("minimumValue")]
 		NSNumber MinimumValue { get; }
 
-		[Export ("maximumValue")]
+		[NullAllowed, Export ("maximumValue")]
 		NSNumber MaximumValue { get; }
 
-		[Export ("stepValue")]
+		[NullAllowed, Export ("stepValue")]
 		NSNumber StepValue { get; }
 
-		[Export ("maxLength")]
+		[NullAllowed, Export ("maxLength")]
 		NSNumber MaxLength { get; }
 
 		[Internal]
-		[Export ("format", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("format", ArgumentSemantic.Copy)]
 		NSString _Format { get; }
 
 		[Internal]
-		[Export ("units", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("units", ArgumentSemantic.Copy)]
 		NSString _Units { get; }
 
-		[Export ("manufacturerDescription")]
+		[NullAllowed, Export ("manufacturerDescription")]
 		string ManufacturerDescription { get; }
 
 		[Watch (3,0), iOS (10,0)]
@@ -626,6 +626,7 @@ namespace HomeKit {
 
 		[EditorBrowsable (EditorBrowsableState.Advanced)]
 		[Export ("servicesWithTypes:")]
+		[return: NullAllowed]
 		HMService [] GetServices (NSString [] serviceTypes);
 
 		[NoTV]
@@ -635,7 +636,7 @@ namespace HomeKit {
 		void UnblockAccessory (HMAccessory accessory, Action<NSError> completion);
 
 		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'HMAccessorySetupManager.PerformAccessorySetup' instead.")]
-		[NoWatch, NoTV, iOS (10,0)]
+		[NoWatch, NoTV, iOS (10,0)][NoMacCatalyst]
 		[Async]
 		[Export ("addAndSetupAccessoriesWithCompletionHandler:")]
 		void AddAndSetupAccessories (Action<NSError> completion);
@@ -934,7 +935,7 @@ namespace HomeKit {
 		[Export ("name")]
 		string Name { get; }
 
-		[Export ("associatedServiceType")]
+		[NullAllowed, Export ("associatedServiceType")]
 		string AssociatedServiceType { get; }
 
 		[Export ("characteristics", ArgumentSemantic.Copy)]
@@ -1026,13 +1027,13 @@ namespace HomeKit {
 		[Export ("fireDate", ArgumentSemantic.Copy)]
 		NSDate FireDate { get; }
 
-		[Export ("timeZone", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("timeZone", ArgumentSemantic.Copy)]
 		NSTimeZone TimeZone { get; }
 
-		[Export ("recurrence", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("recurrence", ArgumentSemantic.Copy)]
 		NSDateComponents Recurrence { get; }
 
-		[Export ("recurrenceCalendar", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("recurrenceCalendar", ArgumentSemantic.Copy)]
 		NSCalendar RecurrenceCalendar { get; }
 
 		[NoTV]
@@ -1070,7 +1071,7 @@ namespace HomeKit {
 		[Export ("actionSets", ArgumentSemantic.Copy)]
 		HMActionSet [] ActionSets { get; }
 
-		[Export ("lastFireDate", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("lastFireDate", ArgumentSemantic.Copy)]
 		NSDate LastFireDate { get; }
 
 		[NoTV]
@@ -1920,37 +1921,20 @@ namespace HomeKit {
 
 	}
 
-	[iOS (15,2), NoWatch, NoTV, NoMacCatalyst]
-	[BaseType (typeof (NSObject))]
-	interface HMAccessorySetupManager
-	{
-		[Async]
-		[iOS (15,4)]
-		[Export ("performAccessorySetupUsingRequest:completionHandler:")]
-		void PerformAccessorySetup (HMAccessorySetupRequest request, Action<HMAccessorySetupResult, NSError> completion);
-
-		[Async]
-		[iOS (15,4)]
-		[Export ("performMatterEcosystemAccessorySetupUsingRequest:topology:completionHandler:")]
-		void PerformMatterEcosystemAccessorySetup (HMAccessorySetupRequest request, HMMatterTopology topology, Action<NSError> completion);
-
-		[Deprecated (PlatformName.iOS, 15, 4, message: "Use 'PerformAccessorySetup' instead.")]
-		[Async]
-		[Export ("addAndSetUpAccessoriesForTopology:completionHandler:")]
-		void AddAndSetUpAccessories (HMMatterTopology topology, Action<NSError> completion);
-	}
-
 	[iOS (15,2), Watch (8,3), TV (15,2), MacCatalyst (15,2)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
 	interface HMMatterHome : NSCopying, NSSecureCoding
 	{
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("uuid", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
 
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("name", ArgumentSemantic.Strong)]
 		string Name { get; }
 
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("initWithUUID:name:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSUuid uuid, string name);
@@ -1980,12 +1964,15 @@ namespace HomeKit {
 	[DisableDefaultCtor]
 	interface HMMatterRoom : NSCopying, NSSecureCoding
 	{
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("uuid", ArgumentSemantic.Strong)]
 		NSUuid Uuid { get; }
 
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("name", ArgumentSemantic.Strong)]
 		string Name { get; }
 
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("initWithUUID:name:")]
 		[DesignatedInitializer]
 		NativeHandle Constructor (NSUuid uuid, string name);
@@ -1996,9 +1983,11 @@ namespace HomeKit {
 	[DisableDefaultCtor]
 	interface HMMatterTopology : NSCopying, NSSecureCoding
 	{
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("initWithHomes:")]
 		NativeHandle Constructor (HMMatterHome [] homes);
 
+		[Wrap ("true ? throw new InvalidOperationException (Constants.RemovedFromHomeKit) : false", IsVirtual = true)]
 		[Export ("homes", ArgumentSemantic.Copy)]
 		HMMatterHome [] Homes { get; }
 	}

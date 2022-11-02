@@ -29,6 +29,23 @@ GENERATOR_FLAGS=-process-enums -core -nologo -nostdlib -noconfig -native-excepti
 
 GENERATOR_TF_VERSION=$(subst net,,$(DOTNET_TFM))
 
+# This is a workaround to create assemblies with a higher version than the
+# stable versions we released for Xcode 13.3. The stable versions we released
+# for Xcode 13.3 has a <osmajor>.<osminor>.300 version number, but that
+# version scheme has been changed, where the third digit from now on will
+# always be 0 in the assembly version. However, this means that until Apple
+# releases new OS versions (and we bind those versions), the assembly version
+# will be lower than the stable version wherever we've implemented the new
+# versioning scheme. This complicates testing, so just bump the third digit to
+# 600 until we're using a new Xcode (and thus presumably new OS versions as
+# well). This workaround can be removed at that point, but implement it so
+# that it will just be skipped/ignored if it isn't removed.
+ifeq ($(XCODE_VERSION),13.3)
+NUGET_VERSION_THIRD_DIGIT_WORKAROUND=600
+else
+NUGET_VERSION_THIRD_DIGIT_WORKAROUND=0
+endif
+
 DOTNET_REFERENCES = \
 	/r:$(DOTNET_BCL_DIR)/System.Buffers.dll \
 	/r:$(DOTNET_BCL_DIR)/System.Collections.Concurrent.dll \
@@ -112,7 +129,7 @@ SHARED_RESX = $(TOP)/tools/mtouch/Errors.resx
 SHARED_DESIGNER_CS = $(BUILD_DIR)/common/Errors.Designer.cs
 
 $(SHARED_DESIGNER_CS): $(SHARED_RESX)
-	./generate-errors.csharp > $(SHARED_DESIGNER_CS)
+	$(Q_GEN) ./generate-errors.csharp > $(SHARED_DESIGNER_CS)
 
 #
 # Xamarin.iOS
@@ -177,6 +194,7 @@ $(IOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(IOS_BUILD_DI
 		-e 's|@NUGET_VERSION_NO_METADATA@|$(IOS_NUGET_VERSION_NO_METADATA)|g' \
 		-e 's|@NUGET_VERSION_MAJOR@|$(IOS_NUGET_VERSION_MAJOR)|g' \
 		-e 's|@NUGET_VERSION_MINOR@|$(IOS_NUGET_VERSION_MINOR)|g' \
+		-e 's|@NUGET_VERSION_THIRD_DIGIT_WORKAROUND@|$(NUGET_VERSION_THIRD_DIGIT_WORKAROUND)|g' \
 		-e 's|@NUGET_VERSION_REV@|$(IOS_NUGET_VERSION_PATCH)|g' \
 		-e 's|@NUGET_VERSION_BUILD@|$(IOS_NUGET_COMMIT_DISTANCE)|g' \
 		-e 's|@DOTNET_PLATFORM@|iOS|g' \
@@ -263,7 +281,7 @@ $(IOS_BUILD_DIR)/native-$(1)%Xamarin.iOS.dll $(IOS_BUILD_DIR)/native-$(1)%Xamari
 		@$(BUILD_DIR)/ios-defines.rsp \
 		$$(IOS_SOURCES) @$(IOS_BUILD_DIR)/native/generated_sources
 
-$(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%pdb $(2): $$(IOS_DOTNET_SOURCES) $$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources $$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml $(PRODUCT_KEY_PATH) | $(IOS_DOTNET_BUILD_DIR)/$(1) $(IOS_DOTNET_BUILD_DIR)/ref
+$(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%pdb $(2): $$(IOS_DOTNET_SOURCES) $$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources $$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $$(TOP)/src/ILLink.Descriptors.xml $$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml $(PRODUCT_KEY_PATH) | $(IOS_DOTNET_BUILD_DIR)/$(1) $(IOS_DOTNET_BUILD_DIR)/ref
 	$$(call Q_PROF_CSC,dotnet/$(1)-bit) $(DOTNET_CSC) $(DOTNET_FLAGS) -out:$(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS.dll -unsafe -optimize \
 		$$(ARGS_$(1)) \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
@@ -273,6 +291,7 @@ $(IOS_DOTNET_BUILD_DIR)/$(1)/Microsoft.iOS%dll $(IOS_DOTNET_BUILD_DIR)/$(1)/Micr
 		$$(IOS_CSC_FLAGS_XI) \
 		@$(DOTNET_BUILD_DIR)/ios-defines-dotnet.rsp \
 		-res:$(IOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
+		-res:$(TOP)/src/ILLink.Descriptors.xml \
 		-res:$(IOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		$$(IOS_DOTNET_SOURCES) @$(IOS_DOTNET_BUILD_DIR)/ios-generated-sources
 
@@ -318,6 +337,7 @@ clean-local::
 	rm -rf build
 	rm -f $(IOS_TARGETS) generated_sources *.mdb *.pdb
 
+ifdef INCLUDE_IOS
 IOS_TARGETS_DIRS += \
 	$(IOS_BUILD_DIR)                                           \
 	$(IOS_BUILD_DIR)/compat                                    \
@@ -377,6 +397,8 @@ DOTNET_TARGETS_DIRS += \
 	$(IOS_DOTNET_BUILD_DIR)/generated-sources \
 	$(DOTNET_DESTDIR)/$(IOS_NUGET).Ref/ref/$(DOTNET_TFM) \
 	$(foreach rid,$(DOTNET_IOS_RUNTIME_IDENTIFIERS),$(DOTNET_DESTDIR)/$(IOS_NUGET).Runtime.$(rid)/runtimes/$(rid)/lib/$(DOTNET_TFM)) \
+
+endif
 
 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/%.dll: $(IOS_BUILD_DIR)/compat/%.dll | $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1 $(IOS_DESTDIR)$(MONOTOUCH_PREFIX)/lib/mono/2.1/Facades
 	$(Q) install -m 0755 $< $@
@@ -442,8 +464,10 @@ $(PROJECT_DIR)/MonoTouch.NUnitLite.csproj: MonoTouch.NUnitLite.templ.csproj Make
 
 PROJECT_FILES += $(PROJECT_DIR)/xamios.csproj $(PROJECT_DIR)/MonoTouch.NUnitLite.csproj
 
+ifdef INCLUDE_IOS
 all-ios: $(IOS_TARGETS)
 install-ios: $(IOS_TARGETS)
+endif
 
 ifdef INCLUDE_XAMARIN_LEGACY
 ifdef INCLUDE_IOS
@@ -549,6 +573,7 @@ $(MAC_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in | $(MAC_BUILD_DI
 		-e 's|@NUGET_VERSION_NO_METADATA@|$(MACOS_NUGET_VERSION_NO_METADATA)|g' \
 		-e 's|@NUGET_VERSION_MAJOR@|$(MACOS_NUGET_VERSION_MAJOR)|g' \
 		-e 's|@NUGET_VERSION_MINOR@|$(MACOS_NUGET_VERSION_MINOR)|g' \
+		-e 's|@NUGET_VERSION_THIRD_DIGIT_WORKAROUND@|$(NUGET_VERSION_THIRD_DIGIT_WORKAROUND)|g' \
 		-e 's|@NUGET_VERSION_REV@|$(MACOS_NUGET_VERSION_PATCH)|g' \
 		-e 's|@NUGET_VERSION_BUILD@|$(MACOS_NUGET_COMMIT_DISTANCE)|g' \
 		-e 's|@DOTNET_PLATFORM@|macOS|g' \
@@ -1160,6 +1185,7 @@ $(TVOS_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/Make.con
 		-e 's|@NUGET_VERSION_NO_METADATA@|$(TVOS_NUGET_VERSION_NO_METADATA)|g' \
 		-e 's|@NUGET_VERSION_MAJOR@|$(TVOS_NUGET_VERSION_MAJOR)|g' \
 		-e 's|@NUGET_VERSION_MINOR@|$(TVOS_NUGET_VERSION_MINOR)|g' \
+		-e 's|@NUGET_VERSION_THIRD_DIGIT_WORKAROUND@|$(NUGET_VERSION_THIRD_DIGIT_WORKAROUND)|g' \
 		-e 's|@NUGET_VERSION_REV@|$(TVOS_NUGET_VERSION_PATCH)|g' \
 		-e 's|@NUGET_VERSION_BUILD@|$(TVOS_NUGET_COMMIT_DISTANCE)|g' \
 		-e 's|@DOTNET_PLATFORM@|tvOS|g' \
@@ -1233,7 +1259,7 @@ $(TVOS_DOTNET_BUILD_DIR)/tvos.rsp: Makefile Makefile.generator frameworks.source
 		@$(DOTNET_BUILD_DIR)/tvos-defines-dotnet.rsp \
 		> $@
 
-$(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%pdb $(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS%dll: $(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources $(TVOS_DOTNET_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(TVOS_DOTNET_BUILD_DIR)/64 $(TVOS_DOTNET_BUILD_DIR)/ref
+$(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%pdb $(TVOS_DOTNET_BUILD_DIR)/ref/Microsoft.tvOS%dll: $(TVOS_DOTNET_BUILD_DIR)/tvos-generated-sources $(TVOS_DOTNET_SOURCES) $(PRODUCT_KEY_PATH) $(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(TOP)/src/ILLink.Descriptors.xml $(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(TVOS_DOTNET_BUILD_DIR)/64 $(TVOS_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
 		$(DOTNET_CSC) $(DOTNET_FLAGS) -out:$(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
@@ -1246,6 +1272,7 @@ $(TVOS_DOTNET_BUILD_DIR)/64/Microsoft.tvOS%dll $(TVOS_DOTNET_BUILD_DIR)/64/Micro
 		$(TVOS_DOTNET_SOURCES) \
 		@$(DOTNET_BUILD_DIR)/tvos-defines-dotnet.rsp \
 		-res:$(TVOS_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
+		-res:$(TOP)/src/ILLink.Descriptors.xml \
 		-res:$(TVOS_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		@$<
 
@@ -1377,6 +1404,7 @@ $(MACCATALYST_BUILD_DIR)/AssemblyInfo.cs: $(TOP)/src/AssemblyInfo.cs.in $(TOP)/M
 		-e 's|@NUGET_VERSION_NO_METADATA@|$(MACCATALYST_NUGET_VERSION_NO_METADATA)|g' \
 		-e 's|@NUGET_VERSION_MAJOR@|$(MACCATALYST_NUGET_VERSION_MAJOR)|g' \
 		-e 's|@NUGET_VERSION_MINOR@|$(MACCATALYST_NUGET_VERSION_MINOR)|g' \
+		-e 's|@NUGET_VERSION_THIRD_DIGIT_WORKAROUND@|$(NUGET_VERSION_THIRD_DIGIT_WORKAROUND)|g' \
 		-e 's|@NUGET_VERSION_REV@|$(MACCATALYST_NUGET_VERSION_PATCH)|g' \
 		-e 's|@NUGET_VERSION_BUILD@|$(MACCATALYST_NUGET_COMMIT_DISTANCE)|g' \
 		-e 's|@DOTNET_PLATFORM@|MacCatalyst|g' \
@@ -1418,7 +1446,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst.rsp: Makefile Makefile.generator fra
 		@$(DOTNET_BUILD_DIR)/maccatalyst-defines-dotnet.rsp \
 		> $@
 
-$(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Microsoft.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_DOTNET_SOURCES) $(PRODUCT_KEY_PATH) $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
+$(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%dll $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%pdb $(MACCATALYST_DOTNET_BUILD_DIR)/ref/Microsoft.MacCatalyst%dll: $(MACCATALYST_DOTNET_BUILD_DIR)/maccatalyst-generated-sources $(MACCATALYST_DOTNET_SOURCES) $(PRODUCT_KEY_PATH) $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml $(TOP)/src/ILLink.Descriptors.xml $(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml | $(MACCATALYST_DOTNET_BUILD_DIR)/64 $(MACCATALYST_DOTNET_BUILD_DIR)/ref
 	$(Q_DOTNET_GEN) \
 		$(DOTNET_CSC) $(DOTNET_FLAGS) -out:$(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst.dll -optimize \
 		-publicsign -keyfile:$(PRODUCT_KEY_PATH) \
@@ -1431,6 +1459,7 @@ $(MACCATALYST_DOTNET_BUILD_DIR)/64/Microsoft.MacCatalyst%dll $(MACCATALYST_DOTNE
 		$(MACCATALYST_DOTNET_SOURCES) \
 		@$(DOTNET_BUILD_DIR)/maccatalyst-defines-dotnet.rsp \
 		-res:$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.LinkAttributes.xml \
+		-res:$(TOP)/src/ILLink.Descriptors.xml \
 		-res:$(MACCATALYST_DOTNET_BUILD_DIR)/ILLink.Substitutions.xml \
 		@$<
 
@@ -1542,7 +1571,7 @@ $(SHARED_PATH)/Delegates.generated.cs: $(SHARED_PATH)/Delegates.cs.t4 $(SHARED_P
 	$(Q) $(MAKE) -C $(SHARED_PATH) Delegates.generated.cs
 
 $(BUILD_DIR)/common/NativeTypes/%.cs: $(TOP)/src/NativeTypes/%.tt | $(BUILD_DIR)/common/NativeTypes
-	$(Q_GEN) $(TT) $< -o $@ 1>/dev/null
+	$(Q_GEN) $(TT) $(abspath $<) -o $(abspath $@) 1>/dev/null
 
 $(COMMON_TARGET_DIRS):
 	$(Q) mkdir -p $@
@@ -1572,10 +1601,6 @@ $(BUILD_DIR)/Constants.%.generated.cs: Makefile $(GENERATE_FRAMEWORKS_CONSTANTS)
 $(DOTNET_BUILD_DIR)/Constants.%.generated.cs: Makefile $(DOTNET_GENERATE_FRAMEWORKS_CONSTANTS) | $(DOTNET_BUILD_DIR)
 	$(Q) mono --debug $(DOTNET_GENERATE_FRAMEWORKS_CONSTANTS) "$*" "$@.tmp"
 	$(Q) mv "$@.tmp" "$@"
-
-# This tells NuGet to use the exact same dotnet version we've configured in Make.config
-global.json: $(TOP)/global6.json
-	$(Q) $(CP) $< $@
 
 install-local:: $(INSTALL_TARGETS)
 all-local:: $(ALL_TARGETS)

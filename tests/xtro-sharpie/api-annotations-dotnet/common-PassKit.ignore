@@ -1,4 +1,4 @@
-# Initial result from new rule extra-null-allowed
+# By default these are null
 !extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_CountryCode(System.String)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_CurrencyCode(System.String)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_MerchantIdentifier(System.String)' has a extraneous [NullAllowed] on parameter #0
@@ -6,15 +6,3 @@
 !extra-null-allowed! 'System.Void PassKit.PKPaymentRequest::set_SupportedNetworks(Foundation.NSString[])' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void PassKit.PKPaymentSummaryItem::set_Amount(Foundation.NSDecimalNumber)' has a extraneous [NullAllowed] on parameter #0
 !extra-null-allowed! 'System.Void PassKit.PKPaymentSummaryItem::set_Label(System.String)' has a extraneous [NullAllowed] on parameter #0
-
-# Initial result from new rule missing-null-allowed
-!missing-null-allowed! 'Foundation.NSDate PassKit.PKPass::get_RelevantDate()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSDictionary PassKit.PKPass::get_UserInfo()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSObject PassKit.PKPass::GetLocalizedValue(Foundation.NSString)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'Foundation.NSUrl PassKit.PKPass::get_WebServiceUrl()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'PassKit.PKPass PassKit.PKPassLibrary::GetPass(System.String,System.String)' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'PassKit.PKShippingMethod PassKit.PKPayment::get_ShippingMethod()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.String PassKit.PKPass::get_AuthenticationToken()' is missing an [NullAllowed] on return type
-!missing-null-allowed! 'System.Void PassKit.PKPaymentAuthorizationResult::set_Errors(Foundation.NSError[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void PassKit.PKPaymentRequestPaymentMethodUpdate::set_Errors(Foundation.NSError[])' is missing an [NullAllowed] on parameter #0
-!missing-null-allowed! 'System.Void PassKit.PKPaymentRequestShippingContactUpdate::set_Errors(Foundation.NSError[])' is missing an [NullAllowed] on parameter #0

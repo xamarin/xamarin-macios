@@ -77,9 +77,10 @@ namespace Foundation {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public partial class NSObject 
+	public partial class NSObject : INativeObject
 #if !COREBUILD
-		: IEquatable<NSObject> 
+		, IEquatable<NSObject>
+		, IDisposable
 #endif
 	{
 #if !COREBUILD
@@ -103,11 +104,10 @@ namespace Foundation {
 		// See  "Toggle-ref support for CoreCLR" in coreclr-bridge.m for more information.
 		Flags actual_flags;
 		internal unsafe Runtime.TrackedObjectInfo* tracked_object_info;
-		internal GCHandle? tracked_object_handle;
 
 		unsafe Flags flags {
 			get {
-				// Get back the InFinalizerQueue flag, it's the only flag we'll set in the tracked object info structure.
+				// Get back the InFinalizerQueue flag, it's the only flag we'll set in the tracked object info structure from native code.
 				// The InFinalizerQueue will never be cleared once set, so there's no need to unset it here if it's not set in the tracked_object_info structure.
 				if (tracked_object_info != null && ((tracked_object_info->Flags) & Flags.InFinalizerQueue) == Flags.InFinalizerQueue)
 					actual_flags |= Flags.InFinalizerQueue;
@@ -282,28 +282,18 @@ namespace Foundation {
 		}
 #endif
 
+#if !NET || !__MACOS__
 		[MethodImplAttribute (MethodImplOptions.InternalCall)]
 		extern static void RegisterToggleRef (NSObject obj, IntPtr handle, bool isCustomType);
+#endif // !NET || !__MACOS__
 
 		[DllImport ("__Internal")]
 		static extern void xamarin_release_managed_ref (IntPtr handle, [MarshalAs (UnmanagedType.I1)] bool user_type);
 
-#if NET
-		static void RegisterToggleRefMonoVM (NSObject obj, IntPtr handle, bool isCustomType)
-		{
-			// We need this indirection for CoreCLR, otherwise JITting RegisterToggleReference will throw System.Security.SecurityException: ECall methods must be packaged into a system module.
-			RegisterToggleRef (obj, handle, isCustomType);
-		}
-#endif
-
 		static void RegisterToggleReference (NSObject obj, IntPtr handle, bool isCustomType)
 		{
-#if NET
-			if (Runtime.IsCoreCLR) {
-				Runtime.RegisterToggleReferenceCoreCLR (obj, handle, isCustomType);
-			} else {
-				RegisterToggleRefMonoVM (obj, handle, isCustomType);
-			}
+#if NET && __MACOS__
+			Runtime.RegisterToggleReferenceCoreCLR (obj, handle, isCustomType);
 #else
 			RegisterToggleRef (obj, handle, isCustomType);
 #endif
@@ -398,12 +388,6 @@ namespace Foundation {
 			}
 			xamarin_release_managed_ref (handle, user_type);
 			FreeData ();
-#if NET
-			if (tracked_object_handle.HasValue) {
-				tracked_object_handle.Value.Free ();
-				tracked_object_handle = null;
-			}
-#endif
 		}
 
 		static bool IsProtocol (Type type, IntPtr protocol)
@@ -482,6 +466,34 @@ namespace Foundation {
 			if (!Runtime.DynamicRegistrationSupported)
 				return false;
 
+			// the linker/trimmer will remove the following code if the dynamic registrar is removed from the app
+			var classHandle = ClassHandle;
+			lock (Runtime.protocol_cache) {
+#if NET
+				ref var map = ref CollectionsMarshal.GetValueRefOrAddDefault (Runtime.protocol_cache, classHandle, out var exists);
+				if (!exists)
+					map = new ();
+				ref var result = ref CollectionsMarshal.GetValueRefOrAddDefault (map, protocol, out exists);
+				if (!exists)
+					result = DynamicConformsToProtocol (protocol);
+#else
+				bool new_map = false;
+				if (!Runtime.protocol_cache.TryGetValue (classHandle, out var map)) {
+					map = new ();
+					new_map = true;
+					Runtime.protocol_cache.Add (classHandle, map);
+				}
+				if (new_map || !map.TryGetValue (protocol, out var result)) {
+					result = DynamicConformsToProtocol (protocol);
+					map.Add (protocol, result);
+				}
+#endif
+				return result;
+			}
+		}
+
+		bool DynamicConformsToProtocol (NativeHandle protocol)
+		{
 			object [] adoptedProtocols = GetType ().GetCustomAttributes (typeof (AdoptsAttribute), true);
 			foreach (AdoptsAttribute adopts in adoptedProtocols){
 				if (adopts.ProtocolHandle == protocol)
@@ -659,10 +671,10 @@ namespace Foundation {
 				SetObjCIvar (name, value.Handle);
 		}
 		
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		extern static void object_getInstanceVariable (IntPtr obj, string name, out IntPtr val);
 
-		[DllImport ("/usr/lib/libobjc.dylib")]
+		[DllImport (Messaging.LIBOBJC_DYLIB)]
 		extern static void object_setInstanceVariable (IntPtr obj, string name, IntPtr val);
 #endif // !XAMCORE_3_0
 
@@ -926,20 +938,6 @@ namespace Foundation {
 				if (disposing) {
 					ReleaseManagedRef ();
 				} else {
-#if NET
-					// By adding an external reference to the object from finalizer we will
-					// resurrect it. Since Runtime class tracks the NSObject instances with
-					// GCHandle(..., WeakTrackResurrection) we need to make sure it's aware
-					// that the object was finalized.
-					//
-					// On CoreCLR the non-tracked objects don't get a callback from the
-					// garbage collector when they enter the finalization queue but the
-					// information is necessary for Runtime.TryGetNSObject to work correctly. 
-					// Since we are on the finalizer thread now we can just set the flag
-					// directly here.
-					actual_flags |= Flags.InFinalizerQueue;
-#endif
-
 					NSObject_Disposer.Add (this);
 				}
 			} else {
@@ -1065,6 +1063,34 @@ namespace Foundation {
 			var o = new Observer (this, key, observer);
 			AddObserver (o, key, options, o.Handle);
 			return o;
+		}
+
+		public static NSObject Alloc (Class kls)
+		{
+			var h = Messaging.IntPtr_objc_msgSend (kls.Handle, Selector.GetHandle (Selector.Alloc));
+			return new NSObject (h, true);
+		}
+
+		public void Init ()
+		{
+			if (handle == IntPtr.Zero)
+				throw new Exception ("you have not allocated the native object");
+
+			handle = Messaging.IntPtr_objc_msgSend (handle, Selector.GetHandle ("init"));
+		}
+
+		public static void InvokeInBackground (Action action)
+		{
+			// using the parameterized Thread.Start to avoid capturing
+			// the 'action' parameter (it'll needlessly create an extra
+			// object).
+			new System.Threading.Thread ((v) =>
+			{
+				((Action) v) ();
+			})
+			{
+				IsBackground = true,
+			}.Start (action);
 		}
 #endif // !COREBUILD
 	}

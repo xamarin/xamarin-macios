@@ -55,6 +55,9 @@ namespace Xamarin.Linker.Steps {
 				case "NativeAttribute":
 					store = remove = LinkContext.App.Optimizations.RemoveDynamicRegistrar == true;
 					break;
+				case "NativeNameAttribute":
+					store = remove = true;
+					break;
 				}
 				break;
 			case Namespaces.Foundation:

@@ -65,12 +65,12 @@ namespace CoreGraphics {
 		[DllImport (Constants.CoreGraphicsLibrary)]
 		extern static /* CGLayerRef */ IntPtr CGLayerRetain (/* CGLayerRef */ IntPtr layer);
 		
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGLayerRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGLayerRelease (GetCheckedHandle ());
 		}

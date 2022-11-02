@@ -24,7 +24,7 @@ namespace MediaPlayer {
 		ulong UInt64ForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.UInt64Value;
 		}
@@ -32,7 +32,7 @@ namespace MediaPlayer {
 		uint UInt32ForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.UInt32Value;
 		}
@@ -40,7 +40,7 @@ namespace MediaPlayer {
 		int Int32ForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.Int32Value;
 		}
@@ -48,7 +48,7 @@ namespace MediaPlayer {
 		double DoubleForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return 0;
 			return prop.DoubleValue;
 		}
@@ -56,7 +56,7 @@ namespace MediaPlayer {
 		bool BoolForProperty (NSString property)
 		{
 			var prop = ValueForProperty (property) as NSNumber;
-			if (prop == null)
+			if (prop is null)
 				return false;
 			return prop.BoolValue;
 		}

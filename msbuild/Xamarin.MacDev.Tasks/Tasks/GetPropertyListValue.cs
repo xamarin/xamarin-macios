@@ -1,6 +1,4 @@
-namespace Xamarin.MacDev.Tasks
-{
-	public class GetPropertyListValue : GetPropertyListValueTaskBase
-	{
+namespace Xamarin.MacDev.Tasks {
+	public class GetPropertyListValue : GetPropertyListValueTaskBase {
 	}
 }

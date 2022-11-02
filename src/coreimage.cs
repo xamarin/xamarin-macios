@@ -254,11 +254,13 @@ namespace CoreImage {
 		CIContext Create ();
 
 #if HAS_OPENGLES
+		[NoMac][NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:")]
 		CIContext FromContext (EAGLContext eaglContext);
 
+		[NoMac][NoMacCatalyst]
 		[Deprecated (PlatformName.iOS, 12, 0)]
 		[Static]
 		[Export ("contextWithEAGLContext:options:")]
@@ -713,6 +715,7 @@ namespace CoreImage {
 	}
 
 	[iOS (15,0), Mac (12,0), MacCatalyst (15,0), TV (15,0)]
+	[NativeName ("CIRAWDecoderVersion")]
 	public enum CIRawDecoderVersion : long {
 		
 		[Field ("CIRAWDecoderVersionNone")]
@@ -3219,10 +3222,10 @@ namespace CoreImage {
 		[CoreImageFilterProperty ("outputImageNonMPS")]
 		CIImage OutputImageNonMps { get; }
 
-#if MONOMAC
+		[Mac (10, 5)]
+		[NoiOS][NoTV][NoWatch][NoMacCatalyst]
 		[CoreImageFilterProperty ("outputImageMPS")]
 		CIImage OutputImageMps { get; }
-#endif
 
 		[CoreImageFilterProperty ("outputData")]
 		NSData OutputData { get; }

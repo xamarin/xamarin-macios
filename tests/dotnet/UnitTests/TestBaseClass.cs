@@ -1,19 +1,12 @@
 #nullable enable
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using System.Text;
 
 using Mono.Cecil;
 
-using NUnit.Framework;
-
-using Xamarin.Utils;
-using Xamarin.Tests;
 using Xamarin.MacDev;
+using Xamarin.Tests;
 
 namespace Xamarin.Tests {
 	[TestFixture]
@@ -44,17 +37,38 @@ namespace Xamarin.Tests {
 		protected string GetProjectPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, out string appPath, string configuration = "Debug")
 		{
 			var rv = GetProjectPath (project, subdir, platform);
-			if (string.IsNullOrEmpty (runtimeIdentifiers))
-				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
-			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
-			appPath = Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, project + ".app");
+			appPath = Path.Combine (GetOutputPath (project, subdir, runtimeIdentifiers, platform, configuration), project + ".app");
 			return rv;
 		}
 
 		protected string GetAppPath (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
 		{
+			return Path.Combine (GetBinDir (projectPath, platform, runtimeIdentifiers, configuration), Path.GetFileNameWithoutExtension (projectPath) + ".app");
+		}
+
+		protected string GetBinDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		{
+			return GetBinOrObjDir ("bin", projectPath, platform, runtimeIdentifiers, configuration);
+		}
+
+		protected string GetObjDir (string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		{
+			return GetBinOrObjDir ("obj", projectPath, platform, runtimeIdentifiers, configuration);
+		}
+
+		protected string GetBinOrObjDir (string binOrObj, string projectPath, ApplePlatform platform, string runtimeIdentifiers, string configuration = "Debug")
+		{
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
-			return Path.Combine (Path.GetDirectoryName (projectPath)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier, Path.GetFileNameWithoutExtension (projectPath) + ".app");
+			return Path.Combine (Path.GetDirectoryName (projectPath)!, binOrObj, configuration, platform.ToFramework (), appPathRuntimeIdentifier);
+		}
+
+		protected string GetOutputPath (string project, string? subdir, string runtimeIdentifiers, ApplePlatform platform, string configuration = "Debug")
+		{
+			var rv = GetProjectPath (project, subdir, platform);
+			if (string.IsNullOrEmpty (runtimeIdentifiers))
+				runtimeIdentifiers = GetDefaultRuntimeIdentifier (platform);
+			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
+			return Path.Combine (Path.GetDirectoryName (rv)!, "bin", configuration, platform.ToFramework (), appPathRuntimeIdentifier);
 		}
 
 		protected string GetDefaultRuntimeIdentifier (ApplePlatform platform)
@@ -176,6 +190,11 @@ namespace Xamarin.Tests {
 			}
 		}
 
+		protected string GetRelativeDylibDirectory (ApplePlatform platform)
+		{
+			return GetRelativeAssemblyDirectory (platform);
+		}
+
 		protected string GetInfoPListPath (ApplePlatform platform, string app_directory)
 		{
 			switch (platform) {
@@ -198,7 +217,7 @@ namespace Xamarin.Tests {
 			foreach (var assembly in assemblies) {
 				ModuleDefinition definition = ModuleDefinition.ReadModule (assembly, new ReaderParameters { ReadingMode = ReadingMode.Deferred });
 
-				bool onlyHasEmptyMethods = definition.Assembly.MainModule.Types.All (t => 
+				bool onlyHasEmptyMethods = definition.Assembly.MainModule.Types.All (t =>
 					t.Methods.Where (m => m.HasBody).All (m => m.Body.Instructions.Count == 1));
 				if (onlyHasEmptyMethods) {
 					assembliesWithOnlyEmptyMethods.Add (assembly);
@@ -218,14 +237,34 @@ namespace Xamarin.Tests {
 		protected string GetNativeExecutable (ApplePlatform platform, string app_directory)
 		{
 			var executableName = Path.GetFileNameWithoutExtension (app_directory);
+			return Path.Combine (app_directory, GetRelativeExecutableDirectory (platform), executableName);
+		}
+
+		protected string GetRelativeExecutableDirectory (ApplePlatform platform)
+		{
 			switch (platform) {
 			case ApplePlatform.iOS:
 			case ApplePlatform.TVOS:
 			case ApplePlatform.WatchOS:
-				return Path.Combine (app_directory, executableName);
+				return string.Empty;
 			case ApplePlatform.MacOSX:
 			case ApplePlatform.MacCatalyst:
-				return Path.Combine (app_directory, "Contents", "MacOS", executableName);
+				return Path.Combine ("Contents", "MacOS");
+			default:
+				throw new NotImplementedException ($"Unknown platform: {platform}");
+			}
+		}
+
+		protected string GetRelativeCodesignDirectory (ApplePlatform platform)
+		{
+			switch (platform) {
+			case ApplePlatform.iOS:
+			case ApplePlatform.TVOS:
+			case ApplePlatform.WatchOS:
+				return string.Empty;
+			case ApplePlatform.MacOSX:
+			case ApplePlatform.MacCatalyst:
+				return "Contents";
 			default:
 				throw new NotImplementedException ($"Unknown platform: {platform}");
 			}
@@ -263,8 +302,6 @@ namespace Xamarin.Tests {
 
 			File.WriteAllText (csproj, sb.ToString ());
 
-			Configuration.CopyDotNetSupportingFiles (dir);
-
 			var appPathRuntimeIdentifier = runtimeIdentifiers.IndexOf (';') >= 0 ? "" : runtimeIdentifiers;
 			appPath = Path.Combine (dir, "bin", "Debug", platform.ToFramework (), appPathRuntimeIdentifier, name + ".app");
 
@@ -281,27 +318,32 @@ namespace Xamarin.Tests {
 
 		protected void ExecuteWithMagicWordAndAssert (string executable)
 		{
+			var rv = Execute (executable, out var output, out string magicWord);
+			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
+			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+		}
+
+		protected Execution Execute (string executable, out StringBuilder output, out string magicWord)
+		{
 			if (!File.Exists (executable))
 				throw new FileNotFoundException ($"The executable '{executable}' does not exists.");
 
-			var magicWord = Guid.NewGuid ().ToString ();
+			magicWord = Guid.NewGuid ().ToString ();
 			var env = new Dictionary<string, string?> {
 				{ "MAGIC_WORD", magicWord },
 				{ "DYLD_FALLBACK_LIBRARY_PATH", null }, // VSMac might set this, which may cause tests to crash.
 			};
 
-			var output = new StringBuilder ();
-			var rv = Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
-			Assert.That (output.ToString (), Does.Contain (magicWord), "Contains magic word");
-			Assert.AreEqual (0, rv.ExitCode, "ExitCode");
+			output = new StringBuilder ();
+			return Execution.RunWithStringBuildersAsync (executable, Array.Empty<string> (), environment: env, standardOutput: output, standardError: output, timeout: TimeSpan.FromSeconds (15)).Result;
 		}
 
-		public static StringBuilder AssertExecute (string executable, params string[] arguments)
+		public static StringBuilder AssertExecute (string executable, params string [] arguments)
 		{
 			return AssertExecute (executable, arguments, out _);
 		}
 
-		public static StringBuilder AssertExecute (string executable, string[] arguments, out StringBuilder output)
+		public static StringBuilder AssertExecute (string executable, string [] arguments, out StringBuilder output)
 		{
 			var rv = ExecutionHelper.Execute (executable, arguments, out output);
 			if (rv != 0) {
@@ -320,6 +362,37 @@ namespace Xamarin.Tests {
 			var appPath = GetAppPath (csproj, platform, runtimeIdentifiers);
 			var appExecutable = GetNativeExecutable (platform, appPath);
 			ExecuteWithMagicWordAndAssert (appExecutable);
+		}
+
+		protected bool IsRuntimeIdentifierSigned (string runtimeIdentifiers)
+		{
+			foreach (var rid in runtimeIdentifiers.Split (';', StringSplitOptions.RemoveEmptyEntries)) {
+				if (rid.StartsWith ("ios-", StringComparison.OrdinalIgnoreCase))
+					return true;
+				if (rid.StartsWith ("tvos-", StringComparison.OrdinalIgnoreCase))
+					return true;
+			}
+			return false;
+		}
+
+		protected bool TryGetEntitlements (string nativeExecutable, [NotNullWhen (true)] out PDictionary? entitlements)
+		{
+			var entitlementsPath = Path.Combine (Cache.CreateTemporaryDirectory (), "EntitlementsInBinary.plist");
+			var args = new string [] {
+				"--display",
+				"--entitlements",
+				entitlementsPath,
+				"--xml",
+				nativeExecutable
+			};
+			var rv = ExecutionHelper.Execute ("codesign", args, out var codesignOutput, TimeSpan.FromSeconds (15));
+			Assert.AreEqual (0, rv, $"'codesign {string.Join (" ", args)}' failed:\n{codesignOutput}");
+			if (File.Exists (entitlementsPath)) {
+				entitlements = PDictionary.FromFile (entitlementsPath);
+				return true;
+			}
+			entitlements = null;
+			return false;
 		}
 	}
 }

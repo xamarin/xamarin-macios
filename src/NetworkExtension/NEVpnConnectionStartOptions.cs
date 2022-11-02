@@ -1,3 +1,5 @@
+#nullable enable
+
 using System.Runtime.Versioning;
 
 using Foundation;
@@ -15,7 +17,7 @@ namespace NetworkExtension {
 		public NEVpnConnectionStartOptions () : base (new NSMutableDictionary ()) {}
 		public NEVpnConnectionStartOptions (NSDictionary dictionary) : base (dictionary) {}
 
-		public NSString Username {
+		public NSString? Username {
 			get {
 				return GetNSStringValue (NEVpnConnectionStartOptionInternal.Username);
 			}
@@ -24,7 +26,7 @@ namespace NetworkExtension {
 			}
 		}
 
-		public NSString Password {
+		public NSString? Password {
 			get {
 				return GetNSStringValue (NEVpnConnectionStartOptionInternal.Password);
 			}

@@ -150,6 +150,9 @@ namespace UIKit {
 	// NSInteger -> NSLayoutConstraint.h
 	[Native]
 	[NoWatch]
+	[iOS (6,0)]
+	[Mac (10,7)]
+	[TV (9,0)]
 	[MacCatalyst (13,0)]
 	public enum NSLayoutAttribute : long {
 		NoAttribute = 0,
@@ -200,6 +203,9 @@ namespace UIKit {
 	[Flags]
 	[NoWatch]
 	[MacCatalyst (13,0)]
+	[iOS (6,0)]
+	[Mac (10,7)]
+	[TV (9,0)]
 	public enum NSLayoutFormatOptions : ulong {
 		None = 0,
 
@@ -305,6 +311,8 @@ namespace UIKit {
 	[MacCatalyst (13,1)]
 	[NoWatch] // Header is not present in watchOS SDK.
 	[iOS (7,0)]
+	[TV (9,0)]
+	[Mac (10,7)]
 	[DesignatedDefaultCtor]
 	[BaseType (typeof (NSObject))]
 	partial interface NSLayoutManager : NSSecureCoding {
@@ -1392,6 +1400,9 @@ namespace UIKit {
 	[BaseType (typeof (NSObject))]
 	[Model]
 	[Protocol]
+	[Mac (10,0)]
+	[TV (9,0)]
+	[MacCatalyst (13,1)]
 	interface NSLayoutManagerDelegate {
 		[Export ("layoutManagerDidInvalidateLayout:")]
 #if MONOMAC && !NET
@@ -1594,6 +1605,10 @@ namespace UIKit {
 
 	[ThreadSafe]
 	[BaseType (typeof (NSObject))]
+	[iOS (6,0)]
+	[Mac (10,0)]
+	[TV (9,0)]
+	[MacCatalyst (13,1)]
 	interface NSParagraphStyle : NSSecureCoding, NSMutableCopying {
 		[Export ("lineSpacing")]
 		nfloat LineSpacing { get; [NotImplemented] set; }
@@ -1701,6 +1716,10 @@ namespace UIKit {
 
 	[ThreadSafe]
 	[BaseType (typeof (NSParagraphStyle))]
+	[iOS (6,0)]
+	[Mac (10,0)]
+	[TV (9,0)]
+	[MacCatalyst (13,1)]
 	interface NSMutableParagraphStyle {
 		[Export ("lineSpacing")]
 		[Override]
@@ -2274,8 +2293,11 @@ namespace UIKit {
 #endif
 	}
 
+	[iOS (6, 0)]
+	[Mac (10,7)]
+	[TV (9, 0)]
 	[NoWatch]
-	[MacCatalyst (13,0)]
+	[MacCatalyst (13,1)]
 	[BaseType (typeof (NSObject))]
 	interface NSLayoutConstraint
 #if MONOMAC
@@ -2359,6 +2381,8 @@ namespace UIKit {
 	}
 
 	[NoWatch]
+	[Introduced (PlatformName.iOS)]
+	[TV (9,0)]
 	[Mac (10,11)]
 	[MacCatalyst (13,0)]
 	[Model]
@@ -2380,8 +2404,10 @@ namespace UIKit {
 	}
 
 	[iOS (7,0)]
+	[Mac (10,0)]
+	[TV (9,0)]
+	[MacCatalyst (13,1)]
 	[NoWatch]
-	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextAttachment : NSTextAttachmentContainer, NSSecureCoding, NSTextAttachmentLayout
 #if !WATCH && !MONOMAC
@@ -2574,6 +2600,9 @@ namespace UIKit {
 	interface INSTextStorageDelegate {}
 
 	[NoWatch]
+	[iOS (7,0)]
+	[Mac (10,6)]
+	[TV (9,0)]
 	[MacCatalyst (13,0)]
 	[Model]
 	[BaseType (typeof (NSObject))]
@@ -2915,6 +2944,8 @@ namespace UIKit {
 	}
 
 	[iOS (7,0)]
+	[Mac (10,0)]
+	[TV (9,0)]
 	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
 	interface NSTextTab : NSSecureCoding, NSCopying {
@@ -2949,8 +2980,8 @@ namespace UIKit {
 		NSString ColumnTerminatorsAttributeName { get; }
 	}
 
-	[NoWatch]
-	[MacCatalyst (13,0)]
+	[Mac (10, 7)][iOS (7, 0)][MacCatalyst (13,0)][TV (9, 0)]
+	[NoWatch]	
 	[Protocol]
 	// no [Model] since it's not exposed in any API
 	// only NSTextContainer conforms to it but it's only queried by iOS itself
@@ -2967,6 +2998,9 @@ namespace UIKit {
 
 	[NoWatch]
 	[iOS (7,0)]
+	[Mac (10,0)]
+	[TV (9,0)]
+	[MacCatalyst (13,0)]
 	[BaseType (typeof (NSObject))]
 	partial interface NSTextContainer : NSTextLayoutOrientationProvider, NSSecureCoding {
 		[NoMac]
@@ -3053,21 +3087,29 @@ namespace UIKit {
 	[Category, BaseType (typeof (NSString))]
 	interface NSExtendedStringDrawing {
 		[iOS (7,0)]
+		[TV (7,0)]
+		[MacCatalyst (13,1)]
 		[Mac (10,11)]
 		[Export ("drawWithRect:options:attributes:context:")]
 		void WeakDrawString (CGRect rect, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
 
 		[iOS (7,0)]
+		[TV (7,0)]
+		[MacCatalyst (13,1)]
 		[Mac (10,11)]
 		[Wrap ("WeakDrawString (This, rect, options, attributes.GetDictionary (), context)")]
 		void DrawString (CGRect rect, NSStringDrawingOptions options, StringAttributes attributes, [NullAllowed] NSStringDrawingContext context);
 
 		[iOS (7,0)]
+		[TV (7,0)]
+		[MacCatalyst (13,1)]
 		[Mac (10,11)]
 		[Export ("boundingRectWithSize:options:attributes:context:")]
 		CGRect WeakGetBoundingRect (CGSize size, NSStringDrawingOptions options, [NullAllowed] NSDictionary attributes, [NullAllowed] NSStringDrawingContext context);
 
 		[iOS (7,0)]
+		[TV (7,0)]
+		[MacCatalyst (13,1)]
 		[Mac (10,11)]
 		[Wrap ("WeakGetBoundingRect (This, size, options, attributes.GetDictionary (), context)")]
 		CGRect GetBoundingRect (CGSize size, NSStringDrawingOptions options, StringAttributes attributes, [NullAllowed] NSStringDrawingContext context);

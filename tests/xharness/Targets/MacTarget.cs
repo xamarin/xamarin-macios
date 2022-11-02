@@ -5,8 +5,7 @@ using Microsoft.DotNet.XHarness.iOS.Shared.Hardware;
 using Microsoft.DotNet.XHarness.iOS.Shared.Utilities;
 
 namespace Xharness.Targets {
-	public class MacTarget : Target
-	{
+	public class MacTarget : Target {
 		public MacFlavors Flavor { get; private set; }
 		public bool Modern => Flavor == MacFlavors.Modern;
 		public bool System => Flavor == MacFlavors.System;
@@ -46,7 +45,7 @@ namespace Xharness.Targets {
 				}
 			}
 		}
-			
+
 		protected override string ProjectTypeGuids {
 			get {
 				return "{A3F8F2AB-B479-4A4A-A458-A89E7DC349F1};" + LanguageGuid;
@@ -147,22 +146,17 @@ namespace Xharness.Targets {
 
 		public override bool ShouldSetTargetFrameworkIdentifier { get { return Modern; } }
 
-		public override Dictionary<string, string> NewPropertiesToAdd 
-		{
-			get 
-			{
+		public override Dictionary<string, string> NewPropertiesToAdd {
+			get {
 				var props = new Dictionary<string, string> ();
 
 
 				if (System) {
 					props.Add ("TargetFrameworkVersion", "v4.7.1");
 					props.Add ("MonoBundlingExtraArgs", "--embed-mono=no");
-				} else if (Modern)
-				{
+				} else if (Modern) {
 					props.Add ("TargetFrameworkVersion", "v2.0");
-				}
-				else
-				{
+				} else {
 					props.Add ("TargetFrameworkVersion", "v4.5");
 					props.Add ("UseXamMacFullFramework", "true");
 				}

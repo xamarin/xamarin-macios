@@ -572,11 +572,23 @@ namespace CarPlay {
 	[DisableDefaultCtor]
 	interface CPListSection : NSSecureCoding {
 
-		[Export ("initWithItems:header:sectionIndexTitle:")]
+#if !XAMCORE_5_0
+		[Wrap ("base (true ? throw new InvalidOperationException (Constants.BrokenBinding) : NSObjectFlag.Empty)")]
+		[Obsolete ("Use '.ctor (ICPListTemplateItem [], string, string)' constructor instead. Warning: this will throw InvalidOperationException at runtime.")]
 		NativeHandle Constructor (CPListItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
+#endif
+
+#if !XAMCORE_5_0
+		[Wrap ("base (true ? throw new InvalidOperationException (Constants.BrokenBinding) : NSObjectFlag.Empty)")]
+		[Obsolete ("Use '.ctor (ICPListTemplateItem [], string, string)' constructor instead. Warning: this will throw InvalidOperationException at runtime.")]
+		NativeHandle Constructor (CPListItem [] items);
+#endif
+
+		[Export ("initWithItems:header:sectionIndexTitle:")]
+		NativeHandle Constructor (ICPListTemplateItem [] items, [NullAllowed] string header, [NullAllowed] string sectionIndexTitle);
 
 		[Export ("initWithItems:")]
-		NativeHandle Constructor (CPListItem [] items);
+		NativeHandle Constructor (ICPListTemplateItem [] items);
 
 		[iOS (15,0), MacCatalyst (15,0)]
 		[Export ("initWithItems:header:headerSubtitle:headerImage:headerButton:sectionIndexTitle:")]
@@ -588,8 +600,18 @@ namespace CarPlay {
 		[NullAllowed, Export ("sectionIndexTitle")]
 		string SectionIndexTitle { get; }
 
-		[Export ("items", ArgumentSemantic.Copy)]
+#if !XAMCORE_5_0
+		[Wrap ("true ? throw new InvalidOperationException (Constants.BrokenBinding) : new NSArray ()", IsVirtual = true)]
+		[Obsolete ("Use 'Items2 : ICPListTemplateItem []' instead.")]
 		CPListItem [] Items { get; }
+#endif
+
+		[Export ("items", ArgumentSemantic.Copy)]
+#if !XAMCORE_5_0
+		ICPListTemplateItem [] Items2 { get; }
+#else
+		ICPListTemplateItem [] Items { get; }
+#endif
 
 		[iOS (14,0)]
 		[Export ("indexOfItem:")]
@@ -1723,6 +1745,9 @@ namespace CarPlay {
 		[Export ("initWithImage:handler:")]
 		NativeHandle Constructor (UIImage image, [NullAllowed] Action<CPNowPlayingButton> handler);
 
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+
 		[NullAllowed, Export ("image", ArgumentSemantic.Strong)]
 		UIImage Image { get; }
 	}
@@ -1926,23 +1951,38 @@ namespace CarPlay {
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingShuffleButton {}
+	interface CPNowPlayingShuffleButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingAddToLibraryButton {}
+	interface CPNowPlayingAddToLibraryButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingMoreButton {}
+	interface CPNowPlayingMoreButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingPlaybackRateButton {}
+	interface CPNowPlayingPlaybackRateButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	[NoWatch, NoTV, NoMac, iOS (14,0)]
 	[BaseType (typeof (CPNowPlayingButton))]
-	interface CPNowPlayingRepeatButton {}
+	interface CPNowPlayingRepeatButton {
+		[Export ("initWithHandler:")]
+		NativeHandle Constructor ([NullAllowed] Action<CPNowPlayingButton> handler);
+	}
 
 	interface ICPListTemplateItem { }
 

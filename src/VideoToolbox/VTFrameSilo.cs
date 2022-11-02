@@ -78,7 +78,7 @@ namespace VideoToolbox {
 		public VTStatus AddSampleBuffer (CMSampleBuffer sampleBuffer)
 		{
 			if (sampleBuffer is null)
-				throw new ArgumentNullException (nameof (sampleBuffer));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (sampleBuffer));
 
 			return VTFrameSiloAddSampleBuffer (Handle, sampleBuffer.Handle);
 		}
@@ -92,7 +92,7 @@ namespace VideoToolbox {
 		public unsafe VTStatus SetTimeRangesForNextPass (CMTimeRange[] ranges)
 		{
 			if (ranges is null)
-				throw new ArgumentNullException (nameof (ranges));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (ranges));
 
 			if (ranges.Length > 0)
 				fixed (CMTimeRange *first = &ranges [0]) {

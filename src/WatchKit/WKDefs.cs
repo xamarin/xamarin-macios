@@ -58,7 +58,7 @@ namespace WatchKit {
 	}
 
 	[NoiOS]
-	[Native]
+	[Native ("WatchKitErrorCode")]
 	[ErrorDomain ("WatchKitErrorDomain")]
 	public enum WKErrorCode : long {
 		None = 0,

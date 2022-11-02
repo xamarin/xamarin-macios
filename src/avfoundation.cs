@@ -105,7 +105,12 @@ namespace AVFoundation {
 	interface MTAudioProcessingTap {}
 #endif
 
+#if XAMCORE_5_0
+	delegate void AVAssetImageGeneratorCompletionHandler (CMTime requestedTime, CGImage imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error);
+#else
 	delegate void AVAssetImageGeneratorCompletionHandler (CMTime requestedTime, IntPtr imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error);
+	delegate void AVAssetImageGeneratorCompletionHandler2 (CMTime requestedTime, CGImage imageRef, CMTime actualTime, AVAssetImageGeneratorResult result, NSError error);
+#endif
 	delegate void AVCompletion (bool finished);
 	delegate void AVRequestAccessStatus (bool accessGranted);
 	delegate AVAudioBuffer AVAudioConverterInputHandler (uint inNumberOfPackets, out AVAudioConverterInputStatus outStatus);
@@ -1274,8 +1279,9 @@ namespace AVFoundation {
 		[Export ("interleaved")]
 		bool Interleaved { [Bind ("isInterleaved")] get; }
 
+		[Internal]
 		[Export ("streamDescription")]
-		AudioStreamBasicDescription StreamDescription { get; }
+		IntPtr _StreamDescription { get; }
 
 		[Export ("channelLayout"), NullAllowed]
 		AVAudioChannelLayout ChannelLayout { get; }
@@ -1826,8 +1832,14 @@ namespace AVFoundation {
 		[Protocolize]
 		AVAudioRecorderDelegate Delegate { get; set;  }
 	
-		[Export ("currentTime")]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'CurrentTime' property instead.")]
+		[Wrap ("CurrentTime", IsVirtual = true)]
 		double currentTime { get; }
+#endif
+
+		[Export ("currentTime")]
+		double CurrentTime { get; }
 	
 		[Export ("meteringEnabled")]
 		bool MeteringEnabled { [Bind ("isMeteringEnabled")] get; set;  }
@@ -3741,6 +3753,12 @@ namespace AVFoundation {
 
 		[Export ("generateCGImagesAsynchronouslyForTimes:completionHandler:")]
 		void GenerateCGImagesAsynchronously (NSValue[] cmTimesRequestedTimes, AVAssetImageGeneratorCompletionHandler handler);
+
+#if !XAMCORE_5_0
+		[Sealed]
+		[Export ("generateCGImagesAsynchronouslyForTimes:completionHandler:")]
+		void GenerateCGImagesAsynchronously (NSValue[] cmTimesRequestedTimes, AVAssetImageGeneratorCompletionHandler2 handler);
+#endif
 
 		[Export ("cancelAllCGImageGeneration")]
 		void CancelAllCGImageGeneration ();
@@ -7596,17 +7614,17 @@ namespace AVFoundation {
 		AVFragmentedMovieTrack[] GetTracks (AVMediaCharacteristics mediaCharacteristic);
 
 		[Async]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("loadTrackWithTrackID:completionHandler:")]
 		void LoadTrack (int trackId, Action<AVMutableCompositionTrack, NSError> completionHandler);
 
 		[Async]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("loadTracksWithMediaType:completionHandler:")]
 		void LoadTracksWithMediaType (string mediaType, Action<NSArray<AVMutableCompositionTrack>, NSError> completionHandler);
 
 		[Async]
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("loadTracksWithMediaCharacteristic:completionHandler:")]
 		void LoadTracksWithMediaCharacteristic (string mediaCharacteristic, Action<NSArray<AVMutableCompositionTrack>, NSError> completionHandler);
 	}
@@ -9166,11 +9184,11 @@ namespace AVFoundation {
 		[Export ("videoFieldMode")]
 		AVVideoFieldMode VideoFieldMode { get; set; }
 
-		[iOS (11, 0), NoMac, TV (11, 0), NoWatch]
+		[iOS (11, 0), NoMac, NoWatch]
 		[Export ("cameraIntrinsicMatrixDeliverySupported")]
 		bool CameraIntrinsicMatrixDeliverySupported { [Bind ("isCameraIntrinsicMatrixDeliverySupported")] get; }
 
-		[iOS (11, 0), NoMac, TV (11, 0), NoWatch]
+		[iOS (11, 0), NoMac, NoWatch]
 		[Export ("cameraIntrinsicMatrixDeliveryEnabled")]
 		bool CameraIntrinsicMatrixDeliveryEnabled { [Bind ("isCameraIntrinsicMatrixDeliveryEnabled")] get; set; }
 
@@ -10501,6 +10519,8 @@ namespace AVFoundation {
 
 	[NoTV]
 	[NoWatch]
+	[MacCatalyst (13,1)]
+	[Deprecated (PlatformName.MacCatalyst, 13,1, message: "Use 'AVCapturePhotoOutput' instead.")]
 	[Deprecated (PlatformName.iOS, 10,0, message: "Use 'AVCapturePhotoOutput' instead.")]
 	[Deprecated (PlatformName.MacOSX, 10,15, message: "Use 'AVCapturePhotoOutput' instead.")]
 	[BaseType (typeof (AVCaptureOutput))]
@@ -10529,24 +10549,28 @@ namespace AVFoundation {
 		NSData JpegStillToNSData (CMSampleBuffer buffer);
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		// 5.0
 		[Export ("capturingStillImage")]
 		bool CapturingStillImage { [Bind ("isCapturingStillImage")] get;  }
 
 		[NoMac]
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (7,0)]
 		[Export ("automaticallyEnablesStillImageStabilizationWhenAvailable")]
 		bool AutomaticallyEnablesStillImageStabilizationWhenAvailable { get; set; }
 
 		[NoMac]
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (7,0)]
 		[Export ("stillImageStabilizationActive")]
 		bool IsStillImageStabilizationActive { [Bind ("isStillImageStabilizationActive")] get; }
 
 		[NoMac]
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (7,0)]
 		[Export ("stillImageStabilizationSupported")]
 		bool IsStillImageStabilizationSupported { [Bind ("isStillImageStabilizationSupported")] get; }
@@ -10577,6 +10601,7 @@ namespace AVFoundation {
 		bool LensStabilizationDuringBracketedCaptureEnabled { [Bind ("isLensStabilizationDuringBracketedCaptureEnabled")] get; set; }
 
 		[Introduced (PlatformName.MacCatalyst, 14, 0)]
+		[Deprecated (PlatformName.MacCatalyst, 14, 0)]
 		[iOS (8,0), Mac (10, 14)]
 		[Export ("highResolutionStillImageOutputEnabled")]
 		bool HighResolutionStillImageOutputEnabled { [Bind ("isHighResolutionStillImageOutputEnabled")] get; set; }
@@ -13842,12 +13867,12 @@ namespace AVFoundation {
 		[return: NullAllowed]
 		AVAssetDownloadTask GetAssetDownloadTask (AVUrlAsset urlAsset, string title, [NullAllowed] NSData artworkData, AVAssetDownloadOptions options);
 
-		[Mac (12,0), NoTV, NoWatch, iOS (11,0)]
+		[Mac (12,0), NoWatch, iOS (11,0)]
 		[Export ("aggregateAssetDownloadTaskWithURLAsset:mediaSelections:assetTitle:assetArtworkData:options:")]
 		[return: NullAllowed]
 		AVAggregateAssetDownloadTask GetAssetDownloadTask (AVUrlAsset URLAsset, AVMediaSelection[] mediaSelections, string title, [NullAllowed] NSData artworkData, [NullAllowed] NSDictionary<NSString, NSObject> options);
 
-		[Watch (8,0), TV (15,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
+		[Watch (8,0), Mac (12,0), iOS (15,0), MacCatalyst (15,0)]
 		[Export ("assetDownloadTaskWithConfiguration:")]
 		AVAssetDownloadTask GetAssetDownloadTask (AVAssetDownloadConfiguration downloadConfiguration);
 	}

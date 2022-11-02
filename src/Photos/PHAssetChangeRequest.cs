@@ -1,3 +1,5 @@
+#nullable enable
+
 #if !MONOMAC
 
 using System;

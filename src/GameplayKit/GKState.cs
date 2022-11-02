@@ -7,6 +7,8 @@
 // Copyright 2015 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using Foundation;
 using ObjCRuntime;
@@ -16,8 +18,8 @@ namespace GameplayKit {
 
 		internal static Class GetClass (Type type, string parameterName)
 		{
-			if (type == null)
-				throw new ArgumentNullException (parameterName);
+			if (type is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameterName));
 
 			var klass = new Class (type);
 			// most API do not accept null so we throw in managed code instead of crashing the app
@@ -29,11 +31,11 @@ namespace GameplayKit {
 
 		internal static Class GetClass (NSObject instance, string parameterName)
 		{
-			if (instance == null)
-				throw new ArgumentNullException (parameterName);
+			if (instance is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (parameterName));
 			
 			var klass = instance.Class; 
-			if ((klass == null) || (klass.Handle == IntPtr.Zero))
+			if ((klass is null) || (klass.Handle == IntPtr.Zero))
 				throw new ArgumentException ("Not an type exposed to ObjC", parameterName);
 			
 			return klass;

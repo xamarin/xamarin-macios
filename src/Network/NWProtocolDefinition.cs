@@ -49,7 +49,7 @@ namespace Network {
 
 		public bool Equals (object other)
 		{
-			if (other == null)
+			if (other is null)
 				return false;
 			if (!(other is NWProtocolDefinition otherDefinition))
 				return false;
@@ -149,7 +149,7 @@ namespace Network {
 		{
 			// get and call, this is internal and we are trying to do all the magic in the call
 			var del = BlockLiteral.GetTarget<Func<NWFramer,NWFramerStartResult>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwFramer = new NWFramer (framer, owns: true);
 				return del (nwFramer);
 			}

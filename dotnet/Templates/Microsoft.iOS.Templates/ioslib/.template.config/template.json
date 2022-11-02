@@ -3,7 +3,7 @@
   "author": "Microsoft",
   "classifications": [ "iOS", "Mobile" ],
   "identity": "Microsoft.iOS.iOSLib",
-  "name": "iOS Class Library (Preview)",
+  "name": "iOS Class Library",
   "description": "A project for creating a .NET iOS class library",
   "shortName": "ioslib",
   "tags": {

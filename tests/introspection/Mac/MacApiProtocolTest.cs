@@ -19,10 +19,19 @@ using Xamarin.Tests;
 namespace Introspection {
 
 	[TestFixture]
-	public class MonoMacFixtures : ApiProtocolTest {
+	public class MacApiProtocolTest : ApiProtocolTest {
 
 		protected override bool Skip (Type type)
 		{
+#if !NET
+			switch (type.Namespace) {
+			case "Chip":
+				// The Chip framework is not stable, it's been added and removed and added and removed a few times already, so just skip verifying the entire framework.
+				// This is legacy Xamarin only, because we removed the framework for .NET.
+				return true;
+			}
+#endif
+
 			switch (type.Name) {
 #if !NET
 			case "NSDraggingInfo":

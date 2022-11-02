@@ -3,7 +3,7 @@
   "author": "Microsoft",
   "classifications": [ "iOS", "Mobile" ],
   "identity": "Microsoft.iOS.iOSBinding",
-  "name": "iOS Binding Library (Preview)",
+  "name": "iOS Binding Library",
   "description": "A project for creating a .NET iOS binding library",
   "shortName": "iosbinding",
   "tags": {

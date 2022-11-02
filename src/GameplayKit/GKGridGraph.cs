@@ -7,6 +7,8 @@
 // Copyright 2016 Xamarin Inc. All rights reserved.
 //
 
+#nullable enable
+
 using System;
 using ObjCRuntime;
 #if NET
@@ -19,12 +21,12 @@ namespace GameplayKit {
 	public partial class GKGridGraph {
 		
 #if !NET
-		public virtual GKGridGraphNode GetNodeAt (Vector2i position)
+		public virtual GKGridGraphNode? GetNodeAt (Vector2i position)
 		{
 			return GetNodeAt<GKGridGraphNode> (position);
 		}
 #endif
-		public NodeType GetNodeAt<NodeType> (Vector2i position) where NodeType : GKGridGraphNode
+		public NodeType? GetNodeAt<NodeType> (Vector2i position) where NodeType : GKGridGraphNode
 		{
 			return Runtime.GetNSObject<NodeType> (_GetNodeAt (position));
 		}

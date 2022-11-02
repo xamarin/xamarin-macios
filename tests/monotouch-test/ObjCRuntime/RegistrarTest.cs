@@ -45,6 +45,9 @@ using CoreLocation;
 #if !__TVOS__
 using Contacts;
 #endif
+#if HAS_COREMIDI
+using CoreMidi;
+#endif
 #if !(__TVOS__ && NET)
 using WebKit;
 #endif
@@ -71,6 +74,36 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		public static Registrars CurrentRegistrar {
 			get {
 				return RegistrarSharedTest.CurrentRegistrar;
+			}
+		}
+
+		[Test]
+		public void NSRangeOutParameter ()
+		{
+			using var obj = new NSRangeOutParameterClass ();
+			var a = new _LongNSRange (-1, -2);
+			var c = new _LongNSRange (-5, -6);
+			Messaging.void_objc_msgSend_NSRange_out_NSRange_ref_NSRange (obj.Handle, Selector.GetHandle ("passRange:getRange:refRange:"), a, out var b, ref c);
+			Assert.AreEqual (a.Location, (long) (-1), "post a Location");
+			Assert.AreEqual (a.Length, (long) (-2), "post a Length");
+			Assert.AreEqual (b.Location, (long) 3, "post b Location");
+			Assert.AreEqual (b.Length, (long) 4, "post b Length");
+			Assert.AreEqual (c.Location, (long) 5, "post c Location");
+			Assert.AreEqual (c.Length, (long) 6, "post c Length");
+		}
+
+		class NSRangeOutParameterClass : NSObject {
+			[Export ("passRange:getRange:refRange:")]
+			public void DoIt (_LongNSRange a, out _LongNSRange b, ref _LongNSRange c)
+			{
+				Assert.AreEqual (a.Location, (long) (-1), "a Location");
+				Assert.AreEqual (a.Length, (long) (-2), "a Length");
+				Assert.AreEqual (c.Location, (long) (-5), "c Location");
+				Assert.AreEqual (c.Length, (long) (-6), "c Length");
+
+				a = new _LongNSRange (1, 2);
+				b = new _LongNSRange (3, 4);
+				c = new _LongNSRange (5, 6);
 			}
 		}
 
@@ -190,7 +223,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.True (Messaging.bool_objc_msgSend_IntPtr (receiver, new Selector ("INativeObject1:").Handle, new CGPath ().Handle), "#a2");
 			
 			Assert.That ((NativeHandle) Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, false), Is.EqualTo (NativeHandle.Zero), "#b1");
-			Assert.That ((NativeHandle) Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, true), Is.Not.EqualTo (NativeHandle.Zero), "#b2");
+			ptr = Messaging.IntPtr_objc_msgSend_bool (receiver, new Selector ("INativeObject2:").Handle, true);
+			Assert.That ((NativeHandle) ptr, Is.Not.EqualTo (NativeHandle.Zero), "#b2");
+			CGPathRelease (ptr);
 			
 			void_objc_msgSend_out_IntPtr_bool (receiver, new Selector ("INativeObject3:create:").Handle, out ptr, true);
 			Assert.That (ptr, Is.Not.EqualTo (NativeHandle.Zero), "#c1");
@@ -212,6 +247,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			Assert.That (ptr, Is.Not.EqualTo (NativeHandle.Zero), "#e2");
 			path = Runtime.GetINativeObject<CGPath> (ptr, false);
 			path.AddArc (1, 2, 3, 4, 5, false); // this should crash if we get back a bogus ptr
+			CGPathRelease (ptr);
 		}
 
 		[Test]
@@ -437,6 +473,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 
 		[DllImport ("/usr/lib/libobjc.dylib")]
 		internal static extern IntPtr object_getClass (IntPtr obj);
+
+		[DllImport (Constants.CoreGraphicsLibrary)]
+		extern static void CGPathRelease (/* CGPathRef */ IntPtr path);
 
 		[Test]
 		public void TestNonVirtualProperty ()
@@ -871,6 +910,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 			
 			[Export ("INativeObject2:")]
+			[return: ReleaseAttribute] // can't return an INativeObject without retaining it (we can autorelease NSObjects, but that doesn't work for INativeObjects)
 			static CGPath INativeObject2 (bool create)
 			{
 				return create ? new CGPath () : null;
@@ -889,6 +929,7 @@ namespace MonoTouchFixtures.ObjCRuntime {
 			}
 			
 			[Export ("INativeObject5:")]
+			[return: ReleaseAttribute] // can't return an INativeObject without retaining it (we can autorelease NSObjects, but that doesn't work for INativeObjects)
 			static CGPath INativeObject5 (bool create)
 			{
 				return create ? new CGPath () : null;
@@ -1653,20 +1694,37 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 
 		[Register ("UnderlyingEnumValues")]
-		class UnderlyingEnumValues : NSObject 
+		internal class UnderlyingEnumValues : NSObject
 		{
-			enum B : byte { a };
-			enum SB : sbyte { a };
-			enum S : short { a };
-			enum US : ushort { a };
-			enum I : int { a };
-			enum UI : uint { a };
-			enum L : long { a };
-			enum UL : ulong { a };
-
 			[Export ("Foo:a:b:c:d:e:f:g:h")]
-			void Foo (B b, SB sb, S s, US us, I i, UI ui, L l, UL ul)
+			void Foo (EnumB b, EnumSB sb, EnumS s, EnumUS us, EnumI i, EnumUI ui, EnumL l, EnumUL ul)
 			{
+			}
+
+			[Export ("ByRef:a:b:c:d:e:f:g:")]
+			void ByRef (ref EnumB b, ref EnumSB sb, ref EnumS s, ref EnumUS us, ref EnumI i, ref EnumUI ui, ref EnumL l, ref EnumUL ul)
+			{
+				b = EnumB.b;
+				sb = EnumSB.b;
+				s = EnumS.b;
+				us = EnumUS.b;
+				i = EnumI.b;
+				ui = EnumUI.b;
+				l = EnumL.b;
+				ul = EnumUL.b;
+			}
+
+			[Export ("Out:a:b:c:d:e:f:g:")]
+			void Out (out EnumB b, out EnumSB sb, out EnumS s, out EnumUS us, out EnumI i, out EnumUI ui, out EnumL l, out EnumUL ul)
+			{
+				b = EnumB.b;
+				sb = EnumSB.b;
+				s = EnumS.b;
+				us = EnumUS.b;
+				i = EnumI.b;
+				ui = EnumUI.b;
+				l = EnumL.b;
+				ul = EnumUL.b;
 			}
 		}
 
@@ -2114,8 +2172,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				// sure this is by design or by accident, but that's how we're behaving right now at least
 				ptr = Messaging.IntPtr_objc_msgSend (Class.GetHandle (typeof (D2)), Selector.GetHandle ("alloc"));
 				ptr = Messaging.IntPtr_objc_msgSend_long (ptr, Selector.GetHandle ("initWithBar:"), 2);
-				// Unable to cast object of type 'AppDelegate+D1' to type 'AppDelegate+D2'
-				Assert.Throws<InvalidCastException> (() => Runtime.GetNSObject<D2> (ptr), "b ex");
+				// Failed to marshal the Objective-C object 0x60000230a410 (type: MonoTouchFixtures_ObjCRuntime_RegistrarTest_D2). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance (because the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+D2' does not have a constructor that takes one NativeHandle argument
+				var ex = Assert.Throws<RuntimeException> (() => Runtime.GetNSObject<D2> (ptr), "b ex");
+				Assert.That (ex.Message, Does.Contain ("Could not find an existing managed instance for this object, nor was it possible to create a new managed instance (because the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+D2' does not have a constructor that takes one"), "Exception message");
 				var obj = Runtime.GetNSObject<D1> (ptr);
 				Assert.AreEqual ("bar", obj.ctor1, "b ctor1");
 			} finally {
@@ -5416,6 +5475,42 @@ namespace MonoTouchFixtures.ObjCRuntime {
 		}
 #endif // !__WATCHOS__ && !__TVOS__
 
+		[Test]
+		public void RefEnumValues ()
+		{
+			EnumB b = 0;
+			EnumSB sb = 0;
+			EnumS s = 0;
+			EnumUS us = 0;
+			EnumI i = 0;
+			EnumUI ui = 0;
+			EnumL l = 0;
+			EnumUL ul = 0;
+
+			using (var obj = new UnderlyingEnumValues ()) {
+				b = 0; sb = 0; s = 0; us = 0; i = 0; ui = 0; l = 0; ul = 0;
+				Messaging.void_objc_msgSend_ref_byte_ref_sbyte_ref_short_ref_ushort_ref_int_ref_uint_ref_long_ref_ulong (obj.Handle, Selector.GetHandle ("ByRef:a:b:c:d:e:f:g:"), ref b, ref sb, ref s, ref us, ref i, ref ui, ref l, ref ul);
+				Assert.AreEqual (EnumB.b, b, "ref: B");
+				Assert.AreEqual (EnumSB.b, sb, "ref: SB");
+				Assert.AreEqual (EnumS.b, s, "ref: S");
+				Assert.AreEqual (EnumUS.b, us, "ref: US");
+				Assert.AreEqual (EnumI.b, i, "ref: I");
+				Assert.AreEqual (EnumUI.b, ui, "ref: UI");
+				Assert.AreEqual (EnumL.b, l, "ref: L");
+				Assert.AreEqual (EnumUL.b, ul, "ref: UL");
+
+				b = 0; sb = 0; s = 0; us = 0; i = 0; ui = 0; l = 0; ul = 0;
+				Messaging.void_objc_msgSend_out_byte_out_sbyte_out_short_out_ushort_out_int_out_uint_out_long_out_ulong (obj.Handle, Selector.GetHandle ("Out:a:b:c:d:e:f:g:"), out b, out sb, out s, out us, out i, out ui, out l, out ul);
+				Assert.AreEqual (EnumB.b, b, "out: B");
+				Assert.AreEqual (EnumSB.b, sb, "out: SB");
+				Assert.AreEqual (EnumS.b, s, "out: S");
+				Assert.AreEqual (EnumUS.b, us, "out: US");
+				Assert.AreEqual (EnumI.b, i, "out: I");
+				Assert.AreEqual (EnumUI.b, ui, "out: UI");
+				Assert.AreEqual (EnumL.b, l, "out: L");
+				Assert.AreEqual (EnumUL.b, ul, "out: UL");
+			}
+		}
 	}
 
 #if !__WATCHOS__
@@ -5638,4 +5733,21 @@ namespace MonoTouchFixtures.ObjCRuntime {
 	}
 #endif // !__TVOS__
 #endif // !__WATCHOS__
+
+#if HAS_COREMIDI
+	// This type exports methods with 'MidiCIDeviceIdentification' parameters, which is a struct with different casing in Objective-C ("MIDI...")
+	class ExportedMethodWithStructWithManagedCasing : NSObject {
+		[Export ("doSomething:")]
+		public void DoSomething (MidiCIDeviceIdentification arg) { }
+
+		[Export ("doSomething2:")]
+		public void DoSomething2 (ref MidiCIDeviceIdentification arg) { }
+
+		[Export ("doSomething3")]
+		public MidiCIDeviceIdentification DoSomething3 () { return default (MidiCIDeviceIdentification); }
+
+		[Export ("doSomething4:")]
+		public void DoSomething4 (out MidiCIDeviceIdentification arg) { arg = default (MidiCIDeviceIdentification); }
+	}
+#endif
 }

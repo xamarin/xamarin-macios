@@ -170,7 +170,7 @@ namespace FileProvider {
 	[Mac (11,0)]
 	[Unavailable (PlatformName.MacCatalyst)][Advice ("This API is not available when using Catalyst on macOS.")]
 	[ErrorDomain ("NSFileProviderErrorDomain")]
-	[Native]
+	[Native ("NSFileProviderErrorCode")]
 	enum NSFileProviderError : long {
 		NotAuthenticated = -1000,
 		FilenameCollision = -1001,

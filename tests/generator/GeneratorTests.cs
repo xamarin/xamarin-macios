@@ -16,21 +16,21 @@ namespace GeneratorTests
 	public class BGen
 	{
 		[Test]
-		public void ResponseFile ()
+		[TestCase (Profile.iOS)]
+		public void ResponseFile (Profile profile)
 		{
+			Configuration.IgnoreIfIgnoredPlatform (profile.AsPlatform ());
 			var bgen = new BGenTool ();
 			bgen.CreateTemporaryBinding ("");
 			bgen.ResponseFile = Path.Combine (Cache.CreateTemporaryDirectory (), "rspfile");
 
 			var arguments = new List<string> ();
+			var targetFramework = BGenTool.GetTargetFramework (profile);
 #if NET
-			var targetFramework = TargetFramework.DotNet_iOS_String;
 			var tf = TargetFramework.Parse (targetFramework);
 			arguments.Add ($"--baselib={Configuration.GetBaseLibrary (tf)}");
 			arguments.Add ($"--attributelib={Configuration.GetBindingAttributePath (tf)}");
 			arguments.AddRange (Directory.GetFiles (Configuration.DotNetBclDir, "*.dll").Select (v => $"-r:{v}"));
-#else
-			var targetFramework = "Xamarin.iOS,v1.0";
 #endif
 			arguments.Add ($"--target-framework={targetFramework}");
 

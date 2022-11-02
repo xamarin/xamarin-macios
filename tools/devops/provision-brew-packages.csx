@@ -1,4 +1,6 @@
 BrewPackages (
+    "shellcheck",
+    "yamllint",
     "cmake", 
     "autoconf",
     "automake",

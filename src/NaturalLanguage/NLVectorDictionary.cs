@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Runtime.Versioning;
 
@@ -27,8 +29,8 @@ namespace NaturalLanguage {
 
 		public float[] this [NSString key] {
 			get {
-				if (key == null)
-					throw new ArgumentNullException (nameof (key));
+				if (key is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 				var a = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
                 return NSArray.ArrayFromHandle<float> (a, input => {
@@ -36,10 +38,10 @@ namespace NaturalLanguage {
 				});
 			}
 			set {
-				if (key == null)
-					throw new ArgumentNullException (nameof (key));
+				if (key is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
-				if (value == null)
+				if (value is null)
 					RemoveValue (key);
 				else
 					Dictionary [key] = NSArray.From (value);

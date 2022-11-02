@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -54,6 +54,8 @@
     <Compile Include="Jenkins\JenkinsDeviceLoadterTests.cs" />
     <Compile Include="Jenkins\ResourceManagerTests.cs" />
     <Compile Include="Jenkins\PeriodicCommandTests.cs" />
+    <Compile Include="Jenkins\TestSelectionTests.cs" />
+    <Compile Include="Jenkins\TestSelectorTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

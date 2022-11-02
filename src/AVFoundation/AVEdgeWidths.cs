@@ -28,6 +28,8 @@ using Foundation;
 using ObjCRuntime;
 using System.Runtime.Versioning;
 
+#nullable enable
+
 namespace AVFoundation {
 
 #if NET
@@ -37,7 +39,7 @@ namespace AVFoundation {
 	[SupportedOSPlatform ("tvos")]
 #endif
 	[StructLayout (LayoutKind.Sequential)]
-	public struct AVEdgeWidths  {
+	public struct AVEdgeWidths {
 		public nfloat /* CGFloat */ Left, Top, Right, Bottom;
 
 		public AVEdgeWidths (nfloat left, nfloat top, nfloat right, nfloat bottom)
@@ -73,13 +75,13 @@ namespace AVFoundation {
 
 		public override int GetHashCode ()
 		{
-			return (int)Left ^
-				(int)Top ^ (int)Right ^ (int)Bottom;
+			return (int) Left ^
+				(int) Top ^ (int) Right ^ (int) Bottom;
 		}
 
-		public override bool Equals (object other)
+		public override bool Equals (object? other)
 		{
-			if (other is AVEdgeWidths){
+			if (other is AVEdgeWidths) {
 				var o = (AVEdgeWidths) other;
 
 				return this == o;

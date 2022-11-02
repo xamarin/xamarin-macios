@@ -1,7 +1,7 @@
 {
-  "author": "Microsoft",
-  "name": "tvOS Application (Preview)",
-  "description": "A project for creating a .NET tvOS application",
-  "symbols/bundleId/description": "Overrides CFBundleIdentifier in the Info.plist",
-  "symbols/minOSVersion/description": "Overrides SupportedOSPlatformVersion in the project file"
+  "author": "Майкрософт",
+  "name": "tvOS Application",
+  "description": "Проект для создания приложения .NET для tvOS",
+  "symbols/bundleId/description": "Переопределяет CFBundleIdentifier в Info.plist",
+  "symbols/minOSVersion/description": "Переопределяет SupportedOSPlatformVersion в файле проекта"
 }

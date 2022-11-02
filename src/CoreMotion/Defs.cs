@@ -2,6 +2,8 @@
 // CoreMotion's struct and enum definitions used by the API file
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;

@@ -26,6 +26,8 @@
 //
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -163,7 +165,7 @@ namespace CoreMedia {
 			}
 		}
 
-		public string FontFamilyName {
+		public string? FontFamilyName {
 			get {
 				return GetStringValue (CMTextMarkupAttributesKeys.FontFamilyName);
 			}

@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using System.Runtime.Versioning;
 
@@ -25,25 +27,26 @@ namespace NaturalLanguage {
 		{
 		}
 
-		public string[] this [NSString key] {
+		public string?[]? this [NSString key] {
 			get {
-				if (key == null)
-					throw new ArgumentNullException (nameof (key));
+				if (key is null)
+					ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (key));
 
 				var value = CFDictionary.GetValue (Dictionary.Handle, key.Handle);
 				return CFArray.StringArrayFromHandle (value);
 			}
+
 			set {
-				SetArrayValue (key, value);
+				SetArrayValue (key, value!);
 			}
 		}
 
-		public string[] this [string key] {
+		public string?[]? this [string key] {
 			get {
 				return this [(NSString) key];
 			}
 			set {
-				SetArrayValue ((NSString) key, value);
+				SetArrayValue ((NSString) key, value!);
 			}
 		}
 #endif

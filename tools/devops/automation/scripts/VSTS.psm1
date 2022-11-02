@@ -1,9 +1,270 @@
+class Agent {
+    [object] $RestObject
+
+    Agent (
+        [object] $object) {
+        $this.RestObject = $object
+    }
+
+    [string] GetID() {
+        return $this.RestObject.id
+    }
+
+    [string] GetName() {
+        return $this.RestObject.name
+    }
+
+    [bool] IsEnabled() {
+        return $this.RestObject.enabled
+    }
+}
+
+
+class Agents {
+    [string] $Org
+    hidden [string] $Token
+
+    Agents(
+        [string] $org,
+        [string] $token) {
+        $this.Org = $org
+        $this.Token = $token
+    }
+
+    [object] GetAgent($pool, $name) {
+        if (-not $pool) {
+            throw [System.ArgumentNullException]::new("pool")
+        }
+        if (-not $name) {
+            throw [System.ArgumentNullException]::new("name")
+        }
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?agentName=$name&includeCapabilities=true&api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $agents = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
+        if ($agents.count -ne 1) {
+            return $null
+        }
+        return [Agent]::new($agents.value[0])
+    }
+
+    [object[]] GetAgents($pool) {
+        if (-not $pool) {
+            throw [System.ArgumentNullException]::new("pool")
+        }
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents?includeCapabilities=true&api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $agents = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
+        $result = [System.Collections.ArrayList]@()
+        foreach ($a in $agents.value) {
+            $result.Add([Agent]::new($a))
+        }
+        return $result
+    }
+
+    [void] SetEnabled($pool, $agent, $isEnabled) {
+        if (-not $pool) {
+            throw [System.ArgumentNullException]::new("pool")
+        }
+        if (-not $agent) {
+            throw [System.ArgumentNullException]::new("agent")
+        }
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools/$($pool.GetID())/agents/$($agent.GetID())?api-version=6.0"
+        Write-Debug "Url is $url"
+        $headers = Get-AuthHeader($this.Token)
+        $payload = @{
+            id = $agent.GetID() ;
+            enabled = $isEnabled ;
+        }
+        Invoke-RestMethod -Uri $url -Headers $headers -Method "PATCH" -Body ($payload | ConvertTo-json) -ContentType 'application/json'
+    }
+}
+
+class Pool {
+    hidden [object] $RestObject
+
+    Pool (
+        [object] $data) {
+        $this.RestObject = $data
+    }
+
+    [string] GetID() {
+        return $this.RestObject.id
+    }
+
+    [string] GetName() {
+        return $this.RestObject.name
+    }
+
+    [int] GetSize() {
+        return $this.RestObject.size
+    }
+}
+
+class Pools {
+
+    [string] $Org
+    hidden [string] $Token
+
+    Pools(
+        [string] $org,
+        [string] $token) {
+        $this.Org = $org
+        $this.Token = $token
+    }
+
+    [object] GetPool ($name) {
+        if (-not $name) {
+            throw [System.ArgumentNullException]::new("name")
+        }
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools?poolName=$name&api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $pools = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
+        if ($pools.count -ne 1) {
+            return $null
+        }
+        return [Pool]::new($pools.value[0])
+    }
+
+    [object[]] GetPools () {
+        $url = "https://dev.azure.com/$($this.Org)/_apis/distributedtask/pools?api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $pools = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
+
+        # loop and create a pool object for each of the pools in the org
+        $result = [System.Collections.ArrayList]@()
+        foreach ($p in $pools.value) {
+            $result.Add([Pool]::new($p))
+        }
+        return $result
+    }
+}
+
+class Artifact {
+    hidden [object] $RestObject
+
+    Artifact (
+        [object] $data) {
+        $this.RestObject = $data
+    }
+
+    [string] GetDownloadTicket() {
+        return $this.RestObject.resource.downloadTicket
+    }
+
+    [string] GetDownloadUrl() {
+        return $this.RestObject.resource.downloadUrl
+    }
+
+    [string] GetName() {
+        return $this.RestObject.name
+    }
+
+}
+
+class Artifacts {
+    [string] $Org
+    [string] $Project
+    hidden [string] $Token
+
+    Artifacts (
+        [string] $org,
+        [string] $project,
+        [string] $token) {
+        $this.Org = $org
+        $this.Project = $project
+        $this.Token = $token
+    }
+
+    [object[]] GetArtifacts($buildId) {
+        if (-not $buildId) {
+            throw [System.ArgumentNullException]::new("buildId")
+        }
+
+        $url = "https://dev.azure.com/$($this.Org)/$($this.Project)/_apis/build/builds/$buildId/artifacts?api-version=6.0"
+        $headers = Get-AuthHeader($this.Token)
+        $artifacts = Invoke-RestMethod -Uri $url -Headers $headers -Method "GET"  -ContentType 'application/json'
+
+        # loop and create a pool object for each of the pools in the org
+        $result = [System.Collections.ArrayList]@()
+        foreach ($a in $artifacts.value) {
+            $result.Add([Artifact]::new($a))
+        }
+        return $result
+    }
+
+    [string] DownloadArtifact($artifact, $outputDir) {
+        if (-not $artifact) {
+            throw [System.ArgumentNullException]::new("artifact")
+        }
+
+        if (-not $outputDir) {
+            throw [System.ArgumentNullException]::new("outputDir")
+        }
+
+        if (Test-Path -Path $outputDir -PathType Leaf) {
+            throw [System.ArgumentException]::new("outputDir must be a directory. File found.")
+        }
+
+        $outputPath = Resolve-Path $outputDir
+        $outputPath = Join-Path  $outputPath  -ChildPath "$($artifact.GetName()).zip"
+        $headers = Get-AuthHeader($this.Token)
+        $auth = $headers["Authorization"]
+        # why using crul, well because with large files you will get an exception fron the internal methods from pwsh. Someone did not
+        # expect me to download large files with Invoke-Rest
+        curl $artifact.GetDownloadUrl() -L -o $outputPath --header "Authorization: $auth" 
+        return $outputPath 
+    }
+
+}
+
+class Vsts {
+    [string] $Org
+    [string] $Project
+    hidden [string] $Token
+
+    [Pools] $Pools
+    [Agents] $Agents
+    [Artifacts] $Artifacts
+
+    VSTS (
+        [string] $org,
+        [string] $project,
+        [string] $token) {
+        $this.Org = $org
+        $this.Project = $project
+        $this.Token = $token
+        # generate the helper objects
+        $this.Pools = [Pools]::new($org, $token)
+        $this.Agents = [Agents]::new($org, $token)
+        $this.Artifacts = [Artifacts]::new($org, $project, $token)
+    }
+}
+
+function New-VSTS {
+    param
+    (
+        [Parameter(Mandatory)]
+        [String]
+        $Org,
+
+        [Parameter(Mandatory)]
+        [String]
+        $Project,
+
+        [Parameter(Mandatory)]
+        [String]
+        $Token
+    )
+    return [Vsts]::new($Org, $Project, $Token)
+}
+
+
 <#
     .SYNOPSIS
         Returns the uri to be used for the VSTS rest API.
 #>
 function Get-BuildUrl {
-    $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "?api-version=5.1"
+    $targetUrl = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI + "$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/" + $Env:BUILD_BUILDID + "?api-version=6.0"
     return $targetUrl
 }
 
@@ -169,7 +430,7 @@ function Set-BuildTags {
 
     foreach ($t in $Tags) {
         $url = Get-TagsRestAPIUrl -Tag $t
-        Write-Host "Uri is $url"
+        Write-Debug "Uri is $url"
 
         Invoke-RestMethod -Uri $url -Headers $headers -Method "PUT"  -ContentType 'application/json'
     }
@@ -179,3 +440,4 @@ function Set-BuildTags {
 Export-ModuleMember -Function Stop-Pipeline
 Export-ModuleMember -Function Set-PipelineResult
 Export-ModuleMember -Function Set-BuildTags
+Export-ModuleMember -Function New-VSTS

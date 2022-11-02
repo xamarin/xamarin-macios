@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>net$(BundledNETCoreAppTargetFrameworkVersion)-macos</TargetFramework>
     <DefineConstants>$(DefineConstants);XAMMAC_TESTS</DefineConstants>
-    <DefineConstants Condition="'$(Configuration)' == 'Debug'">$(DefineConstants);DYNAMIC_REGISTRAR</DefineConstants>
   </PropertyGroup>
 
   <!-- Imports of the form '../shared.csproj' will be inlined by xharness -->

@@ -44,6 +44,12 @@ namespace Introspection {
 				if (TestRuntime.IsSimulatorOrDesktop)
 					return true;
 				break;
+#if __TVOS__
+			case "MetalPerformanceShadersGraph":
+				if (TestRuntime.IsSimulatorOrDesktop)
+					return true;
+				break;
+#endif // __TVOS__
 			case "CoreNFC": // Only available on devices that support NFC, so check if NFCNDEFReaderSession is present.
 				if (Class.GetHandle ("NFCNDEFReaderSession") == IntPtr.Zero)
 					return true;
@@ -171,6 +177,8 @@ namespace Introspection {
 				break;
 #endif
 			case "UIAccessibilityElement":
+				if (protocolName == "UIResponderStandardEditActions" && !TestRuntime.CheckXcodeVersion (11, 0))
+					return true;
 				if (protocolName == "UIUserActivityRestoring")
 					return true;
 				break;
@@ -199,6 +207,7 @@ namespace Introspection {
 			case "UIStepper":
 			case "UISwitch":
 			case "ASAuthorizationAppleIdButton":
+			case "INUIAddVoiceShortcutButton":
 				if (protocolName == "UIContextMenuInteractionDelegate")
 					return !TestRuntime.CheckXcodeVersion (12, 0);
 				break;

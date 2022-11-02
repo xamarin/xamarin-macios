@@ -29,7 +29,7 @@ function Invoke-Request {
             } else {
                 $count = $count + 1
                 $seconds = 5 * $count
-                Write-Host "Error performing request trying in $seconds seconds"
+                Write-Host "Error performing request to $($_.Exception.Response.RequestMessage.RequestUri) trying in $seconds seconds"
                 Write-Host "Exception was:"
                 Write-Host "$($_.Exception)"
                 Write-Host "Response was:"
@@ -93,14 +93,22 @@ class GitHubStatuses {
         $this.Token = $githubToken
     }
 
-    hidden [string] GetStatusUrl() {
+    [string] GetStatusUrl() {
         if ($Env:BUILD_REASON -eq "PullRequest") {
             # the env var is only provided for PR not for builds.
             $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/statuses/$Env:SYSTEM_PULLREQUEST_SOURCECOMMITID"
         } else {
-            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/statuses/$Env:BUILD_REVISION"
+            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/statuses/$Env:BUILD_SOURCEVERSION"
         }
         return $url
+    }
+
+    [string] GetStatusPrefix() {
+        if ($Env:BUILD_REASON -eq "PullRequest") {
+            return "[PR]"
+        } else {
+            return "[CI]"
+        }
     }
 
     [object] SetStatus($status) {
@@ -112,6 +120,8 @@ class GitHubStatuses {
     }
 
     [object] SetStatus($status, $description, $context, $targetUrl) {
+        # set a prefix to be more clear
+        $context = "$($this.GetStatusPrefix()) $context"
         $headers = @{
             Authorization = ("token {0}" -f $this.Token)
         }
@@ -125,7 +135,7 @@ class GitHubStatuses {
         foreach ($s in $presentStatuses) {
             # we found a status from a previous build that was a success, we do not want to step on it
             if (($s.context -eq $context) -and ($s.state -eq "success")) {
-                Write-Host "WARNING: Found status for $Context because it was already set as a success, overriding result."
+                Write-Debug "WARNING: Found status for $Context because it was already set as a success, overriding result."
             }
         }
 
@@ -238,6 +248,11 @@ class GitHubComments {
         [string] $commentTitle,
         [string] $commentEmoji
     ) {
+        # Don't write a header if none was provided
+        if ($commentTitle.Length -eq 0) {
+            return
+        }
+
         if ([string]::IsNullOrEmpty($Env:PR_ID)) {
             $prefix = "[CI Build]"
         } else {
@@ -245,6 +260,7 @@ class GitHubComments {
         }
 
         $stringBuilder.AppendLine("# $commentEmoji $prefix $commentTitle $commentEmoji")
+        $stringBuilder.AppendLine()
     }
 
     [void] WriteCommentFooter(
@@ -253,13 +269,19 @@ class GitHubComments {
         $targetUrl = Get-TargetUrl
         $stringBuilder.AppendLine("[Pipeline]($targetUrl) on Agent $Env:TESTS_BOT") # Env:TESTS_BOT is added by the pipeline as a variable coming from the execute tests job
         $hashUrl = $null
+        $hashSource = $null
         if ([GitHubComments]::IsPR()) {
             $changeId = [GitHubComments]::GetPRID()
             $hashUrl = "https://github.com/$($this.Org)/$($this.Repo)/pull/$changeId/commits/$($this.Hash)"
+            $hashSource = " [PR build]"
         } else {
             $hashUrl= "https://github.com/$($this.Org)/$($this.Repo)/commit/$($this.Hash)"
+            $hashSource = " [CI build]"
         }
-        $stringBuilder.AppendLine("Hash: [$($this.Hash)]($hashUrl)")
+        $ciComment = "[comment]: <> (This is a comment added by Azure DevOps)"
+        $stringBuilder.AppendLine("Hash: [$($this.Hash)]($hashUrl) $hashSource")
+        $stringBuilder.AppendLine("")
+        $stringBuilder.AppendLine($ciComment)
     }
 
     [string] GetCommentUrl() {
@@ -268,7 +290,11 @@ class GitHubComments {
             $changeId = [GitHubComments]::GetPRID()
             $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/issues/$changeId/comments"
         } else {
-            $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/commits/$Env:BUILD_REVISION/comments"
+            if ($this.Hash) {
+                $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/commits/$($this.Hash)/comments"
+            } else {
+                $url = "https://api.github.com/repos/$($this.Org)/$($this.Repo)/commits/$Env:BUILD_SOURCEVERSION/comments"
+            }
         }
         return $url
     }
@@ -314,10 +340,57 @@ class GitHubComments {
 
         # header
         $this.WriteCommentHeader($msg, $commentTitle, $commentEmoji)
-        $msg.AppendLine()
 
         # content
         $commentObject.WriteComment($msg)
+        $msg.AppendLine()
+
+        # footer
+        $this.WriteCommentFooter($msg)
+
+        return $this.NewComment($msg)
+    }
+
+    [object] NewCommentFromFile(
+        [string] $commentTitle,
+        [string] $commentEmoji,
+        [string] $filePath
+    ) {
+        # build the message, which will be sent to github, users can use markdown
+        $msg = [System.Text.StringBuilder]::new()
+
+        # header
+        $this.WriteCommentHeader($msg, $commentTitle, $commentEmoji)
+
+        if (-not (Test-Path $filePath -PathType Leaf)) {
+            throw [System.IO.FileNotFoundException]::new($filePath)
+        }
+
+        # content
+        foreach ($line in Get-Content -Path $filePath)
+        {
+            $msg.AppendLine($line)
+        }
+        $msg.AppendLine()
+
+        # footer
+        $this.WriteCommentFooter($msg)
+
+        return $this.NewComment($msg)
+    }
+
+    [object] NewCommentFromMessage(
+        [string] $commentTitle,
+        [string] $commentEmoji,
+        [string] $content
+    ) {
+        $msg = [System.Text.StringBuilder]::new()
+
+        # header
+        $this.WriteCommentHeader($msg, $commentTitle, $commentEmoji)
+
+        # content
+        $msg.AppendLine($content)
         $msg.AppendLine()
 
         # footer
@@ -484,6 +557,7 @@ function New-GitHubCommentsObject {
         $Hash
 
     )
+    Write-Debug "New-GitHubCommentsObject ('$Org', '$Repo', '$Token', '$Hash')"
     if ($Hash) {
         return [GitHubComments]::new($Org, $Repo, $Token, $Hash)
     } else {
@@ -512,122 +586,6 @@ function Get-XamarinStorageIndexUrl {
     )
 
     return "http://xamarin-storage/$Path/jenkins-results/tests/index.html"
-}
-
-<#
-    .SYNOPSIS
-        Sets a new status in github for the current build.
-    .DESCRIPTION
-
-    .PARAMETER Status
-        The status value to be set in GitHub. The available values are:
-
-        * error
-        * failure
-        * pending
-        * success
-
-        If the wrong value is passed a validation error with be thrown.
-
-    .PARAMETER Description
-        The description that will be added with the status update. This allows us to add a human readable string
-        to understand why the status was updated.
-    
-    .PARAMETER Context
-        The context to be used. A status can contain several contexts. The context must be passed to associate
-        the status with a specific event.
-
-    .EXAMPLE
-        Set-GitHubStatus -Status "error" -Description "Not enough free space in the host." -Context "VSTS iOS device tests."
-
-    .NOTES
-        This cmdlet depends on the following environment variables. If one or more of the variables is missing an
-        InvalidOperationException will be thrown:
-
-        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
-        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
-        * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
-        * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
-        * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
-#>
-function Set-GitHubStatus {
-    param
-    (
-        [Parameter(Mandatory)]
-        [String]
-        [ValidateScript({
-            $("error", "failure", "pending", "success").Contains($_) #validate that the status is in the range of valid values
-        })]
-        $Status,
-
-        [Parameter(Mandatory)]
-        [String]
-        $Description,
-
-        [Parameter(Mandatory)]
-        [String]
-        $Context,
-
-        [String]
-        $TargetUrl
-    )
-
-    # assert that all the env vars that are needed are present, else we do have an error
-    $envVars = @{
-        "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
-        "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
-        "BUILD_BUILDID" = $Env:BUILD_BUILDID;
-        "BUILD_REVISION" = $Env:BUILD_REVISION;
-        "BUILD_REASON" = $Env:BUILD_REASON;
-        "BUILD_SOURCEBRANCHNAME" = $Env:BUILD_SOURCEBRANCHNAME;
-        "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
-    }
-
-    foreach ($key in $envVars.Keys) {
-        if (-not($envVars[$key])) {
-            Write-Debug "Enviroment varible missing $key"
-            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
-        }
-    }
-
-    if ($Env:BUILD_REASON -eq "PullRequest") {
-        # the env var is only provided for PR not for builds.
-        $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:SYSTEM_PULLREQUEST_SOURCECOMMITID"
-    } else {
-        $url = "https://api.github.com/repos/xamarin/xamarin-macios/statuses/$Env:BUILD_REVISION"
-    }
-
-    $headers = @{
-        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN)
-    }
-
-    $requestContext = $Context
-    # Check if the status was already set, if it was we will override yet print a message for the user to know this action was done.
-    $presentStatuses = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "GET" -ContentType 'application/json' }
-
-    # try to find the status with the same context and make a decision, this is not a dict but an array :/ 
-    foreach ($s in $presentStatuses) {
-        # we found a status from a previous build that was a success, we do not want to step on it
-        if (($s.context -eq $Context) -and ($s.state -eq "success")) {
-            Write-Host "WARNING: Found status for $Context because it was already set as a success, overriding result."
-        }
-    }
-
-    # use the GitHub API to set the status for the given commit
-    $detailsUrl = ""
-    if ($TargetUrl) {
-        $detailsUrl = $TargetUrl
-    } else {
-        $detailsUrl = Get-TargetUrl
-    }
-    $payload= @{
-        state = $Status
-        target_url = $detailsUrl
-        description = $Description
-        context = $requestContext
-    }
-
-    return Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-json) -ContentType 'application/json' }
 }
 
 <#
@@ -743,347 +701,8 @@ function New-GitHubComment {
     }
 
     $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body ($payload | ConvertTo-Json) -ContentType 'application/json' }
-    Write-Host $request
+    Write-Debug $request
     return $request
-}
-
-<#
-    .SYNOPSIS
-        Add a new comment that contains the result summaries of the test run.
-
-    .PARAMETER Header
-        The header to be used in the comment.
-
-    .PARAMETER Description
-        A show description to be added in the comment, this will show as a short version of the comment on GitHub.
-    
-    .PARAMETER Message
-        A longer string that contains the full comment message. Will be shown when the comment is expanded.
-
-    .PARAMETER Emoji
-        Optional string representing and emoji to be used in the comments header.
-
-    .EXAMPLE
-        New-GitHubComment -Header "Tests failed catastrophically" -Emoji ":fire:" -Description "Not enough free space in the host."
-
-    .NOTES
-        This cmdlet depends on the following environment variables. If one or more of the variables is missing an
-        InvalidOperationException will be thrown:
-
-        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
-        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
-        * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
-        * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
-        * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
-#>
-function New-GitHubCommentFromFile {
-    param (
-
-        [Parameter(Mandatory)]
-        [String]
-        $Header,
-        
-        [String]
-        $Description,
-
-        [Parameter(Mandatory)]
-        [String]
-        [ValidateScript({
-            Test-Path -Path $_ -PathType Leaf 
-        })]
-        $Path,
-
-        [String]
-        $Emoji #optionally use an emoji
-    )
-
-    # read the file, create a message and use the New-GithubComment function
-    $msg = [System.Text.StringBuilder]::new()
-    foreach ($line in Get-Content -Path $Path)
-    {
-        $msg.AppendLine($line)
-    }
-    return New-GithubComment -Header $Header -Description $Description -Message $msg.ToString() -Emoji $Emoji
-}
-
-<#
-    .SYNOPSIS
-        Test if the current job is successful or not.
-#>
-function Test-JobSuccess {
-
-    param (
-        [Parameter(Mandatory)]
-        [String]
-        $Status
-    )
-
-    # return if the status is one of the failure ones
-    return $Status -eq "Succeeded"
-}
-
-<# 
-    .SYNOPSIS
-        Helper function used to create the content in the comment with the APIDiff
-
-    .PARAMETER APIDiff
-        The path to the the json that contains the content for the PR API diff.
-
-    .PARAMETER APIGeneratorDiffJson
-        The path to the json that contains the content for the generator diffs with stable.
-
-    .PARAMETER APIGeneratorDiff
-        The path to the json that contains the content for the generator diffs.
-#>
-function Write-APIDiffContent {
-    param (
-
-        [Parameter(Mandatory)]
-        [System.Text.StringBuilder]
-        $StringBuilder,
-
-        [String]
-        $APIDiff="",
-
-        [string]
-        $APIGeneratorDiffJson="",
-
-        [string]
-        $APIGeneratorDiff=""
-    )
-
-    if ([string]::IsNullOrEmpty($APIDiff)) {
-        $StringBuilder.AppendLine("* :warning: API diff urls have not been provided.")
-    } else {
-        Write-Diffs -StringBuilder $sb -Header "API diff" -APIDiff $APIDiff
-    }
-    if ([string]::IsNullOrEmpty($APIGeneratorDiffJson)) {
-        $StringBuilder.AppendLine("* :warning: API Current PR diff urls have not been provided.")
-    } else {
-        Write-Diffs -StringBuilder $sb -Header "API Current PR diff" -APIDiff $APIGeneratorDiffJson
-    }
-    if (-not [string]::IsNullOrEmpty($APIGeneratorDiff)) {
-        Write-Host "Parsing Generator diff in path $APIGeneratorDiff"
-        if (-not (Test-Path $APIGeneratorDiff -PathType Leaf)) {
-            $StringBuilder.AppendLine("* :warning: Path $APIGeneratorDiff was not found!")
-        } else {
-            $StringBuilder.AppendLine("# Generator diff")
-            $StringBuilder.AppendLine("")
-            # ugly workaround to get decent new lines
-            foreach ($line in Get-Content -Path $APIGeneratorDiff)
-            {
-                $StringBuilder.AppendLine($line)
-            }
-            $StringBuilder.AppendLine($apidiffcomments)
-        }
-    } else {
-        $StringBuilder.AppendLine("* :warning: Generator diff comments have not been provided.")
-    }
-}
-
-<# 
-    .SYNOPSIS
-        Add a new comment that contains the summaries to the Html Report as well as set the status accordingly.
-
-    .PARAMETER Context
-        The context to be used to link the status and the device test run in the GitHub status API.
-
-    .PARAMETER TestSummaryPath
-        The path to the generated test summary.
-
-    .EXAMPLE
-        New-GitHubSummaryComment -Context "$Env:CONTEXT" -TestSummaryPath "$Env:SYSTEM_DEFAULTWORKINGDIRECTORY/xamarin/xamarin-macios/tests/TestSummary.md"
-    .NOTES
-        This cmdlet depends on the following environment variables. If one or more of the variables is missing an
-        InvalidOperationException will be thrown:
-
-        * SYSTEM_TEAMFOUNDATIONCOLLECTIONURI: The uri of the vsts collection. Needed to be able to calculate the target url.
-        * SYSTEM_TEAMPROJECT: The team project executing the build. Needed to be able to calculate the target url.
-        * BUILD_BUILDID: The current build id. Needed to be able to calculate the target url.
-        * BUILD_REVISION: The revision of the current build. Needed to know the commit whose status to change.
-        * GITHUB_TOKEN: OAuth or PAT token to interact with the GitHub API.
-
-#>
-function New-GitHubSummaryComment {
-    param (
-        [Parameter(Mandatory)]
-        [String]
-        $Context,
-
-        [Parameter(Mandatory)]
-        [String]
-        $TestSummaryPath,
-
-        [string]
-        $Artifacts="",
-
-        [string]
-        $APIDiff="",
-
-        [string]
-        $APIGeneratorDiffJson="",
-
-        [string]
-        $APIGeneratorDiff="",
-
-        [switch]
-        $DeviceTest
-    )
-
-    $envVars = @{
-        "SYSTEM_TEAMFOUNDATIONCOLLECTIONURI" = $Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI;
-        "SYSTEM_TEAMPROJECT" = $Env:SYSTEM_TEAMPROJECT;
-        "BUILD_DEFINITIONNAME" = $Env:BUILD_DEFINITIONNAME;
-        "BUILD_REVISION" = $Env:BUILD_REVISION;
-        "GITHUB_TOKEN" = $Env:GITHUB_TOKEN;
-    }
-
-    foreach ($key in $envVars.Keys) {
-        if (-not($envVars[$key])) {
-            Write-Debug "Environment variable missing: $key"
-            throw [System.InvalidOperationException]::new("Environment variable missing: $key")
-        }
-    }
-
-    $vstsTargetUrl = Get-TargetUrl
-    # build the links to provide extra info to the monitoring person, we need to make sure of a few things
-    # 1. We do have the xamarin-storage path
-    # 2. We did reach the xamarin-storage, stored in the env var XAMARIN_STORAGE_REACHED
-    $sb = [System.Text.StringBuilder]::new()
-    $sb.AppendLine(); # new line to start the list
-    $sb.AppendLine("* [Azure DevOps]($vstsTargetUrl)")
-    if ($Env:VSDROPS_INDEX) {
-        # we did generate an index with the files in vsdrops
-        $sb.AppendLine("* [Html Report (VSDrops)]($Env:VSDROPS_INDEX) [Download]($Env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI$Env:SYSTEM_TEAMPROJECT/_apis/build/builds/$Env:BUILD_BUILDID/artifacts?artifactName=HtmlReport-simulator&api-version=6.0&`$format=zip)")
-    }
-
-    if (-not $DeviceTest) {
-        Write-APIDiffContent -StringBuilder $sb -APIDiff $APIDiff -APIGeneratorDiffJson $APIGeneratorDiffJson -APIGeneratorDiff $APIGeneratorDiff
-
-        $artifactComment = New-ArtifactsFromJsonFile -Content $Artifacts
-        $artifactComment.WriteComment($sb)
-    }
-
-    if (Test-Path $TestSummaryPath -PathType Leaf) { # if present we did get results and add the links, else skip
-        $githubPagePrefix = "https://xamarin.github.io/macios.ci"
-        if (-not [string]::IsNullOrEmpty($Env:PR_ID)) {
-            $staticPageComment = [StaticPages]::new($githubPagePrefix, $Env:PR_ID, $Env:BUILD_BUILDID)
-            $staticPageComment.WriteComment($sb)
-        }
-    }
-
-    $headerLinks = $sb.ToString()
-    $request = $null
-
-    # set the context to be "pipeline name (Test run)", example xamarin-macios (Test run)
-    $statusContext = "$Env:BUILD_DEFINITIONNAME (Test run)"
-    if ($Context -ne "Build") { #special case when we deal with the device tests
-        $statusContext = "$Contex - $Env:BUILD_DEFINITIONNAME) (Test run)"
-    }
-
-    # make a diff between a PR and a CI build so that users do not get confused.
-    $prefix = "";
-    if ([string]::IsNullOrEmpty($Env:PR_ID)) {
-        $prefix = "[CI Build]"
-    } else {
-        $prefix = "[PR Build]"
-    }
-
-    if (-not (Test-Path $TestSummaryPath -PathType Leaf)) {
-        Write-Host "No test summary found"
-        Set-GitHubStatus -Status "failure" -Description "$prefix Tests failed catastrophically on $Context (no summary found)." -Context $statusContext
-        $request = New-GitHubComment -Header "Tests failed catastrophically on $Context (no summary found)." -Emoji ":fire:" -Description "Result file $TestSummaryPath not found. $headerLinks"
-    } else {
-        if ($Env:TESTS_JOBSTATUS -eq "") {
-            Set-GitHubStatus -Status "error" -Description "Tests didn't execute on $Context." -Context $statusContext
-            $request = New-GitHubCommentFromFile -Header "$prefix Tests didn't execute on $Context." -Description "Tests didn't execute on $Context. $headerLinks"  -Emoji ":x:" -Path $TestSummaryPath
-        } elseif (Test-JobSuccess -Status $Env:TESTS_JOBSTATUS) {
-            Set-GitHubStatus -Status "success" -Description "All tests passed on $Context." -Context $statusContext
-            $request = New-GitHubCommentFromFile -Header "$prefix Tests passed on $Context." -Description "Tests passed on $Context. $headerLinks"  -Emoji ":white_check_mark:" -Path $TestSummaryPath
-        } else {
-            Set-GitHubStatus -Status "error" -Description "Tests failed on $Context." -Context $statusContext
-            $request = New-GitHubCommentFromFile -Header "$prefix Tests failed on $Context" -Description "Tests failed on $Context. $headerLinks" -Emoji ":x:" -Path $TestSummaryPath
-        }
-    }
-    return $request
-}
-
-function Write-Diffs {
-    param (
-        [Parameter(Mandatory)]
-        [System.Text.StringBuilder]
-        $StringBuilder,
-
-        [Parameter(Mandatory)]
-        [String]
-        $Header,
-
-        [String]
-        $APIDiff
-    )
-
-    Write-Host "Parsing API diff in path $APIDiff"
-    if (-not (Test-Path $APIDiff -PathType Leaf)) {
-        $StringBuilder.AppendLine("Path $APIDiff was not found!")
-    } else {
-        # read the json file, convert it to an object and add a line for each artifact
-        $json =  Get-Content $APIDiff | ConvertFrom-Json
-        # we are dealing with an object, not a dictionary
-        $hasHtmlLinks = "html" -in $json.PSobject.Properties.Name
-        $hasMDlinks = "gist" -in $json.PSobject.Properties.Name
-        if ($hasHtmlLinks -or $hasMDlinks) {
-            $StringBuilder.AppendLine("# $Header")
-            Write-Host "Message is '$($json.message)'"
-            $StringBuilder.AppendLine($json.message)
-
-            $commonPlatforms = "iOS", "macOS", "tvOS"
-            $legacyPlatforms = @{Title="API diff"; Platforms=@($commonPlatforms + "watchOS");}
-            $dotnetPlatforms = @{Title="dotnet API diff"; Platforms=@($commonPlatforms + "MacCatalyst").ForEach({"dotnet-" + $_});}
-            $dotnetLegacyPlatforms = @{Title="dotnet legacy API diff"; Platforms=@($commonPlatforms).ForEach({"dotnet-legacy-" + $_});}
-            $dotnetMaciOSPlatforms = @{Title="dotnet iOS-MacCatalayst API diff"; Platforms=@("macCatiOS").ForEach({"dotnet-" + $_});}
-            $platforms = @($legacyPlatforms, $dotnetPlatforms, $dotnetLegacyPlatforms, $dotnetMaciOSPlatforms)
-
-            foreach ($linkGroup in $platforms) {
-                $StringBuilder.AppendLine("<details><summary>View $($linkGroup.Title)</summary>")
-                $StringBuilder.AppendLine("") # no new line results in a bad rendering in the links
-                $htmlLink = ""
-                $gistLink = ""
-
-                foreach ($linkPlatform in $linkGroup.Platforms) {
-                    $platformHasHtmlLinks = $linkPlatform -in $json.html.PSobject.Properties.Name
-                    $platformHasMDlinks = $linkPlatform -in $json.gist.PSobject.Properties.Name
-
-                    # some do not have md, some do not have html
-                    if ($platformHasHtmlLinks) {
-                        Write-Host "Found html link for $linkPlatform"
-                        $htmlLinkUrl = $json.html | Select-Object -ExpandProperty $linkPlatform
-                        $htmlLink = "[vsdrops]($htmlLinkUrl)"
-                    }
-
-                    if ($platformHasMDlinks) {
-                        Write-Host "Found gist link for $linkPlatform"
-                        $gistLinkUrl = $json.gist | Select-Object -ExpandProperty $linkPlatform
-                        $gistLink = "[gist]($gistLinkUrl)"
-                    }
-
-                    if (($htmlLink -eq "") -and ($gistLink -eq "")) {
-                        $StringBuilder.AppendLine("* :fire: $linkPlatform :fire: Missing files")
-                    } else {
-                        # I don't like extra ' ' when we are missing vars, use join
-                        $line = @("*", $linkPlatform, $htmlLink, $gistLink) -join " "
-                        $StringBuilder.AppendLine($line)
-                    }
-                }
-                $StringBuilder.AppendLine("</details>")
-                $StringBuilder.AppendLine("")
-            }
-            $StringBuilder.AppendLine("")
-        } else {
-            $StringBuilder.AppendLine("# API diff")
-            $StringBuilder.AppendLine("")
-            $StringBuilder.AppendLine("**No api diff data found.**")
-        }
-    }
 }
 
 <# 
@@ -1113,8 +732,12 @@ function Get-GitHubPRInfo {
 
     $url = "https://api.github.com/repos/xamarin/xamarin-macios/pulls/$ChangeId"
 
-    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' }
-    Write-Host $request
+    $headers = @{
+        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
+    }
+
+    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Method "GET" -ContentType 'application/json' -Headers $headers }
+    Write-Debug $request
     return $request
 }
 
@@ -1216,8 +839,8 @@ function New-GistWithContent {
 
     $url = "https://api.github.com/gists"
     $payloadJson = $payload | ConvertTo-Json
-    Write-Host "Url is $url"
-    Write-Host "Payload is $payloadJson"
+    Write-Debug "Url is $url"
+    Write-Debug "Payload is $payloadJson"
 
     $headers = @{
         Accept = "application/vnd.github.v3+json";
@@ -1225,7 +848,7 @@ function New-GistWithContent {
     } 
 
     $request = Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json'
-    Write-Host $request
+    Write-Debug $request
     return $request.html_url
 }
 
@@ -1302,8 +925,8 @@ function New-GistWithFiles {
 
     $url = "https://api.github.com/gists"
     $payloadJson = $payload | ConvertTo-Json
-    Write-Host "Url is $url"
-    Write-Host "Payload is $payloadJson"
+    Write-Debug "Url is $url"
+    Write-Debug "Payload is $payloadJson"
 
     $headers = @{
         Accept = "application/vnd.github.v3+json";
@@ -1311,69 +934,72 @@ function New-GistWithFiles {
     } 
 
     $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
-    Write-Host $request
+    Write-Debug $request
     return $request.html_url
 }
 
-<#
-    .SYNOPSIS
-        Puse a repository dispatch stating which branch did trigger it.
-
-    .PARAMETER Org
-        The org of the repository to ping.
-
-    .PARAMETER Repository 
-        The repository to ping.
-
-    .PARAMETER Branch
-        The branch that triggered the event.
-#>
-function Push-RepositoryDispatch {
+# This function processes markdown, and replaces:
+#     1. "[vsdrops](" with "[vsdrops](https://link/to/vsdrops/".
+#     2. "[gist](file)" with "[gist](url)" after uploading "file" to a gist.
+# It also takes a root directory parameter, which is where files to gist should be searched for
+function Convert-Markdown {
     param (
-
-        [ValidateNotNullOrEmpty ()]
         [string]
-        $Org, 
+        $RootDirectory,
 
-        [ValidateNotNullOrEmpty ()]
         [string]
-        $Repository,
+        $InputContents,
 
-        [ValidateNotNullOrEmpty ()]
         [string]
-        $Branch
+        $VSDropsPrefix
     )
 
-    # create the hashtable that will contain all the information of all types
-    $payload = @{
-        event_type = $Branch;
+    $InputContents = $InputContents.Replace("[vsdrops](", "[vsdrops](" + $VSDropsPrefix)
+
+    $startIndex = $InputContents.IndexOf("[gist](", $index)
+    while ($startIndex -gt 0) {
+        $endIndex =$InputContents.IndexOf(")", $startIndex + 7)
+        if ($endIndex -gt $startIndex) {
+            $fileToGist = $InputContents.Substring($startIndex + 7, $endIndex - $startIndex - 7)
+            $fullPath = Join-Path -Path $RootDirectory -ChildPath $fileToGist
+            if (Test-Path $fullPath -PathType leaf) {
+                $gistContent = Get-Content -Path $fullPath -Raw
+                if ($gistContent.Length -eq 0) {
+                        $gistText = "[empty gist]"
+                } else {
+                    # github only accepts filename without path components
+                    $filenameForGist = [System.Linq.Enumerable]::Last($fileToGist.Split("/", [StringSplitOptions]::RemoveEmptyEntries))
+                    $obj = New-GistObjectDefinition -Name $filenameForGist -Path $fullPath -Type "markdown"
+                    $filesToGist = ($obj)
+                    try {
+                        $gistUrl = New-GistWithFiles $fileToGist $filesToGist
+                        $gistText = "[gist](" + $gistUrl + ")"
+                    } catch {
+                        Write-Debug "Unable to create gist: $_"
+                        $gistText = "Unable to create gist: $($_.Exception.Message)"
+                    }
+                }
+            } else {
+                $gistText = "(could not create gist: file '$fullPath' does not exist)"
+            }
+            $InputContents = $InputContents.Substring(0, $startIndex) + $gistText + $InputContents.Substring($endIndex + 1)
+        } else {
+            break
+        }
+
+        $startIndex = $InputContents.IndexOf("[gist](", $endIndex)
     }
 
-    $url = "https://api.github.com/repos/$Org/$Repository/dispatches"
-    Write-Host $url
-    $payloadJson = $payload | ConvertTo-Json
-
-    $headers = @{
-        Accept = "application/vnd.github.v3+json";
-        Authorization = ("token {0}" -f $Env:GITHUB_TOKEN);
-    } 
-
-    $request = Invoke-Request -Request { Invoke-RestMethod -Uri $url -Headers $headers -Method "POST" -Body $payloadJson -ContentType 'application/json' }
-    Write-Host $request
-    Write-Host $request.Content
+    return $InputContents
 }
 
 # module exports, any other functions are private and should not be used outside the module.
-Export-ModuleMember -Function Set-GitHubStatus
 Export-ModuleMember -Function New-GitHubComment
-Export-ModuleMember -Function New-GitHubCommentFromFile
-Export-ModuleMember -Function New-GitHubSummaryComment 
-Export-ModuleMember -Function Test-JobSuccess 
 Export-ModuleMember -Function Get-GitHubPRInfo
 Export-ModuleMember -Function New-GistWithFiles 
 Export-ModuleMember -Function New-GistObjectDefinition 
 Export-ModuleMember -Function New-GistWithContent 
-Export-ModuleMember -Function Push-RepositoryDispatch 
+Export-ModuleMember -Function Convert-Markdown
 
 # new future API that uses objects.
 Export-ModuleMember -Function New-GitHubCommentsObject

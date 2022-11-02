@@ -1232,6 +1232,9 @@
 		<value>'{0}'에 잘못된 BindAsAttribute가 있습니다. {1}의 기본 열거형 형식을 찾을 수 없습니다. https://github.com/xamarin/xamarin-macios/issues/new에 버그 보고서를 제출하세요.
 		</value>
 	</data>
+  <data name="MT4124_I" xml:space="preserve">
+		<value>Invalid {0} found on '{1}'. Please file a bug report at https://github.com/xamarin/xamarin-macios/issues/new</value>
+	</data>
   <data name="MT4125" xml:space="preserve">
 		<value>등록자가 '{1}' 메서드의 시그니처에서 잘못된 '{0}' 형식을 찾았습니다. 인터페이스에는 래퍼 형식을 지정하는 Protocol 특성이 있어야 합니다.
 		</value>
@@ -1516,6 +1519,9 @@
 		<value>등록자가 대리자 유형 {0}의 Invoke 메서드를 찾을 수 없기 때문에 메서드 {1}에서 해당 유형의 대리자에 대한 블록 시그니처를 컴퓨팅할 수 없습니다.
 		</value>
 	</data>
+  <data name="MT4186" xml:space="preserve">
+		<value>등록자가 최적 형식이 아닌 형식 `{0}`을(를) 찾았습니다. 형식에는 두 개의 인수(ObjCRuntime.NativeHandle, bool)을 사용하는 생성자가 없습니다. 그러나 두 개의 (System.IntPtr, bool) 인수를 사용하는 생성자를 발견해 대신 사용됩니다.(System.IntPtr, bool) 생성자의 서명을 (ObjCRuntime.NativeHandle, bool)로 변경하는 것이 좋습니다.</value>
+	</data>
   <data name="MT5101" xml:space="preserve">
 		<value>'{0}' 컴파일러가 없습니다. Xcode '명령줄 도구' 구성 요소를 설치하세요.
 		</value>
@@ -1699,6 +1705,11 @@
 		<value>xcrun 도구에서 '{0}' 도구를 찾을 때 결과를 찾지 못했습니다('{1}' 파일이 없음). 자세한 내용은 빌드 로그를 확인하세요.
 		</value>
 	</data>
+  <!-- The linker says custom linker steps can't use error codes between 1000 and 6000, so we use >= 7000 -->
+  <data name="MX7000" xml:space="preserve">
+		<value>사용자 지정 링커 단계를 실행하는 동안 오류가 발생했습니다. 자세한 내용은 빌드 로그를 검토하세요.</value>
+	</data>
+  <!-- 8XXX are for errors that occur at runtime -->
   <data name="MT8018" xml:space="preserve">
 		<value>내부 일관성 오류입니다. https://github.com/xamarin/xamarin-macios/issues/new에 버그 보고서를 제출하세요.
 		</value>
@@ -1731,5 +1742,12 @@
 	</data>
   <data name="MX8041" xml:space="preserve">
 		<value>{0} 형식의 인스턴스를 만들 수 없습니다.</value>
+	</data>
+  <data name="MX8042" xml:space="preserve">
+		<value>An exception occurred while trying to invoke the function {0}: {1}.</value>
+		<comment>
+			0: name of function
+			1: exception info
+		</comment>
 	</data>
 </root>

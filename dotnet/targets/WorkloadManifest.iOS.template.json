@@ -4,8 +4,8 @@
 		"@PLATFORM_LOWERCASE@": {
 			"description": ".NET SDK Workload for building @PLATFORM@ applications.",
 			"packs": [
-				"Microsoft.@PLATFORM@.Sdk",
-				"Microsoft.@PLATFORM@.Windows.Sdk.Aliased",
+				"Microsoft.@PLATFORM@.Sdk.net6",
+				"Microsoft.@PLATFORM@.Windows.Sdk.Aliased.net6",
 				"Microsoft.@PLATFORM@.Ref",
 				"Microsoft.@PLATFORM@.Runtime.ios-arm",
 				"Microsoft.@PLATFORM@.Runtime.ios-arm64",
@@ -20,11 +20,14 @@
 		}
 	},
 	"packs": {
-		"Microsoft.@PLATFORM@.Sdk": {
+		"Microsoft.@PLATFORM@.Sdk.net6": {
 			"kind": "sdk",
-			"version": "@VERSION@"
+			"version": "@VERSION@",
+			"alias-to": {
+				"any": "Microsoft.@PLATFORM@.Sdk"
+			}
 		},
-		"Microsoft.@PLATFORM@.Windows.Sdk.Aliased": {
+		"Microsoft.@PLATFORM@.Windows.Sdk.Aliased.net6": {
 			"kind": "sdk",
 			"version": "@VERSION@",
 			"alias-to": {

@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 
 using Foundation;
 using ObjCRuntime;
+using SceneKit;
 
 #if NET
 using MatrixFloat2x2 = global::CoreGraphics.NMatrix2;
@@ -14,6 +15,16 @@ using MatrixFloat2x2 = global::OpenTK.NMatrix2;
 using MatrixFloat3x3 = global::OpenTK.NMatrix3;
 using MatrixFloat4x3 = global::OpenTK.NMatrix4x3;
 using MatrixFloat4x4 = global::OpenTK.NMatrix4;
+#endif
+
+#if __MACOS__
+#if NET
+using pfloat = System.Runtime.InteropServices.NFloat;
+#else
+using pfloat = System.nfloat;
+#endif
+#else
+using pfloat = System.Single;
 #endif
 
 public static class LibTest {
@@ -126,5 +137,14 @@ namespace Bindings.Test
 				r3c0, r3c1, r3c2, r3c3);
 		}
 #endif
+
+		[DllImport ("__Internal")]
+		public static extern SCNMatrix4 x_SCNMatrix4MakeTranslation (pfloat tx, pfloat ty, pfloat tz);
+
+		[DllImport ("__Internal")]
+		public static extern SCNMatrix4 x_SCNMatrix4MakeScale (pfloat tx, pfloat ty, pfloat tz);
+
+		[DllImport ("__Internal")]
+		public static extern SCNMatrix4 x_SCNMatrix4Translate (SCNMatrix4 m, pfloat tx, pfloat ty, pfloat tz);
 	}
 }

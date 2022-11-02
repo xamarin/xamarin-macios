@@ -16,14 +16,14 @@ public class Cache {
 #elif BUNDLER
 	const string NAME = "dotnet-linker";
 #else
-	#error Wrong defines
+#error Wrong defines
 #endif
 
 	string cache_dir;
 	bool temporary_cache;
-	string[] arguments;
+	string [] arguments;
 
-	public Cache (string[] arguments)
+	public Cache (string [] arguments)
 	{
 		this.arguments = arguments;
 	}
@@ -31,7 +31,7 @@ public class Cache {
 	public bool IsCacheTemporary {
 		get { return temporary_cache; }
 	}
-	
+
 	// see --cache=DIR
 	public string Location {
 		get {
@@ -62,11 +62,11 @@ public class Cache {
 			cache_dir = Target.GetRealPath (Path.GetFullPath (cache_dir));
 		}
 	}
-	
+
 	public void Clean ()
 	{
 #if DEBUG
-		Console.WriteLine ("Cache.Clean: {0}" , Location);
+		Console.WriteLine ("Cache.Clean: {0}", Location);
 #endif
 		Directory.Delete (Location, true);
 		Directory.CreateDirectory (Location);
@@ -148,7 +148,7 @@ public class Cache {
 
 		return FileUtils.CompareStreams (astream, bstream);
 	}
-	
+
 	string GetArgumentsForCacheData (Application app)
 	{
 		var sb = new StringBuilder ();
@@ -180,7 +180,7 @@ public class Cache {
 			default:
 				if (arg [0] == '@')
 					CollectArgumentsForCache (File.ReadAllLines (arg.Substring (1)), 0, sb);
-				
+
 				sb.Append ('\t').Append (StringUtils.Quote (arg)).AppendLine (" \\");
 				break;
 			}
@@ -245,8 +245,8 @@ public class Cache {
 
 			stream = File.OpenRead (filename);
 		}
-		
-		public override int Read (byte[] buffer, int offset, int count)
+
+		public override int Read (byte [] buffer, int offset, int count)
 		{
 			// read the header, always the same 136 bytes, followed by a 4 bytes timestamp (which we must ignore)
 			// the rest (except the #GUID table) is safe to compare.
@@ -256,13 +256,13 @@ public class Cache {
 				if (stream.Position == 136) {
 					// skip the timestamp
 					stream.Position += 4;
-// 					this prints the timestamp:
-//					byte[] buf = new byte[4];
-//					stream.Read (buf, 0, 4);
-//					int t2 = (buf [3] << 24) + (buf [2] << 16) + (buf [1] << 8) + buf [0];
-//					var d = new DateTime (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-//					var d2 = d.AddSeconds (t2);
-//					Console.WriteLine ("TS of {1}: {0}", d2, filename);
+					// this prints the timestamp:
+					// byte[] buf = new byte[4];
+					// stream.Read (buf, 0, 4);
+					// int t2 = (buf [3] << 24) + (buf [2] << 16) + (buf [1] << 8) + buf [0];
+					// var d = new DateTime (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+					// var d2 = d.AddSeconds (t2);
+					// Console.WriteLine ("TS of {1}: {0}", d2, filename);
 				}
 				return read; // don't bother reading more, this makes the implementation easier.
 			}
@@ -317,7 +317,8 @@ public class Cache {
 					// Read the optional PE header
 					str.BaseStream.Position += 208;
 					int cliHeaderRVA = str.ReadInt32 ();
-					/*int cliHeaderSize = */str.ReadInt32 ();
+					/*int cliHeaderSize = */
+					str.ReadInt32 ();
 
 					str.BaseStream.Position += 8;
 
@@ -346,10 +347,11 @@ public class Cache {
 					str.BaseStream.Position = cliHeaderRVA - (virtualAddress - pointerToRawData);
 					str.BaseStream.Position += 8;
 					uint metadataRVA = str.ReadUInt32 ();
-					/*uint metadataSize = */str.ReadUInt32 ();
+					/*uint metadataSize = */
+					str.ReadUInt32 ();
 
 					// Find and read the metadata header
-					uint metadataRootPosition = metadataRVA - (virtualAddress - pointerToRawData); 
+					uint metadataRootPosition = metadataRVA - (virtualAddress - pointerToRawData);
 					str.BaseStream.Position = metadataRootPosition;
 					if (str.ReadByte () != 0x42 || str.ReadByte () != 0x53 || str.ReadByte () != 0x4a || str.ReadByte () != 0x42)
 						return; // Invalid magic signature.
@@ -362,7 +364,7 @@ public class Cache {
 					for (ushort i = 0; i < metadataStreams; i++) {
 						uint offset = str.ReadUInt32 ();
 						uint size = str.ReadUInt32 ();
-						byte[] name = new byte [32];
+						byte [] name = new byte [32];
 
 						for (int k = 0; k < 8; k++) {
 							str.Read (name, k * 4, 4);
@@ -402,7 +404,7 @@ public class Cache {
 			throw new NotImplementedException ();
 		}
 
-		public override void Write (byte[] buffer, int offset, int count)
+		public override void Write (byte [] buffer, int offset, int count)
 		{
 			throw new NotImplementedException ();
 		}

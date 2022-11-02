@@ -214,7 +214,7 @@ namespace ImageCaptureCore {
 		[Export ("modulePath")]
 		string ModulePath { get; }
 
-		[Export ("moduleVersion")]
+		[NullAllowed, Export ("moduleVersion")]
 		string ModuleVersion { get; }
 
 		[Export ("moduleExecutableArchitecture")]
@@ -353,16 +353,16 @@ namespace ImageCaptureCore {
 	[BaseType (typeof(NSObject))]
 	interface ICCameraItem {
 
-		[Export ("device")]
+		[NullAllowed, Export ("device")]
 		ICCameraDevice Device { get; }
 
-		[Export ("parentFolder")]
+		[NullAllowed, Export ("parentFolder")]
 		ICCameraFolder ParentFolder { get; }
 
-		[Export ("name")]
+		[NullAllowed, Export ("name")]
 		string Name { get; }
 
-		[Export ("UTI")]
+		[NullAllowed, Export ("UTI")]
 		string Uti { get; }
 
 		[NullAllowed, Export ("fileSystemPath")]
@@ -406,7 +406,7 @@ namespace ImageCaptureCore {
 	[BaseType (typeof(ICCameraItem))]
 	interface ICCameraFolder {
 
-		[Export ("contents")]
+		[NullAllowed, Export ("contents")]
 		ICCameraItem[] Contents { get; }
 	}
 
@@ -423,7 +423,7 @@ namespace ImageCaptureCore {
 		[Export ("duration")]
 		double Duration { get; }
 
-		[Export ("sidecarFiles")]
+		[NullAllowed, Export ("sidecarFiles")]
 		ICCameraItem[] SidecarFiles { get; }
 	}
 
@@ -495,7 +495,7 @@ namespace ImageCaptureCore {
 	interface ICCameraDeviceDownloadDelegate {
 
 		[Export ("didDownloadFile:error:options:contextInfo:")]
-		void DidDownloadFile (ICCameraFile file, [NullAllowed] NSError error, [NullAllowed] NSDictionary<NSString, NSObject> options, [NullAllowed] IntPtr contextInfo);
+		void DidDownloadFile (ICCameraFile file, [NullAllowed] NSError error, NSDictionary<NSString, NSObject> options, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("didReceiveDownloadProgressForFile:downloadedBytes:maxBytes:")]
 		void DidReceiveDownloadProgress (ICCameraFile file, long downloadedBytes, long maxBytes);
@@ -555,13 +555,13 @@ namespace ImageCaptureCore {
 		void CancelDelete ();
 
 		[Export ("requestDownloadFile:options:downloadDelegate:didDownloadSelector:contextInfo:")]
-		void RequestDownloadFile (ICCameraFile file, [NullAllowed] NSDictionary<NSString, NSObject> options, IICCameraDeviceDownloadDelegate downloadDelegate, Selector didDownloadSelector, [NullAllowed] IntPtr contextInfo);
+		void RequestDownloadFile (ICCameraFile file, NSDictionary<NSString, NSObject> options, IICCameraDeviceDownloadDelegate downloadDelegate, Selector didDownloadSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("cancelDownload")]
 		void CancelDownload ();
 
 		[Export ("requestUploadFile:options:uploadDelegate:didUploadSelector:contextInfo:")]
-		void RequestUploadFile (NSUrl fileUrl, [NullAllowed] NSDictionary<NSString, NSObject> options, NSObject uploadDelegate, Selector didUploadSelector, [NullAllowed] IntPtr contextInfo);
+		void RequestUploadFile (NSUrl fileUrl, NSDictionary<NSString, NSObject> options, NSObject uploadDelegate, Selector didUploadSelector, [NullAllowed] IntPtr contextInfo);
 
 		[Export ("requestReadDataFromFile:atOffset:length:readDelegate:didReadDataSelector:contextInfo:")]
 		void RequestReadDataFromFile (ICCameraFile file, long offset, long length, NSObject readDelegate, Selector didReadDataSelector, [NullAllowed] IntPtr contextInfo);

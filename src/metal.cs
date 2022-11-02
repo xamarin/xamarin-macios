@@ -3861,7 +3861,7 @@ namespace Metal {
 	
 	interface IMTLResource {}
 	interface IMTLHeap {}
-	[iOS (8,0)][Mac (10,11)]
+	[iOS (8,0)][Mac (10,11)][TV (9,0)][MacCatalyst (13,1)]
 	[Protocol] // From Apple Docs: Your app does not define classes that implement this protocol. Model is not needed
 	partial interface MTLResource  {
 
@@ -4677,19 +4677,19 @@ namespace Metal {
 		[Export ("setLayer:atIndex:")]
 		void SetLayer ([NullAllowed] MTLRasterizationRateLayerDescriptor layer, nuint layerIndex);
 
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
 		[Export ("layers")]
 		MTLRasterizationRateLayerArray Layers { get; }
 
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
 		[Export ("screenSize", ArgumentSemantic.Assign)]
 		MTLSize ScreenSize { get; set; }
 
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }
 
-		[iOS (15,0), TV (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
+		[iOS (15,0), MacCatalyst (15,0), Mac (12,0), NoWatch]
 		[Export ("layerCount")]
 		nuint LayerCount { get; }
 	}
@@ -4726,11 +4726,11 @@ namespace Metal {
 		[Export ("vertical")]
 		MTLRasterizationRateSampleArray Vertical { get; }
  
-		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst(15,0), NoWatch]
+		[Mac (12, 0), iOS (15, 0), MacCatalyst(15,0), NoWatch]
 		[Export ("maxSampleCount")]
 		MTLSize MaxSampleCount { get; }
 
-		[Mac (12, 0), iOS (15, 0), TV (15,0), MacCatalyst(15,0), NoWatch]
+		[Mac (12, 0), iOS (15, 0), MacCatalyst(15,0), NoWatch]
 		[Export ("sampleCount", ArgumentSemantic.Assign)]
 		MTLSize SampleCount { get; set; }
 	}
@@ -5022,7 +5022,7 @@ namespace Metal {
 		[Export ("allowDuplicateIntersectionFunctionInvocation")]
 		bool AllowDuplicateIntersectionFunctionInvocation { get; set; }
 
-		[Mac (12, 0), iOS (15, 0), TV (15,0), NoWatch, MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), NoWatch, MacCatalyst (15,0)]
 		[NullAllowed, Export ("label")]
 		string Label { get; set; }
 	}
@@ -5212,15 +5212,15 @@ namespace Metal {
 		[Export ("instanceDescriptorType", ArgumentSemantic.Assign)]
 		MTLAccelerationStructureInstanceDescriptorType InstanceDescriptorType { get; set; }
 
-		[Mac (12, 0), iOS (15, 0), TV (15,0), NoWatch, MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), NoWatch, MacCatalyst (15,0)]
 		[NullAllowed, Export ("motionTransformBuffer", ArgumentSemantic.Retain)]
 		IMTLBuffer MotionTransformBuffer { get; set; }
 
-		[Mac (12, 0), iOS (15, 0), TV (15,0), NoWatch, MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), NoWatch, MacCatalyst (15,0)]
 		[Export ("motionTransformBufferOffset")]
 		nuint MotionTransformBufferOffset { get; set; }
 
-		[Mac (12, 0), iOS (15, 0), TV (15,0), NoWatch, MacCatalyst (15,0)]
+		[Mac (12, 0), iOS (15, 0), NoWatch, MacCatalyst (15,0)]
 		[Export ("motionTransformCount")]
 		nuint MotionTransformCount { get; set; }
 	}
@@ -5481,7 +5481,7 @@ namespace Metal {
 #if NET 
 		[Abstract]
 #endif
-		[Mac (12,0), iOS (15,0), TV (15,0), MacCatalyst (15,0), NoWatch]
+		[Mac (12,0), iOS (15,0), MacCatalyst (15,0), NoWatch]
 		[Export ("writeCompactedAccelerationStructureSize:toBuffer:offset:sizeDataType:")]
 		void WriteCompactedAccelerationStructureSize (IMTLAccelerationStructure accelerationStructure, IMTLBuffer buffer, nuint offset, MTLDataType sizeDataType);
 	}

@@ -54,8 +54,8 @@ namespace Network {
 
 		public void SetHeader (string header, string value) 
 		{
-			if (header == null)
-				throw new ArgumentNullException (header);
+			if (header is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (header));
 			nw_ws_options_add_additional_header (GetCheckedHandle(), header, value); 
 		}
 
@@ -64,8 +64,8 @@ namespace Network {
 
 		public void AddSubprotocol (string subprotocol)
 		{
-			if (subprotocol == null)
-				throw new ArgumentNullException (nameof (subprotocol));
+			if (subprotocol is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (subprotocol));
 			nw_ws_options_add_subprotocol (GetCheckedHandle (), subprotocol);
 		}
 
@@ -112,7 +112,7 @@ namespace Network {
 		static void TrampolineClientRequestHandler (IntPtr block, nw_ws_request_t request)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWWebSocketRequest>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwRequest = new NWWebSocketRequest (request, owns: true);
 				del (nwRequest);
 			}
@@ -121,10 +121,10 @@ namespace Network {
 		[BindingImpl (BindingImplOptions.Optimizable)]
 		public void SetClientRequestHandler (DispatchQueue queue, Action<NWWebSocketRequest> handler)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (handler));
-			if (handler == null)
-				throw new ArgumentNullException (nameof (handler));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
+			if (handler is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (handler));
 			unsafe {
 				BlockLiteral block_handler = new BlockLiteral ();
 				block_handler.SetupBlockUnsafe (static_ClientRequestHandler, handler);

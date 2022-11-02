@@ -78,8 +78,8 @@ namespace Network {
 
 		public void SetQueue (DispatchQueue queue)
 		{
-			if (queue == null)
-				throw new ArgumentNullException (nameof (queue));
+			if (queue is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (queue));
 			nw_path_monitor_set_queue (GetCheckedHandle (), queue.Handle);
 		}
 
@@ -90,7 +90,7 @@ namespace Network {
 		static void TrampolineUpdatedSnapshot (IntPtr block, IntPtr path)
 		{
 			var del = BlockLiteral.GetTarget<Action<NWPath>> (block);
-			if (del != null) {
+			if (del is not null) {
 				var nwPath = new NWPath (path, owns: false);
 				del (nwPath);
 			}
@@ -103,7 +103,7 @@ namespace Network {
 		void _SetUpdatedSnapshotHandler (Action<NWPath> callback)
 		{
 			unsafe {
-				if (callback == null) {
+				if (callback is null) {
 					nw_path_monitor_set_update_handler (GetCheckedHandle (), null);
 					return;
 				}
@@ -137,7 +137,7 @@ namespace Network {
 		void SetUpdatedSnapshotHandlerWrapper (NWPath path)
 		{
 			currentPath = path;
-			if (userSnapshotHandler != null) {
+			if (userSnapshotHandler is not null) {
 				userSnapshotHandler (currentPath);
 			}
 		}
@@ -149,7 +149,7 @@ namespace Network {
 		static void TrampolineMonitorCanceled (IntPtr block)
 		{
 			var del = BlockLiteral.GetTarget<Action> (block);
-			if (del != null) {
+			if (del is not null) {
 				del ();
 			}
 		}
@@ -161,7 +161,7 @@ namespace Network {
 		public void SetMonitorCanceledHandler (Action callback)
 		{
 			unsafe {
-				if (callback == null) {
+				if (callback is null) {
 					nw_path_monitor_set_cancel_handler (GetCheckedHandle (), null);
 					return;
 				}

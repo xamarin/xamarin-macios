@@ -33,11 +33,13 @@ using System;
 using ObjCRuntime;
 using Foundation;
 
+#nullable enable
+
 namespace AVFoundation {
 #if !NET
 	public partial class AVCaptureConnection {
 		[Obsolete ("Use AvailableAudioChannels property instead.")]
-		public virtual AVCaptureAudioChannel AudioChannels { 
+		public virtual AVCaptureAudioChannel AudioChannels {
 			get { throw new NotSupportedException ("Use AvailableAudioChannels property instead."); }
 		}
 	}

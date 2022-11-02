@@ -66,12 +66,12 @@ namespace CoreGraphics {
 		{
 		}
 
-		protected override void Retain ()
+		protected internal override void Retain ()
 		{
 			CGShadingRetain (GetCheckedHandle ());
 		}
 
-		protected override void Release ()
+		protected internal override void Release ()
 		{
 			CGShadingRelease (GetCheckedHandle ());
 		}
@@ -83,9 +83,9 @@ namespace CoreGraphics {
 		public static CGShading CreateAxial (CGColorSpace colorspace, CGPoint start, CGPoint end, CGFunction function, bool extendStart, bool extendEnd)
 		{
 			if (colorspace is null)
-				throw new ArgumentNullException (nameof (colorspace));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorspace));
 			if (function is null)
-				throw new ArgumentNullException (nameof (function));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (function));
 
 			return new CGShading (CGShadingCreateAxial (colorspace.GetCheckedHandle (), start, end, function.GetCheckedHandle (), extendStart, extendEnd), true);
 		}
@@ -99,9 +99,9 @@ namespace CoreGraphics {
 						      CGFunction function, bool extendStart, bool extendEnd)
 		{
 			if (colorspace is null)
-				throw new ArgumentNullException (nameof (colorspace));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (colorspace));
 			if (function is null)
-				throw new ArgumentNullException (nameof (function));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (function));
 
 			return new CGShading (CGShadingCreateRadial (colorspace.GetCheckedHandle (), start, startRadius, end, endRadius,
 								     function.GetCheckedHandle (), extendStart, extendEnd), true);

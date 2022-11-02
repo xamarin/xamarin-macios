@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>DEBUG;DYNAMIC_REGISTRAR;$(DefineConstants)</DefineConstants>
+    <DefineConstants>DEBUG;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchDebug>True</MtouchDebug>
@@ -40,7 +40,7 @@
     <DebugType>none</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>bin\iPhoneSimulator\$(Configuration)-unified</OutputPath>
-    <DefineConstants>MONOTOUCH;DYNAMIC_REGISTRAR;$(DefineConstants)</DefineConstants>
+    <DefineConstants>MONOTOUCH;$(DefineConstants)</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>0</WarningLevel>
     <MtouchLink>None</MtouchLink>
@@ -223,7 +223,10 @@
     <Compile Include="..\..\tools\common\ApplePlatform.cs">
       <Link>ApplePlatform.cs</Link>
     </Compile>
+    <Compile Include="SceneKit\SCNVector3Test.cs" />
+    <Compile Include="SceneKit\SCNVector4Test.cs" />
   </ItemGroup>
+  <Import Project="$(RootTestsDirectory)\ComputeRegistrarConstant.targets" />
   <Import Project="$(RootTestsDirectory)\nunit.framework.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>

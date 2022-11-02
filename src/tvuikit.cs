@@ -405,6 +405,7 @@ namespace TVUIKit {
 		TVMediaItemContentTextTransform Transform { get; set; }
 	}
 
+	[NoiOS][NoMacCatalyst]
 	[TV (15,0)]
 	[BaseType (typeof (NSObject))]
 	[DisableDefaultCtor]
@@ -433,6 +434,7 @@ namespace TVUIKit {
 		NSPersonNameComponents PersonNameComponents { get; set; }
 	}
 
+	[NoiOS][NoMacCatalyst]
 	[TV (15,0)]
 	[BaseType (typeof (UIView))]
 	[DisableDefaultCtor]

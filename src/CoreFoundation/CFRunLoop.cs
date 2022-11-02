@@ -59,7 +59,11 @@ namespace CoreFoundation {
 
 	// CFRunLoop.h
 	[StructLayout (LayoutKind.Sequential)]
+#if NET
+	internal unsafe struct CFRunLoopSourceContext {
+#else
 	internal struct CFRunLoopSourceContext {
+#endif
 		public CFIndex Version;
 		public IntPtr Info;
 		public IntPtr Retain;
@@ -67,9 +71,15 @@ namespace CoreFoundation {
 		public IntPtr CopyDescription;
 		public IntPtr Equal;
 		public IntPtr Hash;
+#if NET
+		public delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> Schedule;
+		public delegate* unmanaged<IntPtr, IntPtr, IntPtr, void> Cancel;
+		public delegate* unmanaged<IntPtr, void> Perform;
+#else
 		public IntPtr Schedule;
 		public IntPtr Cancel;
 		public IntPtr Perform;
+#endif
 	}
 
 #if NET
@@ -145,9 +155,11 @@ namespace CoreFoundation {
 		[DllImport (Constants.CoreFoundationLibrary)]
 		extern static /* CFRunLoopSourceRef */ IntPtr CFRunLoopSourceCreate (/* CFAllocatorRef */ IntPtr allocator, /* CFIndex */ nint order, /* CFRunLoopSourceContext* */ ref CFRunLoopSourceContext context);
 
+#if !NET
 		static ScheduleCallback ScheduleDelegate = (ScheduleCallback) Schedule;
 		static CancelCallback CancelDelegate = (CancelCallback) Cancel;
 		static PerformCallback PerformDelegate = (PerformCallback) Perform;
+#endif
 
 		protected CFRunLoopSourceCustom ()
 			: base (IntPtr.Zero, true)
@@ -155,9 +167,17 @@ namespace CoreFoundation {
 			gch = GCHandle.Alloc (this);
 			var ctx = new CFRunLoopSourceContext ();
 			ctx.Info = GCHandle.ToIntPtr (gch);
+#if NET
+			unsafe {
+				ctx.Schedule = &Schedule;
+				ctx.Cancel = &Cancel;
+				ctx.Perform = &Perform;
+			}
+#else
 			ctx.Schedule = Marshal.GetFunctionPointerForDelegate (ScheduleDelegate);
 			ctx.Cancel = Marshal.GetFunctionPointerForDelegate (CancelDelegate);
 			ctx.Perform = Marshal.GetFunctionPointerForDelegate (PerformDelegate);
+#endif
 
 			var handle = CFRunLoopSourceCreate (IntPtr.Zero, 0, ref ctx);
 			InitializeHandle (handle);
@@ -165,7 +185,11 @@ namespace CoreFoundation {
 
 		delegate void ScheduleCallback (IntPtr info, IntPtr runLoop, IntPtr mode);
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof(ScheduleCallback))]
+#endif
 		static void Schedule (IntPtr info, IntPtr runLoop, IntPtr mode)
 		{
 			var source = GCHandle.FromIntPtr (info).Target as CFRunLoopSourceCustom;
@@ -182,7 +206,11 @@ namespace CoreFoundation {
 
 		delegate void CancelCallback (IntPtr info, IntPtr runLoop, IntPtr mode);
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof(CancelCallback))]
+#endif
 		static void Cancel (IntPtr info, IntPtr runLoop, IntPtr mode)
 		{
 			var source = GCHandle.FromIntPtr (info).Target as CFRunLoopSourceCustom;
@@ -199,7 +227,11 @@ namespace CoreFoundation {
 
 		delegate void PerformCallback (IntPtr info);
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 		[MonoPInvokeCallback (typeof(PerformCallback))]
+#endif
 		static void Perform (IntPtr info)
 		{
 			var source = GCHandle.FromIntPtr (info).Target as CFRunLoopSourceCustom;
@@ -285,7 +317,7 @@ namespace CoreFoundation {
 		public CFRunLoopExitReason RunInMode (NSString mode, double seconds, bool returnAfterSourceHandled)
 		{
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			return CFRunLoopRunInMode (mode.Handle, seconds, returnAfterSourceHandled);
 		}
@@ -296,9 +328,9 @@ namespace CoreFoundation {
 		public void AddSource (CFRunLoopSource source, NSString mode)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			CFRunLoopAddSource (Handle, source.Handle, mode.Handle);
 		}
@@ -310,9 +342,9 @@ namespace CoreFoundation {
 		public bool ContainsSource (CFRunLoopSource source, NSString mode)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			return CFRunLoopContainsSource (Handle, source.Handle, mode.Handle);
 		}
@@ -323,9 +355,9 @@ namespace CoreFoundation {
 		public void RemoveSource (CFRunLoopSource source, NSString mode)
 		{
 			if (source is null)
-				throw new ArgumentNullException (nameof (source));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (source));
 			if (mode is null)
-				throw new ArgumentNullException (nameof (mode));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (mode));
 
 			CFRunLoopRemoveSource (Handle, source.Handle, mode.Handle);
 		}

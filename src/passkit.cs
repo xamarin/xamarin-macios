@@ -81,6 +81,7 @@ namespace PassKit {
 		PKPass[] GetPasses ();
 
 		[Export ("passWithPassTypeIdentifier:serialNumber:")]
+		[return: NullAllowed]
 		PKPass GetPass (string identifier, string serialNumber);
 
 		[iOS (8,0)]
@@ -264,7 +265,7 @@ namespace PassKit {
 		[Deprecated (PlatformName.iOS, 9, 0, message: "Use 'ShippingContact' instead.")]
 		ABRecord ShippingAddress { get; }
 
-		[Export ("shippingMethod", ArgumentSemantic.Strong)]
+		[NullAllowed, Export ("shippingMethod", ArgumentSemantic.Strong)]
 		PKShippingMethod ShippingMethod { get; }
 
 		
@@ -813,7 +814,7 @@ namespace PassKit {
 		[Export ("initWithData:error:")]
 		NativeHandle Constructor (NSData data, out NSError error);
 
-		[Export ("authenticationToken", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("authenticationToken", ArgumentSemantic.Copy)]
 		string AuthenticationToken { get; }
 
 		[NoWatch]
@@ -838,16 +839,17 @@ namespace PassKit {
 		[Export ("passURL", ArgumentSemantic.Copy)]
 		NSUrl PassUrl { get; }
 
-		[Export ("relevantDate", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("relevantDate", ArgumentSemantic.Copy)]
 		NSDate RelevantDate { get; }
 
 		[Export ("serialNumber", ArgumentSemantic.Copy)]
 		string SerialNumber { get; }
 
-		[Export ("webServiceURL", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("webServiceURL", ArgumentSemantic.Copy)]
 		NSUrl WebServiceUrl { get; }
 
 		[Export ("localizedValueForFieldKey:")]
+		[return: NullAllowed]
 		NSObject GetLocalizedValue (NSString key); // TODO: Should be enum for PKPassLibraryUserInfoKey
 
 #if !NET
@@ -857,7 +859,7 @@ namespace PassKit {
 #endif
 
 		[iOS (7,0)]
-		[Export ("userInfo", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("userInfo", ArgumentSemantic.Copy)]
 		NSDictionary UserInfo { get; }
 
 		[iOS (8,0)]
@@ -1334,7 +1336,7 @@ namespace PassKit {
 		[Export ("status", ArgumentSemantic.Assign)]
 		PKPaymentAuthorizationStatus Status { get; set; }
 
-		[Export ("errors", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("errors", ArgumentSemantic.Copy)]
 		NSError[] Errors { get; set; }
 	}
 
@@ -1372,7 +1374,7 @@ namespace PassKit {
 		[Export ("shippingMethods", ArgumentSemantic.Copy)]
 		PKShippingMethod[] ShippingMethods { get; set; }
 
-		[Export ("errors", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("errors", ArgumentSemantic.Copy)]
 		NSError[] Errors { get; set; }
 	}
 
@@ -1400,7 +1402,7 @@ namespace PassKit {
 		NativeHandle Constructor ([NullAllowed] NSError[] errors, PKPaymentSummaryItem [] paymentSummaryItems);
 
 		[Watch (6,0), iOS (13,0)]
-		[Export ("errors", ArgumentSemantic.Copy)]
+		[NullAllowed, Export ("errors", ArgumentSemantic.Copy)]
 		NSError [] Errors { get; set; }
 
 		// inlined

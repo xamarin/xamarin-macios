@@ -25,6 +25,9 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
@@ -53,8 +56,13 @@ namespace CoreGraphics {
 	[StructLayout (LayoutKind.Sequential)]
 	struct CGPatternCallbacks {
 		internal /* unsigned int */ uint version;
+#if NET
+		internal unsafe delegate* unmanaged<IntPtr, IntPtr, void> draw;
+		internal unsafe delegate* unmanaged<IntPtr, void> release;
+#else
 		internal DrawPatternCallback draw;
 		internal ReleaseInfoCallback release;
+#endif
 	}
 
 
@@ -81,8 +89,8 @@ namespace CoreGraphics {
 		{
 		}
 
-		protected override void Retain () => CGPatternRetain (Handle);
-		protected override void Release () => CGPatternRelease (Handle);
+		protected internal override void Retain () => CGPatternRetain (Handle);
+		protected internal override void Release () => CGPatternRelease (Handle);
 		
 		// This is what we expose on the API
 		public delegate void DrawPattern (CGContext ctx);
@@ -92,35 +100,58 @@ namespace CoreGraphics {
 			/* CGFloat */ nfloat xStep, /* CGFloat */ nfloat yStep, CGPatternTiling tiling, [MarshalAs (UnmanagedType.I1)] bool isColored,
 			/* const CGPatternCallbacks* */ ref CGPatternCallbacks callbacks);
 
+#if NET
+		static CGPatternCallbacks callbacks;
+
+		static CGPattern () {
+			unsafe {
+				callbacks = new CGPatternCallbacks () {
+					version = 0,
+					draw = &DrawCallback,
+					release = &ReleaseCallback,
+				};
+			}
+		}
+#else
 		static CGPatternCallbacks callbacks = new CGPatternCallbacks () {
 			version = 0,
 			draw = DrawCallback,
 			release = ReleaseCallback,
 		};
+#endif
 		GCHandle gch;
 		
 		public CGPattern (CGRect bounds, CGAffineTransform matrix, nfloat xStep, nfloat yStep, CGPatternTiling tiling, bool isColored, DrawPattern drawPattern)
 		{
-			if (drawPattern == null)
-				throw new ArgumentNullException (nameof (drawPattern));
+			if (drawPattern is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (drawPattern));
 
 			gch = GCHandle.Alloc (drawPattern);
 			Handle = CGPatternCreate (GCHandle.ToIntPtr (gch), bounds, matrix, xStep, yStep, tiling, isColored, ref callbacks);
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (DrawPatternCallback))]
+#endif
 #endif
 		static void DrawCallback (IntPtr voidptr, IntPtr cgcontextptr)
 		{
 			GCHandle gch = GCHandle.FromIntPtr (voidptr);
-			DrawPattern draw_pattern = (DrawPattern) gch.Target;
-			using (var ctx = new CGContext (cgcontextptr, false))
-				draw_pattern (ctx);
+			if (gch.Target is DrawPattern draw_pattern) {
+				using (var ctx = new CGContext (cgcontextptr, false))
+					draw_pattern (ctx);
+			}
 		}
 
+#if NET
+		[UnmanagedCallersOnly]
+#else
 #if !MONOMAC
 		[MonoPInvokeCallback (typeof (ReleaseInfoCallback))]
+#endif
 #endif
 		static void ReleaseCallback (IntPtr voidptr)
 		{

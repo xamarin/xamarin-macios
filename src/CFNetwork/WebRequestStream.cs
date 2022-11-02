@@ -46,7 +46,7 @@ namespace CFNetwork {
 		TaskCompletionSource<object> openTcs;
 		CancellationTokenSource cts;
 
-		byte[] buffer;
+		byte [] buffer;
 		bool canWrite;
 		bool open, completed, closed;
 		int start, position;

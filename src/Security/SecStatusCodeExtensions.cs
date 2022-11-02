@@ -7,6 +7,8 @@
 // Copyright 2018 Xamarin Inc.
 //
 
+#nullable enable
+
 using System;
 using System.Runtime.InteropServices;
 using ObjCRuntime;

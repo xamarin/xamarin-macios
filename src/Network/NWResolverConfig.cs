@@ -46,7 +46,7 @@ namespace Network {
 		public NWResolverConfig (NWEndpoint urlEndpoint, NWResolverConfigEndpointType endpointType)
 		{
 			if (urlEndpoint is null)
-				throw new ArgumentNullException (nameof (urlEndpoint));
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (urlEndpoint));
 			switch (endpointType) {
 			case NWResolverConfigEndpointType.Https:
 				InitializeHandle (nw_resolver_config_create_https (urlEndpoint.Handle));

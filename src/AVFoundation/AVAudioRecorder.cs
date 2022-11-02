@@ -30,31 +30,35 @@ using AudioToolbox;
 using ObjCRuntime;
 using System;
 
+#nullable enable
+
 namespace AVFoundation {
 #if !TVOS
 	public partial class AVAudioRecorder {
-		AVAudioRecorder (NSUrl url, AudioSettings settings, out NSError error) {
+		AVAudioRecorder (NSUrl url, AudioSettings settings, out NSError error)
+		{
 			// We use this method because it allows us to out NSError but, as a side effect, it is possible for the handle to be null and we will need to check this manually (on the Create method).
 			Handle = InitWithUrl (url, settings.Dictionary, out error);
-		}	
+		}
 
-		AVAudioRecorder (NSUrl url, AVAudioFormat format, out NSError error) {
+		AVAudioRecorder (NSUrl url, AVAudioFormat format, out NSError error)
+		{
 			// We use this method because it allows us to out NSError but, as a side effect, it is possible for the handle to be null and we will need to check this manually (on the Create method).
 			Handle = InitWithUrl (url, format, out error);
 		}
 
-		public static AVAudioRecorder Create (NSUrl url, AudioSettings settings, out NSError error)
+		public static AVAudioRecorder? Create (NSUrl url, AudioSettings settings, out NSError? error)
 		{
-			if (settings == null)
-				throw new ArgumentNullException ("settings");
+			if (settings is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (settings));
 			error = null;
 			try {
 				AVAudioRecorder r = new AVAudioRecorder (url, settings, out error);
-				if (r.Handle == IntPtr.Zero) 
+				if (r.Handle == IntPtr.Zero)
 					return null;
 
 				return r;
-			} catch { 
+			} catch {
 				return null;
 			}
 		}
@@ -65,26 +69,26 @@ namespace AVFoundation {
 		[SupportedOSPlatform ("maccatalyst")]
 		[UnsupportedOSPlatform ("tvos")]
 #else
-		[iOS (10,0)]
-		[Mac (10,12)]
+		[iOS (10, 0)]
+		[Mac (10, 12)]
 #endif
-		public static AVAudioRecorder Create (NSUrl url, AVAudioFormat format, out NSError error)
+		public static AVAudioRecorder? Create (NSUrl url, AVAudioFormat? format, out NSError? error)
 		{
-			if (format == null)
-				throw new ArgumentNullException (nameof (format));
+			if (format is null)
+				ObjCRuntime.ThrowHelper.ThrowArgumentNullException (nameof (format));
 			error = null;
 			try {
 				AVAudioRecorder r = new AVAudioRecorder (url, format, out error);
-				if (r.Handle == IntPtr.Zero) 
+				if (r.Handle == IntPtr.Zero)
 					return null;
 
 				return r;
-			} catch { 
+			} catch {
 				return null;
 			}
 		}
 
-		internal static AVAudioRecorder ToUrl (NSUrl url, NSDictionary settings, out NSError error)
+		internal static AVAudioRecorder? ToUrl (NSUrl url, NSDictionary settings, out NSError? error)
 		{
 			return Create (url, new AudioSettings (settings), out error);
 		}

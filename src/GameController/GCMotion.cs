@@ -6,6 +6,8 @@
 //
 // Copyright 2019 Microsoft Corporation.
 
+#nullable enable
+
 using System;
 using System.Runtime.Versioning;
 using System.Runtime.InteropServices;
@@ -65,6 +67,7 @@ namespace GameController {
 
 #if NET
 	[SupportedOSPlatform ("ios15.4")]
+	[SupportedOSPlatform ("maccatalyst15.4")]
 	[SupportedOSPlatform ("macos12.3")]
 	[SupportedOSPlatform ("tvos15.4")]
 #else
@@ -92,6 +95,7 @@ namespace GameController {
 
 #if NET
 	[SupportedOSPlatform ("ios15.4")]
+	[SupportedOSPlatform ("maccatalyst15.4")]
 	[SupportedOSPlatform ("macos12.3")]
 	[SupportedOSPlatform ("tvos15.4")]
 #else
