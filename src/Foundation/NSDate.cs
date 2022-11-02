@@ -30,6 +30,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
+
 using ObjCRuntime;
 
 #nullable enable
@@ -51,18 +52,16 @@ namespace Foundation {
 			// For 64 bit, convert to components representation since we cannot rely on secondsSinceReferenceDate
 			var units = NSCalendarUnit.Year | NSCalendarUnit.Month | NSCalendarUnit.Day | NSCalendarUnit.Hour |
 				NSCalendarUnit.Minute | NSCalendarUnit.Second | NSCalendarUnit.Nanosecond | NSCalendarUnit.Calendar;
-			using (var calComponents = calendar.Components (units, d)) {
-				var retDate = new DateTime (
-					(int) calComponents.Year,
-					(int) calComponents.Month,
-					(int) calComponents.Day,
-					(int) calComponents.Hour,
-					(int) calComponents.Minute,
-					(int) calComponents.Second,
-					Convert.ToInt32 (calComponents.Nanosecond / NANOSECS_PER_MILLISEC), DateTimeKind.Utc);
-
-				return retDate;
-			}
+			using var calComponents = calendar.Components (units, d);
+			return new DateTime (
+				(int) calComponents.Year,
+				(int) calComponents.Month,
+				(int) calComponents.Day,
+				(int) calComponents.Hour,
+				(int) calComponents.Minute,
+				(int) calComponents.Second,
+				Convert.ToInt32 (calComponents.Nanosecond / NANOSECS_PER_MILLISEC),
+				DateTimeKind.Utc);
 		}
 
 		// now explicit since data can be lost for DateTimeKind.Unspecified
@@ -73,8 +72,8 @@ namespace Foundation {
 
 			var dtUnv = dt.ToUniversalTime ();
 
-			// For 64 bit, convert to components representation since we cannot rely on secondsSinceReferenceDate
-			var dateComponents = new NSDateComponents ();
+			// Convert to components representation since we cannot rely on secondsSinceReferenceDate
+			using var dateComponents = new NSDateComponents ();
 			dateComponents.Day = dtUnv.Day;
 			dateComponents.Month = dtUnv.Month;
 			dateComponents.Year = dtUnv.Year;

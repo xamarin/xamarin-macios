@@ -48,8 +48,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Assert.Throws<ArgumentOutOfRangeException> (() => {
 				var tmp = (DateTime) value;
-				Console.WriteLine ($"Unexpectedly converted {value} to {tmp} ({message})");
-			}, message);
+			}, $"Unexpectedly converted {value} to {tmp} ({message})");
 		}
 
 		static IEnumerable<object[]> GetArgumentExceptionValues ()
@@ -66,8 +65,7 @@ namespace MonoTouchFixtures.Foundation {
 		{
 			Assert.Throws<ArgumentException> (() => {
 				var tmp = (NSDate) value;
-				Console.WriteLine ($"Unexpectedly converted {value} to {tmp} ({message})");
-			}, message);
+			}, $"Unexpectedly converted {value} to {tmp} ({message})");
 		}
 
 		static IEnumerable<DateTime> GetRoundTripFromDateTimeValues ()
