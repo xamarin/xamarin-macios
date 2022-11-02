@@ -1971,4 +1971,13 @@ namespace HomeKit {
 		NSUuid [] AccessoryUniqueIdentifiers { get; }
 	}
 
+	[iOS (15,2), NoWatch, NoTV, NoMacCatalyst]
+	[BaseType (typeof (NSObject))]
+	interface HMAccessorySetupManager {
+		[Async]
+		[iOS (15,4)]
+		[Export ("performAccessorySetupUsingRequest:completionHandler:")]
+		void PerformAccessorySetup (HMAccessorySetupRequest request, Action<HMAccessorySetupResult, NSError> completion);
+	}
+
 }

@@ -1854,8 +1854,14 @@ namespace AVFoundation {
 		[Protocolize]
 		AVAudioRecorderDelegate Delegate { get; set;  }
 	
-		[Export ("currentTime")]
+#if !XAMCORE_5_0
+		[Obsolete ("Use the 'CurrentTime' property instead.")]
+		[Wrap ("CurrentTime", IsVirtual = true)]
 		double currentTime { get; }
+#endif
+
+		[Export ("currentTime")]
+		double CurrentTime { get; }
 	
 		[Export ("meteringEnabled")]
 		bool MeteringEnabled { [Bind ("isMeteringEnabled")] get; set;  }
@@ -12782,7 +12788,7 @@ namespace AVFoundation {
 		[Export ("translatesPlayerInterstitialEvents")]
 		bool TranslatesPlayerInterstitialEvents { get; set; }
 
-		[Watch (9, 0), TV (16, 0), Mac (13, 0), iOS (16, 0)]
+		[Watch (9, 0), TV (16, 0), NoMac, iOS (16, 0)]
 		[NullAllowed, Export ("nowPlayingInfo", ArgumentSemantic.Copy)]
 		NSDictionary WeakNowPlayingInfo { get; set; }
 	}

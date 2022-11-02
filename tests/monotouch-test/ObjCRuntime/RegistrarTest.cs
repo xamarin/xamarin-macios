@@ -2172,8 +2172,9 @@ namespace MonoTouchFixtures.ObjCRuntime {
 				// sure this is by design or by accident, but that's how we're behaving right now at least
 				ptr = Messaging.IntPtr_objc_msgSend (Class.GetHandle (typeof (D2)), Selector.GetHandle ("alloc"));
 				ptr = Messaging.IntPtr_objc_msgSend_long (ptr, Selector.GetHandle ("initWithBar:"), 2);
-				// Unable to cast object of type 'AppDelegate+D1' to type 'AppDelegate+D2'
-				Assert.Throws<InvalidCastException> (() => Runtime.GetNSObject<D2> (ptr), "b ex");
+				// Failed to marshal the Objective-C object 0x60000230a410 (type: MonoTouchFixtures_ObjCRuntime_RegistrarTest_D2). Could not find an existing managed instance for this object, nor was it possible to create a new managed instance (because the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+D2' does not have a constructor that takes one NativeHandle argument
+				var ex = Assert.Throws<RuntimeException> (() => Runtime.GetNSObject<D2> (ptr), "b ex");
+				Assert.That (ex.Message, Does.Contain ("Could not find an existing managed instance for this object, nor was it possible to create a new managed instance (because the type 'MonoTouchFixtures.ObjCRuntime.RegistrarTest+D2' does not have a constructor that takes one"), "Exception message");
 				var obj = Runtime.GetNSObject<D1> (ptr);
 				Assert.AreEqual ("bar", obj.ctor1, "b ctor1");
 			} finally {

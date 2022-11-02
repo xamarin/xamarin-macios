@@ -21732,6 +21732,10 @@ namespace UIKit {
 		[DesignatedInitializer]
 		[Wrap ("base (action)")]
 		NativeHandle Constructor (Action action);
+
+		[iOS (16, 1)]
+		[Export ("zOffset")]
+		nfloat ZOffset { get; }
 	}
 
 	interface IUILargeContentViewerItem { }

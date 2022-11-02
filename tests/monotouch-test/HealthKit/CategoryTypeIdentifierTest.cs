@@ -122,6 +122,13 @@ namespace MonoTouchFixtures.HealthKit {
 					if (!TestRuntime.CheckXcodeVersion (13, 0))
 						continue;
 					break;
+				case HKCategoryTypeIdentifier.InfrequentMenstrualCycles:
+				case HKCategoryTypeIdentifier.IrregularMenstrualCycles:
+				case HKCategoryTypeIdentifier.PersistentIntermenstrualBleeding:
+				case HKCategoryTypeIdentifier.ProlongedMenstrualPeriods:
+					if (!TestRuntime.CheckXcodeVersion (14, 1))
+						continue;
+					break;
 				default:
 					if (!TestRuntime.CheckXcodeVersion (7, 0))
 						continue;

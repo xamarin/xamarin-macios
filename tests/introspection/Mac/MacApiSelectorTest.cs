@@ -80,6 +80,9 @@ namespace Introspection {
 				if (!Mac.CheckSystemVersion (10, 8))
 					return true;
 				break;
+			case "AuthenticationServices.ASWebAuthenticationSessionWebBrowserSessionManager":
+				// needed protocol but wont pass without an impl
+				return true;
 			}
 
 			switch (type.Namespace) {
